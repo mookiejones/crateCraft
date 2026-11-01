@@ -16,6 +16,17 @@ The text under the heading says counts and actions only, plus the app name, the 
 
 The two buttons have the same weight. The line **Saving…** means the choice is being written. **Couldn't save that choice. Try again.** means it was not written. You stay on the step so you can choose again.
 
+## Checking for new versions
+
+Setup then asks **Check for new versions?** on its own step, when you have not answered before. Once a day, the app can ask GitHub whether a newer version is out. GitHub sees your IP address and this app's version. Nothing about your library is sent.
+
+| Choice | What happens |
+| --- | --- |
+| **No, don't check** | The app never contacts GitHub. This button is first. |
+| **Yes, check** | Once a day the app asks GitHub. When a newer version is out, a strip at the top of the page says so. |
+
+The strip has **Download**, which opens that version's page on GitHub in your browser (the app does not download or install anything itself), **Skip this version**, which stops telling you about that version but not a later one, and **Not now**, which hides the strip until the app opens again. Test versions (beta and release candidates) are only shown if you tick **Include test versions** in Settings.
+
 ## Settings later
 
 ![Settings. Sharing is off. This sample copy has no telemetry keys, so nothing is sent either way.](../media/settings.png)
@@ -23,10 +34,11 @@ The two buttons have the same weight. The line **Saving…** means the choice is
 1. Click **Settings** at the bottom of the left rail.
 2. Tick **Share anonymous usage stats and crash reports** to turn sharing on. Clear the tick to turn it off.
 3. Read the line under the tick.
-4. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
-5. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
-6. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the footer of the sidebar stays blank. The page does not show an error code.
-7. Click **Close**.
+4. Tick **Check GitHub for a newer version once a day** to turn the update check on, and **Include test versions (beta and release candidates)** to hear about those too. The second tick is greyed out while the first is off. If a choice cannot be saved, the line under them says **The update choice could not be saved.** and the tick goes back.
+5. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
+6. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
+7. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the footer of the sidebar stays blank. The page does not show an error code.
+8. Click **Close**.
 
 | Line under the tick | Meaning |
 | --- | --- |

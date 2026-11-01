@@ -18,7 +18,7 @@ The install is identified by a random id created when you save a choice. That id
 
 ## Update check
 
-The app can tell you when a newer release is on GitHub. That check is **off** until you turn it on, and a later change adds the setup question and the Settings switch for it (PREVIEW). While it is off, or before you have answered, the app does not contact GitHub.
+The app can tell you when a newer release is on GitHub. That check is **off** until you turn it on. Setup asks **Check for new versions?** on its own step, with **No, don't check** first, and Settings has **Check GitHub for a newer version once a day**. While it is off, or before you have answered, the app does not contact GitHub. If setup cannot read the current choice, it does not ask, and the check stays off.
 
 When it is on, the Python process asks `https://api.github.com/repos/mookiejones/serato-library-manager/releases` at most once every 24 hours. GitHub sees your IP address and a User-Agent of `serato-library-manager/<version>`. Nothing else is sent: no install id, no path, no track, crate, or library data. Only each release's tag, its pre-release and draft flags, and its page address are kept. Pre-releases are offered only if you opt in. A version you skip is not offered again. **Download** opens that release's page on github.com in your browser; the app does not download or install anything itself.
 

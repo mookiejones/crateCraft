@@ -30,6 +30,7 @@ import {
 } from "./restore";
 import { registerPlayerControls, wireShortcuts } from "./shortcuts";
 import { state } from "./state";
+import { loadUpdate, wireUpdate } from "./update";
 import { loadVersion, wireVersion } from "./version";
 import { loadLibrary, setMode, showFailure, wireLibrary } from "./views";
 import { mountPlayer, playerControls } from "./player";
@@ -93,5 +94,7 @@ wireGigCheck(() => {
 wireLayout();
 wireVersion();
 void loadVersion();
+wireUpdate();
+void loadUpdate();
 bindLibraryReload(loadLibrary);
 loadLibrary().catch(showFailure);

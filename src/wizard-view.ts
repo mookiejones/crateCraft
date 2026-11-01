@@ -76,6 +76,7 @@ const HEADINGS: Record<WizardModel["step"], MessageKey> = {
   library: "wizard.heading.library",
   snapshot: "wizard.heading.snapshot",
   consent: "wizard.heading.consent",
+  updates: "wizard.heading.updates",
   done: "wizard.done",
 };
 
@@ -140,6 +141,12 @@ function wire(): void {
   button("wizard-yes").addEventListener("click", () => {
     void chooseConsent(true);
   });
+  button("wizard-updates-no").addEventListener("click", () => {
+    void chooseUpdates(false);
+  });
+  button("wizard-updates-yes").addEventListener("click", () => {
+    void chooseUpdates(true);
+  });
   button("wizard-folder-up").addEventListener("click", () => {
     if (folderParent) void browse(folderParent);
   });
@@ -169,6 +176,8 @@ async function begin(next: OpenOptions): Promise<void> {
   const settings = await loadSettings();
   if (token !== generation) return;
   if (settings.wizard_complete && !next.force) return;
+  const needsUpdates = await updateChoiceMissing();
+  if (token !== generation) return;
   const setup = await loadSetup();
   if (token !== generation) return;
   summary = setup ? noteText(setup.summary) : noteKey("wizard.lookFailed");
@@ -179,6 +188,7 @@ async function begin(next: OpenOptions): Promise<void> {
     needsConsent: settings.needs_consent_prompt,
     library,
     seratoRunning: setup?.seratoRunning ?? false,
+    needsUpdates,
   });
   paint(false);
   const dialog = wizardDialog();
@@ -296,6 +306,46 @@ async function chooseConsent(value: boolean): Promise<void> {
     busy = false;
     statusNote = noteKey("wizard.consentFailed");
     paint(false);
+  }
+}
+
+/** Event the main page listens for, so Settings and the banner refresh. */
+export const UPDATE_CHOICE_EVENT = "serato-update-choice";
+
+async function chooseUpdates(value: boolean): Promise<void> {
+  if (busy || model.step !== "updates") return;
+  const token = generation;
+  busy = true;
+  statusNote = noteKey("wizard.saving");
+  paint(false);
+  try {
+    await postJSON("/api/update", { enabled: value }, 15000);
+    if (token !== generation) return;
+    busy = false;
+    statusNote = null;
+    model = reduceWizard(model, { type: "updates", value });
+    window.dispatchEvent(new CustomEvent(UPDATE_CHOICE_EVENT, { detail: { enabled: value } }));
+    paint(true);
+  } catch {
+    if (token !== generation) return;
+    busy = false;
+    statusNote = noteKey("wizard.updatesFailed");
+    paint(false);
+  }
+}
+
+/**
+ * Whether setup should ask about the update check.
+ *
+ * Only an unanswered choice (``enabled: null``) is asked. A failed request
+ * does not ask, so the check simply stays off.
+ */
+async function updateChoiceMissing(): Promise<boolean> {
+  try {
+    const payload = await getJSON("/api/update", 15000);
+    return isRecord(payload) && payload.enabled === null;
+  } catch {
+    return false;
   }
 }
 
@@ -432,6 +482,7 @@ function paint(moveFocus: boolean): void {
   statusNode.className = status.kind ? `wizard-status is-${status.kind}` : "wizard-status";
   paintProgress();
   element("wizard-consent").hidden = model.step !== "consent";
+  element("wizard-updates").hidden = model.step !== "updates";
   element("wizard-folders").hidden = !(folderOpen && model.step === "library");
   const back = button("wizard-back");
   back.hidden = !canGoBack(model);
@@ -449,6 +500,8 @@ function paint(moveFocus: boolean): void {
   primary.disabled = busy || !primaryEnabled(model);
   button("wizard-no").disabled = busy;
   button("wizard-yes").disabled = busy;
+  button("wizard-updates-no").disabled = busy;
+  button("wizard-updates-yes").disabled = busy;
   button("wizard-cancel").disabled = false;
   if (moveFocus) {
     text("wizard-announce").textContent = stepAnnouncement(model);
@@ -467,6 +520,8 @@ function bodyText(): string {
       return t("wizard.snapshotBody");
     case "consent":
       return t("consent.body");
+    case "updates":
+      return t("wizard.updatesBody");
     case "done":
       return "";
     default:

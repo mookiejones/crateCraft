@@ -552,6 +552,9 @@
     "settings.rerunSetup": "Run setup again",
     "settings.share": "Share anonymous usage stats and crash reports",
     "settings.title": "Settings",
+    "settings.updates": "Check GitHub for a newer version once a day",
+    "settings.updatesFailed": "The update choice could not be saved.",
+    "settings.updatesPrereleases": "Include test versions (beta and release candidates)",
     "sharing.canSend": "Anonymous counts and crash reports can be sent.",
     "sharing.loadFailed": "Couldn't load sharing settings.",
     "sharing.loadFailedOff": "Couldn't load sharing settings. Nothing is sent.",
@@ -638,11 +641,25 @@
     "tooltip.gigNext": "Go to the next step.",
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.updateDismiss": "Hide this until the app opens again.",
+    "tooltip.updateDownload": "Open this release's page on GitHub in your browser.",
+    "tooltip.updatePrereleases": "Also tell you about beta versions and release candidates.",
+    "tooltip.updateSkip": "Don't tell you about this version again.",
+    "tooltip.updateToggle": "Ask GitHub once a day whether a newer version is out.",
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
+    "tooltip.wizardUpdatesNo": "Don't check GitHub for new versions.",
+    "tooltip.wizardUpdatesYes": "Check GitHub once a day for a new version.",
     "track.missingBadge": "missing",
     "track.numbered": "Track {id}",
     "track.stemsBadge": "stems",
     "track.untitled": "Untitled",
+    "update.available": "Version {version} is out. You have {current}.",
+    "update.availableTest": "Test version {version} is out. You have {current}.",
+    "update.dismiss": "Not now",
+    "update.download": "Download",
+    "update.label": "Update available",
+    "update.openFailed": "The release page could not be opened. It is on GitHub under Releases.",
+    "update.skip": "Skip this version",
     "version.app": "App version",
     "version.copied": "Copied",
     "version.copyFailed": "Couldn't copy the version.",
@@ -678,6 +695,7 @@
     "wizard.heading.consent": "Share anonymous usage stats and crash reports?",
     "wizard.heading.library": "Find your library",
     "wizard.heading.snapshot": "Safety snapshot",
+    "wizard.heading.updates": "Check for new versions?",
     "wizard.heading.welcome": "See your Serato library",
     "wizard.lookFailed": "Couldn't look for your library.",
     "wizard.looking": "Looking for your Serato library.",
@@ -694,8 +712,13 @@
     "wizard.step.done": "Done",
     "wizard.step.library": "Find your library",
     "wizard.step.snapshot": "Safety snapshot",
+    "wizard.step.updates": "Updates",
     "wizard.step.welcome": "Welcome",
     "wizard.stepOf": "Step {index} of {count}",
+    "wizard.updatesBody": "Once a day, the app can ask GitHub whether a newer version is out. GitHub sees your IP address and this app's version. Nothing about your library is sent. Checking stays off unless you turn it on, and you can change it in Settings.",
+    "wizard.updatesFailed": "The choice could not be saved. Try again.",
+    "wizard.updatesNo": "No, don't check",
+    "wizard.updatesYes": "Yes, check",
     "wizard.useFolder": "Use this folder",
     "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
     "wizard.yes": "Yes, share",
@@ -1418,6 +1441,9 @@
     "settings.rerunSetup": "Repetir la configuración",
     "settings.share": "Compartir estadísticas de uso anónimas e informes de errores",
     "settings.title": "Ajustes",
+    "settings.updates": "Buscar en GitHub una versión más nueva una vez al día",
+    "settings.updatesFailed": "No se pudo guardar la opción de actualizaciones.",
+    "settings.updatesPrereleases": "Incluir versiones de prueba (beta y candidatas)",
     "sharing.canSend": "Se pueden enviar recuentos anónimos e informes de errores.",
     "sharing.loadFailed": "No se pudieron cargar los ajustes de privacidad.",
     "sharing.loadFailedOff": "No se pudieron cargar los ajustes de privacidad. No se envía nada.",
@@ -1504,11 +1530,25 @@
     "tooltip.gigNext": "Pasa al siguiente paso.",
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
+    "tooltip.updateDismiss": "Ocultar hasta que la app se abra de nuevo.",
+    "tooltip.updateDownload": "Abrir en el navegador la página de esta versión en GitHub.",
+    "tooltip.updatePrereleases": "Avisar también de versiones beta y candidatas.",
+    "tooltip.updateSkip": "No volver a avisar de esta versión.",
+    "tooltip.updateToggle": "Preguntar a GitHub una vez al día si hay una versión más nueva.",
     "tooltip.viewGig": "Comprueba la biblioteca antes de un bolo. Solo lectura.",
+    "tooltip.wizardUpdatesNo": "No buscar versiones nuevas en GitHub.",
+    "tooltip.wizardUpdatesYes": "Buscar en GitHub una versión nueva una vez al día.",
     "track.missingBadge": "no encontrada",
     "track.numbered": "Pista {id}",
     "track.stemsBadge": "stems",
     "track.untitled": "Sin título",
+    "update.available": "Ya está la versión {version}. Tienes la {current}.",
+    "update.availableTest": "Ya está la versión de prueba {version}. Tienes la {current}.",
+    "update.dismiss": "Ahora no",
+    "update.download": "Descargar",
+    "update.label": "Actualización disponible",
+    "update.openFailed": "No se pudo abrir la página de la versión. Está en GitHub, en Releases.",
+    "update.skip": "Omitir esta versión",
     "version.app": "Versión de la app",
     "version.copied": "Copiada",
     "version.copyFailed": "No se pudo copiar la versión.",
@@ -1544,6 +1584,7 @@
     "wizard.heading.consent": "¿Compartir estadísticas de uso anónimas e informes de errores?",
     "wizard.heading.library": "Encuentra tu biblioteca",
     "wizard.heading.snapshot": "Instantánea de seguridad",
+    "wizard.heading.updates": "¿Buscar versiones nuevas?",
     "wizard.heading.welcome": "Mira tu biblioteca de Serato",
     "wizard.lookFailed": "No se pudo buscar tu biblioteca.",
     "wizard.looking": "Buscando tu biblioteca de Serato.",
@@ -1560,8 +1601,13 @@
     "wizard.step.done": "Listo",
     "wizard.step.library": "Encuentra tu biblioteca",
     "wizard.step.snapshot": "Instantánea de seguridad",
+    "wizard.step.updates": "Actualizaciones",
     "wizard.step.welcome": "Bienvenida",
     "wizard.stepOf": "Paso {index} de {count}",
+    "wizard.updatesBody": "Una vez al día, la app puede preguntar a GitHub si hay una versión más nueva. GitHub ve tu dirección IP y la versión de esta app. No se envía nada de tu biblioteca. La búsqueda queda desactivada salvo que la actives, y puedes cambiarlo en Ajustes.",
+    "wizard.updatesFailed": "No se pudo guardar la opción. Inténtalo de nuevo.",
+    "wizard.updatesNo": "No, no buscar",
+    "wizard.updatesYes": "Sí, buscar",
     "wizard.useFolder": "Usar esta carpeta",
     "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
     "wizard.yes": "Sí, compartir",
@@ -2281,6 +2327,13 @@
     wizardFolderClose: spec("tooltip.wizardFolderClose"),
     wizardNo: spec("tooltip.wizardNo"),
     wizardYes: spec("tooltip.wizardYes"),
+    wizardUpdatesNo: spec("tooltip.wizardUpdatesNo"),
+    wizardUpdatesYes: spec("tooltip.wizardUpdatesYes"),
+    updateToggle: spec("tooltip.updateToggle"),
+    updatePrereleases: spec("tooltip.updatePrereleases"),
+    updateDownload: spec("tooltip.updateDownload"),
+    updateSkip: spec("tooltip.updateSkip"),
+    updateDismiss: spec("tooltip.updateDismiss"),
     wizardBack: spec("tooltip.wizardBack"),
     wizardCancel: spec("tooltip.wizardCancel"),
     wizardSecondary: spec("tooltip.wizardSecondary"),
@@ -2453,6 +2506,13 @@
       "wizard-folder-close": tips.wizardFolderClose,
       "wizard-no": tips.wizardNo,
       "wizard-yes": tips.wizardYes,
+      "wizard-updates-no": tips.wizardUpdatesNo,
+      "wizard-updates-yes": tips.wizardUpdatesYes,
+      "update-toggle": tips.updateToggle,
+      "update-prereleases": tips.updatePrereleases,
+      "update-download": tips.updateDownload,
+      "update-skip": tips.updateSkip,
+      "update-dismiss": tips.updateDismiss,
       "wizard-back": tips.wizardBack,
       "wizard-cancel": tips.wizardCancel,
       "wizard-secondary": tips.wizardSecondary,
@@ -2812,7 +2872,7 @@
     });
   }
   async function loadGigCheck(keepStep = false) {
-    const token = ++state.gigToken;
+    const token2 = ++state.gigToken;
     if (!keepStep) stepIndex = 0;
     beginBusy();
     let settle = "none";
@@ -2821,9 +2881,9 @@
       const response = await fetch(
         `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
       );
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       const payload = await readJSON(response).catch(() => null);
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       if (!response.ok || payload === null) {
         failStatus(serverMessage(payload, t("gig.unreadable")));
         settle = "retry";
@@ -2835,11 +2895,11 @@
       renderGigReport(payload);
       settle = "heading";
     } catch {
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       failStatus(t("gig.unreachable"));
       settle = "retry";
     } finally {
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       endBusy();
       if (settle === "retry") el("gig-refresh").focus();
       if (settle === "heading") focusHeading();
@@ -3189,8 +3249,8 @@
     const status = el("operations-status");
     const list = el("operations-list");
     list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest2 = state.operations[state.operations.length - 1];
-    const failed = latest2?.result === "rollback_failed";
+    const latest3 = state.operations[state.operations.length - 1];
+    const failed = latest3?.result === "rollback_failed";
     alert.hidden = !failed;
     alert.textContent = failed ? t("operations.rollbackFailed") : "";
     list.replaceChildren();
@@ -4777,18 +4837,18 @@
     return true;
   }
   function loadCues(id) {
-    const token = ++cueToken;
+    const token2 = ++cueToken;
     cues = [];
     waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
     void readCues(id).then(
       (found) => {
-        if (token !== cueToken || trackId !== id) return;
+        if (token2 !== cueToken || trackId !== id) return;
         cues = found.cues;
         waveform?.setMarkers(id, found);
         emit();
       },
       () => {
-        if (token !== cueToken || trackId !== id) return;
+        if (token2 !== cueToken || trackId !== id) return;
         cues = [];
         waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
         emit();
@@ -5474,12 +5534,12 @@
     area.value = JSON.stringify(crate.rules, null, 2);
     area.disabled = !state.writable;
     area.setAttribute("aria-label", t("rules.label"));
-    const save2 = buttonEl(tips.saveRules);
-    save2.className = "text-button";
-    save2.textContent = t("rules.save");
-    save2.disabled = !state.writable;
-    save2.addEventListener("click", () => saveRules(crate.id, area.value));
-    editor.append(area, save2);
+    const save3 = buttonEl(tips.saveRules);
+    save3.className = "text-button";
+    save3.textContent = t("rules.save");
+    save3.disabled = !state.writable;
+    save3.addEventListener("click", () => saveRules(crate.id, area.value));
+    editor.append(area, save3);
     const bar = document.querySelector(".browser-bar");
     bar.after(editor);
     bar.after(line);
@@ -5644,7 +5704,7 @@
     state.selectedId = id;
     syncMergeButton();
     paintRows();
-    const token = ++state.request;
+    const token2 = ++state.request;
     const pending = document.createElement("p");
     pending.className = "detail-empty";
     pending.textContent = t("detail.reading");
@@ -5653,11 +5713,11 @@
       const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
       const payload = await readJSONOr(response, {});
       if (!response.ok) throw new Error(serverMessage(payload, t("detail.readFailed", { status: String(response.status) })));
-      if (token !== state.request) return;
+      if (token2 !== state.request) return;
       if (payload.serato) applyStatus(payload.serato);
       renderDetail(payload);
     } catch (error2) {
-      if (token !== state.request) return;
+      if (token2 !== state.request) return;
       const failure = document.createElement("p");
       failure.className = "detail-error";
       failure.textContent = failureOf(error2).message;
@@ -5842,11 +5902,11 @@
     lockInput.checked = Boolean(edit.is_beatgrid_locked);
     lock.append(lockInput, document.createTextNode(t("field.beatgridLocked")));
     form.append(lock);
-    const save2 = buttonEl(tips.saveTrack);
-    save2.type = "submit";
-    save2.className = "text-button wide";
-    save2.textContent = t("detail.saveTrack");
-    form.append(save2);
+    const save3 = buttonEl(tips.saveTrack);
+    save3.type = "submit";
+    save3.className = "text-button wide";
+    save3.textContent = t("detail.saveTrack");
+    form.append(save3);
     for (const control of form.querySelectorAll("input, select, textarea, button")) control.disabled = !writable;
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -6059,17 +6119,17 @@
     return section;
   }
   async function loadRelated(track, section, writable, query) {
-    const token = ++relatedRequest;
+    const token2 = ++relatedRequest;
     const path = track.resolved_path || track.edit?.portable_id || "";
     const params = new URLSearchParams({ path, space: state.space });
     try {
       const response = await fetch(`/api/related?${params}`);
       const payload = await readJSONOr(response, {});
-      if (token !== relatedRequest || !section.isConnected) return;
+      if (token2 !== relatedRequest || !section.isConnected) return;
       if (!response.ok) throw new Error(serverMessage(payload, t("related.loadFailed")));
       renderRelated(track, section, writable, payload, query);
     } catch (error2) {
-      if (token !== relatedRequest || !section.isConnected) return;
+      if (token2 !== relatedRequest || !section.isConnected) return;
       section.setAttribute("aria-busy", "false");
       const status = section.querySelector("[role=status]");
       if (status) status.textContent = failureOf(error2).message;
@@ -6233,11 +6293,11 @@
     mutual.type = "checkbox";
     mutual.checked = true;
     mutualLabel.append(mutual, document.createTextNode(t("related.twoWayLink")));
-    const save2 = buttonEl(tips.saveLink);
-    save2.className = "text-button";
-    save2.textContent = t("related.saveLink");
-    save2.addEventListener("click", () => {
-      save2.disabled = true;
+    const save3 = buttonEl(tips.saveLink);
+    save3.className = "text-button";
+    save3.textContent = t("related.saveLink");
+    save3.addEventListener("click", () => {
+      save3.disabled = true;
       saveRelated(track, section, {
         action: "add",
         asset: track.id,
@@ -6248,7 +6308,7 @@
         space: state.space
       }, query);
     });
-    form.append(chosen, noteLabel, ratingLabel, mutualLabel, save2);
+    form.append(chosen, noteLabel, ratingLabel, mutualLabel, save3);
   }
   function relatedSuggestList(track, section, suggested) {
     const list = document.createElement("ul");
@@ -6263,12 +6323,12 @@
       reasons.className = "related-meta";
       reasons.textContent = Array.isArray(item2.reasons) ? item2.reasons.join(" · ") : "";
       main.append(name, reasons);
-      const save2 = buttonEl(saveSuggestion(item2.title || "Untitled"));
-      save2.className = "text-button";
-      save2.textContent = t("common.save");
-      save2.setAttribute("aria-label", t("related.saveLinkTo", { name: item2.title || t("track.untitled") }));
-      save2.addEventListener("click", () => {
-        save2.disabled = true;
+      const save3 = buttonEl(saveSuggestion(item2.title || "Untitled"));
+      save3.className = "text-button";
+      save3.textContent = t("common.save");
+      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item2.title || t("track.untitled") }));
+      save3.addEventListener("click", () => {
+        save3.disabled = true;
         saveRelated(track, section, {
           action: "add",
           asset: track.id,
@@ -6279,7 +6339,7 @@
           space: state.space
         }, "");
       });
-      row.append(main, save2);
+      row.append(main, save3);
       list.append(row);
     }
     return list;
@@ -6798,7 +6858,7 @@
     const elsewhere = options.elsewhere === true;
     const refresh = options.refresh === true;
     const atRoots = path === "" && !elsewhere;
-    const token = ++filesRequest;
+    const token2 = ++filesRequest;
     state.filesLoading = true;
     state.filesError = "";
     if (!options.keepMessage) state.filesMessage = "";
@@ -6816,7 +6876,7 @@
     renderFiles();
     if (refresh || atRoots) {
       const rootsPayload = await fetchLibraryRoots(refresh);
-      if (token !== filesRequest) return;
+      if (token2 !== filesRequest) return;
       state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
     }
     if (atRoots) {
@@ -6839,7 +6899,7 @@
     const query = params.size ? `?${params.toString()}` : "";
     const response = await fetch(`/api/files${query}`);
     const payload = await readJSONOr(response, {});
-    if (token !== filesRequest) return;
+    if (token2 !== filesRequest) return;
     if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
     state.filesPath = payload.path || "";
     state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
@@ -6855,7 +6915,7 @@
     renderFiles();
   }
   async function searchFiles(query) {
-    const token = ++filesRequest;
+    const token2 = ++filesRequest;
     const scope = state.filesAtRoots ? "" : state.filesPath;
     const elsewhere = state.filesElsewhere && !state.filesAtRoots;
     state.filesLoading = true;
@@ -6869,7 +6929,7 @@
     if (elsewhere) params.set("elsewhere", "1");
     const response = await fetch(`/api/files?${params.toString()}`);
     const payload = await readJSONOr(response, {});
-    if (token !== filesRequest) return;
+    if (token2 !== filesRequest) return;
     if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
     const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
     state.filesEntries = entries;
@@ -7476,7 +7536,7 @@
   async function saveRekordboxExport() {
     const key = el("rekordbox-key").value;
     const notation = key === "camelot" || key === "classical" ? key : "asis";
-    const token = ++rekordboxToken;
+    const token2 = ++rekordboxToken;
     try {
       const payload = await postJSON("/api/settings", {
         rekordbox: {
@@ -7485,7 +7545,7 @@
           key_notation: notation
         }
       });
-      if (token === rekordboxToken) applyRekordboxExport(payload);
+      if (token2 === rekordboxToken) applyRekordboxExport(payload);
     } catch {
     }
   }
@@ -7598,7 +7658,7 @@
   }
   async function refreshMergePreview() {
     const keepId = selectedMergeKeepId();
-    const token = ++mergeToken;
+    const token2 = ++mergeToken;
     mergeLoading = false;
     mergePreview = null;
     el("merge-status").textContent = "";
@@ -7611,7 +7671,7 @@
         keep_id: keepId,
         preview: true
       });
-      if (token !== mergeToken) return;
+      if (token2 !== mergeToken) return;
       mergePreview = preview;
       renderMergePreview(preview);
       if (preview.writable === false) {
@@ -7619,7 +7679,7 @@
       }
       syncTrashChoice();
     } catch (error2) {
-      if (token !== mergeToken) return;
+      if (token2 !== mergeToken) return;
       mergePreview = null;
       el("merge-preview").replaceChildren();
       const failed = document.createElement("p");
@@ -7799,14 +7859,14 @@
     return true;
   }
   async function loadPrivacy() {
-    const token = rekordboxToken;
+    const token2 = rekordboxToken;
     const response = await fetch("/api/settings");
     const payload = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(payload, t("sharing.loadFailed")));
     applyPrivacy(payload);
     applyLanguage(payload);
     applyLayout(payload);
-    if (token === rekordboxToken) applyRekordboxExport(payload);
+    if (token2 === rekordboxToken) applyRekordboxExport(payload);
     if (!state.wizardComplete && openWizard(false, el("search"))) return;
     if (payload.needs_consent_prompt) showConsent();
   }
@@ -8324,12 +8384,12 @@
     }, QUICK_OPEN_MS);
   }
   async function loadFiles(query, tracks) {
-    const token = ++requestToken;
+    const token2 = ++requestToken;
     phase = "loading";
     try {
       const response = await fetch(`/api/files?q=${encodeURIComponent(query)}`);
       const payload = await readJSONOr(response, {});
-      if (token !== requestToken) return;
+      if (token2 !== requestToken) return;
       if (!response.ok) throw new Error(payload.error || t("quickOpen.fileError"));
       const files = fileHits(payload);
       hits = mergeHits(tracks, files);
@@ -8338,7 +8398,7 @@
       if (active >= hits.length) active = Math.max(0, hits.length - 1);
       paint();
     } catch {
-      if (token !== requestToken) return;
+      if (token2 !== requestToken) return;
       hits = tracks;
       phase = "error";
       paint();
@@ -8937,6 +8997,126 @@
     if (node && node.isConnected) node.focus();
   }
 
+  // src/update.ts
+  var UPDATE_CHOICE_EVENT = "serato-update-choice";
+  var latest2 = null;
+  var dismissed = false;
+  var token = 0;
+  var wired2 = false;
+  function parseUpdateStatus(value) {
+    if (typeof value !== "object" || value === null || Array.isArray(value)) return null;
+    const body = value;
+    const enabled = body.enabled;
+    if (enabled !== null && typeof enabled !== "boolean") return null;
+    if (typeof body.update !== "boolean" || typeof body.current !== "string") return null;
+    let release = null;
+    const raw = body.latest;
+    if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
+      const item2 = raw;
+      if (typeof item2.version === "string" && typeof item2.url === "string") {
+        release = { version: item2.version, url: item2.url, prerelease: item2.prerelease === true };
+      }
+    }
+    return {
+      enabled,
+      include_prereleases: body.include_prereleases === true,
+      current: body.current,
+      update: body.update && release !== null,
+      latest: release
+    };
+  }
+  async function loadUpdate() {
+    const mine = ++token;
+    try {
+      const response = await fetch("/api/update");
+      const body = response.ok ? await response.json() : null;
+      if (mine !== token) return;
+      latest2 = parseUpdateStatus(body);
+    } catch {
+      if (mine !== token) return;
+      latest2 = null;
+    }
+    paintUpdate();
+  }
+  function paintUpdate() {
+    const status = latest2;
+    const toggle = el("update-toggle");
+    const pre = el("update-prereleases");
+    toggle.checked = status?.enabled === true;
+    pre.checked = status?.include_prereleases === true;
+    pre.disabled = status?.enabled !== true;
+    const banner = el("update-banner");
+    const release = status?.latest ?? null;
+    if (!status || status.enabled !== true || !status.update || !release || dismissed) {
+      banner.hidden = true;
+      return;
+    }
+    const key = release.prerelease ? "update.availableTest" : "update.available";
+    el("update-text").textContent = t(key, { version: release.version, current: status.current });
+    banner.hidden = false;
+  }
+  function repaintUpdate() {
+    paintUpdate();
+  }
+  function wireUpdate() {
+    if (wired2) return;
+    wired2 = true;
+    el("update-download").addEventListener("click", () => {
+      void download();
+    });
+    el("update-skip").addEventListener("click", () => {
+      void skip();
+    });
+    el("update-dismiss").addEventListener("click", () => {
+      dismissed = true;
+      paintUpdate();
+    });
+    el("update-toggle").addEventListener("change", () => {
+      void save2({ enabled: el("update-toggle").checked });
+    });
+    el("update-prereleases").addEventListener("change", () => {
+      void save2({ include_prereleases: el("update-prereleases").checked });
+    });
+    window.addEventListener(UPDATE_CHOICE_EVENT, () => {
+      void loadUpdate();
+    });
+  }
+  async function save2(choice) {
+    const toggle = el("update-toggle");
+    const pre = el("update-prereleases");
+    toggle.disabled = true;
+    pre.disabled = true;
+    el("update-status").textContent = "";
+    try {
+      await postJSON("/api/update", choice);
+      toggle.disabled = false;
+      await loadUpdate();
+    } catch {
+      toggle.disabled = false;
+      el("update-status").textContent = t("settings.updatesFailed");
+      paintUpdate();
+    }
+  }
+  async function download() {
+    try {
+      const reply = await postJSON("/api/update", { open: true });
+      if (reply.opened !== true) el("update-text").textContent = t("update.openFailed");
+    } catch {
+      el("update-text").textContent = t("update.openFailed");
+    }
+  }
+  async function skip() {
+    const release = latest2?.latest;
+    if (!release) return;
+    try {
+      await postJSON("/api/update", { skip: release.version });
+      await loadUpdate();
+    } catch {
+      dismissed = true;
+      paintUpdate();
+    }
+  }
+
   // src/version.ts
   var copyText = "";
   var painted;
@@ -9028,6 +9208,7 @@
     repaintQuickOpen();
     repaintPlayer();
     repaintVersion();
+    repaintUpdate();
     refreshTooltips();
   }
   var stop = null;
@@ -9081,6 +9262,8 @@
   wireLayout();
   wireVersion();
   void loadVersion();
+  wireUpdate();
+  void loadUpdate();
   bindLibraryReload(loadLibrary);
   loadLibrary().catch(showFailure);
 })();
