@@ -1,0 +1,491 @@
+"""Restored crate files survive a Serato 4/5 launch.
+
+Serato 4 and 5 rebuild the crate folder from ``master.sqlite`` and delete a
+``.crate`` or ``.scrate`` the database has never heard of. These tests fake
+that launch. They use synthetic databases and the spec-derived crate fixtures.
+They do not open a live library.
+"""
+
+from __future__ import annotations
+
+import os
+import shutil
+import unittest
+from pathlib import Path
+
+import library
+import snapshots
+from snapshots import DriveSpec, SnapshotBlocked, SnapshotStore
+from tests.fixture import TempLibrary, open_database
+from tests.test_snapshots import _crate, _drive
+
+FIXTURES = Path(__file__).resolve().parent / "fixtures"
+
+
+def simulate_serato_launch(master: Path, roots: list[Path]) -> list[str]:
+    """Delete crate files Serato 4/5 would remove on launch.
+
+    The database is the source of truth. A crate file it has never heard of
+    is removed. Shortcuts are not removed. This is the launch the restore
+    has to survive.
+
+    Args:
+        master: ``master.sqlite``.
+        roots: ``_Serato_`` directories that are present.
+
+    Returns:
+        Basenames that were removed.
+    """
+    removed: list[str] = []
+    for root in roots:
+        for path in snapshots.unknown_crate_files(master, root):
+            path.unlink()
+            removed.append(path.name)
+    return removed
+
+
+def _members(master: Path, filename: str) -> list[int]:
+    """Return asset ids in crate order for one export filename.
+
+    Args:
+        master: Database to read.
+        filename: Exact ``dj_container_metadata.filename``.
+
+    Returns:
+        Asset ids. An unknown filename returns an empty list.
+    """
+    with open_database(master) as conn:
+        rows = conn.execute(
+            """
+            SELECT ca.asset_id
+            FROM dj_container_metadata m
+            JOIN location_container lc ON lc.container_id = m.container_id
+            JOIN container_asset ca ON ca.location_container_id = lc.id
+            WHERE m.filename = ?
+            ORDER BY ca.list_order, ca.asset_id
+            """,
+            (filename,),
+        ).fetchall()
+    return [int(row[0]) for row in rows]
+
+
+def _filenames(master: Path) -> list[str]:
+    """Return stored crate export filenames.
+
+    Args:
+        master: Database to read.
+
+    Returns:
+        Filenames in container id order.
+    """
+    with open_database(master) as conn:
+        rows = conn.execute(
+            "SELECT filename FROM dj_container_metadata ORDER BY container_id"
+        ).fetchall()
+    return [str(row[0]) for row in rows if row[0]]
+
+
+def _add_asset(master: Path, asset_id: int, portable: str, file_name: str) -> None:
+    """Insert one track into the Serato Library space.
+
+    Args:
+        master: Database to write.
+        asset_id: New asset id. Must not already be used.
+        portable: Stored path.
+        file_name: File name Serato shows.
+    """
+    with open_database(master) as conn:
+        conn.execute(
+            """
+            INSERT INTO asset
+                (id, name, artist, portable_id, file_name, location_id, is_missing)
+            VALUES (?, ?, 'Artist', ?, ?, 1, 0)
+            """,
+            (asset_id, file_name, portable, file_name),
+        )
+        conn.execute(
+            "INSERT INTO space_asset (id, asset_id, space_id) VALUES (?, ?, 1)",
+            (asset_id, asset_id),
+        )
+
+
+def _root_database(path: Path) -> None:
+    """Create a location database the crate mirror can update.
+
+    Args:
+        path: ``root.sqlite`` beside the master file.
+    """
+    with open_database(path) as conn:
+        conn.executescript(
+            """
+            CREATE TABLE serato (revision INTEGER);
+            CREATE TABLE space (id INTEGER PRIMARY KEY, name TEXT);
+            CREATE TABLE container (
+                id INTEGER PRIMARY KEY,
+                revision INTEGER,
+                parent_id INTEGER,
+                name TEXT,
+                type INTEGER,
+                list_order INTEGER,
+                space_id INTEGER,
+                time_added INTEGER,
+                expanded INTEGER,
+                portable_id TEXT,
+                color INTEGER
+            );
+            CREATE TABLE dj_container_metadata (
+                container_id INTEGER PRIMARY KEY,
+                revision INTEGER,
+                export_state INTEGER,
+                filename TEXT
+            );
+            INSERT INTO serato (revision) VALUES (1);
+            INSERT INTO space (id, name) VALUES (1, 'Serato Library');
+            INSERT INTO container
+                (id, parent_id, name, type, list_order, space_id, time_added, expanded, portable_id)
+            VALUES (1, NULL, 'Library', 0, 0, 1, 1, 0, '');
+            """
+        )
+
+
+class CrateRestoreTests(unittest.TestCase):
+    """A restore leaves crate files that a Serato 4/5 launch will keep."""
+
+    def test_launch_removes_a_crate_the_database_has_never_heard_of(self) -> None:
+        """Delete an unregistered crate file and keep one the database names.
+
+        A Windows path in ``dj_container_metadata.filename`` still counts as
+        the basename. The simulation is not an empty check: the unknown file
+        has to disappear.
+
+        Returns:
+            None. The test fails if the unknown file remains or the known
+            file is removed.
+        """
+        with TempLibrary() as temp:
+            music, serato, _store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            known = sub / "House.crate"
+            unknown = sub / "Ghost.crate"
+            known.write_bytes(_crate(["Music/same-a.mp3"]))
+            unknown.write_bytes(_crate(["Music/same-b.mp3"]))
+            with open_database(temp.db) as conn:
+                conn.execute(
+                    """
+                    INSERT INTO container
+                        (id, parent_id, name, type, list_order, space_id, time_added, expanded, portable_id)
+                    VALUES (9, 1, 'House', 1, 1, 1, 1, 0, '')
+                    """
+                )
+                conn.execute(
+                    """
+                    INSERT INTO dj_container_metadata (container_id, revision, export_state, filename)
+                    VALUES (9, 1, 0, ?)
+                    """,
+                    ("Subcrates\\House.crate",),
+                )
+            removed = simulate_serato_launch(temp.db, [serato])
+            self.assertEqual(removed, ["Ghost.crate"])
+            self.assertTrue(known.is_file())
+            self.assertFalse(unknown.exists())
+            self.assertTrue(music.is_dir())
+
+    def test_restored_serato_4_and_5_crates_survive_launch(self) -> None:
+        """Register fixture crates and keep them when launch reconciliation runs.
+
+        Serato 4's nested ``House%%Café.crate`` and Serato 5's
+        ``House%%深夜.crate`` are the fixture files. A Windows path and a
+        macOS path match the library tracks. An empty crate, a smart crate,
+        and a second copy of the same track are included. A file named
+        ``.crate`` has no leaf and is the one launch still removes. The
+        location database receives the same filenames. The plan lists the
+        crates and does not write them.
+
+        Returns:
+            None. The test fails if launch deletes a registered crate, a
+            track is missing, or a second container is created for one name.
+        """
+        with TempLibrary() as temp:
+            _root_database(temp.db.parent / "root.sqlite")
+            _add_asset(temp.db, 3, "Music/café-loop.flac", "café-loop.flac")
+            _add_asset(temp.db, 4, "Music/深夜-loop.flac", "深夜-loop.flac")
+            _add_asset(temp.db, 5, "../secret.mp3", "secret.mp3")
+            _add_asset(temp.db, 6, "Music/clash-a.mp3", "clash.mp3")
+            _add_asset(temp.db, 7, "Music/clash-b.mp3", "clash.mp3")
+            music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            shutil.copy(FIXTURES / "serato4" / "_Serato_" / "Subcrates" / "House%%Café.crate", sub)
+            shutil.copy(FIXTURES / "serato4" / "_Serato_" / "Subcrates" / "Empty.crate", sub)
+            shutil.copy(FIXTURES / "serato5" / "_Serato_" / "Subcrates" / "House%%深夜.crate", sub)
+            (sub / "Paths.crate").write_bytes(_crate([
+                "C:\\Users\\dj\\Music\\same-a.mp3",
+                "/Users/dj/Music/same-b.mp3",
+                "Music/same-a.mp3",
+                "../secret.mp3",
+                "clash.mp3",
+            ]))
+            smart = serato / "SmartCrates"
+            smart.mkdir()
+            (smart / "Friday.scrate").write_bytes(_crate(["Music/same-a.mp3"]))
+            nameless = sub / ".crate"
+            nameless.write_bytes(_crate(["Music/same-a.mp3"]))
+            saved = store.take("manual", "Crates the database has not heard of.")
+            plan = store.plan(saved["id"])
+            self.assertTrue(plan["dry_run"])
+            registered = plan["crates_registered"]
+            self.assertIsInstance(registered, list)
+            assert isinstance(registered, list)
+            paths = {str(item["path"]) for item in registered}
+            self.assertIn("Subcrates/House%%Café.crate", paths)
+            self.assertIn("Subcrates/House%%深夜.crate", paths)
+            self.assertIn("Subcrates/Empty.crate", paths)
+            self.assertIn("Subcrates/Paths.crate", paths)
+            self.assertIn("SmartCrates/Friday.scrate", paths)
+            self.assertNotIn("Subcrates/.crate", paths)
+            with open_database(temp.db) as conn:
+                before = conn.execute("SELECT COUNT(*) FROM container").fetchone()[0]
+            self.assertEqual(before, 2)
+            for path in (sub / "House%%Café.crate", sub / "Empty.crate", sub / "Paths.crate", nameless):
+                path.unlink()
+            (sub / "House%%深夜.crate").unlink()
+            (smart / "Friday.scrate").unlink()
+            result = store.restore(saved["id"])
+            self.assertEqual(result["restored"], saved["id"])
+            self.assertIn("House%%Café.crate", _filenames(temp.db))
+            self.assertIn("House%%深夜.crate", _filenames(temp.db))
+            self.assertIn("Empty.crate", _filenames(temp.db))
+            self.assertIn("Paths.crate", _filenames(temp.db))
+            self.assertIn("Friday.scrate", _filenames(temp.db))
+            self.assertNotIn(".crate", _filenames(temp.db))
+            self.assertEqual(_members(temp.db, "Paths.crate"), [1, 2])
+            self.assertEqual(_members(temp.db, "House%%Café.crate"), [3])
+            self.assertEqual(_members(temp.db, "House%%深夜.crate"), [4])
+            self.assertEqual(_members(temp.db, "Empty.crate"), [])
+            self.assertEqual(_members(temp.db, "Friday.scrate"), [])
+            with open_database(temp.db) as conn:
+                houses = conn.execute(
+                    "SELECT COUNT(*) FROM container WHERE name = 'House'"
+                ).fetchone()[0]
+                friday = conn.execute(
+                    "SELECT type FROM container WHERE name = 'Friday'"
+                ).fetchone()
+            self.assertEqual(houses, 1)
+            self.assertIsNotNone(friday)
+            assert friday is not None
+            self.assertEqual(int(friday[0]), 2)
+            root_names = _filenames(temp.db.parent / "root.sqlite")
+            for name in ("House%%Café.crate", "House%%深夜.crate", "Empty.crate", "Paths.crate", "Friday.scrate"):
+                self.assertIn(name, root_names)
+            removed = simulate_serato_launch(temp.db, [serato])
+            self.assertEqual(removed, [".crate"])
+            self.assertTrue((sub / "House%%Café.crate").is_file())
+            self.assertTrue((sub / "House%%深夜.crate").is_file())
+            self.assertTrue((sub / "Empty.crate").is_file())
+            self.assertTrue((sub / "Paths.crate").is_file())
+            self.assertTrue((smart / "Friday.scrate").is_file())
+            self.assertFalse(nameless.exists())
+            self.assertTrue(music.is_dir())
+
+    def test_a_known_crate_is_not_duplicated(self) -> None:
+        """Keep one container when the snapshot database already heard the name.
+
+        The crate file's track is still added. Launch keeps the file.
+
+        Returns:
+            None. The test fails if a second House row appears or the track
+            is not a member.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            created = library.crate_action({"action": "create", "name": "House"})
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            crate = sub / "House.crate"
+            crate.write_bytes(_crate(["Music/same-a.mp3"]))
+            saved = store.take("manual", "House is already in the database.")
+            library.crate_action({"action": "delete", "id": created["id"]})
+            crate.unlink()
+            store.restore(saved["id"])
+            with open_database(temp.db) as conn:
+                count = conn.execute(
+                    "SELECT COUNT(*) FROM container WHERE name = 'House'"
+                ).fetchone()[0]
+            self.assertEqual(count, 1)
+            self.assertEqual(_members(temp.db, "House.crate"), [1])
+            self.assertEqual(simulate_serato_launch(temp.db, [serato]), [])
+            self.assertTrue(crate.is_file())
+
+    def test_an_unplugged_drive_is_registered_without_writing_the_file(self) -> None:
+        """Register a crate from the snapshot when its drive is not present.
+
+        The file is not written through the missing drive. Putting the same
+        bytes back, as the drive would when it returns, survives launch.
+
+        Returns:
+            None. The test fails if the file is written while the drive is
+            absent, or if launch then deletes it.
+        """
+        with TempLibrary() as temp:
+            usb_root = temp.root / "usb"
+            usb_serato = usb_root / "_Serato_"
+            usb_sub = usb_serato / "Subcrates"
+            usb_sub.mkdir(parents=True)
+            gig = FIXTURES / "serato4" / "drives" / "UNMOUNTED" / "_Serato_" / "Subcrates" / "Gig.crate"
+            shutil.copy(gig, usb_sub / "Gig.crate")
+            _music, serato, store = _drive(temp.root, temp.db)
+            (serato / "Subcrates").mkdir()
+            store.drives = [
+                DriveSpec("tour", "Tour", serato, _music, "external", True),
+                DriveSpec("usb", "USB", usb_serato, usb_root, "external", True),
+            ]
+            saved = store.take("manual", "USB crate.")
+            store.drives = [
+                DriveSpec("tour", "Tour", serato, _music, "external", True),
+                DriveSpec("usb", "USB", usb_serato, usb_root, "external", False),
+            ]
+            (usb_sub / "Gig.crate").unlink()
+            store.restore(saved["id"])
+            self.assertFalse((usb_sub / "Gig.crate").exists())
+            self.assertIn("Gig.crate", _filenames(temp.db))
+            shutil.copy(gig, usb_sub / "Gig.crate")
+            self.assertEqual(simulate_serato_launch(temp.db, [usb_serato]), [])
+            self.assertTrue((usb_sub / "Gig.crate").is_file())
+
+    def test_a_shortcut_crate_is_not_followed_or_removed(self) -> None:
+        """Leave a crate shortcut in place and do not read its target.
+
+        The target lives outside ``_Serato_``. Its bytes stay put, and its
+        track is not added to a crate named for the shortcut.
+
+        Returns:
+            None. The test fails if the shortcut is removed or its target
+            changes.
+        """
+        with TempLibrary() as temp:
+            _add_asset(temp.db, 3, "Music/leaked.mp3", "leaked.mp3")
+            _music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            house = sub / "House.crate"
+            house.write_bytes(_crate(["Music/same-a.mp3"]))
+            outside = temp.root / "outside"
+            outside.mkdir()
+            target = outside / "Outside.crate"
+            target.write_bytes(_crate(["Music/leaked.mp3"]))
+            link = sub / "Outside.crate"
+            try:
+                os.symlink(target, link)
+            except OSError:
+                self.skipTest("symlinks are not available")
+            saved = store.take("manual", "A real crate and a shortcut.")
+            original = target.read_bytes()
+            house.unlink()
+            store.restore(saved["id"])
+            self.assertTrue(house.is_file())
+            self.assertTrue(link.is_symlink())
+            self.assertEqual(target.read_bytes(), original)
+            with open_database(temp.db) as conn:
+                outside_row = conn.execute(
+                    "SELECT id FROM container WHERE name = 'Outside'"
+                ).fetchone()
+            self.assertIsNone(outside_row)
+            self.assertNotIn(3, _members(temp.db, "House.crate"))
+            self.assertEqual(simulate_serato_launch(temp.db, [serato]), [])
+            self.assertTrue(link.is_symlink())
+
+    def test_restore_refuses_to_register_crates_while_serato_is_running(self) -> None:
+        """Write no crate row when Serato DJ is running.
+
+        Returns:
+            None. The test fails if a container or a filename is inserted.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            (sub / "House.crate").write_bytes(_crate(["Music/same-a.mp3"]))
+            saved = store.take("manual", "While Serato is quit.")
+            (sub / "House.crate").unlink()
+            store.serato_running = lambda: True
+            with self.assertRaises(SnapshotBlocked):
+                store.restore(saved["id"])
+            self.assertEqual(_filenames(temp.db), [])
+            self.assertFalse((sub / "House.crate").exists())
+
+    def test_a_library_with_no_space_rolls_the_restore_back(self) -> None:
+        """Put the library back when a crate file cannot be registered.
+
+        The snapshot database has no Serato Library space. Restore does not
+        leave the crate file in place for Serato to delete, and it does not
+        leave the space missing.
+
+        Returns:
+            None. The test fails if the crate file remains or the space is gone.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            crate = sub / "House.crate"
+            crate.write_bytes(_crate(["Music/same-a.mp3"]))
+            with open_database(temp.db) as conn:
+                conn.execute("DELETE FROM container")
+                conn.execute("DELETE FROM space")
+            saved = store.take("manual", "No space.")
+            with open_database(temp.db) as conn:
+                conn.execute("INSERT INTO space (id, name) VALUES (1, 'Serato Library')")
+                conn.execute(
+                    """
+                    INSERT INTO container
+                        (id, parent_id, name, type, list_order, space_id, time_added, expanded, portable_id)
+                    VALUES (1, NULL, 'Library', 0, 0, 1, 1, 0, '')
+                    """
+                )
+            crate.unlink()
+            with self.assertRaises(snapshots.SnapshotError):
+                store.restore(saved["id"])
+            self.assertFalse(crate.exists())
+            with open_database(temp.db) as conn:
+                space = conn.execute(
+                    "SELECT name FROM space WHERE name = 'Serato Library'"
+                ).fetchone()
+            self.assertIsNotNone(space)
+            self.assertEqual(_filenames(temp.db), [])
+
+    def test_registration_does_not_open_another_snapshot(self) -> None:
+        """Avoid a nested snapshot while a restore could be holding the journal.
+
+        Returns:
+            None. The test fails if ``register_restored_crates`` saves a snapshot.
+        """
+        with TempLibrary() as temp:
+            _music, _serato, store = _drive(temp.root, temp.db)
+            before = [item["id"] for item in store.list_snapshots()]
+            library.register_restored_crates([("House.crate", ["Music/same-a.mp3"])])
+            self.assertEqual([item["id"] for item in store.list_snapshots()], before)
+            self.assertIn("House.crate", _filenames(temp.db))
+            self.assertEqual(_members(temp.db, "House.crate"), [1])
+
+    def test_a_locked_library_is_not_written(self) -> None:
+        """Refuse registration when the lock table says Serato is open.
+
+        Returns:
+            None. The test fails if a crate row is inserted.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                conn.execute(
+                    "INSERT INTO lock (owner_process_id, owner_process_name) VALUES (99, 'Serato DJ Pro')"
+                )
+            with self.assertRaises(library.SeratoOpen):
+                library.register_restored_crates([("House.crate", ["Music/same-a.mp3"])])
+            self.assertEqual(_filenames(temp.db), [])
+            with open_database(temp.db) as conn:
+                count = conn.execute("SELECT COUNT(*) FROM container WHERE name = 'House'").fetchone()[0]
+            self.assertEqual(count, 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

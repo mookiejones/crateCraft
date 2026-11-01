@@ -320,6 +320,7 @@
     "plan.andMore": ", and {count} more",
     "plan.cratesAdded": "Crates added",
     "plan.cratesChanged": "Crates changed",
+    "plan.cratesRegistered": "Crates registered so Serato keeps them",
     "plan.cratesRemoved": "Crates removed",
     "plan.cratesUnavailable": "Crates on an unavailable drive",
     "plan.cueChanges": "Cue changes",
@@ -1048,6 +1049,7 @@
     "plan.andMore": " y {count} más",
     "plan.cratesAdded": "Cajas añadidas",
     "plan.cratesChanged": "Cajas modificadas",
+    "plan.cratesRegistered": "Cajas registradas para que Serato las conserve",
     "plan.cratesRemoved": "Cajas quitadas",
     "plan.cratesUnavailable": "Cajas en una unidad no disponible",
     "plan.cueChanges": "Cambios de cues",
@@ -2586,6 +2588,7 @@
     appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
     appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
     appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
+    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
     appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
     appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
     appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);

@@ -156,7 +156,8 @@ export async function openSnapshotPlan(snapshotId: string) {
  * Fill the restore dialog from a dry-run plan.
  *
  * @param {object} plan Response from action plan. Reads plan.crates,
- *   plan.tracks, plan.cues, plan.grids, plan.dry_run, and plan.restore_blocked.
+ *   plan.tracks, plan.cues, plan.grids, plan.dry_run, plan.restore_blocked,
+ *   and plan.crates_registered.
  * @returns {void}
  */
 let lastPlan: RestorePlan | null = null;
@@ -182,6 +183,7 @@ function paintSnapshotPlan(plan: RestorePlan) {
   appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
   appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
   appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
+  appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
   appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
   appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
   appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);

@@ -317,6 +317,7 @@
   "plan.andMore": ", and {count} more",
   "plan.cratesAdded": "Crates added",
   "plan.cratesChanged": "Crates changed",
+  "plan.cratesRegistered": "Crates registered so Serato keeps them",
   "plan.cratesRemoved": "Crates removed",
   "plan.cratesUnavailable": "Crates on an unavailable drive",
   "plan.cueChanges": "Cue changes",

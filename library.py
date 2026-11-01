@@ -19,7 +19,7 @@ import sys
 import tempfile
 import time
 import uuid
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import closing, contextmanager
 from pathlib import Path
 from typing import cast
@@ -1206,18 +1206,25 @@ def _cleanup_partial_backups(parent: Path) -> None:
             _discard_failed_backup(child, parent)
 
 
-def begin_write() -> sqlite3.Connection:
+def begin_write(*, snapshot: bool = True) -> sqlite3.Connection:
     """Open a write transaction after Serato has quit.
 
     The first call in a process also copies the databases into Library/Backups.
-    Every call first saves a content-addressed snapshot, after Serato 5 has
-    been allowed to proceed.
+    A normal call first saves a content-addressed snapshot, after Serato 5 has
+    been allowed to proceed. Restore passes ``snapshot=False`` because it
+    already saved a snapshot and is holding the restore journal. A nested
+    snapshot would open the store again and roll that journal back.
+
+    Args:
+        snapshot: When true, save a snapshot before the transaction opens.
+            When false, the caller has already saved the undo snapshot.
 
     Returns:
         A connection inside BEGIN IMMEDIATE. The caller commits and closes it.
 
     Raises:
         SeratoOpen: If Serato holds the lock or the database is locked.
+        LibraryError: If the version gate refuses the library.
         sqlite3.OperationalError: If the write transaction fails for another reason.
     """
     info = status()
@@ -1228,7 +1235,8 @@ def begin_write() -> sqlite3.Connection:
     blocked = snapshots.write_block_message()
     if blocked:
         raise LibraryError(blocked, 409)
-    snapshots.snapshot_before_write()
+    if snapshot:
+        snapshots.snapshot_before_write()
     ensure_backup()
     conn = sqlite3.connect(Path(MASTER), timeout=1)
     conn.row_factory = sqlite3.Row
@@ -1469,6 +1477,133 @@ def _stored_name(conn: sqlite3.Connection, parent_id: int, display: str, crate_t
     if suffix:
         raise LibraryError("A crate with that name already exists here.")
     return text + NAME_SPLIT + uuid.uuid4().hex
+
+
+def _export_basename(filename: str) -> str:
+    """Return the crate file name Serato compares at launch.
+
+    Args:
+        filename: A stored export name or a path. Backslashes are separators.
+
+    Returns:
+        The last path piece, or an empty string when there is nothing to keep.
+    """
+    return filename.replace("\\", "/").split("/")[-1].strip()
+
+
+def _split_crate_filename(filename: str) -> tuple[str, list[str], bool]:
+    """Split a crate file name into a leaf, parents, and smart-crate flag.
+
+    Args:
+        filename: Base name such as ``House%%Café.crate`` or ``Friday.scrate``.
+            A ``.scrate`` name is not treated as a ``.crate`` name.
+
+    Returns:
+        The leaf name, parent names from the root down, and True for a
+        smart crate.
+
+    Raises:
+        LibraryError: If the name has no crate suffix or no leaf.
+    """
+    base = _export_basename(filename)
+    folded = base.casefold()
+    if folded.endswith(".scrate"):
+        stem = base[:-7]
+        smart = True
+    elif folded.endswith(".crate"):
+        stem = base[:-6]
+        smart = False
+    else:
+        raise LibraryError("That file is not a crate.")
+    pieces = [piece for piece in stem.split("%%") if piece]
+    if not pieces:
+        raise LibraryError("That crate file has no name.")
+    return pieces[-1], pieces[:-1], smart
+
+
+def is_registerable_crate_name(filename: str) -> bool:
+    """Return whether a crate file name can be stored in the database.
+
+    Args:
+        filename: Base name or path.
+
+    Returns:
+        False when the suffix is missing or the leaf name is empty, as with
+        a file named ``.crate``.
+    """
+    try:
+        _split_crate_filename(filename)
+    except LibraryError:
+        return False
+    return True
+
+
+def _export_index(conn: sqlite3.Connection) -> dict[str, tuple[int, str]]:
+    """Map casefolded crate file names to the container that owns them.
+
+    Generated names are recorded first. A stored ``dj_container_metadata``
+    filename replaces the generated spelling, including a Windows path.
+
+    Args:
+        conn: Open connection.
+
+    Returns:
+        Casefolded basename to ``(container id, exact basename)``.
+    """
+    found: dict[str, tuple[int, str]] = {}
+    if "container" not in _tables(conn) or "space" not in _tables(conn):
+        return found
+    rows = conn.execute(
+        """
+        SELECT c.id, c.type FROM container c
+        JOIN space s ON s.id = c.space_id
+        WHERE c.type != 0 AND s.name = ?
+        ORDER BY c.id
+        """,
+        (LIBRARY_SPACE,),
+    ).fetchall()
+    for row in rows:
+        base = _export_basename(_filename(conn, int(row["id"]), int(row["type"])))
+        if base:
+            found[base.casefold()] = (int(row["id"]), base)
+    if "dj_container_metadata" in _tables(conn):
+        stored = conn.execute(
+            "SELECT container_id, filename FROM dj_container_metadata"
+        ).fetchall()
+        for row in stored:
+            raw = row["filename"]
+            if not isinstance(raw, str):
+                continue
+            base = _export_basename(raw)
+            if base:
+                found[base.casefold()] = (int(row["container_id"]), base)
+    return found
+
+
+def crate_export_names(master: Path) -> set[str]:
+    """Return the crate file names a Serato 4/5 database has heard of.
+
+    Serato deletes a ``.crate`` or ``.scrate`` whose name is not in this set
+    the next time it launches. The set contains casefolded basenames.
+    A stored path keeps only its last piece, so ``Subcrates\\\\House.crate``
+    is the same name as ``House.crate``. The database is opened read-only.
+    A symlink is not opened.
+
+    Args:
+        master: ``master.sqlite``.
+
+    Returns:
+        Casefolded basenames. An empty set when the file is missing or has
+        no crate tables.
+
+    Raises:
+        sqlite3.Error: If the database cannot be read.
+    """
+    if not master.is_file() or master.is_symlink():
+        return set()
+    with closing(sqlite3.connect(f"file:{master}?mode=ro", uri=True)) as conn:
+        conn.row_factory = sqlite3.Row
+        return set(_export_index(conn))
 
 
 def _filename(conn: sqlite3.Connection, crate_id: int, crate_type: int) -> str:
@@ -2807,6 +2942,325 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
             raise LibraryError("That crate action is not available.")
         conn.commit()
         return result
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def _library_crate(conn: sqlite3.Connection, crate_id: int) -> bool:
+    """Return whether a container is a crate in the Serato Library space.
+
+    Args:
+        conn: Open connection.
+        crate_id: Container id.
+
+    Returns:
+        True when the row exists, is not the space root, and is in
+        ``Serato Library``.
+    """
+    row = conn.execute(
+        """
+        SELECT 1 FROM container c
+        JOIN space s ON s.id = c.space_id
+        WHERE c.id = ? AND s.name = ? AND c.type != 0
+        """,
+        (crate_id, LIBRARY_SPACE),
+    ).fetchone()
+    return row is not None
+
+
+def _find_child(conn: sqlite3.Connection, parent_id: int, name: str, crate_type: int) -> int | None:
+    """Find a child crate by its visible name.
+
+    Args:
+        conn: Open connection.
+        parent_id: Parent container id.
+        name: Visible crate name.
+        crate_type: 1 for a normal crate, 2 for a smart crate.
+
+    Returns:
+        The container id, or None when that child is absent. The match
+        ignores case so a Windows file and the stored name agree.
+    """
+    rows = conn.execute(
+        "SELECT id, name FROM container WHERE parent_id = ? AND type = ?",
+        (parent_id, crate_type),
+    ).fetchall()
+    want = name.casefold()
+    for row in rows:
+        stored = row["name"] if isinstance(row["name"], str) else ""
+        if display_name(stored).casefold() == want:
+            return int(row["id"])
+    return None
+
+
+def _remember_filename(
+    conn: sqlite3.Connection,
+    crate_id: int,
+    filename: str,
+    found: dict[str, tuple[int, str]],
+) -> None:
+    """Store the on-disk crate file name and mirror it to root.sqlite.
+
+    Args:
+        conn: Open master write connection.
+        crate_id: Container id.
+        filename: Exact basename Serato should keep.
+        found: Export index updated to that basename.
+    """
+    _upsert_filename(conn, crate_id, filename)
+    previous = [key for key, item in found.items() if item[0] == crate_id]
+    for key in previous:
+        del found[key]
+    found[filename.casefold()] = (crate_id, filename)
+    external = _external_ids(conn, [crate_id])
+    root_path = _location_paths(conn).get(3)
+    if not external or root_path is None:
+        return
+
+    def apply(root: sqlite3.Connection) -> None:
+        """Copy the export filename into the location database.
+
+        Args:
+            root: Location database connection.
+        """
+        if "dj_container_metadata" not in _tables(root):
+            return None
+        _upsert_filename(root, external[0], filename)
+        return None
+
+    _with_location(root_path, apply)
+
+
+def _ensure_library_crate(
+    conn: sqlite3.Connection,
+    parent_id: int,
+    name: str,
+    smart: bool,
+    found: dict[str, tuple[int, str]],
+) -> int:
+    """Return a Serato Library crate, creating it when it is missing.
+
+    Args:
+        conn: Open master write connection.
+        parent_id: Parent container id.
+        name: Visible name.
+        smart: True to create a smart crate.
+        found: Export index updated when a crate is created.
+
+    Returns:
+        The container id.
+    """
+    crate_type = 2 if smart else 1
+    existing = _find_child(conn, parent_id, name, crate_type)
+    if existing is not None:
+        return existing
+    created = _create_crate(conn, LIBRARY_SPACE, parent_id, name, smart, None)
+    crate_id = int(created["id"])
+    generated = _export_basename(_filename(conn, crate_id, crate_type))
+    if generated:
+        found[generated.casefold()] = (crate_id, generated)
+    return crate_id
+
+
+def _path_key(value: str) -> str:
+    """Normalize a stored path for comparison.
+
+    Args:
+        value: A portable id or a path from a crate file.
+
+    Returns:
+        Forward slashes, without a trailing slash, casefolded.
+    """
+    return value.replace("\\", "/").strip().rstrip("/").casefold()
+
+
+def _match_asset(index: Sequence[tuple[int, str, str]], stored: str) -> int | None:
+    """Find the one library asset a crate path points at.
+
+    A Windows path (``C:\\Users\\dj\\Music\\same-a.mp3``) and a macOS path
+    (``/Users/dj/Music/same-a.mp3``) match a portable id of
+    ``Music/same-a.mp3``. A path that climbs out with ``..`` matches nothing.
+    Two assets that share only a file name are left unmatched.
+
+    Args:
+        index: ``(asset id, portable id, file name)`` rows.
+        stored: Path text from the crate file.
+
+    Returns:
+        One asset id, or None when there is no single match.
+    """
+    text = stored.strip()
+    if not text:
+        return None
+    want = _path_key(text)
+    parts = [part for part in want.split("/") if part not in {"", "."}]
+    if not parts or any(part == ".." for part in parts):
+        return None
+    want_name = parts[-1]
+    exact: list[int] = []
+    suffix: list[int] = []
+    by_name: list[int] = []
+    for asset_id, portable, file_name in index:
+        key = _path_key(portable) if portable else ""
+        if key and key == want:
+            exact.append(asset_id)
+            continue
+        if key and (want.endswith("/" + key) or key.endswith("/" + want)):
+            suffix.append(asset_id)
+            continue
+        name = file_name.casefold() if file_name else (key.split("/")[-1] if key else "")
+        if want_name and name == want_name:
+            by_name.append(asset_id)
+    if len(exact) == 1:
+        return exact[0]
+    if len(exact) > 1 or len(suffix) > 1:
+        return None
+    if len(suffix) == 1:
+        return suffix[0]
+    if len(by_name) == 1:
+        return by_name[0]
+    return None
+
+
+def _add_restored_tracks(
+    conn: sqlite3.Connection,
+    crate_id: int,
+    tracks: Sequence[str],
+    index: Sequence[tuple[int, str, str]],
+) -> None:
+    """Add crate-file tracks that match one library asset.
+
+    Args:
+        conn: Open master write connection.
+        crate_id: Normal crate id.
+        tracks: Paths from the crate file, in file order.
+        index: Asset rows from :func:`_asset_rows`.
+    """
+    seen: set[int] = set()
+    for stored in tracks:
+        asset_id = _match_asset(index, stored)
+        if asset_id is None or asset_id in seen:
+            continue
+        if not _space_asset_exists(conn, asset_id, LIBRARY_SPACE):
+            continue
+        seen.add(asset_id)
+        try:
+            _membership(conn, crate_id, asset_id, LIBRARY_SPACE, True)
+        except (LibraryError, TypeError, ValueError):
+            continue
+
+
+def _space_asset_exists(conn: sqlite3.Connection, asset_id: int, space: str) -> bool:
+    """Return whether an asset is already in a space.
+
+    Args:
+        conn: Open connection.
+        asset_id: Asset id.
+        space: Space name.
+
+    Returns:
+        True when a space_asset row joins that space.
+    """
+    row = conn.execute(
+        """
+        SELECT 1 FROM space_asset sa
+        JOIN space s ON s.id = sa.space_id
+        WHERE sa.asset_id = ? AND s.name = ?
+        """,
+        (asset_id, space),
+    ).fetchone()
+    return row is not None
+
+
+def _asset_rows(conn: sqlite3.Connection) -> list[tuple[int, str, str]]:
+    """Load asset ids and paths for crate matching.
+
+    Args:
+        conn: Open connection.
+
+    Returns:
+        ``(id, portable id, file name)``. Missing columns yield an empty list.
+    """
+    if "asset" not in _tables(conn):
+        return []
+    rows = conn.execute("SELECT id, portable_id, file_name FROM asset").fetchall()
+    found: list[tuple[int, str, str]] = []
+    for row in rows:
+        portable = row["portable_id"] if isinstance(row["portable_id"], str) else ""
+        file_name = row["file_name"] if isinstance(row["file_name"], str) else ""
+        found.append((int(row["id"]), portable, file_name))
+    return found
+
+
+def register_restored_crates(crates: Sequence[tuple[str, Sequence[str]]]) -> list[dict[str, object]]:
+    """Register crate files Serato 4/5 would otherwise delete on launch.
+
+    The database is the source of truth. A ``.crate`` or ``.scrate`` whose
+    name it has never heard of is removed the next time Serato starts.
+    This writes those crates through :func:`begin_write` with
+    ``snapshot=False``: Serato must be quit, the version gate must allow
+    the library, and the first write in the process still copies the
+    databases into Library/Backups. The caller is a restore that already
+    saved the undo snapshot. One transaction covers every crate. A file
+    with no name is skipped. Tracks are added when one library asset
+    matches the path.
+
+    Args:
+        crates: ``(filename, track paths)`` pairs. ``filename`` is the
+            on-disk basename. Track paths are the crate file's ``ptrk``
+            values, in order.
+
+    Returns:
+        One dict per crate that was created or whose export filename was
+        set to the on-disk name. Each has ``filename``, ``id``, and ``name``.
+
+    Raises:
+        SeratoOpen: If Serato holds the library lock. Nothing is written.
+        LibraryError: If the version gate refuses the library, or a crate
+            name cannot be stored. The transaction is rolled back.
+    """
+    def order(item: tuple[str, Sequence[str]]) -> tuple[int, str]:
+        base = _export_basename(item[0]).casefold()
+        return (base.count("%%"), base)
+
+    ordered = sorted(crates, key=order)
+    conn = begin_write(snapshot=False)
+    registered: list[dict[str, object]] = []
+    try:
+        found = _export_index(conn)
+        index = _asset_rows(conn)
+        for filename, tracks in ordered:
+            base = _export_basename(filename)
+            try:
+                leaf, parents, smart = _split_crate_filename(base)
+            except LibraryError:
+                app_log.logger.warning("A crate file was not registered because it has no name.")
+                continue
+            key = base.casefold()
+            current = found.get(key)
+            if current is not None and _library_crate(conn, current[0]):
+                crate_id, exact = current
+                if exact != base:
+                    _remember_filename(conn, crate_id, base, found)
+                    registered.append({"filename": base, "id": crate_id, "name": leaf})
+                if not smart:
+                    _add_restored_tracks(conn, crate_id, tracks, index)
+                continue
+            if current is not None:
+                continue
+            parent_id = _space_root(conn, LIBRARY_SPACE)
+            for part in parents:
+                parent_id = _ensure_library_crate(conn, parent_id, part, False, found)
+            crate_id = _ensure_library_crate(conn, parent_id, leaf, smart, found)
+            _remember_filename(conn, crate_id, base, found)
+            if not smart:
+                _add_restored_tracks(conn, crate_id, tracks, index)
+            registered.append({"filename": base, "id": crate_id, "name": leaf})
+        conn.commit()
+        return registered
     except Exception:
         conn.rollback()
         raise

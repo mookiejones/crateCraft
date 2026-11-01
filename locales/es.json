@@ -317,6 +317,7 @@
   "plan.andMore": " y {count} más",
   "plan.cratesAdded": "Cajas añadidas",
   "plan.cratesChanged": "Cajas modificadas",
+  "plan.cratesRegistered": "Cajas registradas para que Serato las conserve",
   "plan.cratesRemoved": "Cajas quitadas",
   "plan.cratesUnavailable": "Cajas en una unidad no disponible",
   "plan.cueChanges": "Cambios de cues",
