@@ -10,7 +10,10 @@ from __future__ import annotations
 
 import os
 import shutil
+import sqlite3
+import tempfile
 import unittest
+from contextlib import closing
 from pathlib import Path
 from unittest import mock
 
@@ -748,6 +751,54 @@ class CrateRestoreTests(unittest.TestCase):
                 count = conn.execute("SELECT COUNT(*) FROM container WHERE name = 'House'").fetchone()[0]
             self.assertEqual(count, 0)
 
+
+
+class RowCheckTests(unittest.TestCase):
+    """The restored-database row check must not touch the live files."""
+
+    def test_row_check_leaves_a_wal_library_untouched(self) -> None:
+        """Read rows without checkpointing or adding files beside the library.
+
+        Serato's library runs in WAL mode. Opening ``master.sqlite``
+        directly and closing it folds the ``-wal`` frames into the main
+        file and deletes the sidecars, so the check would rewrite the
+        library it is checking. The rows must come from a copy.
+
+        Returns:
+            None. The test fails if a live byte or file name changes.
+        """
+        with tempfile.TemporaryDirectory(prefix="serato-rowcheck-test-") as raw:
+            folder = Path(raw)
+            db = folder / "master.sqlite"
+            with closing(sqlite3.connect(db)) as setup:
+                setup.execute("PRAGMA journal_mode=WAL")
+                setup.execute("CREATE TABLE asset (id INTEGER PRIMARY KEY, name TEXT)")
+                setup.execute("INSERT INTO asset VALUES (1, 'Opener')")
+                setup.commit()
+                setup.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+            snapshot = db.read_bytes()
+            conn = sqlite3.connect(db)
+            try:
+                flag = getattr(sqlite3, "SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE", None)
+                if flag is None:
+                    self.skipTest("This SQLite cannot keep the WAL on close.")
+                conn.setconfig(flag, True)
+                conn.execute("PRAGMA wal_autocheckpoint=0")
+                conn.execute("INSERT INTO asset VALUES (2, 'Closer')")
+                conn.commit()
+            finally:
+                conn.close()
+            wal = Path(str(db) + "-wal")
+            self.assertTrue(wal.is_file() and wal.stat().st_size > 0)
+            before = {path.name: path.read_bytes() for path in folder.iterdir()}
+
+            # The WAL holds a row the snapshot lacks, so the rows differ.
+            self.assertFalse(snapshots._database_rows_match(snapshot, db, set()))
+
+            after = {path.name: path.read_bytes() for path in folder.iterdir()}
+            self.assertEqual(sorted(after), sorted(before))
+            self.assertEqual(after["master.sqlite"], before["master.sqlite"])
+            self.assertEqual(after["master.sqlite-wal"], before["master.sqlite-wal"])
 
 if __name__ == "__main__":
     unittest.main()

@@ -41,6 +41,7 @@ import os
 import plistlib
 import re
 import secrets
+import shutil
 import sqlite3
 import struct
 import subprocess
@@ -1897,10 +1898,6 @@ class SnapshotStore:
         Args:
             manifest: Verified snapshot.
 
-        A crate file that ``_apply_drives`` left as it was, because its
-        snapshot copy has no hash or cannot be read, is not compared. That
-        restore warned about it and kept the file on disk.
-
         Raises:
             SnapshotError: If a crate file is missing, extra, or different.
         """
@@ -3619,7 +3616,7 @@ def _database_rows_match(snapshot: bytes, live: Path, family: set[str]) -> bool:
         snap = _load_rows(path)
     finally:
         path.unlink(missing_ok=True)
-    current = _load_rows(live)
+    current = _load_live_rows(live)
     allowed = _allowed_container_ids(snap, current, family)
     if allowed is None:
         return False
@@ -3648,6 +3645,34 @@ def _database_rows_match(snapshot: bytes, live: Path, family: set[str]) -> bool:
             if not _row_belongs(table, cols, row, allowed, locations):
                 return False
     return True
+
+
+def _load_live_rows(live: Path) -> dict[str, tuple[list[str], set[tuple[object, ...]]]]:
+    """Read the restored database's rows from a temporary copy.
+
+    Opening the live file and closing it would checkpoint its ``-wal`` into
+    ``master.sqlite`` and delete the sidecars, so the check would rewrite
+    the library it is checking. The database and its ``-wal`` are copied to
+    the system temp folder and read there, as ``safe_write`` does.
+
+    Args:
+        live: Restored database beside the Serato library.
+
+    Returns:
+        Table name to ``(column names, rows)``.
+
+    Raises:
+        SnapshotError: If the database or its ``-wal`` is a shortcut.
+    """
+    wal = Path(str(live) + "-wal")
+    if live.is_symlink() or wal.is_symlink():
+        raise SnapshotError("Refusing to read a database shortcut.")
+    with tempfile.TemporaryDirectory(prefix="serato-rowcheck-") as raw:
+        copied = Path(raw) / "master.sqlite"
+        shutil.copyfile(live, copied)
+        if wal.is_file():
+            shutil.copyfile(wal, Path(raw) / "master.sqlite-wal")
+        return _load_rows(copied)
 
 
 def _without_revision(cols: list[str], row: tuple[object, ...]) -> tuple[object, ...]:
