@@ -27,7 +27,11 @@ class SurveyTests(unittest.TestCase):
         roles = {row["role"]: row for row in report["places"]}  # type: ignore[union-attr]
         self.assertTrue(roles["database-v2"]["exists"])
         self.assertFalse(roles["master"]["exists"])
-        self.assertIn("Application Support/Serato/Library/master.sqlite", str(roles["master"]["path"]))
+        master = Path(str(roles["master"]["path"]))
+        self.assertEqual(
+            master.parts[-5:],
+            ("Library", "Application Support", "Serato", "Library", "master.sqlite"),
+        )
 
     def test_master_sqlite_is_serato_4_or_5_and_a_drive_is_separate(self) -> None:
         """master.sqlite marks Serato 4 or 5. An external drive is its own tree.
