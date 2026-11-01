@@ -13,6 +13,7 @@ The first time you open it, setup finds your library and saves a safety copy bef
 ## What you can do
 
 - [Browse crates and tracks](guide/crates.md), and make, rename, color, and delete crates.
+- [Play a track](guide/playback.md) in the window before you crate or tag it. Playback does not change the file. The server can build a waveform for that track. M4A, AAC, and ALAC use the Mac or Windows audio system, or ffmpeg on Linux when it is already installed. ffmpeg is not included. A 60-minute stereo 44.1 kHz WAV is analyzed in 7.9 seconds and cached beside the app settings.
 - [Edit track details](guide/tags.md) that Serato stores in the library. Cue points stay in the audio file.
 - Read [History](guide/history.md), find [missing files](guide/missing.md), and see [stems](guide/stems.md).
 - [Merge duplicate copies](guide/duplicates.md) into the file you want to keep.
@@ -22,6 +23,7 @@ The first time you open it, setup finds your library and saves a safety copy bef
 - [Rename, move, replace, and trash files](guide/files.md) so crates and history follow the file.
 - [Keep hash-checked snapshots and restore one](guide/safety.md#snapshots), including crates on each drive and the cue data stored in audio files. The music itself is not copied into the snapshot. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 - Change [sharing, and open the log](guide/settings.md).
+- Use [keyboard shortcuts](guide/shortcuts.md) to search, switch views, and move through a list. **Shortcuts** is at the bottom of the sidebar.
 
 Pictures in this guide use a small sample library, not your collection.
 
