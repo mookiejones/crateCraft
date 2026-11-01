@@ -311,7 +311,10 @@ def moved_folders(old: str, new: str) -> tuple[str, str] | None:
 
     Returns:
         The two folders, or None when only the file name is shared, or the
-        paths are the same.
+        paths are the same. The old folder keeps the stored separators, so a
+        Mac path read on Windows (or a PC path read on a Mac) is reported
+        exactly as the library wrote it. The new folder is a path on this
+        computer.
     """
     a = PurePath(old.replace("\\", "/")).parts
     b = PurePath(new.replace("\\", "/")).parts
@@ -320,7 +323,24 @@ def moved_folders(old: str, new: str) -> tuple[str, str] | None:
         shared += 1
     if shared < 1 or a[: len(a) - shared] == b[: len(b) - shared]:
         return None
-    return str(PurePath(*a[: len(a) - shared])), str(PurePath(*b[: len(b) - shared]))
+    return _drop_tail(old, shared), str(PurePath(*b[: len(b) - shared]))
+
+
+def _drop_tail(path: str, count: int) -> str:
+    """Remove the last ``count`` names from a path, keeping its separators.
+
+    Args:
+        path: A stored path, with ``/`` or ``\\`` separators.
+        count: Names to remove, at least 1.
+
+    Returns:
+        The folder that held those names, written as stored.
+    """
+    end = len(path.rstrip("/\\"))
+    for _ in range(count):
+        end = max(path.rfind("/", 0, end), path.rfind("\\", 0, end))
+        end = len(path[:end].rstrip("/\\"))
+    return path[:end]
 
 
 def remaps(pairs: Sequence[tuple[Missing, Candidate]]) -> list[dict[str, object]]:
@@ -358,7 +378,7 @@ def _remapped(track: Missing, moves: Sequence[dict[str, object]], index: _Index)
     """
     stored = PurePath(track.stored.replace("\\", "/"))
     for move in moves:
-        old = PurePath(str(move["from"]))
+        old = PurePath(str(move["from"]).replace("\\", "/"))
         try:
             tail = stored.relative_to(old)
         except ValueError:

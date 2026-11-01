@@ -19,7 +19,7 @@ import urllib.error
 import urllib.request
 from contextlib import closing
 from http.server import ThreadingHTTPServer
-from pathlib import Path
+from pathlib import Path, PurePath
 from unittest import mock
 
 import library
@@ -91,17 +91,18 @@ class ClassifyTests(unittest.TestCase):
             result = relink.plan(temp.db, library.LIBRARY_SPACE, [music])
             self.assertEqual(temp.db.read_bytes(), before)
             self.assertFalse(Path(str(temp.db) + "-wal").exists())
-        self.assertIn("RELINK_TEST_ABSENT_DRIVE", result["unavailable_drives"])  # type: ignore[operator]
         if sys.platform == "win32":
-            # Z: is a drive letter that is not plugged in: unavailable.
-            self.assertEqual(sorted(_by_id(result)), [2])
-            self.assertIn("Z:", result["unavailable_drives"])  # type: ignore[operator]
+            # Z: is a drive letter that is not plugged in: unavailable. A
+            # /Volumes path read on Windows is a library that came from a
+            # Mac, so it is missing here and worth relinking.
+            self.assertEqual(sorted(_by_id(result)), [2, 3])
+            self.assertEqual(result["unavailable_drives"], ["Z:"])
         else:
             # A Windows path read on macOS or Linux is a library that came
             # from a PC, so it is missing here and worth relinking (gig
             # check rule: only an absolute path names a drive).
             self.assertEqual(sorted(_by_id(result)), [2, 4])
-            self.assertNotIn("Z:", result["unavailable_drives"])  # type: ignore[operator]
+            self.assertEqual(result["unavailable_drives"], ["RELINK_TEST_ABSENT_DRIVE"])
         self.assertEqual(_by_id(result)[2][0]["path"], str(spare))
 
     def test_unknown_space_and_missing_library_are_refused(self) -> None:
@@ -208,7 +209,26 @@ class RemapTests(unittest.TestCase):
         """A single sure match does not invent a move."""
         pair = (Missing(1, "t", "a", "/OLD/Music/a.mp3", "/OLD/Music/a.mp3", 4), Candidate("/NEW/DJ/a.mp3", "high", "x"))
         self.assertEqual(relink.remaps([pair]), [])
-        self.assertEqual(relink.remaps([pair, pair]), [{"from": "/OLD/Music", "to": "/NEW/DJ", "count": 2}])
+        self.assertEqual(relink.remaps([pair, pair]), [{"from": "/OLD/Music", "to": str(PurePath("/NEW/DJ")), "count": 2}])
+
+    def test_old_folder_keeps_the_stored_separators(self) -> None:
+        """A PC path read on a Mac, or a Mac path read on a PC, is reported as stored."""
+        found = str(PurePath("/NEW/DJ/House/a.mp3"))
+        self.assertEqual(
+            relink.moved_folders("C:\\Music\\House\\a.mp3", found), ("C:\\Music", str(PurePath("/NEW/DJ")))
+        )
+        self.assertEqual(relink.moved_folders("/Volumes/OLD/House/a.mp3", found), ("/Volumes/OLD", str(PurePath("/NEW/DJ"))))
+        self.assertEqual(relink.moved_folders("/OLD//Music//House/a.mp3", found), ("/OLD//Music", str(PurePath("/NEW/DJ"))))
+
+    def test_a_pc_folder_move_finds_the_rest_on_this_computer(self) -> None:
+        """A move learned from backslash paths still places a third track."""
+        with tempfile.TemporaryDirectory() as raw:
+            new = Path(raw) / "NEW"
+            c = _file(new / "House" / "c.mp3")
+            index = relink.scan([Path(raw)])
+            moves: list[dict[str, object]] = [{"from": "C:\\Music", "to": str(new), "count": 2}]
+            track = Missing(3, "c", "", "C:\\Music\\House\\c.mp3", "C:\\Music\\House\\c.mp3", 4)
+            self.assertEqual(relink._remapped(track, moves, index), Candidate(str(c), "high", "folder moved"))  # pyright: ignore[reportPrivateUsage]
 
     def test_folders_strip_the_shared_tail(self) -> None:
         """The shared tail is removed; same path or name-only is not a move."""
