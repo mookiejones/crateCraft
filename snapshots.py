@@ -47,6 +47,7 @@ from pathlib import Path
 from typing import Protocol, TypedDict
 
 import app_log
+import error_codes
 import snapshot_frames
 from serato_web.completeness import (
     LEGACY_STATUS,
@@ -234,6 +235,19 @@ class SeratoInstall:
     protect: str
 
 
+@dataclass(frozen=True)
+class CodedNotice:
+    """An English refusal plus the catalog code that translates it.
+
+    ``code`` is None when the sentence has no translation yet. ``params``
+    fills ``{name}`` placeholders in ``error.<code>``.
+    """
+
+    text: str
+    code: str | None = None
+    params: dict[str, str] | None = None
+
+
 def read_install() -> SeratoInstall:
     """Read the Serato app version and Protect Library.
 
@@ -250,12 +264,14 @@ def read_install() -> SeratoInstall:
     return SeratoInstall(version, build, protect)
 
 
-def write_block_message(install: SeratoInstall | None = None) -> str | None:
+def write_block_notice(install: SeratoInstall | None = None) -> CodedNotice | None:
     """Return why a library cannot be written or restored.
 
     An unknown version blocks. So does an unreadable version plist, because
-    that is stored as unknown. Serato 5 also blocks when Protect Library is
-    on, off, or unknown, until Lucid and Flexible beatgrid storage is verified.
+    that is stored as unknown. That notice carries ``serato_version_unknown``
+    and the build, so the page can translate it. Serato 5 also blocks when
+    Protect Library is on, off, or unknown, until Lucid and Flexible beatgrid
+    storage is verified. Those sentences stay English.
 
     Args:
         install: Version to judge. None reads the install on this machine.
@@ -266,29 +282,41 @@ def write_block_message(install: SeratoInstall | None = None) -> str | None:
     chosen = install if install is not None else read_install()
     parsed = _parsed_version(chosen.version)
     if parsed is None:
-        return (
-            f"Serato version is unknown (build {chosen.build}). "
-            "Writes and restores are off until the installed Serato version can be read. "
-            "A value that is not a dotted number, including an unreadable plist, is unknown. "
-            "Snapshots can still be taken and read."
+        params = {"build": chosen.build}
+        return CodedNotice(
+            error_codes.render("serato_version_unknown", params),
+            "serato_version_unknown",
+            params,
         )
-    install = chosen
     if parsed[0] < 5:
         return None
-    if install.protect == "off" and LUCID_BEATGRID_VERIFIED:
+    if chosen.protect == "off" and LUCID_BEATGRID_VERIFIED:
         return None
-    if install.protect == "on":
+    if chosen.protect == "on":
         protect = "Protect Library is on (library_protect is 1)."
-    elif install.protect == "off":
+    elif chosen.protect == "off":
         protect = "Protect Library is off."
     else:
         protect = "Protect Library is unknown because library_protect could not be read."
-    return (
-        f"Serato {install.version} (build {install.build}): writes and restores are off. "
+    return CodedNotice(
+        f"Serato {chosen.version} (build {chosen.build}): writes and restores are off. "
         f"{protect} "
         "Lucid and Flexible beatgrid storage is not verified, so this library stays read-only. "
         "Snapshots can still be taken and read."
     )
+
+
+def write_block_message(install: SeratoInstall | None = None) -> str | None:
+    """Return the English text of :func:`write_block_notice`.
+
+    Args:
+        install: Version to judge. None reads the install on this machine.
+
+    Returns:
+        The refusal sentence, or None when a write is allowed.
+    """
+    notice = write_block_notice(install)
+    return None if notice is None else notice.text
 
 
 def detection_command(platform: str) -> list[str]:
@@ -378,8 +406,10 @@ def parse_serato_bytes(data: bytes) -> list[str]:
     """Return track paths from a database V2 file or a crate file.
 
     Both files are a run of four-byte tags, a big-endian length, and that
-    many bytes. ``otrk`` holds a ``ptrk`` path encoded as UTF-16-BE. Serato
-    5.0 still writes this ``database V2`` layout.
+    many bytes. In a crate, ``otrk`` holds a ``ptrk`` path. In
+    ``database V2``, ``otrk`` holds a ``pfil`` path. Both are UTF-16-BE.
+    The first non-empty path in an ``otrk`` is used, so a track is listed
+    once. Serato 5.0 still writes this ``database V2`` layout.
 
     Args:
         data: File bytes.
@@ -395,12 +425,79 @@ def parse_serato_bytes(data: bytes) -> list[str]:
             if text:
                 tracks.append(text)
         elif tag == "otrk":
-            for inner, payload in _chunks(body):
-                if inner == "ptrk":
-                    text = _utf16be(payload)
-                    if text:
-                        tracks.append(text)
+            text = _otrk_path(body)
+            if text:
+                tracks.append(text)
     return tracks
+
+
+_TRACK_PATH_TAGS = ("ptrk", "pfil")
+"""Path fields inside an ``otrk``: ``ptrk`` in a crate, ``pfil`` in ``database V2``."""
+
+
+def _otrk_path(body: bytes, tags: tuple[str, ...] = _TRACK_PATH_TAGS) -> str:
+    """Return the first non-empty path in one ``otrk``.
+
+    Args:
+        body: The ``otrk`` payload.
+        tags: Path fields to accept. ``database V2`` rows pass only
+            ``pfil`` so a crate is never read as a database.
+
+    Returns:
+        The first non-empty text among ``tags``, or an empty string. One
+        track gives at most one path.
+    """
+    for inner, payload in _chunks(body):
+        if inner in tags:
+            text = _utf16be(payload)
+            if text:
+                return text
+    return ""
+
+
+_DATABASE_V2_FIELDS = {
+    "tsng": "title",
+    "tart": "artist",
+    "talb": "album",
+    "tbpm": "bpm",
+    "ttyp": "type",
+}
+
+
+def parse_database_v2(data: bytes) -> list[dict[str, object]]:
+    """Return track rows from a ``database V2`` file.
+
+    ``database V2`` stores each track as an ``otrk`` whose ``pfil`` field
+    is the path relative to the drive root, encoded as UTF-16-BE. The path
+    comes from :func:`_otrk_path`, the same reader :func:`parse_serato_bytes`
+    uses. Title, artist, album, BPM, and type are ``tsng``, ``tart``,
+    ``talb``, ``tbpm``, and ``ttyp``. ``bmis`` is Serato's missing flag.
+
+    Args:
+        data: File bytes. Nothing is written.
+
+    Returns:
+        One dict per ``otrk`` that has a non-empty ``pfil``, in file
+        order. Each has ``path`` and may have ``title``, ``artist``,
+        ``album``, ``bpm``, ``type``, and ``serato_missing``. A truncated
+        or unfamiliar file returns the rows it could parse.
+    """
+    rows: list[dict[str, object]] = []
+    for tag, body in _chunks(data):
+        if tag != "otrk":
+            continue
+        row: dict[str, object] = {}
+        for inner, payload in _chunks(body):
+            key = _DATABASE_V2_FIELDS.get(inner)
+            if key is not None:
+                row[key] = _utf16be(payload)
+            elif inner == "bmis":
+                row["serato_missing"] = payload[:1] == b"\x01"
+        path = _otrk_path(body, ("pfil",))
+        if path:
+            row["path"] = path
+            rows.append(row)
+    return rows
 
 
 def current_store() -> SnapshotStore:
@@ -602,9 +699,12 @@ class SnapshotStore:
         if self.serato_running():
             blocked = SERATO_RUNNING_MESSAGE
         else:
-            message = write_block_message()
-            if message:
-                blocked = message
+            notice = write_block_notice()
+            if notice is not None:
+                blocked = notice.text
+                if notice.code:
+                    diff["restore_blocked_code"] = notice.code
+                    diff["restore_blocked_params"] = dict(notice.params or {})
             else:
                 status = _library_status()
                 if status.get("open"):

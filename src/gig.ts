@@ -5,34 +5,40 @@
  * not write. A newer selection ignores a late response. The report is
  * painted with text nodes. Five steps lead to a done screen. #gig-ready-art
  * is the empty slot for the done artwork Pixel supplies.
+ *
+ * Page text is in the locale catalogs under gig.*. The report sentences
+ * the server writes (holding_it_back, snapshot_note, empty-crate
+ * warnings) stay in English, as the Rekordbox loss report does.
  */
 
 import { readJSON } from "./api";
 import type { GigReport } from "./api-types";
 import { el } from "./dom";
+import { formatDate, serverMessage, t, type MessageKey } from "./i18n";
 import { state } from "./state";
+import { buttonEl } from "./tooltip";
+import { tips } from "./tooltip-strings";
 
 const STEP_COUNT = 5;
 const LIST_CAP = 100;
-const UNREACHABLE = "Couldn't reach the library server. Check it's running, then press Check again";
 
 interface GigStep {
-  title: string;
-  action: string;
-  empty: string;
+  title: MessageKey;
+  action: MessageKey;
+  empty: MessageKey;
 }
 
 const STEPS: readonly GigStep[] = [
-  { title: "Drives", action: "Check drives", empty: "No drives are unplugged." },
-  { title: "Missing files", action: "Locate missing files", empty: "No files are missing." },
-  { title: "Streaming", action: "Review streaming tracks", empty: "No streaming tracks." },
-  { title: "Empty crates", action: "Fill empty crates", empty: "No empty crates." },
-  { title: "Since last gig", action: "Review changes", empty: "Nothing changed since the last snapshot." },
+  { title: "gig.drives", action: "gig.drivesAction", empty: "gig.drivesEmpty" },
+  { title: "gig.missing", action: "gig.missingAction", empty: "gig.missingEmpty" },
+  { title: "gig.streaming", action: "gig.streamingAction", empty: "gig.streamingEmpty" },
+  { title: "gig.emptyCrates", action: "gig.emptyCratesAction", empty: "gig.emptyCratesEmpty" },
+  { title: "gig.since", action: "gig.sinceAction", empty: "gig.sinceEmpty" },
 ];
 
 let stepIndex = 0;
 let latest: GigReport | null = null;
-let checkedAt = "";
+let checkedAt: Date | null = null;
 let exitGig: () => void = () => {};
 
 /**
@@ -91,18 +97,18 @@ export async function loadGigCheck(keepStep = false): Promise<void> {
     const payload = await readJSON<GigReport>(response).catch((): null => null);
     if (token !== state.gigToken) return;
     if (!response.ok || payload === null) {
-      failStatus(payload?.error || "The gig check could not be read.");
+      failStatus(serverMessage(payload, t("gig.unreadable")));
       settle = "retry";
       return;
     }
-    checkedAt = formatCheckedAt(new Date());
+    checkedAt = new Date();
     latest = payload;
     el("gig-status").textContent = "";
     renderGigReport(payload);
     settle = "heading";
   } catch {
     if (token !== state.gigToken) return;
-    failStatus(UNREACHABLE);
+    failStatus(t("gig.unreachable"));
     settle = "retry";
   } finally {
     if (token !== state.gigToken) return;
@@ -123,7 +129,7 @@ export async function loadGigCheck(keepStep = false): Promise<void> {
 export function showGigFailure(error: unknown): void {
   const message = error instanceof Error && error.message
     ? error.message
-    : "The gig check could not be read.";
+    : t("gig.unreadable");
   failStatus(message);
   endBusy();
   el("gig-refresh").focus();
@@ -139,17 +145,29 @@ export function showGigFailure(error: unknown): void {
  */
 export function renderGigReport(payload: GigReport): void {
   const report = el("gig-report");
-  el("gig-scope").textContent = payload.scope?.crate_name || "Whole space";
+  el("gig-scope").textContent = payload.scope?.crate_name || t("gig.wholeSpace");
   report.replaceChildren(scoreBlock(payload));
   if (stepIndex >= STEP_COUNT) {
     report.append(doneScreen(payload));
     return;
   }
   const step = STEPS[stepIndex]!;
-  report.append(kicker(stepIndex), heading(step.title));
+  report.append(kicker(stepIndex), heading(t(step.title)));
   if (stepIndex === STEP_COUNT - 1) renderSince(report, payload);
   else renderStepList(report, step, linesFor(payload, stepIndex));
-  report.append(actions(step.action));
+  report.append(actions(t(step.action)));
+}
+
+/**
+ * Paint the last report again in the active language.
+ *
+ * locale-wiring calls this on a language change. Nothing is fetched,
+ * and the step the person is on is kept.
+ *
+ * @returns {void}
+ */
+export function repaintGig(): void {
+  if (latest) renderGigReport(latest);
 }
 
 function beginBusy(): void {
@@ -157,7 +175,7 @@ function beginBusy(): void {
   button.disabled = true;
   button.setAttribute("aria-busy", "true");
   el("gig-panel").setAttribute("aria-busy", "true");
-  el("gig-status").textContent = "Checking the library…";
+  el("gig-status").textContent = t("gig.checking");
 }
 
 function endBusy(): void {
@@ -176,25 +194,21 @@ function focusHeading(): void {
   if (headingNode instanceof HTMLElement) headingNode.focus();
 }
 
-function formatCheckedAt(date: Date): string {
-  const hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const suffix = hours >= 12 ? "PM" : "AM";
-  const hour12 = hours % 12 || 12;
-  return `${hour12}:${minutes} ${suffix}`;
+function formatCheckedAt(date: Date | null): string {
+  return date ? formatDate(date, { hour: "numeric", minute: "2-digit" }) : "";
 }
 
 function scoreBlock(payload: GigReport): HTMLParagraphElement {
   const score = document.createElement("p");
   score.className = "gig-score";
-  const word = payload.ready ? "ready" : "not ready";
-  score.setAttribute("aria-label", `Ready score ${payload.score} out of 100, ${word}`);
+  const verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady");
+  score.setAttribute("aria-label", t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }));
   const value = document.createElement("span");
   value.className = "gig-score-value";
-  value.textContent = `${payload.score}/100`;
+  value.textContent = t("gig.score", { score: payload.score });
   const verdict = document.createElement("span");
   verdict.className = payload.ready ? "gig-verdict" : "gig-verdict not-ready";
-  verdict.textContent = payload.ready ? "✓ Ready" : "✕ Not ready";
+  verdict.textContent = t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady");
   score.append(value, verdict);
   return score;
 }
@@ -202,7 +216,7 @@ function scoreBlock(payload: GigReport): HTMLParagraphElement {
 function kicker(index: number): HTMLParagraphElement {
   const step = document.createElement("p");
   step.className = "gig-kicker";
-  step.textContent = `Step ${index + 1} of ${STEP_COUNT}`;
+  step.textContent = t("gig.stepOf", { index: index + 1, total: STEP_COUNT });
   return step;
 }
 
@@ -216,7 +230,9 @@ function heading(text: string): HTMLHeadingElement {
 
 function linesFor(payload: GigReport, index: number): string[] {
   if (index === 0) {
-    return (payload.unavailable_drives || []).map((drive) => `${drive.name}: ${drive.track_count} tracks unavailable`);
+    return (payload.unavailable_drives || []).map((drive) =>
+      t("gig.driveUnavailable", { name: drive.name, count: drive.track_count }),
+    );
   }
   if (index === 1) return (payload.missing_files || []).map((item) => item.path);
   if (index === 2) return (payload.streaming_tracks || []).map((item) => `${item.service}: ${item.title}`);
@@ -228,11 +244,11 @@ function renderStepList(parent: HTMLElement, step: GigStep, lines: string[]): vo
   if (!lines.length) {
     const empty = document.createElement("p");
     empty.className = "gig-note";
-    empty.textContent = step.empty;
+    empty.textContent = t(step.empty);
     parent.append(empty);
     return;
   }
-  parent.append(detailsGroup(step.title, lines));
+  parent.append(detailsGroup(t(step.title), lines));
 }
 
 function renderSince(parent: HTMLElement, payload: GigReport): void {
@@ -245,26 +261,26 @@ function renderSince(parent: HTMLElement, payload: GigReport): void {
   }
   const changes = payload.changes;
   if (!changes) {
-    if (!note) parent.append(noteLine("No snapshot to compare."));
+    if (!note) parent.append(noteLine(t("gig.noSnapshot")));
     return;
   }
-  const groups: Array<[string, string[]]> = [
-    ["Crates added", changes.crates_added || []],
-    ["Crates removed", changes.crates_removed || []],
-    ["Crates edited", changes.crates_edited || []],
-    ["Tracks added", changes.tracks_added || []],
-    ["Tracks removed", changes.tracks_removed || []],
-    ["Cues edited", changes.cues_edited || []],
-    ["Beatgrids edited", changes.grids_edited || []],
-    ["Tags edited", changes.tags_edited || []],
+  const groups: Array<[MessageKey, string[]]> = [
+    ["gig.cratesAdded", changes.crates_added || []],
+    ["gig.cratesRemoved", changes.crates_removed || []],
+    ["gig.cratesEdited", changes.crates_edited || []],
+    ["gig.tracksAdded", changes.tracks_added || []],
+    ["gig.tracksRemoved", changes.tracks_removed || []],
+    ["gig.cuesEdited", changes.cues_edited || []],
+    ["gig.gridsEdited", changes.grids_edited || []],
+    ["gig.tagsEdited", changes.tags_edited || []],
   ];
   let any = false;
   for (const [label, lines] of groups) {
     if (!lines.length) continue;
-    parent.append(detailsGroup(label, lines));
+    parent.append(detailsGroup(t(label), lines));
     any = true;
   }
-  if (!any) parent.append(noteLine(STEPS[STEP_COUNT - 1]!.empty));
+  if (!any) parent.append(noteLine(t(STEPS[STEP_COUNT - 1]!.empty)));
 }
 
 function noteLine(text: string): HTMLParagraphElement {
@@ -279,16 +295,15 @@ function detailsGroup(label: string, lines: string[]): HTMLDetailsElement {
   details.className = "gig-group";
   details.open = true;
   const summary = document.createElement("summary");
-  summary.textContent = `${label} (${lines.length})`;
+  summary.textContent = t("gig.groupCount", { label, count: lines.length });
   const list = document.createElement("ul");
   const shown = lines.slice(0, LIST_CAP);
   for (const line of shown) list.append(item(line));
   details.append(summary, list);
   if (lines.length > LIST_CAP) {
-    const show = document.createElement("button");
-    show.type = "button";
+    const show = buttonEl(tips.gigShowAll);
     show.className = "gig-show-all";
-    show.textContent = `Show all ${lines.length}`;
+    show.textContent = t("gig.showAll", { count: lines.length });
     show.addEventListener("click", () => {
       list.replaceChildren();
       for (const line of lines) list.append(item(line));
@@ -308,31 +323,28 @@ function item(text: string): HTMLLIElement {
 function actions(primary: string | null): HTMLDivElement {
   const bar = document.createElement("div");
   bar.className = "gig-actions";
-  const back = document.createElement("button");
-  back.type = "button";
+  const back = buttonEl(tips.gigBack);
   back.dataset.gigAction = "back";
-  back.textContent = "Back";
+  back.textContent = t("common.back");
   back.disabled = stepIndex === 0;
   bar.append(back);
   if (primary) {
-    const next = document.createElement("button");
-    next.type = "button";
+    const next = buttonEl(tips.gigNext);
     next.className = "gig-primary";
     next.dataset.gigAction = "next";
     next.textContent = primary;
     bar.append(next);
   }
-  const exit = document.createElement("button");
-  exit.type = "button";
+  const exit = buttonEl(tips.gigExit);
   exit.dataset.gigAction = "exit";
-  exit.textContent = "Exit gig check";
+  exit.textContent = t("gig.exit");
   bar.append(exit);
   return bar;
 }
 
 function doneScreen(payload: GigReport): DocumentFragment {
   const fragment = document.createDocumentFragment();
-  fragment.append(heading("Done"));
+  fragment.append(heading(t("gig.done")));
   const art = document.createElement("div");
   art.id = "gig-ready-art";
   art.className = "gig-art-slot";
@@ -340,12 +352,15 @@ function doneScreen(payload: GigReport): DocumentFragment {
   art.setAttribute("aria-hidden", "true");
   const line = document.createElement("p");
   line.className = "gig-done";
-  const crate = payload.scope?.crate_name || "the whole space";
-  const lead = payload.ready ? "Ready for the gig" : "Not ready for the gig";
-  line.textContent = `${lead}: ${payload.score}/100, checked ${crate} at ${checkedAt}`;
+  const crate = payload.scope?.crate_name || t("gig.wholeSpaceInline");
+  line.textContent = t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
+    score: payload.score,
+    crate,
+    time: formatCheckedAt(checkedAt),
+  });
   fragment.append(art, line);
   const holding = (payload.holding_it_back || []).map((item) => item.summary);
-  if (holding.length) fragment.append(detailsGroup("Holding it back", holding));
+  if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
   fragment.append(actions(null));
   return fragment;
 }

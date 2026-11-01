@@ -1,7 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { GigReport } from "./api-types";
-import { loadGigCheck, wireGigCheck } from "./gig";
+import { loadGigCheck, repaintGig, wireGigCheck } from "./gig";
+import { setLocale } from "./i18n";
+import { applyStaticTooltips } from "./tooltip";
 import { state } from "./state";
 import { installPage } from "./test-page";
 
@@ -219,5 +221,81 @@ describe("gig", () => {
     expect(reportText()).toContain("Step 5 of 5");
     clickAction("exit");
     expect(left).toBe(true);
+  });
+});
+
+describe("gig in the active language", () => {
+  beforeEach(() => {
+    installPage();
+    setLocale("en");
+    state.space = "Serato Library";
+    state.activeCrate = 5;
+    state.gigToken = 0;
+    state.crates = [{ id: 5, name: "Friday" }];
+    wireGigCheck(() => {
+      state.mode = "crates";
+    });
+    document.getElementById("gig-panel")!.hidden = false;
+  });
+
+  afterEach(() => {
+    setLocale("en");
+    vi.unstubAllGlobals();
+  });
+
+  it("paints the score, step, and verdict in Spanish", async () => {
+    setLocale("es");
+    vi.stubGlobal("fetch", vi.fn(() => Promise.resolve(reply(report))));
+    await loadGigCheck();
+    const text = reportText();
+    expect(text).toContain("72/100");
+    expect(text).toContain("✕ No listo");
+    expect(text).toContain("Paso 1 de 5");
+    expect(text).toContain("Unidades");
+    expect(text).toContain("GIGDRIVE: 2 pistas no disponibles");
+    expect(text).not.toContain("Not ready");
+    expect(document.querySelector(".gig-score")!.getAttribute("aria-label")).toBe(
+      "Puntuación 72 de 100, no listo",
+    );
+    expect(document.querySelector('[data-gig-action="exit"]')!.textContent).toBe("Salir de la comprobación");
+  });
+
+  it("repaints the last report on a language change without asking the server again", async () => {
+    const fetchMock = vi.fn(() => Promise.resolve(reply(report)));
+    vi.stubGlobal("fetch", fetchMock);
+    await loadGigCheck();
+    clickAction("next");
+    expect(reportText()).toContain("Missing files");
+    setLocale("es");
+    repaintGig();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(reportText()).toContain("Paso 2 de 5");
+    expect(reportText()).toContain("Archivos que faltan");
+    expect(reportText()).toContain("/Music/gone.mp3");
+  });
+
+  it("gives every gig control a tooltip", async () => {
+    vi.stubGlobal("fetch", vi.fn(() => Promise.resolve(reply(report))));
+    applyStaticTooltips();
+    expect(document.getElementById("gig-refresh")!.dataset.tooltipKey).toBe("tooltip.gigRefresh");
+    expect(document.querySelector<HTMLElement>('[data-view="gig"]')!.dataset.tooltipKey).toBe("tooltip.viewGig");
+    await loadGigCheck();
+    const keys = (action: string): string | undefined =>
+      document.querySelector<HTMLElement>(`[data-gig-action="${action}"]`)?.dataset.tooltipKey;
+    expect(keys("back")).toBe("tooltip.gigBack");
+    expect(keys("next")).toBe("tooltip.gigNext");
+    expect(keys("exit")).toBe("tooltip.gigExit");
+    const untipped = [...document.querySelectorAll<HTMLButtonElement>("#gig-panel button")].filter(
+      (button) => !button.dataset.tooltipKey,
+    );
+    expect(untipped).toEqual([]);
+  });
+
+  it("uses the singular for one unavailable track", async () => {
+    const one: GigReport = { ...report, unavailable_drives: [{ name: "USB", track_count: 1, crates: [] }] };
+    vi.stubGlobal("fetch", vi.fn(() => Promise.resolve(reply(one))));
+    await loadGigCheck();
+    expect(reportText()).toContain("USB: 1 track unavailable");
+    expect(reportText()).not.toContain("1 tracks");
   });
 });

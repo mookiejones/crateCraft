@@ -6,7 +6,9 @@
  * loadLibrary. Settings load when the dialogs wire. server.py uses port
  * 8765. The desktop app uses a free port, and this page calls the same
  * origin. Snapshot UI is src/restore.ts. The gig check is src/gig.ts.
- * This file does not open master.sqlite itself.
+ * This file does not open master.sqlite itself. The page language is set
+ * before the first paint and every view repaints when it changes; see
+ * src/i18n.ts.
  */
 
 import { failureOf } from "./api";
@@ -14,6 +16,7 @@ import { wireDialogs } from "./dialogs";
 import { el } from "./dom";
 import { wireGigCheck } from "./gig";
 import { wireLayout } from "./layout";
+import { wireLocale } from "./locale-wiring";
 import {
   bindLibraryReload,
   confirmSnapshotRestore,
@@ -23,8 +26,12 @@ import {
   setSnapshotDialogStatus,
   takeSnapshot,
 } from "./restore";
+import { registerPlayerControls, wireShortcuts } from "./shortcuts";
 import { state } from "./state";
+import { loadVersion, wireVersion } from "./version";
 import { loadLibrary, setMode, showFailure, wireLibrary } from "./views";
+import { mountPlayer, playerControls } from "./player";
+import { applyStaticTooltips, installTooltips } from "./tooltip";
 import { mountTrackList, wireVirtualScroll } from "./virtual-scroll";
 
 /**
@@ -59,14 +66,22 @@ function wireSnapshots(): void {
   });
 }
 
+wireLocale();
+installTooltips();
+applyStaticTooltips();
 mountTrackList();
+mountPlayer();
+registerPlayerControls(playerControls);
 wireLibrary();
 wireVirtualScroll();
+wireShortcuts();
 wireDialogs();
 wireSnapshots();
 wireGigCheck(() => {
   setMode("crates");
 });
 wireLayout();
+wireVersion();
+void loadVersion();
 bindLibraryReload(loadLibrary);
 loadLibrary().catch(showFailure);
