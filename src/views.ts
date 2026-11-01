@@ -26,6 +26,7 @@ import type {
 import { bridge } from "./bridge";
 import { el } from "./dom";
 import { clockLabel, colorHex, compare, durationLabel, sizeLabel } from "./format";
+import { loadGigCheck, showGigFailure } from "./gig";
 import { failSnapshots, loadSnapshots } from "./restore";
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
 import { play } from "./player";
@@ -551,25 +552,33 @@ export function renderColumns() {
 export function renderShell() {
   markHistoryColumns();
   const cratesMode = state.mode === "crates";
+  const gigMode = state.mode === "gig";
   const historyMode = state.mode === "history";
-  el("crate-tools").hidden = !cratesMode;
+  const showCrates = cratesMode || gigMode;
+  el("crate-tools").hidden = !showCrates;
   el("crate-actions").hidden = !cratesMode;
-  el("crate-list").hidden = !cratesMode;
+  el("crate-list").hidden = !showCrates;
   el("session-list").hidden = !historyMode;
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  el("browser").hidden = filesMode || snapshotsMode;
-  el("track-splitter").hidden = filesMode || snapshotsMode;
-  el("detail").hidden = filesMode || snapshotsMode;
+  const panelMode = filesMode || snapshotsMode || gigMode;
+  el("browser").hidden = panelMode;
+  el("track-splitter").hidden = panelMode;
+  el("detail").hidden = panelMode;
   el("files-panel").hidden = !filesMode;
   el("snapshots-panel").hidden = !snapshotsMode;
+  el("gig-panel").hidden = !gigMode;
   if (state.mode === "missing") el("mode-note").textContent = t("mode.missing");
   if (state.mode === "duplicates") {
     el("mode-note").textContent = t("mode.duplicates");
   }
   if (state.mode === "stems") el("mode-note").textContent = t("mode.stems");
   if (filesMode) el("mode-note").textContent = t("mode.files");
+  if (gigMode) {
+    el("mode-note").textContent = t("mode.gig");
+    document.querySelector(".rules")?.remove();
+  }
   if (snapshotsMode) {
     el("mode-note").textContent = t("mode.snapshots");
   }
@@ -594,6 +603,11 @@ export function renderShell() {
     }
     const listed = state.filesEntries.filter((entry) => entry.kind === "file").length;
     el("crate-foot").textContent = state.filesLoading ? t("files.readingFolder") : t("files.fileCount", { count: listed });
+    return;
+  }
+  if (gigMode) {
+    const crate = state.crates.find((item) => item.id === state.activeCrate);
+    el("crate-foot").textContent = state.activeCrate === "all" ? "All tracks" : (crate?.name ?? "Selected crate");
     return;
   }
   if (snapshotsMode) {
@@ -641,6 +655,10 @@ export function renderList() {
   renderShell();
   if (state.mode === "files") {
     renderFiles();
+    return;
+  }
+  if (state.mode === "gig") {
+    renderCrates();
     return;
   }
   renderColumns();
@@ -704,6 +722,7 @@ export function selectCrate(id: number | "all") {
   if (id !== "all") expandAncestors(id);
   el("list").scrollTop = 0;
   renderList();
+  if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
 }
 
 /**
@@ -1715,6 +1734,7 @@ function membershipSection(track: Track, writable: boolean) {
 export function repaintViews(): void {
   // The static markup pass resets the status line, so put the server's back.
   if (state.serato) el("status").textContent = statusLine(state.serato);
+  paintGeneration(state.serato);
   renderList();
   if (state.mode === "history") {
     renderSessions();
@@ -1763,10 +1783,90 @@ export function statusLine(info: SeratoStatus | null | undefined): string {
   return info?.message || t("status.library");
 }
 
+const GENERATION_LABELS: Record<string, MessageKey> = {
+  serato4: "generation.serato4",
+  serato5: "generation.serato5",
+  legacy: "generation.legacy",
+  unknown: "generation.unknown",
+};
+
+const GENERATION_REASONS: Record<string, MessageKey> = {
+  log: "generation.reason.log",
+  version: "generation.reason.version",
+  fallback: "generation.reason.fallback",
+  unknown: "generation.reason.unknown",
+  unmounted: "generation.reason.unmounted",
+  downgrade: "generation.reason.downgrade",
+  mismatch: "generation.reason.mismatch",
+  installed: "generation.reason.installed",
+  installUnknown: "generation.reason.installUnknown",
+};
+
+/**
+ * The short name for the generation button.
+ *
+ * @param info Status payload. Null before the server answers.
+ * @returns The catalog key for the visible label.
+ */
+function generationKind(info: SeratoStatus | null | undefined): MessageKey {
+  const kind = info?.generation?.kind ?? "";
+  return GENERATION_LABELS[kind] ?? "generation.checking";
+}
+
+/**
+ * The sentence under the generation button.
+ *
+ * @param info Status payload. Null before the server answers.
+ * @returns The reason in the active language.
+ */
+function generationReason(info: SeratoStatus | null | undefined): string {
+  const generation = info?.generation;
+  const key = GENERATION_REASONS[generation?.reason ?? ""] ?? "generation.reason.pending";
+  return t(key, {
+    log: generation?.log_name || "",
+    version: generation?.version || "",
+    newest: generation?.newest_version || "",
+    database: generation?.database || "",
+  });
+}
+
+/**
+ * Paint the library-generation button from the status payload.
+ *
+ * The visible name is the generation. The accessible name adds that it is
+ * the library generation, and the tooltip says where that answer came from.
+ * Those three strings are not the same. Opening the button shows the reason.
+ *
+ * @param info Status payload. Null before the server answers.
+ * @returns {void}
+ */
+export function paintGeneration(info: SeratoStatus | null | undefined): void {
+  const button = document.getElementById("library-generation");
+  if (!(button instanceof HTMLButtonElement)) return;
+  const kind = t(generationKind(info));
+  button.textContent = kind;
+  button.setAttribute("aria-label", t("generation.named", { kind }));
+  setTooltip(button, tips.libraryGeneration);
+  const note = document.getElementById("library-generation-note");
+  if (note) {
+    note.textContent = generationReason(info);
+    note.hidden = button.getAttribute("aria-expanded") !== "true";
+  }
+  if (button.dataset.bound === "1") return;
+  button.dataset.bound = "1";
+  button.addEventListener("click", () => {
+    const next = button.getAttribute("aria-expanded") !== "true";
+    button.setAttribute("aria-expanded", next ? "true" : "false");
+    const panel = document.getElementById("library-generation-note");
+    if (panel) panel.hidden = !next;
+  });
+}
+
 export function applyStatus(info: SeratoStatus | null | undefined) {
   state.serato = info;
   state.writable = Boolean(info?.writable);
   el("status").textContent = statusLine(info);
+  paintGeneration(info);
   renderShell();
 }
 
@@ -2271,7 +2371,8 @@ export async function loadLibrary() {
 }
 
 /**
- * Switch among crates, history, missing, duplicates, stems, and files.
+ * Switch among crates, history, missing, duplicates, stems, files,
+ * snapshots, and gig.
  *
  * History sorts by start time descending and loads sessions once.
  * Duplicates load when this space has not been scanned yet. Files loads
@@ -2302,6 +2403,7 @@ export function setMode(mode: string) {
   if (mode === "snapshots") {
     loadSnapshots().catch((error) => failSnapshots(error));
   }
+  if (mode === "gig") loadGigCheck().catch(showGigFailure);
   renderList();
 }
 
@@ -3119,6 +3221,7 @@ export function wireLibrary(): void {
     const jobs = [loadLibrary()];
     if (state.mode === "history") jobs.push(loadHistory());
     if (state.mode === "duplicates") jobs.push(loadDuplicates());
+    if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
     Promise.all(jobs).catch(showFailure);
   });
 
@@ -3151,6 +3254,7 @@ export function wireLibrary(): void {
     state.duplicateGroups = [];
     loadLibrary().then(() => {
       if (state.mode === "duplicates") return loadDuplicates();
+      if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
       return null;
     }).catch(showFailure);
   });

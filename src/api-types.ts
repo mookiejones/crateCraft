@@ -6,6 +6,21 @@
  * the page already treats that as empty.
  */
 
+export interface LibraryGeneration {
+  kind?: string;
+  source?: string;
+  version?: string;
+  build?: string;
+  newest_version?: string;
+  database?: string;
+  log_name?: string;
+  mounted?: boolean | null;
+  downgrade?: boolean;
+  confirmed?: boolean | null;
+  reason?: string;
+  install_version?: string;
+}
+
 export interface SeratoStatus {
   writable?: boolean;
   message?: string;
@@ -15,6 +30,8 @@ export interface SeratoStatus {
   code?: string;
   /** Placeholder values for `code`, such as the Serato build. */
   params?: Record<string, string>;
+  /** Serato 4, Serato 5, or unknown, and why that was chosen. */
+  generation?: LibraryGeneration;
 }
 
 export interface EditFields {
@@ -472,6 +489,40 @@ export interface SnapshotList {
   write_block_params?: Record<string, string>;
   serato_running?: boolean;
   drive_backup?: DriveBackup | null;
+  error?: string;
+}
+
+export interface GigDeduction {
+  code: string;
+  points: number;
+  hard_red: boolean;
+  summary: string;
+}
+
+export interface GigChanges {
+  crates_added: string[];
+  crates_removed: string[];
+  crates_edited: string[];
+  tracks_added: string[];
+  tracks_removed: string[];
+  cues_edited: string[];
+  grids_edited: string[];
+  tags_edited: string[];
+}
+
+export interface GigReport {
+  ready: boolean;
+  score: number;
+  hard_red: boolean;
+  holding_it_back?: GigDeduction[];
+  missing_files?: Array<{ path: string; title: string; artist: string; crate: string }>;
+  unavailable_drives?: Array<{ name: string; track_count: number; crates: string[] }>;
+  streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string }>;
+  empty_crates?: Array<{ name: string; warning: string }>;
+  snapshot_note?: string;
+  changes?: GigChanges | null;
+  scope?: { space: string; crate_id: number | null; crate_name: string | null };
+  checked_at?: string;
   error?: string;
 }
 

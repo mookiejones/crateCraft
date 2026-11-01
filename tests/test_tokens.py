@@ -328,6 +328,7 @@ def _length(value: str, colors: dict[str, str]) -> float:
     named = re.search(r"var\(\s*(--[A-Za-z0-9-]+)", value)
     if named:
         token = {
+            "--font-display": 56,
             "--font-title": 20,
             "--font-heading": 14,
             "--font-body": 13,
@@ -361,6 +362,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("body", ("--color-card", "--color-selection", "hover", "--color-button"), 15, 400),
     (".rail", ("--color-bg",), 15, 400),
     (".brand p", ("--color-bg",), 14, 400),
+    (".generation", ("--color-bg",), 15, 400),
+    (".brand .generation-note", ("--color-bg",), 13, 400),
     (".rail select", ("--color-bg",), 15, 400),
     (".rail-field input", ("--color-bg",), 15, 400),
     (".view-switch button", ("--color-bg",), 15, 400),
@@ -385,6 +388,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("#export-m3u", ("--color-card",), 15, 400),
     ("#export-rekordbox", ("--color-card",), 15, 400),
     ("#import-m3u", ("--color-card",), 15, 400),
+    ("#gig-refresh", ("--color-card",), 15, 400),
     (".text-button", ("--color-card",), 15, 400),
     (".actions button", ("--color-card",), 15, 400),
     (".rekordbox-option", ("--color-card",), 15, 400),
@@ -397,6 +401,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".empty-list", ("--color-card",), 15, 400),
     (".detail-empty", ("--color-card",), 15, 400),
     (".detail-error", ("--color-card",), 15, 400),
+    (".gig-verdict.not-ready", ("--color-card",), 18, 600),
     (".detail-kicker", ("--color-card",), 15, 400),
     (".deck .bpm", ("--color-card",), 28, 500),
     (".deck span", ("--color-card",), 13, 400),
