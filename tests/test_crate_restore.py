@@ -8,8 +8,10 @@ They do not open a live library.
 
 from __future__ import annotations
 
+import hashlib
 import os
 import shutil
+import sqlite3
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -710,6 +712,81 @@ class CrateRestoreTests(unittest.TestCase):
             self.assertEqual(entry["action"], "restore")
             self.assertIs(entry["verified"], True)
             self.assertIs(entry["rolled_back"], False)
+
+    def test_row_check_leaves_the_database_and_wal_bytes_unchanged(self) -> None:
+        """Read the restored database without checkpointing its WAL.
+
+        Opening the live file read-write folds the WAL into the database
+        and removes ``-wal`` and ``-shm``. The check copies them and opens
+        the copy read-only, so those three hashes stay the same.
+
+        Returns:
+            None. The test fails if any of the three files changes.
+        """
+        with TempLibrary() as temp:
+            conn = sqlite3.connect(temp.db)
+            try:
+                library._keep_wal(conn)
+                conn.execute("PRAGMA journal_mode=WAL")
+                conn.execute("UPDATE asset SET name = name WHERE id = 1")
+                conn.commit()
+            finally:
+                conn.close()
+            wal = Path(str(temp.db) + "-wal")
+            shm = Path(str(temp.db) + "-shm")
+            self.assertTrue(wal.is_file())
+            self.assertTrue(shm.is_file())
+
+            def digest(path: Path) -> str:
+                return hashlib.sha256(path.read_bytes()).hexdigest()
+
+            before = (digest(temp.db), digest(wal), digest(shm))
+            snapshots._load_rows(temp.db)
+            after = (digest(temp.db), digest(wal), digest(shm))
+            self.assertEqual(after, before)
+            self.assertTrue(wal.is_file())
+            self.assertTrue(shm.is_file())
+
+    def test_an_unrelated_track_change_after_registration_rolls_back(self) -> None:
+        """Roll back when a restore that registers a crate changes another row.
+
+        The crate rows are allowed. A track row that was not part of that
+        registration is not. The pre-restore snapshot is put back.
+
+        Returns:
+            None. The test fails if the tampered title or the new crate remains.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            (sub / "House.crate").write_bytes(_crate(["Music/same-a.mp3"]))
+            saved = store.take("manual", "House is only a crate file.")
+            (sub / "House.crate").unlink()
+            with open_database(temp.db) as conn:
+                original = conn.execute("SELECT name FROM asset WHERE id = 1").fetchone()
+            assert original is not None
+
+            def tamper() -> None:
+                with open_database(temp.db) as conn:
+                    conn.execute("UPDATE asset SET name = ? WHERE id = 1", ("Tampered",))
+
+            store.restore_fault = snapshots.RestoreFault(after_apply=tamper)
+            with self.assertRaises(snapshots.SnapshotError) as caught:
+                store.restore(saved["id"])
+            self.assertIn("put back", caught.exception.message)
+            with open_database(temp.db) as conn:
+                name = conn.execute("SELECT name FROM asset WHERE id = 1").fetchone()
+                houses = conn.execute("SELECT COUNT(*) FROM container WHERE name = 'House'").fetchone()
+            assert name is not None
+            assert houses is not None
+            self.assertEqual(name[0], original[0])
+            self.assertEqual(houses[0], 0)
+            self.assertFalse((sub / "House.crate").exists())
+            entry = safe_write.read_log(temp.db)[-1]
+            self.assertEqual(entry["result"], "rolled_back")
+            self.assertIs(entry["verified"], False)
+            self.assertIs(entry["rolled_back"], True)
 
     def test_registration_does_not_open_another_snapshot(self) -> None:
         """Avoid a nested snapshot while a restore could be holding the journal.

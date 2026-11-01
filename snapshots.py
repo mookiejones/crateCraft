@@ -22,12 +22,18 @@ Serato 4 and 5 delete a ``.crate`` or ``.scrate`` the database has never
 heard of the next time they launch. After the crate files are put back,
 restore registers those files through the same write guards as a crate
 edit, without a second snapshot while the restore journal is open.
-After the files are replaced, the restore checks them again. Database
-files are compared by rows: the snapshot's rows plus exactly the crates
-that were registered. A crate whose snapshot copy could not be read is
-left out of that check and reported as skipped. A mismatch puts the
-pre-restore snapshot back. ``plan`` reports crate, track, cue, and grid
-differences, including crates that registration will write, and writes nothing.
+After the files are replaced, the restore checks them again. When no
+crate was registered, the database files are compared by byte hash.
+When crates were registered, row counts are compared: the snapshot's
+rows plus exactly those crates. That read copies the database and its
+WAL and opens the copy with ``mode=ro`` and ``query_only``, so the live
+file, ``-wal``, and ``-shm`` stay unchanged. Indexes, triggers, views,
+and ``PRAGMA integrity_check`` must match, and in the ``serato`` table
+only ``revision`` may change. A crate whose snapshot copy could not be
+read is left out of the file check and reported as skipped. A mismatch
+puts the pre-restore snapshot back. ``plan`` reports crate, track, cue,
+and grid differences, including crates that registration will write,
+and writes nothing.
 """
 
 from __future__ import annotations
@@ -48,6 +54,7 @@ import sys
 import tempfile
 import threading
 import time
+from collections import Counter
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import closing, contextmanager
 from dataclasses import dataclass
@@ -1855,16 +1862,17 @@ class SnapshotStore:
     def _verify_applied_database(self, manifest: Mapping[str, object]) -> None:
         """Compare restored database rows with the snapshot plus registered crates.
 
-        The file bytes change when crate rows are inserted, so the check is
-        the snapshot's rows plus exactly those crates. A database that was
-        not registered stays row-for-row the same.
+        When no crate was registered, the file bytes must match the snapshot.
+        When crates were registered, the rows must be the snapshot's rows
+        plus exactly those crates. The live file is not opened.
 
         Args:
             manifest: Verified snapshot.
 
         Raises:
-            SnapshotError: If a database file is missing or its rows are not
-                the snapshot plus the registered crates.
+            SnapshotError: If a database file is missing, its bytes differ
+                when nothing was registered, or its rows are not the snapshot
+                plus the registered crates.
         """
         database = manifest.get("database")
         if not isinstance(database, dict):
@@ -1885,6 +1893,10 @@ class SnapshotStore:
             path = library_dir / filename
             if path.is_symlink() or not path.is_file():
                 raise SnapshotError("The restored database does not match the snapshot.")
+            if not family:
+                if _sha256_file(path) != digest:
+                    raise SnapshotError("The restored database does not match the snapshot.")
+                continue
             if not _database_rows_match(self._read_blob(digest), path, family):
                 raise SnapshotError("The restored database does not match the snapshot.")
 
@@ -3507,17 +3519,46 @@ def _ident(name: str) -> str:
     return '"' + name + '"'
 
 
-def _load_rows(path: Path) -> dict[str, tuple[list[str], set[tuple[object, ...]]]]:
-    """Read every user table as a set of rows.
+def _load_rows(path: Path) -> dict[str, tuple[list[str], Counter[tuple[object, ...]]]]:
+    """Read every user table as a count of rows.
+
+    The live file is not opened. :func:`library.copied_read_conn` copies
+    the database and its WAL, then opens that copy with ``mode=ro`` and
+    ``query_only``. The original database, ``-wal``, and ``-shm`` stay
+    as they are.
 
     Args:
-        path: SQLite database. The WAL is included when it is present.
+        path: SQLite database. A real ``-wal`` file is copied with it.
 
     Returns:
-        Table name to ``(column names, rows)``.
+        Table name to ``(column names, row counts)``.
     """
-    found: dict[str, tuple[list[str], set[tuple[object, ...]]]] = {}
-    with closing(sqlite3.connect(path)) as conn:
+    tables, _schema, _ok = _read_database(path)
+    return tables
+
+
+def _read_database(
+    path: Path,
+) -> tuple[
+    dict[str, tuple[list[str], Counter[tuple[object, ...]]]],
+    Counter[tuple[object, ...]],
+    bool,
+]:
+    """Read row counts, schema objects, and the integrity result.
+
+    Args:
+        path: SQLite database. A real ``-wal`` file is copied with it.
+            The original file is not opened as a database.
+
+    Returns:
+        User tables, counts of ``(type, name, tbl_name, sql)`` for
+        indexes, triggers, and views, and whether ``PRAGMA integrity_check``
+        returned a single ``ok``.
+    """
+    import library
+
+    found: dict[str, tuple[list[str], Counter[tuple[object, ...]]]] = {}
+    with library.copied_read_conn(path) as conn:
         tables = [
             str(row[0])
             for row in conn.execute(
@@ -3529,13 +3570,21 @@ def _load_rows(path: Path) -> dict[str, tuple[list[str], set[tuple[object, ...]]
             cols = [str(row[1]) for row in info]
             quoted = ", ".join(_ident(col) for col in cols)
             rows = conn.execute(f"SELECT {quoted} FROM {_ident(table)}").fetchall()
-            found[table] = (cols, {tuple(row) for row in rows})
-    return found
+            found[table] = (cols, Counter(tuple(row) for row in rows))
+        schema_rows = conn.execute(
+            """
+            SELECT type, name, tbl_name, sql FROM sqlite_master
+            WHERE type IN ('index', 'trigger', 'view')
+            """
+        ).fetchall()
+        checked = conn.execute("PRAGMA integrity_check").fetchall()
+    schema = Counter(tuple(row) for row in schema_rows)
+    return found, schema, len(checked) == 1 and checked[0][0] == "ok"
 
 
 def _allowed_container_ids(
-    snap: dict[str, tuple[list[str], set[tuple[object, ...]]]],
-    live: dict[str, tuple[list[str], set[tuple[object, ...]]]],
+    snap: dict[str, tuple[list[str], Counter[tuple[object, ...]]]],
+    live: dict[str, tuple[list[str], Counter[tuple[object, ...]]]],
     family: set[str],
 ) -> set[int] | None:
     """Return container ids the registered crates may add or change.
@@ -3587,9 +3636,9 @@ def _row_belongs(table: str, cols: list[str], row: tuple[object, ...], allowed: 
 
     Returns:
         True when the row is one of those crates or their membership.
+        A ``serato`` row is not covered here. Only its revision may differ,
+        and that comparison is done by the caller.
     """
-    if table == "serato":
-        return bool(allowed)
     if table == "container" and "id" in cols:
         return int(row[cols.index("id")]) in allowed
     if "container_id" in cols and row[cols.index("container_id")] is not None:
@@ -3610,16 +3659,24 @@ def _database_rows_match(snapshot: bytes, live: Path, family: set[str]) -> bool:
     Returns:
         True when every snapshot row is still there, or was replaced only
         for a registered crate, and every extra row belongs to those crates.
+        Counts must match, including a repeated row. Columns must match
+        even when a table is empty. Indexes, triggers, and views must
+        match, and ``PRAGMA integrity_check`` must be ok. In ``serato``,
+        only ``revision`` may differ.
     """
     fd, name = tempfile.mkstemp(prefix="serato-rowcheck-", suffix=".sqlite")
     os.close(fd)
     path = Path(name)
     try:
         path.write_bytes(snapshot)
-        snap = _load_rows(path)
+        snap, snap_schema, snap_ok = _read_database(path)
     finally:
         path.unlink(missing_ok=True)
-    current = _load_rows(live)
+        for suffix in ("-wal", "-shm", "-journal"):
+            Path(str(path) + suffix).unlink(missing_ok=True)
+    current, live_schema, live_ok = _read_database(live)
+    if not snap_ok or not live_ok or snap_schema != live_schema:
+        return False
     allowed = _allowed_container_ids(snap, current, family)
     if allowed is None:
         return False
@@ -3628,24 +3685,25 @@ def _database_rows_match(snapshot: bytes, live: Path, family: set[str]) -> bool:
     if located is not None and "id" in located[0] and "container_id" in located[0]:
         id_at = located[0].index("id")
         crate_at = located[0].index("container_id")
-        locations = {int(row[id_at]) for row in located[1] if row[crate_at] is not None and int(row[crate_at]) in allowed}
+        locations = {
+            int(row[id_at])
+            for row in located[1]
+            if row[crate_at] is not None and int(row[crate_at]) in allowed
+        }
     tables = set(snap) | set(current)
     for table in tables:
-        snap_cols, snap_rows = snap.get(table, ([], set()))
-        live_cols, live_rows = current.get(table, ([], set()))
-        if table == "serato" and allowed:
-            snap_rows = {_without_revision(snap_cols, row) for row in snap_rows}
-            live_rows = {_without_revision(live_cols, row) for row in live_rows}
-            snap_cols = [col for col in snap_cols if col != "revision"]
-            live_cols = [col for col in live_cols if col != "revision"]
-        if snap_cols != live_cols and snap_rows and live_rows:
+        snap_cols, snap_rows = snap.get(table, ([], Counter()))
+        live_cols, live_rows = current.get(table, ([], Counter()))
+        if snap_cols != live_cols:
             return False
-        cols = live_cols or snap_cols
-        for row in snap_rows - live_rows:
-            if not _row_belongs(table, cols, row, allowed, locations):
+        if table == "serato":
+            snap_plain = Counter(_without_revision(snap_cols, row) for row in snap_rows.elements())
+            live_plain = Counter(_without_revision(live_cols, row) for row in live_rows.elements())
+            if snap_plain != live_plain:
                 return False
-        for row in live_rows - snap_rows:
-            if not _row_belongs(table, cols, row, allowed, locations):
+            continue
+        for row in set(snap_rows) | set(live_rows):
+            if snap_rows[row] != live_rows[row] and not _row_belongs(table, snap_cols, row, allowed, locations):
                 return False
     return True
 
