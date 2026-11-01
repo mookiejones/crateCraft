@@ -34,6 +34,7 @@ import library
 import music_roots
 import rekordbox
 import related
+import relink
 import setup_flow
 import snapshots
 import telemetry
@@ -1766,6 +1767,15 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
                 self.wfile.write(body)
+                return
+            if parsed.path == "/api/relink":
+                space = require_space(query_text(query, "space"))
+                roots = [
+                    Path(str(item["path"]))
+                    for item in music_roots.music_roots()
+                    if not item.get("missing") and isinstance(item.get("path"), str)
+                ]
+                self.send_json(relink.plan(Path(library.MASTER), space, roots))
                 return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
