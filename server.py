@@ -1963,7 +1963,9 @@ class Handler(BaseHTTPRequestHandler):
         except sqlite3.OperationalError as exc:
             try:
                 info = as_dict(_library_call("status"))
-            except library.LibraryError:
+            except (library.LibraryError, sqlite3.DatabaseError):
+                # A damaged file can fail the re-check too; fall back to the
+                # write's own error instead of the generic 500.
                 info = {}
             if "locked" in str(exc).lower() or info.get("open"):
                 if not info:

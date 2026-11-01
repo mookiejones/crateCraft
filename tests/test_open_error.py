@@ -465,6 +465,42 @@ class OpenErrorHttpTests(unittest.TestCase):
         self.assertEqual(_backups(self.library), [])
         self.assertTrue(song.is_file())
 
+    def test_status_recheck_that_fails_still_answers_json(self) -> None:
+        """Answer the POST when the ``status()`` re-check itself fails.
+
+        A write that raises ``OperationalError`` makes the server re-read
+        ``status()``. A damaged file raises ``sqlite3.DatabaseError`` there
+        ("file is not a database"), which ``status()`` does not turn into a
+        busy status. The server must still send a JSON answer, not drop
+        the connection: 409 with the SQLite text for a lock, 500 otherwise.
+
+        Returns:
+            None. The test fails if the request gets no JSON answer.
+        """
+        before = self.library.db.read_bytes()
+        damaged = sqlite3.DatabaseError("file is not a database")
+        cases = {
+            "database is locked": 409,
+            "no such column: bogus": 500,
+        }
+        for text, expected in cases.items():
+            with self.subTest(error=text), mock.patch.object(
+                files, "plan", side_effect=sqlite3.OperationalError(text)
+            ), mock.patch.object(library, "status", side_effect=damaged):
+                code, body = self.request("/api/files", {"action": "rename", "path": "/x.mp3"})
+                self.assertEqual(code, expected, body)
+                if expected == 409:
+                    self.assertTrue(body["serato"]["open"])
+                    self.assertFalse(body["serato"]["writable"])
+                    self.assertEqual(body["error"], library.LOCKED_MESSAGE)
+                else:
+                    self.assertEqual(
+                        body,
+                        {"error": "The library could not be saved.", "code": "library_not_saved"},
+                    )
+        self.assertEqual(self.library.db.read_bytes(), before)
+        self.assertEqual(_backups(self.library), [])
+
 
 if __name__ == "__main__":
     unittest.main()
