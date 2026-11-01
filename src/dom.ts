@@ -38,6 +38,8 @@ export interface ElementIds {
   "snapshot-dialog": HTMLDialogElement;
   "snapshot-status": HTMLParagraphElement;
   "snapshots-take": HTMLButtonElement;
+  "snapshots-drives": HTMLButtonElement;
+  "snapshots-drives-note": HTMLParagraphElement;
   "crate-search": HTMLInputElement;
   reload: HTMLButtonElement;
   "export-m3u": HTMLButtonElement;

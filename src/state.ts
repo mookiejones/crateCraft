@@ -16,6 +16,7 @@ import type {
   HistorySession,
   PendingUndo,
   SeratoStatus,
+  DriveBackup,
   SnapshotInfo,
   Track,
 } from "./api-types";
@@ -98,6 +99,7 @@ export interface PageState {
   filesQuery: string;
   filesSearching: boolean;
   snapshots: SnapshotInfo[];
+  driveBackup: DriveBackup | null;
   snapshotLoading: boolean;
   snapshotError: string;
   snapshotMessage: MessageKey | "";
@@ -158,6 +160,7 @@ export const state: PageState = {
   filesQuery: "",
   filesSearching: false,
   snapshots: [],
+  driveBackup: null,
   snapshotLoading: false,
   snapshotError: "",
   snapshotMessage: "",

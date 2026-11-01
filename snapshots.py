@@ -1801,6 +1801,40 @@ def discover_drives() -> list[DriveSpec]:
     return found
 
 
+def drives_for_backup() -> list[DriveSpec]:
+    """Return drives a plain backup should record.
+
+    Present drives come from :func:`discover_drives`. A drive the newest
+    snapshot already stored, and that is not mounted now, is included with
+    ``present`` false so the backup can list it without treating it as a
+    failure. A relocated library discovers no present drives.
+
+    Returns:
+        Drive specs. Nothing is written.
+    """
+    found = discover_drives()
+    seen = {spec.drive_id for spec in found}
+    try:
+        previous = current_store()._latest_manifest()
+    except (OSError, SnapshotError):
+        previous = None
+    for record in _drive_records(previous):
+        drive_id = str(record.get("drive_id") or "")
+        if not drive_id or drive_id in seen:
+            continue
+        label = record.get("label")
+        role = record.get("role")
+        found.append(DriveSpec(
+            drive_id=drive_id,
+            label=label if isinstance(label, str) and label else drive_id,
+            serato_root=None,
+            music_root=None,
+            role=role if role in {"internal", "external"} else "external",
+            present=False,
+        ))
+    return found
+
+
 def default_process_names() -> list[str]:
     """Return command names of running processes.
 
@@ -2464,6 +2498,51 @@ def _iter_serato_files(root: Path) -> list[tuple[str, Path]]:
                 continue
             rel = path.relative_to(root).as_posix()
             if _excluded_relative(rel) or _fold_component(name) in _EXCLUDED_FOLDED:
+                continue
+            found.append((rel, path))
+    return found
+
+
+def iter_backup_files(root: Path) -> list[tuple[str, Path]]:
+    """List ``_Serato_`` files a plain backup copies.
+
+    ``Export Backups`` and ``Lexicon`` are excluded with the same folding
+    as a snapshot: letter case, a trailing dot, a trailing space, and an
+    alternate data stream. Shortcuts are not followed. There is no size
+    cap. ``Recording`` and ``DJ Sessions`` are included. The caller checks
+    free space before it copies, and refuses the backup when the disk
+    cannot hold the files.
+
+    Args:
+        root: ``_Serato_`` directory.
+
+    Returns:
+        Relative POSIX path and file path.
+
+    Raises:
+        OSError: If a directory in the tree cannot be listed.
+    """
+    found: list[tuple[str, Path]] = []
+    if not root.is_dir() or root.is_symlink():
+        return found
+
+    def onerror(error: OSError) -> None:
+        raise error
+
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=onerror):
+        current = Path(dirpath)
+        dirnames[:] = [
+            name for name in dirnames
+            if _fold_component(name) not in _EXCLUDED_FOLDED and not (current / name).is_symlink()
+        ]
+        for name in filenames:
+            path = current / name
+            if path.is_symlink() or not path.is_file():
+                continue
+            if _fold_component(name) in _EXCLUDED_FOLDED:
+                continue
+            rel = path.relative_to(root).as_posix()
+            if _excluded_relative(rel):
                 continue
             found.append((rel, path))
     return found

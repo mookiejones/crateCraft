@@ -6,7 +6,7 @@
  */
 
 import { failureOf, postJSON, readJSON } from "./api";
-import type { FrameDiff, PlanName, RestorePlan, SnapshotList } from "./api-types";
+import type { DriveBackup, DriveCopy, FrameDiff, PlanName, RestorePlan, SnapshotList } from "./api-types";
 import { el } from "./dom";
 import { state } from "./state";
 import { codedText, formatList, messageParams, serverMessage, t } from "./i18n";
@@ -42,6 +42,7 @@ export async function loadSnapshots() {
   state.writeBlockCode = payload.write_block_code || "";
   state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
   state.seratoRunning = Boolean(payload.serato_running);
+  state.driveBackup = driveBackupFrom(payload.drive_backup);
   state.snapshotLoading = false;
   renderSnapshots();
 }
@@ -72,6 +73,7 @@ export function renderSnapshots() {
   const undo = el("snapshots-undo");
   const list = el("snapshots-list");
   list.setAttribute("aria-busy", String(state.snapshotLoading));
+  paintDriveCopies();
   if (state.writeBlock) {
     block.hidden = false;
     block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
@@ -168,6 +170,92 @@ let lastPlan: RestorePlan | null = null;
  */
 export function repaintSnapshotPlan() {
   if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
+}
+
+function isDriveCopy(value: unknown): value is DriveCopy {
+  if (!value || typeof value !== "object") return false;
+  const record = value as DriveCopy;
+  return typeof record.status === "string" && (record.label === undefined || typeof record.label === "string");
+}
+
+/**
+ * Keep a drive report only when the server says the hashes matched.
+ *
+ * @param value JSON from `drive_backup`.
+ * @returns The report, or null when it is missing or not verified.
+ */
+export function driveBackupFrom(value: unknown): DriveBackup | null {
+  if (!value || typeof value !== "object") return null;
+  const record = value as DriveBackup;
+  if (record.verified !== true) return null;
+  const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
+  return {
+    folder: typeof record.folder === "string" ? record.folder : "",
+    verified: true,
+    drives,
+  };
+}
+
+function driveName(drive: DriveCopy, status: string): string {
+  const name = drive.label || drive.drive_id || t("snapshots.unknownTime");
+  if (status === "read-only") return t("snapshots.driveReadOnly", { name });
+  if (status === "permission") return t("snapshots.drivePermission", { name });
+  return name;
+}
+
+function driveCopyText(): string {
+  const report = state.driveBackup;
+  const drives = report?.drives ?? [];
+  if (!report?.verified || !drives.length) {
+    return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
+  }
+  const parts: string[] = [];
+  const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
+  const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
+  const skipped = drives
+    .filter((drive) => drive.status === "read-only" || drive.status === "permission")
+    .map((drive) => driveName(drive, drive.status ?? ""));
+  if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
+  if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
+  if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
+  return parts.join(" ") || t("snapshots.drivesIntro");
+}
+
+function paintDriveCopies(): void {
+  const note = el("snapshots-drives-note");
+  note.hidden = false;
+  note.textContent = driveCopyText();
+}
+
+/**
+ * Copy each connected drive's Serato folder into the backup on this computer.
+ *
+ * The request does not change the library. An unplugged drive is listed
+ * and skipped. A failure stays on the drive line. The snapshot list is
+ * left in place.
+ *
+ * @returns {Promise<void>}
+ */
+export async function backupDriveCrates(): Promise<void> {
+  const button = el("snapshots-drives");
+  button.disabled = true;
+  const note = el("snapshots-drives-note");
+  note.hidden = false;
+  note.textContent = t("snapshots.backupDrivesBusy");
+  try {
+    const payload = await postJSON<SnapshotList & { created?: boolean }>("/api/snapshots", { action: "backup-drives" });
+    state.driveBackup = driveBackupFrom(payload.drive_backup);
+    state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
+    renderSnapshots();
+  } catch (error) {
+    state.snapshotMessage = "";
+    renderSnapshots();
+    const shown = el("snapshots-drives-note");
+    shown.hidden = false;
+    shown.textContent = failureOf(error).message || t("snapshots.unreadable");
+  } finally {
+    button.disabled = false;
+  }
 }
 
 function paintSnapshotPlan(plan: RestorePlan) {

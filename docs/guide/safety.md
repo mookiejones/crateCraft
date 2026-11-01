@@ -56,7 +56,7 @@ The copy is a folder next to `master.sqlite`:
 
 `Library/Backups/serato-web-YYYYMMDD-HHMMSS`
 
-`YYYYMMDD` is the date. `HHMMSS` is the time on this computer. When a folder for that same second already exists, the name ends with `-02`, then `-03`, up through `-99`. A later number is a later copy from that second. Sorting the folder names keeps them in the order they were made. The folder contains `master.sqlite`. It also contains `root.sqlite` when that file was beside the library. A finished folder also contains a file named `COMPLETE`. That file is JSON. It lists a SHA-256 hash for every other file in the folder.
+`YYYYMMDD` is the date. `HHMMSS` is the time on this computer. When a folder for that same second already exists, the name ends with `-02`, then `-03`, up through `-99`. A later number is a later copy from that second. Sorting the folder names keeps them in the order they were made. The folder contains `master.sqlite`. It also contains `root.sqlite` when that file was beside the library. When a drive is connected, it also contains a `drives` folder. Each drive has its own directory there, and that directory has only that drive's `_Serato_` crates and `database V2`. An unplugged drive is named in `drives.json` and is not copied. A drive that is plugged in later is copied the next time the library is saved. The copy stays on this computer. Nothing is written on the external drive. If there is not enough disk space, the copy is refused and the library is not changed. A finished folder also contains a file named `COMPLETE`. That file is JSON. It lists a SHA-256 hash for every other file in the folder. A restore of this folder is checked against those hashes.
 
 Do not restore a folder whose name ends with `-failed` or `-failed-` and digits, such as `-failed-02` or `-failed-100` (any capitalization). Do not restore a hidden folder whose name ends with `.partial`. Do not restore a folder that contains a file named `INCOMPLETE`. Those copies did not finish. Leave them where they are.
 
@@ -64,7 +64,7 @@ An older folder that has `master.sqlite` but no `COMPLETE` file is **legacy, unv
 
 A file change in the Files view copies the database first as well. During the change, the app also writes `Library/Backups/file-ops-journal.json`. That file is removed when the change finishes. Leave it alone.
 
-The backup is the database, not your audio. A backup does not contain your music files.
+The backup is the database and the drive's `_Serato_` crates, not your audio. A backup does not contain your music files. Recordings Serato stored under `_Serato_` are included. `Export Backups` and `Lexicon` are not.
 
 ## Restore an older database copy by hand
 

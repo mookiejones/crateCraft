@@ -7,8 +7,9 @@ vi.mock("./api", async () => {
   return { ...actual, postJSON };
 });
 
-import { setLocale } from "./i18n";
-import { confirmSnapshotRestore, openSnapshotPlan, renderSnapshots, repaintSnapshotPlan } from "./restore";
+import { applyStatic, setLocale, t } from "./i18n";
+import { backupDriveCrates, confirmSnapshotRestore, openSnapshotPlan, renderSnapshots, repaintSnapshotPlan } from "./restore";
+import { applyStaticTooltips } from "./tooltip";
 import type { RestorePlan } from "./api-types";
 import { state } from "./state";
 import { installPage } from "./test-page";
@@ -52,6 +53,7 @@ describe("restore", () => {
     state.snapshotPlanId = "snap-9";
     state.snapshotUndo = null;
     state.snapshotMessage = "";
+    state.driveBackup = null;
     postJSON.mockReset();
     postJSON.mockResolvedValue({});
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
@@ -143,6 +145,59 @@ describe("restore", () => {
     } finally {
       setLocale("en");
     }
+  });
+
+  it("copies drive crates and keeps the tooltip different from the button name", async () => {
+    applyStatic(document);
+    applyStaticTooltips();
+    const button = document.getElementById("snapshots-drives");
+    expect(button?.getAttribute("aria-label")).toBe("Back up drive crates");
+    expect(button?.getAttribute("data-tooltip")).toBe(t("tooltip.backupDrives"));
+    expect(button?.getAttribute("data-tooltip")).not.toBe(button?.getAttribute("aria-label"));
+    expect(button?.getAttribute("data-tooltip")).not.toBe(t("snapshots.backupDrives"));
+
+    postJSON.mockResolvedValue({
+      ok: true,
+      created: true,
+      drive_backup: {
+        verified: true,
+        folder: "serato-web-1",
+        drives: [
+          { label: "Music", status: "copied", present: true },
+          { label: "OLD", status: "absent", present: false },
+          { label: "LOCK", status: "read-only", present: true },
+        ],
+      },
+    });
+    await backupDriveCrates();
+    expect(postJSON).toHaveBeenCalledWith("/api/snapshots", { action: "backup-drives" });
+    const note = document.getElementById("snapshots-drives-note")?.textContent ?? "";
+    expect(note).toContain("Copied: Music.");
+    expect(note).toContain("Unplugged, not copied: OLD.");
+    expect(note).toContain("Skipped: LOCK (read-only).");
+    expect(document.getElementById("snapshots-status")?.textContent).toBe(t("snapshots.drivesSaved"));
+
+    setLocale("es");
+    try {
+      renderSnapshots();
+      const spanish = document.getElementById("snapshots-drives-note")?.textContent ?? "";
+      expect(spanish).toContain("Copiadas: Music.");
+      expect(spanish).toContain("Desconectadas, sin copiar: OLD.");
+      expect(spanish).toContain("LOCK (solo lectura)");
+      expect(spanish).not.toContain("Unplugged");
+    } finally {
+      setLocale("en");
+    }
+  });
+
+  it("shows a disk-space refusal on the drive line", async () => {
+    state.snapshotLoading = false;
+    state.snapshotError = "";
+    state.snapshots = [];
+    postJSON.mockRejectedValue(new Error(t("error.backup_no_space")));
+    await backupDriveCrates();
+    expect(document.getElementById("snapshots-drives-note")?.textContent).toBe(t("error.backup_no_space"));
+    expect(document.getElementById("snapshots-list")?.textContent).toContain("No snapshots yet");
   });
 
   it("does not repaint a closed plan dialog", async () => {

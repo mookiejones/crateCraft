@@ -2326,6 +2326,7 @@ class Handler(BaseHTTPRequestHandler):
             "pending_undo": pending,
             "write_block": None if notice is None else notice.text,
             "serato_running": store.serato_running(),
+            "drive_backup": library.drive_backup_report(),
         }
         if notice is not None and notice.code:
             body["write_block_code"] = notice.code
@@ -2337,11 +2338,16 @@ class Handler(BaseHTTPRequestHandler):
 
         Args:
             payload: JSON body with ``action`` of ``create``, ``plan``,
-                ``restore``, or ``undo``. ``restore`` also needs ``id`` and
-                ``confirm`` true. ``plan`` changes nothing.
+                ``restore``, ``undo``, or ``backup-drives``. ``restore`` also
+                needs ``id`` and ``confirm`` true. ``plan`` changes nothing.
+                ``backup-drives`` copies each present drive's ``_Serato_``
+                folder into ``Library/Backups`` and does not change the library.
         """
         store = snapshots.current_store()
         action = payload.get("action")
+        if action == "backup-drives":
+            self.send_json(library.backup_connected_drives())
+            return
         if action == "create":
             info = store.take("manual", "Snapshot taken in the app.")
             self.send_json({"ok": True, "snapshot": info})
