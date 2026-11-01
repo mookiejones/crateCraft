@@ -234,7 +234,7 @@ class RemapTests(unittest.TestCase):
         """The shared tail is removed; same path or name-only is not a move."""
         self.assertEqual(
             relink.moved_folders("/Volumes/OLD/Music/House/a.mp3", "/Volumes/NEW/DJ/House/a.mp3"),
-            (str(Path("/Volumes/OLD/Music")), str(Path("/Volumes/NEW/DJ"))),
+            ("/Volumes/OLD/Music", str(PurePath("/Volumes/NEW/DJ"))),
         )
         self.assertIsNone(relink.moved_folders("/x/a.mp3", "/x/a.mp3"))
 
