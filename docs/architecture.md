@@ -280,6 +280,12 @@ The live side of the diff takes cues and the beatgrid from `tags.read_serato_tag
 
 Maps each fixed English error sentence the server sends to a stable code. `send_json` adds `code` beside `error` when the sentence is one of them. A sentence with a path or other changing part has no code. `PARAM_CODES` is the exception: the unknown Serato version notice is `serato_version_unknown` with a `{build}` param. `status`, `GET /api/snapshots`, and a blocked restore plan send that `code` and `params` beside the English sentence. The page shows `error.serato_version_unknown` in the active language. Codes never change once shipped. `tests/test_language.py` checks that each code has `error.<code>` in every locale file and that the English entry is the same sentence, or the same template for a parameterized code.
 
+### `lost_tags.py`
+
+`lost_tags.py` lists titles and artists Serato's database lost (#73). It writes nothing. `plan` opens the library with `gig_check.open_read_only` and selects the space's tracks whose `name` or `artist` is empty or only spaces. For each, `library.resolved_path` finds the file; a track whose file is not there counts in `unreadable`. `tags.read_text_tags` reads the file's own tags. A fix is proposed only for a field that is blank in the database and set in the file: a field with a value is never proposed, even when the file differs. `GET /api/lost-tags?space=` returns `{ checked, unreadable, fixes }`, each fix `{ asset_id, path, current: { name, artist }, proposed }`. Applying a fix, through `safe_write` with Serato closed, is a later change.
+
+`tags.read_text_tags` reads ID3v2.3 and ID3v2.4 `TIT2` and `TPE1` from the first 2,000,000 bytes (which includes an `id3` chunk near the start of a WAV or AIFF), then fills anything still empty from a FLAC Vorbis comment (`TITLE`, `ARTIST`, any case; at most 1024 metadata blocks) and an MP4 `moov/udta/meta/ilst` (`©nam`, `©ART`; `mdat` is skipped). ID3 wins when both are present. Latin-1, UTF-16 with a BOM, UTF-16BE, and UTF-8 decode. A multi-value frame gives its first value, and surrounding spaces are removed. A missing or unreadable file gives empty strings. The file is opened `rb` and not changed.
+
 ### `files.py`
 
 `files.py` renames a file, moves files, moves a folder, points a library track at a replacement file, and moves a file to the Trash. Crates, history, and Prepare stay attached because every stored path that resolves to the old file is rewritten. Cue points travel inside the audio file. A replacement copies them with `tags.copy_serato_geob` when that is safe, and the result says so when it is not. The old file stays on disk.
@@ -449,6 +455,7 @@ An error body is `{"error": "<English sentence>"}`. When the sentence is one of 
 | GET | `/api/setup` | `browse` | Child folders. An empty value lists the home directory. Shortcuts and hidden names are skipped |
 | POST | `/api/setup` | `folder` | The same object as GET when `folder` is the open library directory, or, when no library file is open, a folder that already contains a Serato library. Otherwise `found` is false. The database is not created or modified. A remembered path is not included |
 | GET | `/api/logs` | none | `{ "text", "truncated" }` from the local log. The text can contain a path. It is not a report |
+| GET | `/api/lost-tags` | `space` | `{ checked, unreadable, fixes }`. Each fix is `{ asset_id, path, current, proposed }`; `proposed` holds only blank fields the file fills. Read-only. 400 for an unknown space |
 | POST | `/api/logs/open` | none | Opens the logs folder. `{ "ok": true }`. The path is not in the body |
 | GET | `/api/legacy-library` | none | Older library (`database V2`, no `master.sqlite`), read-only: `{ "read_only", "write_blocked", "tracks", "crates", "missing", "offline", "duplicates" }`. 404 when there is none or a newer library is open |
 | GET | `/api/operations` | none | `{ "operations" }`. Newest 200 lines from `operations.jsonl` in the app data folder. No file paths |
