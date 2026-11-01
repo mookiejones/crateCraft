@@ -70,6 +70,41 @@ The log is `serato-library.log`. It can include the path of the library database
 
 If the copy fails, a box of log text appears. The line says **Couldn't copy automatically. Select the log text and copy it.**
 
+## Help
+
+**Help** is at the bottom of the left rail, between **Shortcuts** and **Settings**. It does not change the library. Nothing is sent until you submit it on GitHub.
+
+1. Click **Help**.
+2. The line under the title is the version of this copy, the same line as **About**. When the version cannot be read, it says **Version unavailable**.
+3. The note says **Nothing is sent until you submit it on GitHub.**
+4. Click **Report a bug** or **Request a feature**. **View on GitHub** opens the repository in your browser. **Release notes** opens the releases page in your browser. Neither one replaces this window. **Close** leaves the dialog.
+
+**Report a bug** asks **What happened** and **What you expected**. **Request a feature** asks **What should change** and does not ask what you expected. The note on that screen says **You will see this on GitHub before it is submitted. The app does not post it.**
+
+**What will be included** is shown before the browser opens:
+
+| Line | Meaning |
+| --- | --- |
+| **App version** | This copy of Serato Library. |
+| **Commit** | The short commit, when this copy has one. |
+| **Operating system** | The computer's system. |
+| **Python** | The Python version this copy is running. |
+| **Serato version** | The Serato DJ Pro version this computer reports. |
+| **Serato build** | The Serato build. It can change when the version number does not. |
+| **Protect Library** | **on**, **off**, or **unknown**. **unknown** means this is not Serato 5, or the setting could not be read. |
+
+Your home folder, in the words you typed and in the log, is shown as `~`. Track names and crate names from the log are left out unless you tick **Include track and crate names from the log**.
+
+1. Read **What will be included**.
+2. Click **Copy log** to put the redacted log on the clipboard. The line says **Log copied.** A long log says **Copied the latest log entries. Older entries were left out.** An empty log says **The log is empty.**
+3. Click **Open on GitHub**.
+
+While the link is being built, the line says **Opening…**. When the browser opens, it says **Opened in your browser. Review it, then submit it on GitHub.** If the report is too long for a link, the app copies it instead and says **The report is too long for a link. It was copied. Paste it into the GitHub issue.** A report that was copied but still has a link says **Copied. Paste it into the GitHub issue.**
+
+If the copy fails, a box of the report appears. The line says **Couldn't copy the report.** or **Couldn't copy automatically. Select the log text and copy it.** If the diagnostics cannot be read, the line says **Couldn't load the diagnostics.** The page does not show the server's error text.
+
+**About** in **Settings** also has **View on GitHub**. It opens the same repository in your browser, so this window stays on the library.
+
 ## Where the choice is stored
 
 | System | Settings file |
