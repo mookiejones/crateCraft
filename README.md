@@ -41,12 +41,14 @@ App version **1.1.0** is in source and is not a GitHub Release yet. The [release
 These are on `main` (1.1.0).
 
 - Browse crates, history, missing files, stems, and Prepare.
+- Play a track in the window. Double-click a row, or use Play. The player bar has pause, seek, and volume. Only files already in the library are streamed, and playback does not write to them.
 - Merge duplicate copies into the file you keep. Cue points stay in the audio file.
 - Import and export M3U. Export `rekordbox.xml`. **Hot loops** starts off, and the app remembers that checkbox in its settings. Uses a free hot-cue pad. What that file keeps is in [docs/coming-from-rekordbox.md](docs/coming-from-rekordbox.md).
 - Save related tracks in `related.sqlite` next to the app settings, not in Serato's library.
 - Rename, move, replace, and trash audio, and update the library path.
 - Keep hash-checked snapshots of the database, the crates on each drive, and the Serato frames inside audio files. Preview a restore, then confirm. Confirm saves a snapshot first. The music bytes are not copied into the snapshot. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 - The first write in a session copies the database into `Library/Backups`. An unfinished copy is not offered for restore.
+- English and Spanish. **Settings** → **Language** switches the whole page at once; Same as the system follows the OS language.
 - Ask before sharing anonymous counts and crash reports. Setup asks on the first launch. Sharing stays off until you opt in. See [PRIVACY.md](PRIVACY.md).
 
 The page source is strict TypeScript in `src/`. `npm run build` writes the `static/app.js` the server loads. Node is not required to run the server. Node 22 or newer is required to typecheck and rebuild that file.
@@ -141,4 +143,4 @@ CI runs that discovery with `python` in [`.github/workflows/ci.yml`](.github/wor
 
 The user guide is [docs/index.md](docs/index.md) and [the published site](https://mookiejones.github.io/serato-library-manager/). Contributing is [CONTRIBUTING.md](CONTRIBUTING.md). Security reports are [SECURITY.md](SECURITY.md). Actions and releases are [docs/github.md](docs/github.md). The roadmap is the [Serato Tools Roadmap](https://github.com/users/mookiejones/projects/3).
 
-This repository has no `LICENSE` file. GitHub reports the license as not specified.
+This repository has no `LICENSE` file. GitHub reports the license as not specified. Third-party license notes, including the GCC Runtime Library Exception for `libgfortran` and `libquadmath` inside the NumPy wheel, are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

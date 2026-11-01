@@ -6,13 +6,15 @@
  * loadLibrary. Settings load when the dialogs wire. server.py uses port
  * 8765. The desktop app uses a free port, and this page calls the same
  * origin. Snapshot UI is src/restore.ts. This file does not open
- * master.sqlite itself.
+ * master.sqlite itself. The page language is set before the first paint
+ * and every view repaints when it changes; see src/i18n.ts.
  */
 
 import { failureOf } from "./api";
 import { wireDialogs } from "./dialogs";
 import { el } from "./dom";
 import { wireLayout } from "./layout";
+import { wireLocale } from "./locale-wiring";
 import {
   bindLibraryReload,
   confirmSnapshotRestore,
@@ -22,10 +24,12 @@ import {
   setSnapshotDialogStatus,
   takeSnapshot,
 } from "./restore";
-import { wireShortcuts } from "./shortcuts";
+import { registerPlayerControls, wireShortcuts } from "./shortcuts";
 import { state } from "./state";
 import { loadVersion, wireVersion } from "./version";
 import { loadLibrary, showFailure, wireLibrary } from "./views";
+import { mountPlayer, playerControls } from "./player";
+import { applyStaticTooltips, installTooltips } from "./tooltip";
 import { mountTrackList, wireVirtualScroll } from "./virtual-scroll";
 
 /**
@@ -60,7 +64,12 @@ function wireSnapshots(): void {
   });
 }
 
+wireLocale();
+installTooltips();
+applyStaticTooltips();
 mountTrackList();
+mountPlayer();
+registerPlayerControls(playerControls);
 wireLibrary();
 wireVirtualScroll();
 wireShortcuts();

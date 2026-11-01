@@ -370,6 +370,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ('.sort-crates button[aria-pressed="true"]', ("--color-bg",), 15, 400),
     (".rail-foot button", ("--color-bg",), 15, 400),
     (".app-version", ("--color-bg",), 13, 400),
+    (".app-tooltip", ("--color-bg",), 13, 400),
+    (".app-tooltip:popover-open", ("--color-bg",), 13, 400),
     (".mode-note", ("--color-bg",), 13, 400),
     (".crate-foot", ("--color-bg",), 13, 400),
     (".crate-row", ("--color-bg", "--color-panel"), 15, 400),
@@ -450,6 +452,16 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("#wizard-primary", ("--color-primary",), 20, 700),
     ("#wizard-folder-use", ("--color-text",), 15, 400),
     (".wizard-folder", ("--color-button",), 15, 400),
+    (".player-title", ("--color-card",), 14, 600),
+    (".player-artist", ("--color-card",), 13, 400),
+    (".player-status", ("--color-card",), 13, 400),
+    (".player-toggle", ("--color-card",), 13, 600),
+    (".waveform-reading", ("--color-bg",), 11, 400),
+    (".waveform-note", ("--color-card",), 13, 400),
+    (".waveform-zoom-button", ("--color-card",), 14, 600),
+    (".player-time", ("--color-card",), 13, 400),
+    (".player-volume", ("--color-card",), 11, 400),
+    (".detail-play", ("--color-card",), 13, 600),
 )
 
 # Large or inherited text whose color comes from an ancestor rule.
@@ -501,6 +513,7 @@ _DECORATIVE = {
     ".shortcut-table th",
     ".shortcut-table td",
     ".swatch",
+    ".player-bar",
 }
 
 # The only visible edge of these fields. Card surfaces use the sheet.
@@ -519,8 +532,12 @@ _CONTROL_EDGE = (
     (".files-field input", "--color-card", "border-bottom"),
     ("#quick-open-query", "--color-card", "border"),
     (".shortcut-table kbd", "--color-card", "border"),
+    (".row-play", "--color-card", "border"),
+    ("dialog .settings-field select", "--color-card", "border"),
     (".rule-edit textarea", "--color-card", "border"),
     (".wizard-folder", "--color-card", "border"),
+    (".app-tooltip", "--color-bg", "border"),
+    (".app-tooltip:popover-open", "--color-bg", "border"),
 )
 
 
@@ -656,7 +673,7 @@ class ContrastTests(unittest.TestCase):
             ratio = contrast(_over(mark, surface, alpha or 0), surface)
             self.assertGreaterEqual(ratio, 3, f"holds-selection on {background_name} is {ratio:.2f}:1")
 
-        for selector in ("#consent-accept", "#open-logs", "#copy-logs", "#copy-version", "#rekordbox-cancel", "#merge-cancel", ".wizard-choice"):
+        for selector in ("#consent-accept", "#open-logs", "#copy-logs", "#copy-version", "#rekordbox-cancel", "#merge-cancel", ".wizard-choice", ".player-toggle", ".waveform-zoom-button", ".detail-play"):
             border = _paint(self._rule(selector)["border"], self.colors)
             ratio = contrast(border, self._surface("--color-card"))
             self.assertGreaterEqual(ratio, 3, f"{selector} border is {ratio:.2f}:1")
@@ -718,6 +735,10 @@ class ContrastTests(unittest.TestCase):
             "#merge-cancel",
             ".wizard-choice",
             ".quick-open-option.is-active",
+            ".player-toggle",
+            ".waveform-zoom-button",
+            ".waveform-overview:focus-visible",
+            ".detail-play",
         } | {selector for selector, _, _ in _CONTROL_EDGE}
         self.assertEqual(bordered - checked_borders, set(), "borders missing from the contrast list")
         self.assertEqual(checked_borders - bordered, set(), "contrast list names a border that is not painted")

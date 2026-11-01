@@ -8,10 +8,12 @@
 
 import { readJSONOr } from "./api";
 import type { FileEntry, FilesPayload, Track } from "./api-types";
-import { copy, fill } from "./copy";
 import { el } from "./dom";
+import { t } from "./i18n";
 import { scoreQuery } from "./fuzzy";
 import { ROW, state } from "./state";
+import { buttonEl } from "./tooltip";
+import { quickOpenHit } from "./tooltip-strings";
 import { focusFileByPath, loadFolder, selectCrate, selectTrack, setMode } from "./views";
 
 /** Wait before asking the disk, so a fast typist does not search every letter. */
@@ -74,11 +76,28 @@ export function quickOpenIsOpen(): boolean {
   return el("quick-open").open;
 }
 
+/** Fill the find-box labels in the active language. */
+function labelQuickOpen(): void {
+  el("quick-open-title").textContent = t("quickOpen.title");
+  el("quick-open-label").textContent = t("quickOpen.label");
+  el("quick-open-query").placeholder = t("quickOpen.placeholder");
+  el("quick-open-close").textContent = t("common.close");
+  el("quick-open-retry").textContent = t("common.tryAgain");
+  el("quick-open-list").setAttribute("aria-label", t("quickOpen.matches"));
+}
+
 /**
- * Show the find box and focus its field.
+ * Repaint the find box when it is open.
  *
  * @returns {void}
  */
+export function repaintQuickOpen(): void {
+  const dialog = document.getElementById("quick-open");
+  if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
+  labelQuickOpen();
+  paint();
+}
+
 export function openQuickOpen(): void {
   const dialog = el("quick-open");
   if (dialog.open) return;
@@ -90,11 +109,7 @@ export function openQuickOpen(): void {
   truncated = false;
   window.clearTimeout(timer);
   el("quick-open-query").value = "";
-  el("quick-open-title").textContent = copy.quickOpenTitle;
-  el("quick-open-label").textContent = copy.quickOpenLabel;
-  el("quick-open-query").placeholder = copy.quickOpenPlaceholder;
-  el("quick-open-close").textContent = copy.quickOpenClose;
-  el("quick-open-retry").textContent = copy.quickOpenRetry;
+  labelQuickOpen();
   paint();
   dialog.showModal();
   el("quick-open-query").focus();
@@ -178,7 +193,7 @@ async function loadFiles(query: string, tracks: TrackHit[]): Promise<void> {
     const response = await fetch(`/api/files?q=${encodeURIComponent(query)}`);
     const payload = await readJSONOr<FilesPayload>(response, {});
     if (token !== requestToken) return;
-    if (!response.ok) throw new Error(payload.error || copy.quickOpenFileError);
+    if (!response.ok) throw new Error(payload.error || t("quickOpen.fileError"));
     const files = fileHits(payload);
     hits = mergeHits(tracks, files);
     truncated = Boolean(payload.truncated);
@@ -271,15 +286,18 @@ function paint(): void {
   const query = pendingQuery.trim();
   retry.hidden = phase !== "error";
   list.replaceChildren();
-  if (!query) status.textContent = copy.quickOpenEmpty;
-  else if (phase === "loading") status.textContent = copy.quickOpenSearching;
-  else if (phase === "error") status.textContent = copy.quickOpenFileError;
-  else if (!hits.length) status.textContent = fill(copy.quickOpenNone, { query });
-  else status.textContent = truncated ? copy.quickOpenTruncated : `${hits.length.toLocaleString()} matches`;
+  if (!query) status.textContent = t("quickOpen.empty");
+  else if (phase === "loading") status.textContent = t("quickOpen.searching");
+  else if (phase === "error") status.textContent = t("quickOpen.fileError");
+  else if (!hits.length) status.textContent = t("quickOpen.none", { query });
+  else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
   hits.forEach((hit, index) => {
     const item = document.createElement("li");
-    const button = document.createElement("button");
-    button.type = "button";
+    const button = buttonEl(quickOpenHit(
+      hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
+      hit.title,
+      hit.detail,
+    ));
     button.className = "quick-open-option";
     button.id = `quick-open-option-${index}`;
     button.setAttribute("role", "option");
@@ -288,15 +306,13 @@ function paint(): void {
     if (index === active) button.classList.add("is-active");
     const kind = document.createElement("span");
     kind.className = "quick-open-kind";
-    kind.textContent = hit.kind === "track" ? copy.quickOpenTrack : copy.quickOpenFile;
+    kind.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
     const title = document.createElement("span");
     title.className = "quick-open-name";
     title.textContent = hit.title;
-    title.title = hit.title;
     const detail = document.createElement("span");
     detail.className = "quick-open-detail";
     detail.textContent = hit.detail;
-    detail.title = hit.detail;
     button.append(kind, title, detail);
     button.addEventListener("click", () => {
       active = index;

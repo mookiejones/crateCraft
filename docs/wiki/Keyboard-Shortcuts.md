@@ -4,6 +4,8 @@ The keys work anywhere on the library screen, except while you are typing in a f
 
 **Shortcuts**, at the bottom of the sidebar, opens the list. **?** opens it too.
 
+Point at a control, or tab to it, and a short note says what it does. When that control has a shortcut, the note shows the same key as this list.
+
 | Key | Action |
 | --- | --- |
 | Ctrl+F or Command+F, or / | Focus search |
@@ -11,10 +13,12 @@ The keys work anywhere on the library screen, except while you are typing in a f
 | Up or Down, Enter | Move through the list and open the row |
 | Ctrl+1 or Command+1 through 5 | Library, Crates, Files, History, Snapshots |
 | Esc | Close a dialog, or clear the search |
-| Space, Left, Right | Play, or move 5 seconds, once playback is available |
+| Space | Play or pause |
+| Left | Back 5 seconds |
+| Right | Forward 5 seconds |
 
 On Windows the key is Ctrl. On a Mac it is Command.
 
 Find a track or a file scores the open library at once, then files on disk. Enter opens the highlighted row. A track opens in the library. A file opens in **Files**.
 
-Space and the left and right arrows do nothing until playback is connected.
+Space plays or pauses. Left moves 5 seconds back. Right moves 5 seconds forward.
