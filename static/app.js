@@ -153,6 +153,9 @@
     "error.trash_failed": "The file could not be moved to the Trash.",
     "error.undo_needs_confirm": "Confirm undo before it is saved.",
     "error.upload_too_large": "That upload is too large.",
+    "error.write_preimage_mismatch": "The pre-write snapshot does not match its hash.",
+    "error.write_rollback_failed": "The write did not match, and putting the library back failed.",
+    "error.write_undo_failed": "The write failed, and putting the library back failed.",
     "export.m3u": "Export",
     "field.album": "Album",
     "field.beatgridLocked": "Beatgrid locked",
@@ -385,6 +388,40 @@
     "mode.missing": "Tracks Serato has marked missing in this space.",
     "mode.snapshots": "Hash-checked copies of the library, crates, and Serato frames inside audio files. Audio itself is not copied.",
     "mode.stems": "Tracks with a stems analysis state.",
+    "operations.action.crateAdd": "Add to crate",
+    "operations.action.crateColor": "Crate color",
+    "operations.action.crateCreate": "Create crate",
+    "operations.action.crateDelete": "Delete crate",
+    "operations.action.crateExpanded": "Crate expanded",
+    "operations.action.cratePrepare": "Prepare",
+    "operations.action.crateRemove": "Remove from crate",
+    "operations.action.crateRemoveLibrary": "Remove from library",
+    "operations.action.crateRename": "Rename crate",
+    "operations.action.crateRules": "Crate rules",
+    "operations.action.delete": "Delete file",
+    "operations.action.importM3u": "Import playlist",
+    "operations.action.mergeDuplicates": "Merge copies",
+    "operations.action.move": "Move file",
+    "operations.action.moveFolder": "Move folder",
+    "operations.action.rename": "Rename file",
+    "operations.action.replace": "Replace file",
+    "operations.action.restore": "Restore",
+    "operations.action.restoreRecover": "Recover restore",
+    "operations.action.saveTrack": "Save track",
+    "operations.actionOther": "Library edit",
+    "operations.beforeOnly": "Before {before}.",
+    "operations.empty": "No checked edits yet. Each library edit and each restore is listed here after it is checked.",
+    "operations.entry": "{time}. {action}. {target}. {outcome}.",
+    "operations.heading": "Operation log",
+    "operations.noTarget": "the library",
+    "operations.outcome.refused": "Not saved",
+    "operations.outcome.rollbackFailed": "Could not put back",
+    "operations.outcome.rolledBack": "Put back",
+    "operations.outcome.verified": "Checked",
+    "operations.reading": "Reading the operation log",
+    "operations.rollbackFailed": "A change could not be put back. The library may not match the last good copy. This was not saved as a success.",
+    "operations.snapshots": "Before {before}. After {after}.",
+    "operations.unreadable": "The operation log could not be read.",
     "plan.andMore": ", and {count} more",
     "plan.cratesAdded": "Crates added",
     "plan.cratesChanged": "Crates changed",
@@ -708,6 +745,9 @@
     "tooltip.openInLibrary": "Open this history row in the library.",
     "tooltip.openLogs": "Open the folder that holds the log.",
     "tooltip.openRelated": "Open the linked track {name}.",
+    "tooltip.operationsList": "Operation log. Each row is one checked edit or restore.",
+    "tooltip.operationsRefresh": "Refresh the operation log.",
+    "tooltip.operationsRetry": "Try reading the operation log again.",
     "tooltip.overview": "Overview of the whole track. Click or drag to seek. Left arrow goes back 5 seconds. Right arrow goes forward 5 seconds.",
     "tooltip.playRow": "Start {name}. Space plays or pauses.",
     "tooltip.prepareAdd": "Send this track to Prepare.",
@@ -957,6 +997,9 @@
     "error.trash_failed": "No se pudo mover el archivo a la Papelera.",
     "error.undo_needs_confirm": "Confirma la acción de deshacer antes de guardarla.",
     "error.upload_too_large": "Ese archivo es demasiado grande.",
+    "error.write_preimage_mismatch": "La copia previa al cambio no coincide con su hash.",
+    "error.write_rollback_failed": "El cambio no coincidía, y no se pudo devolver la biblioteca.",
+    "error.write_undo_failed": "El cambio falló, y no se pudo devolver la biblioteca.",
     "export.m3u": "Exportar",
     "field.album": "Álbum",
     "field.beatgridLocked": "Beatgrid bloqueado",
@@ -1189,6 +1232,40 @@
     "mode.missing": "Pistas que Serato ha marcado como no encontradas en este espacio.",
     "mode.snapshots": "Copias verificadas por hash de la biblioteca, las cajas y los datos de Serato dentro de los archivos de audio. El audio en sí no se copia.",
     "mode.stems": "Pistas con un estado de análisis de stems.",
+    "operations.action.crateAdd": "Añadir a la caja",
+    "operations.action.crateColor": "Color de la caja",
+    "operations.action.crateCreate": "Crear caja",
+    "operations.action.crateDelete": "Eliminar caja",
+    "operations.action.crateExpanded": "Caja expandida",
+    "operations.action.cratePrepare": "Preparar",
+    "operations.action.crateRemove": "Quitar de la caja",
+    "operations.action.crateRemoveLibrary": "Quitar de la biblioteca",
+    "operations.action.crateRename": "Renombrar caja",
+    "operations.action.crateRules": "Reglas de la caja",
+    "operations.action.delete": "Eliminar archivo",
+    "operations.action.importM3u": "Importar lista",
+    "operations.action.mergeDuplicates": "Unir copias",
+    "operations.action.move": "Mover archivo",
+    "operations.action.moveFolder": "Mover carpeta",
+    "operations.action.rename": "Renombrar archivo",
+    "operations.action.replace": "Reemplazar archivo",
+    "operations.action.restore": "Restaurar",
+    "operations.action.restoreRecover": "Recuperar restauración",
+    "operations.action.saveTrack": "Guardar pista",
+    "operations.actionOther": "Edición de la biblioteca",
+    "operations.beforeOnly": "Antes {before}.",
+    "operations.empty": "Todavía no hay cambios comprobados. Cada edición y cada restauración aparecen aquí después de la comprobación.",
+    "operations.entry": "{time}. {action}. {target}. {outcome}.",
+    "operations.heading": "Registro de operaciones",
+    "operations.noTarget": "la biblioteca",
+    "operations.outcome.refused": "No se guardó",
+    "operations.outcome.rollbackFailed": "No se pudo revertir",
+    "operations.outcome.rolledBack": "Revertido",
+    "operations.outcome.verified": "Comprobado",
+    "operations.reading": "Leyendo el registro de operaciones",
+    "operations.rollbackFailed": "Un cambio no se pudo revertir. La biblioteca puede no coincidir con la última copia buena. Esto no se guardó como un éxito.",
+    "operations.snapshots": "Antes {before}. Después {after}.",
+    "operations.unreadable": "No se pudo leer el registro de operaciones.",
     "plan.andMore": " y {count} más",
     "plan.cratesAdded": "Cajas añadidas",
     "plan.cratesChanged": "Cajas modificadas",
@@ -1512,6 +1589,9 @@
     "tooltip.openInLibrary": "Abre esta fila del historial en la biblioteca.",
     "tooltip.openLogs": "Abre la carpeta que contiene el registro.",
     "tooltip.openRelated": "Abre la pista enlazada {name}.",
+    "tooltip.operationsList": "Registro de operaciones. Cada fila es una edición o una restauración comprobada.",
+    "tooltip.operationsRefresh": "Actualiza el registro de operaciones.",
+    "tooltip.operationsRetry": "Intenta leer el registro de operaciones otra vez.",
     "tooltip.overview": "Vista de toda la pista. Haz clic o arrastra para buscar. Izquierda retrocede 5 segundos. Derecha avanza 5 segundos.",
     "tooltip.playRow": "Empieza {name}. Espacio reproduce o pausa.",
     "tooltip.prepareAdd": "Envía esta pista a Preparar.",
@@ -2004,6 +2084,9 @@
     filesQuery: "",
     filesSearching: false,
     snapshots: [],
+    operations: [],
+    operationsLoading: false,
+    operationsError: "",
     snapshotLoading: false,
     snapshotError: "",
     snapshotMessage: "",
@@ -2113,6 +2196,9 @@
     filesDelete: spec("tooltip.filesDelete"),
     filesMoveHere: spec("tooltip.filesMoveHere"),
     filesPickCancel: spec("tooltip.filesPickCancel"),
+    operationsRefresh: spec("tooltip.operationsRefresh"),
+    operationsList: spec("tooltip.operationsList"),
+    operationsRetry: spec("tooltip.operationsRetry"),
     snapshotsRefresh: spec("tooltip.snapshotsRefresh"),
     snapshotsTake: spec("tooltip.snapshotsTake"),
     snapshotsUndo: spec("tooltip.snapshotsUndo"),
@@ -2282,6 +2368,8 @@
       "files-delete": tips.filesDelete,
       "files-move-here": tips.filesMoveHere,
       "files-pick-cancel": tips.filesPickCancel,
+      "operations-refresh": tips.operationsRefresh,
+      "operations-list": tips.operationsList,
       "snapshots-refresh": tips.snapshotsRefresh,
       "gig-refresh": tips.gigRefresh,
       "snapshots-take": tips.snapshotsTake,
@@ -2922,18 +3010,39 @@
   async function loadSnapshots() {
     state.snapshotLoading = true;
     state.snapshotError = "";
+    const operationsPromise = loadOperations();
     renderSnapshots();
-    const response = await fetch("/api/snapshots");
-    const payload = await readJSON(response);
-    if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
-    state.snapshots = payload.snapshots || [];
-    state.snapshotUndo = payload.pending_undo || null;
-    state.writeBlock = payload.write_block || "";
-    state.writeBlockCode = payload.write_block_code || "";
-    state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
-    state.seratoRunning = Boolean(payload.serato_running);
-    state.snapshotLoading = false;
-    renderSnapshots();
+    try {
+      const response = await fetch("/api/snapshots");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
+      state.snapshots = payload.snapshots || [];
+      state.snapshotUndo = payload.pending_undo || null;
+      state.writeBlock = payload.write_block || "";
+      state.writeBlockCode = payload.write_block_code || "";
+      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
+      state.seratoRunning = Boolean(payload.serato_running);
+      state.snapshotLoading = false;
+      renderSnapshots();
+    } finally {
+      await operationsPromise;
+    }
+  }
+  async function loadOperations() {
+    state.operationsLoading = true;
+    state.operationsError = "";
+    renderOperations();
+    try {
+      const response = await fetch("/api/operations");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
+      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
+      state.operationsLoading = false;
+    } catch (error2) {
+      state.operationsLoading = false;
+      state.operationsError = failureOf(error2).message || t("operations.unreadable");
+    }
+    renderOperations();
   }
   function failSnapshots(error2) {
     state.snapshotLoading = false;
@@ -2941,6 +3050,8 @@
     renderSnapshots();
   }
   function renderSnapshots() {
+    renderOperations();
+    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
     const status = el("snapshots-status");
     const block = el("snapshots-block");
     const undo = el("snapshots-undo");
@@ -2995,6 +3106,103 @@
       card.append(title2, detail, restore);
       list.append(card);
     }
+  }
+  var OPERATION_ACTIONS = {
+    crate_create: "operations.action.crateCreate",
+    crate_rename: "operations.action.crateRename",
+    crate_delete: "operations.action.crateDelete",
+    crate_color: "operations.action.crateColor",
+    crate_expanded: "operations.action.crateExpanded",
+    crate_rules: "operations.action.crateRules",
+    crate_add: "operations.action.crateAdd",
+    crate_remove: "operations.action.crateRemove",
+    crate_prepare: "operations.action.cratePrepare",
+    crate_remove_library: "operations.action.crateRemoveLibrary",
+    save_track: "operations.action.saveTrack",
+    import_m3u: "operations.action.importM3u",
+    merge_duplicates: "operations.action.mergeDuplicates",
+    rename: "operations.action.rename",
+    move: "operations.action.move",
+    move_folder: "operations.action.moveFolder",
+    replace: "operations.action.replace",
+    delete: "operations.action.delete",
+    restore: "operations.action.restore",
+    restore_recover: "operations.action.restoreRecover"
+  };
+  var OPERATION_OUTCOMES = {
+    verified: "operations.outcome.verified",
+    rolled_back: "operations.outcome.rolledBack",
+    refused: "operations.outcome.refused",
+    rollback_failed: "operations.outcome.rollbackFailed"
+  };
+  function renderOperations() {
+    const alert = el("operations-alert");
+    const status = el("operations-status");
+    const list = el("operations-list");
+    list.setAttribute("aria-busy", String(state.operationsLoading));
+    const latest2 = state.operations[state.operations.length - 1];
+    const failed = latest2?.result === "rollback_failed";
+    alert.hidden = !failed;
+    alert.textContent = failed ? t("operations.rollbackFailed") : "";
+    list.replaceChildren();
+    if (state.operationsLoading && state.operations.length === 0) {
+      status.textContent = t("operations.reading");
+      return;
+    }
+    if (state.operationsError) {
+      status.textContent = state.operationsError;
+      const retry = buttonEl(tips.operationsRetry);
+      retry.textContent = t("common.tryAgain");
+      retry.addEventListener("click", () => {
+        loadOperations().catch(() => void 0);
+      });
+      list.append(retry);
+      return;
+    }
+    status.textContent = "";
+    if (!state.operations.length) {
+      const empty = document.createElement("p");
+      empty.textContent = t("operations.empty");
+      list.append(empty);
+      return;
+    }
+    for (const item2 of [...state.operations].reverse()) {
+      list.append(operationCard(item2));
+    }
+  }
+  function operationCard(item2) {
+    const card = document.createElement("article");
+    card.className = "operation-card snapshot-card";
+    card.setAttribute("role", "listitem");
+    const actionName = item2.action || item2.operation || "";
+    const actionKey = OPERATION_ACTIONS[actionName];
+    const outcomeKey = OPERATION_OUTCOMES[item2.result || ""] ?? "operations.outcome.refused";
+    const title2 = document.createElement("p");
+    title2.textContent = t("operations.entry", {
+      time: operationTime(item2.time || ""),
+      action: actionKey ? t(actionKey) : t("operations.actionOther"),
+      target: item2.target || t("operations.noTarget"),
+      outcome: t(outcomeKey)
+    });
+    card.append(title2);
+    if (item2.snapshot_before && item2.snapshot_after) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.snapshots", {
+        before: item2.snapshot_before,
+        after: item2.snapshot_after
+      });
+      card.append(detail);
+    } else if (item2.snapshot_before) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.beforeOnly", { before: item2.snapshot_before });
+      card.append(detail);
+    }
+    return card;
+  }
+  function operationTime(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
+    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
   }
   async function openSnapshotPlan(snapshotId) {
     state.snapshotPlanId = snapshotId;
@@ -3112,6 +3320,7 @@
     } catch (error2) {
       setSnapshotDialogStatus(failureOf(error2).message);
       confirm2.disabled = false;
+      await loadOperations();
     } finally {
       confirm2.textContent = t("snapshots.restore");
     }
@@ -8709,6 +8918,9 @@
   function wireSnapshots() {
     el("snapshots-refresh").addEventListener("click", () => {
       loadSnapshots().catch((error2) => failSnapshots(error2));
+    });
+    el("operations-refresh").addEventListener("click", () => {
+      loadOperations().catch(() => void 0);
     });
     el("snapshots-take").addEventListener("click", () => {
       takeSnapshot().catch((error2) => failSnapshots(error2));

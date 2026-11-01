@@ -25,6 +25,7 @@ from pathlib import Path, PurePosixPath, PureWindowsPath, WindowsPath
 
 import app_log
 import library
+import safe_write
 import serato_web.completeness as completeness
 import snapshot_frames
 import snapshots
@@ -1470,6 +1471,115 @@ class SnapshotTests(unittest.TestCase):
             completeness.write_complete_marker(folder)
             with self.assertRaises(snapshots.SnapshotError):
                 store._manifest(saved["id"])
+
+    def test_successful_restore_adds_one_verified_log_entry(self) -> None:
+        """Record one checked restore and leave the journal clear.
+
+        Returns:
+            None. The test fails if the log is missing, has more than the
+            new entry, or says the check failed.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            crate = serato / "Subcrates" / "House.crate"
+            crate.parent.mkdir(parents=True)
+            original = _crate(["track.mp3"])
+            crate.write_bytes(original)
+            saved = store.take("manual", "Crate as it was.")
+            crate.write_bytes(_crate(["other.mp3"]))
+            before = len(safe_write.read_log(temp.db))
+            result = store.restore(saved["id"])
+            lines = safe_write.read_log(temp.db)
+            entry = lines[-1]
+            self.assertTrue(result["ok"])
+            self.assertEqual(len(lines), before + 1)
+            self.assertIs(entry["verified"], True)
+            self.assertIs(entry["rolled_back"], False)
+            self.assertEqual(entry["action"], "restore")
+            self.assertEqual(entry["snapshot_before"], result["undo_snapshot"])
+            self.assertEqual(entry["snapshot_after"], result["restored"])
+            self.assertEqual(crate.read_bytes(), original)
+            self.assertFalse((store.root / "restore-journal.json").exists())
+            self.assertNotIn(str(temp.root), json.dumps(entry))
+            self.assertFalse(str(safe_write.store_dir(temp.db).resolve()).startswith(str(temp.root.resolve())))
+
+    def test_changed_drive_crate_after_apply_rolls_back(self) -> None:
+        """Roll a restore back when a drive crate changes after it is written.
+
+        The journal is removed only after the pre-restore snapshot is put
+        back and its hashes match.
+
+        Returns:
+            None. The test fails if the corrupted crate remains or the
+            journal is still there.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            crate = serato / "Subcrates" / "House.crate"
+            crate.parent.mkdir(parents=True)
+            crate.write_bytes(_crate(["track.mp3"]))
+            saved = store.take("manual", "Crate as it was.")
+            changed = _crate(["other.mp3"])
+            crate.write_bytes(changed)
+
+            def corrupt() -> None:
+                data = bytearray(crate.read_bytes())
+                data[-1] ^= 0xFF
+                crate.write_bytes(bytes(data))
+
+            store.restore_fault = snapshots.RestoreFault(after_apply=corrupt)
+            with self.assertRaises(snapshots.SnapshotError) as caught:
+                store.restore(saved["id"])
+            entry = safe_write.read_log(temp.db)[-1]
+            self.assertIn("put back", caught.exception.message)
+            self.assertNotIn("could not be put back", caught.exception.message)
+            self.assertEqual(crate.read_bytes(), changed)
+            self.assertFalse((store.root / "restore-journal.json").exists())
+            self.assertEqual(entry["action"], "restore")
+            self.assertEqual(entry["result"], "rolled_back")
+            self.assertIs(entry["verified"], False)
+            self.assertIs(entry["rolled_back"], True)
+            self.assertEqual(entry["snapshot_after"], entry["snapshot_before"])
+
+    def test_failed_restore_rollback_keeps_the_journal(self) -> None:
+        """Leave the journal when putting the pre-restore snapshot back fails.
+
+        Returns:
+            None. The test fails if the failure is recorded as checked or
+            the journal is removed.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            crate = serato / "Subcrates" / "House.crate"
+            crate.parent.mkdir(parents=True)
+            original = _crate(["track.mp3"])
+            crate.write_bytes(original)
+            saved = store.take("manual", "Crate as it was.")
+            crate.write_bytes(_crate(["other.mp3"]))
+            calls = {"n": 0}
+
+            def before(snapshot_id: str) -> None:
+                calls["n"] += 1
+                if calls["n"] > 1:
+                    raise snapshots.SnapshotError(f"undo apply blocked for {snapshot_id}")
+
+            def corrupt() -> None:
+                data = bytearray(crate.read_bytes())
+                data[-1] ^= 0xFF
+                crate.write_bytes(bytes(data))
+
+            store.restore_fault = snapshots.RestoreFault(after_apply=corrupt, before_apply=before)
+            with self.assertRaises(snapshots.SnapshotError) as caught:
+                store.restore(saved["id"])
+            entry = safe_write.read_log(temp.db)[-1]
+            self.assertIn("could not be put back", caught.exception.message)
+            self.assertNotIn("was put back", caught.exception.message)
+            self.assertTrue((store.root / "restore-journal.json").is_file())
+            self.assertNotEqual(crate.read_bytes(), original)
+            self.assertEqual(entry["result"], "rollback_failed")
+            self.assertIs(entry["verified"], False)
+            self.assertIs(entry["rolled_back"], False)
+            self.assertNotEqual(entry.get("result"), "verified")
 
     def _flip_frames(self, path: Path, frames: dict[str, bytes]) -> None:
         """Flip the last byte of each stored frame.

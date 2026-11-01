@@ -21,6 +21,7 @@ import {
   bindLibraryReload,
   confirmSnapshotRestore,
   failSnapshots,
+  loadOperations,
   loadSnapshots,
   openSnapshotPlan,
   setSnapshotDialogStatus,
@@ -45,6 +46,10 @@ import { mountTrackList, wireVirtualScroll } from "./virtual-scroll";
 function wireSnapshots(): void {
   el("snapshots-refresh").addEventListener("click", () => {
     loadSnapshots().catch((error) => failSnapshots(error));
+  });
+
+  el("operations-refresh").addEventListener("click", () => {
+    loadOperations().catch(() => undefined);
   });
 
   el("snapshots-take").addEventListener("click", () => {

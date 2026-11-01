@@ -209,6 +209,43 @@ class OpenErrorStatusTests(unittest.TestCase):
         self.assertTrue(caught.exception.info["open"])
         self.assertEqual(after, before)
 
+    def test_keep_wal_error_is_serato_open_and_closes_the_connection(self) -> None:
+        """Refuse with ``SeratoOpen`` when setting up the WAL check fails.
+
+        ``_keep_wal`` (from the write check in #121) runs on the new write
+        connection. An ``OperationalError`` there must get the same 409 as
+        the other open errors, close the connection, and leave the file.
+
+        Returns:
+            None. The test fails if the error escapes or the connection leaks.
+        """
+        opened: list[sqlite3.Connection] = []
+        real = sqlite3.connect
+
+        def connect(*args: object, **kwargs: object) -> sqlite3.Connection:
+            conn = real(*args, **kwargs)  # type: ignore[arg-type]
+            if kwargs.get("timeout") == 1:
+                opened.append(conn)
+            return conn
+
+        def keep_wal(conn: sqlite3.Connection) -> None:
+            raise sqlite3.OperationalError("disk I/O error")
+
+        with TempLibrary() as temp:
+            before = temp.db.read_bytes()
+            with mock.patch("snapshots.serato_dj_running", return_value=False), mock.patch.object(
+                library.sqlite3, "connect", connect
+            ), mock.patch.object(library, "_keep_wal", keep_wal):
+                with self.assertRaises(SeratoOpen) as caught:
+                    library.begin_write()
+            after = temp.db.read_bytes()
+        self.assertIn("disk I/O error", caught.exception.message)
+        self.assertFalse(caught.exception.info["writable"])
+        self.assertEqual(len(opened), 1)
+        with self.assertRaises(sqlite3.ProgrammingError):
+            opened[0].execute("SELECT 1")
+        self.assertEqual(after, before)
+
     def test_locked_error_keeps_the_serato_message(self) -> None:
         """Keep today's message and refusal for a locked database.
 

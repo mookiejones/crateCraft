@@ -463,6 +463,24 @@ export interface PendingUndo {
   source?: string;
 }
 
+export interface OperationEntry {
+  time?: string;
+  action?: string;
+  operation?: string;
+  target?: string;
+  result?: string;
+  verified?: boolean;
+  rolled_back?: boolean;
+  snapshot_before?: string | null;
+  snapshot_after?: string | null;
+}
+
+export interface OperationList {
+  operations?: OperationEntry[];
+  error?: string;
+  code?: string;
+}
+
 export interface SnapshotList {
   snapshots?: SnapshotInfo[];
   pending_undo?: PendingUndo | null;
