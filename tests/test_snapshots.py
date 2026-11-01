@@ -656,8 +656,10 @@ class SnapshotTests(unittest.TestCase):
                 self.assertEqual(saved["trigger"], "version-change")
                 self.assertEqual(saved["serato_version"], "5.0.0")
                 self.assertEqual(saved["serato_build"], "5.0.0.1251")
-                self.assertIn("5.0.0.1", saved["reason"])
-                self.assertIn("5.0.0.1251", saved["reason"])
+                # "5.0.0.1" alone is a substring of "5.0.0.1251", so match
+                # the whole build text on each side of the change.
+                self.assertIn("(build 5.0.0.1) ", saved["reason"])
+                self.assertIn("(build 5.0.0.1251)", saved["reason"])
                 self.assertIn("as it is now", saved["reason"])
                 self.assertEqual(len(store.list_snapshots()), 1)
                 self.assertIsNone(store.check_version())
