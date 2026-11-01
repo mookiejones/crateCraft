@@ -56,6 +56,16 @@ export function wireHelp(): void {
   el("help-open-github").addEventListener("click", () => {
     void submitReport();
   });
+  for (const [id, page] of [
+    ["help-github", "repo"],
+    ["help-releases", "releases"],
+    ["about-github", "repo"],
+  ] as const) {
+    el(id).addEventListener("click", (event) => {
+      event.preventDefault();
+      void openPage(page);
+    });
+  }
   el("help-copy-log").addEventListener("click", () => {
     void copyLog();
   });
@@ -172,5 +182,27 @@ async function copyText(text: string): Promise<boolean> {
     return true;
   } catch {
     return false;
+  }
+}
+
+/**
+ * Ask the server to open a GitHub page in the system browser.
+ *
+ * The desktop window has no address bar or Back button, so following the
+ * link inside it would replace the app with GitHub. The server opens only
+ * the repository page or its releases.
+ *
+ * @param page ``repo`` or ``releases``.
+ * @returns {Promise<void>}
+ */
+export async function openPage(page: "repo" | "releases"): Promise<void> {
+  try {
+    await fetch("/api/help", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ page }),
+    });
+  } catch {
+    // The server is gone; there is nothing else to open the page with.
   }
 }

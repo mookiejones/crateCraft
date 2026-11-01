@@ -255,5 +255,52 @@ class HelpRouteTests(unittest.TestCase):
             httpd.server_close()
 
 
+
+class PageTests(unittest.TestCase):
+    """GitHub pages open in the system browser, never in the app window."""
+
+    def test_only_the_two_known_pages_open(self) -> None:
+        """``repo`` and ``releases`` open their fixed URLs; anything else raises."""
+        with mock.patch.object(help_report.webbrowser, "open", return_value=True) as opened:
+            self.assertTrue(help_report.open_page("repo"))
+            self.assertTrue(help_report.open_page("releases"))
+            for bad in ("issues", "https://example.com", "", "REPO"):
+                with self.subTest(page=bad), self.assertRaises(ValueError):
+                    help_report.open_page(bad)
+        self.assertEqual(
+            [call.args[0] for call in opened.call_args_list],
+            [
+                "https://github.com/mookiejones/serato-library-manager",
+                "https://github.com/mookiejones/serato-library-manager/releases",
+            ],
+        )
+
+    def test_post_page_opens_the_browser_and_refuses_other_names(self) -> None:
+        """POST ``page`` opens a known page; an unknown one is 400 and opens nothing."""
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        host, port = httpd.server_address[:2]
+
+        def post(body: dict[str, object]) -> urllib.request.Request:
+            return urllib.request.Request(
+                f"http://{host}:{port}/api/help",
+                data=json.dumps(body).encode("utf-8"),
+                headers={"Content-Type": "application/json"},
+            )
+
+        try:
+            with mock.patch.object(help_report.webbrowser, "open", return_value=True) as opened:
+                with urllib.request.urlopen(post({"page": "releases"}), timeout=5) as response:
+                    self.assertEqual(json.loads(response.read().decode("utf-8")), {"opened": True})
+                for bad in ({"page": "https://example.com"}, {"page": 3}):
+                    with self.subTest(body=bad), self.assertRaises(urllib.error.HTTPError) as caught:
+                        urllib.request.urlopen(post(bad), timeout=5)
+                    self.assertEqual(caught.exception.code, 400)
+            opened.assert_called_once_with("https://github.com/mookiejones/serato-library-manager/releases")
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+
 if __name__ == "__main__":
     unittest.main()

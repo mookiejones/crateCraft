@@ -202,6 +202,35 @@ def build_issue(
     return IssueLink("open", url, report, True, diagnostics)
 
 
+PAGES: dict[str, str] = {
+    "repo": f"https://github.com/{REPO}",
+    "releases": f"https://github.com/{REPO}/releases",
+}
+
+
+def open_page(name: str) -> bool:
+    """Open the repository page or its release notes in the system browser.
+
+    The desktop app shows the page in its own window, which has no address
+    bar or Back button. A plain link would replace the app with GitHub, so
+    these two pages open in the person's browser instead. Only the names in
+    ``PAGES`` are accepted; the URL never comes from the request.
+
+    Args:
+        name: ``repo`` or ``releases``.
+
+    Returns:
+        True when the browser accepted the URL.
+
+    Raises:
+        ValueError: ``name`` is not one of ``PAGES``.
+    """
+    url = PAGES.get(name)
+    if url is None:
+        raise ValueError("That page is not available.")
+    return bool(webbrowser.open(url))
+
+
 def open_in_browser(url: str) -> bool:
     """Open a new-issue URL in the system browser.
 

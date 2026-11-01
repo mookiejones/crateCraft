@@ -2469,11 +2469,20 @@ class Handler(BaseHTTPRequestHandler):
 
         Args:
             payload: ``kind`` is ``bug`` or ``feature``. ``open`` true asks
-                the system browser to open a short enough link.
+                the system browser to open a short enough link. ``page``
+                (``repo`` or ``releases``) instead opens that GitHub page
+                in the system browser, so the desktop window is not replaced.
 
         Raises:
             library.LibraryError: The kind or a field is not usable.
         """
+        if "page" in payload:
+            try:
+                opened = help_report.open_page(_help_text(payload.get("page")))
+            except ValueError as exc:
+                raise library.LibraryError(str(exc), 400) from exc
+            self.send_json({"opened": opened})
+            return
         include = payload.get("include_names", False)
         if include is not False and include is not True:
             raise library.LibraryError("include_names must be true or false.", 400)

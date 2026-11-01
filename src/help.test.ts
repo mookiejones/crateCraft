@@ -80,4 +80,26 @@ describe("help", () => {
     });
     expect(el("help-report-status").textContent).toContain("too long");
   });
+
+  it("opens GitHub pages in the system browser, not the app window", () => {
+    vi.mocked(fetch).mockResolvedValue(jsonResponse({ opened: true }));
+    const cases: Array<[string, string]> = [
+      ["help-github", "repo"],
+      ["help-releases", "releases"],
+      ["about-github", "repo"],
+    ];
+    for (const [id, page] of cases) {
+      vi.mocked(fetch).mockClear();
+      const link = document.getElementById(id);
+      if (!link) throw new Error(`missing ${id}`);
+      const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+      link.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+      expect(fetch).toHaveBeenCalledWith("/api/help", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ page }),
+      });
+    }
+  });
 });
