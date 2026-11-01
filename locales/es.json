@@ -121,6 +121,7 @@
   "error.playlist_empty": "La lista de reproducción está vacía.",
   "error.rating_invalid": "La valoración debe ser un número entero del 1 al 5.",
   "error.recycle_failed": "No se pudo mover el archivo a la Papelera de reciclaje.",
+  "error.registration_no_space": "Las cajas no se registraron. Esta biblioteca no tiene el espacio Serato Library, así que Serato puede quitar esos archivos de caja la próxima vez que se abra.",
   "error.related_direction": "Elige un enlace en un sentido o en ambos sentidos.",
   "error.related_missing": "Ese enlace no está en las pistas relacionadas.",
   "error.related_not_saved": "No se pudo guardar el archivo de pistas relacionadas.",

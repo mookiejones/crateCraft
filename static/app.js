@@ -124,6 +124,7 @@
     "error.playlist_empty": "The playlist is empty.",
     "error.rating_invalid": "Rating needs a whole number from 1 to 5.",
     "error.recycle_failed": "The file could not be moved to the Recycle Bin.",
+    "error.registration_no_space": "Crates were not registered. This library has no Serato Library space, so Serato may remove those crate files the next time it opens.",
     "error.related_direction": "Choose a one-way or two-way link.",
     "error.related_missing": "That link is not in the related tracks.",
     "error.related_not_saved": "The related-tracks file could not be saved.",
@@ -853,6 +854,7 @@
     "error.playlist_empty": "La lista de reproducción está vacía.",
     "error.rating_invalid": "La valoración debe ser un número entero del 1 al 5.",
     "error.recycle_failed": "No se pudo mover el archivo a la Papelera de reciclaje.",
+    "error.registration_no_space": "Las cajas no se registraron. Esta biblioteca no tiene el espacio Serato Library, así que Serato puede quitar esos archivos de caja la próxima vez que se abra.",
     "error.related_direction": "Elige un enlace en un sentido o en ambos sentidos.",
     "error.related_missing": "Ese enlace no está en las pistas relacionadas.",
     "error.related_not_saved": "No se pudo guardar el archivo de pistas relacionadas.",
@@ -2589,6 +2591,11 @@
     appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
     appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
     appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
+    if (plan.registration_warning) {
+      const warning = document.createElement("p");
+      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
+      planBox.append(warning);
+    }
     appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
     appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
     appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);

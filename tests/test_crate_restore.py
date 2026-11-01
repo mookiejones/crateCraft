@@ -110,6 +110,41 @@ def _add_asset(master: Path, asset_id: int, portable: str, file_name: str) -> No
         )
 
 
+def _rewrite(store: SnapshotStore, manifest: dict[str, object]) -> str:
+    """Publish a changed copy of a manifest under a new id.
+
+    Args:
+        store: Store that holds the blobs.
+        manifest: Manifest to publish. Its id and hash are replaced.
+
+    Returns:
+        The new snapshot id.
+    """
+    body = dict(manifest)
+    body.pop("sha256", None)
+    body["id"] = snapshots._new_id()
+    store._write_manifest(body)
+    return str(body["id"])
+
+
+def _without_master(store: SnapshotStore, snapshot_id: str) -> str:
+    """Return a snapshot id whose manifest has no master database.
+
+    Args:
+        store: Store that holds the snapshot.
+        snapshot_id: Snapshot to copy.
+
+    Returns:
+        The new snapshot id.
+    """
+    manifest = store._manifest(snapshot_id)
+    database = dict(manifest.get("database") or {})
+    database["master"] = None
+    manifest = dict(manifest)
+    manifest["database"] = database
+    return _rewrite(store, manifest)
+
+
 def _root_database(path: Path) -> None:
     """Create a location database the crate mirror can update.
 
@@ -415,26 +450,33 @@ class CrateRestoreTests(unittest.TestCase):
             self.assertEqual(_filenames(temp.db), [])
             self.assertFalse((sub / "House.crate").exists())
 
-    def test_a_library_with_no_space_rolls_the_restore_back(self) -> None:
-        """Put the library back when a crate file cannot be registered.
+    def test_a_library_with_no_space_skips_registration(self) -> None:
+        """Finish the restore when the database has no Serato Library space.
 
-        The snapshot database has no Serato Library space. Restore does not
-        leave the crate file in place for Serato to delete, and it does not
-        leave the space missing.
+        The crate file is put back and the database from the snapshot stays
+        in place. The crate is not registered, so Serato may remove that
+        file the next time it opens. The plan says so, and it does not list
+        the crate as one that will be registered.
 
         Returns:
-            None. The test fails if the crate file remains or the space is gone.
+            None. The test fails if the restore rolls back or a filename row
+            is inserted.
         """
         with TempLibrary() as temp:
             _music, serato, store = _drive(temp.root, temp.db)
             sub = serato / "Subcrates"
             sub.mkdir()
             crate = sub / "House.crate"
-            crate.write_bytes(_crate(["Music/same-a.mp3"]))
+            original = _crate(["Music/same-a.mp3"])
+            crate.write_bytes(original)
             with open_database(temp.db) as conn:
                 conn.execute("DELETE FROM container")
                 conn.execute("DELETE FROM space")
             saved = store.take("manual", "No space.")
+            plan = store.plan(saved["id"])
+            self.assertEqual(plan["crates_registered"], [])
+            self.assertIn("no Serato Library space", str(plan["registration_warning"]))
+            self.assertEqual(plan["registration_warning_code"], "registration_no_space")
             with open_database(temp.db) as conn:
                 conn.execute("INSERT INTO space (id, name) VALUES (1, 'Serato Library')")
                 conn.execute(
@@ -444,16 +486,139 @@ class CrateRestoreTests(unittest.TestCase):
                     VALUES (1, NULL, 'Library', 0, 0, 1, 1, 0, '')
                     """
                 )
-            crate.unlink()
-            with self.assertRaises(snapshots.SnapshotError):
-                store.restore(saved["id"])
-            self.assertFalse(crate.exists())
+            crate.write_bytes(_crate(["Music/other.mp3"]))
+            store.restore(saved["id"])
+            self.assertEqual(crate.read_bytes(), original)
+            self.assertEqual(_filenames(temp.db), [])
             with open_database(temp.db) as conn:
                 space = conn.execute(
                     "SELECT name FROM space WHERE name = 'Serato Library'"
                 ).fetchone()
-            self.assertIsNotNone(space)
+            self.assertIsNone(space)
+
+    def test_a_snapshot_without_a_master_does_not_list_or_register_crates(self) -> None:
+        """Leave the live database alone when the snapshot has no master.
+
+        An empty known-name set must not make every crate look unregistered.
+        The crate file is still restored. A missing master file is the same
+        skip: ``_apply`` does not ask ``begin_write`` and does not roll back.
+
+        Returns:
+            None. The test fails if a crate row appears or the restore raises.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            crate = sub / "House.crate"
+            original = _crate(["Music/same-a.mp3"])
+            crate.write_bytes(original)
+            saved = store.take("manual", "Crate file only.")
+            bare = _without_master(store, saved["id"])
+            plan = store.plan(bare)
+            self.assertEqual(plan["crates_registered"], [])
+            self.assertIsNone(plan["registration_warning"])
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET name = ? WHERE id = 1", ("Changed",))
+            crate.unlink()
+            store.restore(bare)
+            self.assertEqual(crate.read_bytes(), original)
             self.assertEqual(_filenames(temp.db), [])
+            with open_database(temp.db) as conn:
+                name = conn.execute("SELECT name FROM asset WHERE id = 1").fetchone()
+            assert name is not None
+            self.assertEqual(name[0], "Changed")
+            temp.db.unlink()
+            store._apply(bare)
+            self.assertFalse(temp.db.exists())
+            self.assertTrue(crate.is_file())
+
+    def test_the_same_crate_on_two_drives_is_one_plan_row(self) -> None:
+        """List one crate when two drives store the same file name.
+
+        Returns:
+            None. The test fails if House appears twice.
+        """
+        with TempLibrary() as temp:
+            music, serato, store = _drive(temp.root, temp.db)
+            (serato / "Subcrates").mkdir()
+            (serato / "Subcrates" / "House.crate").write_bytes(_crate(["Music/same-a.mp3"]))
+            other_root = temp.root / "other"
+            other = other_root / "_Serato_"
+            (other / "Subcrates").mkdir(parents=True)
+            (other / "Subcrates" / "House.crate").write_bytes(_crate(["Music/same-b.mp3"]))
+            store.drives = [
+                DriveSpec("tour", "Tour", serato, music, "external", True),
+                DriveSpec("other", "Other", other, other_root, "external", True),
+            ]
+            saved = store.take("manual", "Same crate name on two drives.")
+            plan = store.plan(saved["id"])
+            registered = plan["crates_registered"]
+            assert isinstance(registered, list)
+            houses = [item for item in registered if str(item["path"]).endswith("House.crate")]
+            self.assertEqual(len(houses), 1)
+
+    def test_a_file_name_alone_does_not_pick_a_track(self) -> None:
+        """Do not attach a crate path that is only a file name.
+
+        The library track's portable id is ``Music/same-a.mp3``. A crate
+        that stores ``same-a.mp3`` must stay empty. The crate file itself
+        is still registered.
+
+        Returns:
+            None. The test fails if asset 1 is added to the crate.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            (sub / "Bare.crate").write_bytes(_crate(["same-a.mp3"]))
+            saved = store.take("manual", "Bare file name.")
+            store.restore(saved["id"])
+            self.assertEqual(_members(temp.db, "Bare.crate"), [])
+            self.assertIn("Bare.crate", _filenames(temp.db))
+
+    def test_a_damaged_crate_blob_does_not_abort_the_restore(self) -> None:
+        """Skip one crate whose snapshot copy cannot be read.
+
+        The other crate is restored and registered. The damaged crate's
+        file is left as it is. The restore does not roll back.
+
+        Returns:
+            None. The test fails if restore raises or Peak is not registered.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            house = sub / "House.crate"
+            peak = sub / "Peak.crate"
+            house.write_bytes(_crate(["Music/same-a.mp3"]))
+            peak.write_bytes(_crate(["Music/same-b.mp3"]))
+            saved = store.take("manual", "Two crates.")
+            manifest = dict(store._manifest(saved["id"]))
+            drives = []
+            for record in manifest["drives"]:
+                copied = dict(record)
+                files = []
+                for item in copied["files"]:
+                    entry = dict(item)
+                    if str(entry.get("path", "")).endswith("House.crate"):
+                        entry["sha256"] = None
+                    files.append(entry)
+                copied["files"] = files
+                drives.append(copied)
+            manifest["drives"] = drives
+            damaged = _rewrite(store, manifest)
+            house.write_bytes(_crate(["Music/kept.mp3"]))
+            kept = house.read_bytes()
+            with self.assertLogs("serato", level="WARNING") as logs:
+                store.restore(damaged)
+            self.assertTrue(any("could not be read" in line for line in logs.output))
+            self.assertEqual(house.read_bytes(), kept)
+            self.assertEqual(peak.read_bytes(), _crate(["Music/same-b.mp3"]))
+            self.assertIn("Peak.crate", _filenames(temp.db))
+            self.assertNotIn("House.crate", _filenames(temp.db))
 
     def test_registration_does_not_open_another_snapshot(self) -> None:
         """Avoid a nested snapshot while a restore could be holding the journal.

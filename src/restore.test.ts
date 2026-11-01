@@ -90,6 +90,22 @@ describe("restore", () => {
     expect(document.getElementById("snapshot-plan")?.textContent).toContain(
       "Crates registered so Serato keeps them: 1. Café",
     );
+
+    const skipped = "Crates were not registered. This library has no Serato Library space, so Serato may remove those crate files the next time it opens.";
+    postJSON.mockResolvedValue({
+      ...plan,
+      registration_warning: skipped,
+      registration_warning_code: "registration_no_space",
+    });
+    await openSnapshotPlan("snap-9");
+    expect(document.getElementById("snapshot-plan")?.textContent).toContain(skipped);
+    setLocale("es");
+    repaintSnapshotPlan();
+    expect(document.getElementById("snapshot-plan")?.textContent).toContain(
+      "Las cajas no se registraron. Esta biblioteca no tiene el espacio Serato Library",
+    );
+    setLocale("en");
+    repaintSnapshotPlan();
     expect(text).toContain("Cue changes: 1 file");
     expect(text).toContain("Grid changes: 1 file");
     expect(text).toContain("Deleted crates: 1. Old");

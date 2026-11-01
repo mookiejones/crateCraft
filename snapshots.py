@@ -1111,7 +1111,10 @@ class SnapshotStore:
                 if drive_id not in visible or drive_id in absent:
                     row["present"] = False
         diff = _diff_contents(current, target, snapshot_id)
-        diff["crates_registered"] = self._crates_to_register(snapshot_id)
+        registered, notice = self._crates_to_register(snapshot_id)
+        diff["crates_registered"] = registered
+        diff["registration_warning"] = None if notice is None else notice.text
+        diff["registration_warning_code"] = None if notice is None else notice.code
         return diff
 
     def _apply(self, snapshot_id: str) -> None:
@@ -1174,10 +1177,23 @@ class SnapshotStore:
                     continue
                 rel = _safe_relative(str(item.get("path") or ""))
                 digest = item.get("sha256")
+                name = Path(rel).name
                 if not isinstance(digest, str):
+                    if _is_crate_filename(name):
+                        _warn_skipped_crate()
+                        wanted.add(rel)
+                        continue
                     raise SnapshotError("A snapshot file has no hash.")
+                try:
+                    data = self._read_blob(digest)
+                except SnapshotError:
+                    if _is_crate_filename(name):
+                        _warn_skipped_crate()
+                        wanted.add(rel)
+                        continue
+                    raise
                 target = _join(root, rel)
-                _atomic_write(target, self._read_blob(digest))
+                _atomic_write(target, data)
                 wanted.add(rel)
             for rel, path in _iter_serato_files(root):
                 if rel not in wanted:
@@ -1202,8 +1218,16 @@ class SnapshotStore:
             SnapshotBlocked: If Serato DJ is running or holds the database.
             SnapshotError: If a crate cannot be stored. The restore rolls back.
         """
+        import error_codes
         import library
 
+        if not _snapshot_has_master(manifest):
+            return
+        if not self.master.is_file() or self.master.is_symlink():
+            return
+        if not library.can_register_crates(self.master):
+            app_log.logger.warning("%s", error_codes.REGISTRATION_NO_SPACE)
+            return
         crates = _snapshot_crate_files(manifest, self._read_blob)
         if not crates:
             return
@@ -1215,20 +1239,32 @@ class SnapshotStore:
         except library.LibraryError as exc:
             raise SnapshotError(exc.message, exc.status) from exc
 
-    def _crates_to_register(self, snapshot_id: str) -> list[dict[str, object]]:
-        """List snapshot crate files the snapshot database has not heard of.
+    def _crates_to_register(self, snapshot_id: str) -> tuple[list[dict[str, object]], CodedNotice | None]:
+        """List crate files this restore would register, and any skip warning.
+
+        A snapshot with no master database registers nothing, and those
+        crate files are not listed. The same basename on two drives is one
+        row. A database with no Serato Library root crate registers nothing
+        and the warning explains that Serato may remove the files.
 
         Args:
             snapshot_id: Snapshot whose restore would register these crates.
 
         Returns:
-            Name, path, and drive for each file. Nothing is written.
+            The rows, and the warning or None. Nothing is written.
         """
+        import error_codes
         import library
 
         manifest = self._manifest(snapshot_id)
-        known = _manifest_export_names(manifest, self._read_blob)
+        if not _snapshot_has_master(manifest):
+            return [], None
+        with _manifest_master(manifest, self._read_blob) as master:
+            if master is None or not library.can_register_crates(master):
+                return [], CodedNotice(error_codes.REGISTRATION_NO_SPACE, "registration_no_space")
+            known = library.crate_export_names(master)
         rows: list[dict[str, object]] = []
+        seen: set[str] = set()
         for record in _drive_records(manifest):
             drive_id = str(record.get("drive_id") or "")
             label = str(record.get("label") or drive_id)
@@ -1241,17 +1277,21 @@ class SnapshotStore:
                 name = Path(rel).name
                 if not _is_crate_filename(name):
                     continue
+                if not isinstance(item.get("sha256"), str):
+                    continue
                 if not library.is_registerable_crate_name(name):
                     continue
-                if name.casefold() in known:
+                key = name.casefold()
+                if key in seen or key in known:
                     continue
+                seen.add(key)
                 rows.append({
                     "drive_id": drive_id,
                     "drive_label": label,
                     "name": Path(name).stem.replace("%%", " / "),
                     "path": rel,
                 })
-        return rows
+        return rows, None
 
     def _apply_tracks(self, manifest: Mapping[str, object]) -> None:
         """Restore Serato frames in audio files on present drives.
@@ -2619,8 +2659,14 @@ def _snapshot_crate_files(
                 continue
             digest = item.get("sha256")
             if not isinstance(digest, str):
+                _warn_skipped_crate()
                 continue
-            tracks = parse_serato_bytes(reader(digest))
+            try:
+                data = reader(digest)
+            except SnapshotError:
+                _warn_skipped_crate()
+                continue
+            tracks = parse_serato_bytes(data)
             key = name.casefold()
             current = grouped.get(key)
             if current is None:
@@ -2633,31 +2679,56 @@ def _snapshot_crate_files(
     return list(grouped.values())
 
 
-def _manifest_export_names(manifest: Mapping[str, object], reader: Callable[[str], bytes]) -> set[str]:
-    """Return crate names the snapshotted master database has heard of.
+def _warn_skipped_crate() -> None:
+    """Log that one crate file was left out of this restore."""
+    app_log.logger.warning("A crate file was skipped because its snapshot copy could not be read.")
+
+
+def _snapshot_has_master(manifest: Mapping[str, object]) -> bool:
+    """Return whether a snapshot stored a master database.
+
+    Args:
+        manifest: Snapshot manifest.
+
+    Returns:
+        True when ``database.master`` names a blob hash.
+    """
+    database = manifest.get("database")
+    if not isinstance(database, dict):
+        return False
+    master = database.get("master")
+    return isinstance(master, dict) and isinstance(master.get("sha256"), str)
+
+
+@contextmanager
+def _manifest_master(
+    manifest: Mapping[str, object],
+    reader: Callable[[str], bytes],
+) -> Iterator[Path | None]:
+    """Yield a temporary copy of the snapshotted master database.
 
     Args:
         manifest: Snapshot manifest.
         reader: Returns blob bytes for a hash.
 
-    Returns:
-        Casefolded basenames. No master database means an empty set.
+    Yields:
+        The temporary file, or None when the snapshot has no master database.
+        The file is removed when the block ends.
     """
-    import library
-
+    if not _snapshot_has_master(manifest):
+        yield None
+        return
     database = manifest.get("database")
-    if not isinstance(database, dict):
-        return set()
+    assert isinstance(database, dict)
     master = database.get("master")
-    if not isinstance(master, dict) or not isinstance(master.get("sha256"), str):
-        return set()
-    data = reader(master["sha256"])
+    assert isinstance(master, dict)
+    data = reader(str(master.get("sha256")))
     fd, name = tempfile.mkstemp(prefix="serato-snapnames-", suffix=".sqlite")
     os.close(fd)
     path = Path(name)
     try:
         path.write_bytes(data)
-        return library.crate_export_names(path)
+        yield path
     finally:
         path.unlink(missing_ok=True)
 

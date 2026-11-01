@@ -121,6 +121,7 @@
   "error.playlist_empty": "The playlist is empty.",
   "error.rating_invalid": "Rating needs a whole number from 1 to 5.",
   "error.recycle_failed": "The file could not be moved to the Recycle Bin.",
+  "error.registration_no_space": "Crates were not registered. This library has no Serato Library space, so Serato may remove those crate files the next time it opens.",
   "error.related_direction": "Choose a one-way or two-way link.",
   "error.related_missing": "That link is not in the related tracks.",
   "error.related_not_saved": "The related-tracks file could not be saved.",

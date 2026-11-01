@@ -427,6 +427,10 @@ export interface RestorePlan {
    * them into the library so Serato 4/5 does not delete them on launch.
    */
   crates_registered?: PlanName[];
+  /** English warning when crate files will not be registered. */
+  registration_warning?: string | null;
+  /** Catalog code for `registration_warning`. */
+  registration_warning_code?: string | null;
   dry_run?: boolean;
   restore_blocked?: string | null;
   /** Catalog code for `restore_blocked` when that sentence can be translated. */

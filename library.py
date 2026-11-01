@@ -1580,6 +1580,37 @@ def _export_index(conn: sqlite3.Connection) -> dict[str, tuple[int, str]]:
     return found
 
 
+def can_register_crates(master: Path) -> bool:
+    """Return whether restored crate files can be written into this database.
+
+    Args:
+        master: ``master.sqlite``.
+
+    Returns:
+        True when the file is a database with a Serato Library root crate.
+        False when it is missing, a shortcut, unreadable, or has no such
+        root. Nothing is written.
+    """
+    if not master.is_file() or master.is_symlink():
+        return False
+    try:
+        with closing(sqlite3.connect(f"file:{master}?mode=ro", uri=True)) as conn:
+            conn.row_factory = sqlite3.Row
+            if "space" not in _tables(conn) or "container" not in _tables(conn):
+                return False
+            row = conn.execute(
+                """
+                SELECT 1 FROM container c
+                JOIN space s ON s.id = c.space_id
+                WHERE s.name = ? AND c.type = 0
+                """,
+                (LIBRARY_SPACE,),
+            ).fetchone()
+    except sqlite3.Error:
+        return False
+    return row is not None
+
+
 def crate_export_names(master: Path) -> set[str]:
     """Return the crate file names a Serato 4/5 database has heard of.
 
@@ -3083,7 +3114,8 @@ def _match_asset(index: Sequence[tuple[int, str, str]], stored: str) -> int | No
     A Windows path (``C:\\Users\\dj\\Music\\same-a.mp3``) and a macOS path
     (``/Users/dj/Music/same-a.mp3``) match a portable id of
     ``Music/same-a.mp3``. A path that climbs out with ``..`` matches nothing.
-    Two assets that share only a file name are left unmatched.
+    A file name on its own is not a match, so two different tracks that share
+    a name cannot be confused.
 
     Args:
         index: ``(asset id, portable id, file name)`` rows.
@@ -3099,29 +3131,23 @@ def _match_asset(index: Sequence[tuple[int, str, str]], stored: str) -> int | No
     parts = [part for part in want.split("/") if part not in {"", "."}]
     if not parts or any(part == ".." for part in parts):
         return None
-    want_name = parts[-1]
     exact: list[int] = []
     suffix: list[int] = []
-    by_name: list[int] = []
-    for asset_id, portable, file_name in index:
+    for asset_id, portable, _file_name in index:
         key = _path_key(portable) if portable else ""
         if key and key == want:
             exact.append(asset_id)
             continue
-        if key and (want.endswith("/" + key) or key.endswith("/" + want)):
+        # Both sides need a directory. A bare file name is not a suffix of
+        # a longer portable id, or the other way around.
+        if key and "/" in want and "/" in key and (want.endswith("/" + key) or key.endswith("/" + want)):
             suffix.append(asset_id)
-            continue
-        name = file_name.casefold() if file_name else (key.split("/")[-1] if key else "")
-        if want_name and name == want_name:
-            by_name.append(asset_id)
     if len(exact) == 1:
         return exact[0]
     if len(exact) > 1 or len(suffix) > 1:
         return None
     if len(suffix) == 1:
         return suffix[0]
-    if len(by_name) == 1:
-        return by_name[0]
     return None
 
 
