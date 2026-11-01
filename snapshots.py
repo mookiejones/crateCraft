@@ -65,6 +65,10 @@ from serato_web.completeness import (
 FORMAT = 1
 EXCLUDED_DIRS = frozenset({"Export Backups", "Lexicon"})
 _EXCLUDED_FOLDED = frozenset(name.casefold() for name in EXCLUDED_DIRS)
+# Audio Serato stores under ``_Serato_``. A plain backup copies crates and
+# ``database V2``, not these folders. Snapshots do not use this set.
+BACKUP_SKIP_DIRS = frozenset({"Recording", "DJ Sessions"})
+_BACKUP_SKIP_FOLDED = _EXCLUDED_FOLDED | frozenset(name.casefold() for name in BACKUP_SKIP_DIRS)
 FRAME_KINDS = snapshot_frames.FRAME_KINDS
 TRIGGERS = frozenset({
     "manual",
@@ -2359,6 +2363,40 @@ def discover_drives() -> list[DriveSpec]:
     return found
 
 
+def drives_for_backup() -> list[DriveSpec]:
+    """Return drives a plain backup should record.
+
+    Present drives come from :func:`discover_drives`. A drive the newest
+    snapshot already stored, and that is not mounted now, is included with
+    ``present`` false so the backup can list it without treating it as a
+    failure. A relocated library discovers no present drives.
+
+    Returns:
+        Drive specs. Nothing is written.
+    """
+    found = discover_drives()
+    seen = {spec.drive_id for spec in found}
+    try:
+        previous = current_store()._latest_manifest()
+    except (OSError, SnapshotError):
+        previous = None
+    for record in _drive_records(previous):
+        drive_id = str(record.get("drive_id") or "")
+        if not drive_id or drive_id in seen:
+            continue
+        label = record.get("label")
+        role = record.get("role")
+        found.append(DriveSpec(
+            drive_id=drive_id,
+            label=label if isinstance(label, str) and label else drive_id,
+            serato_root=None,
+            music_root=None,
+            role=role if role in {"internal", "external"} else "external",
+            present=False,
+        ))
+    return found
+
+
 def default_process_names() -> list[str]:
     """Return command names of running processes.
 
@@ -3118,6 +3156,69 @@ def _iter_serato_files(root: Path) -> list[tuple[str, Path]]:
                 continue
             rel = path.relative_to(root).as_posix()
             if _excluded_relative(rel) or _fold_component(name) in _EXCLUDED_FOLDED:
+                continue
+            found.append((rel, path))
+    return found
+
+
+def _backup_skipped(part: str) -> bool:
+    """Return whether a plain backup leaves this path component out.
+
+    Args:
+        part: One path component.
+
+    Returns:
+        True for ``Export Backups``, ``Lexicon``, ``Recording``, and
+        ``DJ Sessions`` after the same folding as a snapshot exclusion.
+        A sibling such as ``Recording-extra`` is false.
+    """
+    return _fold_component(part) in _BACKUP_SKIP_FOLDED
+
+
+def iter_backup_files(root: Path) -> list[tuple[str, Path]]:
+    """List ``_Serato_`` files a plain backup copies.
+
+    ``Export Backups``, ``Lexicon``, ``Recording``, and ``DJ Sessions``
+    are excluded with the same folding as a snapshot: letter case, a
+    trailing dot, a trailing space, and an alternate data stream.
+    ``Recording`` and ``DJ Sessions`` are audio, not library metadata.
+    Shortcuts are not followed. There is no size cap. The caller checks
+    free space before it copies, and refuses the backup when the disk
+    cannot hold the files it will actually copy.
+
+    Args:
+        root: ``_Serato_`` directory.
+
+    Returns:
+        Relative POSIX path and file path.
+
+    Raises:
+        OSError: If a directory in the tree cannot be listed. ``EACCES``
+            and ``EPERM`` are left for the caller to record as one drive.
+            Any other listing error, including a drive that disappears,
+            is a failed backup.
+    """
+    found: list[tuple[str, Path]] = []
+    if not root.is_dir() or root.is_symlink():
+        return found
+
+    def onerror(error: OSError) -> None:
+        raise error
+
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=onerror):
+        current = Path(dirpath)
+        dirnames[:] = [
+            name for name in dirnames
+            if not _backup_skipped(name) and not (current / name).is_symlink()
+        ]
+        for name in filenames:
+            path = current / name
+            if path.is_symlink() or not path.is_file():
+                continue
+            if _backup_skipped(name):
+                continue
+            rel = path.relative_to(root).as_posix()
+            if any(_backup_skipped(part) for part in rel.split("/") if part):
                 continue
             found.append((rel, path))
     return found

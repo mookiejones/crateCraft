@@ -91,6 +91,8 @@
     "detail.sentPrepare": "Sent to Prepare.",
     "duplicates.readFailed": "Could not read duplicates.",
     "error.action_unavailable": "That action is not available.",
+    "error.backup_no_space": "There is not enough disk space to back up the library.",
+    "error.backup_serato_running": "Quit Serato DJ Pro before backing up drive crates. Serato DJ is still running, so nothing was copied.",
     "error.body_not_json": "The request body is not JSON.",
     "error.body_not_object": "The request body is not an object.",
     "error.choose_copy": "Choose the copy to keep.",
@@ -579,10 +581,21 @@
     "shortcuts.viewHistory": "History",
     "shortcuts.viewLibrary": "Library",
     "shortcuts.viewSnapshots": "Snapshots",
+    "snapshots.backupDrives": "Back up drive crates",
+    "snapshots.backupDrivesBusy": "Backing up drive crates…",
     "snapshots.count": {
       one: "{count} snapshot",
       other: "{count} snapshots"
     },
+    "snapshots.drivePermission": "{name} (no permission)",
+    "snapshots.driveReadOnly": "{name} (read-only)",
+    "snapshots.drivesAbsent": "Unplugged, not copied: {drives}.",
+    "snapshots.drivesAlready": "Those drive crates are already in this session's backup.",
+    "snapshots.drivesCopied": "Copied: {drives}.",
+    "snapshots.drivesIntro": "Connected drive crates are copied into the backup on this computer.",
+    "snapshots.drivesNone": "No drive folders were due for a copy.",
+    "snapshots.drivesSaved": "Drive crates were copied into the backup on this computer.",
+    "snapshots.drivesSkipped": "Skipped: {drives}.",
     "snapshots.empty": "No snapshots yet. Take a snapshot to keep a point you can restore. Snapshots are kept, and this page does not expire them.",
     "snapshots.noSearch": "Snapshots has no search. Press Ctrl+K to find a track or a file.",
     "snapshots.outsideChange": "Something outside this app changed the Serato folder. A snapshot was saved after that change. Undo puts back the previous snapshot.",
@@ -603,6 +616,7 @@
     "snapshots.take": "Take a snapshot",
     "snapshots.trigger": "snapshot",
     "snapshots.unavailableDrives": "Unavailable: {drives}.",
+    "snapshots.unknownDrive": "Unknown drive",
     "snapshots.unknownTime": "Unknown time",
     "snapshots.unreadable": "The snapshots could not be read.",
     "space.appleMusic": "Apple Music",
@@ -679,6 +693,7 @@
     "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
     "wizard.yes": "Yes, share",
     "tooltip.allTracks": "Show every track in this space. Ctrl/Cmd+1.",
+    "tooltip.backupDrives": "Copy each connected drive's Serato folder into the backup on this computer. An unplugged drive is listed and left untouched.",
     "tooltip.beatgridLock": "Lock the beatgrid so Serato does not move it.",
     "tooltip.chooseRelated": "Choose {name} as the track to link.",
     "tooltip.collapseCrate": "Hide the crates nested under {name}.",
@@ -935,6 +950,8 @@
     "detail.sentPrepare": "Enviada a Prepare.",
     "duplicates.readFailed": "No se pudieron leer los duplicados.",
     "error.action_unavailable": "Esa acción no está disponible.",
+    "error.backup_no_space": "No hay espacio suficiente en el disco para copiar la biblioteca.",
+    "error.backup_serato_running": "Cierra Serato DJ Pro antes de copiar las cajas de las unidades. Serato DJ sigue abierto, así que no se copió nada.",
     "error.body_not_json": "El cuerpo de la solicitud no es JSON.",
     "error.body_not_object": "El cuerpo de la solicitud no es un objeto.",
     "error.choose_copy": "Elige la copia que quieres conservar.",
@@ -1423,10 +1440,21 @@
     "shortcuts.viewHistory": "Historial",
     "shortcuts.viewLibrary": "Biblioteca",
     "shortcuts.viewSnapshots": "Instantáneas",
+    "snapshots.backupDrives": "Copiar cajas de las unidades",
+    "snapshots.backupDrivesBusy": "Copiando cajas de las unidades…",
     "snapshots.count": {
       one: "{count} instantánea",
       other: "{count} instantáneas"
     },
+    "snapshots.drivePermission": "{name} (sin permiso)",
+    "snapshots.driveReadOnly": "{name} (solo lectura)",
+    "snapshots.drivesAbsent": "Desconectadas, sin copiar: {drives}.",
+    "snapshots.drivesAlready": "Esas cajas ya están en la copia de esta sesión.",
+    "snapshots.drivesCopied": "Copiadas: {drives}.",
+    "snapshots.drivesIntro": "Las cajas de las unidades conectadas se copian en la copia de este equipo.",
+    "snapshots.drivesNone": "No había carpetas de unidades pendientes de copiar.",
+    "snapshots.drivesSaved": "Las cajas de las unidades se copiaron en la copia de este equipo.",
+    "snapshots.drivesSkipped": "Omitidas: {drives}.",
     "snapshots.empty": "Todavía no hay instantáneas. Toma una para guardar un punto al que puedas volver. Las instantáneas se conservan y esta página no las caduca.",
     "snapshots.noSearch": "Instantáneas no tiene búsqueda. Pulsa Ctrl+K para buscar una pista o un archivo.",
     "snapshots.outsideChange": "Algo ajeno a esta app cambió la carpeta de Serato. Se guardó una instantánea después de ese cambio. Deshacer restaura la instantánea anterior.",
@@ -1447,6 +1475,7 @@
     "snapshots.take": "Tomar una instantánea",
     "snapshots.trigger": "instantánea",
     "snapshots.unavailableDrives": "No disponibles: {drives}.",
+    "snapshots.unknownDrive": "Unidad desconocida",
     "snapshots.unknownTime": "Hora desconocida",
     "snapshots.unreadable": "No se pudieron leer las instantáneas.",
     "space.appleMusic": "Apple Music",
@@ -1523,6 +1552,7 @@
     "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
     "wizard.yes": "Sí, compartir",
     "tooltip.allTracks": "Muestra todas las pistas de este espacio. Ctrl/Cmd+1.",
+    "tooltip.backupDrives": "Copia la carpeta Serato de cada unidad conectada en la copia de este equipo. Una unidad desconectada se anota y no se toca.",
     "tooltip.beatgridLock": "Bloquea la rejilla de tiempo para que Serato no la mueva.",
     "tooltip.chooseRelated": "Elige {name} como pista para enlazar.",
     "tooltip.collapseCrate": "Oculta las cajas que están dentro de {name}.",
@@ -2084,6 +2114,7 @@
     filesQuery: "",
     filesSearching: false,
     snapshots: [],
+    driveBackup: null,
     operations: [],
     operationsLoading: false,
     operationsError: "",
@@ -2201,6 +2232,7 @@
     operationsRetry: spec("tooltip.operationsRetry"),
     snapshotsRefresh: spec("tooltip.snapshotsRefresh"),
     snapshotsTake: spec("tooltip.snapshotsTake"),
+    backupDrives: spec("tooltip.backupDrives"),
     snapshotsUndo: spec("tooltip.snapshotsUndo"),
     consentDecline: spec("tooltip.consentDecline"),
     consentAccept: spec("tooltip.consentAccept"),
@@ -2373,6 +2405,7 @@
       "snapshots-refresh": tips.snapshotsRefresh,
       "gig-refresh": tips.gigRefresh,
       "snapshots-take": tips.snapshotsTake,
+      "snapshots-drives": tips.backupDrives,
       "snapshots-undo-button": tips.snapshotsUndo,
       "consent-decline": tips.consentDecline,
       "consent-accept": tips.consentAccept,
@@ -3022,6 +3055,7 @@
       state.writeBlockCode = payload.write_block_code || "";
       state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
       state.seratoRunning = Boolean(payload.serato_running);
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
       state.snapshotLoading = false;
       renderSnapshots();
     } finally {
@@ -3057,6 +3091,7 @@
     const undo = el("snapshots-undo");
     const list = el("snapshots-list");
     list.setAttribute("aria-busy", String(state.snapshotLoading));
+    paintDriveCopies();
     if (state.writeBlock) {
       block.hidden = false;
       block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
@@ -3220,6 +3255,69 @@
   var lastPlan = null;
   function repaintSnapshotPlan() {
     if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
+  }
+  function isDriveCopy(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
+  }
+  function driveBackupFrom(value) {
+    if (!value || typeof value !== "object") return null;
+    const record = value;
+    if (record.verified !== true) return null;
+    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
+    return {
+      folder: typeof record.folder === "string" ? record.folder : "",
+      verified: true,
+      drives
+    };
+  }
+  function driveName(drive, status) {
+    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
+    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
+    if (status === "permission") return t("snapshots.drivePermission", { name });
+    return name;
+  }
+  function driveCopyText() {
+    const report = state.driveBackup;
+    const drives = report?.drives ?? [];
+    if (!report?.verified || !drives.length) {
+      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
+    }
+    const parts = [];
+    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
+    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
+    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
+    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
+    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
+    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
+    return parts.join(" ") || t("snapshots.drivesIntro");
+  }
+  function paintDriveCopies() {
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = driveCopyText();
+  }
+  async function backupDriveCrates() {
+    const button2 = el("snapshots-drives");
+    button2.disabled = true;
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = t("snapshots.backupDrivesBusy");
+    try {
+      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
+      renderSnapshots();
+    } catch (error2) {
+      state.snapshotMessage = "";
+      renderSnapshots();
+      const shown = el("snapshots-drives-note");
+      shown.hidden = false;
+      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
+    } finally {
+      button2.disabled = false;
+    }
   }
   function paintSnapshotPlan(plan) {
     lastPlan = plan;
@@ -8924,6 +9022,9 @@
     });
     el("snapshots-take").addEventListener("click", () => {
       takeSnapshot().catch((error2) => failSnapshots(error2));
+    });
+    el("snapshots-drives").addEventListener("click", () => {
+      backupDriveCrates().catch((error2) => failSnapshots(error2));
     });
     el("snapshots-undo-button").addEventListener("click", () => {
       const pending = state.snapshotUndo;

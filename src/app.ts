@@ -19,6 +19,7 @@ import { wireLayout } from "./layout";
 import { wireLocale } from "./locale-wiring";
 import {
   bindLibraryReload,
+  backupDriveCrates,
   confirmSnapshotRestore,
   failSnapshots,
   loadOperations,
@@ -54,6 +55,10 @@ function wireSnapshots(): void {
 
   el("snapshots-take").addEventListener("click", () => {
     takeSnapshot().catch((error) => failSnapshots(error));
+  });
+
+  el("snapshots-drives").addEventListener("click", () => {
+    backupDriveCrates().catch((error) => failSnapshots(error));
   });
 
   el("snapshots-undo-button").addEventListener("click", () => {
