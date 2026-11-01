@@ -302,7 +302,8 @@ export async function openSnapshotPlan(snapshotId: string) {
  * Fill the restore dialog from a dry-run plan.
  *
  * @param {object} plan Response from action plan. Reads plan.crates,
- *   plan.tracks, plan.cues, plan.grids, plan.dry_run, and plan.restore_blocked.
+ *   plan.tracks, plan.cues, plan.grids, plan.dry_run, plan.restore_blocked,
+ *   plan.crates_registered, and plan.registration_warning.
  * @returns {void}
  */
 let lastPlan: RestorePlan | null = null;
@@ -414,6 +415,13 @@ function paintSnapshotPlan(plan: RestorePlan) {
   appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
   appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
   appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
+  appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
+  appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
+  if (plan.registration_warning) {
+    const warning = document.createElement("p");
+    warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
+    planBox.append(warning);
+  }
   appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
   appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
   appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
@@ -539,11 +547,16 @@ export async function confirmSnapshotRestore() {
     const body = undoing
       ? { action: "undo", confirm: true }
       : { action: "restore", id: state.snapshotPlanId, confirm: true };
-    await postJSON("/api/snapshots", body);
+    const result = await postJSON<RestorePlan>("/api/snapshots", body);
+    const skipped = result.crates_skipped || [];
     el("snapshot-dialog").close();
-    state.snapshotMessage = "snapshots.restored";
+    state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
     await loadSnapshots();
     await reloadLibrary();
+    if (skipped.length) {
+      const names = skipped.map((item) => item.name || item.path || t("plan.item")).join(", ");
+      el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
+    }
   } catch (error) {
     setSnapshotDialogStatus(failureOf(error).message);
     confirm.disabled = false;

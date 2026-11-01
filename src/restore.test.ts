@@ -8,6 +8,7 @@ vi.mock("./api", async () => {
 });
 
 import { applyStatic, setLocale, t } from "./i18n";
+import { el } from "./dom";
 import { backupDriveCrates, confirmSnapshotRestore, openSnapshotPlan, renderOperations, renderSnapshots, repaintSnapshotPlan } from "./restore";
 import { applyStaticTooltips } from "./tooltip";
 import type { RestorePlan } from "./api-types";
@@ -62,6 +63,21 @@ describe("restore", () => {
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
   });
 
+  it("reports skipped crates after restore in the active language", async () => {
+    postJSON.mockResolvedValue({
+      crates_skipped: [{ name: "House", path: "Subcrates/House.crate" }],
+    });
+    await confirmSnapshotRestore();
+    expect(document.getElementById("snapshots-status")?.textContent).toBe(
+      "Restore finished. 1 crate file was skipped because its snapshot copy could not be read: House.",
+    );
+    setLocale("es");
+    el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: 1, names: "House" });
+    expect(document.getElementById("snapshots-status")?.textContent).toContain("Se omitió");
+    expect(document.getElementById("snapshots-status")?.textContent).toContain("House");
+    setLocale("en");
+  });
+
   it("posts undo or restore with confirm true", async () => {
     await confirmSnapshotRestore();
     expect(postJSON).toHaveBeenCalledWith("/api/snapshots", {
@@ -84,7 +100,34 @@ describe("restore", () => {
     await openSnapshotPlan("snap-9");
     const text = document.getElementById("snapshot-plan")?.textContent ?? "";
     expect(text).toContain("Crates added: 1. House");
+    expect(text).toContain("Crates registered so Serato keeps them: none");
+    expect(text).toContain("Crates skipped: none");
     expect(text).toContain("Tracks added: 1. Music/a.mp3");
+
+    postJSON.mockResolvedValue({
+      ...plan,
+      crates_registered: [{ name: "Café", path: "Subcrates/House%%Café.crate" }],
+    });
+    await openSnapshotPlan("snap-9");
+    expect(document.getElementById("snapshot-plan")?.textContent).toContain(
+      "Crates registered so Serato keeps them: 1. Café",
+    );
+
+    const skipped = "Crates were not registered. This library has no Serato Library space, so Serato may remove those crate files the next time it opens.";
+    postJSON.mockResolvedValue({
+      ...plan,
+      registration_warning: skipped,
+      registration_warning_code: "registration_no_space",
+    });
+    await openSnapshotPlan("snap-9");
+    expect(document.getElementById("snapshot-plan")?.textContent).toContain(skipped);
+    setLocale("es");
+    repaintSnapshotPlan();
+    expect(document.getElementById("snapshot-plan")?.textContent).toContain(
+      "Las cajas no se registraron. Esta biblioteca no tiene el espacio Serato Library",
+    );
+    setLocale("en");
+    repaintSnapshotPlan();
     expect(text).toContain("Cue changes: 1 file");
     expect(text).toContain("Grid changes: 1 file");
     expect(text).toContain("Deleted crates: 1. Old");
@@ -136,6 +179,7 @@ describe("restore", () => {
       repaintSnapshotPlan();
       text = document.getElementById("snapshot-plan")?.textContent ?? "";
       expect(text).toContain("Cajas añadidas: 10. C0, C1, C2, C3, C4, C5, C6, C7 y 2 más");
+    expect(text).toContain("Cajas registradas para que Serato las conserve: ninguno");
       expect(text).toContain("Cambios de cues: 1 archivo");
       expect(text).toContain("Pistas eliminadas: ninguno");
       expect(document.getElementById("snapshot-block")?.textContent).toBe("No se ha cambiado nada.");
