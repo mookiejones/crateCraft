@@ -28,7 +28,7 @@ The first time you finish setup, **Take a safety snapshot** saves a copy of the 
 
 **Snapshots** in the sidebar keeps hash-checked copies of the library database, the crates on each drive (including a drive's `_Serato_` folder and `database V2`), and the Serato cue, beatgrid, and autotag data stored inside MP3, FLAC, M4A, and AIFF files. The music itself is not copied. Snapshots are kept with no time limit. The page does not delete old ones.
 
-Quit Serato DJ Pro before you restore. If Serato DJ is still running, restore stops and the page tells you to quit it first. That check runs again before the database, the crates, and the audio files are replaced. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was. **Review restore** shows what would change: crates, tracks, and the cue and beatgrid differences for each file. Nothing is written until you confirm. Confirm saves a new snapshot first, so the restore can be undone from the list. If the app stops in the middle of a restore, the next time it opens it puts that saved snapshot back.
+Quit Serato DJ Pro before you restore. If Serato DJ is still running, restore stops and the page tells you to quit it first. That check runs again before the database, the crates, and the audio files are replaced. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was. **Review restore** shows what would change: crates, tracks, and the cue and beatgrid differences for each file. Nothing is written until you confirm. Confirm saves a new snapshot first, so the restore can be undone from the list. If the app stops in the middle of a restore, the next time it opens it puts that saved snapshot back. After a restore writes the files, it checks their hashes against the snapshot. If they do not match, it puts the saved snapshot back. The Snapshots page lists each edit and each restore, including one that could not be put back. That line is not shown as a success.
 
 A drive that is not plugged in is shown as unavailable. Its crates and tracks stay in the snapshot. They are not treated as deleted, and a restore does not remove them.
 
@@ -44,7 +44,9 @@ Protect Library is read from the Mac preferences key `library_protect`. On means
 
 ## Automatic backups
 
-The first time you save anything after you open the app, the app also copies the library database into a backup folder. Later saves in that same session do not make another of these copies. Each save does add a snapshot, described above.
+A library edit does not add a `Backups` folder beside `master.sqlite`. The app keeps the pre-write copy in its own data folder, checks the edit, and puts that copy back when the check fails.
+
+After the save is committed, the app reads a copy of the database, including a `-wal` file when one is present. It does not open the live database for that check. If the rows or the file hashes are not the change you asked for, the app puts the pre-write copy back and checks those hashes. That copy, the write journal, and the operation note are kept in this app's data folder, not in Serato's library folder. Serato 5 stays read-only. That rollback does not write a Serato 5 library. If the copy cannot be saved because the disk is full, the save does not run. The Snapshots page lists each of these notes.
 
 1. Quit Serato DJ Pro.
 2. Open Serato Library.

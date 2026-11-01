@@ -89,6 +89,9 @@ ERROR_CODES: dict[str, str] = {
     "The space root has no color.": "root_color",
     "The playlist is empty.": "playlist_empty",
     "The note is too long.": "note_too_long",
+    "The write did not match, and putting the library back failed.": "write_rollback_failed",
+    "The write failed, and putting the library back failed.": "write_undo_failed",
+    "The pre-write snapshot does not match its hash.": "write_preimage_mismatch",
 }
 
 # Code -> English template. ``{name}`` is filled from the params the page

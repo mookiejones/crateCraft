@@ -1744,6 +1744,11 @@ class Handler(BaseHTTPRequestHandler):
                     )
                 )
                 return
+            if parsed.path == "/api/operations":
+                import safe_write
+
+                self.send_json({"operations": safe_write.read_log()})
+                return
             if parsed.path == "/api/snapshots":
                 self._get_snapshots(query)
                 return

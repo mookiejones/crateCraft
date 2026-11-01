@@ -8,7 +8,7 @@ vi.mock("./api", async () => {
 });
 
 import { applyStatic, setLocale, t } from "./i18n";
-import { backupDriveCrates, confirmSnapshotRestore, openSnapshotPlan, renderSnapshots, repaintSnapshotPlan } from "./restore";
+import { backupDriveCrates, confirmSnapshotRestore, openSnapshotPlan, renderOperations, renderSnapshots, repaintSnapshotPlan } from "./restore";
 import { applyStaticTooltips } from "./tooltip";
 import type { RestorePlan } from "./api-types";
 import { state } from "./state";
@@ -54,6 +54,9 @@ describe("restore", () => {
     state.snapshotUndo = null;
     state.snapshotMessage = "";
     state.driveBackup = null;
+    state.operations = [];
+    state.operationsLoading = false;
+    state.operationsError = "";
     postJSON.mockReset();
     postJSON.mockResolvedValue({});
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
@@ -185,6 +188,68 @@ describe("restore", () => {
       expect(spanish).toContain("Desconectadas, sin copiar: OLD.");
       expect(spanish).toContain("LOCK (solo lectura)");
       expect(spanish).not.toContain("Unplugged");
+    } finally {
+      setLocale("en");
+    }
+  });
+
+  it("shows a failed rollback and does not call the restore a success", async () => {
+    postJSON.mockRejectedValue(new Error("Restore failed and snapshot abc could not be put back either."));
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (String(url).includes("/api/operations")) {
+        return new Response(JSON.stringify({
+          operations: [{
+            time: "2026-11-01T12:00:00Z",
+            action: "restore",
+            target: "snap-9",
+            result: "rollback_failed",
+            verified: false,
+            rolled_back: false,
+            snapshot_before: "before-1",
+            snapshot_after: null,
+          }],
+        }), { status: 200, headers: { "Content-Type": "application/json" } });
+      }
+      return snapshotResponse();
+    }));
+    applyStaticTooltips();
+    await confirmSnapshotRestore();
+    expect(state.snapshotMessage).toBe("");
+    expect(document.getElementById("snapshot-status")?.textContent).toContain("could not be put back");
+    expect(document.getElementById("snapshot-status")?.textContent).not.toContain("Restore finished");
+    const alert = document.getElementById("operations-alert");
+    expect(alert?.hidden).toBe(false);
+    expect(alert?.textContent).toContain("could not be put back");
+    expect(document.getElementById("operations-list")?.textContent).toContain("Could not put back");
+    expect(document.getElementById("operations-list")?.textContent).toContain("Before before-1");
+    expect(document.getElementById("operations-list")?.textContent).not.toContain("Unknown time");
+    expect(document.getElementById("operations-refresh")?.getAttribute("data-tooltip")).toContain("operation log");
+    expect(document.getElementById("operations-list")?.getAttribute("data-tooltip")).toContain("Operation log");
+  });
+
+  it("lists one checked restore in Spanish", () => {
+    state.operations = [{
+      time: "2026-11-01T12:00:00Z",
+      action: "restore",
+      target: "snap-9",
+      result: "verified",
+      verified: true,
+      rolled_back: false,
+      snapshot_before: "before-1",
+      snapshot_after: "snap-9",
+    }];
+    state.operationsLoading = false;
+    state.operationsError = "";
+    setLocale("es");
+    try {
+      renderOperations();
+      const text = document.getElementById("operations-list")?.textContent ?? "";
+      expect(text).toContain("Restaurar");
+      expect(text).toContain("snap-9");
+      expect(text).toContain("Comprobado");
+      expect(text).toContain("Antes before-1");
+      expect(text).not.toContain("Hora desconocida");
+      expect(document.getElementById("operations-alert")?.hidden).toBe(true);
     } finally {
       setLocale("en");
     }
