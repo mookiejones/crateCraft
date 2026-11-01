@@ -361,6 +361,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("body", ("--color-card", "--color-selection", "hover", "--color-button"), 15, 400),
     (".rail", ("--color-bg",), 15, 400),
     (".brand p", ("--color-bg",), 14, 400),
+    (".generation", ("--color-bg",), 15, 400),
+    (".brand .generation-note", ("--color-bg",), 13, 400),
     (".rail select", ("--color-bg",), 15, 400),
     (".rail-field input", ("--color-bg",), 15, 400),
     (".view-switch button", ("--color-bg",), 15, 400),

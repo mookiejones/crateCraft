@@ -1715,6 +1715,7 @@ function membershipSection(track: Track, writable: boolean) {
 export function repaintViews(): void {
   // The static markup pass resets the status line, so put the server's back.
   if (state.serato) el("status").textContent = statusLine(state.serato);
+  paintGeneration(state.serato);
   renderList();
   if (state.mode === "history") {
     renderSessions();
@@ -1763,10 +1764,90 @@ export function statusLine(info: SeratoStatus | null | undefined): string {
   return info?.message || t("status.library");
 }
 
+const GENERATION_LABELS: Record<string, MessageKey> = {
+  serato4: "generation.serato4",
+  serato5: "generation.serato5",
+  legacy: "generation.legacy",
+  unknown: "generation.unknown",
+};
+
+const GENERATION_REASONS: Record<string, MessageKey> = {
+  log: "generation.reason.log",
+  version: "generation.reason.version",
+  fallback: "generation.reason.fallback",
+  unknown: "generation.reason.unknown",
+  unmounted: "generation.reason.unmounted",
+  downgrade: "generation.reason.downgrade",
+  mismatch: "generation.reason.mismatch",
+  installed: "generation.reason.installed",
+  installUnknown: "generation.reason.installUnknown",
+};
+
+/**
+ * The short name for the generation button.
+ *
+ * @param info Status payload. Null before the server answers.
+ * @returns The catalog key for the visible label.
+ */
+function generationKind(info: SeratoStatus | null | undefined): MessageKey {
+  const kind = info?.generation?.kind ?? "";
+  return GENERATION_LABELS[kind] ?? "generation.checking";
+}
+
+/**
+ * The sentence under the generation button.
+ *
+ * @param info Status payload. Null before the server answers.
+ * @returns The reason in the active language.
+ */
+function generationReason(info: SeratoStatus | null | undefined): string {
+  const generation = info?.generation;
+  const key = GENERATION_REASONS[generation?.reason ?? ""] ?? "generation.reason.pending";
+  return t(key, {
+    log: generation?.log_name || "",
+    version: generation?.version || "",
+    newest: generation?.newest_version || "",
+    database: generation?.database || "",
+  });
+}
+
+/**
+ * Paint the library-generation button from the status payload.
+ *
+ * The visible name is the generation. The accessible name adds that it is
+ * the library generation, and the tooltip says where that answer came from.
+ * Those three strings are not the same. Opening the button shows the reason.
+ *
+ * @param info Status payload. Null before the server answers.
+ * @returns {void}
+ */
+export function paintGeneration(info: SeratoStatus | null | undefined): void {
+  const button = document.getElementById("library-generation");
+  if (!(button instanceof HTMLButtonElement)) return;
+  const kind = t(generationKind(info));
+  button.textContent = kind;
+  button.setAttribute("aria-label", t("generation.named", { kind }));
+  setTooltip(button, tips.libraryGeneration);
+  const note = document.getElementById("library-generation-note");
+  if (note) {
+    note.textContent = generationReason(info);
+    note.hidden = button.getAttribute("aria-expanded") !== "true";
+  }
+  if (button.dataset.bound === "1") return;
+  button.dataset.bound = "1";
+  button.addEventListener("click", () => {
+    const next = button.getAttribute("aria-expanded") !== "true";
+    button.setAttribute("aria-expanded", next ? "true" : "false");
+    const panel = document.getElementById("library-generation-note");
+    if (panel) panel.hidden = !next;
+  });
+}
+
 export function applyStatus(info: SeratoStatus | null | undefined) {
   state.serato = info;
   state.writable = Boolean(info?.writable);
   el("status").textContent = statusLine(info);
+  paintGeneration(info);
   renderShell();
 }
 
