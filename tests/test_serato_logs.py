@@ -219,6 +219,85 @@ class LogParserTests(unittest.TestCase):
             (only / "20261019_153045.log").symlink_to(real / "20261019_153045.log")
             self.assertEqual(serato_logs.parse_logs(only).state, "missing")
 
+    def test_library_path_comes_only_from_the_newest_log(self) -> None:
+        """An older ``[Library]`` line does not name the database.
+
+        Returns:
+            None.
+        """
+        with TempLibrary() as temp:
+            folder = temp.root / "Logs"
+            folder.mkdir()
+            (folder / "20261018_090000.log").write_text(
+                "[Application] Serato DJ Pro 5.0.0\n"
+                "[Library] Opening database '/Users/dj/Music/_Serato_/database V2'\n",
+                encoding="utf-8",
+            )
+            (folder / "20261020_120000.log").write_text(
+                "[Application] Serato DJ Pro 4.1.0 (build 4.1.0.1)\n"
+                "Session started\n",
+                encoding="utf-8",
+            )
+            read = serato_logs.parse_logs(folder)
+        self.assertEqual(read.version, "5.0.0")
+        self.assertTrue(read.downgrade)
+        self.assertEqual(read.database, "")
+        self.assertEqual(read.database_path, "")
+        self.assertEqual(read.log_name, "20261020_120000.log")
+
+    def test_parse_logs_is_cached_until_the_mtime_changes(self) -> None:
+        """A second read uses the cache. A new mtime reads the file again.
+
+        Returns:
+            None.
+        """
+        with TempLibrary() as temp:
+            folder = temp.root / "Logs"
+            folder.mkdir()
+            log = folder / "20261101_120000.log"
+            log.write_text("[Application] Serato DJ Pro 4.0.1\n", encoding="utf-8")
+            first = serato_logs.parse_logs(folder)
+            kept = log.stat().st_mtime_ns
+            log.write_text("[Application] Serato DJ Pro 5.0.0\n", encoding="utf-8")
+            os.utime(log, ns=(kept, kept))
+            second = serato_logs.parse_logs(folder)
+            os.utime(log, ns=(kept + 1_000_000_000, kept + 1_000_000_000))
+            third = serato_logs.parse_logs(folder)
+        self.assertEqual(first.version, "4.0.1")
+        self.assertEqual(second.version, "4.0.1")
+        self.assertEqual(third.version, "5.0.0")
+
+    def test_darwin_confirms_a_path_that_differs_only_by_case(self) -> None:
+        """macOS treats ``MASTER.SQLITE`` as the same file. Linux does not.
+
+        Returns:
+            None.
+        """
+        master = Path("/Users/dj/Library/Application Support/Serato/Library/master.sqlite")
+        logged = "/Users/dj/Library/Application Support/Serato/Library/MASTER.SQLITE"
+
+        def is_file(self: Path) -> bool:
+            del self
+            return True
+
+        def is_symlink(self: Path) -> bool:
+            del self
+            return False
+
+        def resolve(self: Path, strict: bool = False) -> Path:
+            del strict
+            return self
+
+        with (
+            mock.patch.object(Path, "is_file", is_file),
+            mock.patch.object(Path, "is_symlink", is_symlink),
+            mock.patch.object(Path, "resolve", resolve),
+        ):
+            with mock.patch("serato_logs.sys.platform", "darwin"):
+                self.assertTrue(serato_logs.confirms_library(logged, "master.sqlite", master))
+            with mock.patch("serato_logs.sys.platform", "linux"):
+                self.assertFalse(serato_logs.confirms_library(logged, "master.sqlite", master))
+
     def test_logged_path_confirms_only_this_master_file(self) -> None:
         """The same master file confirms. database V2 and a shortcut do not.
 
@@ -435,6 +514,60 @@ class LogGateTests(unittest.TestCase):
         self.assertEqual(generation["reason"], "unmounted")
         self.assertEqual(generation["kind"], "serato4")
         self.assertIs(generation["mounted"], False)
+
+    def test_unknown_install_stays_unknown_when_the_log_names_serato_4(self) -> None:
+        """Serato 4 in the log does not unlock an unreadable install.
+
+        One log names this ``master.sqlite``. The other has no ``[Library]``
+        line. Both keep ``serato_version_unknown``.
+
+        Returns:
+            None.
+        """
+        with TempLibrary() as temp:
+            bad = temp.root / "not-a-plist"
+            bad.write_bytes(b"nope")
+            named_dir = temp.root / "with-library"
+            named_dir.mkdir()
+            (named_dir / "20261101_120000.log").write_text(
+                "[Application] Serato DJ Pro 4.0.1\n"
+                f"[Library] Opening database '{library.MASTER}'\n",
+                encoding="utf-8",
+            )
+            bare_dir = temp.root / "version-only"
+            bare_dir.mkdir()
+            (bare_dir / "20261101_120001.log").write_text(
+                "[Application] Serato DJ Pro 4.0.1\n",
+                encoding="utf-8",
+            )
+            base_env = {"SERATO_LIBRARY_APP_INFO": str(bad)}
+            with mock.patch.dict(os.environ, {**base_env, "SERATO_LIBRARY_LOGS": str(named_dir)}):
+                named = library.status()
+                with self.assertRaises(LibraryError) as caught:
+                    library.begin_write()
+            with mock.patch.dict(os.environ, {**base_env, "SERATO_LIBRARY_LOGS": str(bare_dir)}):
+                bare = library.status()
+                with self.assertRaises(LibraryError) as bare_write:
+                    library.begin_write()
+        for body in (named, bare):
+            self.assertFalse(body["writable"])
+            self.assertEqual(body["code"], "serato_version_unknown")
+            self.assertIn("(build unknown)", str(body["message"]))
+            generation = body["generation"]
+            assert isinstance(generation, dict)
+            self.assertEqual(generation["version"], "unknown")
+            self.assertEqual(generation["kind"], "unknown")
+            self.assertEqual(generation["reason"], "installUnknown")
+        self.assertIn("version is unknown", str(caught.exception))
+        self.assertIn("version is unknown", str(bare_write.exception))
+        named_generation = named["generation"]
+        bare_generation = bare["generation"]
+        assert isinstance(named_generation, dict)
+        assert isinstance(bare_generation, dict)
+        self.assertEqual(named_generation["database"], "master.sqlite")
+        self.assertIs(named_generation["confirmed"], True)
+        self.assertEqual(bare_generation["database"], "")
+        self.assertIsNone(bare_generation["confirmed"])
 
     def test_version_only_log_uses_the_logged_serato_4(self) -> None:
         """No [Library] line keeps today's write rule and records the version.

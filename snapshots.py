@@ -292,7 +292,9 @@ def library_gate(
     """Decide the write gate and the generation the page shows.
 
     Session logs are read only when ``install`` is None. A missing or empty
-    log folder leaves the installed version in place. Serato 5, from the
+    log folder leaves the installed version in place. The log can only make
+    the gate stricter. An installed version that is not a dotted number stays
+    ``serato_version_unknown`` no matter what the log says. Serato 5, from the
     log or from the installed app, stays read-only. A log that names a
     database other than this ``master.sqlite`` refuses a Serato 4 write.
 
@@ -332,6 +334,23 @@ def _generation(base: SeratoInstall, read: serato_logs.LogRead) -> dict[str, obj
             "fallback",
             base.version,
         )
+    # A log must not unlock writes. An unreadable install stays unknown
+    # even when the log names Serato 4, with or without a [Library] line.
+    if _parsed_version(base.version) is None:
+        confirmed = _log_confirms(read)
+        return _generation_row(
+            "unknown",
+            base.build or "unknown",
+            read.newest_version,
+            read.database,
+            read.log_name,
+            read.mounted,
+            False,
+            confirmed,
+            "log" if read.database else "version",
+            "installUnknown",
+            base.version,
+        )
     version = read.version
     build = read.build or "unknown"
     reason = "unknown" if read.state == "unknown" else ("log" if read.database else "version")
@@ -345,11 +364,7 @@ def _generation(base: SeratoInstall, read: serato_logs.LogRead) -> dict[str, obj
         version = "unknown"
         build = "unknown"
         reason = "unknown"
-    confirmed: bool | None = None
-    if read.database:
-        import library
-
-        confirmed = serato_logs.confirms_library(read.database_path, read.database, Path(library.MASTER))
+    confirmed = _log_confirms(read)
     if reason not in {"downgrade", "installed", "unknown"} and not _is_serato_5(version):
         if read.mounted is False:
             reason = "unmounted"
@@ -372,6 +387,22 @@ def _generation(base: SeratoInstall, read: serato_logs.LogRead) -> dict[str, obj
         reason,
         base.version,
     )
+
+
+def _log_confirms(read: serato_logs.LogRead) -> bool | None:
+    """Return whether the logged database is the open master file.
+
+    Args:
+        read: Session-log read.
+
+    Returns:
+        None when the log names no database. True or False otherwise.
+    """
+    if not read.database:
+        return None
+    import library
+
+    return serato_logs.confirms_library(read.database_path, read.database, Path(library.MASTER))
 
 
 def _generation_row(

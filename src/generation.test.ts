@@ -107,4 +107,27 @@ describe("library generation", () => {
     expect(document.getElementById("library-generation-note")?.textContent).toContain("4.1.0");
     expect(document.getElementById("library-generation-note")?.textContent).not.toContain("Writes and restores");
   });
+
+  it("keeps an unknown install read-only in the active language", () => {
+    applyStatus({
+      writable: false,
+      code: "serato_version_unknown",
+      params: { build: "unknown" },
+      message: "Serato version is unknown (build unknown).",
+      generation: generation({
+        kind: "unknown",
+        version: "unknown",
+        build: "unknown",
+        newest_version: "4.0.1",
+        reason: "installUnknown",
+        confirmed: true,
+      }),
+    });
+    expect(button().textContent).toBe(t("generation.unknown"));
+    button().click();
+    expect(document.getElementById("library-generation-note")?.textContent).toBe(
+      t("generation.reason.installUnknown"),
+    );
+    expect(button().dataset.tooltip).not.toBe(button().getAttribute("aria-label"));
+  });
 });

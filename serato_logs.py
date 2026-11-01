@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import os
 import re
+import sys
+import threading
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -36,6 +38,8 @@ _VERSION_LINE = re.compile(
     r"(?!\d)"
 )
 _BUILD = re.compile(r"(?i)\bbuild\s+(\d+\.\d+(?:\.\d+){0,3})(?!\d)")
+_CACHE_LOCK = threading.Lock()
+_CACHE: tuple[tuple[object, ...], "LogRead"] | None = None
 _PATH = re.compile(
     r"""(?ix)
     (?:
@@ -123,7 +127,10 @@ def parse_logs(directory: Path) -> LogRead:
     """Parse the newest session logs in one folder.
 
     A symlink for the folder is not followed. A symlink for a file is
-    skipped. The function only reads. It does not create or change files.
+    skipped. The ``[Library]`` path is taken only from the newest log that
+    has text. The result is cached by that folder and each log file's
+    mtime, because ``status`` polls this. The function only reads. It does
+    not create or change files.
 
     Args:
         directory: The ``Logs`` folder, not its parent.
@@ -132,7 +139,49 @@ def parse_logs(directory: Path) -> LogRead:
         A missing read when the folder is absent, empty, or not a real
         directory. A parsed or unknown read otherwise.
     """
+    global _CACHE
     files = _log_files(directory)
+    key = _cache_key(directory, files)
+    with _CACHE_LOCK:
+        if _CACHE is not None and _CACHE[0] == key:
+            return _CACHE[1]
+    read = _parse_listed(files)
+    with _CACHE_LOCK:
+        _CACHE = (key, read)
+    return read
+
+
+def _cache_key(directory: Path, files: list[Path]) -> tuple[object, ...]:
+    """Return the cache key for one logs folder.
+
+    Args:
+        directory: The folder that was listed.
+        files: Newest-first log files from that folder.
+
+    Returns:
+        The folder path plus each file's name and mtime. A new or edited
+        log changes the key.
+    """
+    rows: list[tuple[str, int]] = []
+    for path in files:
+        try:
+            rows.append((path.name, path.stat().st_mtime_ns))
+        except OSError:
+            rows.append((path.name, -1))
+    return (str(directory), tuple(rows))
+
+
+def _parse_listed(files: list[Path]) -> LogRead:
+    """Parse an already listed, newest-first set of log files.
+
+    Args:
+        files: Regular log files. The first file with text is the newest
+            session.
+
+    Returns:
+        A missing read when every file is empty. A parsed or unknown read
+        otherwise.
+    """
     if not files:
         return LogRead.missing()
     newest_version = ""
@@ -154,15 +203,12 @@ def parse_logs(directory: Path) -> LogRead:
             newest_version = version
             newest_build = build
             log_name = path.name
+            # Older sessions must not name the database. Only this file does.
+            database_path = _library_path(text)
         if version and _major(version) is not None and _major(version) >= 5 and five is None:
             five = (version, build)
         if version and first is None:
             first = (version, build)
-        if not database_path:
-            found = _library_path(text)
-            if found:
-                database_path = found
-                log_name = path.name
     if not any_text:
         return LogRead.missing()
     database = _database_name(database_path)
@@ -229,9 +275,28 @@ def confirms_library(database_path: str, database: str, master: Path) -> bool:
             return False
         if not logged.is_file() or not current.is_file():
             return False
-        return logged.resolve() == current.resolve()
+        return _same_path(logged.resolve(), current.resolve())
     except OSError:
         return False
+
+
+def _same_path(logged: Path, current: Path) -> bool:
+    """Return whether two resolved paths are the same library file.
+
+    Args:
+        logged: Path from the session log, already resolved.
+        current: The open ``master.sqlite``, already resolved.
+
+    Returns:
+        True when the paths match. On macOS the comparison ignores case,
+        because the volume can be case-insensitive. ``os.path.normcase``
+        does not fold case there, so the strings are casefolded.
+    """
+    left = str(logged)
+    right = str(current)
+    if sys.platform == "darwin":
+        return left.casefold() == right.casefold()
+    return left == right
 
 
 def volume_root(path: str) -> str | None:

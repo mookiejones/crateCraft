@@ -31,7 +31,7 @@ Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each
 
 An unplugged drive is marked unavailable, never deleted. Its crates and tracks stay in the Backup, and a restore does not remove them. The plan lines are **Crates on an unavailable drive** and **Tracks on an unavailable drive**.
 
-Quit Serato DJ Pro before you restore. If Serato is still running, restore stops. On Serato 5, writes and restores stay off. The note names the version, Protect Library, and that Lucid and Flexible beatgrid storage is not verified. Snapshots can still be taken and read. The newest session log in `_Serato_/Logs` can name Serato 4 or Serato 5. A log that does not name a dotted version is unknown. An unreadable version does the same: writes and restores stay off until a version can be read.
+Quit Serato DJ Pro before you restore. If Serato is still running, restore stops. On Serato 5, writes and restores stay off. The note names the version, Protect Library, and that Lucid and Flexible beatgrid storage is not verified. Snapshots can still be taken and read. The newest session log in `_Serato_/Logs` can name Serato 4 or Serato 5. A log that does not name a dotted version is unknown. If the installed version cannot be read, that log does not turn writes back on. An unreadable version does the same: writes and restores stay off until a version can be read.
 
 If something else changes the Serato folder, including Lexicon, the app saves a snapshot after that change and offers **Review undo**. That puts back the previous snapshot. The app does not read or restore `_Serato_/Lexicon/` or `_Serato_/Export Backups/`.
 

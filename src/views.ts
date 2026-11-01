@@ -1780,6 +1780,7 @@ const GENERATION_REASONS: Record<string, MessageKey> = {
   downgrade: "generation.reason.downgrade",
   mismatch: "generation.reason.mismatch",
   installed: "generation.reason.installed",
+  installUnknown: "generation.reason.installUnknown",
 };
 
 /**

@@ -231,6 +231,7 @@
   "generation.reason.downgrade": "The newest session log says Serato {newest}, and an earlier log says Serato {version}. Writes and restores stay off.",
   "generation.reason.fallback": "No session log was found. The installed Serato version is {version}.",
   "generation.reason.installed": "The installed Serato is {version}. The newest session log says Serato {newest}. Writes and restores stay off.",
+  "generation.reason.installUnknown": "The installed Serato version could not be read, so writes stay off. A session log cannot turn them on.",
   "generation.reason.log": "The newest session log {log} recorded Serato {version} opening {database}.",
   "generation.reason.mismatch": "The session log opened {database}, which is not this library file.",
   "generation.reason.pending": "The library generation has not been read yet.",

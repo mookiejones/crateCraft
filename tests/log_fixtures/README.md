@@ -1,7 +1,7 @@
 # Session log fixtures
 
-These files are spec-derived stand-ins for `_Serato_/Logs`, not a byte-for-byte
-capture from a Serato 4 or Serato 5 install. Serato's support note says a
+These files are hand-written stand-ins for `_Serato_/Logs`, not a capture
+from a Serato 4 or Serato 5 install. Serato's support note says a
 session log's name carries the session date and the time the session
 finished, and that the file names the Serato DJ version. A published note
 on the Serato 5 library says the lines marked `[Library]` name the database

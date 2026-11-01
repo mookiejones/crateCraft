@@ -234,6 +234,7 @@
     "generation.reason.downgrade": "The newest session log says Serato {newest}, and an earlier log says Serato {version}. Writes and restores stay off.",
     "generation.reason.fallback": "No session log was found. The installed Serato version is {version}.",
     "generation.reason.installed": "The installed Serato is {version}. The newest session log says Serato {newest}. Writes and restores stay off.",
+    "generation.reason.installUnknown": "The installed Serato version could not be read, so writes stay off. A session log cannot turn them on.",
     "generation.reason.log": "The newest session log {log} recorded Serato {version} opening {database}.",
     "generation.reason.mismatch": "The session log opened {database}, which is not this library file.",
     "generation.reason.pending": "The library generation has not been read yet.",
@@ -980,6 +981,7 @@
     "generation.reason.downgrade": "El registro más reciente dice Serato {newest} y un registro anterior dice Serato {version}. Las escrituras y las restauraciones siguen desactivadas.",
     "generation.reason.fallback": "No se encontró un registro de sesión. Se usa la versión de Serato instalada, {version}.",
     "generation.reason.installed": "El Serato instalado es {version}. El registro más reciente dice Serato {newest}. Las escrituras y las restauraciones siguen desactivadas.",
+    "generation.reason.installUnknown": "No se pudo leer la versión de Serato instalada, así que las escrituras siguen desactivadas. Un registro de sesión no puede activarlas.",
     "generation.reason.log": "El registro de sesión más reciente, {log}, anotó que Serato {version} abrió {database}.",
     "generation.reason.mismatch": "El registro de sesión abrió {database}, que no es este archivo de biblioteca.",
     "generation.reason.pending": "La generación de la biblioteca todavía no se ha leído.",
@@ -5642,7 +5644,8 @@
     unmounted: "generation.reason.unmounted",
     downgrade: "generation.reason.downgrade",
     mismatch: "generation.reason.mismatch",
-    installed: "generation.reason.installed"
+    installed: "generation.reason.installed",
+    installUnknown: "generation.reason.installUnknown"
   };
   function generationKind(info) {
     const kind = info?.generation?.kind ?? "";
