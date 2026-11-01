@@ -15,7 +15,7 @@ The first time you open it, setup finds your library and saves a safety copy bef
 - [Browse crates and tracks](guide/crates.md), and make, rename, color, and delete crates.
 - [Play a track](guide/playback.md) in the window before you crate or tag it. Playback does not change the file. The server can build a waveform for that track. M4A, AAC, and ALAC use the Mac or Windows audio system, or ffmpeg on Linux when it is already installed. ffmpeg is not included. A 60-minute stereo 44.1 kHz WAV is analyzed in 7.9 seconds and cached beside the app settings.
 - [Edit track details](guide/tags.md) that Serato stores in the library. Cue points stay in the audio file.
-- Read [History](guide/history.md), find [missing files](guide/missing.md), and see [stems](guide/stems.md).
+- Read [History](guide/history.md), find [missing files](guide/missing.md), run a [check before a gig](guide/gig-check.md), and see [stems](guide/stems.md).
 - [Merge duplicate copies](guide/duplicates.md) into the file you want to keep.
 - Send tracks to [Prepare](guide/prepare.md).
 - [Import and export M3U playlists](guide/playlists.md), and export rekordbox.xml for CDJs. [Moving between Serato and Rekordbox](coming-from-rekordbox.md) lists what that file keeps.
@@ -39,7 +39,7 @@ Start with [Troubleshooting](guide/troubleshooting.md).
 
 The [Panic page](panic.md) covers red tracks, empty crates, a drive that will not mount, and a library that looks different after an update. Restore from the app is **Snapshots**, then **Review restore**.
 
-[Is my library safe?](is-my-library-safe.md) describes restore, undo, snapshots, and the outside-change watcher. Those work. The gig check on that page is **PREVIEW** until [#41](https://github.com/mookiejones/serato-library-manager/issues/41) merges. It is not in the app.
+[Is my library safe?](is-my-library-safe.md) describes restore, undo, snapshots, and the outside-change watcher. Those work. The [check before a gig](guide/gig-check.md) is in the app.
 
 ## For developers
 
