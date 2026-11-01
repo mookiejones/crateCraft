@@ -293,6 +293,32 @@
     "gig.wholeSpaceInline": "the whole space",
     "gig.wordNotReady": "not ready",
     "gig.wordReady": "ready",
+    "help.bug": "Report a bug",
+    "help.bugTitle": "Report a bug",
+    "help.change": "What should change",
+    "help.copied": "Copied. Paste it into the GitHub issue.",
+    "help.copyFailed": "Couldn't copy the report.",
+    "help.copyLog": "Copy log",
+    "help.diagnostics": "What will be included",
+    "help.expected": "What you expected",
+    "help.feature": "Request a feature",
+    "help.featureTitle": "Request a feature",
+    "help.github": "View on GitHub",
+    "help.happened": "What happened",
+    "help.loadFailed": "Couldn't load the diagnostics.",
+    "help.loading": "Loading diagnostics…",
+    "help.logCopied": "Log copied.",
+    "help.logEmpty": "The log is empty.",
+    "help.names": "Include track and crate names from the log",
+    "help.nothing": "Nothing is sent until you submit it on GitHub.",
+    "help.openGitHub": "Open on GitHub",
+    "help.opened": "Opened in your browser. Review it, then submit it on GitHub.",
+    "help.opening": "Opening…",
+    "help.releases": "Release notes",
+    "help.reportText": "Report text",
+    "help.review": "You will see this on GitHub before it is submitted. The app does not post it.",
+    "help.title": "Help",
+    "help.tooLong": "The report is too long for a link. It was copied. Paste it into the GitHub issue.",
     "history.chooseSession": "Choose a session.",
     "history.file": "File",
     "history.notes": "Notes",
@@ -580,6 +606,18 @@
     "tooltip.gigNext": "Go to the next step.",
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.help": "Open Help. Report a bug or request a feature on GitHub. The app does not post it.",
+    "tooltip.helpBug": "Describe a bug. GitHub opens so you can review it.",
+    "tooltip.helpClose": "Close Help. Esc.",
+    "tooltip.helpCopyLog": "Copy the log with your home folder replaced by ~.",
+    "tooltip.helpExpected": "What you expected to happen.",
+    "tooltip.helpFeature": "Describe a feature. GitHub opens so you can review it.",
+    "tooltip.helpGithub": "Open the project on GitHub.",
+    "tooltip.helpHappened": "What happened, or what should change.",
+    "tooltip.helpNames": "Keep track and crate names in the copied log. Off leaves them out.",
+    "tooltip.helpOpen": "Open the prefilled GitHub issue. You submit it there.",
+    "tooltip.helpReleases": "Open the release notes on GitHub.",
+    "tooltip.helpReport": "The report text, when it could not be copied.",
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
     "track.missingBadge": "missing",
     "track.numbered": "Track {id}",
@@ -1097,6 +1135,32 @@
     "gig.wholeSpaceInline": "todo el espacio",
     "gig.wordNotReady": "no listo",
     "gig.wordReady": "listo",
+    "help.bug": "Informar de un error",
+    "help.bugTitle": "Informar de un error",
+    "help.change": "Qué debería cambiar",
+    "help.copied": "Copiado. Pégalo en el informe de GitHub.",
+    "help.copyFailed": "No se pudo copiar el informe.",
+    "help.copyLog": "Copiar registro",
+    "help.diagnostics": "Qué se incluirá",
+    "help.expected": "Qué esperabas",
+    "help.feature": "Pedir una función",
+    "help.featureTitle": "Pedir una función",
+    "help.github": "Ver en GitHub",
+    "help.happened": "Qué ocurrió",
+    "help.loadFailed": "No se pudieron cargar los datos de diagnóstico.",
+    "help.loading": "Cargando diagnóstico…",
+    "help.logCopied": "Registro copiado.",
+    "help.logEmpty": "El registro está vacío.",
+    "help.names": "Incluir nombres de pistas y cajas del registro",
+    "help.nothing": "No se envía nada hasta que lo envíes en GitHub.",
+    "help.openGitHub": "Abrir en GitHub",
+    "help.opened": "Abierto en el navegador. Revísalo y envíalo en GitHub.",
+    "help.opening": "Abriendo…",
+    "help.releases": "Notas de la versión",
+    "help.reportText": "Texto del informe",
+    "help.review": "Lo verás en GitHub antes de enviarlo. La app no lo publica.",
+    "help.title": "Ayuda",
+    "help.tooLong": "El informe es demasiado largo para un enlace. Se copió. Pégalo en el informe de GitHub.",
     "history.chooseSession": "Elige una sesión.",
     "history.file": "Archivo",
     "history.notes": "Notas",
@@ -1384,6 +1448,18 @@
     "tooltip.gigNext": "Pasa al siguiente paso.",
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
+    "tooltip.help": "Abre Ayuda. Informa de un error o pide una función en GitHub. La app no lo publica.",
+    "tooltip.helpBug": "Describe un error. GitHub se abre para que lo revises.",
+    "tooltip.helpClose": "Cierra Ayuda. Esc.",
+    "tooltip.helpCopyLog": "Copia el registro con tu carpeta personal reemplazada por ~.",
+    "tooltip.helpExpected": "Qué esperabas que ocurriera.",
+    "tooltip.helpFeature": "Describe una función. GitHub se abre para que la revises.",
+    "tooltip.helpGithub": "Abre el proyecto en GitHub.",
+    "tooltip.helpHappened": "Qué ocurrió, o qué debería cambiar.",
+    "tooltip.helpNames": "Conserva los nombres de pistas y cajas en el registro copiado. Desactivado los omite.",
+    "tooltip.helpOpen": "Abre el informe de GitHub ya rellenado. Tú lo envías allí.",
+    "tooltip.helpReleases": "Abre las notas de la versión en GitHub.",
+    "tooltip.helpReport": "El texto del informe, cuando no se pudo copiar.",
     "tooltip.viewGig": "Comprueba la biblioteca antes de un bolo. Solo lectura.",
     "track.missingBadge": "no encontrada",
     "track.numbered": "Pista {id}",
@@ -2091,6 +2167,18 @@
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     shortcuts: spec("tooltip.shortcuts"),
+    help: spec("tooltip.help"),
+    helpBug: spec("tooltip.helpBug"),
+    helpFeature: spec("tooltip.helpFeature"),
+    helpGithub: spec("tooltip.helpGithub"),
+    helpReleases: spec("tooltip.helpReleases"),
+    helpClose: spec("tooltip.helpClose"),
+    helpHappened: spec("tooltip.helpHappened"),
+    helpExpected: spec("tooltip.helpExpected"),
+    helpNames: spec("tooltip.helpNames"),
+    helpCopyLog: spec("tooltip.helpCopyLog"),
+    helpOpen: spec("tooltip.helpOpen"),
+    helpReport: spec("tooltip.helpReport"),
     settings: spec("tooltip.settings"),
     search: spec("tooltip.search"),
     exportM3u: spec("tooltip.exportM3u"),
@@ -2261,6 +2349,7 @@
       "crate-color": tips.crateColor,
       "crate-delete": tips.crateDelete,
       "open-shortcuts": tips.shortcuts,
+      "open-help": tips.help,
       "open-settings": tips.settings,
       search: tips.search,
       "export-m3u": tips.exportM3u,
@@ -2293,6 +2382,19 @@
       "rerun-wizard": tips.rerunWizard,
       "open-logs": tips.openLogs,
       "copy-logs": tips.copyLogs,
+      "about-github": tips.helpGithub,
+      "help-bug": tips.helpBug,
+      "help-feature": tips.helpFeature,
+      "help-github": tips.helpGithub,
+      "help-releases": tips.helpReleases,
+      "help-close": tips.helpClose,
+      "help-happened": tips.helpHappened,
+      "help-expected": tips.helpExpected,
+      "help-names": tips.helpNames,
+      "help-copy-log": tips.helpCopyLog,
+      "help-open-github": tips.helpOpen,
+      "help-report-close": tips.helpClose,
+      "help-log-fallback": tips.helpReport,
       "settings-close": tips.settingsClose,
       "log-fallback": tips.logFallback,
       "language-select": tips.language,
@@ -2393,9 +2495,9 @@
   function keepCopy(name) {
     return spec("tooltip.keepCopy", { name });
   }
-  function quickOpenHit(kind, title2, detail) {
-    if (detail) return spec("tooltip.quickOpenHitDetail", { kind, title: title2, detail });
-    return spec("tooltip.quickOpenHit", { kind, title: title2 });
+  function quickOpenHit(kind2, title2, detail) {
+    if (detail) return spec("tooltip.quickOpenHitDetail", { kind: kind2, title: title2, detail });
+    return spec("tooltip.quickOpenHit", { kind: kind2, title: title2 });
   }
 
   // src/tooltip.ts
@@ -6065,8 +6167,8 @@
     installUnknown: "generation.reason.installUnknown"
   };
   function generationKind(info) {
-    const kind = info?.generation?.kind ?? "";
-    return GENERATION_LABELS[kind] ?? "generation.checking";
+    const kind2 = info?.generation?.kind ?? "";
+    return GENERATION_LABELS[kind2] ?? "generation.checking";
   }
   function generationReason(info) {
     const generation = info?.generation;
@@ -6081,9 +6183,9 @@
   function paintGeneration(info) {
     const button2 = document.getElementById("library-generation");
     if (!(button2 instanceof HTMLButtonElement)) return;
-    const kind = t(generationKind(info));
-    button2.textContent = kind;
-    button2.setAttribute("aria-label", t("generation.named", { kind }));
+    const kind2 = t(generationKind(info));
+    button2.textContent = kind2;
+    button2.setAttribute("aria-label", t("generation.named", { kind: kind2 }));
     setTooltip(button2, tips.libraryGeneration);
     const note = document.getElementById("library-generation-note");
     if (note) {
@@ -6892,13 +6994,13 @@
     row.append(label);
     return row;
   }
-  function fileIcon(kind) {
+  function fileIcon(kind2) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("width", "20");
     svg.setAttribute("height", "20");
     svg.setAttribute("aria-hidden", "true");
-    svg.classList.add("files-icon", kind === "drive" ? "files-icon-drive" : "files-icon-folder");
+    svg.classList.add("files-icon", kind2 === "drive" ? "files-icon-drive" : "files-icon-folder");
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "currentColor");
@@ -6906,7 +7008,7 @@
     path.setAttribute("stroke-linejoin", "round");
     path.setAttribute(
       "d",
-      kind === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z"
+      kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z"
     );
     svg.append(path);
     return svg;
@@ -7845,6 +7947,135 @@
   }
   bridge.openSetup = openSetup;
 
+  // src/help.ts
+  var kind = "bug";
+  function wireHelp() {
+    el("open-help").addEventListener("click", () => {
+      el("help-dialog").showModal();
+    });
+    el("help-close").addEventListener("click", () => {
+      el("help-dialog").close();
+    });
+    el("help-bug").addEventListener("click", () => {
+      void openReport("bug");
+    });
+    el("help-feature").addEventListener("click", () => {
+      void openReport("feature");
+    });
+    el("help-report-close").addEventListener("click", () => {
+      el("help-report-dialog").close();
+    });
+    el("help-open-github").addEventListener("click", () => {
+      void submitReport();
+    });
+    el("help-copy-log").addEventListener("click", () => {
+      void copyLog();
+    });
+    document.addEventListener("serato-locale", () => {
+      if (el("help-report-dialog").open) paintReport();
+    });
+  }
+  async function openReport(next2) {
+    kind = next2;
+    el("help-happened").value = "";
+    el("help-expected").value = "";
+    el("help-names").checked = false;
+    el("help-log-fallback").hidden = true;
+    el("help-report-status").textContent = "";
+    el("help-diagnostics").textContent = t("help.loading");
+    paintReport();
+    el("help-dialog").close();
+    el("help-report-dialog").showModal();
+    try {
+      const response = await fetch("/api/help");
+      const payload = await readJSONOr(response, {});
+      if (!response.ok) throw new Error(serverMessage(payload, t("help.loadFailed")));
+      el("help-diagnostics").textContent = payload.diagnostics || t("help.loadFailed");
+    } catch {
+      el("help-diagnostics").textContent = t("help.loadFailed");
+    }
+  }
+  function paintReport() {
+    const feature = kind === "feature";
+    el("help-report-title").textContent = t(feature ? "help.featureTitle" : "help.bugTitle");
+    el("help-happened-name").textContent = t(feature ? "help.change" : "help.happened");
+    el("help-expected-label").hidden = feature;
+  }
+  async function submitReport() {
+    const button2 = el("help-open-github");
+    button2.disabled = true;
+    el("help-report-status").textContent = t("help.opening");
+    try {
+      const response = await fetch("/api/help", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind,
+          happened: el("help-happened").value,
+          expected: el("help-expected").value,
+          change: kind === "feature" ? el("help-happened").value : "",
+          include_names: el("help-names").checked,
+          open: true
+        })
+      });
+      const payload = await readJSONOr(response, {});
+      if (!response.ok) throw new Error(serverMessage(payload, t("help.loadFailed")));
+      if (payload.opened === true) {
+        el("help-report-status").textContent = t("help.opened");
+        return;
+      }
+      const copied = await copyText(payload.text || "");
+      if (!copied) {
+        el("help-log-fallback").hidden = false;
+        el("help-log-fallback").value = payload.text || "";
+        el("help-report-status").textContent = t("help.copyFailed");
+        return;
+      }
+      const linked = (payload.url || "").includes("diagnostics=");
+      el("help-report-status").textContent = linked ? t("help.copied") : t("help.tooLong");
+    } catch {
+      el("help-report-status").textContent = t("help.loadFailed");
+    } finally {
+      button2.disabled = false;
+    }
+  }
+  async function copyLog() {
+    const names = el("help-names").checked ? "1" : "0";
+    el("help-report-status").textContent = t("logs.copying");
+    try {
+      const response = await fetch(`/api/help?include_names=${names}`);
+      const payload = await readJSONOr(response, {});
+      if (!response.ok) throw new Error(serverMessage(payload, t("help.copyFailed")));
+      const text = payload.log || "";
+      if (!text) {
+        el("help-report-status").textContent = t("help.logEmpty");
+        return;
+      }
+      const copied = await copyText(text);
+      if (copied) {
+        el("help-log-fallback").hidden = true;
+        el("help-report-status").textContent = payload.log_truncated ? t("logs.copiedTruncated") : t("help.logCopied");
+        return;
+      }
+      el("help-log-fallback").hidden = false;
+      el("help-log-fallback").value = text;
+      el("help-log-fallback").focus();
+      el("help-log-fallback").select();
+      el("help-report-status").textContent = t("logs.copyManual");
+    } catch {
+      el("help-report-status").textContent = t("help.copyFailed");
+    }
+  }
+  async function copyText(text) {
+    if (!text || !navigator.clipboard || !window.isSecureContext) return false;
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   // src/fuzzy.ts
   var BOUNDARY = /[ ._/\-\\]/;
   function fuzzyScore(needle, haystack) {
@@ -8100,16 +8331,16 @@
       button2.setAttribute("aria-selected", String(index === active));
       button2.tabIndex = -1;
       if (index === active) button2.classList.add("is-active");
-      const kind = document.createElement("span");
-      kind.className = "quick-open-kind";
-      kind.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
+      const kind2 = document.createElement("span");
+      kind2.className = "quick-open-kind";
+      kind2.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
       const title2 = document.createElement("span");
       title2.className = "quick-open-name";
       title2.textContent = hit.title;
       const detail = document.createElement("span");
       detail.className = "quick-open-detail";
       detail.textContent = hit.detail;
-      button2.append(kind, title2, detail);
+      button2.append(kind2, title2, detail);
       button2.addEventListener("click", () => {
         active = index;
         void activate(hit);
@@ -8605,7 +8836,7 @@
   }
 
   // src/version.ts
-  var copyText = "";
+  var copyText2 = "";
   var painted;
   function versionLabel(info) {
     const version = formatVersion(info.version);
@@ -8631,13 +8862,14 @@
     const about = el("about-version");
     el("version-copy-status").textContent = "";
     if (!label) {
-      copyText = "";
+      copyText2 = "";
       footer.hidden = true;
       footer.replaceChildren();
       about.textContent = t("version.unavailable");
+      el("help-version").textContent = t("version.unavailable");
       return;
     }
-    copyText = label;
+    copyText2 = label;
     footer.hidden = false;
     footer.replaceChildren();
     const name = document.createElement("span");
@@ -8647,6 +8879,7 @@
     value.textContent = label;
     footer.append(name, value);
     about.textContent = label;
+    el("help-version").textContent = label;
   }
   function repaintVersion() {
     if (painted === void 0) return;
@@ -8661,7 +8894,7 @@
   }
   async function copyVersion() {
     const status = el("version-copy-status");
-    if (!copyText) {
+    if (!copyText2) {
       status.textContent = t("version.unavailable");
       return;
     }
@@ -8671,7 +8904,7 @@
       return;
     }
     try {
-      await writeText.call(navigator.clipboard, copyText);
+      await writeText.call(navigator.clipboard, copyText2);
       status.textContent = t("version.copied");
     } catch {
       status.textContent = t("version.copyFailed");
@@ -8735,6 +8968,7 @@
   wireVirtualScroll();
   wireShortcuts();
   wireDialogs();
+  wireHelp();
   wireSnapshots();
   wireGigCheck(() => {
     setMode("crates");

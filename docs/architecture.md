@@ -340,6 +340,14 @@ Sentry uses `server_name` `local`, environment `local`, release `app_config.APP_
 
 `app_log.py` writes `serato-library.log` with `RotatingFileHandler`: 1 MiB and three backups. The directory is `~/Library/Logs/Serato Library` on macOS, `%LOCALAPPDATA%\Serato Library\Logs` on Windows, and `$XDG_STATE_HOME/serato-library/logs` (or `~/.local/state/serato-library/logs`) elsewhere. `SERATO_LIBRARY_LOG_DIR` overrides it when the value is absolute. The startup line can include the database path. That file is not uploaded. Copying the log skips a symlink and skips a file that is not inside the log directory, and it keeps the newest 200,000 characters. Opening the folder runs `open` on macOS, `xdg-open` elsewhere, and `os.startfile` on Windows. The response does not include the path.
 
+## Help
+
+`help_report.py` builds a GitHub new-issue link. It does not post, and it does not read a Serato database. `GET /api/help` returns `diagnostics`, `log`, and `log_truncated`. The diagnostics are the app version, commit, operating system, Python version, Serato version, Serato build, and Protect Library (`on`, `off`, or `unknown`). `POST /api/help` takes `kind` (`bug` or `feature`), `happened`, `expected`, `change`, `include_names`, and `open`. `include_names` and `open` must be booleans. A non-boolean is 400. An unknown kind, a non-string field, or a field longer than 8000 characters is 400.
+
+The home directory is replaced with `~` in the user's words and in the log. Unless `include_names` is true, audio file names and `.crate` / `.scrate` names become `[track]` and `[crate]`. A link longer than 6000 characters is not opened. The response `mode` is `clipboard`, `url` is only the template, and `text` is the report to paste. `open` true asks the system browser to open a link whose host is `github.com`, whose path is `/mookiejones/serato-library-manager/issues/new`, and whose `template` is `bug_report.yml` or `feature_request.yml`. Any other URL is refused. The form templates are `.github/ISSUE_TEMPLATE/bug_report.yml` and `feature_request.yml`.
+
+The rail footer **Help** button opens that screen. **Report a bug** and **Request a feature** show the diagnostics before the browser opens. **Copy log** uses the redacted log. **View on GitHub** and **Release notes** are ordinary links. About in Settings links to the repository. A failed diagnostics read says `Couldn't load the diagnostics.` and does not show the server's error text.
+
 ## Portable drive check
 
 `drive_check.py` reads one portable drive and reports what to fix on the laptop before the gig. The drive is a folder with `_Serato_` at its root, or that `_Serato_` folder itself. `python3 drive_check.py DRIVE` prints the report. `GET /api/drive-check` returns the same JSON. The page does not show this check. The Gig view is still the open gig-check pull request, and the Files page owns the drive list.

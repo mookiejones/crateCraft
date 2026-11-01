@@ -878,7 +878,8 @@ dialog p {
   margin-top: var(--space-4);
 }
 
-.dialog-actions button {
+.dialog-actions button,
+.dialog-actions a {
   min-height: 44px;
   padding: var(--space-2) 14px;
   border-radius: 4px;
@@ -918,6 +919,12 @@ dialog p {
   font-variant-numeric: tabular-nums;
   line-height: 1.5;
   overflow-wrap: anywhere;
+}
+
+.help-diagnostics {
+  margin: var(--space-2) 0 0;
+  white-space: pre-wrap;
+  font: inherit;
 }
 
 dialog .check {

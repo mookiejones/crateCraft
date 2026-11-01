@@ -38,6 +38,8 @@ A missing `SENTRY_DSN` keeps crash reports off even after you opt in. A missing 
 
 The log file is `serato-library.log`. It rotates at 1 MiB and keeps three older files. Logs stay on this machine. They can include the path of the library database. They are not uploaded. Settings has **Open logs folder** and **Copy logs**.
 
+**Help** can open your browser to a new GitHub issue that you review and submit yourself. The app does not post the issue and does not call the GitHub API. The form can include the app version, commit, operating system, Python version, Serato version and build, and whether Protect Library is on. Your home folder is written as `~`. Track and crate names from the log are left out unless you tick that box. If the link would be too long, the text is copied instead of opened.
+
 ## Release builds
 
 A tagged release writes `SENTRY_DSN`, `POSTHOG_KEY`, and `POSTHOG_HOST` from GitHub Actions secrets into `_build_config.py` before the app is frozen. A manual run of that workflow does not. An empty secret leaves that service off. The copy of `_build_config.py` in git is empty, and a build from source uses that empty file. Do not commit a filled-in key file.
