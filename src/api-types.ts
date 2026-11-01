@@ -439,6 +439,17 @@ export interface RestorePlan {
   cues?: FrameDiff[];
   grids?: FrameDiff[];
   deleted?: DeletedPlan;
+  /**
+   * Crate files the snapshot database has not heard of. Restore writes
+   * them into the library so Serato 4/5 does not delete them on launch.
+   */
+  crates_registered?: PlanName[];
+  /** Crate files whose snapshot copy has no hash or could not be read. */
+  crates_skipped?: PlanName[];
+  /** English warning when crate files will not be registered. */
+  registration_warning?: string | null;
+  /** Catalog code for `registration_warning`. */
+  registration_warning_code?: string | null;
   dry_run?: boolean;
   restore_blocked?: string | null;
   /** Catalog code for `restore_blocked` when that sentence can be translated. */

@@ -18,9 +18,21 @@ parsed or written. Snapshots stay available. A restore also refuses while a
 Serato DJ process is running.
 
 Restoring writes a snapshot first, so the restore itself can be undone.
-After the files are replaced, the restore hashes them again and compares
-those hashes with the target manifest. A mismatch puts the pre-restore
-snapshot back. ``plan`` reports crate, track, cue, and grid differences
+Serato 4 and 5 delete a ``.crate`` or ``.scrate`` the database has never
+heard of the next time they launch. After the crate files are put back,
+restore registers those files through the same write guards as a crate
+edit, without a second snapshot while the restore journal is open.
+After the files are replaced, the restore checks them again. When no
+crate was registered, the database files are compared by byte hash.
+When crates were registered, row counts are compared: the snapshot's
+rows plus exactly those crates. That read copies the database and its
+WAL and opens the copy with ``mode=ro`` and ``query_only``, so the live
+file, ``-wal``, and ``-shm`` stay unchanged. Indexes, triggers, views,
+and ``PRAGMA integrity_check`` must match, and in the ``serato`` table
+only ``revision`` may change. A crate whose snapshot copy could not be
+read is left out of the file check and reported as skipped. A mismatch
+puts the pre-restore snapshot back. ``plan`` reports crate, track, cue,
+and grid differences, including crates that registration will write,
 and writes nothing.
 """
 
@@ -35,6 +47,7 @@ import os
 import plistlib
 import re
 import secrets
+import shutil
 import sqlite3
 import struct
 import subprocess
@@ -42,6 +55,7 @@ import sys
 import tempfile
 import threading
 import time
+from collections import Counter
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import closing, contextmanager
 from dataclasses import dataclass
@@ -1243,7 +1257,8 @@ class SnapshotStore:
             fault = self.restore_fault
             if fault is not None and fault.after_apply is not None:
                 fault.after_apply()
-            self._verify_applied(self._manifest(snapshot_id))
+            manifest = self._manifest(snapshot_id)
+            self._verify_applied(manifest)
         except BaseException as exc:
             self._fail_restore(snapshot_id, str(pre["id"]), exc)
         self._clear_restore_journal()
@@ -1258,12 +1273,14 @@ class SnapshotStore:
             result="verified",
             rollback="not_needed",
         )
+        skipped = diff.get("crates_skipped")
         return {
             "ok": True,
             "dry_run": False,
             "restored": snapshot_id,
             "undo_snapshot": pre["id"],
             "changes": diff,
+            "crates_skipped": skipped if isinstance(skipped, list) else [],
         }
 
     def _fail_restore(self, snapshot_id: str, undo_id: str, exc: BaseException) -> None:
@@ -1553,7 +1570,14 @@ class SnapshotStore:
                 drive_id = row["drive_id"]
                 if drive_id not in visible or drive_id in absent:
                     row["present"] = False
-        return _diff_contents(current, target, snapshot_id)
+        diff = _diff_contents(current, target, snapshot_id)
+        skipped, readable = self._classify_crate_copies(snapshot_id)
+        registered, notice = self._crates_to_register(snapshot_id, readable)
+        diff["crates_registered"] = registered
+        diff["crates_skipped"] = skipped
+        diff["registration_warning"] = None if notice is None else notice.text
+        diff["registration_warning_code"] = None if notice is None else notice.code
+        return diff
 
     def _apply(self, snapshot_id: str) -> None:
         """Put one snapshot's files back.
@@ -1571,10 +1595,13 @@ class SnapshotStore:
         fault = self.restore_fault
         if fault is not None and fault.before_apply is not None:
             fault.before_apply(snapshot_id)
+        self._registered_crates = []
         self._refuse_if_running()
         self._apply_database(manifest)
         self._refuse_if_running()
         self._apply_drives(manifest)
+        self._refuse_if_running()
+        self._registered_crates = self._register_restored_crates(manifest)
         self._refuse_if_running()
         self._apply_tracks(manifest)
 
@@ -1616,16 +1643,179 @@ class SnapshotStore:
                     continue
                 rel = _safe_relative(str(item.get("path") or ""))
                 digest = item.get("sha256")
+                name = Path(rel).name
                 if not isinstance(digest, str):
+                    if _is_crate_filename(name):
+                        _warn_skipped_crate()
+                        wanted.add(rel)
+                        continue
                     raise SnapshotError("A snapshot file has no hash.")
+                try:
+                    data = self._read_blob(digest)
+                except SnapshotError:
+                    if _is_crate_filename(name):
+                        _warn_skipped_crate()
+                        wanted.add(rel)
+                        continue
+                    raise
                 target = _join(root, rel)
-                _atomic_write(target, self._read_blob(digest))
+                _atomic_write(target, data)
                 wanted.add(rel)
             for rel, path in _iter_serato_files(root):
                 if rel not in wanted:
                     if path.is_symlink():
                         raise SnapshotError("Refusing to remove a shortcut in the Serato folder.")
                     path.unlink()
+
+    def _register_restored_crates(self, manifest: Mapping[str, object]) -> list[dict[str, object]]:
+        """Write restored crate files into the database so Serato keeps them.
+
+        Serato 4 and 5 rebuild the crate folder from ``master.sqlite`` on
+        launch and delete a ``.crate`` or ``.scrate`` that database has
+        never heard of. Files are read from the verified snapshot, including
+        a drive that is not plugged in now, so the name is registered before
+        that drive comes back. Serato is checked again here. The write uses
+        ``begin_write(snapshot=False)`` so the restore journal stays put.
+        ``restore`` calls this after ``_verify_applied``: the database it
+        writes no longer matches the snapshot bytes, by design. A rollback
+        does not call it, because the pre-restore library already agreed
+        with its crate files.
+
+        Args:
+            manifest: Verified snapshot.
+
+        Raises:
+            SnapshotBlocked: If Serato DJ is running or holds the database.
+            SnapshotError: If a crate cannot be stored. The restore rolls back.
+        """
+        import error_codes
+        import library
+
+        if not _snapshot_has_master(manifest):
+            return []
+        if not self.master.is_file() or self.master.is_symlink():
+            return []
+        if not library.can_register_crates(self.master):
+            app_log.logger.warning("%s", error_codes.REGISTRATION_NO_SPACE)
+            return []
+        crates = _snapshot_crate_files(manifest, self._read_blob)
+        if not crates:
+            return []
+        self._refuse_if_running()
+        try:
+            return library.register_restored_crates(crates)
+        except library.SeratoOpen as exc:
+            raise SnapshotBlocked(SERATO_RUNNING_MESSAGE) from exc
+        except library.LibraryError as exc:
+            raise SnapshotError(exc.message, exc.status) from exc
+
+    def _classify_crate_copies(self, snapshot_id: str) -> tuple[list[dict[str, object]], set[str]]:
+        """Split crate files into skipped copies and readable names.
+
+        A crate with no hash, or a hash whose blob cannot be read, is
+        skipped. The same basename on two drives is one row. A name that
+        can be read from any drive is not skipped.
+
+        Args:
+            snapshot_id: Snapshot to read.
+
+        Returns:
+            Skipped rows (name, path, drive) and the casefolded basenames
+            that have a readable copy. Nothing is written.
+        """
+        manifest = self._manifest(snapshot_id)
+        first: dict[str, dict[str, object]] = {}
+        readable: set[str] = set()
+        for record in _drive_records(manifest):
+            drive_id = str(record.get("drive_id") or "")
+            label = str(record.get("label") or drive_id)
+            for item in record.get("files") or []:
+                if not isinstance(item, dict):
+                    continue
+                rel = str(item.get("path") or "")
+                if _excluded_relative(rel):
+                    continue
+                name = Path(rel).name
+                if not _is_crate_filename(name):
+                    continue
+                key = name.casefold()
+                first.setdefault(key, {
+                    "drive_id": drive_id,
+                    "drive_label": label,
+                    "name": Path(name).stem.replace("%%", " / "),
+                    "path": rel,
+                })
+                digest = item.get("sha256")
+                if not isinstance(digest, str):
+                    continue
+                try:
+                    self._read_blob(digest)
+                except SnapshotError:
+                    continue
+                readable.add(key)
+        skipped = [row for key, row in first.items() if key not in readable]
+        return skipped, readable
+
+    def _crates_to_register(
+        self,
+        snapshot_id: str,
+        readable: set[str] | None = None,
+    ) -> tuple[list[dict[str, object]], CodedNotice | None]:
+        """List crate files this restore would register, and any skip warning.
+
+        A snapshot with no master database registers nothing, and those
+        crate files are not listed. The same basename on two drives is one
+        row. A database with no Serato Library root crate registers nothing
+        and the warning explains that Serato may remove the files. A crate
+        whose snapshot copy cannot be read is not listed here.
+
+        Args:
+            snapshot_id: Snapshot whose restore would register these crates.
+            readable: Casefolded basenames that have a readable blob. None
+                classifies the snapshot first.
+
+        Returns:
+            The rows, and the warning or None. Nothing is written.
+        """
+        import error_codes
+        import library
+
+        manifest = self._manifest(snapshot_id)
+        if readable is None:
+            _skipped, readable = self._classify_crate_copies(snapshot_id)
+        if not _snapshot_has_master(manifest):
+            return [], None
+        with _manifest_master(manifest, self._read_blob) as master:
+            if master is None or not library.can_register_crates(master):
+                return [], CodedNotice(error_codes.REGISTRATION_NO_SPACE, "registration_no_space")
+            known = library.crate_export_names(master)
+        rows: list[dict[str, object]] = []
+        seen: set[str] = set()
+        for record in _drive_records(manifest):
+            drive_id = str(record.get("drive_id") or "")
+            label = str(record.get("label") or drive_id)
+            for item in record.get("files") or []:
+                if not isinstance(item, dict):
+                    continue
+                rel = str(item.get("path") or "")
+                if _excluded_relative(rel):
+                    continue
+                name = Path(rel).name
+                if not _is_crate_filename(name):
+                    continue
+                if not library.is_registerable_crate_name(name):
+                    continue
+                key = name.casefold()
+                if key not in readable or key in seen or key in known:
+                    continue
+                seen.add(key)
+                rows.append({
+                    "drive_id": drive_id,
+                    "drive_label": label,
+                    "name": Path(name).stem.replace("%%", " / "),
+                    "path": rel,
+                })
+        return rows, None
 
     def _apply_tracks(self, manifest: Mapping[str, object]) -> None:
         """Restore Serato frames in audio files on present drives.
@@ -1675,18 +1865,28 @@ class SnapshotStore:
         self._verify_applied_tracks(manifest)
 
     def _verify_applied_database(self, manifest: Mapping[str, object]) -> None:
-        """Compare the restored database files with the manifest hashes.
+        """Compare restored database rows with the snapshot plus registered crates.
+
+        When no crate was registered, the file bytes must match the snapshot.
+        When crates were registered, the rows must be the snapshot's rows
+        plus exactly those crates. The live file is not opened.
 
         Args:
             manifest: Verified snapshot.
 
         Raises:
-            SnapshotError: If a database file is missing or its bytes differ.
+            SnapshotError: If a database file is missing, its bytes differ
+                when nothing was registered, or its rows are not the snapshot
+                plus the registered crates.
         """
         database = manifest.get("database")
         if not isinstance(database, dict):
             return
         library_dir = self.master.resolve().parent
+        family: set[str] = set()
+        for item in getattr(self, "_registered_crates", []) or []:
+            if isinstance(item, dict) and isinstance(item.get("filename"), str):
+                family |= _crate_family(item["filename"])
         names = {"master": "master.sqlite", "root": "root.sqlite"}
         for key, filename in names.items():
             record = database.get(key)
@@ -1696,11 +1896,20 @@ class SnapshotStore:
             if not isinstance(digest, str):
                 continue
             path = library_dir / filename
-            if path.is_symlink() or not path.is_file() or _sha256_file(path) != digest:
+            if path.is_symlink() or not path.is_file():
+                raise SnapshotError("The restored database does not match the snapshot.")
+            if not family:
+                if _sha256_file(path) != digest:
+                    raise SnapshotError("The restored database does not match the snapshot.")
+                continue
+            if not _database_rows_match(self._read_blob(digest), path, family):
                 raise SnapshotError("The restored database does not match the snapshot.")
 
     def _verify_applied_drives(self, manifest: Mapping[str, object]) -> None:
         """Compare restored crate files with the manifest hashes.
+
+        A crate whose snapshot copy has no hash or cannot be read is left
+        out of the comparison. Other files must still match.
 
         Args:
             manifest: Verified snapshot.
@@ -1715,12 +1924,17 @@ class SnapshotStore:
             if root is None:
                 continue
             wanted: dict[str, str] = {}
+            skipped: set[str] = set()
             for item in record.get("files") or []:
                 if not isinstance(item, dict):
                     continue
                 rel = _safe_relative(str(item.get("path") or ""))
                 digest = item.get("sha256")
-                if not isinstance(digest, str):
+                name = Path(rel).name
+                if not isinstance(digest, str) or not _blob_readable(self, digest):
+                    if _is_crate_filename(name):
+                        skipped.add(rel)
+                        continue
                     raise SnapshotError("A restored crate file does not match the snapshot.")
                 wanted[rel] = digest
             for rel, digest in wanted.items():
@@ -1728,8 +1942,23 @@ class SnapshotStore:
                 if path.is_symlink() or not path.is_file() or _sha256_file(path) != digest:
                     raise SnapshotError("A restored crate file does not match the snapshot.")
             for rel, _path in _iter_serato_files(root):
-                if rel not in wanted:
+                if rel not in wanted and rel not in skipped:
                     raise SnapshotError("A restored crate file does not match the snapshot.")
+
+    def _blob_readable(self, digest: str) -> bool:
+        """Return whether a snapshot blob can be read and matches its hash.
+
+        Args:
+            digest: Blob hash from the manifest.
+
+        Returns:
+            False when ``_read_blob`` refuses it, as ``_apply_drives`` does.
+        """
+        try:
+            self._read_blob(digest)
+        except SnapshotError:
+            return False
+        return True
 
     def _verify_applied_tracks(self, manifest: Mapping[str, object]) -> None:
         """Compare restored Serato frames with the manifest hashes.
@@ -2019,7 +2248,13 @@ class SnapshotStore:
                     if hashlib.sha256(data).hexdigest() != digest:
                         raise SnapshotError("A snapshot file does not match its hash.")
                 elif isinstance(digest, str):
-                    self._read_blob(digest)
+                    if _is_crate_filename(Path(rel).name):
+                        try:
+                            self._read_blob(digest)
+                        except SnapshotError:
+                            continue
+                    else:
+                        self._read_blob(digest)
         for track in _track_records(manifest):
             frames = track.get("frames")
             stored = track.get("stored")
@@ -2369,17 +2604,18 @@ def drives_for_backup() -> list[DriveSpec]:
     Present drives come from :func:`discover_drives`. A drive the newest
     snapshot already stored, and that is not mounted now, is included with
     ``present`` false so the backup can list it without treating it as a
-    failure. A relocated library discovers no present drives.
+    failure. A relocated library discovers no present drives. The newest
+    snapshot is read from the store this process already has open. When
+    none is open, the store is opened with recovery off. A backup that
+    runs inside a restore must not roll that restore's journal back, and
+    must not take the backup lock again.
 
     Returns:
         Drive specs. Nothing is written.
     """
     found = discover_drives()
     seen = {spec.drive_id for spec in found}
-    try:
-        previous = current_store()._latest_manifest()
-    except (OSError, SnapshotError):
-        previous = None
+    previous = _manifest_for_backup()
     for record in _drive_records(previous):
         drive_id = str(record.get("drive_id") or "")
         if not drive_id or drive_id in seen:
@@ -2395,6 +2631,25 @@ def drives_for_backup() -> list[DriveSpec]:
             present=False,
         ))
     return found
+
+
+def _manifest_for_backup() -> dict[str, object] | None:
+    """Return the newest snapshot manifest without recovering a restore.
+
+    Returns:
+        The manifest, or None when the store cannot be read. An unfinished
+        restore is left as it is.
+    """
+    import library
+
+    master = Path(library.MASTER).resolve()
+    store = _stores.get(str(master))
+    if store is None:
+        store = SnapshotStore(master, recover=False)
+    try:
+        return store._latest_manifest()
+    except (OSError, SnapshotError):
+        return None
 
 
 def default_process_names() -> list[str]:
@@ -2503,7 +2758,12 @@ def _contents(manifest: Mapping[str, object], reader: Callable[[str], bytes]) ->
                 digest = item.get("sha256")
                 if not isinstance(digest, str):
                     continue
-                data = reader(digest)
+                try:
+                    data = reader(digest)
+                except SnapshotError:
+                    if _is_crate_filename(Path(rel).name):
+                        continue
+                    raise
             crates.extend(_crates_from_file(drive_id, label, present, rel, data))
     crates.extend(_sqlite_crates(manifest, reader))
     cues: list[CueTrackView] = []
@@ -3159,6 +3419,420 @@ def _iter_serato_files(root: Path) -> list[tuple[str, Path]]:
                 continue
             found.append((rel, path))
     return found
+
+
+def _is_crate_filename(name: str) -> bool:
+    """Return whether a file name is a Serato crate or smart crate.
+
+    ``pathlib`` treats ``.crate`` as a dotfile with no suffix. The name is
+    still a crate file, so the check uses the file name rather than
+    ``Path.suffix``. ``.scrate`` ends in ``.crate`` and is included.
+
+    Args:
+        name: A file name, not a directory path.
+
+    Returns:
+        True for names that end in ``.crate`` or ``.scrate``.
+    """
+    folded = name.casefold()
+    return folded.endswith(".crate") or folded.endswith(".scrate")
+
+
+def unknown_crate_files(master: Path, serato_root: Path) -> list[Path]:
+    """Return crate files Serato 4/5 would delete on the next launch.
+
+    The database is the source of truth. A ``.crate`` or ``.scrate`` whose
+    basename the database has never heard of is removed when Serato starts.
+    Shortcuts are left in place. ``Export Backups`` and ``Lexicon`` are not
+    entered. This does not delete anything.
+
+    Args:
+        master: ``master.sqlite`` to read.
+        serato_root: A drive's ``_Serato_`` directory.
+
+    Returns:
+        Crate files, sorted by name, that a launch would remove.
+    """
+    import library
+
+    known = library.crate_export_names(master)
+    found: list[Path] = []
+    for rel, path in _iter_serato_files(serato_root):
+        if not _is_crate_filename(path.name):
+            continue
+        if path.name.casefold() not in known:
+            found.append(path)
+    found.sort(key=lambda item: item.name.casefold())
+    return found
+
+
+def _snapshot_crate_files(
+    manifest: Mapping[str, object],
+    reader: Callable[[str], bytes],
+) -> list[tuple[str, list[str]]]:
+    """Collect crate files stored in one snapshot.
+
+    Args:
+        manifest: Verified snapshot.
+        reader: Returns blob bytes for a hash.
+
+    Returns:
+        ``(basename, track paths)`` for each ``.crate`` and ``.scrate``.
+        The same basename on two drives is one crate. Its tracks stay in
+        file order. Excluded folders are skipped.
+    """
+    grouped: dict[str, tuple[str, list[str]]] = {}
+    for record in _drive_records(manifest):
+        for item in record.get("files") or []:
+            if not isinstance(item, dict):
+                continue
+            rel = str(item.get("path") or "")
+            if _excluded_relative(rel):
+                continue
+            name = Path(rel).name
+            if not _is_crate_filename(name):
+                continue
+            digest = item.get("sha256")
+            if not isinstance(digest, str):
+                _warn_skipped_crate()
+                continue
+            try:
+                data = reader(digest)
+            except SnapshotError:
+                _warn_skipped_crate()
+                continue
+            tracks = parse_serato_bytes(data)
+            key = name.casefold()
+            current = grouped.get(key)
+            if current is None:
+                grouped[key] = (name, list(tracks))
+                continue
+            existing = current[1]
+            for track in tracks:
+                if track not in existing:
+                    existing.append(track)
+    return list(grouped.values())
+
+
+def _crate_family(filename: str) -> set[str]:
+    """Return a crate file name and the parent crate file names above it.
+
+    Args:
+        filename: On-disk basename such as ``House%%Café.crate``.
+
+    Returns:
+        Casefolded names. Parents use ``.crate``. The leaf keeps its suffix.
+    """
+    base = filename.replace("\\", "/").split("/")[-1]
+    folded = base.casefold()
+    if folded.endswith(".scrate"):
+        stem = base[:-7]
+    elif folded.endswith(".crate"):
+        stem = base[:-6]
+    else:
+        return set()
+    parts = [part for part in stem.split("%%") if part]
+    family = {base.casefold()}
+    acc: list[str] = []
+    for part in parts[:-1]:
+        acc.append(part)
+        family.add(("%%".join(acc) + ".crate").casefold())
+    return family
+
+
+def _blob_readable(store: SnapshotStore, digest: str) -> bool:
+    """Return whether a snapshot blob can be read.
+
+    Args:
+        store: Store that holds the blob.
+        digest: SHA-256 hex digest.
+
+    Returns:
+        False when the blob is missing or its hash does not match.
+    """
+    try:
+        store._read_blob(digest)
+    except SnapshotError:
+        return False
+    return True
+
+
+def _ident(name: str) -> str:
+    """Quote a SQLite identifier that is a plain table or column name.
+
+    Args:
+        name: Identifier from ``sqlite_master`` or ``PRAGMA table_info``.
+
+    Returns:
+        The quoted name.
+
+    Raises:
+        SnapshotError: If the name is not a plain identifier.
+    """
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+        raise SnapshotError("The restored database does not match the snapshot.")
+    return '"' + name + '"'
+
+
+def _load_rows(path: Path) -> dict[str, tuple[list[str], Counter[tuple[object, ...]]]]:
+    """Read every user table as a count of rows.
+
+    The live file is not opened. :func:`library.copied_read_conn` copies
+    the database and its WAL, then opens that copy with ``mode=ro`` and
+    ``query_only``. The original database, ``-wal``, and ``-shm`` stay
+    as they are.
+
+    Args:
+        path: SQLite database. A real ``-wal`` file is copied with it.
+
+    Returns:
+        Table name to ``(column names, row counts)``.
+    """
+    tables, _schema, _ok = _read_database(path)
+    return tables
+
+
+def _read_database(
+    path: Path,
+) -> tuple[
+    dict[str, tuple[list[str], Counter[tuple[object, ...]]]],
+    Counter[tuple[object, ...]],
+    bool,
+]:
+    """Read row counts, schema objects, and the integrity result.
+
+    Args:
+        path: SQLite database. A real ``-wal`` file is copied with it.
+            The original file is not opened as a database.
+
+    Returns:
+        User tables, counts of ``(type, name, tbl_name, sql)`` for
+        indexes, triggers, and views, and whether ``PRAGMA integrity_check``
+        returned a single ``ok``.
+    """
+    import library
+
+    found: dict[str, tuple[list[str], Counter[tuple[object, ...]]]] = {}
+    with library.copied_read_conn(path) as conn:
+        tables = [
+            str(row[0])
+            for row in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'"
+            )
+        ]
+        for table in tables:
+            info = list(conn.execute(f"PRAGMA table_info({_ident(table)})"))
+            cols = [str(row[1]) for row in info]
+            quoted = ", ".join(_ident(col) for col in cols)
+            rows = conn.execute(f"SELECT {quoted} FROM {_ident(table)}").fetchall()
+            found[table] = (cols, Counter(tuple(row) for row in rows))
+        schema_rows = conn.execute(
+            """
+            SELECT type, name, tbl_name, sql FROM sqlite_master
+            WHERE type IN ('index', 'trigger', 'view')
+            """
+        ).fetchall()
+        checked = conn.execute("PRAGMA integrity_check").fetchall()
+    schema = Counter(tuple(row) for row in schema_rows)
+    return found, schema, len(checked) == 1 and checked[0][0] == "ok"
+
+
+def _allowed_container_ids(
+    snap: dict[str, tuple[list[str], Counter[tuple[object, ...]]]],
+    live: dict[str, tuple[list[str], Counter[tuple[object, ...]]]],
+    family: set[str],
+) -> set[int] | None:
+    """Return container ids the registered crates may add or change.
+
+    Args:
+        snap: Rows from the snapshot database.
+        live: Rows from the restored database.
+        family: Casefolded crate file names that registration may write,
+            including parent crates.
+
+    Returns:
+        Those ids, or None when a new container is not one of those crates.
+        An empty family allows no new containers.
+    """
+    meta = live.get("dj_container_metadata")
+    containers = live.get("container")
+    if meta is None or containers is None:
+        return set() if not family else None
+    cols, rows = meta
+    if "container_id" not in cols or "filename" not in cols:
+        return set() if not family else None
+    id_at = cols.index("container_id")
+    name_at = cols.index("filename")
+    allowed: set[int] = set()
+    for row in rows:
+        filename = row[name_at]
+        if isinstance(filename, str) and filename.casefold() in family:
+            allowed.add(int(row[id_at]))
+    snap_ids: set[int] = set()
+    snap_containers = snap.get("container")
+    if snap_containers is not None and "id" in snap_containers[0]:
+        snap_ids = {int(row[snap_containers[0].index("id")]) for row in snap_containers[1]}
+    live_ids = {int(row[containers[0].index("id")]) for row in containers[1]} if "id" in containers[0] else set()
+    for new_id in live_ids - snap_ids:
+        if new_id not in allowed:
+            return None
+    return allowed
+
+
+def _row_belongs(table: str, cols: list[str], row: tuple[object, ...], allowed: set[int], locations: set[int]) -> bool:
+    """Return whether one changed row belongs to a registered crate.
+
+    Args:
+        table: Table name.
+        cols: Column names in row order.
+        row: One row.
+        allowed: Container ids registration may change.
+        locations: ``location_container`` ids for those containers.
+
+    Returns:
+        True when the row is one of those crates or their membership.
+        A ``serato`` row is not covered here. Only its revision may differ,
+        and that comparison is done by the caller.
+    """
+    if table == "container" and "id" in cols:
+        return int(row[cols.index("id")]) in allowed
+    if "container_id" in cols and row[cols.index("container_id")] is not None:
+        return int(row[cols.index("container_id")]) in allowed
+    if "location_container_id" in cols and row[cols.index("location_container_id")] is not None:
+        return int(row[cols.index("location_container_id")]) in locations
+    return False
+
+
+def _database_rows_match(snapshot: bytes, live: Path, family: set[str]) -> bool:
+    """Return whether the live database is the snapshot plus registered crates.
+
+    Args:
+        snapshot: Snapshot database bytes.
+        live: Restored database, including its WAL.
+        family: Casefolded crate filenames registration may have written.
+
+    Returns:
+        True when every snapshot row is still there, or was replaced only
+        for a registered crate, and every extra row belongs to those crates.
+        Counts must match, including a repeated row. Columns must match
+        even when a table is empty. Indexes, triggers, and views must
+        match, and ``PRAGMA integrity_check`` must be ok. In ``serato``,
+        only ``revision`` may differ.
+    """
+    fd, name = tempfile.mkstemp(prefix="serato-rowcheck-", suffix=".sqlite")
+    os.close(fd)
+    path = Path(name)
+    try:
+        path.write_bytes(snapshot)
+        snap, snap_schema, snap_ok = _read_database(path)
+    finally:
+        path.unlink(missing_ok=True)
+        for suffix in ("-wal", "-shm", "-journal"):
+            Path(str(path) + suffix).unlink(missing_ok=True)
+    current, live_schema, live_ok = _read_database(live)
+    if not snap_ok or not live_ok or snap_schema != live_schema:
+        return False
+    allowed = _allowed_container_ids(snap, current, family)
+    if allowed is None:
+        return False
+    locations: set[int] = set()
+    located = current.get("location_container")
+    if located is not None and "id" in located[0] and "container_id" in located[0]:
+        id_at = located[0].index("id")
+        crate_at = located[0].index("container_id")
+        locations = {
+            int(row[id_at])
+            for row in located[1]
+            if row[crate_at] is not None and int(row[crate_at]) in allowed
+        }
+    tables = set(snap) | set(current)
+    for table in tables:
+        snap_cols, snap_rows = snap.get(table, ([], Counter()))
+        live_cols, live_rows = current.get(table, ([], Counter()))
+        if snap_cols != live_cols:
+            return False
+        if table == "serato":
+            snap_plain = Counter(_without_revision(snap_cols, row) for row in snap_rows.elements())
+            live_plain = Counter(_without_revision(live_cols, row) for row in live_rows.elements())
+            if snap_plain != live_plain:
+                return False
+            continue
+        for row in set(snap_rows) | set(live_rows):
+            if snap_rows[row] != live_rows[row] and not _row_belongs(table, snap_cols, row, allowed, locations):
+                return False
+    return True
+
+
+def _without_revision(cols: list[str], row: tuple[object, ...]) -> tuple[object, ...]:
+    """Drop the revision column from one row.
+
+    Args:
+        cols: Column names.
+        row: Row values.
+
+    Returns:
+        The row without ``revision``, or the same row when that column is absent.
+    """
+    if "revision" not in cols:
+        return row
+    index = cols.index("revision")
+    return tuple(value for at, value in enumerate(row) if at != index)
+
+
+def _warn_skipped_crate() -> None:
+    """Log that one crate file was left out of this restore."""
+    app_log.logger.warning("A crate file was skipped because its snapshot copy could not be read.")
+
+
+def _snapshot_has_master(manifest: Mapping[str, object]) -> bool:
+    """Return whether a snapshot stored a master database.
+
+    Args:
+        manifest: Snapshot manifest.
+
+    Returns:
+        True when ``database.master`` names a blob hash.
+    """
+    database = manifest.get("database")
+    if not isinstance(database, dict):
+        return False
+    master = database.get("master")
+    return isinstance(master, dict) and isinstance(master.get("sha256"), str)
+
+
+@contextmanager
+def _manifest_master(
+    manifest: Mapping[str, object],
+    reader: Callable[[str], bytes],
+) -> Iterator[Path | None]:
+    """Yield a temporary copy of the snapshotted master database.
+
+    Args:
+        manifest: Snapshot manifest.
+        reader: Returns blob bytes for a hash.
+
+    Yields:
+        The temporary file, or None when the snapshot has no master database.
+        The file is removed when the block ends.
+    """
+    if not _snapshot_has_master(manifest):
+        yield None
+        return
+    database = manifest.get("database")
+    assert isinstance(database, dict)
+    master = database.get("master")
+    assert isinstance(master, dict)
+    data = reader(str(master.get("sha256")))
+    fd, name = tempfile.mkstemp(prefix="serato-snapnames-", suffix=".sqlite")
+    os.close(fd)
+    path = Path(name)
+    try:
+        path.write_bytes(data)
+        yield path
+    finally:
+        path.unlink(missing_ok=True)
+
+
 
 
 def _backup_skipped(part: str) -> bool:

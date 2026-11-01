@@ -24,6 +24,12 @@ from collections.abc import Mapping
 
 import legacy_library
 
+REGISTRATION_NO_SPACE = (
+    "Crates were not registered. This library has no Serato Library space, "
+    "so Serato may remove those crate files the next time it opens."
+)
+"""Plan warning when crate files cannot be stored in the Serato Library space."""
+
 # English sentence -> code. Codes are lowercase words joined by
 # underscores and never change once shipped.
 ERROR_CODES: dict[str, str] = {
@@ -63,6 +69,7 @@ ERROR_CODES: dict[str, str] = {
     "That file is not on disk.": "file_not_on_disk",
     "The file could not be moved to the Trash.": "trash_failed",
     "The file could not be moved to the Recycle Bin.": "recycle_failed",
+    REGISTRATION_NO_SPACE: "registration_no_space",
     "The file could not be moved. Nothing was changed.": "move_failed",
     "That track is not in a duplicate group.": "not_duplicate",
     "Choose the copy to keep.": "choose_copy",
