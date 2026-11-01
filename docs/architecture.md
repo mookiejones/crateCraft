@@ -280,6 +280,10 @@ The live side of the diff takes cues and the beatgrid from `tags.read_serato_tag
 
 Maps each fixed English error sentence the server sends to a stable code. `send_json` adds `code` beside `error` when the sentence is one of them. A sentence with a path or other changing part has no code. `PARAM_CODES` is the exception: the unknown Serato version notice is `serato_version_unknown` with a `{build}` param. `status`, `GET /api/snapshots`, and a blocked restore plan send that `code` and `params` beside the English sentence. The page shows `error.serato_version_unknown` in the active language. Codes never change once shipped. `tests/test_language.py` checks that each code has `error.<code>` in every locale file and that the English entry is the same sentence, or the same template for a parameterized code.
 
+### `tag_cleanup.py`
+
+`tag_cleanup.py` groups spellings of one genre or artist (#27). It writes nothing. `clusters` opens the library with `gig_check.open_read_only` and counts the space's tracks by `genre` or `artist`; any other field is 400, and the SQL comes from a fixed table, not from the request. Blank values and values that are only spaces are left out, and a stored trailing space is the same spelling. `normalize` folds case, removes accents (NFKD), reads `&` and `+` as "and", and drops everything that is not a letter or a digit, so "Hip Hop", "Hip-Hop", "hiphop", and "HIP HOP" share the key `hiphop`. Only a key with two or more spellings is a group. Each group has `key`, `suggested` (the spelling most tracks use; a tie goes to the spelling that sorts first), `tracks`, and `spellings` (`value`, `count`, most used first). Groups are largest first. `GET /api/tag-clusters?space=&field=` returns `{ field, values, groups }`. Choosing a spelling and applying it through `safe_write`, and remembering it for new imports, are later changes.
+
 ### `files.py`
 
 `files.py` renames a file, moves files, moves a folder, points a library track at a replacement file, and moves a file to the Trash. Crates, history, and Prepare stay attached because every stored path that resolves to the old file is rewritten. Cue points travel inside the audio file. A replacement copies them with `tags.copy_serato_geob` when that is safe, and the result says so when it is not. The old file stays on disk.
@@ -449,6 +453,7 @@ An error body is `{"error": "<English sentence>"}`. When the sentence is one of 
 | GET | `/api/setup` | `browse` | Child folders. An empty value lists the home directory. Shortcuts and hidden names are skipped |
 | POST | `/api/setup` | `folder` | The same object as GET when `folder` is the open library directory, or, when no library file is open, a folder that already contains a Serato library. Otherwise `found` is false. The database is not created or modified. A remembered path is not included |
 | GET | `/api/logs` | none | `{ "text", "truncated" }` from the local log. The text can contain a path. It is not a report |
+| GET | `/api/tag-clusters` | `space`, `field` (`genre` default, or `artist`) | `{ field, values, groups }`; each group `{ key, suggested, tracks, spellings }`. Read-only. 400 for another field or an unknown space |
 | POST | `/api/logs/open` | none | Opens the logs folder. `{ "ok": true }`. The path is not in the body |
 | GET | `/api/legacy-library` | none | Older library (`database V2`, no `master.sqlite`), read-only: `{ "read_only", "write_blocked", "tracks", "crates", "missing", "offline", "duplicates" }`. 404 when there is none or a newer library is open |
 | GET | `/api/operations` | none | `{ "operations" }`. Newest 200 lines from `operations.jsonl` in the app data folder. No file paths |
