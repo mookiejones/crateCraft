@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
+import os
 import unittest
 from pathlib import Path
+from unittest import mock
 
+import library
 import serato_probe
 
 
@@ -90,7 +93,6 @@ class SurveyTests(unittest.TestCase):
         """
         home = Path("/tmp") / "serato-probe-missing-home"
         self.assertFalse(home.exists())
-        text_out: list[str] = []
         import io
         from contextlib import redirect_stdout
 
@@ -103,6 +105,37 @@ class SurveyTests(unittest.TestCase):
         self.assertFalse(home.exists())
         self.assertIn("unconfirmed", buffer.getvalue())
 
+
+
+class SamePathsAsTheAppTests(unittest.TestCase):
+    """The probe must name the files the app itself opens.
+
+    The probe keeps its own list of paths so it can run on its own. These
+    tests tie that list to ``library.default_library_path`` so the two
+    cannot drift apart without a failing test.
+    """
+
+    def test_macos_master_matches_the_app(self) -> None:
+        """The probe's macOS master.sqlite is the file the app opens."""
+        home = Path("/Users/ada")
+        with mock.patch.object(library.sys, "platform", "darwin"), mock.patch.object(
+            library.Path, "home", return_value=home
+        ):
+            expected = library.default_library_path()
+        roles = {place.role: place.path for place in serato_probe.mac_places(home)}
+        self.assertEqual(roles["master"], expected)
+        self.assertEqual(roles["root"], expected.with_name("root.sqlite"))
+
+    def test_windows_master_matches_the_app(self) -> None:
+        """The probe's Windows master.sqlite is under the same LOCALAPPDATA."""
+        home = Path(r"C:\Users\Ada")
+        local = Path(r"C:\Users\Ada\AppData\Local")
+        with mock.patch.object(library.sys, "platform", "win32"), mock.patch.dict(
+            os.environ, {"LOCALAPPDATA": str(local)}
+        ):
+            expected = library.default_library_path()
+        roles = {place.role: place.path for place in serato_probe.windows_places(home, local)}
+        self.assertEqual(roles["master"], expected)
 
 if __name__ == "__main__":
     unittest.main()
