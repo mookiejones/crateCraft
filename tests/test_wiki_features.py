@@ -101,8 +101,10 @@ class WikiFeaturePageTests(unittest.TestCase):
         self.assertNotIn("never changes audio", text)
         self.assertIn("marked unavailable, never deleted", text)
         self.assertIn("Files and Folders > Removable Volumes", text)
-        self.assertIn("PREVIEW", text)
-        self.assertIn("https://github.com/mookiejones/serato-library-manager/issues/91", text)
+        self.assertIn("each connected drive's `_Serato_` folder", text)
+        self.assertIn("An unplugged drive is listed and not copied.", text)
+        self.assertNotIn("PREVIEW", text)
+        self.assertNotIn("issues/91", text)
 
     def test_files_can_change_audio_and_drives_need_permission(self) -> None:
         """Say organizing files moves, renames, and trashes audio files.

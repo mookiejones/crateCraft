@@ -34,6 +34,9 @@ REGISTRATION_NO_SPACE = (
 # underscores and never change once shipped.
 ERROR_CODES: dict[str, str] = {
     "Something went wrong. The details are in the local log.": "internal",
+    "There is not enough disk space to back up the library.": "backup_no_space",
+    "Quit Serato DJ Pro before backing up drive crates. "
+    "Serato DJ is still running, so nothing was copied.": "backup_serato_running",
     "That request is not valid.": "invalid_request",
     "The request body is not JSON.": "body_not_json",
     "The request body is not an object.": "body_not_object",

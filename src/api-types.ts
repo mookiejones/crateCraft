@@ -474,6 +474,22 @@ export interface PendingUndo {
   source?: string;
 }
 
+export interface DriveCopy {
+  drive_id?: string;
+  label?: string;
+  role?: string;
+  present?: boolean;
+  status?: string;
+  files?: number;
+}
+
+/** Newest finished plain backup, after its hashes have been checked. */
+export interface DriveBackup {
+  folder?: string;
+  verified?: boolean;
+  drives?: DriveCopy[];
+}
+
 export interface OperationEntry {
   time?: string;
   action?: string;
@@ -501,6 +517,7 @@ export interface SnapshotList {
   /** Placeholder values for `write_block_code`. */
   write_block_params?: Record<string, string>;
   serato_running?: boolean;
+  drive_backup?: DriveBackup | null;
   error?: string;
 }
 

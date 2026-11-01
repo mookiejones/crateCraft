@@ -17,6 +17,7 @@ import type {
   OperationEntry,
   PendingUndo,
   SeratoStatus,
+  DriveBackup,
   SnapshotInfo,
   Track,
 } from "./api-types";
@@ -99,6 +100,7 @@ export interface PageState {
   filesQuery: string;
   filesSearching: boolean;
   snapshots: SnapshotInfo[];
+  driveBackup: DriveBackup | null;
   operations: OperationEntry[];
   operationsLoading: boolean;
   operationsError: string;
@@ -163,6 +165,7 @@ export const state: PageState = {
   filesQuery: "",
   filesSearching: false,
   snapshots: [],
+  driveBackup: null,
   operations: [],
   operationsLoading: false,
   operationsError: "",

@@ -78,6 +78,10 @@ from serato_web.completeness import (
 FORMAT = 1
 EXCLUDED_DIRS = frozenset({"Export Backups", "Lexicon"})
 _EXCLUDED_FOLDED = frozenset(name.casefold() for name in EXCLUDED_DIRS)
+# Audio Serato stores under ``_Serato_``. A plain backup copies crates and
+# ``database V2``, not these folders. Snapshots do not use this set.
+BACKUP_SKIP_DIRS = frozenset({"Recording", "DJ Sessions"})
+_BACKUP_SKIP_FOLDED = _EXCLUDED_FOLDED | frozenset(name.casefold() for name in BACKUP_SKIP_DIRS)
 FRAME_KINDS = snapshot_frames.FRAME_KINDS
 TRIGGERS = frozenset({
     "manual",
@@ -2597,6 +2601,60 @@ def discover_drives() -> list[DriveSpec]:
     return found
 
 
+def drives_for_backup() -> list[DriveSpec]:
+    """Return drives a plain backup should record.
+
+    Present drives come from :func:`discover_drives`. A drive the newest
+    snapshot already stored, and that is not mounted now, is included with
+    ``present`` false so the backup can list it without treating it as a
+    failure. A relocated library discovers no present drives. The newest
+    snapshot is read from the store this process already has open. When
+    none is open, the store is opened with recovery off. A backup that
+    runs inside a restore must not roll that restore's journal back, and
+    must not take the backup lock again.
+
+    Returns:
+        Drive specs. Nothing is written.
+    """
+    found = discover_drives()
+    seen = {spec.drive_id for spec in found}
+    previous = _manifest_for_backup()
+    for record in _drive_records(previous):
+        drive_id = str(record.get("drive_id") or "")
+        if not drive_id or drive_id in seen:
+            continue
+        label = record.get("label")
+        role = record.get("role")
+        found.append(DriveSpec(
+            drive_id=drive_id,
+            label=label if isinstance(label, str) and label else drive_id,
+            serato_root=None,
+            music_root=None,
+            role=role if role in {"internal", "external"} else "external",
+            present=False,
+        ))
+    return found
+
+
+def _manifest_for_backup() -> dict[str, object] | None:
+    """Return the newest snapshot manifest without recovering a restore.
+
+    Returns:
+        The manifest, or None when the store cannot be read. An unfinished
+        restore is left as it is.
+    """
+    import library
+
+    master = Path(library.MASTER).resolve()
+    store = _stores.get(str(master))
+    if store is None:
+        store = SnapshotStore(master, recover=False)
+    try:
+        return store._latest_manifest()
+    except (OSError, SnapshotError):
+        return None
+
+
 def default_process_names() -> list[str]:
     """Return command names of running processes.
 
@@ -3776,6 +3834,71 @@ def _manifest_master(
         yield path
     finally:
         path.unlink(missing_ok=True)
+
+
+
+
+def _backup_skipped(part: str) -> bool:
+    """Return whether a plain backup leaves this path component out.
+
+    Args:
+        part: One path component.
+
+    Returns:
+        True for ``Export Backups``, ``Lexicon``, ``Recording``, and
+        ``DJ Sessions`` after the same folding as a snapshot exclusion.
+        A sibling such as ``Recording-extra`` is false.
+    """
+    return _fold_component(part) in _BACKUP_SKIP_FOLDED
+
+
+def iter_backup_files(root: Path) -> list[tuple[str, Path]]:
+    """List ``_Serato_`` files a plain backup copies.
+
+    ``Export Backups``, ``Lexicon``, ``Recording``, and ``DJ Sessions``
+    are excluded with the same folding as a snapshot: letter case, a
+    trailing dot, a trailing space, and an alternate data stream.
+    ``Recording`` and ``DJ Sessions`` are audio, not library metadata.
+    Shortcuts are not followed. There is no size cap. The caller checks
+    free space before it copies, and refuses the backup when the disk
+    cannot hold the files it will actually copy.
+
+    Args:
+        root: ``_Serato_`` directory.
+
+    Returns:
+        Relative POSIX path and file path.
+
+    Raises:
+        OSError: If a directory in the tree cannot be listed. ``EACCES``
+            and ``EPERM`` are left for the caller to record as one drive.
+            Any other listing error, including a drive that disappears,
+            is a failed backup.
+    """
+    found: list[tuple[str, Path]] = []
+    if not root.is_dir() or root.is_symlink():
+        return found
+
+    def onerror(error: OSError) -> None:
+        raise error
+
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=onerror):
+        current = Path(dirpath)
+        dirnames[:] = [
+            name for name in dirnames
+            if not _backup_skipped(name) and not (current / name).is_symlink()
+        ]
+        for name in filenames:
+            path = current / name
+            if path.is_symlink() or not path.is_file():
+                continue
+            if _backup_skipped(name):
+                continue
+            rel = path.relative_to(root).as_posix()
+            if any(_backup_skipped(part) for part in rel.split("/") if part):
+                continue
+            found.append((rel, path))
+    return found
 
 
 def _carry_drive(old: Mapping[str, object] | None, spec: DriveSpec | None) -> dict[str, object]:

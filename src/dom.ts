@@ -43,6 +43,8 @@ export interface ElementIds {
   "snapshot-dialog": HTMLDialogElement;
   "snapshot-status": HTMLParagraphElement;
   "snapshots-take": HTMLButtonElement;
+  "snapshots-drives": HTMLButtonElement;
+  "snapshots-drives-note": HTMLParagraphElement;
   "gig-panel": HTMLElement;
   "gig-scope": HTMLParagraphElement;
   "gig-status": HTMLParagraphElement;
