@@ -11,7 +11,7 @@ Restore, undo, snapshots, and the outside-change watcher are in the app. Open **
 - **No write while unsure.** If we can't confirm Protect Library and Lucid Beatgrid status, we won't write at all.
 - **Snapshot first.** Before any change, we save a snapshot and check it against what's on disk.
 - **Check the write.** After a save, the app reads a copy of the database, including a live `-wal` file, and checks the rows and file hashes. If they do not match, it puts that copy back and checks the hashes again. The copy, the journal, and the operation note stay in the app's data folder, not in Serato's library folder. Serato 5 stays read-only. Rollback does not write a Serato 5 library. If there is no room for the copy, the save does not run.
-- **Every restore can be undone.** A restore takes its own snapshot first.
+- **Every restore can be undone.** A restore takes its own snapshot first. After it writes, it checks the hashes. A mismatch puts that snapshot back. **Snapshots** lists each checked edit and restore. A change that could not be put back is shown there and is not reported as saved.
 - **A missing drive is never a deletion.** Its tracks and crates are marked unavailable, never removed.
 - **Empty crates.** Serato deletes empty crates when it closes. The gig check that would flag them first is **PREVIEW** until [#41](https://github.com/mookiejones/serato-library-manager/issues/41) merges. It is not in the app.
 - **Outside changes get caught.** If another app changes your Serato folder, we take a snapshot, show what changed and offer an undo. We can't catch the moment *before* an outside app writes, so undo returns you to our last snapshot. In the app that button is **Review undo**.

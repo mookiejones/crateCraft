@@ -215,6 +215,12 @@ class SafeWriteTests(unittest.TestCase):
             self.assertEqual(record.result, "verified")
             self.assertEqual(record.rollback, "not_needed")
             self.assertIsNotNone(record.snapshot_id)
+            lines = safe_write.read_log(temp.db)
+            self.assertEqual(len(lines), 1)
+            self.assertIs(lines[0]["verified"], True)
+            self.assertIs(lines[0]["rolled_back"], False)
+            self.assertEqual(lines[0]["action"], "crate_create")
+            self.assertEqual(lines[0]["snapshot_before"], record.snapshot_id)
             self.assertIn("master.sqlite", record.files)
             self.assertNotIn(str(temp.root), blob)
             self.assertTrue(finished)
@@ -300,6 +306,11 @@ class SafeWriteTests(unittest.TestCase):
             self.assertIn("put back", caught.exception.message)
             self.assertEqual(record.result, "rolled_back")
             self.assertEqual(record.rollback, "verified")
+            self.assertEqual(_hash_file(temp.db), record.hashes["master.sqlite"])
+            entry = safe_write.read_log(temp.db)[-1]
+            self.assertIs(entry["verified"], False)
+            self.assertIs(entry["rolled_back"], True)
+            self.assertEqual(entry["result"], "rolled_back")
             self.assertEqual(record.target, "Renamed")
             self.assertIn("drive/_Serato_/Subcrates/House.crate", record.files)
             self.assertFalse(_journal(temp.db).exists())
@@ -483,6 +494,242 @@ class SafeWriteTests(unittest.TestCase):
             seen = _names_with_wal(temp.db)
             self.assertEqual(seen[1], "Renamed")
             self.assertEqual(seen[50], "OnlyWal")
+
+    def test_crate_rename_corruption_matches_the_preimage(self) -> None:
+        """Roll a renamed crate back when the committed row is changed.
+
+        The bytes after the failure match the pre-write snapshot, including
+        the database hash stored for that snapshot.
+
+        Returns:
+            None. The test fails if the new name remains or the hash differs.
+        """
+        with TempLibrary() as temp:
+            created = library.crate_action({"action": "create", "name": "Warmup"})
+            crate_id = int(created["id"])
+            before = _snapshot(temp.db, _wal(temp.db))
+
+            def corrupt() -> None:
+                conn = sqlite3.connect(temp.db)
+                try:
+                    flag = getattr(sqlite3, "SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE", None)
+                    if flag is not None:
+                        conn.setconfig(flag, True)
+                    conn.execute("PRAGMA wal_autocheckpoint=0")
+                    conn.execute("UPDATE container SET name = ? WHERE id = ?", ("Corrupt", crate_id))
+                    conn.commit()
+                finally:
+                    conn.close()
+
+            safe_write.install_fault(Fault(after_commit=corrupt))
+            with self.assertRaises(LibraryError) as caught:
+                library.crate_action({"action": "rename", "id": crate_id, "name": "Evening"})
+            record = safe_write.results(temp.db)[-1]
+            self.assertIn("put back", caught.exception.message)
+            self.assertEqual(_snapshot(temp.db, _wal(temp.db)), before)
+            self.assertEqual(_hash_file(temp.db), record.hashes["master.sqlite"])
+            self.assertEqual(record.result, "rolled_back")
+            self.assertFalse(_journal(temp.db).exists())
+            conn = library.read_conn()
+            try:
+                row = conn.execute("SELECT name FROM container WHERE id = ?", (crate_id,)).fetchone()
+            finally:
+                conn.close()
+            self.assertIsNotNone(row)
+            assert row is not None
+            self.assertNotEqual(row[0], "Evening")
+            self.assertNotEqual(row[0], "Corrupt")
+
+    def test_crate_color_corruption_rolls_back(self) -> None:
+        """Roll a crate color back when the committed color is changed.
+
+        Returns:
+            None. The test fails if the color check is skipped and the
+            corrupted color remains.
+        """
+        with TempLibrary() as temp:
+            created = library.crate_action({"action": "create", "name": "Warmup"})
+            crate_id = int(created["id"])
+
+            def corrupt() -> None:
+                conn = sqlite3.connect(temp.db)
+                try:
+                    flag = getattr(sqlite3, "SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE", None)
+                    if flag is not None:
+                        conn.setconfig(flag, True)
+                    conn.execute("PRAGMA wal_autocheckpoint=0")
+                    conn.execute("UPDATE container SET color = 1 WHERE id = ?", (crate_id,))
+                    conn.commit()
+                finally:
+                    conn.close()
+
+            safe_write.install_fault(Fault(after_commit=corrupt))
+            with self.assertRaises(LibraryError):
+                library.crate_action({"action": "color", "id": crate_id, "color": 255})
+            conn = library.read_conn()
+            try:
+                row = conn.execute("SELECT color FROM container WHERE id = ?", (crate_id,)).fetchone()
+            finally:
+                conn.close()
+            self.assertIsNotNone(row)
+            assert row is not None
+            self.assertIsNone(row[0])
+            entry = safe_write.read_log(temp.db)[-1]
+            self.assertEqual(entry["action"], "crate_color")
+            self.assertIs(entry["verified"], False)
+            self.assertIs(entry["rolled_back"], True)
+            self.assertFalse(_journal(temp.db).exists())
+
+    def test_crate_expanded_corruption_rolls_back(self) -> None:
+        """Roll an expanded flag back when the committed value is changed.
+
+        Returns:
+            None. The test fails if the expanded check is skipped.
+        """
+        with TempLibrary() as temp:
+            created = library.crate_action({"action": "create", "name": "Warmup"})
+            crate_id = int(created["id"])
+
+            def corrupt() -> None:
+                conn = sqlite3.connect(temp.db)
+                try:
+                    flag = getattr(sqlite3, "SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE", None)
+                    if flag is not None:
+                        conn.setconfig(flag, True)
+                    conn.execute("PRAGMA wal_autocheckpoint=0")
+                    conn.execute("UPDATE container SET expanded = 2 WHERE id = ?", (crate_id,))
+                    conn.commit()
+                finally:
+                    conn.close()
+
+            safe_write.install_fault(Fault(after_commit=corrupt))
+            with self.assertRaises(LibraryError):
+                library.crate_action({"action": "expanded", "id": crate_id, "expanded": True})
+            conn = library.read_conn()
+            try:
+                row = conn.execute("SELECT expanded FROM container WHERE id = ?", (crate_id,)).fetchone()
+            finally:
+                conn.close()
+            self.assertIsNotNone(row)
+            assert row is not None
+            self.assertEqual(int(row[0]), 0)
+            entry = safe_write.read_log(temp.db)[-1]
+            self.assertEqual(entry["action"], "crate_expanded")
+            self.assertIs(entry["rolled_back"], True)
+            self.assertIs(entry["verified"], False)
+
+    def test_smart_crate_rules_corruption_rolls_back(self) -> None:
+        """Roll smart-crate rules back when the committed JSON is changed.
+
+        Returns:
+            None. The test fails if the rules check is skipped.
+        """
+        with TempLibrary() as temp:
+            rules = {"conjunction": "AND", "live_updates": True, "rules": [], "spaces": ["Serato Library"]}
+            created = library.crate_action({"action": "create", "name": "Smart", "smart": True, "rules": rules})
+            crate_id = int(created["id"])
+            conn = library.read_conn()
+            try:
+                before = conn.execute(
+                    "SELECT rules FROM smart_crate_rules WHERE container_id = ?",
+                    (crate_id,),
+                ).fetchone()
+            finally:
+                conn.close()
+            self.assertIsNotNone(before)
+            assert before is not None
+            original = str(before[0])
+
+            def corrupt() -> None:
+                conn = sqlite3.connect(temp.db)
+                try:
+                    flag = getattr(sqlite3, "SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE", None)
+                    if flag is not None:
+                        conn.setconfig(flag, True)
+                    conn.execute("PRAGMA wal_autocheckpoint=0")
+                    conn.execute(
+                        "UPDATE smart_crate_rules SET rules = ? WHERE container_id = ?",
+                        ('{"rules":["corrupt"]}', crate_id),
+                    )
+                    conn.commit()
+                finally:
+                    conn.close()
+
+            replacement = {"conjunction": "OR", "live_update": True, "rules": [], "spaces": ["Serato Library"]}
+            safe_write.install_fault(Fault(after_commit=corrupt))
+            with self.assertRaises(LibraryError):
+                library.crate_action({"action": "rules", "id": crate_id, "rules": replacement})
+            conn = library.read_conn()
+            try:
+                row = conn.execute(
+                    "SELECT rules FROM smart_crate_rules WHERE container_id = ?",
+                    (crate_id,),
+                ).fetchone()
+            finally:
+                conn.close()
+            self.assertIsNotNone(row)
+            assert row is not None
+            self.assertEqual(str(row[0]), original)
+            entry = safe_write.read_log(temp.db)[-1]
+            self.assertEqual(entry["action"], "crate_rules")
+            self.assertIs(entry["verified"], False)
+            self.assertIs(entry["rolled_back"], True)
+
+    def test_failed_rollback_is_logged_and_not_success(self) -> None:
+        """Keep the journal and the failure when the preimage cannot be restored.
+
+        Returns:
+            None. The test fails if the failure is recorded as verified or
+            the journal is removed.
+        """
+        with TempLibrary() as temp:
+            def break_preimage() -> None:
+                images = safe_write.store_dir(temp.db) / "write-images"
+                copies = [path for path in images.glob("*/master.sqlite") if path.is_file()]
+                self.assertTrue(copies)
+                copies[0].write_bytes(b"broken-preimage")
+                conn = sqlite3.connect(temp.db)
+                try:
+                    flag = getattr(sqlite3, "SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE", None)
+                    if flag is not None:
+                        conn.setconfig(flag, True)
+                    conn.execute("PRAGMA wal_autocheckpoint=0")
+                    conn.execute("UPDATE container SET name = 'Corrupt' WHERE type = 1")
+                    conn.commit()
+                finally:
+                    conn.close()
+
+            safe_write.install_fault(Fault(after_commit=break_preimage))
+            with self.assertRaises(LibraryError) as caught:
+                library.crate_action({"action": "create", "name": "Warmup"})
+            self.assertIn("does not match its hash", caught.exception.message)
+            self.assertNotIn("verified", caught.exception.message)
+            entry = safe_write.read_log(temp.db)[-1]
+            self.assertEqual(entry["result"], "rollback_failed")
+            self.assertIs(entry["verified"], False)
+            self.assertIs(entry["rolled_back"], False)
+            self.assertTrue(_journal(temp.db).is_file())
+
+
+def _hash_file(path: Path) -> str:
+    """Return the SHA-256 hex digest of one file.
+
+    Args:
+        path: File to read.
+
+    Returns:
+        The lowercase hex digest.
+    """
+    import hashlib
+
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        while True:
+            block = handle.read(1024 * 1024)
+            if not block:
+                break
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def _names_with_wal(db: Path) -> dict[int, str]:

@@ -171,6 +171,15 @@
         </div>
         <p id="snapshots-status" class="notice" role="status" aria-live="polite"></p>
         <div id="snapshots-list" class="files-list" role="list" aria-label="Snapshots" data-i18n-attr="aria-label:view.snapshots" aria-busy="false" tabindex="0"></div>
+        <section id="operations" class="operations" aria-labelledby="operations-heading">
+          <div class="browser-bar">
+            <h2 id="operations-heading" class="operations-heading" data-i18n="operations.heading">Operation log</h2>
+            <button id="operations-refresh" type="button" data-i18n="common.refresh">Refresh</button>
+          </div>
+          <p id="operations-alert" class="operations-alert" role="alert" hidden></p>
+          <p id="operations-status" class="notice" role="status" aria-live="polite"></p>
+          <div id="operations-list" class="files-list" role="list" aria-label="Operation log" data-i18n-attr="aria-label:operations.heading" aria-busy="false" tabindex="0"></div>
+        </section>
       </section>
       <div id="player-bar" class="player-bar"></div>
     </main>

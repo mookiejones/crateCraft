@@ -10,8 +10,9 @@ raises, the preimage is copied back and those hashes are checked again.
 A Serato 5 library is refused before any of that runs. Rollback uses the
 same gate and does not replace a file when the gate is closed.
 
-The operation record is one JSON object per write. The page that shows it
-is a later change. This module does not build that page.
+The operation record is one JSON object per write or restore. The
+Snapshots page lists those records. A file outside the library folder is
+stored as its name only. The record stays on this computer.
 
 The preimage, ``write-journal.json``, and ``operations.jsonl`` are stored
 in the app data folder (``app_config.config_dir() / "write-checks"``), not
@@ -118,16 +119,29 @@ class WriteResult:
         Returns:
             A dict with the stable field names. ``files`` is a list.
         """
+        verified = self.result == "verified"
+        rolled_back = self.result == "rolled_back"
+        if rolled_back:
+            after: str | None = self.snapshot_id
+        elif verified:
+            after = self.content_snapshot_id
+        else:
+            after = None
         return {
             "version": 1,
             "time": self.time,
+            "action": self.operation,
             "operation": self.operation,
             "target": self.target,
             "files": list(self.files),
             "hashes": dict(self.hashes),
             "result": self.result,
             "rollback": self.rollback,
+            "verified": verified,
+            "rolled_back": rolled_back,
             "snapshot_id": self.snapshot_id,
+            "snapshot_before": self.snapshot_id,
+            "snapshot_after": after,
             "content_snapshot_id": self.content_snapshot_id,
         }
 
@@ -180,6 +194,95 @@ def install_fault(fault: Fault | None) -> None:
     """
     global _INSTALLED
     _INSTALLED = fault
+
+
+def append_entry(
+    action: str,
+    target: str,
+    *,
+    snapshot_before: str | None,
+    snapshot_after: str | None,
+    verified: bool,
+    rolled_back: bool,
+    result: str,
+    rollback: str,
+) -> dict[str, object]:
+    """Append one operation record and return it.
+
+    The record is the same shape as :meth:`WriteResult.to_dict`. It does
+    not store a file path. Callers pass a crate name, a track name, a file
+    name, or a snapshot id.
+
+    Args:
+        action: Short machine name, such as ``restore``.
+        target: Human-readable name. Not a path.
+        snapshot_before: Snapshot or preimage id from before the change.
+        snapshot_after: Snapshot id that matches the library afterwards.
+            None when that id does not exist, including a failed rollback.
+        verified: True when the check after the change passed.
+        rolled_back: True when a preimage or pre-restore snapshot was put back.
+        result: ``verified``, ``rolled_back``, ``refused``, or ``rollback_failed``.
+        rollback: ``not_needed``, ``verified``, ``failed``, ``refused``, or
+            ``not_attempted``.
+
+    Returns:
+        The object that was appended.
+
+    Raises:
+        OSError: If the log file cannot be created or written.
+    """
+    record: dict[str, object] = {
+        "version": 1,
+        "time": _now(),
+        "action": action,
+        "operation": action,
+        "target": target,
+        "files": [],
+        "hashes": {},
+        "result": result,
+        "rollback": rollback,
+        "verified": verified,
+        "rolled_back": rolled_back,
+        "snapshot_id": snapshot_before,
+        "snapshot_before": snapshot_before,
+        "snapshot_after": snapshot_after,
+        "content_snapshot_id": snapshot_after if verified else None,
+    }
+    _persist_line(record, create=True)
+    return record
+
+
+def read_log(master: Path | None = None) -> list[dict[str, object]]:
+    """Return the operation records stored for one library.
+
+    Args:
+        master: Database path. None uses the library this process has open.
+
+    Returns:
+        Records in the order they were written, oldest first, at most the
+        newest ``_RESULT_LIMIT`` lines. A missing log is an empty list. A
+        line that is not a JSON object is skipped.
+    """
+    path = store_dir(master) / _LOG_NAME
+    try:
+        if path.is_symlink() or not path.is_file():
+            return []
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    rows: list[dict[str, object]] = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        try:
+            item = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(item, dict):
+            rows.append(item)
+    if len(rows) > _RESULT_LIMIT:
+        return rows[-_RESULT_LIMIT:]
+    return rows
 
 
 def results(master: Path | None = None) -> list[WriteResult]:
@@ -1298,13 +1401,31 @@ def _store_result(record: WriteResult, persist: bool) -> None:
         del bucket[: len(bucket) - _RESULT_LIMIT]
     if not persist:
         return
+    _persist_line(record.to_dict(), create=False)
+
+
+def _persist_line(record: dict[str, object], create: bool) -> None:
+    """Append one JSON line to the operation log.
+
+    Args:
+        record: Object to store. It must not contain a file path.
+        create: True creates the app-data directory. False leaves a missing
+            directory alone so a refusal does not create it.
+
+    Raises:
+        OSError: If ``create`` is set and the line cannot be written.
+    """
     root = _store_root()
-    if not root.is_dir() or root.is_symlink():
+    if root.is_symlink():
+        return
+    if create:
+        root.mkdir(parents=True, exist_ok=True)
+    elif not root.is_dir():
         return
     path = root / _LOG_NAME
-    if path.is_symlink():
+    if path.is_symlink() or path.resolve().parent != root.resolve():
         return
-    line = json.dumps(record.to_dict(), sort_keys=True, separators=(",", ":")) + "\n"
+    line = json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n"
     with path.open("a", encoding="utf-8", newline="\n") as handle:
         handle.write(line)
         handle.flush()

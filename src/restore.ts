@@ -6,10 +6,10 @@
  */
 
 import { failureOf, postJSON, readJSON } from "./api";
-import type { FrameDiff, PlanName, RestorePlan, SnapshotList } from "./api-types";
+import type { FrameDiff, OperationEntry, OperationList, PlanName, RestorePlan, SnapshotList } from "./api-types";
 import { el } from "./dom";
 import { state } from "./state";
-import { codedText, formatList, messageParams, serverMessage, t } from "./i18n";
+import { codedText, formatDate, formatList, messageParams, serverMessage, t, type MessageKey } from "./i18n";
 import { buttonEl } from "./tooltip";
 import { tips } from "./tooltip-strings";
 
@@ -32,18 +32,48 @@ export function bindLibraryReload(reload: () => Promise<void>): void {
 export async function loadSnapshots() {
   state.snapshotLoading = true;
   state.snapshotError = "";
+  const operationsPromise = loadOperations();
   renderSnapshots();
-  const response = await fetch("/api/snapshots");
-  const payload = await readJSON<SnapshotList>(response);
-  if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
-  state.snapshots = payload.snapshots || [];
-  state.snapshotUndo = payload.pending_undo || null;
-  state.writeBlock = payload.write_block || "";
-  state.writeBlockCode = payload.write_block_code || "";
-  state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
-  state.seratoRunning = Boolean(payload.serato_running);
-  state.snapshotLoading = false;
-  renderSnapshots();
+  try {
+    const response = await fetch("/api/snapshots");
+    const payload = await readJSON<SnapshotList>(response);
+    if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
+    state.snapshots = payload.snapshots || [];
+    state.snapshotUndo = payload.pending_undo || null;
+    state.writeBlock = payload.write_block || "";
+    state.writeBlockCode = payload.write_block_code || "";
+    state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
+    state.seratoRunning = Boolean(payload.serato_running);
+    state.snapshotLoading = false;
+    renderSnapshots();
+  } finally {
+    await operationsPromise;
+  }
+}
+
+/**
+ * Load the operation log.
+ *
+ * A failure stays in the log panel and does not change the snapshot list.
+ * The log does not include file paths.
+ *
+ * @returns {Promise<void>}
+ */
+export async function loadOperations() {
+  state.operationsLoading = true;
+  state.operationsError = "";
+  renderOperations();
+  try {
+    const response = await fetch("/api/operations");
+    const payload = await readJSON<OperationList>(response);
+    if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
+    state.operations = Array.isArray(payload.operations) ? payload.operations : [];
+    state.operationsLoading = false;
+  } catch (error) {
+    state.operationsLoading = false;
+    state.operationsError = failureOf(error).message || t("operations.unreadable");
+  }
+  renderOperations();
 }
 
 /**
@@ -67,6 +97,10 @@ export function failSnapshots(error: unknown) {
  * @returns {void}
  */
 export function renderSnapshots() {
+  renderOperations();
+  el("crate-foot").textContent = state.snapshotLoading
+    ? t("snapshots.reading")
+    : t("snapshots.count", { count: state.snapshots.length });
   const status = el("snapshots-status");
   const block = el("snapshots-block");
   const undo = el("snapshots-undo");
@@ -127,6 +161,116 @@ export function renderSnapshots() {
     card.append(title, detail, restore);
     list.append(card);
   }
+}
+
+const OPERATION_ACTIONS: Record<string, MessageKey> = {
+  crate_create: "operations.action.crateCreate",
+  crate_rename: "operations.action.crateRename",
+  crate_delete: "operations.action.crateDelete",
+  crate_color: "operations.action.crateColor",
+  crate_expanded: "operations.action.crateExpanded",
+  crate_rules: "operations.action.crateRules",
+  crate_add: "operations.action.crateAdd",
+  crate_remove: "operations.action.crateRemove",
+  crate_prepare: "operations.action.cratePrepare",
+  crate_remove_library: "operations.action.crateRemoveLibrary",
+  save_track: "operations.action.saveTrack",
+  import_m3u: "operations.action.importM3u",
+  merge_duplicates: "operations.action.mergeDuplicates",
+  rename: "operations.action.rename",
+  move: "operations.action.move",
+  move_folder: "operations.action.moveFolder",
+  replace: "operations.action.replace",
+  delete: "operations.action.delete",
+  restore: "operations.action.restore",
+  restore_recover: "operations.action.restoreRecover",
+};
+
+const OPERATION_OUTCOMES: Record<string, MessageKey> = {
+  verified: "operations.outcome.verified",
+  rolled_back: "operations.outcome.rolledBack",
+  refused: "operations.outcome.refused",
+  rollback_failed: "operations.outcome.rollbackFailed",
+};
+
+/**
+ * Paint the operation log under the snapshot list.
+ *
+ * Text is set with textContent. A failed rollback uses an alert. The
+ * rows do not include file paths.
+ *
+ * @returns {void}
+ */
+export function renderOperations() {
+  const alert = el("operations-alert");
+  const status = el("operations-status");
+  const list = el("operations-list");
+  list.setAttribute("aria-busy", String(state.operationsLoading));
+  const latest = state.operations[state.operations.length - 1];
+  const failed = latest?.result === "rollback_failed";
+  alert.hidden = !failed;
+  alert.textContent = failed ? t("operations.rollbackFailed") : "";
+  list.replaceChildren();
+  if (state.operationsLoading && state.operations.length === 0) {
+    status.textContent = t("operations.reading");
+    return;
+  }
+  if (state.operationsError) {
+    status.textContent = state.operationsError;
+    const retry = buttonEl(tips.operationsRetry);
+    retry.textContent = t("common.tryAgain");
+    retry.addEventListener("click", () => {
+      loadOperations().catch(() => undefined);
+    });
+    list.append(retry);
+    return;
+  }
+  status.textContent = "";
+  if (!state.operations.length) {
+    const empty = document.createElement("p");
+    empty.textContent = t("operations.empty");
+    list.append(empty);
+    return;
+  }
+  for (const item of [...state.operations].reverse()) {
+    list.append(operationCard(item));
+  }
+}
+
+function operationCard(item: OperationEntry) {
+  const card = document.createElement("article");
+  card.className = "operation-card snapshot-card";
+  card.setAttribute("role", "listitem");
+  const actionName = item.action || item.operation || "";
+  const actionKey = OPERATION_ACTIONS[actionName];
+  const outcomeKey = OPERATION_OUTCOMES[item.result || ""] ?? "operations.outcome.refused";
+  const title = document.createElement("p");
+  title.textContent = t("operations.entry", {
+    time: operationTime(item.time || ""),
+    action: actionKey ? t(actionKey) : t("operations.actionOther"),
+    target: item.target || t("operations.noTarget"),
+    outcome: t(outcomeKey),
+  });
+  card.append(title);
+  if (item.snapshot_before && item.snapshot_after) {
+    const detail = document.createElement("p");
+    detail.textContent = t("operations.snapshots", {
+      before: item.snapshot_before,
+      after: item.snapshot_after,
+    });
+    card.append(detail);
+  } else if (item.snapshot_before) {
+    const detail = document.createElement("p");
+    detail.textContent = t("operations.beforeOnly", { before: item.snapshot_before });
+    card.append(detail);
+  }
+  return card;
+}
+
+function operationTime(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
+  return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
 }
 
 /**
@@ -315,6 +459,7 @@ export async function confirmSnapshotRestore() {
   } catch (error) {
     setSnapshotDialogStatus(failureOf(error).message);
     confirm.disabled = false;
+    await loadOperations();
   } finally {
     confirm.textContent = t("snapshots.restore");
   }

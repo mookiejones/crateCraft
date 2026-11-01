@@ -14,6 +14,7 @@ import type {
   FileRoot,
   LibraryRoot,
   HistorySession,
+  OperationEntry,
   PendingUndo,
   SeratoStatus,
   SnapshotInfo,
@@ -98,6 +99,9 @@ export interface PageState {
   filesQuery: string;
   filesSearching: boolean;
   snapshots: SnapshotInfo[];
+  operations: OperationEntry[];
+  operationsLoading: boolean;
+  operationsError: string;
   snapshotLoading: boolean;
   snapshotError: string;
   snapshotMessage: MessageKey | "";
@@ -158,6 +162,9 @@ export const state: PageState = {
   filesQuery: "",
   filesSearching: false,
   snapshots: [],
+  operations: [],
+  operationsLoading: false,
+  operationsError: "",
   snapshotLoading: false,
   snapshotError: "",
   snapshotMessage: "",

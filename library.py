@@ -2983,6 +2983,125 @@ def _expect_crate(
                 raise safe_write.VerifyMismatch("The track is still in the library.")
 
         session.check(check_removed)
+        return
+    if action == "color":
+        crate_id = _as_int(payload["id"])
+        color = payload.get("color")
+        if color is None or color == "":
+            wanted_color: int | None = None
+        else:
+            wanted_color = _as_int(color)
+            if wanted_color == 0xFFFFFF:
+                wanted_color = None
+
+        def check_color(
+            copied: sqlite3.Connection,
+            crate_id: int = crate_id,
+            wanted_color: int | None = wanted_color,
+        ) -> None:
+            """Fail when the crate color is not the one that was asked for.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: Container id.
+                wanted_color: Stored color, or None when the color was cleared.
+
+            Raises:
+                VerifyMismatch: If the stored color does not match.
+            """
+            row = copied.execute("SELECT color FROM container WHERE id = ?", (crate_id,)).fetchone()
+            stored = None if row is None or row[0] is None else int(row[0])
+            if row is None or stored != wanted_color:
+                raise safe_write.VerifyMismatch("The crate color does not match.")
+
+        session.check(check_color)
+        return
+    if action == "expanded":
+        crate_id = _as_int(payload["id"])
+        wanted_expanded = 1 if payload.get("expanded") in (True, 1, "1", "true") else 0
+
+        def check_expanded(
+            copied: sqlite3.Connection,
+            crate_id: int = crate_id,
+            wanted_expanded: int = wanted_expanded,
+        ) -> None:
+            """Fail when the expanded flag is not the one that was asked for.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: Container id.
+                wanted_expanded: 1 when the crate should be expanded.
+
+            Raises:
+                VerifyMismatch: If the stored flag does not match.
+            """
+            row = copied.execute("SELECT expanded FROM container WHERE id = ?", (crate_id,)).fetchone()
+            stored = 0 if row is None or row[0] is None else int(row[0])
+            if row is None or stored != wanted_expanded:
+                raise safe_write.VerifyMismatch("The crate expanded flag does not match.")
+
+        session.check(check_expanded)
+        return
+    if action == "rules":
+        crate_id = _as_int(payload["id"])
+        wanted_rules = _rules_blob(payload.get("rules"))
+
+        def check_rules(
+            copied: sqlite3.Connection,
+            crate_id: int = crate_id,
+            wanted_rules: str = wanted_rules,
+        ) -> None:
+            """Fail when the smart-crate rules are not the ones that were asked for.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: Container id.
+                wanted_rules: Compact JSON that was stored.
+
+            Raises:
+                VerifyMismatch: If the stored rules do not match.
+            """
+            row = copied.execute(
+                "SELECT rules FROM smart_crate_rules WHERE container_id = ?",
+                (crate_id,),
+            ).fetchone()
+            if row is None or str(row[0]) != wanted_rules:
+                raise safe_write.VerifyMismatch("The smart crate rules do not match.")
+
+        session.check(check_rules)
+        return
+    if action == "prepare":
+        asset_id = _as_int(payload["asset"])
+        wanted_prepare = bool(payload.get("add", True))
+
+        def check_prepare(
+            copied: sqlite3.Connection,
+            asset_id: int = asset_id,
+            wanted_prepare: bool = wanted_prepare,
+        ) -> None:
+            """Fail when Prepare membership does not match the request.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                asset_id: Asset id.
+                wanted_prepare: True when the track should be in Prepare.
+
+            Raises:
+                VerifyMismatch: If the space membership is missing or still there.
+            """
+            row = copied.execute(
+                """
+                SELECT COUNT(*) FROM space_asset sa
+                JOIN space s ON s.id = sa.space_id
+                WHERE sa.asset_id = ? AND s.name = 'Prepare'
+                """,
+                (asset_id,),
+            ).fetchone()
+            count = 0 if row is None else int(row[0])
+            if (count > 0) != wanted_prepare:
+                raise safe_write.VerifyMismatch("Prepare membership does not match.")
+
+        session.check(check_prepare)
 
 
 def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
