@@ -31,6 +31,11 @@ export interface ElementIds {
   "snapshots-block": HTMLParagraphElement;
   "snapshots-undo": HTMLDivElement;
   "snapshots-list": HTMLDivElement;
+  "operations-heading": HTMLHeadingElement;
+  "operations-refresh": HTMLButtonElement;
+  "operations-alert": HTMLParagraphElement;
+  "operations-status": HTMLParagraphElement;
+  "operations-list": HTMLDivElement;
   "snapshots-undo-text": HTMLParagraphElement;
   "snapshot-plan": HTMLDivElement;
   "snapshot-block": HTMLParagraphElement;
@@ -38,6 +43,8 @@ export interface ElementIds {
   "snapshot-dialog": HTMLDialogElement;
   "snapshot-status": HTMLParagraphElement;
   "snapshots-take": HTMLButtonElement;
+  "snapshots-drives": HTMLButtonElement;
+  "snapshots-drives-note": HTMLParagraphElement;
   "gig-panel": HTMLElement;
   "gig-scope": HTMLParagraphElement;
   "gig-status": HTMLParagraphElement;

@@ -7,8 +7,9 @@ vi.mock("./api", async () => {
   return { ...actual, postJSON };
 });
 
-import { setLocale } from "./i18n";
-import { confirmSnapshotRestore, openSnapshotPlan, renderSnapshots, repaintSnapshotPlan } from "./restore";
+import { applyStatic, setLocale, t } from "./i18n";
+import { backupDriveCrates, confirmSnapshotRestore, openSnapshotPlan, renderOperations, renderSnapshots, repaintSnapshotPlan } from "./restore";
+import { applyStaticTooltips } from "./tooltip";
 import type { RestorePlan } from "./api-types";
 import { state } from "./state";
 import { installPage } from "./test-page";
@@ -52,6 +53,10 @@ describe("restore", () => {
     state.snapshotPlanId = "snap-9";
     state.snapshotUndo = null;
     state.snapshotMessage = "";
+    state.driveBackup = null;
+    state.operations = [];
+    state.operationsLoading = false;
+    state.operationsError = "";
     postJSON.mockReset();
     postJSON.mockResolvedValue({});
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
@@ -143,6 +148,154 @@ describe("restore", () => {
     } finally {
       setLocale("en");
     }
+  });
+
+  it("copies drive crates and keeps the tooltip different from the button name", async () => {
+    applyStatic(document);
+    applyStaticTooltips();
+    const button = document.getElementById("snapshots-drives");
+    expect(button?.getAttribute("aria-label")).toBe("Back up drive crates");
+    expect(button?.getAttribute("data-tooltip")).toBe(t("tooltip.backupDrives"));
+    expect(button?.getAttribute("data-tooltip")).not.toBe(button?.getAttribute("aria-label"));
+    expect(button?.getAttribute("data-tooltip")).not.toBe(t("snapshots.backupDrives"));
+
+    postJSON.mockResolvedValue({
+      ok: true,
+      created: true,
+      drive_backup: {
+        verified: true,
+        folder: "serato-web-1",
+        drives: [
+          { label: "Music", status: "copied", present: true },
+          { label: "OLD", status: "absent", present: false },
+          { label: "LOCK", status: "read-only", present: true },
+        ],
+      },
+    });
+    await backupDriveCrates();
+    expect(postJSON).toHaveBeenCalledWith("/api/snapshots", { action: "backup-drives" });
+    const note = document.getElementById("snapshots-drives-note")?.textContent ?? "";
+    expect(note).toContain("Copied: Music.");
+    expect(note).toContain("Unplugged, not copied: OLD.");
+    expect(note).toContain("Skipped: LOCK (read-only).");
+    expect(document.getElementById("snapshots-status")?.textContent).toBe(t("snapshots.drivesSaved"));
+
+    setLocale("es");
+    try {
+      renderSnapshots();
+      const spanish = document.getElementById("snapshots-drives-note")?.textContent ?? "";
+      expect(spanish).toContain("Copiadas: Music.");
+      expect(spanish).toContain("Desconectadas, sin copiar: OLD.");
+      expect(spanish).toContain("LOCK (solo lectura)");
+      expect(spanish).not.toContain("Unplugged");
+    } finally {
+      setLocale("en");
+    }
+  });
+
+  it("shows a failed rollback and does not call the restore a success", async () => {
+    postJSON.mockRejectedValue(new Error("Restore failed and snapshot abc could not be put back either."));
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (String(url).includes("/api/operations")) {
+        return new Response(JSON.stringify({
+          operations: [{
+            time: "2026-11-01T12:00:00Z",
+            action: "restore",
+            target: "snap-9",
+            result: "rollback_failed",
+            verified: false,
+            rolled_back: false,
+            snapshot_before: "before-1",
+            snapshot_after: null,
+          }],
+        }), { status: 200, headers: { "Content-Type": "application/json" } });
+      }
+      return snapshotResponse();
+    }));
+    applyStaticTooltips();
+    await confirmSnapshotRestore();
+    expect(state.snapshotMessage).toBe("");
+    expect(document.getElementById("snapshot-status")?.textContent).toContain("could not be put back");
+    expect(document.getElementById("snapshot-status")?.textContent).not.toContain("Restore finished");
+    const alert = document.getElementById("operations-alert");
+    expect(alert?.hidden).toBe(false);
+    expect(alert?.textContent).toContain("could not be put back");
+    expect(document.getElementById("operations-list")?.textContent).toContain("Could not put back");
+    expect(document.getElementById("operations-list")?.textContent).toContain("Before before-1");
+    expect(document.getElementById("operations-list")?.textContent).not.toContain("Unknown time");
+    expect(document.getElementById("operations-refresh")?.getAttribute("data-tooltip")).toContain("operation log");
+    expect(document.getElementById("operations-list")?.getAttribute("data-tooltip")).toContain("Operation log");
+  });
+
+  it("lists one checked restore in Spanish", () => {
+    state.operations = [{
+      time: "2026-11-01T12:00:00Z",
+      action: "restore",
+      target: "snap-9",
+      result: "verified",
+      verified: true,
+      rolled_back: false,
+      snapshot_before: "before-1",
+      snapshot_after: "snap-9",
+    }];
+    state.operationsLoading = false;
+    state.operationsError = "";
+    setLocale("es");
+    try {
+      renderOperations();
+      const text = document.getElementById("operations-list")?.textContent ?? "";
+      expect(text).toContain("Restaurar");
+      expect(text).toContain("snap-9");
+      expect(text).toContain("Comprobado");
+      expect(text).toContain("Antes before-1");
+      expect(text).not.toContain("Hora desconocida");
+      expect(document.getElementById("operations-alert")?.hidden).toBe(true);
+    } finally {
+      setLocale("en");
+    }
+  });
+
+  it("names a drive with no label from its own string", async () => {
+    state.snapshotLoading = false;
+    state.snapshotError = "";
+    state.snapshots = [];
+    postJSON.mockResolvedValue({
+      ok: true,
+      created: true,
+      drive_backup: {
+        verified: true,
+        folder: "serato-web-1",
+        drives: [
+          { status: "copied", drive_id: "dev-gig", present: true },
+          { status: "permission", present: true },
+        ],
+      },
+    });
+    await backupDriveCrates();
+    const note = document.getElementById("snapshots-drives-note")?.textContent ?? "";
+    expect(note).toContain("Copied: dev-gig.");
+    expect(note).toContain(`${t("snapshots.unknownDrive")} (no permission)`);
+    expect(note).not.toContain(t("snapshots.unknownTime"));
+    setLocale("es");
+    try {
+      renderSnapshots();
+      const spanish = document.getElementById("snapshots-drives-note")?.textContent ?? "";
+      expect(spanish).toContain(`${t("snapshots.unknownDrive")} (sin permiso)`);
+      expect(spanish).not.toContain("Unknown time");
+      expect(spanish).not.toContain("Hora desconocida");
+    } finally {
+      setLocale("en");
+    }
+  });
+
+  it("shows a disk-space refusal on the drive line", async () => {
+    state.snapshotLoading = false;
+    state.snapshotError = "";
+    state.snapshots = [];
+    postJSON.mockRejectedValue(new Error(t("error.backup_no_space")));
+    await backupDriveCrates();
+    expect(document.getElementById("snapshots-drives-note")?.textContent).toBe(t("error.backup_no_space"));
+    expect(document.getElementById("snapshots-list")?.textContent).toContain("No snapshots yet");
   });
 
   it("does not repaint a closed plan dialog", async () => {
