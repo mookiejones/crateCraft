@@ -10,7 +10,7 @@ flowchart TD
   serato["Serato/Library"] --> master["master.sqlite and root.sqlite"]
   master --> backups["Library/Backups"]
   backups --> snap["snapshots, the Backups you restore"]
-  backups --> session["serato-web-, database only"]
+  backups --> session["serato-web-, database and each drive"]
   app["Serato Library, with a space"] --> settings["settings.json"]
   app --> related["related.sqlite"]
   audio["Each audio file"] --> cues["Cue points, loops, beatgrid"]
@@ -50,6 +50,6 @@ This app's own files use a different folder, **Serato Library**, with a space.
 | Mac | `~/Library/Application Support/Serato Library/` (`settings.json`, `library.json`, `related.sqlite`) |
 | Windows | `%APPDATA%\Serato Library\` |
 
-Hash-checked Backups are `Library/Backups/snapshots` next to `master.sqlite`. The first save in a session also writes `Library/Backups/serato-web-` plus the date and time. That folder is `master.sqlite` and `root.sqlite` only.
+Hash-checked Backups are `Library/Backups/snapshots` next to `master.sqlite`. The first save in a session also writes `Library/Backups/serato-web-` plus the date and time. That folder holds `master.sqlite`, `root.sqlite`, and each connected drive's `_Serato_` folder under `drives`. An unplugged drive is listed and skipped.
 
 Logs are `~/Library/Logs/Serato Library/` on a Mac and `%LOCALAPPDATA%\Serato Library\Logs\` on Windows. [Settings](Settings) opens that folder.

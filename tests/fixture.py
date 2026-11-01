@@ -324,6 +324,7 @@ class TempLibrary:
         self.db = self.root / "master.sqlite"
         self._old_master = library.MASTER
         self._old_backed = set(library._backed_up)
+        self._old_drives = {key: set(value) for key, value in library._copied_drives.items()}
 
     def __enter__(self) -> TempLibrary:
         """Build the fixture database and point ``library.MASTER`` at it.
@@ -344,6 +345,7 @@ class TempLibrary:
         build_database(self.db)
         library.MASTER = self.db
         library._backed_up.clear()
+        library._copied_drives.clear()
         server.invalidate()
         if not str(library.MASTER).startswith(tempfile.gettempdir()):
             raise RuntimeError("The test database is not in a temporary directory.")
@@ -376,6 +378,10 @@ class TempLibrary:
         library.MASTER = self._old_master
         library._backed_up.clear()
         library._backed_up.update(self._old_backed)
+        library._copied_drives.clear()
+        library._copied_drives.update(
+            {key: set(value) for key, value in self._old_drives.items()}
+        )
         server.invalidate()
         leaked = _open_sqlite_handles(self.db)
         try:

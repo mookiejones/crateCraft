@@ -18,7 +18,10 @@ parsed or written. Snapshots stay available. A restore also refuses while a
 Serato DJ process is running.
 
 Restoring writes a snapshot first, so the restore itself can be undone.
-``plan`` reports crate, track, cue, and grid differences and writes nothing.
+After the files are replaced, the restore hashes them again and compares
+those hashes with the target manifest. A mismatch puts the pre-restore
+snapshot back. ``plan`` reports crate, track, cue, and grid differences
+and writes nothing.
 """
 
 from __future__ import annotations
@@ -62,6 +65,10 @@ from serato_web.completeness import (
 FORMAT = 1
 EXCLUDED_DIRS = frozenset({"Export Backups", "Lexicon"})
 _EXCLUDED_FOLDED = frozenset(name.casefold() for name in EXCLUDED_DIRS)
+# Audio Serato stores under ``_Serato_``. A plain backup copies crates and
+# ``database V2``, not these folders. Snapshots do not use this set.
+BACKUP_SKIP_DIRS = frozenset({"Recording", "DJ Sessions"})
+_BACKUP_SKIP_FOLDED = _EXCLUDED_FOLDED | frozenset(name.casefold() for name in BACKUP_SKIP_DIRS)
 FRAME_KINDS = snapshot_frames.FRAME_KINDS
 TRIGGERS = frozenset({
     "manual",
@@ -109,6 +116,19 @@ class SnapshotError(Exception):
         super().__init__(message)
         self.message = message
         self.status = status
+
+
+@dataclass
+class RestoreFault:
+    """A test seam for one restore.
+
+    Production leaves this unset. ``after_apply`` runs after the snapshot
+    files are written and before they are hashed again. ``before_apply``
+    runs after the manifest is accepted and before any file is replaced.
+    """
+
+    after_apply: Callable[[], None] | None = None
+    before_apply: Callable[[str], None] | None = None
 
 
 class SnapshotBlocked(SnapshotError):
@@ -792,7 +812,8 @@ class SnapshotStore:
             master: ``master.sqlite`` for this library.
             drives: Drives to snapshot. None discovers them, and a relocated
                 library discovers none unless this list is passed.
-            recover: Roll back an unfinished restore now. The read-only gig
+            recover: Roll back an unfinished restore, and an unfinished
+                library write from ``safe_write``, now. The read-only gig
                 check passes False so opening the store cannot write.
         """
         self.master = Path(master)
@@ -802,9 +823,11 @@ class SnapshotStore:
         self.manifests = self.root / "manifests"
         self.serato_running = serato_dj_running
         self.process_names: Callable[[], Sequence[str]] = default_process_names
+        self.restore_fault: RestoreFault | None = None
         self._depth = 0
         if recover:
             self._recover_if_journal()
+            self._recover_interrupted_write()
 
     def list_snapshots(self) -> list[SnapshotInfo]:
         """Return snapshots, newest first.
@@ -1026,6 +1049,7 @@ class SnapshotStore:
             raise SnapshotBlocked(SERATO_RUNNING_MESSAGE) from exc
         try:
             self._apply(undo_id)
+            self._verify_applied(self._manifest(undo_id))
         except BaseException as rollback:
             raise SnapshotError(
                 f"Restore failed and snapshot {undo_id} could not be put back either."
@@ -1065,10 +1089,47 @@ class SnapshotStore:
         if not is_complete(self._snapshot_dir(undo)):
             raise SnapshotError("The pre-restore snapshot is incomplete.")
         self._verify(self._manifest(undo))
-        self._apply(undo)
+        try:
+            self._apply(undo)
+            self._verify_applied(self._manifest(undo))
+        except BaseException:
+            self._log_operation(
+                "restore_recover",
+                undo,
+                undo,
+                None,
+                verified=False,
+                rolled_back=False,
+                result="rollback_failed",
+                rollback="failed",
+            )
+            raise
         self._clear_restore_journal()
         self.rebase_fingerprint()
+        self._log_operation(
+            "restore_recover",
+            undo,
+            undo,
+            undo,
+            verified=True,
+            rolled_back=True,
+            result="rolled_back",
+            rollback="verified",
+        )
         return True
+
+    def _recover_interrupted_write(self) -> None:
+        """Roll back a library write that stopped after its journal was saved.
+
+        A missing journal does nothing. Serato 5 and a running Serato DJ
+        process leave the journal in place. A failure is logged.
+        """
+        try:
+            import safe_write
+
+            safe_write.recover_interrupted_write()
+        except Exception:
+            app_log.logger.exception("An unfinished library write could not be rolled back.")
 
     def _recover_if_journal(self) -> None:
         """Roll back an unfinished restore when this store is opened.
@@ -1150,8 +1211,12 @@ class SnapshotStore:
                 is changed, and no snapshot is saved.
             SnapshotError: If a hash or a path is not valid, or the snapshot
                 directory is not complete. A legacy folder is checked with
-                ``verify_legacy_backup`` before the pre-restore snapshot. A
-                failure after that snapshot tries to put that snapshot back.
+                ``verify_legacy_backup`` before the pre-restore snapshot. After
+                the files are replaced, their hashes are compared with the
+                target manifest. A mismatch puts the pre-restore snapshot back.
+                The journal is removed only after that rollback's own hash
+                check passes. A failure after the pre-restore snapshot tries
+                to put that snapshot back.
         """
         self._refuse_restore()
         directory = self._snapshot_dir(snapshot_id)
@@ -1175,10 +1240,24 @@ class SnapshotStore:
         self._write_restore_journal(snapshot_id, pre["id"])
         try:
             self._apply(snapshot_id)
+            fault = self.restore_fault
+            if fault is not None and fault.after_apply is not None:
+                fault.after_apply()
+            self._verify_applied(self._manifest(snapshot_id))
         except BaseException as exc:
-            self._rollback_restore(pre["id"], exc)
+            self._fail_restore(snapshot_id, str(pre["id"]), exc)
         self._clear_restore_journal()
         self.rebase_fingerprint()
+        self._log_operation(
+            "restore",
+            snapshot_id,
+            str(pre["id"]),
+            snapshot_id,
+            verified=True,
+            rolled_back=False,
+            result="verified",
+            rollback="not_needed",
+        )
         return {
             "ok": True,
             "dry_run": False,
@@ -1186,6 +1265,121 @@ class SnapshotStore:
             "undo_snapshot": pre["id"],
             "changes": diff,
         }
+
+    def _fail_restore(self, snapshot_id: str, undo_id: str, exc: BaseException) -> None:
+        """Put the pre-restore snapshot back and record the outcome.
+
+        ``_rollback_restore`` always raises. A rollback that itself fails
+        leaves the journal in place. The log entry is never ``verified``.
+
+        Args:
+            snapshot_id: Snapshot the restore was trying to put back.
+            undo_id: Snapshot saved before the restore.
+            exc: Failure from the restore that was in progress.
+
+        Raises:
+            SnapshotBlocked: If Serato DJ is running. The journal stays.
+            SnapshotError: If the library was put back, or if that also failed.
+            KeyboardInterrupt: After a successful rollback, when that was the
+                original failure.
+            SystemExit: After a successful rollback, when that was the
+                original failure.
+        """
+        try:
+            self._rollback_restore(undo_id, exc)
+        except (KeyboardInterrupt, SystemExit):
+            self._log_operation(
+                "restore",
+                snapshot_id,
+                undo_id,
+                undo_id,
+                verified=False,
+                rolled_back=True,
+                result="rolled_back",
+                rollback="verified",
+            )
+            raise
+        except SnapshotBlocked:
+            self._log_operation(
+                "restore",
+                snapshot_id,
+                undo_id,
+                None,
+                verified=False,
+                rolled_back=False,
+                result="rollback_failed",
+                rollback="refused",
+            )
+            raise
+        except SnapshotError as rolled:
+            failed = "could not be put back" in rolled.message
+            self._log_operation(
+                "restore",
+                snapshot_id,
+                undo_id,
+                None if failed else undo_id,
+                verified=False,
+                rolled_back=not failed,
+                result="rollback_failed" if failed else "rolled_back",
+                rollback="failed" if failed else "verified",
+            )
+            raise
+        except BaseException:
+            self._log_operation(
+                "restore",
+                snapshot_id,
+                undo_id,
+                None,
+                verified=False,
+                rolled_back=False,
+                result="rollback_failed",
+                rollback="failed",
+            )
+            raise
+        raise SnapshotError("The restore failed, and the library was not reported as restored.")
+
+    def _log_operation(
+        self,
+        action: str,
+        target: str,
+        snapshot_before: str | None,
+        snapshot_after: str | None,
+        *,
+        verified: bool,
+        rolled_back: bool,
+        result: str,
+        rollback: str,
+    ) -> None:
+        """Append one restore record to the operation log.
+
+        A failure to write the log is recorded in the local debug log. It
+        does not change the library a second time.
+
+        Args:
+            action: ``restore`` or ``restore_recover``.
+            target: Snapshot id. Not a file path.
+            snapshot_before: Snapshot from before the restore.
+            snapshot_after: Snapshot that matches the library afterwards.
+            verified: True when the check after the restore passed.
+            rolled_back: True when the pre-restore snapshot was put back.
+            result: Record result.
+            rollback: What the rollback step did.
+        """
+        import safe_write
+
+        try:
+            safe_write.append_entry(
+                action,
+                target,
+                snapshot_before=snapshot_before,
+                snapshot_after=snapshot_after,
+                verified=verified,
+                rolled_back=rolled_back,
+                result=result,
+                rollback=rollback,
+            )
+        except OSError:
+            app_log.logger.exception("The operation log could not be written.")
 
     def undo_outside(self) -> dict[str, object]:
         """Restore the snapshot from before the last outside change.
@@ -1374,6 +1568,9 @@ class SnapshotStore:
         """
         manifest = self._manifest(snapshot_id)
         self._verify(manifest)
+        fault = self.restore_fault
+        if fault is not None and fault.before_apply is not None:
+            fault.before_apply(snapshot_id)
         self._refuse_if_running()
         self._apply_database(manifest)
         self._refuse_if_running()
@@ -1458,6 +1655,117 @@ class SnapshotStore:
                 if isinstance(digest, str):
                     restored[kind] = self._read_blob(digest)
             snapshot_frames.restore_stored_frames(path, restored)
+
+    def _verify_applied(self, manifest: Mapping[str, object]) -> None:
+        """Re-hash the files this restore wrote and compare them with the manifest.
+
+        The check reads the files. It does not open the live database, and
+        it does not write. A mismatch raises so the caller can put the
+        pre-restore snapshot back.
+
+        Args:
+            manifest: Manifest whose hashes were accepted before the write.
+
+        Raises:
+            SnapshotError: If a restored database, crate file, or Serato
+                frame does not match the manifest.
+        """
+        self._verify_applied_database(manifest)
+        self._verify_applied_drives(manifest)
+        self._verify_applied_tracks(manifest)
+
+    def _verify_applied_database(self, manifest: Mapping[str, object]) -> None:
+        """Compare the restored database files with the manifest hashes.
+
+        Args:
+            manifest: Verified snapshot.
+
+        Raises:
+            SnapshotError: If a database file is missing or its bytes differ.
+        """
+        database = manifest.get("database")
+        if not isinstance(database, dict):
+            return
+        library_dir = self.master.resolve().parent
+        names = {"master": "master.sqlite", "root": "root.sqlite"}
+        for key, filename in names.items():
+            record = database.get(key)
+            if not isinstance(record, dict):
+                continue
+            digest = record.get("sha256")
+            if not isinstance(digest, str):
+                continue
+            path = library_dir / filename
+            if path.is_symlink() or not path.is_file() or _sha256_file(path) != digest:
+                raise SnapshotError("The restored database does not match the snapshot.")
+
+    def _verify_applied_drives(self, manifest: Mapping[str, object]) -> None:
+        """Compare restored crate files with the manifest hashes.
+
+        Args:
+            manifest: Verified snapshot.
+
+        Raises:
+            SnapshotError: If a crate file is missing, extra, or different.
+        """
+        for record in _drive_records(manifest):
+            if not record.get("present"):
+                continue
+            root = _present_root(record, self._drive_specs())
+            if root is None:
+                continue
+            wanted: dict[str, str] = {}
+            for item in record.get("files") or []:
+                if not isinstance(item, dict):
+                    continue
+                rel = _safe_relative(str(item.get("path") or ""))
+                digest = item.get("sha256")
+                if not isinstance(digest, str):
+                    raise SnapshotError("A restored crate file does not match the snapshot.")
+                wanted[rel] = digest
+            for rel, digest in wanted.items():
+                path = _join(root, rel)
+                if path.is_symlink() or not path.is_file() or _sha256_file(path) != digest:
+                    raise SnapshotError("A restored crate file does not match the snapshot.")
+            for rel, _path in _iter_serato_files(root):
+                if rel not in wanted:
+                    raise SnapshotError("A restored crate file does not match the snapshot.")
+
+    def _verify_applied_tracks(self, manifest: Mapping[str, object]) -> None:
+        """Compare restored Serato frames with the manifest hashes.
+
+        Args:
+            manifest: Verified snapshot.
+
+        Raises:
+            SnapshotError: If a frame hash differs from the manifest.
+        """
+        specs = {spec.drive_id: spec for spec in self._drive_specs()}
+        for track in _track_records(manifest):
+            if not track.get("present"):
+                continue
+            spec = specs.get(str(track.get("drive_id")))
+            if spec is None or not spec.present or spec.music_root is None:
+                continue
+            raw_path = track.get("path")
+            if not isinstance(raw_path, str):
+                continue
+            path = Path(raw_path)
+            if not _contained(path, spec.music_root) or path.is_symlink() or not path.is_file():
+                continue
+            frames = track.get("frames")
+            if not isinstance(frames, dict):
+                continue
+            stored = snapshot_frames.read_stored_frames(path)
+            for kind in FRAME_KINDS:
+                digest = frames.get(kind)
+                blob = stored.get(kind)
+                if digest is None:
+                    if blob is not None:
+                        raise SnapshotError("A restored audio tag does not match the snapshot.")
+                    continue
+                if not isinstance(digest, str) or blob is None or hashlib.sha256(blob).hexdigest() != digest:
+                    raise SnapshotError("A restored audio tag does not match the snapshot.")
 
     def _capture_database(self) -> dict[str, object]:
         """Snapshot the master database and root database.
@@ -2051,6 +2359,40 @@ def discover_drives() -> list[DriveSpec]:
             music_root=root.parent,
             role="external",
             present=True,
+        ))
+    return found
+
+
+def drives_for_backup() -> list[DriveSpec]:
+    """Return drives a plain backup should record.
+
+    Present drives come from :func:`discover_drives`. A drive the newest
+    snapshot already stored, and that is not mounted now, is included with
+    ``present`` false so the backup can list it without treating it as a
+    failure. A relocated library discovers no present drives.
+
+    Returns:
+        Drive specs. Nothing is written.
+    """
+    found = discover_drives()
+    seen = {spec.drive_id for spec in found}
+    try:
+        previous = current_store()._latest_manifest()
+    except (OSError, SnapshotError):
+        previous = None
+    for record in _drive_records(previous):
+        drive_id = str(record.get("drive_id") or "")
+        if not drive_id or drive_id in seen:
+            continue
+        label = record.get("label")
+        role = record.get("role")
+        found.append(DriveSpec(
+            drive_id=drive_id,
+            label=label if isinstance(label, str) and label else drive_id,
+            serato_root=None,
+            music_root=None,
+            role=role if role in {"internal", "external"} else "external",
+            present=False,
         ))
     return found
 
@@ -2819,6 +3161,69 @@ def _iter_serato_files(root: Path) -> list[tuple[str, Path]]:
     return found
 
 
+def _backup_skipped(part: str) -> bool:
+    """Return whether a plain backup leaves this path component out.
+
+    Args:
+        part: One path component.
+
+    Returns:
+        True for ``Export Backups``, ``Lexicon``, ``Recording``, and
+        ``DJ Sessions`` after the same folding as a snapshot exclusion.
+        A sibling such as ``Recording-extra`` is false.
+    """
+    return _fold_component(part) in _BACKUP_SKIP_FOLDED
+
+
+def iter_backup_files(root: Path) -> list[tuple[str, Path]]:
+    """List ``_Serato_`` files a plain backup copies.
+
+    ``Export Backups``, ``Lexicon``, ``Recording``, and ``DJ Sessions``
+    are excluded with the same folding as a snapshot: letter case, a
+    trailing dot, a trailing space, and an alternate data stream.
+    ``Recording`` and ``DJ Sessions`` are audio, not library metadata.
+    Shortcuts are not followed. There is no size cap. The caller checks
+    free space before it copies, and refuses the backup when the disk
+    cannot hold the files it will actually copy.
+
+    Args:
+        root: ``_Serato_`` directory.
+
+    Returns:
+        Relative POSIX path and file path.
+
+    Raises:
+        OSError: If a directory in the tree cannot be listed. ``EACCES``
+            and ``EPERM`` are left for the caller to record as one drive.
+            Any other listing error, including a drive that disappears,
+            is a failed backup.
+    """
+    found: list[tuple[str, Path]] = []
+    if not root.is_dir() or root.is_symlink():
+        return found
+
+    def onerror(error: OSError) -> None:
+        raise error
+
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False, onerror=onerror):
+        current = Path(dirpath)
+        dirnames[:] = [
+            name for name in dirnames
+            if not _backup_skipped(name) and not (current / name).is_symlink()
+        ]
+        for name in filenames:
+            path = current / name
+            if path.is_symlink() or not path.is_file():
+                continue
+            if _backup_skipped(name):
+                continue
+            rel = path.relative_to(root).as_posix()
+            if any(_backup_skipped(part) for part in rel.split("/") if part):
+                continue
+            found.append((rel, path))
+    return found
+
+
 def _carry_drive(old: Mapping[str, object] | None, spec: DriveSpec | None) -> dict[str, object]:
     """Copy a drive record forward as unavailable.
 
@@ -2985,6 +3390,25 @@ def _join(root: Path, rel: str) -> Path:
     if not _contained(target, root):
         raise SnapshotError("A snapshot path is not valid.")
     return target
+
+
+def _sha256_file(path: Path) -> str:
+    """Return the SHA-256 hex digest of a file.
+
+    Args:
+        path: File to read. The caller has already rejected a shortcut.
+
+    Returns:
+        The lowercase hex digest.
+    """
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        while True:
+            block = handle.read(1024 * 1024)
+            if not block:
+                break
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def _replace_database(path: Path, data: bytes, library_dir: Path) -> None:

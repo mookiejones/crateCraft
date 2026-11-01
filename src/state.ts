@@ -14,8 +14,10 @@ import type {
   FileRoot,
   LibraryRoot,
   HistorySession,
+  OperationEntry,
   PendingUndo,
   SeratoStatus,
+  DriveBackup,
   SnapshotInfo,
   Track,
 } from "./api-types";
@@ -98,6 +100,10 @@ export interface PageState {
   filesQuery: string;
   filesSearching: boolean;
   snapshots: SnapshotInfo[];
+  driveBackup: DriveBackup | null;
+  operations: OperationEntry[];
+  operationsLoading: boolean;
+  operationsError: string;
   snapshotLoading: boolean;
   snapshotError: string;
   snapshotMessage: MessageKey | "";
@@ -159,6 +165,10 @@ export const state: PageState = {
   filesQuery: "",
   filesSearching: false,
   snapshots: [],
+  driveBackup: null,
+  operations: [],
+  operationsLoading: false,
+  operationsError: "",
   snapshotLoading: false,
   snapshotError: "",
   snapshotMessage: "",
