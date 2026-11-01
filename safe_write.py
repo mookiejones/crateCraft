@@ -331,9 +331,93 @@ def recover_interrupted_write() -> bool:
     if directory is None:
         raise library.LibraryError("The pre-write snapshot is not in the snapshot store.")
     preimage = _load_preimage(directory, snapshot_id)
+    committed = payload.get("committed")
+    if not _only_this_write_changed(preimage, committed if isinstance(committed, dict) else {}):
+        target = payload.get("target")
+        operation = payload.get("operation")
+        append_entry(
+            operation if isinstance(operation, str) else "write",
+            target if isinstance(target, str) else "",
+            snapshot_before=snapshot_id,
+            snapshot_after=None,
+            verified=False,
+            rolled_back=False,
+            result="rollback_failed",
+            rollback="refused",
+        )
+        app_log.logger.warning(
+            "An unfinished write was not rolled back because the library changed after it."
+        )
+        _clear_journal()
+        return False
     _restore_preimage(preimage)
     _verify_preimage(preimage)
     _clear_journal()
+    return True
+
+
+def _file_state(path: Path) -> str | None:
+    """Return a file's hash, or None when it does not exist.
+
+    Args:
+        path: Library file or sidecar.
+
+    Returns:
+        The SHA-256 of a regular file, ``"symlink"`` for a shortcut, or None.
+    """
+    if path.is_symlink():
+        return "symlink"
+    if not path.is_file():
+        return None
+    return _hash_file(path)
+
+
+def _compared(path: Path) -> bool:
+    """Return whether recovery compares this path.
+
+    ``-shm`` is SQLite's shared-memory index. A plain read rewrites it and
+    SQLite rebuilds it, so it says nothing about the library's contents.
+
+    Args:
+        path: Preimage destination or absent path.
+
+    Returns:
+        False for a ``-shm`` sidecar, True otherwise.
+    """
+    return not path.name.endswith("-shm")
+
+
+def _only_this_write_changed(preimage: _Preimage, committed: dict[object, object]) -> bool:
+    """Return whether every library file is in a state this write explains.
+
+    A file may still hold its pre-write bytes, or the bytes the write left
+    after it committed (``committed`` in the journal). Anything else means
+    another program, such as Serato DJ, changed the library after the
+    interrupted write. Rolling back would then erase that later work.
+
+    Args:
+        preimage: The pre-write snapshot.
+        committed: Path to hash (or None for absent) after the commit. Empty
+            when the process stopped before that was recorded.
+
+    Returns:
+        True when a rollback only undoes this write.
+    """
+    def allowed(path: Path, before: str | None) -> bool:
+        if not _compared(path):
+            return True
+        now = _file_state(path)
+        if now == before:
+            return True
+        key = str(path)
+        return key in committed and committed[key] == now
+
+    for entry in preimage.files:
+        if not allowed(entry.dest, entry.sha256):
+            return False
+    for path in preimage.absent:
+        if not allowed(path, None):
+            return False
     return True
 
 
@@ -577,6 +661,13 @@ class Session:
         try:
             if self.fault is not None and self.fault.after_commit is not None:
                 self.fault.after_commit()
+            if self._journaled and self._preimage is not None:
+                _write_journal(
+                    self._preimage,
+                    self.operation,
+                    self.target,
+                    committed=_committed_state(self._preimage),
+                )
             if self.fault is not None and self.fault.crash:
                 raise InjectedCrash()
             _verify_database(self._checks)
@@ -1322,13 +1413,23 @@ def _verify_one_database(source: Path, checks: Sequence[Check]) -> None:
             conn.close()
 
 
-def _write_journal(preimage: _Preimage, operation: str, target: str) -> None:
+def _write_journal(
+    preimage: _Preimage,
+    operation: str,
+    target: str,
+    committed: dict[str, str | None] | None = None,
+) -> None:
     """Record the preimage id before the body changes anything.
+
+    After the commit the journal is written again with ``committed``: each
+    library file's hash as the write left it. Recovery rolls back only when
+    every file still matches either the preimage or that state.
 
     Args:
         preimage: Finished snapshot.
         operation: Short machine name.
         target: Human-readable name.
+        committed: Path to hash after the commit, or None before it.
 
     Raises:
         LibraryError: If the journal would not stay inside the store.
@@ -1347,7 +1448,22 @@ def _write_journal(preimage: _Preimage, operation: str, target: str) -> None:
         "operation": operation,
         "target": target,
     }
+    if committed is not None:
+        payload["committed"] = committed
     _atomic_json(path, payload)
+
+
+def _committed_state(preimage: _Preimage) -> dict[str, str | None]:
+    """Return each preimage path's hash as the write left it.
+
+    Args:
+        preimage: The pre-write snapshot.
+
+    Returns:
+        Path text to SHA-256, or None for a file that does not exist.
+    """
+    paths = [entry.dest for entry in preimage.files] + list(preimage.absent)
+    return {str(path): _file_state(path) for path in paths if _compared(path)}
 
 
 def _clear_journal() -> None:

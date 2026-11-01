@@ -12,8 +12,9 @@ import plistlib
 import sqlite3
 import unittest
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from pathlib import Path
+from unittest import mock
 
 import library
 import safe_write
@@ -342,6 +343,122 @@ class SafeWriteTests(unittest.TestCase):
             restored = _snapshot(temp.db, crate, _wal(temp.db))
             self.assertEqual(restored, before)
             self.assertFalse(_journal(temp.db).exists())
+
+    def test_recovery_leaves_a_library_changed_after_the_crash(self) -> None:
+        """Do not roll back over changes made after the interrupted write.
+
+        The app stops mid-write. Serato DJ then runs a session (it renames
+        the track and writes a new crate file) and quits. When the app
+        starts again, putting the pre-write bytes back would erase that
+        session. Recovery must leave the library and the new crate alone,
+        clear the journal so later writes are not blocked, and record that
+        the rollback was refused.
+
+        Returns:
+            None. The test fails if Serato's later changes are overwritten.
+        """
+        with TempLibrary() as temp:
+            crate = _drive_crate(temp.root)
+
+            def apply(conn: sqlite3.Connection, session: safe_write.Session) -> None:
+                _rename(conn, session, crate)
+
+            with self.assertRaises(InjectedCrash):
+                safe_write.run(
+                    "rename_track",
+                    "Renamed",
+                    apply,
+                    extra_files=(crate,),
+                    fault=Fault(crash=True),
+                )
+            self.assertTrue(_journal(temp.db).is_file())
+            gig = sqlite3.connect(temp.db)
+            try:
+                gig.execute("UPDATE asset SET name = ? WHERE id = 1", ("Played at the gig",))
+                gig.commit()
+            finally:
+                gig.close()
+            data = bytearray(crate.read_bytes())
+            data[-1] ^= 0xFF
+            crate.write_bytes(bytes(data))
+            after_gig = _snapshot(temp.db, crate, _wal(temp.db))
+
+            self.assertFalse(safe_write.recover_interrupted_write())
+
+            self.assertEqual(_snapshot(temp.db, crate, _wal(temp.db)), after_gig)
+            self.assertFalse(_journal(temp.db).exists())
+            last = safe_write.read_log(temp.db)[-1]
+            self.assertEqual(last["result"], "rollback_failed")
+            self.assertEqual(last["rollback"], "refused")
+
+    def test_recovery_restores_when_only_this_write_changed_the_library(self) -> None:
+        """Roll back after a crash when nothing else touched the files.
+
+        The write committed and the process stopped before its check. No
+        other program changed the library, so recovery puts the pre-write
+        bytes back as before.
+
+        Returns:
+            None. The test fails if the rollback is skipped.
+        """
+        with TempLibrary() as temp:
+            crate = _drive_crate(temp.root)
+            before = _snapshot(temp.db, crate, _wal(temp.db))
+
+            def apply(conn: sqlite3.Connection, session: safe_write.Session) -> None:
+                _rename(conn, session, crate)
+
+            with self.assertRaises(InjectedCrash):
+                safe_write.run(
+                    "rename_track",
+                    "Renamed",
+                    apply,
+                    extra_files=(crate,),
+                    fault=Fault(crash=True),
+                )
+            self.assertNotEqual(_snapshot(temp.db, crate, _wal(temp.db)), before)
+            self.assertTrue(safe_write.recover_interrupted_write())
+            self.assertEqual(_snapshot(temp.db, crate, _wal(temp.db)), before)
+            self.assertFalse(_journal(temp.db).exists())
+
+    def test_recovery_ignores_a_shm_index_rewritten_by_a_read(self) -> None:
+        """Roll back in WAL mode after the app's own status read.
+
+        Serato's library runs in WAL mode. On the next launch the app reads
+        ``status()`` before the snapshot store recovers, and that read
+        rewrites ``master.sqlite-shm``. That index holds no library data, so
+        it must not make recovery think another program changed the library.
+
+        Returns:
+            None. The test fails if the rollback is skipped.
+        """
+        with TempLibrary() as temp:
+            with closing(sqlite3.connect(temp.db)) as conn:
+                conn.execute("PRAGMA journal_mode=WAL")
+            crate = _drive_crate(temp.root)
+            shm = Path(str(temp.db) + "-shm")
+            before = _snapshot(temp.db, crate)
+            name_before = _names_with_wal(temp.db)[1]
+
+            def apply(conn: sqlite3.Connection, session: safe_write.Session) -> None:
+                _rename(conn, session, crate)
+
+            with self.assertRaises(InjectedCrash):
+                safe_write.run(
+                    "rename_track",
+                    "Renamed",
+                    apply,
+                    extra_files=(crate,),
+                    fault=Fault(crash=True),
+                )
+            shm_after_crash = shm.read_bytes()
+            with mock.patch("snapshots.serato_dj_running", return_value=False):
+                library.status()
+            self.assertNotEqual(shm.read_bytes(), shm_after_crash)
+            self.assertEqual(_names_with_wal(temp.db)[1], "Renamed")
+            self.assertTrue(safe_write.recover_interrupted_write())
+            self.assertEqual(_names_with_wal(temp.db)[1], name_before)
+            self.assertEqual(_snapshot(temp.db, crate), before)
 
     def test_disk_full_refuses_the_write(self) -> None:
         """Refuse the write when the preimage cannot be stored.
