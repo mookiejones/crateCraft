@@ -47,6 +47,7 @@ import os
 import plistlib
 import re
 import secrets
+import shutil
 import sqlite3
 import struct
 import subprocess
@@ -1912,10 +1913,6 @@ class SnapshotStore:
 
         Args:
             manifest: Verified snapshot.
-
-        A crate file that ``_apply_drives`` left as it was, because its
-        snapshot copy has no hash or cannot be read, is not compared. That
-        restore warned about it and kept the file on disk.
 
         Raises:
             SnapshotError: If a crate file is missing, extra, or different.
