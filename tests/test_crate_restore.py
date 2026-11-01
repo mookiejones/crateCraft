@@ -12,6 +12,7 @@ import os
 import shutil
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import library
 import snapshots
@@ -471,6 +472,10 @@ class CrateRestoreTests(unittest.TestCase):
     def test_a_locked_library_is_not_written(self) -> None:
         """Refuse registration when the lock table says Serato is open.
 
+        The process check is patched. On macOS a low pid can be a live
+        process that is not Serato, so an unpatched lookup would ignore
+        the lock. The patch is what the other lock tests use.
+
         Returns:
             None. The test fails if a crate row is inserted.
         """
@@ -479,8 +484,9 @@ class CrateRestoreTests(unittest.TestCase):
                 conn.execute(
                     "INSERT INTO lock (owner_process_id, owner_process_name) VALUES (99, 'Serato DJ Pro')"
                 )
-            with self.assertRaises(library.SeratoOpen):
-                library.register_restored_crates([("House.crate", ["Music/same-a.mp3"])])
+            with mock.patch.object(library, "_process_is_serato", return_value=True):
+                with self.assertRaises(library.SeratoOpen):
+                    library.register_restored_crates([("House.crate", ["Music/same-a.mp3"])])
             self.assertEqual(_filenames(temp.db), [])
             with open_database(temp.db) as conn:
                 count = conn.execute("SELECT COUNT(*) FROM container WHERE name = 'House'").fetchone()[0]
