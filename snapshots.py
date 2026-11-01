@@ -1245,7 +1245,8 @@ class SnapshotStore:
             fault = self.restore_fault
             if fault is not None and fault.after_apply is not None:
                 fault.after_apply()
-            self._verify_applied(self._manifest(snapshot_id))
+            manifest = self._manifest(snapshot_id)
+            self._verify_applied(manifest)
         except BaseException as exc:
             self._fail_restore(snapshot_id, str(pre["id"]), exc)
         self._clear_restore_journal()
@@ -1663,6 +1664,10 @@ class SnapshotStore:
         a drive that is not plugged in now, so the name is registered before
         that drive comes back. Serato is checked again here. The write uses
         ``begin_write(snapshot=False)`` so the restore journal stays put.
+        ``restore`` calls this after ``_verify_applied``: the database it
+        writes no longer matches the snapshot bytes, by design. A rollback
+        does not call it, because the pre-restore library already agreed
+        with its crate files.
 
         Args:
             manifest: Verified snapshot.
@@ -1892,6 +1897,10 @@ class SnapshotStore:
         Args:
             manifest: Verified snapshot.
 
+        A crate file that ``_apply_drives`` left as it was, because its
+        snapshot copy has no hash or cannot be read, is not compared. That
+        restore warned about it and kept the file on disk.
+
         Raises:
             SnapshotError: If a crate file is missing, extra, or different.
         """
@@ -1922,6 +1931,21 @@ class SnapshotStore:
             for rel, _path in _iter_serato_files(root):
                 if rel not in wanted and rel not in skipped:
                     raise SnapshotError("A restored crate file does not match the snapshot.")
+
+    def _blob_readable(self, digest: str) -> bool:
+        """Return whether a snapshot blob can be read and matches its hash.
+
+        Args:
+            digest: Blob hash from the manifest.
+
+        Returns:
+            False when ``_read_blob`` refuses it, as ``_apply_drives`` does.
+        """
+        try:
+            self._read_blob(digest)
+        except SnapshotError:
+            return False
+        return True
 
     def _verify_applied_tracks(self, manifest: Mapping[str, object]) -> None:
         """Compare restored Serato frames with the manifest hashes.
