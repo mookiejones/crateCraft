@@ -14,6 +14,7 @@ import type {
   FileRoot,
   LibraryRoot,
   HistorySession,
+  OperationEntry,
   PendingUndo,
   SeratoStatus,
   SnapshotInfo,
@@ -98,6 +99,9 @@ export interface PageState {
   filesQuery: string;
   filesSearching: boolean;
   snapshots: SnapshotInfo[];
+  operations: OperationEntry[];
+  operationsLoading: boolean;
+  operationsError: string;
   snapshotLoading: boolean;
   snapshotError: string;
   snapshotMessage: MessageKey | "";
@@ -107,6 +111,7 @@ export interface PageState {
   writeBlockParams: Record<string, string | number> | null;
   seratoRunning: boolean;
   snapshotPlanId: string;
+  gigToken: number;
   view: Track[];
 }
 
@@ -158,6 +163,9 @@ export const state: PageState = {
   filesQuery: "",
   filesSearching: false,
   snapshots: [],
+  operations: [],
+  operationsLoading: false,
+  operationsError: "",
   snapshotLoading: false,
   snapshotError: "",
   snapshotMessage: "",
@@ -167,5 +175,6 @@ export const state: PageState = {
   writeBlockParams: null,
   seratoRunning: false,
   snapshotPlanId: "",
+  gigToken: 0,
   view: [],
 };

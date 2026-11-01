@@ -5,20 +5,23 @@
  * fetch when they are imported. This file attaches listeners, then calls
  * loadLibrary. Settings load when the dialogs wire. server.py uses port
  * 8765. The desktop app uses a free port, and this page calls the same
- * origin. Snapshot UI is src/restore.ts. This file does not open
- * master.sqlite itself. The page language is set before the first paint
- * and every view repaints when it changes; see src/i18n.ts.
+ * origin. Snapshot UI is src/restore.ts. The gig check is src/gig.ts.
+ * This file does not open master.sqlite itself. The page language is set
+ * before the first paint and every view repaints when it changes; see
+ * src/i18n.ts.
  */
 
 import { failureOf } from "./api";
 import { wireDialogs } from "./dialogs";
 import { el } from "./dom";
+import { wireGigCheck } from "./gig";
 import { wireLayout } from "./layout";
 import { wireLocale } from "./locale-wiring";
 import {
   bindLibraryReload,
   confirmSnapshotRestore,
   failSnapshots,
+  loadOperations,
   loadSnapshots,
   openSnapshotPlan,
   setSnapshotDialogStatus,
@@ -27,7 +30,7 @@ import {
 import { registerPlayerControls, wireShortcuts } from "./shortcuts";
 import { state } from "./state";
 import { loadVersion, wireVersion } from "./version";
-import { loadLibrary, showFailure, wireLibrary } from "./views";
+import { loadLibrary, setMode, showFailure, wireLibrary } from "./views";
 import { mountPlayer, playerControls } from "./player";
 import { applyStaticTooltips, installTooltips } from "./tooltip";
 import { mountTrackList, wireVirtualScroll } from "./virtual-scroll";
@@ -43,6 +46,10 @@ import { mountTrackList, wireVirtualScroll } from "./virtual-scroll";
 function wireSnapshots(): void {
   el("snapshots-refresh").addEventListener("click", () => {
     loadSnapshots().catch((error) => failSnapshots(error));
+  });
+
+  el("operations-refresh").addEventListener("click", () => {
+    loadOperations().catch(() => undefined);
   });
 
   el("snapshots-take").addEventListener("click", () => {
@@ -75,6 +82,9 @@ wireVirtualScroll();
 wireShortcuts();
 wireDialogs();
 wireSnapshots();
+wireGigCheck(() => {
+  setMode("crates");
+});
 wireLayout();
 wireVersion();
 void loadVersion();

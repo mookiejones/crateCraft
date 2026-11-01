@@ -328,6 +328,7 @@ def _length(value: str, colors: dict[str, str]) -> float:
     named = re.search(r"var\(\s*(--[A-Za-z0-9-]+)", value)
     if named:
         token = {
+            "--font-display": 56,
             "--font-title": 20,
             "--font-heading": 14,
             "--font-body": 13,
@@ -361,6 +362,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("body", ("--color-card", "--color-selection", "hover", "--color-button"), 15, 400),
     (".rail", ("--color-bg",), 15, 400),
     (".brand p", ("--color-bg",), 14, 400),
+    (".generation", ("--color-bg",), 15, 400),
+    (".brand .generation-note", ("--color-bg",), 13, 400),
     (".rail select", ("--color-bg",), 15, 400),
     (".rail-field input", ("--color-bg",), 15, 400),
     (".view-switch button", ("--color-bg",), 15, 400),
@@ -385,6 +388,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("#export-m3u", ("--color-card",), 15, 400),
     ("#export-rekordbox", ("--color-card",), 15, 400),
     ("#import-m3u", ("--color-card",), 15, 400),
+    ("#gig-refresh", ("--color-card",), 15, 400),
     (".text-button", ("--color-card",), 15, 400),
     (".actions button", ("--color-card",), 15, 400),
     (".rekordbox-option", ("--color-card",), 15, 400),
@@ -397,6 +401,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".empty-list", ("--color-card",), 15, 400),
     (".detail-empty", ("--color-card",), 15, 400),
     (".detail-error", ("--color-card",), 15, 400),
+    (".gig-verdict.not-ready", ("--color-card",), 18, 600),
     (".detail-kicker", ("--color-card",), 15, 400),
     (".deck .bpm", ("--color-card",), 28, 500),
     (".deck span", ("--color-card",), 13, 400),
@@ -446,6 +451,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("#files-confirm.danger", ("--color-danger",), 15, 400),
     (".wizard-step", ("--color-card",), 14, 500),
     (".wizard-status.is-blocked", ("--color-warn-bg",), 15, 400),
+    (".operations-alert", ("--color-warn-bg",), 15, 400),
     (".wizard-status.is-saved", ("--color-safe-bg",), 15, 400),
     (".wizard-choice", ("--color-card",), 15, 400),
     (".wizard-quiet", ("--color-card",), 15, 400),
@@ -514,6 +520,7 @@ _DECORATIVE = {
     ".shortcut-table td",
     ".swatch",
     ".player-bar",
+    ".operations",
 }
 
 # The only visible edge of these fields. Card surfaces use the sheet.
@@ -677,6 +684,9 @@ class ContrastTests(unittest.TestCase):
             border = _paint(self._rule(selector)["border"], self.colors)
             ratio = contrast(border, self._surface("--color-card"))
             self.assertGreaterEqual(ratio, 3, f"{selector} border is {ratio:.2f}:1")
+        alert_border = _paint(self._rule(".operations-alert")["border"], self.colors)
+        alert_ratio = contrast(alert_border, self._surface("--color-warn-bg"))
+        self.assertGreaterEqual(alert_ratio, 3, f".operations-alert border is {alert_ratio:.2f}:1")
         active_mark = _paint(self._rule(".quick-open-option.is-active")["border-left"], self.colors)
         for background_name in ("--color-card", "--color-selection"):
             ratio = contrast(active_mark, self._surface(background_name))
@@ -739,6 +749,7 @@ class ContrastTests(unittest.TestCase):
             ".waveform-zoom-button",
             ".waveform-overview:focus-visible",
             ".detail-play",
+            ".operations-alert",
         } | {selector for selector, _, _ in _CONTROL_EDGE}
         self.assertEqual(bordered - checked_borders, set(), "borders missing from the contrast list")
         self.assertEqual(checked_borders - bordered, set(), "contrast list names a border that is not painted")
