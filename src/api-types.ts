@@ -6,6 +6,21 @@
  * the page already treats that as empty.
  */
 
+export interface LibraryGeneration {
+  kind?: string;
+  source?: string;
+  version?: string;
+  build?: string;
+  newest_version?: string;
+  database?: string;
+  log_name?: string;
+  mounted?: boolean | null;
+  downgrade?: boolean;
+  confirmed?: boolean | null;
+  reason?: string;
+  install_version?: string;
+}
+
 export interface SeratoStatus {
   writable?: boolean;
   message?: string;
@@ -15,6 +30,8 @@ export interface SeratoStatus {
   code?: string;
   /** Placeholder values for `code`, such as the Serato build. */
   params?: Record<string, string>;
+  /** Serato 4, Serato 5, or unknown, and why that was chosen. */
+  generation?: LibraryGeneration;
 }
 
 export interface EditFields {
