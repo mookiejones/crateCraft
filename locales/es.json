@@ -124,6 +124,7 @@
   "error.playlist_empty": "La lista de reproducción está vacía.",
   "error.rating_invalid": "La valoración debe ser un número entero del 1 al 5.",
   "error.recycle_failed": "No se pudo mover el archivo a la Papelera de reciclaje.",
+  "error.registration_no_space": "Las cajas no se registraron. Esta biblioteca no tiene el espacio Serato Library, así que Serato puede quitar esos archivos de caja la próxima vez que se abra.",
   "error.related_direction": "Elige un enlace en un sentido o en ambos sentidos.",
   "error.related_missing": "Ese enlace no está en las pistas relacionadas.",
   "error.related_not_saved": "No se pudo guardar el archivo de pistas relacionadas.",
@@ -424,7 +425,9 @@
   "plan.andMore": " y {count} más",
   "plan.cratesAdded": "Cajas añadidas",
   "plan.cratesChanged": "Cajas modificadas",
+  "plan.cratesRegistered": "Cajas registradas para que Serato las conserve",
   "plan.cratesRemoved": "Cajas quitadas",
+  "plan.cratesSkipped": "Cajas omitidas",
   "plan.cratesUnavailable": "Cajas en una unidad no disponible",
   "plan.cueChanges": "Cambios de cues",
   "plan.deletedCrates": "Cajas eliminadas",
@@ -607,6 +610,10 @@
   "snapshots.reviewRestore": "Revisar restauración",
   "snapshots.reviewUndo": "Revisar deshacer",
   "snapshots.saved": "Instantánea guardada.",
+  "snapshots.skippedCrates": {
+    "one": "Restauración terminada. Se omitió {count} archivo de caja porque no se pudo leer su copia de la instantánea: {names}.",
+    "other": "Restauración terminada. Se omitieron {count} archivos de caja porque no se pudo leer su copia de la instantánea: {names}."
+  },
   "snapshots.saving": "Guardando instantánea…",
   "snapshots.seratoUnknown": "Versión de Serato desconocida",
   "snapshots.seratoVersion": "Serato {version} (compilación {build})",
