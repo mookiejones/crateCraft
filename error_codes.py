@@ -97,6 +97,10 @@ PARAM_CODES: dict[str, str] = {
         "A value that is not a dotted number, including an unreadable plist, is unknown. "
         "Snapshots can still be taken and read."
     ),
+    "library_log_unconfirmed": (
+        "The session log does not confirm this library file ({database}). "
+        "Writes and restores are off. Snapshots can still be taken and read."
+    ),
 }
 
 

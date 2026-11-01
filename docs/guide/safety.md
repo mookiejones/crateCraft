@@ -38,7 +38,7 @@ Each snapshot records the Serato version and build when those can be read from t
 
 ## Serato 5
 
-On Serato 5, writes and restores stay off. The status line says why.
+On Serato 5, writes and restores stay off. The status line says why. Under that line, **Library generation** says Serato 4, Serato 5, or Version unknown, and opens a note that says whether that came from the newest session log in `_Serato_/Logs`, from the installed Serato, or because no log was found. A log that does not name a dotted version is treated as unknown, and writes stay off. A missing Logs folder leaves the installed version in place.
 
 Protect Library is read from the Mac preferences key `library_protect`. On means it is set. Off means it is cleared. If the preference cannot be read, it is treated as unknown. All three block writes and restores. Separately, Lucid and Flexible beatgrid storage does not have a confirmed file layout, so this app does not write a Serato 5 library until that is known. Snapshots can still be taken and read. Serato 5.0 still keeps crates in `database V2` inside `_Serato_`, and those files are included in the snapshot. Protect Library does not lock that file; the block is the version and the preference, not a file lock.
 

@@ -48,6 +48,7 @@ from typing import Protocol, TypedDict
 
 import app_log
 import error_codes
+import serato_logs
 import snapshot_frames
 from serato_web.completeness import (
     LEGACY_STATUS,
@@ -269,27 +270,224 @@ def write_block_notice(install: SeratoInstall | None = None) -> CodedNotice | No
 
     An unknown version blocks. So does an unreadable version plist, because
     that is stored as unknown. That notice carries ``serato_version_unknown``
-    and the build, so the page can translate it. Serato 5 also blocks when
+    and the build, so the page can translate it. A session log that does not
+    name a dotted version uses that same notice. Serato 5 also blocks when
     Protect Library is on, off, or unknown, until Lucid and Flexible beatgrid
-    storage is verified. Those sentences stay English.
+    storage is verified. Those sentences stay English. An explicit ``install``
+    is judged on its own and does not read the session logs.
 
     Args:
-        install: Version to judge. None reads the install on this machine.
+        install: Version to judge. None reads the install and the session logs.
 
     Returns:
         The refusal, or None when a known Serato older than 5 may be written.
     """
-    chosen = install if install is not None else read_install()
-    parsed = _parsed_version(chosen.version)
+    notice, _generation = library_gate(install)
+    return notice
+
+
+def library_gate(
+    install: SeratoInstall | None = None,
+) -> tuple[CodedNotice | None, dict[str, object]]:
+    """Decide the write gate and the generation the page shows.
+
+    Session logs are read only when ``install`` is None. A missing or empty
+    log folder leaves the installed version in place. Serato 5, from the
+    log or from the installed app, stays read-only. A log that names a
+    database other than this ``master.sqlite`` refuses a Serato 4 write.
+
+    Args:
+        install: Version to judge. None reads the install and the logs.
+
+    Returns:
+        The refusal, or None, and the ``generation`` object for ``status``.
+    """
+    base = install if install is not None else read_install()
+    read = serato_logs.LogRead.missing() if install is not None else serato_logs.read_session_log()
+    generation = _generation(base, read)
+    return _notice_for(base, generation), generation
+
+
+def _generation(base: SeratoInstall, read: serato_logs.LogRead) -> dict[str, object]:
+    """Build the generation object from the install and one log read.
+
+    Args:
+        base: Installed Serato version.
+        read: Session-log read. Missing means the logs were not used.
+
+    Returns:
+        The ``generation`` fields ``status`` sends to the page.
+    """
+    if read.state == "missing":
+        return _generation_row(
+            base.version,
+            base.build,
+            "",
+            "",
+            "",
+            None,
+            False,
+            None,
+            "fallback",
+            "fallback",
+            base.version,
+        )
+    version = read.version
+    build = read.build or "unknown"
+    reason = "unknown" if read.state == "unknown" else ("log" if read.database else "version")
+    if read.downgrade and _is_serato_5(version):
+        reason = "downgrade"
+    elif _is_serato_5(base.version) and not _is_serato_5(version):
+        version = base.version
+        build = base.build
+        reason = "installed"
+    elif read.state == "unknown":
+        version = "unknown"
+        build = "unknown"
+        reason = "unknown"
+    confirmed: bool | None = None
+    if read.database:
+        import library
+
+        confirmed = serato_logs.confirms_library(read.database_path, read.database, Path(library.MASTER))
+    if reason not in {"downgrade", "installed", "unknown"} and not _is_serato_5(version):
+        if read.mounted is False:
+            reason = "unmounted"
+        elif read.database and confirmed is False:
+            reason = "mismatch"
+        elif read.database:
+            reason = "log"
+        else:
+            reason = "version"
+    return _generation_row(
+        version,
+        build,
+        read.newest_version,
+        read.database,
+        read.log_name,
+        read.mounted,
+        read.downgrade,
+        confirmed,
+        "log" if read.database else "version",
+        reason,
+        base.version,
+    )
+
+
+def _generation_row(
+    version: str,
+    build: str,
+    newest: str,
+    database: str,
+    log_name: str,
+    mounted: bool | None,
+    downgrade: bool,
+    confirmed: bool | None,
+    source: str,
+    reason: str,
+    install_version: str,
+) -> dict[str, object]:
+    """Return one generation object with the keys the page reads.
+
+    Args:
+        version: Version the write gate uses.
+        build: Build that goes with ``version``.
+        newest: Version in the newest log, or empty.
+        database: ``master.sqlite``, ``database V2``, or empty.
+        log_name: Log file name, or empty.
+        mounted: Whether an external volume is connected.
+        downgrade: True when an older log is Serato 5 and the newest is not.
+        confirmed: Whether the logged path is this master file.
+        source: ``log``, ``version``, or ``fallback``.
+        reason: Which sentence the page shows.
+        install_version: Version read from the installed app.
+
+    Returns:
+        A JSON-ready dict.
+    """
+    kind = _generation_kind(version)
+    return {
+        "kind": kind,
+        "source": source,
+        "version": version or "unknown",
+        "build": build or "unknown",
+        "newest_version": newest,
+        "database": database,
+        "log_name": Path(log_name).name if log_name else "",
+        "mounted": mounted,
+        "downgrade": downgrade,
+        "confirmed": confirmed,
+        "reason": reason,
+        "install_version": install_version or "unknown",
+    }
+
+
+def _generation_kind(version: str) -> str:
+    """Return the generation name for a version string.
+
+    Args:
+        version: A dotted version, or ``unknown``.
+
+    Returns:
+        ``serato5``, ``serato4``, ``legacy``, or ``unknown``.
+    """
+    parsed = _parsed_version(version)
     if parsed is None:
-        params = {"build": chosen.build}
+        return "unknown"
+    if parsed[0] >= 5:
+        return "serato5"
+    if parsed[0] == 4:
+        return "serato4"
+    return "legacy"
+
+
+def _notice_for(base: SeratoInstall, generation: dict[str, object]) -> CodedNotice | None:
+    """Return the write refusal for one generation.
+
+    Args:
+        base: Installed version, used for Protect Library on Serato 5.
+        generation: Object from :func:`_generation`.
+
+    Returns:
+        The refusal, or None when a known Serato older than 5 may be written
+        and the log names this library file.
+    """
+    version = str(generation.get("version") or "unknown")
+    build = str(generation.get("build") or "unknown")
+    parsed = _parsed_version(version)
+    if parsed is None:
+        params = {"build": build}
         return CodedNotice(
             error_codes.render("serato_version_unknown", params),
             "serato_version_unknown",
             params,
         )
-    if parsed[0] < 5:
-        return None
+    if parsed[0] >= 5:
+        protect = base.protect if _is_serato_5(base.version) else _read_protect()
+        return _serato5_notice(SeratoInstall(version, build, protect))
+    database = str(generation.get("database") or "")
+    confirmed = generation.get("confirmed")
+    mounted = generation.get("mounted")
+    if database and (confirmed is False or mounted is False):
+        params = {"database": database}
+        return CodedNotice(
+            error_codes.render("library_log_unconfirmed", params),
+            "library_log_unconfirmed",
+            params,
+        )
+    return None
+
+
+def _serato5_notice(chosen: SeratoInstall) -> CodedNotice | None:
+    """Return the Serato 5 read-only notice.
+
+    Args:
+        chosen: Version, build, and Protect Library.
+
+    Returns:
+        The refusal, or None when Lucid beatgrid storage is verified and
+        Protect Library is off.
+    """
     if chosen.protect == "off" and LUCID_BEATGRID_VERIFIED:
         return None
     if chosen.protect == "on":

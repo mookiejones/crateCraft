@@ -593,7 +593,9 @@ def status(path: Path | None = None, *, from_copy: bool = False) -> dict[str, ob
         A status dict. A locked database is reported as open. Any other
         ``OperationalError`` from opening or first querying a file that
         exists is reported as open too, with the SQLite text in
-        ``message`` and ``open_error``. file_manager names Finder or File Explorer.
+        ``message`` and ``open_error``. ``generation`` says whether the
+        session logs named Serato 4, Serato 5, or neither. file_manager
+        names Finder or File Explorer.
 
     Raises:
         LibraryError: If the database file does not exist.
@@ -615,7 +617,8 @@ def status(path: Path | None = None, *, from_copy: bool = False) -> dict[str, ob
     info["file_manager"] = file_manager_name()
     import snapshots
 
-    notice = snapshots.write_block_notice()
+    notice, generation = snapshots.library_gate()
+    info["generation"] = generation
     info["write_block"] = None if notice is None else notice.text
     info["serato_running"] = snapshots.serato_dj_running()
     # The sidebar and the setup wizard share this flag. A running Serato DJ

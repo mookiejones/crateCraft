@@ -112,6 +112,7 @@
     "error.layout_not_saved": "The layout could not be saved.",
     "error.legacy_read_only": "This library was made by an older Serato DJ. This app can show it but cannot change it yet.",
     "error.length_invalid": "Length needs a whole number of milliseconds.",
+    "error.library_log_unconfirmed": "The session log does not confirm this library file ({database}). Writes and restores are off. Snapshots can still be taken and read.",
     "error.library_not_saved": "The library could not be saved.",
     "error.logs_not_opened": "The logs folder could not be opened.",
     "error.move_failed": "The file could not be moved. Nothing was changed.",
@@ -226,6 +227,22 @@
     },
     "format.hoursMinutes": "{hours}h {minutes}m",
     "format.minutes": "{minutes}m",
+    "generation.checking": "Checking",
+    "generation.label": "Library generation",
+    "generation.legacy": "Older Serato",
+    "generation.named": "Library generation, {kind}",
+    "generation.reason.downgrade": "The newest session log says Serato {newest}, and an earlier log says Serato {version}. Writes and restores stay off.",
+    "generation.reason.fallback": "No session log was found. The installed Serato version is {version}.",
+    "generation.reason.installed": "The installed Serato is {version}. The newest session log says Serato {newest}. Writes and restores stay off.",
+    "generation.reason.log": "The newest session log {log} recorded Serato {version} opening {database}.",
+    "generation.reason.mismatch": "The session log opened {database}, which is not this library file.",
+    "generation.reason.pending": "The library generation has not been read yet.",
+    "generation.reason.unknown": "A session log was found, but it did not name Serato 4 or Serato 5. Writes and restores stay off.",
+    "generation.reason.unmounted": "The session log {log} named {database} on a drive that is not connected.",
+    "generation.reason.version": "The newest session log {log} names Serato {version} and does not name a database file.",
+    "generation.serato4": "Serato 4",
+    "generation.serato5": "Serato 5",
+    "generation.unknown": "Version unknown",
     "history.chooseSession": "Choose a session.",
     "history.file": "File",
     "history.notes": "Notes",
@@ -613,6 +630,7 @@
     "tooltip.linkMutual": "Also link that track back to this one.",
     "tooltip.linkNote": "Add a note for this link.",
     "tooltip.language": "Choose the language for this window. Same as the system follows this computer.",
+    "tooltip.libraryGeneration": "Opens the note that says whether the session log or the installed Serato decided this is Serato 4, Serato 5, or an unknown version.",
     "tooltip.linkRating": "Rate this link from 1 to 5.",
     "tooltip.logFallback": "Log text, when it could not be copied.",
     "tooltip.membership": "Add this track to {name}, or take it out.",
@@ -840,6 +858,7 @@
     "error.layout_not_saved": "No se pudo guardar la disposición.",
     "error.legacy_read_only": "Esta biblioteca la creó una versión anterior de Serato DJ. Esta app puede mostrarla, pero todavía no puede modificarla.",
     "error.length_invalid": "La duración debe ser un número entero de milisegundos.",
+    "error.library_log_unconfirmed": "El registro de la sesión no confirma este archivo de biblioteca ({database}). Las escrituras y las restauraciones están desactivadas. Las instantáneas se pueden tomar y leer.",
     "error.library_not_saved": "No se pudo guardar la biblioteca.",
     "error.logs_not_opened": "No se pudo abrir la carpeta de registros.",
     "error.move_failed": "No se pudo mover el archivo. No se cambió nada.",
@@ -954,6 +973,22 @@
     },
     "format.hoursMinutes": "{hours} h {minutes} min",
     "format.minutes": "{minutes} min",
+    "generation.checking": "Comprobando",
+    "generation.label": "Generación de la biblioteca",
+    "generation.legacy": "Serato anterior",
+    "generation.named": "Generación de la biblioteca, {kind}",
+    "generation.reason.downgrade": "El registro más reciente dice Serato {newest} y un registro anterior dice Serato {version}. Las escrituras y las restauraciones siguen desactivadas.",
+    "generation.reason.fallback": "No se encontró un registro de sesión. Se usa la versión de Serato instalada, {version}.",
+    "generation.reason.installed": "El Serato instalado es {version}. El registro más reciente dice Serato {newest}. Las escrituras y las restauraciones siguen desactivadas.",
+    "generation.reason.log": "El registro de sesión más reciente, {log}, anotó que Serato {version} abrió {database}.",
+    "generation.reason.mismatch": "El registro de sesión abrió {database}, que no es este archivo de biblioteca.",
+    "generation.reason.pending": "La generación de la biblioteca todavía no se ha leído.",
+    "generation.reason.unknown": "Hay un registro de sesión, pero no nombra Serato 4 ni Serato 5. Las escrituras y las restauraciones siguen desactivadas.",
+    "generation.reason.unmounted": "El registro de sesión {log} nombró {database} en una unidad que no está conectada.",
+    "generation.reason.version": "El registro de sesión más reciente, {log}, nombra Serato {version} y no nombra un archivo de base de datos.",
+    "generation.serato4": "Serato 4",
+    "generation.serato5": "Serato 5",
+    "generation.unknown": "Versión desconocida",
     "history.chooseSession": "Elige una sesión.",
     "history.file": "Archivo",
     "history.notes": "Notas",
@@ -1341,6 +1376,7 @@
     "tooltip.linkMutual": "Enlaza también esa pista de vuelta a esta.",
     "tooltip.linkNote": "Añade una nota a este enlace.",
     "tooltip.language": "Elige el idioma de esta ventana. Igual que el sistema sigue el idioma de este ordenador.",
+    "tooltip.libraryGeneration": "Abre la nota que dice si el registro de sesión o el Serato instalado decidió que esta biblioteca es Serato 4, Serato 5 o una versión desconocida.",
     "tooltip.linkRating": "Valora este enlace de 1 a 5.",
     "tooltip.logFallback": "Texto del registro, cuando no se pudo copiar.",
     "tooltip.membership": "Añade esta pista a {name}, o quítala.",
@@ -2025,6 +2061,7 @@
     linkNote: spec("tooltip.linkNote"),
     linkRating: spec("tooltip.linkRating"),
     language: spec("tooltip.language"),
+    libraryGeneration: spec("tooltip.libraryGeneration"),
     linkMutual: spec("tooltip.linkMutual"),
     saveLink: spec("tooltip.saveLink"),
     showSearchCopies: spec("tooltip.showSearchCopies"),
@@ -2134,6 +2171,7 @@
       "settings-close": tips.settingsClose,
       "log-fallback": tips.logFallback,
       "language-select": tips.language,
+      "library-generation": tips.libraryGeneration,
       "merge-trash": tips.mergeTrash,
       "merge-cancel": tips.mergeCancel,
       "merge-confirm": tips.mergeConfirm,
@@ -5572,6 +5610,7 @@
   }
   function repaintViews() {
     if (state.serato) el("status").textContent = statusLine(state.serato);
+    paintGeneration(state.serato);
     renderList();
     if (state.mode === "history") {
       renderSessions();
@@ -5589,10 +5628,62 @@
     if (info?.code) return codedText(info.message || t("status.library"), info.code, messageParams(info.params));
     return info?.message || t("status.library");
   }
+  var GENERATION_LABELS = {
+    serato4: "generation.serato4",
+    serato5: "generation.serato5",
+    legacy: "generation.legacy",
+    unknown: "generation.unknown"
+  };
+  var GENERATION_REASONS = {
+    log: "generation.reason.log",
+    version: "generation.reason.version",
+    fallback: "generation.reason.fallback",
+    unknown: "generation.reason.unknown",
+    unmounted: "generation.reason.unmounted",
+    downgrade: "generation.reason.downgrade",
+    mismatch: "generation.reason.mismatch",
+    installed: "generation.reason.installed"
+  };
+  function generationKind(info) {
+    const kind = info?.generation?.kind ?? "";
+    return GENERATION_LABELS[kind] ?? "generation.checking";
+  }
+  function generationReason(info) {
+    const generation = info?.generation;
+    const key = GENERATION_REASONS[generation?.reason ?? ""] ?? "generation.reason.pending";
+    return t(key, {
+      log: generation?.log_name || "",
+      version: generation?.version || "",
+      newest: generation?.newest_version || "",
+      database: generation?.database || ""
+    });
+  }
+  function paintGeneration(info) {
+    const button2 = document.getElementById("library-generation");
+    if (!(button2 instanceof HTMLButtonElement)) return;
+    const kind = t(generationKind(info));
+    button2.textContent = kind;
+    button2.setAttribute("aria-label", t("generation.named", { kind }));
+    setTooltip(button2, tips.libraryGeneration);
+    const note = document.getElementById("library-generation-note");
+    if (note) {
+      note.textContent = generationReason(info);
+      note.hidden = button2.getAttribute("aria-expanded") !== "true";
+    }
+    if (button2.dataset.bound === "1") return;
+    button2.dataset.bound = "1";
+    button2.addEventListener("click", () => {
+      const next2 = button2.getAttribute("aria-expanded") !== "true";
+      button2.setAttribute("aria-expanded", next2 ? "true" : "false");
+      const panel = document.getElementById("library-generation-note");
+      if (panel) panel.hidden = !next2;
+    });
+  }
   function applyStatus(info) {
     state.serato = info;
     state.writable = Boolean(info?.writable);
     el("status").textContent = statusLine(info);
+    paintGeneration(info);
     renderShell();
   }
   function lockDown(error2) {
