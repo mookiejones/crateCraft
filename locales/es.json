@@ -508,6 +508,7 @@
   "snapshots.take": "Tomar una instantánea",
   "snapshots.trigger": "instantánea",
   "snapshots.unavailableDrives": "No disponibles: {drives}.",
+  "snapshots.unknownDrive": "Unidad desconocida",
   "snapshots.unknownTime": "Hora desconocida",
   "snapshots.unreadable": "No se pudieron leer las instantáneas.",
   "space.appleMusic": "Apple Music",

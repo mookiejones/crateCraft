@@ -190,6 +190,39 @@ describe("restore", () => {
     }
   });
 
+  it("names a drive with no label from its own string", async () => {
+    state.snapshotLoading = false;
+    state.snapshotError = "";
+    state.snapshots = [];
+    postJSON.mockResolvedValue({
+      ok: true,
+      created: true,
+      drive_backup: {
+        verified: true,
+        folder: "serato-web-1",
+        drives: [
+          { status: "copied", drive_id: "dev-gig", present: true },
+          { status: "permission", present: true },
+        ],
+      },
+    });
+    await backupDriveCrates();
+    const note = document.getElementById("snapshots-drives-note")?.textContent ?? "";
+    expect(note).toContain("Copied: dev-gig.");
+    expect(note).toContain(`${t("snapshots.unknownDrive")} (no permission)`);
+    expect(note).not.toContain(t("snapshots.unknownTime"));
+    setLocale("es");
+    try {
+      renderSnapshots();
+      const spanish = document.getElementById("snapshots-drives-note")?.textContent ?? "";
+      expect(spanish).toContain(`${t("snapshots.unknownDrive")} (sin permiso)`);
+      expect(spanish).not.toContain("Unknown time");
+      expect(spanish).not.toContain("Hora desconocida");
+    } finally {
+      setLocale("en");
+    }
+  });
+
   it("shows a disk-space refusal on the drive line", async () => {
     state.snapshotLoading = false;
     state.snapshotError = "";

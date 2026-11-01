@@ -197,7 +197,7 @@ export function driveBackupFrom(value: unknown): DriveBackup | null {
 }
 
 function driveName(drive: DriveCopy, status: string): string {
-  const name = drive.label || drive.drive_id || t("snapshots.unknownTime");
+  const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
   if (status === "read-only") return t("snapshots.driveReadOnly", { name });
   if (status === "permission") return t("snapshots.drivePermission", { name });
   return name;

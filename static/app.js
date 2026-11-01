@@ -511,6 +511,7 @@
     "snapshots.take": "Take a snapshot",
     "snapshots.trigger": "snapshot",
     "snapshots.unavailableDrives": "Unavailable: {drives}.",
+    "snapshots.unknownDrive": "Unknown drive",
     "snapshots.unknownTime": "Unknown time",
     "snapshots.unreadable": "The snapshots could not be read.",
     "space.appleMusic": "Apple Music",
@@ -1253,6 +1254,7 @@
     "snapshots.take": "Tomar una instantánea",
     "snapshots.trigger": "instantánea",
     "snapshots.unavailableDrives": "No disponibles: {drives}.",
+    "snapshots.unknownDrive": "Unidad desconocida",
     "snapshots.unknownTime": "Hora desconocida",
     "snapshots.unreadable": "No se pudieron leer las instantáneas.",
     "space.appleMusic": "Apple Music",
@@ -2624,7 +2626,7 @@
     };
   }
   function driveName(drive, status) {
-    const name = drive.label || drive.drive_id || t("snapshots.unknownTime");
+    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
     if (status === "read-only") return t("snapshots.driveReadOnly", { name });
     if (status === "permission") return t("snapshots.drivePermission", { name });
     return name;

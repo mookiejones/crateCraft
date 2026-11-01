@@ -64,7 +64,7 @@ An older folder that has `master.sqlite` but no `COMPLETE` file is **legacy, unv
 
 A file change in the Files view copies the database first as well. During the change, the app also writes `Library/Backups/file-ops-journal.json`. That file is removed when the change finishes. Leave it alone.
 
-The backup is the database and the drive's `_Serato_` crates, not your audio. A backup does not contain your music files. Recordings Serato stored under `_Serato_` are included. `Export Backups` and `Lexicon` are not.
+The backup is the database and the drive's `_Serato_` crates, not your audio. A backup does not contain your music files. `Recording`, `DJ Sessions`, `Export Backups`, and `Lexicon` are not included.
 
 ## Restore an older database copy by hand
 

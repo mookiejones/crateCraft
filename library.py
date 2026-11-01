@@ -4,7 +4,8 @@ master.sqlite is the library Serato and this app display. root.sqlite is the
 on-disk location database and is updated to match, when it is connected.
 Writes are refused while Serato's lock is held by a live process. The first
 write in a process copies the databases, and each present drive's ``_Serato_``
-folder, into Library/Backups first. An unplugged drive is recorded and skipped.
+folder, into Library/Backups first. An unplugged or unreadable drive is
+recorded and skipped. ``Recording`` and ``DJ Sessions`` are not copied.
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import uuid
 from collections.abc import Callable, Iterator, Mapping, Sequence
@@ -129,8 +131,11 @@ _KEY_VALUES = {
 
 _backed_up: set[str] = set()
 # Drive ids whose ``_Serato_`` folder was copied for one master path.
-# A drive that was absent or skipped is not listed, so a later mount is copied.
+# A drive that was absent, read-only, or unreadable is not listed, so a
+# later call tries it again. ``_backup_guard`` covers both sets for the
+# whole copy, so two writes cannot publish the same drive twice or drop an id.
 _copied_drives: dict[str, set[str]] = {}
+_backup_guard = threading.Lock()
 
 # Fixed sentences. error_codes maps the same text to a stable code.
 BACKUP_NO_SPACE = "There is not enough disk space to back up the library."
@@ -1010,12 +1015,70 @@ def _drive_skip_reason(spec: DriveBackupSpec) -> str | None:
     return None
 
 
+class DriveUnreadable(OSError):
+    """One drive's ``_Serato_`` tree cannot be read.
+
+    The backup removes that drive's partial copy, records ``permission``,
+    and continues with the other drives. A full disk, a missing file, and
+    any other copy error are not this exception.
+    """
+
+    def __init__(self) -> None:
+        """Record the refusal as ``EACCES``.
+
+        Returns:
+            None.
+        """
+        super().__init__(errno.EACCES, "A drive folder could not be read.")
+
+
+def _is_permission(exc: BaseException) -> bool:
+    """Return whether an error is a refusal to read, not a failed copy.
+
+    Args:
+        exc: Error from listing, measuring, or opening a drive file.
+
+    Returns:
+        True for ``PermissionError``, ``EACCES``, and ``EPERM``. A full
+        disk, a missing file, and an I/O error are false.
+    """
+    if isinstance(exc, PermissionError):
+        return True
+    return isinstance(exc, OSError) and exc.errno in (errno.EACCES, errno.EPERM)
+
+
+def _drive_backup_files(root: Path) -> list[tuple[str, Path]]:
+    """List one drive's backup files, or report that the tree is unreadable.
+
+    Args:
+        root: ``_Serato_`` directory.
+
+    Returns:
+        Relative POSIX path and file path. ``Recording`` and ``DJ Sessions``
+        are already left out.
+
+    Raises:
+        DriveUnreadable: If listing the tree is refused.
+        OSError: If listing fails for another reason, including a drive
+            that disappeared.
+    """
+    import snapshots
+
+    try:
+        return snapshots.iter_backup_files(root)
+    except OSError as exc:
+        if _is_permission(exc):
+            raise DriveUnreadable() from exc
+        raise
+
+
 def _backup_payload_bytes(master: Path, specs: Sequence[DriveBackupSpec]) -> int:
     """Return how many source bytes this backup will read.
 
     Args:
         master: ``master.sqlite``.
-        specs: Drives to consider. A skipped drive is not counted.
+        specs: Drives to consider. A skipped drive, including one whose
+            subdirectory cannot be read, is not counted.
 
     Returns:
         The size of the database files plus each file that will be copied.
@@ -1023,10 +1086,10 @@ def _backup_payload_bytes(master: Path, specs: Sequence[DriveBackupSpec]) -> int
         keeps a margin for those.
 
     Raises:
-        OSError: If a file that would be copied cannot be measured.
+        OSError: If a file that would be copied cannot be measured for a
+            reason other than permission. A permission error skips that
+            drive and does not fail the measurement.
     """
-    import snapshots
-
     total = 0
     if master.is_file() and not master.is_symlink():
         total += master.stat().st_size
@@ -1036,11 +1099,21 @@ def _backup_payload_bytes(master: Path, specs: Sequence[DriveBackupSpec]) -> int
     for spec in specs:
         if _drive_skip_reason(spec) is not None or spec.serato_root is None:
             continue
-        for _rel, path in snapshots.iter_backup_files(spec.serato_root):
-            try:
-                total += path.stat().st_size
-            except OSError as exc:
-                raise OSError(exc.errno or errno.EIO, "A drive file could not be measured.") from exc
+        drive_bytes = 0
+        try:
+            for _rel, path in _drive_backup_files(spec.serato_root):
+                try:
+                    drive_bytes += path.stat().st_size
+                except OSError as exc:
+                    if _is_permission(exc):
+                        raise DriveUnreadable() from exc
+                    raise OSError(
+                        exc.errno or errno.EIO,
+                        "A drive file could not be measured.",
+                    ) from exc
+        except DriveUnreadable:
+            continue
+        total += drive_bytes
     return total
 
 
@@ -1134,13 +1207,21 @@ def _copy_readonly(source: Path, dest: Path) -> None:
             is not replaced.
 
     Raises:
-        OSError: If the file cannot be copied, the disk fills, or the
-            copied bytes do not hash to the bytes that were read.
+        DriveUnreadable: If the source cannot be opened because permission
+            is refused. Nothing is written for this file.
+        OSError: If the file cannot be copied, the disk fills, the source
+            disappears, or the copied bytes do not hash to the bytes that
+            were read.
     """
     digest = hashlib.sha256()
     # O_NOFOLLOW refuses a shortcut that appears after the path was checked.
     read_flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
-    src_fd = os.open(source, read_flags)
+    try:
+        src_fd = os.open(source, read_flags)
+    except OSError as exc:
+        if _is_permission(exc):
+            raise DriveUnreadable() from exc
+        raise
     try:
         dest.parent.mkdir(parents=True, exist_ok=True)
         write_flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0)
@@ -1177,6 +1258,25 @@ def _copy_readonly(source: Path, dest: Path) -> None:
         raise OSError("The drive copy did not match the source.")
 
 
+def _discard_drive_copy(dest_root: Path, staging: Path) -> None:
+    """Remove one drive's partial copy from the staging directory.
+
+    Args:
+        dest_root: ``drives/<id>/`` for the drive that could not be read.
+        staging: Hidden backup directory that must contain ``dest_root``.
+
+    Raises:
+        OSError: If the directory is a shortcut, would leave the staging
+            folder, or cannot be removed. The caller then fails the whole
+            backup so a partial drive tree is not published.
+    """
+    if not dest_root.exists():
+        return
+    if dest_root.is_symlink() or not dest_root.is_dir() or not _contained(dest_root, staging):
+        raise OSError("The drive backup would leave the backup folder.")
+    shutil.rmtree(dest_root)
+
+
 def _copy_drive_tree(spec: DriveBackupSpec, staging: Path) -> int:
     """Copy one drive's ``_Serato_`` files under the staging directory.
 
@@ -1189,10 +1289,12 @@ def _copy_drive_tree(spec: DriveBackupSpec, staging: Path) -> int:
         How many files were copied.
 
     Raises:
-        OSError: If a path would leave the backup folder or a copy fails.
+        DriveUnreadable: If listing or reading this drive is refused.
+            Any files already copied for this drive are removed first.
+        OSError: If a path would leave the backup folder, the disk fills,
+            the drive disappears, or another copy error occurs. Those
+            failures are not turned into a skipped drive.
     """
-    import snapshots
-
     root = spec.serato_root
     if root is None:
         return 0
@@ -1200,14 +1302,35 @@ def _copy_drive_tree(spec: DriveBackupSpec, staging: Path) -> int:
     if not _contained(dest_root, staging):
         raise OSError("The drive backup would leave the backup folder.")
     count = 0
-    for rel, source in snapshots.iter_backup_files(root):
-        if _bad_drive_rel(rel) or source.is_symlink() or not source.is_file():
-            raise OSError("A drive path is not valid.")
-        target = dest_root.joinpath(*rel.split("/"))
-        if not _contained(target, dest_root):
-            raise OSError("A drive path is not valid.")
-        _copy_readonly(source, target)
-        count += 1
+    try:
+        for rel, source in _drive_backup_files(root):
+            try:
+                link = source.is_symlink()
+                regular = source.is_file()
+            except OSError as exc:
+                if _is_permission(exc):
+                    raise DriveUnreadable() from exc
+                raise
+            if _bad_drive_rel(rel) or link or not regular:
+                raise OSError("A drive path is not valid.")
+            target = dest_root.joinpath(*rel.split("/"))
+            if not _contained(target, dest_root):
+                raise OSError("A drive path is not valid.")
+            try:
+                _copy_readonly(source, target)
+            except DriveUnreadable:
+                raise
+            except OSError as exc:
+                # A refusal before this file exists is the source. A full
+                # disk or a missing file still fails the backup. A refusal
+                # after the destination file exists is a copy error too.
+                if _is_permission(exc) and not target.exists():
+                    raise DriveUnreadable() from exc
+                raise
+            count += 1
+    except DriveUnreadable:
+        _discard_drive_copy(dest_root, staging)
+        raise
     if count:
         _fsync_directory(dest_root)
         drives = staging / "drives"
@@ -1265,18 +1388,25 @@ def ensure_backup(drives: Sequence[DriveBackupSpec] | None = None) -> Path | Non
     ``mkdir(parents=True, exist_ok=False)`` claims it. The copy includes
     ``master.sqlite``, ``root.sqlite`` when that file may be mirrored, and
     each present writable drive's ``_Serato_`` folder under
-    ``drives/<drive id>/``. ``Export Backups`` and ``Lexicon`` are not
-    copied. ``Recording`` and ``DJ Sessions`` are copied. The destination
-    is ``Library/Backups`` on the disk that holds the library, never the
-    external drive. A drive that is unplugged, read-only, or unreadable is
-    listed in ``drives.json`` and skipped. Nothing is written on that drive.
+    ``drives/<drive id>/``. ``Export Backups``, ``Lexicon``, ``Recording``,
+    and ``DJ Sessions`` are not copied. ``Recording`` and ``DJ Sessions``
+    are audio, not library metadata. The destination is ``Library/Backups``
+    on the disk that holds the library, never the external drive. A drive
+    that is unplugged, read-only, or unreadable is listed in ``drives.json``
+    and skipped. An unreadable subdirectory is the same ``permission``
+    result: that drive's partial copy is removed, and the other drives are
+    still copied. Nothing is written on the skipped drive.
 
     Free space is checked before the first byte is copied. When the
     destination does not have room for the source bytes plus
     :data:`BACKUP_SPACE_MARGIN`, :data:`BACKUP_NO_SPACE` is raised and the
-    staging directory is discarded. A copy that fails, including a drive
-    unplugged while it is being read, is discarded the same way. No partial
-    folder is published.
+    staging directory is discarded. A copy that fails, including a full
+    disk while a file is being written or a drive unplugged while it is
+    being read, is discarded the same way. No partial folder is published.
+    A permission refusal is not one of those failures.
+
+    :data:`_backup_guard` is held for the whole call, including the update
+    of :data:`_backed_up` and :data:`_copied_drives`.
 
     After every copy succeeds, a ``COMPLETE`` marker is written last, with
     a SHA-256 for every file, including ``drives.json``, and the directory
@@ -1310,6 +1440,25 @@ def ensure_backup(drives: Sequence[DriveBackupSpec] | None = None) -> Path | Non
         OSError: If a claimed backup file cannot be written, or the disk
             does not have room. ``errno`` is ``ENOSPC`` and the message is
             :data:`BACKUP_NO_SPACE` when the disk check refuses the copy.
+            A permission error on one drive is not raised.
+    """
+    with _backup_guard:
+        return _ensure_backup_held(drives)
+
+
+def _ensure_backup_held(drives: Sequence[DriveBackupSpec] | None) -> Path | None:
+    """Copy the library while :data:`_backup_guard` is already held.
+
+    Args:
+        drives: Drives to record. None discovers them.
+
+    Returns:
+        The new backup directory, or None when this process already backed
+        up that database and every drive it can copy.
+
+    Raises:
+        FileExistsError: If every backup name for this second exists.
+        OSError: If the copy cannot be written or the disk is full.
     """
     master = Path(MASTER)
     key = str(master.resolve())
@@ -1337,18 +1486,25 @@ def ensure_backup(drives: Sequence[DriveBackupSpec] | None = None) -> Path | Non
                 _match_quiescent_header(root, staging / "root.sqlite")
                 _fsync_file(staging / "root.sqlite")
             records: list[dict[str, object]] = []
+            copied_now: list[DriveBackupSpec] = []
             for spec in specs:
                 reason = _drive_skip_reason(spec)
-                if reason is not None:
-                    records.append(_drive_record(spec, reason, 0))
-                    app_log.logger.info(
-                        "Drive backup skipped %s (%s).",
-                        spec.label or spec.drive_id,
-                        reason,
-                    )
-                    continue
-                copied = _copy_drive_tree(spec, staging)
-                records.append(_drive_record(spec, "copied", copied))
+                copied = 0
+                if reason is None:
+                    try:
+                        copied = _copy_drive_tree(spec, staging)
+                    except DriveUnreadable:
+                        reason = "permission"
+                    else:
+                        records.append(_drive_record(spec, "copied", copied))
+                        copied_now.append(spec)
+                        continue
+                records.append(_drive_record(spec, reason or "permission", 0))
+                app_log.logger.info(
+                    "Drive backup skipped %s (%s).",
+                    spec.label or spec.drive_id,
+                    reason,
+                )
             if records:
                 _write_drives_manifest(staging, records)
             _write_complete_marker(staging)
@@ -1370,7 +1526,7 @@ def ensure_backup(drives: Sequence[DriveBackupSpec] | None = None) -> Path | Non
         _discard_failed_backup(staging, parent)
         raise
     copied_ids = _copied_drives.setdefault(key, set())
-    for spec in copyable:
+    for spec in copied_now:
         copied_ids.add(spec.drive_id)
     _backed_up.add(key)
     telemetry.capture(telemetry.EVENT_BACKUP_MADE)
@@ -1680,7 +1836,9 @@ def begin_write() -> sqlite3.Connection:
     The first call in a process also copies the databases and each present
     drive's ``_Serato_`` folder into Library/Backups. A later call copies a
     drive the first time it is mounted. The write does not open when that
-    copy does not fit on the disk. Every call first saves a content-addressed
+    copy does not fit on the disk, or when a copy error is not a permission
+    refusal. An unreadable drive is recorded and does not block the write.
+    Every call first saves a content-addressed
     snapshot, after Serato 5 has been allowed to proceed.
 
     Returns:

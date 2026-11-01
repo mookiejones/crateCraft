@@ -125,13 +125,13 @@ def _oracle(master: Path, roots: list[Path]) -> int:
         roots: ``_Serato_`` directories that will be copied.
 
     Returns:
-        The source size. ``Recording`` and ``DJ Sessions`` are included.
+        The source size. ``Recording`` and ``DJ Sessions`` are not included.
     """
     total = master.stat().st_size
     root_db = master.parent / "root.sqlite"
     if root_db.is_file() and not root_db.is_symlink():
         total += root_db.stat().st_size
-    excluded = {"export backups", "lexicon"}
+    excluded = {"export backups", "lexicon", "recording", "dj sessions"}
     for root in roots:
         for dirpath, dirnames, filenames in os.walk(root):
             kept: list[str] = []
@@ -158,8 +158,9 @@ class DriveBackupTests(unittest.TestCase):
         """Back up two mounted drives and record one that is unplugged.
 
         The unplugged drive has files on disk. They stay there and are not
-        in the backup. Export Backups and Lexicon stay out. Recording is
-        copied. Each drive directory holds only that drive's files. The
+        in the backup. Export Backups, Lexicon, Recording, and DJ Sessions
+        stay out. A sibling of Recording is copied. Each drive directory
+        holds only that drive's files. The
         source trees are unchanged, and the backup hashes match.
 
         Returns:
@@ -173,8 +174,14 @@ class DriveBackupTests(unittest.TestCase):
             old = base / "OLD" / "_Serato_"
             _write(internal / "Subcrates" / "House.crate", b"house")
             _write(internal / "database V2", b"v2-music")
-            _write(internal / "Recording" / "session.txt", b"recorded")
-            _write(internal / "DJ Sessions" / "set.txt", b"session")
+            _write(internal / "Recording" / "session.txt", b"recorded-audio-bytes")
+            _write(internal / "DJ Sessions" / "set.txt", b"dj-session-audio-bytes")
+            _write(internal / "Recording-extra" / "keep-rec.txt", b"keep-recording-extra")
+            for name in ("Recording.", "DJ Sessions ", "DJ Sessions::$DATA"):
+                try:
+                    _write(internal / name / "audio.bin", b"folded-audio")
+                except OSError:
+                    continue
             _write(internal / "Export Backups" / "secret.zip", b"export-secret")
             _write(internal / "Lexicon" / "backup.zip", b"lexicon-secret")
             _write(internal / "Export Backups-extra" / "keep.crate", b"keep-extra")
@@ -237,10 +244,12 @@ class DriveBackupTests(unittest.TestCase):
             self.assertNotIn(b"export-secret", blob)
             self.assertNotIn(b"lexicon-secret", blob)
             self.assertNotIn(b"folded-secret", blob)
+            self.assertNotIn(b"folded-audio", blob)
             self.assertNotIn(b"old-only", blob)
             self.assertNotIn(b"OUTSIDE-SECRET-BYTES", blob)
-            self.assertIn(b"recorded", blob)
-            self.assertIn(b"session", blob)
+            self.assertNotIn(b"recorded-audio-bytes", blob)
+            self.assertNotIn(b"dj-session-audio-bytes", blob)
+            self.assertIn(b"keep-recording-extra", blob)
             self.assertIn(b"keep-extra", blob)
             self.assertIn(b"house", blob)
             self.assertIn(b"gig-only", blob)
@@ -669,6 +678,230 @@ class DriveBackupTests(unittest.TestCase):
             self.assertEqual((old / "Subcrates" / "Old.crate").read_bytes(), b"http-old")
             self.assertEqual((gig / "Subcrates" / "Http.crate").read_bytes(), b"http-gig")
 
+    def test_an_unreadable_subfolder_skips_that_drive_and_later_writes_open(self) -> None:
+        """Record one unreadable child as permission and keep the other drive.
+
+        The top of ``_Serato_`` can be listed. ``History`` cannot, with
+        ``EACCES`` and again with ``EPERM``. Measuring that tree does not
+        raise, and the backup does not contain either of that drive's
+        files. ``begin_write`` still opens a connection. When the child
+        can be listed, the next backup copies the drive.
+
+        Returns:
+            None. The test fails if the permission error fails the backup,
+            if the other drive is missing, or if the later write does not open.
+        """
+        errors = (
+            PermissionError(errno.EACCES, "Permission denied"),
+            OSError(errno.EPERM, "Operation not permitted"),
+        )
+        for error in errors:
+            with self.subTest(errno=error.errno):
+                with TempLibrary() as temp:
+                    good = temp.root / "good" / "_Serato_"
+                    bad = temp.root / "bad" / "_Serato_"
+                    _write(good / "Subcrates" / "Good.crate", b"good-bytes")
+                    _write(bad / "Subcrates" / "Visible.crate", b"visible-bytes")
+                    history = bad / "History"
+                    _write(history / "session.txt", b"history-bytes")
+                    specs = [
+                        _spec("dev-good", "GOOD", good),
+                        _spec("dev-bad", "BAD", bad),
+                    ]
+                    good_only = library._backup_payload_bytes(temp.db, [specs[0]])
+                    real_scan = os.scandir
+                    target = history.resolve()
+
+                    def blocked(path: object) -> object:
+                        try:
+                            resolved = Path(str(path)).resolve()
+                        except OSError:
+                            resolved = None
+                        if resolved == target:
+                            raise error
+                        return real_scan(path)  # type: ignore[arg-type]
+
+                    with mock.patch("os.scandir", side_effect=blocked):
+                        self.assertEqual(library._backup_payload_bytes(temp.db, specs), good_only)
+                        folder = library.ensure_backup(specs)
+                        backup = cast(Path, folder)
+                        self.assertTrue(library.is_complete(backup))
+                        report = json.loads((backup / library.DRIVES_MANIFEST).read_text(encoding="utf-8"))
+                        by_label = {row["label"]: row for row in report["drives"]}
+                        self.assertEqual(by_label["GOOD"]["status"], "copied")
+                        self.assertGreater(by_label["GOOD"]["files"], 0)
+                        self.assertEqual(by_label["BAD"]["status"], "permission")
+                        self.assertEqual(by_label["BAD"]["files"], 0)
+                        blob = b"".join(
+                            path.read_bytes() for path in backup.rglob("*") if path.is_file()
+                        )
+                        self.assertIn(b"good-bytes", blob)
+                        self.assertNotIn(b"visible-bytes", blob)
+                        self.assertNotIn(b"history-bytes", blob)
+                        self.assertFalse((backup / "drives" / library._drive_dir_name("dev-bad")).exists())
+                        key = str(temp.db.resolve())
+                        self.assertIn(key, library._backed_up)
+                        self.assertNotIn("dev-bad", library._copied_drives[key])
+                        self.assertIn("dev-good", library._copied_drives[key])
+                        if error.errno == errno.EACCES:
+                            conn = library.begin_write()
+                            try:
+                                self.assertEqual(conn.execute("SELECT 1").fetchone()[0], 1)
+                                conn.rollback()
+                            finally:
+                                conn.close()
+                    retried = library.ensure_backup(specs)
+                    self.assertIsInstance(retried, Path)
+                    later = cast(Path, retried)
+                    self.assertTrue(library.is_complete(later))
+                    later_blob = b"".join(
+                        path.read_bytes() for path in later.rglob("*") if path.is_file()
+                    )
+                    self.assertIn(b"visible-bytes", later_blob)
+                    self.assertIn(b"good-bytes", later_blob)
+                    self.assertIn("dev-bad", library._copied_drives[key])
+
+    def test_a_permission_error_mid_copy_discards_that_drive_only(self) -> None:
+        """Drop a drive's partial files when a later file cannot be read.
+
+        The first file of the unreadable drive is copied, then opening the
+        next file raises ``PermissionError``. That drive directory is not
+        in the finished backup. The other drive is. ``EPERM`` from the
+        source open is the same skip.
+
+        Returns:
+            None. The test fails if the partial file is published or the
+            other drive is discarded.
+        """
+        for error in (
+            PermissionError(errno.EACCES, "denied"),
+            OSError(errno.EPERM, "not permitted"),
+        ):
+            with self.subTest(errno=error.errno):
+                with TempLibrary() as temp:
+                    good = temp.root / "good" / "_Serato_"
+                    bad = temp.root / "bad" / "_Serato_"
+                    _write(good / "Subcrates" / "Good.crate", b"good-bytes")
+                    _write(bad / "Subcrates" / "First.crate", b"first-partial-bytes")
+                    _write(bad / "Subcrates" / "Second.crate", b"second-partial-bytes")
+                    real = library._copy_readonly
+
+                    def boom(source: Path, dest: Path) -> None:
+                        if source.name == "Second.crate":
+                            raise error
+                        real(source, dest)
+
+                    specs = [
+                        _spec("dev-good", "GOOD", good),
+                        _spec("dev-bad", "BAD", bad),
+                    ]
+                    with mock.patch.object(library, "_copy_readonly", side_effect=boom):
+                        folder = library.ensure_backup(specs)
+                    backup = cast(Path, folder)
+                    self.assertTrue(library.is_complete(backup))
+                    report = json.loads((backup / library.DRIVES_MANIFEST).read_text(encoding="utf-8"))
+                    by_label = {row["label"]: row for row in report["drives"]}
+                    self.assertEqual(by_label["GOOD"]["status"], "copied")
+                    self.assertEqual(by_label["BAD"]["status"], "permission")
+                    self.assertEqual(by_label["BAD"]["files"], 0)
+                    blob = b"".join(path.read_bytes() for path in backup.rglob("*") if path.is_file())
+                    self.assertIn(b"good-bytes", blob)
+                    self.assertNotIn(b"first-partial-bytes", blob)
+                    self.assertNotIn(b"second-partial-bytes", blob)
+                    self.assertFalse((backup / "drives" / library._drive_dir_name("dev-bad")).exists())
+
+    def test_a_real_copy_error_still_fails_the_backup(self) -> None:
+        """Keep a full disk, a missing file, and an I/O error as failures.
+
+        The readable drive is copied into the staging folder first. The
+        next file then raises. Nothing is published, and the process does
+        not record the database as backed up.
+
+        Returns:
+            None. The test fails if any of those errors is stored as
+            ``permission`` or a finished backup remains.
+        """
+        for error in (
+            OSError(errno.EIO, "read failed"),
+            OSError(errno.ENOENT, "unplugged"),
+            OSError(errno.ENOSPC, "no space"),
+        ):
+            with self.subTest(errno=error.errno):
+                with TempLibrary() as temp:
+                    good = temp.root / "good" / "_Serato_"
+                    bad = temp.root / "bad" / "_Serato_"
+                    _write(good / "Subcrates" / "Good.crate", b"good-bytes")
+                    _write(bad / "Subcrates" / "Gone.crate", b"gone-bytes")
+                    real = library._copy_readonly
+
+                    def boom(source: Path, dest: Path) -> None:
+                        if source.name == "Gone.crate":
+                            raise error
+                        real(source, dest)
+
+                    before = temp.db.read_bytes()
+                    with mock.patch.object(library, "_copy_readonly", side_effect=boom):
+                        with self.assertRaises(OSError) as caught:
+                            library.ensure_backup(
+                                [
+                                    _spec("dev-good", "GOOD", good),
+                                    _spec("dev-bad", "BAD", bad),
+                                ]
+                            )
+                    self.assertEqual(caught.exception.errno, error.errno)
+                    self.assertNotIsInstance(caught.exception, library.DriveUnreadable)
+                    self.assertEqual(library.list_backups(temp.root / "Backups"), [])
+                    self.assertNotIn(str(temp.db.resolve()), library._backed_up)
+                    self.assertEqual(temp.db.read_bytes(), before)
+                    self.assertEqual((good / "Subcrates" / "Good.crate").read_bytes(), b"good-bytes")
+                    self.assertFalse((temp.root / "Backups").exists() and any(
+                        path.name.endswith("-failed") or ".partial" in path.name
+                        for path in (temp.root / "Backups").iterdir()
+                    ))
+
+    def test_the_backup_record_stays_locked_while_a_drive_is_copied(self) -> None:
+        """Hold the backup lock from the decision through the set update.
+
+        A second caller cannot take the lock while the first call is
+        inside the drive copy.
+
+        Returns:
+            None. The test fails if the lock is free during the copy.
+        """
+        with TempLibrary() as temp:
+            root = temp.root / "lock" / "_Serato_"
+            _write(root / "Subcrates" / "Lock.crate", b"lock-bytes")
+            spec = _spec("dev-lockset", "LOCKSET", root)
+            inside = threading.Event()
+            release = threading.Event()
+
+            def hold(drive: object, staging: Path) -> int:
+                inside.set()
+                self.assertTrue(release.wait(5), "the copy was not released")
+                return 0
+
+            errors: list[BaseException] = []
+
+            def first() -> None:
+                try:
+                    library.ensure_backup([spec])
+                except BaseException as exc:  # noqa: BLE001 - the thread must report it
+                    errors.append(exc)
+
+            with mock.patch.object(library, "_copy_drive_tree", side_effect=hold):
+                thread = threading.Thread(target=first)
+                thread.start()
+                self.assertTrue(inside.wait(5))
+                acquired = library._backup_guard.acquire(timeout=0.2)
+                if acquired:
+                    library._backup_guard.release()
+                release.set()
+                thread.join(5)
+            self.assertFalse(acquired)
+            self.assertFalse(thread.is_alive())
+            self.assertEqual(errors, [])
+            self.assertIn(str(temp.db.resolve()), library._backed_up)
+
     def test_docs_name_the_drive_copy_and_the_disk_check(self) -> None:
         """Keep the guide and the agent notes on the backup that ships.
 
@@ -679,7 +912,8 @@ class DriveBackupTests(unittest.TestCase):
         architecture = (ROOT / "docs" / "architecture.md").read_text(encoding="utf-8")
         self.assertIn("drives/<id>/", architecture)
         self.assertIn("There is not enough disk space to back up the library.", architecture)
-        self.assertIn("`Recording` and `DJ Sessions` are included", architecture)
+        self.assertIn("`Recording` and `DJ Sessions` are audio, not library metadata", architecture)
+        self.assertIn("records `permission`", architecture)
         self.assertIn("backup-drives", architecture)
         safety = (ROOT / "docs" / "guide" / "safety.md").read_text(encoding="utf-8")
         self.assertIn("`drives`", safety)

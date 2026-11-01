@@ -508,6 +508,7 @@
   "snapshots.take": "Take a snapshot",
   "snapshots.trigger": "snapshot",
   "snapshots.unavailableDrives": "Unavailable: {drives}.",
+  "snapshots.unknownDrive": "Unknown drive",
   "snapshots.unknownTime": "Unknown time",
   "snapshots.unreadable": "The snapshots could not be read.",
   "space.appleMusic": "Apple Music",
