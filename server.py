@@ -37,6 +37,7 @@ import related
 import setup_flow
 import snapshots
 import telemetry
+import update_check
 import version_info
 import waveform
 
@@ -1670,6 +1671,9 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/api/version":
             self.send_json(version_info.payload())
             return
+        if parsed.path == "/api/update":
+            self.send_json(update_check.status())
+            return
         try:
             if parsed.path == "/api/drive-check":
                 self._get_drive_check(query)
@@ -1896,6 +1900,9 @@ class Handler(BaseHTTPRequestHandler):
             return
         if parsed.path == "/api/logs/open":
             self._post_open_logs()
+            return
+        if parsed.path == "/api/update":
+            self._post_update(payload)
             return
         if parsed.path not in LEGACY_ALLOWED_POSTS and setup_flow.legacy_folder() is not None:
             self.send_json({"error": legacy_library.WRITE_BLOCKED, "read_only": True}, status=409)
@@ -2310,6 +2317,47 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(result)
             return
         raise library.LibraryError("That related-tracks action is not available.")
+
+    def _post_update(self, payload: dict[str, object]) -> None:
+        """Save an update-check choice, or open the offered release page.
+
+        Exactly one of ``enabled`` (bool), ``include_prereleases`` (bool),
+        ``skip`` (a release tag), or ``open`` (true) is accepted. Saving a
+        choice answers with the new status. Turning the check on does not
+        wait for GitHub: the page asks ``GET /api/update`` next. The
+        library is not opened.
+
+        Args:
+            payload: Parsed JSON body.
+        """
+        keys = [key for key in ("enabled", "include_prereleases", "skip", "open") if key in payload]
+        if len(keys) != 1:
+            self.send_json({"error": "Send one update choice."}, status=400)
+            return
+        key = keys[0]
+        value = payload[key]
+        if key == "open":
+            if value is not True:
+                self.send_json({"error": "open must be true."}, status=400)
+                return
+            self.send_json({"opened": update_check.open_release()})
+            return
+        try:
+            if key == "skip":
+                if not isinstance(value, str):
+                    raise ValueError("skip must be a release version.")
+                update_check.set_choice(skipped=value)
+            elif not isinstance(value, bool):
+                raise ValueError(f"{key} must be true or false.")
+            elif key == "enabled":
+                update_check.set_choice(enabled=value)
+            else:
+                update_check.set_choice(include_prereleases=value)
+        except ValueError as exc:
+            self.send_json({"error": str(exc)}, status=400)
+            return
+        values = update_check.state()
+        self.send_json({"enabled": values["enabled"], "include_prereleases": values["include_prereleases"], "skipped": values["skipped"]})
 
     def _post_open_logs(self) -> None:
         """Open the local logs folder.
