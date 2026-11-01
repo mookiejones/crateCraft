@@ -118,6 +118,14 @@ export interface ElementIds {
   "files-review": HTMLButtonElement;
   "files-refresh": HTMLButtonElement;
   "files-search": HTMLInputElement;
+  "portable-dialog": HTMLDialogElement;
+  "portable-title": HTMLHeadingElement;
+  "portable-note": HTMLParagraphElement;
+  "portable-verdict": HTMLParagraphElement;
+  "portable-summary": HTMLParagraphElement;
+  "portable-findings": HTMLUListElement;
+  "portable-status": HTMLParagraphElement;
+  "portable-close": HTMLButtonElement;
   "open-shortcuts": HTMLButtonElement;
   "shortcuts-dialog": HTMLDialogElement;
   "shortcuts-title": HTMLHeadingElement;
