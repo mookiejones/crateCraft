@@ -347,6 +347,7 @@ var SeratoWizard = (() => {
     "plan.cratesChanged": "Crates changed",
     "plan.cratesRegistered": "Crates registered so Serato keeps them",
     "plan.cratesRemoved": "Crates removed",
+    "plan.cratesSkipped": "Crates skipped",
     "plan.cratesUnavailable": "Crates on an unavailable drive",
     "plan.cueChanges": "Cue changes",
     "plan.deletedCrates": "Deleted crates",
@@ -518,6 +519,10 @@ var SeratoWizard = (() => {
     "snapshots.reviewRestore": "Review restore",
     "snapshots.reviewUndo": "Review undo",
     "snapshots.saved": "Snapshot saved.",
+    "snapshots.skippedCrates": {
+      one: "Restore finished. {count} crate file was skipped because its snapshot copy could not be read: {names}.",
+      other: "Restore finished. {count} crate files were skipped because their snapshot copy could not be read: {names}."
+    },
     "snapshots.saving": "Saving snapshot…",
     "snapshots.seratoUnknown": "Serato version unknown",
     "snapshots.seratoVersion": "Serato {version} (build {build})",
@@ -1077,6 +1082,7 @@ var SeratoWizard = (() => {
     "plan.cratesChanged": "Cajas modificadas",
     "plan.cratesRegistered": "Cajas registradas para que Serato las conserve",
     "plan.cratesRemoved": "Cajas quitadas",
+    "plan.cratesSkipped": "Cajas omitidas",
     "plan.cratesUnavailable": "Cajas en una unidad no disponible",
     "plan.cueChanges": "Cambios de cues",
     "plan.deletedCrates": "Cajas eliminadas",
@@ -1248,6 +1254,10 @@ var SeratoWizard = (() => {
     "snapshots.reviewRestore": "Revisar restauración",
     "snapshots.reviewUndo": "Revisar deshacer",
     "snapshots.saved": "Instantánea guardada.",
+    "snapshots.skippedCrates": {
+      one: "Restauración terminada. Se omitió {count} archivo de caja porque no se pudo leer su copia de la instantánea: {names}.",
+      other: "Restauración terminada. Se omitieron {count} archivos de caja porque no se pudo leer su copia de la instantánea: {names}."
+    },
     "snapshots.saving": "Guardando instantánea…",
     "snapshots.seratoUnknown": "Versión de Serato desconocida",
     "snapshots.seratoVersion": "Serato {version} (compilación {build})",

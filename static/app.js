@@ -323,6 +323,7 @@
     "plan.cratesChanged": "Crates changed",
     "plan.cratesRegistered": "Crates registered so Serato keeps them",
     "plan.cratesRemoved": "Crates removed",
+    "plan.cratesSkipped": "Crates skipped",
     "plan.cratesUnavailable": "Crates on an unavailable drive",
     "plan.cueChanges": "Cue changes",
     "plan.deletedCrates": "Deleted crates",
@@ -494,6 +495,10 @@
     "snapshots.reviewRestore": "Review restore",
     "snapshots.reviewUndo": "Review undo",
     "snapshots.saved": "Snapshot saved.",
+    "snapshots.skippedCrates": {
+      one: "Restore finished. {count} crate file was skipped because its snapshot copy could not be read: {names}.",
+      other: "Restore finished. {count} crate files were skipped because their snapshot copy could not be read: {names}."
+    },
     "snapshots.saving": "Saving snapshot…",
     "snapshots.seratoUnknown": "Serato version unknown",
     "snapshots.seratoVersion": "Serato {version} (build {build})",
@@ -1053,6 +1058,7 @@
     "plan.cratesChanged": "Cajas modificadas",
     "plan.cratesRegistered": "Cajas registradas para que Serato las conserve",
     "plan.cratesRemoved": "Cajas quitadas",
+    "plan.cratesSkipped": "Cajas omitidas",
     "plan.cratesUnavailable": "Cajas en una unidad no disponible",
     "plan.cueChanges": "Cambios de cues",
     "plan.deletedCrates": "Cajas eliminadas",
@@ -1224,6 +1230,10 @@
     "snapshots.reviewRestore": "Revisar restauración",
     "snapshots.reviewUndo": "Revisar deshacer",
     "snapshots.saved": "Instantánea guardada.",
+    "snapshots.skippedCrates": {
+      one: "Restauración terminada. Se omitió {count} archivo de caja porque no se pudo leer su copia de la instantánea: {names}.",
+      other: "Restauración terminada. Se omitieron {count} archivos de caja porque no se pudo leer su copia de la instantánea: {names}."
+    },
     "snapshots.saving": "Guardando instantánea…",
     "snapshots.seratoUnknown": "Versión de Serato desconocida",
     "snapshots.seratoVersion": "Serato {version} (compilación {build})",
@@ -2591,6 +2601,7 @@
     appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
     appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
     appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
+    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
     if (plan.registration_warning) {
       const warning = document.createElement("p");
       warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
@@ -2675,11 +2686,16 @@
     try {
       const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
       const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
-      await postJSON("/api/snapshots", body);
+      const result = await postJSON("/api/snapshots", body);
+      const skipped = result.crates_skipped || [];
       el("snapshot-dialog").close();
-      state.snapshotMessage = "snapshots.restored";
+      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
       await loadSnapshots();
       await reloadLibrary();
+      if (skipped.length) {
+        const names = skipped.map((item) => item.name || item.path || t("plan.item")).join(", ");
+        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
+      }
     } catch (error2) {
       setSnapshotDialogStatus(failureOf(error2).message);
       confirm2.disabled = false;

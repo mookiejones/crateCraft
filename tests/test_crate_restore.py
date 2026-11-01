@@ -610,15 +610,77 @@ class CrateRestoreTests(unittest.TestCase):
                 drives.append(copied)
             manifest["drives"] = drives
             damaged = _rewrite(store, manifest)
+            plan = store.plan(damaged)
+            registered = plan["crates_registered"]
+            skipped = plan["crates_skipped"]
+            assert isinstance(registered, list)
+            assert isinstance(skipped, list)
+            self.assertFalse(any(str(item["path"]).endswith("House.crate") for item in registered))
+            self.assertTrue(any(str(item["path"]).endswith("House.crate") for item in skipped))
+            self.assertTrue(any(str(item["path"]).endswith("Peak.crate") for item in registered))
             house.write_bytes(_crate(["Music/kept.mp3"]))
             kept = house.read_bytes()
             with self.assertLogs("serato", level="WARNING") as logs:
-                store.restore(damaged)
+                result = store.restore(damaged)
             self.assertTrue(any("could not be read" in line for line in logs.output))
+            result_skipped = result["crates_skipped"]
+            assert isinstance(result_skipped, list)
+            self.assertTrue(any(str(item["path"]).endswith("House.crate") for item in result_skipped))
+            changes = result["changes"]
+            assert isinstance(changes, dict)
+            self.assertFalse(any(str(item["path"]).endswith("House.crate") for item in changes["crates_registered"]))
             self.assertEqual(house.read_bytes(), kept)
             self.assertEqual(peak.read_bytes(), _crate(["Music/same-b.mp3"]))
             self.assertIn("Peak.crate", _filenames(temp.db))
             self.assertNotIn("House.crate", _filenames(temp.db))
+
+    def test_an_unreadable_crate_blob_is_not_listed_as_registered(self) -> None:
+        """Report a crate whose hash does not point at a blob.
+
+        The plan and the restore result name it as skipped. It is not
+        listed as a crate that will be registered. The other crate is.
+
+        Returns:
+            None. The test fails if House is registered or missing from
+            the skipped list.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            (sub / "House.crate").write_bytes(_crate(["Music/same-a.mp3"]))
+            (sub / "Peak.crate").write_bytes(_crate(["Music/same-b.mp3"]))
+            saved = store.take("manual", "Two crates.")
+            manifest = dict(store._manifest(saved["id"]))
+            drives = []
+            for record in manifest["drives"]:
+                copied = dict(record)
+                files = []
+                for item in copied["files"]:
+                    entry = dict(item)
+                    if str(entry.get("path", "")).endswith("House.crate"):
+                        entry["sha256"] = "a" * 64
+                    files.append(entry)
+                copied["files"] = files
+                drives.append(copied)
+            manifest["drives"] = drives
+            damaged = _rewrite(store, manifest)
+            plan = store.plan(damaged)
+            registered = plan["crates_registered"]
+            skipped = plan["crates_skipped"]
+            assert isinstance(registered, list)
+            assert isinstance(skipped, list)
+            self.assertFalse(any(str(item.get("path", "")).endswith("House.crate") for item in registered))
+            self.assertEqual(
+                [str(item.get("path")) for item in skipped if str(item.get("path", "")).endswith("House.crate")],
+                ["Subcrates/House.crate"],
+            )
+            result = store.restore(damaged)
+            result_skipped = result["crates_skipped"]
+            assert isinstance(result_skipped, list)
+            self.assertTrue(any(str(item.get("path", "")).endswith("House.crate") for item in result_skipped))
+            self.assertNotIn("House.crate", _filenames(temp.db))
+            self.assertIn("Peak.crate", _filenames(temp.db))
 
     def test_registration_does_not_open_another_snapshot(self) -> None:
         """Avoid a nested snapshot while a restore could be holding the journal.

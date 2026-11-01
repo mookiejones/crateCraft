@@ -427,6 +427,8 @@ export interface RestorePlan {
    * them into the library so Serato 4/5 does not delete them on launch.
    */
   crates_registered?: PlanName[];
+  /** Crate files whose snapshot copy has no hash or could not be read. */
+  crates_skipped?: PlanName[];
   /** English warning when crate files will not be registered. */
   registration_warning?: string | null;
   /** Catalog code for `registration_warning`. */

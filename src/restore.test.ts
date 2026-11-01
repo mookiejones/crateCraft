@@ -7,7 +7,8 @@ vi.mock("./api", async () => {
   return { ...actual, postJSON };
 });
 
-import { setLocale } from "./i18n";
+import { setLocale, t } from "./i18n";
+import { el } from "./dom";
 import { confirmSnapshotRestore, openSnapshotPlan, renderSnapshots, repaintSnapshotPlan } from "./restore";
 import type { RestorePlan } from "./api-types";
 import { state } from "./state";
@@ -57,6 +58,21 @@ describe("restore", () => {
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
   });
 
+  it("reports skipped crates after restore in the active language", async () => {
+    postJSON.mockResolvedValue({
+      crates_skipped: [{ name: "House", path: "Subcrates/House.crate" }],
+    });
+    await confirmSnapshotRestore();
+    expect(document.getElementById("snapshots-status")?.textContent).toBe(
+      "Restore finished. 1 crate file was skipped because its snapshot copy could not be read: House.",
+    );
+    setLocale("es");
+    el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: 1, names: "House" });
+    expect(document.getElementById("snapshots-status")?.textContent).toContain("Se omitió");
+    expect(document.getElementById("snapshots-status")?.textContent).toContain("House");
+    setLocale("en");
+  });
+
   it("posts undo or restore with confirm true", async () => {
     await confirmSnapshotRestore();
     expect(postJSON).toHaveBeenCalledWith("/api/snapshots", {
@@ -80,6 +96,7 @@ describe("restore", () => {
     const text = document.getElementById("snapshot-plan")?.textContent ?? "";
     expect(text).toContain("Crates added: 1. House");
     expect(text).toContain("Crates registered so Serato keeps them: none");
+    expect(text).toContain("Crates skipped: none");
     expect(text).toContain("Tracks added: 1. Music/a.mp3");
 
     postJSON.mockResolvedValue({

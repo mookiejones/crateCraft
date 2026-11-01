@@ -184,6 +184,7 @@ function paintSnapshotPlan(plan: RestorePlan) {
   appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
   appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
   appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
+  appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
   if (plan.registration_warning) {
     const warning = document.createElement("p");
     warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
@@ -314,11 +315,16 @@ export async function confirmSnapshotRestore() {
     const body = undoing
       ? { action: "undo", confirm: true }
       : { action: "restore", id: state.snapshotPlanId, confirm: true };
-    await postJSON("/api/snapshots", body);
+    const result = await postJSON<RestorePlan>("/api/snapshots", body);
+    const skipped = result.crates_skipped || [];
     el("snapshot-dialog").close();
-    state.snapshotMessage = "snapshots.restored";
+    state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
     await loadSnapshots();
     await reloadLibrary();
+    if (skipped.length) {
+      const names = skipped.map((item) => item.name || item.path || t("plan.item")).join(", ");
+      el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
+    }
   } catch (error) {
     setSnapshotDialogStatus(failureOf(error).message);
     confirm.disabled = false;

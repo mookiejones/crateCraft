@@ -930,12 +930,14 @@ class SnapshotStore:
             self._rollback_restore(pre["id"], exc)
         self._clear_restore_journal()
         self.rebase_fingerprint()
+        skipped = diff.get("crates_skipped")
         return {
             "ok": True,
             "dry_run": False,
             "restored": snapshot_id,
             "undo_snapshot": pre["id"],
             "changes": diff,
+            "crates_skipped": skipped if isinstance(skipped, list) else [],
         }
 
     def undo_outside(self) -> dict[str, object]:
@@ -1111,8 +1113,10 @@ class SnapshotStore:
                 if drive_id not in visible or drive_id in absent:
                     row["present"] = False
         diff = _diff_contents(current, target, snapshot_id)
-        registered, notice = self._crates_to_register(snapshot_id)
+        skipped, readable = self._classify_crate_copies(snapshot_id)
+        registered, notice = self._crates_to_register(snapshot_id, readable)
         diff["crates_registered"] = registered
+        diff["crates_skipped"] = skipped
         diff["registration_warning"] = None if notice is None else notice.text
         diff["registration_warning_code"] = None if notice is None else notice.code
         return diff
@@ -1239,16 +1243,70 @@ class SnapshotStore:
         except library.LibraryError as exc:
             raise SnapshotError(exc.message, exc.status) from exc
 
-    def _crates_to_register(self, snapshot_id: str) -> tuple[list[dict[str, object]], CodedNotice | None]:
+    def _classify_crate_copies(self, snapshot_id: str) -> tuple[list[dict[str, object]], set[str]]:
+        """Split crate files into skipped copies and readable names.
+
+        A crate with no hash, or a hash whose blob cannot be read, is
+        skipped. The same basename on two drives is one row. A name that
+        can be read from any drive is not skipped.
+
+        Args:
+            snapshot_id: Snapshot to read.
+
+        Returns:
+            Skipped rows (name, path, drive) and the casefolded basenames
+            that have a readable copy. Nothing is written.
+        """
+        manifest = self._manifest(snapshot_id)
+        first: dict[str, dict[str, object]] = {}
+        readable: set[str] = set()
+        for record in _drive_records(manifest):
+            drive_id = str(record.get("drive_id") or "")
+            label = str(record.get("label") or drive_id)
+            for item in record.get("files") or []:
+                if not isinstance(item, dict):
+                    continue
+                rel = str(item.get("path") or "")
+                if _excluded_relative(rel):
+                    continue
+                name = Path(rel).name
+                if not _is_crate_filename(name):
+                    continue
+                key = name.casefold()
+                first.setdefault(key, {
+                    "drive_id": drive_id,
+                    "drive_label": label,
+                    "name": Path(name).stem.replace("%%", " / "),
+                    "path": rel,
+                })
+                digest = item.get("sha256")
+                if not isinstance(digest, str):
+                    continue
+                try:
+                    self._read_blob(digest)
+                except SnapshotError:
+                    continue
+                readable.add(key)
+        skipped = [row for key, row in first.items() if key not in readable]
+        return skipped, readable
+
+    def _crates_to_register(
+        self,
+        snapshot_id: str,
+        readable: set[str] | None = None,
+    ) -> tuple[list[dict[str, object]], CodedNotice | None]:
         """List crate files this restore would register, and any skip warning.
 
         A snapshot with no master database registers nothing, and those
         crate files are not listed. The same basename on two drives is one
         row. A database with no Serato Library root crate registers nothing
-        and the warning explains that Serato may remove the files.
+        and the warning explains that Serato may remove the files. A crate
+        whose snapshot copy cannot be read is not listed here.
 
         Args:
             snapshot_id: Snapshot whose restore would register these crates.
+            readable: Casefolded basenames that have a readable blob. None
+                classifies the snapshot first.
 
         Returns:
             The rows, and the warning or None. Nothing is written.
@@ -1257,6 +1315,8 @@ class SnapshotStore:
         import library
 
         manifest = self._manifest(snapshot_id)
+        if readable is None:
+            _skipped, readable = self._classify_crate_copies(snapshot_id)
         if not _snapshot_has_master(manifest):
             return [], None
         with _manifest_master(manifest, self._read_blob) as master:
@@ -1277,12 +1337,10 @@ class SnapshotStore:
                 name = Path(rel).name
                 if not _is_crate_filename(name):
                     continue
-                if not isinstance(item.get("sha256"), str):
-                    continue
                 if not library.is_registerable_crate_name(name):
                     continue
                 key = name.casefold()
-                if key in seen or key in known:
+                if key not in readable or key in seen or key in known:
                     continue
                 seen.add(key)
                 rows.append({
@@ -1574,7 +1632,13 @@ class SnapshotStore:
                     if hashlib.sha256(data).hexdigest() != digest:
                         raise SnapshotError("A snapshot file does not match its hash.")
                 elif isinstance(digest, str):
-                    self._read_blob(digest)
+                    if _is_crate_filename(Path(rel).name):
+                        try:
+                            self._read_blob(digest)
+                        except SnapshotError:
+                            continue
+                    else:
+                        self._read_blob(digest)
         for track in _track_records(manifest):
             frames = track.get("frames")
             stored = track.get("stored")
@@ -2024,7 +2088,12 @@ def _contents(manifest: Mapping[str, object], reader: Callable[[str], bytes]) ->
                 digest = item.get("sha256")
                 if not isinstance(digest, str):
                     continue
-                data = reader(digest)
+                try:
+                    data = reader(digest)
+                except SnapshotError:
+                    if _is_crate_filename(Path(rel).name):
+                        continue
+                    raise
             crates.extend(_crates_from_file(drive_id, label, present, rel, data))
     crates.extend(_sqlite_crates(manifest, reader))
     cues: list[CueTrackView] = []

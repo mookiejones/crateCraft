@@ -934,7 +934,7 @@ class SnapshotTests(unittest.TestCase):
         page = Path("static/app.js").read_text(encoding="utf-8")
         markup = Path("static/index.html").read_text(encoding="utf-8")
         self.assertIn('data-view="snapshots"', markup)
-        for field in ("plan.crates", "plan.tracks", "plan.cues", "plan.grids", "plan.dry_run", "plan.restore_blocked", "plan.deleted", "crates_registered", "registration_warning"):
+        for field in ("plan.crates", "plan.tracks", "plan.cues", "plan.grids", "plan.dry_run", "plan.restore_blocked", "plan.deleted", "crates_registered", "crates_skipped", "registration_warning"):
             self.assertIn(field, page)
 
     def test_reader_protocol_returns_crates_cues_grids_and_tags(self) -> None:

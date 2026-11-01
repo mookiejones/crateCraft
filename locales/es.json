@@ -320,6 +320,7 @@
   "plan.cratesChanged": "Cajas modificadas",
   "plan.cratesRegistered": "Cajas registradas para que Serato las conserve",
   "plan.cratesRemoved": "Cajas quitadas",
+  "plan.cratesSkipped": "Cajas omitidas",
   "plan.cratesUnavailable": "Cajas en una unidad no disponible",
   "plan.cueChanges": "Cambios de cues",
   "plan.deletedCrates": "Cajas eliminadas",
@@ -491,6 +492,10 @@
   "snapshots.reviewRestore": "Revisar restauración",
   "snapshots.reviewUndo": "Revisar deshacer",
   "snapshots.saved": "Instantánea guardada.",
+  "snapshots.skippedCrates": {
+    "one": "Restauración terminada. Se omitió {count} archivo de caja porque no se pudo leer su copia de la instantánea: {names}.",
+    "other": "Restauración terminada. Se omitieron {count} archivos de caja porque no se pudo leer su copia de la instantánea: {names}."
+  },
   "snapshots.saving": "Guardando instantánea…",
   "snapshots.seratoUnknown": "Versión de Serato desconocida",
   "snapshots.seratoVersion": "Serato {version} (compilación {build})",
