@@ -8,9 +8,9 @@
   Rekordbox writes rekordbox.xml. The Files view browses folders
   and previews a rename, move, replace, or delete before it is saved.
   The Snapshots view lists hash-checked library snapshots and previews a
-  restore before it is confirmed. tokens.css, app.css, and app.js are local
-  files. The page talks only to the library server on 127.0.0.1. It does not
-  open master.sqlite itself.
+  restore before it is confirmed. Gig is a read-only ready score.
+  tokens.css, app.css, and app.js are local files. The page talks only to
+  the library server on 127.0.0.1. It does not open master.sqlite itself.
 -->
 <html lang="en">
 <head>
@@ -49,6 +49,7 @@
         <button type="button" data-view="stems" role="tab" data-i18n="view.stems">Stems</button>
         <button type="button" data-view="files" role="tab" data-i18n="view.files">Files</button>
         <button type="button" data-view="snapshots" role="tab" data-i18n="view.snapshots">Snapshots</button>
+        <button type="button" id="gig-tab" data-view="gig" role="tab" aria-controls="gig-panel" data-i18n="view.gig">Gig</button>
       </div>
       <div id="crate-tools">
         <label class="rail-field">
@@ -182,6 +183,16 @@
           <p id="operations-status" class="notice" role="status" aria-live="polite"></p>
           <div id="operations-list" class="files-list" role="list" aria-label="Operation log" data-i18n-attr="aria-label:operations.heading" aria-busy="false" tabindex="0"></div>
         </section>
+      </section>
+
+      <section id="gig-panel" class="gig-panel" role="tabpanel" hidden aria-labelledby="gig-heading" aria-busy="false">
+        <h2 id="gig-heading" class="visually-hidden" data-i18n="gig.heading">Gig check</h2>
+        <div class="browser-bar">
+          <p id="gig-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="gig-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+        </div>
+        <p id="gig-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="gig-report" class="gig-report"></div>
       </section>
       <div id="player-bar" class="player-bar"></div>
     </main>

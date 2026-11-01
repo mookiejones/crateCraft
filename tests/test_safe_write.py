@@ -460,6 +460,42 @@ class SafeWriteTests(unittest.TestCase):
             self.assertEqual(_names_with_wal(temp.db)[1], name_before)
             self.assertEqual(_snapshot(temp.db, crate), before)
 
+    def test_read_only_store_open_leaves_an_unfinished_write(self) -> None:
+        """Do not roll back a write when the store is opened read-only.
+
+        The gig check opens ``SnapshotStore(master, recover=False)`` and
+        promises not to write. An unfinished write's journal must survive
+        that open, and the library must keep the committed bytes. A normal
+        open still recovers.
+
+        Returns:
+            None. The test fails if a read-only open changes the library.
+        """
+        with TempLibrary() as temp:
+            crate = _drive_crate(temp.root)
+            before = _snapshot(temp.db, crate, _wal(temp.db))
+
+            def apply(conn: sqlite3.Connection, session: safe_write.Session) -> None:
+                _rename(conn, session, crate)
+
+            with self.assertRaises(InjectedCrash):
+                safe_write.run(
+                    "rename_track",
+                    "Renamed",
+                    apply,
+                    extra_files=(crate,),
+                    fault=Fault(crash=True),
+                )
+            committed = _snapshot(temp.db, crate, _wal(temp.db))
+            with mock.patch("snapshots.serato_dj_running", return_value=False):
+                snapshots.SnapshotStore(temp.db, recover=False)
+            self.assertEqual(_snapshot(temp.db, crate, _wal(temp.db)), committed)
+            self.assertTrue(_journal(temp.db).is_file())
+            with mock.patch("snapshots.serato_dj_running", return_value=False):
+                snapshots.SnapshotStore(temp.db)
+            self.assertEqual(_snapshot(temp.db, crate, _wal(temp.db)), before)
+            self.assertFalse(_journal(temp.db).exists())
+
     def test_disk_full_refuses_the_write(self) -> None:
         """Refuse the write when the preimage cannot be stored.
 
