@@ -340,6 +340,8 @@ Sentry uses `server_name` `local`, environment `local`, release `app_config.APP_
 
 `app_log.py` writes `serato-library.log` with `RotatingFileHandler`: 1 MiB and three backups. The directory is `~/Library/Logs/Serato Library` on macOS, `%LOCALAPPDATA%\Serato Library\Logs` on Windows, and `$XDG_STATE_HOME/serato-library/logs` (or `~/.local/state/serato-library/logs`) elsewhere. `SERATO_LIBRARY_LOG_DIR` overrides it when the value is absolute. The startup line can include the database path. That file is not uploaded. Copying the log skips a symlink and skips a file that is not inside the log directory, and it keeps the newest 200,000 characters. Opening the folder runs `open` on macOS, `xdg-open` elsewhere, and `os.startfile` on Windows. The response does not include the path.
 
+`serato_probe.py` reports the macOS and Windows paths for Serato 3 (`database V2`) and Serato 4/5 (`master.sqlite` plus `root.sqlite`) and each external volume's `_Serato_` folder. `python3 serato_probe.py` prints JSON. It does not open or create those files. Lucid beatgrid storage stays `unconfirmed`. The note is [serato-5-macos.md](serato-5-macos.md).
+
 ## Portable drive check
 
 `drive_check.py` reads one portable drive and reports what to fix on the laptop before the gig. The drive is a folder with `_Serato_` at its root, or that `_Serato_` folder itself. `python3 drive_check.py DRIVE` prints the report. `GET /api/drive-check` returns the same JSON. The page does not show this check. The Gig view is still the open gig-check pull request, and the Files page owns the drive list.
