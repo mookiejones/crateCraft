@@ -1961,8 +1961,15 @@ class Handler(BaseHTTPRequestHandler):
                 status=exc.status,
             )
         except sqlite3.OperationalError as exc:
-            if "locked" in str(exc).lower():
+            try:
                 info = as_dict(_library_call("status"))
+            except (library.LibraryError, sqlite3.DatabaseError):
+                # A damaged file can fail the re-check too; fall back to the
+                # write's own error instead of the generic 500.
+                info = {}
+            if "locked" in str(exc).lower() or info.get("open"):
+                if not info:
+                    info = library.open_error_status(exc)
                 self.send_json({"error": info["message"], "serato": info}, status=409)
                 return
             self.send_json({"error": "The library could not be saved."}, status=500)

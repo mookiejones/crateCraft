@@ -346,8 +346,11 @@ class ErrorCodeTests(unittest.TestCase):
                     self.assertIn(f"error.{code}", catalog)
             for code, template in error_codes.PARAM_CODES.items():
                 with self.subTest(language=language, code=code):
-                    self.assertEqual(catalog[f"error.{code}"].count("{build}"), template.count("{build}"))
-                    self.assertIn("{build}", catalog[f"error.{code}"])
+                    names = re.findall(r"\{([A-Za-z0-9_]+)\}", template)
+                    self.assertTrue(names)
+                    for name in names:
+                        token = "{" + name + "}"
+                        self.assertEqual(catalog[f"error.{code}"].count(token), template.count(token))
         for code, template in error_codes.PARAM_CODES.items():
             self.assertEqual(english[f"error.{code}"], template)
             self.assertNotIn(code, error_codes.ERROR_CODES.values())
