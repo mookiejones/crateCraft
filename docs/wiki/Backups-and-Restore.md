@@ -31,10 +31,12 @@ Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each
 
 An unplugged drive is marked unavailable, never deleted. Its crates and tracks stay in the Backup, and a restore does not remove them. The plan lines are **Crates on an unavailable drive** and **Tracks on an unavailable drive**.
 
-Quit Serato DJ Pro before you restore. If Serato is still running, restore stops. On Serato 5, writes and restores stay off. The note names the version, Protect Library, and that Lucid and Flexible beatgrid storage is not verified. Snapshots can still be taken and read. An unreadable version does the same: writes and restores stay off until a version can be read.
+Quit Serato DJ Pro before you restore. If Serato is still running, restore stops. On Serato 5, writes and restores stay off. The note names the version, Protect Library, and that Lucid and Flexible beatgrid storage is not verified. Snapshots can still be taken and read. The newest session log in `_Serato_/Logs` can name Serato 4 or Serato 5. A log that does not name a dotted version is unknown. If the installed version cannot be read, that log does not turn writes back on. An unreadable version does the same: writes and restores stay off until a version can be read.
 
 If something else changes the Serato folder, including Lexicon, the app saves a snapshot after that change and offers **Review undo**. That puts back the previous snapshot. The app does not read or restore `_Serato_/Lexicon/` or `_Serato_/Export Backups/`.
 
 The first save in a session also copies `master.sqlite` and `root.sqlite` into `Library/Backups/serato-web-` plus the date and time. That folder is the database only. It does not hold your music. The hash-checked Backups live in `Library/Backups/snapshots`, beside `master.sqlite`.
+
+After a save, the app reads a copy of the database back. If the rows or file hashes do not match, it puts the pre-write copy back. That copy is kept in the app's data folder, not in Serato's library folder. Serato 5 stays read-only, and that rollback does not write a Serato 5 library. After a restore writes the files, it checks their hashes. A mismatch puts the snapshot from before the restore back. **Snapshots** lists each edit and each restore. A change that could not be put back stays in that list and is not shown as finished.
 
 On a Mac, external drives need **Files and Folders > Removable Volumes**. The steps are on [Install on a Mac](Install-macOS).

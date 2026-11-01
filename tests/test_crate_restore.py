@@ -15,6 +15,7 @@ from pathlib import Path
 from unittest import mock
 
 import library
+import safe_write
 import snapshots
 from snapshots import DriveSpec, SnapshotBlocked, SnapshotStore
 from tests.fixture import TempLibrary, open_database
@@ -681,6 +682,34 @@ class CrateRestoreTests(unittest.TestCase):
             self.assertTrue(any(str(item.get("path", "")).endswith("House.crate") for item in result_skipped))
             self.assertNotIn("House.crate", _filenames(temp.db))
             self.assertIn("Peak.crate", _filenames(temp.db))
+
+    def test_restore_with_registration_passes_the_row_check(self) -> None:
+        """Restore a crate the database has not heard of while the check is on.
+
+        The check compares database rows with the snapshot plus the crates
+        that were registered. A byte match would fail after those rows are
+        inserted. The operation log records the check as verified.
+
+        Returns:
+            None. The test fails if the restore rolls back or the crate is
+            missing from the database.
+        """
+        with TempLibrary() as temp:
+            _music, serato, store = _drive(temp.root, temp.db)
+            sub = serato / "Subcrates"
+            sub.mkdir()
+            (sub / "House.crate").write_bytes(_crate(["Music/same-a.mp3"]))
+            saved = store.take("manual", "House is only a crate file.")
+            (sub / "House.crate").unlink()
+            result = store.restore(saved["id"])
+            self.assertTrue(result["ok"])
+            self.assertEqual((sub / "House.crate").read_bytes(), _crate(["Music/same-a.mp3"]))
+            self.assertIn("House.crate", _filenames(temp.db))
+            self.assertEqual(_members(temp.db, "House.crate"), [1])
+            entry = safe_write.read_log(temp.db)[-1]
+            self.assertEqual(entry["action"], "restore")
+            self.assertIs(entry["verified"], True)
+            self.assertIs(entry["rolled_back"], False)
 
     def test_registration_does_not_open_another_snapshot(self) -> None:
         """Avoid a nested snapshot while a restore could be holding the journal.

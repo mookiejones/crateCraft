@@ -93,6 +93,9 @@ ERROR_CODES: dict[str, str] = {
     "The space root has no color.": "root_color",
     "The playlist is empty.": "playlist_empty",
     "The note is too long.": "note_too_long",
+    "The write did not match, and putting the library back failed.": "write_rollback_failed",
+    "The write failed, and putting the library back failed.": "write_undo_failed",
+    "The pre-write snapshot does not match its hash.": "write_preimage_mismatch",
 }
 
 # Code -> English template. ``{name}`` is filled from the params the page
@@ -103,6 +106,10 @@ PARAM_CODES: dict[str, str] = {
         "Writes and restores are off until the installed Serato version can be read. "
         "A value that is not a dotted number, including an unreadable plist, is unknown. "
         "Snapshots can still be taken and read."
+    ),
+    "library_log_unconfirmed": (
+        "The session log does not confirm this library file ({database}). "
+        "Writes and restores are off. Snapshots can still be taken and read."
     ),
 }
 
