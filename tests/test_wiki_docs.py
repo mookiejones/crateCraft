@@ -172,3 +172,101 @@ class InstallPageTests(unittest.TestCase):
         self.assertIn("](Install-Windows)", quick)
         self.assertIn("](Quick-Start)", mac)
         self.assertIn("](Quick-Start)", windows)
+
+
+COMPLETION_FIELDS = (
+    "- **Issue:** link",
+    "- **PR and commit:** link and SHA",
+    "- **What changed:** up to 3 bullets",
+    "- **Proof:** the exact test commands with their pass counts, CI status, and a screenshot for UI changes",
+    "- **Not done / risks:**",
+    "- **Next:** what is needed from Charles (@mookiejones) or QA (`mookiejones-qa`)",
+)
+
+COMPLETION_RULES = (
+    "Every agent (Claude, Cursor, and others)",
+    "When the work has an issue, the same report is the final comment on that issue.",
+    'Saying "done", without the issue link, the pull request link, the commit SHA, and the test output, does not count.',
+    "Never claim work you did not push.",
+)
+
+PRE_PR_COMMANDS = """\
+python3 -m pip install -r requirements.txt
+python3 -m unittest discover -s tests -t . -v
+npm ci
+npx tsc --noEmit
+npx tsc --noEmit -p e2e
+npx eslint src e2e
+npm test
+npx playwright install chromium
+npx playwright test -c e2e/playwright.config.ts
+npm run build
+"""
+
+REQUIRED_CHECKS = (
+    "`tests (ubuntu-latest, Python 3.12)`",
+    "`tests (ubuntu-latest, Python 3.14)`",
+    "`tests (windows-latest, Python 3.12)`",
+    "`tests (macos-latest, Python 3.12)`",
+    "`frontend (ubuntu-latest)`",
+    "`frontend (windows-latest)`",
+    "`frontend (macos-latest)`",
+    "`analyze Python` (CodeQL)",
+)
+
+MERGE_RULES = (
+    "If a new push dismisses the `mookiejones-qa` approval, re-request review.",
+    "Do not force-push to `main`.",
+    "Admins can bypass these rules, but should not.",
+    "The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green.",
+    "The workflow also runs `tests (macos-latest, Python 3.12)` and `frontend (macos-latest)` on every pull request. Add those names to branch protection so they block a merge. Until an admin does that, they still run on every pull request, and the previous required set still gates `main`.",
+    "Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK.",
+    "They are not required checks.",
+    "Tests must fail if the logic is broken. QA may mutation-test; weak tests that pass anyway get blocked.",
+    "Cover the edge cases that apply to the change: Windows and macOS paths, symlinks and unmounted drives, Serato 4 vs Serato 5 data, and an empty or missing library.",
+    "Never write extra files inside the Serato folder.",
+)
+
+
+class CompletionReportTests(unittest.TestCase):
+    """Keep the agent finish report and the merge rules on one text."""
+
+    def test_completion_report_template_is_on_every_surface(self) -> None:
+        """Require the same report fields, rules, and pre-PR commands.
+
+        Returns:
+            None. The test fails when a surface drops a field or a command.
+        """
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        claude = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        contributing = (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
+        template = (ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md").read_text(encoding="utf-8")
+        github = (ROOT / "docs" / "github.md").read_text(encoding="utf-8")
+        self.assertEqual(agents, claude)
+        surfaces = (agents, contributing, template, github)
+        for surface in surfaces:
+            self.assertIn("## Completion report", surface)
+            for field in COMPLETION_FIELDS:
+                self.assertIn(field, surface)
+            for rule in COMPLETION_RULES:
+                self.assertIn(rule, surface)
+        indented = "\n".join(f"   {line}" for line in PRE_PR_COMMANDS.splitlines())
+        self.assertIn(indented, agents)
+        self.assertIn(PRE_PR_COMMANDS, contributing)
+        for guide in (agents, contributing):
+            for check in REQUIRED_CHECKS:
+                self.assertIn(check, guide)
+            for rule in MERGE_RULES:
+                self.assertIn(rule, guide)
+        for rule in (
+            "If a new push dismisses the `mookiejones-qa` approval, re-request review.",
+            "Do not force-push to `main`.",
+            "Admins can bypass these rules, but should not.",
+            "The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green.",
+            "Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK.",
+        ):
+            self.assertIn(rule, github)
+        for command in PRE_PR_COMMANDS.splitlines():
+            self.assertIn(f"`{command}`", template)
+        for check in REQUIRED_CHECKS:
+            self.assertIn(check, template)

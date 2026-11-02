@@ -38,6 +38,8 @@ npm run typecheck
 npm run build
 ```
 
+The commands to paste into a pull request are the full list under [After a change](#after-a-change).
+
 ## Layout
 
 - `server.py` is a `ThreadingHTTPServer` bound to `127.0.0.1:8765` when you run it directly. The desktop app asks for a free port instead. GET routes are `/api/health`, `/api/version`, `/api/drive-check`, `/api/library`, `/api/status`, `/api/track`, `/api/audio`, `/api/waveform`, `/api/waveform/overview`, `/api/history`, `/api/duplicates`, `/api/related`, `/api/library-roots`, `/api/files`, `/api/gig-check`, `/api/export.m3u`, `/api/export.rekordbox.xml`, `/api/settings`, `/api/setup`, `/api/logs`, `/api/legacy-library`, `/api/snapshots`, and `/api/operations`. POST routes are `/api/shutdown`, `/api/focus`, `/api/track`, `/api/crate`, `/api/import.m3u`, `/api/reveal`, `/api/related`, `/api/duplicates/merge`, `/api/files`, `/api/settings`, `/api/setup`, `/api/logs/open`, and `/api/snapshots`. Any other path is a file under `static/`. A request whose Host or Origin is not localhost, 127.0.0.1, or [::1] is refused. A frozen build reads `static/` from the PyInstaller bundle. `/api/health`, `/api/version`, and `/api/drive-check` do not open the library. `/api/version` returns `version`, `commit`, and `source`. `/api/shutdown` answers only when the desktop process set a token. When the library file exists, `serve` starts a poll of the Serato files that snapshots after an outside change. A missing library file still serves the page. Setup can then open a folder that already contains a Serato library. That choice does not create or modify the database.
@@ -75,8 +77,9 @@ npm run build
 3. Update `docs/github.md` when a workflow, a release check, or a GitHub setting changes.
 4. Update `PRIVACY.md` and the README when sharing, local logs, or telemetry keys change.
 5. Tests. Every behavior change or bug fix ships with tests in the same PR: Python `unittest` under `tests/`, page code as Vitest `*.test.ts` in `src/`. A bug fix needs a test that fails before the fix. Use only synthetic fixtures (`tests/fixtures/`), never a real `master.sqlite`, `root.sqlite`, or audio file.
-6. Before opening a PR, run all checks locally and paste the results in the PR:
+6. Before opening a PR, run all checks locally and paste the results in the completion report:
    ```bash
+   python3 -m pip install -r requirements.txt
    python3 -m unittest discover -s tests -t . -v
    npm ci
    npx tsc --noEmit
@@ -89,6 +92,7 @@ npm run build
    ```
    Commit the rebuilt `static/app.js` and `static/wizard.js`.
 7. Push to a branch and open a PR. Never push to `main`.
+8. Write the [completion report](#completion-report) in the pull request body. When the work has an issue, post the same report as a final comment on that issue.
 
 ## Test bar
 
@@ -113,10 +117,25 @@ QA (Gatekeeper, account `mookiejones-qa`) blocks a PR whose tests do not meet th
   - `analyze Python` (CodeQL)
 - Do not force-push to `main`.
 - Admins can bypass these rules, but should not.
-- The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green. The workflow also runs `tests (macos-latest, Python 3.12)` and `frontend (macos-latest)`. Add those names to branch protection so they block a merge. Until an admin does that, they still run on every pull request. Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK.
+- The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green. The workflow also runs `tests (macos-latest, Python 3.12)` and `frontend (macos-latest)` on every pull request. Add those names to branch protection so they block a merge. Until an admin does that, they still run on every pull request, and the previous required set still gates `main`. Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK.
 - `dependency audit` and `review dependency changes` also run. They are not required checks.
 - QA reviews every pull request and blocks any pull request lacking tests for its changes. See [Test bar](#test-bar).
 - Follow [Library safety](#library-safety) and [strict TypeScript](#strict-typescript).
+
+## Completion report
+
+Every agent (Claude, Cursor, and others) finishes each issue with a completion report. The report goes in the pull request body. When the work has an issue, the same report is the final comment on that issue. `CONTRIBUTING.md`, `.github/pull_request_template.md`, and [docs/github.md](docs/github.md) use this template.
+
+Saying "done", without the issue link, the pull request link, the commit SHA, and the test output, does not count. Never claim work you did not push. The SHA is a commit on the remote branch, and each test line is a command you ran on that commit.
+
+**What changed** is at most three bullets. **Proof** uses the exact commands in [After a change](#after-a-change). Each command that prints a pass count includes that count. Each other command includes pass or fail. Proof names the CI status of every check in [Merge rules](#merge-rules) and includes a screenshot when the change is visible in the page. A change with no page UI says there is no screenshot. **Next** says what is needed from Charles (@mookiejones) or QA (`mookiejones-qa`). Merge only when [Merge rules](#merge-rules) allow it.
+
+- **Issue:** link
+- **PR and commit:** link and SHA
+- **What changed:** up to 3 bullets
+- **Proof:** the exact test commands with their pass counts, CI status, and a screenshot for UI changes
+- **Not done / risks:**
+- **Next:** what is needed from Charles (@mookiejones) or QA (`mookiejones-qa`)
 
 ## Library safety
 

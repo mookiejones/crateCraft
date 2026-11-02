@@ -13,8 +13,8 @@ This is a local browser for a Serato DJ Pro library. The server binds `127.0.0.1
 
 1. Branch or fork.
 2. Open a pull request. Code and the docs that describe it go in that same pull request.
-3. Add tests and run every check locally. Paste the results in the pull request. See [Tests](#tests) and [Checks](#checks).
-4. Wait until CI is green, including Windows and macOS. These checks are required ([`ci.yml`](.github/workflows/ci.yml), [`codeql.yml`](.github/workflows/codeql.yml)):
+3. Add tests and run every check locally. Paste the results in the [completion report](#completion-report). See [Tests](#tests) and [Checks](#checks).
+4. Wait until CI is green. These checks must pass ([`ci.yml`](.github/workflows/ci.yml), [`codeql.yml`](.github/workflows/codeql.yml)):
    - `tests (ubuntu-latest, Python 3.12)`
    - `tests (ubuntu-latest, Python 3.14)`
    - `tests (windows-latest, Python 3.12)`
@@ -22,15 +22,33 @@ This is a local browser for a Serato DJ Pro library. The server binds `127.0.0.1
    - `frontend (ubuntu-latest)`
    - `frontend (windows-latest)`
    - `frontend (macos-latest)`
-   - `analyze Python`
+   - `analyze Python` (CodeQL)
 
-   The macOS jobs run on every pull request. Add their names to branch protection so they block a merge. Until an admin does that, the previous required set still gates `main`.
+   The workflow also runs `tests (macos-latest, Python 3.12)` and `frontend (macos-latest)` on every pull request. Add those names to branch protection so they block a merge. Until an admin does that, they still run on every pull request, and the previous required set still gates `main`.
 
-   `dependency audit` ([`ci.yml`](.github/workflows/ci.yml)) and `review dependency changes` ([`dependency-review.yml`](.github/workflows/dependency-review.yml), pull requests) also run, but are not required.
-5. Gatekeeper QA (`mookiejones-qa`) reviews the pull request.
-6. The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green. Only releases and tags need Charles's (@mookiejones) explicit OK. Never push to `main`.
+   `dependency audit` ([`ci.yml`](.github/workflows/ci.yml)) and `review dependency changes` ([`dependency-review.yml`](.github/workflows/dependency-review.yml)) also run. They are not required checks.
+5. If a new push dismisses the `mookiejones-qa` approval, re-request review.
+6. QA (Gatekeeper, account `mookiejones-qa`) reviews every pull request and blocks any pull request lacking tests for its changes. See [Tests](#tests).
+7. The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green. Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK.
+
+`main` is protected. Changes go in only through a pull request. Never push to `main`. Do not force-push to `main`. Admins can bypass these rules, but should not.
 
 Label work that is not merged **PREVIEW**. Do not describe it as shipped.
+
+## Completion report
+
+Every agent (Claude, Cursor, and others) finishes each issue with a completion report. The report goes in the pull request body. When the work has an issue, the same report is the final comment on that issue. `AGENTS.md` and `CLAUDE.md` require this report. `.github/pull_request_template.md` starts with the same fields.
+
+Saying "done", without the issue link, the pull request link, the commit SHA, and the test output, does not count. Never claim work you did not push. The SHA is a commit on the remote branch, and each test line is a command you ran on that commit.
+
+**What changed** is at most three bullets. **Proof** uses the exact commands in [Checks](#checks). Each command that prints a pass count includes that count. Each other command includes pass or fail. Proof names the CI status of every check in [Merge flow](#merge-flow) and includes a screenshot when the change is visible in the page. A change with no page UI says there is no screenshot. **Next** says what is needed from Charles (@mookiejones) or QA (`mookiejones-qa`). Merge only when [Merge flow](#merge-flow) allows it.
+
+- **Issue:** link
+- **PR and commit:** link and SHA
+- **What changed:** up to 3 bullets
+- **Proof:** the exact test commands with their pass counts, CI status, and a screenshot for UI changes
+- **Not done / risks:**
+- **Next:** what is needed from Charles (@mookiejones) or QA (`mookiejones-qa`)
 
 ## Before you start
 
@@ -56,34 +74,34 @@ Page color and type tokens are in `static/tokens.css`. The page source is strict
 
 Every behavior change or bug fix ships with tests in the same pull request: Python `unittest` under `tests/`, page code as Vitest `*.test.ts` in `src/`. A bug fix needs a test that fails before the fix. Use only synthetic fixtures (`tests/fixtures/`), never a real `master.sqlite`, `root.sqlite`, or audio file.
 
-QA (Gatekeeper, `mookiejones-qa`) uses this bar:
+QA (Gatekeeper, account `mookiejones-qa`) blocks a pull request whose tests do not meet this bar:
 
 - Tests must fail if the logic is broken. QA may mutation-test; weak tests that pass anyway get blocked.
-- Cover the edge cases that apply: Windows and macOS paths, symlinks and unmounted drives, Serato 4 vs Serato 5 data, and an empty or missing library.
+- Cover the edge cases that apply to the change: Windows and macOS paths, symlinks and unmounted drives, Serato 4 vs Serato 5 data, and an empty or missing library.
 - Never write extra files inside the Serato folder.
 
 ## Checks
 
-Before opening a pull request, run all of these and paste the results in it. Commit the rebuilt `static/app.js` and `static/wizard.js`.
+Before opening a pull request, run all of these and paste the results in the [completion report](#completion-report). Commit the rebuilt `static/app.js` and `static/wizard.js`.
 
 From the repository root:
 
 ```bash
 python3 -m pip install -r requirements.txt
 python3 -m unittest discover -s tests -t . -v
+npm ci
+npx tsc --noEmit
+npx tsc --noEmit -p e2e
+npx eslint src e2e
+npm test
+npx playwright install chromium
+npx playwright test -c e2e/playwright.config.ts
+npm run build
 ```
 
 The install step is required because the suite imports `sentry-sdk` and `posthog`. Sharing stays off without a key and without consent. Do not commit a DSN, a PostHog project key, or a filled-in `_build_config.py`.
 
-The page checks use Node 22 or newer:
-
-```bash
-npm ci
-npx tsc --noEmit
-npx eslint src
-npm test
-npm run build
-```
+The page checks use Node 22 or newer. `npm run typecheck` is the two `tsc` commands above.
 
 GitHub Actions runs the same discovery with `python` on Ubuntu (3.12 and 3.14) and Windows (3.12). The Windows job also runs `python scripts/release_bundle.py check-tag` with `shell: bash` and `RELEASE_TAG` set to `v0.0.0`. [docs/github.md](docs/github.md) lists the workflows.
 
@@ -101,7 +119,7 @@ Python has no separate linter. The page uses ESLint, which rejects `any`. The su
 - `PRIVACY.md` and the README when sharing, local logs, or telemetry keys change.
 - `locales/en.json` and every other file in `locales/` when the page shows new text. Use `t("key")` in `src/` and `data-i18n` in `index.html`, never a bare English string. A new fixed server error sentence goes in `error_codes.py` with an `error.<code>` entry in each locale. Open the page with `?locale=qps-ploc` to spot text that skipped translation and labels that cannot take longer strings.
 
-The pull request template asks for the same list.
+The pull request template asks for the same list and starts with the [completion report](#completion-report).
 
 ## Reports
 
