@@ -126,7 +126,7 @@ class GuidePageTests(unittest.TestCase):
             text = (DOCS / name).read_text(encoding="utf-8")
             self.assertIn(RESTORE, text, name)
             self.assertIn("**Crates**", text, name)
-            self.assertIn("**Snapshots**", text, name)
+            self.assertIn("**Backups**", text, name)
             self.assertIn("**Prepare**", text, name)
             self.assertIn("move, rename, and trash audio files", text, name)
             self.assertNotIn("PREVIEW", text, name)
