@@ -2,7 +2,7 @@
 
 The keys below work anywhere on the library screen, except while you are typing in a field. **Esc** still closes a dialog or clears a search.
 
-**Shortcuts**, at the bottom of the sidebar, opens this list. **?** opens it too.
+The list is in **Settings**, under **Keyboard shortcuts**. **?** opens Settings on that heading.
 
 | Key | Action |
 | --- | --- |

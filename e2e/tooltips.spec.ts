@@ -36,11 +36,14 @@ test("every control has a tooltip, and focus shows it", async ({ page }) => {
   const missing = await page.evaluate(() => window.tooltipAudit.missing());
   expect(missing).toEqual([]);
 
-  const shortcuts = page.locator("#open-shortcuts");
+  await page.locator("#settings-dialog").evaluate((node) => {
+    if (node instanceof HTMLDialogElement) node.showModal();
+  });
+  const shortcuts = page.locator("#shortcuts-title");
   await shortcuts.focus();
   const tip = page.locator("#app-tooltip");
   await expect(tip).toBeVisible();
-  await expect(tip).toHaveText("Show keyboard shortcuts. ?.");
+  await expect(tip).toHaveText("Keyboard shortcuts for this screen. ? opens this list.");
   await expect(shortcuts).toHaveAttribute("aria-describedby", /app-tooltip/);
   expect(await tip.evaluate((node) => node.matches(":popover-open"))).toBe(true);
   await saveShot(page, "tooltip_shortcuts");
