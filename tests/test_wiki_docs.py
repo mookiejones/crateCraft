@@ -215,16 +215,25 @@ REQUIRED_CHECKS = (
 )
 
 MERGE_RULES = (
+    "`main` is protected. Changes go in only through a pull request.",
     "If a new push dismisses the `mookiejones-qa` approval, re-request review.",
+    "These checks must pass",
     "Do not force-push to `main`.",
     "Admins can bypass these rules, but should not.",
     "The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green.",
     "The workflow also runs `tests (macos-latest, Python 3.12)` and `frontend (macos-latest)` on every pull request. Add those names to branch protection so they block a merge. Until an admin does that, they still run on every pull request, and the previous required set still gates `main`.",
     "Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK.",
-    "They are not required checks.",
+    "`dependency audit` and `review dependency changes` also run. They are not required checks.",
     "Tests must fail if the logic is broken. QA may mutation-test; weak tests that pass anyway get blocked.",
     "Cover the edge cases that apply to the change: Windows and macOS paths, symlinks and unmounted drives, Serato 4 vs Serato 5 data, and an empty or missing library.",
     "Never write extra files inside the Serato folder.",
+)
+
+GITHUB_MERGE_RULES = tuple(
+    rule for rule in MERGE_RULES
+    if not rule.startswith("Tests must fail")
+    and not rule.startswith("Cover the edge cases")
+    and not rule.startswith("Never write extra files")
 )
 
 
@@ -258,14 +267,12 @@ class CompletionReportTests(unittest.TestCase):
                 self.assertIn(check, guide)
             for rule in MERGE_RULES:
                 self.assertIn(rule, guide)
-        for rule in (
-            "If a new push dismisses the `mookiejones-qa` approval, re-request review.",
-            "Do not force-push to `main`.",
-            "Admins can bypass these rules, but should not.",
-            "The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green.",
-            "Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK.",
-        ):
+        for check in REQUIRED_CHECKS:
+            self.assertIn(check, github)
+        for rule in GITHUB_MERGE_RULES:
             self.assertIn(rule, github)
+        self.assertNotIn("- `dependency audit`", github)
+        self.assertNotIn("Require `review dependency changes`", github)
         for command in PRE_PR_COMMANDS.splitlines():
             self.assertIn(f"`{command}`", template)
         for check in REQUIRED_CHECKS:

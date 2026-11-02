@@ -26,7 +26,7 @@ This is a local browser for a Serato DJ Pro library. The server binds `127.0.0.1
 
    The workflow also runs `tests (macos-latest, Python 3.12)` and `frontend (macos-latest)` on every pull request. Add those names to branch protection so they block a merge. Until an admin does that, they still run on every pull request, and the previous required set still gates `main`.
 
-   `dependency audit` ([`ci.yml`](.github/workflows/ci.yml)) and `review dependency changes` ([`dependency-review.yml`](.github/workflows/dependency-review.yml)) also run. They are not required checks.
+   `dependency audit` and `review dependency changes` also run. They are not required checks. The jobs are [`dependency audit`](.github/workflows/ci.yml) and [`review dependency changes`](.github/workflows/dependency-review.yml).
 5. If a new push dismisses the `mookiejones-qa` approval, re-request review.
 6. QA (Gatekeeper, account `mookiejones-qa`) reviews every pull request and blocks any pull request lacking tests for its changes. See [Tests](#tests).
 7. The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green. Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK.

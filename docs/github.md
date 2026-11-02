@@ -152,7 +152,7 @@ The wiki stays enabled. Draft pages live in `docs/wiki/` and are excluded from t
 
 ## Branch protection
 
-Wait until CI, CodeQL, and a pull-request dependency review have each completed once. Then require these checks on `main`:
+Wait until CI, CodeQL, and a pull-request dependency review have each completed once. These checks must pass:
 
 - `tests (ubuntu-latest, Python 3.12)`
 - `tests (ubuntu-latest, Python 3.14)`
@@ -161,12 +161,13 @@ Wait until CI, CodeQL, and a pull-request dependency review have each completed 
 - `frontend (ubuntu-latest)`
 - `frontend (windows-latest)`
 - `frontend (macos-latest)`
-- `dependency audit`
-- `analyze Python`
+- `analyze Python` (CodeQL)
 
-Require `review dependency changes` on pull requests. That check does not run on a direct push, so it cannot be a required status for every update of `main`.
+The workflow also runs `tests (macos-latest, Python 3.12)` and `frontend (macos-latest)` on every pull request. Add those names to branch protection so they block a merge. Until an admin does that, they still run on every pull request, and the previous required set still gates `main`.
 
-A green check is not the whole merge. QA (Gatekeeper, account `mookiejones-qa`) reviews the pull request next and blocks any pull request lacking tests for its changes. If a new push dismisses the `mookiejones-qa` approval, re-request review. The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green. Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK. `main` is protected. Never push to `main`. Do not force-push to `main`. Admins can bypass these rules, but should not. `.github/CODEOWNERS` names `@mookiejones` for the whole tree. Documentation for the change is in the same pull request. Work that is not merged is labelled PREVIEW.
+`dependency audit` and `review dependency changes` also run. They are not required checks. `review dependency changes` does not run on a direct push, so it cannot be a required status for every update of `main`.
+
+A green check is not the whole merge. QA (Gatekeeper, account `mookiejones-qa`) reviews the pull request next and blocks any pull request lacking tests for its changes. If a new push dismisses the `mookiejones-qa` approval, re-request review. The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green. Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK. `main` is protected. Changes go in only through a pull request. Never push to `main`. Do not force-push to `main`. Admins can bypass these rules, but should not. `.github/CODEOWNERS` names `@mookiejones` for the whole tree. Documentation for the change is in the same pull request. Work that is not merged is labelled PREVIEW.
 
 ## Where a change has to land
 
