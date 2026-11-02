@@ -33,6 +33,7 @@ import { state } from "./state";
 import { loadVersion, wireVersion } from "./version";
 import { loadLibrary, setMode, showFailure, wireLibrary } from "./views";
 import { mountPlayer, playerControls } from "./player";
+import { installDesktopActions } from "./desktop-actions";
 import { applyStaticTooltips, installTooltips } from "./tooltip";
 import { mountTrackList, wireVirtualScroll } from "./virtual-scroll";
 
@@ -85,6 +86,7 @@ registerPlayerControls(playerControls);
 wireLibrary();
 wireVirtualScroll();
 wireShortcuts();
+installDesktopActions();
 wireDialogs();
 wireSnapshots();
 wireGigCheck(() => {

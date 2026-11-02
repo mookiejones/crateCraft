@@ -1,0 +1,120 @@
+"""The desktop menu mirrors the page and does not invent shortcuts.
+
+These cases build the menu in process. They do not open a window.
+"""
+
+from __future__ import annotations
+
+import unittest
+from pathlib import Path
+
+import desktop_menu
+from webview.menu import Menu, MenuAction, MenuSeparator
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _titles(menu: list[object]) -> list[str]:
+    found: list[str] = []
+
+    def walk(items: list[object]) -> None:
+        for item in items:
+            if isinstance(item, Menu):
+                if item.title != "__app__":
+                    found.append(item.title)
+                walk(item.items)
+            elif isinstance(item, MenuAction):
+                found.append(item.title)
+
+    walk(menu)
+    return found
+
+
+class DesktopMenuTests(unittest.TestCase):
+    def test_english_menu_names_the_page_actions(self) -> None:
+        """Use the English catalog, including Settings under File and the app menu.
+
+        Returns:
+            None. The test fails if a group or a page action is missing.
+        """
+        seen: list[str] = []
+        menu = desktop_menu.build_menu(seen.append, "en")
+        titles = _titles(menu)
+        self.assertEqual(titles[:5], ["Settings", "Run setup again", "File", "Find a track or file", "Focus search"])
+        for name in (
+            "Library",
+            "Crates",
+            "All tracks",
+            "Tools",
+            "Missing",
+            "Duplicates",
+            "Merge copies",
+            "Stems",
+            "Gig",
+            "Take a snapshot",
+            "Snapshots",
+            "Review undo",
+            "Related tracks",
+            "Window",
+            "Minimize",
+            "Reset list width",
+            "Help",
+            "Keyboard shortcuts",
+        ):
+            self.assertIn(name, titles)
+        self.assertEqual(titles.count("Settings"), 2)
+        file_menu = next(item for item in menu if isinstance(item, Menu) and item.title == "File")
+        file_menu.items[0].function()
+        self.assertEqual(seen, ["find"])
+
+    def test_spanish_menu_uses_the_spanish_catalog(self) -> None:
+        """A saved Spanish language builds the bar from es.json.
+
+        Returns:
+            None. The test fails if the File menu stays in English.
+        """
+        menu = desktop_menu.build_menu(lambda _action: None, "es")
+        titles = _titles(menu)
+        self.assertIn("Archivo", titles)
+        self.assertIn("Herramientas", titles)
+        self.assertIn("Ayuda", titles)
+        self.assertNotIn("File", titles)
+
+    def test_titles_do_not_name_a_shortcut(self) -> None:
+        """pywebview 6.2.1 cannot attach a shortcut, so the title must not fake one.
+
+        Returns:
+            None. The test fails if Ctrl or Cmd is written into a title.
+        """
+        for language in ("en", "es", None):
+            for title in _titles(desktop_menu.build_menu(lambda _action: None, language)):
+                self.assertNotIn("Ctrl", title)
+                self.assertNotIn("Cmd", title)
+
+    def test_the_shell_keeps_the_mac_edit_and_view_menus(self) -> None:
+        """Leave SHOW_DEFAULT_MENUS on, and pass the menu to the window and to start.
+
+        GTK ignores a window menu and uses the menu given to start.
+
+        Returns:
+            None. The test fails if the desktop window hides the default
+            menus or only sets one of the two menu arguments.
+        """
+        text = (ROOT / "desktop.py").read_text(encoding="utf-8")
+        self.assertNotIn("SHOW_DEFAULT_MENUS", text)
+        self.assertIn('options["menu"] = menu', text)
+        self.assertIn("menu=menu", text)
+        for title in _titles(desktop_menu.build_menu(lambda _action: None, "en")):
+            self.assertNotIn(title, {"Edit", "View"})
+
+    def test_separators_stay_between_groups(self) -> None:
+        """File keeps a separator between search, crates, playlists, and Close.
+
+        Returns:
+            None. The test fails if the File menu is one flat list.
+        """
+        menu = desktop_menu.build_menu(lambda _action: None, "en")
+        file_menu = next(item for item in menu if isinstance(item, Menu) and item.title == "File")
+        separators = [item for item in file_menu.items if isinstance(item, MenuSeparator)]
+        self.assertGreaterEqual(len(separators), 4)

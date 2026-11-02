@@ -381,6 +381,16 @@
       one: "Point {count} history entry at the kept copy.",
       other: "Point {count} history entries at the kept copy."
     },
+    "menu.close": "Close",
+    "menu.exportRekordbox": "Export for Rekordbox",
+    "menu.file": "File",
+    "menu.focusSearch": "Focus search",
+    "menu.help": "Help",
+    "menu.library": "Library",
+    "menu.minimize": "Minimize",
+    "menu.resetWidth": "Reset list width",
+    "menu.tools": "Tools",
+    "menu.window": "Window",
     "merge.title": "Merge copies",
     "merge.trashFiles": "Move {files} to the Trash.",
     "merge.trashLabel": "Move the other audio files to the Trash",
@@ -1247,6 +1257,16 @@
       one: "Apuntar {count} entrada del historial a la copia conservada.",
       other: "Apuntar {count} entradas del historial a la copia conservada."
     },
+    "menu.close": "Cerrar",
+    "menu.exportRekordbox": "Exportar para Rekordbox",
+    "menu.file": "Archivo",
+    "menu.focusSearch": "Ir a la búsqueda",
+    "menu.help": "Ayuda",
+    "menu.library": "Biblioteca",
+    "menu.minimize": "Minimizar",
+    "menu.resetWidth": "Restablecer el ancho de la lista",
+    "menu.tools": "Herramientas",
+    "menu.window": "Ventana",
     "merge.title": "Combinar copias",
     "merge.trashFiles": "Mover {files} a la Papelera.",
     "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
@@ -9038,6 +9058,82 @@
     stop = onLocaleChange(repaintAll);
   }
 
+  // src/desktop-actions.ts
+  var CLICKS = {
+    "new-crate": "crate-new",
+    "rename-crate": "crate-rename",
+    "delete-crate": "crate-delete",
+    "import-playlist": "import-m3u",
+    "export-playlist": "export-m3u",
+    "export-rekordbox": "export-rekordbox",
+    reload: "reload",
+    settings: "open-settings",
+    "rerun-setup": "rerun-wizard",
+    merge: "merge-duplicates",
+    "take-snapshot": "snapshots-take",
+    "review-undo": "snapshots-undo-button",
+    "open-logs": "open-logs",
+    "copy-version": "copy-version"
+  };
+  var VIEWS = {
+    "view-crates": "crates",
+    "view-history": "history",
+    "view-files": "files",
+    "view-missing": "missing",
+    "view-duplicates": "duplicates",
+    "view-stems": "stems",
+    "view-snapshots": "snapshots",
+    "view-gig": "gig"
+  };
+  function runDesktopAction(action) {
+    if (action === "find") {
+      openQuickOpen();
+      return;
+    }
+    if (action === "focus-search") {
+      const field = state.mode === "files" ? el("files-search") : el("search");
+      field.focus();
+      if (typeof field.select === "function") field.select();
+      return;
+    }
+    if (action === "shortcuts") {
+      openCheatSheet();
+      return;
+    }
+    if (action === "view-all") {
+      setMode("crates");
+      selectCrate("all");
+      return;
+    }
+    if (action === "related") {
+      document.querySelector(".related-search input")?.focus();
+      return;
+    }
+    if (action === "reset-width") {
+      el("track-splitter").dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
+      return;
+    }
+    if (action.startsWith("space:")) {
+      const select = el("space");
+      select.value = action.slice("space:".length);
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      return;
+    }
+    const view = VIEWS[action];
+    if (view) {
+      setMode(view);
+      return;
+    }
+    const id = CLICKS[action];
+    if (!id) return;
+    const node = document.getElementById(id);
+    if (node instanceof HTMLButtonElement) node.click();
+  }
+  function installDesktopActions() {
+    const host = window;
+    host.seratoDesktop = { run: runDesktopAction };
+  }
+
   // src/app.ts
   function wireSnapshots() {
     el("snapshots-refresh").addEventListener("click", () => {
@@ -9073,6 +9169,7 @@
   wireLibrary();
   wireVirtualScroll();
   wireShortcuts();
+  installDesktopActions();
   wireDialogs();
   wireSnapshots();
   wireGigCheck(() => {
