@@ -251,7 +251,10 @@ class CompletionReportTests(unittest.TestCase):
         contributing = (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
         template_path = ROOT / ".github" / "pull_request_template.md"
         self.assertTrue(template_path.is_file())
-        self.assertFalse((ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md").exists())
+        # List the folder: exists() ignores case on macOS and Windows.
+        names = [path.name for path in (ROOT / ".github").iterdir()]
+        self.assertIn("pull_request_template.md", names)
+        self.assertNotIn("PULL_REQUEST_TEMPLATE.md", names)
         template = template_path.read_text(encoding="utf-8")
         github = (ROOT / "docs" / "github.md").read_text(encoding="utf-8")
         self.assertEqual(agents, claude)
