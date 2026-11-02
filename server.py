@@ -2052,6 +2052,11 @@ class Handler(BaseHTTPRequestHandler):
                 Booleans reject integers. ``key_notation`` must be
                 ``asis``, ``camelot``, or ``classical``. Any other shape is
                 a 400, and the file is left unchanged.
+                ``{"colorway": str}`` and ``{"icon_follows_theme": bool}``
+                may be sent together or alone. ``colorway`` must be a known
+                theme. The icon flag must be a boolean. The running icon
+                is updated after the file is saved. A platform that cannot
+                change it still saves the choice.
         """
         keys = set(payload)
         if keys == {"wizard_complete"} and isinstance(payload.get("wizard_complete"), bool):
@@ -2104,6 +2109,9 @@ class Handler(BaseHTTPRequestHandler):
                 return
             self.send_json(telemetry.public_settings())
             return
+        if keys and keys <= {"colorway", "icon_follows_theme"}:
+            self._post_appearance(payload)
+            return
         allowed = {"telemetry_consent", "rekordbox"}
         if not keys or not keys <= allowed:
             self.send_json({"error": "That request is not valid."}, status=400)
@@ -2146,6 +2154,55 @@ class Handler(BaseHTTPRequestHandler):
             )
         except ValueError:
             self.send_json({"error": "That request is not valid."}, status=400)
+
+    def _post_appearance(self, payload: dict[str, object]) -> None:
+        """Save the theme and whether the running icon follows it.
+
+        Args:
+            payload: ``colorway``, ``icon_follows_theme``, or both.
+                ``colorway`` is ``motown``, ``deep-house``, or ``daisy-age``.
+                The icon flag is a boolean. ``False`` is kept.
+
+        The file is written before the icon changes. A Dock or taskbar
+        change that this computer cannot do still returns 200. The body
+        includes ``icon`` with ``applied`` false and a reason.
+        """
+        import app_icons
+
+        colorway = payload.get("colorway") if "colorway" in payload else None
+        follow = payload.get("icon_follows_theme") if "icon_follows_theme" in payload else None
+        if colorway is not None and not isinstance(colorway, str):
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        if follow is not None and not isinstance(follow, bool):
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        try:
+            app_config.set_appearance(
+                colorway=colorway if isinstance(colorway, str) else None,
+                icon_follows_theme=follow if isinstance(follow, bool) else None,
+            )
+        except ValueError:
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        except OSError:
+            self.send_json({"error": "The theme could not be saved."}, status=500)
+            return
+        body = telemetry.public_settings()
+        try:
+            body["icon"] = app_icons.apply_saved().as_json()
+        except Exception:
+            app_log.logger.exception("The app icon could not be changed")
+            body["icon"] = {
+                "applied": False,
+                "platform": "unknown",
+                "target": "unsupported",
+                "reason": "error",
+                "colorway": body.get("colorway"),
+                "follows_theme": body.get("icon_follows_theme"),
+                "href": body.get("icon_href"),
+            }
+        self.send_json(body)
 
     def _get_setup(self, query: dict[str, list[str]]) -> None:
         """Return the library summary, or one folder listing.
