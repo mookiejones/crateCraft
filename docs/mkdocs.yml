@@ -66,9 +66,11 @@ nav:
       - Panic: panic.md
   - Your library:
       - Crates: guide/crates.md
+      - Playback: guide/playback.md
       - Track details: guide/tags.md
       - History: guide/history.md
       - Missing files: guide/missing.md
+      - Before a gig: guide/gig-check.md
       - Duplicates: guide/duplicates.md
       - Stems: guide/stems.md
       - Prepare: guide/prepare.md
@@ -77,6 +79,7 @@ nav:
       - Related tracks: guide/related.md
       - Files: guide/files.md
   - The app:
+      - Keyboard shortcuts: guide/shortcuts.md
       - Settings and privacy: guide/settings.md
       - Troubleshooting: guide/troubleshooting.md
   - For developers:

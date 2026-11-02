@@ -24,7 +24,11 @@ from urllib.parse import parse_qs, urlparse
 
 import app_config
 import app_log
+import audio_stream
+import drive_check
+import error_codes
 import files
+import gig_check
 import legacy_library
 import library
 import music_roots
@@ -34,6 +38,66 @@ import setup_flow
 import snapshots
 import telemetry
 import version_info
+import waveform
+
+
+class _WaveformFlight:
+    """One analysis shared by every request that arrives while it runs."""
+
+    def __init__(self) -> None:
+        """Start an unfinished flight."""
+        self.event = threading.Event()
+        self.result: tuple[bytes, bool] | BaseException | None = None
+
+
+def load_shared_waveform(path: Path) -> tuple[bytes, bool]:
+    """Analyze ``path`` once when several requests ask at the same time.
+
+    Args:
+        path: Real audio file from the library access check.
+
+    Returns:
+        The ``SWF1`` body and whether it was already cached.
+
+    Raises:
+        waveform.WaveformUnavailable: The file cannot be decoded. Every
+            waiter receives that same error.
+    """
+    try:
+        info = path.lstat()
+    except OSError as exc:
+        raise waveform.WaveformUnavailable() from exc
+    key = "\0".join(
+        (
+            os.path.normcase(os.path.normpath(os.fspath(path))),
+            str(info.st_size),
+            str(info.st_mtime_ns),
+            str(waveform.ANALYZER_VERSION),
+        )
+    )
+    with _waveform_flight_lock:
+        flight = _waveform_flights.get(key)
+        leader = flight is None
+        if flight is None:
+            flight = _WaveformFlight()
+            _waveform_flights[key] = flight
+    if leader:
+        try:
+            result: tuple[bytes, bool] | BaseException = waveform.load(path)
+        except BaseException as exc:
+            result = exc
+        flight.result = result
+        with _waveform_flight_lock:
+            _waveform_flights.pop(key, None)
+        flight.event.set()
+    else:
+        flight.event.wait()
+    found = flight.result
+    if isinstance(found, BaseException):
+        raise found
+    if found is None:
+        raise waveform.WaveformUnavailable()
+    return found
 
 
 def app_root() -> Path:
@@ -62,6 +126,8 @@ FOCUS_HEADER = "X-Serato-Library-Focus"
 LIBRARY_SPACE = library.LIBRARY_SPACE
 NAME_SPLIT = library.NAME_SPLIT
 BODY_LIMIT = 2_000_000
+_waveform_flights: dict[str, "_WaveformFlight"] = {}
+_waveform_flight_lock = threading.Lock()
 LEGACY_ALLOWED_POSTS = frozenset({"/api/related", "/api/reveal"})
 """POST routes, after settings, setup, and logs, that still answer while only an
 older ``database V2`` library is present. Every other POST is refused with 409,
@@ -605,10 +671,14 @@ def db_stamp() -> tuple[int, ...]:
 
 
 def invalidate() -> None:
-    """Drop the cached library payloads and the Files music-root cache."""
+    """Drop the cached library payloads and the Files music-root cache.
+
+    The audio index is dropped too, so the next play rereads asset paths.
+    """
     _cache["stamp"] = None
     _cache["libraries"] = {}
     files.invalidate_browse_cache()
+    audio_stream.invalidate_index()
 
 
 def display_name(name: str) -> str:
@@ -876,13 +946,20 @@ def display_beatgrid(markers: object) -> list[dict[str, object]]:
 
     Returns:
         Marker dicts whose ``position`` is a three-decimal seconds string.
+        ``position_seconds`` is the stored float, so beat times can be
+        computed from that value, ``beats``, and the last marker's ``bpm``.
         A non-finite ``bpm`` is ``None``. The export reads the audio file
         itself and does not use this copy.
     """
     shown: list[dict[str, object]] = []
     for marker in as_dicts(markers):
         copy = dict(marker)
-        copy["position"] = format_beat_position(marker.get("position"))
+        raw_position = marker.get("position")
+        copy["position"] = format_beat_position(raw_position)
+        if isinstance(raw_position, (int, float)) and not isinstance(raw_position, bool):
+            number = float(raw_position)
+            if math.isfinite(number):
+                copy["position_seconds"] = number
         if "bpm" in copy:
             copy["bpm"] = display_bpm(marker.get("bpm"))
         shown.append(copy)
@@ -1281,7 +1358,8 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
     Returns:
         The detail payload, or None when the track is not in the space.
         Beatgrid positions in that payload are three-decimal strings for
-        the panel. The export does not read them.
+        the panel. ``position_seconds`` keeps the stored float so beat
+        times can be computed. The export does not read them.
 
     Raises:
         LibraryError: If the space name is not allowed.
@@ -1478,6 +1556,52 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
     }
 
 
+_LOCAL_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
+
+
+def host_name(value: str) -> str:
+    """Return the host from a Host header or an Origin netloc.
+
+    Args:
+        value: ``localhost:8765``, ``127.0.0.1``, or ``[::1]:8765``.
+
+    Returns:
+        The host, lowercased, without a port. Empty when the value is not a host.
+    """
+    text = value.strip().lower()
+    if not text:
+        return ""
+    if text.startswith("["):
+        end = text.find("]")
+        if end < 0:
+            return ""
+        return text[1:end]
+    if text.count(":") == 1:
+        return text.split(":", 1)[0]
+    return text
+
+
+def request_hosts_allowed(host: str | None, origin: str | None) -> bool:
+    """Return whether this request is from this computer.
+
+    Args:
+        host: The ``Host`` header. Required. A DNS rebinding page sends another name.
+        origin: The ``Origin`` header, or None when the client did not send one.
+
+    Returns:
+        True when Host is ``localhost``, ``127.0.0.1``, or ``[::1]``, with or
+        without a port, and Origin is absent or names one of those hosts.
+    """
+    if host is None or host_name(host) not in _LOCAL_HOSTS:
+        return False
+    if origin is None or origin == "":
+        return True
+    named = urlparse(origin).hostname
+    if named is None:
+        return False
+    return named.lower() in _LOCAL_HOSTS
+
+
 class Handler(BaseHTTPRequestHandler):
     """Serve the JSON API and the files in static/."""
 
@@ -1518,12 +1642,15 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         """Answer a GET request.
 
-        Health and version are answered before the library is opened.
+        Health, version, and the portable-drive check are answered before the library is opened.
         Settings and logs are answered before the library routes. Library,
-        status, track, history, duplicate, file, related-track, M3U, and
-        rekordbox XML paths return data. Every other path is a file under static/.
+        status, track, history, duplicate, file, related-track, gig-check,
+        M3U, and rekordbox XML paths return data. Every other path is a file
+        under static/. A Host or Origin that is not this computer is refused first.
         """
         try:
+            if self._refuse_foreign_host():
+                return
             self._do_GET()
         except Exception as exc:
             self._report_failure(exc)
@@ -1531,9 +1658,9 @@ class Handler(BaseHTTPRequestHandler):
     def _do_GET(self) -> None:
         """Answer a GET request.
 
-        Health and version do not open the library. Library, status, track,
-        history, duplicate, file, M3U, and rekordbox XML paths return data.
-        Every other path is a file under static/.
+        Health, version, and the portable-drive check do not open the library.
+        Library, status, track, history, duplicate, file, related-track, gig-check, M3U, and rekordbox
+        XML paths return data. Every other path is a file under static/.
         """
         parsed = urlparse(self.path)
         query = parse_qs(parsed.query)
@@ -1544,6 +1671,9 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(version_info.payload())
             return
         try:
+            if parsed.path == "/api/drive-check":
+                self._get_drive_check(query)
+                return
             if parsed.path == "/api/settings":
                 self.send_json(telemetry.public_settings())
                 return
@@ -1565,6 +1695,12 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if parsed.path == "/api/status":
                 self.send_json(as_dict(_library_call("status")))
+                return
+            if parsed.path == "/api/audio":
+                self._serve_audio(parsed.query, query, head=False)
+                return
+            if parsed.path in {"/api/waveform", "/api/waveform/overview"}:
+                self._serve_waveform(parsed.path, parsed.query, query)
                 return
             if parsed.path == "/api/track":
                 raw = query_text(query, "id", "") or ""
@@ -1604,8 +1740,14 @@ class Handler(BaseHTTPRequestHandler):
                         query_text(query, "path", "") or "",
                         elsewhere=elsewhere,
                         refresh=refresh,
+                        query=query_text(query, "q", "") or "",
                     )
                 )
+                return
+            if parsed.path == "/api/operations":
+                import safe_write
+
+                self.send_json({"operations": safe_write.read_log()})
                 return
             if parsed.path == "/api/snapshots":
                 self._get_snapshots(query)
@@ -1624,6 +1766,12 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
                 self.wfile.write(body)
+                return
+            if parsed.path == "/api/gig-check":
+                space = require_space(query_text(query, "space"))
+                raw_crate = query_text(query, "crate", "all") or "all"
+                report = gig_check.run_gig_check(space=space, crate_id=crate_query(raw_crate))
+                self.send_json(gig_check.report_to_dict(report))
                 return
             if parsed.path == "/api/export.rekordbox.xml":
                 space = require_space(query_text(query, "space"))
@@ -1674,13 +1822,35 @@ class Handler(BaseHTTPRequestHandler):
             return
         self.send_file(parsed.path)
 
+    def do_HEAD(self) -> None:
+        """Answer a HEAD request for one library audio file.
+
+        ``/api/audio`` sends the same headers as GET, including
+        ``Accept-Ranges`` and ``Content-Length``, and does not send a body.
+        Any other path is not served. A Host or Origin that is not this
+        computer is refused first.
+        """
+        try:
+            if self._refuse_foreign_host():
+                return
+            parsed = urlparse(self.path)
+            if parsed.path != "/api/audio":
+                self.send_error(501, "Unsupported method")
+                return
+            self._serve_audio(parsed.query, parse_qs(parsed.query), head=True)
+        except Exception as exc:
+            self._report_failure(exc)
+
     def do_POST(self) -> None:
         """Answer a JSON POST that edits the library, reveals a file, or saves settings.
 
         A body larger than BODY_LIMIT returns 413. Serato holding the database returns 409.
         Settings and the logs folder do not take the library write lock.
+        A Host or Origin that is not this computer is refused first.
         """
         try:
+            if self._refuse_foreign_host():
+                return
             self._do_POST()
         except Exception as exc:
             self._report_failure(exc)
@@ -1803,8 +1973,15 @@ class Handler(BaseHTTPRequestHandler):
                 status=exc.status,
             )
         except sqlite3.OperationalError as exc:
-            if "locked" in str(exc).lower():
+            try:
                 info = as_dict(_library_call("status"))
+            except (library.LibraryError, sqlite3.DatabaseError):
+                # A damaged file can fail the re-check too; fall back to the
+                # write's own error instead of the generic 500.
+                info = {}
+            if "locked" in str(exc).lower() or info.get("open"):
+                if not info:
+                    info = library.open_error_status(exc)
                 self.send_json({"error": info["message"], "serato": info}, status=409)
                 return
             self.send_json({"error": "The library could not be saved."}, status=500)
@@ -1909,6 +2086,21 @@ class Handler(BaseHTTPRequestHandler):
                 return
             except OSError:
                 self.send_json({"error": "The layout could not be saved."}, status=500)
+                return
+            self.send_json(telemetry.public_settings())
+            return
+        if keys == {"language"}:
+            language = payload.get("language")
+            if language is not None and not isinstance(language, str):
+                self.send_json({"error": "That request is not valid."}, status=400)
+                return
+            try:
+                app_config.set_language(language)
+            except ValueError:
+                self.send_json({"error": "That request is not valid."}, status=400)
+                return
+            except OSError:
+                self.send_json({"error": "The language could not be saved."}, status=500)
                 return
             self.send_json(telemetry.public_settings())
             return
@@ -2147,23 +2339,34 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(store.plan(snapshot_id))
             return
         pending = store.pending_undo()
-        self.send_json({
+        notice = snapshots.write_block_notice()
+        body: dict[str, object] = {
             "snapshots": store.list_snapshots(),
             "pending_undo": pending,
-            "write_block": snapshots.write_block_message(),
+            "write_block": None if notice is None else notice.text,
             "serato_running": store.serato_running(),
-        })
+            "drive_backup": library.drive_backup_report(),
+        }
+        if notice is not None and notice.code:
+            body["write_block_code"] = notice.code
+            body["write_block_params"] = dict(notice.params or {})
+        self.send_json(body)
 
     def _post_snapshots(self, payload: dict[str, object]) -> None:
         """Create a snapshot, plan a restore, restore, or undo an outside change.
 
         Args:
             payload: JSON body with ``action`` of ``create``, ``plan``,
-                ``restore``, or ``undo``. ``restore`` also needs ``id`` and
-                ``confirm`` true. ``plan`` changes nothing.
+                ``restore``, ``undo``, or ``backup-drives``. ``restore`` also
+                needs ``id`` and ``confirm`` true. ``plan`` changes nothing.
+                ``backup-drives`` copies each present drive's ``_Serato_``
+                folder into ``Library/Backups`` and does not change the library.
         """
         store = snapshots.current_store()
         action = payload.get("action")
+        if action == "backup-drives":
+            self.send_json(library.backup_connected_drives())
+            return
         if action == "create":
             info = store.take("manual", "Snapshot taken in the app.")
             self.send_json({"ok": True, "snapshot": info})
@@ -2192,14 +2395,217 @@ class Handler(BaseHTTPRequestHandler):
             return
         self.send_json({"error": "That action is not available."}, status=404)
 
+    def _refuse_foreign_host(self) -> bool:
+        """Refuse a request whose Host or Origin is not this computer.
+
+        Returns:
+            True when a 403 response has been sent.
+        """
+        if request_hosts_allowed(self.headers.get("Host"), self.headers.get("Origin")):
+            return False
+        self.send_json({"error": "This page only answers on this computer."}, status=403)
+        return True
+
+    def _get_drive_check(self, query: dict[str, list[str]]) -> None:
+        """Report whether a portable drive's crates can leave the laptop.
+
+        Args:
+            query: Parsed query. ``drive`` is the drive root. ``crate`` may
+                be repeated. A filesystem name in the query is ignored.
+
+        Raises:
+            library.LibraryError: The drive was not chosen, the folder has
+                no ``_Serato_`` directory, or a requested crate is not there.
+        """
+        raw = query_text(query, "drive", "") or ""
+        if not raw.strip():
+            raise library.LibraryError("Choose a drive.", 400)
+        crates = [item.strip() for item in query.get("crate", []) if item.strip()]
+        report = drive_check.check_drive(raw, crates or None)
+        self.send_json(report.to_dict())
+
+    def _serve_audio(self, raw_query: str, query: dict[str, list[str]], *, head: bool) -> None:
+        """Stream one library track, or send the headers for HEAD.
+
+        Args:
+            raw_query: Query text still percent-encoded. The track id is
+                taken from this string and must be decimal digits. A
+                ``path`` parameter is refused, including beside an id.
+            query: Parsed query. ``space`` limits the id to that space.
+            head: When true, send headers and no body. The file is not opened.
+
+        The bytes are read in chunks from the resolved library file. A
+        refusal is JSON and does not include a filesystem path.
+        """
+        space_text = query_text(query, "space")
+        space: str | None = None
+        if space_text:
+            try:
+                space = require_space(space_text)
+            except library.LibraryError as exc:
+                self.send_json({"error": exc.message}, status=exc.status)
+                return
+        try:
+            asset_id = audio_stream.parse_track_id(raw_query)
+            target = audio_stream.resolve_audio(asset_id=asset_id, space=space)
+        except audio_stream.AudioRefusal as exc:
+            self.send_json({"error": exc.message}, status=exc.status)
+            return
+        except library.LibraryError as exc:
+            if "Serato library not found" in exc.message:
+                self.send_json(
+                    {"error": "No Serato library was found on this computer."},
+                    status=404,
+                )
+                return
+            self.send_json({"error": exc.message}, status=exc.status)
+            return
+        span = audio_stream.parse_range(self.headers.get("Range"), target.size)
+        if span.status == 416:
+            self._send_audio_headers(target, span, head=True)
+            return
+        length = 0 if span.end < span.start else span.end - span.start + 1
+        chunks: Iterator[bytes] | None = None
+        first = b""
+        if not head and length:
+            chunks = audio_stream.iter_bytes(target.path, span.start, span.end)
+            try:
+                first = next(chunks)
+            except StopIteration:
+                chunks = None
+                first = b""
+            except OSError:
+                if chunks is not None:
+                    chunks.close()
+                self.send_json({"error": "That track is not in the library."}, status=404)
+                return
+        self._send_audio_headers(target, span, head=head)
+        if head or chunks is None:
+            if first:
+                try:
+                    self.wfile.write(first)
+                except ConnectionError:
+                    return
+            return
+        try:
+            self.wfile.write(first)
+            for block in chunks:
+                self.wfile.write(block)
+        except ConnectionError:
+            return
+        finally:
+            chunks.close()
+
+    def _send_audio_headers(
+        self,
+        target: audio_stream.AudioTarget,
+        span: audio_stream.ByteRange,
+        *,
+        head: bool,
+    ) -> None:
+        """Send status and headers for an audio response.
+
+        Args:
+            target: Indexed file. Its path is not written into a header.
+            span: Parsed range. 416 sends ``Content-Range: bytes */size``.
+            head: Accepted so the caller can share this with HEAD. The body
+                is not written here.
+        """
+        del head
+        if span.status == 416:
+            self.send_response(416)
+            self.send_header("Content-Type", target.media_type)
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Content-Range", f"bytes */{target.size}")
+            self.send_header("Content-Length", "0")
+            self.send_header("Cache-Control", "private")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.end_headers()
+            return
+        length = 0 if span.end < span.start else span.end - span.start + 1
+        self.send_response(span.status)
+        self.send_header("Content-Type", target.media_type)
+        self.send_header("Accept-Ranges", "bytes")
+        self.send_header("Content-Length", str(length))
+        if span.status == 206:
+            self.send_header("Content-Range", f"bytes {span.start}-{span.end}/{target.size}")
+        self.send_header("Cache-Control", "private")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.end_headers()
+
+    def _serve_waveform(self, url_path: str, raw_query: str, query: dict[str, list[str]]) -> None:
+        """Return a waveform, or the file's Serato Overview, for one library id.
+
+        Args:
+            url_path: ``/api/waveform`` or ``/api/waveform/overview``.
+            raw_query: Query text still percent-encoded. The track id is
+                taken from this string and must be decimal digits. A
+                ``path`` parameter is refused, including beside an id.
+            query: Parsed query. ``space`` limits the id. ``meta=1`` on
+                the waveform route returns JSON counts instead of the body.
+
+        The id check is ``audio_stream.parse_track_id`` and
+        ``audio_stream.resolve_audio``. A file that cannot be decoded
+        returns ``{"available": false, "error": "waveform unavailable"}``.
+        The overview route does not decode audio. Neither route writes
+        the audio file or the Serato folder.
+        """
+        space_text = query_text(query, "space")
+        space: str | None = None
+        if space_text:
+            try:
+                space = require_space(space_text)
+            except library.LibraryError as exc:
+                self.send_json({"error": exc.message}, status=exc.status)
+                return
+        try:
+            asset_id = audio_stream.parse_track_id(raw_query)
+            target = audio_stream.resolve_audio(asset_id=asset_id, space=space)
+        except audio_stream.AudioRefusal as exc:
+            self.send_json({"error": exc.message}, status=exc.status)
+            return
+        except library.LibraryError as exc:
+            if "Serato library not found" in exc.message:
+                self.send_json(
+                    {"error": "No Serato library was found on this computer."},
+                    status=404,
+                )
+                return
+            self.send_json({"error": exc.message}, status=exc.status)
+            return
+        if url_path == "/api/waveform/overview":
+            self.send_json(waveform.overview_document(target.path))
+            return
+        try:
+            body, cached = load_shared_waveform(target.path)
+        except waveform.WaveformUnavailable as exc:
+            self.send_json({"available": False, "error": exc.message})
+            return
+        if _flag(query, "meta"):
+            self.send_json(waveform.describe(body, cached=cached))
+            return
+        self.send_response(200)
+        self.send_header("Content-Type", "application/octet-stream")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "private")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Waveform-Format", "SWF1")
+        self.end_headers()
+        try:
+            self.wfile.write(body)
+        except ConnectionError:
+            return
+
     def send_json(self, payload: object, status: int = 200) -> None:
         """Write a JSON response.
 
         Args:
             payload: Object encoded as UTF-8 JSON. A non-finite float becomes null.
+                A known ``error`` sentence also gets its ``code`` from
+                ``error_codes`` so the page can show it in another language.
             status: HTTP status code. Defaults to 200.
         """
-        body = encode_json(payload)
+        body = encode_json(error_codes.with_code(payload))
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))

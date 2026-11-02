@@ -63,6 +63,10 @@ _NAME_RE_MAX = 255
 _CHANGE_CAP = 200
 _FILE_CAP = 500
 _TREE_CAP = 50000
+_QUERY_MAX = 200
+_SEARCH_SCAN = 20000
+_SEARCH_HITS = 40
+_SEARCH_SKIP_DIRS = frozenset({"_Serato_", ".git", "node_modules"})
 _JOURNAL = "file-ops-journal.json"
 _TRASH_ENV = "SERATO_LIBRARY_TRASH"
 FO_DELETE = 3
@@ -154,30 +158,48 @@ class Plan:
     trash: list[str] = field(default_factory=list)
 
 
-def list_directory(path: str | None, *, elsewhere: bool = False, refresh: bool = False) -> dict[str, object]:
+def list_directory(
+    path: str | None,
+    *,
+    elsewhere: bool = False,
+    refresh: bool = False,
+    query: str = "",
+) -> dict[str, object]:
     """List the music roots, or one folder under a root.
 
     An empty path lists the folders Serato uses. ``elsewhere`` lists a
     folder outside those roots. The path is normalized first. A shortcut
     in the path is refused, and a rooted browse cannot leave its root.
 
+    A non-empty ``query`` searches names instead of listing one folder.
+    That search is read-only. It does not follow shortcuts, and it skips
+    a root marked missing.
+
     Args:
-        path: Folder to open. Empty selects the music roots.
+        path: Folder to open. Empty selects the music roots. With a
+            query, empty searches every music root that is on disk.
         elsewhere: When true, a folder outside the music roots may be
-            listed. Path checks still apply.
+            listed. Path checks still apply. A query also needs a path.
         refresh: When true, drop the cached roots and read the library again.
+        query: Name filter. Blank lists the folder. Longer than 200
+            characters, or a null byte, is refused.
 
     Returns:
         The roots, the folder, its parent, and every entry. Folders are
         listed before files. Shortcuts are listed and are not followed.
-        ``truncated`` is false. ``parent`` is null at a music root.
+        ``truncated`` is false for a listing. A search sets ``search``
+        and ``query``, orders matches by score, and may set ``truncated``.
+        ``parent`` is null at a music root.
 
     Raises:
         LibraryError: If the path is missing, outside the music roots,
-            or a shortcut.
+            or a shortcut, or if the query is not valid.
     """
     if refresh:
         invalidate_browse_cache()
+    text = _search_text(query)
+    if text:
+        return _search_listing(text, path, elsewhere=elsewhere)
     info = _browser_status()
     roots = music_roots.music_roots(refresh=refresh)
     if path is None or path == "":
@@ -214,6 +236,283 @@ def list_directory(path: str | None, *, elsewhere: bool = False, refresh: bool =
         "writable": bool(info.get("writable")),
         "serato": info,
     }
+
+
+def _search_text(query: str) -> str:
+    """Return a name query, or an empty string when there is nothing to find.
+
+    Args:
+        query: Raw ``q`` value. Blank and whitespace are not a search.
+
+    Returns:
+        The query with its internal whitespace collapsed.
+
+    Raises:
+        LibraryError: If the value is too long or contains a null byte.
+    """
+    if not isinstance(query, str):
+        raise library.LibraryError("That search is not valid.", 400)
+    if "\x00" in query or len(query) > _QUERY_MAX:
+        raise library.LibraryError("That search is not valid." if "\x00" in query else "That search is too long.", 400)
+    return " ".join(query.split())
+
+
+def _fuzzy_score(needle: str, haystack: str) -> int | None:
+    """Score one word as a subsequence of a name.
+
+    Consecutive letters, a whole word, and a prefix score higher. The
+    same rules are in ``src/fuzzy.ts``.
+
+    Args:
+        needle: One word. An empty word does not match.
+        haystack: File name or folder name.
+
+    Returns:
+        A higher score for a tighter match, or None when ``needle`` is
+        not a subsequence.
+    """
+    folded_needle = needle.casefold()
+    folded = haystack.casefold()
+    if not folded_needle:
+        return None
+    score = 0
+    previous = -2
+    start = 0
+    for character in folded_needle:
+        found = folded.find(character, start)
+        if found < 0:
+            return None
+        score += 8
+        if found == previous + 1:
+            score += 16
+        if found == 0 or folded[found - 1] in " ._-/\\":
+            score += 12
+        previous = found
+        start = found + 1
+    if folded_needle in folded:
+        score += 40
+    if folded.startswith(folded_needle):
+        score += 30
+    score -= max(0, len(folded) - len(folded_needle)) // 4
+    return score
+
+
+def _match_score(terms: list[str], name: str, parent_name: str) -> int | None:
+    """Score every word against a file name or its parent folder.
+
+    A word that matches the file name scores higher than a word that
+    matches only the folder.
+
+    Args:
+        terms: Words from the query. Each one must match.
+        name: File or folder name.
+        parent_name: Name of the folder that contains it.
+
+    Returns:
+        The total score, or None when a word matches neither string.
+    """
+    total = 0
+    for term in terms:
+        name_score = _fuzzy_score(term, name)
+        if name_score is not None:
+            total += name_score + 20
+            continue
+        parent_score = _fuzzy_score(term, parent_name)
+        if parent_score is None:
+            return None
+        total += parent_score
+    return total
+
+
+def _asset_ids(indexed: dict[Path, list[int]], path: Path, *, link: bool) -> list[int]:
+    """Return library asset ids for a scanned path.
+
+    A shortcut is not resolved, so the lookup cannot follow it out of
+    the folder.
+
+    Args:
+        indexed: Resolved paths from the asset table.
+        path: Path from the scan.
+        link: When true, do not resolve the path.
+
+    Returns:
+        Asset ids, or an empty list when the file is not in the library.
+    """
+    found = indexed.get(path, [])
+    if found or link:
+        return found
+    try:
+        return indexed.get(path.resolve(strict=False), [])
+    except OSError:
+        return []
+
+
+def _dir_ident(directory: Path) -> tuple[int, int] | None:
+    """Return a device and inode, without following a shortcut.
+
+    Args:
+        directory: Folder about to be scanned.
+
+    Returns:
+        The identity, or None when the folder cannot be statted.
+    """
+    try:
+        stat = directory.stat(follow_symlinks=False)
+    except OSError:
+        return None
+    return (stat.st_dev, stat.st_ino)
+
+
+def _search_listing(text: str, path: str | None, *, elsewhere: bool) -> dict[str, object]:
+    """Find files and folders by name without writing anything.
+
+    Missing roots are skipped. Shortcuts are not followed. The walk stops
+    after ``_SEARCH_SCAN`` entries. The response keeps the best
+    ``_SEARCH_HITS`` matches.
+
+    Args:
+        text: Collapsed query.
+        path: Folder to search. Empty searches the music roots.
+        elsewhere: When true, ``path`` may sit outside the music roots.
+            An empty path is refused so the home directory is not walked.
+
+    Returns:
+        A listing whose ``entries`` are the matches. ``search`` is true.
+
+    Raises:
+        LibraryError: If the path is not a folder this browse may open,
+            or if ``elsewhere`` is set without a path.
+    """
+    info = _browser_status()
+    roots = music_roots.music_roots(refresh=False)
+    if path:
+        starts = [_resolve_directory(path, elsewhere=elsewhere, roots=roots)]
+    elif elsewhere:
+        raise library.LibraryError("Choose a folder before searching outside the music folders.", 400)
+    else:
+        starts = []
+        for root in roots:
+            if root.get("missing"):
+                continue
+            root_path = root.get("path")
+            if not isinstance(root_path, str) or root_path == "":
+                continue
+            candidate = Path(root_path)
+            try:
+                if candidate.is_symlink() or not candidate.is_dir():
+                    continue
+            except OSError:
+                continue
+            starts.append(candidate)
+    terms = text.split()
+    indexed = _index_assets()
+    found: list[dict[str, object]] = []
+    seen: set[tuple[int, int]] = set()
+    start_keys = {os.path.normcase(str(start)) for start in starts}
+    budget = 0
+    truncated = False
+    for start in starts:
+        if truncated:
+            break
+        stack = [start]
+        while stack and not truncated:
+            directory = stack.pop()
+            ident = _dir_ident(directory)
+            if ident is not None:
+                if ident in seen:
+                    continue
+                seen.add(ident)
+            try:
+                scanner = os.scandir(directory)
+            except OSError:
+                continue
+            parent_name = "" if os.path.normcase(str(directory)) in start_keys else directory.name
+            with scanner:
+                for entry in scanner:
+                    budget += 1
+                    if budget > _SEARCH_SCAN:
+                        truncated = True
+                        break
+                    name = entry.name
+                    if name in {".", ".."} or name.startswith("."):
+                        continue
+                    child = Path(entry.path)
+                    try:
+                        link = entry.is_symlink()
+                    except OSError:
+                        continue
+                    if link:
+                        _consider_match(name, child, "link", False, parent_name, terms, indexed, found)
+                        continue
+                    try:
+                        is_dir = entry.is_dir(follow_symlinks=False)
+                    except OSError:
+                        continue
+                    if is_dir:
+                        if name not in _SEARCH_SKIP_DIRS:
+                            stack.append(child)
+                        _consider_match(name, child, "dir", False, parent_name, terms, indexed, found)
+                        continue
+                    audio = Path(name).suffix.lower() in _AUDIO
+                    _consider_match(name, child, "file", audio, parent_name, terms, indexed, found)
+    found.sort(key=lambda item: (-int(item["score"]), str(item["name"]).casefold(), str(item["path"]).casefold()))
+    if len(found) > _SEARCH_HITS:
+        truncated = True
+    scope = "" if not path else str(starts[0]) if starts else ""
+    return {
+        "roots": roots,
+        "root": None,
+        "path": scope,
+        "parent": None,
+        "breadcrumb": [],
+        "entries": found[:_SEARCH_HITS],
+        "truncated": truncated,
+        "elsewhere": elsewhere and bool(path),
+        "writable": bool(info.get("writable")),
+        "serato": info,
+        "search": True,
+        "query": text,
+    }
+
+
+def _consider_match(
+    name: str,
+    path: Path,
+    kind: str,
+    audio: bool,
+    parent_name: str,
+    terms: list[str],
+    indexed: dict[Path, list[int]],
+    found: list[dict[str, object]],
+) -> None:
+    """Append one name when it matches the query.
+
+    Args:
+        name: Directory entry name.
+        path: That entry's path.
+        kind: ``file``, ``dir``, or ``link``.
+        audio: True when the file is an audio suffix.
+        parent_name: Folder that contains the entry.
+        terms: Query words.
+        indexed: Library path index.
+        found: Matches collected so far.
+    """
+    score = _match_score(terms, name, parent_name)
+    if score is None:
+        return
+    assets = _asset_ids(indexed, path, link=kind == "link") if kind == "file" else []
+    found.append(
+        {
+            "name": name,
+            "kind": kind,
+            "path": str(path),
+            "audio": audio,
+            "assets": assets,
+            "in_library": bool(assets),
+            "detail": str(path.parent),
+            "score": score,
+        }
+    )
 
 
 def plan(payload: Mapping[str, object]) -> dict[str, object]:
@@ -284,30 +583,53 @@ def execute(payload: Mapping[str, object]) -> dict[str, object]:
     built = _build(payload)
     if not built.ok:
         raise library.LibraryError(built.error or "That change was not saved.")
-    snapshots.snapshot_before_write()
-    library.ensure_backup()
-    journal = _journal_for(built)
-    _write_journal(journal)
-    cue_status = built.cues
-    try:
-        cue_status = _perform_files(built, journal)
-        _commit_database(built, journal)
-        journal["done"] = True
+    import safe_write
+
+    extra = [change.source for change in built.changes]
+    extra.extend(removal.path for removal in built.removals if removal.path is not None)
+    holder: dict[str, dict[str, object]] = {}
+
+    def undo_files() -> None:
+        """Put moved files back from the in-memory journal.
+
+        The journal file may already have been removed. The dict still
+        describes the moves.
+        """
+        journal = holder.get("journal")
+        if journal is None:
+            return
+        _undo_journal(journal)
+
+    with safe_write.session(
+        built.action,
+        _file_target(built),
+        extra,
+        on_rollback=undo_files,
+    ) as write:
+        journal = _journal_for(built)
+        holder["journal"] = journal
         _write_journal(journal)
-    except library.SeratoOpen:
-        _undo_and_drop(journal)
-        raise
-    except library.LibraryError:
-        _undo_and_drop(journal)
-        raise
-    except Exception as exc:
-        logger.exception("File change failed")
-        _undo_and_drop(journal)
-        raise library.LibraryError(
-            "The files could not be changed. Nothing was left halfway."
-        ) from exc
-    _finish_journal(journal)
-    _delete_journal()
+        cue_status = built.cues
+        try:
+            cue_status = _perform_files(built, journal)
+            _commit_database(built, journal)
+            journal["done"] = True
+            _write_journal(journal)
+            write.mark_committed()
+        except library.SeratoOpen:
+            _undo_and_drop(journal)
+            raise
+        except library.LibraryError:
+            _undo_and_drop(journal)
+            raise
+        except Exception as exc:
+            logger.exception("File change failed")
+            _undo_and_drop(journal)
+            raise library.LibraryError(
+                "The files could not be changed. Nothing was left halfway."
+            ) from exc
+        _finish_journal(journal)
+        _delete_journal()
     related_notes = _retarget_related(built)
     _capture(built, cue_status)
     body = _public(built)
@@ -1611,6 +1933,11 @@ def _commit_database(plan: Plan, journal: dict[str, object]) -> None:
         sqlite3.Error: If the commit fails. The caller puts the files back.
     """
     del journal
+    import safe_write
+
+    active = safe_write.current_session()
+    if active is not None:
+        _expect_file_plan(active, plan)
     conn = library.begin_write()
     schemas: dict[Path, str] = {}
     try:
@@ -1637,6 +1964,86 @@ def _commit_database(plan: Plan, journal: dict[str, object]) -> None:
             except sqlite3.Error:
                 pass
         conn.close()
+
+
+def _file_target(plan: Plan) -> str:
+    """Return the file name a person would recognize for this change.
+
+    Args:
+        plan: Checked plan.
+
+    Returns:
+        The destination or removal name. Several files are joined, up to three.
+    """
+    names = [change.dest.name for change in plan.changes]
+    if not names:
+        names = [removal.name for removal in plan.removals]
+    if not names:
+        return plan.action
+    shown = names[:3]
+    if len(names) > 3:
+        shown.append(f"and {len(names) - 3} more")
+    return ", ".join(shown)
+
+
+def _expect_file_plan(session: safe_write.Session, plan: Plan) -> None:
+    """Register the path check for a file change.
+
+    Args:
+        session: The write session that will open the temporary copy.
+        plan: Checked plan. Delete expects the asset rows to be gone.
+            Other actions expect each asset's file name and portable id.
+    """
+    import safe_write as safe
+
+    if plan.action == "delete":
+        ids = tuple(asset_id for removal in plan.removals for asset_id in removal.asset_ids)
+
+        def check_gone(copied: sqlite3.Connection, ids: tuple[int, ...] = ids) -> None:
+            """Fail when a deleted track is still in the library.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                ids: Asset ids that should be gone.
+
+            Raises:
+                VerifyMismatch: If an asset row remains.
+            """
+            for asset_id in ids:
+                row = copied.execute("SELECT COUNT(*) FROM asset WHERE id = ?", (asset_id,)).fetchone()
+                if row is None or int(row[0]) != 0:
+                    raise safe.VerifyMismatch("A deleted track is still in the library.")
+
+        session.check(check_gone)
+        return
+    expected = tuple(
+        (asset_id, change.dest.name, to_portable(change.dest))
+        for change in plan.changes
+        for asset_id in change.asset_ids
+    )
+
+    def check_paths(
+        copied: sqlite3.Connection,
+        expected: tuple[tuple[int, str, str], ...] = expected,
+    ) -> None:
+        """Fail when a moved track does not store its new path.
+
+        Args:
+            copied: Read-only connection to the temporary database copy.
+            expected: Asset id, file name, and portable id.
+
+        Raises:
+            VerifyMismatch: If the row is missing or still has the old path.
+        """
+        for asset_id, name, portable in expected:
+            row = copied.execute(
+                "SELECT file_name, portable_id FROM asset WHERE id = ?",
+                (asset_id,),
+            ).fetchone()
+            if row is None or row[0] != name or row[1] != portable:
+                raise safe.VerifyMismatch("The saved file path does not match.")
+
+    session.check(check_paths)
 
 
 def _commit(conn: sqlite3.Connection) -> None:

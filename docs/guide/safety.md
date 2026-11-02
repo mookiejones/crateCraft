@@ -28,7 +28,7 @@ The first time you finish setup, **Take a safety snapshot** saves a copy of the 
 
 **Snapshots** in the sidebar keeps hash-checked copies of the library database, the crates on each drive (including a drive's `_Serato_` folder and `database V2`), and the Serato cue, beatgrid, and autotag data stored inside MP3, FLAC, M4A, and AIFF files. The music itself is not copied. Snapshots are kept with no time limit. The page does not delete old ones.
 
-Quit Serato DJ Pro before you restore. If Serato DJ is still running, restore stops and the page tells you to quit it first. That check runs again before the database, the crates, and the audio files are replaced. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was. **Review restore** shows what would change: crates, tracks, and the cue and beatgrid differences for each file. Nothing is written until you confirm. Confirm saves a new snapshot first, so the restore can be undone from the list. If the app stops in the middle of a restore, the next time it opens it puts that saved snapshot back.
+Quit Serato DJ Pro before you restore. If Serato DJ is still running, restore stops and the page tells you to quit it first. That check runs again before the database, the crates, and the audio files are replaced. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was. **Review restore** shows what would change: crates, tracks, and the cue and beatgrid differences for each file. It also lists crate files the library database has not heard of. Serato 4 and 5 delete those files the next time Serato opens. Restore writes them into the library as well as putting the files back, so the crates are still there after that launch. If the library has no Serato Library space, those files are put back but not registered, and the plan says Serato may remove them on the next launch. A crate file whose snapshot copy could not be read is listed as skipped and is not registered. The rest of the restore still finishes. Nothing is written until you confirm. The database is not written while Serato is running. Confirm saves a new snapshot first, so the restore can be undone from the list. If the app stops in the middle of a restore, the next time it opens it puts that saved snapshot back. After a restore writes the files, it checks them against the snapshot. When no crate was registered, the database files must match the snapshot byte for byte. When crates were registered, the library rows must be the snapshot's rows plus those crates. If they do not match, it puts the saved snapshot back. The Snapshots page lists each edit and each restore, including one that could not be put back. That line is not shown as a success.
 
 A drive that is not plugged in is shown as unavailable. Its crates and tracks stay in the snapshot. They are not treated as deleted, and a restore does not remove them.
 
@@ -38,13 +38,15 @@ Each snapshot records the Serato version and build when those can be read from t
 
 ## Serato 5
 
-On Serato 5, writes and restores stay off. The status line says why.
+On Serato 5, writes and restores stay off. The status line says why. Under that line, **Library generation** says Serato 4, Serato 5, or Version unknown, and opens a note that says whether that came from the newest session log in `_Serato_/Logs`, from the installed Serato, or because no log was found. A log that does not name a dotted version is treated as unknown, and writes stay off. If the installed Serato version cannot be read, a session log does not turn writes back on. A missing Logs folder leaves the installed version in place.
 
 Protect Library is read from the Mac preferences key `library_protect`. On means it is set. Off means it is cleared. If the preference cannot be read, it is treated as unknown. All three block writes and restores. Separately, Lucid and Flexible beatgrid storage does not have a confirmed file layout, so this app does not write a Serato 5 library until that is known. Snapshots can still be taken and read. Serato 5.0 still keeps crates in `database V2` inside `_Serato_`, and those files are included in the snapshot. Protect Library does not lock that file; the block is the version and the preference, not a file lock.
 
 ## Automatic backups
 
-The first time you save anything after you open the app, the app also copies the library database into a backup folder. Later saves in that same session do not make another of these copies. Each save does add a snapshot, described above.
+A library edit does not add a `Backups` folder beside `master.sqlite`. The app keeps the pre-write copy in its own data folder, checks the edit, and puts that copy back when the check fails.
+
+After the save is committed, the app reads a copy of the database, including a `-wal` file when one is present. It does not open the live database for that check. If the rows or the file hashes are not the change you asked for, the app puts the pre-write copy back and checks those hashes. That copy, the write journal, and the operation note are kept in this app's data folder, not in Serato's library folder. Serato 5 stays read-only. That rollback does not write a Serato 5 library. If the copy cannot be saved because the disk is full, the save does not run. The Snapshots page lists each of these notes.
 
 1. Quit Serato DJ Pro.
 2. Open Serato Library.
@@ -56,7 +58,7 @@ The copy is a folder next to `master.sqlite`:
 
 `Library/Backups/serato-web-YYYYMMDD-HHMMSS`
 
-`YYYYMMDD` is the date. `HHMMSS` is the time on this computer. When a folder for that same second already exists, the name ends with `-02`, then `-03`, up through `-99`. A later number is a later copy from that second. Sorting the folder names keeps them in the order they were made. The folder contains `master.sqlite`. It also contains `root.sqlite` when that file was beside the library. A finished folder also contains a file named `COMPLETE`. That file is JSON. It lists a SHA-256 hash for every other file in the folder.
+`YYYYMMDD` is the date. `HHMMSS` is the time on this computer. When a folder for that same second already exists, the name ends with `-02`, then `-03`, up through `-99`. A later number is a later copy from that second. Sorting the folder names keeps them in the order they were made. The folder contains `master.sqlite`. It also contains `root.sqlite` when that file was beside the library. When a drive is connected, it also contains a `drives` folder. Each drive has its own directory there, and that directory has only that drive's `_Serato_` crates and `database V2`. An unplugged drive is named in `drives.json` and is not copied. A drive that is plugged in later is copied the next time the library is saved. The copy stays on this computer. Nothing is written on the external drive. If there is not enough disk space, the copy is refused and the library is not changed. A finished folder also contains a file named `COMPLETE`. That file is JSON. It lists a SHA-256 hash for every other file in the folder. A restore of this folder is checked against those hashes.
 
 Do not restore a folder whose name ends with `-failed` or `-failed-` and digits, such as `-failed-02` or `-failed-100` (any capitalization). Do not restore a hidden folder whose name ends with `.partial`. Do not restore a folder that contains a file named `INCOMPLETE`. Those copies did not finish. Leave them where they are.
 
@@ -64,7 +66,7 @@ An older folder that has `master.sqlite` but no `COMPLETE` file is **legacy, unv
 
 A file change in the Files view copies the database first as well. During the change, the app also writes `Library/Backups/file-ops-journal.json`. That file is removed when the change finishes. Leave it alone.
 
-The backup is the database, not your audio. A backup does not contain your music files.
+The backup is the database and the drive's `_Serato_` crates, not your audio. A backup does not contain your music files. `Recording`, `DJ Sessions`, `Export Backups`, and `Lexicon` are not included.
 
 ## Restore an older database copy by hand
 

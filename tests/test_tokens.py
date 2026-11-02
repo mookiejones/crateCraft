@@ -328,6 +328,7 @@ def _length(value: str, colors: dict[str, str]) -> float:
     named = re.search(r"var\(\s*(--[A-Za-z0-9-]+)", value)
     if named:
         token = {
+            "--font-display": 56,
             "--font-title": 20,
             "--font-heading": 14,
             "--font-body": 13,
@@ -361,6 +362,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("body", ("--color-card", "--color-selection", "hover", "--color-button"), 15, 400),
     (".rail", ("--color-bg",), 15, 400),
     (".brand p", ("--color-bg",), 14, 400),
+    (".generation", ("--color-bg",), 15, 400),
+    (".brand .generation-note", ("--color-bg",), 13, 400),
     (".rail select", ("--color-bg",), 15, 400),
     (".rail-field input", ("--color-bg",), 15, 400),
     (".view-switch button", ("--color-bg",), 15, 400),
@@ -370,6 +373,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ('.sort-crates button[aria-pressed="true"]', ("--color-bg",), 15, 400),
     (".rail-foot button", ("--color-bg",), 15, 400),
     (".app-version", ("--color-bg",), 13, 400),
+    (".app-tooltip", ("--color-bg",), 13, 400),
+    (".app-tooltip:popover-open", ("--color-bg",), 13, 400),
     (".mode-note", ("--color-bg",), 13, 400),
     (".crate-foot", ("--color-bg",), 13, 400),
     (".crate-row", ("--color-bg", "--color-panel"), 15, 400),
@@ -383,6 +388,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("#export-m3u", ("--color-card",), 15, 400),
     ("#export-rekordbox", ("--color-card",), 15, 400),
     ("#import-m3u", ("--color-card",), 15, 400),
+    ("#gig-refresh", ("--color-card",), 15, 400),
     (".text-button", ("--color-card",), 15, 400),
     (".actions button", ("--color-card",), 15, 400),
     (".rekordbox-option", ("--color-card",), 15, 400),
@@ -395,6 +401,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".empty-list", ("--color-card",), 15, 400),
     (".detail-empty", ("--color-card",), 15, 400),
     (".detail-error", ("--color-card",), 15, 400),
+    (".gig-verdict.not-ready", ("--color-card",), 18, 600),
     (".detail-kicker", ("--color-card",), 15, 400),
     (".deck .bpm", ("--color-card",), 28, 500),
     (".deck span", ("--color-card",), 13, 400),
@@ -407,6 +414,11 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".lock-note", ("--color-card",), 15, 400),
     (".editor label", ("--color-card",), 13, 400),
     ("dialog", ("--color-card",), 15, 400),
+    (".shortcut-table thead th", ("--color-card",), 11, 600),
+    ("#quick-open-query", ("--color-card",), 15, 400),
+    (".quick-open-option", ("--color-card", "--color-selection"), 15, 400),
+    (".quick-open-kind", ("--color-button",), 11, 600),
+    (".quick-open-detail", ("--color-card", "--color-selection"), 11, 400),
     (".dialog-note", ("--color-card",), 15, 400),
     (".dialog-status", ("--color-card",), 15, 400),
     (".about-version", ("--color-card",), 13, 400),
@@ -423,6 +435,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("#merge-cancel", ("--color-card",), 15, 400),
     ("#merge-confirm.danger", ("--color-danger",), 15, 400),
     (".log-fallback", ("--color-card",), 15, 400),
+    (".files-match-detail", ("--color-card", "--color-selection"), 11, 400),
     (".files-badge", ("--color-card",), 13, 400),
     (".files-root-detail", ("--color-card",), 13, 400),
     (".files-row.is-missing .files-icon", ("--color-card", "--color-selection"), 20, 400),
@@ -438,12 +451,23 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("#files-confirm.danger", ("--color-danger",), 15, 400),
     (".wizard-step", ("--color-card",), 14, 500),
     (".wizard-status.is-blocked", ("--color-warn-bg",), 15, 400),
+    (".operations-alert", ("--color-warn-bg",), 15, 400),
     (".wizard-status.is-saved", ("--color-safe-bg",), 15, 400),
     (".wizard-choice", ("--color-card",), 15, 400),
     (".wizard-quiet", ("--color-card",), 15, 400),
     ("#wizard-primary", ("--color-primary",), 20, 700),
     ("#wizard-folder-use", ("--color-text",), 15, 400),
     (".wizard-folder", ("--color-button",), 15, 400),
+    (".player-title", ("--color-card",), 14, 600),
+    (".player-artist", ("--color-card",), 13, 400),
+    (".player-status", ("--color-card",), 13, 400),
+    (".player-toggle", ("--color-card",), 13, 600),
+    (".waveform-reading", ("--color-bg",), 11, 400),
+    (".waveform-note", ("--color-card",), 13, 400),
+    (".waveform-zoom-button", ("--color-card",), 14, 600),
+    (".player-time", ("--color-card",), 13, 400),
+    (".player-volume", ("--color-card",), 11, 400),
+    (".detail-play", ("--color-card",), 13, 600),
 )
 
 # Large or inherited text whose color comes from an ancestor rule.
@@ -492,7 +516,11 @@ _DECORATIVE = {
     ".files-row",
     ".files-actions",
     ".snapshot-card",
+    ".shortcut-table th",
+    ".shortcut-table td",
     ".swatch",
+    ".player-bar",
+    ".operations",
 }
 
 # The only visible edge of these fields. Card surfaces use the sheet.
@@ -509,8 +537,14 @@ _CONTROL_EDGE = (
     (".related-form input", "--color-card", "border-bottom"),
     (".related-form select", "--color-card", "border-bottom"),
     (".files-field input", "--color-card", "border-bottom"),
+    ("#quick-open-query", "--color-card", "border"),
+    (".shortcut-table kbd", "--color-card", "border"),
+    (".row-play", "--color-card", "border"),
+    ("dialog .settings-field select", "--color-card", "border"),
     (".rule-edit textarea", "--color-card", "border"),
     (".wizard-folder", "--color-card", "border"),
+    (".app-tooltip", "--color-bg", "border"),
+    (".app-tooltip:popover-open", "--color-bg", "border"),
 )
 
 
@@ -646,10 +680,17 @@ class ContrastTests(unittest.TestCase):
             ratio = contrast(_over(mark, surface, alpha or 0), surface)
             self.assertGreaterEqual(ratio, 3, f"holds-selection on {background_name} is {ratio:.2f}:1")
 
-        for selector in ("#consent-accept", "#open-logs", "#copy-logs", "#copy-version", "#rekordbox-cancel", "#merge-cancel", ".wizard-choice"):
+        for selector in ("#consent-accept", "#open-logs", "#copy-logs", "#copy-version", "#rekordbox-cancel", "#merge-cancel", ".wizard-choice", ".player-toggle", ".waveform-zoom-button", ".detail-play"):
             border = _paint(self._rule(selector)["border"], self.colors)
             ratio = contrast(border, self._surface("--color-card"))
             self.assertGreaterEqual(ratio, 3, f"{selector} border is {ratio:.2f}:1")
+        alert_border = _paint(self._rule(".operations-alert")["border"], self.colors)
+        alert_ratio = contrast(alert_border, self._surface("--color-warn-bg"))
+        self.assertGreaterEqual(alert_ratio, 3, f".operations-alert border is {alert_ratio:.2f}:1")
+        active_mark = _paint(self._rule(".quick-open-option.is-active")["border-left"], self.colors)
+        for background_name in ("--color-card", "--color-selection"):
+            ratio = contrast(active_mark, self._surface(background_name))
+            self.assertGreaterEqual(ratio, 3, f"quick-open selection on {background_name} is {ratio:.2f}:1")
 
         for selector, background_name, prop in _CONTROL_EDGE:
             value = self._rule(selector)[prop]
@@ -703,6 +744,12 @@ class ContrastTests(unittest.TestCase):
             "#rekordbox-cancel",
             "#merge-cancel",
             ".wizard-choice",
+            ".quick-open-option.is-active",
+            ".player-toggle",
+            ".waveform-zoom-button",
+            ".waveform-overview:focus-visible",
+            ".detail-play",
+            ".operations-alert",
         } | {selector for selector, _, _ in _CONTROL_EDGE}
         self.assertEqual(bordered - checked_borders, set(), "borders missing from the contrast list")
         self.assertEqual(checked_borders - bordered, set(), "contrast list names a border that is not painted")
