@@ -249,16 +249,22 @@ class CompletionReportTests(unittest.TestCase):
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         claude = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
         contributing = (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
-        template = (ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md").read_text(encoding="utf-8")
+        template_path = ROOT / ".github" / "pull_request_template.md"
+        self.assertTrue(template_path.is_file())
+        self.assertFalse((ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md").exists())
+        template = template_path.read_text(encoding="utf-8")
         github = (ROOT / "docs" / "github.md").read_text(encoding="utf-8")
         self.assertEqual(agents, claude)
         surfaces = (agents, contributing, template, github)
         for surface in surfaces:
             self.assertIn("## Completion report", surface)
+            self.assertNotIn(".github/PULL_REQUEST_TEMPLATE.md", surface)
             for field in COMPLETION_FIELDS:
                 self.assertIn(field, surface)
             for rule in COMPLETION_RULES:
                 self.assertIn(rule, surface)
+        for guide in (agents, contributing, github):
+            self.assertIn(".github/pull_request_template.md", guide)
         indented = "\n".join(f"   {line}" for line in PRE_PR_COMMANDS.splitlines())
         self.assertIn(indented, agents)
         self.assertIn(PRE_PR_COMMANDS, contributing)
