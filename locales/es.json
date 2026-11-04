@@ -90,6 +90,7 @@
   "error.action_unavailable": "Esa acción no está disponible.",
   "error.backup_no_space": "No hay espacio suficiente en el disco para copiar la biblioteca.",
   "error.backup_serato_running": "Cierra Serato DJ Pro antes de copiar las cajas de las unidades. Serato DJ sigue abierto, así que no se copió nada.",
+  "error.bitrate_needs_crate": "Elige una caja para comprobar la tasa de bits.",
   "error.body_not_json": "El cuerpo de la solicitud no es JSON.",
   "error.body_not_object": "El cuerpo de la solicitud no es un objeto.",
   "error.choose_copy": "Elige la copia que quieres conservar.",

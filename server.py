@@ -25,6 +25,7 @@ from urllib.parse import parse_qs, urlparse
 import app_config
 import app_log
 import audio_stream
+import bitrate_check
 import drive_check
 import error_codes
 import files
@@ -1766,6 +1767,12 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
                 self.wfile.write(body)
+                return
+            if parsed.path == "/api/bitrate-check":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                bitrate_check.require_crate(crate_id)
+                self.send_json(bitrate_check.scan(Path(library.MASTER), space, crate_id))
                 return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
