@@ -135,6 +135,8 @@
   "error.root_color": "La raíz del espacio no tiene color.",
   "error.root_delete": "La raíz del espacio no se puede eliminar.",
   "error.root_rename": "La raíz del espacio no se puede renombrar.",
+  "error.scan_depth": "Elige una comprobación rápida o completa.",
+  "error.scan_full_needs_crate": "Elige una caja para la comprobación completa.",
   "error.serato_version_unknown": "La versión de Serato es desconocida (compilación {build}). Las escrituras y las restauraciones están desactivadas hasta que se pueda leer la versión de Serato instalada. Un valor que no es un número con puntos, incluido un plist ilegible, es desconocido. Las instantáneas se pueden tomar y leer.",
   "error.setup_needs_consent": "Elige si quieres compartir estadísticas antes de terminar la configuración.",
   "error.setup_not_saved": "No se pudo guardar la configuración.",
