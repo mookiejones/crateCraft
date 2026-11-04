@@ -1463,6 +1463,9 @@ dialog .settings-field select {
 .detail[hidden],
 #crate-actions[hidden],
 .files-field[hidden],
+.preset-field[hidden],
+#preset-scope-label[hidden],
+#crate-refresh[hidden],
 #files-move-here[hidden],
 #files-pick-cancel[hidden],
 #files-pick[hidden],
@@ -1688,17 +1691,21 @@ dialog .settings-field select {
   font-weight: 700;
 }
 
-.files-field {
+.files-field,
+.preset-field {
   display: block;
   margin-top: 14px;
 }
 
-.files-field span {
+.files-field span,
+.preset-field span {
   display: block;
   margin-bottom: var(--space-1);
 }
 
-.files-field input {
+.files-field input,
+.preset-field input,
+.preset-field select {
   width: 100%;
   min-height: 44px;
   background: transparent;
@@ -1708,6 +1715,10 @@ dialog .settings-field select {
 }
 
 #files-dialog { max-width: 42rem; }
+
+#preset-dialog { max-width: 32rem; }
+
+.preset-field small { display: block; margin-top: var(--space-1); }
 
 #files-changes {
   max-height: 240px;

@@ -537,6 +537,8 @@ _CONTROL_EDGE = (
     (".related-form input", "--color-card", "border-bottom"),
     (".related-form select", "--color-card", "border-bottom"),
     (".files-field input", "--color-card", "border-bottom"),
+    (".preset-field input", "--color-card", "border-bottom"),
+    (".preset-field select", "--color-card", "border-bottom"),
     ("#quick-open-query", "--color-card", "border"),
     (".shortcut-table kbd", "--color-card", "border"),
     (".row-play", "--color-card", "border"),

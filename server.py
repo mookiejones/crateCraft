@@ -1195,6 +1195,8 @@ def load_library(space: str | None = None) -> dict[str, object]:
     info = as_dict(_library_call("status"))
     payload["serato"] = info
     payload["writable"] = info["writable"]
+    crates = payload.get("crates")
+    payload["presets"] = smart_presets.for_crates(chosen, crates if isinstance(crates, list) else [])
     return payload
 
 

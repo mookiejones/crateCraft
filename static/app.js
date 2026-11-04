@@ -474,6 +474,43 @@
     "player.waveformUnavailable": "Waveform unavailable for this format",
     "player.zoomIn": "Zoom in",
     "player.zoomOut": "Zoom out",
+    "presets.bpm": "BPM",
+    "presets.button": "Preset",
+    "presets.counting": "Counting tracks…",
+    "presets.create": "Create crate",
+    "presets.created": {
+      one: "{name} saved with {count} track.",
+      other: "{name} saved with {count} tracks."
+    },
+    "presets.intro": "The app picks the tracks and saves a normal crate whose name ends in ⟳. Serato plays it like any crate. It refreshes when this app opens while Serato is closed, or when you press Refresh.",
+    "presets.key": "Key",
+    "presets.keyHelp": "Camelot, like 8A, or a key name, like Am.",
+    "presets.kind": "Preset",
+    "presets.kind.bpm": "BPM range",
+    "presets.kind.harmonic": "Mixes with a key",
+    "presets.kind.unplayed": "Not played lately",
+    "presets.matches": {
+      one: "{count} track matches.",
+      other: "{count} tracks match."
+    },
+    "presets.months": "Months",
+    "presets.name": "Crate name",
+    "presets.name.bpm": "BPM {bpm} ±{range}",
+    "presets.name.harmonic": "Mixes with {key}",
+    "presets.name.unplayed": {
+      one: "Not played in {count} month",
+      other: "Not played in {count} months"
+    },
+    "presets.range": "Plus or minus",
+    "presets.refresh": "Refresh",
+    "presets.refreshed": "{name} refreshed: {added} added, {removed} removed.",
+    "presets.refreshedOnOpen": {
+      one: "{count} preset crate refreshed.",
+      other: "{count} preset crates refreshed."
+    },
+    "presets.scope": "Only tracks in {name} and its subcrates",
+    "presets.title": "New crate from a preset",
+    "presets.updated": "⟳ updated {date}",
     "quickOpen.empty": "Type a track or file name.",
     "quickOpen.file": "File",
     "quickOpen.fileError": "Files on disk could not be searched. Track matches are still listed.",
@@ -639,11 +676,22 @@
     "space.video": "Video",
     "status.checking": "Checking Serato",
     "status.library": "Library",
+    "tooltip.cratePreset": "Make a crate from a preset: tracks that mix with a key, a BPM range, or tracks not played lately.",
+    "tooltip.crateRefresh": "Pick the tracks for this preset crate again from its preset.",
     "tooltip.gigBack": "Go back one step.",
     "tooltip.gigExit": "Leave the gig check and show crates.",
     "tooltip.gigNext": "Go to the next step.",
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.presetBpm": "The tempo in the middle of the range.",
+    "tooltip.presetCancel": "Close without making a crate.",
+    "tooltip.presetCreate": "Save the matching tracks as a new crate.",
+    "tooltip.presetKey": "The key to mix from. Tracks one step either way on the Camelot wheel, and the relative key, are included.",
+    "tooltip.presetKind": "Choose which tracks the crate collects.",
+    "tooltip.presetMonths": "Tracks with no play in this many months, including tracks never played.",
+    "tooltip.presetName": "The crate name. ⟳ is added at the end.",
+    "tooltip.presetRange": "How far above or below that tempo a track can be.",
+    "tooltip.presetScope": "Look only at tracks in the selected crate and the crates inside it.",
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
     "track.missingBadge": "missing",
     "track.numbered": "Track {id}",
@@ -1346,6 +1394,43 @@
     "player.waveformUnavailable": "Forma de onda no disponible para este formato",
     "player.zoomIn": "Acercar",
     "player.zoomOut": "Alejar",
+    "presets.bpm": "BPM",
+    "presets.button": "Preajuste",
+    "presets.counting": "Contando pistas…",
+    "presets.create": "Crear caja",
+    "presets.created": {
+      one: "{name} guardada con {count} pista.",
+      other: "{name} guardada con {count} pistas."
+    },
+    "presets.intro": "La app elige las pistas y guarda una caja normal cuyo nombre termina en ⟳. Serato la reproduce como cualquier caja. Se actualiza cuando esta app se abre con Serato cerrado, o cuando pulsas Actualizar.",
+    "presets.key": "Tonalidad",
+    "presets.keyHelp": "Camelot, como 8A, o un nombre de tonalidad, como Am.",
+    "presets.kind": "Preajuste",
+    "presets.kind.bpm": "Rango de BPM",
+    "presets.kind.harmonic": "Mezcla con una tonalidad",
+    "presets.kind.unplayed": "Sin tocar últimamente",
+    "presets.matches": {
+      one: "Coincide {count} pista.",
+      other: "Coinciden {count} pistas."
+    },
+    "presets.months": "Meses",
+    "presets.name": "Nombre de la caja",
+    "presets.name.bpm": "BPM {bpm} ±{range}",
+    "presets.name.harmonic": "Mezcla con {key}",
+    "presets.name.unplayed": {
+      one: "Sin tocar en {count} mes",
+      other: "Sin tocar en {count} meses"
+    },
+    "presets.range": "Más o menos",
+    "presets.refresh": "Actualizar",
+    "presets.refreshed": "{name} actualizada: {added} añadidas, {removed} quitadas.",
+    "presets.refreshedOnOpen": {
+      one: "Se actualizó {count} caja de preajuste.",
+      other: "Se actualizaron {count} cajas de preajuste."
+    },
+    "presets.scope": "Solo pistas de {name} y sus subcajas",
+    "presets.title": "Nueva caja a partir de un preajuste",
+    "presets.updated": "⟳ actualizada {date}",
     "quickOpen.empty": "Escribe el nombre de una pista o de un archivo.",
     "quickOpen.file": "Archivo",
     "quickOpen.fileError": "No se pudieron buscar los archivos del disco. Las pistas que coinciden siguen en la lista.",
@@ -1511,11 +1596,22 @@
     "space.video": "Vídeo",
     "status.checking": "Comprobando Serato",
     "status.library": "Biblioteca",
+    "tooltip.cratePreset": "Crea una caja a partir de un preajuste: pistas que mezclan con una tonalidad, un rango de BPM o pistas sin tocar últimamente.",
+    "tooltip.crateRefresh": "Vuelve a elegir las pistas de esta caja según su preajuste.",
     "tooltip.gigBack": "Vuelve un paso atrás.",
     "tooltip.gigExit": "Sale de la comprobación y muestra las cajas.",
     "tooltip.gigNext": "Pasa al siguiente paso.",
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
+    "tooltip.presetBpm": "El tempo en el centro del rango.",
+    "tooltip.presetCancel": "Cierra sin crear una caja.",
+    "tooltip.presetCreate": "Guarda las pistas que coinciden como una caja nueva.",
+    "tooltip.presetKey": "La tonalidad de partida. Se incluyen las pistas un paso a cada lado en la rueda Camelot y la tonalidad relativa.",
+    "tooltip.presetKind": "Elige qué pistas reúne la caja.",
+    "tooltip.presetMonths": "Pistas sin tocar en estos meses, incluidas las que nunca se tocaron.",
+    "tooltip.presetName": "El nombre de la caja. Se añade ⟳ al final.",
+    "tooltip.presetRange": "Cuánto puede subir o bajar una pista respecto a ese tempo.",
+    "tooltip.presetScope": "Mira solo las pistas de la caja elegida y de las cajas que contiene.",
     "tooltip.viewGig": "Comprueba la biblioteca antes de un bolo. Solo lectura.",
     "track.missingBadge": "no encontrada",
     "track.numbered": "Pista {id}",
@@ -2097,6 +2193,7 @@
     byId: /* @__PURE__ */ new Map(),
     crates: [],
     crateTracks: /* @__PURE__ */ new Map(),
+    presets: {},
     rootId: null,
     activeCrate: "all",
     query: "",
@@ -2230,6 +2327,17 @@
     crateRename: spec("tooltip.crateRename"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
+    cratePreset: spec("tooltip.cratePreset"),
+    crateRefresh: spec("tooltip.crateRefresh"),
+    presetKind: spec("tooltip.presetKind"),
+    presetKey: spec("tooltip.presetKey"),
+    presetBpm: spec("tooltip.presetBpm"),
+    presetRange: spec("tooltip.presetRange"),
+    presetMonths: spec("tooltip.presetMonths"),
+    presetScope: spec("tooltip.presetScope"),
+    presetName: spec("tooltip.presetName"),
+    presetCancel: spec("tooltip.presetCancel"),
+    presetCreate: spec("tooltip.presetCreate"),
     shortcuts: spec("tooltip.shortcuts"),
     settings: spec("tooltip.settings"),
     search: spec("tooltip.search"),
@@ -2404,6 +2512,17 @@
       "crate-rename": tips.crateRename,
       "crate-color": tips.crateColor,
       "crate-delete": tips.crateDelete,
+      "crate-preset": tips.cratePreset,
+      "crate-refresh": tips.crateRefresh,
+      "preset-kind": tips.presetKind,
+      "preset-key": tips.presetKey,
+      "preset-bpm": tips.presetBpm,
+      "preset-range": tips.presetRange,
+      "preset-months": tips.presetMonths,
+      "preset-scope": tips.presetScope,
+      "preset-name": tips.presetName,
+      "preset-cancel": tips.presetCancel,
+      "preset-create": tips.presetCreate,
       "open-shortcuts": tips.shortcuts,
       "open-settings": tips.settings,
       search: tips.search,
@@ -3058,6 +3177,72 @@
     if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
     fragment.append(actions(null));
     return fragment;
+  }
+
+  // src/preset-view.ts
+  function presetName(preset) {
+    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
+    if (preset.kind === "bpm") {
+      return t("presets.name.bpm", {
+        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
+        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
+      });
+    }
+    return t("presets.name.unplayed", { count: preset.months });
+  }
+  function numberFrom(input) {
+    const text = input.value.trim();
+    if (!text) return null;
+    const value = Number(text);
+    return Number.isFinite(value) ? value : null;
+  }
+  function scopeCrate() {
+    if (state.activeCrate === "all") return null;
+    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
+    return crate && !crate.smart ? crate : null;
+  }
+  function readPresetForm() {
+    const kind = el("preset-kind").value;
+    const scope = scopeCrate();
+    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
+    if (kind === "harmonic") {
+      const key = el("preset-key").value.trim();
+      return key ? { kind, key, ...crate } : null;
+    }
+    if (kind === "bpm") {
+      const bpm = numberFrom(el("preset-bpm"));
+      const range = numberFrom(el("preset-range")) ?? 3;
+      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
+      return { kind, bpm, range, ...crate };
+    }
+    if (kind === "unplayed") {
+      const months = numberFrom(el("preset-months")) ?? 12;
+      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
+      return { kind, months, ...crate };
+    }
+    return null;
+  }
+  function syncPresetFields() {
+    const kind = el("preset-kind").value;
+    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
+      field.hidden = field.dataset.presetKind !== kind;
+    }
+  }
+  function isPresetCrate(id) {
+    return id !== "all" && Object.hasOwn(state.presets, String(id));
+  }
+  function presetFoot(id) {
+    if (!isPresetCrate(id)) return "";
+    const updated = Number(state.presets[String(id)]?.updated);
+    if (!Number.isFinite(updated) || updated <= 0) return "";
+    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    return ` · ${t("presets.updated", { date })}`;
+  }
+  function syncPresetButtons() {
+    el("crate-preset").disabled = !state.writable;
+    const preset = isPresetCrate(state.activeCrate);
+    el("crate-refresh").hidden = !preset;
+    el("crate-refresh").disabled = !state.writable || !preset;
   }
 
   // src/restore.ts
@@ -5557,6 +5742,7 @@
     el("crate-rename").disabled = !state.writable || !crateChosen;
     el("crate-color").disabled = !state.writable || !crateChosen;
     el("crate-delete").disabled = !state.writable || !crateChosen;
+    syncPresetButtons();
     syncMergeButton();
     if (filesMode) {
       if (state.filesAtRoots) {
@@ -5579,7 +5765,8 @@
     const pool = state.mode === "history" ? state.entries : footerTracks();
     const bytes = pool.reduce((sum, track) => sum + (Number(track.file_size) || 0), 0);
     const ms = pool.reduce((sum, track) => sum + (Number(track.length_ms) || 0), 0);
-    el("crate-foot").textContent = `${formatNumber(pool.length)} · ${durationLabel(ms)} · ${sizeLabel(bytes)}`;
+    const preset = state.mode === "crates" ? presetFoot(state.activeCrate) : "";
+    el("crate-foot").textContent = `${formatNumber(pool.length)} · ${durationLabel(ms)} · ${sizeLabel(bytes)}${preset}`;
   }
   function footerTracks() {
     if (state.mode === "crates" && state.activeCrate !== "all") {
@@ -6735,6 +6922,7 @@
     state.crates = library.crates;
     state.rootId = library.root_id;
     state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)]));
+    state.presets = library.presets ?? {};
     state.expanded = new Set(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id));
     state.activeCrate = active2 === "all" || library.crates.some((crate) => crate.id === active2) ? active2 : "all";
     state.selectedId = selected;
@@ -9050,6 +9238,140 @@
     stop = onLocaleChange(repaintAll);
   }
 
+  // src/presets.ts
+  var PREVIEW_DELAY_MS = 250;
+  var previewTimer = 0;
+  var previewToken = 0;
+  var creating = false;
+  function syncNamePlaceholder(preset) {
+    el("preset-name").placeholder = preset ? presetName(preset) : "";
+  }
+  async function previewPreset() {
+    const token = ++previewToken;
+    const preset = readPresetForm();
+    syncNamePlaceholder(preset);
+    el("preset-create").disabled = !preset || creating;
+    if (!preset) {
+      el("preset-preview").textContent = "";
+      return;
+    }
+    el("preset-preview").textContent = t("presets.counting");
+    try {
+      const reply = await postJSON("/api/smart-preset", { action: "preview", space: state.space, preset });
+      if (token !== previewToken) return;
+      el("preset-preview").textContent = t("presets.matches", { count: Number(reply.count) || 0 });
+    } catch (error2) {
+      if (token !== previewToken) return;
+      el("preset-preview").textContent = failureOf(error2).message;
+      el("preset-create").disabled = true;
+    }
+  }
+  function schedulePreview() {
+    window.clearTimeout(previewTimer);
+    previewTimer = window.setTimeout(() => {
+      void previewPreset();
+    }, PREVIEW_DELAY_MS);
+  }
+  async function openPresetDialog() {
+    if (!state.writable) {
+      setNotice(el("status").textContent || "");
+      return;
+    }
+    const track = state.selectedId == null ? void 0 : state.byId.get(state.selectedId);
+    el("preset-key").value = track?.key?.trim() || el("preset-key").value;
+    const bpm = Number(track?.bpm);
+    if (Number.isFinite(bpm) && bpm > 0) el("preset-bpm").value = String(Math.round(bpm * 10) / 10);
+    const scope = scopeCrate();
+    el("preset-scope-label").hidden = !scope;
+    el("preset-scope").checked = Boolean(scope);
+    el("preset-scope-text").textContent = scope ? t("presets.scope", { name: scope.name }) : "";
+    el("preset-name").value = "";
+    el("preset-status").textContent = "";
+    syncPresetFields();
+    if (!el("preset-dialog").open) el("preset-dialog").showModal();
+    el("preset-kind").focus();
+    await previewPreset();
+  }
+  async function createPreset() {
+    const preset = readPresetForm();
+    if (!preset || creating) return;
+    creating = true;
+    el("preset-create").disabled = true;
+    el("preset-status").textContent = "";
+    const name = el("preset-name").value.trim() || presetName(preset);
+    try {
+      const reply = await postJSON("/api/smart-preset", { action: "create", space: state.space, preset, name });
+      el("preset-dialog").close();
+      const message = t("presets.created", { name: reply.name || name, count: Number(reply.added) || 0 });
+      setNotice(reply.warning ? `${message} ${reply.warning}` : message);
+      await loadLibrary();
+      if (typeof reply.id === "number") selectCrate(reply.id);
+    } catch (error2) {
+      el("preset-status").textContent = failureOf(error2).message;
+      if (failureOf(error2).status === 409) {
+        lockDown(error2);
+        el("preset-dialog").close();
+      }
+    } finally {
+      creating = false;
+      el("preset-create").disabled = !readPresetForm();
+    }
+  }
+  async function refreshActivePreset() {
+    const id = state.activeCrate;
+    if (id === "all" || !state.writable) return;
+    const crate = state.crates.find((item2) => item2.id === id);
+    try {
+      const reply = await postJSON("/api/smart-preset", { action: "refresh", id });
+      const message = t("presets.refreshed", {
+        name: crate?.name ?? "",
+        added: Number(reply.added) || 0,
+        removed: Number(reply.removed) || 0
+      });
+      setNotice(reply.warning ? `${message} ${reply.warning}` : message);
+      await loadLibrary();
+    } catch (error2) {
+      if (failureOf(error2).status === 409) lockDown(error2);
+      else setNotice(failureOf(error2).message);
+      if (failureOf(error2).status === 404) await loadLibrary();
+    }
+  }
+  async function refreshPresetsOnOpen() {
+    if (!state.writable || Object.keys(state.presets).length === 0) return;
+    try {
+      const reply = await postJSON("/api/smart-preset", { action: "refresh_all" });
+      const changed = reply.changed?.length ?? 0;
+      if (!changed) return;
+      const message = t("presets.refreshedOnOpen", { count: changed });
+      setNotice(reply.warning ? `${message} ${reply.warning}` : message);
+      await loadLibrary();
+    } catch (error2) {
+      if (failureOf(error2).status !== 409) setNotice(failureOf(error2).message);
+    }
+  }
+  function wirePresets() {
+    el("crate-preset").addEventListener("click", () => {
+      openPresetDialog().catch((error2) => setNotice(failureOf(error2).message));
+    });
+    el("crate-refresh").addEventListener("click", () => {
+      refreshActivePreset().catch((error2) => setNotice(failureOf(error2).message));
+    });
+    el("preset-kind").addEventListener("change", () => {
+      syncPresetFields();
+      void previewPreset();
+    });
+    for (const id of ["preset-key", "preset-bpm", "preset-range", "preset-months"]) {
+      el(id).addEventListener("input", schedulePreview);
+    }
+    el("preset-scope").addEventListener("change", () => {
+      void previewPreset();
+    });
+    el("preset-cancel").addEventListener("click", () => el("preset-dialog").close());
+    el("preset-create").addEventListener("click", () => {
+      createPreset().catch((error2) => setNotice(failureOf(error2).message));
+    });
+  }
+
   // src/app.ts
   function wireSnapshots() {
     el("snapshots-refresh").addEventListener("click", () => {
@@ -9086,6 +9408,7 @@
   wireVirtualScroll();
   wireShortcuts();
   wireDialogs();
+  wirePresets();
   wireSnapshots();
   wireGigCheck(() => {
     setMode("crates");
@@ -9094,6 +9417,6 @@
   wireVersion();
   void loadVersion();
   bindLibraryReload(loadLibrary);
-  loadLibrary().catch(showFailure);
+  loadLibrary().then(() => refreshPresetsOnOpen()).catch(showFailure);
 })();
 //# sourceMappingURL=app.js.map
