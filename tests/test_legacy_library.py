@@ -428,7 +428,7 @@ class LegacyApiTests(unittest.TestCase):
     def test_every_write_route_is_refused_and_nothing_changes(self) -> None:
         before = _tree_state(self.tree.serato)
         self.assertEqual(server.LEGACY_ALLOWED_POSTS, frozenset({"/api/related", "/api/reveal"}))
-        routes = ["/api/track", "/api/crate", "/api/import.m3u", "/api/duplicates/merge", "/api/files", "/api/snapshots", "/api/some-future-write"]
+        routes = ["/api/track", "/api/crate", "/api/import.m3u", "/api/smart-preset", "/api/duplicates/merge", "/api/files", "/api/snapshots", "/api/some-future-write"]
         for route in routes:
             with self.subTest(route=route):
                 status, body = self._call(route, {})

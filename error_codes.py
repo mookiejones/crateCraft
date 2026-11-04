@@ -23,6 +23,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 
 import legacy_library
+import smart_presets
 
 REGISTRATION_NO_SPACE = (
     "Crates were not registered. This library has no Serato Library space, "
@@ -88,6 +89,12 @@ ERROR_CODES: dict[str, str] = {
     "Color needs a number.": "color_not_number",
     "Color is out of range.": "color_out_of_range",
     "Smart crate rules need a rules list.": "smart_rules_list",
+    smart_presets.UNKNOWN_PRESET: "preset_unknown",
+    smart_presets.BAD_KEY: "preset_bad_key",
+    smart_presets.BAD_BPM: "preset_bad_bpm",
+    smart_presets.BAD_MONTHS: "preset_bad_months",
+    smart_presets.NOT_A_PRESET_CRATE: "preset_not_a_preset_crate",
+    smart_presets.PRESET_CRATE_GONE: "preset_crate_gone",
     "Smart crate rules need to be JSON.": "smart_rules_json",
     "That crate name is too long.": "crate_name_too_long",
     "Use a crate name without the Serato name separator.": "crate_name_separator",

@@ -26,9 +26,9 @@ A missing `SENTRY_DSN` keeps crash reports off even after you opt in. A missing 
 
 | System | Settings | Logs |
 |--------|----------|------|
-| macOS | `~/Library/Application Support/Serato Library/settings.json`, `library.json`, and `related.sqlite` | `~/Library/Logs/Serato Library/` |
-| Windows | `%APPDATA%\Serato Library\settings.json`, `library.json`, and `related.sqlite` | `%LOCALAPPDATA%\Serato Library\Logs\` |
-| Linux | `$XDG_CONFIG_HOME/serato-library/settings.json`, `library.json`, and `related.sqlite`, or `~/.config/serato-library/` | `$XDG_STATE_HOME/serato-library/logs`, or `~/.local/state/serato-library/logs` |
+| macOS | `~/Library/Application Support/Serato Library/settings.json`, `library.json`, `related.sqlite`, and `preset-crates.json` | `~/Library/Logs/Serato Library/` |
+| Windows | `%APPDATA%\Serato Library\settings.json`, `library.json`, `related.sqlite`, and `preset-crates.json` | `%LOCALAPPDATA%\Serato Library\Logs\` |
+| Linux | `$XDG_CONFIG_HOME/serato-library/settings.json`, `library.json`, `related.sqlite`, and `preset-crates.json`, or `~/.config/serato-library/` | `$XDG_STATE_HOME/serato-library/logs`, or `~/.local/state/serato-library/logs` |
 
 `settings.json` also stores the Rekordbox export bar: whether hot loops and memory cues are on, and which key notation was chosen. Those choices are not sent.
 
@@ -37,6 +37,8 @@ A missing `SENTRY_DSN` keeps crash reports off even after you opt in. A missing 
 `related.sqlite` stores which tracks you marked as going well together, including file paths, titles, artists, lengths, notes, and ratings. That file stays on this machine. It is not a usage report. The schema is in [docs/related-tracks.md](docs/related-tracks.md).
 
 The log file is `serato-library.log`. It rotates at 1 MiB and keeps three older files. Logs stay on this machine. They can include the path of the library database. They are not uploaded. Settings has **Open logs folder** and **Copy logs**.
+
+`preset-crates.json` remembers which crates were made from a crate preset: the library file's path, the crate id, name, and added time, and the preset (key, BPM range, or months, and the crate it is limited to). It stays on this machine. It is not a usage report.
 
 Each library write and each restore appends one JSON line to `operations.jsonl` under the app data folder (`write-checks` inside the same directory as `settings.json`). It is not written beside `master.sqlite`. That line names the operation, a crate, track, or file name, or a snapshot id, the files that were snapshotted, and whether the change was checked or put back. A file outside the library folder is stored as its name only. The Snapshots page reads that file on this computer. The line stays on this machine. It is not a usage report, and it is not uploaded.
 

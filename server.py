@@ -35,6 +35,7 @@ import music_roots
 import rekordbox
 import related
 import setup_flow
+import smart_presets
 import snapshots
 import telemetry
 import version_info
@@ -1917,7 +1918,10 @@ class Handler(BaseHTTPRequestHandler):
             with _lock:
                 with snapshots.own_writes():
                     merging = parsed.path == "/api/duplicates/merge"
-                    preview = merging and payload.get("preview") is True
+                    preset = parsed.path == "/api/smart-preset"
+                    preview = (merging and payload.get("preview") is True) or (
+                        preset and payload.get("action") in ("preview", "list")
+                    )
                     if not preview:
                         invalidate()
                     if parsed.path == "/api/track":
@@ -1944,6 +1948,12 @@ class Handler(BaseHTTPRequestHandler):
                             )
                         )
                         telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif preset:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = smart_presets.action(request)
+                        if request.get("action") == "create":
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif merging:
                         result = as_dict(_library_call("merge_duplicates", payload))
                         if not preview:
