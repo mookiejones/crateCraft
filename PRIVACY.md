@@ -38,7 +38,7 @@ A missing `SENTRY_DSN` keeps crash reports off even after you opt in. A missing 
 
 The log file is `serato-library.log`. It rotates at 1 MiB and keeps three older files. Logs stay on this machine. They can include the path of the library database. They are not uploaded. Settings has **Open logs folder** and **Copy logs**.
 
-`preset-crates.json` remembers which crates were made from a crate preset: the library file's path, the crate id, name, and added time, and the preset (key, BPM range, or months, and the crate it is limited to). It stays on this machine. It is not a usage report.
+`preset-crates.json` remembers which crates were made from a crate preset: the library file's path, the crate id and added time, and the preset (key, BPM range, or months, and the crate it is limited to). It stays on this machine. It is not a usage report.
 
 Each library write and each restore appends one JSON line to `operations.jsonl` under the app data folder (`write-checks` inside the same directory as `settings.json`). It is not written beside `master.sqlite`. That line names the operation, a crate, track, or file name, or a snapshot id, the files that were snapshotted, and whether the change was checked or put back. A file outside the library folder is stored as its name only. The Snapshots page reads that file on this computer. The line stays on this machine. It is not a usage report, and it is not uploaded.
 

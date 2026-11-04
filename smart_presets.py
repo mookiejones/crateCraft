@@ -480,8 +480,13 @@ def create(space: str, preset: object, parent: int | None = None, name: str = ""
     result = safe_write.run("preset_create", label, apply)
     crate_id = int(result["id"])  # type: ignore[arg-type]
     updated = int(time.time())
-    record: dict[str, object] = {"space": space, "preset": clean, "updated": updated}
-    record.update(_identity(crate_id) or {})
+    found = _identity(crate_id) or {}
+    record: dict[str, object] = {
+        "space": space,
+        "preset": clean,
+        "updated": updated,
+        "time_added": found.get("time_added"),
+    }
     _remember(crate_id, record)
     result["updated"] = updated
     return result
@@ -491,27 +496,87 @@ def _identity(crate_id: int) -> dict[str, object] | None:
     """Read what tells this crate apart from a later crate given the same id.
 
     SQLite can hand a deleted crate's id to the next new crate. A refresh
-    must never rewrite that other crate, so the stored name and the time the
-    crate was added are remembered and compared.
+    must never rewrite that other crate, so the time the crate was added,
+    its type, and its space are remembered and compared. The name is not
+    compared, so renaming a preset crate keeps it refreshable.
 
     Args:
         crate_id: Container id.
 
     Returns:
-        ``{"stored_name", "time_added", "type", "space"}``, or None when
-        the crate is gone.
+        ``{"time_added", "type", "crate_space", "stored_name"}``, or None
+        when the crate is gone. ``stored_name`` is only for messages.
     """
     with closing(library.read_conn()) as conn:
-        row = conn.execute(
-            """
-            SELECT c.name, c.time_added, c.type, s.name FROM container c
-            JOIN space s ON s.id = c.space_id WHERE c.id = ?
-            """,
-            (crate_id,),
-        ).fetchone()
+        return _identity_in(conn, crate_id)
+
+
+def _identity_in(conn: sqlite3.Connection, crate_id: int) -> dict[str, object] | None:
+    """Read one crate's identity on an open connection.
+
+    Args:
+        conn: Open connection.
+        crate_id: Container id.
+
+    Returns:
+        The same dict as :func:`_identity`, or None.
+    """
+    row = conn.execute(
+        """
+        SELECT c.name, c.time_added, c.type, s.name FROM container c
+        JOIN space s ON s.id = c.space_id WHERE c.id = ?
+        """,
+        (crate_id,),
+    ).fetchone()
     if row is None:
         return None
     return {"stored_name": row[0], "time_added": row[1], "type": row[2], "crate_space": row[3]}
+
+
+def _same_crate(record: Mapping[str, object], found: Mapping[str, object] | None) -> bool:
+    """Tell whether a remembered record still names the crate that is there now.
+
+    Args:
+        record: A stored preset record.
+        found: The crate's identity now, or None when it is gone.
+
+    Returns:
+        True when the crate is a normal crate in the same space, added at the
+        same time as when the preset was saved.
+    """
+    return (
+        found is not None
+        and found["type"] == 1
+        and found["crate_space"] == str(record.get("space") or LIBRARY_SPACE)
+        and found["time_added"] == record.get("time_added")
+    )
+
+
+def prune() -> list[int]:
+    """Forget preset records whose crate was deleted or replaced.
+
+    The server calls this after a crate delete, so a new crate that is
+    given a deleted crate's id never inherits that crate's preset.
+
+    Returns:
+        The crate ids that were forgotten. Nothing is written when the
+        list is empty, or when the library cannot be read.
+    """
+    records = list_remembered()
+    if not records:
+        return []
+    try:
+        with closing(library.read_conn()) as conn:
+            gone = [
+                int(cid)
+                for cid, record in records.items()
+                if cid.isdigit() and not _same_crate(record, _identity_in(conn, int(cid)))
+            ]
+    except (LibraryError, sqlite3.Error):
+        return []
+    for crate_id in gone:
+        _remember(crate_id, None)
+    return gone
 
 
 def refresh(crate_id: int) -> dict[str, object]:
@@ -539,15 +604,10 @@ def refresh(crate_id: int) -> dict[str, object]:
     space = str(record.get("space") or LIBRARY_SPACE)
     clean = normalize(record.get("preset"))
     found = _identity(crate_id)
-    if (
-        found is None
-        or found["type"] != 1
-        or found["crate_space"] != space
-        or found["stored_name"] != record.get("stored_name")
-        or found["time_added"] != record.get("time_added")
-    ):
+    if found is None or not _same_crate(record, found):
         _remember(crate_id, None)
         raise LibraryError(PRESET_CRATE_GONE, 404)
+    label = library.display_name(str(found["stored_name"]))
 
     def apply(conn: sqlite3.Connection, write: safe_write.Session) -> dict[str, object]:
         """Add new matches, drop old ones, and register the check.
@@ -580,24 +640,11 @@ def refresh(crate_id: int) -> dict[str, object]:
             "warning": warning,
         }
 
-    result = safe_write.run("preset_refresh", str(display_name_of(record)), apply)
+    result = safe_write.run("preset_refresh", label, apply)
     updated = int(time.time())
     _remember(crate_id, {**record, "preset": clean, "updated": updated})
     result["updated"] = updated
     return result
-
-
-def display_name_of(record: Mapping[str, object]) -> str:
-    """Return the name the page shows for a remembered crate.
-
-    Args:
-        record: A stored preset record.
-
-    Returns:
-        The display name, or ``preset crate`` when none was stored.
-    """
-    stored = record.get("stored_name")
-    return library.display_name(stored) if isinstance(stored, str) else "preset crate"
 
 
 def action(payload: Mapping[str, object]) -> dict[str, object]:

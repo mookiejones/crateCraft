@@ -1937,6 +1937,9 @@ class Handler(BaseHTTPRequestHandler):
                         result = as_dict(_library_call("crate_action", payload))
                         if payload.get("action") == "create":
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                        elif payload.get("action") == "delete":
+                            # A new crate can be given the deleted id. Forget its preset now.
+                            smart_presets.prune()
                     elif parsed.path == "/api/import.m3u":
                         result = as_dict(
                             _library_call(

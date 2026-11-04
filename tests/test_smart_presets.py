@@ -299,7 +299,7 @@ class CreateAndRefreshTests(unittest.TestCase):
         self.assertEqual(members, [3, 4])
         assert record is not None
         self.assertEqual(record["preset"], {"kind": "harmonic", "key": "1A", "crate": crates["bar"]})
-        self.assertEqual(record["stored_name"], "Mixes with 1A ⟳")
+        self.assertNotIn("stored_name", record)
         self.assertEqual(list(raw), [str(temp.db.resolve())])
         self.assertFalse(str(temp.root) in str(app_config.config_dir()))
 
@@ -341,11 +341,36 @@ class CreateAndRefreshTests(unittest.TestCase):
         self.assertEqual(members, [3, 6])
         self.assertEqual((again["added"], again["removed"]), (0, 0))
 
-    def test_refresh_never_touches_a_new_crate_that_reused_the_id(self) -> None:
-        """Delete a preset crate, make another crate with the same id, refresh is refused.
+    def test_deleting_a_preset_crate_forgets_it_before_the_id_is_reused(self) -> None:
+        """Delete a preset crate through the page route, then make a crate with the same id.
 
-        SQLite gives the next crate the deleted crate's id. That crate's
-        track must stay and the stale record must be forgotten.
+        SQLite gives the next crate the deleted crate's id, often in the same
+        second. The delete prunes the record, so the new crate's track stays
+        and refresh answers 404.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 128, "range": 0})
+            crate_id = cast(int, made["id"])
+            library.crate_action({"action": "delete", "id": crate_id})
+            self.assertEqual(smart_presets.prune(), [crate_id])
+            mine = cast(int, library.crate_action({"action": "create", "name": "Mine"})["id"])
+            library.crate_action({"action": "add", "id": mine, "asset": 1})
+            self.assertEqual(mine, crate_id)
+            with self.assertRaises(LibraryError) as caught:
+                smart_presets.refresh(crate_id)
+            members = _members(mine)
+        self.assertEqual(caught.exception.message, smart_presets.NOT_A_PRESET_CRATE)
+        self.assertEqual(members, [1])
+
+    def test_reused_id_with_a_different_added_time_is_refused(self) -> None:
+        """A crate deleted outside the app and replaced later is not refreshed.
+
+        Nothing pruned the record, so refresh compares the added time,
+        refuses with 404, leaves the new crate alone, and forgets the record.
 
         Returns:
             None.
@@ -357,11 +382,9 @@ class CreateAndRefreshTests(unittest.TestCase):
             library.crate_action({"action": "delete", "id": crate_id})
             mine = cast(int, library.crate_action({"action": "create", "name": "Mine"})["id"])
             library.crate_action({"action": "add", "id": mine, "asset": 1})
-            self.assertEqual(mine, crate_id)
-            # Same added second, so only the stored name tells the crates apart.
-            stamp = cast(dict, smart_presets.list_remembered()[str(crate_id)])["time_added"]
             with open_database(temp.db) as conn:
-                conn.execute("UPDATE container SET time_added = ? WHERE id = ?", (stamp, mine))
+                conn.execute("UPDATE container SET time_added = time_added + 60 WHERE id = ?", (mine,))
+            self.assertEqual(mine, crate_id)
             with self.assertRaises(LibraryError) as caught:
                 smart_presets.refresh(crate_id)
             members = _members(mine)
@@ -370,6 +393,33 @@ class CreateAndRefreshTests(unittest.TestCase):
         self.assertEqual(caught.exception.status, 404)
         self.assertEqual(members, [1])
         self.assertIsNone(record)
+
+    def test_renamed_preset_crate_still_refreshes(self) -> None:
+        """Renaming does not change the crate's identity.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            crate_id = cast(int, made["id"])
+            library.crate_action({"action": "rename", "id": crate_id, "name": "Warmup ⟳"})
+            result = smart_presets.refresh(crate_id)
+        self.assertEqual(result["count"], 4)
+
+    def test_prune_keeps_live_preset_crates(self) -> None:
+        """Prune forgets nothing while every preset crate is still there.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            crates = _seed(temp)
+            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            library.crate_action({"action": "delete", "id": crates["other"]})
+            self.assertEqual(smart_presets.prune(), [])
+            self.assertIsNotNone(smart_presets.remembered(cast(int, made["id"])))
 
     def test_refresh_refuses_a_crate_whose_added_time_changed(self) -> None:
         """Same id and name but a different added time is a different crate.
@@ -385,6 +435,22 @@ class CreateAndRefreshTests(unittest.TestCase):
                 conn.execute("UPDATE container SET time_added = time_added + 1 WHERE id = ?", (crate_id,))
             with self.assertRaises(LibraryError):
                 smart_presets.refresh(crate_id)
+
+    def test_refresh_refuses_a_crate_that_became_smart(self) -> None:
+        """A crate whose row is now a Serato smart crate is not refreshed.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            crate_id = cast(int, made["id"])
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE container SET type = 2 WHERE id = ?", (crate_id,))
+            with self.assertRaises(LibraryError) as caught:
+                smart_presets.refresh(crate_id)
+        self.assertEqual(caught.exception.message, smart_presets.PRESET_CRATE_GONE)
 
     def test_refresh_of_an_unknown_crate_is_404(self) -> None:
         """A crate that was not made from a preset is not refreshed.
@@ -484,6 +550,10 @@ class PresetApiTests(unittest.TestCase):
             self.assertEqual(cast(dict, refreshed)["count"], 4)
             status, listed = self.request("/api/smart-preset", {"action": "list"})
             self.assertEqual(list(cast(dict, listed)["crates"]), [str(crate_id)])
+            status, _ = self.request("/api/crate", {"action": "delete", "id": crate_id})
+            self.assertEqual(status, 200)
+            status, listed = self.request("/api/smart-preset", {"action": "list"})
+            self.assertEqual(cast(dict, listed)["crates"], {})
             status, bad = self.request(
                 "/api/smart-preset", {"action": "preview", "preset": {"kind": "harmonic", "key": "Z"}}
             )
