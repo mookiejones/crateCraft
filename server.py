@@ -25,6 +25,7 @@ from urllib.parse import parse_qs, urlparse
 import app_config
 import app_log
 import audio_stream
+import crate_trees
 import drive_check
 import error_codes
 import files
@@ -1919,8 +1920,11 @@ class Handler(BaseHTTPRequestHandler):
                 with snapshots.own_writes():
                     merging = parsed.path == "/api/duplicates/merge"
                     preset = parsed.path == "/api/smart-preset"
-                    preview = (merging and payload.get("preview") is True) or (
-                        preset and payload.get("action") in ("preview", "list")
+                    tree = parsed.path == "/api/crate-tree"
+                    preview = (
+                        (merging and payload.get("preview") is True)
+                        or (preset and payload.get("action") in ("preview", "list"))
+                        or (tree and payload.get("action") == "preview")
                     )
                     if not preview:
                         invalidate()
@@ -1955,6 +1959,12 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = smart_presets.action(request)
+                        if request.get("action") == "create":
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif tree:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = crate_trees.action(request)
                         if request.get("action") == "create":
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif merging:

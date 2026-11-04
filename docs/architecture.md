@@ -167,11 +167,21 @@ Suggestions rank other tracks in the space by Camelot key (same, relative, or on
 
 ### `smart_presets.py`
 
-Part 1 of #26. A preset is evaluated by the app and saved as a normal crate whose name ends in `⟳`, because Serato smart crates cannot express an OR group or a crate scope. Presets are `harmonic` (`key`: the same key, one Camelot step either side in the same letter, or the relative key, which is `related.key_relation`), `bpm` (`bpm` above zero and `range` from 0 to 50, default 3, inclusive; a blank or zero BPM never matches), and `unplayed` (`months` from 1 to 240, default 12; no `history_entry` with `played` set in that window, so a track loaded but not played still counts). Any preset can take `crate`, which limits it to that crate and the crates nested under it.
+Part 1 of #26. A preset is evaluated by the app and saved as a normal crate whose name ends in `⟳`, because Serato smart crates cannot express an OR group or a crate scope. Presets are `bpm_band` (`low` to, not including, `high`, up to 400), `key` (one key), `genre` (genre text, ignoring case and extra spaces), `harmonic` (`key`: the same key, one Camelot step either side in the same letter, or the relative key, which is `related.key_relation`), `bpm` (`bpm` above zero and `range` from 0 to 50, default 3, inclusive; a blank or zero BPM never matches), and `unplayed` (`months` from 1 to 240, default 12; no `history_entry` with `played` set in that window, so a track loaded but not played still counts). Any preset can take `crate`, which limits it to that crate and the crates nested under it.
 
 `preview` opens the database read-only and returns the count, the default name, and at most 200 ids. `create` and `refresh` run through `safe_write.run` like a crate edit, so they are refused while Serato is running and checked after the commit: the crate must hold exactly the matching tracks. `refresh` removes tracks that no longer match, adds new matches, and leaves tracks that still match in place.
 
 The preset is remembered in `preset-crates.json` beside `settings.json`, keyed by the resolved path of `master.sqlite` and the crate id, with the crate's `time_added`. It is never written in the Serato folder. SQLite can give a deleted crate's id to a new crate, often in the same second, so a crate delete through `POST /api/crate` calls `prune`, which forgets every record whose crate is gone or replaced. `refresh` also refuses with 404 and forgets the record when the crate is no longer a normal crate in the same space with the same added time. The name is not compared, so a renamed preset crate still refreshes. A missing or damaged file reads as empty. The record is saved only after the write is checked, so a refused write remembers nothing. The page does not show presets yet.
+
+### `crate_trees.py`
+
+Part 1 of #31. A crate tree is one normal parent crate with a subcrate per BPM band, key, or genre. Every subcrate is a preset crate from `smart_presets` (name ending in `⟳`), so it is remembered and refreshed like any preset crate. The parent is a plain folder. A tree does not add subcrates later for a genre or key that appears after it was made.
+
+- `bpm`: bands from `low` (default 80) to `high` (default 140), `width` wide (1 to 50, default 10), starting every `step` (1 to `width`, default `width`). A smaller step makes overlapping bands. A band is `bpm_band`: from its low end up to, not including, its high end, so adjacent bands never share a track. At most 60 bands.
+- `key`: one `key` subcrate per key that has tracks, in Camelot order 1A, 1B, 2A, 2B, and so on. A key name such as `Am` counts as its Camelot key.
+- `genre`: one `genre` subcrate per genre with at least `min_tracks` (default 2) tracks, largest first, at most `limit` (1 to 100, default 40). Genres that differ only in case or spacing are one genre, named by the most common spelling (ties go to the spelling that sorts first). A blank genre is skipped.
+
+`crate` limits every subcrate to that crate and its subcrates. Empty subcrates are not made. `preview` opens the database read-only and returns each subcrate's name and count. `create` makes the parent (top level, or inside `parent`) and every subcrate in one `safe_write` session, with a membership check per subcrate, then remembers each subcrate's preset. A tree that no track fits is refused before anything is written.
 
 ### `snapshots.py`
 
@@ -446,6 +456,7 @@ An error body is `{"error": "<English sentence>"}`. When the sentence is one of 
 | POST | `/api/track` | `id`, `space`, `fields` | Saves track fields |
 | POST | `/api/crate` | `action` plus ids and fields | Crate or membership change |
 | POST | `/api/import.m3u` | `space`, `parent`, `name`, `text` | New crate from playlist text |
+| POST | `/api/crate-tree` | `action` (`preview`, `create`), `space`, `tree` (`kind` `bpm`, `key`, or `genre` and its fields, optional `crate`), `parent`, `name` | `preview` lists the subcrates and counts without writing. `create` makes the parent and every non-empty subcrate in one write. A bad tree returns 400 with a `tree_*` code. A tree no track fits returns 400 `tree_empty` |
 | POST | `/api/smart-preset` | `action` (`preview`, `create`, `refresh`, `list`), `space`, `preset`, `parent`, `name`, `id` | `preview` counts a preset without writing. `create` saves a `⟳` crate and remembers the preset. `refresh` brings that crate up to date. `list` returns the remembered preset crates for this library. A bad preset returns 400 with a `preset_*` code. An unknown or replaced crate returns 404 |
 | POST | `/api/reveal` | `id` | Reveals the file in Finder or File Explorer |
 | POST | `/api/related` | `action` `add`, `remove`, or `crate` | Saves or removes a sidecar link, or writes the `Related - ` crate |

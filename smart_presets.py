@@ -44,7 +44,9 @@ STORE_NAME = "preset-crates.json"
 SUFFIX = " ⟳"
 MONTH_SECONDS = 30.44 * 24 * 3600
 
-KINDS = ("harmonic", "bpm", "unplayed")
+KINDS = ("harmonic", "bpm", "unplayed", "bpm_band", "key", "genre")
+MAX_BPM = 400.0
+GENRE_LIMIT = 200
 DEFAULT_BPM_RANGE = 3.0
 MAX_BPM_RANGE = 50.0
 MAX_MONTHS = 240
@@ -55,6 +57,8 @@ UNKNOWN_PRESET = "That crate preset is not available."
 BAD_KEY = "Choose a musical key for the harmonic preset."
 BAD_BPM = "Choose a BPM above zero and a range of 0 to 50."
 BAD_MONTHS = "Choose between 1 and 240 months."
+BAD_BAND = "Choose a BPM band whose low end is below its high end, up to 400."
+BAD_GENRE = "Choose a genre."
 NOT_A_PRESET_CRATE = "That crate was not made from a preset."
 PRESET_CRATE_GONE = "That preset crate is no longer in the library."
 
@@ -129,6 +133,20 @@ def normalize(preset: object) -> dict[str, object]:
             raise LibraryError(BAD_BPM)
         clean["bpm"] = bpm
         clean["range"] = spread
+    elif kind == "bpm_band":
+        low = _number(preset.get("low"))
+        high = _number(preset.get("high"))
+        if low is None or high is None or low < 0 or high <= low or high > MAX_BPM:
+            raise LibraryError(BAD_BAND)
+        clean["low"] = low
+        clean["high"] = high
+    elif kind == "key":
+        clean["key"] = check_key(preset.get("key"))
+    elif kind == "genre":
+        genre = preset.get("genre")
+        if not isinstance(genre, str) or not genre_key(genre) or len(genre) > GENRE_LIMIT:
+            raise LibraryError(BAD_GENRE)
+        clean["genre"] = " ".join(genre.split())
     else:
         months = preset.get("months", 12)
         if isinstance(months, bool) or not isinstance(months, int) or not 1 <= months <= MAX_MONTHS:
@@ -140,6 +158,22 @@ def normalize(preset: object) -> dict[str, object]:
             raise LibraryError("That crate is not in this space.")
         clean["crate"] = crate
     return clean
+
+
+def genre_key(text: str) -> str:
+    """Compare genres without case or extra spaces.
+
+    Args:
+        text: A genre as stored or typed.
+
+    Returns:
+        The genre folded to lower case with runs of spaces made single.
+
+    Example:
+        >>> genre_key("  Deep   House ")
+        'deep house'
+    """
+    return " ".join(text.split()).casefold()
 
 
 def default_name(preset: Mapping[str, object]) -> str:
@@ -160,6 +194,10 @@ def default_name(preset: Mapping[str, object]) -> str:
         label = f"Mixes with {preset['key']}"
     elif kind == "bpm":
         label = f"BPM {_trim(preset['bpm'])} ±{_trim(preset['range'])}"
+    elif kind == "bpm_band":
+        label = f"{_trim(preset['low'])}–{_trim(preset['high'])} BPM"
+    elif kind in ("key", "genre"):
+        label = str(preset[kind])
     else:
         label = f"Not played in {preset['months']} months"
     return label + SUFFIX
@@ -201,7 +239,7 @@ def matching_ids(
     """
     params: list[object] = [space]
     sql = """
-        SELECT a.id, a.key, a.bpm FROM asset a
+        SELECT a.id, a.key, a.bpm, a.genre FROM asset a
         JOIN space_asset sa ON sa.asset_id = a.id
         JOIN space s ON s.id = sa.space_id
         WHERE s.name = ?
@@ -238,6 +276,21 @@ def matching_ids(
             if bpm is not None and bpm > 0 and abs(bpm - target) <= spread + 1e-9:
                 found.append(int(row[0]))
         return found
+    if kind == "bpm_band":
+        low = float(preset["low"])  # type: ignore[arg-type]
+        high = float(preset["high"])  # type: ignore[arg-type]
+        in_band: list[int] = []
+        for row in rows:
+            bpm = _number(row[2])
+            if bpm is not None and bpm > 0 and low <= bpm < high:
+                in_band.append(int(row[0]))
+        return in_band
+    if kind == "key":
+        wanted = library.serato_key_type(preset["key"])
+        return [int(row[0]) for row in rows if library.serato_key_type(row[1]) == wanted]
+    if kind == "genre":
+        target = genre_key(str(preset["genre"]))
+        return [int(row[0]) for row in rows if isinstance(row[3], str) and genre_key(row[3]) == target]
     cutoff = (time.time() if now is None else now) - int(preset["months"]) * MONTH_SECONDS  # type: ignore[arg-type]
     recent = {
         int(row[0])
