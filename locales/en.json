@@ -792,7 +792,7 @@
   "tooltip.saveRules": "Save these smart crate rules.",
   "tooltip.saveSuggestion": "Save a two-way link to {name}. Serato is not changed until you update the crate.",
   "tooltip.saveTrack": "Save these track details.",
-  "tooltip.search": "Search tracks by title or artist. Ctrl/Cmd+F or /. Esc clears the search.",
+  "tooltip.search": "Search tracks by title or artist. Filter with bpm:120-128, bpm:124~3, key:8A, or mix:8A (keys that mix with 8A). Ctrl/Cmd+F or /. Esc clears the search.",
   "tooltip.seek": "Move through the track. Left arrow goes back 5 seconds. Right arrow goes forward 5 seconds. Shift with an arrow jumps 30 seconds.",
   "tooltip.selectFile": "Select {name} for rename, move, or delete.",
   "tooltip.selectFilePath": "Select {name} at {path} for rename, move, or delete.",

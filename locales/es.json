@@ -792,7 +792,7 @@
   "tooltip.saveRules": "Guarda las reglas de esta caja inteligente.",
   "tooltip.saveSuggestion": "Guarda un enlace en ambos sentidos a {name}. Serato no cambia hasta que actualices la caja.",
   "tooltip.saveTrack": "Guarda estos datos de la pista.",
-  "tooltip.search": "Busca pistas por título o artista. Ctrl/Cmd+F o /. Esc borra la búsqueda.",
+  "tooltip.search": "Busca pistas por título o artista. Filtra con bpm:120-128, bpm:124~3, key:8A o mix:8A (tonalidades que mezclan con 8A). Ctrl/Cmd+F o /. Esc borra la búsqueda.",
   "tooltip.seek": "Avanza por la pista. Izquierda retrocede 5 segundos. Derecha avanza 5 segundos. Mayús con una flecha salta 30 segundos.",
   "tooltip.selectFile": "Selecciona {name} para renombrar, mover o eliminar.",
   "tooltip.selectFilePath": "Selecciona {name} en {path} para renombrar, mover o eliminar.",
