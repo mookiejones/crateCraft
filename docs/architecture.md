@@ -280,6 +280,16 @@ The live side of the diff takes cues and the beatgrid from `tags.read_serato_tag
 
 Maps each fixed English error sentence the server sends to a stable code. `send_json` adds `code` beside `error` when the sentence is one of them. A sentence with a path or other changing part has no code. `PARAM_CODES` is the exception: the unknown Serato version notice is `serato_version_unknown` with a `{build}` param. `status`, `GET /api/snapshots`, and a blocked restore plan send that `code` and `params` beside the English sentence. The page shows `error.serato_version_unknown` in the active language. Codes never change once shipped. `tests/test_language.py` checks that each code has `error.<code>` in every locale file and that the English entry is the same sentence, or the same template for a parameterized code.
 
+### `history_stats.py`
+
+`history_stats.py` answers what Serato's all-time Plays column cannot (#33): the most played tracks and artists in a period, and the tracks that have not been played in a while. It writes nothing; the library is opened with `gig_check.open_read_only`. Only `history_entry` rows marked `played` count, and a period is `[from, to)` in Unix seconds on `start_time`.
+
+A play is matched to its track by `asset_id`. A play whose track was later removed has none; it is grouped by its own title and artist, ignoring case and outer spaces, and keeps the title it was last played under. `top_tracks` rows are `{ asset_id, name, artist, plays, last_played }`. Artists are grouped the same way and shown with the spelling used most (a tie goes to the spelling that sorts first); `top_artists` rows are `{ artist, plays, tracks, last_played }`, where `tracks` counts different tracks. Both lists are most plays first, a tie going to the latest play, and hold `top` rows (1 to 500, default 25).
+
+History is not split by space, so the period counts every space. `not_played` takes the space's tracks that were added before `now - idle_days` (1 to 3650, default 365) and have no played entry since then. A track with no stored date added counts as old. Rows are `{ id, name, artist, added, last_played, play_count }`, never played first by name, then the rest from the longest ago. `play_count` is Serato's own `dj_play_count`, so a track whose history was cleared still shows its plays.
+
+`GET /api/history-stats?space=&from=&to=&top=&idle_days=` returns `{ from, to, plays, sessions, top_tracks, top_artists, idle_days, not_played, not_played_count }`. A value that is not ASCII digits, is out of range, or an empty period (`from` not before `to`) is 400 `invalid_request`. `python3 history_stats.py` prints the same. Making the not-played list into a crate, CSV export, and the page view are later changes.
+
 ### `files.py`
 
 `files.py` renames a file, moves files, moves a folder, points a library track at a replacement file, and moves a file to the Trash. Crates, history, and Prepare stay attached because every stored path that resolves to the old file is rewritten. Cue points travel inside the audio file. A replacement copies them with `tags.copy_serato_geob` when that is safe, and the result says so when it is not. The old file stays on disk.
@@ -448,6 +458,7 @@ An error body is `{"error": "<English sentence>"}`. When the sentence is one of 
 | GET | `/api/setup` | none | `{ "found", "summary", "next", "volume", "track_count", "places", "serato_running", "status_message", "status_writable" }`. `status_message` is the same sentence as `/api/status`. A missing library is `found` false, `status_message` null, and does not include a path |
 | GET | `/api/setup` | `browse` | Child folders. An empty value lists the home directory. Shortcuts and hidden names are skipped |
 | POST | `/api/setup` | `folder` | The same object as GET when `folder` is the open library directory, or, when no library file is open, a folder that already contains a Serato library. Otherwise `found` is false. The database is not created or modified. A remembered path is not included |
+| GET | `/api/history-stats` | `space`, optional `from` and `to` (Unix seconds), `top` (25), `idle_days` (365) | `{ from, to, plays, sessions, top_tracks, top_artists, idle_days, not_played, not_played_count }`. Read-only. A bad number or an empty period is 400 `invalid_request` |
 | GET | `/api/logs` | none | `{ "text", "truncated" }` from the local log. The text can contain a path. It is not a report |
 | POST | `/api/logs/open` | none | Opens the logs folder. `{ "ok": true }`. The path is not in the body |
 | GET | `/api/legacy-library` | none | Older library (`database V2`, no `master.sqlite`), read-only: `{ "read_only", "write_blocked", "tracks", "crates", "missing", "offline", "duplicates" }`. 404 when there is none or a newer library is open |

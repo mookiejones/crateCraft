@@ -29,6 +29,7 @@ import drive_check
 import error_codes
 import files
 import gig_check
+import history_stats
 import legacy_library
 import library
 import music_roots
@@ -1766,6 +1767,21 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
                 self.wfile.write(body)
+                return
+            if parsed.path == "/api/history-stats":
+                space = require_space(query_text(query, "space"))
+                number = history_stats.number
+                self.send_json(
+                    history_stats.stats(
+                        Path(library.MASTER),
+                        space,
+                        start=number(query_text(query, "from"), None, 0, history_stats.TIME_MAX),
+                        end=number(query_text(query, "to"), None, 0, history_stats.TIME_MAX),
+                        top=number(query_text(query, "top"), history_stats.TOP, 1, history_stats.TOP_MAX) or history_stats.TOP,
+                        idle_days=number(query_text(query, "idle_days"), history_stats.IDLE_DAYS, 1, history_stats.IDLE_DAYS_MAX)
+                        or history_stats.IDLE_DAYS,
+                    )
+                )
                 return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
