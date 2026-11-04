@@ -25,6 +25,7 @@ from urllib.parse import parse_qs, urlparse
 import app_config
 import app_log
 import audio_stream
+import crate_compare
 import drive_check
 import error_codes
 import files
@@ -1766,6 +1767,16 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
                 self.wfile.write(body)
+                return
+            if parsed.path == "/api/crate-compare":
+                space = require_space(query_text(query, "space"))
+                crate_a = crate_query(query_text(query, "a", "") or "")
+                crate_b = crate_query(query_text(query, "b", "") or "")
+                if crate_a is None or crate_b is None:
+                    raise library.LibraryError("That request is not valid.", 400)
+                self.send_json(
+                    crate_compare.compare(Path(library.MASTER), space, crate_a, crate_b, subcrates=_flag(query, "subcrates"))
+                )
                 return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))

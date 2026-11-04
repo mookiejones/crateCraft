@@ -276,6 +276,12 @@ Streaming is only `third_party_type` 6, Apple Music. `server.py` maps that value
 
 The live side of the diff takes cues and the beatgrid from `tags.read_serato_tags`, which opens the file with `rb`. Library text comes from the asset row. The diff is for the whole space, including when a crate was selected for the missing-file scope. With no snapshot, `snapshot_note` is `No snapshots yet` and `changes` is null.
 
+### `crate_compare.py`
+
+`crate_compare.py` compares two crates in one space (#113). It writes nothing; the library is opened with `gig_check.open_read_only`. Each crate's stored members are read through `location_container` and, in the test schema, `container_asset.container_id`, in crate order (`list_order`, then row id). With `subcrates` a crate also counts the crates under it (`library.descendant_ids`), the parent's tracks first. A track listed twice counts once. A crate row whose track is gone is listed with an empty name.
+
+`compare` returns `a` and `b` (`id`, `name` without the stored suffix, `smart`, `tracks`), `subcrates`, and `both`, `only_a`, and `only_b` as `{ id, name, artist }` rows. `both` and `only_a` follow A's order and `only_b` follows B's. A smart crate is compared by the members Serato last stored, which can be out of date; `smart` lets the page say so. The same crate twice is 400 `invalid_request`, and a crate not in the space is 404 `crate_not_in_space`. `GET /api/crate-compare?space=&a=&b=&subcrates=1` returns it, and `python3 crate_compare.py A B [--subcrates]` prints it. Saving a result as a new crate, through the crate write guards, is a later change.
+
 ### `error_codes.py`
 
 Maps each fixed English error sentence the server sends to a stable code. `send_json` adds `code` beside `error` when the sentence is one of them. A sentence with a path or other changing part has no code. `PARAM_CODES` is the exception: the unknown Serato version notice is `serato_version_unknown` with a `{build}` param. `status`, `GET /api/snapshots`, and a blocked restore plan send that `code` and `params` beside the English sentence. The page shows `error.serato_version_unknown` in the active language. Codes never change once shipped. `tests/test_language.py` checks that each code has `error.<code>` in every locale file and that the English entry is the same sentence, or the same template for a parameterized code.
@@ -448,6 +454,7 @@ An error body is `{"error": "<English sentence>"}`. When the sentence is one of 
 | GET | `/api/setup` | none | `{ "found", "summary", "next", "volume", "track_count", "places", "serato_running", "status_message", "status_writable" }`. `status_message` is the same sentence as `/api/status`. A missing library is `found` false, `status_message` null, and does not include a path |
 | GET | `/api/setup` | `browse` | Child folders. An empty value lists the home directory. Shortcuts and hidden names are skipped |
 | POST | `/api/setup` | `folder` | The same object as GET when `folder` is the open library directory, or, when no library file is open, a folder that already contains a Serato library. Otherwise `found` is false. The database is not created or modified. A remembered path is not included |
+| GET | `/api/crate-compare` | `space`, `a`, `b` (crate ids), optional `subcrates=1` | `{ a, b, subcrates, both, only_a, only_b }`. Read-only. A missing or repeated crate is 400 `invalid_request`; a crate not in the space is 404 |
 | GET | `/api/logs` | none | `{ "text", "truncated" }` from the local log. The text can contain a path. It is not a report |
 | POST | `/api/logs/open` | none | Opens the logs folder. `{ "ok": true }`. The path is not in the body |
 | GET | `/api/legacy-library` | none | Older library (`database V2`, no `master.sqlite`), read-only: `{ "read_only", "write_blocked", "tracks", "crates", "missing", "offline", "duplicates" }`. 404 when there is none or a newer library is open |
