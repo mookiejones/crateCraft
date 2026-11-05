@@ -516,7 +516,7 @@ File saves use the same Serato-open check and the same backup as a track edit. T
 
 ## Older libraries (database V2 only, read-only)
 
-Issue #126. Serato DJ before version 4 has `_Serato_/database V2` and `.crate` files but no `master.sqlite`. When `master.sqlite` is missing, `setup_flow.legacy_folder()` looks for a `_Serato_` folder with a regular `database V2` file: the folder chosen in setup for this process, then `~/Music/_Serato_` (`%USERPROFILE%\Music\_Serato_` on Windows). A newer `master.sqlite` always wins. Shortcuts (symlinks) to the folder, to `database V2`, or to a crate are not followed.
+Issue #126. Serato DJ before version 4 has `_Serato_/database V2` and `.crate` files but no `master.sqlite`. When `master.sqlite` is missing, `setup_flow.legacy_folder()` looks for a `_Serato_` folder with a regular `database V2` file: the folder chosen in setup for this process, then `~/Music/_Serato_` (`%USERPROFILE%\Music\_Serato_` on Windows). `SERATO_LIBRARY_HOME_SERATO` overrides that folder when the value is absolute. A relative value is ignored. The test suite points it at an empty temporary folder, so a run never reads an older library on the host (#185). A newer `master.sqlite` always wins. Shortcuts (symlinks) to the folder, to `database V2`, or to a crate are not followed.
 
 `GET /api/setup` then answers `found: false`, `legacy: true`, `read_only: true`, the summary "Found an older Serato library on <disk>, <n> tracks.", and a `next` sentence that says the app can show it but will not change it. The wizard shows those words in place of "No Serato library was found" and does not move on to the safety snapshot. Choosing that folder in setup is remembered for this process only; `library.json` is not written.
 
