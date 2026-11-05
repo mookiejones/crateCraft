@@ -48,6 +48,10 @@ test("every control has a tooltip, and focus shows it", async ({ page }) => {
   expect(await tip.evaluate((node) => node.matches(":popover-open"))).toBe(true);
   await saveShot(page, "tooltip_shortcuts");
 
+  // The modal makes the page behind it inert, so close it before focusing search.
+  await page.locator("#settings-dialog").evaluate((node) => {
+    if (node instanceof HTMLDialogElement) node.close();
+  });
   await page.locator("#search").focus();
   await expect(tip).toContainText("Ctrl/Cmd+F");
   await expect(tip).toContainText("Esc");
