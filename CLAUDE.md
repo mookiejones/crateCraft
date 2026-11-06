@@ -154,7 +154,7 @@ The database lives outside this repo. Quit Serato before a write. Do not commit 
 
 ### Issue tracker
 
-Issues live in this repo's GitHub Issues, operated with the `gh` CLI. See `docs/agents/issue-tracker.md`.
+Issues live in this repo's GitHub Issues, operated with the `gh` CLI. See `docs/agents/issue-tracker.md`. Before any other write on an issue you are implementing, run `gh issue edit <n> --add-assignee @me`.
 
 ### Triage labels
 
