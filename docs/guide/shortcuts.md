@@ -2,7 +2,7 @@
 
 The keys below work anywhere on the library screen, except while you are typing in a field. **Esc** still closes a dialog or clears a search.
 
-**Shortcuts**, at the bottom of the sidebar, opens this list. **?** opens it too.
+The list is in **Settings**, under **Keyboard shortcuts**. **?** opens Settings on that heading.
 
 | Key | Action |
 | --- | --- |
@@ -14,7 +14,7 @@ The keys below work anywhere on the library screen, except while you are typing 
 | Ctrl+2 or Command+2 | Crates |
 | Ctrl+3 or Command+3 | Files |
 | Ctrl+4 or Command+4 | History |
-| Ctrl+5 or Command+5 | Snapshots |
+| Ctrl+5 or Command+5 | Backups |
 | Esc | Close a dialog, or clear the search |
 | ? | Show this list |
 | Space | Play or pause |
@@ -36,7 +36,7 @@ Ctrl+K or Command+K opens **Find a track or file**.
 
 If the disk search cannot be read, the box says so and keeps the track matches. **Try again** asks for the files again.
 
-**Search tracks** and **Search files** are still there. `/` or Ctrl+F focuses the one for the view you are in. Snapshots has no search field. `/` there tells you to use Ctrl+K.
+**Search tracks** and **Search files** are still there. `/` or Ctrl+F focuses the one for the view you are in. Backups has no search field. `/` there tells you to use Ctrl+K.
 
 ## Lists
 
@@ -46,4 +46,4 @@ In **Crates**, the crate list keeps its own keys when that list is focused. Righ
 
 In **Files**, Up and Down move through the folder. Enter opens a folder or ticks a file.
 
-In **Snapshots**, Up and Down move through the saved copies. Enter opens **Review restore**. Nothing is written until you confirm that dialog.
+In **Backups**, Up and Down move through the saved copies. Enter opens **Review restore**. Nothing is written until you confirm that dialog.

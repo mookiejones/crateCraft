@@ -583,7 +583,7 @@
     "shortcuts.viewFiles": "Files",
     "shortcuts.viewHistory": "History",
     "shortcuts.viewLibrary": "Library",
-    "shortcuts.viewSnapshots": "Snapshots",
+    "shortcuts.viewSnapshots": "Backups",
     "snapshots.backupDrives": "Back up drive crates",
     "snapshots.backupDrivesBusy": "Backing up drive crates…",
     "snapshots.count": {
@@ -600,7 +600,7 @@
     "snapshots.drivesSaved": "Drive crates were copied into the backup on this computer.",
     "snapshots.drivesSkipped": "Skipped: {drives}.",
     "snapshots.empty": "No snapshots yet. Take a snapshot to keep a point you can restore. Snapshots are kept, and this page does not expire them.",
-    "snapshots.noSearch": "Snapshots has no search. Press Ctrl+K to find a track or a file.",
+    "snapshots.noSearch": "Backups has no search. Press Ctrl+K to find a track or a file.",
     "snapshots.outsideChange": "Something outside this app changed the Serato folder. A snapshot was saved after that change. Undo puts back the previous snapshot.",
     "snapshots.outsideChangeLexicon": "Lexicon changed the Serato folder. A snapshot was saved after that change. Undo puts back the previous snapshot.",
     "snapshots.reading": "Reading snapshots",
@@ -650,11 +650,13 @@
     "view.crates": "Crates",
     "view.duplicates": "Duplicates",
     "view.files": "Files",
-    "view.gig": "Gig",
+    "view.gig": "Before a gig",
+    "view.group.health": "Library health",
+    "view.group.library": "Library",
     "view.history": "History",
     "view.label": "Views",
-    "view.missing": "Missing",
-    "view.snapshots": "Snapshots",
+    "view.missing": "Missing files",
+    "view.snapshots": "Backups",
     "view.stems": "Stems",
     "wizard.action.checkAgain": "Check again",
     "wizard.action.continue": "Continue",
@@ -803,7 +805,7 @@
     "tooltip.session": "Show the tracks played in the session {name}.",
     "tooltip.settings": "Open settings.",
     "tooltip.settingsClose": "Close settings. Esc.",
-    "tooltip.shortcuts": "Show keyboard shortcuts. ?.",
+    "tooltip.shortcuts": "Keyboard shortcuts for this screen. ? opens this list.",
     "tooltip.shortcutsClose": "Close the shortcut list. Esc.",
     "tooltip.showSearchCopies": "Show the fields that were compared.",
     "tooltip.smartRules": "Edit the smart crate rules. Nothing is saved until you press Save rules.",
@@ -839,9 +841,9 @@
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
     "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
-    "tooltip.viewMissing": "Show tracks whose files are missing.",
-    "tooltip.viewSnapshots": "Show snapshots. Ctrl/Cmd+5.",
-    "tooltip.viewStems": "Show tracks that have stems.",
+    "tooltip.viewMissing": "Show tracks whose files are missing in this space.",
+    "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
+    "tooltip.viewStems": "Show tracks Serato has analyzed for stems. This does not separate the audio.",
     "tooltip.volume": "Change how loud playback is.",
     "tooltip.wizard.checkAgain": "Look for the Serato library again.",
     "tooltip.wizard.continue": "Continue to the next step.",
@@ -1449,7 +1451,7 @@
     "shortcuts.viewFiles": "Archivos",
     "shortcuts.viewHistory": "Historial",
     "shortcuts.viewLibrary": "Biblioteca",
-    "shortcuts.viewSnapshots": "Instantáneas",
+    "shortcuts.viewSnapshots": "Copias de seguridad",
     "snapshots.backupDrives": "Copiar cajas de las unidades",
     "snapshots.backupDrivesBusy": "Copiando cajas de las unidades…",
     "snapshots.count": {
@@ -1466,7 +1468,7 @@
     "snapshots.drivesSaved": "Las cajas de las unidades se copiaron en la copia de este equipo.",
     "snapshots.drivesSkipped": "Omitidas: {drives}.",
     "snapshots.empty": "Todavía no hay instantáneas. Toma una para guardar un punto al que puedas volver. Las instantáneas se conservan y esta página no las caduca.",
-    "snapshots.noSearch": "Instantáneas no tiene búsqueda. Pulsa Ctrl+K para buscar una pista o un archivo.",
+    "snapshots.noSearch": "Copias de seguridad no tiene búsqueda. Pulsa Ctrl+K para buscar una pista o un archivo.",
     "snapshots.outsideChange": "Algo ajeno a esta app cambió la carpeta de Serato. Se guardó una instantánea después de ese cambio. Deshacer restaura la instantánea anterior.",
     "snapshots.outsideChangeLexicon": "Lexicon cambió la carpeta de Serato. Se guardó una instantánea después de ese cambio. Deshacer restaura la instantánea anterior.",
     "snapshots.reading": "Leyendo instantáneas",
@@ -1504,7 +1506,7 @@
     "tooltip.gigNext": "Pasa al siguiente paso.",
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
-    "tooltip.viewGig": "Comprueba la biblioteca antes de un bolo. Solo lectura.",
+    "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
     "track.missingBadge": "no encontrada",
     "track.numbered": "Pista {id}",
     "track.stemsBadge": "stems",
@@ -1516,11 +1518,13 @@
     "view.crates": "Cajas",
     "view.duplicates": "Duplicados",
     "view.files": "Archivos",
-    "view.gig": "Bolo",
+    "view.gig": "Antes del bolo",
+    "view.group.health": "Salud de la biblioteca",
+    "view.group.library": "Biblioteca",
     "view.history": "Historial",
     "view.label": "Vistas",
-    "view.missing": "No encontradas",
-    "view.snapshots": "Instantáneas",
+    "view.missing": "Archivos no encontrados",
+    "view.snapshots": "Copias de seguridad",
     "view.stems": "Stems",
     "wizard.action.checkAgain": "Volver a buscar",
     "wizard.action.continue": "Continuar",
@@ -1669,7 +1673,7 @@
     "tooltip.session": "Muestra las pistas reproducidas en la sesión {name}.",
     "tooltip.settings": "Abre los ajustes.",
     "tooltip.settingsClose": "Cierra los ajustes. Esc.",
-    "tooltip.shortcuts": "Muestra los atajos de teclado. ?.",
+    "tooltip.shortcuts": "Atajos de teclado de esta pantalla. ? abre esta lista.",
     "tooltip.shortcutsClose": "Cierra la lista de atajos. Esc.",
     "tooltip.showSearchCopies": "Muestra los campos que se compararon.",
     "tooltip.smartRules": "Edita las reglas de la caja inteligente. No se guarda nada hasta que pulses Guardar reglas.",
@@ -1705,9 +1709,9 @@
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
     "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
-    "tooltip.viewMissing": "Muestra las pistas cuyo archivo no se encuentra.",
-    "tooltip.viewSnapshots": "Muestra las instantáneas. Ctrl/Cmd+5.",
-    "tooltip.viewStems": "Muestra las pistas que tienen stems.",
+    "tooltip.viewMissing": "Muestra las pistas de este espacio cuyo archivo no se encuentra.",
+    "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
+    "tooltip.viewStems": "Muestra las pistas que Serato ya analizó para stems. No separa el audio.",
     "tooltip.volume": "Cambia el volumen de la reproducción.",
     "tooltip.wizard.checkAgain": "Vuelve a buscar la biblioteca de Serato.",
     "tooltip.wizard.continue": "Sigue al paso siguiente.",
@@ -2392,7 +2396,7 @@
       "crate-rename": tips.crateRename,
       "crate-color": tips.crateColor,
       "crate-delete": tips.crateDelete,
-      "open-shortcuts": tips.shortcuts,
+      "shortcuts-title": tips.shortcuts,
       "open-settings": tips.settings,
       search: tips.search,
       "export-m3u": tips.exportM3u,
@@ -2442,7 +2446,6 @@
       "files-cancel": tips.filesCancel,
       "files-review": tips.filesReview,
       "files-confirm": tips.filesConfirm,
-      "shortcuts-close": tips.shortcutsClose,
       "quick-open-query": tips.quickOpen,
       "quick-open-retry": tips.quickOpenRetry,
       "quick-open-close": tips.quickOpenClose,
@@ -8561,7 +8564,7 @@
     },
     {
       id: "view-snapshots",
-      label: "Snapshots",
+      label: "Backups",
       group: "Views",
       keys: [{ key: "5", mod: true }],
       whileTyping: false
@@ -8639,21 +8642,28 @@
     return true;
   }
   function openCheatSheet() {
-    const dialog = el("shortcuts-dialog");
-    if (dialog.open) return;
-    rememberFocus();
+    const dialog = el("settings-dialog");
     renderCheatSheet();
-    dialog.showModal();
-    el("shortcuts-title").tabIndex = -1;
-    el("shortcuts-title").focus();
+    if (!dialog.open) {
+      rememberFocus();
+      dialog.showModal();
+    }
+    const title2 = el("shortcuts-title");
+    title2.tabIndex = -1;
+    title2.focus();
+    if (typeof title2.scrollIntoView === "function") title2.scrollIntoView({ block: "nearest" });
   }
   function wireShortcuts() {
     document.removeEventListener("keydown", onKey);
     document.addEventListener("keydown", onKey);
-    el("open-shortcuts").addEventListener("click", () => openCheatSheet());
-    el("shortcuts-close").addEventListener("click", () => el("shortcuts-dialog").close());
-    el("shortcuts-dialog").addEventListener("close", () => restoreFocus());
+    const dialog = el("settings-dialog");
+    dialog.removeEventListener("close", onSettingsClose);
+    dialog.addEventListener("close", onSettingsClose);
+    renderCheatSheet();
     wireQuickOpen();
+  }
+  function onSettingsClose() {
+    restoreFocus();
   }
   function onKey(event) {
     if (event.isComposing || event.defaultPrevented) return;
@@ -8825,7 +8835,7 @@
         closeQuickOpen();
         return;
       }
-      if (dialog.id === "shortcuts-dialog") {
+      if (dialog.id === "settings-dialog") {
         event.preventDefault();
         dialog.close();
         return;
@@ -8872,13 +8882,14 @@
     field.dispatchEvent(new Event("input", { bubbles: true }));
   }
   function repaintCheatSheet() {
-    const dialog = document.getElementById("shortcuts-dialog");
-    if (dialog instanceof HTMLDialogElement && dialog.open) renderCheatSheet();
+    if (!document.getElementById("shortcuts-body")) return;
+    renderCheatSheet();
   }
   function renderCheatSheet() {
-    el("shortcuts-title").textContent = t("shortcuts.title");
+    const title2 = el("shortcuts-title");
+    title2.textContent = t("shortcuts.title");
+    setTooltip(title2, tips.shortcuts);
     el("shortcuts-intro").textContent = t("shortcuts.intro");
-    el("shortcuts-close").textContent = t("common.close");
     const body = el("shortcuts-body");
     body.replaceChildren();
     const groups = [];

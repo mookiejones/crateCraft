@@ -10,6 +10,7 @@ flowchart TD
   rail["Settings, bottom of the sidebar"] --> box["Share anonymous usage stats and crash reports"]
   box --> off["Clear: Nothing is sent"]
   box --> on["Ticked: counts and crash reports, only with a key"]
+  rail --> keys["Keyboard shortcuts. ? opens this list"]
   rail --> language["Language: Same as the system, English, or Español"]
   rail --> again["Run setup again"]
   rail --> logs["Open logs folder, or Copy logs"]
