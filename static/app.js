@@ -875,7 +875,7 @@
     "tooltip.saveRules": "Save these smart crate rules.",
     "tooltip.saveSuggestion": "Save a two-way link to {name}. Serato is not changed until you update the crate.",
     "tooltip.saveTrack": "Save these track details.",
-    "tooltip.search": "Search tracks by title or artist. Ctrl/Cmd+F or /. Esc clears the search.",
+    "tooltip.search": "Search tracks by title or artist. Filter with bpm:120-128, bpm:124~3, key:8A, or mix:8A (keys that mix with 8A). Ctrl/Cmd+F or /. Esc clears the search.",
     "tooltip.seek": "Move through the track. Left arrow goes back 5 seconds. Right arrow goes forward 5 seconds. Shift with an arrow jumps 30 seconds.",
     "tooltip.selectFile": "Select {name} for rename, move, or delete.",
     "tooltip.selectFilePath": "Select {name} at {path} for rename, move, or delete.",
@@ -1884,7 +1884,7 @@
     "tooltip.saveRules": "Guarda las reglas de esta caja inteligente.",
     "tooltip.saveSuggestion": "Guarda un enlace en ambos sentidos a {name}. Serato no cambia hasta que actualices la caja.",
     "tooltip.saveTrack": "Guarda estos datos de la pista.",
-    "tooltip.search": "Busca pistas por título o artista. Ctrl/Cmd+F o /. Esc borra la búsqueda.",
+    "tooltip.search": "Busca pistas por título o artista. Filtra con bpm:120-128, bpm:124~3, key:8A o mix:8A (tonalidades que mezclan con 8A). Ctrl/Cmd+F o /. Esc borra la búsqueda.",
     "tooltip.seek": "Avanza por la pista. Izquierda retrocede 5 segundos. Derecha avanza 5 segundos. Mayús con una flecha salta 30 segundos.",
     "tooltip.selectFile": "Selecciona {name} para renombrar, mover o eliminar.",
     "tooltip.selectFilePath": "Selecciona {name} en {path} para renombrar, mover o eliminar.",
@@ -4053,6 +4053,137 @@
     }
   }
 
+  // src/search-filters.ts
+  var KEY_VALUES = {
+    "g#m": 0,
+    abm: 0,
+    "1a": 0,
+    ebm: 1,
+    "d#m": 1,
+    "2a": 1,
+    bbm: 2,
+    "a#m": 2,
+    "3a": 2,
+    fm: 3,
+    "4a": 3,
+    cm: 4,
+    "5a": 4,
+    gm: 5,
+    "6a": 5,
+    dm: 6,
+    "7a": 6,
+    am: 7,
+    "8a": 7,
+    em: 8,
+    "9a": 8,
+    bm: 9,
+    "10a": 9,
+    "f#m": 10,
+    gbm: 10,
+    "11a": 10,
+    "c#m": 11,
+    dbm: 11,
+    "12a": 11,
+    b: 12,
+    "1b": 12,
+    "f#": 13,
+    gb: 13,
+    "2b": 13,
+    "c#": 14,
+    db: 14,
+    "3b": 14,
+    "g#": 15,
+    ab: 15,
+    "4b": 15,
+    "d#": 16,
+    eb: 16,
+    "5b": 16,
+    "a#": 17,
+    bb: 17,
+    "6b": 17,
+    f: 18,
+    "7b": 18,
+    c: 19,
+    "8b": 19,
+    g: 20,
+    "9b": 20,
+    d: 21,
+    "10b": 21,
+    a: 22,
+    "11b": 22,
+    e: 23,
+    "12b": 23
+  };
+  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
+  var EXACT = new RegExp(`^${NUMBER}$`);
+  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
+  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
+  var ABOVE = new RegExp(`^>${NUMBER}$`);
+  var BELOW = new RegExp(`^<${NUMBER}$`);
+  function keyNumber(value) {
+    if (!value) return -1;
+    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
+  }
+  function mixingKeys(key) {
+    const base = key < 12 ? 0 : 12;
+    const index = key - base;
+    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
+  }
+  function bpmFilter(value) {
+    let match = RANGE.exec(value);
+    if (match) {
+      const low = Number(match[1]);
+      const high = Number(match[2]);
+      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
+    }
+    match = AROUND.exec(value);
+    if (match) {
+      const center = Number(match[1]);
+      const spread = Number(match[2]);
+      return { kind: "bpm", min: center - spread, max: center + spread };
+    }
+    match = ABOVE.exec(value);
+    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
+    match = BELOW.exec(value);
+    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
+    match = EXACT.exec(value);
+    if (match) {
+      const whole = Number(match[1]);
+      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
+    }
+    return null;
+  }
+  function parseQuery(text2) {
+    const terms = [];
+    const filters = [];
+    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
+      const colon = word.indexOf(":");
+      const name = colon > 0 ? word.slice(0, colon) : "";
+      const value = colon > 0 ? word.slice(colon + 1) : "";
+      let filter = null;
+      if (name === "bpm") filter = bpmFilter(value);
+      else if (name === "key" || name === "mix") {
+        const key = keyNumber(value);
+        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
+      }
+      if (filter) filters.push(filter);
+      else terms.push(word);
+    }
+    return { terms, filters };
+  }
+  function matchesFilters(track, filters) {
+    for (const filter of filters) {
+      if (filter.kind === "bpm") {
+        const bpm = Number(track.bpm);
+        if (!(track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0)) return false;
+        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
+      } else if (!filter.keys.has(keyNumber(track.key))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   // src/player-strings.ts
   var playerStrings = {
     get region() {
@@ -5806,13 +5937,14 @@
   // src/views.ts
   var relatedRequest = 0;
   var lastDetail = null;
-  function matchesQuery(track, terms) {
-    if (!terms.length) return true;
+  function matchesQuery(track, query) {
+    if (!matchesFilters(track, query.filters)) return false;
+    if (!query.terms.length) return true;
     const hay = `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-    return terms.every((term) => hay.includes(term));
+    return query.terms.every((term) => hay.includes(term));
   }
   function queryTerms() {
-    return state.query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    return parseQuery(state.query);
   }
   function childLists() {
     const children = /* @__PURE__ */ new Map();
@@ -6016,8 +6148,8 @@
     const scroll = el("crate-list").scrollTop;
     const active2 = document.activeElement;
     const restore = el("crate-list").contains(active2) ? active2.closest(".crate-row")?.querySelector(".crate")?.dataset.id ?? null : null;
-    const terms = queryTerms();
-    const matched = terms.length ? new Set(state.tracks.filter((track) => matchesQuery(track, terms)).map((track) => track.id)) : null;
+    const query = queryTerms();
+    const matched = query.terms.length || query.filters.length ? new Set(state.tracks.filter((track) => matchesQuery(track, query)).map((track) => track.id)) : null;
     const crates = visibleCrates();
     const holder = hiddenSelectionHolder(crates);
     el("crate-list").replaceChildren();
@@ -6778,15 +6910,15 @@
       results.replaceChildren();
       form.hidden = true;
       form.replaceChildren();
-      const terms = input.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-      if (!terms.length) {
+      const query2 = parseQuery(input.value);
+      if (!query2.terms.length && !query2.filters.length) {
         const hint = document.createElement("li");
         hint.className = "related-meta";
         hint.textContent = t("related.typeHint");
         results.append(hint);
         return;
       }
-      const hits2 = state.tracks.filter((item2) => item2.id !== track.id && matchesQuery(item2, terms)).slice(0, 8);
+      const hits2 = state.tracks.filter((item2) => item2.id !== track.id && matchesQuery(item2, query2)).slice(0, 8);
       if (!hits2.length) {
         const empty = document.createElement("li");
         empty.className = "related-meta";

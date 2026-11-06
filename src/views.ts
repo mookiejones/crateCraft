@@ -30,6 +30,7 @@ import { loadGigCheck, showGigFailure } from "./gig";
 import { portableDriveButton } from "./portable";
 import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
+import { matchesFilters, parseQuery, type ParsedQuery } from "./search-filters";
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
 import { play } from "./player";
 import { playerStrings } from "./player-strings";
@@ -71,32 +72,33 @@ let relatedRequest = 0;
 let lastDetail: Track | null = null;
 
 /**
- * Return whether a track contains every search term.
+ * Return whether a track contains every search word and passes every filter.
  *
- * The haystack is title, artist, album, genre, key, and file. Terms are
- * already lowercased. An empty term list matches everything. No request
- * is made.
+ * The haystack is title, artist, album, genre, key, and file. Filter words
+ * (`bpm:`, `key:`, `mix:`) are read by search-filters.ts. An empty query
+ * matches everything. No request is made.
  *
  * @param {object} track Track or history row.
- * @param {string[]} terms Lowercased words from the search box.
- * @returns {boolean} True when every term occurs in the haystack.
+ * @param {ParsedQuery} query Words and filters from the search box.
+ * @returns {boolean} True when every word occurs in the haystack and every filter passes.
  */
-function matchesQuery(track: Track, terms: string[]) {
-  if (!terms.length) return true;
+function matchesQuery(track: Track, query: ParsedQuery) {
+  if (!matchesFilters(track, query.filters)) return false;
+  if (!query.terms.length) return true;
   const hay = `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-  return terms.every((term) => hay.includes(term));
+  return query.terms.every((term) => hay.includes(term));
 }
 
 /**
- * Split the track search box into lowercased words.
+ * Read the track search box.
  *
  * Reads state.query, which the search field copies on each input event.
  * Does not fetch the library.
  *
- * @returns {string[]} Words with empty pieces removed.
+ * @returns {ParsedQuery} Lowercased words and filters.
  */
 function queryTerms() {
-  return state.query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  return parseQuery(state.query);
 }
 
 /**
@@ -426,9 +428,9 @@ export function renderCrates() {
   const restore = el("crate-list").contains(active)
     ? active!.closest(".crate-row")?.querySelector<HTMLElement>(".crate")?.dataset.id ?? null
     : null;
-  const terms = queryTerms();
-  const matched = terms.length
-    ? new Set(state.tracks.filter((track) => matchesQuery(track, terms)).map((track) => track.id))
+  const query = queryTerms();
+  const matched = query.terms.length || query.filters.length
+    ? new Set(state.tracks.filter((track) => matchesQuery(track, query)).map((track) => track.id))
     : null;
   const crates = visibleCrates();
   const holder = hiddenSelectionHolder(crates);
@@ -1460,8 +1462,8 @@ function relatedSearch(track: Track, section: HTMLElement, query: string) {
     results.replaceChildren();
     form.hidden = true;
     form.replaceChildren();
-    const terms = input.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-    if (!terms.length) {
+    const query = parseQuery(input.value);
+    if (!query.terms.length && !query.filters.length) {
       const hint = document.createElement("li");
       hint.className = "related-meta";
       hint.textContent = t("related.typeHint");
@@ -1469,7 +1471,7 @@ function relatedSearch(track: Track, section: HTMLElement, query: string) {
       return;
     }
     const hits = state.tracks
-      .filter((item) => item.id !== track.id && matchesQuery(item, terms))
+      .filter((item) => item.id !== track.id && matchesQuery(item, query))
       .slice(0, 8);
     if (!hits.length) {
       const empty = document.createElement("li");
