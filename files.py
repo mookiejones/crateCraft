@@ -1,9 +1,10 @@
-"""Move, rename, replace, and trash audio without dropping Serato crates.
+"""Move, rename, replace, relink, and trash audio without dropping Serato crates.
 
 Serato stores the file path on the library row. Cue points stay in the
 audio file. This module rewrites path columns in ``master.sqlite`` and in
 the mirrored location database after the file is in its new place, in one
-transaction. If that write fails, the files are put back. If a file move
+transaction. Relink only rewrites those paths; the audio is not moved.
+If that write fails, the files are put back. If a file move
 fails, the database transaction is rolled back.
 
 A preview uses the same path checks and does not copy the database. The
@@ -36,11 +37,11 @@ from urllib.parse import quote
 import library
 import music_roots
 import telemetry
-from tags import copy_serato_geob, plan_serato_geob
+from tags import copy_serato_geob, plan_serato_geob, read_serato_tags
 
 logger = logging.getLogger("serato.files")
 
-_ACTIONS = frozenset({"rename", "move", "move_folder", "replace", "delete"})
+_ACTIONS = frozenset({"rename", "move", "move_folder", "replace", "relink", "delete"})
 _AUDIO = frozenset(
     {
         ".mp3",
@@ -1279,6 +1280,8 @@ def _build(payload: Mapping[str, object]) -> Plan:
                 return _plan_folder(payload, rows, conn)
             if action == "replace":
                 return _plan_replace(payload, rows, conn)
+            if action == "relink":
+                return _plan_relink(payload, rows, conn)
             return _plan_delete(payload, rows, conn)
     except _Refuse as exc:
         return _failed(action, exc.message)
@@ -1477,6 +1480,113 @@ def _plan_replace(
         cue_dest=replacement,
         summary=_summary("replace", changes, warnings),
         browse=str(replacement.parent),
+    )
+
+
+def _plan_relink(
+    payload: Mapping[str, object],
+    rows: list[dict[str, object]],
+    conn: sqlite3.Connection,
+) -> Plan:
+    """Plan pointing missing library tracks at files that are on disk.
+
+    Audio is not moved. Each match is one asset id and one dest path.
+    Cue tags on the dest are checked and warned about, not copied.
+
+    Args:
+        payload: Request with ``matches`` as ``[{id, path}, ...]``.
+        rows: Asset rows.
+        conn: Read connection, used to name crates.
+
+    Returns:
+        The relink plan.
+
+    Raises:
+        _Refuse: If a match is refused.
+        LibraryError: If a match is not a usable object.
+    """
+    raw = payload.get("matches")
+    if not isinstance(raw, list) or not raw:
+        raise _Refuse("Choose tracks to relink.")
+    if len(raw) > _FILE_CAP:
+        raise _Refuse("Choose fewer files at once.")
+    by_id = {int(row["id"]): row for row in rows}
+    seen_ids: set[int] = set()
+    seen_dests: set[Path] = set()
+    changes: list[FileChange] = []
+    dests: list[Path] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            raise library.LibraryError("That request is not valid.")
+        try:
+            asset_id = int(str(item.get("id")))
+        except (TypeError, ValueError) as exc:
+            raise library.LibraryError("That request is not valid.") from exc
+        if asset_id in seen_ids:
+            raise _Refuse("Two of those tracks are the same.")
+        seen_ids.add(asset_id)
+        dest = _real_file(_as_path(item.get("path")))
+        if dest.suffix.lower() not in _AUDIO:
+            raise _Refuse("That file is not an audio file.")
+        if dest in seen_dests:
+            raise _Refuse("Two of those files are the same.")
+        seen_dests.add(dest)
+        row = by_id.get(asset_id)
+        if row is None:
+            raise _Refuse("That track is not in the library.")
+        stored = str(row.get("portable_id") or "")
+        source = resolve_stored(stored)
+        if source is not None and source.is_file() and not source.is_symlink():
+            raise _Refuse("That track is still on disk.")
+        if source is not None and source == dest:
+            raise _Refuse("That file is already this track.")
+        others = [other for other in _assets_at(rows, dest) if int(other["id"]) != asset_id]
+        if others:
+            raise _Refuse("Another library track already uses that file.")
+        origin = Path(stored) if stored else dest
+        changes.append(
+            _change_for(origin, dest, [row], missing=True, conn=conn, matched=[row])
+        )
+        dests.append(dest)
+    warnings: list[str] = []
+    geob = _missing_geob_warning(dests)
+    if geob is not None:
+        warnings.append(geob)
+    return Plan(
+        action="relink",
+        ok=True,
+        changes=changes,
+        moves=[],
+        warnings=warnings,
+        summary=_summary("relink", changes, warnings),
+        browse=str(changes[0].dest.parent) if changes else None,
+    )
+
+
+def _missing_geob_warning(paths: list[Path]) -> str | None:
+    """Warn when a dest file has no Serato cue tags.
+
+    Args:
+        paths: Destination audio files.
+
+    Returns:
+        A sentence, or None when every file has tags.
+    """
+    missing = 0
+    for path in paths:
+        try:
+            found = bool(read_serato_tags(str(path)).get("found"))
+        except (OSError, ValueError, TypeError, KeyError):
+            found = False
+        if not found:
+            missing += 1
+    if missing == 0:
+        return None
+    if missing == 1:
+        return "Cue tags were not found on 1 of the new files. That may be a different edit."
+    return (
+        f"Cue tags were not found on {missing} of the new files. "
+        "Those may be different edits."
     )
 
 
@@ -1687,9 +1797,14 @@ def _summary(action: str, changes: list[FileChange], warnings: list[str]) -> str
         )
     elif action == "replace":
         text = "Point this track at the new file. Crates, history, and the other fields stay on this track."
+    elif action == "relink":
+        text = (
+            f"Point {_count(len(changes), 'missing track', 'missing tracks')} at the matched files. "
+            "Crates, history, and related links stay attached."
+        )
     else:
         text = "Move the file to the Trash and remove it from the library and its crates."
-    if missing_n:
+    if missing_n and action != "relink":
         text += f" {_count(missing_n, 'stored path changes', 'stored paths change')} even though the file is not on disk."
     return text
 
@@ -1756,6 +1871,8 @@ def _perform_files(plan: Plan, journal: dict[str, object]) -> str | None:
         return _perform_cues(plan, journal)
     if plan.action == "delete":
         _perform_trash(plan, journal)
+        return plan.cues
+    if plan.action == "relink":
         return plan.cues
     _perform_moves(journal)
     return plan.cues
@@ -2290,6 +2407,10 @@ def _map_stored(
         return None
     if resolved in exact:
         return exact[resolved]
+    for old, new in exact.items():
+        mapped = resolve_stored(str(old))
+        if mapped is not None and mapped == resolved:
+            return new
     for old, new in directories:
         if resolved == old or old in resolved.parents:
             suffix = Path(".") if resolved == old else resolved.relative_to(old)
@@ -2604,6 +2725,10 @@ def _moved_pairs(plan: Plan) -> list[tuple[str, str]]:
 
     for change in plan.changes:
         add(change.source, change.dest)
+        if change.missing:
+            resolved = resolve_stored(str(change.source))
+            if resolved is not None:
+                add(resolved, change.dest)
     for old, new in plan.directories:
         if not new.is_dir():
             continue
@@ -2653,6 +2778,8 @@ def _file_count(plan: Plan) -> int:
         return 1
     if plan.action == "move_folder":
         return max(len(plan.changes), 1)
+    if plan.action == "relink":
+        return len(plan.changes)
     return len(plan.moves)
 
 
