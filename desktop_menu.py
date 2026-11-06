@@ -154,6 +154,12 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
             say("menu.help"),
             [
                 item("help.title", "help"),
+                MenuSeparator(),
+                item("help.bug", "help-bug"),
+                item("help.feature", "help-feature"),
+                item("help.github", "help-github"),
+                item("help.releases", "help-releases"),
+                MenuSeparator(),
                 item("shortcuts.title", "shortcuts"),
                 item("settings.openLogs", "open-logs"),
                 item("settings.copyVersion", "copy-version"),

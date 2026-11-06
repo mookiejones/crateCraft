@@ -135,6 +135,7 @@ export interface ElementIds {
   "open-logs": HTMLButtonElement;
   "copy-logs": HTMLButtonElement;
   "app-version": HTMLParagraphElement;
+  "about-title": HTMLHeadingElement;
   "about-version": HTMLParagraphElement;
   "copy-version": HTMLButtonElement;
   "version-copy-status": HTMLParagraphElement;
