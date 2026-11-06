@@ -152,7 +152,7 @@ The wiki stays enabled. Draft pages live in `docs/wiki/` and are excluded from t
 
 ## Branch protection
 
-Wait until CI, CodeQL, and a pull-request dependency review have each completed once. Then require these checks on `main`:
+Wait until CI, CodeQL, and a pull-request dependency review have each completed once. These checks must pass:
 
 - `tests (ubuntu-latest, Python 3.12)`
 - `tests (ubuntu-latest, Python 3.14)`
@@ -161,13 +161,27 @@ Wait until CI, CodeQL, and a pull-request dependency review have each completed 
 - `frontend (ubuntu-latest)`
 - `frontend (windows-latest)`
 - `frontend (macos-latest)`
-- `dependency audit`
-- `analyze Python`
+- `analyze Python` (CodeQL)
 
-Require `review dependency changes` on pull requests. That check does not run on a direct push, so it cannot be a required status for every update of `main`.
+The workflow also runs `tests (macos-latest, Python 3.12)` and `frontend (macos-latest)` on every pull request. Add those names to branch protection so they block a merge. Until an admin does that, they still run on every pull request, and the previous required set still gates `main`.
 
-A green check is not the whole merge. Gatekeeper QA reviews the pull request next. The Principal Developer reviews and merges after that. `.github/CODEOWNERS` names `@mookiejones` for the whole tree. Documentation for the change is in the same pull request. Work that is not merged is labelled PREVIEW.
+`dependency audit` and `review dependency changes` also run. They are not required checks. `review dependency changes` does not run on a direct push, so it cannot be a required status for every update of `main`.
+
+A green check is not the whole merge. QA (Gatekeeper, account `mookiejones-qa`) reviews the pull request next and blocks any pull request lacking tests for its changes. If a new push dismisses the `mookiejones-qa` approval, re-request review. The team, including agents, may merge once `mookiejones-qa` approved the latest commit and all required checks are green. Only releases and tags (including pre-releases) need Charles's (@mookiejones) explicit OK. `main` is protected. Changes go in only through a pull request. Never push to `main`. Do not force-push to `main`. Admins can bypass these rules, but should not. `.github/CODEOWNERS` names `@mookiejones` for the whole tree. Documentation for the change is in the same pull request. Work that is not merged is labelled PREVIEW.
 
 ## Where a change has to land
 
 A workflow, release, or GitHub setting change updates this file in the same commit. A change a DJ can see also updates the user guide under `docs/index.md` and `docs/guide/` in the same commit. Behavior, the API, the layout, or the run path also updates [architecture.md](architecture.md). The run command or the layout summary also updates `CLAUDE.md` and `AGENTS.md`. They are copies of the same text. The README keeps the local test command and points here for Actions. Wiki drafts under `docs/wiki/` are copied into the GitHub wiki by hand. `SECURITY.md` keeps the attestation commands and the rule that the server stays on `127.0.0.1`. `PRIVACY.md` keeps what sharing can send. The release footer in `scripts/release-notes-footer.md` is what GitHub appends to the generated notes.
+
+## Completion report
+
+Every agent (Claude, Cursor, and others) finishes each issue with the completion report in `AGENTS.md` and `CLAUDE.md`. The report goes in the pull request body. When the work has an issue, the same report is the final comment on that issue. `CONTRIBUTING.md` and `.github/pull_request_template.md` use this template:
+
+- **Issue:** link
+- **PR and commit:** link and SHA
+- **What changed:** up to 3 bullets
+- **Proof:** the exact test commands with their pass counts, CI status, and a screenshot for UI changes
+- **Not done / risks:**
+- **Next:** what is needed from Charles (@mookiejones) or QA (`mookiejones-qa`)
+
+Saying "done", without the issue link, the pull request link, the commit SHA, and the test output, does not count. Never claim work you did not push.

@@ -82,6 +82,10 @@ export interface ElementIds {
   "settings-dialog": HTMLDialogElement;
   "telemetry-toggle": HTMLInputElement;
   "language-select": HTMLSelectElement;
+  "colorway-select": HTMLSelectElement;
+  "colorway-preview": HTMLImageElement;
+  "icon-follows-theme": HTMLInputElement;
+  "icon-status": HTMLParagraphElement;
   "language-status": HTMLParagraphElement;
   "telemetry-note": HTMLParagraphElement;
   "consent-status": HTMLParagraphElement;
@@ -125,10 +129,18 @@ export interface ElementIds {
   "files-review": HTMLButtonElement;
   "files-refresh": HTMLButtonElement;
   "files-search": HTMLInputElement;
-  "shortcuts-section": HTMLElement,
-  "shortcuts-title": HTMLHeadingElement,
-  "shortcuts-intro": HTMLParagraphElement,
-  "shortcuts-body": HTMLDivElement,
+  "portable-dialog": HTMLDialogElement;
+  "portable-title": HTMLHeadingElement;
+  "portable-note": HTMLParagraphElement;
+  "portable-verdict": HTMLParagraphElement;
+  "portable-summary": HTMLParagraphElement;
+  "portable-findings": HTMLUListElement;
+  "portable-status": HTMLParagraphElement;
+  "portable-close": HTMLButtonElement;
+  "shortcuts-section": HTMLElement;
+  "shortcuts-title": HTMLHeadingElement;
+  "shortcuts-intro": HTMLParagraphElement;
+  "shortcuts-body": HTMLDivElement;
   "quick-open": HTMLDialogElement;
   "quick-open-title": HTMLHeadingElement;
   "quick-open-label": HTMLLabelElement;

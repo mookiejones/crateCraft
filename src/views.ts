@@ -27,6 +27,7 @@ import { bridge } from "./bridge";
 import { el } from "./dom";
 import { clockLabel, colorHex, compare, durationLabel, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
+import { portableDriveButton } from "./portable";
 import { failSnapshots, loadSnapshots } from "./restore";
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
 import { play } from "./player";
@@ -2741,6 +2742,8 @@ function browserRows(): FileEntry[] {
         detail: root.detail,
         kind: root.kind === "serato_drive" ? "drive" : "folder",
         missing: root.missing,
+        removable: root.removable,
+        serato: root.serato,
       };
       return entry;
     });
@@ -3024,6 +3027,7 @@ function fileRow(entry: FileEntry, index: number): HTMLDivElement {
       });
     }
     row.append(button);
+    if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
     return row;
   }
   if (entry.kind !== "file") {

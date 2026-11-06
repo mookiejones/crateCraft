@@ -148,6 +148,7 @@
     "error.snapshot_incomplete": "That snapshot is incomplete.",
     "error.snapshot_unreadable": "That snapshot could not be read.",
     "error.space_unavailable": "That space is not available here.",
+    "error.theme_not_saved": "The theme could not be saved.",
     "error.track_id_required": "Track id is required.",
     "error.track_not_in_library": "That track is not in the library.",
     "error.track_not_in_space": "Track is not in this space.",
@@ -468,6 +469,22 @@
     "player.waveformUnavailable": "Waveform unavailable for this format",
     "player.zoomIn": "Zoom in",
     "player.zoomOut": "Zoom out",
+    "portable.check": "Check drive",
+    "portable.checkLabel": "Check {name}",
+    "portable.checking": "Checking this drive.",
+    "portable.kindFileSize": "File too large",
+    "portable.kindMissing": "Missing",
+    "portable.kindOffDrive": "Not on this drive",
+    "portable.kindPathLength": "Path too long",
+    "portable.kindSmartCrate": "Smart Crate",
+    "portable.kindUnsafeName": "Unsafe name",
+    "portable.missing": "This drive is not connected. Nothing was deleted.",
+    "portable.notReady": "Not ready. Fix these on the laptop first.",
+    "portable.readOnly": "This only reads the drive. Nothing is copied or deleted.",
+    "portable.ready": "Ready to leave the laptop.",
+    "portable.title": "Portable drive",
+    "portable.unreachable": "This drive could not be checked.",
+    "portable.unreadable": "This drive could not be read.",
     "quickOpen.empty": "Type a track or file name.",
     "quickOpen.file": "File",
     "quickOpen.fileError": "Files on disk could not be searched. Track matches are still listed.",
@@ -542,8 +559,20 @@
     "rules.saved": "Rules saved.",
     "search.tracks": "Search tracks",
     "settings.about": "About",
+    "settings.colorway": "Theme",
+    "settings.colorway.daisyAge": "Daisy Age",
+    "settings.colorway.deepHouse": "Deep House",
+    "settings.colorway.motown": "Motown Soul",
+    "settings.colorwayPreview": "Theme icon preview",
     "settings.copyLogs": "Copy logs",
     "settings.copyVersion": "Copy version",
+    "settings.iconAppliedDock": "The Dock icon matches this theme.",
+    "settings.iconAppliedWindow": "The window and taskbar icon match this theme.",
+    "settings.iconDefault": "The app icon stays the usual one.",
+    "settings.iconFollowsTheme": "App icon follows the theme",
+    "settings.iconNotSaved": "Couldn't save the theme. It is used until you close the app.",
+    "settings.iconSaved": "Theme saved.",
+    "settings.iconUnsupported": "This computer can't change the running app icon. The choice is saved and applies on Mac and Windows.",
     "settings.language": "Language",
     "settings.languageNotSaved": "Couldn't save the language. It is used until you close the app.",
     "settings.languageSystem": "Same as the system",
@@ -706,6 +735,7 @@
     "tooltip.beatgridLock": "Lock the beatgrid so Serato does not move it.",
     "tooltip.chooseRelated": "Choose {name} as the track to link.",
     "tooltip.collapseCrate": "Hide the crates nested under {name}.",
+    "tooltip.colorway": "Choose the theme. The app icon can follow this choice.",
     "tooltip.consentAccept": "Share anonymous stats and crash reports.",
     "tooltip.consentDecline": "Don't share anonymous stats.",
     "tooltip.copyLogs": "Copy the log text.",
@@ -743,6 +773,7 @@
     "tooltip.findRelated": "Find a track to link by title or artist.",
     "tooltip.hideSearchCopies": "Hide the fields that were compared.",
     "tooltip.hotLoops": "Copy loops onto a free hot-cue pad in the Rekordbox file.",
+    "tooltip.iconFollowsTheme": "Match the Dock icon on Mac, or the window and taskbar icon on Windows, to the theme. On by default. The Finder icon and the Windows program icon stay the same.",
     "tooltip.importFile": "Choose a playlist file to import.",
     "tooltip.importM3u": "Add tracks from a playlist file into a new crate.",
     "tooltip.keepCopy": "Keep this copy: {name}. The others leave the library.",
@@ -774,6 +805,8 @@
     "tooltip.operationsRetry": "Try reading the operation log again.",
     "tooltip.overview": "Overview of the whole track. Click or drag to seek. Left arrow goes back 5 seconds. Right arrow goes forward 5 seconds.",
     "tooltip.playRow": "Start {name}. Space plays or pauses.",
+    "tooltip.portableCheck": "Check {name}. Read its crates and list what to fix before the gig. Nothing is written.",
+    "tooltip.portableClose": "Close the portable drive report.",
     "tooltip.prepareAdd": "Send this track to Prepare.",
     "tooltip.prepareRemove": "Take this track out of Prepare.",
     "tooltip.previous": "Play the previous track in this list.",
@@ -1016,6 +1049,7 @@
     "error.snapshot_incomplete": "Esa instantánea está incompleta.",
     "error.snapshot_unreadable": "No se pudo leer esa instantánea.",
     "error.space_unavailable": "Ese espacio no está disponible aquí.",
+    "error.theme_not_saved": "No se pudo guardar el tema.",
     "error.track_id_required": "Se necesita el identificador de la pista.",
     "error.track_not_in_library": "Esa pista no está en la biblioteca.",
     "error.track_not_in_space": "La pista no está en este espacio.",
@@ -1336,6 +1370,22 @@
     "player.waveformUnavailable": "Forma de onda no disponible para este formato",
     "player.zoomIn": "Acercar",
     "player.zoomOut": "Alejar",
+    "portable.check": "Comprobar unidad",
+    "portable.checkLabel": "Comprobar {name}",
+    "portable.checking": "Comprobando esta unidad.",
+    "portable.kindFileSize": "Archivo demasiado grande",
+    "portable.kindMissing": "No está",
+    "portable.kindOffDrive": "Fuera de esta unidad",
+    "portable.kindPathLength": "Ruta demasiado larga",
+    "portable.kindSmartCrate": "Caja inteligente",
+    "portable.kindUnsafeName": "Nombre no válido",
+    "portable.missing": "Esta unidad no está conectada. No se ha borrado nada.",
+    "portable.notReady": "No está lista. Corrígelo en el portátil primero.",
+    "portable.readOnly": "Esto solo lee la unidad. No se copia ni se borra nada.",
+    "portable.ready": "Lista para salir del portátil.",
+    "portable.title": "Unidad portátil",
+    "portable.unreachable": "No se ha podido comprobar esta unidad.",
+    "portable.unreadable": "No se ha podido leer esta unidad.",
     "quickOpen.empty": "Escribe el nombre de una pista o de un archivo.",
     "quickOpen.file": "Archivo",
     "quickOpen.fileError": "No se pudieron buscar los archivos del disco. Las pistas que coinciden siguen en la lista.",
@@ -1410,8 +1460,20 @@
     "rules.saved": "Reglas guardadas.",
     "search.tracks": "Buscar pistas",
     "settings.about": "Acerca de",
+    "settings.colorway": "Tema",
+    "settings.colorway.daisyAge": "Daisy Age",
+    "settings.colorway.deepHouse": "Deep House",
+    "settings.colorway.motown": "Motown Soul",
+    "settings.colorwayPreview": "Vista previa del icono del tema",
     "settings.copyLogs": "Copiar registros",
     "settings.copyVersion": "Copiar versión",
+    "settings.iconAppliedDock": "El icono del Dock coincide con este tema.",
+    "settings.iconAppliedWindow": "El icono de la ventana y de la barra de tareas coincide con este tema.",
+    "settings.iconDefault": "El icono de la app se queda en el habitual.",
+    "settings.iconFollowsTheme": "El icono de la app sigue el tema",
+    "settings.iconNotSaved": "No se pudo guardar el tema. Se usa hasta que cierres la app.",
+    "settings.iconSaved": "Tema guardado.",
+    "settings.iconUnsupported": "Este ordenador no puede cambiar el icono de la app en ejecución. La elección se guarda y se aplica en Mac y Windows.",
     "settings.language": "Idioma",
     "settings.languageNotSaved": "No se pudo guardar el idioma. Se usa hasta que cierres la app.",
     "settings.languageSystem": "El mismo que el sistema",
@@ -1574,6 +1636,7 @@
     "tooltip.beatgridLock": "Bloquea la rejilla de tiempo para que Serato no la mueva.",
     "tooltip.chooseRelated": "Elige {name} como pista para enlazar.",
     "tooltip.collapseCrate": "Oculta las cajas que están dentro de {name}.",
+    "tooltip.colorway": "Elige el tema. El icono de la app puede seguir esta elección.",
     "tooltip.consentAccept": "Comparte estadísticas anónimas e informes de fallos.",
     "tooltip.consentDecline": "No compartas estadísticas anónimas.",
     "tooltip.copyLogs": "Copia el texto del registro.",
@@ -1611,6 +1674,7 @@
     "tooltip.findRelated": "Busca una pista para enlazar por título o artista.",
     "tooltip.hideSearchCopies": "Oculta los campos que se compararon.",
     "tooltip.hotLoops": "Copia los bucles a un pad de cue libre en el archivo de Rekordbox.",
+    "tooltip.iconFollowsTheme": "Haz que el icono del Dock en Mac, o el de la ventana y la barra de tareas en Windows, coincida con el tema. Activado de forma predeterminada. El icono del Finder y el icono del programa en Windows no cambian.",
     "tooltip.importFile": "Elige un archivo de lista de reproducción para importar.",
     "tooltip.importM3u": "Añade pistas de un archivo de lista a una caja nueva.",
     "tooltip.keepCopy": "Conserva esta copia: {name}. Las demás salen de la biblioteca.",
@@ -1642,6 +1706,8 @@
     "tooltip.operationsRetry": "Intenta leer el registro de operaciones otra vez.",
     "tooltip.overview": "Vista de toda la pista. Haz clic o arrastra para buscar. Izquierda retrocede 5 segundos. Derecha avanza 5 segundos.",
     "tooltip.playRow": "Empieza {name}. Espacio reproduce o pausa.",
+    "tooltip.portableCheck": "Comprueba {name}. Lee sus cajas y lista lo que hay que corregir antes del bolo. No se escribe nada.",
+    "tooltip.portableClose": "Cierra el informe de la unidad portátil.",
     "tooltip.prepareAdd": "Envía esta pista a Preparar.",
     "tooltip.prepareRemove": "Quita esta pista de Preparar.",
     "tooltip.previous": "Reproduce la pista anterior de esta lista.",
@@ -1806,10 +1872,10 @@
     N: "Ñ",
     Y: "Ý"
   };
-  function pseudo(text) {
-    const parts = text.split(/(\{[a-zA-Z0-9_]+\})/);
+  function pseudo(text2) {
+    const parts = text2.split(/(\{[a-zA-Z0-9_]+\})/);
     const body = parts.map((part) => part.startsWith("{") ? part : part.replace(/[a-zA-Z]/g, (ch) => ACCENTS[ch] ?? ch)).join("");
-    const letters = text.replace(/\{[a-zA-Z0-9_]+\}/g, "").length;
+    const letters = text2.replace(/\{[a-zA-Z0-9_]+\}/g, "").length;
     const pad = "~".repeat(Math.max(1, Math.ceil(letters * 0.3)));
     return `[${body} ${pad}]`;
   }
@@ -1823,10 +1889,10 @@
     const exact = count === 0 ? message.zero : void 0;
     return exact ?? message[rules.select(count)] ?? message.other;
   }
-  function fill(text, params, locale) {
-    if (!params) return text;
+  function fill(text2, params, locale) {
+    if (!params) return text2;
     const tag = locale === PSEUDO ? "en" : locale;
-    return text.replace(/\{([a-zA-Z0-9_]+)\}/g, (whole, name) => {
+    return text2.replace(/\{([a-zA-Z0-9_]+)\}/g, (whole, name) => {
       const value = params[name];
       if (value === void 0) return whole;
       return typeof value === "number" ? new Intl.NumberFormat(tag).format(value) : value;
@@ -1850,12 +1916,12 @@
     }
     return Object.keys(params).length ? params : void 0;
   }
-  function codedText(text, code, params) {
+  function codedText(text2, code, params) {
     if (typeof code === "string") {
       const key = `error.${code}`;
       if (hasKey(key)) return t(key, params ?? void 0);
     }
-    return text;
+    return text2;
   }
   function serverMessage(body, fallback) {
     if (typeof body?.code === "string") return codedText(body.error || fallback, body.code, body.params);
@@ -2290,6 +2356,7 @@
     wizardSecondary: spec("tooltip.wizardSecondary"),
     trackList: spec("tooltip.trackList"),
     filesList: spec("tooltip.filesList"),
+    portableClose: spec("tooltip.portableClose"),
     snapshotsList: spec("tooltip.snapshotsList"),
     splitter: spec("tooltip.splitter"),
     previous: spec("tooltip.previous"),
@@ -2314,6 +2381,8 @@
     linkNote: spec("tooltip.linkNote"),
     linkRating: spec("tooltip.linkRating"),
     language: spec("tooltip.language"),
+    colorway: spec("tooltip.colorway"),
+    iconFollowsTheme: spec("tooltip.iconFollowsTheme"),
     libraryGeneration: spec("tooltip.libraryGeneration"),
     linkMutual: spec("tooltip.linkMutual"),
     saveLink: spec("tooltip.saveLink"),
@@ -2435,6 +2504,8 @@
       "settings-close": tips.settingsClose,
       "log-fallback": tips.logFallback,
       "language-select": tips.language,
+      "colorway-select": tips.colorway,
+      "icon-follows-theme": tips.iconFollowsTheme,
       "library-generation": tips.libraryGeneration,
       "merge-trash": tips.mergeTrash,
       "merge-cancel": tips.mergeCancel,
@@ -2446,6 +2517,7 @@
       "files-cancel": tips.filesCancel,
       "files-review": tips.filesReview,
       "files-confirm": tips.filesConfirm,
+      "portable-close": tips.portableClose,
       "quick-open-query": tips.quickOpen,
       "quick-open-retry": tips.quickOpenRetry,
       "quick-open-close": tips.quickOpenClose,
@@ -2517,6 +2589,9 @@
   }
   function openFile(name) {
     return spec("tooltip.openFile", { name });
+  }
+  function portableCheck(name) {
+    return spec("tooltip.portableCheck", { name });
   }
   function missingDrive(name) {
     return spec("tooltip.missingDrive", { name });
@@ -2608,20 +2683,20 @@
   }
   function applyStaticTooltips(root = document) {
     root.querySelectorAll("[id]").forEach((node) => {
-      const text = staticTip(node.id);
-      if (text) setTooltip(node, text);
+      const text2 = staticTip(node.id);
+      if (text2) setTooltip(node, text2);
     });
     root.querySelectorAll("[data-view]").forEach((node) => {
-      const text = viewTip(node.dataset.view ?? "");
-      if (text) setTooltip(node, text);
+      const text2 = viewTip(node.dataset.view ?? "");
+      if (text2) setTooltip(node, text2);
     });
     root.querySelectorAll("[data-sort]").forEach((node) => {
       const label = node.textContent?.trim() || node.dataset.sort || "";
       setTooltip(node, sortTip(node.dataset.sort ?? "", label));
     });
     root.querySelectorAll("[data-crate-sort]").forEach((node) => {
-      const text = crateSortTip(node.dataset.crateSort ?? "");
-      if (text) setTooltip(node, text);
+      const text2 = crateSortTip(node.dataset.crateSort ?? "");
+      if (text2) setTooltip(node, text2);
     });
   }
   function refreshTooltips(root = document) {
@@ -2681,12 +2756,12 @@
     timer = window.setTimeout(() => show(target), delay);
   }
   function show(target) {
-    const text = target.dataset.tooltip?.trim() ?? "";
-    if (!text) return;
+    const text2 = target.dataset.tooltip?.trim() ?? "";
+    if (!text2) return;
     if (current && current !== target) restoreDescribedBy(current);
     current = target;
     const tip = ensureTip();
-    tip.textContent = text;
+    tip.textContent = text2;
     openTip(tip);
     place(target, tip);
     addDescribedBy(target);
@@ -2815,7 +2890,7 @@
     });
   }
   async function loadGigCheck(keepStep = false) {
-    const token = ++state.gigToken;
+    const token2 = ++state.gigToken;
     if (!keepStep) stepIndex = 0;
     beginBusy();
     let settle = "none";
@@ -2824,9 +2899,9 @@
       const response = await fetch(
         `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
       );
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       const payload = await readJSON(response).catch(() => null);
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       if (!response.ok || payload === null) {
         failStatus(serverMessage(payload, t("gig.unreadable")));
         settle = "retry";
@@ -2838,11 +2913,11 @@
       renderGigReport(payload);
       settle = "heading";
     } catch {
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       failStatus(t("gig.unreachable"));
       settle = "retry";
     } finally {
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       endBusy();
       if (settle === "retry") el("gig-refresh").focus();
       if (settle === "heading") focusHeading();
@@ -2914,11 +2989,11 @@
     step.textContent = t("gig.stepOf", { index: index + 1, total: STEP_COUNT });
     return step;
   }
-  function heading(text) {
+  function heading(text2) {
     const title2 = document.createElement("h3");
     title2.id = "gig-step-heading";
     title2.tabIndex = -1;
-    title2.textContent = text;
+    title2.textContent = text2;
     return title2;
   }
   function linesFor(payload, index) {
@@ -2973,10 +3048,10 @@
     }
     if (!any) parent.append(noteLine(t(STEPS[STEP_COUNT - 1].empty)));
   }
-  function noteLine(text) {
+  function noteLine(text2) {
     const line = document.createElement("p");
     line.className = "gig-note";
-    line.textContent = text;
+    line.textContent = text2;
     return line;
   }
   function detailsGroup(label, lines) {
@@ -3002,9 +3077,9 @@
     }
     return details;
   }
-  function item(text) {
+  function item(text2) {
     const row = document.createElement("li");
-    row.textContent = text;
+    row.textContent = text2;
     return row;
   }
   function actions(primary) {
@@ -3049,6 +3124,200 @@
     if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
     fragment.append(actions(null));
     return fragment;
+  }
+
+  // src/portable.ts
+  var FINDING_CAP = 100;
+  var KIND_KEY = {
+    off_drive: "portable.kindOffDrive",
+    missing: "portable.kindMissing",
+    smart_crate: "portable.kindSmartCrate",
+    unsafe_name: "portable.kindUnsafeName",
+    path_length: "portable.kindPathLength",
+    file_size: "portable.kindFileSize"
+  };
+  var token = 0;
+  var latest2 = null;
+  var opener = null;
+  var wired = false;
+  function portableDriveRoot(path) {
+    const trimmed = path.trim();
+    if (!trimmed) return "";
+    const unified = trimmed.replace(/\\/g, "/");
+    const marker = unified.search(/\/_Serato_(\/|$)/i);
+    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
+    const volumes = /^\/Volumes\/[^/]+/.exec(base);
+    if (volumes) return volumes[0];
+    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
+    if (media2) return media2[0];
+    const mnt = /^\/mnt\/[^/]+/.exec(base);
+    if (mnt) return mnt[0];
+    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
+    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
+    const win = /^[A-Za-z]:/.exec(trimmed);
+    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
+    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
+  }
+  function parseDriveReport(value) {
+    if (!isRecord(value)) return null;
+    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
+    if (typeof value.summary !== "string") return null;
+    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
+    const findings = [];
+    for (const item2 of value.findings) {
+      if (!isRecord(item2) || typeof item2.kind !== "string" || typeof item2.fix !== "string") return null;
+      findings.push({
+        kind: item2.kind,
+        crate: text(item2.crate),
+        track: text(item2.track),
+        path: text(item2.path),
+        found: text(item2.found),
+        fix: item2.fix
+      });
+    }
+    const errors = [];
+    for (const item2 of value.errors) {
+      if (!isRecord(item2) || typeof item2.message !== "string") return null;
+      errors.push({ crate: text(item2.crate), message: item2.message });
+    }
+    return {
+      drive: text(value.drive),
+      name: text(value.name),
+      ready: value.ready,
+      missing_drive: value.missing_drive,
+      summary: value.summary,
+      findings,
+      errors
+    };
+  }
+  function portableDriveButton(name, path) {
+    const button2 = buttonEl(portableCheck(name));
+    button2.className = "files-portable";
+    button2.dataset.portableName = name;
+    button2.textContent = t("portable.check");
+    button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    button2.addEventListener("click", (event) => {
+      event.stopPropagation();
+      void openPortableCheck(path, button2);
+    });
+    return button2;
+  }
+  async function openPortableCheck(path, trigger) {
+    wirePortable();
+    const drive = portableDriveRoot(path);
+    const mine = ++token;
+    opener = trigger ?? null;
+    const dialog = el("portable-dialog");
+    latest2 = null;
+    el("portable-verdict").textContent = "";
+    el("portable-summary").textContent = "";
+    el("portable-findings").replaceChildren();
+    el("portable-status").textContent = t("portable.checking");
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    if (!drive) {
+      el("portable-status").textContent = t("portable.unreadable");
+      return;
+    }
+    try {
+      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
+      if (mine !== token) return;
+      const body = await readJSON(response).catch(() => null);
+      if (mine !== token) return;
+      if (!response.ok) {
+        fail(serverMessage(errorBody(body), t("portable.unreadable")));
+        return;
+      }
+      const report = parseDriveReport(body);
+      if (!report) {
+        fail(t("portable.unreadable"));
+        return;
+      }
+      latest2 = report;
+      el("portable-status").textContent = "";
+      renderPortableReport(report);
+    } catch {
+      if (mine !== token) return;
+      fail(t("portable.unreachable"));
+    }
+  }
+  function repaintPortable() {
+    for (const button2 of document.querySelectorAll(".files-portable")) {
+      button2.textContent = t("portable.check");
+      const name = button2.dataset.portableName ?? "";
+      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    }
+    if (latest2) renderPortableReport(latest2);
+  }
+  function wirePortable() {
+    if (wired) return;
+    wired = true;
+    el("portable-close").addEventListener("click", () => {
+      el("portable-dialog").close();
+      if (opener?.isConnected) opener.focus();
+    });
+  }
+  function renderPortableReport(report) {
+    latest2 = report;
+    const verdict = el("portable-verdict");
+    if (report.missing_drive) verdict.textContent = t("portable.missing");
+    else if (report.ready) verdict.textContent = t("portable.ready");
+    else verdict.textContent = t("portable.notReady");
+    el("portable-summary").textContent = report.summary;
+    const list = el("portable-findings");
+    const items = [];
+    const shown = report.findings.slice(0, FINDING_CAP);
+    for (const finding of shown) {
+      const row = document.createElement("li");
+      const kind = document.createElement("span");
+      kind.className = "portable-kind";
+      kind.textContent = kindLabel(finding.kind);
+      row.append(kind);
+      if (finding.fix) {
+        row.append(document.createTextNode(" "));
+        const fix = document.createElement("span");
+        fix.className = "portable-fix";
+        fix.textContent = finding.fix;
+        row.append(fix);
+      }
+      items.push(row);
+    }
+    for (const error2 of report.errors) {
+      const row = document.createElement("li");
+      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
+      items.push(row);
+    }
+    const hidden = report.findings.length - shown.length;
+    if (hidden > 0) {
+      const row = document.createElement("li");
+      row.textContent = t("files.andMore", { count: hidden });
+      items.push(row);
+    }
+    list.replaceChildren(...items);
+  }
+  function kindLabel(kind) {
+    const key = KIND_KEY[kind];
+    return key ? t(key) : kind;
+  }
+  function fail(message) {
+    latest2 = null;
+    el("portable-verdict").textContent = "";
+    el("portable-summary").textContent = "";
+    el("portable-findings").replaceChildren();
+    el("portable-status").textContent = message;
+  }
+  function isRecord(value) {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+  }
+  function text(value) {
+    return typeof value === "string" ? value : "";
+  }
+  function errorBody(value) {
+    if (!isRecord(value)) return null;
+    const body = {};
+    if (typeof value.error === "string") body.error = value.error;
+    if (typeof value.code === "string") body.code = value.code;
+    if (body.error === void 0 && body.code === void 0) return null;
+    return body;
   }
 
   // src/restore.ts
@@ -3192,8 +3461,8 @@
     const status = el("operations-status");
     const list = el("operations-list");
     list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest2 = state.operations[state.operations.length - 1];
-    const failed = latest2?.result === "rollback_failed";
+    const latest3 = state.operations[state.operations.length - 1];
+    const failed = latest3?.result === "rollback_failed";
     alert.hidden = !failed;
     alert.textContent = failed ? t("operations.rollbackFailed") : "";
     list.replaceChildren();
@@ -4300,9 +4569,9 @@
         const buffer = await response.arrayBuffer();
         const parsed = parseSwf1(buffer);
         if (parsed) return parsed;
-        const text = new TextDecoder().decode(buffer);
+        const text2 = new TextDecoder().decode(buffer);
         try {
-          const payload = JSON.parse(text);
+          const payload = JSON.parse(text2);
           if (payload && typeof payload === "object" && payload.available === false) {
             return "unavailable";
           }
@@ -4493,10 +4762,10 @@
       return this.parsed.durationMs / 1e3;
     }
   };
-  function button(label, text, tooltip) {
+  function button(label, text2, tooltip) {
     const element = buttonEl(tooltip);
     element.className = "waveform-zoom-button";
-    element.textContent = text;
+    element.textContent = text2;
     element.setAttribute("aria-label", label);
     return element;
   }
@@ -4522,7 +4791,7 @@
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
   var listeners = /* @__PURE__ */ new Set();
-  var wired = /* @__PURE__ */ new WeakSet();
+  var wired2 = /* @__PURE__ */ new WeakSet();
   var CUE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
   var media = null;
   var trackId = null;
@@ -4715,8 +4984,8 @@
     return audio;
   }
   function wire(element) {
-    if (wired.has(element)) return;
-    wired.add(element);
+    if (wired2.has(element)) return;
+    wired2.add(element);
     element.addEventListener("play", () => {
       playing = true;
       emit();
@@ -4780,18 +5049,18 @@
     return true;
   }
   function loadCues(id) {
-    const token = ++cueToken;
+    const token2 = ++cueToken;
     cues = [];
     waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
     void readCues(id).then(
       (found) => {
-        if (token !== cueToken || trackId !== id) return;
+        if (token2 !== cueToken || trackId !== id) return;
         cues = found.cues;
         waveform?.setMarkers(id, found);
         emit();
       },
       () => {
-        if (token !== cueToken || trackId !== id) return;
+        if (token2 !== cueToken || trackId !== id) return;
         cues = [];
         waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
         emit();
@@ -5647,7 +5916,7 @@
     state.selectedId = id;
     syncMergeButton();
     paintRows();
-    const token = ++state.request;
+    const token2 = ++state.request;
     const pending = document.createElement("p");
     pending.className = "detail-empty";
     pending.textContent = t("detail.reading");
@@ -5656,11 +5925,11 @@
       const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
       const payload = await readJSONOr(response, {});
       if (!response.ok) throw new Error(serverMessage(payload, t("detail.readFailed", { status: String(response.status) })));
-      if (token !== state.request) return;
+      if (token2 !== state.request) return;
       if (payload.serato) applyStatus(payload.serato);
       renderDetail(payload);
     } catch (error2) {
-      if (token !== state.request) return;
+      if (token2 !== state.request) return;
       const failure = document.createElement("p");
       failure.className = "detail-error";
       failure.textContent = failureOf(error2).message;
@@ -5696,10 +5965,10 @@
       const name = document.createElement("div");
       name.className = "label";
       name.textContent = label;
-      const text = document.createElement("div");
-      text.className = "value";
-      text.textContent = value;
-      row.append(name, text);
+      const text2 = document.createElement("div");
+      text2.className = "value";
+      text2.textContent = value;
+      row.append(name, text2);
       body.append(row);
     }
     if (entry.asset_id) {
@@ -6062,17 +6331,17 @@
     return section;
   }
   async function loadRelated(track, section, writable, query) {
-    const token = ++relatedRequest;
+    const token2 = ++relatedRequest;
     const path = track.resolved_path || track.edit?.portable_id || "";
     const params = new URLSearchParams({ path, space: state.space });
     try {
       const response = await fetch(`/api/related?${params}`);
       const payload = await readJSONOr(response, {});
-      if (token !== relatedRequest || !section.isConnected) return;
+      if (token2 !== relatedRequest || !section.isConnected) return;
       if (!response.ok) throw new Error(serverMessage(payload, t("related.loadFailed")));
       renderRelated(track, section, writable, payload, query);
     } catch (error2) {
-      if (token !== relatedRequest || !section.isConnected) return;
+      if (token2 !== relatedRequest || !section.isConnected) return;
       section.setAttribute("aria-busy", "false");
       const status = section.querySelector("[role=status]");
       if (status) status.textContent = failureOf(error2).message;
@@ -6223,10 +6492,10 @@
     const ratingLabel = document.createElement("label");
     ratingLabel.append(document.createTextNode(t("related.linkRating")));
     const rating = selectEl(tips.linkRating);
-    for (const [value, text] of [["", t("rating.none")], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]) {
+    for (const [value, text2] of [["", t("rating.none")], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]) {
       const option = document.createElement("option");
       option.value = value;
-      option.textContent = text;
+      option.textContent = text2;
       rating.append(option);
     }
     ratingLabel.append(rating);
@@ -6375,9 +6644,9 @@
     const detail = lastDetail;
     if (detail && detail.id === state.selectedId && el("detail").querySelector(".detail-body")) renderDetail(detail);
   }
-  function setNotice(text) {
-    el("notice").textContent = text || "";
-    el("notice").hidden = !text;
+  function setNotice(text2) {
+    el("notice").textContent = text2 || "";
+    el("notice").hidden = !text2;
   }
   function statusLine(info) {
     if (info?.code) return codedText(info.message || t("status.library"), info.code, messageParams(info.params));
@@ -6546,10 +6815,10 @@
       else setNotice(failureOf(error2).message);
     }
   }
-  async function saveRules(id, text) {
+  async function saveRules(id, text2) {
     let rules;
     try {
-      rules = JSON.parse(text);
+      rules = JSON.parse(text2);
     } catch {
       setNotice(t("error.smart_rules_json"));
       return;
@@ -6639,11 +6908,11 @@
     }
   }
   async function importPlaylist(file) {
-    const text = await file.text();
+    const text2 = await file.text();
     const name = file.name.replace(/\.m3u8?$/i, "") || t("import.defaultName");
     const parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
     try {
-      const result = await postJSON("/api/import.m3u", { space: state.space, parent, name, text });
+      const result = await postJSON("/api/import.m3u", { space: state.space, parent, name, text: text2 });
       const missed = result.unmatched_count ? ` ${t("import.unmatched", { count: Number(result.unmatched_count) })}` : "";
       setNotice(`${t("import.added", { count: Number(result.added) || 0 })}${missed}${result.warning ? ` ${result.warning}` : ""}`);
       await loadLibrary();
@@ -6801,7 +7070,7 @@
     const elsewhere = options.elsewhere === true;
     const refresh = options.refresh === true;
     const atRoots = path === "" && !elsewhere;
-    const token = ++filesRequest;
+    const token2 = ++filesRequest;
     state.filesLoading = true;
     state.filesError = "";
     if (!options.keepMessage) state.filesMessage = "";
@@ -6819,7 +7088,7 @@
     renderFiles();
     if (refresh || atRoots) {
       const rootsPayload = await fetchLibraryRoots(refresh);
-      if (token !== filesRequest) return;
+      if (token2 !== filesRequest) return;
       state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
     }
     if (atRoots) {
@@ -6842,7 +7111,7 @@
     const query = params.size ? `?${params.toString()}` : "";
     const response = await fetch(`/api/files${query}`);
     const payload = await readJSONOr(response, {});
-    if (token !== filesRequest) return;
+    if (token2 !== filesRequest) return;
     if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
     state.filesPath = payload.path || "";
     state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
@@ -6858,7 +7127,7 @@
     renderFiles();
   }
   async function searchFiles(query) {
-    const token = ++filesRequest;
+    const token2 = ++filesRequest;
     const scope = state.filesAtRoots ? "" : state.filesPath;
     const elsewhere = state.filesElsewhere && !state.filesAtRoots;
     state.filesLoading = true;
@@ -6872,7 +7141,7 @@
     if (elsewhere) params.set("elsewhere", "1");
     const response = await fetch(`/api/files?${params.toString()}`);
     const payload = await readJSONOr(response, {});
-    if (token !== filesRequest) return;
+    if (token2 !== filesRequest) return;
     if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
     const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
     state.filesEntries = entries;
@@ -6975,7 +7244,9 @@
           path: root.path,
           detail: root.detail,
           kind: root.kind === "serato_drive" ? "drive" : "folder",
-          missing: root.missing
+          missing: root.missing,
+          removable: root.removable,
+          serato: root.serato
         };
         return entry;
       });
@@ -7052,10 +7323,10 @@
     list.append(spacer2);
     return spacer2;
   }
-  function fileNote(text) {
+  function fileNote(text2) {
     const note = document.createElement("p");
     note.className = "files-empty";
-    note.textContent = text;
+    note.textContent = text2;
     return note;
   }
   function rootsEmpty() {
@@ -7181,6 +7452,7 @@
         });
       }
       row.append(button2);
+      if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
       return row;
     }
     if (entry.kind !== "file") {
@@ -7451,6 +7723,11 @@
   var mergeLoading = false;
   var consentSettled = false;
   var privacySync = false;
+  var appearanceSync = false;
+  var COLORWAYS = ["motown", "deep-house", "daisy-age"];
+  function isColorway(value) {
+    return typeof value === "string" && COLORWAYS.includes(value);
+  }
   var filesPreview = null;
   var filesAction = "";
   var filesTrigger = null;
@@ -7479,7 +7756,7 @@
   async function saveRekordboxExport() {
     const key = el("rekordbox-key").value;
     const notation = key === "camelot" || key === "classical" ? key : "asis";
-    const token = ++rekordboxToken;
+    const token2 = ++rekordboxToken;
     try {
       const payload = await postJSON("/api/settings", {
         rekordbox: {
@@ -7488,7 +7765,7 @@
           key_notation: notation
         }
       });
-      if (token === rekordboxToken) applyRekordboxExport(payload);
+      if (token2 === rekordboxToken) applyRekordboxExport(payload);
     } catch {
     }
   }
@@ -7534,9 +7811,9 @@
     const list = document.createElement("ul");
     list.className = "merge-preview";
     const added = preview.crates_added || [];
-    const item2 = (text) => {
+    const item2 = (text2) => {
       const line = document.createElement("li");
-      line.textContent = text;
+      line.textContent = text2;
       list.append(line);
     };
     if (added.length) {
@@ -7601,7 +7878,7 @@
   }
   async function refreshMergePreview() {
     const keepId = selectedMergeKeepId();
-    const token = ++mergeToken;
+    const token2 = ++mergeToken;
     mergeLoading = false;
     mergePreview = null;
     el("merge-status").textContent = "";
@@ -7614,7 +7891,7 @@
         keep_id: keepId,
         preview: true
       });
-      if (token !== mergeToken) return;
+      if (token2 !== mergeToken) return;
       mergePreview = preview;
       renderMergePreview(preview);
       if (preview.writable === false) {
@@ -7622,7 +7899,7 @@
       }
       syncTrashChoice();
     } catch (error2) {
-      if (token !== mergeToken) return;
+      if (token2 !== mergeToken) return;
       mergePreview = null;
       el("merge-preview").replaceChildren();
       const failed = document.createElement("p");
@@ -7650,7 +7927,7 @@
       input.addEventListener("change", () => {
         if (input.checked) refreshMergePreview().catch((error2) => setNotice(failureOf(error2).message));
       });
-      const text = document.createElement("span");
+      const text2 = document.createElement("span");
       const name = document.createElement("span");
       name.textContent = track.file || t("track.numbered", { id: String(id) });
       const meta = document.createElement("span");
@@ -7661,8 +7938,8 @@
       if (crates.length) parts.push(crates.join(", "));
       if (track.missing) parts.push(t("track.missingBadge"));
       meta.textContent = parts.join(" · ");
-      text.append(name, meta);
-      label.append(input, text);
+      text2.append(name, meta);
+      label.append(input, text2);
       el("merge-choices").append(label);
     }
   }
@@ -7731,6 +8008,64 @@
   function systemLanguages() {
     return Array.isArray(navigator.languages) && navigator.languages.length ? [...navigator.languages] : [navigator.language || "en"];
   }
+  function applyAppearance(payload) {
+    const hasColorway = "colorway" in payload;
+    const hasFollow = "icon_follows_theme" in payload;
+    const hasHref = "icon_href" in payload;
+    if (!hasColorway && !hasFollow && !hasHref) return;
+    const colorway = isColorway(payload.colorway) ? payload.colorway : el("colorway-select").value;
+    const known = isColorway(colorway) ? colorway : "motown";
+    const follow = hasFollow ? payload.icon_follows_theme !== false : el("icon-follows-theme").checked;
+    appearanceSync = true;
+    if (hasColorway) el("colorway-select").value = isColorway(payload.colorway) ? payload.colorway : "motown";
+    if (hasFollow) el("icon-follows-theme").checked = follow;
+    appearanceSync = false;
+    const shown = isColorway(el("colorway-select").value) ? el("colorway-select").value : known;
+    document.documentElement.dataset.colorway = shown;
+    const preview = el("colorway-preview");
+    preview.src = `/img/icons/placeholder-${shown}.svg`;
+    preview.alt = t("settings.colorwayPreview");
+    const href = hasHref && typeof payload.icon_href === "string" ? payload.icon_href : follow ? `/img/icons/placeholder-${shown}.svg` : "/img/icons/default.svg";
+    const icon = document.getElementById("app-icon");
+    if (icon instanceof HTMLLinkElement) icon.href = href;
+  }
+  function iconStatusText(icon) {
+    if (!icon) return t("settings.iconSaved");
+    if (!icon.follows_theme) return t("settings.iconDefault");
+    if (icon.applied && icon.target === "dock") return t("settings.iconAppliedDock");
+    if (icon.applied && icon.target === "window") return t("settings.iconAppliedWindow");
+    if (!icon.applied && (icon.reason === "unsupported" || icon.reason === "no-window")) {
+      return t("settings.iconUnsupported");
+    }
+    return t("settings.iconSaved");
+  }
+  async function saveColorway() {
+    if (appearanceSync) return;
+    const value = el("colorway-select").value;
+    if (!isColorway(value)) return;
+    document.documentElement.dataset.colorway = value;
+    el("colorway-preview").src = `/img/icons/placeholder-${value}.svg`;
+    el("icon-status").textContent = "";
+    try {
+      const payload = await postJSON("/api/settings", { colorway: value });
+      applyAppearance(payload);
+      el("icon-status").textContent = iconStatusText(payload.icon);
+    } catch {
+      el("icon-status").textContent = t("settings.iconNotSaved");
+    }
+  }
+  async function saveIconFollow() {
+    if (appearanceSync) return;
+    const follow = el("icon-follows-theme").checked;
+    el("icon-status").textContent = "";
+    try {
+      const payload = await postJSON("/api/settings", { icon_follows_theme: follow });
+      applyAppearance(payload);
+      el("icon-status").textContent = iconStatusText(payload.icon);
+    } catch {
+      el("icon-status").textContent = t("settings.iconNotSaved");
+    }
+  }
   async function saveLanguage() {
     const value = el("language-select").value;
     const saved = isLanguage(value) ? value : null;
@@ -7744,6 +8079,7 @@
   }
   function repaintDialogs() {
     el("telemetry-note").textContent = telemetryNoteText();
+    el("colorway-preview").alt = t("settings.colorwayPreview");
     if (el("merge-dialog").open) {
       renderMergePreview(mergeLoading ? null : mergePreview);
       syncTrashChoice();
@@ -7802,14 +8138,15 @@
     return true;
   }
   async function loadPrivacy() {
-    const token = rekordboxToken;
+    const token2 = rekordboxToken;
     const response = await fetch("/api/settings");
     const payload = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(payload, t("sharing.loadFailed")));
     applyPrivacy(payload);
     applyLanguage(payload);
     applyLayout(payload);
-    if (token === rekordboxToken) applyRekordboxExport(payload);
+    applyAppearance(payload);
+    if (token2 === rekordboxToken) applyRekordboxExport(payload);
     if (!state.wizardComplete && openWizard(false, el("search"))) return;
     if (payload.needs_consent_prompt) showConsent();
   }
@@ -8011,6 +8348,12 @@
     el("language-select").addEventListener("change", () => {
       void saveLanguage();
     });
+    el("colorway-select").addEventListener("change", () => {
+      void saveColorway();
+    });
+    el("icon-follows-theme").addEventListener("change", () => {
+      void saveIconFollow();
+    });
     el("settings-close").addEventListener("click", () => {
       el("settings-dialog").close();
     });
@@ -8053,15 +8396,15 @@
         const response = await fetch("/api/logs");
         const payload = await readJSONOr(response, {});
         if (!response.ok) throw new Error(serverMessage(payload, t("logs.copyFailed")));
-        const text = payload.text || "";
-        if (!text) {
+        const text2 = payload.text || "";
+        if (!text2) {
           el("settings-status").textContent = t("logs.empty");
           return;
         }
         let copied = false;
         if (navigator.clipboard && window.isSecureContext) {
           try {
-            await navigator.clipboard.writeText(text);
+            await navigator.clipboard.writeText(text2);
             copied = true;
           } catch (error2) {
             copied = false;
@@ -8073,7 +8416,7 @@
           return;
         }
         el("log-fallback").hidden = false;
-        el("log-fallback").value = text;
+        el("log-fallback").value = text2;
         el("log-fallback").focus();
         el("log-fallback").select();
         el("settings-status").textContent = t("logs.copyManual");
@@ -8185,23 +8528,23 @@
   var BOUNDARY = /[ ._/\-\\]/;
   function fuzzyScore(needle, haystack) {
     const query = needle.toLocaleLowerCase();
-    const text = haystack.toLocaleLowerCase();
+    const text2 = haystack.toLocaleLowerCase();
     if (!query) return null;
     let score = 0;
     let previous2 = -2;
     let from = 0;
     for (const letter of query) {
-      const found = text.indexOf(letter, from);
+      const found = text2.indexOf(letter, from);
       if (found < 0) return null;
       score += 8;
       if (found === previous2 + 1) score += 16;
-      if (found === 0 || BOUNDARY.test(text.charAt(found - 1))) score += 12;
+      if (found === 0 || BOUNDARY.test(text2.charAt(found - 1))) score += 12;
       previous2 = found;
       from = found + 1;
     }
-    if (text.includes(query)) score += 40;
-    if (text.startsWith(query)) score += 30;
-    score -= Math.floor(Math.max(0, text.length - query.length) / 4);
+    if (text2.includes(query)) score += 40;
+    if (text2.startsWith(query)) score += 30;
+    score -= Math.floor(Math.max(0, text2.length - query.length) / 4);
     return score;
   }
   function scoreQuery(query, name, parentName = "") {
@@ -8327,12 +8670,12 @@
     }, QUICK_OPEN_MS);
   }
   async function loadFiles(query, tracks) {
-    const token = ++requestToken;
+    const token2 = ++requestToken;
     phase = "loading";
     try {
       const response = await fetch(`/api/files?q=${encodeURIComponent(query)}`);
       const payload = await readJSONOr(response, {});
-      if (token !== requestToken) return;
+      if (token2 !== requestToken) return;
       if (!response.ok) throw new Error(payload.error || t("quickOpen.fileError"));
       const files = fileHits(payload);
       hits = mergeHits(tracks, files);
@@ -8341,18 +8684,18 @@
       if (active >= hits.length) active = Math.max(0, hits.length - 1);
       paint();
     } catch {
-      if (token !== requestToken) return;
+      if (token2 !== requestToken) return;
       hits = tracks;
       phase = "error";
       paint();
     }
   }
   function trackHits(query) {
-    const text = query.trim();
-    if (!text) return [];
+    const text2 = query.trim();
+    if (!text2) return [];
     const found = [];
     for (const track of state.tracks) {
-      const hit = scoreTrack(track, text);
+      const hit = scoreTrack(track, text2);
       if (hit) found.push(hit);
     }
     found.sort(byScore);
@@ -9033,6 +9376,7 @@
     repaintViews();
     if (state.mode === "snapshots") renderSnapshots();
     if (state.mode === "gig") repaintGig();
+    repaintPortable();
     repaintSnapshotPlan();
     repaintDialogs();
     repaintCheatSheet();
@@ -9089,6 +9433,7 @@
   wireGigCheck(() => {
     setMode("crates");
   });
+  wirePortable();
   wireLayout();
   wireVersion();
   void loadVersion();

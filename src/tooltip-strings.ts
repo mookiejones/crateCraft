@@ -94,6 +94,7 @@ export const tips = {
   wizardSecondary: spec("tooltip.wizardSecondary"),
   trackList: spec("tooltip.trackList"),
   filesList: spec("tooltip.filesList"),
+  portableClose: spec("tooltip.portableClose"),
   snapshotsList: spec("tooltip.snapshotsList"),
   splitter: spec("tooltip.splitter"),
   previous: spec("tooltip.previous"),
@@ -118,6 +119,8 @@ export const tips = {
   linkNote: spec("tooltip.linkNote"),
   linkRating: spec("tooltip.linkRating"),
   language: spec("tooltip.language"),
+  colorway: spec("tooltip.colorway"),
+  iconFollowsTheme: spec("tooltip.iconFollowsTheme"),
   libraryGeneration: spec("tooltip.libraryGeneration"),
   linkMutual: spec("tooltip.linkMutual"),
   saveLink: spec("tooltip.saveLink"),
@@ -272,6 +275,8 @@ export function staticTip(id: string): TipSpec | undefined {
     "settings-close": tips.settingsClose,
     "log-fallback": tips.logFallback,
     "language-select": tips.language,
+    "colorway-select": tips.colorway,
+    "icon-follows-theme": tips.iconFollowsTheme,
     "library-generation": tips.libraryGeneration,
     "merge-trash": tips.mergeTrash,
     "merge-cancel": tips.mergeCancel,
@@ -283,6 +288,7 @@ export function staticTip(id: string): TipSpec | undefined {
     "files-cancel": tips.filesCancel,
     "files-review": tips.filesReview,
     "files-confirm": tips.filesConfirm,
+    "portable-close": tips.portableClose,
     "quick-open-query": tips.quickOpen,
     "quick-open-retry": tips.quickOpenRetry,
     "quick-open-close": tips.quickOpenClose,
@@ -371,6 +377,10 @@ export function openCrumb(name: string): TipSpec {
 
 export function openFile(name: string): TipSpec {
   return spec("tooltip.openFile", { name });
+}
+
+export function portableCheck(name: string): TipSpec {
+  return spec("tooltip.portableCheck", { name });
 }
 
 export function missingDrive(name: string): TipSpec {

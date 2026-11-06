@@ -86,6 +86,24 @@ textarea:focus-visible,
   overflow: hidden;
   color: var(--manila);
   padding: 22px var(--space-3) var(--space-4);
+  box-shadow: inset 4px 0 0 var(--colorway-accent);
+}
+
+html[data-colorway="motown"] { --colorway-accent: var(--colorway-motown-accent); }
+html[data-colorway="deep-house"] { --colorway-accent: var(--colorway-deep-house-accent); }
+html[data-colorway="daisy-age"] { --colorway-accent: var(--colorway-daisy-age-accent); }
+
+.colorway-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.colorway-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: var(--color-bg);
 }
 
 .brand h1 {
@@ -1613,7 +1631,8 @@ dialog .settings-field select {
 .files-kind:focus-visible,
 .files-file input:focus-visible,
 .files-crumb:focus-visible,
-.files-elsewhere:focus-visible {
+.files-elsewhere:focus-visible,
+.files-portable:focus-visible {
   outline: 2px solid var(--cadmium);
   outline-offset: -2px;
 }
@@ -1631,7 +1650,8 @@ dialog .settings-field select {
 
 .files-open,
 .files-file,
-.files-kind {
+.files-kind,
+.files-portable {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -1640,6 +1660,12 @@ dialog .settings-field select {
   flex: 1;
   text-align: left;
   overflow: hidden;
+}
+
+.files-portable {
+  flex: none;
+  padding: 0 10px;
+  white-space: nowrap;
 }
 
 .files-open span,
@@ -1666,6 +1692,22 @@ dialog .settings-field select {
   color: var(--quiet);
   font-size: 13px;
   font-weight: 400;
+}
+
+#portable-findings {
+  margin: var(--space-3) 0 0;
+  padding-left: 1.2em;
+  max-height: 40vh;
+  overflow: auto;
+}
+
+#portable-verdict {
+  margin-top: var(--space-3);
+  font-weight: 600;
+}
+
+.portable-kind {
+  font-weight: 600;
 }
 
 .files-badge,
