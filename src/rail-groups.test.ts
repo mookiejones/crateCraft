@@ -3,7 +3,7 @@
  *
  * The markup is index.html. Group labels are headings. Each tab still
  * has a tooltip. The view ids stay crates, history, files, missing,
- * duplicates, stems, snapshots, and gig.
+ * duplicates, stems, scan, snapshots, and gig.
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
@@ -28,11 +28,12 @@ describe("rail groups", () => {
     );
     expect(groups).toEqual([
       ["crates", "history", "files"],
-      ["missing", "duplicates", "stems"],
+      ["missing", "duplicates", "stems", "scan"],
       ["snapshots"],
       ["gig"],
     ]);
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Missing files");
+    expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Damaged files");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Before a gig");
   });
@@ -53,6 +54,7 @@ describe("rail groups", () => {
     const labels = [...document.querySelectorAll(".view-group-label")].map((node) => node.textContent);
     expect(labels).toEqual(["Biblioteca", "Salud de la biblioteca"]);
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Archivos no encontrados");
+    expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Archivos dañados");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Copias de seguridad");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Antes del bolo");
   });

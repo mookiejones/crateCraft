@@ -18,7 +18,7 @@ The long guide is published at <https://mookiejones.github.io/serato-library-man
 
 **Library** sits at the top of the sidebar. The status line under it starts as **Checking Serato**.
 
-The rail groups are **Library** (Crates, History, Files), **Library health** (Missing files, Duplicates, Stems), **Backups**, and **Before a gig**.
+The rail groups are **Library** (Crates, History, Files), **Library health** (Missing files, Duplicates, Stems, Damaged files), **Backups**, and **Before a gig**.
 
 Double-click a track to play it. The bar under the list has pause, seek, and volume. Playback does not change the file.
 

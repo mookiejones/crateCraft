@@ -66,6 +66,12 @@ export interface ElementIds {
   "gig-status": HTMLParagraphElement;
   "gig-report": HTMLDivElement;
   "gig-refresh": HTMLButtonElement;
+  "scan-panel": HTMLElement;
+  "scan-scope": HTMLParagraphElement;
+  "scan-status": HTMLParagraphElement;
+  "scan-report": HTMLDivElement;
+  "scan-quick": HTMLButtonElement;
+  "scan-full": HTMLButtonElement;
   "crate-search": HTMLInputElement;
   reload: HTMLButtonElement;
   "export-m3u": HTMLButtonElement;

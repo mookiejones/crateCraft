@@ -441,6 +441,7 @@
     "mode.files": "Files on disk. Cue points stay in the audio file. Crates follow the path.",
     "mode.gig": "Read-only. This check does not change the library.",
     "mode.missing": "Tracks Serato has marked missing in this space.",
+    "mode.scan": "Read-only. This check does not change the library.",
     "mode.snapshots": "Hash-checked copies of the library, crates, and Serato frames inside audio files. Audio itself is not copied.",
     "mode.stems": "Tracks with a stems analysis state.",
     "operations.action.crateAdd": "Add to crate",
@@ -645,6 +646,39 @@
     "rules.or": "or",
     "rules.save": "Save rules",
     "rules.saved": "Rules saved.",
+    "scan.checkFull": "Full decode",
+    "scan.checkQuick": "Quick check",
+    "scan.checking": "Checking files…",
+    "scan.decodeErrorDetail": "Decode stopped at {detail}s",
+    "scan.empty": "No damaged files in this check.",
+    "scan.heading": "Damaged files",
+    "scan.intro": "Quick check reads the start of each file. Full decode needs a crate because it can take minutes.",
+    "scan.notFound": {
+      one: "{count} missing track was skipped. See Missing files.",
+      other: "{count} missing tracks were skipped. See Missing files."
+    },
+    "scan.problem.decode_error": "Decode error",
+    "scan.problem.empty": "Empty file",
+    "scan.problem.serato_flagged": "Serato marked this file corrupt",
+    "scan.problem.short": "Shorter than stored length",
+    "scan.problem.undecodable": "Could not decode",
+    "scan.problem.unknown": "Damaged file",
+    "scan.problem.unreadable": "Could not read the file",
+    "scan.problem.wrong_format": "Wrong format",
+    "scan.row": "{title} ({file}) — {problem}",
+    "scan.shortDetail": "Shorter than stored length ({detail}s)",
+    "scan.summary": {
+      one: "{checked} files checked. {count} damaged file.",
+      other: "{checked} files checked. {count} damaged files."
+    },
+    "scan.summaryClear": "{checked} files checked. None damaged.",
+    "scan.unchecked": {
+      one: "{count} file has an extension this check does not know.",
+      other: "{count} files have an extension this check does not know."
+    },
+    "scan.unreachable": "Couldn't reach the library server. Check it's running, then press Quick check",
+    "scan.unreadable": "The file check could not be read.",
+    "scan.wrongFormatDetail": "Looks like {detail}",
     "search.tracks": "Search tracks",
     "settings.about": "About",
     "settings.colorway": "Theme",
@@ -881,6 +915,8 @@
     "tooltip.saveRules": "Save these smart crate rules.",
     "tooltip.saveSuggestion": "Save a two-way link to {name}. Serato is not changed until you update the crate.",
     "tooltip.saveTrack": "Save these track details.",
+    "tooltip.scanFull": "Decode every file in the selected crate. Choose a crate first. This can take minutes. Nothing is written.",
+    "tooltip.scanQuick": "Read the start of each audio file. Empty files and the wrong format show up here. Nothing is written.",
     "tooltip.search": "Search tracks by title or artist. Filter with bpm:120-128, bpm:124~3, key:8A, or mix:8A (keys that mix with 8A). Ctrl/Cmd+F or /. Esc clears the search.",
     "tooltip.seek": "Move through the track. Left arrow goes back 5 seconds. Right arrow goes forward 5 seconds. Shift with an arrow jumps 30 seconds.",
     "tooltip.selectFile": "Select {name} for rename, move, or delete.",
@@ -932,6 +968,7 @@
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
     "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
     "tooltip.viewMissing": "Show tracks whose files are missing in this space.",
+    "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
     "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Show tracks Serato has analyzed for stems. This does not separate the audio.",
     "tooltip.volume": "Change how loud playback is.",
@@ -982,6 +1019,7 @@
     "view.history": "History",
     "view.label": "Views",
     "view.missing": "Missing files",
+    "view.scan": "Damaged files",
     "view.snapshots": "Backups",
     "view.stems": "Stems",
     "wizard.action.checkAgain": "Check again",
@@ -1476,6 +1514,7 @@
     "mode.files": "Archivos en el disco. Los cues se quedan en el archivo de audio. Las cajas siguen la ruta.",
     "mode.gig": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.missing": "Pistas que Serato ha marcado como no encontradas en este espacio.",
+    "mode.scan": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.snapshots": "Copias verificadas por hash de la biblioteca, las cajas y los datos de Serato dentro de los archivos de audio. El audio en sí no se copia.",
     "mode.stems": "Pistas con un estado de análisis de stems.",
     "operations.action.crateAdd": "Añadir a la caja",
@@ -1680,6 +1719,39 @@
     "rules.or": "o",
     "rules.save": "Guardar reglas",
     "rules.saved": "Reglas guardadas.",
+    "scan.checkFull": "Decodificación completa",
+    "scan.checkQuick": "Comprobación rápida",
+    "scan.checking": "Comprobando archivos…",
+    "scan.decodeErrorDetail": "La decodificación se detuvo a los {detail}s",
+    "scan.empty": "Ningún archivo dañado en esta comprobación.",
+    "scan.heading": "Archivos dañados",
+    "scan.intro": "La comprobación rápida lee el inicio de cada archivo. La decodificación completa necesita una caja porque puede tardar minutos.",
+    "scan.notFound": {
+      one: "Se omitió {count} pista no encontrada. Mira Archivos no encontrados.",
+      other: "Se omitieron {count} pistas no encontradas. Mira Archivos no encontrados."
+    },
+    "scan.problem.decode_error": "Error de decodificación",
+    "scan.problem.empty": "Archivo vacío",
+    "scan.problem.serato_flagged": "Serato marcó este archivo como dañado",
+    "scan.problem.short": "Más corto que la duración guardada",
+    "scan.problem.undecodable": "No se pudo decodificar",
+    "scan.problem.unknown": "Archivo dañado",
+    "scan.problem.unreadable": "No se pudo leer el archivo",
+    "scan.problem.wrong_format": "Formato incorrecto",
+    "scan.row": "{title} ({file}) — {problem}",
+    "scan.shortDetail": "Más corto que la duración guardada ({detail}s)",
+    "scan.summary": {
+      one: "{checked} archivos comprobados. {count} archivo dañado.",
+      other: "{checked} archivos comprobados. {count} archivos dañados."
+    },
+    "scan.summaryClear": "{checked} archivos comprobados. Ninguno dañado.",
+    "scan.unchecked": {
+      one: "{count} archivo tiene una extensión que esta comprobación no conoce.",
+      other: "{count} archivos tienen una extensión que esta comprobación no conoce."
+    },
+    "scan.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Comprobación rápida",
+    "scan.unreadable": "No se pudo leer la comprobación de archivos.",
+    "scan.wrongFormatDetail": "Parece {detail}",
     "search.tracks": "Buscar pistas",
     "settings.about": "Acerca de",
     "settings.colorway": "Tema",
@@ -1916,6 +1988,8 @@
     "tooltip.saveRules": "Guarda las reglas de esta caja inteligente.",
     "tooltip.saveSuggestion": "Guarda un enlace en ambos sentidos a {name}. Serato no cambia hasta que actualices la caja.",
     "tooltip.saveTrack": "Guarda estos datos de la pista.",
+    "tooltip.scanFull": "Decodifica cada archivo de la caja seleccionada. Elige una caja primero. Puede tardar minutos. No se escribe nada.",
+    "tooltip.scanQuick": "Lee el inicio de cada archivo de audio. Aquí aparecen los archivos vacíos y el formato incorrecto. No se escribe nada.",
     "tooltip.search": "Busca pistas por título o artista. Filtra con bpm:120-128, bpm:124~3, key:8A o mix:8A (tonalidades que mezclan con 8A). Ctrl/Cmd+F o /. Esc borra la búsqueda.",
     "tooltip.seek": "Avanza por la pista. Izquierda retrocede 5 segundos. Derecha avanza 5 segundos. Mayús con una flecha salta 30 segundos.",
     "tooltip.selectFile": "Selecciona {name} para renombrar, mover o eliminar.",
@@ -1967,6 +2041,7 @@
     "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
     "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
     "tooltip.viewMissing": "Muestra las pistas de este espacio cuyo archivo no se encuentra.",
+    "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
     "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Muestra las pistas que Serato ya analizó para stems. No separa el audio.",
     "tooltip.volume": "Cambia el volumen de la reproducción.",
@@ -2017,6 +2092,7 @@
     "view.history": "Historial",
     "view.label": "Vistas",
     "view.missing": "Archivos no encontrados",
+    "view.scan": "Archivos dañados",
     "view.snapshots": "Copias de seguridad",
     "view.stems": "Stems",
     "wizard.action.checkAgain": "Volver a buscar",
@@ -2179,8 +2255,8 @@
   function messageParams(value) {
     if (!value || typeof value !== "object") return void 0;
     const params = {};
-    for (const [name, item2] of Object.entries(value)) {
-      if (typeof item2 === "string" || typeof item2 === "number" && Number.isFinite(item2)) params[name] = item2;
+    for (const [name, item3] of Object.entries(value)) {
+      if (typeof item3 === "string" || typeof item3 === "number" && Number.isFinite(item3)) params[name] = item3;
     }
     return Object.keys(params).length ? params : void 0;
   }
@@ -2481,6 +2557,7 @@
     seratoRunning: false,
     snapshotPlanId: "",
     gigToken: 0,
+    scanToken: 0,
     view: []
   };
 
@@ -2700,7 +2777,10 @@
     viewFiles: spec("tooltip.viewFiles"),
     viewSnapshots: spec("tooltip.viewSnapshots"),
     viewGig: spec("tooltip.viewGig"),
+    viewScan: spec("tooltip.viewScan"),
     gigRefresh: spec("tooltip.gigRefresh"),
+    scanQuick: spec("tooltip.scanQuick"),
+    scanFull: spec("tooltip.scanFull"),
     gigBack: spec("tooltip.gigBack"),
     gigNext: spec("tooltip.gigNext"),
     gigExit: spec("tooltip.gigExit"),
@@ -2745,7 +2825,8 @@
       stems: tips.viewStems,
       files: tips.viewFiles,
       snapshots: tips.viewSnapshots,
-      gig: tips.viewGig
+      gig: tips.viewGig,
+      scan: tips.viewScan
     };
     return known[view];
   }
@@ -2802,6 +2883,8 @@
       "operations-list": tips.operationsList,
       "snapshots-refresh": tips.snapshotsRefresh,
       "gig-refresh": tips.gigRefresh,
+      "scan-quick": tips.scanQuick,
+      "scan-full": tips.scanFull,
       "snapshots-take": tips.snapshotsTake,
       "snapshots-drives": tips.backupDrives,
       "snapshots-undo-button": tips.snapshotsUndo,
@@ -3333,9 +3416,9 @@
         (drive) => t("gig.driveUnavailable", { name: drive.name, count: drive.track_count })
       );
     }
-    if (index === 1) return (payload.missing_files || []).map((item2) => item2.path);
-    if (index === 2) return (payload.streaming_tracks || []).map((item2) => `${item2.service}: ${item2.title}`);
-    if (index === 3) return (payload.empty_crates || []).map((item2) => `${item2.name} — ${item2.warning}`);
+    if (index === 1) return (payload.missing_files || []).map((item3) => item3.path);
+    if (index === 2) return (payload.streaming_tracks || []).map((item3) => `${item3.service}: ${item3.title}`);
+    if (index === 3) return (payload.empty_crates || []).map((item3) => `${item3.name} — ${item3.warning}`);
     return [];
   }
   function renderStepList(parent, step, lines) {
@@ -3451,10 +3534,210 @@
       time: formatCheckedAt(checkedAt)
     });
     fragment.append(art, line);
-    const holding = (payload.holding_it_back || []).map((item2) => item2.summary);
+    const holding = (payload.holding_it_back || []).map((item3) => item3.summary);
     if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
     fragment.append(actions(null));
     return fragment;
+  }
+
+  // src/scan.ts
+  var LIST_CAP2 = 100;
+  var PROBLEM_ORDER = [
+    "empty",
+    "unreadable",
+    "wrong_format",
+    "serato_flagged",
+    "undecodable",
+    "decode_error",
+    "short"
+  ];
+  var PROBLEM_KEYS = {
+    empty: "scan.problem.empty",
+    unreadable: "scan.problem.unreadable",
+    wrong_format: "scan.problem.wrong_format",
+    serato_flagged: "scan.problem.serato_flagged",
+    undecodable: "scan.problem.undecodable",
+    decode_error: "scan.problem.decode_error",
+    short: "scan.problem.short"
+  };
+  var latest2 = null;
+  var lastDepth = "quick";
+  function wireScan() {
+    const panel = el("scan-panel");
+    if (panel.dataset.scanWired === "true") return;
+    panel.dataset.scanWired = "true";
+    el("scan-quick").addEventListener("click", () => {
+      void loadScan("quick");
+    });
+    el("scan-full").addEventListener("click", () => {
+      void loadScan("full");
+    });
+  }
+  async function loadScan(depth) {
+    const chosen = resolveDepth(depth);
+    const token3 = ++state.scanToken;
+    beginBusy2();
+    let settle = "none";
+    if (chosen === "full" && state.activeCrate === "all") {
+      failStatus2(t("error.scan_full_needs_crate"));
+      endBusy2();
+      el("scan-full").focus();
+      return;
+    }
+    lastDepth = chosen;
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/file-scan?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&depth=${encodeURIComponent(chosen)}`
+      );
+      if (token3 !== state.scanToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.scanToken) return;
+      if (!response.ok || payload === null) {
+        failStatus2(serverMessage(payload, t("scan.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest2 = payload;
+      el("scan-status").textContent = "";
+      renderScanReport(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.scanToken) return;
+      failStatus2(t("scan.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.scanToken) return;
+      endBusy2();
+      if (settle === "retry") el("scan-quick").focus();
+      if (settle === "report") el("scan-report").focus();
+    }
+  }
+  function showScanFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
+    failStatus2(message);
+    endBusy2();
+    el("scan-quick").focus();
+  }
+  function renderScanReport(payload) {
+    el("scan-scope").textContent = scopeLabel();
+    const report = el("scan-report");
+    const problems = payload.problems || [];
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked });
+    report.replaceChildren(summary);
+    if (payload.not_found) {
+      report.append(noteLine2(t("scan.notFound", { count: payload.not_found })));
+    }
+    if (payload.unchecked) {
+      report.append(noteLine2(t("scan.unchecked", { count: payload.unchecked })));
+    }
+    if (!problems.length) {
+      report.append(noteLine2(t("scan.empty")));
+      return;
+    }
+    for (const kind2 of problemKinds(problems)) {
+      const rows2 = problems.filter((item3) => item3.problem === kind2);
+      report.append(detailsGroup2(problemHeading(kind2), rows2.map(problemLine)));
+    }
+  }
+  function repaintScan() {
+    el("scan-scope").textContent = scopeLabel();
+    if (latest2) renderScanReport(latest2);
+  }
+  function resolveDepth(depth) {
+    if (depth === "quick" || depth === "full") return depth;
+    if (lastDepth === "full" && state.activeCrate === "all") return "quick";
+    return lastDepth;
+  }
+  function beginBusy2() {
+    for (const id of ["scan-quick", "scan-full"]) {
+      const button2 = el(id);
+      button2.disabled = true;
+      button2.setAttribute("aria-busy", "true");
+    }
+    el("scan-panel").setAttribute("aria-busy", "true");
+    el("scan-status").textContent = t("scan.checking");
+  }
+  function endBusy2() {
+    el("scan-quick").disabled = false;
+    el("scan-quick").setAttribute("aria-busy", "false");
+    const full = el("scan-full");
+    full.disabled = state.activeCrate === "all";
+    full.setAttribute("aria-busy", "false");
+    el("scan-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus2(message) {
+    el("scan-status").textContent = message;
+  }
+  function scopeLabel() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function noteLine2(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+  function problemKinds(problems) {
+    const seen = new Set(problems.map((item3) => item3.problem));
+    const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
+    const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
+    return [...known, ...extra];
+  }
+  function problemHeading(kind2) {
+    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
+  }
+  function problemLine(item3) {
+    const title2 = [item3.artist, item3.name].filter(Boolean).join(" — ") || item3.file;
+    const label = problemDetail(item3);
+    return t("scan.row", { title: title2, file: item3.file, problem: label });
+  }
+  function problemDetail(item3) {
+    const heading2 = problemHeading(item3.problem);
+    if (item3.problem === "wrong_format" && item3.detail) {
+      return t("scan.wrongFormatDetail", { detail: item3.detail });
+    }
+    if ((item3.problem === "decode_error" || item3.problem === "short") && item3.detail) {
+      return t(item3.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
+        detail: item3.detail
+      });
+    }
+    if (item3.problem === "serato_flagged" && item3.detail) {
+      return `${heading2}: ${item3.detail}`;
+    }
+    return heading2;
+  }
+  function detailsGroup2(label, lines) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = true;
+    const summary = document.createElement("summary");
+    summary.textContent = t("gig.groupCount", { label, count: lines.length });
+    const list = document.createElement("ul");
+    const shown = lines.slice(0, LIST_CAP2);
+    for (const line of shown) list.append(item2(line));
+    details.append(summary, list);
+    if (lines.length > LIST_CAP2) {
+      const show2 = buttonEl(tips.gigShowAll);
+      show2.className = "gig-show-all";
+      show2.textContent = t("gig.showAll", { count: lines.length });
+      show2.addEventListener("click", () => {
+        list.replaceChildren();
+        for (const line of lines) list.append(item2(line));
+        show2.remove();
+      });
+      details.append(show2);
+    }
+    return details;
+  }
+  function item2(text2) {
+    const row = document.createElement("li");
+    row.textContent = text2;
+    return row;
   }
 
   // src/portable.ts
@@ -3468,7 +3751,7 @@
     file_size: "portable.kindFileSize"
   };
   var token = 0;
-  var latest2 = null;
+  var latest3 = null;
   var opener = null;
   var wired = false;
   function portableDriveRoot(path) {
@@ -3495,21 +3778,21 @@
     if (typeof value.summary !== "string") return null;
     if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
     const findings = [];
-    for (const item2 of value.findings) {
-      if (!isRecord(item2) || typeof item2.kind !== "string" || typeof item2.fix !== "string") return null;
+    for (const item3 of value.findings) {
+      if (!isRecord(item3) || typeof item3.kind !== "string" || typeof item3.fix !== "string") return null;
       findings.push({
-        kind: item2.kind,
-        crate: text(item2.crate),
-        track: text(item2.track),
-        path: text(item2.path),
-        found: text(item2.found),
-        fix: item2.fix
+        kind: item3.kind,
+        crate: text(item3.crate),
+        track: text(item3.track),
+        path: text(item3.path),
+        found: text(item3.found),
+        fix: item3.fix
       });
     }
     const errors = [];
-    for (const item2 of value.errors) {
-      if (!isRecord(item2) || typeof item2.message !== "string") return null;
-      errors.push({ crate: text(item2.crate), message: item2.message });
+    for (const item3 of value.errors) {
+      if (!isRecord(item3) || typeof item3.message !== "string") return null;
+      errors.push({ crate: text(item3.crate), message: item3.message });
     }
     return {
       drive: text(value.drive),
@@ -3539,7 +3822,7 @@
     const mine = ++token;
     opener = trigger ?? null;
     const dialog = el("portable-dialog");
-    latest2 = null;
+    latest3 = null;
     el("portable-verdict").textContent = "";
     el("portable-summary").textContent = "";
     el("portable-findings").replaceChildren();
@@ -3563,7 +3846,7 @@
         fail(t("portable.unreadable"));
         return;
       }
-      latest2 = report;
+      latest3 = report;
       el("portable-status").textContent = "";
       renderPortableReport(report);
     } catch {
@@ -3577,7 +3860,7 @@
       const name = button2.dataset.portableName ?? "";
       if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
     }
-    if (latest2) renderPortableReport(latest2);
+    if (latest3) renderPortableReport(latest3);
   }
   function wirePortable() {
     if (wired) return;
@@ -3588,7 +3871,7 @@
     });
   }
   function renderPortableReport(report) {
-    latest2 = report;
+    latest3 = report;
     const verdict = el("portable-verdict");
     if (report.missing_drive) verdict.textContent = t("portable.missing");
     else if (report.ready) verdict.textContent = t("portable.ready");
@@ -3630,7 +3913,7 @@
     return key ? t(key) : kind2;
   }
   function fail(message) {
-    latest2 = null;
+    latest3 = null;
     el("portable-verdict").textContent = "";
     el("portable-summary").textContent = "";
     el("portable-findings").replaceChildren();
@@ -3670,7 +3953,7 @@
   }
   function scopeCrate() {
     if (state.activeCrate === "all") return null;
-    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     return crate && !crate.smart ? crate : null;
   }
   function readPresetForm() {
@@ -3808,19 +4091,19 @@
       list.append(empty);
       return;
     }
-    for (const item2 of state.snapshots) {
+    for (const item3 of state.snapshots) {
       const card = document.createElement("article");
       card.className = "snapshot-card";
       card.setAttribute("role", "listitem");
       const title2 = document.createElement("p");
-      title2.textContent = `${item2.created || t("snapshots.unknownTime")} · ${item2.trigger || t("snapshots.trigger")}`;
+      title2.textContent = `${item3.created || t("snapshots.unknownTime")} · ${item3.trigger || t("snapshots.trigger")}`;
       const detail = document.createElement("p");
-      const version = item2.serato_version && item2.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item2.serato_version, build: String(item2.serato_build ?? "") }) : t("snapshots.seratoUnknown");
-      const drives = (item2.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item2.unavailable_drives || []) })}` : "";
-      detail.textContent = `${version}. ${item2.reason || ""}${drives}`;
+      const version = item3.serato_version && item3.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item3.serato_version, build: String(item3.serato_build ?? "") }) : t("snapshots.seratoUnknown");
+      const drives = (item3.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item3.unavailable_drives || []) })}` : "";
+      detail.textContent = `${version}. ${item3.reason || ""}${drives}`;
       const restore = buttonEl(tips.reviewRestore);
       restore.textContent = t("snapshots.reviewRestore");
-      restore.addEventListener("click", () => openSnapshotPlan(item2.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
+      restore.addEventListener("click", () => openSnapshotPlan(item3.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
       card.append(title2, detail, restore);
       list.append(card);
     }
@@ -3858,8 +4141,8 @@
     const status = el("operations-status");
     const list = el("operations-list");
     list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest4 = state.operations[state.operations.length - 1];
-    const failed = latest4?.result === "rollback_failed";
+    const latest5 = state.operations[state.operations.length - 1];
+    const failed = latest5?.result === "rollback_failed";
     alert.hidden = !failed;
     alert.textContent = failed ? t("operations.rollbackFailed") : "";
     list.replaceChildren();
@@ -3884,35 +4167,35 @@
       list.append(empty);
       return;
     }
-    for (const item2 of [...state.operations].reverse()) {
-      list.append(operationCard(item2));
+    for (const item3 of [...state.operations].reverse()) {
+      list.append(operationCard(item3));
     }
   }
-  function operationCard(item2) {
+  function operationCard(item3) {
     const card = document.createElement("article");
     card.className = "operation-card snapshot-card";
     card.setAttribute("role", "listitem");
-    const actionName = item2.action || item2.operation || "";
+    const actionName = item3.action || item3.operation || "";
     const actionKey = OPERATION_ACTIONS[actionName];
-    const outcomeKey = OPERATION_OUTCOMES[item2.result || ""] ?? "operations.outcome.refused";
+    const outcomeKey = OPERATION_OUTCOMES[item3.result || ""] ?? "operations.outcome.refused";
     const title2 = document.createElement("p");
     title2.textContent = t("operations.entry", {
-      time: operationTime(item2.time || ""),
+      time: operationTime(item3.time || ""),
       action: actionKey ? t(actionKey) : t("operations.actionOther"),
-      target: item2.target || t("operations.noTarget"),
+      target: item3.target || t("operations.noTarget"),
       outcome: t(outcomeKey)
     });
     card.append(title2);
-    if (item2.snapshot_before && item2.snapshot_after) {
+    if (item3.snapshot_before && item3.snapshot_after) {
       const detail = document.createElement("p");
       detail.textContent = t("operations.snapshots", {
-        before: item2.snapshot_before,
-        after: item2.snapshot_after
+        before: item3.snapshot_before,
+        after: item3.snapshot_after
       });
       card.append(detail);
-    } else if (item2.snapshot_before) {
+    } else if (item3.snapshot_before) {
       const detail = document.createElement("p");
-      detail.textContent = t("operations.beforeOnly", { before: item2.snapshot_before });
+      detail.textContent = t("operations.beforeOnly", { before: item3.snapshot_before });
       card.append(detail);
     }
     return card;
@@ -4049,7 +4332,7 @@
     if (!items.length) {
       line.textContent = t("plan.none", { label });
     } else {
-      const names = items.slice(0, 8).map((item2) => item2.name || item2.path || item2.drive_label || t("plan.item"));
+      const names = items.slice(0, 8).map((item3) => item3.name || item3.path || item3.drive_label || t("plan.item"));
       const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
       const listed = `${names.join(", ")}${extra}`;
       line.textContent = t("plan.listed", { label, count: items.length, names: listed });
@@ -4066,9 +4349,9 @@
     }
     line.textContent = t("plan.files", { label, count: items.length });
     parent.append(line);
-    for (const item2 of items.slice(0, 12)) {
+    for (const item3 of items.slice(0, 12)) {
       const row = document.createElement("p");
-      row.textContent = fileName(item2.path || "");
+      row.textContent = fileName(item3.path || "");
       parent.append(row);
     }
   }
@@ -4107,7 +4390,7 @@
       await loadSnapshots();
       await reloadLibrary();
       if (skipped.length) {
-        const names = skipped.map((item2) => item2.name || item2.path || t("plan.item")).join(", ");
+        const names = skipped.map((item3) => item3.name || item3.path || t("plan.item")).join(", ");
         el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
       }
     } catch (error2) {
@@ -5971,7 +6254,7 @@
     if (!row) return void 0;
     const id = Number(row.getAttribute("data-id"));
     if (!Number.isInteger(id)) return void 0;
-    return state.view.find((item2) => item2.id === id);
+    return state.view.find((item3) => item3.id === id);
   }
   function wireVirtualScroll() {
     el("list").addEventListener("scroll", () => paintRows());
@@ -5983,7 +6266,7 @@
         event.preventDefault();
         moveSelection(-1);
       } else if (event.key === "Enter") {
-        const chosen = focusedTrack(event.target) ?? state.view.find((item2) => item2.id === state.selectedId);
+        const chosen = focusedTrack(event.target) ?? state.view.find((item3) => item3.id === state.selectedId);
         if (!chosen || chosen.entry) return;
         event.preventDefault();
         void bridge.selectTrack(chosen.id);
@@ -6068,7 +6351,7 @@
     for (const crate of state.crates) {
       if (seen.has(crate.id)) continue;
       if (keep && !keep.has(crate.id)) continue;
-      const parentListed = state.crates.some((item2) => item2.id === crate.parent);
+      const parentListed = state.crates.some((item3) => item3.id === crate.parent);
       if (parentListed) continue;
       seen.add(crate.id);
       crate.depth = 0;
@@ -6206,8 +6489,8 @@
   function placeCrateFocus(previousId) {
     const items = [...el("crate-list").querySelectorAll(".crate")];
     if (!items.length) return null;
-    const current2 = items.find((item2) => item2.dataset.id === previousId) || items[0];
-    for (const item2 of items) item2.tabIndex = item2 === current2 ? 0 : -1;
+    const current2 = items.find((item3) => item3.dataset.id === previousId) || items[0];
+    for (const item3 of items) item3.tabIndex = item3 === current2 ? 0 : -1;
     return current2;
   }
   function renderCrates() {
@@ -6254,7 +6537,7 @@
   function renderRules() {
     document.querySelector(".rules")?.remove();
     document.querySelector(".rule-edit")?.remove();
-    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate || !crate.rules || state.mode !== "crates") return;
     const line = document.createElement("p");
     line.className = "rules";
@@ -6306,8 +6589,9 @@
     markHistoryColumns();
     const cratesMode = state.mode === "crates";
     const gigMode = state.mode === "gig";
+    const scanMode = state.mode === "scan";
     const historyMode = state.mode === "history";
-    const showCrates2 = cratesMode || gigMode;
+    const showCrates2 = cratesMode || gigMode || scanMode;
     el("crate-tools").hidden = !showCrates2;
     el("crate-actions").hidden = !cratesMode;
     el("crate-list").hidden = !showCrates2;
@@ -6315,13 +6599,14 @@
     el("mode-note").hidden = cratesMode || historyMode;
     const filesMode = state.mode === "files";
     const snapshotsMode = state.mode === "snapshots";
-    const panelMode = filesMode || snapshotsMode || gigMode;
+    const panelMode = filesMode || snapshotsMode || gigMode || scanMode;
     el("browser").hidden = panelMode;
     el("track-splitter").hidden = panelMode;
     el("detail").hidden = panelMode;
     el("files-panel").hidden = !filesMode;
     el("snapshots-panel").hidden = !snapshotsMode;
     el("gig-panel").hidden = !gigMode;
+    el("scan-panel").hidden = !scanMode;
     if (state.mode === "missing") el("mode-note").textContent = t("mode.missing");
     if (state.mode === "duplicates") {
       el("mode-note").textContent = t("mode.duplicates");
@@ -6330,6 +6615,10 @@
     if (filesMode) el("mode-note").textContent = t("mode.files");
     if (gigMode) {
       el("mode-note").textContent = t("mode.gig");
+      document.querySelector(".rules")?.remove();
+    }
+    if (scanMode) {
+      el("mode-note").textContent = t("mode.scan");
       document.querySelector(".rules")?.remove();
     }
     if (snapshotsMode) {
@@ -6357,8 +6646,8 @@
       el("crate-foot").textContent = state.filesLoading ? t("files.readingFolder") : t("files.fileCount", { count: listed });
       return;
     }
-    if (gigMode) {
-      const crate = state.crates.find((item2) => item2.id === state.activeCrate);
+    if (gigMode || scanMode) {
+      const crate = state.crates.find((item3) => item3.id === state.activeCrate);
       el("crate-foot").textContent = state.activeCrate === "all" ? "All tracks" : crate?.name ?? "Selected crate";
       return;
     }
@@ -6392,6 +6681,10 @@
       return;
     }
     if (state.mode === "gig") {
+      renderCrates();
+      return;
+    }
+    if (state.mode === "scan") {
       renderCrates();
       return;
     }
@@ -6436,12 +6729,13 @@
     el("list").scrollTop = 0;
     renderList();
     if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
+    if (state.mode === "scan") loadScan().catch(showScanFailure);
   }
-  function focusCrateItem(item2) {
-    if (!item2) return;
+  function focusCrateItem(item3) {
+    if (!item3) return;
     for (const button2 of el("crate-list").querySelectorAll(".crate")) button2.tabIndex = -1;
-    item2.tabIndex = 0;
-    item2.focus();
+    item3.tabIndex = 0;
+    item3.focus();
   }
   async function selectTrack(id) {
     state.selectedId = id;
@@ -6470,7 +6764,7 @@
   function selectEntry(id) {
     state.selectedId = id;
     paintRows();
-    const entry = state.entries.find((item2) => item2.id === id);
+    const entry = state.entries.find((item3) => item3.id === id);
     if (!entry) return;
     const body = document.createElement("div");
     body.className = "detail-body";
@@ -6912,8 +7206,8 @@
     const list = document.createElement("ul");
     list.className = "related-list";
     for (const link of saved) {
-      const item2 = document.createElement("li");
-      item2.className = "related-row";
+      const item3 = document.createElement("li");
+      item3.className = "related-row";
       const main = document.createElement("div");
       const other = link.track || {};
       const label = other.title || t("track.untitled");
@@ -6950,8 +7244,8 @@
       remove.textContent = t("common.remove");
       remove.setAttribute("aria-label", t("related.removeLink", { name: label }));
       remove.addEventListener("click", () => removeRelated(track, section, link));
-      item2.append(main, remove);
-      list.append(item2);
+      item3.append(main, remove);
+      list.append(item3);
     }
     return list;
   }
@@ -6984,7 +7278,7 @@
         results.append(hint);
         return;
       }
-      const hits2 = state.tracks.filter((item2) => item2.id !== track.id && matchesQuery(item2, query2)).slice(0, 8);
+      const hits2 = state.tracks.filter((item3) => item3.id !== track.id && matchesQuery(item3, query2)).slice(0, 8);
       if (!hits2.length) {
         const empty = document.createElement("li");
         empty.className = "related-meta";
@@ -6993,14 +7287,14 @@
         return;
       }
       for (const hit of hits2) {
-        const item2 = document.createElement("li");
+        const item3 = document.createElement("li");
         const name = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         const choose = buttonEl(chooseRelated(name));
         choose.className = "text-button";
         choose.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         choose.addEventListener("click", () => relatedLinkForm(track, section, form, hit, input.value));
-        item2.append(choose);
-        results.append(item2);
+        item3.append(choose);
+        results.append(item3);
       }
     };
     input.addEventListener("input", paint3);
@@ -7056,26 +7350,26 @@
   function relatedSuggestList(track, section, suggested) {
     const list = document.createElement("ul");
     list.className = "related-list";
-    for (const item2 of suggested) {
+    for (const item3 of suggested) {
       const row = document.createElement("li");
       row.className = "related-row";
       const main = document.createElement("div");
       const name = document.createElement("span");
-      name.textContent = item2.artist ? `${item2.title || t("track.untitled")} · ${item2.artist}` : item2.title || t("track.untitled");
+      name.textContent = item3.artist ? `${item3.title || t("track.untitled")} · ${item3.artist}` : item3.title || t("track.untitled");
       const reasons = document.createElement("p");
       reasons.className = "related-meta";
-      reasons.textContent = Array.isArray(item2.reasons) ? item2.reasons.join(" · ") : "";
+      reasons.textContent = Array.isArray(item3.reasons) ? item3.reasons.join(" · ") : "";
       main.append(name, reasons);
-      const save3 = buttonEl(saveSuggestion(item2.title || "Untitled"));
+      const save3 = buttonEl(saveSuggestion(item3.title || "Untitled"));
       save3.className = "text-button";
       save3.textContent = t("common.save");
-      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item2.title || t("track.untitled") }));
+      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item3.title || t("track.untitled") }));
       save3.addEventListener("click", () => {
         save3.disabled = true;
         saveRelated(track, section, {
           action: "add",
           asset: track.id,
-          target: item2.asset_id,
+          target: item3.asset_id,
           mutual: true,
           note: "",
           rating: null,
@@ -7379,7 +7673,7 @@
     }
   }
   async function renameCrate() {
-    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate) return;
     const name = prompt(t("crates.renamePrompt"), crate.name);
     if (!name || !name.trim() || name.trim() === crate.name) return;
@@ -7400,7 +7694,7 @@
     return COLORS.find(([, key]) => t(key).toLocaleLowerCase() === wanted)?.[0];
   }
   async function colorCrate() {
-    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate) return;
     const names = COLORS.map(([, key]) => t(key).toLocaleLowerCase());
     const choice = prompt(t("crates.colorPrompt", { names: names.join(", ") }));
@@ -7425,7 +7719,7 @@
     }
   }
   async function deleteCrate() {
-    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate) return;
     if (!confirm(t("crates.confirmDelete", { name: crate.name }))) return;
     try {
@@ -7560,6 +7854,7 @@
       loadSnapshots().catch((error2) => failSnapshots(error2));
     }
     if (mode === "gig") loadGigCheck().catch(showGigFailure);
+    if (mode === "scan") loadScan("quick").catch(showScanFailure);
     renderList();
   }
   function showFailure(error2) {
@@ -7729,7 +8024,7 @@
     list.className = "files-crumbs";
     const crumbs = visibleCrumbs();
     crumbs.forEach((crumb, index) => {
-      const item2 = document.createElement("li");
+      const item3 = document.createElement("li");
       const last = index === crumbs.length - 1;
       if (!last && crumb.path) {
         const button2 = buttonEl(openCrumb(crumb.name));
@@ -7738,22 +8033,22 @@
         button2.addEventListener("click", () => {
           loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
         });
-        item2.append(button2);
+        item3.append(button2);
       } else {
         const current2 = document.createElement("span");
         current2.className = "files-crumb";
         current2.setAttribute("aria-current", "page");
         current2.textContent = crumb.name;
-        item2.append(current2);
+        item3.append(current2);
       }
       if (!last) {
         const sep = document.createElement("span");
         sep.className = "files-sep";
         sep.setAttribute("aria-hidden", "true");
         sep.textContent = "/";
-        item2.append(sep);
+        item3.append(sep);
       }
-      list.append(item2);
+      list.append(item3);
     });
     nav.append(list);
   }
@@ -8117,6 +8412,7 @@
       if (state.mode === "history") jobs.push(loadHistory());
       if (state.mode === "duplicates") jobs.push(loadDuplicates());
       if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
+      if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
       Promise.all(jobs).catch(showFailure);
     });
     el("export-m3u").addEventListener("click", () => {
@@ -8147,6 +8443,7 @@
       loadLibrary().then(() => {
         if (state.mode === "duplicates") return loadDuplicates();
         if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
+        if (state.mode === "scan") return loadScan().catch(showScanFailure);
         return null;
       }).catch(showFailure);
     });
@@ -8178,11 +8475,11 @@
       renderList();
     });
     el("crate-list").addEventListener("keydown", (event) => {
-      const item2 = event.target.closest(".crate");
-      if (!item2 || !el("crate-list").contains(item2)) return;
+      const item3 = event.target.closest(".crate");
+      if (!item3 || !el("crate-list").contains(item3)) return;
       const items = [...el("crate-list").querySelectorAll(".crate")];
-      const index = items.indexOf(item2);
-      const id = item2.dataset.id === "all" ? "all" : Number(item2.dataset.id);
+      const index = items.indexOf(item3);
+      const id = item3.dataset.id === "all" ? "all" : Number(item3.dataset.id);
       if (event.key === "ArrowDown") {
         event.preventDefault();
         focusCrateItem(items[Math.min(items.length - 1, index + 1)]);
@@ -8197,13 +8494,13 @@
         focusCrateItem(items[items.length - 1]);
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
-        if (!state.crateQuery && item2.getAttribute("aria-expanded") === "false") toggleCrate(id);
-        else if (item2.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
+        if (!state.crateQuery && item3.getAttribute("aria-expanded") === "false") toggleCrate(id);
+        else if (item3.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
-        if (!state.crateQuery && item2.getAttribute("aria-expanded") === "true") toggleCrate(id);
-        else if (item2.dataset.parent) {
-          focusCrateItem(items.find((button2) => button2.dataset.id === item2.dataset.parent));
+        if (!state.crateQuery && item3.getAttribute("aria-expanded") === "true") toggleCrate(id);
+        else if (item3.dataset.parent) {
+          focusCrateItem(items.find((button2) => button2.dataset.id === item3.dataset.parent));
         }
       } else if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -8305,9 +8602,9 @@
     const list = el("rekordbox-report");
     list.replaceChildren();
     for (const line of lines) {
-      const item2 = document.createElement("li");
-      item2.textContent = line;
-      list.append(item2);
+      const item3 = document.createElement("li");
+      item3.textContent = line;
+      list.append(item3);
     }
   }
   function selectedMergeKeepId() {
@@ -8343,39 +8640,39 @@
     const list = document.createElement("ul");
     list.className = "merge-preview";
     const added = preview.crates_added || [];
-    const item2 = (text2) => {
+    const item3 = (text2) => {
       const line = document.createElement("li");
       line.textContent = text2;
       list.append(line);
     };
     if (added.length) {
       const names = added.map((crate) => crate.space && crate.space !== state.space ? `${crate.name} (${crate.space})` : crate.name);
-      item2(t("merge.addToCrates", { crates: names.join(", ") }));
+      item3(t("merge.addToCrates", { crates: names.join(", ") }));
     } else if ((preview.crates_kept || []).length) {
-      item2(t("merge.alreadyInCrates"));
+      item3(t("merge.alreadyInCrates"));
     } else {
-      item2(t("merge.noCrates"));
+      item3(t("merge.noCrates"));
     }
-    for (const space of preview.spaces_added || []) item2(t("merge.addToSpace", { space }));
+    for (const space of preview.spaces_added || []) item3(t("merge.addToSpace", { space }));
     if ((preview.fields || []).length) {
       for (const field of preview.fields || []) {
         const before = previewFieldValue(field.field || "", field.before);
         const after = previewFieldValue(field.field || "", field.after);
-        item2(t("merge.fieldChange", { label: field.label ?? "", before, after }));
+        item3(t("merge.fieldChange", { label: field.label ?? "", before, after }));
       }
     } else {
-      item2(t("merge.noFields"));
+      item3(t("merge.noFields"));
     }
     if (preview.history_repointed) {
       const count = Number(preview.history_entries) || 0;
-      item2(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
+      item3(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
     } else {
-      item2(t("merge.noHistoryId"));
+      item3(t("merge.noHistoryId"));
     }
     const removed = (preview.removed || []).length;
-    item2(t("merge.removeCopies", { count: removed }));
+    item3(t("merge.removeCopies", { count: removed }));
     for (const file of preview.files || []) {
-      if (file.reason) item2(`${file.file}: ${file.reason}`);
+      if (file.reason) item3(`${file.file}: ${file.reason}`);
     }
     el("merge-preview").append(list);
     if (preview.cue_warning) {
@@ -8730,11 +9027,11 @@
     const list = el("files-changes");
     list.replaceChildren();
     for (const change of payload.changes || []) {
-      const item2 = document.createElement("li");
+      const item3 = document.createElement("li");
       const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
       const effect = change.effect === "trash" ? t("files.trash") : change.to;
-      item2.textContent = `${change.from} → ${effect}${crates}`;
-      list.append(item2);
+      item3.textContent = `${change.from} → ${effect}${crates}`;
+      list.append(item3);
     }
     if (payload.more) {
       const more = document.createElement("li");
@@ -9448,7 +9745,7 @@
     else if (!hits.length) status.textContent = t("quickOpen.none", { query });
     else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
     hits.forEach((hit, index) => {
-      const item2 = document.createElement("li");
+      const item3 = document.createElement("li");
       const button2 = buttonEl(quickOpenHit(
         hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
         hit.title,
@@ -9474,8 +9771,8 @@
         active = index;
         void activate(hit);
       });
-      item2.append(button2);
-      list.append(item2);
+      item3.append(button2);
+      list.append(item3);
     });
     const field = el("quick-open-query");
     const current2 = hits[active];
@@ -9974,7 +10271,7 @@
 
   // src/update.ts
   var UPDATE_CHOICE_EVENT = "serato-update-choice";
-  var latest3 = null;
+  var latest4 = null;
   var dismissed = false;
   var token2 = 0;
   var wired3 = false;
@@ -9987,9 +10284,9 @@
     let release = null;
     const raw = body.latest;
     if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
-      const item2 = raw;
-      if (typeof item2.version === "string" && typeof item2.url === "string") {
-        release = { version: item2.version, url: item2.url, prerelease: item2.prerelease === true };
+      const item3 = raw;
+      if (typeof item3.version === "string" && typeof item3.url === "string") {
+        release = { version: item3.version, url: item3.url, prerelease: item3.prerelease === true };
       }
     }
     return {
@@ -10006,15 +10303,15 @@
       const response = await fetch("/api/update");
       const body = response.ok ? await response.json() : null;
       if (mine !== token2) return;
-      latest3 = parseUpdateStatus(body);
+      latest4 = parseUpdateStatus(body);
     } catch {
       if (mine !== token2) return;
-      latest3 = null;
+      latest4 = null;
     }
     paintUpdate();
   }
   function paintUpdate() {
-    const status = latest3;
+    const status = latest4;
     const toggle = el("update-toggle");
     const pre = el("update-prereleases");
     toggle.checked = status?.enabled === true;
@@ -10081,7 +10378,7 @@
     }
   }
   async function skip() {
-    const release = latest3?.latest;
+    const release = latest4?.latest;
     if (!release) return;
     try {
       await postJSON("/api/update", { skip: release.version });
@@ -10179,6 +10476,7 @@
     repaintViews();
     if (state.mode === "snapshots") renderSnapshots();
     if (state.mode === "gig") repaintGig();
+    if (state.mode === "scan") repaintScan();
     repaintPortable();
     repaintSnapshotPlan();
     repaintDialogs();
@@ -10279,7 +10577,7 @@
   async function refreshActivePreset() {
     const id = state.activeCrate;
     if (id === "all" || !state.writable) return;
-    const crate = state.crates.find((item2) => item2.id === id);
+    const crate = state.crates.find((item3) => item3.id === id);
     try {
       const reply = await postJSON("/api/smart-preset", { action: "refresh", id });
       const message = t("presets.refreshed", {
@@ -10356,6 +10654,7 @@
     "view-missing": "missing",
     "view-duplicates": "duplicates",
     "view-stems": "stems",
+    "view-scan": "scan",
     "view-snapshots": "snapshots",
     "view-gig": "gig"
   };
@@ -10451,6 +10750,7 @@
   wireGigCheck(() => {
     setMode("crates");
   });
+  wireScan();
   wirePortable();
   wireLayout();
   wireVersion();

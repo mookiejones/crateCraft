@@ -133,6 +133,7 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
                 item("view.duplicates", "view-duplicates"),
                 item("merge.title", "merge"),
                 item("view.stems", "view-stems"),
+                item("view.scan", "view-scan"),
                 MenuSeparator(),
                 item("view.gig", "view-gig"),
                 MenuSeparator(),
