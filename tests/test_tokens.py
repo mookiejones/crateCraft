@@ -366,6 +366,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".brand .generation-note", ("--color-bg",), 13, 400),
     (".rail select", ("--color-bg",), 15, 400),
     (".rail-field input", ("--color-bg",), 15, 400),
+    (".view-group-label", ("--color-bg",), 13, 600),
     (".view-switch button", ("--color-bg",), 15, 400),
     (".sort-crates button", ("--color-bg",), 15, 400),
     (".crate-actions button", ("--color-bg",), 15, 400),
@@ -537,6 +538,8 @@ _CONTROL_EDGE = (
     (".related-form input", "--color-card", "border-bottom"),
     (".related-form select", "--color-card", "border-bottom"),
     (".files-field input", "--color-card", "border-bottom"),
+    (".preset-field input", "--color-card", "border-bottom"),
+    (".preset-field select", "--color-card", "border-bottom"),
     ("#quick-open-query", "--color-card", "border"),
     (".shortcut-table kbd", "--color-card", "border"),
     (".row-play", "--color-card", "border"),
@@ -666,6 +669,10 @@ class ContrastTests(unittest.TestCase):
             (".crate-row:has(.crate[aria-selected=\"true\"])", "--color-panel"),
             ('.row[aria-selected="true"]', "--color-selection"),
         )
+        rail_mark = _paint(self._rule(".rail")["box-shadow"], self.colors)
+        rail_ratio = contrast(rail_mark, self._surface("--color-bg"))
+        self.assertGreaterEqual(rail_ratio, 3, f".rail colorway stripe is {rail_ratio:.2f}:1")
+
         for selector, background_name in solid_bars:
             ink = _paint(self._rule(selector)["box-shadow"], self.colors)
             ratio = contrast(ink, self._surface(background_name))
@@ -734,9 +741,11 @@ class ContrastTests(unittest.TestCase):
             ".files-file input:focus-visible",
             ".files-crumb:focus-visible",
             ".files-elsewhere:focus-visible",
+            ".files-portable:focus-visible",
             '.crate-row:has(.crate[aria-selected="true"])',
             '.row[aria-selected="true"]',
             ".crate-row.holds-selection",
+            ".rail",
             "#consent-accept",
             "#open-logs",
             "#copy-logs",

@@ -23,10 +23,12 @@ The two buttons have the same weight. The line **Saving…** means the choice is
 1. Click **Settings** at the bottom of the left rail.
 2. Tick **Share anonymous usage stats and crash reports** to turn sharing on. Clear the tick to turn it off.
 3. Read the line under the tick.
-4. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
-5. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
-6. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the footer of the sidebar stays blank. The page does not show an error code.
-7. Click **Close**.
+4. Pick a **Theme**: **Motown Soul**, **Deep House**, or **Daisy Age**. A stripe on the sidebar and the icon preview use that colorway. **App icon follows the theme** is on unless you clear it. On a Mac the Dock icon of the running app changes. On Windows the window and taskbar icon change. The Finder icon and the Windows program icon stay the usual ones. On another system the line under the checkbox says the choice is saved for Mac and Windows. If the choice cannot be saved, that line says so, and the theme stays for this session.
+5. Read **Keyboard shortcuts**. **?** opens Settings on that heading.
+6. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
+7. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
+8. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the footer of the sidebar stays blank. The page does not show an error code.
+9. Click **Close**.
 
 | Line under the tick | Meaning |
 | --- | --- |
@@ -70,6 +72,41 @@ The log is `serato-library.log`. It can include the path of the library database
 
 If the copy fails, a box of log text appears. The line says **Couldn't copy automatically. Select the log text and copy it.**
 
+## Help
+
+**Help** is at the bottom of the left rail, between **Shortcuts** and **Settings**. It does not change the library. Nothing is sent until you submit it on GitHub.
+
+1. Click **Help**.
+2. The line under the title is the version of this copy, the same line as **About**. When the version cannot be read, it says **Version unavailable**.
+3. The note says **Nothing is sent until you submit it on GitHub.**
+4. Click **Report a bug** or **Request a feature**. **View on GitHub** opens the repository in your browser. **Release notes** opens the releases page in your browser. Neither one replaces this window. **Close** leaves the dialog.
+
+**Report a bug** asks **What happened** and **What you expected**. **Request a feature** asks **What should change** and does not ask what you expected. The note on that screen says **You will see this on GitHub before it is submitted. The app does not post it.**
+
+**What will be included** is shown before the browser opens:
+
+| Line | Meaning |
+| --- | --- |
+| **App version** | This copy of Serato Library. |
+| **Commit** | The short commit, when this copy has one. |
+| **Operating system** | The computer's system. |
+| **Python** | The Python version this copy is running. |
+| **Serato version** | The Serato DJ Pro version this computer reports. |
+| **Serato build** | The Serato build. It can change when the version number does not. |
+| **Protect Library** | **on**, **off**, or **unknown**. **unknown** means this is not Serato 5, or the setting could not be read. |
+
+Your home folder, in the words you typed and in the log, is shown as `~`. Track names and crate names from the log are left out unless you tick **Include track and crate names from the log**.
+
+1. Read **What will be included**.
+2. Click **Copy log** to put the redacted log on the clipboard. The line says **Log copied.** A long log says **Copied the latest log entries. Older entries were left out.** An empty log says **The log is empty.**
+3. Click **Open on GitHub**.
+
+While the link is being built, the line says **Opening…**. When the browser opens, it says **Opened in your browser. Review it, then submit it on GitHub.** If the report is too long for a link, the app copies it instead and says **The report is too long for a link. It was copied. Paste it into the GitHub issue.** A report that was copied but still has a link says **Copied. Paste it into the GitHub issue.**
+
+If the copy fails, a box of the report appears. The line says **Couldn't copy the report.** or **Couldn't copy automatically. Select the log text and copy it.** If the diagnostics cannot be read, the line says **Couldn't load the diagnostics.** The page does not show the server's error text.
+
+**About** in **Settings** also has **View on GitHub**. It opens the same repository in your browser, so this window stays on the library.
+
 ## Where the choice is stored
 
 | System | Settings file |
@@ -77,4 +114,4 @@ If the copy fails, a box of log text appears. The line says **Couldn't copy auto
 | macOS | `~/Library/Application Support/Serato Library/settings.json` |
 | Windows | `%APPDATA%\Serato Library\settings.json` |
 
-This folder is **Serato Library**, with a space. It is separate from `Serato/Library`, which holds `master.sqlite`. The same file records whether setup has finished, the window size, the width of the track list, and the language you picked. A new install runs setup until you choose **Open my library**. It also stores the Rekordbox export bar: Memory cues, Hot loops, and the key notation. Those choices stay on this computer. If setup was pointed at a library that is not in the usual folder, `library.json` in this same folder remembers that file. The path stays on this computer. It is not a usage report.
+This folder is **Serato Library**, with a space. It is separate from `Serato/Library`, which holds `master.sqlite`. The same file records whether setup has finished, the window size, the width of the track list, the language you picked, the theme, and whether the app icon follows that theme. A new install runs setup until you choose **Open my library**. It also stores the Rekordbox export bar: Memory cues, Hot loops, and the key notation. Those choices stay on this computer. If setup was pointed at a library that is not in the usual folder, `library.json` in this same folder remembers that file. The path stays on this computer. It is not a usage report.

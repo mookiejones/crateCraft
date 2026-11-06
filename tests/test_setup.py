@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -111,6 +112,32 @@ class WordingTests(unittest.TestCase):
         self.assertNotIn("database V2", text)
         self.assertNotIn("space", str(payload["summary"]).lower())
         self.assertNotIn("space", str(payload["next"]).lower())
+
+    def test_older_library_in_the_real_home_folder_is_not_read(self) -> None:
+        """Ignore a ``database V2`` in the host's ``~/Music/_Serato_`` (#185).
+
+        The fake home holds the synthetic Serato 4 ``database V2``. Without
+        the suite's ``SERATO_LIBRARY_HOME_SERATO`` that folder is found, so
+        the second half proves the first half is not passing by accident.
+
+        Returns:
+            None. The test fails if setup reads the home folder during a run.
+        """
+        fixture = Path(__file__).resolve().parent / "fixtures" / "serato4" / "_Serato_" / "database V2"
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            serato = home / "Music" / "_Serato_"
+            serato.mkdir(parents=True)
+            shutil.copyfile(fixture, serato / "database V2")
+            missing = home / "Library" / "master.sqlite"
+            with mock.patch.object(Path, "home", return_value=home), \
+                    mock.patch.object(library, "MASTER", missing):
+                payload = setup_flow.describe_library()
+                self.assertFalse(payload.get("legacy", False))
+                self.assertEqual(payload["summary"], setup_flow.NOT_FOUND_SUMMARY)
+                with mock.patch.dict(os.environ):
+                    os.environ.pop("SERATO_LIBRARY_HOME_SERATO", None)
+                    self.assertEqual(setup_flow.legacy_folder(), serato)
 
     def test_chosen_folder_must_be_the_library_folder(self) -> None:
         """Accept the library folder and refuse a different one.
