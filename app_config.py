@@ -20,9 +20,10 @@ import os
 import sys
 import threading
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
+from app_icons import COLORWAYS, DEFAULT_COLORWAY
 import version_info
 
 CONFIG_ENV = "SERATO_LIBRARY_CONFIG_DIR"
@@ -39,6 +40,8 @@ SETTINGS_KEYS = (
     "rekordbox",
     "layout",
     "language",
+    "colorway",
+    "icon_follows_theme",
 )
 # Page languages a person can pick in Settings. None follows the OS.
 # Keep in sync with LANGUAGES in src/i18n.ts.
@@ -174,6 +177,10 @@ class Settings:
             in CSS pixels. None is the default split.
         language: Page language code from ``LANGUAGES``. None follows the
             operating system language.
+        colorway: Theme id from ``COLORWAYS``. Missing means Motown Soul.
+        icon_follows_theme: True changes the running Dock or taskbar icon
+            to match ``colorway``. False keeps the usual icon. Missing
+            means True. False is a stored choice.
     """
 
     install_id: str | None
@@ -183,6 +190,21 @@ class Settings:
     wizard_complete: bool = False
     track_list_width: int | None = None
     language: str | None = None
+    colorway: str = DEFAULT_COLORWAY
+    icon_follows_theme: bool = True
+
+    def __post_init__(self) -> None:
+        """Reject an unknown theme or a non-boolean icon flag.
+
+        Raises:
+            ValueError: If ``colorway`` is not in ``COLORWAYS``, or
+                ``icon_follows_theme`` is not a boolean. ``True`` and
+                ``False`` are both accepted. An integer is not.
+        """
+        if not isinstance(self.colorway, str) or self.colorway not in COLORWAYS:
+            raise ValueError("colorway is not a known theme.")
+        if not isinstance(self.icon_follows_theme, bool):
+            raise ValueError("icon_follows_theme must be a boolean.")
 
     def as_json(self) -> dict[str, object]:
         """Return the settings object for the file.
@@ -225,6 +247,8 @@ class Settings:
             if self.language not in LANGUAGES:
                 raise ValueError("language is not a known page language.")
             body["language"] = self.language
+        body["colorway"] = self.colorway
+        body["icon_follows_theme"] = self.icon_follows_theme
         return body
 
 
@@ -490,6 +514,20 @@ def _parse(payload: object) -> Settings:
             language = raw_language
         elif raw_language is not None:
             logger.warning("Config key 'language' has wrong type — ignored")
+    colorway = DEFAULT_COLORWAY
+    if "colorway" in payload:
+        raw_colorway = payload.get("colorway")
+        if isinstance(raw_colorway, str) and raw_colorway in COLORWAYS:
+            colorway = raw_colorway
+        else:
+            logger.warning("Config key 'colorway' has wrong type — ignored")
+    icon_follows_theme = True
+    if "icon_follows_theme" in payload:
+        icon_follows_theme = _parse_bool(
+            payload.get("icon_follows_theme"),
+            "icon_follows_theme",
+            True,
+        )
     if "rekordbox" not in payload:
         rekordbox = default_rekordbox()
     else:
@@ -502,6 +540,8 @@ def _parse(payload: object) -> Settings:
         rekordbox=rekordbox,
         track_list_width=track_list_width,
         language=language,
+        colorway=colorway,
+        icon_follows_theme=icon_follows_theme,
     )
 
 def _parse_bool(value: object, dotted: str, default: bool) -> bool:
@@ -689,14 +729,11 @@ def set_telemetry_consent(value: bool) -> Settings:
     with _settings_lock:
         current = load_settings()
         install_id = current.install_id or str(uuid.uuid4())
-        updated = Settings(
+        updated = replace(
+            current,
             install_id=install_id,
             telemetry_consent=value,
-            window=current.window,
             wizard_complete=current.wizard_complete is True,
-            rekordbox=current.rekordbox,
-            track_list_width=current.track_list_width,
-            language=current.language,
         )
         save_settings(updated)
         return updated
@@ -730,14 +767,12 @@ def save_window_geometry(geometry: WindowGeometry) -> Settings:
         if not isinstance(consent, bool) or install_id is None:
             install_id = None
             consent = None
-        updated = Settings(
+        updated = replace(
+            current,
             install_id=install_id,
             telemetry_consent=consent,
             window=geometry,
             wizard_complete=current.wizard_complete is True,
-            rekordbox=current.rekordbox,
-            track_list_width=current.track_list_width,
-            language=current.language,
         )
         save_settings(updated)
         return updated
@@ -767,24 +802,8 @@ def set_wizard_complete(value: bool) -> Settings:
         if not isinstance(current.telemetry_consent, bool) or current.install_id is None:
             if value:
                 raise ValueError("Choose whether to share stats before finishing setup.")
-            return Settings(
-                install_id=current.install_id,
-                telemetry_consent=current.telemetry_consent,
-                window=current.window,
-                wizard_complete=False,
-                rekordbox=current.rekordbox,
-                track_list_width=current.track_list_width,
-                language=current.language,
-            )
-        updated = Settings(
-            install_id=current.install_id,
-            telemetry_consent=current.telemetry_consent,
-            window=current.window,
-            wizard_complete=value,
-            rekordbox=current.rekordbox,
-            track_list_width=current.track_list_width,
-            language=current.language,
-        )
+            return replace(current, wizard_complete=False)
+        updated = replace(current, wizard_complete=value)
         save_settings(updated)
         return updated
 
@@ -831,18 +850,16 @@ def update_rekordbox(
             install_id = None
             consent = None
         box = current.rekordbox
-        updated = Settings(
+        updated = replace(
+            current,
             install_id=install_id,
             telemetry_consent=consent,
-            window=current.window,
             wizard_complete=current.wizard_complete is True,
             rekordbox=RekordboxSettings(
                 hot_loops=box.hot_loops if hot_loops is None else hot_loops,
                 memory_cues=box.memory_cues if memory_cues is None else memory_cues,
                 key_notation=box.key_notation if key_notation is None else key_notation,
             ),
-            track_list_width=current.track_list_width,
-            language=current.language,
         )
         save_settings(updated)
         return updated
@@ -874,14 +891,12 @@ def set_track_list_width(value: int | None) -> Settings:
         if not isinstance(consent, bool) or install_id is None:
             install_id = None
             consent = None
-        updated = Settings(
+        updated = replace(
+            current,
             install_id=install_id,
             telemetry_consent=consent,
-            window=current.window,
             wizard_complete=current.wizard_complete is True,
-            rekordbox=current.rekordbox,
             track_list_width=value,
-            language=current.language,
         )
         save_settings(updated)
         return updated
@@ -912,14 +927,61 @@ def set_language(value: str | None) -> Settings:
         if not isinstance(consent, bool) or install_id is None:
             install_id = None
             consent = None
-        updated = Settings(
+        updated = replace(
+            current,
             install_id=install_id,
             telemetry_consent=consent,
-            window=current.window,
             wizard_complete=current.wizard_complete is True,
-            rekordbox=current.rekordbox,
-            track_list_width=current.track_list_width,
             language=value,
+        )
+        save_settings(updated)
+        return updated
+
+
+def set_appearance(
+    *,
+    colorway: str | None = None,
+    icon_follows_theme: bool | None = None,
+) -> Settings:
+    """Store the theme, whether the icon follows it, or both.
+
+    Args:
+        colorway: A theme id from ``COLORWAYS``. None leaves the saved theme.
+        icon_follows_theme: True uses a matching Dock or taskbar icon.
+            False keeps the usual icon. None leaves the saved flag.
+            ``False`` is stored.
+
+    Returns:
+        The settings that were written. Every other field is kept. A
+        partial sharing pair is dropped, as in :func:`set_language`.
+
+    Raises:
+        ValueError: If no field was given, ``colorway`` is unknown, or
+            ``icon_follows_theme`` is not a boolean.
+        OSError: If the settings file cannot be written.
+    """
+    if colorway is None and icon_follows_theme is None:
+        raise ValueError("appearance has no fields to save.")
+    if colorway is not None and (not isinstance(colorway, str) or colorway not in COLORWAYS):
+        raise ValueError("colorway is not a known theme.")
+    if icon_follows_theme is not None and not isinstance(icon_follows_theme, bool):
+        raise ValueError("icon_follows_theme must be a boolean.")
+    with _settings_lock:
+        current = load_settings()
+        install_id = current.install_id
+        consent = current.telemetry_consent
+        if not isinstance(consent, bool) or install_id is None:
+            install_id = None
+            consent = None
+        updated = replace(
+            current,
+            install_id=install_id,
+            telemetry_consent=consent,
+            wizard_complete=current.wizard_complete is True,
+            colorway=current.colorway if colorway is None else colorway,
+            icon_follows_theme=(
+                current.icon_follows_theme if icon_follows_theme is None else icon_follows_theme
+            ),
         )
         save_settings(updated)
         return updated

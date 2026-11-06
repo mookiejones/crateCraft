@@ -92,7 +92,10 @@ class AssetTests(unittest.TestCase):
             None. The test fails if the page names a different local file.
         """
         names = static_assets.local_asset_names(ROOT / "static" / "index.html")
-        self.assertEqual(names, ["tokens.css", "app.css", "wizard.js", "app.js"])
+        self.assertEqual(
+            names,
+            ["img/icons/placeholder-motown.svg", "tokens.css", "app.css", "wizard.js", "app.js"],
+        )
         page = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
         for name in (
             "wizard-welcome.svg",

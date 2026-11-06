@@ -30,12 +30,14 @@ import error_codes
 import files
 import gig_check
 import legacy_library
+import lost_tags
 import library
 import music_roots
 import rekordbox
 import related
 import setup_flow
 import snapshots
+import tag_cleanup
 import telemetry
 import version_info
 import waveform
@@ -1767,6 +1769,15 @@ class Handler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(body)
                 return
+            if parsed.path == "/api/tag-clusters":
+                space = require_space(query_text(query, "space"))
+                field = query_text(query, "field", "genre") or "genre"
+                self.send_json(tag_cleanup.clusters(Path(library.MASTER), space, field))
+                return
+            if parsed.path == "/api/lost-tags":
+                space = require_space(query_text(query, "space"))
+                self.send_json(lost_tags.plan(Path(library.MASTER), space))
+                return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
@@ -2052,6 +2063,11 @@ class Handler(BaseHTTPRequestHandler):
                 Booleans reject integers. ``key_notation`` must be
                 ``asis``, ``camelot``, or ``classical``. Any other shape is
                 a 400, and the file is left unchanged.
+                ``{"colorway": str}`` and ``{"icon_follows_theme": bool}``
+                may be sent together or alone. ``colorway`` must be a known
+                theme. The icon flag must be a boolean. The running icon
+                is updated after the file is saved. A platform that cannot
+                change it still saves the choice.
         """
         keys = set(payload)
         if keys == {"wizard_complete"} and isinstance(payload.get("wizard_complete"), bool):
@@ -2104,6 +2120,9 @@ class Handler(BaseHTTPRequestHandler):
                 return
             self.send_json(telemetry.public_settings())
             return
+        if keys and keys <= {"colorway", "icon_follows_theme"}:
+            self._post_appearance(payload)
+            return
         allowed = {"telemetry_consent", "rekordbox"}
         if not keys or not keys <= allowed:
             self.send_json({"error": "That request is not valid."}, status=400)
@@ -2146,6 +2165,55 @@ class Handler(BaseHTTPRequestHandler):
             )
         except ValueError:
             self.send_json({"error": "That request is not valid."}, status=400)
+
+    def _post_appearance(self, payload: dict[str, object]) -> None:
+        """Save the theme and whether the running icon follows it.
+
+        Args:
+            payload: ``colorway``, ``icon_follows_theme``, or both.
+                ``colorway`` is ``motown``, ``deep-house``, or ``daisy-age``.
+                The icon flag is a boolean. ``False`` is kept.
+
+        The file is written before the icon changes. A Dock or taskbar
+        change that this computer cannot do still returns 200. The body
+        includes ``icon`` with ``applied`` false and a reason.
+        """
+        import app_icons
+
+        colorway = payload.get("colorway") if "colorway" in payload else None
+        follow = payload.get("icon_follows_theme") if "icon_follows_theme" in payload else None
+        if colorway is not None and not isinstance(colorway, str):
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        if follow is not None and not isinstance(follow, bool):
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        try:
+            app_config.set_appearance(
+                colorway=colorway if isinstance(colorway, str) else None,
+                icon_follows_theme=follow if isinstance(follow, bool) else None,
+            )
+        except ValueError:
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        except OSError:
+            self.send_json({"error": "The theme could not be saved."}, status=500)
+            return
+        body = telemetry.public_settings()
+        try:
+            body["icon"] = app_icons.apply_saved().as_json()
+        except Exception:
+            app_log.logger.exception("The app icon could not be changed")
+            body["icon"] = {
+                "applied": False,
+                "platform": "unknown",
+                "target": "unsupported",
+                "reason": "error",
+                "colorway": body.get("colorway"),
+                "follows_theme": body.get("icon_follows_theme"),
+                "href": body.get("icon_href"),
+            }
+        self.send_json(body)
 
     def _get_setup(self, query: dict[str, list[str]]) -> None:
         """Return the library summary, or one folder listing.
