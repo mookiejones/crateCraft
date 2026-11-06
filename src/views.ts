@@ -27,7 +27,10 @@ import { bridge } from "./bridge";
 import { el } from "./dom";
 import { clockLabel, colorHex, compare, durationLabel, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
+import { portableDriveButton } from "./portable";
+import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
+import { matchesFilters, parseQuery, type ParsedQuery } from "./search-filters";
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
 import { play } from "./player";
 import { playerStrings } from "./player-strings";
@@ -69,32 +72,33 @@ let relatedRequest = 0;
 let lastDetail: Track | null = null;
 
 /**
- * Return whether a track contains every search term.
+ * Return whether a track contains every search word and passes every filter.
  *
- * The haystack is title, artist, album, genre, key, and file. Terms are
- * already lowercased. An empty term list matches everything. No request
- * is made.
+ * The haystack is title, artist, album, genre, key, and file. Filter words
+ * (`bpm:`, `key:`, `mix:`) are read by search-filters.ts. An empty query
+ * matches everything. No request is made.
  *
  * @param {object} track Track or history row.
- * @param {string[]} terms Lowercased words from the search box.
- * @returns {boolean} True when every term occurs in the haystack.
+ * @param {ParsedQuery} query Words and filters from the search box.
+ * @returns {boolean} True when every word occurs in the haystack and every filter passes.
  */
-function matchesQuery(track: Track, terms: string[]) {
-  if (!terms.length) return true;
+function matchesQuery(track: Track, query: ParsedQuery) {
+  if (!matchesFilters(track, query.filters)) return false;
+  if (!query.terms.length) return true;
   const hay = `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-  return terms.every((term) => hay.includes(term));
+  return query.terms.every((term) => hay.includes(term));
 }
 
 /**
- * Split the track search box into lowercased words.
+ * Read the track search box.
  *
  * Reads state.query, which the search field copies on each input event.
  * Does not fetch the library.
  *
- * @returns {string[]} Words with empty pieces removed.
+ * @returns {ParsedQuery} Lowercased words and filters.
  */
 function queryTerms() {
-  return state.query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  return parseQuery(state.query);
 }
 
 /**
@@ -424,9 +428,9 @@ export function renderCrates() {
   const restore = el("crate-list").contains(active)
     ? active!.closest(".crate-row")?.querySelector<HTMLElement>(".crate")?.dataset.id ?? null
     : null;
-  const terms = queryTerms();
-  const matched = terms.length
-    ? new Set(state.tracks.filter((track) => matchesQuery(track, terms)).map((track) => track.id))
+  const query = queryTerms();
+  const matched = query.terms.length || query.filters.length
+    ? new Set(state.tracks.filter((track) => matchesQuery(track, query)).map((track) => track.id))
     : null;
   const crates = visibleCrates();
   const holder = hiddenSelectionHolder(crates);
@@ -593,6 +597,7 @@ export function renderShell() {
   el("crate-rename").disabled = !state.writable || !crateChosen;
   el("crate-color").disabled = !state.writable || !crateChosen;
   el("crate-delete").disabled = !state.writable || !crateChosen;
+  syncPresetButtons();
   syncMergeButton();
   if (filesMode) {
     if (state.filesAtRoots) {
@@ -617,7 +622,8 @@ export function renderShell() {
   const pool = state.mode === "history" ? state.entries : footerTracks();
   const bytes = pool.reduce((sum, track) => sum + (Number(track.file_size) || 0), 0);
   const ms = pool.reduce((sum, track) => sum + (Number(track.length_ms) || 0), 0);
-  el("crate-foot").textContent = `${formatNumber(pool.length)} · ${durationLabel(ms)} · ${sizeLabel(bytes)}`;
+  const preset = state.mode === "crates" ? presetFoot(state.activeCrate) : "";
+  el("crate-foot").textContent = `${formatNumber(pool.length)} · ${durationLabel(ms)} · ${sizeLabel(bytes)}${preset}`;
 }
 
 /**
@@ -1456,8 +1462,8 @@ function relatedSearch(track: Track, section: HTMLElement, query: string) {
     results.replaceChildren();
     form.hidden = true;
     form.replaceChildren();
-    const terms = input.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-    if (!terms.length) {
+    const query = parseQuery(input.value);
+    if (!query.terms.length && !query.filters.length) {
       const hint = document.createElement("li");
       hint.className = "related-meta";
       hint.textContent = t("related.typeHint");
@@ -1465,7 +1471,7 @@ function relatedSearch(track: Track, section: HTMLElement, query: string) {
       return;
     }
     const hits = state.tracks
-      .filter((item) => item.id !== track.id && matchesQuery(item, terms))
+      .filter((item) => item.id !== track.id && matchesQuery(item, query))
       .slice(0, 8);
     if (!hits.length) {
       const empty = document.createElement("li");
@@ -2359,6 +2365,7 @@ export async function loadLibrary() {
   state.crates = library.crates;
   state.rootId = library.root_id;
   state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)]));
+  state.presets = library.presets ?? {};
   state.expanded = new Set<number | "all">(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id));
   state.activeCrate = active === "all" || library.crates.some((crate) => crate.id === active) ? active : "all";
   state.selectedId = selected;
@@ -2741,6 +2748,8 @@ function browserRows(): FileEntry[] {
         detail: root.detail,
         kind: root.kind === "serato_drive" ? "drive" : "folder",
         missing: root.missing,
+        removable: root.removable,
+        serato: root.serato,
       };
       return entry;
     });
@@ -3024,6 +3033,7 @@ function fileRow(entry: FileEntry, index: number): HTMLDivElement {
       });
     }
     row.append(button);
+    if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
     return row;
   }
   if (entry.kind !== "file") {

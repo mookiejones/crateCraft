@@ -1,0 +1,138 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { Track } from "./api-types";
+import { keyNumber, matchesFilters, mixingKeys, parseQuery } from "./search-filters";
+import { state } from "./state";
+import { installPage } from "./test-page";
+import { buildView, renderCrates } from "./views";
+
+vi.hoisted(() => {
+  vi.stubGlobal("fetch", () => {
+    throw new Error("filter tests do not fetch");
+  });
+});
+
+function track(id: number, bpm: number | string | null, key: string, name = `Track ${id}`): Track {
+  return { id, name, artist: "Artist", album: "Album", file: `${id}.mp3`, bpm, key };
+}
+
+function ids(text: string, tracks: Track[]): number[] {
+  const query = parseQuery(text);
+  return tracks.filter((item) => matchesFilters(item, query.filters)).map((item) => item.id);
+}
+
+describe("keys", () => {
+  it("reads Camelot and key names the way Serato numbers them", () => {
+    expect(keyNumber("1A")).toBe(0);
+    expect(keyNumber("8a")).toBe(7);
+    expect(keyNumber(" Am ")).toBe(7);
+    expect(keyNumber("12B")).toBe(23);
+    expect(keyNumber("C")).toBe(19);
+    expect(keyNumber("")).toBe(-1);
+    expect(keyNumber(null)).toBe(-1);
+    expect(keyNumber("13A")).toBe(-1);
+  });
+
+  it("mixes with one step either way, wrapping 12 to 1, and the relative key", () => {
+    expect([...mixingKeys(keyNumber("1A"))].sort((a, b) => a - b)).toEqual([0, 1, 11, 12]);
+    expect([...mixingKeys(keyNumber("12B"))].sort((a, b) => a - b)).toEqual([11, 12, 22, 23]);
+    expect([...mixingKeys(keyNumber("8A"))].sort((a, b) => a - b)).toEqual([6, 7, 8, 19]);
+  });
+});
+
+describe("parseQuery", () => {
+  it("separates filters from words and keeps unreadable filters as words", () => {
+    const query = parseQuery("  House bpm:120-128 KEY:8a bpm:fast mix:zz deep ");
+    expect(query.terms).toEqual(["house", "bpm:fast", "mix:zz", "deep"]);
+    expect(query.filters).toHaveLength(2);
+    expect(parseQuery("").filters).toEqual([]);
+    expect(parseQuery(":8a").terms).toEqual([":8a"]);
+  });
+});
+
+describe("matchesFilters", () => {
+  const tracks = [
+    track(1, 120, "1A"),
+    track(2, 124.4, "2A"),
+    track(3, 128, "1B"),
+    track(4, 0, "12A"),
+    track(5, null, "Am"),
+    track(6, "", "6A"),
+    track(7, 123.6, "C"),
+  ];
+
+  it("reads every BPM form with inclusive bounds", () => {
+    expect(ids("bpm:120-128", tracks)).toEqual([1, 2, 3, 7]);
+    expect(ids("bpm:128-120", tracks)).toEqual([1, 2, 3, 7]);
+    expect(ids("bpm:124", tracks)).toEqual([2, 7]);
+    expect(ids("bpm:124.4", tracks)).toEqual([2]);
+    expect(ids("bpm:124~4", tracks)).toEqual([1, 2, 3, 7]);
+    expect(ids("bpm:124~0.4", tracks)).toEqual([2, 7]);
+    expect(ids("bpm:>124", tracks)).toEqual([2, 3]);
+    expect(ids("bpm:<120", tracks)).toEqual([1]);
+  });
+
+  it("reads a whole BPM as that BPM rounded: 124.5 counts as 125, not 124", () => {
+    const edge = [track(8, 123.5, "1A"), track(9, 124.5, "1A")];
+    expect(ids("bpm:124", edge)).toEqual([8]);
+    expect(ids("bpm:125", edge)).toEqual([9]);
+  });
+
+  it("never matches a blank or zero BPM", () => {
+    expect(ids("bpm:<130", tracks)).toEqual([1, 2, 3, 7]);
+  });
+
+  it("matches exact keys and mixing keys, across Camelot and key names", () => {
+    expect(ids("key:8A", tracks)).toEqual([5]);
+    expect(ids("key:am", tracks)).toEqual([5]);
+    expect(ids("mix:1A", tracks)).toEqual([1, 2, 3, 4]);
+    expect(ids("mix:8B", tracks)).toEqual([5, 7]);
+  });
+
+  it("needs every filter to pass", () => {
+    expect(ids("mix:1A bpm:120-125", tracks)).toEqual([1, 2]);
+    expect(ids("key:1A key:2A", tracks)).toEqual([]);
+  });
+});
+
+describe("track list", () => {
+  beforeEach(() => {
+    installPage();
+    state.mode = "crates";
+    state.sort = "name";
+    state.sortDir = 1;
+    state.query = "";
+    state.crateQuery = "";
+    state.expanded = new Set();
+    state.tracks = [
+      track(1, 120, "1A", "Alpha"),
+      track(2, 124, "2A", "Beta"),
+      track(3, 128, "1B", "Gamma"),
+      track(4, 126, "2A", "Delta"),
+    ];
+    state.byId = new Map(state.tracks.map((item) => [item.id, item]));
+    state.crates = [{ id: 2, name: "Bar set", parent: 1, order: 0 }];
+    state.crateTracks = new Map([[2, new Set([1, 2, 3])]]);
+    state.rootId = 1;
+    state.activeCrate = "all";
+  });
+
+  it("filters inside the selected crate and still searches words", () => {
+    state.query = "bpm:120-125";
+    expect(buildView().map((item) => item.id)).toEqual([1, 2]);
+    state.activeCrate = 2;
+    state.query = "mix:2a bpm:>121";
+    expect(buildView().map((item) => item.id)).toEqual([2]);
+    state.query = "mix:2a beta";
+    expect(buildView().map((item) => item.id)).toEqual([2]);
+    state.activeCrate = "all";
+    state.query = "mix:2a";
+    expect(buildView().map((item) => item.id)).toEqual([1, 2, 4]);
+  });
+
+  it("counts filter matches in the crate rail", () => {
+    state.query = "bpm:>125";
+    renderCrates();
+    const counts = [...document.querySelectorAll<HTMLElement>("#crate-list .meta")].map((node) => node.textContent ?? "");
+    expect(counts).toEqual(["2", "1"]);
+  });
+});

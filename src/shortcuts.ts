@@ -10,6 +10,8 @@
 import { el } from "./dom";
 import { t, type MessageKey } from "./i18n";
 import { state } from "./state";
+import { setTooltip } from "./tooltip";
+import { tips } from "./tooltip-strings";
 import { moveTrackList, openTrackList } from "./virtual-scroll";
 import { closeQuickOpen, openQuickOpen, quickOpenIsOpen, wireQuickOpen } from "./quick-open";
 import { focusCrateItem, moveFileList, openFileList, selectCrate, setMode } from "./views";
@@ -148,7 +150,7 @@ const SHORTCUT_DEFS = [
   },
   {
     id: "view-snapshots",
-    label: "Snapshots",
+    label: "Backups",
     group: "Views",
     keys: [{ key: "5", mod: true }],
     whileTyping: false,
@@ -290,37 +292,46 @@ export function isTypingTarget(target: EventTarget | null): boolean {
 }
 
 /**
- * Fill the cheat sheet from SHORTCUTS and show it.
+ * Fill the cheat sheet and open Settings on that section.
  *
- * Focus moves to the heading. Esc closes the dialog and returns focus.
+ * Focus moves to the heading. Esc closes Settings and returns focus.
+ * When Settings is already open, focus moves to the heading.
  *
  * @returns {void}
  */
 export function openCheatSheet(): void {
-  const dialog = el("shortcuts-dialog");
-  if (dialog.open) return;
-  rememberFocus();
+  const dialog = el("settings-dialog");
   renderCheatSheet();
-  dialog.showModal();
-  el("shortcuts-title").tabIndex = -1;
-  el("shortcuts-title").focus();
+  if (!dialog.open) {
+    rememberFocus();
+    dialog.showModal();
+  }
+  const title = el("shortcuts-title");
+  title.tabIndex = -1;
+  title.focus();
+  if (typeof title.scrollIntoView === "function") title.scrollIntoView({ block: "nearest" });
 }
 
 /**
- * Attach the shortcut keys and the cheat-sheet button.
+ * Attach the shortcut keys.
  *
  * Called once at startup, and again in tests after the page markup is
- * replaced. Does not fetch.
+ * replaced. Does not fetch. The cheat sheet is a section of Settings.
  *
  * @returns {void}
  */
 export function wireShortcuts(): void {
   document.removeEventListener("keydown", onKey);
   document.addEventListener("keydown", onKey);
-  el("open-shortcuts").addEventListener("click", () => openCheatSheet());
-  el("shortcuts-close").addEventListener("click", () => el("shortcuts-dialog").close());
-  el("shortcuts-dialog").addEventListener("close", () => restoreFocus());
+  const dialog = el("settings-dialog");
+  dialog.removeEventListener("close", onSettingsClose);
+  dialog.addEventListener("close", onSettingsClose);
+  renderCheatSheet();
   wireQuickOpen();
+}
+
+function onSettingsClose(): void {
+  restoreFocus();
 }
 
 function onKey(event: KeyboardEvent): void {
@@ -507,7 +518,7 @@ function dismiss(event: KeyboardEvent): void {
       closeQuickOpen();
       return;
     }
-    if (dialog.id === "shortcuts-dialog") {
+    if (dialog.id === "settings-dialog") {
       event.preventDefault();
       dialog.close();
       return;
@@ -565,14 +576,15 @@ function replaceInput(field: HTMLInputElement, value: string): void {
  * @returns {void}
  */
 export function repaintCheatSheet(): void {
-  const dialog = document.getElementById("shortcuts-dialog");
-  if (dialog instanceof HTMLDialogElement && dialog.open) renderCheatSheet();
+  if (!document.getElementById("shortcuts-body")) return;
+  renderCheatSheet();
 }
 
 function renderCheatSheet(): void {
-  el("shortcuts-title").textContent = t("shortcuts.title");
+  const title = el("shortcuts-title");
+  title.textContent = t("shortcuts.title");
+  setTooltip(title, tips.shortcuts);
   el("shortcuts-intro").textContent = t("shortcuts.intro");
-  el("shortcuts-close").textContent = t("common.close");
   const body = el("shortcuts-body");
   body.replaceChildren();
   const groups: string[] = [];
