@@ -154,6 +154,7 @@
     "error.snapshot_incomplete": "That snapshot is incomplete.",
     "error.snapshot_unreadable": "That snapshot could not be read.",
     "error.space_unavailable": "That space is not available here.",
+    "error.theme_not_saved": "The theme could not be saved.",
     "error.track_id_required": "Track id is required.",
     "error.track_not_in_library": "That track is not in the library.",
     "error.track_not_in_space": "Track is not in this space.",
@@ -305,6 +306,32 @@
     "gig.wholeSpaceInline": "the whole space",
     "gig.wordNotReady": "not ready",
     "gig.wordReady": "ready",
+    "help.bug": "Report a bug",
+    "help.bugTitle": "Report a bug",
+    "help.change": "What should change",
+    "help.copied": "Copied. Paste it into the GitHub issue.",
+    "help.copyFailed": "Couldn't copy the report.",
+    "help.copyLog": "Copy log",
+    "help.diagnostics": "What will be included",
+    "help.expected": "What you expected",
+    "help.feature": "Request a feature",
+    "help.featureTitle": "Request a feature",
+    "help.github": "View on GitHub",
+    "help.happened": "What happened",
+    "help.loadFailed": "Couldn't load the diagnostics.",
+    "help.loading": "Loading diagnostics…",
+    "help.logCopied": "Log copied.",
+    "help.logEmpty": "The log is empty.",
+    "help.names": "Include track and crate names from the log",
+    "help.nothing": "Nothing is sent until you submit it on GitHub.",
+    "help.openGitHub": "Open on GitHub",
+    "help.opened": "Opened in your browser. Review it, then submit it on GitHub.",
+    "help.opening": "Opening…",
+    "help.releases": "Release notes",
+    "help.reportText": "Report text",
+    "help.review": "You will see this on GitHub before it is submitted. The app does not post it.",
+    "help.title": "Help",
+    "help.tooLong": "The report is too long for a link. It was copied. Paste it into the GitHub issue.",
     "history.chooseSession": "Choose a session.",
     "history.file": "File",
     "history.notes": "Notes",
@@ -387,6 +414,16 @@
       one: "Point {count} history entry at the kept copy.",
       other: "Point {count} history entries at the kept copy."
     },
+    "menu.close": "Close",
+    "menu.exportRekordbox": "Export for Rekordbox",
+    "menu.file": "File",
+    "menu.focusSearch": "Focus search",
+    "menu.help": "Help",
+    "menu.library": "Library",
+    "menu.minimize": "Minimize",
+    "menu.resetWidth": "Reset list width",
+    "menu.tools": "Tools",
+    "menu.window": "Window",
     "merge.title": "Merge copies",
     "merge.trashFiles": "Move {files} to the Trash.",
     "merge.trashLabel": "Move the other audio files to the Trash",
@@ -474,6 +511,22 @@
     "player.waveformUnavailable": "Waveform unavailable for this format",
     "player.zoomIn": "Zoom in",
     "player.zoomOut": "Zoom out",
+    "portable.check": "Check drive",
+    "portable.checkLabel": "Check {name}",
+    "portable.checking": "Checking this drive.",
+    "portable.kindFileSize": "File too large",
+    "portable.kindMissing": "Missing",
+    "portable.kindOffDrive": "Not on this drive",
+    "portable.kindPathLength": "Path too long",
+    "portable.kindSmartCrate": "Smart Crate",
+    "portable.kindUnsafeName": "Unsafe name",
+    "portable.missing": "This drive is not connected. Nothing was deleted.",
+    "portable.notReady": "Not ready. Fix these on the laptop first.",
+    "portable.readOnly": "This only reads the drive. Nothing is copied or deleted.",
+    "portable.ready": "Ready to leave the laptop.",
+    "portable.title": "Portable drive",
+    "portable.unreachable": "This drive could not be checked.",
+    "portable.unreadable": "This drive could not be read.",
     "quickOpen.empty": "Type a track or file name.",
     "quickOpen.file": "File",
     "quickOpen.fileError": "Files on disk could not be searched. Track matches are still listed.",
@@ -548,8 +601,20 @@
     "rules.saved": "Rules saved.",
     "search.tracks": "Search tracks",
     "settings.about": "About",
+    "settings.colorway": "Theme",
+    "settings.colorway.daisyAge": "Daisy Age",
+    "settings.colorway.deepHouse": "Deep House",
+    "settings.colorway.motown": "Motown Soul",
+    "settings.colorwayPreview": "Theme icon preview",
     "settings.copyLogs": "Copy logs",
     "settings.copyVersion": "Copy version",
+    "settings.iconAppliedDock": "The Dock icon matches this theme.",
+    "settings.iconAppliedWindow": "The window and taskbar icon match this theme.",
+    "settings.iconDefault": "The app icon stays the usual one.",
+    "settings.iconFollowsTheme": "App icon follows the theme",
+    "settings.iconNotSaved": "Couldn't save the theme. It is used until you close the app.",
+    "settings.iconSaved": "Theme saved.",
+    "settings.iconUnsupported": "This computer can't change the running app icon. The choice is saved and applies on Mac and Windows.",
     "settings.language": "Language",
     "settings.languageNotSaved": "Couldn't save the language. It is used until you close the app.",
     "settings.languageSystem": "Same as the system",
@@ -589,7 +654,7 @@
     "shortcuts.viewFiles": "Files",
     "shortcuts.viewHistory": "History",
     "shortcuts.viewLibrary": "Library",
-    "shortcuts.viewSnapshots": "Snapshots",
+    "shortcuts.viewSnapshots": "Backups",
     "snapshots.backupDrives": "Back up drive crates",
     "snapshots.backupDrivesBusy": "Backing up drive crates…",
     "snapshots.count": {
@@ -606,7 +671,7 @@
     "snapshots.drivesSaved": "Drive crates were copied into the backup on this computer.",
     "snapshots.drivesSkipped": "Skipped: {drives}.",
     "snapshots.empty": "No snapshots yet. Take a snapshot to keep a point you can restore. Snapshots are kept, and this page does not expire them.",
-    "snapshots.noSearch": "Snapshots has no search. Press Ctrl+K to find a track or a file.",
+    "snapshots.noSearch": "Backups has no search. Press Ctrl+K to find a track or a file.",
     "snapshots.outsideChange": "Something outside this app changed the Serato folder. A snapshot was saved after that change. Undo puts back the previous snapshot.",
     "snapshots.outsideChangeLexicon": "Lexicon changed the Serato folder. A snapshot was saved after that change. Undo puts back the previous snapshot.",
     "snapshots.reading": "Reading snapshots",
@@ -644,6 +709,18 @@
     "tooltip.gigNext": "Go to the next step.",
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.help": "Open Help. Report a bug or request a feature on GitHub. The app does not post it.",
+    "tooltip.helpBug": "Describe a bug. GitHub opens so you can review it.",
+    "tooltip.helpClose": "Close Help. Esc.",
+    "tooltip.helpCopyLog": "Copy the log with your home folder replaced by ~.",
+    "tooltip.helpExpected": "What you expected to happen.",
+    "tooltip.helpFeature": "Describe a feature. GitHub opens so you can review it.",
+    "tooltip.helpGithub": "Open the project on GitHub.",
+    "tooltip.helpHappened": "What happened, or what should change.",
+    "tooltip.helpNames": "Keep track and crate names in the copied log. Off leaves them out.",
+    "tooltip.helpOpen": "Open the prefilled GitHub issue. You submit it there.",
+    "tooltip.helpReleases": "Open the release notes on GitHub.",
+    "tooltip.helpReport": "The report text, when it could not be copied.",
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
     "track.missingBadge": "missing",
     "track.numbered": "Track {id}",
@@ -656,11 +733,13 @@
     "view.crates": "Crates",
     "view.duplicates": "Duplicates",
     "view.files": "Files",
-    "view.gig": "Gig",
+    "view.gig": "Before a gig",
+    "view.group.health": "Library health",
+    "view.group.library": "Library",
     "view.history": "History",
     "view.label": "Views",
-    "view.missing": "Missing",
-    "view.snapshots": "Snapshots",
+    "view.missing": "Missing files",
+    "view.snapshots": "Backups",
     "view.stems": "Stems",
     "wizard.action.checkAgain": "Check again",
     "wizard.action.continue": "Continue",
@@ -710,6 +789,7 @@
     "tooltip.beatgridLock": "Lock the beatgrid so Serato does not move it.",
     "tooltip.chooseRelated": "Choose {name} as the track to link.",
     "tooltip.collapseCrate": "Hide the crates nested under {name}.",
+    "tooltip.colorway": "Choose the theme. The app icon can follow this choice.",
     "tooltip.consentAccept": "Share anonymous stats and crash reports.",
     "tooltip.consentDecline": "Don't share anonymous stats.",
     "tooltip.copyLogs": "Copy the log text.",
@@ -747,6 +827,7 @@
     "tooltip.findRelated": "Find a track to link by title or artist.",
     "tooltip.hideSearchCopies": "Hide the fields that were compared.",
     "tooltip.hotLoops": "Copy loops onto a free hot-cue pad in the Rekordbox file.",
+    "tooltip.iconFollowsTheme": "Match the Dock icon on Mac, or the window and taskbar icon on Windows, to the theme. On by default. The Finder icon and the Windows program icon stay the same.",
     "tooltip.importFile": "Choose a playlist file to import.",
     "tooltip.importM3u": "Add tracks from a playlist file into a new crate.",
     "tooltip.keepCopy": "Keep this copy: {name}. The others leave the library.",
@@ -778,6 +859,8 @@
     "tooltip.operationsRetry": "Try reading the operation log again.",
     "tooltip.overview": "Overview of the whole track. Click or drag to seek. Left arrow goes back 5 seconds. Right arrow goes forward 5 seconds.",
     "tooltip.playRow": "Start {name}. Space plays or pauses.",
+    "tooltip.portableCheck": "Check {name}. Read its crates and list what to fix before the gig. Nothing is written.",
+    "tooltip.portableClose": "Close the portable drive report.",
     "tooltip.prepareAdd": "Send this track to Prepare.",
     "tooltip.prepareRemove": "Take this track out of Prepare.",
     "tooltip.previous": "Play the previous track in this list.",
@@ -809,7 +892,7 @@
     "tooltip.session": "Show the tracks played in the session {name}.",
     "tooltip.settings": "Open settings.",
     "tooltip.settingsClose": "Close settings. Esc.",
-    "tooltip.shortcuts": "Show keyboard shortcuts. ?.",
+    "tooltip.shortcuts": "Keyboard shortcuts for this screen. ? opens this list.",
     "tooltip.shortcutsClose": "Close the shortcut list. Esc.",
     "tooltip.showSearchCopies": "Show the fields that were compared.",
     "tooltip.smartRules": "Edit the smart crate rules. Nothing is saved until you press Save rules.",
@@ -845,9 +928,9 @@
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
     "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
-    "tooltip.viewMissing": "Show tracks whose files are missing.",
-    "tooltip.viewSnapshots": "Show snapshots. Ctrl/Cmd+5.",
-    "tooltip.viewStems": "Show tracks that have stems.",
+    "tooltip.viewMissing": "Show tracks whose files are missing in this space.",
+    "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
+    "tooltip.viewStems": "Show tracks Serato has analyzed for stems. This does not separate the audio.",
     "tooltip.volume": "Change how loud playback is.",
     "tooltip.wizard.checkAgain": "Look for the Serato library again.",
     "tooltip.wizard.continue": "Continue to the next step.",
@@ -1026,6 +1109,7 @@
     "error.snapshot_incomplete": "Esa instantánea está incompleta.",
     "error.snapshot_unreadable": "No se pudo leer esa instantánea.",
     "error.space_unavailable": "Ese espacio no está disponible aquí.",
+    "error.theme_not_saved": "No se pudo guardar el tema.",
     "error.track_id_required": "Se necesita el identificador de la pista.",
     "error.track_not_in_library": "Esa pista no está en la biblioteca.",
     "error.track_not_in_space": "La pista no está en este espacio.",
@@ -1177,6 +1261,32 @@
     "gig.wholeSpaceInline": "todo el espacio",
     "gig.wordNotReady": "no listo",
     "gig.wordReady": "listo",
+    "help.bug": "Informar de un error",
+    "help.bugTitle": "Informar de un error",
+    "help.change": "Qué debería cambiar",
+    "help.copied": "Copiado. Pégalo en el informe de GitHub.",
+    "help.copyFailed": "No se pudo copiar el informe.",
+    "help.copyLog": "Copiar registro",
+    "help.diagnostics": "Qué se incluirá",
+    "help.expected": "Qué esperabas",
+    "help.feature": "Pedir una función",
+    "help.featureTitle": "Pedir una función",
+    "help.github": "Ver en GitHub",
+    "help.happened": "Qué ocurrió",
+    "help.loadFailed": "No se pudieron cargar los datos de diagnóstico.",
+    "help.loading": "Cargando diagnóstico…",
+    "help.logCopied": "Registro copiado.",
+    "help.logEmpty": "El registro está vacío.",
+    "help.names": "Incluir nombres de pistas y cajas del registro",
+    "help.nothing": "No se envía nada hasta que lo envíes en GitHub.",
+    "help.openGitHub": "Abrir en GitHub",
+    "help.opened": "Abierto en el navegador. Revísalo y envíalo en GitHub.",
+    "help.opening": "Abriendo…",
+    "help.releases": "Notas de la versión",
+    "help.reportText": "Texto del informe",
+    "help.review": "Lo verás en GitHub antes de enviarlo. La app no lo publica.",
+    "help.title": "Ayuda",
+    "help.tooLong": "El informe es demasiado largo para un enlace. Se copió. Pégalo en el informe de GitHub.",
     "history.chooseSession": "Elige una sesión.",
     "history.file": "Archivo",
     "history.notes": "Notas",
@@ -1259,6 +1369,16 @@
       one: "Apuntar {count} entrada del historial a la copia conservada.",
       other: "Apuntar {count} entradas del historial a la copia conservada."
     },
+    "menu.close": "Cerrar",
+    "menu.exportRekordbox": "Exportar para Rekordbox",
+    "menu.file": "Archivo",
+    "menu.focusSearch": "Ir a la búsqueda",
+    "menu.help": "Ayuda",
+    "menu.library": "Biblioteca",
+    "menu.minimize": "Minimizar",
+    "menu.resetWidth": "Restablecer el ancho de la lista",
+    "menu.tools": "Herramientas",
+    "menu.window": "Ventana",
     "merge.title": "Combinar copias",
     "merge.trashFiles": "Mover {files} a la Papelera.",
     "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
@@ -1346,6 +1466,22 @@
     "player.waveformUnavailable": "Forma de onda no disponible para este formato",
     "player.zoomIn": "Acercar",
     "player.zoomOut": "Alejar",
+    "portable.check": "Comprobar unidad",
+    "portable.checkLabel": "Comprobar {name}",
+    "portable.checking": "Comprobando esta unidad.",
+    "portable.kindFileSize": "Archivo demasiado grande",
+    "portable.kindMissing": "No está",
+    "portable.kindOffDrive": "Fuera de esta unidad",
+    "portable.kindPathLength": "Ruta demasiado larga",
+    "portable.kindSmartCrate": "Caja inteligente",
+    "portable.kindUnsafeName": "Nombre no válido",
+    "portable.missing": "Esta unidad no está conectada. No se ha borrado nada.",
+    "portable.notReady": "No está lista. Corrígelo en el portátil primero.",
+    "portable.readOnly": "Esto solo lee la unidad. No se copia ni se borra nada.",
+    "portable.ready": "Lista para salir del portátil.",
+    "portable.title": "Unidad portátil",
+    "portable.unreachable": "No se ha podido comprobar esta unidad.",
+    "portable.unreadable": "No se ha podido leer esta unidad.",
     "quickOpen.empty": "Escribe el nombre de una pista o de un archivo.",
     "quickOpen.file": "Archivo",
     "quickOpen.fileError": "No se pudieron buscar los archivos del disco. Las pistas que coinciden siguen en la lista.",
@@ -1420,8 +1556,20 @@
     "rules.saved": "Reglas guardadas.",
     "search.tracks": "Buscar pistas",
     "settings.about": "Acerca de",
+    "settings.colorway": "Tema",
+    "settings.colorway.daisyAge": "Daisy Age",
+    "settings.colorway.deepHouse": "Deep House",
+    "settings.colorway.motown": "Motown Soul",
+    "settings.colorwayPreview": "Vista previa del icono del tema",
     "settings.copyLogs": "Copiar registros",
     "settings.copyVersion": "Copiar versión",
+    "settings.iconAppliedDock": "El icono del Dock coincide con este tema.",
+    "settings.iconAppliedWindow": "El icono de la ventana y de la barra de tareas coincide con este tema.",
+    "settings.iconDefault": "El icono de la app se queda en el habitual.",
+    "settings.iconFollowsTheme": "El icono de la app sigue el tema",
+    "settings.iconNotSaved": "No se pudo guardar el tema. Se usa hasta que cierres la app.",
+    "settings.iconSaved": "Tema guardado.",
+    "settings.iconUnsupported": "Este ordenador no puede cambiar el icono de la app en ejecución. La elección se guarda y se aplica en Mac y Windows.",
     "settings.language": "Idioma",
     "settings.languageNotSaved": "No se pudo guardar el idioma. Se usa hasta que cierres la app.",
     "settings.languageSystem": "El mismo que el sistema",
@@ -1461,7 +1609,7 @@
     "shortcuts.viewFiles": "Archivos",
     "shortcuts.viewHistory": "Historial",
     "shortcuts.viewLibrary": "Biblioteca",
-    "shortcuts.viewSnapshots": "Instantáneas",
+    "shortcuts.viewSnapshots": "Copias de seguridad",
     "snapshots.backupDrives": "Copiar cajas de las unidades",
     "snapshots.backupDrivesBusy": "Copiando cajas de las unidades…",
     "snapshots.count": {
@@ -1478,7 +1626,7 @@
     "snapshots.drivesSaved": "Las cajas de las unidades se copiaron en la copia de este equipo.",
     "snapshots.drivesSkipped": "Omitidas: {drives}.",
     "snapshots.empty": "Todavía no hay instantáneas. Toma una para guardar un punto al que puedas volver. Las instantáneas se conservan y esta página no las caduca.",
-    "snapshots.noSearch": "Instantáneas no tiene búsqueda. Pulsa Ctrl+K para buscar una pista o un archivo.",
+    "snapshots.noSearch": "Copias de seguridad no tiene búsqueda. Pulsa Ctrl+K para buscar una pista o un archivo.",
     "snapshots.outsideChange": "Algo ajeno a esta app cambió la carpeta de Serato. Se guardó una instantánea después de ese cambio. Deshacer restaura la instantánea anterior.",
     "snapshots.outsideChangeLexicon": "Lexicon cambió la carpeta de Serato. Se guardó una instantánea después de ese cambio. Deshacer restaura la instantánea anterior.",
     "snapshots.reading": "Leyendo instantáneas",
@@ -1516,7 +1664,19 @@
     "tooltip.gigNext": "Pasa al siguiente paso.",
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
-    "tooltip.viewGig": "Comprueba la biblioteca antes de un bolo. Solo lectura.",
+    "tooltip.help": "Abre Ayuda. Informa de un error o pide una función en GitHub. La app no lo publica.",
+    "tooltip.helpBug": "Describe un error. GitHub se abre para que lo revises.",
+    "tooltip.helpClose": "Cierra Ayuda. Esc.",
+    "tooltip.helpCopyLog": "Copia el registro con tu carpeta personal reemplazada por ~.",
+    "tooltip.helpExpected": "Qué esperabas que ocurriera.",
+    "tooltip.helpFeature": "Describe una función. GitHub se abre para que la revises.",
+    "tooltip.helpGithub": "Abre el proyecto en GitHub.",
+    "tooltip.helpHappened": "Qué ocurrió, o qué debería cambiar.",
+    "tooltip.helpNames": "Conserva los nombres de pistas y cajas en el registro copiado. Desactivado los omite.",
+    "tooltip.helpOpen": "Abre el informe de GitHub ya rellenado. Tú lo envías allí.",
+    "tooltip.helpReleases": "Abre las notas de la versión en GitHub.",
+    "tooltip.helpReport": "El texto del informe, cuando no se pudo copiar.",
+    "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
     "track.missingBadge": "no encontrada",
     "track.numbered": "Pista {id}",
     "track.stemsBadge": "stems",
@@ -1528,11 +1688,13 @@
     "view.crates": "Cajas",
     "view.duplicates": "Duplicados",
     "view.files": "Archivos",
-    "view.gig": "Bolo",
+    "view.gig": "Antes del bolo",
+    "view.group.health": "Salud de la biblioteca",
+    "view.group.library": "Biblioteca",
     "view.history": "Historial",
     "view.label": "Vistas",
-    "view.missing": "No encontradas",
-    "view.snapshots": "Instantáneas",
+    "view.missing": "Archivos no encontrados",
+    "view.snapshots": "Copias de seguridad",
     "view.stems": "Stems",
     "wizard.action.checkAgain": "Volver a buscar",
     "wizard.action.continue": "Continuar",
@@ -1582,6 +1744,7 @@
     "tooltip.beatgridLock": "Bloquea la rejilla de tiempo para que Serato no la mueva.",
     "tooltip.chooseRelated": "Elige {name} como pista para enlazar.",
     "tooltip.collapseCrate": "Oculta las cajas que están dentro de {name}.",
+    "tooltip.colorway": "Elige el tema. El icono de la app puede seguir esta elección.",
     "tooltip.consentAccept": "Comparte estadísticas anónimas e informes de fallos.",
     "tooltip.consentDecline": "No compartas estadísticas anónimas.",
     "tooltip.copyLogs": "Copia el texto del registro.",
@@ -1619,6 +1782,7 @@
     "tooltip.findRelated": "Busca una pista para enlazar por título o artista.",
     "tooltip.hideSearchCopies": "Oculta los campos que se compararon.",
     "tooltip.hotLoops": "Copia los bucles a un pad de cue libre en el archivo de Rekordbox.",
+    "tooltip.iconFollowsTheme": "Haz que el icono del Dock en Mac, o el de la ventana y la barra de tareas en Windows, coincida con el tema. Activado de forma predeterminada. El icono del Finder y el icono del programa en Windows no cambian.",
     "tooltip.importFile": "Elige un archivo de lista de reproducción para importar.",
     "tooltip.importM3u": "Añade pistas de un archivo de lista a una caja nueva.",
     "tooltip.keepCopy": "Conserva esta copia: {name}. Las demás salen de la biblioteca.",
@@ -1650,6 +1814,8 @@
     "tooltip.operationsRetry": "Intenta leer el registro de operaciones otra vez.",
     "tooltip.overview": "Vista de toda la pista. Haz clic o arrastra para buscar. Izquierda retrocede 5 segundos. Derecha avanza 5 segundos.",
     "tooltip.playRow": "Empieza {name}. Espacio reproduce o pausa.",
+    "tooltip.portableCheck": "Comprueba {name}. Lee sus cajas y lista lo que hay que corregir antes del bolo. No se escribe nada.",
+    "tooltip.portableClose": "Cierra el informe de la unidad portátil.",
     "tooltip.prepareAdd": "Envía esta pista a Preparar.",
     "tooltip.prepareRemove": "Quita esta pista de Preparar.",
     "tooltip.previous": "Reproduce la pista anterior de esta lista.",
@@ -1681,7 +1847,7 @@
     "tooltip.session": "Muestra las pistas reproducidas en la sesión {name}.",
     "tooltip.settings": "Abre los ajustes.",
     "tooltip.settingsClose": "Cierra los ajustes. Esc.",
-    "tooltip.shortcuts": "Muestra los atajos de teclado. ?.",
+    "tooltip.shortcuts": "Atajos de teclado de esta pantalla. ? abre esta lista.",
     "tooltip.shortcutsClose": "Cierra la lista de atajos. Esc.",
     "tooltip.showSearchCopies": "Muestra los campos que se compararon.",
     "tooltip.smartRules": "Edita las reglas de la caja inteligente. No se guarda nada hasta que pulses Guardar reglas.",
@@ -1717,9 +1883,9 @@
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
     "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
-    "tooltip.viewMissing": "Muestra las pistas cuyo archivo no se encuentra.",
-    "tooltip.viewSnapshots": "Muestra las instantáneas. Ctrl/Cmd+5.",
-    "tooltip.viewStems": "Muestra las pistas que tienen stems.",
+    "tooltip.viewMissing": "Muestra las pistas de este espacio cuyo archivo no se encuentra.",
+    "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
+    "tooltip.viewStems": "Muestra las pistas que Serato ya analizó para stems. No separa el audio.",
     "tooltip.volume": "Cambia el volumen de la reproducción.",
     "tooltip.wizard.checkAgain": "Vuelve a buscar la biblioteca de Serato.",
     "tooltip.wizard.continue": "Sigue al paso siguiente.",
@@ -1814,10 +1980,10 @@
     N: "Ñ",
     Y: "Ý"
   };
-  function pseudo(text) {
-    const parts = text.split(/(\{[a-zA-Z0-9_]+\})/);
+  function pseudo(text2) {
+    const parts = text2.split(/(\{[a-zA-Z0-9_]+\})/);
     const body = parts.map((part) => part.startsWith("{") ? part : part.replace(/[a-zA-Z]/g, (ch) => ACCENTS[ch] ?? ch)).join("");
-    const letters = text.replace(/\{[a-zA-Z0-9_]+\}/g, "").length;
+    const letters = text2.replace(/\{[a-zA-Z0-9_]+\}/g, "").length;
     const pad = "~".repeat(Math.max(1, Math.ceil(letters * 0.3)));
     return `[${body} ${pad}]`;
   }
@@ -1831,10 +1997,10 @@
     const exact = count === 0 ? message.zero : void 0;
     return exact ?? message[rules.select(count)] ?? message.other;
   }
-  function fill(text, params, locale) {
-    if (!params) return text;
+  function fill(text2, params, locale) {
+    if (!params) return text2;
     const tag = locale === PSEUDO ? "en" : locale;
-    return text.replace(/\{([a-zA-Z0-9_]+)\}/g, (whole, name) => {
+    return text2.replace(/\{([a-zA-Z0-9_]+)\}/g, (whole, name) => {
       const value = params[name];
       if (value === void 0) return whole;
       return typeof value === "number" ? new Intl.NumberFormat(tag).format(value) : value;
@@ -1858,12 +2024,12 @@
     }
     return Object.keys(params).length ? params : void 0;
   }
-  function codedText(text, code, params) {
+  function codedText(text2, code, params) {
     if (typeof code === "string") {
       const key = `error.${code}`;
       if (hasKey(key)) return t(key, params ?? void 0);
     }
-    return text;
+    return text2;
   }
   function serverMessage(body, fallback) {
     if (typeof body?.code === "string") return codedText(body.error || fallback, body.code, body.params);
@@ -2231,6 +2397,18 @@
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     shortcuts: spec("tooltip.shortcuts"),
+    help: spec("tooltip.help"),
+    helpBug: spec("tooltip.helpBug"),
+    helpFeature: spec("tooltip.helpFeature"),
+    helpGithub: spec("tooltip.helpGithub"),
+    helpReleases: spec("tooltip.helpReleases"),
+    helpClose: spec("tooltip.helpClose"),
+    helpHappened: spec("tooltip.helpHappened"),
+    helpExpected: spec("tooltip.helpExpected"),
+    helpNames: spec("tooltip.helpNames"),
+    helpCopyLog: spec("tooltip.helpCopyLog"),
+    helpOpen: spec("tooltip.helpOpen"),
+    helpReport: spec("tooltip.helpReport"),
     settings: spec("tooltip.settings"),
     search: spec("tooltip.search"),
     exportM3u: spec("tooltip.exportM3u"),
@@ -2298,6 +2476,7 @@
     wizardSecondary: spec("tooltip.wizardSecondary"),
     trackList: spec("tooltip.trackList"),
     filesList: spec("tooltip.filesList"),
+    portableClose: spec("tooltip.portableClose"),
     snapshotsList: spec("tooltip.snapshotsList"),
     splitter: spec("tooltip.splitter"),
     previous: spec("tooltip.previous"),
@@ -2322,6 +2501,8 @@
     linkNote: spec("tooltip.linkNote"),
     linkRating: spec("tooltip.linkRating"),
     language: spec("tooltip.language"),
+    colorway: spec("tooltip.colorway"),
+    iconFollowsTheme: spec("tooltip.iconFollowsTheme"),
     libraryGeneration: spec("tooltip.libraryGeneration"),
     linkMutual: spec("tooltip.linkMutual"),
     saveLink: spec("tooltip.saveLink"),
@@ -2404,7 +2585,8 @@
       "crate-rename": tips.crateRename,
       "crate-color": tips.crateColor,
       "crate-delete": tips.crateDelete,
-      "open-shortcuts": tips.shortcuts,
+      "open-help": tips.help,
+      "shortcuts-title": tips.shortcuts,
       "open-settings": tips.settings,
       search: tips.search,
       "export-m3u": tips.exportM3u,
@@ -2440,9 +2622,24 @@
       "rerun-wizard": tips.rerunWizard,
       "open-logs": tips.openLogs,
       "copy-logs": tips.copyLogs,
+      "about-github": tips.helpGithub,
+      "help-bug": tips.helpBug,
+      "help-feature": tips.helpFeature,
+      "help-github": tips.helpGithub,
+      "help-releases": tips.helpReleases,
+      "help-close": tips.helpClose,
+      "help-happened": tips.helpHappened,
+      "help-expected": tips.helpExpected,
+      "help-names": tips.helpNames,
+      "help-copy-log": tips.helpCopyLog,
+      "help-open-github": tips.helpOpen,
+      "help-report-close": tips.helpClose,
+      "help-log-fallback": tips.helpReport,
       "settings-close": tips.settingsClose,
       "log-fallback": tips.logFallback,
       "language-select": tips.language,
+      "colorway-select": tips.colorway,
+      "icon-follows-theme": tips.iconFollowsTheme,
       "library-generation": tips.libraryGeneration,
       "merge-trash": tips.mergeTrash,
       "merge-cancel": tips.mergeCancel,
@@ -2454,7 +2651,7 @@
       "files-cancel": tips.filesCancel,
       "files-review": tips.filesReview,
       "files-confirm": tips.filesConfirm,
-      "shortcuts-close": tips.shortcutsClose,
+      "portable-close": tips.portableClose,
       "quick-open-query": tips.quickOpen,
       "quick-open-retry": tips.quickOpenRetry,
       "quick-open-close": tips.quickOpenClose,
@@ -2527,6 +2724,9 @@
   function openFile(name) {
     return spec("tooltip.openFile", { name });
   }
+  function portableCheck(name) {
+    return spec("tooltip.portableCheck", { name });
+  }
   function missingDrive(name) {
     return spec("tooltip.missingDrive", { name });
   }
@@ -2540,9 +2740,9 @@
   function keepCopy(name) {
     return spec("tooltip.keepCopy", { name });
   }
-  function quickOpenHit(kind, title2, detail) {
-    if (detail) return spec("tooltip.quickOpenHitDetail", { kind, title: title2, detail });
-    return spec("tooltip.quickOpenHit", { kind, title: title2 });
+  function quickOpenHit(kind2, title2, detail) {
+    if (detail) return spec("tooltip.quickOpenHitDetail", { kind: kind2, title: title2, detail });
+    return spec("tooltip.quickOpenHit", { kind: kind2, title: title2 });
   }
 
   // src/tooltip.ts
@@ -2617,20 +2817,20 @@
   }
   function applyStaticTooltips(root = document) {
     root.querySelectorAll("[id]").forEach((node) => {
-      const text = staticTip(node.id);
-      if (text) setTooltip(node, text);
+      const text2 = staticTip(node.id);
+      if (text2) setTooltip(node, text2);
     });
     root.querySelectorAll("[data-view]").forEach((node) => {
-      const text = viewTip(node.dataset.view ?? "");
-      if (text) setTooltip(node, text);
+      const text2 = viewTip(node.dataset.view ?? "");
+      if (text2) setTooltip(node, text2);
     });
     root.querySelectorAll("[data-sort]").forEach((node) => {
       const label = node.textContent?.trim() || node.dataset.sort || "";
       setTooltip(node, sortTip(node.dataset.sort ?? "", label));
     });
     root.querySelectorAll("[data-crate-sort]").forEach((node) => {
-      const text = crateSortTip(node.dataset.crateSort ?? "");
-      if (text) setTooltip(node, text);
+      const text2 = crateSortTip(node.dataset.crateSort ?? "");
+      if (text2) setTooltip(node, text2);
     });
   }
   function refreshTooltips(root = document) {
@@ -2690,12 +2890,12 @@
     timer = window.setTimeout(() => show(target), delay);
   }
   function show(target) {
-    const text = target.dataset.tooltip?.trim() ?? "";
-    if (!text) return;
+    const text2 = target.dataset.tooltip?.trim() ?? "";
+    if (!text2) return;
     if (current && current !== target) restoreDescribedBy(current);
     current = target;
     const tip = ensureTip();
-    tip.textContent = text;
+    tip.textContent = text2;
     openTip(tip);
     place(target, tip);
     addDescribedBy(target);
@@ -2824,7 +3024,7 @@
     });
   }
   async function loadGigCheck(keepStep = false) {
-    const token = ++state.gigToken;
+    const token2 = ++state.gigToken;
     if (!keepStep) stepIndex = 0;
     beginBusy();
     let settle = "none";
@@ -2833,9 +3033,9 @@
       const response = await fetch(
         `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
       );
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       const payload = await readJSON(response).catch(() => null);
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       if (!response.ok || payload === null) {
         failStatus(serverMessage(payload, t("gig.unreadable")));
         settle = "retry";
@@ -2847,11 +3047,11 @@
       renderGigReport(payload);
       settle = "heading";
     } catch {
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       failStatus(t("gig.unreachable"));
       settle = "retry";
     } finally {
-      if (token !== state.gigToken) return;
+      if (token2 !== state.gigToken) return;
       endBusy();
       if (settle === "retry") el("gig-refresh").focus();
       if (settle === "heading") focusHeading();
@@ -2923,11 +3123,11 @@
     step.textContent = t("gig.stepOf", { index: index + 1, total: STEP_COUNT });
     return step;
   }
-  function heading(text) {
+  function heading(text2) {
     const title2 = document.createElement("h3");
     title2.id = "gig-step-heading";
     title2.tabIndex = -1;
-    title2.textContent = text;
+    title2.textContent = text2;
     return title2;
   }
   function linesFor(payload, index) {
@@ -2982,10 +3182,10 @@
     }
     if (!any) parent.append(noteLine(t(STEPS[STEP_COUNT - 1].empty)));
   }
-  function noteLine(text) {
+  function noteLine(text2) {
     const line = document.createElement("p");
     line.className = "gig-note";
-    line.textContent = text;
+    line.textContent = text2;
     return line;
   }
   function detailsGroup(label, lines) {
@@ -3011,9 +3211,9 @@
     }
     return details;
   }
-  function item(text) {
+  function item(text2) {
     const row = document.createElement("li");
-    row.textContent = text;
+    row.textContent = text2;
     return row;
   }
   function actions(primary) {
@@ -3058,6 +3258,200 @@
     if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
     fragment.append(actions(null));
     return fragment;
+  }
+
+  // src/portable.ts
+  var FINDING_CAP = 100;
+  var KIND_KEY = {
+    off_drive: "portable.kindOffDrive",
+    missing: "portable.kindMissing",
+    smart_crate: "portable.kindSmartCrate",
+    unsafe_name: "portable.kindUnsafeName",
+    path_length: "portable.kindPathLength",
+    file_size: "portable.kindFileSize"
+  };
+  var token = 0;
+  var latest2 = null;
+  var opener = null;
+  var wired = false;
+  function portableDriveRoot(path) {
+    const trimmed = path.trim();
+    if (!trimmed) return "";
+    const unified = trimmed.replace(/\\/g, "/");
+    const marker = unified.search(/\/_Serato_(\/|$)/i);
+    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
+    const volumes = /^\/Volumes\/[^/]+/.exec(base);
+    if (volumes) return volumes[0];
+    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
+    if (media2) return media2[0];
+    const mnt = /^\/mnt\/[^/]+/.exec(base);
+    if (mnt) return mnt[0];
+    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
+    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
+    const win = /^[A-Za-z]:/.exec(trimmed);
+    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
+    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
+  }
+  function parseDriveReport(value) {
+    if (!isRecord(value)) return null;
+    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
+    if (typeof value.summary !== "string") return null;
+    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
+    const findings = [];
+    for (const item2 of value.findings) {
+      if (!isRecord(item2) || typeof item2.kind !== "string" || typeof item2.fix !== "string") return null;
+      findings.push({
+        kind: item2.kind,
+        crate: text(item2.crate),
+        track: text(item2.track),
+        path: text(item2.path),
+        found: text(item2.found),
+        fix: item2.fix
+      });
+    }
+    const errors = [];
+    for (const item2 of value.errors) {
+      if (!isRecord(item2) || typeof item2.message !== "string") return null;
+      errors.push({ crate: text(item2.crate), message: item2.message });
+    }
+    return {
+      drive: text(value.drive),
+      name: text(value.name),
+      ready: value.ready,
+      missing_drive: value.missing_drive,
+      summary: value.summary,
+      findings,
+      errors
+    };
+  }
+  function portableDriveButton(name, path) {
+    const button2 = buttonEl(portableCheck(name));
+    button2.className = "files-portable";
+    button2.dataset.portableName = name;
+    button2.textContent = t("portable.check");
+    button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    button2.addEventListener("click", (event) => {
+      event.stopPropagation();
+      void openPortableCheck(path, button2);
+    });
+    return button2;
+  }
+  async function openPortableCheck(path, trigger) {
+    wirePortable();
+    const drive = portableDriveRoot(path);
+    const mine = ++token;
+    opener = trigger ?? null;
+    const dialog = el("portable-dialog");
+    latest2 = null;
+    el("portable-verdict").textContent = "";
+    el("portable-summary").textContent = "";
+    el("portable-findings").replaceChildren();
+    el("portable-status").textContent = t("portable.checking");
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    if (!drive) {
+      el("portable-status").textContent = t("portable.unreadable");
+      return;
+    }
+    try {
+      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
+      if (mine !== token) return;
+      const body = await readJSON(response).catch(() => null);
+      if (mine !== token) return;
+      if (!response.ok) {
+        fail(serverMessage(errorBody(body), t("portable.unreadable")));
+        return;
+      }
+      const report = parseDriveReport(body);
+      if (!report) {
+        fail(t("portable.unreadable"));
+        return;
+      }
+      latest2 = report;
+      el("portable-status").textContent = "";
+      renderPortableReport(report);
+    } catch {
+      if (mine !== token) return;
+      fail(t("portable.unreachable"));
+    }
+  }
+  function repaintPortable() {
+    for (const button2 of document.querySelectorAll(".files-portable")) {
+      button2.textContent = t("portable.check");
+      const name = button2.dataset.portableName ?? "";
+      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    }
+    if (latest2) renderPortableReport(latest2);
+  }
+  function wirePortable() {
+    if (wired) return;
+    wired = true;
+    el("portable-close").addEventListener("click", () => {
+      el("portable-dialog").close();
+      if (opener?.isConnected) opener.focus();
+    });
+  }
+  function renderPortableReport(report) {
+    latest2 = report;
+    const verdict = el("portable-verdict");
+    if (report.missing_drive) verdict.textContent = t("portable.missing");
+    else if (report.ready) verdict.textContent = t("portable.ready");
+    else verdict.textContent = t("portable.notReady");
+    el("portable-summary").textContent = report.summary;
+    const list = el("portable-findings");
+    const items = [];
+    const shown = report.findings.slice(0, FINDING_CAP);
+    for (const finding of shown) {
+      const row = document.createElement("li");
+      const kind2 = document.createElement("span");
+      kind2.className = "portable-kind";
+      kind2.textContent = kindLabel(finding.kind);
+      row.append(kind2);
+      if (finding.fix) {
+        row.append(document.createTextNode(" "));
+        const fix = document.createElement("span");
+        fix.className = "portable-fix";
+        fix.textContent = finding.fix;
+        row.append(fix);
+      }
+      items.push(row);
+    }
+    for (const error2 of report.errors) {
+      const row = document.createElement("li");
+      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
+      items.push(row);
+    }
+    const hidden = report.findings.length - shown.length;
+    if (hidden > 0) {
+      const row = document.createElement("li");
+      row.textContent = t("files.andMore", { count: hidden });
+      items.push(row);
+    }
+    list.replaceChildren(...items);
+  }
+  function kindLabel(kind2) {
+    const key = KIND_KEY[kind2];
+    return key ? t(key) : kind2;
+  }
+  function fail(message) {
+    latest2 = null;
+    el("portable-verdict").textContent = "";
+    el("portable-summary").textContent = "";
+    el("portable-findings").replaceChildren();
+    el("portable-status").textContent = message;
+  }
+  function isRecord(value) {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+  }
+  function text(value) {
+    return typeof value === "string" ? value : "";
+  }
+  function errorBody(value) {
+    if (!isRecord(value)) return null;
+    const body = {};
+    if (typeof value.error === "string") body.error = value.error;
+    if (typeof value.code === "string") body.code = value.code;
+    if (body.error === void 0 && body.code === void 0) return null;
+    return body;
   }
 
   // src/restore.ts
@@ -3201,8 +3595,8 @@
     const status = el("operations-status");
     const list = el("operations-list");
     list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest2 = state.operations[state.operations.length - 1];
-    const failed = latest2?.result === "rollback_failed";
+    const latest3 = state.operations[state.operations.length - 1];
+    const failed = latest3?.result === "rollback_failed";
     alert.hidden = !failed;
     alert.textContent = failed ? t("operations.rollbackFailed") : "";
     list.replaceChildren();
@@ -4309,9 +4703,9 @@
         const buffer = await response.arrayBuffer();
         const parsed = parseSwf1(buffer);
         if (parsed) return parsed;
-        const text = new TextDecoder().decode(buffer);
+        const text2 = new TextDecoder().decode(buffer);
         try {
-          const payload = JSON.parse(text);
+          const payload = JSON.parse(text2);
           if (payload && typeof payload === "object" && payload.available === false) {
             return "unavailable";
           }
@@ -4502,10 +4896,10 @@
       return this.parsed.durationMs / 1e3;
     }
   };
-  function button(label, text, tooltip) {
+  function button(label, text2, tooltip) {
     const element = buttonEl(tooltip);
     element.className = "waveform-zoom-button";
-    element.textContent = text;
+    element.textContent = text2;
     element.setAttribute("aria-label", label);
     return element;
   }
@@ -4531,7 +4925,7 @@
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
   var listeners = /* @__PURE__ */ new Set();
-  var wired = /* @__PURE__ */ new WeakSet();
+  var wired2 = /* @__PURE__ */ new WeakSet();
   var CUE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
   var media = null;
   var trackId = null;
@@ -4724,8 +5118,8 @@
     return audio;
   }
   function wire(element) {
-    if (wired.has(element)) return;
-    wired.add(element);
+    if (wired2.has(element)) return;
+    wired2.add(element);
     element.addEventListener("play", () => {
       playing = true;
       emit();
@@ -4789,18 +5183,18 @@
     return true;
   }
   function loadCues(id) {
-    const token = ++cueToken;
+    const token2 = ++cueToken;
     cues = [];
     waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
     void readCues(id).then(
       (found) => {
-        if (token !== cueToken || trackId !== id) return;
+        if (token2 !== cueToken || trackId !== id) return;
         cues = found.cues;
         waveform?.setMarkers(id, found);
         emit();
       },
       () => {
-        if (token !== cueToken || trackId !== id) return;
+        if (token2 !== cueToken || trackId !== id) return;
         cues = [];
         waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
         emit();
@@ -5656,7 +6050,7 @@
     state.selectedId = id;
     syncMergeButton();
     paintRows();
-    const token = ++state.request;
+    const token2 = ++state.request;
     const pending = document.createElement("p");
     pending.className = "detail-empty";
     pending.textContent = t("detail.reading");
@@ -5665,11 +6059,11 @@
       const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
       const payload = await readJSONOr(response, {});
       if (!response.ok) throw new Error(serverMessage(payload, t("detail.readFailed", { status: String(response.status) })));
-      if (token !== state.request) return;
+      if (token2 !== state.request) return;
       if (payload.serato) applyStatus(payload.serato);
       renderDetail(payload);
     } catch (error2) {
-      if (token !== state.request) return;
+      if (token2 !== state.request) return;
       const failure = document.createElement("p");
       failure.className = "detail-error";
       failure.textContent = failureOf(error2).message;
@@ -5705,10 +6099,10 @@
       const name = document.createElement("div");
       name.className = "label";
       name.textContent = label;
-      const text = document.createElement("div");
-      text.className = "value";
-      text.textContent = value;
-      row.append(name, text);
+      const text2 = document.createElement("div");
+      text2.className = "value";
+      text2.textContent = value;
+      row.append(name, text2);
       body.append(row);
     }
     if (entry.asset_id) {
@@ -6071,17 +6465,17 @@
     return section;
   }
   async function loadRelated(track, section, writable, query) {
-    const token = ++relatedRequest;
+    const token2 = ++relatedRequest;
     const path = track.resolved_path || track.edit?.portable_id || "";
     const params = new URLSearchParams({ path, space: state.space });
     try {
       const response = await fetch(`/api/related?${params}`);
       const payload = await readJSONOr(response, {});
-      if (token !== relatedRequest || !section.isConnected) return;
+      if (token2 !== relatedRequest || !section.isConnected) return;
       if (!response.ok) throw new Error(serverMessage(payload, t("related.loadFailed")));
       renderRelated(track, section, writable, payload, query);
     } catch (error2) {
-      if (token !== relatedRequest || !section.isConnected) return;
+      if (token2 !== relatedRequest || !section.isConnected) return;
       section.setAttribute("aria-busy", "false");
       const status = section.querySelector("[role=status]");
       if (status) status.textContent = failureOf(error2).message;
@@ -6232,10 +6626,10 @@
     const ratingLabel = document.createElement("label");
     ratingLabel.append(document.createTextNode(t("related.linkRating")));
     const rating = selectEl(tips.linkRating);
-    for (const [value, text] of [["", t("rating.none")], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]) {
+    for (const [value, text2] of [["", t("rating.none")], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]) {
       const option = document.createElement("option");
       option.value = value;
-      option.textContent = text;
+      option.textContent = text2;
       rating.append(option);
     }
     ratingLabel.append(rating);
@@ -6384,9 +6778,9 @@
     const detail = lastDetail;
     if (detail && detail.id === state.selectedId && el("detail").querySelector(".detail-body")) renderDetail(detail);
   }
-  function setNotice(text) {
-    el("notice").textContent = text || "";
-    el("notice").hidden = !text;
+  function setNotice(text2) {
+    el("notice").textContent = text2 || "";
+    el("notice").hidden = !text2;
   }
   function statusLine(info) {
     if (info?.code) return codedText(info.message || t("status.library"), info.code, messageParams(info.params));
@@ -6410,8 +6804,8 @@
     installUnknown: "generation.reason.installUnknown"
   };
   function generationKind(info) {
-    const kind = info?.generation?.kind ?? "";
-    return GENERATION_LABELS[kind] ?? "generation.checking";
+    const kind2 = info?.generation?.kind ?? "";
+    return GENERATION_LABELS[kind2] ?? "generation.checking";
   }
   function generationReason(info) {
     const generation = info?.generation;
@@ -6426,9 +6820,9 @@
   function paintGeneration(info) {
     const button2 = document.getElementById("library-generation");
     if (!(button2 instanceof HTMLButtonElement)) return;
-    const kind = t(generationKind(info));
-    button2.textContent = kind;
-    button2.setAttribute("aria-label", t("generation.named", { kind }));
+    const kind2 = t(generationKind(info));
+    button2.textContent = kind2;
+    button2.setAttribute("aria-label", t("generation.named", { kind: kind2 }));
     setTooltip(button2, tips.libraryGeneration);
     const note = document.getElementById("library-generation-note");
     if (note) {
@@ -6555,10 +6949,10 @@
       else setNotice(failureOf(error2).message);
     }
   }
-  async function saveRules(id, text) {
+  async function saveRules(id, text2) {
     let rules;
     try {
-      rules = JSON.parse(text);
+      rules = JSON.parse(text2);
     } catch {
       setNotice(t("error.smart_rules_json"));
       return;
@@ -6648,11 +7042,11 @@
     }
   }
   async function importPlaylist(file) {
-    const text = await file.text();
+    const text2 = await file.text();
     const name = file.name.replace(/\.m3u8?$/i, "") || t("import.defaultName");
     const parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
     try {
-      const result = await postJSON("/api/import.m3u", { space: state.space, parent, name, text });
+      const result = await postJSON("/api/import.m3u", { space: state.space, parent, name, text: text2 });
       const missed = result.unmatched_count ? ` ${t("import.unmatched", { count: Number(result.unmatched_count) })}` : "";
       setNotice(`${t("import.added", { count: Number(result.added) || 0 })}${missed}${result.warning ? ` ${result.warning}` : ""}`);
       await loadLibrary();
@@ -6810,7 +7204,7 @@
     const elsewhere = options.elsewhere === true;
     const refresh = options.refresh === true;
     const atRoots = path === "" && !elsewhere;
-    const token = ++filesRequest;
+    const token2 = ++filesRequest;
     state.filesLoading = true;
     state.filesError = "";
     if (!options.keepMessage) state.filesMessage = "";
@@ -6828,7 +7222,7 @@
     renderFiles();
     if (refresh || atRoots) {
       const rootsPayload = await fetchLibraryRoots(refresh);
-      if (token !== filesRequest) return;
+      if (token2 !== filesRequest) return;
       state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
     }
     if (atRoots) {
@@ -6851,7 +7245,7 @@
     const query = params.size ? `?${params.toString()}` : "";
     const response = await fetch(`/api/files${query}`);
     const payload = await readJSONOr(response, {});
-    if (token !== filesRequest) return;
+    if (token2 !== filesRequest) return;
     if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
     state.filesPath = payload.path || "";
     state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
@@ -6867,7 +7261,7 @@
     renderFiles();
   }
   async function searchFiles(query) {
-    const token = ++filesRequest;
+    const token2 = ++filesRequest;
     const scope = state.filesAtRoots ? "" : state.filesPath;
     const elsewhere = state.filesElsewhere && !state.filesAtRoots;
     state.filesLoading = true;
@@ -6881,7 +7275,7 @@
     if (elsewhere) params.set("elsewhere", "1");
     const response = await fetch(`/api/files?${params.toString()}`);
     const payload = await readJSONOr(response, {});
-    if (token !== filesRequest) return;
+    if (token2 !== filesRequest) return;
     if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
     const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
     state.filesEntries = entries;
@@ -6984,7 +7378,9 @@
           path: root.path,
           detail: root.detail,
           kind: root.kind === "serato_drive" ? "drive" : "folder",
-          missing: root.missing
+          missing: root.missing,
+          removable: root.removable,
+          serato: root.serato
         };
         return entry;
       });
@@ -7061,10 +7457,10 @@
     list.append(spacer2);
     return spacer2;
   }
-  function fileNote(text) {
+  function fileNote(text2) {
     const note = document.createElement("p");
     note.className = "files-empty";
-    note.textContent = text;
+    note.textContent = text2;
     return note;
   }
   function rootsEmpty() {
@@ -7190,6 +7586,7 @@
         });
       }
       row.append(button2);
+      if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
       return row;
     }
     if (entry.kind !== "file") {
@@ -7237,13 +7634,13 @@
     row.append(label);
     return row;
   }
-  function fileIcon(kind) {
+  function fileIcon(kind2) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("width", "20");
     svg.setAttribute("height", "20");
     svg.setAttribute("aria-hidden", "true");
-    svg.classList.add("files-icon", kind === "drive" ? "files-icon-drive" : "files-icon-folder");
+    svg.classList.add("files-icon", kind2 === "drive" ? "files-icon-drive" : "files-icon-folder");
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "currentColor");
@@ -7251,7 +7648,7 @@
     path.setAttribute("stroke-linejoin", "round");
     path.setAttribute(
       "d",
-      kind === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z"
+      kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z"
     );
     svg.append(path);
     return svg;
@@ -7460,6 +7857,11 @@
   var mergeLoading = false;
   var consentSettled = false;
   var privacySync = false;
+  var appearanceSync = false;
+  var COLORWAYS = ["motown", "deep-house", "daisy-age"];
+  function isColorway(value) {
+    return typeof value === "string" && COLORWAYS.includes(value);
+  }
   var filesPreview = null;
   var filesAction = "";
   var filesTrigger = null;
@@ -7488,7 +7890,7 @@
   async function saveRekordboxExport() {
     const key = el("rekordbox-key").value;
     const notation = key === "camelot" || key === "classical" ? key : "asis";
-    const token = ++rekordboxToken;
+    const token2 = ++rekordboxToken;
     try {
       const payload = await postJSON("/api/settings", {
         rekordbox: {
@@ -7497,7 +7899,7 @@
           key_notation: notation
         }
       });
-      if (token === rekordboxToken) applyRekordboxExport(payload);
+      if (token2 === rekordboxToken) applyRekordboxExport(payload);
     } catch {
     }
   }
@@ -7543,9 +7945,9 @@
     const list = document.createElement("ul");
     list.className = "merge-preview";
     const added = preview.crates_added || [];
-    const item2 = (text) => {
+    const item2 = (text2) => {
       const line = document.createElement("li");
-      line.textContent = text;
+      line.textContent = text2;
       list.append(line);
     };
     if (added.length) {
@@ -7610,7 +8012,7 @@
   }
   async function refreshMergePreview() {
     const keepId = selectedMergeKeepId();
-    const token = ++mergeToken;
+    const token2 = ++mergeToken;
     mergeLoading = false;
     mergePreview = null;
     el("merge-status").textContent = "";
@@ -7623,7 +8025,7 @@
         keep_id: keepId,
         preview: true
       });
-      if (token !== mergeToken) return;
+      if (token2 !== mergeToken) return;
       mergePreview = preview;
       renderMergePreview(preview);
       if (preview.writable === false) {
@@ -7631,7 +8033,7 @@
       }
       syncTrashChoice();
     } catch (error2) {
-      if (token !== mergeToken) return;
+      if (token2 !== mergeToken) return;
       mergePreview = null;
       el("merge-preview").replaceChildren();
       const failed = document.createElement("p");
@@ -7659,7 +8061,7 @@
       input.addEventListener("change", () => {
         if (input.checked) refreshMergePreview().catch((error2) => setNotice(failureOf(error2).message));
       });
-      const text = document.createElement("span");
+      const text2 = document.createElement("span");
       const name = document.createElement("span");
       name.textContent = track.file || t("track.numbered", { id: String(id) });
       const meta = document.createElement("span");
@@ -7670,8 +8072,8 @@
       if (crates.length) parts.push(crates.join(", "));
       if (track.missing) parts.push(t("track.missingBadge"));
       meta.textContent = parts.join(" · ");
-      text.append(name, meta);
-      label.append(input, text);
+      text2.append(name, meta);
+      label.append(input, text2);
       el("merge-choices").append(label);
     }
   }
@@ -7740,6 +8142,64 @@
   function systemLanguages() {
     return Array.isArray(navigator.languages) && navigator.languages.length ? [...navigator.languages] : [navigator.language || "en"];
   }
+  function applyAppearance(payload) {
+    const hasColorway = "colorway" in payload;
+    const hasFollow = "icon_follows_theme" in payload;
+    const hasHref = "icon_href" in payload;
+    if (!hasColorway && !hasFollow && !hasHref) return;
+    const colorway = isColorway(payload.colorway) ? payload.colorway : el("colorway-select").value;
+    const known = isColorway(colorway) ? colorway : "motown";
+    const follow = hasFollow ? payload.icon_follows_theme !== false : el("icon-follows-theme").checked;
+    appearanceSync = true;
+    if (hasColorway) el("colorway-select").value = isColorway(payload.colorway) ? payload.colorway : "motown";
+    if (hasFollow) el("icon-follows-theme").checked = follow;
+    appearanceSync = false;
+    const shown = isColorway(el("colorway-select").value) ? el("colorway-select").value : known;
+    document.documentElement.dataset.colorway = shown;
+    const preview = el("colorway-preview");
+    preview.src = `/img/icons/placeholder-${shown}.svg`;
+    preview.alt = t("settings.colorwayPreview");
+    const href = hasHref && typeof payload.icon_href === "string" ? payload.icon_href : follow ? `/img/icons/placeholder-${shown}.svg` : "/img/icons/default.svg";
+    const icon = document.getElementById("app-icon");
+    if (icon instanceof HTMLLinkElement) icon.href = href;
+  }
+  function iconStatusText(icon) {
+    if (!icon) return t("settings.iconSaved");
+    if (!icon.follows_theme) return t("settings.iconDefault");
+    if (icon.applied && icon.target === "dock") return t("settings.iconAppliedDock");
+    if (icon.applied && icon.target === "window") return t("settings.iconAppliedWindow");
+    if (!icon.applied && (icon.reason === "unsupported" || icon.reason === "no-window")) {
+      return t("settings.iconUnsupported");
+    }
+    return t("settings.iconSaved");
+  }
+  async function saveColorway() {
+    if (appearanceSync) return;
+    const value = el("colorway-select").value;
+    if (!isColorway(value)) return;
+    document.documentElement.dataset.colorway = value;
+    el("colorway-preview").src = `/img/icons/placeholder-${value}.svg`;
+    el("icon-status").textContent = "";
+    try {
+      const payload = await postJSON("/api/settings", { colorway: value });
+      applyAppearance(payload);
+      el("icon-status").textContent = iconStatusText(payload.icon);
+    } catch {
+      el("icon-status").textContent = t("settings.iconNotSaved");
+    }
+  }
+  async function saveIconFollow() {
+    if (appearanceSync) return;
+    const follow = el("icon-follows-theme").checked;
+    el("icon-status").textContent = "";
+    try {
+      const payload = await postJSON("/api/settings", { icon_follows_theme: follow });
+      applyAppearance(payload);
+      el("icon-status").textContent = iconStatusText(payload.icon);
+    } catch {
+      el("icon-status").textContent = t("settings.iconNotSaved");
+    }
+  }
   async function saveLanguage() {
     const value = el("language-select").value;
     const saved = isLanguage(value) ? value : null;
@@ -7753,6 +8213,7 @@
   }
   function repaintDialogs() {
     el("telemetry-note").textContent = telemetryNoteText();
+    el("colorway-preview").alt = t("settings.colorwayPreview");
     if (el("merge-dialog").open) {
       renderMergePreview(mergeLoading ? null : mergePreview);
       syncTrashChoice();
@@ -7811,14 +8272,15 @@
     return true;
   }
   async function loadPrivacy() {
-    const token = rekordboxToken;
+    const token2 = rekordboxToken;
     const response = await fetch("/api/settings");
     const payload = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(payload, t("sharing.loadFailed")));
     applyPrivacy(payload);
     applyLanguage(payload);
     applyLayout(payload);
-    if (token === rekordboxToken) applyRekordboxExport(payload);
+    applyAppearance(payload);
+    if (token2 === rekordboxToken) applyRekordboxExport(payload);
     if (!state.wizardComplete && openWizard(false, el("search"))) return;
     if (payload.needs_consent_prompt) showConsent();
   }
@@ -8020,6 +8482,12 @@
     el("language-select").addEventListener("change", () => {
       void saveLanguage();
     });
+    el("colorway-select").addEventListener("change", () => {
+      void saveColorway();
+    });
+    el("icon-follows-theme").addEventListener("change", () => {
+      void saveIconFollow();
+    });
     el("settings-close").addEventListener("click", () => {
       el("settings-dialog").close();
     });
@@ -8062,15 +8530,15 @@
         const response = await fetch("/api/logs");
         const payload = await readJSONOr(response, {});
         if (!response.ok) throw new Error(serverMessage(payload, t("logs.copyFailed")));
-        const text = payload.text || "";
-        if (!text) {
+        const text2 = payload.text || "";
+        if (!text2) {
           el("settings-status").textContent = t("logs.empty");
           return;
         }
         let copied = false;
         if (navigator.clipboard && window.isSecureContext) {
           try {
-            await navigator.clipboard.writeText(text);
+            await navigator.clipboard.writeText(text2);
             copied = true;
           } catch (error2) {
             copied = false;
@@ -8082,7 +8550,7 @@
           return;
         }
         el("log-fallback").hidden = false;
-        el("log-fallback").value = text;
+        el("log-fallback").value = text2;
         el("log-fallback").focus();
         el("log-fallback").select();
         el("settings-status").textContent = t("logs.copyManual");
@@ -8190,27 +8658,176 @@
   }
   bridge.openSetup = openSetup;
 
+  // src/help.ts
+  var kind = "bug";
+  function wireHelp() {
+    el("open-help").addEventListener("click", () => {
+      el("help-dialog").showModal();
+    });
+    el("help-close").addEventListener("click", () => {
+      el("help-dialog").close();
+    });
+    el("help-bug").addEventListener("click", () => {
+      void openReport("bug");
+    });
+    el("help-feature").addEventListener("click", () => {
+      void openReport("feature");
+    });
+    el("help-report-close").addEventListener("click", () => {
+      el("help-report-dialog").close();
+    });
+    el("help-open-github").addEventListener("click", () => {
+      void submitReport();
+    });
+    for (const [id, page] of [
+      ["help-github", "repo"],
+      ["help-releases", "releases"],
+      ["about-github", "repo"]
+    ]) {
+      el(id).addEventListener("click", (event) => {
+        event.preventDefault();
+        void openPage(page);
+      });
+    }
+    el("help-copy-log").addEventListener("click", () => {
+      void copyLog();
+    });
+    document.addEventListener("serato-locale", () => {
+      if (el("help-report-dialog").open) paintReport();
+    });
+  }
+  async function openReport(next2) {
+    kind = next2;
+    el("help-happened").value = "";
+    el("help-expected").value = "";
+    el("help-names").checked = false;
+    el("help-log-fallback").hidden = true;
+    el("help-report-status").textContent = "";
+    el("help-diagnostics").textContent = t("help.loading");
+    paintReport();
+    el("help-dialog").close();
+    el("help-report-dialog").showModal();
+    try {
+      const response = await fetch("/api/help");
+      const payload = await readJSONOr(response, {});
+      if (!response.ok) throw new Error(serverMessage(payload, t("help.loadFailed")));
+      el("help-diagnostics").textContent = payload.diagnostics || t("help.loadFailed");
+    } catch {
+      el("help-diagnostics").textContent = t("help.loadFailed");
+    }
+  }
+  function paintReport() {
+    const feature = kind === "feature";
+    el("help-report-title").textContent = t(feature ? "help.featureTitle" : "help.bugTitle");
+    el("help-happened-name").textContent = t(feature ? "help.change" : "help.happened");
+    el("help-expected-label").hidden = feature;
+  }
+  async function submitReport() {
+    const button2 = el("help-open-github");
+    button2.disabled = true;
+    el("help-report-status").textContent = t("help.opening");
+    try {
+      const response = await fetch("/api/help", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind,
+          happened: el("help-happened").value,
+          expected: el("help-expected").value,
+          change: kind === "feature" ? el("help-happened").value : "",
+          include_names: el("help-names").checked,
+          open: true
+        })
+      });
+      const payload = await readJSONOr(response, {});
+      if (!response.ok) throw new Error(serverMessage(payload, t("help.loadFailed")));
+      if (payload.opened === true) {
+        el("help-report-status").textContent = t("help.opened");
+        return;
+      }
+      const copied = await copyText(payload.text || "");
+      if (!copied) {
+        el("help-log-fallback").hidden = false;
+        el("help-log-fallback").value = payload.text || "";
+        el("help-report-status").textContent = t("help.copyFailed");
+        return;
+      }
+      const linked = (payload.url || "").includes("diagnostics=");
+      el("help-report-status").textContent = linked ? t("help.copied") : t("help.tooLong");
+    } catch {
+      el("help-report-status").textContent = t("help.loadFailed");
+    } finally {
+      button2.disabled = false;
+    }
+  }
+  async function copyLog() {
+    const names = el("help-names").checked ? "1" : "0";
+    el("help-report-status").textContent = t("logs.copying");
+    try {
+      const response = await fetch(`/api/help?include_names=${names}`);
+      const payload = await readJSONOr(response, {});
+      if (!response.ok) throw new Error(serverMessage(payload, t("help.copyFailed")));
+      const text2 = payload.log || "";
+      if (!text2) {
+        el("help-report-status").textContent = t("help.logEmpty");
+        return;
+      }
+      const copied = await copyText(text2);
+      if (copied) {
+        el("help-log-fallback").hidden = true;
+        el("help-report-status").textContent = payload.log_truncated ? t("logs.copiedTruncated") : t("help.logCopied");
+        return;
+      }
+      el("help-log-fallback").hidden = false;
+      el("help-log-fallback").value = text2;
+      el("help-log-fallback").focus();
+      el("help-log-fallback").select();
+      el("help-report-status").textContent = t("logs.copyManual");
+    } catch {
+      el("help-report-status").textContent = t("help.copyFailed");
+    }
+  }
+  async function copyText(text2) {
+    if (!text2 || !navigator.clipboard || !window.isSecureContext) return false;
+    try {
+      await navigator.clipboard.writeText(text2);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  async function openPage(page) {
+    try {
+      await fetch("/api/help", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ page })
+      });
+    } catch {
+    }
+  }
+
   // src/fuzzy.ts
   var BOUNDARY = /[ ._/\-\\]/;
   function fuzzyScore(needle, haystack) {
     const query = needle.toLocaleLowerCase();
-    const text = haystack.toLocaleLowerCase();
+    const text2 = haystack.toLocaleLowerCase();
     if (!query) return null;
     let score = 0;
     let previous2 = -2;
     let from = 0;
     for (const letter of query) {
-      const found = text.indexOf(letter, from);
+      const found = text2.indexOf(letter, from);
       if (found < 0) return null;
       score += 8;
       if (found === previous2 + 1) score += 16;
-      if (found === 0 || BOUNDARY.test(text.charAt(found - 1))) score += 12;
+      if (found === 0 || BOUNDARY.test(text2.charAt(found - 1))) score += 12;
       previous2 = found;
       from = found + 1;
     }
-    if (text.includes(query)) score += 40;
-    if (text.startsWith(query)) score += 30;
-    score -= Math.floor(Math.max(0, text.length - query.length) / 4);
+    if (text2.includes(query)) score += 40;
+    if (text2.startsWith(query)) score += 30;
+    score -= Math.floor(Math.max(0, text2.length - query.length) / 4);
     return score;
   }
   function scoreQuery(query, name, parentName = "") {
@@ -8336,12 +8953,12 @@
     }, QUICK_OPEN_MS);
   }
   async function loadFiles(query, tracks) {
-    const token = ++requestToken;
+    const token2 = ++requestToken;
     phase = "loading";
     try {
       const response = await fetch(`/api/files?q=${encodeURIComponent(query)}`);
       const payload = await readJSONOr(response, {});
-      if (token !== requestToken) return;
+      if (token2 !== requestToken) return;
       if (!response.ok) throw new Error(payload.error || t("quickOpen.fileError"));
       const files = fileHits(payload);
       hits = mergeHits(tracks, files);
@@ -8350,18 +8967,18 @@
       if (active >= hits.length) active = Math.max(0, hits.length - 1);
       paint();
     } catch {
-      if (token !== requestToken) return;
+      if (token2 !== requestToken) return;
       hits = tracks;
       phase = "error";
       paint();
     }
   }
   function trackHits(query) {
-    const text = query.trim();
-    if (!text) return [];
+    const text2 = query.trim();
+    if (!text2) return [];
     const found = [];
     for (const track of state.tracks) {
-      const hit = scoreTrack(track, text);
+      const hit = scoreTrack(track, text2);
       if (hit) found.push(hit);
     }
     found.sort(byScore);
@@ -8445,16 +9062,16 @@
       button2.setAttribute("aria-selected", String(index === active));
       button2.tabIndex = -1;
       if (index === active) button2.classList.add("is-active");
-      const kind = document.createElement("span");
-      kind.className = "quick-open-kind";
-      kind.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
+      const kind2 = document.createElement("span");
+      kind2.className = "quick-open-kind";
+      kind2.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
       const title2 = document.createElement("span");
       title2.className = "quick-open-name";
       title2.textContent = hit.title;
       const detail = document.createElement("span");
       detail.className = "quick-open-detail";
       detail.textContent = hit.detail;
-      button2.append(kind, title2, detail);
+      button2.append(kind2, title2, detail);
       button2.addEventListener("click", () => {
         active = index;
         void activate(hit);
@@ -8573,7 +9190,7 @@
     },
     {
       id: "view-snapshots",
-      label: "Snapshots",
+      label: "Backups",
       group: "Views",
       keys: [{ key: "5", mod: true }],
       whileTyping: false
@@ -8651,21 +9268,28 @@
     return true;
   }
   function openCheatSheet() {
-    const dialog = el("shortcuts-dialog");
-    if (dialog.open) return;
-    rememberFocus();
+    const dialog = el("settings-dialog");
     renderCheatSheet();
-    dialog.showModal();
-    el("shortcuts-title").tabIndex = -1;
-    el("shortcuts-title").focus();
+    if (!dialog.open) {
+      rememberFocus();
+      dialog.showModal();
+    }
+    const title2 = el("shortcuts-title");
+    title2.tabIndex = -1;
+    title2.focus();
+    if (typeof title2.scrollIntoView === "function") title2.scrollIntoView({ block: "nearest" });
   }
   function wireShortcuts() {
     document.removeEventListener("keydown", onKey);
     document.addEventListener("keydown", onKey);
-    el("open-shortcuts").addEventListener("click", () => openCheatSheet());
-    el("shortcuts-close").addEventListener("click", () => el("shortcuts-dialog").close());
-    el("shortcuts-dialog").addEventListener("close", () => restoreFocus());
+    const dialog = el("settings-dialog");
+    dialog.removeEventListener("close", onSettingsClose);
+    dialog.addEventListener("close", onSettingsClose);
+    renderCheatSheet();
     wireQuickOpen();
+  }
+  function onSettingsClose() {
+    restoreFocus();
   }
   function onKey(event) {
     if (event.isComposing || event.defaultPrevented) return;
@@ -8837,7 +9461,7 @@
         closeQuickOpen();
         return;
       }
-      if (dialog.id === "shortcuts-dialog") {
+      if (dialog.id === "settings-dialog") {
         event.preventDefault();
         dialog.close();
         return;
@@ -8884,13 +9508,14 @@
     field.dispatchEvent(new Event("input", { bubbles: true }));
   }
   function repaintCheatSheet() {
-    const dialog = document.getElementById("shortcuts-dialog");
-    if (dialog instanceof HTMLDialogElement && dialog.open) renderCheatSheet();
+    if (!document.getElementById("shortcuts-body")) return;
+    renderCheatSheet();
   }
   function renderCheatSheet() {
-    el("shortcuts-title").textContent = t("shortcuts.title");
+    const title2 = el("shortcuts-title");
+    title2.textContent = t("shortcuts.title");
+    setTooltip(title2, tips.shortcuts);
     el("shortcuts-intro").textContent = t("shortcuts.intro");
-    el("shortcuts-close").textContent = t("common.close");
     const body = el("shortcuts-body");
     body.replaceChildren();
     const groups = [];
@@ -8950,7 +9575,7 @@
   }
 
   // src/version.ts
-  var copyText = "";
+  var copyText2 = "";
   var painted;
   function versionLabel(info) {
     const version = formatVersion(info.version);
@@ -8976,13 +9601,14 @@
     const about = el("about-version");
     el("version-copy-status").textContent = "";
     if (!label) {
-      copyText = "";
+      copyText2 = "";
       footer.hidden = true;
       footer.replaceChildren();
       about.textContent = t("version.unavailable");
+      el("help-version").textContent = t("version.unavailable");
       return;
     }
-    copyText = label;
+    copyText2 = label;
     footer.hidden = false;
     footer.replaceChildren();
     const name = document.createElement("span");
@@ -8992,6 +9618,7 @@
     value.textContent = label;
     footer.append(name, value);
     about.textContent = label;
+    el("help-version").textContent = label;
   }
   function repaintVersion() {
     if (painted === void 0) return;
@@ -9006,7 +9633,7 @@
   }
   async function copyVersion() {
     const status = el("version-copy-status");
-    if (!copyText) {
+    if (!copyText2) {
       status.textContent = t("version.unavailable");
       return;
     }
@@ -9016,7 +9643,7 @@
       return;
     }
     try {
-      await writeText.call(navigator.clipboard, copyText);
+      await writeText.call(navigator.clipboard, copyText2);
       status.textContent = t("version.copied");
     } catch {
       status.textContent = t("version.copyFailed");
@@ -9034,6 +9661,7 @@
     repaintViews();
     if (state.mode === "snapshots") renderSnapshots();
     if (state.mode === "gig") repaintGig();
+    repaintPortable();
     repaintSnapshotPlan();
     repaintDialogs();
     repaintCheatSheet();
@@ -9048,6 +9676,83 @@
     setLocale(initialLocale());
     applyStatic(document);
     stop = onLocaleChange(repaintAll);
+  }
+
+  // src/desktop-actions.ts
+  var CLICKS = {
+    "new-crate": "crate-new",
+    "rename-crate": "crate-rename",
+    "delete-crate": "crate-delete",
+    "import-playlist": "import-m3u",
+    "export-playlist": "export-m3u",
+    "export-rekordbox": "export-rekordbox",
+    reload: "reload",
+    settings: "open-settings",
+    "rerun-setup": "rerun-wizard",
+    merge: "merge-duplicates",
+    "take-snapshot": "snapshots-take",
+    "review-undo": "snapshots-undo-button",
+    "open-logs": "open-logs",
+    "copy-version": "copy-version",
+    help: "open-help"
+  };
+  var VIEWS = {
+    "view-crates": "crates",
+    "view-history": "history",
+    "view-files": "files",
+    "view-missing": "missing",
+    "view-duplicates": "duplicates",
+    "view-stems": "stems",
+    "view-snapshots": "snapshots",
+    "view-gig": "gig"
+  };
+  function runDesktopAction(action) {
+    if (action === "find") {
+      openQuickOpen();
+      return;
+    }
+    if (action === "focus-search") {
+      const field = state.mode === "files" ? el("files-search") : el("search");
+      field.focus();
+      if (typeof field.select === "function") field.select();
+      return;
+    }
+    if (action === "shortcuts") {
+      openCheatSheet();
+      return;
+    }
+    if (action === "view-all") {
+      setMode("crates");
+      selectCrate("all");
+      return;
+    }
+    if (action === "related") {
+      document.querySelector(".related-search input")?.focus();
+      return;
+    }
+    if (action === "reset-width") {
+      el("track-splitter").dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
+      return;
+    }
+    if (action.startsWith("space:")) {
+      const select = el("space");
+      select.value = action.slice("space:".length);
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      return;
+    }
+    const view = VIEWS[action];
+    if (view) {
+      setMode(view);
+      return;
+    }
+    const id = CLICKS[action];
+    if (!id) return;
+    const node = document.getElementById(id);
+    if (node instanceof HTMLButtonElement) node.click();
+  }
+  function installDesktopActions() {
+    const host = window;
+    host.seratoDesktop = { run: runDesktopAction };
   }
 
   // src/app.ts
@@ -9085,11 +9790,14 @@
   wireLibrary();
   wireVirtualScroll();
   wireShortcuts();
+  installDesktopActions();
   wireDialogs();
+  wireHelp();
   wireSnapshots();
   wireGigCheck(() => {
     setMode("crates");
   });
+  wirePortable();
   wireLayout();
   wireVersion();
   void loadVersion();
