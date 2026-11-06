@@ -1,0 +1,60 @@
+name: Prepare release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prepare-release
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    name: prepare next release
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Draft the next release notes
+        run: python scripts/prepare_release.py --write next-release.md
+
+      - name: Upload the notes
+        if: hashFiles('next-release.md') != ''
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: next-release
+          path: next-release.md
+          if-no-files-found: error
+
+      - name: Update the Next release issue
+        if: hashFiles('next-release.md') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          numbers="$(gh issue list --repo "$RELEASE_REPO" --state open --search 'in:title "Next release"' --json number,title --jq '.[] | select(.title=="Next release") | .number')"
+          count="$(printf '%s\n' "$numbers" | grep -c . || true)"
+          if [ "$count" -eq 0 ]; then
+            gh issue create --repo "$RELEASE_REPO" --title "Next release" --body-file next-release.md
+          else
+            number="$(printf '%s\n' "$numbers" | sort -n | head -1)"
+            gh issue edit "$number" --repo "$RELEASE_REPO" --body-file next-release.md
+          fi
