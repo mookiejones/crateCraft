@@ -812,7 +812,7 @@
   "tooltip.session": "Muestra las pistas reproducidas en la sesión {name}.",
   "tooltip.settings": "Abre los ajustes.",
   "tooltip.settingsClose": "Cierra los ajustes. Esc.",
-  "tooltip.shortcuts": "Muestra los atajos de teclado. ?.",
+  "tooltip.shortcuts": "Atajos de teclado de esta pantalla. ? abre esta lista.",
   "tooltip.shortcutsClose": "Cierra la lista de atajos. Esc.",
   "tooltip.showSearchCopies": "Muestra los campos que se compararon.",
   "tooltip.smartRules": "Edita las reglas de la caja inteligente. No se guarda nada hasta que pulses Guardar reglas.",
