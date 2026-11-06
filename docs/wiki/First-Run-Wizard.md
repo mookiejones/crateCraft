@@ -33,4 +33,4 @@ If Serato DJ is open on the snapshot step, the page says **Close Serato DJ to co
 
 **Back** is on every step except Welcome. **Run setup again** in **Settings** shows these steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
 
-The safety copy is the first Backup. Later copies are under **Snapshots**. [Backups and restore](Backups-and-Restore). Sharing is [Settings](Settings).
+The safety copy is the first Backup. Later copies are under **Backups**. [Backups and restore](Backups-and-Restore). Sharing is [Settings](Settings).
