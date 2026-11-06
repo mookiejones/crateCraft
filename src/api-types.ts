@@ -226,6 +226,10 @@ export interface FileEntry {
   in_library?: boolean;
   missing?: boolean;
   detail?: string;
+  /** Music root that can leave the laptop. Absent on an ordinary folder row. */
+  removable?: boolean;
+  /** Music root Serato already uses. Absent on an ordinary folder row. */
+  serato?: boolean;
   /** Present on a name search. Higher is a closer match. */
   score?: number;
 }
