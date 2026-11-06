@@ -1121,6 +1121,38 @@ def _restore_stop_signals(previous_term: object, previous_int: object) -> None:
     signal.signal(signal.SIGINT, previous_int)  # type: ignore[arg-type]
 
 
+def _run_menu_action(window: object | None, action: str) -> None:
+    """Run one native-menu action.
+
+    Args:
+        window: The pywebview window, or None if it is not open yet.
+        action: Action id from ``desktop_menu.build_menu``. ``close`` and
+            ``minimize`` stay in this process. Every other id is handed to
+            the page.
+
+    Close destroys the window. The window's closed handler still posts
+    shutdown. Minimize uses the shell. The page call is a single
+    ``evaluate_js`` of ``seratoDesktop.run``, so ``python3 server.py``
+    does not need a menu.
+    """
+    if window is None:
+        return
+    if action == "close":
+        destroy = getattr(window, "destroy", None)
+        if callable(destroy):
+            destroy()
+        return
+    if action == "minimize":
+        minimize = getattr(window, "minimize", None)
+        if callable(minimize):
+            minimize()
+        return
+    evaluate = getattr(window, "evaluate_js", None)
+    if not callable(evaluate):
+        return
+    evaluate("window.seratoDesktop&&window.seratoDesktop.run(" + json.dumps(action) + ")")
+
+
 def open_window(
     url: str,
     httpd: server.ThreadingHTTPServer,
@@ -1153,9 +1185,13 @@ def open_window(
     import app_icons
     import webview
 
+    import desktop_menu
+
     app_icons.prepare_taskbar()
+
     reset_window_geometry()
-    saved = app_config.load_settings().window
+    saved_settings = app_config.load_settings()
+    saved = saved_settings.window
     options: dict[str, object] = {
         "width": saved.width if saved is not None else DEFAULT_WIDTH,
         "height": saved.height if saved is not None else DEFAULT_HEIGHT,
@@ -1167,7 +1203,15 @@ def open_window(
     if saved is not None:
         options["x"] = saved.x
         options["y"] = saved.y
+    holder: dict[str, object] = {}
+
+    def dispatch(action: str) -> None:
+        _run_menu_action(holder.get("window"), action)
+
+    menu = desktop_menu.build_menu(dispatch, saved_settings.language)
+    options["menu"] = menu
     window = webview.create_window(WINDOW_TITLE, url, **options)
+    holder["window"] = window
     if window is None:
         raise SystemExit("The window could not be created.")
     window.events.resized += note_window_resized
@@ -1190,7 +1234,7 @@ def open_window(
     previous_term, previous_int = _install_stop_signals(stop)
     try:
         try:
-            webview.start(gui=gui, private_mode=True)
+            webview.start(gui=gui, private_mode=True, menu=menu)
         except Exception as exc:
             if type(exc).__name__ != "WebViewException":
                 raise

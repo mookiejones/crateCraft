@@ -51,6 +51,7 @@ These are on `main` (1.1.0).
 - The first write in a session copies the database and each connected drive's `_Serato_` folder into `Library/Backups`. An unplugged or unreadable drive is listed and skipped. `Recording` and `DJ Sessions` are not copied. An unfinished copy is not offered for restore.
 - English and Spanish. **Settings** → **Language** switches the whole page at once; Same as the system follows the OS language.
 - Ask before sharing anonymous counts and crash reports. Setup asks on the first launch. Sharing stays off until you opt in. See [PRIVACY.md](PRIVACY.md).
+- **Help** in the sidebar: report a bug, request a feature, or open the project and the release notes on GitHub. The app does not post the issue. You review it in the browser and submit it yourself.
 
 The page source is strict TypeScript in `src/`. `npm run build` writes the `static/app.js` the server loads. Node is not required to run the server. Node 22 or newer is required to typecheck and rebuild that file.
 

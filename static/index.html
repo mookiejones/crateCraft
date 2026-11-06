@@ -92,6 +92,7 @@
       </div>
       <footer class="rail-foot">
         <p id="app-version" class="app-version" hidden></p>
+        <button id="open-help" type="button" aria-haspopup="dialog" data-i18n="help.title">Help</button>
         <button id="open-settings" type="button" aria-haspopup="dialog" data-i18n="settings.title">Settings</button>
       </footer>
     </aside>
@@ -262,6 +263,7 @@
     <section class="about" aria-labelledby="about-title">
       <h3 id="about-title" data-i18n="settings.about">About</h3>
       <p id="about-version" class="about-version"></p>
+      <p><a id="about-github" href="https://github.com/mookiejones/serato-library-manager" data-i18n="help.github">View on GitHub</a></p>
       <div class="dialog-actions">
         <button id="copy-version" type="button" data-i18n="settings.copyVersion">Copy version</button>
       </div>
@@ -275,6 +277,43 @@
     </div>
     <p id="settings-status" class="dialog-status" role="status" aria-live="polite"></p>
     <textarea id="log-fallback" class="log-fallback" readonly hidden aria-label="Log text" data-i18n-attr="aria-label:settings.logText"></textarea>
+  </dialog>
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <h2 id="help-title" data-i18n="help.title">Help</h2>
+    <p id="help-version" class="about-version"></p>
+    <p class="dialog-note" data-i18n="help.nothing">Nothing is sent until you submit it on GitHub.</p>
+    <div class="dialog-actions">
+      <button id="help-bug" type="button" data-i18n="help.bug">Report a bug</button>
+      <button id="help-feature" type="button" data-i18n="help.feature">Request a feature</button>
+      <a id="help-github" href="https://github.com/mookiejones/serato-library-manager" data-i18n="help.github">View on GitHub</a>
+      <a id="help-releases" href="https://github.com/mookiejones/serato-library-manager/releases" data-i18n="help.releases">Release notes</a>
+      <button id="help-close" type="button" data-i18n="common.close">Close</button>
+    </div>
+  </dialog>
+  <dialog id="help-report-dialog" aria-labelledby="help-report-title">
+    <h2 id="help-report-title" data-i18n="help.bugTitle">Report a bug</h2>
+    <p class="dialog-note" data-i18n="help.review">You will see this on GitHub before it is submitted. The app does not post it.</p>
+    <label id="help-happened-label" class="settings-field">
+      <span id="help-happened-name" data-i18n="help.happened">What happened</span>
+      <textarea id="help-happened" rows="3"></textarea>
+    </label>
+    <label id="help-expected-label" class="settings-field">
+      <span data-i18n="help.expected">What you expected</span>
+      <textarea id="help-expected" rows="3"></textarea>
+    </label>
+    <p id="help-diagnostics-label" data-i18n="help.diagnostics">What will be included</p>
+    <pre id="help-diagnostics" class="help-diagnostics"></pre>
+    <label class="check">
+      <input id="help-names" type="checkbox">
+      <span data-i18n="help.names">Include track and crate names from the log</span>
+    </label>
+    <div class="dialog-actions">
+      <button id="help-copy-log" type="button" data-i18n="help.copyLog">Copy log</button>
+      <button id="help-open-github" type="button" data-i18n="help.openGitHub">Open on GitHub</button>
+      <button id="help-report-close" type="button" data-i18n="common.close">Close</button>
+    </div>
+    <p id="help-report-status" class="dialog-status" role="status" aria-live="polite"></p>
+    <textarea id="help-log-fallback" class="log-fallback" readonly hidden aria-label="Report text" data-i18n-attr="aria-label:help.reportText"></textarea>
   </dialog>
   <dialog id="merge-dialog" aria-labelledby="merge-title" aria-describedby="merge-intro">
     <h2 id="merge-title" data-i18n="merge.title">Merge copies</h2>
