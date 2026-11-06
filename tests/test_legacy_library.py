@@ -14,6 +14,8 @@ import hashlib
 import json
 import os
 import shutil
+import subprocess
+import sys
 import tempfile
 import threading
 import unittest
@@ -327,6 +329,51 @@ class FindLegacyTests(unittest.TestCase):
         self.assertEqual(caught.exception.message, legacy_library.WRITE_BLOCKED)
 
 
+class HomeSeratoFolderTests(unittest.TestCase):
+    """``SERATO_LIBRARY_HOME_SERATO`` keeps a run away from the real ``~/Music/_Serato_`` (#185)."""
+
+    def test_absolute_override_wins(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp) / "_Serato_"
+            with mock.patch.dict(os.environ, {"SERATO_LIBRARY_HOME_SERATO": f"  {folder}  "}), \
+                    mock.patch.object(Path, "home", return_value=Path(tmp) / "home"):
+                self.assertEqual(legacy_library.home_serato_folder(), folder)
+
+    def test_relative_override_is_ignored(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp) / "home"
+            with mock.patch.dict(os.environ, {"SERATO_LIBRARY_HOME_SERATO": "Music/_Serato_"}), \
+                    mock.patch.object(Path, "home", return_value=home):
+                self.assertEqual(legacy_library.home_serato_folder(), home / "Music" / "_Serato_")
+
+    def test_unset_uses_the_home_music_folder(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp) / "home"
+            with mock.patch.dict(os.environ), mock.patch.object(Path, "home", return_value=home):
+                os.environ.pop("SERATO_LIBRARY_HOME_SERATO", None)
+                self.assertEqual(legacy_library.home_serato_folder(), home / "Music" / "_Serato_")
+                os.environ["SERATO_LIBRARY_HOME_SERATO"] = ""
+                self.assertEqual(legacy_library.home_serato_folder(), home / "Music" / "_Serato_")
+
+    def test_suite_points_the_folder_at_an_empty_temp_folder(self) -> None:
+        folder = Path(os.environ["SERATO_LIBRARY_HOME_SERATO"])
+        self.assertTrue(folder.is_absolute())
+        self.assertEqual(legacy_library.home_serato_folder(), folder)
+        self.assertNotEqual(folder, Path.home() / "Music" / "_Serato_")
+        self.assertTrue(folder.parent.name.startswith("serato-library-tests-"))
+        self.assertFalse(legacy_library.is_legacy_folder(folder))
+
+    def test_import_works_in_a_fresh_interpreter(self) -> None:
+        """``legacy_library`` alone imports without the ``error_codes`` cycle."""
+        root = Path(__file__).resolve().parent.parent
+        result = subprocess.run(
+            [sys.executable, "-c", "import legacy_library; print(legacy_library.WRITE_BLOCKED)"],
+            cwd=root, capture_output=True, text=True, timeout=60,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.strip(), legacy_library.WRITE_BLOCKED)
+
+
 class SetupWordingTests(unittest.TestCase):
     """Setup explains an older library instead of saying not found."""
 
@@ -428,7 +475,7 @@ class LegacyApiTests(unittest.TestCase):
     def test_every_write_route_is_refused_and_nothing_changes(self) -> None:
         before = _tree_state(self.tree.serato)
         self.assertEqual(server.LEGACY_ALLOWED_POSTS, frozenset({"/api/related", "/api/reveal"}))
-        routes = ["/api/track", "/api/crate", "/api/import.m3u", "/api/duplicates/merge", "/api/files", "/api/snapshots", "/api/some-future-write"]
+        routes = ["/api/track", "/api/crate", "/api/import.m3u", "/api/smart-preset", "/api/crate-tree", "/api/duplicates/merge", "/api/files", "/api/snapshots", "/api/some-future-write"]
         for route in routes:
             with self.subTest(route=route):
                 status, body = self._call(route, {})

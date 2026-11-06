@@ -2,7 +2,7 @@
 
 The keys work anywhere on the library screen, except while you are typing in a field. **Esc** still closes a dialog or clears a search.
 
-**Shortcuts**, at the bottom of the sidebar, opens the list. **?** opens it too.
+The list is in **Settings**, under **Keyboard shortcuts**. **?** opens Settings on that heading.
 
 Point at a control, or tab to it, and a short note says what it does. When that control has a shortcut, the note shows the same key as this list.
 
@@ -11,7 +11,7 @@ Point at a control, or tab to it, and a short note says what it does. When that 
 | Ctrl+F or Command+F, or / | Focus search |
 | Ctrl+K or Command+K | Find a track or a file |
 | Up or Down, Enter | Move through the list and open the row |
-| Ctrl+1 or Command+1 through 5 | Library, Crates, Files, History, Snapshots |
+| Ctrl+1 or Command+1 through 5 | Library, Crates, Files, History, Backups |
 | Esc | Close a dialog, or clear the search |
 | Space | Play or pause |
 | Left | Back 5 seconds |

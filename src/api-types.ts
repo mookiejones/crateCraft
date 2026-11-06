@@ -189,11 +189,25 @@ export interface RelatedHit {
   in_library?: boolean;
 }
 
+/** A crate preset as POST /api/smart-preset stores it. */
+export type PresetSpec =
+  | { kind: "harmonic"; key: string; crate?: number }
+  | { kind: "bpm"; bpm: number; range: number; crate?: number }
+  | { kind: "unplayed"; months: number; crate?: number };
+
+/** One remembered preset crate in GET /api/library. */
+export interface PresetRecord {
+  preset: PresetSpec;
+  updated?: number | null;
+}
+
 export interface LibraryPayload {
   tracks: Track[];
   crates: Crate[];
   root_id?: number | null;
   serato?: SeratoStatus | null;
+  /** Preset crates of this space, keyed by crate id. */
+  presets?: Record<string, PresetRecord>;
   error?: string;
 }
 
@@ -226,6 +240,10 @@ export interface FileEntry {
   in_library?: boolean;
   missing?: boolean;
   detail?: string;
+  /** Music root that can leave the laptop. Absent on an ordinary folder row. */
+  removable?: boolean;
+  /** Music root Serato already uses. Absent on an ordinary folder row. */
+  serato?: boolean;
   /** Present on a name search. Higher is a closer match. */
   score?: number;
 }
@@ -366,6 +384,16 @@ export interface RekordboxSettings {
   key_notation?: string;
 }
 
+export interface IconApplyResult {
+  applied: boolean;
+  platform: string;
+  target: string;
+  reason: string;
+  colorway: string;
+  follows_theme: boolean;
+  href: string;
+}
+
 export interface SettingsPayload {
   telemetry_consent?: boolean | null;
   telemetry_configured?: boolean;
@@ -376,6 +404,14 @@ export interface SettingsPayload {
   rekordbox?: RekordboxSettings;
   /** Saved page language, or null to follow the OS. */
   language?: string | null;
+  /** Theme id: motown, deep-house, or daisy-age. */
+  colorway?: string;
+  /** True when the Dock or taskbar icon should match the theme. */
+  icon_follows_theme?: boolean;
+  /** Page icon for the saved choice. */
+  icon_href?: string;
+  /** Result of changing the running icon. Present after a theme save. */
+  icon?: IconApplyResult;
   error?: string;
   code?: string;
 }

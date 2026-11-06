@@ -86,7 +86,14 @@ class SettingsTests(unittest.TestCase):
         self.assertIs(payload["wizard_complete"], False)
         self.assertEqual(
             set(payload),
-            {"install_id", "telemetry_consent", "wizard_complete", "rekordbox"},
+            {
+                "install_id",
+                "telemetry_consent",
+                "wizard_complete",
+                "rekordbox",
+                "colorway",
+                "icon_follows_theme",
+            },
         )
         self.assertEqual(
             payload["rekordbox"],
@@ -381,7 +388,15 @@ class WindowSettingsTests(unittest.TestCase):
         payload = json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
         self.assertEqual(
             set(payload),
-            {"install_id", "telemetry_consent", "window", "wizard_complete", "rekordbox"},
+            {
+                "install_id",
+                "telemetry_consent",
+                "window",
+                "wizard_complete",
+                "rekordbox",
+                "colorway",
+                "icon_follows_theme",
+            },
         )
         self.assertIs(payload["wizard_complete"], False)
         self.assertEqual(set(payload["window"]), set(app_config.WINDOW_FIELDS))
@@ -574,7 +589,9 @@ class LayoutSettingsTests(unittest.TestCase):
         app_config.set_track_list_width(400)
         path = self.config / "settings.json"
         stored = json.loads(path.read_text(encoding="utf-8"))
-        self.assertEqual(set(stored), {"rekordbox", "layout"})
+        self.assertEqual(set(stored), {"rekordbox", "layout", "colorway", "icon_follows_theme"})
+        self.assertEqual(stored["colorway"], "motown")
+        self.assertIs(stored["icon_follows_theme"], True)
         self.assertEqual(stored["layout"], {"track_list_width": 400})
         self.assertIs(stored["rekordbox"]["hot_loops"], True)
         self.assertIsNone(app_config.load_settings().telemetry_consent)

@@ -1,8 +1,8 @@
 # Panic page: something's wrong before a gig
 
-Snapshots, restore, and undo are in the app. The sidebar views include **Crates** and **Snapshots**. **Prepare** is a space in the space menu. Open **Snapshots**, then **Review restore**. Quit Serato first. [Safety and backups](guide/safety.md#snapshots) has the steps.
+Snapshots, restore, and undo are in the app. The sidebar views include **Crates** and **Backups**. **Prepare** is a space in the space menu. Open **Backups**, then **Review restore**. Quit Serato first. [Safety and backups](guide/safety.md#snapshots) has the steps.
 
-The gig check is in the app. Open **Gig**, or run `python3 gig_check.py`. [Before a gig](guide/gig-check.md). The panic card below is an example layout, not the current window.
+The gig check is in the app. Open **Before a gig**, or run `python3 gig_check.py`. [Before a gig](guide/gig-check.md). The panic card below is an example layout, not the current window.
 
 > **Do this first.** Don't delete, re-import or "rebuild" anything yet. Most crates that look gone are only hidden.
 > Close Serato, then copy the whole `_Serato_` folder (on every drive) somewhere safe. That way every step below can be undone.
@@ -20,7 +20,7 @@ The gig check is in the app. Open **Gig**, or run `python3 gig_check.py`. [Befor
 
 ![Gig-night panic card. Example layout. Three columns for missing tracks, a vanished crate, and a drive that will not mount. The card shows Gig check and a Rewind control.](media/docs-panic-card.png)
 
-*Example layout, not the current window. The gig check is in the app. Restore is **Snapshots**, then **Review restore**.*
+*Example layout, not the current window. The gig check is in the app. Restore is **Backups**, then **Review restore**.*
 
 ## A. Red or missing tracks
 1. Plug in every drive your music lives on.
@@ -31,7 +31,7 @@ The gig check is in the app. Open **Gig**, or run `python3 gig_check.py`. [Befor
 1. Check that every drive is plugged in and shows up in Finder or Explorer.
 2. On a Mac, for an external drive, macOS asks for the **Files and Folders › Removable Volumes** permission under **System Settings, Privacy & Security**. Check that Serato has it. **Full Disk Access** is a secondary thing to check. Unsigned builds may ask for it again after each update.
 3. Restart Serato.
-4. Still gone? Open **Snapshots** and choose **Review restore**. Serato's `_Serato_Backup` folder is the other copy. Quit Serato first. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was. [Safety and backups](guide/safety.md#snapshots).
+4. Still gone? Open **Backups** and choose **Review restore**. Serato's `_Serato_Backup` folder is the other copy. Quit Serato first. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was. [Safety and backups](guide/safety.md#snapshots).
 
 ## C. Drive won't mount
 1. Try another cable and port, and check that the drive appears in Disk Utility or Disk Management.
@@ -44,8 +44,8 @@ The gig check is in the app. Open **Gig**, or run `python3 gig_check.py`. [Befor
 
 ---
 
-The gig check is in the app. Open **Gig**, or run `python3 gig_check.py`. [Before a gig](guide/gig-check.md).
+The gig check is in the app. Open **Before a gig**, or run `python3 gig_check.py`. [Before a gig](guide/gig-check.md).
 
-**About this app.** Open **Snapshots** to restore, or to undo a change another program made. **Review restore** writes nothing until you confirm, and confirm saves a snapshot first. **Review undo** puts back the previous snapshot. [Is my library safe?](is-my-library-safe.md).
+**About this app.** Open **Backups** to restore, or to undo a change another program made. **Review restore** writes nothing until you confirm, and confirm saves a snapshot first. **Review undo** puts back the previous snapshot. [Is my library safe?](is-my-library-safe.md).
 
 Sources: Serato support articles and DJ reports collected in `faq-top20.md` and `docs-references.md`.
