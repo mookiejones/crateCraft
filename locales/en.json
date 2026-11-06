@@ -90,6 +90,7 @@
   "error.action_unavailable": "That action is not available.",
   "error.backup_no_space": "There is not enough disk space to back up the library.",
   "error.backup_serato_running": "Quit Serato DJ Pro before backing up drive crates. Serato DJ is still running, so nothing was copied.",
+  "error.bitrate_needs_crate": "Choose a crate for a bitrate check.",
   "error.body_not_json": "The request body is not JSON.",
   "error.body_not_object": "The request body is not an object.",
   "error.choose_copy": "Choose the copy to keep.",
