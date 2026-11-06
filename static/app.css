@@ -1638,7 +1638,8 @@ dialog .settings-field select {
 .files-kind:focus-visible,
 .files-file input:focus-visible,
 .files-crumb:focus-visible,
-.files-elsewhere:focus-visible {
+.files-elsewhere:focus-visible,
+.files-portable:focus-visible {
   outline: 2px solid var(--cadmium);
   outline-offset: -2px;
 }
@@ -1656,7 +1657,8 @@ dialog .settings-field select {
 
 .files-open,
 .files-file,
-.files-kind {
+.files-kind,
+.files-portable {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -1665,6 +1667,12 @@ dialog .settings-field select {
   flex: 1;
   text-align: left;
   overflow: hidden;
+}
+
+.files-portable {
+  flex: none;
+  padding: 0 10px;
+  white-space: nowrap;
 }
 
 .files-open span,
@@ -1691,6 +1699,22 @@ dialog .settings-field select {
   color: var(--quiet);
   font-size: 13px;
   font-weight: 400;
+}
+
+#portable-findings {
+  margin: var(--space-3) 0 0;
+  padding-left: 1.2em;
+  max-height: 40vh;
+  overflow: auto;
+}
+
+#portable-verdict {
+  margin-top: var(--space-3);
+  font-weight: 600;
+}
+
+.portable-kind {
+  font-weight: 600;
 }
 
 .files-badge,

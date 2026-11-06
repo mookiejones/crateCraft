@@ -365,6 +365,17 @@
       <button id="files-confirm" type="button" data-i18n="common.confirm">Confirm</button>
     </div>
   </dialog>
+  <dialog id="portable-dialog" aria-labelledby="portable-title" aria-describedby="portable-note">
+    <h2 id="portable-title" data-i18n="portable.title">Portable drive</h2>
+    <p id="portable-note" class="dialog-note" data-i18n="portable.readOnly">This only reads the drive. Nothing is copied or deleted.</p>
+    <p id="portable-verdict"></p>
+    <p id="portable-summary"></p>
+    <ul id="portable-findings"></ul>
+    <p id="portable-status" class="dialog-status" role="status" aria-live="polite"></p>
+    <div class="dialog-actions">
+      <button id="portable-close" type="button" data-i18n="common.close">Close</button>
+    </div>
+  </dialog>
   <dialog id="quick-open" aria-labelledby="quick-open-title">
     <h2 id="quick-open-title" data-i18n="quickOpen.title">Find a track or file</h2>
     <label id="quick-open-label" for="quick-open-query" data-i18n="quickOpen.label">Name</label>

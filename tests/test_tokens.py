@@ -739,6 +739,7 @@ class ContrastTests(unittest.TestCase):
             ".files-file input:focus-visible",
             ".files-crumb:focus-visible",
             ".files-elsewhere:focus-visible",
+            ".files-portable:focus-visible",
             '.crate-row:has(.crate[aria-selected="true"])',
             '.row[aria-selected="true"]',
             ".crate-row.holds-selection",

@@ -154,6 +154,14 @@ export interface ElementIds {
   "help-report-status": HTMLParagraphElement;
   "help-log-fallback": HTMLTextAreaElement;
   "about-github": HTMLAnchorElement;
+  "portable-dialog": HTMLDialogElement;
+  "portable-title": HTMLHeadingElement;
+  "portable-note": HTMLParagraphElement;
+  "portable-verdict": HTMLParagraphElement;
+  "portable-summary": HTMLParagraphElement;
+  "portable-findings": HTMLUListElement;
+  "portable-status": HTMLParagraphElement;
+  "portable-close": HTMLButtonElement;
   "shortcuts-section": HTMLElement;
   "shortcuts-title": HTMLHeadingElement;
   "shortcuts-intro": HTMLParagraphElement;
