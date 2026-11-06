@@ -843,7 +843,7 @@
     "tooltip.session": "Show the tracks played in the session {name}.",
     "tooltip.settings": "Open settings.",
     "tooltip.settingsClose": "Close settings. Esc.",
-    "tooltip.shortcuts": "Show keyboard shortcuts. ?.",
+    "tooltip.shortcuts": "Keyboard shortcuts for this screen. ? opens this list.",
     "tooltip.shortcutsClose": "Close the shortcut list. Esc.",
     "tooltip.showSearchCopies": "Show the fields that were compared.",
     "tooltip.smartRules": "Edit the smart crate rules. Nothing is saved until you press Save rules.",
@@ -1749,7 +1749,7 @@
     "tooltip.session": "Muestra las pistas reproducidas en la sesión {name}.",
     "tooltip.settings": "Abre los ajustes.",
     "tooltip.settingsClose": "Cierra los ajustes. Esc.",
-    "tooltip.shortcuts": "Muestra los atajos de teclado. ?.",
+    "tooltip.shortcuts": "Atajos de teclado de esta pantalla. ? abre esta lista.",
     "tooltip.shortcutsClose": "Cierra la lista de atajos. Esc.",
     "tooltip.showSearchCopies": "Muestra los campos que se compararon.",
     "tooltip.smartRules": "Edita las reglas de la caja inteligente. No se guarda nada hasta que pulses Guardar reglas.",
@@ -2484,8 +2484,8 @@
       "crate-rename": tips.crateRename,
       "crate-color": tips.crateColor,
       "crate-delete": tips.crateDelete,
-      "open-shortcuts": tips.shortcuts,
       "open-help": tips.help,
+      "shortcuts-title": tips.shortcuts,
       "open-settings": tips.settings,
       search: tips.search,
       "export-m3u": tips.exportM3u,
@@ -2548,7 +2548,6 @@
       "files-cancel": tips.filesCancel,
       "files-review": tips.filesReview,
       "files-confirm": tips.filesConfirm,
-      "shortcuts-close": tips.shortcutsClose,
       "quick-open-query": tips.quickOpen,
       "quick-open-retry": tips.quickOpenRetry,
       "quick-open-close": tips.quickOpenClose,
@@ -8894,21 +8893,28 @@
     return true;
   }
   function openCheatSheet() {
-    const dialog = el("shortcuts-dialog");
-    if (dialog.open) return;
-    rememberFocus();
+    const dialog = el("settings-dialog");
     renderCheatSheet();
-    dialog.showModal();
-    el("shortcuts-title").tabIndex = -1;
-    el("shortcuts-title").focus();
+    if (!dialog.open) {
+      rememberFocus();
+      dialog.showModal();
+    }
+    const title2 = el("shortcuts-title");
+    title2.tabIndex = -1;
+    title2.focus();
+    if (typeof title2.scrollIntoView === "function") title2.scrollIntoView({ block: "nearest" });
   }
   function wireShortcuts() {
     document.removeEventListener("keydown", onKey);
     document.addEventListener("keydown", onKey);
-    el("open-shortcuts").addEventListener("click", () => openCheatSheet());
-    el("shortcuts-close").addEventListener("click", () => el("shortcuts-dialog").close());
-    el("shortcuts-dialog").addEventListener("close", () => restoreFocus());
+    const dialog = el("settings-dialog");
+    dialog.removeEventListener("close", onSettingsClose);
+    dialog.addEventListener("close", onSettingsClose);
+    renderCheatSheet();
     wireQuickOpen();
+  }
+  function onSettingsClose() {
+    restoreFocus();
   }
   function onKey(event) {
     if (event.isComposing || event.defaultPrevented) return;
@@ -9080,7 +9086,7 @@
         closeQuickOpen();
         return;
       }
-      if (dialog.id === "shortcuts-dialog") {
+      if (dialog.id === "settings-dialog") {
         event.preventDefault();
         dialog.close();
         return;
@@ -9127,13 +9133,14 @@
     field.dispatchEvent(new Event("input", { bubbles: true }));
   }
   function repaintCheatSheet() {
-    const dialog = document.getElementById("shortcuts-dialog");
-    if (dialog instanceof HTMLDialogElement && dialog.open) renderCheatSheet();
+    if (!document.getElementById("shortcuts-body")) return;
+    renderCheatSheet();
   }
   function renderCheatSheet() {
-    el("shortcuts-title").textContent = t("shortcuts.title");
+    const title2 = el("shortcuts-title");
+    title2.textContent = t("shortcuts.title");
+    setTooltip(title2, tips.shortcuts);
     el("shortcuts-intro").textContent = t("shortcuts.intro");
-    el("shortcuts-close").textContent = t("common.close");
     const body = el("shortcuts-body");
     body.replaceChildren();
     const groups = [];

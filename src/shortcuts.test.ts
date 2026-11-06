@@ -166,8 +166,11 @@ const cases: ShortcutCase[] = [
     prepare: () => {
       document.body.focus();
     },
-    ran: () => expect(el("shortcuts-dialog").open).toBe(true),
-    stayed: () => expect(el("shortcuts-dialog").open).toBe(false),
+    ran: () => {
+      expect(el("settings-dialog").open).toBe(true);
+      expect(document.activeElement).toBe(el("shortcuts-title"));
+    },
+    stayed: () => expect(el("settings-dialog").open).toBe(false),
   },
   {
     id: "list-previous",
@@ -422,9 +425,13 @@ describe("keyboard shortcuts", () => {
   });
 
   it("draws the cheat sheet from the shortcut table", () => {
-    el("open-shortcuts").click();
+    expect(document.getElementById("open-shortcuts")).toBeNull();
+    expect(el("settings-dialog").contains(el("shortcuts-section"))).toBe(true);
+    if (el("settings-dialog").open) el("settings-dialog").close();
+    el("reload").focus();
+    press({ key: "?" });
     const text = el("shortcuts-body").textContent ?? "";
-    expect(el("shortcuts-dialog").open).toBe(true);
+    expect(el("settings-dialog").open).toBe(true);
     expect(document.activeElement).toBe(el("shortcuts-title"));
     for (const shortcut of SHORTCUTS) {
       expect(text).toContain(shortcut.label);
@@ -434,11 +441,13 @@ describe("keyboard shortcuts", () => {
     expect(text).toContain("Ctrl/Cmd+K");
     expect(text).toContain("Ctrl/Cmd+1");
     press({ key: "Escape" });
-    expect(el("shortcuts-dialog").open).toBe(false);
+    expect(el("settings-dialog").open).toBe(false);
+    expect(document.activeElement).toBe(el("reload"));
   });
 
   it("translates the open cheat sheet", () => {
-    el("open-shortcuts").click();
+    document.body.focus();
+    press({ key: "?" });
     setLocale("es");
     try {
       repaintCheatSheet();

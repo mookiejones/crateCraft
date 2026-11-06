@@ -23,10 +23,11 @@ The two buttons have the same weight. The line **Saving…** means the choice is
 1. Click **Settings** at the bottom of the left rail.
 2. Tick **Share anonymous usage stats and crash reports** to turn sharing on. Clear the tick to turn it off.
 3. Read the line under the tick.
-4. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
-5. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
-6. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the footer of the sidebar stays blank. The page does not show an error code.
-7. Click **Close**.
+4. Read **Keyboard shortcuts**. **?** opens Settings on that heading.
+5. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
+6. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
+7. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the footer of the sidebar stays blank. The page does not show an error code.
+8. Click **Close**.
 
 | Line under the tick | Meaning |
 | --- | --- |

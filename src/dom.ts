@@ -125,7 +125,6 @@ export interface ElementIds {
   "files-review": HTMLButtonElement;
   "files-refresh": HTMLButtonElement;
   "files-search": HTMLInputElement;
-  "open-shortcuts": HTMLButtonElement;
   "open-help": HTMLButtonElement;
   "help-dialog": HTMLDialogElement;
   "help-title": HTMLHeadingElement;
@@ -151,11 +150,10 @@ export interface ElementIds {
   "help-report-status": HTMLParagraphElement;
   "help-log-fallback": HTMLTextAreaElement;
   "about-github": HTMLAnchorElement;
-  "shortcuts-dialog": HTMLDialogElement;
+  "shortcuts-section": HTMLElement;
   "shortcuts-title": HTMLHeadingElement;
   "shortcuts-intro": HTMLParagraphElement;
   "shortcuts-body": HTMLDivElement;
-  "shortcuts-close": HTMLButtonElement;
   "quick-open": HTMLDialogElement;
   "quick-open-title": HTMLHeadingElement;
   "quick-open-label": HTMLLabelElement;
