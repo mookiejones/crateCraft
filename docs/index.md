@@ -37,7 +37,7 @@ The recording below is also on the [Duplicates](guide/duplicates.md) page, where
 
 Start with [Troubleshooting](guide/troubleshooting.md).
 
-The [Panic page](panic.md) covers red tracks, empty crates, a drive that will not mount, and a library that looks different after an update. Restore from the app is **Snapshots**, then **Review restore**.
+The [Panic page](panic.md) covers red tracks, empty crates, a drive that will not mount, and a library that looks different after an update. Restore from the app is **Backups**, then **Review restore**.
 
 [Is my library safe?](is-my-library-safe.md) describes restore, undo, snapshots, and the outside-change watcher. Those work. The [check before a gig](guide/gig-check.md) is in the app.
 

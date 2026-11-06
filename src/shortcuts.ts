@@ -150,7 +150,7 @@ const SHORTCUT_DEFS = [
   },
   {
     id: "view-snapshots",
-    label: "Snapshots",
+    label: "Backups",
     group: "Views",
     keys: [{ key: "5", mod: true }],
     whileTyping: false,
