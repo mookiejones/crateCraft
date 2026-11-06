@@ -22,7 +22,7 @@ The first time you open it, setup finds your library and saves a safety copy bef
 - [Save related tracks](guide/related.md), and open the live view in the separate listener app while you play.
 - [Rename, move, replace, and trash files](guide/files.md) so crates and history follow the file. [Check drive](guide/files.md#check-a-portable-drive) reads a removable Serato drive. Nothing is copied or deleted.
 - [Keep hash-checked snapshots and restore one](guide/safety.md#snapshots), including crates on each drive and the cue data stored in audio files. A restored crate file is also written into the library database, so Serato 4 and 5 do not delete it on the next launch. The music itself is not copied into the snapshot. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
-- Change [sharing, and open the log](guide/settings.md).
+- Change [sharing, and open the log](guide/settings.md). [Help](guide/settings.md#help) is beside **Settings**. It shows what a report will include and does not post the issue.
 - Use [keyboard shortcuts](guide/shortcuts.md) to search, switch views, and move through a list. The full list is in **Settings**. **?** opens it.
 
 Pictures in this guide use a small sample library, not your collection.
