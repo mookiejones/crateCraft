@@ -246,8 +246,8 @@
     "generation.named": "Library generation, {kind}",
     "generation.reason.downgrade": "The newest session log says Serato {newest}, and an earlier log says Serato {version}. Writes and restores stay off.",
     "generation.reason.fallback": "No session log was found. The installed Serato version is {version}.",
-    "generation.reason.installed": "The installed Serato is {version}. The newest session log says Serato {newest}. Writes and restores stay off.",
     "generation.reason.installUnknown": "The installed Serato version could not be read, so writes stay off. A session log cannot turn them on.",
+    "generation.reason.installed": "The installed Serato is {version}. The newest session log says Serato {newest}. Writes and restores stay off.",
     "generation.reason.log": "The newest session log {log} recorded Serato {version} opening {database}.",
     "generation.reason.mismatch": "The session log opened {database}, which is not this library file.",
     "generation.reason.pending": "The library generation has not been read yet.",
@@ -381,6 +381,16 @@
     "markers.none": "No Serato cues in this file.",
     "markers.readOnly": "Read from the audio file. These are not written back.",
     "markers.unavailable": "The file is not on disk, so cues cannot be read.",
+    "menu.close": "Close",
+    "menu.exportRekordbox": "Export for Rekordbox",
+    "menu.file": "File",
+    "menu.focusSearch": "Focus search",
+    "menu.help": "Help",
+    "menu.library": "Library",
+    "menu.minimize": "Minimize",
+    "menu.resetWidth": "Reset list width",
+    "menu.tools": "Tools",
+    "menu.window": "Window",
     "merge.addToCrates": "Add the kept copy to {crates}.",
     "merge.addToSpace": "Add the kept copy to the {space} space.",
     "merge.alreadyInCrates": "The kept copy is already in every crate the others use. It stays where it is.",
@@ -414,16 +424,6 @@
       one: "Point {count} history entry at the kept copy.",
       other: "Point {count} history entries at the kept copy."
     },
-    "menu.close": "Close",
-    "menu.exportRekordbox": "Export for Rekordbox",
-    "menu.file": "File",
-    "menu.focusSearch": "Focus search",
-    "menu.help": "Help",
-    "menu.library": "Library",
-    "menu.minimize": "Minimize",
-    "menu.resetWidth": "Reset list width",
-    "menu.tools": "Tools",
-    "menu.window": "Window",
     "merge.title": "Merge copies",
     "merge.trashFiles": "Move {files} to the Trash.",
     "merge.trashLabel": "Move the other audio files to the Trash",
@@ -527,6 +527,43 @@
     "portable.title": "Portable drive",
     "portable.unreachable": "This drive could not be checked.",
     "portable.unreadable": "This drive could not be read.",
+    "presets.bpm": "BPM",
+    "presets.button": "Preset",
+    "presets.counting": "Counting tracks…",
+    "presets.create": "Create crate",
+    "presets.created": {
+      one: "{name} saved with {count} track.",
+      other: "{name} saved with {count} tracks."
+    },
+    "presets.intro": "The app picks the tracks and saves a normal crate whose name ends in ⟳. Serato plays it like any crate. It refreshes when this app opens while Serato is closed, or when you press Refresh.",
+    "presets.key": "Key",
+    "presets.keyHelp": "Camelot, like 8A, or a key name, like Am.",
+    "presets.kind": "Preset",
+    "presets.kind.bpm": "BPM range",
+    "presets.kind.harmonic": "Mixes with a key",
+    "presets.kind.unplayed": "Not played lately",
+    "presets.matches": {
+      one: "{count} track matches.",
+      other: "{count} tracks match."
+    },
+    "presets.months": "Months",
+    "presets.name": "Crate name",
+    "presets.name.bpm": "BPM {bpm} ±{range}",
+    "presets.name.harmonic": "Mixes with {key}",
+    "presets.name.unplayed": {
+      one: "Not played in {count} month",
+      other: "Not played in {count} months"
+    },
+    "presets.range": "Plus or minus",
+    "presets.refresh": "Refresh",
+    "presets.refreshed": "{name} refreshed: {added} added, {removed} removed.",
+    "presets.refreshedOnOpen": {
+      one: "{count} preset crate refreshed.",
+      other: "{count} preset crates refreshed."
+    },
+    "presets.scope": "Only tracks in {name} and its subcrates",
+    "presets.title": "New crate from a preset",
+    "presets.updated": "⟳ updated {date}",
     "quickOpen.empty": "Type a track or file name.",
     "quickOpen.file": "File",
     "quickOpen.fileError": "Files on disk could not be searched. Track matches are still listed.",
@@ -684,13 +721,13 @@
     "snapshots.reviewRestore": "Review restore",
     "snapshots.reviewUndo": "Review undo",
     "snapshots.saved": "Snapshot saved.",
+    "snapshots.saving": "Saving snapshot…",
+    "snapshots.seratoUnknown": "Serato version unknown",
+    "snapshots.seratoVersion": "Serato {version} (build {build})",
     "snapshots.skippedCrates": {
       one: "Restore finished. {count} crate file was skipped because its snapshot copy could not be read: {names}.",
       other: "Restore finished. {count} crate files were skipped because their snapshot copy could not be read: {names}."
     },
-    "snapshots.saving": "Saving snapshot…",
-    "snapshots.seratoUnknown": "Serato version unknown",
-    "snapshots.seratoVersion": "Serato {version} (build {build})",
     "snapshots.take": "Take a snapshot",
     "snapshots.trigger": "snapshot",
     "snapshots.unavailableDrives": "Unavailable: {drives}.",
@@ -704,86 +741,6 @@
     "space.video": "Video",
     "status.checking": "Checking Serato",
     "status.library": "Library",
-    "tooltip.gigBack": "Go back one step.",
-    "tooltip.gigExit": "Leave the gig check and show crates.",
-    "tooltip.gigNext": "Go to the next step.",
-    "tooltip.gigRefresh": "Run the gig check again.",
-    "tooltip.gigShowAll": "Show every item in this list.",
-    "tooltip.help": "Open Help. Report a bug or request a feature on GitHub. The app does not post it.",
-    "tooltip.helpBug": "Describe a bug. GitHub opens so you can review it.",
-    "tooltip.helpClose": "Close Help. Esc.",
-    "tooltip.helpCopyLog": "Copy the log with your home folder replaced by ~.",
-    "tooltip.helpExpected": "What you expected to happen.",
-    "tooltip.helpFeature": "Describe a feature. GitHub opens so you can review it.",
-    "tooltip.helpGithub": "Open the project on GitHub.",
-    "tooltip.helpHappened": "What happened, or what should change.",
-    "tooltip.helpNames": "Keep track and crate names in the copied log. Off leaves them out.",
-    "tooltip.helpOpen": "Open the prefilled GitHub issue. You submit it there.",
-    "tooltip.helpReleases": "Open the release notes on GitHub.",
-    "tooltip.helpReport": "The report text, when it could not be copied.",
-    "tooltip.viewGig": "Check the library before a gig. Read-only.",
-    "track.missingBadge": "missing",
-    "track.numbered": "Track {id}",
-    "track.stemsBadge": "stems",
-    "track.untitled": "Untitled",
-    "version.app": "App version",
-    "version.copied": "Copied",
-    "version.copyFailed": "Couldn't copy the version.",
-    "version.unavailable": "Version unavailable",
-    "view.crates": "Crates",
-    "view.duplicates": "Duplicates",
-    "view.files": "Files",
-    "view.gig": "Before a gig",
-    "view.group.health": "Library health",
-    "view.group.library": "Library",
-    "view.history": "History",
-    "view.label": "Views",
-    "view.missing": "Missing files",
-    "view.snapshots": "Backups",
-    "view.stems": "Stems",
-    "wizard.action.checkAgain": "Check again",
-    "wizard.action.continue": "Continue",
-    "wizard.action.getStarted": "Get started",
-    "wizard.action.looking": "Looking…",
-    "wizard.action.openLibrary": "Open my library",
-    "wizard.action.takeSnapshot": "Take a safety snapshot",
-    "wizard.action.tryAgain": "Try again",
-    "wizard.action.useLibrary": "Use this library",
-    "wizard.announce": "Step {index} of {count}. {name}.",
-    "wizard.blocked": "Close Serato DJ to continue.",
-    "wizard.chooseCheckAgain": "Choose Check again.",
-    "wizard.chooseFolder": "Choose a folder",
-    "wizard.closeFolders": "Close folder list",
-    "wizard.consentFailed": "Couldn't save that choice. Try again.",
-    "wizard.copySaved": "Safety copy saved.",
-    "wizard.done": "Library ready. Snapshot saved.",
-    "wizard.finishFailed": "Couldn't save that you finished setup. Try again.",
-    "wizard.folders": "Folders",
-    "wizard.genericError": "Something went wrong. Try again.",
-    "wizard.heading.consent": "Share anonymous usage stats and crash reports?",
-    "wizard.heading.library": "Find your library",
-    "wizard.heading.snapshot": "Safety snapshot",
-    "wizard.heading.welcome": "See your Serato library",
-    "wizard.lookFailed": "Couldn't look for your library.",
-    "wizard.looking": "Looking for your Serato library.",
-    "wizard.no": "No, don't share",
-    "wizard.noSubfolders": "This folder has no folders inside it.",
-    "wizard.opening": "Opening…",
-    "wizard.progressLabel": "Saving a safety copy",
-    "wizard.saving": "Saving…",
-    "wizard.savingCopy": "Saving a safety copy…",
-    "wizard.savingLibraryCopy": "Saving a safety copy of your library.",
-    "wizard.snapshotBody": "A backup of your library data is saved before anything is changed.",
-    "wizard.snapshotFailed": "The safety copy could not be saved. Your library was not changed. Try again.",
-    "wizard.step.consent": "Sharing",
-    "wizard.step.done": "Done",
-    "wizard.step.library": "Find your library",
-    "wizard.step.snapshot": "Safety snapshot",
-    "wizard.step.welcome": "Welcome",
-    "wizard.stepOf": "Step {index} of {count}",
-    "wizard.useFolder": "Use this folder",
-    "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
-    "wizard.yes": "Yes, share",
     "tooltip.allTracks": "Show every track in this space. Ctrl/Cmd+1.",
     "tooltip.backupDrives": "Copy each connected drive's Serato folder into the backup on this computer. An unplugged drive is listed and left untouched.",
     "tooltip.beatgridLock": "Lock the beatgrid so Serato does not move it.",
@@ -797,6 +754,8 @@
     "tooltip.crateColor": "Set the color of the selected crate.",
     "tooltip.crateDelete": "Delete the selected crate. The tracks stay in the library.",
     "tooltip.crateNew": "Create a new crate.",
+    "tooltip.cratePreset": "Make a crate from a preset: tracks that mix with a key, a BPM range, or tracks not played lately.",
+    "tooltip.crateRefresh": "Pick the tracks for this preset crate again from its preset.",
     "tooltip.crateRename": "Rename the selected crate.",
     "tooltip.crateSearch": "Find a crate by name. Esc clears the search.",
     "tooltip.cue": "Move the playhead to {label}.",
@@ -825,16 +784,33 @@
     "tooltip.filesSearch": "Search file names. Ctrl/Cmd+F or /. Esc clears the search.",
     "tooltip.filesUp": "Go up to the parent folder.",
     "tooltip.findRelated": "Find a track to link by title or artist.",
+    "tooltip.gigBack": "Go back one step.",
+    "tooltip.gigExit": "Leave the gig check and show crates.",
+    "tooltip.gigNext": "Go to the next step.",
+    "tooltip.gigRefresh": "Run the gig check again.",
+    "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.help": "Open Help. Report a bug or request a feature on GitHub. The app does not post it.",
+    "tooltip.helpBug": "Describe a bug. GitHub opens so you can review it.",
+    "tooltip.helpClose": "Close Help. Esc.",
+    "tooltip.helpCopyLog": "Copy the log with your home folder replaced by ~.",
+    "tooltip.helpExpected": "What you expected to happen.",
+    "tooltip.helpFeature": "Describe a feature. GitHub opens so you can review it.",
+    "tooltip.helpGithub": "Open the project on GitHub.",
+    "tooltip.helpHappened": "What happened, or what should change.",
+    "tooltip.helpNames": "Keep track and crate names in the copied log. Off leaves them out.",
+    "tooltip.helpOpen": "Open the prefilled GitHub issue. You submit it there.",
+    "tooltip.helpReleases": "Open the release notes on GitHub.",
+    "tooltip.helpReport": "The report text, when it could not be copied.",
     "tooltip.hideSearchCopies": "Hide the fields that were compared.",
     "tooltip.hotLoops": "Copy loops onto a free hot-cue pad in the Rekordbox file.",
     "tooltip.iconFollowsTheme": "Match the Dock icon on Mac, or the window and taskbar icon on Windows, to the theme. On by default. The Finder icon and the Windows program icon stay the same.",
     "tooltip.importFile": "Choose a playlist file to import.",
     "tooltip.importM3u": "Add tracks from a playlist file into a new crate.",
     "tooltip.keepCopy": "Keep this copy: {name}. The others leave the library.",
-    "tooltip.linkMutual": "Also link that track back to this one.",
-    "tooltip.linkNote": "Add a note for this link.",
     "tooltip.language": "Choose the language for this window. Same as the system follows this computer.",
     "tooltip.libraryGeneration": "Opens the note that says whether the session log or the installed Serato decided this is Serato 4, Serato 5, or an unknown version.",
+    "tooltip.linkMutual": "Also link that track back to this one.",
+    "tooltip.linkNote": "Add a note for this link.",
     "tooltip.linkRating": "Rate this link from 1 to 5.",
     "tooltip.logFallback": "Log text, when it could not be copied.",
     "tooltip.membership": "Add this track to {name}, or take it out.",
@@ -863,6 +839,15 @@
     "tooltip.portableClose": "Close the portable drive report.",
     "tooltip.prepareAdd": "Send this track to Prepare.",
     "tooltip.prepareRemove": "Take this track out of Prepare.",
+    "tooltip.presetBpm": "The tempo in the middle of the range.",
+    "tooltip.presetCancel": "Close without making a crate.",
+    "tooltip.presetCreate": "Save the matching tracks as a new crate.",
+    "tooltip.presetKey": "The key to mix from. Tracks one step either way on the Camelot wheel, and the relative key, are included.",
+    "tooltip.presetKind": "Choose which tracks the crate collects.",
+    "tooltip.presetMonths": "Tracks with no play in this many months, including tracks never played.",
+    "tooltip.presetName": "The crate name. ⟳ is added at the end.",
+    "tooltip.presetRange": "How far above or below that tempo a track can be.",
+    "tooltip.presetScope": "Look only at tracks in the selected crate and the crates inside it.",
     "tooltip.previous": "Play the previous track in this list.",
     "tooltip.quickOpen": "Find a track or a file by name. Ctrl/Cmd+K. Esc closes this box.",
     "tooltip.quickOpenClose": "Close find. Esc.",
@@ -927,6 +912,7 @@
     "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
+    "tooltip.viewGig": "Check the library before a gig. Read-only.",
     "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
     "tooltip.viewMissing": "Show tracks whose files are missing in this space.",
     "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
@@ -952,7 +938,69 @@
     "tooltip.wizardSecondary": "Choose a folder that already has a Serato library.",
     "tooltip.wizardYes": "Share anonymous stats and crash reports.",
     "tooltip.zoomIn": "Show a shorter stretch of the waveform around the playhead.",
-    "tooltip.zoomOut": "Show a longer stretch of the waveform around the playhead."
+    "tooltip.zoomOut": "Show a longer stretch of the waveform around the playhead.",
+    "track.missingBadge": "missing",
+    "track.numbered": "Track {id}",
+    "track.stemsBadge": "stems",
+    "track.untitled": "Untitled",
+    "version.app": "App version",
+    "version.copied": "Copied",
+    "version.copyFailed": "Couldn't copy the version.",
+    "version.unavailable": "Version unavailable",
+    "view.crates": "Crates",
+    "view.duplicates": "Duplicates",
+    "view.files": "Files",
+    "view.gig": "Before a gig",
+    "view.group.health": "Library health",
+    "view.group.library": "Library",
+    "view.history": "History",
+    "view.label": "Views",
+    "view.missing": "Missing files",
+    "view.snapshots": "Backups",
+    "view.stems": "Stems",
+    "wizard.action.checkAgain": "Check again",
+    "wizard.action.continue": "Continue",
+    "wizard.action.getStarted": "Get started",
+    "wizard.action.looking": "Looking…",
+    "wizard.action.openLibrary": "Open my library",
+    "wizard.action.takeSnapshot": "Take a safety snapshot",
+    "wizard.action.tryAgain": "Try again",
+    "wizard.action.useLibrary": "Use this library",
+    "wizard.announce": "Step {index} of {count}. {name}.",
+    "wizard.blocked": "Close Serato DJ to continue.",
+    "wizard.chooseCheckAgain": "Choose Check again.",
+    "wizard.chooseFolder": "Choose a folder",
+    "wizard.closeFolders": "Close folder list",
+    "wizard.consentFailed": "Couldn't save that choice. Try again.",
+    "wizard.copySaved": "Safety copy saved.",
+    "wizard.done": "Library ready. Snapshot saved.",
+    "wizard.finishFailed": "Couldn't save that you finished setup. Try again.",
+    "wizard.folders": "Folders",
+    "wizard.genericError": "Something went wrong. Try again.",
+    "wizard.heading.consent": "Share anonymous usage stats and crash reports?",
+    "wizard.heading.library": "Find your library",
+    "wizard.heading.snapshot": "Safety snapshot",
+    "wizard.heading.welcome": "See your Serato library",
+    "wizard.lookFailed": "Couldn't look for your library.",
+    "wizard.looking": "Looking for your Serato library.",
+    "wizard.no": "No, don't share",
+    "wizard.noSubfolders": "This folder has no folders inside it.",
+    "wizard.opening": "Opening…",
+    "wizard.progressLabel": "Saving a safety copy",
+    "wizard.saving": "Saving…",
+    "wizard.savingCopy": "Saving a safety copy…",
+    "wizard.savingLibraryCopy": "Saving a safety copy of your library.",
+    "wizard.snapshotBody": "A backup of your library data is saved before anything is changed.",
+    "wizard.snapshotFailed": "The safety copy could not be saved. Your library was not changed. Try again.",
+    "wizard.step.consent": "Sharing",
+    "wizard.step.done": "Done",
+    "wizard.step.library": "Find your library",
+    "wizard.step.snapshot": "Safety snapshot",
+    "wizard.step.welcome": "Welcome",
+    "wizard.stepOf": "Step {index} of {count}",
+    "wizard.useFolder": "Use this folder",
+    "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
+    "wizard.yes": "Yes, share"
   };
 
   // locales/es.json
@@ -1201,8 +1249,8 @@
     "generation.named": "Generación de la biblioteca, {kind}",
     "generation.reason.downgrade": "El registro más reciente dice Serato {newest} y un registro anterior dice Serato {version}. Las escrituras y las restauraciones siguen desactivadas.",
     "generation.reason.fallback": "No se encontró un registro de sesión. Se usa la versión de Serato instalada, {version}.",
-    "generation.reason.installed": "El Serato instalado es {version}. El registro más reciente dice Serato {newest}. Las escrituras y las restauraciones siguen desactivadas.",
     "generation.reason.installUnknown": "No se pudo leer la versión de Serato instalada, así que las escrituras siguen desactivadas. Un registro de sesión no puede activarlas.",
+    "generation.reason.installed": "El Serato instalado es {version}. El registro más reciente dice Serato {newest}. Las escrituras y las restauraciones siguen desactivadas.",
     "generation.reason.log": "El registro de sesión más reciente, {log}, anotó que Serato {version} abrió {database}.",
     "generation.reason.mismatch": "El registro de sesión abrió {database}, que no es este archivo de biblioteca.",
     "generation.reason.pending": "La generación de la biblioteca todavía no se ha leído.",
@@ -1336,6 +1384,16 @@
     "markers.none": "Este archivo no tiene cues de Serato.",
     "markers.readOnly": "Leídos del archivo de audio. No se vuelven a escribir.",
     "markers.unavailable": "El archivo no está en el disco, así que no se pueden leer los cues.",
+    "menu.close": "Cerrar",
+    "menu.exportRekordbox": "Exportar para Rekordbox",
+    "menu.file": "Archivo",
+    "menu.focusSearch": "Ir a la búsqueda",
+    "menu.help": "Ayuda",
+    "menu.library": "Biblioteca",
+    "menu.minimize": "Minimizar",
+    "menu.resetWidth": "Restablecer el ancho de la lista",
+    "menu.tools": "Herramientas",
+    "menu.window": "Ventana",
     "merge.addToCrates": "Añadir la copia conservada a {crates}.",
     "merge.addToSpace": "Añadir la copia conservada al espacio {space}.",
     "merge.alreadyInCrates": "La copia conservada ya está en todas las cajas que usan las demás. Se queda donde está.",
@@ -1369,16 +1427,6 @@
       one: "Apuntar {count} entrada del historial a la copia conservada.",
       other: "Apuntar {count} entradas del historial a la copia conservada."
     },
-    "menu.close": "Cerrar",
-    "menu.exportRekordbox": "Exportar para Rekordbox",
-    "menu.file": "Archivo",
-    "menu.focusSearch": "Ir a la búsqueda",
-    "menu.help": "Ayuda",
-    "menu.library": "Biblioteca",
-    "menu.minimize": "Minimizar",
-    "menu.resetWidth": "Restablecer el ancho de la lista",
-    "menu.tools": "Herramientas",
-    "menu.window": "Ventana",
     "merge.title": "Combinar copias",
     "merge.trashFiles": "Mover {files} a la Papelera.",
     "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
@@ -1482,6 +1530,43 @@
     "portable.title": "Unidad portátil",
     "portable.unreachable": "No se ha podido comprobar esta unidad.",
     "portable.unreadable": "No se ha podido leer esta unidad.",
+    "presets.bpm": "BPM",
+    "presets.button": "Preajuste",
+    "presets.counting": "Contando pistas…",
+    "presets.create": "Crear caja",
+    "presets.created": {
+      one: "{name} guardada con {count} pista.",
+      other: "{name} guardada con {count} pistas."
+    },
+    "presets.intro": "La app elige las pistas y guarda una caja normal cuyo nombre termina en ⟳. Serato la reproduce como cualquier caja. Se actualiza cuando esta app se abre con Serato cerrado, o cuando pulsas Actualizar.",
+    "presets.key": "Tonalidad",
+    "presets.keyHelp": "Camelot, como 8A, o un nombre de tonalidad, como Am.",
+    "presets.kind": "Preajuste",
+    "presets.kind.bpm": "Rango de BPM",
+    "presets.kind.harmonic": "Mezcla con una tonalidad",
+    "presets.kind.unplayed": "Sin tocar últimamente",
+    "presets.matches": {
+      one: "Coincide {count} pista.",
+      other: "Coinciden {count} pistas."
+    },
+    "presets.months": "Meses",
+    "presets.name": "Nombre de la caja",
+    "presets.name.bpm": "BPM {bpm} ±{range}",
+    "presets.name.harmonic": "Mezcla con {key}",
+    "presets.name.unplayed": {
+      one: "Sin tocar en {count} mes",
+      other: "Sin tocar en {count} meses"
+    },
+    "presets.range": "Más o menos",
+    "presets.refresh": "Actualizar",
+    "presets.refreshed": "{name} actualizada: {added} añadidas, {removed} quitadas.",
+    "presets.refreshedOnOpen": {
+      one: "Se actualizó {count} caja de preajuste.",
+      other: "Se actualizaron {count} cajas de preajuste."
+    },
+    "presets.scope": "Solo pistas de {name} y sus subcajas",
+    "presets.title": "Nueva caja a partir de un preajuste",
+    "presets.updated": "⟳ actualizada {date}",
     "quickOpen.empty": "Escribe el nombre de una pista o de un archivo.",
     "quickOpen.file": "Archivo",
     "quickOpen.fileError": "No se pudieron buscar los archivos del disco. Las pistas que coinciden siguen en la lista.",
@@ -1639,13 +1724,13 @@
     "snapshots.reviewRestore": "Revisar restauración",
     "snapshots.reviewUndo": "Revisar deshacer",
     "snapshots.saved": "Instantánea guardada.",
+    "snapshots.saving": "Guardando instantánea…",
+    "snapshots.seratoUnknown": "Versión de Serato desconocida",
+    "snapshots.seratoVersion": "Serato {version} (compilación {build})",
     "snapshots.skippedCrates": {
       one: "Restauración terminada. Se omitió {count} archivo de caja porque no se pudo leer su copia de la instantánea: {names}.",
       other: "Restauración terminada. Se omitieron {count} archivos de caja porque no se pudo leer su copia de la instantánea: {names}."
     },
-    "snapshots.saving": "Guardando instantánea…",
-    "snapshots.seratoUnknown": "Versión de Serato desconocida",
-    "snapshots.seratoVersion": "Serato {version} (compilación {build})",
     "snapshots.take": "Tomar una instantánea",
     "snapshots.trigger": "instantánea",
     "snapshots.unavailableDrives": "No disponibles: {drives}.",
@@ -1659,86 +1744,6 @@
     "space.video": "Vídeo",
     "status.checking": "Comprobando Serato",
     "status.library": "Biblioteca",
-    "tooltip.gigBack": "Vuelve un paso atrás.",
-    "tooltip.gigExit": "Sale de la comprobación y muestra las cajas.",
-    "tooltip.gigNext": "Pasa al siguiente paso.",
-    "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
-    "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
-    "tooltip.help": "Abre Ayuda. Informa de un error o pide una función en GitHub. La app no lo publica.",
-    "tooltip.helpBug": "Describe un error. GitHub se abre para que lo revises.",
-    "tooltip.helpClose": "Cierra Ayuda. Esc.",
-    "tooltip.helpCopyLog": "Copia el registro con tu carpeta personal reemplazada por ~.",
-    "tooltip.helpExpected": "Qué esperabas que ocurriera.",
-    "tooltip.helpFeature": "Describe una función. GitHub se abre para que la revises.",
-    "tooltip.helpGithub": "Abre el proyecto en GitHub.",
-    "tooltip.helpHappened": "Qué ocurrió, o qué debería cambiar.",
-    "tooltip.helpNames": "Conserva los nombres de pistas y cajas en el registro copiado. Desactivado los omite.",
-    "tooltip.helpOpen": "Abre el informe de GitHub ya rellenado. Tú lo envías allí.",
-    "tooltip.helpReleases": "Abre las notas de la versión en GitHub.",
-    "tooltip.helpReport": "El texto del informe, cuando no se pudo copiar.",
-    "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
-    "track.missingBadge": "no encontrada",
-    "track.numbered": "Pista {id}",
-    "track.stemsBadge": "stems",
-    "track.untitled": "Sin título",
-    "version.app": "Versión de la app",
-    "version.copied": "Copiada",
-    "version.copyFailed": "No se pudo copiar la versión.",
-    "version.unavailable": "Versión no disponible",
-    "view.crates": "Cajas",
-    "view.duplicates": "Duplicados",
-    "view.files": "Archivos",
-    "view.gig": "Antes del bolo",
-    "view.group.health": "Salud de la biblioteca",
-    "view.group.library": "Biblioteca",
-    "view.history": "Historial",
-    "view.label": "Vistas",
-    "view.missing": "Archivos no encontrados",
-    "view.snapshots": "Copias de seguridad",
-    "view.stems": "Stems",
-    "wizard.action.checkAgain": "Volver a buscar",
-    "wizard.action.continue": "Continuar",
-    "wizard.action.getStarted": "Empezar",
-    "wizard.action.looking": "Buscando…",
-    "wizard.action.openLibrary": "Abrir mi biblioteca",
-    "wizard.action.takeSnapshot": "Tomar una instantánea de seguridad",
-    "wizard.action.tryAgain": "Reintentar",
-    "wizard.action.useLibrary": "Usar esta biblioteca",
-    "wizard.announce": "Paso {index} de {count}. {name}.",
-    "wizard.blocked": "Cierra Serato DJ para continuar.",
-    "wizard.chooseCheckAgain": "Elige Volver a buscar.",
-    "wizard.chooseFolder": "Elegir una carpeta",
-    "wizard.closeFolders": "Cerrar la lista de carpetas",
-    "wizard.consentFailed": "No se pudo guardar esa elección. Inténtalo de nuevo.",
-    "wizard.copySaved": "Copia de seguridad guardada.",
-    "wizard.done": "Biblioteca lista. Instantánea guardada.",
-    "wizard.finishFailed": "No se pudo guardar que terminaste la configuración. Inténtalo de nuevo.",
-    "wizard.folders": "Carpetas",
-    "wizard.genericError": "Algo salió mal. Inténtalo de nuevo.",
-    "wizard.heading.consent": "¿Compartir estadísticas de uso anónimas e informes de errores?",
-    "wizard.heading.library": "Encuentra tu biblioteca",
-    "wizard.heading.snapshot": "Instantánea de seguridad",
-    "wizard.heading.welcome": "Mira tu biblioteca de Serato",
-    "wizard.lookFailed": "No se pudo buscar tu biblioteca.",
-    "wizard.looking": "Buscando tu biblioteca de Serato.",
-    "wizard.no": "No, no compartir",
-    "wizard.noSubfolders": "Esta carpeta no contiene otras carpetas.",
-    "wizard.opening": "Abriendo…",
-    "wizard.progressLabel": "Guardando una copia de seguridad",
-    "wizard.saving": "Guardando…",
-    "wizard.savingCopy": "Guardando una copia de seguridad…",
-    "wizard.savingLibraryCopy": "Guardando una copia de seguridad de tu biblioteca.",
-    "wizard.snapshotBody": "Se guarda una copia de seguridad de los datos de tu biblioteca antes de cambiar nada.",
-    "wizard.snapshotFailed": "No se pudo guardar la copia de seguridad. Tu biblioteca no cambió. Inténtalo de nuevo.",
-    "wizard.step.consent": "Compartir",
-    "wizard.step.done": "Listo",
-    "wizard.step.library": "Encuentra tu biblioteca",
-    "wizard.step.snapshot": "Instantánea de seguridad",
-    "wizard.step.welcome": "Bienvenida",
-    "wizard.stepOf": "Paso {index} de {count}",
-    "wizard.useFolder": "Usar esta carpeta",
-    "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
-    "wizard.yes": "Sí, compartir",
     "tooltip.allTracks": "Muestra todas las pistas de este espacio. Ctrl/Cmd+1.",
     "tooltip.backupDrives": "Copia la carpeta Serato de cada unidad conectada en la copia de este equipo. Una unidad desconectada se anota y no se toca.",
     "tooltip.beatgridLock": "Bloquea la rejilla de tiempo para que Serato no la mueva.",
@@ -1752,6 +1757,8 @@
     "tooltip.crateColor": "Elige el color de la caja seleccionada.",
     "tooltip.crateDelete": "Elimina la caja seleccionada. Las pistas siguen en la biblioteca.",
     "tooltip.crateNew": "Crea una caja nueva.",
+    "tooltip.cratePreset": "Crea una caja a partir de un preajuste: pistas que mezclan con una tonalidad, un rango de BPM o pistas sin tocar últimamente.",
+    "tooltip.crateRefresh": "Vuelve a elegir las pistas de esta caja según su preajuste.",
     "tooltip.crateRename": "Cambia el nombre de la caja seleccionada.",
     "tooltip.crateSearch": "Busca una caja por nombre. Esc borra la búsqueda.",
     "tooltip.cue": "Lleva el cursor de reproducción a {label}.",
@@ -1780,16 +1787,33 @@
     "tooltip.filesSearch": "Busca nombres de archivo. Ctrl/Cmd+F o /. Esc borra la búsqueda.",
     "tooltip.filesUp": "Sube a la carpeta superior.",
     "tooltip.findRelated": "Busca una pista para enlazar por título o artista.",
+    "tooltip.gigBack": "Vuelve un paso atrás.",
+    "tooltip.gigExit": "Sale de la comprobación y muestra las cajas.",
+    "tooltip.gigNext": "Pasa al siguiente paso.",
+    "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
+    "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
+    "tooltip.help": "Abre Ayuda. Informa de un error o pide una función en GitHub. La app no lo publica.",
+    "tooltip.helpBug": "Describe un error. GitHub se abre para que lo revises.",
+    "tooltip.helpClose": "Cierra Ayuda. Esc.",
+    "tooltip.helpCopyLog": "Copia el registro con tu carpeta personal reemplazada por ~.",
+    "tooltip.helpExpected": "Qué esperabas que ocurriera.",
+    "tooltip.helpFeature": "Describe una función. GitHub se abre para que la revises.",
+    "tooltip.helpGithub": "Abre el proyecto en GitHub.",
+    "tooltip.helpHappened": "Qué ocurrió, o qué debería cambiar.",
+    "tooltip.helpNames": "Conserva los nombres de pistas y cajas en el registro copiado. Desactivado los omite.",
+    "tooltip.helpOpen": "Abre el informe de GitHub ya rellenado. Tú lo envías allí.",
+    "tooltip.helpReleases": "Abre las notas de la versión en GitHub.",
+    "tooltip.helpReport": "El texto del informe, cuando no se pudo copiar.",
     "tooltip.hideSearchCopies": "Oculta los campos que se compararon.",
     "tooltip.hotLoops": "Copia los bucles a un pad de cue libre en el archivo de Rekordbox.",
     "tooltip.iconFollowsTheme": "Haz que el icono del Dock en Mac, o el de la ventana y la barra de tareas en Windows, coincida con el tema. Activado de forma predeterminada. El icono del Finder y el icono del programa en Windows no cambian.",
     "tooltip.importFile": "Elige un archivo de lista de reproducción para importar.",
     "tooltip.importM3u": "Añade pistas de un archivo de lista a una caja nueva.",
     "tooltip.keepCopy": "Conserva esta copia: {name}. Las demás salen de la biblioteca.",
-    "tooltip.linkMutual": "Enlaza también esa pista de vuelta a esta.",
-    "tooltip.linkNote": "Añade una nota a este enlace.",
     "tooltip.language": "Elige el idioma de esta ventana. Igual que el sistema sigue el idioma de este ordenador.",
     "tooltip.libraryGeneration": "Abre la nota que dice si el registro de sesión o el Serato instalado decidió que esta biblioteca es Serato 4, Serato 5 o una versión desconocida.",
+    "tooltip.linkMutual": "Enlaza también esa pista de vuelta a esta.",
+    "tooltip.linkNote": "Añade una nota a este enlace.",
     "tooltip.linkRating": "Valora este enlace de 1 a 5.",
     "tooltip.logFallback": "Texto del registro, cuando no se pudo copiar.",
     "tooltip.membership": "Añade esta pista a {name}, o quítala.",
@@ -1818,6 +1842,15 @@
     "tooltip.portableClose": "Cierra el informe de la unidad portátil.",
     "tooltip.prepareAdd": "Envía esta pista a Preparar.",
     "tooltip.prepareRemove": "Quita esta pista de Preparar.",
+    "tooltip.presetBpm": "El tempo en el centro del rango.",
+    "tooltip.presetCancel": "Cierra sin crear una caja.",
+    "tooltip.presetCreate": "Guarda las pistas que coinciden como una caja nueva.",
+    "tooltip.presetKey": "La tonalidad de partida. Se incluyen las pistas un paso a cada lado en la rueda Camelot y la tonalidad relativa.",
+    "tooltip.presetKind": "Elige qué pistas reúne la caja.",
+    "tooltip.presetMonths": "Pistas sin tocar en estos meses, incluidas las que nunca se tocaron.",
+    "tooltip.presetName": "El nombre de la caja. Se añade ⟳ al final.",
+    "tooltip.presetRange": "Cuánto puede subir o bajar una pista respecto a ese tempo.",
+    "tooltip.presetScope": "Mira solo las pistas de la caja elegida y de las cajas que contiene.",
     "tooltip.previous": "Reproduce la pista anterior de esta lista.",
     "tooltip.quickOpen": "Busca una pista o un archivo por nombre. Ctrl/Cmd+K. Esc cierra este cuadro.",
     "tooltip.quickOpenClose": "Cierra la búsqueda. Esc.",
@@ -1882,6 +1915,7 @@
     "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
+    "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
     "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
     "tooltip.viewMissing": "Muestra las pistas de este espacio cuyo archivo no se encuentra.",
     "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
@@ -1907,7 +1941,69 @@
     "tooltip.wizardSecondary": "Elige una carpeta que ya tenga una biblioteca de Serato.",
     "tooltip.wizardYes": "Comparte estadísticas anónimas e informes de fallos.",
     "tooltip.zoomIn": "Muestra un tramo más corto de la forma de onda alrededor del cursor.",
-    "tooltip.zoomOut": "Muestra un tramo más largo de la forma de onda alrededor del cursor."
+    "tooltip.zoomOut": "Muestra un tramo más largo de la forma de onda alrededor del cursor.",
+    "track.missingBadge": "no encontrada",
+    "track.numbered": "Pista {id}",
+    "track.stemsBadge": "stems",
+    "track.untitled": "Sin título",
+    "version.app": "Versión de la app",
+    "version.copied": "Copiada",
+    "version.copyFailed": "No se pudo copiar la versión.",
+    "version.unavailable": "Versión no disponible",
+    "view.crates": "Cajas",
+    "view.duplicates": "Duplicados",
+    "view.files": "Archivos",
+    "view.gig": "Antes del bolo",
+    "view.group.health": "Salud de la biblioteca",
+    "view.group.library": "Biblioteca",
+    "view.history": "Historial",
+    "view.label": "Vistas",
+    "view.missing": "Archivos no encontrados",
+    "view.snapshots": "Copias de seguridad",
+    "view.stems": "Stems",
+    "wizard.action.checkAgain": "Volver a buscar",
+    "wizard.action.continue": "Continuar",
+    "wizard.action.getStarted": "Empezar",
+    "wizard.action.looking": "Buscando…",
+    "wizard.action.openLibrary": "Abrir mi biblioteca",
+    "wizard.action.takeSnapshot": "Tomar una instantánea de seguridad",
+    "wizard.action.tryAgain": "Reintentar",
+    "wizard.action.useLibrary": "Usar esta biblioteca",
+    "wizard.announce": "Paso {index} de {count}. {name}.",
+    "wizard.blocked": "Cierra Serato DJ para continuar.",
+    "wizard.chooseCheckAgain": "Elige Volver a buscar.",
+    "wizard.chooseFolder": "Elegir una carpeta",
+    "wizard.closeFolders": "Cerrar la lista de carpetas",
+    "wizard.consentFailed": "No se pudo guardar esa elección. Inténtalo de nuevo.",
+    "wizard.copySaved": "Copia de seguridad guardada.",
+    "wizard.done": "Biblioteca lista. Instantánea guardada.",
+    "wizard.finishFailed": "No se pudo guardar que terminaste la configuración. Inténtalo de nuevo.",
+    "wizard.folders": "Carpetas",
+    "wizard.genericError": "Algo salió mal. Inténtalo de nuevo.",
+    "wizard.heading.consent": "¿Compartir estadísticas de uso anónimas e informes de errores?",
+    "wizard.heading.library": "Encuentra tu biblioteca",
+    "wizard.heading.snapshot": "Instantánea de seguridad",
+    "wizard.heading.welcome": "Mira tu biblioteca de Serato",
+    "wizard.lookFailed": "No se pudo buscar tu biblioteca.",
+    "wizard.looking": "Buscando tu biblioteca de Serato.",
+    "wizard.no": "No, no compartir",
+    "wizard.noSubfolders": "Esta carpeta no contiene otras carpetas.",
+    "wizard.opening": "Abriendo…",
+    "wizard.progressLabel": "Guardando una copia de seguridad",
+    "wizard.saving": "Guardando…",
+    "wizard.savingCopy": "Guardando una copia de seguridad…",
+    "wizard.savingLibraryCopy": "Guardando una copia de seguridad de tu biblioteca.",
+    "wizard.snapshotBody": "Se guarda una copia de seguridad de los datos de tu biblioteca antes de cambiar nada.",
+    "wizard.snapshotFailed": "No se pudo guardar la copia de seguridad. Tu biblioteca no cambió. Inténtalo de nuevo.",
+    "wizard.step.consent": "Compartir",
+    "wizard.step.done": "Listo",
+    "wizard.step.library": "Encuentra tu biblioteca",
+    "wizard.step.snapshot": "Instantánea de seguridad",
+    "wizard.step.welcome": "Bienvenida",
+    "wizard.stepOf": "Paso {index} de {count}",
+    "wizard.useFolder": "Usar esta carpeta",
+    "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
+    "wizard.yes": "Sí, compartir"
   };
 
   // src/i18n.ts
@@ -2263,6 +2359,7 @@
     byId: /* @__PURE__ */ new Map(),
     crates: [],
     crateTracks: /* @__PURE__ */ new Map(),
+    presets: {},
     rootId: null,
     activeCrate: "all",
     query: "",
@@ -2396,6 +2493,17 @@
     crateRename: spec("tooltip.crateRename"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
+    cratePreset: spec("tooltip.cratePreset"),
+    crateRefresh: spec("tooltip.crateRefresh"),
+    presetKind: spec("tooltip.presetKind"),
+    presetKey: spec("tooltip.presetKey"),
+    presetBpm: spec("tooltip.presetBpm"),
+    presetRange: spec("tooltip.presetRange"),
+    presetMonths: spec("tooltip.presetMonths"),
+    presetScope: spec("tooltip.presetScope"),
+    presetName: spec("tooltip.presetName"),
+    presetCancel: spec("tooltip.presetCancel"),
+    presetCreate: spec("tooltip.presetCreate"),
     shortcuts: spec("tooltip.shortcuts"),
     help: spec("tooltip.help"),
     helpBug: spec("tooltip.helpBug"),
@@ -2585,6 +2693,17 @@
       "crate-rename": tips.crateRename,
       "crate-color": tips.crateColor,
       "crate-delete": tips.crateDelete,
+      "crate-preset": tips.cratePreset,
+      "crate-refresh": tips.crateRefresh,
+      "preset-kind": tips.presetKind,
+      "preset-key": tips.presetKey,
+      "preset-bpm": tips.presetBpm,
+      "preset-range": tips.presetRange,
+      "preset-months": tips.presetMonths,
+      "preset-scope": tips.presetScope,
+      "preset-name": tips.presetName,
+      "preset-cancel": tips.presetCancel,
+      "preset-create": tips.presetCreate,
       "open-help": tips.help,
       "shortcuts-title": tips.shortcuts,
       "open-settings": tips.settings,
@@ -3452,6 +3571,72 @@
     if (typeof value.code === "string") body.code = value.code;
     if (body.error === void 0 && body.code === void 0) return null;
     return body;
+  }
+
+  // src/preset-view.ts
+  function presetName(preset) {
+    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
+    if (preset.kind === "bpm") {
+      return t("presets.name.bpm", {
+        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
+        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
+      });
+    }
+    return t("presets.name.unplayed", { count: preset.months });
+  }
+  function numberFrom(input) {
+    const text2 = input.value.trim();
+    if (!text2) return null;
+    const value = Number(text2);
+    return Number.isFinite(value) ? value : null;
+  }
+  function scopeCrate() {
+    if (state.activeCrate === "all") return null;
+    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
+    return crate && !crate.smart ? crate : null;
+  }
+  function readPresetForm() {
+    const kind2 = el("preset-kind").value;
+    const scope = scopeCrate();
+    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
+    if (kind2 === "harmonic") {
+      const key = el("preset-key").value.trim();
+      return key ? { kind: kind2, key, ...crate } : null;
+    }
+    if (kind2 === "bpm") {
+      const bpm = numberFrom(el("preset-bpm"));
+      const range = numberFrom(el("preset-range")) ?? 3;
+      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
+      return { kind: kind2, bpm, range, ...crate };
+    }
+    if (kind2 === "unplayed") {
+      const months = numberFrom(el("preset-months")) ?? 12;
+      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
+      return { kind: kind2, months, ...crate };
+    }
+    return null;
+  }
+  function syncPresetFields() {
+    const kind2 = el("preset-kind").value;
+    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
+      field.hidden = field.dataset.presetKind !== kind2;
+    }
+  }
+  function isPresetCrate(id) {
+    return id !== "all" && Object.hasOwn(state.presets, String(id));
+  }
+  function presetFoot(id) {
+    if (!isPresetCrate(id)) return "";
+    const updated = Number(state.presets[String(id)]?.updated);
+    if (!Number.isFinite(updated) || updated <= 0) return "";
+    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    return ` · ${t("presets.updated", { date })}`;
+  }
+  function syncPresetButtons() {
+    el("crate-preset").disabled = !state.writable;
+    const preset = isPresetCrate(state.activeCrate);
+    el("crate-refresh").hidden = !preset;
+    el("crate-refresh").disabled = !state.writable || !preset;
   }
 
   // src/restore.ts
@@ -5951,6 +6136,7 @@
     el("crate-rename").disabled = !state.writable || !crateChosen;
     el("crate-color").disabled = !state.writable || !crateChosen;
     el("crate-delete").disabled = !state.writable || !crateChosen;
+    syncPresetButtons();
     syncMergeButton();
     if (filesMode) {
       if (state.filesAtRoots) {
@@ -5973,7 +6159,8 @@
     const pool = state.mode === "history" ? state.entries : footerTracks();
     const bytes = pool.reduce((sum, track) => sum + (Number(track.file_size) || 0), 0);
     const ms = pool.reduce((sum, track) => sum + (Number(track.length_ms) || 0), 0);
-    el("crate-foot").textContent = `${formatNumber(pool.length)} · ${durationLabel(ms)} · ${sizeLabel(bytes)}`;
+    const preset = state.mode === "crates" ? presetFoot(state.activeCrate) : "";
+    el("crate-foot").textContent = `${formatNumber(pool.length)} · ${durationLabel(ms)} · ${sizeLabel(bytes)}${preset}`;
   }
   function footerTracks() {
     if (state.mode === "crates" && state.activeCrate !== "all") {
@@ -7129,6 +7316,7 @@
     state.crates = library.crates;
     state.rootId = library.root_id;
     state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)]));
+    state.presets = library.presets ?? {};
     state.expanded = new Set(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id));
     state.activeCrate = active2 === "all" || library.crates.some((crate) => crate.id === active2) ? active2 : "all";
     state.selectedId = selected;
@@ -9678,6 +9866,140 @@
     stop = onLocaleChange(repaintAll);
   }
 
+  // src/presets.ts
+  var PREVIEW_DELAY_MS = 250;
+  var previewTimer = 0;
+  var previewToken = 0;
+  var creating = false;
+  function syncNamePlaceholder(preset) {
+    el("preset-name").placeholder = preset ? presetName(preset) : "";
+  }
+  async function previewPreset() {
+    const token2 = ++previewToken;
+    const preset = readPresetForm();
+    syncNamePlaceholder(preset);
+    el("preset-create").disabled = !preset || creating;
+    if (!preset) {
+      el("preset-preview").textContent = "";
+      return;
+    }
+    el("preset-preview").textContent = t("presets.counting");
+    try {
+      const reply = await postJSON("/api/smart-preset", { action: "preview", space: state.space, preset });
+      if (token2 !== previewToken) return;
+      el("preset-preview").textContent = t("presets.matches", { count: Number(reply.count) || 0 });
+    } catch (error2) {
+      if (token2 !== previewToken) return;
+      el("preset-preview").textContent = failureOf(error2).message;
+      el("preset-create").disabled = true;
+    }
+  }
+  function schedulePreview() {
+    window.clearTimeout(previewTimer);
+    previewTimer = window.setTimeout(() => {
+      void previewPreset();
+    }, PREVIEW_DELAY_MS);
+  }
+  async function openPresetDialog() {
+    if (!state.writable) {
+      setNotice(el("status").textContent || "");
+      return;
+    }
+    const track = state.selectedId == null ? void 0 : state.byId.get(state.selectedId);
+    el("preset-key").value = track?.key?.trim() || el("preset-key").value;
+    const bpm = Number(track?.bpm);
+    if (Number.isFinite(bpm) && bpm > 0) el("preset-bpm").value = String(Math.round(bpm * 10) / 10);
+    const scope = scopeCrate();
+    el("preset-scope-label").hidden = !scope;
+    el("preset-scope").checked = Boolean(scope);
+    el("preset-scope-text").textContent = scope ? t("presets.scope", { name: scope.name }) : "";
+    el("preset-name").value = "";
+    el("preset-status").textContent = "";
+    syncPresetFields();
+    if (!el("preset-dialog").open) el("preset-dialog").showModal();
+    el("preset-kind").focus();
+    await previewPreset();
+  }
+  async function createPreset() {
+    const preset = readPresetForm();
+    if (!preset || creating) return;
+    creating = true;
+    el("preset-create").disabled = true;
+    el("preset-status").textContent = "";
+    const name = el("preset-name").value.trim() || presetName(preset);
+    try {
+      const reply = await postJSON("/api/smart-preset", { action: "create", space: state.space, preset, name });
+      el("preset-dialog").close();
+      const message = t("presets.created", { name: reply.name || name, count: Number(reply.added) || 0 });
+      setNotice(reply.warning ? `${message} ${reply.warning}` : message);
+      await loadLibrary();
+      if (typeof reply.id === "number") selectCrate(reply.id);
+    } catch (error2) {
+      el("preset-status").textContent = failureOf(error2).message;
+      if (failureOf(error2).status === 409) {
+        lockDown(error2);
+        el("preset-dialog").close();
+      }
+    } finally {
+      creating = false;
+      el("preset-create").disabled = !readPresetForm();
+    }
+  }
+  async function refreshActivePreset() {
+    const id = state.activeCrate;
+    if (id === "all" || !state.writable) return;
+    const crate = state.crates.find((item2) => item2.id === id);
+    try {
+      const reply = await postJSON("/api/smart-preset", { action: "refresh", id });
+      const message = t("presets.refreshed", {
+        name: crate?.name ?? "",
+        added: Number(reply.added) || 0,
+        removed: Number(reply.removed) || 0
+      });
+      setNotice(reply.warning ? `${message} ${reply.warning}` : message);
+      await loadLibrary();
+    } catch (error2) {
+      if (failureOf(error2).status === 409) lockDown(error2);
+      else setNotice(failureOf(error2).message);
+      if (failureOf(error2).status === 404) await loadLibrary();
+    }
+  }
+  async function refreshPresetsOnOpen() {
+    if (!state.writable || Object.keys(state.presets).length === 0) return;
+    try {
+      const reply = await postJSON("/api/smart-preset", { action: "refresh_all" });
+      const changed = reply.changed?.length ?? 0;
+      if (!changed) return;
+      const message = t("presets.refreshedOnOpen", { count: changed });
+      setNotice(reply.warning ? `${message} ${reply.warning}` : message);
+      await loadLibrary();
+    } catch (error2) {
+      if (failureOf(error2).status !== 409) setNotice(failureOf(error2).message);
+    }
+  }
+  function wirePresets() {
+    el("crate-preset").addEventListener("click", () => {
+      openPresetDialog().catch((error2) => setNotice(failureOf(error2).message));
+    });
+    el("crate-refresh").addEventListener("click", () => {
+      refreshActivePreset().catch((error2) => setNotice(failureOf(error2).message));
+    });
+    el("preset-kind").addEventListener("change", () => {
+      syncPresetFields();
+      void previewPreset();
+    });
+    for (const id of ["preset-key", "preset-bpm", "preset-range", "preset-months"]) {
+      el(id).addEventListener("input", schedulePreview);
+    }
+    el("preset-scope").addEventListener("change", () => {
+      void previewPreset();
+    });
+    el("preset-cancel").addEventListener("click", () => el("preset-dialog").close());
+    el("preset-create").addEventListener("click", () => {
+      createPreset().catch((error2) => setNotice(failureOf(error2).message));
+    });
+  }
+
   // src/desktop-actions.ts
   var CLICKS = {
     "new-crate": "crate-new",
@@ -9792,6 +10114,7 @@
   wireShortcuts();
   installDesktopActions();
   wireDialogs();
+  wirePresets();
   wireHelp();
   wireSnapshots();
   wireGigCheck(() => {
@@ -9802,6 +10125,6 @@
   wireVersion();
   void loadVersion();
   bindLibraryReload(loadLibrary);
-  loadLibrary().catch(showFailure);
+  loadLibrary().then(() => refreshPresetsOnOpen()).catch(showFailure);
 })();
 //# sourceMappingURL=app.js.map

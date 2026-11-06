@@ -11,6 +11,7 @@ from unittest import mock
 
 import app_config
 import library
+import safe_write
 import smart_presets
 from library import LibraryError, SeratoOpen
 from tests.fixture import TempLibrary, open_database
@@ -517,6 +518,105 @@ class CreateAndRefreshTests(unittest.TestCase):
             self.assertIsNotNone(smart_presets.remembered(cast(int, made["id"])))
 
 
+class RefreshAllTests(unittest.TestCase):
+    """Refreshing every preset crate when the page opens."""
+
+    def _locked(self, temp: TempLibrary) -> None:
+        """Put a live Serato lock row in the temporary library.
+
+        Args:
+            temp: The open temporary library.
+        """
+        with open_database(temp.db) as conn:
+            conn.execute("INSERT INTO lock (owner_process_id, owner_process_name) VALUES (99, 'Serato DJ Pro')")
+
+    def test_nothing_stale_writes_nothing_even_while_serato_runs(self) -> None:
+        """Current crates are only read, so a running Serato does not matter.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            before = len(safe_write.read_log())
+            self._locked(temp)
+            with mock.patch("library._process_is_serato", return_value=True):
+                result = smart_presets.refresh_all()
+            after = len(safe_write.read_log())
+        self.assertEqual((result["checked"], result["changed"]), (1, []))
+        self.assertEqual(before, after)
+
+    def test_stale_crates_update_in_one_checked_write(self) -> None:
+        """Two stale crates change in one session. A current one is left alone.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            crates = _seed(temp)
+            fast = cast(int, smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 128, "range": 0})["id"])
+            keyed = cast(int, smart_presets.create(
+                "Serato Library", {"kind": "harmonic", "key": "1A", "crate": crates["bar"]}
+            )["id"])
+            steady = cast(int, smart_presets.create("Serato Library", {"kind": "harmonic", "key": "8A"})["id"])
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET bpm = 128 WHERE id = 3")
+            library.crate_action({"action": "remove", "id": crates["late"], "asset": 4})
+            before = len(safe_write.read_log())
+            result = smart_presets.refresh_all()
+            after = len(safe_write.read_log())
+            members = {crate: _members(crate) for crate in (fast, keyed, steady)}
+        self.assertEqual(result["checked"], 3)
+        self.assertEqual(sorted(cast(list, result["changed"])), sorted([fast, keyed]))
+        self.assertEqual((result["added"], result["removed"]), (1, 1))
+        self.assertEqual(after - before, 1)
+        self.assertEqual(members, {fast: [6, 3], keyed: [3], steady: [7]})
+
+    def test_stale_crate_while_serato_runs_is_refused_and_unchanged(self) -> None:
+        """A needed write is refused while Serato runs and nothing moves.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            crate_id = cast(int, smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 128, "range": 0})["id"])
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET bpm = 128 WHERE id = 3")
+            self._locked(temp)
+            with mock.patch("library._process_is_serato", return_value=True):
+                with self.assertRaises(SeratoOpen):
+                    smart_presets.refresh_all()
+            members = _members(crate_id)
+        self.assertEqual(members, [6])
+
+    def test_for_crates_lists_only_live_preset_crates_of_the_space(self) -> None:
+        """Renamed crates stay listed. Replaced, smart, and other-space crates do not.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            kept = cast(int, smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})["id"])
+            library.crate_action({"action": "rename", "id": kept, "name": "Warmup ⟳"})
+            listed = smart_presets.for_crates("Serato Library", [
+                {"id": kept, "added": cast(dict, smart_presets.remembered(kept))["time_added"], "smart": False},
+                {"id": 999, "added": 1, "smart": False},
+            ])
+            replaced = smart_presets.for_crates("Serato Library", [{"id": kept, "added": -5, "smart": False}])
+            smart = smart_presets.for_crates("Serato Library", [
+                {"id": kept, "added": cast(dict, smart_presets.remembered(kept))["time_added"], "smart": True},
+            ])
+            other = smart_presets.for_crates("Prepare", [
+                {"id": kept, "added": cast(dict, smart_presets.remembered(kept))["time_added"], "smart": False},
+            ])
+        self.assertEqual(list(listed), [str(kept)])
+        self.assertEqual(listed[str(kept)]["preset"], {"kind": "bpm", "bpm": 120.0, "range": 3.0})
+        self.assertEqual((replaced, smart, other), ({}, {}, {}))
+
+
 class PresetApiTests(unittest.TestCase):
     """``POST /api/smart-preset`` against a temporary library."""
 
@@ -545,6 +645,9 @@ class PresetApiTests(unittest.TestCase):
             status, library_body = self.request("/api/library")
             names = [crate["name"] for crate in cast(dict, library_body)["crates"]]
             self.assertIn("BPM 120 ±3 ⟳", names)
+            self.assertEqual(list(cast(dict, library_body)["presets"]), [str(crate_id)])
+            status, all_result = self.request("/api/smart-preset", {"action": "refresh_all"})
+            self.assertEqual((status, cast(dict, all_result)["checked"]), (200, 1))
             status, refreshed = self.request("/api/smart-preset", {"action": "refresh", "id": crate_id})
             self.assertEqual(status, 200)
             self.assertEqual(cast(dict, refreshed)["count"], 4)

@@ -6,6 +6,7 @@
  * loadLibrary. Settings load when the dialogs wire. server.py uses port
  * 8765. The desktop app uses a free port, and this page calls the same
  * origin. Snapshot UI is src/restore.ts. The gig check is src/gig.ts.
+ * Crate presets are src/presets.ts.
  * Help is src/help.ts. It does not post to GitHub.
  * The portable drive check is src/portable.ts. It does not write.
  * This file does not open master.sqlite itself. The page language is set
@@ -35,6 +36,7 @@ import {
 import { registerPlayerControls, wireShortcuts } from "./shortcuts";
 import { state } from "./state";
 import { loadVersion, wireVersion } from "./version";
+import { refreshPresetsOnOpen, wirePresets } from "./presets";
 import { loadLibrary, setMode, showFailure, wireLibrary } from "./views";
 import { mountPlayer, playerControls } from "./player";
 import { installDesktopActions } from "./desktop-actions";
@@ -92,6 +94,7 @@ wireVirtualScroll();
 wireShortcuts();
 installDesktopActions();
 wireDialogs();
+wirePresets();
 wireHelp();
 wireSnapshots();
 wireGigCheck(() => {
@@ -102,4 +105,6 @@ wireLayout();
 wireVersion();
 void loadVersion();
 bindLibraryReload(loadLibrary);
-loadLibrary().catch(showFailure);
+loadLibrary()
+  .then(() => refreshPresetsOnOpen())
+  .catch(showFailure);

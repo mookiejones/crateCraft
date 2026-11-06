@@ -42,6 +42,7 @@ The log file is `serato-library.log`. It rotates at 1 MiB and keeps three older 
 
 **Help** can open your browser to a new GitHub issue that you review and submit yourself. The app does not post the issue and does not call the GitHub API. The form can include the app version, commit, operating system, Python version, Serato version and build, and whether Protect Library is on. Your home folder is written as `~`. Track and crate names from the log are left out unless you tick that box. If the link would be too long, the text is copied instead of opened.
 
+
 Each library write and each restore appends one JSON line to `operations.jsonl` under the app data folder (`write-checks` inside the same directory as `settings.json`). It is not written beside `master.sqlite`. That line names the operation, a crate, track, or file name, or a snapshot id, the files that were snapshotted, and whether the change was checked or put back. A file outside the library folder is stored as its name only. The Snapshots page reads that file on this computer. The line stays on this machine. It is not a usage report, and it is not uploaded.
 
 ## Release builds
