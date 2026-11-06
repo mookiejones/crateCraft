@@ -1519,3 +1519,202 @@ def _write_copied_tag(source: Path, dest: Path) -> bool:
         if temp is not None:
             temp.unlink(missing_ok=True)
         backup.unlink(missing_ok=True)
+
+
+class TextTags(TypedDict):
+    """Plain title and artist read from an audio file's own tags.
+
+    Attributes:
+        title: ID3 ``TIT2``, Vorbis ``TITLE``, or MP4 ``\u00a9nam``; empty when none.
+        artist: ID3 ``TPE1``, Vorbis ``ARTIST``, or MP4 ``\u00a9ART``; empty when none.
+    """
+
+    title: str
+    artist: str
+
+
+_ID3_TEXT = {b"TIT2": "title", b"TPE1": "artist"}
+_VORBIS_TEXT = {"TITLE": "title", "ARTIST": "artist"}
+_MP4_TEXT = {b"\xa9nam": "title", b"\xa9ART": "artist"}
+_FLAC_TEXT_BLOCKS = 1024
+
+
+def read_text_tags(path: str | Path | None) -> TextTags:
+    """Read the title and artist an audio file carries, without rewriting it.
+
+    ID3v2.3 and ID3v2.4 tags in the first 2,000,000 bytes are read first
+    (an MP3, or the ``id3`` chunk of a WAV or AIFF near the start). A FLAC
+    Vorbis comment and an MP4 ``ilst`` fill whatever is still empty. The
+    first value of a multi-value frame is used. Surrounding spaces are
+    removed. A missing or unreadable file gives empty strings.
+
+    Args:
+        path: Audio file, or None.
+
+    Returns:
+        ``title`` and ``artist``; each is empty when the file has none.
+    """
+    found: TextTags = {"title": "", "artist": ""}
+    if not path:
+        return found
+    file = Path(path)
+    try:
+        if not file.is_file():
+            return found
+        size = file.stat().st_size
+        with file.open("rb") as handle:
+            head = handle.read(min(size, _HEAD_READ))
+            sources = [_id3_text(head)]
+            if head.startswith(b"fLaC") or file.suffix.lower() == ".flac":
+                sources.append(_flac_text(handle, size))
+            if _is_mp4_family(file, head):
+                sources.append(_mp4_text(handle, size))
+    except OSError:
+        return found
+    for source in sources:
+        for key in ("title", "artist"):
+            if not found[key] and source.get(key):
+                found[key] = source[key]
+    return found
+
+
+def _first_value(text: str) -> str:
+    """Return the first NUL-separated value, stripped."""
+    return text.split("\x00", 1)[0].strip()
+
+
+def _id3_text(blob: bytes) -> dict[str, str]:
+    """Read ``TIT2`` and ``TPE1`` from the ID3 tags in a buffer.
+
+    Args:
+        blob: Leading file bytes.
+
+    Returns:
+        ``title`` and ``artist`` values that were found.
+    """
+    found: dict[str, str] = {}
+    cursor = 0
+    while cursor < len(blob) - 10 and len(found) < 2:
+        offset = blob.find(b"ID3", cursor)
+        if offset < 0:
+            break
+        cursor = offset + 3
+        version = blob[offset + 3] if offset + 3 < len(blob) else 0
+        if version not in (3, 4) or offset + 10 > len(blob):
+            continue
+        end = min(len(blob), offset + 10 + _synchsafe(blob[offset + 6:offset + 10]))
+        pos = offset + 10
+        while pos + 10 <= end:
+            frame_id = blob[pos:pos + 4]
+            if frame_id[0] == 0:
+                break
+            if version == 4:
+                frame_size = _synchsafe(blob[pos + 4:pos + 8])
+            else:
+                frame_size = int.from_bytes(blob[pos + 4:pos + 8], "big")
+            body = blob[pos + 10:pos + 10 + frame_size]
+            pos += 10 + frame_size
+            key = _ID3_TEXT.get(frame_id)
+            if key is None or len(body) < 2 or key in found:
+                continue
+            value = _first_value(_decode_text(body[0], body[1:]))
+            if value:
+                found[key] = value
+    return found
+
+
+def _flac_text(handle: BinaryIO, size: int) -> dict[str, str]:
+    """Read ``TITLE`` and ``ARTIST`` from a FLAC Vorbis comment.
+
+    The walk visits at most ``_FLAC_TEXT_BLOCKS`` metadata blocks and skips
+    every block body except the comment.
+
+    Args:
+        handle: Open FLAC file.
+        size: File size in bytes.
+
+    Returns:
+        ``title`` and ``artist`` values that were found.
+    """
+    found: dict[str, str] = {}
+    handle.seek(0)
+    if size < 8 or handle.read(4) != b"fLaC":
+        return found
+    pos = 4
+    for _ in range(_FLAC_TEXT_BLOCKS):
+        if pos + 4 > size:
+            break
+        handle.seek(pos)
+        header = handle.read(4)
+        if len(header) < 4:
+            break
+        length = int.from_bytes(header[1:4], "big")
+        if length > size - pos - 4:
+            break
+        if header[0] & 0x7F == 4:
+            for key, value in _comment_pairs(handle.read(length)):
+                name = _VORBIS_TEXT.get(key.upper())
+                text = _first_value(value.decode("utf-8", "replace"))
+                if name and text and name not in found:
+                    found[name] = text
+        if header[0] & 0x80:
+            break
+        pos += 4 + length
+    return found
+
+
+def _mp4_text(handle: BinaryIO, size: int) -> dict[str, str]:
+    """Read ``\u00a9nam`` and ``\u00a9ART`` from an MP4 ``moov/udta/meta/ilst``.
+
+    Args:
+        handle: Open MP4-family file.
+        size: File size in bytes.
+
+    Returns:
+        ``title`` and ``artist`` values that were found. ``mdat`` is skipped.
+    """
+    found: dict[str, str] = {}
+    pos = 0
+    for _ in range(64):
+        if pos + 8 > size:
+            break
+        handle.seek(pos)
+        header = handle.read(8)
+        if len(header) < 8:
+            break
+        atom_size = int.from_bytes(header[:4], "big")
+        header_len = 8
+        if atom_size == 1:
+            extended = handle.read(8)
+            if len(extended) < 8:
+                break
+            atom_size = int.from_bytes(extended, "big")
+            header_len = 16
+        elif atom_size == 0:
+            atom_size = size - pos
+        if atom_size < header_len or pos + atom_size > size:
+            break
+        if header[4:8] == b"moov":
+            moov = handle.read(min(atom_size - header_len, _TAG_LIMIT))
+            for kind, udta in _mp4_atoms(moov):
+                if kind != b"udta":
+                    continue
+                for meta_kind, meta in _mp4_atoms(udta):
+                    if meta_kind != b"meta":
+                        continue
+                    for ilst_kind, ilst in _mp4_atoms(meta[4:]):
+                        if ilst_kind != b"ilst":
+                            continue
+                        for item_kind, item in _mp4_atoms(ilst):
+                            name = _MP4_TEXT.get(item_kind)
+                            if name is None or name in found:
+                                continue
+                            for data_kind, data in _mp4_atoms(item):
+                                if data_kind == b"data" and len(data) > 8:
+                                    text = _first_value(data[8:].decode("utf-8", "replace"))
+                                    if text:
+                                        found[name] = text
+                                        break
+        pos += atom_size
+    return found
+

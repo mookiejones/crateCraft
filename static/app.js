@@ -148,6 +148,7 @@
     "error.snapshot_incomplete": "That snapshot is incomplete.",
     "error.snapshot_unreadable": "That snapshot could not be read.",
     "error.space_unavailable": "That space is not available here.",
+    "error.theme_not_saved": "The theme could not be saved.",
     "error.track_id_required": "Track id is required.",
     "error.track_not_in_library": "That track is not in the library.",
     "error.track_not_in_space": "Track is not in this space.",
@@ -568,8 +569,20 @@
     "rules.saved": "Rules saved.",
     "search.tracks": "Search tracks",
     "settings.about": "About",
+    "settings.colorway": "Theme",
+    "settings.colorway.daisyAge": "Daisy Age",
+    "settings.colorway.deepHouse": "Deep House",
+    "settings.colorway.motown": "Motown Soul",
+    "settings.colorwayPreview": "Theme icon preview",
     "settings.copyLogs": "Copy logs",
     "settings.copyVersion": "Copy version",
+    "settings.iconAppliedDock": "The Dock icon matches this theme.",
+    "settings.iconAppliedWindow": "The window and taskbar icon match this theme.",
+    "settings.iconDefault": "The app icon stays the usual one.",
+    "settings.iconFollowsTheme": "App icon follows the theme",
+    "settings.iconNotSaved": "Couldn't save the theme. It is used until you close the app.",
+    "settings.iconSaved": "Theme saved.",
+    "settings.iconUnsupported": "This computer can't change the running app icon. The choice is saved and applies on Mac and Windows.",
     "settings.language": "Language",
     "settings.languageNotSaved": "Couldn't save the language. It is used until you close the app.",
     "settings.languageSystem": "Same as the system",
@@ -744,6 +757,7 @@
     "tooltip.beatgridLock": "Lock the beatgrid so Serato does not move it.",
     "tooltip.chooseRelated": "Choose {name} as the track to link.",
     "tooltip.collapseCrate": "Hide the crates nested under {name}.",
+    "tooltip.colorway": "Choose the theme. The app icon can follow this choice.",
     "tooltip.consentAccept": "Share anonymous stats and crash reports.",
     "tooltip.consentDecline": "Don't share anonymous stats.",
     "tooltip.copyLogs": "Copy the log text.",
@@ -781,6 +795,7 @@
     "tooltip.findRelated": "Find a track to link by title or artist.",
     "tooltip.hideSearchCopies": "Hide the fields that were compared.",
     "tooltip.hotLoops": "Copy loops onto a free hot-cue pad in the Rekordbox file.",
+    "tooltip.iconFollowsTheme": "Match the Dock icon on Mac, or the window and taskbar icon on Windows, to the theme. On by default. The Finder icon and the Windows program icon stay the same.",
     "tooltip.importFile": "Choose a playlist file to import.",
     "tooltip.importM3u": "Add tracks from a playlist file into a new crate.",
     "tooltip.keepCopy": "Keep this copy: {name}. The others leave the library.",
@@ -1054,6 +1069,7 @@
     "error.snapshot_incomplete": "Esa instantánea está incompleta.",
     "error.snapshot_unreadable": "No se pudo leer esa instantánea.",
     "error.space_unavailable": "Ese espacio no está disponible aquí.",
+    "error.theme_not_saved": "No se pudo guardar el tema.",
     "error.track_id_required": "Se necesita el identificador de la pista.",
     "error.track_not_in_library": "Esa pista no está en la biblioteca.",
     "error.track_not_in_space": "La pista no está en este espacio.",
@@ -1474,8 +1490,20 @@
     "rules.saved": "Reglas guardadas.",
     "search.tracks": "Buscar pistas",
     "settings.about": "Acerca de",
+    "settings.colorway": "Tema",
+    "settings.colorway.daisyAge": "Daisy Age",
+    "settings.colorway.deepHouse": "Deep House",
+    "settings.colorway.motown": "Motown Soul",
+    "settings.colorwayPreview": "Vista previa del icono del tema",
     "settings.copyLogs": "Copiar registros",
     "settings.copyVersion": "Copiar versión",
+    "settings.iconAppliedDock": "El icono del Dock coincide con este tema.",
+    "settings.iconAppliedWindow": "El icono de la ventana y de la barra de tareas coincide con este tema.",
+    "settings.iconDefault": "El icono de la app se queda en el habitual.",
+    "settings.iconFollowsTheme": "El icono de la app sigue el tema",
+    "settings.iconNotSaved": "No se pudo guardar el tema. Se usa hasta que cierres la app.",
+    "settings.iconSaved": "Tema guardado.",
+    "settings.iconUnsupported": "Este ordenador no puede cambiar el icono de la app en ejecución. La elección se guarda y se aplica en Mac y Windows.",
     "settings.language": "Idioma",
     "settings.languageNotSaved": "No se pudo guardar el idioma. Se usa hasta que cierres la app.",
     "settings.languageSystem": "El mismo que el sistema",
@@ -1650,6 +1678,7 @@
     "tooltip.beatgridLock": "Bloquea la rejilla de tiempo para que Serato no la mueva.",
     "tooltip.chooseRelated": "Elige {name} como pista para enlazar.",
     "tooltip.collapseCrate": "Oculta las cajas que están dentro de {name}.",
+    "tooltip.colorway": "Elige el tema. El icono de la app puede seguir esta elección.",
     "tooltip.consentAccept": "Comparte estadísticas anónimas e informes de fallos.",
     "tooltip.consentDecline": "No compartas estadísticas anónimas.",
     "tooltip.copyLogs": "Copia el texto del registro.",
@@ -1687,6 +1716,7 @@
     "tooltip.findRelated": "Busca una pista para enlazar por título o artista.",
     "tooltip.hideSearchCopies": "Oculta los campos que se compararon.",
     "tooltip.hotLoops": "Copia los bucles a un pad de cue libre en el archivo de Rekordbox.",
+    "tooltip.iconFollowsTheme": "Haz que el icono del Dock en Mac, o el de la ventana y la barra de tareas en Windows, coincida con el tema. Activado de forma predeterminada. El icono del Finder y el icono del programa en Windows no cambian.",
     "tooltip.importFile": "Elige un archivo de lista de reproducción para importar.",
     "tooltip.importM3u": "Añade pistas de un archivo de lista a una caja nueva.",
     "tooltip.keepCopy": "Conserva esta copia: {name}. Las demás salen de la biblioteca.",
@@ -2402,6 +2432,8 @@
     linkNote: spec("tooltip.linkNote"),
     linkRating: spec("tooltip.linkRating"),
     language: spec("tooltip.language"),
+    colorway: spec("tooltip.colorway"),
+    iconFollowsTheme: spec("tooltip.iconFollowsTheme"),
     libraryGeneration: spec("tooltip.libraryGeneration"),
     linkMutual: spec("tooltip.linkMutual"),
     saveLink: spec("tooltip.saveLink"),
@@ -2537,6 +2569,8 @@
       "settings-close": tips.settingsClose,
       "log-fallback": tips.logFallback,
       "language-select": tips.language,
+      "colorway-select": tips.colorway,
+      "icon-follows-theme": tips.iconFollowsTheme,
       "library-generation": tips.libraryGeneration,
       "merge-trash": tips.mergeTrash,
       "merge-cancel": tips.mergeCancel,
@@ -7553,6 +7587,11 @@
   var mergeLoading = false;
   var consentSettled = false;
   var privacySync = false;
+  var appearanceSync = false;
+  var COLORWAYS = ["motown", "deep-house", "daisy-age"];
+  function isColorway(value) {
+    return typeof value === "string" && COLORWAYS.includes(value);
+  }
   var filesPreview = null;
   var filesAction = "";
   var filesTrigger = null;
@@ -7833,6 +7872,64 @@
   function systemLanguages() {
     return Array.isArray(navigator.languages) && navigator.languages.length ? [...navigator.languages] : [navigator.language || "en"];
   }
+  function applyAppearance(payload) {
+    const hasColorway = "colorway" in payload;
+    const hasFollow = "icon_follows_theme" in payload;
+    const hasHref = "icon_href" in payload;
+    if (!hasColorway && !hasFollow && !hasHref) return;
+    const colorway = isColorway(payload.colorway) ? payload.colorway : el("colorway-select").value;
+    const known = isColorway(colorway) ? colorway : "motown";
+    const follow = hasFollow ? payload.icon_follows_theme !== false : el("icon-follows-theme").checked;
+    appearanceSync = true;
+    if (hasColorway) el("colorway-select").value = isColorway(payload.colorway) ? payload.colorway : "motown";
+    if (hasFollow) el("icon-follows-theme").checked = follow;
+    appearanceSync = false;
+    const shown = isColorway(el("colorway-select").value) ? el("colorway-select").value : known;
+    document.documentElement.dataset.colorway = shown;
+    const preview = el("colorway-preview");
+    preview.src = `/img/icons/placeholder-${shown}.svg`;
+    preview.alt = t("settings.colorwayPreview");
+    const href = hasHref && typeof payload.icon_href === "string" ? payload.icon_href : follow ? `/img/icons/placeholder-${shown}.svg` : "/img/icons/default.svg";
+    const icon = document.getElementById("app-icon");
+    if (icon instanceof HTMLLinkElement) icon.href = href;
+  }
+  function iconStatusText(icon) {
+    if (!icon) return t("settings.iconSaved");
+    if (!icon.follows_theme) return t("settings.iconDefault");
+    if (icon.applied && icon.target === "dock") return t("settings.iconAppliedDock");
+    if (icon.applied && icon.target === "window") return t("settings.iconAppliedWindow");
+    if (!icon.applied && (icon.reason === "unsupported" || icon.reason === "no-window")) {
+      return t("settings.iconUnsupported");
+    }
+    return t("settings.iconSaved");
+  }
+  async function saveColorway() {
+    if (appearanceSync) return;
+    const value = el("colorway-select").value;
+    if (!isColorway(value)) return;
+    document.documentElement.dataset.colorway = value;
+    el("colorway-preview").src = `/img/icons/placeholder-${value}.svg`;
+    el("icon-status").textContent = "";
+    try {
+      const payload = await postJSON("/api/settings", { colorway: value });
+      applyAppearance(payload);
+      el("icon-status").textContent = iconStatusText(payload.icon);
+    } catch {
+      el("icon-status").textContent = t("settings.iconNotSaved");
+    }
+  }
+  async function saveIconFollow() {
+    if (appearanceSync) return;
+    const follow = el("icon-follows-theme").checked;
+    el("icon-status").textContent = "";
+    try {
+      const payload = await postJSON("/api/settings", { icon_follows_theme: follow });
+      applyAppearance(payload);
+      el("icon-status").textContent = iconStatusText(payload.icon);
+    } catch {
+      el("icon-status").textContent = t("settings.iconNotSaved");
+    }
+  }
   async function saveLanguage() {
     const value = el("language-select").value;
     const saved = isLanguage(value) ? value : null;
@@ -7846,6 +7943,7 @@
   }
   function repaintDialogs() {
     el("telemetry-note").textContent = telemetryNoteText();
+    el("colorway-preview").alt = t("settings.colorwayPreview");
     if (el("merge-dialog").open) {
       renderMergePreview(mergeLoading ? null : mergePreview);
       syncTrashChoice();
@@ -7911,6 +8009,7 @@
     applyPrivacy(payload);
     applyLanguage(payload);
     applyLayout(payload);
+    applyAppearance(payload);
     if (token === rekordboxToken) applyRekordboxExport(payload);
     if (!state.wizardComplete && openWizard(false, el("search"))) return;
     if (payload.needs_consent_prompt) showConsent();
@@ -8112,6 +8211,12 @@
     });
     el("language-select").addEventListener("change", () => {
       void saveLanguage();
+    });
+    el("colorway-select").addEventListener("change", () => {
+      void saveColorway();
+    });
+    el("icon-follows-theme").addEventListener("change", () => {
+      void saveIconFollow();
     });
     el("settings-close").addEventListener("click", () => {
       el("settings-dialog").close();

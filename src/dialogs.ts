@@ -43,6 +43,13 @@ let mergeToken = 0;
 let mergeLoading = false;
 let consentSettled = false;
 let privacySync = false;
+let appearanceSync = false;
+
+const COLORWAYS = ["motown", "deep-house", "daisy-age"] as const;
+
+function isColorway(value: unknown): value is (typeof COLORWAYS)[number] {
+  return typeof value === "string" && (COLORWAYS as readonly string[]).includes(value);
+}
 let filesPreview: FilesPayload | null = null;
 let filesAction = "";
 let filesTrigger: HTMLElement | null = null;
@@ -486,6 +493,99 @@ function systemLanguages(): string[] {
 }
 
 /**
+ * Apply the saved theme to the picker, the page, and the icon preview.
+ *
+ * A payload without theme fields leaves the controls alone. The checkbox
+ * defaults to on. The preview shows the colorway icon even when the
+ * running icon stays the usual one. No request is made.
+ *
+ * @param payload Settings object from the server.
+ * @returns {void}
+ */
+export function applyAppearance(payload: SettingsPayload): void {
+  const hasColorway = "colorway" in payload;
+  const hasFollow = "icon_follows_theme" in payload;
+  const hasHref = "icon_href" in payload;
+  if (!hasColorway && !hasFollow && !hasHref) return;
+  const colorway = isColorway(payload.colorway) ? payload.colorway : el("colorway-select").value;
+  const known = isColorway(colorway) ? colorway : "motown";
+  const follow = hasFollow ? payload.icon_follows_theme !== false : el("icon-follows-theme").checked;
+  appearanceSync = true;
+  if (hasColorway) el("colorway-select").value = isColorway(payload.colorway) ? payload.colorway : "motown";
+  if (hasFollow) el("icon-follows-theme").checked = follow;
+  appearanceSync = false;
+  const shown = isColorway(el("colorway-select").value) ? el("colorway-select").value : known;
+  document.documentElement.dataset.colorway = shown;
+  const preview = el("colorway-preview");
+  preview.src = `/img/icons/placeholder-${shown}.svg`;
+  preview.alt = t("settings.colorwayPreview");
+  const href = hasHref && typeof payload.icon_href === "string"
+    ? payload.icon_href
+    : follow
+      ? `/img/icons/placeholder-${shown}.svg`
+      : "/img/icons/default.svg";
+  const icon = document.getElementById("app-icon");
+  if (icon instanceof HTMLLinkElement) icon.href = href;
+}
+
+/** Sentence under the theme controls after a save. */
+function iconStatusText(icon: SettingsPayload["icon"]): string {
+  if (!icon) return t("settings.iconSaved");
+  if (!icon.follows_theme) return t("settings.iconDefault");
+  if (icon.applied && icon.target === "dock") return t("settings.iconAppliedDock");
+  if (icon.applied && icon.target === "window") return t("settings.iconAppliedWindow");
+  if (!icon.applied && (icon.reason === "unsupported" || icon.reason === "no-window")) {
+    return t("settings.iconUnsupported");
+  }
+  return t("settings.iconSaved");
+}
+
+/**
+ * Save the theme picked in Settings and paint it now.
+ *
+ * The page switches before the save answers. A failed save says so and
+ * keeps the new theme for this session.
+ *
+ * @returns {Promise<void>}
+ */
+export async function saveColorway(): Promise<void> {
+  if (appearanceSync) return;
+  const value = el("colorway-select").value;
+  if (!isColorway(value)) return;
+  document.documentElement.dataset.colorway = value;
+  el("colorway-preview").src = `/img/icons/placeholder-${value}.svg`;
+  el("icon-status").textContent = "";
+  try {
+    const payload = await postJSON<SettingsPayload>("/api/settings", { colorway: value });
+    applyAppearance(payload);
+    el("icon-status").textContent = iconStatusText(payload.icon);
+  } catch {
+    el("icon-status").textContent = t("settings.iconNotSaved");
+  }
+}
+
+/**
+ * Save whether the running icon follows the theme.
+ *
+ * False is sent as false. A failed save says so and keeps the checkbox
+ * where the person left it for this session.
+ *
+ * @returns {Promise<void>}
+ */
+export async function saveIconFollow(): Promise<void> {
+  if (appearanceSync) return;
+  const follow = el("icon-follows-theme").checked;
+  el("icon-status").textContent = "";
+  try {
+    const payload = await postJSON<SettingsPayload>("/api/settings", { icon_follows_theme: follow });
+    applyAppearance(payload);
+    el("icon-status").textContent = iconStatusText(payload.icon);
+  } catch {
+    el("icon-status").textContent = t("settings.iconNotSaved");
+  }
+}
+
+/**
  * Save the language picked in Settings and switch the page now.
  *
  * The page switches before the save answers, so the choice shows at once.
@@ -515,6 +615,7 @@ export async function saveLanguage(): Promise<void> {
  */
 export function repaintDialogs(): void {
   el("telemetry-note").textContent = telemetryNoteText();
+  el("colorway-preview").alt = t("settings.colorwayPreview");
   if (el("merge-dialog").open) {
     renderMergePreview(mergeLoading ? null : mergePreview);
     syncTrashChoice();
@@ -623,6 +724,7 @@ export async function loadPrivacy() {
   applyPrivacy(payload);
   applyLanguage(payload);
   applyLayout(payload);
+  applyAppearance(payload);
   if (token === rekordboxToken) applyRekordboxExport(payload);
   if (!state.wizardComplete && openWizard(false, el("search"))) return;
   if (payload.needs_consent_prompt) showConsent();
@@ -892,6 +994,14 @@ export function wireDialogs(): void {
 
   el("language-select").addEventListener("change", () => {
     void saveLanguage();
+  });
+
+  el("colorway-select").addEventListener("change", () => {
+    void saveColorway();
+  });
+
+  el("icon-follows-theme").addEventListener("change", () => {
+    void saveIconFollow();
   });
 
   el("settings-close").addEventListener("click", () => {

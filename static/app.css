@@ -86,6 +86,24 @@ textarea:focus-visible,
   overflow: hidden;
   color: var(--manila);
   padding: 22px var(--space-3) var(--space-4);
+  box-shadow: inset 4px 0 0 var(--colorway-accent);
+}
+
+html[data-colorway="motown"] { --colorway-accent: var(--colorway-motown-accent); }
+html[data-colorway="deep-house"] { --colorway-accent: var(--colorway-deep-house-accent); }
+html[data-colorway="daisy-age"] { --colorway-accent: var(--colorway-daisy-age-accent); }
+
+.colorway-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.colorway-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: var(--color-bg);
 }
 
 .brand h1 {
