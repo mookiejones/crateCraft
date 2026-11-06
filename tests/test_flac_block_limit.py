@@ -12,12 +12,26 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import snapshot_frames
 import tags
 from snapshot_frames import FrameRewriteError
 from tags import read_serato_tags
 from tests.test_tags import _flac_block, _markers_payload, _serato_b64, _vorbis_comment
+
+
+def _titled_flac(path: Path, total_blocks: int) -> None:
+    """Write a FLAC whose title and artist sit in metadata block ``total_blocks``.
+
+    Args:
+        path: File to write.
+        total_blocks: Number of metadata blocks, at least 2.
+    """
+    blocks = _flac_block(0, bytes(34), False)
+    blocks += _flac_block(1, b"", False) * (total_blocks - 2)
+    blocks += _flac_block(4, _vorbis_comment([b"TITLE=Edge", b"ARTIST=DJ"]), True)
+    path.write_bytes(b"fLaC" + blocks + b"\xff\xf8" + bytes(32))
 
 
 def _padded_flac(path: Path, total_blocks: int) -> bytes:
@@ -91,6 +105,34 @@ class FlacRewriteLimitTests(unittest.TestCase):
                 snapshot_frames._read_flac_blocks(path)
             self.assertEqual(snapshot_frames._read_flac_frames(path), {})
             self.assertEqual(path.read_bytes(), data)
+
+
+
+class FlacTextLimitTests(unittest.TestCase):
+    """``read_text_tags`` walks FLAC blocks under the same shared cap."""
+
+    def test_title_at_the_limit_is_read(self) -> None:
+        """A comment that is block number ``FLAC_BLOCK_LIMIT`` still gives the title."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "edge.flac"
+            _titled_flac(path, tags.FLAC_BLOCK_LIMIT)
+            self.assertEqual(tags.read_text_tags(path), {"title": "Edge", "artist": "DJ"})
+
+    def test_title_past_the_limit_is_not_read(self) -> None:
+        """A comment one block past the cap is not reached."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "crafted.flac"
+            _titled_flac(path, tags.FLAC_BLOCK_LIMIT + 1)
+            self.assertEqual(tags.read_text_tags(path), {"title": "", "artist": ""})
+
+    def test_text_walk_follows_the_shared_limit(self) -> None:
+        """Lowering ``FLAC_BLOCK_LIMIT`` lowers the text walk too: one cap, not two."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "short.flac"
+            _titled_flac(path, 4)
+            self.assertEqual(tags.read_text_tags(path)["title"], "Edge")
+            with mock.patch.object(tags, "FLAC_BLOCK_LIMIT", 3):
+                self.assertEqual(tags.read_text_tags(path)["title"], "")
 
 
 if __name__ == "__main__":
