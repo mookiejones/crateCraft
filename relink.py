@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Find where missing tracks went, without changing anything (#28, part 2).
+"""Find where missing tracks went (#28). Applying a match is journalled in files.py.
 
 ``plan`` reads the library with ``gig_check.open_read_only`` and lists
 tracks whose file is gone. A track on a drive that is not plugged in is
@@ -21,7 +21,8 @@ file is at the new place gets a ``high`` "folder moved" candidate.
 The walk reads directory entries with ``os.scandir``. It does not follow
 shortcuts, does not enter ``_Serato_`` or hidden folders, does not open
 audio, and stops after ``SCAN_LIMIT`` entries (``truncated`` is then true).
-Nothing is written. Applying a match is a separate, journalled step.
+Nothing is written here. ``POST /api/files`` with ``action: relink``
+applies chosen matches through the journalled path rewrite in ``files.py``.
 """
 
 from __future__ import annotations
@@ -387,6 +388,43 @@ def _remapped(track: Missing, moves: Sequence[dict[str, object]], index: _Index)
         if os.path.normcase(str(target)) in index.paths:
             return Candidate(str(target), "high", "folder moved")
     return None
+
+
+def search_root(value: str) -> Path:
+    """Resolve an extra folder to search after a drive swap.
+
+    After a drive swap the files may sit outside the current music roots, so
+    this folder can be anywhere on the computer. The path is normalized and
+    required to stay under its drive root before the folder is opened, the
+    same way the setup folder picker is.
+
+    Args:
+        value: Absolute path from the page.
+
+    Returns:
+        The resolved directory.
+
+    Raises:
+        library.LibraryError: If the path is not an absolute real folder.
+    """
+    if not isinstance(value, str) or not value.strip() or "\x00" in value or len(value) > 4096:
+        raise library.LibraryError("That request is not valid.")
+    if not os.path.isabs(value):
+        raise library.LibraryError("That request is not valid.")
+    normalized = os.path.normpath(os.path.abspath(value))
+    drive, _rest = os.path.splitdrive(normalized)
+    root = drive + os.sep if drive else os.path.abspath(os.sep)
+    if not normalized.startswith(root):
+        raise library.LibraryError("That request is not valid.")
+    directory = Path(normalized)
+    if directory.is_symlink():
+        raise library.LibraryError("Shortcuts are left alone.")
+    if not directory.is_dir():
+        raise library.LibraryError("Choose a folder.")
+    try:
+        return directory.resolve()
+    except OSError as exc:
+        raise library.LibraryError("That folder could not be read.") from exc
 
 
 def plan(database: Path, space: str, roots: Sequence[Path], *, limit: int = SCAN_LIMIT) -> dict[str, object]:

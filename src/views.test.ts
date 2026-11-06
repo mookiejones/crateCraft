@@ -153,6 +153,15 @@ describe("library views", () => {
     expect(document.querySelector("#list .missing-word")?.textContent).toBe("missing");
     expect(document.querySelector("#mode-note")?.textContent).toBe("Tracks Serato has marked missing in this space.");
     expect((document.querySelector("#mode-note") as HTMLElement).hidden).toBe(false);
+    expect((document.querySelector("#relink-actions") as HTMLElement).hidden).toBe(false);
+    expect((document.querySelector("#open-relink") as HTMLButtonElement).disabled).toBe(true);
+    state.writable = true;
+    renderList();
+    expect((document.querySelector("#open-relink") as HTMLButtonElement).disabled).toBe(false);
+    state.mode = "crates";
+    renderList();
+    expect((document.querySelector("#relink-actions") as HTMLElement).hidden).toBe(true);
+    expect((document.querySelector("#open-relink") as HTMLButtonElement).disabled).toBe(true);
   });
 
   it("waits for duplicate ids, then lists the group and enables merge when Serato is quit", () => {

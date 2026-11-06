@@ -93,6 +93,18 @@ export interface ElementIds {
   "merge-choices": HTMLDivElement;
   "merge-preview": HTMLDivElement;
   "merge-status": HTMLParagraphElement;
+  "relink-actions": HTMLDivElement;
+  "open-relink": HTMLButtonElement;
+  "relink-dialog": HTMLDialogElement;
+  "relink-root": HTMLInputElement;
+  "relink-find": HTMLButtonElement;
+  "relink-accept-high": HTMLButtonElement;
+  "relink-banner": HTMLParagraphElement;
+  "relink-rows": HTMLTableSectionElement;
+  "relink-empty": HTMLParagraphElement;
+  "relink-cancel": HTMLButtonElement;
+  "relink-confirm": HTMLButtonElement;
+  "relink-status": HTMLParagraphElement;
   "merge-file-note": HTMLParagraphElement;
   "consent-dialog": HTMLDialogElement;
   "settings-dialog": HTMLDialogElement;

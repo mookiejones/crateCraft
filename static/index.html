@@ -83,6 +83,9 @@
       <div id="duplicate-actions" class="crate-actions" hidden>
         <button id="merge-duplicates" type="button" data-i18n="merge.title">Merge copies</button>
       </div>
+      <div id="relink-actions" class="crate-actions" hidden>
+        <button id="open-relink" type="button" data-i18n="relink.title">Relink missing files</button>
+      </div>
       <p id="crate-foot" class="crate-foot"></p>
       <div id="crate-actions" class="crate-actions">
         <button id="crate-new" type="button" data-i18n="crates.new">New</button>
@@ -353,6 +356,40 @@
       <button id="merge-confirm" type="button" data-i18n="merge.title">Merge copies</button>
     </div>
     <p id="merge-status" class="dialog-status" role="status" aria-live="polite"></p>
+  </dialog>
+  <dialog id="relink-dialog" aria-labelledby="relink-title" aria-describedby="relink-intro">
+    <h2 id="relink-title" data-i18n="relink.title">Relink missing files</h2>
+    <p id="relink-intro" data-i18n="relink.intro">Point missing tracks at files that moved. Audio stays where it is. Crates, history, and related links stay attached.</p>
+    <label class="preset-field">
+      <span data-i18n="relink.root">Extra folder to search</span>
+      <input id="relink-root" type="text" autocomplete="off" spellcheck="false" aria-describedby="relink-root-help">
+      <small id="relink-root-help" class="dialog-note" data-i18n="relink.rootHelp">Optional. Paste a folder after a drive swap, for example /Volumes/NEW/DJ.</small>
+    </label>
+    <div class="dialog-actions">
+      <button id="relink-find" type="button" data-i18n="relink.find">Find matches</button>
+      <button id="relink-accept-high" type="button" data-i18n="relink.acceptHigh">Accept all high</button>
+    </div>
+    <p id="relink-banner" class="dialog-note" hidden></p>
+    <div id="relink-table-wrap">
+      <table id="relink-table">
+        <thead>
+          <tr>
+            <th scope="col"><span class="visually-hidden" data-i18n="relink.include">Relink this track</span></th>
+            <th scope="col" data-i18n="relink.track">Track</th>
+            <th scope="col" data-i18n="relink.match">Match</th>
+            <th scope="col" data-i18n="relink.confidence">Confidence</th>
+            <th scope="col" data-i18n="relink.why">Why</th>
+          </tr>
+        </thead>
+        <tbody id="relink-rows"></tbody>
+      </table>
+    </div>
+    <p id="relink-empty" class="dialog-note" data-i18n="relink.none">No matches yet. Search the music folders, or add an extra folder after a drive swap.</p>
+    <div class="dialog-actions">
+      <button id="relink-cancel" type="button" autofocus data-i18n="common.cancel">Cancel</button>
+      <button id="relink-confirm" type="button" data-i18n="relink.confirm">Relink</button>
+    </div>
+    <p id="relink-status" class="dialog-status" role="status" aria-live="polite"></p>
   </dialog>
   <dialog id="preset-dialog" aria-labelledby="preset-title" aria-describedby="preset-intro">
     <h2 id="preset-title" data-i18n="presets.title">New crate from a preset</h2>

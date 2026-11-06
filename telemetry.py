@@ -59,7 +59,7 @@ FILE_COUNT_BUCKET = "file_count_bucket"
 CHANGE = "change"
 CUES = "cues"
 LINK_DIRECTION = "link_direction"
-CHANGES = frozenset({"rename", "move", "move_folder", "replace", "delete"})
+CHANGES = frozenset({"rename", "move", "move_folder", "replace", "relink", "delete"})
 CUE_RESULTS = frozenset({"copied", "kept", "skipped", "unsupported", "failed"})
 LINK_DIRECTIONS = frozenset({"one_way", "two_way"})
 
