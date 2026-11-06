@@ -25,7 +25,7 @@ The builds are unsigned. The Mac and Windows warnings, including Removable Volum
 
 The release on that page today is **v0.1.1**. It attaches `Serato-Library-macos.zip` and `Serato-Library-windows.zip`.
 
-App version **1.1.0** is in source and is not a GitHub Release yet. The [release workflow](.github/workflows/release.yml) builds these unsigned files when a `vMAJOR.MINOR.PATCH` tag is pushed. The pre-release [v1.1.0-rc2](https://github.com/mookiejones/serato-library-manager/releases/tag/v1.1.0-rc2) already attaches them, and it is not marked Latest.
+App version **1.1.0** is in source and is not a GitHub Release yet. Merges to `main` draft the next version on the **Next release** issue. They do not publish. The [release workflow](.github/workflows/release.yml) builds these unsigned files when a `vMAJOR.MINOR.PATCH` tag is pushed. The pre-release [v1.1.0-rc2](https://github.com/mookiejones/serato-library-manager/releases/tag/v1.1.0-rc2) already attaches them, and it is not marked Latest.
 
 | Computer | File |
 | --- | --- |
