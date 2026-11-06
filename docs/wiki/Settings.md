@@ -10,6 +10,9 @@ flowchart TD
   rail["Settings, bottom of the sidebar"] --> box["Share anonymous usage stats and crash reports"]
   box --> off["Clear: Nothing is sent"]
   box --> on["Ticked: counts and crash reports, only with a key"]
+  rail --> theme["Theme: Motown Soul, Deep House, or Daisy Age"]
+  theme --> icon["App icon follows the theme, on unless you clear it"]
+  rail --> keys["Keyboard shortcuts. ? opens this list"]
   rail --> language["Language: Same as the system, English, or Español"]
   rail --> again["Run setup again"]
   rail --> logs["Open logs folder, or Copy logs"]
@@ -29,6 +32,8 @@ Tick **Share anonymous usage stats and crash reports** to turn sharing on. Clear
 
 What can leave, and only after you choose share and only when a key is present, is a count of an action, a track-count range, the app name, the app version, the operating system, a random install id, and a crash report with file paths removed. Titles, artists, crate names, notes, and paths stay on this computer. The full list is [PRIVACY.md](https://github.com/mookiejones/serato-library-manager/blob/main/PRIVACY.md).
 
+**Theme** is Motown Soul, Deep House, or Daisy Age. The sidebar stripe and the icon preview use that colorway. **App icon follows the theme** is on unless you clear it. On a Mac the Dock icon of the running app changes. On Windows the window and taskbar icon change. The Finder icon and the Windows program icon stay the usual ones. On another system the line says the choice is saved for Mac and Windows.
+
 **Language** switches the whole page at once. **Same as the system** follows your computer's language. English and Spanish are included.
 
 **Run setup again** opens [first-run setup](First-Run-Wizard). **Cancel** there does not forget that setup already finished.
@@ -37,7 +42,7 @@ What can leave, and only after you choose share and only when a key is present, 
 
 **About** shows the version of this copy, such as **v1.4.2**. The same text sits at the bottom of the sidebar, so you can see it without opening Settings. **Copy version** puts that line on the clipboard and the next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the sidebar line is blank.
 
-The same settings file remembers the window, the track-list width, the language, that setup finished, and the Rekordbox bar: Memory cues, Hot loops, and the key notation. If setup was pointed at a library that is not in the usual folder, `library.json` in that same folder remembers the file. The path stays on this computer.
+The same settings file remembers the window, the track-list width, the language, the theme, whether the app icon follows that theme, that setup finished, and the Rekordbox bar: Memory cues, Hot loops, and the key notation. If setup was pointed at a library that is not in the usual folder, `library.json` in that same folder remembers the file. The path stays on this computer.
 
 | System | Settings | Logs |
 | --- | --- | --- |
