@@ -91,7 +91,6 @@
       </div>
       <footer class="rail-foot">
         <p id="app-version" class="app-version" hidden></p>
-        <button id="open-shortcuts" type="button" aria-haspopup="dialog" data-i18n="shortcuts.open">Shortcuts</button>
         <button id="open-settings" type="button" aria-haspopup="dialog" data-i18n="settings.title">Settings</button>
       </footer>
     </aside>
@@ -238,6 +237,11 @@
       </select>
     </label>
     <p id="language-status" class="dialog-status" role="status" aria-live="polite"></p>
+    <section id="shortcuts-section" class="shortcuts-section" aria-labelledby="shortcuts-title">
+      <h3 id="shortcuts-title" tabindex="-1" data-i18n="shortcuts.title">Keyboard shortcuts</h3>
+      <p id="shortcuts-intro" data-i18n="shortcuts.intro">These keys work anywhere on this screen, except while you are typing in a field. Esc still closes a dialog or clears a search.</p>
+      <div id="shortcuts-body"></div>
+    </section>
     <section class="about" aria-labelledby="about-title">
       <h3 id="about-title" data-i18n="settings.about">About</h3>
       <p id="about-version" class="about-version"></p>
@@ -304,14 +308,6 @@
       <button id="files-review" type="button" data-i18n="files.review">Review</button>
       <button id="files-confirm" type="button" data-i18n="common.confirm">Confirm</button>
     </div>
-  </dialog>
-  <dialog id="shortcuts-dialog" aria-labelledby="shortcuts-title" aria-describedby="shortcuts-intro">
-    <h2 id="shortcuts-title" tabindex="-1" data-i18n="shortcuts.title">Keyboard shortcuts</h2>
-    <p id="shortcuts-intro" data-i18n="shortcuts.intro">These keys work anywhere on this screen, except while you are typing in a field. Esc still closes a dialog or clears a search.</p>
-    <div class="dialog-actions">
-      <button id="shortcuts-close" type="button" data-i18n="common.close">Close</button>
-    </div>
-    <div id="shortcuts-body"></div>
   </dialog>
   <dialog id="quick-open" aria-labelledby="quick-open-title">
     <h2 id="quick-open-title" data-i18n="quickOpen.title">Find a track or file</h2>

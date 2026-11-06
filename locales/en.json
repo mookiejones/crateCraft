@@ -802,7 +802,7 @@
   "tooltip.session": "Show the tracks played in the session {name}.",
   "tooltip.settings": "Open settings.",
   "tooltip.settingsClose": "Close settings. Esc.",
-  "tooltip.shortcuts": "Show keyboard shortcuts. ?.",
+  "tooltip.shortcuts": "Keyboard shortcuts for this screen. ? opens this list.",
   "tooltip.shortcutsClose": "Close the shortcut list. Esc.",
   "tooltip.showSearchCopies": "Show the fields that were compared.",
   "tooltip.smartRules": "Edit the smart crate rules. Nothing is saved until you press Save rules.",
