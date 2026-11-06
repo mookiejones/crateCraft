@@ -1536,7 +1536,6 @@ class TextTags(TypedDict):
 _ID3_TEXT = {b"TIT2": "title", b"TPE1": "artist"}
 _VORBIS_TEXT = {"TITLE": "title", "ARTIST": "artist"}
 _MP4_TEXT = {b"\xa9nam": "title", b"\xa9ART": "artist"}
-_FLAC_TEXT_BLOCKS = 1024
 
 
 def read_text_tags(path: str | Path | None) -> TextTags:
@@ -1626,8 +1625,9 @@ def _id3_text(blob: bytes) -> dict[str, str]:
 def _flac_text(handle: BinaryIO, size: int) -> dict[str, str]:
     """Read ``TITLE`` and ``ARTIST`` from a FLAC Vorbis comment.
 
-    The walk visits at most ``_FLAC_TEXT_BLOCKS`` metadata blocks and skips
-    every block body except the comment.
+    The walk visits at most ``FLAC_BLOCK_LIMIT`` metadata blocks, the same
+    cap the Serato marker walk uses, and skips every block body except the
+    comment.
 
     Args:
         handle: Open FLAC file.
@@ -1641,7 +1641,7 @@ def _flac_text(handle: BinaryIO, size: int) -> dict[str, str]:
     if size < 8 or handle.read(4) != b"fLaC":
         return found
     pos = 4
-    for _ in range(_FLAC_TEXT_BLOCKS):
+    for _ in range(FLAC_BLOCK_LIMIT):
         if pos + 4 > size:
             break
         handle.seek(pos)
