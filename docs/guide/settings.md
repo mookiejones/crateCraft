@@ -24,10 +24,11 @@ The two buttons have the same weight. The line **Saving…** means the choice is
 2. Tick **Share anonymous usage stats and crash reports** to turn sharing on. Clear the tick to turn it off.
 3. Read the line under the tick.
 4. Pick a **Theme**: **Motown Soul**, **Deep House**, or **Daisy Age**. A stripe on the sidebar and the icon preview use that colorway. **App icon follows the theme** is on unless you clear it. On a Mac the Dock icon of the running app changes. On Windows the window and taskbar icon change. The Finder icon and the Windows program icon stay the usual ones. On another system the line under the checkbox says the choice is saved for Mac and Windows. If the choice cannot be saved, that line says so, and the theme stays for this session.
-5. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
-6. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
-7. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the footer of the sidebar stays blank. The page does not show an error code.
-8. Click **Close**.
+5. Read **Keyboard shortcuts**. **?** opens Settings on that heading.
+6. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
+7. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
+8. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the footer of the sidebar stays blank. The page does not show an error code.
+9. Click **Close**.
 
 | Line under the tick | Meaning |
 | --- | --- |

@@ -12,6 +12,7 @@ flowchart TD
   box --> on["Ticked: counts and crash reports, only with a key"]
   rail --> theme["Theme: Motown Soul, Deep House, or Daisy Age"]
   theme --> icon["App icon follows the theme, on unless you clear it"]
+  rail --> keys["Keyboard shortcuts. ? opens this list"]
   rail --> language["Language: Same as the system, English, or Español"]
   rail --> again["Run setup again"]
   rail --> logs["Open logs folder, or Copy logs"]
