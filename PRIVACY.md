@@ -16,6 +16,14 @@ Crash reports go to Sentry. A report is the exception type and a stack trace. Th
 
 The install is identified by a random id created when you save a choice. That id is not your name, and it is not a Serato account.
 
+## Update check
+
+The app can tell you when a newer release is on GitHub. That check is **off** until you turn it on, and a later change adds the setup question and the Settings switch for it (PREVIEW). While it is off, or before you have answered, the app does not contact GitHub.
+
+When it is on, the Python process asks `https://api.github.com/repos/mookiejones/serato-library-manager/releases` at most once every 24 hours. GitHub sees your IP address and a User-Agent of `serato-library-manager/<version>`. Nothing else is sent: no install id, no path, no track, crate, or library data. Only each release's tag, its pre-release and draft flags, and its page address are kept. Pre-releases are offered only if you opt in. A version you skip is not offered again. **Download** opens that release's page on github.com in your browser; the app does not download or install anything itself.
+
+The choice, the skipped version, and the last answer are stored in `updates.json` beside `settings.json`. They stay on this machine.
+
 ## What is never sent
 
 Track titles, artists, crate names, file paths, playlist text, and the rows in `master.sqlite` are not usage properties. The page does not load a PostHog or Sentry script. Reports leave from the Python process only.
