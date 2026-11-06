@@ -107,6 +107,8 @@ GitHub Actions runs the same discovery with `python` on Ubuntu (3.12 and 3.14) a
 
 A desktop build uses `requirements-build.txt` and `python -m PyInstaller serato-library.spec`. On macOS, `requirements-macos.txt` supplies the WKWebView frameworks. Release builds are unsigned. GitHub Releases is the only download. Signing runs only when the Apple or Windows secrets in `scripts/release_sign.py` are all set.
 
+Merges to `main` refresh the **Next release** issue (`python3 scripts/prepare_release.py`). That draft does not publish. Publish is pushing tag `vMAJOR.MINOR.PATCH`, which runs [`.github/workflows/release.yml`](.github/workflows/release.yml). [docs/github.md](docs/github.md) is the prepare-versus-publish note.
+
 Python has no separate linter. The page uses ESLint, which rejects `any`. The suites are `unittest` and Vitest.
 
 ## What to update in the same pull request
