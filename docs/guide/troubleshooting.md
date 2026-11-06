@@ -75,7 +75,7 @@ Use one backup folder when you [restore](safety.md#restore-an-older-database-cop
 
 ## Merge warns about cue points
 
-The file you chose to keep has no Serato cues, and another copy does. The merge does not copy cues from one audio file onto another.
+The file you chose to keep has no Serato cues that can be copied from another copy. The files may use different containers, or rewriting the tag would not be safe. The markers stay in the other audio file.
 
 1. Click **Cancel**.
 2. Select the copy that has the cues.

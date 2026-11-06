@@ -336,6 +336,13 @@ export interface MergeFile {
   blocks_trash?: boolean;
 }
 
+export interface MergeCueCopy {
+  file?: string;
+  markers?: boolean;
+  beatgrid?: boolean;
+  status?: string;
+}
+
 export interface MergePreview {
   crates_added?: MergeCrate[];
   crates_kept?: MergeCrate[];
@@ -346,6 +353,7 @@ export interface MergePreview {
   removed?: Array<{ id?: number }>;
   files?: MergeFile[];
   cue_warning?: string;
+  cue_copy?: MergeCueCopy | null;
   writable?: boolean;
   kept?: { file?: string };
   warning?: string;

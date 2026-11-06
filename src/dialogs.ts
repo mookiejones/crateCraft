@@ -12,6 +12,7 @@ import type {
   FilesBody,
   FilesPayload,
   LogsPayload,
+  MergeCueCopy,
   MergePreview,
   SettingsPayload,
 } from "./api-types";
@@ -192,6 +193,32 @@ function previewFieldValue(field: string, value: string | number | null | undefi
 }
 
 /**
+ * Name the frames a merge will copy.
+ *
+ * @param {object} copy Plan from ``cue_copy``.
+ * @returns {string} "cues", "beatgrid", or both.
+ */
+function mergeCopyWhat(copy: MergeCueCopy): string {
+  if (copy.markers && copy.beatgrid) return t("merge.copyCuesWhatBoth");
+  if (copy.markers) return t("merge.copyCuesWhatMarkers");
+  return t("merge.copyCuesWhatGrid");
+}
+
+/**
+ * Build the planned or finished cue-copy sentence.
+ *
+ * @param {object} copy Plan from ``cue_copy``.
+ * @param {boolean} done True after the frames have been written.
+ * @returns {string} Localized sentence. No path.
+ */
+function mergeCopyLine(copy: MergeCueCopy, done: boolean): string {
+  return t(done ? "merge.copiedCues" : "merge.copyCues", {
+    file: copy.file ?? "",
+    what: mergeCopyWhat(copy),
+  });
+}
+
+/**
  * Show one merge plan in the dialog.
  *
  * The list is built with text nodes. File paths from the server are not
@@ -200,7 +227,7 @@ function previewFieldValue(field: string, value: string | number | null | undefi
  * @param {object|null} preview Plan from POST /api/duplicates/merge, or null while it loads.
  * @returns {void}
  */
-function renderMergePreview(preview: MergePreview | null) {
+export function renderMergePreview(preview: MergePreview | null) {
   el("merge-preview").replaceChildren();
   if (!preview) {
     const pending = document.createElement("p");
@@ -248,6 +275,10 @@ function renderMergePreview(preview: MergePreview | null) {
   item(t("merge.removeCopies", { count: removed }));
   for (const file of preview.files || []) {
     if (file.reason) item(`${file.file}: ${file.reason}`);
+  }
+  const copy = preview.cue_copy;
+  if (copy && (copy.markers || copy.beatgrid) && copy.status !== "failed") {
+    item(mergeCopyLine(copy, copy.status === "copied"));
   }
   el("merge-preview").append(list);
   if (preview.cue_warning) {
@@ -424,6 +455,10 @@ async function confirmMerge() {
     const name = result.kept?.file || t("merge.keptCopy");
     let message = t("merge.merged", { count, name });
     if (result.warning) message = `${message} ${result.warning}`;
+    const copy = result.cue_copy;
+    if (copy && (copy.markers || copy.beatgrid) && copy.status === "copied") {
+      message = `${message} ${mergeCopyLine(copy, true)}`;
+    }
     if (result.cue_warning) message = `${message} ${result.cue_warning}`;
     setNotice(message);
     state.selectedId = keepId;

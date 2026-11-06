@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { loadPrivacy, rekordboxExportUrl, saveRekordboxExport, wireDialogs } from "./dialogs";
+import { loadPrivacy, rekordboxExportUrl, renderMergePreview, saveRekordboxExport, wireDialogs } from "./dialogs";
 import { el } from "./dom";
 import { state } from "./state";
 import { installPage } from "./test-page";
@@ -154,5 +154,52 @@ describe("Rekordbox export settings", () => {
     await saveRekordboxExport();
     expect(memoryCues().checked).toBe(false);
     expect(rekordboxExportUrl(false)).toContain("memory=0");
+  });
+});
+
+describe("renderMergePreview", () => {
+  beforeEach(() => {
+    installPage();
+  });
+
+  it("names a planned cue and beatgrid copy", () => {
+    renderMergePreview({
+      crates_added: [],
+      crates_kept: [],
+      spaces_added: [],
+      fields: [],
+      history_repointed: true,
+      history_entries: 0,
+      removed: [{ id: 2 }],
+      files: [],
+      cue_copy: {
+        file: "dup.mp3",
+        markers: true,
+        beatgrid: true,
+        status: "planned",
+      },
+    });
+    expect(el("merge-preview").textContent).toContain(
+      "dup.mp3 has the better cues and beatgrid. They will be copied onto the file you keep.",
+    );
+    expect(el("merge-preview").querySelector(".merge-warning")).toBeNull();
+  });
+
+  it("shows the cue warning when frames cannot be copied", () => {
+    renderMergePreview({
+      crates_added: [],
+      crates_kept: [],
+      spaces_added: [],
+      fields: [],
+      history_repointed: true,
+      history_entries: 0,
+      removed: [{ id: 2 }],
+      files: [],
+      cue_warning: "dup.mp3 has Serato cues, loops, flips, or a beatgrid.",
+    });
+    expect(el("merge-preview").querySelector(".merge-warning")?.textContent).toContain(
+      "dup.mp3 has Serato cues",
+    );
+    expect(el("merge-preview").textContent).not.toContain("will be copied");
   });
 });
