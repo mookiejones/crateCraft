@@ -59,6 +59,7 @@ function paint(label: string | null): void {
     footer.hidden = true;
     footer.replaceChildren();
     about.textContent = t("version.unavailable");
+    el("help-version").textContent = t("version.unavailable");
     return;
   }
   copyText = label;
@@ -71,6 +72,7 @@ function paint(label: string | null): void {
   value.textContent = label;
   footer.append(name, value);
   about.textContent = label;
+  el("help-version").textContent = label;
 }
 
 /**

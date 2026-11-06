@@ -30,6 +30,34 @@ Files have a checkbox. A file that is in the library shows **In library**. A sho
 
 The line at the bottom of the rail counts the files in the folder, or the music folders on the first screen.
 
+## Check a portable drive
+
+**Check drive** is on the first Files screen, beside a removable folder that has a Serato library. **Music** on the internal disk does not get the button. A folder you have already opened does not get it either. The check reads the drive that folder sits on, including the `_Serato_` folder at the top of the drive. It does not write. A drive that is not plugged in is reported missing. It is not deleted.
+
+1. Click **Files**.
+2. On a row such as **Music (GIGDRIVE)**, click **Check drive**.
+3. The dialog title is **Portable drive**. The note says **This only reads the drive. Nothing is copied or deleted.** While the check runs, the line says **Checking this drive.**
+4. Read the result. **Close** leaves the dialog. Nothing was copied or deleted.
+
+| What you see | Meaning |
+| --- | --- |
+| **Ready to leave the laptop.** | Nothing needs fixing. The next line can say **Every crate track on GIGDRIVE is on this drive.** A drive with no crates says **This drive has no crates.** |
+| **Not ready. Fix these on the laptop first.** | Fix the list on the laptop, then copy the files to the drive. The next line counts them, such as **12 of 40 tracks are not on this drive.** |
+| **This drive is not connected. Nothing was deleted.** | The drive is unplugged. The row can also say **Drive not connected**. Plug it in and click **Refresh**, then **Check drive** again. |
+| **This drive could not be read.** | The check could not read that drive. |
+| **This drive could not be checked.** | The page could not reach the check. |
+
+The list under that line names each problem. Fix it on the laptop. The check does not rename, copy, or delete the file.
+
+| Label | What to do |
+| --- | --- |
+| **Not on this drive** | The track is on the laptop. Copy it onto the drive. |
+| **Missing** | The file was not on the drive and was not found on this computer. Restore it on the laptop, then copy it. |
+| **Smart Crate** | Serato does not copy a Smart Crate to a portable library. On the laptop, make a normal crate and copy that. |
+| **Unsafe name** | The name is not safe on a Windows drive. Rename it on the laptop, then copy it. |
+| **Path too long** | Shorten the name on the laptop, then copy it. |
+| **File too large** | The file is over 4 GB on a FAT drive. Shorten it on the laptop, or use an exFAT drive, then copy it again. |
+
 ## Read the review first
 
 Every change opens **Review this change**. The dialog says **Nothing is changed until you confirm.**

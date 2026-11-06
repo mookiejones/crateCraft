@@ -9,6 +9,7 @@
 
 import { repaintDialogs } from "./dialogs";
 import { repaintGig } from "./gig";
+import { repaintPortable } from "./portable";
 import { applyStatic, initialLocale, onLocaleChange, setLocale } from "./i18n";
 import { repaintPlayer } from "./player";
 import { repaintQuickOpen } from "./quick-open";
@@ -34,6 +35,7 @@ export function repaintAll(): void {
   repaintViews();
   if (state.mode === "snapshots") renderSnapshots();
   if (state.mode === "gig") repaintGig();
+  repaintPortable();
   repaintSnapshotPlan();
   repaintDialogs();
   repaintCheatSheet();
