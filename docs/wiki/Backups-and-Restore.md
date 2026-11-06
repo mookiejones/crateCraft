@@ -1,8 +1,8 @@
 # Backups and restore
 
-Backups you restore are **Snapshots**. That flow is in the app.
+Backups in the sidebar are the snapshots you restore. That flow is in the app.
 
-**Snapshots** keep each drive's crates. The first save in a session also copies those `_Serato_` folders into `Library/Backups/serato-web-…/drives`. An unplugged drive is listed and skipped.
+**Backups** keeps each drive's crates. The first save in a session also copies those `_Serato_` folders into `Library/Backups/serato-web-…/drives`. An unplugged drive is listed and skipped.
 
 <figure>
   <img alt="The Snapshots view with the Restore this snapshot dialog open." src="images/features/backups-and-restore.png">
@@ -12,7 +12,7 @@ Backups you restore are **Snapshots**. That flow is in the app.
 ```mermaid
 flowchart TD
   quit["Quit Serato DJ Pro"] --> take["Take a snapshot"]
-  take --> list["Snapshots"]
+  take --> list["Backups"]
   list --> review["Review restore"]
   review --> plan["Nothing is changed until you confirm"]
   plan --> confirm["Restore"]
@@ -23,7 +23,7 @@ flowchart TD
   mark --> keep["Crates and tracks are never deleted"]
 ```
 
-Open **Snapshots**. **Take a snapshot** saves a hash-checked Backup of the library database, the crates on each drive (the `_Serato_` folder and `database V2`), and the Cue point, beatgrid, and autotag frames inside the audio files. The music itself is not copied. Snapshots are kept. This page does not delete old ones.
+Open **Backups**. **Take a snapshot** saves a hash-checked Backup of the library database, the crates on each drive (the `_Serato_` folder and `database V2`), and the Cue point, beatgrid, and autotag frames inside the audio files. The music itself is not copied. Snapshots are kept. This page does not delete old ones.
 
 **Review restore** shows crates, tracks, Cue changes, and grid changes. It also lists crate files the library has not heard of. Serato 4 and 5 delete those files the next time Serato opens, so restore writes them into the library as well as putting the files back. If the library has no Serato Library space, those files are put back but not registered, and the plan says Serato may remove them on the next launch. The rest of the restore still finishes. **Nothing is changed until you confirm.** **Restore** saves a new snapshot first, so the list can undo it. If the app stops in the middle, the next open puts that saved snapshot back.
 
@@ -35,8 +35,8 @@ Quit Serato DJ Pro before you restore. If Serato is still running, restore stops
 
 If something else changes the Serato folder, including Lexicon, the app saves a snapshot after that change and offers **Review undo**. That puts back the previous snapshot. The app does not read or restore `_Serato_/Lexicon/` or `_Serato_/Export Backups/`.
 
-The first save in a session also copies `master.sqlite`, `root.sqlite`, and each connected drive's `_Serato_` folder into `Library/Backups/serato-web-` plus the date and time. Each drive's files stay in their own `drives` directory. An unplugged drive is listed and not copied. A drive whose folder cannot be read is listed and not copied, and the other drives are still saved. The folder does not hold your music. `Recording` and `DJ Sessions` are not copied. If the disk does not have room, the copy is refused. The hash-checked Backups live in `Library/Backups/snapshots`, beside `master.sqlite`. **Back up drive crates**, on the Snapshots page, copies connected drives without changing the library.
+The first save in a session also copies `master.sqlite`, `root.sqlite`, and each connected drive's `_Serato_` folder into `Library/Backups/serato-web-` plus the date and time. Each drive's files stay in their own `drives` directory. An unplugged drive is listed and not copied. A drive whose folder cannot be read is listed and not copied, and the other drives are still saved. The folder does not hold your music. `Recording` and `DJ Sessions` are not copied. If the disk does not have room, the copy is refused. The hash-checked Backups live in `Library/Backups/snapshots`, beside `master.sqlite`. **Back up drive crates**, on Backups, copies connected drives without changing the library.
 
-After a save, the app reads a copy of the database back. If the rows or file hashes do not match, it puts the pre-write copy back. That copy is kept in the app's data folder, not in Serato's library folder. Serato 5 stays read-only, and that rollback does not write a Serato 5 library. After a restore writes the files, it checks their hashes. A mismatch puts the snapshot from before the restore back. **Snapshots** lists each edit and each restore. A change that could not be put back stays in that list and is not shown as finished.
+After a save, the app reads a copy of the database back. If the rows or file hashes do not match, it puts the pre-write copy back. That copy is kept in the app's data folder, not in Serato's library folder. Serato 5 stays read-only, and that rollback does not write a Serato 5 library. After a restore writes the files, it checks their hashes. A mismatch puts the snapshot from before the restore back. **Backups** lists each edit and each restore. A change that could not be put back stays in that list and is not shown as finished.
 
 On a Mac, external drives need **Files and Folders > Removable Volumes**. The steps are on [Install on a Mac](Install-macOS).

@@ -901,6 +901,8 @@ class DriveCheckTests(unittest.TestCase):
         """
         text = (ROOT / "docs" / "architecture.md").read_text(encoding="utf-8")
         self.assertIn("`/api/drive-check`", text)
+        self.assertIn("Check drive", text)
+        self.assertNotIn("The page does not show this check", text)
         for kind in drive_check.FINDING_KINDS:
             self.assertIn(f"`{kind}`", text)
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
