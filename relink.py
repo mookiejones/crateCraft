@@ -393,6 +393,11 @@ def _remapped(track: Missing, moves: Sequence[dict[str, object]], index: _Index)
 def search_root(value: str) -> Path:
     """Resolve an extra folder to search after a drive swap.
 
+    After a drive swap the files may sit outside the current music roots, so
+    this folder can be anywhere on the computer. The path is normalized and
+    required to stay under its drive root before the folder is opened, the
+    same way the setup folder picker is.
+
     Args:
         value: Absolute path from the page.
 
@@ -404,15 +409,20 @@ def search_root(value: str) -> Path:
     """
     if not isinstance(value, str) or not value.strip() or "\x00" in value or len(value) > 4096:
         raise library.LibraryError("That request is not valid.")
-    path = Path(value)
-    if not path.is_absolute():
+    if not os.path.isabs(value):
         raise library.LibraryError("That request is not valid.")
-    if path.is_symlink():
+    normalized = os.path.normpath(os.path.abspath(value))
+    drive, _rest = os.path.splitdrive(normalized)
+    root = drive + os.sep if drive else os.path.abspath(os.sep)
+    if not normalized.startswith(root):
+        raise library.LibraryError("That request is not valid.")
+    directory = Path(normalized)
+    if directory.is_symlink():
         raise library.LibraryError("Shortcuts are left alone.")
-    if not path.is_dir():
+    if not directory.is_dir():
         raise library.LibraryError("Choose a folder.")
     try:
-        return path.resolve()
+        return directory.resolve()
     except OSError as exc:
         raise library.LibraryError("That folder could not be read.") from exc
 

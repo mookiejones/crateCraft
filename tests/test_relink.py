@@ -376,6 +376,12 @@ class SearchRootTests(unittest.TestCase):
             folder.mkdir()
             audio = _file(folder / "x.mp3")
             self.assertEqual(relink.search_root(str(folder)), folder.resolve())
+            nested = folder / "sub"
+            nested.mkdir()
+            self.assertEqual(
+                relink.search_root(str(nested / os.pardir)),
+                folder.resolve(),
+            )
             with self.assertRaises(library.LibraryError) as relative:
                 relink.search_root("music")
             self.assertEqual(relative.exception.message, "That request is not valid.")
