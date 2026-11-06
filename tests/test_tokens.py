@@ -667,6 +667,10 @@ class ContrastTests(unittest.TestCase):
             (".crate-row:has(.crate[aria-selected=\"true\"])", "--color-panel"),
             ('.row[aria-selected="true"]', "--color-selection"),
         )
+        rail_mark = _paint(self._rule(".rail")["box-shadow"], self.colors)
+        rail_ratio = contrast(rail_mark, self._surface("--color-bg"))
+        self.assertGreaterEqual(rail_ratio, 3, f".rail colorway stripe is {rail_ratio:.2f}:1")
+
         for selector, background_name in solid_bars:
             ink = _paint(self._rule(selector)["box-shadow"], self.colors)
             ratio = contrast(ink, self._surface(background_name))
@@ -738,6 +742,7 @@ class ContrastTests(unittest.TestCase):
             '.crate-row:has(.crate[aria-selected="true"])',
             '.row[aria-selected="true"]',
             ".crate-row.holds-selection",
+            ".rail",
             "#consent-accept",
             "#open-logs",
             "#copy-logs",

@@ -74,6 +74,13 @@
   --space-5: 24px;
   --space-6: 32px;
 
+  /* Theme colorways. The rail stripe uses --colorway-accent.
+     Motown Soul is the default. The page text stays walnut and manila. */
+  --colorway-motown-accent: #f4e4c4;
+  --colorway-deep-house-accent: #ff6f61;
+  --colorway-daisy-age-accent: #f5c518;
+  --colorway-accent: #f4e4c4;
+
   /* Spot illustrations. The names match design/tokens.css. */
   --illus-primary: var(--color-primary);
   --illus-surface: var(--color-card);
