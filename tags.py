@@ -1,8 +1,9 @@
-"""Read Serato cue points, loops, flips, and beatgrids from audio files.
+"""Read Serato cue points, loops, flips, beatgrids, and overviews from audio files.
 
 Serato stores these outside the library database. MP3, AIFF, and WAV keep
 them in ID3 GEOB frames. FLAC keeps them in Vorbis comments. M4A and MP4
-keep them in freeform atoms. Reading never rewrites a file.
+keep them in freeform atoms. Ogg Vorbis keeps an overview in a comment
+whose bytes use a different header. Reading never rewrites a file.
 ``copy_serato_geob`` copies existing Serato GEOB frames onto another file
 when that file has a plain ID3v2.3 tag, or when it is an MP3 with no tag
 yet. Other frames and the audio bytes stay as they are. Any other layout
@@ -23,6 +24,11 @@ from pathlib import Path
 from typing import BinaryIO, NotRequired, TypedDict
 
 logger = logging.getLogger("serato.tags")
+
+# A real FLAC file has a handful of metadata blocks. A crafted file made of
+# thousands of empty blocks took about 8 seconds per 100 MB to walk (#68).
+# Reading stops here; rewriting refuses the file (snapshot_frames).
+FLAC_BLOCK_LIMIT = 1024
 
 
 class Cue(TypedDict):
@@ -395,6 +401,8 @@ _B64_ALPHABET = frozenset(
 _ENVELOPE_MARK = b"application/octet-stream\x00\x00"
 _SERATO_MEAN = b"com.serato.dj"
 _SERATO_FRAME_NAMES = frozenset({"Serato Markers2", "Serato BeatGrid"})
+_OVERVIEW_NAMES = frozenset({"Serato Overview"})
+_OVERVIEW_COLUMNS = 8192
 _HEAD_READ = 2_000_000
 _TAIL_READ = 512_000
 
@@ -445,7 +453,10 @@ def _decode_serato_base64(raw: bytes) -> bytes | None:
         return None
 
 
-def _unwrap_serato_envelope(raw: bytes) -> tuple[str, bytes] | None:
+def _unwrap_serato_envelope(
+    raw: bytes,
+    names: frozenset[str] | None = None,
+) -> tuple[str, bytes] | None:
     """Split one FLAC or MP4 Serato value into a frame name and payload.
 
     The value is base64 of ``application/octet-stream``, two nulls, a
@@ -454,11 +465,14 @@ def _unwrap_serato_envelope(raw: bytes) -> tuple[str, bytes] | None:
 
     Args:
         raw: The Vorbis comment value or the MP4 data bytes.
+        names: Frame names to keep. None keeps Markers2 and BeatGrid.
+            ``read_serato_overview`` passes ``Serato Overview``.
 
     Returns:
-        The frame name and payload for Markers2 or BeatGrid. Other Serato
+        The frame name and payload when the name is allowed. Other Serato
         blocks, and values that do not decode, return None.
     """
+    allowed = _SERATO_FRAME_NAMES if names is None else names
     decoded = _decode_serato_base64(raw)
     if not decoded or not decoded.startswith(_ENVELOPE_MARK):
         return None
@@ -466,7 +480,7 @@ def _unwrap_serato_envelope(raw: bytes) -> tuple[str, bytes] | None:
     if not sep or not name:
         return None
     label = name.decode("utf-8", "replace")
-    if label not in _SERATO_FRAME_NAMES:
+    if label not in allowed:
         return None
     return label, payload
 
@@ -495,6 +509,7 @@ def _container_frames(
     path: Path,
     size: int,
     head: bytes,
+    names: frozenset[str] | None = None,
 ) -> list[tuple[str, bytes]]:
     """Collect Markers2 and BeatGrid payloads stored outside ID3.
 
@@ -506,29 +521,36 @@ def _container_frames(
         path: Filesystem path, used for the suffix check.
         size: File size in bytes.
         head: Leading bytes already read.
+        names: Frame names to keep. None keeps Markers2 and BeatGrid.
 
     Returns:
         Frame name and payload pairs. The file is not written.
     """
     frames: list[tuple[str, bytes]] = []
     if head.startswith(b"fLaC") or path.suffix.lower() == ".flac":
-        frames.extend(_flac_serato_frames(handle, size))
+        frames.extend(_flac_serato_frames(handle, size, names))
     if _is_mp4_family(path, head):
-        frames.extend(_mp4_moov_frames(handle, size))
+        frames.extend(_mp4_moov_frames(handle, size, names))
     return frames
 
 
-def _flac_serato_frames(handle: BinaryIO, size: int) -> list[tuple[str, bytes]]:
+def _flac_serato_frames(
+    handle: BinaryIO,
+    size: int,
+    names: frozenset[str] | None = None,
+) -> list[tuple[str, bytes]]:
     """Read Serato Vorbis comments by walking every FLAC metadata block.
 
     Each block header is 4 bytes: a type, a last-block flag, and a 24-bit
     length. The body of a picture or padding block is skipped with seek.
     A Vorbis comment is read in full. There is no byte cap. A length that
-    would run past the end of the file stops the walk.
+    would run past the end of the file stops the walk, and so does block
+    ``FLAC_BLOCK_LIMIT`` + 1, with a warning; frames read before it are kept.
 
     Args:
         handle: Open file positioned anywhere.
         size: File size in bytes.
+        names: Frame names to keep. None keeps Markers2 and BeatGrid.
 
     Returns:
         Frame name and payload pairs. A file that does not start with
@@ -541,7 +563,15 @@ def _flac_serato_frames(handle: BinaryIO, size: int) -> list[tuple[str, bytes]]:
         return []
     frames: list[tuple[str, bytes]] = []
     pos = 4
+    walked = 0
     while pos + 4 <= size:
+        if walked >= FLAC_BLOCK_LIMIT:
+            logger.warning(
+                "Stopped reading FLAC metadata after %d blocks; the rest of the file was not read.",
+                FLAC_BLOCK_LIMIT,
+            )
+            break
+        walked += 1
         handle.seek(pos)
         header = handle.read(4)
         if len(header) < 4:
@@ -559,7 +589,7 @@ def _flac_serato_frames(handle: BinaryIO, size: int) -> list[tuple[str, bytes]]:
             block = handle.read(length)
             if len(block) != length:
                 break
-            frames.extend(_vorbis_comment_frames(block))
+            frames.extend(_vorbis_comment_frames(block, names))
         if is_last:
             break
         next_pos = data_at + length
@@ -569,13 +599,17 @@ def _flac_serato_frames(handle: BinaryIO, size: int) -> list[tuple[str, bytes]]:
     return frames
 
 
-def _vorbis_comment_frames(block: bytes) -> list[tuple[str, bytes]]:
+def _vorbis_comment_frames(
+    block: bytes,
+    names: frozenset[str] | None = None,
+) -> list[tuple[str, bytes]]:
     """Read ``SERATO_*`` fields from one Vorbis comment block.
 
     Lengths are little-endian, which is the Vorbis comment rule.
 
     Args:
         block: Comment block bytes, vendor string included.
+        names: Frame names to keep. None keeps Markers2 and BeatGrid.
 
     Returns:
         Frame name and payload pairs. A short or truncated block is empty.
@@ -605,18 +639,23 @@ def _vorbis_comment_frames(block: bytes) -> list[tuple[str, bytes]]:
             continue
         if not key.decode("utf-8", "replace").upper().startswith("SERATO_"):
             continue
-        unwrapped = _unwrap_serato_envelope(value)
+        unwrapped = _unwrap_serato_envelope(value, names)
         if unwrapped is not None:
             frames.append(unwrapped)
     return frames
 
 
-def _mp4_moov_frames(handle: BinaryIO, size: int) -> list[tuple[str, bytes]]:
+def _mp4_moov_frames(
+    handle: BinaryIO,
+    size: int,
+    names: frozenset[str] | None = None,
+) -> list[tuple[str, bytes]]:
     """Read Serato atoms from each top-level ``moov``, skipping audio.
 
     Args:
         handle: Open MP4 file.
         size: File size in bytes.
+        names: Frame names to keep. None keeps Markers2 and BeatGrid.
 
     Returns:
         Frame name and payload pairs. ``mdat`` is skipped by its declared
@@ -652,17 +691,21 @@ def _mp4_moov_frames(handle: BinaryIO, size: int) -> list[tuple[str, bytes]]:
                     _TAG_LIMIT,
                 )
                 body_len = _TAG_LIMIT
-            frames.extend(_mp4_serato_frames(handle.read(body_len)))
+            frames.extend(_mp4_serato_frames(handle.read(body_len), names))
         pos += atom_size
     return frames
 
 
-def _mp4_serato_frames(blob: bytes) -> list[tuple[str, bytes]]:
+def _mp4_serato_frames(
+    blob: bytes,
+    names: frozenset[str] | None = None,
+) -> list[tuple[str, bytes]]:
     """Find ``----:com.serato.dj`` atoms in a byte window.
 
     Args:
         blob: Bytes that may contain a freeform atom. The window does not
             have to start on an atom boundary.
+        names: Frame names to keep. None keeps Markers2 and BeatGrid.
 
     Returns:
         Frame name and payload pairs.
@@ -674,13 +717,17 @@ def _mp4_serato_frames(blob: bytes) -> list[tuple[str, bytes]]:
         if index < 0:
             break
         start = index + len(_SERATO_MEAN)
-        parsed = _mp4_freeform_at(blob, index)
+        parsed = _mp4_freeform_at(blob, index, names)
         if parsed is not None:
             frames.append(parsed)
     return frames
 
 
-def _mp4_freeform_at(blob: bytes, index: int) -> tuple[str, bytes] | None:
+def _mp4_freeform_at(
+    blob: bytes,
+    index: int,
+    names: frozenset[str] | None = None,
+) -> tuple[str, bytes] | None:
     """Parse the freeform atom whose mean string starts at ``index``.
 
     The layout is a 32-bit ``----`` atom, then ``mean``, ``name``, and
@@ -690,6 +737,7 @@ def _mp4_freeform_at(blob: bytes, index: int) -> tuple[str, bytes] | None:
     Args:
         blob: Bytes containing the atom.
         index: Index of ``com.serato.dj``.
+        names: Frame names to keep. None keeps Markers2 and BeatGrid.
 
     Returns:
         The frame name and payload, or None when the bytes around the mean
@@ -718,7 +766,7 @@ def _mp4_freeform_at(blob: bytes, index: int) -> tuple[str, bytes] | None:
             break
     if data is None:
         return None
-    return _unwrap_serato_envelope(data)
+    return _unwrap_serato_envelope(data, names)
 
 
 def _mp4_atoms(buf: bytes) -> list[tuple[bytes, bytes]]:
@@ -747,6 +795,229 @@ def _mp4_atoms(buf: bytes) -> list[tuple[bytes, bytes]]:
         atoms.append((kind, buf[pos + header_len:pos + atom_size]))
         pos += atom_size
     return atoms
+
+
+def read_serato_overview(path: str | None) -> bytes | None:
+    """Read the Serato Overview tag without rewriting the file.
+
+    ID3 GEOB, FLAC Vorbis comments, and MP4 freeform atoms use the same
+    walks as the marker reader. An Ogg page is read only when the file
+    starts with ``OggS`` or the suffix is ``.ogg`` or ``.oga``. The Ogg
+    value is either the shared base64 envelope or the hex layout Serato
+    writes for Vorbis: two big-endian version words, 1 and 5, then the
+    columns. Marker parsing still ignores this tag, so ``found`` stays
+    false when an overview is the only Serato block.
+
+    Args:
+        path: Filesystem path of the audio file, or None.
+
+    Returns:
+        Bytes that start with ``01 05`` and then complete 16-byte columns.
+        A short tail is dropped. None when the tag is missing or unreadable.
+        At most 8192 columns are returned.
+    """
+    if not path:
+        return None
+    file = Path(path)
+    try:
+        if not file.is_file():
+            return None
+        size = file.stat().st_size
+        with file.open("rb") as handle:
+            head = handle.read(min(size, _HEAD_READ))
+            tail = b""
+            if size > _HEAD_READ:
+                handle.seek(max(0, size - _TAIL_READ))
+                tail = handle.read(_TAIL_READ)
+            for name, payload in _geob_frames(head) + _geob_frames(tail):
+                if name == "Serato Overview":
+                    normalized = _normalize_overview(payload)
+                    if normalized is not None:
+                        return normalized
+            for name, payload in _container_frames(handle, file, size, head, _OVERVIEW_NAMES):
+                if name == "Serato Overview":
+                    normalized = _normalize_overview(payload)
+                    if normalized is not None:
+                        return normalized
+            if head.startswith(b"OggS") or file.suffix.lower() in {".ogg", ".oga"}:
+                handle.seek(0)
+                return _ogg_overview(handle)
+    except OSError:
+        return None
+    return None
+
+
+def _normalize_overview(payload: bytes) -> bytes | None:
+    """Return a versioned overview payload of complete 16-byte columns.
+
+    Args:
+        payload: GEOB data, an unwrapped container payload, or hex text.
+
+    Returns:
+        ``01 05`` plus up to 8192 columns. None when the version is not
+        1.5 or there is not one full column. A hex string is decoded once.
+    """
+    direct = _normalize_overview_bytes(payload)
+    if direct is not None:
+        return direct
+    decoded = _unhex(payload)
+    if decoded is None:
+        return None
+    return _normalize_overview_bytes(decoded)
+
+
+def _normalize_overview_bytes(payload: bytes) -> bytes | None:
+    """Accept the ID3 layout or the Ogg uint32 version words.
+
+    Args:
+        payload: Binary overview bytes, not hex text.
+
+    Returns:
+        ``01 05`` plus complete columns, or None when the version does not match.
+    """
+    if len(payload) >= 2 and payload[0] == 1 and payload[1] == 5:
+        return _trim_columns(payload[2:])
+    if len(payload) >= 8:
+        major = int.from_bytes(payload[0:4], "big")
+        minor = int.from_bytes(payload[4:8], "big")
+        if (major, minor) == (1, 5):
+            return _trim_columns(payload[8:])
+    return None
+
+
+def _trim_columns(body: bytes) -> bytes | None:
+    """Keep whole 16-byte columns and prefix the shared version bytes.
+
+    Args:
+        body: Column bytes after the version header.
+
+    Returns:
+        ``01 05`` plus at most 8192 columns. None when ``body`` has no column.
+    """
+    cols = min(len(body) // 16, _OVERVIEW_COLUMNS)
+    if cols < 1:
+        return None
+    return bytes((1, 5)) + body[: cols * 16]
+
+
+def _unhex(raw: bytes) -> bytes | None:
+    """Decode a hex overview value, ignoring nothing else.
+
+    Args:
+        raw: Comment text that may be hexadecimal.
+
+    Returns:
+        The decoded bytes when every character is hex and the length is
+        even. None otherwise.
+    """
+    if len(raw) < 16 or len(raw) % 2:
+        return None
+    if any(byte not in b"0123456789abcdefABCDEF" for byte in raw):
+        return None
+    try:
+        return bytes.fromhex(raw.decode("ascii"))
+    except ValueError:
+        return None
+
+
+def _ogg_overview(handle: BinaryIO) -> bytes | None:
+    """Read ``serato_overview`` from the Vorbis comment packet.
+
+    Args:
+        handle: Open file positioned at the first Ogg page.
+
+    Returns:
+        A normalized overview payload, or None when the comment is absent.
+        Audio pages after the comment packet are not read.
+    """
+    packets = _ogg_packets(handle, 2)
+    if len(packets) < 2:
+        return None
+    comment = packets[1]
+    block = comment[7:] if comment.startswith(b"\x03vorbis") else comment
+    for key, value in _comment_pairs(block):
+        if key.upper() != "SERATO_OVERVIEW":
+            continue
+        unwrapped = _unwrap_serato_envelope(value, _OVERVIEW_NAMES)
+        if unwrapped is not None:
+            normalized = _normalize_overview(unwrapped[1])
+            if normalized is not None:
+                return normalized
+        normalized = _normalize_overview(value)
+        if normalized is not None:
+            return normalized
+    return None
+
+
+def _ogg_packets(handle: BinaryIO, limit: int) -> list[bytes]:
+    """Read the first Vorbis packets from an Ogg file.
+
+    Args:
+        handle: Open file at the first page.
+        limit: Stop after this many complete packets.
+
+    Returns:
+        Packets in order. A page that is not ``OggS`` ends the list.
+        A packet larger than 1 MB is abandoned.
+    """
+    packets: list[bytes] = []
+    current = bytearray()
+    for _page in range(8):
+        header = handle.read(27)
+        if len(header) < 27 or header[:4] != b"OggS":
+            break
+        count = header[26]
+        table = handle.read(count)
+        if len(table) < count:
+            break
+        for seg_len in table:
+            piece = handle.read(seg_len)
+            if len(piece) < seg_len:
+                return packets
+            current.extend(piece)
+            if len(current) > 1_000_000:
+                return packets
+            if seg_len < 255:
+                packets.append(bytes(current))
+                current.clear()
+                if len(packets) >= limit:
+                    return packets
+    return packets
+
+
+def _comment_pairs(block: bytes) -> list[tuple[str, bytes]]:
+    """List every Vorbis comment in one block.
+
+    Args:
+        block: Vendor string and comments, little-endian lengths. The
+            Ogg framing byte after the comments is ignored.
+
+    Returns:
+        Key and value pairs. A truncated block stops early.
+    """
+    if len(block) < 8:
+        return []
+    vendor_len = int.from_bytes(block[0:4], "little")
+    if vendor_len > len(block) - 8:
+        return []
+    pos = 4 + vendor_len
+    count = int.from_bytes(block[pos:pos + 4], "little")
+    pos += 4
+    pairs: list[tuple[str, bytes]] = []
+    for _ in range(min(count, len(block))):
+        if pos + 4 > len(block):
+            break
+        comment_len = int.from_bytes(block[pos:pos + 4], "little")
+        pos += 4
+        if comment_len > len(block) - pos:
+            break
+        comment = block[pos:pos + comment_len]
+        pos += comment_len
+        key, sep, value = comment.partition(b"=")
+        if not sep:
+            continue
+        pairs.append((key.decode("utf-8", "replace"), value))
+    return pairs
 
 
 def _parse_markers2(payload: bytes) -> MarkerEntries:
@@ -1248,3 +1519,202 @@ def _write_copied_tag(source: Path, dest: Path) -> bool:
         if temp is not None:
             temp.unlink(missing_ok=True)
         backup.unlink(missing_ok=True)
+
+
+class TextTags(TypedDict):
+    """Plain title and artist read from an audio file's own tags.
+
+    Attributes:
+        title: ID3 ``TIT2``, Vorbis ``TITLE``, or MP4 ``\u00a9nam``; empty when none.
+        artist: ID3 ``TPE1``, Vorbis ``ARTIST``, or MP4 ``\u00a9ART``; empty when none.
+    """
+
+    title: str
+    artist: str
+
+
+_ID3_TEXT = {b"TIT2": "title", b"TPE1": "artist"}
+_VORBIS_TEXT = {"TITLE": "title", "ARTIST": "artist"}
+_MP4_TEXT = {b"\xa9nam": "title", b"\xa9ART": "artist"}
+_FLAC_TEXT_BLOCKS = 1024
+
+
+def read_text_tags(path: str | Path | None) -> TextTags:
+    """Read the title and artist an audio file carries, without rewriting it.
+
+    ID3v2.3 and ID3v2.4 tags in the first 2,000,000 bytes are read first
+    (an MP3, or the ``id3`` chunk of a WAV or AIFF near the start). A FLAC
+    Vorbis comment and an MP4 ``ilst`` fill whatever is still empty. The
+    first value of a multi-value frame is used. Surrounding spaces are
+    removed. A missing or unreadable file gives empty strings.
+
+    Args:
+        path: Audio file, or None.
+
+    Returns:
+        ``title`` and ``artist``; each is empty when the file has none.
+    """
+    found: TextTags = {"title": "", "artist": ""}
+    if not path:
+        return found
+    file = Path(path)
+    try:
+        if not file.is_file():
+            return found
+        size = file.stat().st_size
+        with file.open("rb") as handle:
+            head = handle.read(min(size, _HEAD_READ))
+            sources = [_id3_text(head)]
+            if head.startswith(b"fLaC") or file.suffix.lower() == ".flac":
+                sources.append(_flac_text(handle, size))
+            if _is_mp4_family(file, head):
+                sources.append(_mp4_text(handle, size))
+    except OSError:
+        return found
+    for source in sources:
+        for key in ("title", "artist"):
+            if not found[key] and source.get(key):
+                found[key] = source[key]
+    return found
+
+
+def _first_value(text: str) -> str:
+    """Return the first NUL-separated value, stripped."""
+    return text.split("\x00", 1)[0].strip()
+
+
+def _id3_text(blob: bytes) -> dict[str, str]:
+    """Read ``TIT2`` and ``TPE1`` from the ID3 tags in a buffer.
+
+    Args:
+        blob: Leading file bytes.
+
+    Returns:
+        ``title`` and ``artist`` values that were found.
+    """
+    found: dict[str, str] = {}
+    cursor = 0
+    while cursor < len(blob) - 10 and len(found) < 2:
+        offset = blob.find(b"ID3", cursor)
+        if offset < 0:
+            break
+        cursor = offset + 3
+        version = blob[offset + 3] if offset + 3 < len(blob) else 0
+        if version not in (3, 4) or offset + 10 > len(blob):
+            continue
+        end = min(len(blob), offset + 10 + _synchsafe(blob[offset + 6:offset + 10]))
+        pos = offset + 10
+        while pos + 10 <= end:
+            frame_id = blob[pos:pos + 4]
+            if frame_id[0] == 0:
+                break
+            if version == 4:
+                frame_size = _synchsafe(blob[pos + 4:pos + 8])
+            else:
+                frame_size = int.from_bytes(blob[pos + 4:pos + 8], "big")
+            body = blob[pos + 10:pos + 10 + frame_size]
+            pos += 10 + frame_size
+            key = _ID3_TEXT.get(frame_id)
+            if key is None or len(body) < 2 or key in found:
+                continue
+            value = _first_value(_decode_text(body[0], body[1:]))
+            if value:
+                found[key] = value
+    return found
+
+
+def _flac_text(handle: BinaryIO, size: int) -> dict[str, str]:
+    """Read ``TITLE`` and ``ARTIST`` from a FLAC Vorbis comment.
+
+    The walk visits at most ``_FLAC_TEXT_BLOCKS`` metadata blocks and skips
+    every block body except the comment.
+
+    Args:
+        handle: Open FLAC file.
+        size: File size in bytes.
+
+    Returns:
+        ``title`` and ``artist`` values that were found.
+    """
+    found: dict[str, str] = {}
+    handle.seek(0)
+    if size < 8 or handle.read(4) != b"fLaC":
+        return found
+    pos = 4
+    for _ in range(_FLAC_TEXT_BLOCKS):
+        if pos + 4 > size:
+            break
+        handle.seek(pos)
+        header = handle.read(4)
+        if len(header) < 4:
+            break
+        length = int.from_bytes(header[1:4], "big")
+        if length > size - pos - 4:
+            break
+        if header[0] & 0x7F == 4:
+            for key, value in _comment_pairs(handle.read(length)):
+                name = _VORBIS_TEXT.get(key.upper())
+                text = _first_value(value.decode("utf-8", "replace"))
+                if name and text and name not in found:
+                    found[name] = text
+        if header[0] & 0x80:
+            break
+        pos += 4 + length
+    return found
+
+
+def _mp4_text(handle: BinaryIO, size: int) -> dict[str, str]:
+    """Read ``\u00a9nam`` and ``\u00a9ART`` from an MP4 ``moov/udta/meta/ilst``.
+
+    Args:
+        handle: Open MP4-family file.
+        size: File size in bytes.
+
+    Returns:
+        ``title`` and ``artist`` values that were found. ``mdat`` is skipped.
+    """
+    found: dict[str, str] = {}
+    pos = 0
+    for _ in range(64):
+        if pos + 8 > size:
+            break
+        handle.seek(pos)
+        header = handle.read(8)
+        if len(header) < 8:
+            break
+        atom_size = int.from_bytes(header[:4], "big")
+        header_len = 8
+        if atom_size == 1:
+            extended = handle.read(8)
+            if len(extended) < 8:
+                break
+            atom_size = int.from_bytes(extended, "big")
+            header_len = 16
+        elif atom_size == 0:
+            atom_size = size - pos
+        if atom_size < header_len or pos + atom_size > size:
+            break
+        if header[4:8] == b"moov":
+            moov = handle.read(min(atom_size - header_len, _TAG_LIMIT))
+            for kind, udta in _mp4_atoms(moov):
+                if kind != b"udta":
+                    continue
+                for meta_kind, meta in _mp4_atoms(udta):
+                    if meta_kind != b"meta":
+                        continue
+                    for ilst_kind, ilst in _mp4_atoms(meta[4:]):
+                        if ilst_kind != b"ilst":
+                            continue
+                        for item_kind, item in _mp4_atoms(ilst):
+                            name = _MP4_TEXT.get(item_kind)
+                            if name is None or name in found:
+                                continue
+                            for data_kind, data in _mp4_atoms(item):
+                                if data_kind == b"data" and len(data) > 8:
+                                    text = _first_value(data[8:].decode("utf-8", "replace"))
+                                    if text:
+                                        found[name] = text
+                                        break
+        pos += atom_size
+    return found
+

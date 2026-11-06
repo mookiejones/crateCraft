@@ -1,5 +1,9 @@
 # Troubleshooting
 
+## The gig check says Not ready
+
+Open [Before a gig](gig-check.md). **Not ready** with a drive name means that drive is absent. **Not ready** with missing files lists each path. The check does not change the library.
+
 ## The edit buttons are off
 
 Serato DJ Pro still has the library, or the database is locked.
@@ -127,6 +131,8 @@ Read the line under the checkbox in **Settings**. **This copy has no telemetry k
 ## Where is the log?
 
 **Settings**, then **Open logs folder** or **Copy logs**. The folders are in [Settings and privacy](settings.md#logs). The log can include the path of `master.sqlite`. It is not uploaded.
+
+The same Settings dialog has **About**. **Copy version** puts the version on the clipboard for a bug report. The line says **Copied**. When the version cannot be read, About says **Version unavailable** and the sidebar does not show a version.
 
 ## Does this upload my music?
 

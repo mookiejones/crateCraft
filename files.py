@@ -34,6 +34,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 import library
+import music_roots
 import telemetry
 from tags import copy_serato_geob, plan_serato_geob
 
@@ -59,11 +60,13 @@ _AUDIO = frozenset(
     }
 )
 _NAME_RE_MAX = 255
-_LIST_CAP = 2000
-_SCAN_CAP = 5000
 _CHANGE_CAP = 200
 _FILE_CAP = 500
 _TREE_CAP = 50000
+_QUERY_MAX = 200
+_SEARCH_SCAN = 20000
+_SEARCH_HITS = 40
+_SEARCH_SKIP_DIRS = frozenset({"_Serato_", ".git", "node_modules"})
 _JOURNAL = "file-ops-journal.json"
 _TRASH_ENV = "SERATO_LIBRARY_TRASH"
 FO_DELETE = 3
@@ -155,22 +158,57 @@ class Plan:
     trash: list[str] = field(default_factory=list)
 
 
-def list_directory(path: str | None) -> dict[str, object]:
-    """List one folder for the file browser.
+def list_directory(
+    path: str | None,
+    *,
+    elsewhere: bool = False,
+    refresh: bool = False,
+    query: str = "",
+) -> dict[str, object]:
+    """List the music roots, or one folder under a root.
+
+    An empty path lists the folders Serato uses. ``elsewhere`` lists a
+    folder outside those roots. The path is normalized first. A shortcut
+    in the path is refused, and a rooted browse cannot leave its root.
+
+    A non-empty ``query`` searches names instead of listing one folder.
+    That search is read-only. It does not follow shortcuts, and it skips
+    a root marked missing.
 
     Args:
-        path: Folder to open. Empty selects the home directory.
+        path: Folder to open. Empty selects the music roots. With a
+            query, empty searches every music root that is on disk.
+        elsewhere: When true, a folder outside the music roots may be
+            listed. Path checks still apply. A query also needs a path.
+        refresh: When true, drop the cached roots and read the library again.
+        query: Name filter. Blank lists the folder. Longer than 200
+            characters, or a null byte, is refused.
 
     Returns:
-        The folder, its parent, and up to 2000 entries. Shortcuts are
-        listed and are not followed.
+        The roots, the folder, its parent, and every entry. Folders are
+        listed before files. Shortcuts are listed and are not followed.
+        ``truncated`` is false for a listing. A search sets ``search``
+        and ``query``, orders matches by score, and may set ``truncated``.
+        ``parent`` is null at a music root.
 
     Raises:
-        LibraryError: If the path is not a real folder.
+        LibraryError: If the path is missing, outside the music roots,
+            or a shortcut, or if the query is not valid.
     """
-    directory = _list_root(path)
-    info = library.status()
-    entries, truncated = _scan(directory)
+    if refresh:
+        invalidate_browse_cache()
+    text = _search_text(query)
+    if text:
+        return _search_listing(text, path, elsewhere=elsewhere)
+    info = _browser_status()
+    roots = music_roots.music_roots(refresh=refresh)
+    if path is None or path == "":
+        if not elsewhere:
+            return _roots_payload(roots, info)
+        directory = _resolve_directory(str(Path.home()), elsewhere=True, roots=roots)
+    else:
+        directory = _resolve_directory(path, elsewhere=elsewhere, roots=roots)
+    entries = _scan(directory)
     indexed = _index_assets()
     listed: list[dict[str, object]] = []
     for entry in entries:
@@ -185,15 +223,296 @@ def list_directory(path: str | None) -> dict[str, object]:
                 "in_library": bool(assets),
             }
         )
-    parent = None if directory.parent == directory else str(directory.parent)
+    root = None if elsewhere else _matching_root(directory, roots)
     return {
+        "roots": roots,
+        "root": root,
         "path": str(directory),
-        "parent": parent,
+        "parent": _parent_path(directory, root, elsewhere=elsewhere),
+        "breadcrumb": _breadcrumb(directory, root, elsewhere=elsewhere),
         "entries": listed,
-        "truncated": truncated,
+        "truncated": False,
+        "elsewhere": elsewhere,
         "writable": bool(info.get("writable")),
         "serato": info,
     }
+
+
+def _search_text(query: str) -> str:
+    """Return a name query, or an empty string when there is nothing to find.
+
+    Args:
+        query: Raw ``q`` value. Blank and whitespace are not a search.
+
+    Returns:
+        The query with its internal whitespace collapsed.
+
+    Raises:
+        LibraryError: If the value is too long or contains a null byte.
+    """
+    if not isinstance(query, str):
+        raise library.LibraryError("That search is not valid.", 400)
+    if "\x00" in query or len(query) > _QUERY_MAX:
+        raise library.LibraryError("That search is not valid." if "\x00" in query else "That search is too long.", 400)
+    return " ".join(query.split())
+
+
+def _fuzzy_score(needle: str, haystack: str) -> int | None:
+    """Score one word as a subsequence of a name.
+
+    Consecutive letters, a whole word, and a prefix score higher. The
+    same rules are in ``src/fuzzy.ts``.
+
+    Args:
+        needle: One word. An empty word does not match.
+        haystack: File name or folder name.
+
+    Returns:
+        A higher score for a tighter match, or None when ``needle`` is
+        not a subsequence.
+    """
+    folded_needle = needle.casefold()
+    folded = haystack.casefold()
+    if not folded_needle:
+        return None
+    score = 0
+    previous = -2
+    start = 0
+    for character in folded_needle:
+        found = folded.find(character, start)
+        if found < 0:
+            return None
+        score += 8
+        if found == previous + 1:
+            score += 16
+        if found == 0 or folded[found - 1] in " ._-/\\":
+            score += 12
+        previous = found
+        start = found + 1
+    if folded_needle in folded:
+        score += 40
+    if folded.startswith(folded_needle):
+        score += 30
+    score -= max(0, len(folded) - len(folded_needle)) // 4
+    return score
+
+
+def _match_score(terms: list[str], name: str, parent_name: str) -> int | None:
+    """Score every word against a file name or its parent folder.
+
+    A word that matches the file name scores higher than a word that
+    matches only the folder.
+
+    Args:
+        terms: Words from the query. Each one must match.
+        name: File or folder name.
+        parent_name: Name of the folder that contains it.
+
+    Returns:
+        The total score, or None when a word matches neither string.
+    """
+    total = 0
+    for term in terms:
+        name_score = _fuzzy_score(term, name)
+        if name_score is not None:
+            total += name_score + 20
+            continue
+        parent_score = _fuzzy_score(term, parent_name)
+        if parent_score is None:
+            return None
+        total += parent_score
+    return total
+
+
+def _asset_ids(indexed: dict[Path, list[int]], path: Path, *, link: bool) -> list[int]:
+    """Return library asset ids for a scanned path.
+
+    A shortcut is not resolved, so the lookup cannot follow it out of
+    the folder.
+
+    Args:
+        indexed: Resolved paths from the asset table.
+        path: Path from the scan.
+        link: When true, do not resolve the path.
+
+    Returns:
+        Asset ids, or an empty list when the file is not in the library.
+    """
+    found = indexed.get(path, [])
+    if found or link:
+        return found
+    try:
+        return indexed.get(path.resolve(strict=False), [])
+    except OSError:
+        return []
+
+
+def _dir_ident(directory: Path) -> tuple[int, int] | None:
+    """Return a device and inode, without following a shortcut.
+
+    Args:
+        directory: Folder about to be scanned.
+
+    Returns:
+        The identity, or None when the folder cannot be statted.
+    """
+    try:
+        stat = directory.stat(follow_symlinks=False)
+    except OSError:
+        return None
+    return (stat.st_dev, stat.st_ino)
+
+
+def _search_listing(text: str, path: str | None, *, elsewhere: bool) -> dict[str, object]:
+    """Find files and folders by name without writing anything.
+
+    Missing roots are skipped. Shortcuts are not followed. The walk stops
+    after ``_SEARCH_SCAN`` entries. The response keeps the best
+    ``_SEARCH_HITS`` matches.
+
+    Args:
+        text: Collapsed query.
+        path: Folder to search. Empty searches the music roots.
+        elsewhere: When true, ``path`` may sit outside the music roots.
+            An empty path is refused so the home directory is not walked.
+
+    Returns:
+        A listing whose ``entries`` are the matches. ``search`` is true.
+
+    Raises:
+        LibraryError: If the path is not a folder this browse may open,
+            or if ``elsewhere`` is set without a path.
+    """
+    info = _browser_status()
+    roots = music_roots.music_roots(refresh=False)
+    if path:
+        starts = [_resolve_directory(path, elsewhere=elsewhere, roots=roots)]
+    elif elsewhere:
+        raise library.LibraryError("Choose a folder before searching outside the music folders.", 400)
+    else:
+        starts = []
+        for root in roots:
+            if root.get("missing"):
+                continue
+            root_path = root.get("path")
+            if not isinstance(root_path, str) or root_path == "":
+                continue
+            candidate = Path(root_path)
+            try:
+                if candidate.is_symlink() or not candidate.is_dir():
+                    continue
+            except OSError:
+                continue
+            starts.append(candidate)
+    terms = text.split()
+    indexed = _index_assets()
+    found: list[dict[str, object]] = []
+    seen: set[tuple[int, int]] = set()
+    start_keys = {os.path.normcase(str(start)) for start in starts}
+    budget = 0
+    truncated = False
+    for start in starts:
+        if truncated:
+            break
+        stack = [start]
+        while stack and not truncated:
+            directory = stack.pop()
+            ident = _dir_ident(directory)
+            if ident is not None:
+                if ident in seen:
+                    continue
+                seen.add(ident)
+            try:
+                scanner = os.scandir(directory)
+            except OSError:
+                continue
+            parent_name = "" if os.path.normcase(str(directory)) in start_keys else directory.name
+            with scanner:
+                for entry in scanner:
+                    budget += 1
+                    if budget > _SEARCH_SCAN:
+                        truncated = True
+                        break
+                    name = entry.name
+                    if name in {".", ".."} or name.startswith("."):
+                        continue
+                    child = Path(entry.path)
+                    try:
+                        link = entry.is_symlink()
+                    except OSError:
+                        continue
+                    if link:
+                        _consider_match(name, child, "link", False, parent_name, terms, indexed, found)
+                        continue
+                    try:
+                        is_dir = entry.is_dir(follow_symlinks=False)
+                    except OSError:
+                        continue
+                    if is_dir:
+                        if name not in _SEARCH_SKIP_DIRS:
+                            stack.append(child)
+                        _consider_match(name, child, "dir", False, parent_name, terms, indexed, found)
+                        continue
+                    audio = Path(name).suffix.lower() in _AUDIO
+                    _consider_match(name, child, "file", audio, parent_name, terms, indexed, found)
+    found.sort(key=lambda item: (-int(item["score"]), str(item["name"]).casefold(), str(item["path"]).casefold()))
+    if len(found) > _SEARCH_HITS:
+        truncated = True
+    scope = "" if not path else str(starts[0]) if starts else ""
+    return {
+        "roots": roots,
+        "root": None,
+        "path": scope,
+        "parent": None,
+        "breadcrumb": [],
+        "entries": found[:_SEARCH_HITS],
+        "truncated": truncated,
+        "elsewhere": elsewhere and bool(path),
+        "writable": bool(info.get("writable")),
+        "serato": info,
+        "search": True,
+        "query": text,
+    }
+
+
+def _consider_match(
+    name: str,
+    path: Path,
+    kind: str,
+    audio: bool,
+    parent_name: str,
+    terms: list[str],
+    indexed: dict[Path, list[int]],
+    found: list[dict[str, object]],
+) -> None:
+    """Append one name when it matches the query.
+
+    Args:
+        name: Directory entry name.
+        path: That entry's path.
+        kind: ``file``, ``dir``, or ``link``.
+        audio: True when the file is an audio suffix.
+        parent_name: Folder that contains the entry.
+        terms: Query words.
+        indexed: Library path index.
+        found: Matches collected so far.
+    """
+    score = _match_score(terms, name, parent_name)
+    if score is None:
+        return
+    assets = _asset_ids(indexed, path, link=kind == "link") if kind == "file" else []
+    found.append(
+        {
+            "name": name,
+            "kind": kind,
+            "path": str(path),
+            "audio": audio,
+            "assets": assets,
+            "in_library": bool(assets),
+            "detail": str(path.parent),
+            "score": score,
+        }
+    )
 
 
 def plan(payload: Mapping[str, object]) -> dict[str, object]:
@@ -264,30 +583,53 @@ def execute(payload: Mapping[str, object]) -> dict[str, object]:
     built = _build(payload)
     if not built.ok:
         raise library.LibraryError(built.error or "That change was not saved.")
-    snapshots.snapshot_before_write()
-    library.ensure_backup()
-    journal = _journal_for(built)
-    _write_journal(journal)
-    cue_status = built.cues
-    try:
-        cue_status = _perform_files(built, journal)
-        _commit_database(built, journal)
-        journal["done"] = True
+    import safe_write
+
+    extra = [change.source for change in built.changes]
+    extra.extend(removal.path for removal in built.removals if removal.path is not None)
+    holder: dict[str, dict[str, object]] = {}
+
+    def undo_files() -> None:
+        """Put moved files back from the in-memory journal.
+
+        The journal file may already have been removed. The dict still
+        describes the moves.
+        """
+        journal = holder.get("journal")
+        if journal is None:
+            return
+        _undo_journal(journal)
+
+    with safe_write.session(
+        built.action,
+        _file_target(built),
+        extra,
+        on_rollback=undo_files,
+    ) as write:
+        journal = _journal_for(built)
+        holder["journal"] = journal
         _write_journal(journal)
-    except library.SeratoOpen:
-        _undo_and_drop(journal)
-        raise
-    except library.LibraryError:
-        _undo_and_drop(journal)
-        raise
-    except Exception as exc:
-        logger.exception("File change failed")
-        _undo_and_drop(journal)
-        raise library.LibraryError(
-            "The files could not be changed. Nothing was left halfway."
-        ) from exc
-    _finish_journal(journal)
-    _delete_journal()
+        cue_status = built.cues
+        try:
+            cue_status = _perform_files(built, journal)
+            _commit_database(built, journal)
+            journal["done"] = True
+            _write_journal(journal)
+            write.mark_committed()
+        except library.SeratoOpen:
+            _undo_and_drop(journal)
+            raise
+        except library.LibraryError:
+            _undo_and_drop(journal)
+            raise
+        except Exception as exc:
+            logger.exception("File change failed")
+            _undo_and_drop(journal)
+            raise library.LibraryError(
+                "The files could not be changed. Nothing was left halfway."
+            ) from exc
+        _finish_journal(journal)
+        _delete_journal()
     related_notes = _retarget_related(built)
     _capture(built, cue_status)
     body = _public(built)
@@ -362,7 +704,11 @@ def recover_interrupted() -> str:
 
 
 def _list_root(path: str | None) -> Path:
-    """Resolve the folder a listing is allowed to open.
+    """Resolve a folder the setup wizard is allowed to open.
+
+    The wizard looks through the computer for the library folder. The
+    Files page uses :func:`_resolve_directory`, which stays inside the
+    music roots unless the request asks to browse elsewhere.
 
     Args:
         path: Requested folder, or empty for the home directory.
@@ -377,8 +723,6 @@ def _list_root(path: str | None) -> Path:
         return Path.home().resolve()
     if not isinstance(path, str) or "\x00" in path or len(path) > 4096:
         raise library.LibraryError("That request is not valid.")
-    # Normalize first, then keep only an absolute path on its own drive.
-    # Filesystem checks happen after that, so a relative request cannot climb out.
     normalized = os.path.normpath(os.path.abspath(path))
     drive, _rest = os.path.splitdrive(normalized)
     root = drive + os.sep if drive else os.path.abspath(os.sep)
@@ -394,6 +738,392 @@ def _list_root(path: str | None) -> Path:
     if not resolved.is_dir():
         raise library.LibraryError("That folder could not be read.", 404)
     return resolved
+
+
+def _browser_status() -> dict[str, object]:
+    """Return the library lock status, or a closed status when it is missing.
+
+    Returns:
+        The status dict. A missing library is not open and is not writable.
+    """
+    try:
+        return library.status()
+    except library.LibraryError:
+        return {
+            "open": False,
+            "writable": False,
+            "message": "No Serato library was found on this computer.",
+        }
+
+
+def _roots_payload(roots: list[dict[str, str]], info: dict[str, object]) -> dict[str, object]:
+    """Return the top-level music-folder list.
+
+    Args:
+        roots: Named folders and drives.
+        info: Lock status included for the page.
+
+    Returns:
+        A listing with no folder entries and no parent.
+    """
+    return {
+        "roots": roots,
+        "root": None,
+        "path": "",
+        "parent": None,
+        "breadcrumb": [],
+        "entries": [],
+        "truncated": False,
+        "elsewhere": False,
+        "writable": bool(info.get("writable")),
+        "serato": info,
+    }
+
+
+def _bare_root(path: str) -> bool:
+    """Return whether ``path`` is a root the browse must not open.
+
+    Args:
+        path: Requested or normalized path.
+
+    Returns:
+        True for ``/``, ``/Volumes``, a drive root such as ``C:\\``, and
+        the root of a UNC share such as ``\\\\server\\share``.
+    """
+    text = _without_extended_prefix(path)
+    if text.startswith("\\\\") or text.startswith("//"):
+        parts = [part for part in text.replace("/", "\\").split("\\") if part]
+        return len(parts) <= 2
+    folded = os.path.normpath(text).replace("\\", "/").rstrip("/").casefold()
+    if folded in {"", "/"} or folded == "/volumes":
+        return True
+    if len(text) >= 2 and text[1] == ":":
+        rest = os.path.normpath(text)[2:].replace("/", "\\").strip("\\")
+        return rest == ""
+    return False
+
+
+def _without_extended_prefix(path: str) -> str:
+    """Drop a Windows ``\\\\?\\`` prefix so the root check sees the real path.
+
+    Args:
+        path: Requested path, possibly in extended form.
+
+    Returns:
+        ``\\\\server\\share`` for ``\\\\?\\UNC\\server\\share``, the path
+        after ``\\\\?\\`` for a drive, or ``path`` when it has no prefix.
+    """
+    if path.startswith("\\\\?\\"):
+        rest = path[4:]
+        if rest[:4].upper() == "UNC\\":
+            return "\\\\" + rest[4:]
+        return rest
+    if path.startswith("//?/"):
+        rest = path[4:]
+        if rest[:4].upper() == "UNC/":
+            return "//" + rest[4:]
+        return rest
+    return path
+
+
+def _is_missing_root(path: str, roots: list[dict[str, str]]) -> bool:
+    """Return whether ``path`` is a root whose drive is not connected.
+
+    Args:
+        path: Requested folder.
+        roots: Named roots. A root with ``missing`` true cannot be opened.
+
+    Returns:
+        True when the normalized path matches a missing root.
+    """
+    folded = os.path.normcase(os.path.normpath(path))
+    for root in roots:
+        if not root.get("missing"):
+            continue
+        if os.path.normcase(os.path.normpath(str(root.get("path") or ""))) == folded:
+            return True
+    return False
+
+
+def _resolve_directory(path: str, *, elsewhere: bool, roots: list[dict[str, str]]) -> Path:
+    """Normalize a browse path and keep it inside a music root.
+
+    ``..`` is collapsed before the folder is opened. A shortcut below the
+    top of the disk is refused. When ``elsewhere`` is false, the resolved
+    path must sit inside one of ``roots``.
+
+    Args:
+        path: Requested folder.
+        elsewhere: When true, a path outside the music roots is allowed.
+        roots: Named roots from :func:`music_roots.music_roots`.
+
+    Returns:
+        The real directory.
+
+    Raises:
+        LibraryError: If the path is not a folder, leaves a root, or is a shortcut.
+    """
+    if not isinstance(path, str) or "\x00" in path or len(path) > 4096 or not path.strip():
+        raise library.LibraryError("That request is not valid.")
+    if _bare_root(path) or _is_missing_root(path, roots):
+        raise library.LibraryError(
+            "That folder could not be read." if _is_missing_root(path, roots) else "That folder is outside the music folders.",
+            404 if _is_missing_root(path, roots) else 403,
+        )
+    normalized = os.path.normpath(os.path.abspath(path))
+    if _bare_root(normalized):
+        raise library.LibraryError("That folder is outside the music folders.", 403)
+    drive, _rest = os.path.splitdrive(normalized)
+    anchor = drive + os.sep if drive else os.path.abspath(os.sep)
+    probe = os.path.normcase(normalized)
+    if not probe.endswith(os.sep):
+        probe = probe + os.sep
+    prefix = os.path.normcase(anchor)
+    if not prefix.endswith(os.sep):
+        prefix = prefix + os.sep
+    if probe.startswith(prefix):
+        requested = Path(probe)
+        _refuse_deep_symlink(requested)
+        try:
+            resolved = requested.resolve(strict=True)
+        except OSError as exc:
+            raise library.LibraryError("That folder could not be read.", 404) from exc
+        if not resolved.is_dir():
+            raise library.LibraryError("That folder could not be read.", 404)
+        if _bare_root(str(resolved)):
+            raise library.LibraryError("That folder is outside the music folders.", 403)
+        if elsewhere:
+            return resolved
+        match = _matching_root(resolved, roots)
+        if match is None:
+            raise library.LibraryError("That folder is outside the music folders.", 403)
+        _refuse_symlink_under_root(Path(match["path"]), requested)
+        return resolved
+    raise library.LibraryError("That folder could not be read.", 404)
+
+
+def _refuse_deep_symlink(path: Path) -> None:
+    """Refuse a shortcut that is not an alias at the top of the disk.
+
+    macOS uses shortcuts for ``/tmp`` and ``/var``. Those sit one level
+    below the anchor. A shortcut in a music folder is deeper, and opening
+    it would leave the folder the path names.
+
+    Args:
+        path: Normalized request path.
+
+    Raises:
+        LibraryError: If a shortcut below the top of the disk is in the path.
+    """
+    current = path
+    while True:
+        try:
+            linked = current.is_symlink()
+        except OSError as exc:
+            raise library.LibraryError("That folder could not be read.", 404) from exc
+        # Depth 1 is /tmp or /var. Depth 2 is the next system alias, such as
+        # /var/folders. A shortcut deeper than that is inside a folder the
+        # user named, so following it would leave the path on screen.
+        if linked and _path_depth(current) > 2:
+            raise library.LibraryError("Shortcuts are left alone.")
+        if current.parent == current:
+            break
+        current = current.parent
+
+
+def _path_depth(path: Path) -> int:
+    """Count the components below the drive anchor.
+
+    Args:
+        path: Absolute path.
+
+    Returns:
+        The number of parts below the anchor.
+    """
+    anchor = Path(path.anchor) if path.anchor else Path(os.sep)
+    try:
+        return len(path.relative_to(anchor).parts)
+    except ValueError:
+        return 99
+
+
+def _refuse_symlink_under_root(root: Path, requested: Path) -> None:
+    """Refuse a shortcut on the path from a music root down to the folder.
+
+    Args:
+        root: Music root the browse is allowed to use.
+        requested: Normalized request path, before shortcuts are followed.
+
+    Raises:
+        LibraryError: If a component inside the root is a shortcut.
+    """
+    try:
+        root_resolved = root.resolve()
+    except OSError as exc:
+        raise library.LibraryError("That folder could not be read.", 404) from exc
+    matched: Path | None = None
+    probe = requested
+    while True:
+        try:
+            if probe.exists() and probe.resolve() == root_resolved:
+                matched = probe
+                break
+        except OSError as exc:
+            raise library.LibraryError("That folder could not be read.", 404) from exc
+        if probe.parent == probe:
+            break
+        probe = probe.parent
+    if matched is None:
+        return
+    try:
+        relative = requested.relative_to(matched)
+    except ValueError:
+        return
+    current = matched
+    for part in relative.parts:
+        current = current / part
+        try:
+            if current.is_symlink():
+                raise library.LibraryError("Shortcuts are left alone.")
+        except OSError as exc:
+            raise library.LibraryError("That folder could not be read.", 404) from exc
+
+
+def _matching_root(directory: Path, roots: list[dict[str, str]]) -> dict[str, str] | None:
+    """Return the longest music root that contains ``directory``.
+
+    Args:
+        directory: Real folder.
+        roots: Named roots.
+
+    Returns:
+        The matching root, or None when the folder is outside all of them.
+    """
+    best: dict[str, str] | None = None
+    best_len = -1
+    for root in roots:
+        root_path = Path(root["path"])
+        if not _within(directory, root_path):
+            continue
+        length = len(os.path.normcase(os.path.normpath(root["path"])))
+        if length > best_len:
+            best = root
+            best_len = length
+    return best
+
+
+def _within(child: Path, parent: Path) -> bool:
+    """Return whether ``child`` is ``parent`` or a folder inside it.
+
+    The check uses the resolved paths, so a shortcut that lands outside
+    ``parent`` does not count as inside. A sibling whose name starts with
+    the parent name does not count either.
+
+    Args:
+        child: Folder that was opened.
+        parent: Allowed root.
+
+    Returns:
+        True when the resolved child stays inside the resolved parent.
+    """
+    try:
+        child_text = os.path.normcase(os.path.normpath(str(child.resolve())))
+        parent_text = os.path.normcase(os.path.normpath(str(parent.resolve())))
+    except OSError:
+        return False
+    if child_text == parent_text:
+        return True
+    try:
+        return os.path.commonpath([child_text, parent_text]) == parent_text
+    except ValueError:
+        return False
+
+
+def _parent_path(directory: Path, root: dict[str, str] | None, *, elsewhere: bool) -> str | None:
+    """Return the parent a browse is allowed to open, or None at a root.
+
+    Args:
+        directory: Folder that was listed.
+        root: Music root that contains it, when the browse is rooted.
+        elsewhere: When true, the parent may sit above a music root.
+
+    Returns:
+        The parent path, or None when Up must stay put.
+    """
+    if directory.parent == directory:
+        return None
+    if elsewhere:
+        return str(directory.parent)
+    if root is None:
+        return None
+    try:
+        if directory.resolve() == Path(root["path"]).resolve():
+            return None
+    except OSError:
+        return None
+    return str(directory.parent)
+
+
+def _breadcrumb(directory: Path, root: dict[str, str] | None, *, elsewhere: bool) -> list[dict[str, str]]:
+    """Return the path crumbs, starting at the music-root name.
+
+    Args:
+        directory: Folder that was listed.
+        root: Music root that contains it.
+        elsewhere: When true, the first crumb is Home or the drive.
+
+    Returns:
+        ``name`` and ``path`` for each crumb. The last crumb is the open folder.
+    """
+    if root is not None:
+        root_path = Path(root["path"])
+        crumbs = [{"name": root["name"], "path": str(root_path)}]
+        try:
+            relative = directory.resolve().relative_to(root_path.resolve())
+        except (OSError, ValueError):
+            return crumbs
+        current = root_path
+        for part in relative.parts:
+            current = current / part
+            crumbs.append({"name": part, "path": str(current)})
+        return crumbs
+    if elsewhere:
+        return _elsewhere_breadcrumb(directory)
+    return [{"name": directory.name or "Folder", "path": str(directory)}]
+
+
+def _elsewhere_breadcrumb(directory: Path) -> list[dict[str, str]]:
+    """Return crumbs for a browse that started outside the music roots.
+
+    Args:
+        directory: Folder that was listed.
+
+    Returns:
+        Crumbs from Home when the folder is under the home directory,
+        otherwise from the drive.
+    """
+    try:
+        home = Path.home().resolve()
+        resolved = directory.resolve()
+    except OSError:
+        home = Path.home()
+        resolved = directory
+    if resolved == home or _within(resolved, home):
+        start = home
+        label = "Home"
+    else:
+        start = Path(directory.anchor) if directory.anchor else Path(os.sep)
+        label = directory.drive.rstrip("\\") or "Computer"
+    crumbs = [{"name": label, "path": str(start)}]
+    try:
+        relative = resolved.relative_to(start)
+    except ValueError:
+        return crumbs
+    current = start
+    for part in relative.parts:
+        current = current / part
+        crumbs.append({"name": part, "path": str(current)})
+    return crumbs
 
 
 def _is_backup_root(directory: Path) -> bool:
@@ -437,27 +1167,26 @@ def _hide_incomplete_backup(name: str, path: Path, kind: str) -> bool:
     return False
 
 
-def _scan(directory: Path) -> tuple[list[dict[str, object]], bool]:
+def _scan(directory: Path) -> list[dict[str, object]]:
     """Read one folder without following shortcuts.
+
+    Every entry is returned. Folders are ordered before files, and files
+    before shortcuts.
 
     Args:
         directory: Real directory to scan.
 
     Returns:
-        Entry dicts and whether the scan stopped early.
+        Entry dicts for the whole folder.
 
     Raises:
         LibraryError: If the folder cannot be read.
     """
     found: list[dict[str, object]] = []
-    truncated = False
     backup_root = _is_backup_root(directory)
     try:
         with os.scandir(directory) as scanner:
             for entry in scanner:
-                if len(found) >= _SCAN_CAP:
-                    truncated = True
-                    break
                 kind = "link" if entry.is_symlink() else "dir" if entry.is_dir(follow_symlinks=False) else "file"
                 path = Path(entry.path)
                 if backup_root and _hide_incomplete_backup(entry.name, path, kind):
@@ -473,23 +1202,44 @@ def _scan(directory: Path) -> tuple[list[dict[str, object]], bool]:
                 )
     except OSError as exc:
         raise library.LibraryError("That folder could not be read.", 404) from exc
-    found.sort(key=lambda item: (str(item["kind"]) == "file", str(item["kind"]) == "link", str(item["name"]).casefold()))
-    if len(found) > _LIST_CAP:
-        return found[:_LIST_CAP], True
-    return found, truncated
+    rank = {"dir": 0, "file": 1, "link": 2}
+    found.sort(key=lambda item: (rank.get(str(item["kind"]), 3), str(item["name"]).casefold()))
+    return found
+
+
+_asset_cache: tuple[tuple[object, ...], dict[Path, list[int]]] | None = None
+
+
+def invalidate_browse_cache() -> None:
+    """Drop the cached music roots and the cached library path index.
+
+    A library write, a settings save, and an explicit refresh call this
+    so the next folder open reads the database again.
+    """
+    global _asset_cache
+    _asset_cache = None
+    music_roots.invalidate()
 
 
 def _index_assets() -> dict[Path, list[int]]:
     """Map resolved audio paths to asset ids.
 
+    The map is cached with the music roots. A folder click does not read
+    every track again until the library, the settings, or a refresh
+    changes that cache.
+
     Returns:
         Paths that are on the asset table. A missing database yields an
         empty map so the folder can still be listed.
     """
+    global _asset_cache
+    stamp = music_roots.cache_stamp()
+    if _asset_cache is not None and _asset_cache[0] == stamp:
+        return _asset_cache[1]
     indexed: dict[Path, list[int]] = {}
     try:
         conn_cm = closing(library.read_conn())
-    except library.LibraryError:
+    except (library.LibraryError, sqlite3.Error, OSError):
         return indexed
     with conn_cm as conn:
         if not _has(conn, "main", "asset"):
@@ -499,6 +1249,7 @@ def _index_assets() -> dict[Path, list[int]]:
             if resolved is None:
                 continue
             indexed.setdefault(resolved, []).append(int(row["id"]))
+    _asset_cache = (stamp, indexed)
     return indexed
 
 
@@ -1182,6 +1933,11 @@ def _commit_database(plan: Plan, journal: dict[str, object]) -> None:
         sqlite3.Error: If the commit fails. The caller puts the files back.
     """
     del journal
+    import safe_write
+
+    active = safe_write.current_session()
+    if active is not None:
+        _expect_file_plan(active, plan)
     conn = library.begin_write()
     schemas: dict[Path, str] = {}
     try:
@@ -1208,6 +1964,86 @@ def _commit_database(plan: Plan, journal: dict[str, object]) -> None:
             except sqlite3.Error:
                 pass
         conn.close()
+
+
+def _file_target(plan: Plan) -> str:
+    """Return the file name a person would recognize for this change.
+
+    Args:
+        plan: Checked plan.
+
+    Returns:
+        The destination or removal name. Several files are joined, up to three.
+    """
+    names = [change.dest.name for change in plan.changes]
+    if not names:
+        names = [removal.name for removal in plan.removals]
+    if not names:
+        return plan.action
+    shown = names[:3]
+    if len(names) > 3:
+        shown.append(f"and {len(names) - 3} more")
+    return ", ".join(shown)
+
+
+def _expect_file_plan(session: safe_write.Session, plan: Plan) -> None:
+    """Register the path check for a file change.
+
+    Args:
+        session: The write session that will open the temporary copy.
+        plan: Checked plan. Delete expects the asset rows to be gone.
+            Other actions expect each asset's file name and portable id.
+    """
+    import safe_write as safe
+
+    if plan.action == "delete":
+        ids = tuple(asset_id for removal in plan.removals for asset_id in removal.asset_ids)
+
+        def check_gone(copied: sqlite3.Connection, ids: tuple[int, ...] = ids) -> None:
+            """Fail when a deleted track is still in the library.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                ids: Asset ids that should be gone.
+
+            Raises:
+                VerifyMismatch: If an asset row remains.
+            """
+            for asset_id in ids:
+                row = copied.execute("SELECT COUNT(*) FROM asset WHERE id = ?", (asset_id,)).fetchone()
+                if row is None or int(row[0]) != 0:
+                    raise safe.VerifyMismatch("A deleted track is still in the library.")
+
+        session.check(check_gone)
+        return
+    expected = tuple(
+        (asset_id, change.dest.name, to_portable(change.dest))
+        for change in plan.changes
+        for asset_id in change.asset_ids
+    )
+
+    def check_paths(
+        copied: sqlite3.Connection,
+        expected: tuple[tuple[int, str, str], ...] = expected,
+    ) -> None:
+        """Fail when a moved track does not store its new path.
+
+        Args:
+            copied: Read-only connection to the temporary database copy.
+            expected: Asset id, file name, and portable id.
+
+        Raises:
+            VerifyMismatch: If the row is missing or still has the old path.
+        """
+        for asset_id, name, portable in expected:
+            row = copied.execute(
+                "SELECT file_name, portable_id FROM asset WHERE id = ?",
+                (asset_id,),
+            ).fetchone()
+            if row is None or row[0] != name or row[1] != portable:
+                raise safe.VerifyMismatch("The saved file path does not match.")
+
+    session.check(check_paths)
 
 
 def _commit(conn: sqlite3.Connection) -> None:

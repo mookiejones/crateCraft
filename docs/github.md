@@ -16,7 +16,7 @@ The HTTP banner in `server.py` is `SeratoLibrary/1.0`. A release tag does not ch
 
 A push to `main` runs CI and CodeQL once. When that push also changes `docs/` or the Pages workflow, Pages runs too. A pull request runs CI, CodeQL, and dependency review. A pull request that changes the guide also builds the site. The two events do not both fire for the same commit on a feature branch, because CI, CodeQL, and Pages listen to `push` only on `main`.
 
-Each workflow sets `permissions: contents: read` and a `timeout-minutes` value. A job that needs more access sets its own permissions, which replace the workflow floor. CI, CodeQL, and dependency review cancel an older run on the same ref. The release workflow does not. The Pages workflow does not cancel an in-progress run, because a publish should finish. The Pages deploy job sets `contents: read`, `pages: write`, and `id-token: write`.
+Each workflow sets `permissions: contents: read` and a `timeout-minutes` value. The CI tests job allows 20 minutes, because the Windows run takes about 9 minutes and grows with the suite. A job that needs more access sets its own permissions, which replace the workflow floor. CI, CodeQL, and dependency review cancel an older run on the same ref. The release workflow does not. The Pages workflow does not cancel an in-progress run, because a publish should finish. The Pages deploy job sets `contents: read`, `pages: write`, and `id-token: write`.
 
 Actions are pinned to a commit SHA. The trailing comment is the version Dependabot matches. Dependabot opens a weekly Monday pull request for Python dependencies, another for the Node toolchain (`typescript`, `esbuild`, and ESLint), and another for GitHub Actions. Each group is one pull request, with a `deps` commit prefix, and at most five Python pull requests stay open. The Node group is one pull request as well.
 
@@ -27,25 +27,31 @@ The test job is a matrix:
 - `tests (ubuntu-latest, Python 3.12)`
 - `tests (ubuntu-latest, Python 3.14)`
 - `tests (windows-latest, Python 3.12)`
+- `tests (macos-latest, Python 3.12)`
 
-There is no macOS test job. The suite mocks platform paths, and a macOS runner costs ten times a Linux minute. Windows stays in the matrix because the app ships a Windows build.
+macOS runs the suite once, on Python 3.12. Python 3.14 stays on Ubuntu. A macOS minute costs ten Linux minutes, and the audio route's real paths and symlinks are the part that differs by operating system, so a second macOS interpreter is not in the matrix. Windows stays because the app ships a Windows build.
 
 The Windows test job runs `python scripts/release_bundle.py check-tag` with `shell: bash` and `RELEASE_TAG` set to `v0.0.0`. No tag is passed on the command line. That is the same environment path the release job uses, and it runs on `windows-latest` for every pull request. `v0.0.0` is not a published release.
 
-The frontend job runs on `ubuntu-latest` and `windows-latest`. It installs Node 22. `package.json` sets `engines.node` to `>=22`. The job installs from `package-lock.json` with `npm ci`, runs `npx tsc --noEmit`, runs ESLint so `any` is rejected, runs the Vitest suite (`npm test`), then runs `node scripts/build_frontend.mjs --check`. That check builds `static/app.js` and `static/wizard.js` in memory, does not write `static/`, and fails if either file or its sourcemap differs from the committed copy. The job does not start a browser. The check names are `frontend (ubuntu-latest)` and `frontend (windows-latest)`. On your machine:
+The frontend job runs on `ubuntu-latest`, `windows-latest`, and `macos-latest`. It installs Node 22. `package.json` sets `engines.node` to `>=22`. The job installs from `package-lock.json` with `npm ci`, runs `npx tsc --noEmit` and `npx tsc --noEmit -p e2e`, runs ESLint on `src` and `e2e` so `any` is rejected, runs the Vitest suite (`npm test`), runs `node scripts/build_frontend.mjs --check`, then installs Playwright's Chromium and runs `npx playwright test -c e2e/playwright.config.ts`. That check builds `static/app.js` and `static/wizard.js` in memory, does not write `static/`, and fails if either file or its sourcemap differs from the committed copy. The Playwright step screenshots the waveform with cues, a loop, the beatgrid, the shaded overview, a zoomed-in view, a zoomed-out view, and the unavailable note. Canvas shots are compared to the committed baselines. Every operating system uploads `e2e/output/` as `waveform-screenshots-<OS>`. Ubuntu installs the browser with `--with-deps`. Windows and macOS install Chromium only. The check names are `frontend (ubuntu-latest)`, `frontend (windows-latest)`, and `frontend (macos-latest)`. On your machine:
 
 ```bash
 npm ci
 npx tsc --noEmit
-npx eslint src
+npx tsc --noEmit -p e2e
+npx eslint src e2e
 npm test
 node scripts/build_frontend.mjs --check
+npx playwright install chromium
+npx playwright test -c e2e/playwright.config.ts
 ```
 
-The test job installs `requirements.txt`, then runs the suite. The suite imports `sentry-sdk` and `posthog`. On your machine the commands are:
+The test job installs `requirements.txt`, then runs the suite. The Ubuntu Python 3.12 job also installs `pyright==1.1.407` and runs `python -m pyright waveform.py waveform_native.py tests/test_waveform.py` in strict mode (`pyrightconfig.json`). Those files are on the strict include list. The rest of the include list is not gated by this step. The suite imports `sentry-sdk` and `posthog`. On your machine the commands are:
 
 ```bash
 python3 -m pip install -r requirements.txt
+python3 -m pip install pyright==1.1.407
+python3 -m pyright waveform.py waveform_native.py tests/test_waveform.py
 python3 -m unittest discover -s tests -t . -v
 ```
 
@@ -71,7 +77,7 @@ The job name is `review dependency changes`. It needs only `contents: read`. A p
 
 GitHub Releases is the only download. The workflow does not publish a Homebrew formula, a winget package, or a website.
 
-`macos-latest` builds `Serato-Library-macos-arm64.dmg`. That runner is Apple silicon. `macos-15-intel` builds `Serato-Library-macos-x64.dmg`. PyInstaller does not produce a reliable universal binary from one Python install, so the two architectures are separate disk images. `macos-15-intel` is the GitHub-hosted Intel image and is scheduled to remain available through August 2027. `windows-latest` builds `Serato-Library-windows-setup.exe` with Inno Setup 6.7.3 and `Serato-Library-windows.zip`, the portable folder. The builds use Python 3.12, `requirements-build.txt` (`pywebview==6.2.1`, `pythonnet==3.2.1` and `clr-loader==0.3.1` on Windows, `sentry-sdk==2.73.0`, `posthog==7.75.11`, and `pyinstaller==6.22.3`), and, on macOS, `requirements-macos.txt` (`pyobjc-core==12.2.2`, `pyobjc-framework-Cocoa==12.2.2`, `pyobjc-framework-Quartz==12.2.2`, `pyobjc-framework-WebKit==12.2.2`, `pyobjc-framework-Security==12.2.2`, and `pyobjc-framework-UniformTypeIdentifiers==12.2.2`). Source tests also cover Python 3.14. The frozen app embeds 3.12 only. The window uses the system web view. The spec excludes CEF and Qt WebEngine, so the installer does not bundle Chromium.
+`macos-latest` builds `Serato-Library-macos-arm64.dmg`. That runner is Apple silicon. `macos-15-intel` builds `Serato-Library-macos-x64.dmg`. PyInstaller does not produce a reliable universal binary from one Python install, so the two architectures are separate disk images. `macos-15-intel` is the GitHub-hosted Intel image and is scheduled to remain available through August 2027. `windows-latest` builds `Serato-Library-windows-setup.exe` with Inno Setup 6.7.3 and `Serato-Library-windows.zip`, the portable folder. The builds use Python 3.12, `requirements-build.txt` (`pywebview==6.2.1`, `pythonnet==3.2.1` and `clr-loader==0.3.1` on Windows, `sentry-sdk==2.73.0`, `posthog==7.75.11`, `miniaudio==1.71`, `cffi==2.1.1`, `pycparser==3.12`, `numpy==2.5.4`, and `pyinstaller==6.22.3`), and, on macOS, `requirements-macos.txt` (`pyobjc-core==12.2.2`, `pyobjc-framework-Cocoa==12.2.2`, `pyobjc-framework-Quartz==12.2.2`, `pyobjc-framework-WebKit==12.2.2`, `pyobjc-framework-Security==12.2.2`, and `pyobjc-framework-UniformTypeIdentifiers==12.2.2`). Source tests also cover Python 3.14. The frozen app embeds 3.12 only. The window uses the system web view. The spec excludes CEF and Qt WebEngine, so the installer does not bundle Chromium.
 
 Sharing stays off until the person opts in. Setup asks with **No, don't share** and **Yes, share**. Esc cancels setup and does not save a choice. A missing key keeps that service off even after opt-in. If `static/wizard.js` did not load, the older dialog still saves a decline when it closes.
 
@@ -83,7 +89,7 @@ The tag filter `v*.*.*` is a glob. `scripts/release_bundle.py check-tag` accepts
 
 A final tag is published with `gh release create --latest`. An `-rcN` or `-betaN` tag is published with `--prerelease --latest=false`. `scripts/release_bundle.py release-flags` prints those flags. The publish job runs only when the event is `push` and the ref is a tag. `workflow_dispatch` builds and uploads artifacts and does not publish, including when the selected ref is a tag. A `pull_request` cannot publish either: the publish condition requires `push`.
 
-A pull request runs the three `build` legs when it changes `packaging/`, `serato-library.spec`, `scripts/release_*`, `scripts/write_version.py`, `version_info.py`, `_version.py`, `.github/workflows/release.yml`, `desktop.py`, `requirements.txt`, `requirements-build.txt`, or `requirements-macos.txt`. Each leg builds, smoke-tests, and uploads its artifact. The token for that job is `contents: read` only. `actions/upload-artifact` does not need `actions: write`. The job does not attest or publish. A step with no secrets runs `scripts/release_sign.py`, which prints `Signing skipped` and exits 0. The telemetry bake is not in that job, so the build keeps the empty `_build_config.py` from git. The version bake is in that job. It does not use a secret. A pull request stamps `git describe` or `0.0.0+dev`, and the Windows leg checks that resource. Sharing stays off until the person opts in, and a build from a pull request or from source has no keys to send.
+A pull request runs the three `build` legs when it changes `packaging/`, `serato-library.spec`, `scripts/release_*`, `scripts/write_version.py`, `version_info.py`, `_version.py`, `.github/workflows/release.yml`, `desktop.py`, `waveform.py`, `waveform_native.py` (`waveform*.py`), `static/app.js`, `static/app.css`, `requirements.txt`, `requirements-build.txt`, or `requirements-macos.txt`. Each leg builds, smoke-tests, and uploads its artifact. The token for that job is `contents: read` only. `actions/upload-artifact` does not need `actions: write`. The job does not attest or publish. A step with no secrets runs `scripts/release_sign.py`, which prints `Signing skipped` and exits 0. The telemetry bake is not in that job, so the build keeps the empty `_build_config.py` from git. The version bake is in that job. It does not use a secret. A pull request stamps `git describe` or `0.0.0+dev`, and the Windows leg checks that resource. Sharing stays off until the person opts in, and a build from a pull request or from source has no keys to send.
 
 Signing is a dormant hook in `scripts/release_sign.py`. The macOS step runs when `runner.os` is `macOS` and receives only `APPLE_CERTIFICATE_P12_BASE64`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `APPLE_NOTARY_KEY_BASE64`, `APPLE_NOTARY_KEY_ID`, and `APPLE_NOTARY_ISSUER_ID`. The Windows app step runs when `runner.os` is `Windows` and receives only `WINDOWS_CERTIFICATE_PFX_BASE64` and `WINDOWS_CERTIFICATE_PASSWORD`. The installer step on Windows receives those same two Windows secrets. Those secrets are not configured. When every secret for that step is empty, the step prints `Signing skipped` and exits 0. When some are set and some are not, the step fails. The script does not print secret values. The Inno Setup script does not call SignTool.
 
@@ -151,8 +157,10 @@ Wait until CI, CodeQL, and a pull-request dependency review have each completed 
 - `tests (ubuntu-latest, Python 3.12)`
 - `tests (ubuntu-latest, Python 3.14)`
 - `tests (windows-latest, Python 3.12)`
+- `tests (macos-latest, Python 3.12)`
 - `frontend (ubuntu-latest)`
 - `frontend (windows-latest)`
+- `frontend (macos-latest)`
 - `dependency audit`
 - `analyze Python`
 

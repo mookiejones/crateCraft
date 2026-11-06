@@ -3,26 +3,31 @@
 master.sqlite is the library Serato and this app display. root.sqlite is the
 on-disk location database and is updated to match, when it is connected.
 Writes are refused while Serato's lock is held by a live process. The first
-write in a process copies the database into Library/Backups first.
+write in a process copies the databases, and each present drive's ``_Serato_``
+folder, into Library/Backups first. An unplugged or unreadable drive is
+recorded and skipped. ``Recording`` and ``DJ Sessions`` are not copied.
 """
 
 from __future__ import annotations
 
 import errno
+import hashlib
 import json
 import os
 import re
 import shutil
 import sqlite3
+import stat
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import uuid
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import closing, contextmanager
 from pathlib import Path
-from typing import cast
+from typing import Protocol, cast
 from urllib.parse import quote, unquote, urlparse
 
 import app_log
@@ -125,6 +130,22 @@ _KEY_VALUES = {
 }
 
 _backed_up: set[str] = set()
+# Drive ids whose ``_Serato_`` folder was copied for one master path.
+# A drive that was absent, read-only, or unreadable is not listed, so a
+# later call tries it again. ``_backup_guard`` covers both sets for the
+# whole copy, so two writes cannot publish the same drive twice or drop an id.
+_copied_drives: dict[str, set[str]] = {}
+_backup_guard = threading.Lock()
+
+# Fixed sentences. error_codes maps the same text to a stable code.
+BACKUP_NO_SPACE = "There is not enough disk space to back up the library."
+BACKUP_SERATO_RUNNING = (
+    "Quit Serato DJ Pro before backing up drive crates. "
+    "Serato DJ is still running, so nothing was copied."
+)
+# Room for drives.json, the COMPLETE marker, and directory entries.
+BACKUP_SPACE_MARGIN = 1024 * 1024
+DRIVES_MANIFEST = "drives.json"
 
 
 def _as_int(value: object) -> int:
@@ -385,7 +406,10 @@ def _read_only_uri(path: Path, query: str) -> str:
         end the URI early.
     """
     posix = path.resolve().as_posix()
-    if sys.platform == "win32" and len(posix) >= 2 and posix[1] == ":":
+    # A drive letter needs an empty URI authority (file:///C:/...). Checking
+    # the path, not sys.platform, still does that when a test has patched
+    # the platform to linux while the file remains on a Windows drive.
+    if len(posix) >= 2 and posix[1] == ":":
         posix = "/" + posix
     return "file://" + quote(posix, safe="/:") + "?" + query
 
@@ -539,6 +563,47 @@ def _status_rows(conn: sqlite3.Connection) -> dict[str, object]:
     }
 
 
+LOCKED_MESSAGE = "Serato DJ Pro has the library open. Edits stay off until it quits."
+
+
+def open_error_status(exc: sqlite3.OperationalError) -> dict[str, object]:
+    """Build the busy status for a library file that exists but did not open.
+
+    A locked database keeps the plain Serato message. Any other open or
+    first-query error is also treated as Serato holding the file, so every
+    write refuses, but the message carries the SQLite text so a damaged
+    file is not hidden behind "Serato is open".
+
+    Args:
+        exc: The error from opening or first querying ``master.sqlite``.
+
+    Returns:
+        A status dict with ``open`` true, ``writable`` false, and
+        ``open_error`` set to the SQLite text (None for a plain lock).
+    """
+    text = str(exc).strip() or type(exc).__name__
+    if "locked" in text.lower():
+        return {
+            "open": True,
+            "writable": False,
+            "pid": None,
+            "process": "Serato DJ Pro",
+            "message": LOCKED_MESSAGE,
+            "open_error": None,
+        }
+    return {
+        "open": True,
+        "writable": False,
+        "pid": None,
+        "process": "Serato DJ Pro",
+        "message": (
+            "The library could not be opened (SQLite: "
+            f"{text}). Serato DJ Pro may have it open. Edits stay off until it opens."
+        ),
+        "open_error": text,
+    }
+
+
 def status(path: Path | None = None, *, from_copy: bool = False) -> dict[str, object]:
     """Report whether Serato has the library open.
 
@@ -549,10 +614,14 @@ def status(path: Path | None = None, *, from_copy: bool = False) -> dict[str, ob
             file. Setup uses this. The sidebar reads the live file.
 
     Returns:
-        A status dict. A locked database is reported as open. file_manager names Finder or File Explorer.
+        A status dict. A locked database is reported as open. Any other
+        ``OperationalError`` from opening or first querying a file that
+        exists is reported as open too, with the SQLite text in
+        ``message`` and ``open_error``. ``generation`` says whether the
+        session logs named Serato 4, Serato 5, or neither. file_manager
+        names Finder or File Explorer.
 
     Raises:
-        sqlite3.OperationalError: If the database fails for a reason other than a lock.
         LibraryError: If the database file does not exist.
     """
     info: dict[str, object]
@@ -565,20 +634,16 @@ def status(path: Path | None = None, *, from_copy: bool = False) -> dict[str, ob
         with opener as conn:
             info = _status_rows(conn)
     except sqlite3.OperationalError as exc:
-        if "locked" not in str(exc).lower():
-            raise
-        info = {
-            "open": True,
-            "writable": False,
-            "pid": None,
-            "process": "Serato DJ Pro",
-            "message": "Serato DJ Pro has the library open. Edits stay off until it quits.",
-        }
+        if not database.exists():
+            raise LibraryError(f"Serato library not found at {database}", 404) from exc
+        info = open_error_status(exc)
+    info.setdefault("open_error", None)
     info["file_manager"] = file_manager_name()
     import snapshots
 
-    blocked = snapshots.write_block_message()
-    info["write_block"] = blocked
+    notice, generation = snapshots.library_gate()
+    info["generation"] = generation
+    info["write_block"] = None if notice is None else notice.text
     info["serato_running"] = snapshots.serato_dj_running()
     # The sidebar and the setup wizard share this flag. A running Serato DJ
     # process blocks edits even when the database lock row has not been written yet.
@@ -587,9 +652,12 @@ def status(path: Path | None = None, *, from_copy: bool = False) -> dict[str, ob
         info["writable"] = False
         info["process"] = "Serato DJ"
         info["message"] = "Serato DJ is open. Edits stay off until it quits."
-    if blocked and not info.get("open"):
+    if notice is not None and not info.get("open"):
         info["writable"] = False
-        info["message"] = blocked
+        info["message"] = notice.text
+        if notice.code:
+            info["code"] = notice.code
+            info["params"] = dict(notice.params or {})
     return info
 
 
@@ -907,36 +975,542 @@ def _write_incomplete_marker(folder: Path, rename_error: OSError) -> None:
     )
 
 
-def ensure_backup() -> Path | None:
-    """Copy the master database once per process before the first write.
+class DriveBackupSpec(Protocol):
+    """One drive :func:`ensure_backup` can copy.
+
+    ``snapshots.DriveSpec`` satisfies this. ``serato_root`` is that drive's
+    ``_Serato_`` directory. A missing drive has ``present`` false.
+    """
+
+    drive_id: str
+    label: str
+    serato_root: Path | None
+    role: str
+    present: bool
+
+
+def _discovered_drives() -> list[DriveBackupSpec]:
+    """Return the drives a backup of the open library should record.
+
+    Returns:
+        Present drives from :func:`snapshots.discover_drives`, plus drives
+        the newest snapshot already marked unavailable. A relocated library
+        discovers none.
+    """
+    import snapshots
+
+    return list(snapshots.drives_for_backup())
+
+
+def _unique_drives(specs: Sequence[DriveBackupSpec]) -> list[DriveBackupSpec]:
+    """Drop a repeated drive id, keeping the first record.
+
+    Args:
+        specs: Drives the caller asked to record.
+
+    Returns:
+        The first record for each id.
+    """
+    found: list[DriveBackupSpec] = []
+    seen: set[str] = set()
+    for spec in specs:
+        if spec.drive_id in seen:
+            continue
+        seen.add(spec.drive_id)
+        found.append(spec)
+    return found
+
+
+def _drive_skip_reason(spec: DriveBackupSpec) -> str | None:
+    """Return why a drive is not copied.
+
+    Args:
+        spec: Drive to judge.
+
+    Returns:
+        ``absent`` when the drive is unplugged or its ``_Serato_`` folder
+        is gone. ``permission`` when that folder cannot be read or is a
+        shortcut. ``read-only`` when it can be read and is not writable, so
+        the backup does not write on it. None when the folder can be copied.
+    """
+    if not spec.present or spec.serato_root is None:
+        return "absent"
+    root = spec.serato_root
+    try:
+        if root.is_symlink():
+            return "permission"
+        if not root.is_dir():
+            return "absent"
+        mode = root.stat().st_mode
+        if not (mode & stat.S_IRUSR) or not os.access(root, os.R_OK):
+            return "permission"
+        if not (mode & stat.S_IWUSR) or not os.access(root, os.W_OK):
+            return "read-only"
+        with os.scandir(root) as scan:
+            next(scan, None)
+    except PermissionError:
+        return "permission"
+    except OSError as exc:
+        if exc.errno in (errno.EACCES, errno.EPERM):
+            return "permission"
+        if exc.errno == errno.ENOENT:
+            return "absent"
+        return "permission"
+    return None
+
+
+class DriveUnreadable(OSError):
+    """One drive's ``_Serato_`` tree cannot be read.
+
+    The backup removes that drive's partial copy, records ``permission``,
+    and continues with the other drives. A full disk, a missing file, and
+    any other copy error are not this exception.
+    """
+
+    def __init__(self) -> None:
+        """Record the refusal as ``EACCES``.
+
+        Returns:
+            None.
+        """
+        super().__init__(errno.EACCES, "A drive folder could not be read.")
+
+
+def _is_permission(exc: BaseException) -> bool:
+    """Return whether an error is a refusal to read, not a failed copy.
+
+    Args:
+        exc: Error from listing, measuring, or opening a drive file.
+
+    Returns:
+        True for ``PermissionError``, ``EACCES``, and ``EPERM``. A full
+        disk, a missing file, and an I/O error are false.
+    """
+    if isinstance(exc, PermissionError):
+        return True
+    return isinstance(exc, OSError) and exc.errno in (errno.EACCES, errno.EPERM)
+
+
+def _drive_backup_files(root: Path) -> list[tuple[str, Path]]:
+    """List one drive's backup files, or report that the tree is unreadable.
+
+    Args:
+        root: ``_Serato_`` directory.
+
+    Returns:
+        Relative POSIX path and file path. ``Recording`` and ``DJ Sessions``
+        are already left out.
+
+    Raises:
+        DriveUnreadable: If listing the tree is refused.
+        OSError: If listing fails for another reason, including a drive
+            that disappeared.
+    """
+    import snapshots
+
+    try:
+        return snapshots.iter_backup_files(root)
+    except OSError as exc:
+        if _is_permission(exc):
+            raise DriveUnreadable() from exc
+        raise
+
+
+def _backup_payload_bytes(master: Path, specs: Sequence[DriveBackupSpec]) -> int:
+    """Return how many source bytes this backup will read.
+
+    Args:
+        master: ``master.sqlite``.
+        specs: Drives to consider. A skipped drive, including one whose
+            subdirectory cannot be read, is not counted.
+
+    Returns:
+        The size of the database files plus each file that will be copied.
+        ``drives.json`` and ``COMPLETE`` are not included. The space check
+        keeps a margin for those.
+
+    Raises:
+        OSError: If a file that would be copied cannot be measured for a
+            reason other than permission. A permission error skips that
+            drive and does not fail the measurement.
+    """
+    total = 0
+    if master.is_file() and not master.is_symlink():
+        total += master.stat().st_size
+    root = master.resolve().parent / "root.sqlite"
+    if root.is_file() and not root.is_symlink() and _mirror_allowed(root):
+        total += root.stat().st_size
+    for spec in specs:
+        if _drive_skip_reason(spec) is not None or spec.serato_root is None:
+            continue
+        drive_bytes = 0
+        try:
+            for _rel, path in _drive_backup_files(spec.serato_root):
+                try:
+                    drive_bytes += path.stat().st_size
+                except OSError as exc:
+                    if _is_permission(exc):
+                        raise DriveUnreadable() from exc
+                    raise OSError(
+                        exc.errno or errno.EIO,
+                        "A drive file could not be measured.",
+                    ) from exc
+        except DriveUnreadable:
+            continue
+        total += drive_bytes
+    return total
+
+
+def _require_backup_space(folder: Path, backups: Path, needed: int) -> None:
+    """Refuse a backup the destination disk cannot hold.
+
+    Args:
+        folder: Staging directory that will receive the copy. Free space is
+            read for this directory, which is under ``Library/Backups``.
+        backups: The ``Backups`` directory. ``folder`` must sit inside it.
+        needed: Source bytes the copy will write.
+
+    Raises:
+        OSError: ``ENOSPC`` with :data:`BACKUP_NO_SPACE` when the free space
+            is below ``needed`` plus :data:`BACKUP_SPACE_MARGIN`, when the
+            free space cannot be read, or when ``folder`` is not inside
+            ``backups``. Nothing has been copied yet.
+    """
+    try:
+        resolved = folder.resolve()
+        root = backups.resolve()
+    except OSError as exc:
+        raise OSError(errno.ENOSPC, BACKUP_NO_SPACE) from exc
+    if root != resolved and root not in resolved.parents:
+        raise OSError(errno.ENOSPC, BACKUP_NO_SPACE)
+    try:
+        free = shutil.disk_usage(folder).free
+    except OSError as exc:
+        raise OSError(errno.ENOSPC, BACKUP_NO_SPACE) from exc
+    if free < needed + BACKUP_SPACE_MARGIN:
+        raise OSError(errno.ENOSPC, BACKUP_NO_SPACE)
+
+
+def _drive_dir_name(drive_id: str) -> str:
+    """Return a backup directory name for one drive id.
+
+    Args:
+        drive_id: Id from the drive record. It may contain a colon, a
+            slash, or ``..``.
+
+    Returns:
+        A single path component. A short hash of the original id keeps two
+        different ids from sharing a folder.
+    """
+    cleaned = re.sub(r"[^A-Za-z0-9._-]+", "-", drive_id).strip(".-")
+    if not cleaned:
+        cleaned = "drive"
+    suffix = hashlib.sha256(drive_id.encode("utf-8")).hexdigest()[:10]
+    return f"{cleaned[:40]}-{suffix}"
+
+
+def _contained(path: Path, root: Path) -> bool:
+    """Return whether a path stays inside a directory.
+
+    Args:
+        path: File or directory to test.
+        root: Directory that must contain it.
+
+    Returns:
+        True when ``path`` is ``root`` or a file inside it. A shortcut that
+        resolves outside is false.
+    """
+    try:
+        resolved = path.resolve()
+        base = root.resolve()
+    except OSError:
+        return False
+    return resolved == base or base in resolved.parents
+
+
+def _bad_drive_rel(rel: str) -> bool:
+    """Return whether a relative drive path must not be copied.
+
+    Args:
+        rel: Path relative to ``_Serato_``.
+
+    Returns:
+        True for an empty, absolute, or climbing path.
+    """
+    if not rel or "\\" in rel or rel.startswith("/") or (len(rel) >= 2 and rel[1] == ":"):
+        return True
+    return any(part in {"", ".", ".."} for part in rel.split("/"))
+
+
+def _copy_readonly(source: Path, dest: Path) -> None:
+    """Copy one file with a read-only open and check the copy.
+
+    Args:
+        source: File to read. It is opened ``O_RDONLY``.
+        dest: New file. The parent directory is created. An existing file
+            is not replaced.
+
+    Raises:
+        DriveUnreadable: If the source cannot be opened because permission
+            is refused. Nothing is written for this file.
+        OSError: If the file cannot be copied, the disk fills, the source
+            disappears, or the copied bytes do not hash to the bytes that
+            were read.
+    """
+    digest = hashlib.sha256()
+    # O_NOFOLLOW refuses a shortcut that appears after the path was checked.
+    read_flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        src_fd = os.open(source, read_flags)
+    except OSError as exc:
+        if _is_permission(exc):
+            raise DriveUnreadable() from exc
+        raise
+    try:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        write_flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0)
+        out_fd = os.open(dest, write_flags, 0o644)
+        try:
+            while True:
+                block = os.read(src_fd, 1024 * 1024)
+                if not block:
+                    break
+                digest.update(block)
+                written = 0
+                while written < len(block):
+                    count = os.write(out_fd, block[written:])
+                    if count <= 0:
+                        raise OSError(errno.ENOSPC, BACKUP_NO_SPACE)
+                    written += count
+            os.fsync(out_fd)
+        finally:
+            os.close(out_fd)
+    except OSError as exc:
+        if exc.errno == errno.ENOSPC:
+            raise OSError(errno.ENOSPC, BACKUP_NO_SPACE) from exc
+        raise
+    finally:
+        os.close(src_fd)
+    copied = hashlib.sha256()
+    with dest.open("rb") as handle:
+        while True:
+            block = handle.read(1024 * 1024)
+            if not block:
+                break
+            copied.update(block)
+    if copied.digest() != digest.digest():
+        raise OSError("The drive copy did not match the source.")
+
+
+def _discard_drive_copy(dest_root: Path, staging: Path) -> None:
+    """Remove one drive's partial copy from the staging directory.
+
+    Args:
+        dest_root: ``drives/<id>/`` for the drive that could not be read.
+        staging: Hidden backup directory that must contain ``dest_root``.
+
+    Raises:
+        OSError: If the directory is a shortcut, would leave the staging
+            folder, or cannot be removed. The caller then fails the whole
+            backup so a partial drive tree is not published.
+    """
+    if not dest_root.exists():
+        return
+    if dest_root.is_symlink() or not dest_root.is_dir() or not _contained(dest_root, staging):
+        raise OSError("The drive backup would leave the backup folder.")
+    shutil.rmtree(dest_root)
+
+
+def _copy_drive_tree(spec: DriveBackupSpec, staging: Path) -> int:
+    """Copy one drive's ``_Serato_`` files under the staging directory.
+
+    Args:
+        spec: Drive whose folder can be read. Its files stay in
+            ``drives/<id>/``. Another drive's files are not written there.
+        staging: Hidden backup directory.
+
+    Returns:
+        How many files were copied.
+
+    Raises:
+        DriveUnreadable: If listing or reading this drive is refused.
+            Any files already copied for this drive are removed first.
+        OSError: If a path would leave the backup folder, the disk fills,
+            the drive disappears, or another copy error occurs. Those
+            failures are not turned into a skipped drive.
+    """
+    root = spec.serato_root
+    if root is None:
+        return 0
+    dest_root = staging / "drives" / _drive_dir_name(spec.drive_id)
+    if not _contained(dest_root, staging):
+        raise OSError("The drive backup would leave the backup folder.")
+    count = 0
+    try:
+        for rel, source in _drive_backup_files(root):
+            try:
+                link = source.is_symlink()
+                regular = source.is_file()
+            except OSError as exc:
+                if _is_permission(exc):
+                    raise DriveUnreadable() from exc
+                raise
+            if _bad_drive_rel(rel) or link or not regular:
+                raise OSError("A drive path is not valid.")
+            target = dest_root.joinpath(*rel.split("/"))
+            if not _contained(target, dest_root):
+                raise OSError("A drive path is not valid.")
+            try:
+                _copy_readonly(source, target)
+            except DriveUnreadable:
+                raise
+            except OSError as exc:
+                # A refusal before this file exists is the source. A full
+                # disk or a missing file still fails the backup. A refusal
+                # after the destination file exists is a copy error too.
+                if _is_permission(exc) and not target.exists():
+                    raise DriveUnreadable() from exc
+                raise
+            count += 1
+    except DriveUnreadable:
+        _discard_drive_copy(dest_root, staging)
+        raise
+    if count:
+        _fsync_directory(dest_root)
+        drives = staging / "drives"
+        if drives.is_dir():
+            _fsync_directory(drives)
+    return count
+
+
+def _drive_record(spec: DriveBackupSpec, status: str, files: int) -> dict[str, object]:
+    """Build one drives.json row.
+
+    Args:
+        spec: Drive that was copied or skipped.
+        status: ``copied``, ``absent``, ``read-only``, or ``permission``.
+        files: How many files were copied.
+
+    Returns:
+        A row with the label and whether the drive was present. It does
+        not include a filesystem path.
+    """
+    role = spec.role if spec.role in {"internal", "external"} else "external"
+    label = spec.label if isinstance(spec.label, str) and spec.label else spec.drive_id
+    return {
+        "drive_id": spec.drive_id,
+        "files": files,
+        "label": label,
+        "present": bool(spec.present) and status != "absent",
+        "role": role,
+        "status": status,
+    }
+
+
+def _write_drives_manifest(folder: Path, records: list[dict[str, object]]) -> None:
+    """Write ``drives.json`` into a staging directory.
+
+    Args:
+        folder: Staging directory.
+        records: One row per drive, including drives that were not copied.
+
+    Raises:
+        OSError: If the file cannot be written or flushed.
+    """
+    ordered = sorted(records, key=lambda item: str(item.get("drive_id") or ""))
+    payload = {"drives": ordered, "version": 1}
+    path = folder / DRIVES_MANIFEST
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    _fsync_file(path)
+
+
+def ensure_backup(drives: Sequence[DriveBackupSpec] | None = None) -> Path | None:
+    """Copy the library once per process, and each drive the first time it is mounted.
 
     Files are copied into a hidden ``.serato-web-<stamp>.partial`` directory.
     When that name exists, the next free name is ``-02`` through ``-99``.
-    ``mkdir(parents=True, exist_ok=False)`` claims it. After every copy
-    succeeds, a ``COMPLETE`` marker is written last, with a SHA-256 for
-    every file, and the directory is renamed to ``serato-web-<stamp>``.
-    A leftover ``.partial`` directory is removed on a later backup only when
-    its newest mtime is at least an hour old and its lock file can be taken.
-    A directory another process is still writing is left in place. If this copy fails, the staging directory
-    is renamed so the name ends with ``-failed`` (or ``-failed-02`` when
-    that name is taken) and then removed. If the rename fails, an
-    ``INCOMPLETE`` file is written in the staging directory. A failure to
-    rename or remove it is logged and does not replace the copy error.
-    :func:`is_complete` is false for a staging directory, a failed name,
-    and a folder with no verified ``COMPLETE`` marker.
+    ``mkdir(parents=True, exist_ok=False)`` claims it. The copy includes
+    ``master.sqlite``, ``root.sqlite`` when that file may be mirrored, and
+    each present writable drive's ``_Serato_`` folder under
+    ``drives/<drive id>/``. ``Export Backups``, ``Lexicon``, ``Recording``,
+    and ``DJ Sessions`` are not copied. ``Recording`` and ``DJ Sessions``
+    are audio, not library metadata. The destination is ``Library/Backups``
+    on the disk that holds the library, never the external drive. A drive
+    that is unplugged, read-only, or unreadable is listed in ``drives.json``
+    and skipped. An unreadable subdirectory is the same ``permission``
+    result: that drive's partial copy is removed, and the other drives are
+    still copied. Nothing is written on the skipped drive.
+
+    Free space is checked before the first byte is copied. When the
+    destination does not have room for the source bytes plus
+    :data:`BACKUP_SPACE_MARGIN`, :data:`BACKUP_NO_SPACE` is raised and the
+    staging directory is discarded. A copy that fails, including a full
+    disk while a file is being written or a drive unplugged while it is
+    being read, is discarded the same way. No partial folder is published.
+    A permission refusal is not one of those failures.
+
+    :data:`_backup_guard` is held for the whole call, including the update
+    of :data:`_backed_up` and :data:`_copied_drives`.
+
+    After every copy succeeds, a ``COMPLETE`` marker is written last, with
+    a SHA-256 for every file, including ``drives.json``, and the directory
+    is renamed to ``serato-web-<stamp>``. :func:`is_complete` is the check
+    a restore uses. A leftover ``.partial`` directory is removed on a later
+    backup only when its newest mtime is at least an hour old and its lock
+    file can be taken. A directory another process is still writing is left
+    in place. If this copy fails, the staging directory is renamed so the
+    name ends with ``-failed`` (or ``-failed-02`` when that name is taken)
+    and then removed. If the rename fails, an ``INCOMPLETE`` file is written
+    in the staging directory. A failure to rename or remove it is logged
+    and does not replace the copy error. :func:`is_complete` is false for a
+    staging directory, a failed name, and a folder with no verified
+    ``COMPLETE`` marker.
+
+    The databases are copied once per process. A drive plugged in later is
+    copied on the next call. A drive that was skipped is tried again when
+    it becomes readable and writable.
+
+    Args:
+        drives: Drives to record. None discovers them. A test library passes
+            its own list. An empty list records no drives.
 
     Returns:
         The new backup directory, or None when this process already backed
-        up that path.
+        up that database and every drive it can copy.
 
     Raises:
         FileExistsError: If ``serato-web-<stamp>`` and every suffix from
             ``-02`` through ``-99`` already exist. Nothing was copied.
-        OSError: If a claimed backup file cannot be written.
+        OSError: If a claimed backup file cannot be written, or the disk
+            does not have room. ``errno`` is ``ENOSPC`` and the message is
+            :data:`BACKUP_NO_SPACE` when the disk check refuses the copy.
+            A permission error on one drive is not raised.
+    """
+    with _backup_guard:
+        return _ensure_backup_held(drives)
+
+
+def _ensure_backup_held(drives: Sequence[DriveBackupSpec] | None) -> Path | None:
+    """Copy the library while :data:`_backup_guard` is already held.
+
+    Args:
+        drives: Drives to record. None discovers them.
+
+    Returns:
+        The new backup directory, or None when this process already backed
+        up that database and every drive it can copy.
+
+    Raises:
+        FileExistsError: If every backup name for this second exists.
+        OSError: If the copy cannot be written or the disk is full.
     """
     master = Path(MASTER)
     key = str(master.resolve())
-    if key in _backed_up:
+    specs = _unique_drives(list(drives) if drives is not None else _discovered_drives())
+    copyable = [spec for spec in specs if _drive_skip_reason(spec) is None]
+    already = _copied_drives.get(key, set())
+    pending = [spec for spec in copyable if spec.drive_id not in already]
+    if key in _backed_up and not pending:
         return None
     stamp = time.strftime("%Y%m%d-%H%M%S")
     parent = master.resolve().parent / "Backups"
@@ -946,6 +1520,7 @@ def ensure_backup() -> Path | None:
     try:
         try:
             lock = _lock_partial(staging)
+            _require_backup_space(staging, parent, _backup_payload_bytes(master, specs))
             _backup_database(master, staging / "master.sqlite")
             _match_quiescent_header(master, staging / "master.sqlite")
             _fsync_file(staging / "master.sqlite")
@@ -954,6 +1529,28 @@ def ensure_backup() -> Path | None:
                 _backup_database(root, staging / "root.sqlite")
                 _match_quiescent_header(root, staging / "root.sqlite")
                 _fsync_file(staging / "root.sqlite")
+            records: list[dict[str, object]] = []
+            copied_now: list[DriveBackupSpec] = []
+            for spec in specs:
+                reason = _drive_skip_reason(spec)
+                copied = 0
+                if reason is None:
+                    try:
+                        copied = _copy_drive_tree(spec, staging)
+                    except DriveUnreadable:
+                        reason = "permission"
+                    else:
+                        records.append(_drive_record(spec, "copied", copied))
+                        copied_now.append(spec)
+                        continue
+                records.append(_drive_record(spec, reason or "permission", 0))
+                app_log.logger.info(
+                    "Drive backup skipped %s (%s).",
+                    spec.label or spec.drive_id,
+                    reason,
+                )
+            if records:
+                _write_drives_manifest(staging, records)
             _write_complete_marker(staging)
             _fsync_directory(staging)
             # Windows refuses to rename a directory that still has an open file.
@@ -972,9 +1569,83 @@ def ensure_backup() -> Path | None:
     except Exception:
         _discard_failed_backup(staging, parent)
         raise
+    copied_ids = _copied_drives.setdefault(key, set())
+    for spec in copied_now:
+        copied_ids.add(spec.drive_id)
     _backed_up.add(key)
     telemetry.capture(telemetry.EVENT_BACKUP_MADE)
     return folder
+
+
+def drive_backup_report(directory: Path | None = None) -> dict[str, object] | None:
+    """Return the newest finished backup's drive list.
+
+    The folder must pass :func:`is_complete`, which checks every file hash.
+    A backup that does not pass is not reported.
+
+    Args:
+        directory: Folder that holds the backups. None uses ``Backups``
+            beside the current master database.
+
+    Returns:
+        ``folder``, ``verified`` true, and ``drives``. None when no finished
+        backup exists. A finished backup with no ``drives.json`` has an
+        empty drive list.
+    """
+    folders = list_backups(directory)
+    if not folders:
+        return None
+    folder = folders[-1]
+    if not is_complete(folder):
+        return None
+    manifest = folder / DRIVES_MANIFEST
+    drives: list[object] = []
+    if manifest.exists():
+        if manifest.is_symlink() or not manifest.is_file():
+            return None
+        try:
+            loaded = json.loads(manifest.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError, UnicodeError):
+            return None
+        rows = loaded.get("drives") if isinstance(loaded, dict) else None
+        if not isinstance(rows, list):
+            return None
+        drives = [item for item in rows if isinstance(item, dict)]
+    return {"drives": drives, "folder": folder.name, "verified": True}
+
+
+def backup_connected_drives() -> dict[str, object]:
+    """Copy drive crates into ``Library/Backups`` without changing the library.
+
+    This is a read of the databases and of each drive folder. It is refused
+    while Serato holds the library lock or a Serato DJ process is running.
+    It does not use the Serato version gate, so a library that cannot be
+    edited can still be copied.
+
+    Returns:
+        ``ok``, ``created`` (false when this process already copied every
+        drive it can), and ``drive_backup`` from :func:`drive_backup_report`.
+
+    Raises:
+        SeratoOpen: If Serato holds the lock.
+        LibraryError: If Serato DJ is running, the disk does not have room,
+            or the copy fails.
+    """
+    import snapshots
+
+    if snapshots.serato_dj_running():
+        raise LibraryError(BACKUP_SERATO_RUNNING, 409)
+    info = status()
+    if info["open"]:
+        raise SeratoOpen(info)
+    try:
+        folder = ensure_backup()
+    except OSError as exc:
+        if exc.errno == errno.ENOSPC:
+            raise LibraryError(BACKUP_NO_SPACE, 507) from exc
+        app_log.logger.exception("Drive backup failed.")
+        raise LibraryError("The library could not be saved.", 500) from exc
+    return {"created": folder is not None, "drive_backup": drive_backup_report(), "ok": True}
 
 
 def _backup_name_choices(stamp: str) -> list[str]:
@@ -1203,46 +1874,96 @@ def _cleanup_partial_backups(parent: Path) -> None:
             _discard_failed_backup(child, parent)
 
 
-def begin_write() -> sqlite3.Connection:
+def begin_write(*, snapshot: bool = True) -> sqlite3.Connection:
     """Open a write transaction after Serato has quit.
 
-    The first call in a process also copies the databases into Library/Backups.
-    Every call first saves a content-addressed snapshot, after Serato 5 has
-    been allowed to proceed.
+    The first call in a process also copies the databases and each present
+    drive's ``_Serato_`` folder into Library/Backups. A later call copies a
+    drive the first time it is mounted. The write does not open when that
+    copy does not fit on the disk, or when a copy error is not a permission
+    refusal. An unreadable drive is recorded and does not block the write.
+    A normal call first saves a content-addressed snapshot, after Serato 5 has
+    been allowed to proceed. A ``safe_write`` session takes that snapshot
+    once and this function does not take a second one while the session is open.
+    Restore passes ``snapshot=False`` because it already saved a snapshot and
+    is holding the restore journal. A nested snapshot would open the store
+    again and roll that journal back.
+
+    Args:
+        snapshot: When true, save a snapshot before the transaction opens.
+            When false, the caller has already saved the undo snapshot.
 
     Returns:
         A connection inside BEGIN IMMEDIATE. The caller commits and closes it.
+        Library edits go through ``safe_write.run``, which checks the commit
+        and puts the snapshot back when the rows do not match.
 
     Raises:
-        SeratoOpen: If Serato holds the lock or the database is locked.
-        sqlite3.OperationalError: If the write transaction fails for another reason.
+        SeratoOpen: If Serato holds the lock, the database is locked, or
+            opening the write transaction raises any ``OperationalError``.
+            The message then carries the SQLite text.
+        LibraryError: If the version gate refuses the library.
     """
     info = status()
     if info["open"]:
         raise SeratoOpen(info)
     import snapshots
+    import safe_write
 
     blocked = snapshots.write_block_message()
     if blocked:
         raise LibraryError(blocked, 409)
-    snapshots.snapshot_before_write()
-    ensure_backup()
-    conn = sqlite3.connect(Path(MASTER), timeout=1)
-    conn.row_factory = sqlite3.Row
-    register(conn)
+    if not safe_write.holding_snapshot():
+        if snapshot:
+            snapshots.snapshot_before_write()
+        try:
+            ensure_backup()
+        except OSError as exc:
+            if exc.errno == errno.ENOSPC:
+                raise LibraryError(BACKUP_NO_SPACE, 507) from exc
+            raise
+    conn: sqlite3.Connection | None = None
     try:
+        conn = sqlite3.connect(Path(MASTER), timeout=1)
+        conn.row_factory = sqlite3.Row
+        register(conn)
+        _keep_wal(conn)
         conn.execute("PRAGMA foreign_keys=OFF")
         conn.execute("BEGIN IMMEDIATE")
     except sqlite3.OperationalError as exc:
+        if conn is not None:
+            conn.close()
+        info = status()
+        if not info["open"]:
+            info = {**info, **open_error_status(exc)}
+        raise SeratoOpen(info) from exc
+    try:
+        held = _status_rows(conn)["open"]
+    except sqlite3.OperationalError as exc:
+        conn.rollback()
         conn.close()
-        if "locked" in str(exc).lower():
-            raise SeratoOpen(status()) from exc
-        raise
-    if _status_rows(conn)["open"]:
+        raise SeratoOpen({**status(), **open_error_status(exc)}) from exc
+    if held:
         conn.rollback()
         conn.close()
         raise SeratoOpen(status())
     return conn
+
+
+def _keep_wal(conn: sqlite3.Connection) -> None:
+    """Leave committed frames in the WAL file until the write is checked.
+
+    The check copies ``master.sqlite`` and ``-wal``. A checkpoint on close
+    would fold those frames into the main file first, and the copy of
+    ``-wal`` would no longer be what the write committed.
+
+    Args:
+        conn: Connection that is about to start a write transaction.
+    """
+    flag = getattr(sqlite3, "SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE", None)
+    if flag is not None:
+        conn.setconfig(flag, True)
+    conn.execute("PRAGMA wal_autocheckpoint=0")
 
 
 def _space_id(conn: sqlite3.Connection, space: str) -> int:
@@ -1466,6 +2187,164 @@ def _stored_name(conn: sqlite3.Connection, parent_id: int, display: str, crate_t
     if suffix:
         raise LibraryError("A crate with that name already exists here.")
     return text + NAME_SPLIT + uuid.uuid4().hex
+
+
+def _export_basename(filename: str) -> str:
+    """Return the crate file name Serato compares at launch.
+
+    Args:
+        filename: A stored export name or a path. Backslashes are separators.
+
+    Returns:
+        The last path piece, or an empty string when there is nothing to keep.
+    """
+    return filename.replace("\\", "/").split("/")[-1].strip()
+
+
+def _split_crate_filename(filename: str) -> tuple[str, list[str], bool]:
+    """Split a crate file name into a leaf, parents, and smart-crate flag.
+
+    Args:
+        filename: Base name such as ``House%%Café.crate`` or ``Friday.scrate``.
+            A ``.scrate`` name is not treated as a ``.crate`` name.
+
+    Returns:
+        The leaf name, parent names from the root down, and True for a
+        smart crate.
+
+    Raises:
+        LibraryError: If the name has no crate suffix or no leaf.
+    """
+    base = _export_basename(filename)
+    folded = base.casefold()
+    if folded.endswith(".scrate"):
+        stem = base[:-7]
+        smart = True
+    elif folded.endswith(".crate"):
+        stem = base[:-6]
+        smart = False
+    else:
+        raise LibraryError("That file is not a crate.")
+    pieces = [piece for piece in stem.split("%%") if piece]
+    if not pieces:
+        raise LibraryError("That crate file has no name.")
+    return pieces[-1], pieces[:-1], smart
+
+
+def is_registerable_crate_name(filename: str) -> bool:
+    """Return whether a crate file name can be stored in the database.
+
+    Args:
+        filename: Base name or path.
+
+    Returns:
+        False when the suffix is missing or the leaf name is empty, as with
+        a file named ``.crate``.
+    """
+    try:
+        _split_crate_filename(filename)
+    except LibraryError:
+        return False
+    return True
+
+
+def _export_index(conn: sqlite3.Connection) -> dict[str, tuple[int, str]]:
+    """Map casefolded crate file names to the container that owns them.
+
+    Generated names are recorded first. A stored ``dj_container_metadata``
+    filename replaces the generated spelling, including a Windows path.
+
+    Args:
+        conn: Open connection.
+
+    Returns:
+        Casefolded basename to ``(container id, exact basename)``.
+    """
+    found: dict[str, tuple[int, str]] = {}
+    if "container" not in _tables(conn) or "space" not in _tables(conn):
+        return found
+    rows = conn.execute(
+        """
+        SELECT c.id, c.type FROM container c
+        JOIN space s ON s.id = c.space_id
+        WHERE c.type != 0 AND s.name = ?
+        ORDER BY c.id
+        """,
+        (LIBRARY_SPACE,),
+    ).fetchall()
+    for row in rows:
+        base = _export_basename(_filename(conn, int(row["id"]), int(row["type"])))
+        if base:
+            found[base.casefold()] = (int(row["id"]), base)
+    if "dj_container_metadata" in _tables(conn):
+        stored = conn.execute(
+            "SELECT container_id, filename FROM dj_container_metadata"
+        ).fetchall()
+        for row in stored:
+            raw = row["filename"]
+            if not isinstance(raw, str):
+                continue
+            base = _export_basename(raw)
+            if base:
+                found[base.casefold()] = (int(row["container_id"]), base)
+    return found
+
+
+def can_register_crates(master: Path) -> bool:
+    """Return whether restored crate files can be written into this database.
+
+    Args:
+        master: ``master.sqlite``.
+
+    Returns:
+        True when the file is a database with a Serato Library root crate.
+        False when it is missing, a shortcut, unreadable, or has no such
+        root. Nothing is written.
+    """
+    if not master.is_file() or master.is_symlink():
+        return False
+    try:
+        with closing(sqlite3.connect(f"file:{master}?mode=ro", uri=True)) as conn:
+            conn.row_factory = sqlite3.Row
+            if "space" not in _tables(conn) or "container" not in _tables(conn):
+                return False
+            row = conn.execute(
+                """
+                SELECT 1 FROM container c
+                JOIN space s ON s.id = c.space_id
+                WHERE s.name = ? AND c.type = 0
+                """,
+                (LIBRARY_SPACE,),
+            ).fetchone()
+    except sqlite3.Error:
+        return False
+    return row is not None
+
+
+def crate_export_names(master: Path) -> set[str]:
+    """Return the crate file names a Serato 4/5 database has heard of.
+
+    Serato deletes a ``.crate`` or ``.scrate`` whose name is not in this set
+    the next time it launches. The set contains casefolded basenames.
+    A stored path keeps only its last piece, so ``Subcrates\\\\House.crate``
+    is the same name as ``House.crate``. The database is opened read-only.
+    A symlink is not opened.
+
+    Args:
+        master: ``master.sqlite``.
+
+    Returns:
+        Casefolded basenames. An empty set when the file is missing or has
+        no crate tables.
+
+    Raises:
+        sqlite3.Error: If the database cannot be read.
+    """
+    if not master.is_file() or master.is_symlink():
+        return set()
+    with closing(sqlite3.connect(f"file:{master}?mode=ro", uri=True)) as conn:
+        conn.row_factory = sqlite3.Row
+        return set(_export_index(conn))
 
 
 def _filename(conn: sqlite3.Connection, crate_id: int, crate_type: int) -> str:
@@ -1762,6 +2641,50 @@ def _mirror_asset(master: sqlite3.Connection, asset_id: int, columns: Mapping[st
     return _with_location(path, apply)
 
 
+def _expect_asset(session: object, asset_id: int, values: Mapping[str, object]) -> None:
+    """Register the track fields a save must leave behind.
+
+    Args:
+        session: The safe-write session, or another object when this helper
+            is called without one.
+        asset_id: Asset id.
+        values: Columns this save assigned.
+    """
+    import safe_write
+
+    if not isinstance(session, safe_write.Session):
+        return
+    allowed = TRACK_FIELDS | {"file_name", "is_missing", "file_size", "time_modified"}
+    columns = tuple(name for name in values if isinstance(name, str) and name.isidentifier() and name in allowed)
+    expected = tuple(values[name] for name in columns)
+
+    def check(
+        copied: sqlite3.Connection,
+        columns: tuple[str, ...] = columns,
+        expected: tuple[object, ...] = expected,
+        asset_id: int = asset_id,
+    ) -> None:
+        """Fail when the copied row does not hold the saved fields.
+
+        Args:
+            copied: Read-only connection to the temporary database copy.
+            columns: Column names that were assigned.
+            expected: Values those columns should have.
+            asset_id: Asset id.
+
+        Raises:
+            VerifyMismatch: If the row is missing or different.
+        """
+        if not columns:
+            return
+        sql = "SELECT " + ", ".join(columns) + " FROM asset WHERE id = ?"
+        row = copied.execute(sql, (asset_id,)).fetchone()
+        if row is None or tuple(row) != expected:
+            raise safe_write.VerifyMismatch("The track fields do not match.")
+
+    session.check(check)
+
+
 def save_track(asset_id: int, fields: object, space: str = LIBRARY_SPACE) -> dict[str, object]:
     """Save editable fields for one track.
 
@@ -1779,8 +2702,24 @@ def save_track(asset_id: int, fields: object, space: str = LIBRARY_SPACE) -> dic
     """
     cleaned = _clean_fields(fields)
     portable = cleaned.get("portable_id")
-    conn = begin_write()
-    try:
+    target = str(cleaned.get("name") or f"track {asset_id}")
+
+    def apply(conn: sqlite3.Connection, write: object) -> dict[str, object]:
+        """Update the asset row and register the fields the check must see.
+
+        Args:
+            conn: Open write connection.
+            write: The safe-write session.
+
+        Returns:
+            The column values that were saved.
+
+        Raises:
+            LibraryError: If the track is not in the space or a path cannot be read.
+        """
+        import safe_write
+
+        session = write if isinstance(write, safe_write.Session) else None
         _space_id(conn, space)
         row = conn.execute(
             """
@@ -1804,13 +2743,15 @@ def save_track(asset_id: int, fields: object, space: str = LIBRARY_SPACE) -> dic
                 raise LibraryError("That path could not be read.", 400) from exc
         values["time_modified"] = int(time.time())
         _assign(conn, "asset", values, "id = ?", asset_id)
-        conn.commit()
-    except Exception:
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
+        if isinstance(values.get("name"), str):
+            if session is not None:
+                session.set_target(str(values["name"]))
+        _expect_asset(session, asset_id, values)
+        return values
 
+    import safe_write
+
+    values = safe_write.run("save_track", target, apply)
     mirror_values = {key: value for key, value in values.items() if key != "time_modified"}
     mirror_values["time_modified"] = values["time_modified"]
     with closing(read_conn()) as master:
@@ -2748,6 +3689,271 @@ def _remove_from_space(conn: sqlite3.Connection, asset_id: int, space: str) -> d
     return {"ok": True, "id": asset_id, "warning": warning}
 
 
+def _crate_target(payload: Mapping[str, object]) -> str:
+    """Return the human-readable crate or track name for a crate edit.
+
+    Args:
+        payload: Crate action body.
+
+    Returns:
+        The name field when it is text, otherwise a short fallback.
+    """
+    name = payload.get("name")
+    if isinstance(name, str) and name.strip():
+        return name.strip()
+    action = payload.get("action")
+    if action == "prepare":
+        return "Prepare"
+    if action == "remove_library":
+        return "library"
+    return "crate"
+
+
+def _expect_crate(
+    session: object,
+    action: object,
+    payload: Mapping[str, object],
+    result: Mapping[str, object],
+) -> None:
+    """Register the row check for one crate edit.
+
+    Args:
+        session: The safe-write session.
+        action: Action name from the request.
+        payload: Request body.
+        result: Result dict from the edit. The check uses the request, and
+            the result id when the action created a row.
+    """
+    import safe_write
+
+    if not isinstance(session, safe_write.Session):
+        return
+    if action in {"create", "rename"}:
+        crate_id = result.get("id")
+        wanted = str(payload.get("name") or "").strip()
+        if not isinstance(crate_id, int):
+            return
+
+        def check(copied: sqlite3.Connection, crate_id: int = crate_id, wanted: str = wanted) -> None:
+            """Fail when the crate's display name is not the one that was asked for.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: Container id.
+                wanted: Display name from the request.
+
+            Raises:
+                VerifyMismatch: If the stored name does not display as ``wanted``.
+            """
+            row = copied.execute("SELECT name FROM container WHERE id = ?", (crate_id,)).fetchone()
+            if row is None or display_name(str(row[0])) != wanted:
+                raise safe_write.VerifyMismatch("The crate name does not match.")
+
+        session.check(check)
+        return
+    if action == "delete":
+        crate_id = _as_int(payload["id"])
+
+        def check_gone(copied: sqlite3.Connection, crate_id: int = crate_id) -> None:
+            """Fail when the deleted crate is still in the library.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: Container id.
+
+            Raises:
+                VerifyMismatch: If the crate row remains.
+            """
+            row = copied.execute("SELECT COUNT(*) FROM container WHERE id = ?", (crate_id,)).fetchone()
+            if row is None or int(row[0]) != 0:
+                raise safe_write.VerifyMismatch("The crate is still in the library.")
+
+        session.check(check_gone)
+        return
+    if action in {"add", "remove"}:
+        crate_id = _as_int(payload["id"])
+        asset_id = _as_int(payload["asset"])
+        present = 1 if action == "add" else 0
+
+        def check_member(
+            copied: sqlite3.Connection,
+            crate_id: int = crate_id,
+            asset_id: int = asset_id,
+            present: int = present,
+        ) -> None:
+            """Fail when crate membership does not match the request.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: Container id.
+                asset_id: Asset id.
+                present: 1 when the track should be in the crate.
+
+            Raises:
+                VerifyMismatch: If the membership row is missing or still there.
+            """
+            row = copied.execute(
+                """
+                SELECT COUNT(*) FROM container_asset ca
+                JOIN location_container lc ON lc.id = ca.location_container_id
+                WHERE lc.container_id = ? AND ca.asset_id = ?
+                """,
+                (crate_id, asset_id),
+            ).fetchone()
+            count = 0 if row is None else int(row[0])
+            if (count > 0) != (present == 1):
+                raise safe_write.VerifyMismatch("The crate membership does not match.")
+
+        session.check(check_member)
+        return
+    if action == "remove_library":
+        asset_id = _as_int(payload["asset"])
+        space = cast(str, payload.get("space") or LIBRARY_SPACE)
+
+        def check_removed(copied: sqlite3.Connection, asset_id: int = asset_id, space: str = space) -> None:
+            """Fail when the track is still in the space.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                asset_id: Asset id.
+                space: Space name.
+
+            Raises:
+                VerifyMismatch: If the space membership remains.
+            """
+            row = copied.execute(
+                """
+                SELECT COUNT(*) FROM space_asset sa
+                JOIN space s ON s.id = sa.space_id
+                WHERE sa.asset_id = ? AND s.name = ?
+                """,
+                (asset_id, space),
+            ).fetchone()
+            if row is None or int(row[0]) != 0:
+                raise safe_write.VerifyMismatch("The track is still in the library.")
+
+        session.check(check_removed)
+        return
+    if action == "color":
+        crate_id = _as_int(payload["id"])
+        color = payload.get("color")
+        if color is None or color == "":
+            wanted_color: int | None = None
+        else:
+            wanted_color = _as_int(color)
+            if wanted_color == 0xFFFFFF:
+                wanted_color = None
+
+        def check_color(
+            copied: sqlite3.Connection,
+            crate_id: int = crate_id,
+            wanted_color: int | None = wanted_color,
+        ) -> None:
+            """Fail when the crate color is not the one that was asked for.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: Container id.
+                wanted_color: Stored color, or None when the color was cleared.
+
+            Raises:
+                VerifyMismatch: If the stored color does not match.
+            """
+            row = copied.execute("SELECT color FROM container WHERE id = ?", (crate_id,)).fetchone()
+            stored = None if row is None or row[0] is None else int(row[0])
+            if row is None or stored != wanted_color:
+                raise safe_write.VerifyMismatch("The crate color does not match.")
+
+        session.check(check_color)
+        return
+    if action == "expanded":
+        crate_id = _as_int(payload["id"])
+        wanted_expanded = 1 if payload.get("expanded") in (True, 1, "1", "true") else 0
+
+        def check_expanded(
+            copied: sqlite3.Connection,
+            crate_id: int = crate_id,
+            wanted_expanded: int = wanted_expanded,
+        ) -> None:
+            """Fail when the expanded flag is not the one that was asked for.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: Container id.
+                wanted_expanded: 1 when the crate should be expanded.
+
+            Raises:
+                VerifyMismatch: If the stored flag does not match.
+            """
+            row = copied.execute("SELECT expanded FROM container WHERE id = ?", (crate_id,)).fetchone()
+            stored = 0 if row is None or row[0] is None else int(row[0])
+            if row is None or stored != wanted_expanded:
+                raise safe_write.VerifyMismatch("The crate expanded flag does not match.")
+
+        session.check(check_expanded)
+        return
+    if action == "rules":
+        crate_id = _as_int(payload["id"])
+        wanted_rules = _rules_blob(payload.get("rules"))
+
+        def check_rules(
+            copied: sqlite3.Connection,
+            crate_id: int = crate_id,
+            wanted_rules: str = wanted_rules,
+        ) -> None:
+            """Fail when the smart-crate rules are not the ones that were asked for.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: Container id.
+                wanted_rules: Compact JSON that was stored.
+
+            Raises:
+                VerifyMismatch: If the stored rules do not match.
+            """
+            row = copied.execute(
+                "SELECT rules FROM smart_crate_rules WHERE container_id = ?",
+                (crate_id,),
+            ).fetchone()
+            if row is None or str(row[0]) != wanted_rules:
+                raise safe_write.VerifyMismatch("The smart crate rules do not match.")
+
+        session.check(check_rules)
+        return
+    if action == "prepare":
+        asset_id = _as_int(payload["asset"])
+        wanted_prepare = bool(payload.get("add", True))
+
+        def check_prepare(
+            copied: sqlite3.Connection,
+            asset_id: int = asset_id,
+            wanted_prepare: bool = wanted_prepare,
+        ) -> None:
+            """Fail when Prepare membership does not match the request.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                asset_id: Asset id.
+                wanted_prepare: True when the track should be in Prepare.
+
+            Raises:
+                VerifyMismatch: If the space membership is missing or still there.
+            """
+            row = copied.execute(
+                """
+                SELECT COUNT(*) FROM space_asset sa
+                JOIN space s ON s.id = sa.space_id
+                WHERE sa.asset_id = ? AND s.name = 'Prepare'
+                """,
+                (asset_id,),
+            ).fetchone()
+            count = 0 if row is None else int(row[0])
+            if (count > 0) != wanted_prepare:
+                raise safe_write.VerifyMismatch("Prepare membership does not match.")
+
+        session.check(check_prepare)
+
+
 def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
     """Run one crate edit.
 
@@ -2766,8 +3972,23 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
     """
     action = payload.get("action")
     space = cast(str, payload.get("space") or LIBRARY_SPACE)
-    conn = begin_write()
-    try:
+    target = _crate_target(payload)
+    import safe_write
+
+    def apply(conn: sqlite3.Connection, write: safe_write.Session) -> dict[str, object]:
+        """Run the crate edit and register the row the check must see.
+
+        Args:
+            conn: Open write connection.
+            write: Session that records the expected rows.
+
+        Returns:
+            The action result dict.
+
+        Raises:
+            LibraryError: If the action is unknown or its fields are invalid.
+            KeyError: If a required id is missing.
+        """
         if action == "create":
             result = _create_crate(
                 conn,
@@ -2802,8 +4023,324 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
             result = _remove_from_space(conn, _as_int(payload["asset"]), space)
         else:
             raise LibraryError("That crate action is not available.")
-        conn.commit()
+        if isinstance(result.get("name"), str):
+            write.set_target(str(result["name"]))
+        _expect_crate(write, action, payload, result)
         return result
+
+    return safe_write.run(f"crate_{action}", target, apply)
+
+
+def _library_crate(conn: sqlite3.Connection, crate_id: int) -> bool:
+    """Return whether a container is a crate in the Serato Library space.
+
+    Args:
+        conn: Open connection.
+        crate_id: Container id.
+
+    Returns:
+        True when the row exists, is not the space root, and is in
+        ``Serato Library``.
+    """
+    row = conn.execute(
+        """
+        SELECT 1 FROM container c
+        JOIN space s ON s.id = c.space_id
+        WHERE c.id = ? AND s.name = ? AND c.type != 0
+        """,
+        (crate_id, LIBRARY_SPACE),
+    ).fetchone()
+    return row is not None
+
+
+def _find_child(conn: sqlite3.Connection, parent_id: int, name: str, crate_type: int) -> int | None:
+    """Find a child crate by its visible name.
+
+    Args:
+        conn: Open connection.
+        parent_id: Parent container id.
+        name: Visible crate name.
+        crate_type: 1 for a normal crate, 2 for a smart crate.
+
+    Returns:
+        The container id, or None when that child is absent. The match
+        ignores case so a Windows file and the stored name agree.
+    """
+    rows = conn.execute(
+        "SELECT id, name FROM container WHERE parent_id = ? AND type = ?",
+        (parent_id, crate_type),
+    ).fetchall()
+    want = name.casefold()
+    for row in rows:
+        stored = row["name"] if isinstance(row["name"], str) else ""
+        if display_name(stored).casefold() == want:
+            return int(row["id"])
+    return None
+
+
+def _remember_filename(
+    conn: sqlite3.Connection,
+    crate_id: int,
+    filename: str,
+    found: dict[str, tuple[int, str]],
+) -> None:
+    """Store the on-disk crate file name and mirror it to root.sqlite.
+
+    Args:
+        conn: Open master write connection.
+        crate_id: Container id.
+        filename: Exact basename Serato should keep.
+        found: Export index updated to that basename.
+    """
+    _upsert_filename(conn, crate_id, filename)
+    previous = [key for key, item in found.items() if item[0] == crate_id]
+    for key in previous:
+        del found[key]
+    found[filename.casefold()] = (crate_id, filename)
+    external = _external_ids(conn, [crate_id])
+    root_path = _location_paths(conn).get(3)
+    if not external or root_path is None:
+        return
+
+    def apply(root: sqlite3.Connection) -> None:
+        """Copy the export filename into the location database.
+
+        Args:
+            root: Location database connection.
+        """
+        if "dj_container_metadata" not in _tables(root):
+            return None
+        _upsert_filename(root, external[0], filename)
+        return None
+
+    _with_location(root_path, apply)
+
+
+def _ensure_library_crate(
+    conn: sqlite3.Connection,
+    parent_id: int,
+    name: str,
+    smart: bool,
+    found: dict[str, tuple[int, str]],
+) -> int:
+    """Return a Serato Library crate, creating it when it is missing.
+
+    Args:
+        conn: Open master write connection.
+        parent_id: Parent container id.
+        name: Visible name.
+        smart: True to create a smart crate.
+        found: Export index updated when a crate is created.
+
+    Returns:
+        The container id.
+    """
+    crate_type = 2 if smart else 1
+    existing = _find_child(conn, parent_id, name, crate_type)
+    if existing is not None:
+        return existing
+    created = _create_crate(conn, LIBRARY_SPACE, parent_id, name, smart, None)
+    crate_id = int(created["id"])
+    generated = _export_basename(_filename(conn, crate_id, crate_type))
+    if generated:
+        found[generated.casefold()] = (crate_id, generated)
+    return crate_id
+
+
+def _path_key(value: str) -> str:
+    """Normalize a stored path for comparison.
+
+    Args:
+        value: A portable id or a path from a crate file.
+
+    Returns:
+        Forward slashes, without a trailing slash, casefolded.
+    """
+    return value.replace("\\", "/").strip().rstrip("/").casefold()
+
+
+def _match_asset(index: Sequence[tuple[int, str, str]], stored: str) -> int | None:
+    """Find the one library asset a crate path points at.
+
+    A Windows path (``C:\\Users\\dj\\Music\\same-a.mp3``) and a macOS path
+    (``/Users/dj/Music/same-a.mp3``) match a portable id of
+    ``Music/same-a.mp3``. A path that climbs out with ``..`` matches nothing.
+    A file name on its own is not a match, so two different tracks that share
+    a name cannot be confused.
+
+    Args:
+        index: ``(asset id, portable id, file name)`` rows.
+        stored: Path text from the crate file.
+
+    Returns:
+        One asset id, or None when there is no single match.
+    """
+    text = stored.strip()
+    if not text:
+        return None
+    want = _path_key(text)
+    parts = [part for part in want.split("/") if part not in {"", "."}]
+    if not parts or any(part == ".." for part in parts):
+        return None
+    exact: list[int] = []
+    suffix: list[int] = []
+    for asset_id, portable, _file_name in index:
+        key = _path_key(portable) if portable else ""
+        if key and key == want:
+            exact.append(asset_id)
+            continue
+        # Both sides need a directory. A bare file name is not a suffix of
+        # a longer portable id, or the other way around.
+        if key and "/" in want and "/" in key and (want.endswith("/" + key) or key.endswith("/" + want)):
+            suffix.append(asset_id)
+    if len(exact) == 1:
+        return exact[0]
+    if len(exact) > 1 or len(suffix) > 1:
+        return None
+    if len(suffix) == 1:
+        return suffix[0]
+    return None
+
+
+def _add_restored_tracks(
+    conn: sqlite3.Connection,
+    crate_id: int,
+    tracks: Sequence[str],
+    index: Sequence[tuple[int, str, str]],
+) -> None:
+    """Add crate-file tracks that match one library asset.
+
+    Args:
+        conn: Open master write connection.
+        crate_id: Normal crate id.
+        tracks: Paths from the crate file, in file order.
+        index: Asset rows from :func:`_asset_rows`.
+    """
+    seen: set[int] = set()
+    for stored in tracks:
+        asset_id = _match_asset(index, stored)
+        if asset_id is None or asset_id in seen:
+            continue
+        if not _space_asset_exists(conn, asset_id, LIBRARY_SPACE):
+            continue
+        seen.add(asset_id)
+        try:
+            _membership(conn, crate_id, asset_id, LIBRARY_SPACE, True)
+        except (LibraryError, TypeError, ValueError):
+            continue
+
+
+def _space_asset_exists(conn: sqlite3.Connection, asset_id: int, space: str) -> bool:
+    """Return whether an asset is already in a space.
+
+    Args:
+        conn: Open connection.
+        asset_id: Asset id.
+        space: Space name.
+
+    Returns:
+        True when a space_asset row joins that space.
+    """
+    row = conn.execute(
+        """
+        SELECT 1 FROM space_asset sa
+        JOIN space s ON s.id = sa.space_id
+        WHERE sa.asset_id = ? AND s.name = ?
+        """,
+        (asset_id, space),
+    ).fetchone()
+    return row is not None
+
+
+def _asset_rows(conn: sqlite3.Connection) -> list[tuple[int, str, str]]:
+    """Load asset ids and paths for crate matching.
+
+    Args:
+        conn: Open connection.
+
+    Returns:
+        ``(id, portable id, file name)``. Missing columns yield an empty list.
+    """
+    if "asset" not in _tables(conn):
+        return []
+    rows = conn.execute("SELECT id, portable_id, file_name FROM asset").fetchall()
+    found: list[tuple[int, str, str]] = []
+    for row in rows:
+        portable = row["portable_id"] if isinstance(row["portable_id"], str) else ""
+        file_name = row["file_name"] if isinstance(row["file_name"], str) else ""
+        found.append((int(row["id"]), portable, file_name))
+    return found
+
+
+def register_restored_crates(crates: Sequence[tuple[str, Sequence[str]]]) -> list[dict[str, object]]:
+    """Register crate files Serato 4/5 would otherwise delete on launch.
+
+    The database is the source of truth. A ``.crate`` or ``.scrate`` whose
+    name it has never heard of is removed the next time Serato starts.
+    This writes those crates through :func:`begin_write` with
+    ``snapshot=False``: Serato must be quit, the version gate must allow
+    the library, and the first write in the process still copies the
+    databases into Library/Backups. The caller is a restore that already
+    saved the undo snapshot. One transaction covers every crate. A file
+    with no name is skipped. Tracks are added when one library asset
+    matches the path.
+
+    Args:
+        crates: ``(filename, track paths)`` pairs. ``filename`` is the
+            on-disk basename. Track paths are the crate file's ``ptrk``
+            values, in order.
+
+    Returns:
+        One dict per crate that was created, whose export filename was
+        set to the on-disk name, or whose tracks were added. Each has
+        ``filename``, ``id``, and ``name``. The restore check uses that
+        list so those rows, and no others, may differ from the snapshot.
+
+    Raises:
+        SeratoOpen: If Serato holds the library lock. Nothing is written.
+        LibraryError: If the version gate refuses the library, or a crate
+            name cannot be stored. The transaction is rolled back.
+    """
+    def order(item: tuple[str, Sequence[str]]) -> tuple[int, str]:
+        base = _export_basename(item[0]).casefold()
+        return (base.count("%%"), base)
+
+    ordered = sorted(crates, key=order)
+    conn = begin_write(snapshot=False)
+    registered: list[dict[str, object]] = []
+    try:
+        found = _export_index(conn)
+        index = _asset_rows(conn)
+        for filename, tracks in ordered:
+            base = _export_basename(filename)
+            try:
+                leaf, parents, smart = _split_crate_filename(base)
+            except LibraryError:
+                app_log.logger.warning("A crate file was not registered because it has no name.")
+                continue
+            key = base.casefold()
+            current = found.get(key)
+            if current is not None and _library_crate(conn, current[0]):
+                crate_id, exact = current
+                if exact != base:
+                    _remember_filename(conn, crate_id, base, found)
+                if not smart:
+                    _add_restored_tracks(conn, crate_id, tracks, index)
+                if exact != base or not smart:
+                    registered.append({"filename": base, "id": crate_id, "name": leaf})
+                continue
+            if current is not None:
+                continue
+            parent_id = _space_root(conn, LIBRARY_SPACE)
+            for part in parents:
+                parent_id = _ensure_library_crate(conn, parent_id, part, False, found)
+            crate_id = _ensure_library_crate(conn, parent_id, leaf, smart, found)
+            _remember_filename(conn, crate_id, base, found)
+            if not smart:
+                _add_restored_tracks(conn, crate_id, tracks, index)
+            registered.append({"filename": base, "id": crate_id, "name": leaf})
+        conn.commit()
+        return registered
     except Exception:
         conn.rollback()
         raise
@@ -4447,19 +5984,60 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
         early = _build_merge_plan(conn, space, keep_id)
     if delete_files:
         _refuse_unsafe_trash(early)
-    conn = begin_write()
-    try:
+    import safe_write
+
+    def apply(conn: sqlite3.Connection, write: safe_write.Session) -> tuple[dict[str, object], list[str | None]]:
+        """Merge the group and register the rows the check must see.
+
+        Args:
+            conn: Open write connection.
+            write: Session that records the expected rows.
+
+        Returns:
+            The plan and any mirror warnings.
+
+        Raises:
+            LibraryError: If a requested file move is unsafe.
+        """
         plan = _build_merge_plan(conn, space, keep_id)
         if delete_files:
             _refuse_unsafe_trash(plan)
         _apply_merge(conn, plan)
         warnings = _mirror_merge(conn, plan)
-        conn.commit()
-    except Exception:
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
+        kept = plan.get("kept")
+        if isinstance(kept, dict) and isinstance(kept.get("name"), str) and kept["name"]:
+            write.set_target(str(kept["name"]))
+        remove_ids = tuple(int(item) for item in cast(list[int], plan["remove_ids"]))
+        kept_id = int(cast(int, plan["keep_id"]))
+
+        def check(
+            copied: sqlite3.Connection,
+            kept_id: int = kept_id,
+            remove_ids: tuple[int, ...] = remove_ids,
+        ) -> None:
+            """Fail when the kept track is missing or a duplicate remains.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                kept_id: Asset id that should remain.
+                remove_ids: Asset ids that should be gone.
+
+            Raises:
+                VerifyMismatch: If the group was not folded into the kept copy.
+            """
+            row = copied.execute("SELECT COUNT(*) FROM asset WHERE id = ?", (kept_id,)).fetchone()
+            if row is None or int(row[0]) != 1:
+                raise safe_write.VerifyMismatch("The track that should be kept is missing.")
+            for asset_id in remove_ids:
+                gone = copied.execute("SELECT COUNT(*) FROM asset WHERE id = ?", (asset_id,)).fetchone()
+                if gone is None or int(gone[0]) != 0:
+                    raise safe_write.VerifyMismatch("A duplicate track is still in the library.")
+
+        write.check(check)
+        return plan, warnings
+
+    kept_name = "track"
+    plan, warnings = safe_write.run("merge_duplicates", kept_name, apply)
     trashed: list[str] = []
     trash_warning = None
     if delete_files:
@@ -4636,8 +6214,22 @@ def import_m3u(space: str, parent_id: int | None, name: str, text: object) -> di
         if not line or line.startswith("#"):
             continue
         paths.append(line)
-    conn = begin_write()
-    try:
+    label = name or "Imported playlist"
+    import safe_write
+
+    def apply(conn: sqlite3.Connection, write: safe_write.Session) -> dict[str, object]:
+        """Create the crate, add the known tracks, and register that check.
+
+        Args:
+            conn: Open write connection.
+            write: Session that records the expected rows.
+
+        Returns:
+            The import result, without the fields added after the check.
+
+        Raises:
+            LibraryError: If the crate cannot be created.
+        """
         matched: list[int] = []
         unmatched: list[str] = []
         seen: set[int] = set()
@@ -4649,27 +6241,54 @@ def import_m3u(space: str, parent_id: int | None, name: str, text: object) -> di
                 continue
             seen.add(asset_id)
             matched.append(asset_id)
-        created = _create_crate(conn, space, parent_id, name or "Imported playlist", False, None)
+        created = _create_crate(conn, space, parent_id, label, False, None)
         crate_id = created["id"]
         if not isinstance(crate_id, int):
             raise LibraryError("The crate could not be created.")
         for asset_id in matched:
             _membership(conn, crate_id, asset_id, space, True)
-        conn.commit()
-    except Exception:
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
-    return {
-        "ok": True,
-        "id": created["id"],
-        "name": created["name"],
-        "added": len(matched),
-        "unmatched": unmatched[:50],
-        "unmatched_count": len(unmatched),
-        "warning": created.get("warning"),
-    }
+        if isinstance(created.get("name"), str):
+            write.set_target(str(created["name"]))
+        wanted = tuple(matched)
+
+        def check(copied: sqlite3.Connection, crate_id: int = crate_id, wanted: tuple[int, ...] = wanted) -> None:
+            """Fail when the new crate is missing a track the playlist already had.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                crate_id: New container id.
+                wanted: Asset ids that should be members.
+
+            Raises:
+                VerifyMismatch: If the crate name or a membership does not match.
+            """
+            row = copied.execute("SELECT name FROM container WHERE id = ?", (crate_id,)).fetchone()
+            if row is None or display_name(str(row[0])) != label:
+                raise safe_write.VerifyMismatch("The imported crate name does not match.")
+            for asset_id in wanted:
+                member = copied.execute(
+                    """
+                    SELECT COUNT(*) FROM container_asset ca
+                    JOIN location_container lc ON lc.id = ca.location_container_id
+                    WHERE lc.container_id = ? AND ca.asset_id = ?
+                    """,
+                    (crate_id, asset_id),
+                ).fetchone()
+                if member is None or int(member[0]) != 1:
+                    raise safe_write.VerifyMismatch("A playlist track was not added.")
+
+        write.check(check)
+        return {
+            "ok": True,
+            "id": created["id"],
+            "name": created["name"],
+            "added": len(matched),
+            "unmatched": unmatched[:50],
+            "unmatched_count": len(unmatched),
+            "warning": created.get("warning"),
+        }
+
+    return safe_write.run("import_m3u", label, apply)
 
 
 def reveal_command(path: str) -> list[str]:

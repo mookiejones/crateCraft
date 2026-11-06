@@ -31,6 +31,11 @@ export interface ElementIds {
   "snapshots-block": HTMLParagraphElement;
   "snapshots-undo": HTMLDivElement;
   "snapshots-list": HTMLDivElement;
+  "operations-heading": HTMLHeadingElement;
+  "operations-refresh": HTMLButtonElement;
+  "operations-alert": HTMLParagraphElement;
+  "operations-status": HTMLParagraphElement;
+  "operations-list": HTMLDivElement;
   "snapshots-undo-text": HTMLParagraphElement;
   "snapshot-plan": HTMLDivElement;
   "snapshot-block": HTMLParagraphElement;
@@ -38,6 +43,13 @@ export interface ElementIds {
   "snapshot-dialog": HTMLDialogElement;
   "snapshot-status": HTMLParagraphElement;
   "snapshots-take": HTMLButtonElement;
+  "snapshots-drives": HTMLButtonElement;
+  "snapshots-drives-note": HTMLParagraphElement;
+  "gig-panel": HTMLElement;
+  "gig-scope": HTMLParagraphElement;
+  "gig-status": HTMLParagraphElement;
+  "gig-report": HTMLDivElement;
+  "gig-refresh": HTMLButtonElement;
   "crate-search": HTMLInputElement;
   reload: HTMLButtonElement;
   "export-m3u": HTMLButtonElement;
@@ -69,6 +81,8 @@ export interface ElementIds {
   "consent-dialog": HTMLDialogElement;
   "settings-dialog": HTMLDialogElement;
   "telemetry-toggle": HTMLInputElement;
+  "language-select": HTMLSelectElement;
+  "language-status": HTMLParagraphElement;
   "telemetry-note": HTMLParagraphElement;
   "consent-status": HTMLParagraphElement;
   "settings-status": HTMLParagraphElement;
@@ -80,6 +94,10 @@ export interface ElementIds {
   "settings-close": HTMLButtonElement;
   "open-logs": HTMLButtonElement;
   "copy-logs": HTMLButtonElement;
+  "app-version": HTMLParagraphElement;
+  "about-version": HTMLParagraphElement;
+  "copy-version": HTMLButtonElement;
+  "version-copy-status": HTMLParagraphElement;
   "files-dialog": HTMLDialogElement;
   "files-list": HTMLDivElement;
   "files-status": HTMLParagraphElement;
@@ -88,8 +106,9 @@ export interface ElementIds {
   "files-pick": HTMLParagraphElement;
   "files-move-here": HTMLButtonElement;
   "files-pick-cancel": HTMLButtonElement;
-  "files-path": HTMLParagraphElement;
+  "files-path": HTMLElement;
   "files-up": HTMLButtonElement;
+  "files-elsewhere": HTMLButtonElement;
   "files-rename": HTMLButtonElement;
   "files-move": HTMLButtonElement;
   "files-move-folder": HTMLButtonElement;
@@ -105,6 +124,19 @@ export interface ElementIds {
   "files-cancel": HTMLButtonElement;
   "files-review": HTMLButtonElement;
   "files-refresh": HTMLButtonElement;
+  "files-search": HTMLInputElement;
+  "shortcuts-section": HTMLElement,
+  "shortcuts-title": HTMLHeadingElement,
+  "shortcuts-intro": HTMLParagraphElement,
+  "shortcuts-body": HTMLDivElement,
+  "quick-open": HTMLDialogElement;
+  "quick-open-title": HTMLHeadingElement;
+  "quick-open-label": HTMLLabelElement;
+  "quick-open-query": HTMLInputElement;
+  "quick-open-status": HTMLParagraphElement;
+  "quick-open-list": HTMLUListElement;
+  "quick-open-close": HTMLButtonElement;
+  "quick-open-retry": HTMLButtonElement;
 }
 
 export function el<K extends keyof ElementIds>(id: K): ElementIds[K] {

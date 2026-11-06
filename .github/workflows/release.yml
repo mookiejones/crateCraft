@@ -13,7 +13,10 @@ on:
       - "requirements.txt"
       - "requirements-build.txt"
       - "requirements-macos.txt"
+      - "static/app.js"
+      - "static/app.css"
       - "desktop.py"
+      - "waveform*.py"
       - "version_info.py"
       - "_version.py"
       - "scripts/write_version.py"
@@ -217,19 +220,20 @@ jobs:
             requirements-build.txt
             requirements-macos.txt
 
-      - name: Require a release tag
-        if: github.event_name == 'push'
-        shell: bash
-        env:
-          RELEASE_TAG: ${{ github.ref_name }}
-        run: python scripts/release_bundle.py check-tag
-
       - name: Install build tools
         run: python -m pip install -r requirements-build.txt
 
       - name: Install macOS web view frameworks
         if: runner.os == 'macOS'
         run: python -m pip install -r requirements-macos.txt
+
+      # Runs after the installs: check-tag imports the app, which needs miniaudio.
+      - name: Require a release tag
+        if: github.event_name == 'push'
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: python scripts/release_bundle.py check-tag
 
       - name: Bake telemetry keys
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
@@ -408,6 +412,10 @@ jobs:
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
+
+      # release_bundle.py imports the app, which needs miniaudio.
+      - name: Install app requirements
+        run: python -m pip install -r requirements.txt
 
       - name: Require a release tag
         shell: bash

@@ -1010,6 +1010,301 @@ class FileManagerTests(unittest.TestCase):
         self.assertIn("Move to Trash", script)
         self.assertNotIn("innerHTML", script)
 
+    def test_empty_browse_lists_music_roots(self) -> None:
+        """Open Files on the music folder, not the computer root.
+
+        Returns:
+            None. The test fails if the home directory is listed.
+        """
+        listed = files.list_directory("")
+        self.assertEqual(listed["path"], "")
+        self.assertIsNone(listed["parent"])
+        self.assertFalse(listed["elsewhere"])
+        self.assertEqual(listed["entries"], [])
+        match = next(item for item in listed["roots"] if item["path"] == str(self.music.resolve()))
+        self.assertEqual(match["name"], "music")
+
+    def test_browse_stays_inside_the_music_root(self) -> None:
+        """Refuse a parent, a prefixed sibling, and a path that climbs out.
+
+        A child folder is listed. Up is unavailable on the root itself.
+        ``elsewhere`` lists the parent.
+
+        Returns:
+            None. The test fails if a path outside the music folder is opened.
+        """
+        with self.assertRaises(library.LibraryError) as outside:
+            files.list_directory(str(self.library.root))
+        self.assertEqual(outside.exception.status, 403)
+        self.assertEqual(outside.exception.message, "That folder is outside the music folders.")
+        sibling = self.library.root / "music-extra"
+        sibling.mkdir()
+        with self.assertRaises(library.LibraryError) as prefixed:
+            files.list_directory(str(sibling))
+        self.assertEqual(prefixed.exception.status, 403)
+        with self.assertRaises(library.LibraryError):
+            files.list_directory(str(self.music / ".."))
+        opened = files.list_directory(str(self.music))
+        self.assertIsNone(opened["parent"])
+        self.assertEqual(opened["breadcrumb"][0]["path"], str(self.music.resolve()))
+        self.assertEqual(opened["breadcrumb"][0]["name"], "music")
+        child = self.music / "Crates"
+        child.mkdir()
+        inner = files.list_directory(str(child))
+        self.assertEqual(inner["parent"], str(self.music.resolve()))
+        self.assertEqual(inner["breadcrumb"][1]["name"], "Crates")
+        self.assertEqual(inner["breadcrumb"][0]["path"], str(self.music.resolve()))
+        wider = files.list_directory(str(self.library.root), elsewhere=True)
+        self.assertTrue(wider["elsewhere"])
+        self.assertEqual(wider["path"], str(self.library.root.resolve()))
+
+    def test_a_shortcut_cannot_leave_the_music_root(self) -> None:
+        """Refuse a shortcut and a folder reached through that shortcut.
+
+        Returns:
+            None. The test fails if the target directory is listed.
+        """
+        secret = self.library.root / "secret"
+        secret.mkdir()
+        (secret / "nested").mkdir()
+        link = self.music / "escape"
+        try:
+            link.symlink_to(secret, target_is_directory=True)
+        except OSError:
+            self.skipTest("symlinks are not available")
+        with self.assertRaises(library.LibraryError) as caught:
+            files.list_directory(str(link))
+        self.assertEqual(caught.exception.message, "Shortcuts are left alone.")
+        with self.assertRaises(library.LibraryError) as nested:
+            files.list_directory(str(link / "nested"))
+        self.assertEqual(nested.exception.message, "Shortcuts are left alone.")
+        with self.assertRaises(library.LibraryError) as escaped:
+            files.list_directory(str(link / "nested"), elsewhere=True)
+        self.assertEqual(escaped.exception.message, "Shortcuts are left alone.")
+
+    def test_more_than_5000_entries_are_all_listed_folders_first(self) -> None:
+        """Return every name in a large folder, with folders before files.
+
+        Returns:
+            None. The test fails if the last file is missing or a file sorts first.
+        """
+        folder = self.music / "crate"
+        folder.mkdir()
+        total = 5001
+        for index in range(total):
+            (folder / f"file-{index:05d}.mp3").write_bytes(b"")
+        (folder / "zzz-folder").mkdir()
+        listed = files.list_directory(str(folder))
+        names = [entry["name"] for entry in listed["entries"]]
+        self.assertEqual(len(names), total + 1)
+        self.assertFalse(listed["truncated"])
+        self.assertEqual(names[0], "zzz-folder")
+        self.assertEqual(listed["entries"][0]["kind"], "dir")
+        self.assertEqual(names[-1], "file-05000.mp3")
+        self.assertLess(names.index("zzz-folder"), names.index("file-00000.mp3"))
+
+    def test_http_browse_refuses_a_path_outside_the_roots(self) -> None:
+        """Refuse an outside path over HTTP unless elsewhere is set.
+
+        Returns:
+            None. The test fails if the outside path is listed by default.
+        """
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        host, port = httpd.server_address
+        base = f"http://{host}:{port}"
+        outside = urllib.request.quote(str(self.library.root))
+        try:
+            roots_status, roots = _request(base, "/api/files")
+            self.assertEqual(roots_status, 200)
+            assert isinstance(roots, dict)
+            self.assertEqual(roots["path"], "")
+            self.assertTrue(any(str(item["path"]) == str(self.music.resolve()) for item in roots["roots"]))
+            denied_status, denied = _request(base, f"/api/files?path={outside}")
+            self.assertEqual(denied_status, 403)
+            assert isinstance(denied, dict)
+            self.assertEqual(denied["error"], "That folder is outside the music folders.")
+            allowed_status, allowed = _request(base, f"/api/files?path={outside}&elsewhere=1")
+            self.assertEqual(allowed_status, 200)
+            assert isinstance(allowed, dict)
+            self.assertTrue(allowed["elsewhere"])
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            thread.join(timeout=3)
+
+    def test_blank_query_still_lists_the_folder(self) -> None:
+        """Treat a blank q= as a normal folder listing.
+
+        Returns:
+            None. The test fails if whitespace starts a name search.
+        """
+        listed = files.list_directory(str(self.music), query="   ")
+        self.assertNotIn("search", listed)
+        self.assertFalse(listed["truncated"])
+        names = {str(entry["name"]) for entry in listed["entries"]}
+        self.assertIn("same-a.mp3", names)
+        self.assertIn("same-b.mp3", names)
+
+    def test_name_search_is_fuzzy_ranked_and_read_only(self) -> None:
+        """Find a nested name, rank a prefix first, and leave the disk alone.
+
+        ``hs`` is not a substring of House. It is still a match. A file
+        whose name only contains the word later ranks below a prefix.
+        The music folder's files are unchanged.
+
+        Returns:
+            None. The test fails if the search is exact, unranked, or writes.
+        """
+        nested = self.music / "Deep"
+        nested.mkdir()
+        house = nested / "House Mix.mp3"
+        house.write_bytes(b"nested")
+        (self.music / "zz-same.mp3").write_bytes(b"later")
+        before = sorted(path.relative_to(self.music).as_posix() for path in self.music.rglob("*"))
+        fuzzy = files.list_directory("", query="hs")
+        ranked = files.list_directory("", query="same")
+        after = sorted(path.relative_to(self.music).as_posix() for path in self.music.rglob("*"))
+        self.assertEqual(before, after)
+        self.assertNotIn("file-ops-journal.json", after)
+        self.assertTrue(fuzzy["search"])
+        self.assertEqual(fuzzy["query"], "hs")
+        self.assertEqual([str(entry["name"]) for entry in fuzzy["entries"]], ["House Mix.mp3"])
+        self.assertFalse(fuzzy["truncated"])
+        names = [str(entry["name"]) for entry in ranked["entries"]]
+        self.assertLess(names.index("same-a.mp3"), names.index("zz-same.mp3"))
+        match = next(entry for entry in ranked["entries"] if entry["name"] == "same-a.mp3")
+        self.assertEqual(match["kind"], "file")
+        self.assertTrue(match["audio"])
+        self.assertTrue(match["in_library"])
+        # Windows may spell the same temp folder with an 8.3 short name.
+        self.assertTrue(Path(str(match["detail"])).samefile(self.song.parent))
+        self.assertTrue(str(match["path"]).endswith("same-a.mp3"))
+
+    def test_search_is_case_insensitive_and_stays_in_the_folder(self) -> None:
+        """Match ignoring case, and do not return a sibling of the chosen folder.
+
+        Returns:
+            None. The test fails if SAME-A misses, or if a scoped search
+            climbs out of Deep.
+        """
+        nested = self.music / "Deep"
+        nested.mkdir()
+        (nested / "House Mix.mp3").write_bytes(b"nested")
+        wide = files.list_directory("", query="SAME-A")
+        self.assertIn("same-a.mp3", [str(entry["name"]) for entry in wide["entries"]])
+        scoped = files.list_directory(str(nested), query="same")
+        self.assertEqual(scoped["entries"], [])
+        housed = files.list_directory(str(nested), query="house")
+        self.assertEqual([str(entry["name"]) for entry in housed["entries"]], ["House Mix.mp3"])
+
+    def test_search_skips_shortcuts_missing_roots_and_outside_paths(self) -> None:
+        """Do not follow a shortcut, open a missing root, or treat q as a path.
+
+        An empty library search returns no rows. A query that looks like
+        a Windows path is text, not a folder to open.
+
+        Returns:
+            None. The test fails if a skipped file is returned.
+        """
+        outside = self.library.root / "outside"
+        outside.mkdir()
+        secret = outside / "secret-track.mp3"
+        secret.write_bytes(b"secret")
+        link = self.music / "linked-dir"
+        try:
+            os.symlink(outside, link, target_is_directory=True)
+        except OSError:
+            self.skipTest("This user cannot create a shortcut.")
+        found = files.list_directory("", query="secret-track")
+        self.assertEqual(found["entries"], [])
+        sentinel = self.library.root / "unmounted"
+        sentinel.mkdir()
+        (sentinel / "ghost-track.mp3").write_bytes(b"ghost")
+        original = files.music_roots.music_roots
+
+        def with_missing(refresh: bool = False) -> list[dict[str, object]]:
+            rows = original(refresh=refresh)
+            return [{"name": "Gone", "path": str(sentinel), "kind": "folder", "missing": True}, *rows]
+
+        with mock.patch("files.music_roots.music_roots", with_missing):
+            ghosts = files.list_directory("", query="ghost-track")
+            kept = files.list_directory("", query="same-a")
+        self.assertEqual(ghosts["entries"], [])
+        self.assertIn("same-a.mp3", [str(entry["name"]) for entry in kept["entries"]])
+        with mock.patch("files.music_roots.music_roots", return_value=[]):
+            empty = files.list_directory("", query="same-a")
+        self.assertEqual(empty["entries"], [])
+        self.assertTrue(empty["search"])
+        self.assertFalse(empty["truncated"])
+        windows = files.list_directory("", query="C:\\Windows\\System32")
+        self.assertEqual(windows["entries"], [])
+        with self.assertRaises(library.LibraryError) as outside_path:
+            files.list_directory(str(self.library.root), query="same")
+        self.assertEqual(outside_path.exception.status, 403)
+        with self.assertRaises(library.LibraryError) as elsewhere:
+            files.list_directory("", query="same", elsewhere=True)
+        self.assertEqual(elsewhere.exception.status, 400)
+
+    def test_search_refuses_a_bad_query_and_caps_the_walk(self) -> None:
+        """Refuse a null or a huge query, and stop when the caps are hit.
+
+        Returns:
+            None. The test fails if a bad query is searched or a cap is ignored.
+        """
+        with self.assertRaises(library.LibraryError) as null_query:
+            files.list_directory(str(self.music), query="a\x00b")
+        self.assertEqual(null_query.exception.status, 400)
+        self.assertEqual(null_query.exception.message, "That search is not valid.")
+        with self.assertRaises(library.LibraryError) as long_query:
+            files.list_directory(str(self.music), query="a" * 201)
+        self.assertEqual(long_query.exception.status, 400)
+        self.assertEqual(long_query.exception.message, "That search is too long.")
+        with mock.patch.object(files, "_SEARCH_SCAN", 1):
+            scanned = files.list_directory(str(self.music), query="mp3")
+        self.assertTrue(scanned["truncated"])
+        self.assertLessEqual(len(scanned["entries"]), 1)
+        with mock.patch.object(files, "_SEARCH_HITS", 1):
+            capped = files.list_directory(str(self.music), query="mp3")
+        self.assertTrue(capped["truncated"])
+        self.assertEqual(len(capped["entries"]), 1)
+
+    def test_http_name_search(self) -> None:
+        """Search through GET /api/files?q= without writing.
+
+        Returns:
+            None. The test fails if the route ignores q or returns a file
+            that does not match.
+        """
+        nested = self.music / "Deep"
+        nested.mkdir()
+        (nested / "House Mix.mp3").write_bytes(b"nested")
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        host, port = httpd.server_address
+        base = f"http://{host}:{port}"
+        try:
+            status, body = _request(base, "/api/files?q=house")
+            self.assertEqual(status, 200)
+            assert isinstance(body, dict)
+            self.assertTrue(body["search"])
+            self.assertEqual(body["query"], "house")
+            self.assertIn("House Mix.mp3", [str(entry["name"]) for entry in body["entries"]])
+            missing_status, missing = _request(base, "/api/files?q=zzzz-not-a-track")
+            self.assertEqual(missing_status, 200)
+            assert isinstance(missing, dict)
+            self.assertEqual(missing["entries"], [])
+            long_status, long_body = _request(base, "/api/files?q=" + ("a" * 201))
+            self.assertEqual(long_status, 400)
+            assert isinstance(long_body, dict)
+            self.assertEqual(long_body["error"], "That search is too long.")
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            thread.join(timeout=3)
+
 
 def _title_tag(text: str) -> bytes:
     """Build a tiny ID3v2.3 tag whose only frame is a title.

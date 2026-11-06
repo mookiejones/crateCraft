@@ -3,7 +3,7 @@ import type { Track } from "./api-types";
 import { state } from "./state";
 import { installPage } from "./test-page";
 import { mountTrackList } from "./virtual-scroll";
-import { renderCrates, renderFiles, renderList, renderSessions } from "./views";
+import { renderCrates, renderFiles, renderList, renderSessions, selectCrate, toggleCrate } from "./views";
 
 vi.hoisted(() => {
   vi.stubGlobal("fetch", () => {
@@ -55,6 +55,14 @@ function resetState(): void {
   state.filesError = "";
   state.filesMessage = "";
   state.filesTruncated = false;
+  state.filesAtRoots = false;
+  state.filesRoots = [];
+  state.filesRoot = null;
+  state.filesBreadcrumb = [];
+  state.filesElsewhere = false;
+  state.filesActive = 0;
+  state.filesQuery = "";
+  state.filesSearching = false;
   state.view = [];
 }
 
@@ -126,9 +134,14 @@ describe("library views", () => {
     expect(session?.getAttribute("aria-selected")).toBe("true");
     const columns = [...document.querySelectorAll<HTMLButtonElement>(".columns button")].map((button) => button.textContent);
     expect(columns).toEqual(["Title", "Artist", "Deck", "Played", "Time"]);
+    expect(document.querySelector(".columns")?.classList.contains("for-history")).toBe(true);
+    expect(document.getElementById("list")?.classList.contains("for-history")).toBe(true);
     expect(titles()).toEqual(["Alpha"]);
     expect(document.querySelector("#list .row")?.textContent).toContain("Yes");
     expect(document.querySelector("#count")?.textContent).toBe("1 play");
+    state.mode = "crates";
+    renderList();
+    expect(document.querySelector(".columns")?.classList.contains("for-history")).toBe(false);
   });
 
   it("shows missing tracks and the missing note", () => {
@@ -175,19 +188,22 @@ describe("library views", () => {
     state.mode = "files";
     state.writable = true;
     state.filesPath = "/music";
-    state.filesParent = "/";
+    state.filesParent = null;
+    state.filesRoot = { name: "Music", path: "/music", kind: "folder" };
+    state.filesBreadcrumb = [{ name: "Music", path: "/music" }];
     state.filesEntries = [
-      { name: "Crates", kind: "dir", path: "/music/Crates" },
       { name: "a.mp3", kind: "file", path: "/music/a.mp3", in_library: true },
       { name: "alias", kind: "link", path: "/music/alias" },
+      { name: "Crates", kind: "dir", path: "/music/Crates" },
     ];
     renderFiles();
-    const text = document.querySelector("#files-list")?.textContent ?? "";
-    expect(text).toContain("Crates");
-    expect(text).toContain("a.mp3");
-    expect(text).toContain("In library");
-    expect(text).toContain("alias (shortcut)");
-    expect(document.querySelector("#files-path")?.textContent).toBe("/music");
+    const names = [...document.querySelectorAll<HTMLElement>("#files-list .files-row")].map((row) => row.textContent ?? "");
+    expect(names[0]).toContain("Crates");
+    expect(names[1]).toContain("a.mp3");
+    expect(names[2]).toContain("alias (shortcut)");
+    expect(names[1]).toContain("In library");
+    expect(document.querySelector("#files-path")?.textContent).toContain("Music");
+    expect((document.querySelector("#files-up") as HTMLButtonElement).disabled).toBe(true);
     expect((document.querySelector("#files-rename") as HTMLButtonElement).disabled).toBe(true);
     expect(document.querySelector("#mode-note")?.textContent).toContain("Files on disk");
 
@@ -207,3 +223,83 @@ describe("library views", () => {
     expect(document.querySelector("#files-status")?.textContent).toContain("Reading this folder.");
   });
 });
+
+describe("crate search (#38)", () => {
+  beforeEach(() => {
+    installPage();
+    mountTrackList();
+    resetState();
+    state.rootId = 1;
+    state.crates = [
+      { id: 2, name: "Weddings", parent: 1, order: 0 },
+      { id: 3, name: "First Dance", parent: 2, order: 0 },
+      { id: 4, name: "Deep House", parent: 3, order: 0 },
+      { id: 5, name: "Corporate", parent: 1, order: 1 },
+      { id: 6, name: "House Classics", parent: 5, order: 0 },
+      { id: 7, name: "Hip Hop", parent: 1, order: 2 },
+    ];
+    state.crateTracks = new Map();
+  });
+
+  function shown(): string[] {
+    return [...document.querySelectorAll<HTMLElement>("#crate-list .name")].map((node) => node.textContent ?? "");
+  }
+
+  it("finds a deep subcrate with its whole path and hides the rest", () => {
+    state.crateQuery = "deep";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Weddings", "First Dance", "Deep House"]);
+  });
+
+  it("ignores case and needs every word, in any order", () => {
+    state.crateQuery = "HOUSE classics";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Corporate", "House Classics"]);
+    state.crateQuery = "house";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Weddings", "First Dance", "Deep House", "Corporate", "House Classics"]);
+    state.crateQuery = "house hip";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks"]);
+  });
+
+  it("does not change the saved expanded state while searching", () => {
+    state.crateQuery = "deep";
+    renderCrates();
+    toggleCrate(2);
+    expect(state.expanded.has(2)).toBe(false);
+    expect(shown()).toContain("Deep House");
+  });
+
+  it("keeps a crate picked from the search visible after the search is cleared", () => {
+    state.crateQuery = "deep";
+    renderCrates();
+    selectCrate(4);
+    state.crateQuery = "";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Weddings", "First Dance", "Deep House", "Corporate", "Hip Hop"]);
+    const picked = document.querySelector<HTMLElement>('#crate-list .crate[data-id="4"]');
+    expect(picked?.getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("marks the visible parent when the search hides the selected crate", () => {
+    selectCrate(4);
+    state.crateQuery = "first";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Weddings", "First Dance"]);
+    const holder = document.querySelector<HTMLElement>("#crate-list .crate-row.holds-selection");
+    expect(holder?.textContent).toContain("First Dance");
+  });
+
+  it("stops at a parent loop instead of hanging", () => {
+    state.crates = [
+      { id: 2, name: "Loop A", parent: 3, order: 0 },
+      { id: 3, name: "Loop B", parent: 2, order: 0 },
+    ];
+    state.crateQuery = "loop a";
+    renderCrates();
+    selectCrate(2);
+    expect(state.activeCrate).toBe(2);
+  });
+});
+

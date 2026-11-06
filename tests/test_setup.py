@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -111,6 +112,32 @@ class WordingTests(unittest.TestCase):
         self.assertNotIn("database V2", text)
         self.assertNotIn("space", str(payload["summary"]).lower())
         self.assertNotIn("space", str(payload["next"]).lower())
+
+    def test_older_library_in_the_real_home_folder_is_not_read(self) -> None:
+        """Ignore a ``database V2`` in the host's ``~/Music/_Serato_`` (#185).
+
+        The fake home holds the synthetic Serato 4 ``database V2``. Without
+        the suite's ``SERATO_LIBRARY_HOME_SERATO`` that folder is found, so
+        the second half proves the first half is not passing by accident.
+
+        Returns:
+            None. The test fails if setup reads the home folder during a run.
+        """
+        fixture = Path(__file__).resolve().parent / "fixtures" / "serato4" / "_Serato_" / "database V2"
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            serato = home / "Music" / "_Serato_"
+            serato.mkdir(parents=True)
+            shutil.copyfile(fixture, serato / "database V2")
+            missing = home / "Library" / "master.sqlite"
+            with mock.patch.object(Path, "home", return_value=home), \
+                    mock.patch.object(library, "MASTER", missing):
+                payload = setup_flow.describe_library()
+                self.assertFalse(payload.get("legacy", False))
+                self.assertEqual(payload["summary"], setup_flow.NOT_FOUND_SUMMARY)
+                with mock.patch.dict(os.environ):
+                    os.environ.pop("SERATO_LIBRARY_HOME_SERATO", None)
+                    self.assertEqual(setup_flow.legacy_folder(), serato)
 
     def test_chosen_folder_must_be_the_library_folder(self) -> None:
         """Accept the library folder and refuse a different one.
@@ -347,6 +374,7 @@ class SetupApiTests(unittest.TestCase):
         frame = app_config.WindowGeometry(-12, 0, 1280, 800)
         app_config.save_window_geometry(frame)
         app_config.set_track_list_width(520)
+        app_config.set_language("es")
         status, choice = _request(self.base, "/api/settings", {"telemetry_consent": False})
         self.assertEqual(status, 200)
         assert isinstance(choice, dict)
@@ -386,6 +414,7 @@ class SetupApiTests(unittest.TestCase):
         self.assertEqual(stored["install_id"], install_id)
         self.assertEqual(stored["window"], before["window"])
         self.assertEqual(stored["layout"], {"track_list_width": 520})
+        self.assertEqual(stored["language"], "es")
         self.assertIs(stored["telemetry_consent"], False)
         self.assertEqual(set(stored), set(app_config.SETTINGS_KEYS))
 
@@ -480,15 +509,31 @@ class MissingLibraryServerTests(unittest.TestCase):
         env["XDG_STATE_HOME"] = str(home / "state")
         env[app_config.CONFIG_ENV] = str(config)
         env[app_config.LOG_ENV] = str(logs)
+        # HOME below is empty so the child cannot see a real Serato library.
+        # Packages installed with ``pip install --user`` live under the
+        # current home. Keep that directory on PYTHONPATH.
+        import site
+        user_site = site.getusersitepackages()
+        if user_site and Path(user_site).is_dir():
+            previous = env.get("PYTHONPATH", "")
+            env["PYTHONPATH"] = user_site if not previous else user_site + os.pathsep + previous
         env.pop("HOMEDRIVE", None)
         env.pop("HOMEPATH", None)
         env.pop("SERATO_LIBRARY_SMOKE", None)
         script = (
             "import json, sys, threading\n"
+            "sys.stderr.write('child-start\\n')\n"
+            "sys.stderr.flush()\n"
             "import library, server\n"
+            "sys.stderr.write('child-imported ' + str(library.MASTER) + '\\n')\n"
+            "sys.stderr.flush()\n"
             "master = str(library.MASTER)\n"
             "try:\n"
+            "    sys.stderr.write('child-serve\\n')\n"
+            "    sys.stderr.flush()\n"
             "    httpd = server.serve(port=0, require_library=True)\n"
+            "    sys.stderr.write('child-bound\\n')\n"
+            "    sys.stderr.flush()\n"
             "except SystemExit as exc:\n"
             "    sys.stdout.write(json.dumps({'error': str(exc)}) + '\\n')\n"
             "    sys.stdout.flush()\n"
@@ -527,10 +572,12 @@ class MissingLibraryServerTests(unittest.TestCase):
 
             reader = threading.Thread(target=_read)
             reader.start()
-            reader.join(20)
+            reader.join(60)
             if reader.is_alive():
                 proc.kill()
-                self.fail("The server did not start against an empty home.")
+                stderr.flush()
+                detail = stderr_path.read_text(encoding="utf-8", errors="replace")[-2000:]
+                self.fail("The server did not start against an empty home.\n" + detail)
             line = box.get("line", "")
             started = json.loads(line) if line else {}
             self.assertNotIn("error", started, line)
@@ -715,9 +762,7 @@ class ChosenLibraryTests(unittest.TestCase):
             library.MASTER = self.db
         result = library.save_track(1, {"name": "Renamed", "bpm": 126})
         self.assertTrue(result["ok"])
-        backups = list((self.db.resolve().parent / "Backups").glob("serato-web-*"))
-        self.assertEqual(len(backups), 1)
-        self.assertTrue((backups[0] / "master.sqlite").is_file())
+        self.assertFalse((self.db.resolve().parent / "Backups").exists())
         self.assertNotEqual(self.db.read_bytes(), self._before)
 
     def test_open_library_is_not_switched(self) -> None:

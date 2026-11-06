@@ -41,12 +41,15 @@ App version **1.1.0** is in source and is not a GitHub Release yet. The [release
 These are on `main` (1.1.0).
 
 - Browse crates, history, missing files, stems, and Prepare.
+- Play a track in the window. Double-click a row, or use Play. The player bar has pause, seek, and volume. Only files already in the library are streamed, and playback does not write to them.
 - Merge duplicate copies into the file you keep. Cue points stay in the audio file.
 - Import and export M3U. Export `rekordbox.xml`. **Hot loops** starts off, and the app remembers that checkbox in its settings. Uses a free hot-cue pad. What that file keeps is in [docs/coming-from-rekordbox.md](docs/coming-from-rekordbox.md).
 - Save related tracks in `related.sqlite` next to the app settings, not in Serato's library.
 - Rename, move, replace, and trash audio, and update the library path.
 - Keep hash-checked snapshots of the database, the crates on each drive, and the Serato frames inside audio files. Preview a restore, then confirm. Confirm saves a snapshot first. The music bytes are not copied into the snapshot. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
-- The first write in a session copies the database into `Library/Backups`. An unfinished copy is not offered for restore.
+- Run **Before a gig**, a read-only check before a gig. It gives a ready score and a Holding it back list: missing files, a drive that is not connected, Apple Music streaming tracks, empty crates, whether a snapshot from the last 7 days exists, and what changed since the latest snapshot. A missing drive, or a missing file in the crate you selected, is not ready. `python3 gig_check.py` prints the same report. See [Before a gig](docs/guide/gig-check.md).
+- The first write in a session copies the database and each connected drive's `_Serato_` folder into `Library/Backups`. An unplugged or unreadable drive is listed and skipped. `Recording` and `DJ Sessions` are not copied. An unfinished copy is not offered for restore.
+- English and Spanish. **Settings** → **Language** switches the whole page at once; Same as the system follows the OS language.
 - Ask before sharing anonymous counts and crash reports. Setup asks on the first launch. Sharing stays off until you opt in. See [PRIVACY.md](PRIVACY.md).
 
 The page source is strict TypeScript in `src/`. `npm run build` writes the `static/app.js` the server loads. Node is not required to run the server. Node 22 or newer is required to typecheck and rebuild that file.
@@ -125,15 +128,15 @@ CI runs that discovery with `python` in [`.github/workflows/ci.yml`](.github/wor
 
 | | |
 | --- | --- |
-| App | `app_config.APP_VERSION` is the string `GET /api/version` returns. A release build stamps the tag into `_version.py`. Latest GitHub Release: v0.1.1. |
+| App | `app_config.APP_VERSION` is the string `GET /api/version` returns. The rail footer and Settings → About show that string. A release build stamps the tag into `_version.py`. Latest GitHub Release: v0.1.1. |
 | Python | 3.12 and 3.14 on Ubuntu CI. 3.12 on Windows CI. Frozen builds embed 3.12. |
 | OS | macOS and Windows for the app. Linux runs the test suite and is not a published build. |
-| Serato | Serato DJ Pro. Writes and restores run when the version is a dotted number below 5. Serato 5 can be snapshotted and read. Writes and restores stay off while Lucid and Flexible beatgrid storage is not verified. An unknown version blocks writes. |
+| Serato | Serato DJ Pro. The newest `_Serato_/Logs` session log can name Serato 4 or Serato 5. A missing log folder uses the installed app version. Writes and restores run when the version is a dotted number below 5. Serato 5 can be snapshotted and read. Writes and restores stay off while Lucid and Flexible beatgrid storage is not verified. An unknown installed version blocks writes even when a session log names Serato 4. |
 
 ## Guides
 
-- [Panic page](docs/panic.md). Red tracks, missing crates, a drive that will not mount, or a library that looks wrong after a Serato update. Restore in the app is **Snapshots**, then **Review restore**.
-- [Is my library safe?](docs/is-my-library-safe.md). Snapshots, restore, undo, and the outside-change watcher. The gig check is **PREVIEW** until [#41](https://github.com/mookiejones/serato-library-manager/issues/41) merges. The pictures are example layouts.
+- [Panic page](docs/panic.md). Red tracks, missing crates, a drive that will not mount, or a library that looks wrong after a Serato update. Restore in the app is **Backups**, then **Review restore**.
+- [Is my library safe?](docs/is-my-library-safe.md). Snapshots, restore, undo, and the outside-change watcher. The gig check is in the app. The pictures are example layouts.
 - [Moving between Serato and Rekordbox](docs/coming-from-rekordbox.md). What the export keeps.
 - [User guide](docs/index.md). The rest of the app.
 
@@ -141,4 +144,4 @@ CI runs that discovery with `python` in [`.github/workflows/ci.yml`](.github/wor
 
 The user guide is [docs/index.md](docs/index.md) and [the published site](https://mookiejones.github.io/serato-library-manager/). Contributing is [CONTRIBUTING.md](CONTRIBUTING.md). Security reports are [SECURITY.md](SECURITY.md). Actions and releases are [docs/github.md](docs/github.md). The roadmap is the [Serato Tools Roadmap](https://github.com/users/mookiejones/projects/3).
 
-This repository has no `LICENSE` file. GitHub reports the license as not specified.
+This repository has no `LICENSE` file. GitHub reports the license as not specified. Third-party license notes, including the GCC Runtime Library Exception for `libgfortran` and `libquadmath` inside the NumPy wheel, are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

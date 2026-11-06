@@ -6,11 +6,32 @@
  * the page already treats that as empty.
  */
 
+export interface LibraryGeneration {
+  kind?: string;
+  source?: string;
+  version?: string;
+  build?: string;
+  newest_version?: string;
+  database?: string;
+  log_name?: string;
+  mounted?: boolean | null;
+  downgrade?: boolean;
+  confirmed?: boolean | null;
+  reason?: string;
+  install_version?: string;
+}
+
 export interface SeratoStatus {
   writable?: boolean;
   message?: string;
   file_manager?: string;
   open?: boolean;
+  /** Stable code when `message` is a translated notice. */
+  code?: string;
+  /** Placeholder values for `code`, such as the Serato build. */
+  params?: Record<string, string>;
+  /** Serato 4, Serato 5, or unknown, and why that was chosen. */
+  generation?: LibraryGeneration;
 }
 
 export interface EditFields {
@@ -29,6 +50,8 @@ export interface Marker {
   index?: number;
   locked?: boolean;
   position?: number | string | null;
+  /** Stored beatgrid time in seconds. The panel string is `position`. */
+  position_seconds?: number;
   bpm?: number | string | null;
   beats?: number | string | null;
 }
@@ -201,6 +224,40 @@ export interface FileEntry {
   kind: string;
   path: string;
   in_library?: boolean;
+  missing?: boolean;
+  detail?: string;
+  /** Present on a name search. Higher is a closer match. */
+  score?: number;
+}
+
+export interface FileRoot {
+  name: string;
+  path: string;
+  kind: string;
+  missing?: boolean;
+}
+
+export type LibraryRootKind = "music_library" | "serato_drive" | "user_folder";
+
+export interface LibraryRoot {
+  id: string;
+  path: string;
+  label: string;
+  detail: string;
+  kind: LibraryRootKind;
+  serato: boolean;
+  removable: boolean;
+  missing: boolean;
+}
+
+export interface LibraryRootsPayload {
+  roots: LibraryRoot[];
+  computed_at: string;
+}
+
+export interface FileCrumb {
+  name: string;
+  path: string;
 }
 
 export interface FileChange {
@@ -214,6 +271,12 @@ export interface FilesPayload {
   path?: string;
   parent?: string | null;
   entries?: FileEntry[];
+  search?: boolean;
+  query?: string;
+  roots?: FileRoot[];
+  root?: FileRoot | null;
+  breadcrumb?: FileCrumb[];
+  elsewhere?: boolean;
   truncated?: boolean;
   serato?: SeratoStatus | null;
   error?: string;
@@ -311,7 +374,17 @@ export interface SettingsPayload {
   layout?: { track_list_width: number | null };
   app_version?: string;
   rekordbox?: RekordboxSettings;
+  /** Saved page language, or null to follow the OS. */
+  language?: string | null;
   error?: string;
+  code?: string;
+}
+
+/** JSON body of GET /api/version. commit is null when git cannot name one. */
+export interface VersionPayload {
+  version: string;
+  commit: string | null;
+  source: "release" | "git" | "dev";
 }
 
 export interface LogsPayload {
@@ -366,8 +439,23 @@ export interface RestorePlan {
   cues?: FrameDiff[];
   grids?: FrameDiff[];
   deleted?: DeletedPlan;
+  /**
+   * Crate files the snapshot database has not heard of. Restore writes
+   * them into the library so Serato 4/5 does not delete them on launch.
+   */
+  crates_registered?: PlanName[];
+  /** Crate files whose snapshot copy has no hash or could not be read. */
+  crates_skipped?: PlanName[];
+  /** English warning when crate files will not be registered. */
+  registration_warning?: string | null;
+  /** Catalog code for `registration_warning`. */
+  registration_warning_code?: string | null;
   dry_run?: boolean;
   restore_blocked?: string | null;
+  /** Catalog code for `restore_blocked` when that sentence can be translated. */
+  restore_blocked_code?: string;
+  /** Placeholder values for `restore_blocked_code`. */
+  restore_blocked_params?: Record<string, string>;
   error?: string;
 }
 
@@ -386,15 +474,90 @@ export interface PendingUndo {
   source?: string;
 }
 
+export interface DriveCopy {
+  drive_id?: string;
+  label?: string;
+  role?: string;
+  present?: boolean;
+  status?: string;
+  files?: number;
+}
+
+/** Newest finished plain backup, after its hashes have been checked. */
+export interface DriveBackup {
+  folder?: string;
+  verified?: boolean;
+  drives?: DriveCopy[];
+}
+
+export interface OperationEntry {
+  time?: string;
+  action?: string;
+  operation?: string;
+  target?: string;
+  result?: string;
+  verified?: boolean;
+  rolled_back?: boolean;
+  snapshot_before?: string | null;
+  snapshot_after?: string | null;
+}
+
+export interface OperationList {
+  operations?: OperationEntry[];
+  error?: string;
+  code?: string;
+}
+
 export interface SnapshotList {
   snapshots?: SnapshotInfo[];
   pending_undo?: PendingUndo | null;
   write_block?: string;
+  /** Catalog code for `write_block` when that sentence can be translated. */
+  write_block_code?: string;
+  /** Placeholder values for `write_block_code`. */
+  write_block_params?: Record<string, string>;
   serato_running?: boolean;
+  drive_backup?: DriveBackup | null;
+  error?: string;
+}
+
+export interface GigDeduction {
+  code: string;
+  points: number;
+  hard_red: boolean;
+  summary: string;
+}
+
+export interface GigChanges {
+  crates_added: string[];
+  crates_removed: string[];
+  crates_edited: string[];
+  tracks_added: string[];
+  tracks_removed: string[];
+  cues_edited: string[];
+  grids_edited: string[];
+  tags_edited: string[];
+}
+
+export interface GigReport {
+  ready: boolean;
+  score: number;
+  hard_red: boolean;
+  holding_it_back?: GigDeduction[];
+  missing_files?: Array<{ path: string; title: string; artist: string; crate: string }>;
+  unavailable_drives?: Array<{ name: string; track_count: number; crates: string[] }>;
+  streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string }>;
+  empty_crates?: Array<{ name: string; warning: string }>;
+  snapshot_note?: string;
+  changes?: GigChanges | null;
+  scope?: { space: string; crate_id: number | null; crate_name: string | null };
+  checked_at?: string;
   error?: string;
 }
 
 export interface ErrorBody {
   error?: string;
+  /** Stable code for a known error sentence. The page translates it. */
+  code?: string;
   serato?: SeratoStatus | null;
 }
