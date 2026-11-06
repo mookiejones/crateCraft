@@ -6,6 +6,7 @@
  * loadLibrary. Settings load when the dialogs wire. server.py uses port
  * 8765. The desktop app uses a free port, and this page calls the same
  * origin. Snapshot UI is src/restore.ts. The gig check is src/gig.ts.
+ * Help is src/help.ts. It does not post to GitHub.
  * The portable drive check is src/portable.ts. It does not write.
  * This file does not open master.sqlite itself. The page language is set
  * before the first paint and every view repaints when it changes; see
@@ -16,6 +17,7 @@ import { failureOf } from "./api";
 import { wireDialogs } from "./dialogs";
 import { el } from "./dom";
 import { wireGigCheck } from "./gig";
+import { wireHelp } from "./help";
 import { wirePortable } from "./portable";
 import { wireLayout } from "./layout";
 import { wireLocale } from "./locale-wiring";
@@ -90,6 +92,7 @@ wireVirtualScroll();
 wireShortcuts();
 installDesktopActions();
 wireDialogs();
+wireHelp();
 wireSnapshots();
 wireGigCheck(() => {
   setMode("crates");
