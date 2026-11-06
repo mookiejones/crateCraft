@@ -94,7 +94,7 @@ python3 server.py
 
 Open `http://127.0.0.1:8765`. The server uses the Python standard library. On macOS the library is `~/Library/Application Support/Serato/Library/master.sqlite`. On Windows it is `%LOCALAPPDATA%\Serato\Library\master.sqlite`. Stop the server with Ctrl-C.
 
-In VS Code, press F5. That launch runs `server.py`.
+In VS Code, press F5. That launch runs `server.py`. Choose **Python: Run desktop.py** to debug the native window with `.venv`.
 
 ### Desktop app
 

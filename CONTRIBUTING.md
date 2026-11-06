@@ -66,7 +66,7 @@ python3 -m venv .venv
 
 `desktop.py` starts the local server and opens a native window titled Serato Library. The window uses the system web view (WebView2, WKWebView, or WebKitGTK / Qt WebKit) and does not bundle Chromium. On Windows, use `.venv\Scripts\python`. On macOS, also install `requirements-macos.txt`. On Linux, install WebKitGTK or Qt WebKit.
 
-`python3 server.py` serves `http://127.0.0.1:8765`. Press F5 in VS Code to run that launch.
+`python3 server.py` serves `http://127.0.0.1:8765`. Press F5 in VS Code to run that launch. **Python: Run desktop.py** debugs the native window with `.venv`.
 
 Page color and type tokens are in `static/tokens.css`. The page source is strict TypeScript in `src/`. Edit that, then run `npm run build` so the committed `static/app.js` stays current. Node 22 or newer matches `engines` in `package.json`. Do not hand-edit `static/app.js`.
 
