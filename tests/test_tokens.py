@@ -366,6 +366,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".brand .generation-note", ("--color-bg",), 13, 400),
     (".rail select", ("--color-bg",), 15, 400),
     (".rail-field input", ("--color-bg",), 15, 400),
+    (".view-group-label", ("--color-bg",), 13, 600),
     (".view-switch button", ("--color-bg",), 15, 400),
     (".sort-crates button", ("--color-bg",), 15, 400),
     (".crate-actions button", ("--color-bg",), 15, 400),
