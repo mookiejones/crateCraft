@@ -83,6 +83,7 @@ textarea:focus-visible,
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: hidden;
   color: var(--manila);
   padding: 22px var(--space-3) var(--space-4);
   box-shadow: inset 4px 0 0 var(--colorway-accent);
@@ -153,12 +154,33 @@ html[data-colorway="daisy-age"] { --colorway-accent: var(--colorway-daisy-age-ac
 
 .rail select { color-scheme: dark; }
 
-.view-switch,
+.view-switch {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 0 var(--space-1) 10px;
+}
+
+.view-group-label {
+  margin: 0 0 4px;
+  color: var(--color-text-muted-on-dark);
+  font-size: var(--font-body);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.view-group-tabs,
 .sort-crates,
 .crate-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1) 10px;
+  margin: 0;
+}
+
+.sort-crates,
+.crate-actions {
   margin: 0 var(--space-1) 10px;
 }
 
@@ -168,6 +190,11 @@ html[data-colorway="daisy-age"] { --colorway-accent: var(--colorway-daisy-age-ac
 .sort-crates button,
 .crate-actions button {
   color: var(--color-text-muted-on-dark);
+}
+
+.view-group-tabs button {
+  min-height: 44px;
+  padding: 8px 0;
 }
 
 .view-switch button[aria-selected="true"],
@@ -218,6 +245,7 @@ html[data-colorway="daisy-age"] { --colorway-accent: var(--colorway-daisy-age-ac
 .crate-foot { font-variant-numeric: tabular-nums; }
 
 .crates {
+  flex: 1;
   overflow: auto;
   min-height: 0;
   padding-right: var(--space-1);
