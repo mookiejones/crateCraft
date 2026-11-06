@@ -1033,14 +1033,57 @@ def _apply_launch_icon() -> None:
         app_log.logger.exception("The app icon could not be changed")
 
 
-def _on_window_shown(window: object) -> None:
-    """Place the window, then match the icon to the saved theme.
+def _point_mac_about_at_settings(dispatch: object) -> None:
+    """Point the Mac About item at the Settings About block.
+
+    pywebview always adds the system About panel as the first app-menu
+    item. This keeps that one item and changes where it goes, so the
+    menu does not grow a second About. Other platforms return at once.
+
+    Args:
+        dispatch: Called with ``about`` when the item is chosen.
+    """
+    if sys.platform != "darwin":
+        return
+    if not callable(dispatch):
+        return
+    try:
+        import AppKit
+        from webview.platforms.cocoa import menu_handler
+    except ImportError:
+        return
+    try:
+        main = AppKit.NSApplication.sharedApplication().mainMenu()
+        if main is None or main.numberOfItems() < 1:
+            return
+        submenu = main.itemAtIndex_(0).submenu()
+        if submenu is None or submenu.numberOfItems() < 1:
+            return
+        about = submenu.itemAtIndex_(0)
+        action = about.action()
+        name = action if isinstance(action, str) else str(action)
+        if "orderFrontStandardAboutPanel" not in name:
+            return
+        action_id = "about.settings"
+        menu_handler.register_action(action_id, lambda: dispatch("about"))
+        about.setAction_("handleMenuAction:")
+        about.setTarget_(menu_handler)
+        about.setRepresentedObject_(action_id)
+    except Exception:
+        app_log.logger.exception("The Mac About menu could not be pointed at Settings")
+
+
+def _on_window_shown(window: object, dispatch: object | None = None) -> None:
+    """Place the window, match the icon, and point Mac About at Settings.
 
     Args:
         window: pywebview window that has already been shown.
+        dispatch: Menu action runner. Used to retarget the Mac About item.
     """
     _place_on_screen(window)
     _apply_launch_icon()
+    if callable(dispatch):
+        _point_mac_about_at_settings(dispatch)
 
 
 def _place_on_screen(window: object) -> None:
@@ -1217,7 +1260,7 @@ def open_window(
     window.events.resized += note_window_resized
     window.events.moved += note_window_moved
     app_icons.bind_window(window)
-    window.events.shown += lambda: _on_window_shown(window)
+    window.events.shown += lambda: _on_window_shown(window, dispatch)
     window.events.closed += lambda: _close_window(url, token)
     httpd.focus_window = lambda: _focus(window)
 
