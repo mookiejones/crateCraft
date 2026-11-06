@@ -3,7 +3,7 @@ import type { Track } from "./api-types";
 import { state } from "./state";
 import { installPage } from "./test-page";
 import { mountTrackList } from "./virtual-scroll";
-import { renderCrates, renderFiles, renderList, renderSessions } from "./views";
+import { renderCrates, renderFiles, renderList, renderSessions, selectCrate, toggleCrate } from "./views";
 
 vi.hoisted(() => {
   vi.stubGlobal("fetch", () => {
@@ -223,3 +223,83 @@ describe("library views", () => {
     expect(document.querySelector("#files-status")?.textContent).toContain("Reading this folder.");
   });
 });
+
+describe("crate search (#38)", () => {
+  beforeEach(() => {
+    installPage();
+    mountTrackList();
+    resetState();
+    state.rootId = 1;
+    state.crates = [
+      { id: 2, name: "Weddings", parent: 1, order: 0 },
+      { id: 3, name: "First Dance", parent: 2, order: 0 },
+      { id: 4, name: "Deep House", parent: 3, order: 0 },
+      { id: 5, name: "Corporate", parent: 1, order: 1 },
+      { id: 6, name: "House Classics", parent: 5, order: 0 },
+      { id: 7, name: "Hip Hop", parent: 1, order: 2 },
+    ];
+    state.crateTracks = new Map();
+  });
+
+  function shown(): string[] {
+    return [...document.querySelectorAll<HTMLElement>("#crate-list .name")].map((node) => node.textContent ?? "");
+  }
+
+  it("finds a deep subcrate with its whole path and hides the rest", () => {
+    state.crateQuery = "deep";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Weddings", "First Dance", "Deep House"]);
+  });
+
+  it("ignores case and needs every word, in any order", () => {
+    state.crateQuery = "HOUSE classics";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Corporate", "House Classics"]);
+    state.crateQuery = "house";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Weddings", "First Dance", "Deep House", "Corporate", "House Classics"]);
+    state.crateQuery = "house hip";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks"]);
+  });
+
+  it("does not change the saved expanded state while searching", () => {
+    state.crateQuery = "deep";
+    renderCrates();
+    toggleCrate(2);
+    expect(state.expanded.has(2)).toBe(false);
+    expect(shown()).toContain("Deep House");
+  });
+
+  it("keeps a crate picked from the search visible after the search is cleared", () => {
+    state.crateQuery = "deep";
+    renderCrates();
+    selectCrate(4);
+    state.crateQuery = "";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Weddings", "First Dance", "Deep House", "Corporate", "Hip Hop"]);
+    const picked = document.querySelector<HTMLElement>('#crate-list .crate[data-id="4"]');
+    expect(picked?.getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("marks the visible parent when the search hides the selected crate", () => {
+    selectCrate(4);
+    state.crateQuery = "first";
+    renderCrates();
+    expect(shown()).toEqual(["All tracks", "Weddings", "First Dance"]);
+    const holder = document.querySelector<HTMLElement>("#crate-list .crate-row.holds-selection");
+    expect(holder?.textContent).toContain("First Dance");
+  });
+
+  it("stops at a parent loop instead of hanging", () => {
+    state.crates = [
+      { id: 2, name: "Loop A", parent: 3, order: 0 },
+      { id: 3, name: "Loop B", parent: 2, order: 0 },
+    ];
+    state.crateQuery = "loop a";
+    renderCrates();
+    selectCrate(2);
+    expect(state.activeCrate).toBe(2);
+  });
+});
+

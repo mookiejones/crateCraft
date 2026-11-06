@@ -16,6 +16,7 @@ import type {
   HistorySession,
   OperationEntry,
   PendingUndo,
+  PresetRecord,
   SeratoStatus,
   DriveBackup,
   SnapshotInfo,
@@ -57,6 +58,8 @@ export interface PageState {
   byId: Map<number, Track>;
   crates: Crate[];
   crateTracks: Map<number, Set<number>>;
+  /** Preset crates of this space, keyed by crate id. */
+  presets: Record<string, PresetRecord>;
   rootId: number | null | undefined;
   activeCrate: number | "all";
   query: string;
@@ -122,6 +125,7 @@ export const state: PageState = {
   byId: new Map(),
   crates: [],
   crateTracks: new Map(),
+  presets: {},
   rootId: null,
   activeCrate: "all",
   query: "",

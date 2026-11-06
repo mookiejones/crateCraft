@@ -31,7 +31,7 @@ import os
 import sqlite3
 import tempfile
 import time
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from contextlib import closing
 from pathlib import Path
 
@@ -158,6 +158,7 @@ def normalize(preset: object) -> dict[str, object]:
             raise LibraryError("That crate is not in this space.")
         clean["crate"] = crate
     return clean
+
 
 
 def genre_key(text: str) -> str:
@@ -672,26 +673,7 @@ def refresh(crate_id: int) -> dict[str, object]:
         Returns:
             The result dict.
         """
-        wanted = matching_ids(conn, space, clean)
-        current = _members(conn, crate_id)
-        keep = set(wanted)
-        have = set(current)
-        removed = [asset_id for asset_id in current if asset_id not in keep]
-        added = [asset_id for asset_id in wanted if asset_id not in have]
-        warning: object = None
-        for asset_id in removed:
-            warning = library._membership(conn, crate_id, asset_id, space, False).get("warning") or warning
-        for asset_id in added:
-            warning = library._membership(conn, crate_id, asset_id, space, True).get("warning") or warning
-        _expect_members(write, crate_id, tuple(wanted))
-        return {
-            "ok": True,
-            "id": crate_id,
-            "added": len(added),
-            "removed": len(removed),
-            "count": len(wanted),
-            "warning": warning,
-        }
+        return _sync(conn, write, crate_id, space, clean)
 
     result = safe_write.run("preset_refresh", label, apply)
     updated = int(time.time())
@@ -700,12 +682,165 @@ def refresh(crate_id: int) -> dict[str, object]:
     return result
 
 
+def _plan(conn: sqlite3.Connection, crate_id: int, space: str, preset: Mapping[str, object]) -> tuple[list[int], list[int], list[int]]:
+    """Work out how one preset crate differs from its preset.
+
+    Args:
+        conn: Open connection. Only SELECT statements run.
+        crate_id: Container id.
+        space: Space name.
+        preset: A preset from :func:`normalize`.
+
+    Returns:
+        ``(wanted, added, removed)``: the matching ids, the ids to add, and
+        the ids to remove. Both change lists are empty when the crate is current.
+    """
+    wanted = matching_ids(conn, space, preset)
+    current = _members(conn, crate_id)
+    keep = set(wanted)
+    have = set(current)
+    removed = [asset_id for asset_id in current if asset_id not in keep]
+    added = [asset_id for asset_id in wanted if asset_id not in have]
+    return wanted, added, removed
+
+
+def _sync(
+    conn: sqlite3.Connection,
+    write: object,
+    crate_id: int,
+    space: str,
+    preset: Mapping[str, object],
+) -> dict[str, object]:
+    """Apply one preset crate's changes inside an open write and register its check.
+
+    Args:
+        conn: Open write connection.
+        write: The ``safe_write.Session``.
+        crate_id: Container id.
+        space: Space name.
+        preset: A preset from :func:`normalize`.
+
+    Returns:
+        ``id``, ``added``, ``removed``, ``count``, and ``warning``.
+    """
+    wanted, added, removed = _plan(conn, crate_id, space, preset)
+    warning: object = None
+    for asset_id in removed:
+        warning = library._membership(conn, crate_id, asset_id, space, False).get("warning") or warning
+    for asset_id in added:
+        warning = library._membership(conn, crate_id, asset_id, space, True).get("warning") or warning
+    _expect_members(write, crate_id, tuple(wanted))
+    return {
+        "ok": True,
+        "id": crate_id,
+        "added": len(added),
+        "removed": len(removed),
+        "count": len(wanted),
+        "warning": warning,
+    }
+
+
+def refresh_all() -> dict[str, object]:
+    """Bring every preset crate of this library up to date, writing only when needed.
+
+    The page calls this once when it opens. Stale records are pruned first.
+    Each crate is compared read-only. When none changed, nothing is written
+    and Serato may even be running. Otherwise one checked write updates
+    every crate that changed.
+
+    Returns:
+        ``checked`` (preset crates looked at), ``changed`` (ids that were
+        updated), ``added``, ``removed``, ``updated``, and ``warning``.
+
+    Raises:
+        SeratoOpen: If a crate needs a change while Serato has the library open.
+        LibraryError: If the write is refused.
+    """
+    import safe_write
+
+    prune()
+    records = {
+        int(cid): record for cid, record in list_remembered().items() if cid.isdigit()
+    }
+    jobs: list[tuple[int, str, dict[str, object]]] = []
+    for crate_id, record in sorted(records.items()):
+        try:
+            jobs.append((crate_id, str(record.get("space") or LIBRARY_SPACE), normalize(record.get("preset"))))
+        except LibraryError:
+            continue
+    stale: list[tuple[int, str, dict[str, object]]] = []
+    if jobs:
+        with closing(library.read_conn()) as conn:
+            for job in jobs:
+                _, added, removed = _plan(conn, *job)
+                if added or removed:
+                    stale.append(job)
+    result: dict[str, object] = {"ok": True, "checked": len(jobs), "changed": [], "added": 0, "removed": 0, "warning": None}
+    if stale:
+
+        def apply(conn: sqlite3.Connection, write: safe_write.Session) -> dict[str, object]:
+            """Update every crate that changed and register each check.
+
+            Args:
+                conn: Open write connection.
+                write: Session that records the expected rows.
+
+            Returns:
+                The totals.
+            """
+            changed: list[int] = []
+            added = removed = 0
+            warning: object = None
+            for crate_id, space, preset in stale:
+                one = _sync(conn, write, crate_id, space, preset)
+                if one["added"] or one["removed"]:
+                    changed.append(crate_id)
+                added += int(one["added"])  # type: ignore[call-overload]
+                removed += int(one["removed"])  # type: ignore[call-overload]
+                warning = one["warning"] or warning
+            return {"changed": changed, "added": added, "removed": removed, "warning": warning}
+
+        result.update(safe_write.run("preset_refresh_all", f"{len(stale)} preset crates", apply))
+    updated = int(time.time())
+    for crate_id, _, preset in jobs:
+        record = records[crate_id]
+        _remember(crate_id, {**record, "preset": preset, "updated": updated})
+    result["updated"] = updated
+    return result
+
+
+def for_crates(space: str, crates: Sequence[Mapping[str, object]]) -> dict[str, dict[str, object]]:
+    """List the preset crates of one space that are still the crates they were made as.
+
+    Used by ``GET /api/library`` so the page can show Refresh and the
+    updated stamp. Reads only ``preset-crates.json``; the crate rows come
+    from the library payload.
+
+    Args:
+        space: Space name.
+        crates: Crate dicts with ``id``, ``added``, and ``smart``.
+
+    Returns:
+        ``{crate id: {"preset", "updated"}}``.
+    """
+    records = list_remembered()
+    found: dict[str, dict[str, object]] = {}
+    for crate in crates:
+        record = records.get(str(crate.get("id")))
+        if record is None or crate.get("smart"):
+            continue
+        if str(record.get("space") or LIBRARY_SPACE) != space or record.get("time_added") != crate.get("added"):
+            continue
+        found[str(crate.get("id"))] = {"preset": record.get("preset"), "updated": record.get("updated")}
+    return found
+
+
 def action(payload: Mapping[str, object]) -> dict[str, object]:
     """Run one ``POST /api/smart-preset`` request.
 
     Args:
-        payload: ``action`` is ``preview``, ``create``, ``refresh``, or
-            ``list``. ``preview`` and ``create`` take ``space`` and ``preset``;
+        payload: ``action`` is ``preview``, ``create``, ``refresh``,
+            ``refresh_all``, or ``list``. ``preview`` and ``create`` take ``space`` and ``preset``;
             ``create`` also takes ``parent`` and ``name``. ``refresh`` takes ``id``.
 
     Returns:
@@ -735,4 +870,6 @@ def action(payload: Mapping[str, object]) -> dict[str, object]:
         return refresh(crate_id)
     if kind == "list":
         return {"ok": True, "crates": list_remembered()}
+    if kind == "refresh_all":
+        return refresh_all()
     raise LibraryError("That action is not available.")

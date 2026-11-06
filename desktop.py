@@ -1019,6 +1019,30 @@ def _focus(window: object) -> None:
         show()
 
 
+def _apply_launch_icon() -> None:
+    """Apply the saved theme icon after the window is on screen.
+
+    A failure is logged. The window still opens. The Finder icon and the
+    executable are not changed.
+    """
+    try:
+        import app_icons
+
+        app_icons.apply_saved()
+    except Exception:
+        app_log.logger.exception("The app icon could not be changed")
+
+
+def _on_window_shown(window: object) -> None:
+    """Place the window, then match the icon to the saved theme.
+
+    Args:
+        window: pywebview window that has already been shown.
+    """
+    _place_on_screen(window)
+    _apply_launch_icon()
+
+
 def _place_on_screen(window: object) -> None:
     """Center the window when its title bar is not on a screen.
 
@@ -1097,6 +1121,38 @@ def _restore_stop_signals(previous_term: object, previous_int: object) -> None:
     signal.signal(signal.SIGINT, previous_int)  # type: ignore[arg-type]
 
 
+def _run_menu_action(window: object | None, action: str) -> None:
+    """Run one native-menu action.
+
+    Args:
+        window: The pywebview window, or None if it is not open yet.
+        action: Action id from ``desktop_menu.build_menu``. ``close`` and
+            ``minimize`` stay in this process. Every other id is handed to
+            the page.
+
+    Close destroys the window. The window's closed handler still posts
+    shutdown. Minimize uses the shell. The page call is a single
+    ``evaluate_js`` of ``seratoDesktop.run``, so ``python3 server.py``
+    does not need a menu.
+    """
+    if window is None:
+        return
+    if action == "close":
+        destroy = getattr(window, "destroy", None)
+        if callable(destroy):
+            destroy()
+        return
+    if action == "minimize":
+        minimize = getattr(window, "minimize", None)
+        if callable(minimize):
+            minimize()
+        return
+    evaluate = getattr(window, "evaluate_js", None)
+    if not callable(evaluate):
+        return
+    evaluate("window.seratoDesktop&&window.seratoDesktop.run(" + json.dumps(action) + ")")
+
+
 def open_window(
     url: str,
     httpd: server.ThreadingHTTPServer,
@@ -1126,10 +1182,16 @@ def open_window(
     gui = detect_gui()
     if gui not in _ALLOWED_GUI:
         raise SystemExit(f"Refusing web view {gui!r}.")
+    import app_icons
     import webview
 
+    import desktop_menu
+
+    app_icons.prepare_taskbar()
+
     reset_window_geometry()
-    saved = app_config.load_settings().window
+    saved_settings = app_config.load_settings()
+    saved = saved_settings.window
     options: dict[str, object] = {
         "width": saved.width if saved is not None else DEFAULT_WIDTH,
         "height": saved.height if saved is not None else DEFAULT_HEIGHT,
@@ -1141,12 +1203,21 @@ def open_window(
     if saved is not None:
         options["x"] = saved.x
         options["y"] = saved.y
+    holder: dict[str, object] = {}
+
+    def dispatch(action: str) -> None:
+        _run_menu_action(holder.get("window"), action)
+
+    menu = desktop_menu.build_menu(dispatch, saved_settings.language)
+    options["menu"] = menu
     window = webview.create_window(WINDOW_TITLE, url, **options)
+    holder["window"] = window
     if window is None:
         raise SystemExit("The window could not be created.")
     window.events.resized += note_window_resized
     window.events.moved += note_window_moved
-    window.events.shown += lambda: _place_on_screen(window)
+    app_icons.bind_window(window)
+    window.events.shown += lambda: _on_window_shown(window)
     window.events.closed += lambda: _close_window(url, token)
     httpd.focus_window = lambda: _focus(window)
 
@@ -1163,7 +1234,7 @@ def open_window(
     previous_term, previous_int = _install_stop_signals(stop)
     try:
         try:
-            webview.start(gui=gui, private_mode=True)
+            webview.start(gui=gui, private_mode=True, menu=menu)
         except Exception as exc:
             if type(exc).__name__ != "WebViewException":
                 raise

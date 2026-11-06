@@ -60,6 +60,7 @@ ERROR_CODES: dict[str, str] = {
     "The layout could not be saved.": "layout_not_saved",
     "The sharing choice could not be saved.": "consent_not_saved",
     "The language could not be saved.": "language_not_saved",
+    "The theme could not be saved.": "theme_not_saved",
     "The logs folder could not be opened.": "logs_not_opened",
     "Confirm undo before it is saved.": "undo_needs_confirm",
     "There is no outside change to undo.": "nothing_to_undo",

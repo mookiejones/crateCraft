@@ -102,7 +102,7 @@ If Serato is still open, the page says **Close Serato DJ to continue**.
 
 **No, don't share** leaves anonymous stats off. **Yes, share** is the other choice. Then choose **Open my library**.
 
-Later, open **Snapshots**. **Review restore** shows the plan before anything is written. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
+Later, open **Backups**. **Review restore** shows the plan before anything is written. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 
 ## 5 Start crate digging
 
@@ -118,10 +118,10 @@ Later, open **Snapshots**. **Review restore** shows the plan before anything is 
 
 You land in **Crates**. The space menu reads **Library**, **Video**, **Apple Music**, or **Prepare**.
 
-Use **Search tracks**, then click a tune. Cue points show on the right. They are read from the audio file. Press `/` to jump to that search. Press Ctrl+K (Command+K on a Mac) to find a track or a file on disk. **Shortcuts**, at the bottom of the sidebar, lists the other keys. Hover a control, or tab to it, and a note names the action and any shortcut it already has.
+Use **Search tracks**, then click a tune. Cue points show on the right. They are read from the audio file. Press `/` to jump to that search. Press Ctrl+K (Command+K on a Mac) to find a track or a file on disk. **Settings** lists the other keys under **Keyboard shortcuts**. **?** opens that list. Hover a control, or tab to it, and a note names the action and any shortcut it already has.
 
 Double-click a row, press **Enter**, or click **Play**, to hear it. **Space** plays or pauses. **Left** and **Right** move 5 seconds. The bar under the list shows the title, the artist, previous and next, pause, a seek bar with the file's cue points, and volume. Playback does not write to the audio file and does not add a history row.
 
-The other views are **History**, **Missing**, **Duplicates**, **Stems**, **Files**, and **Snapshots**.
+The other groups are **Library health** (Missing files, Duplicates, Stems), **Files** under Library, **Backups**, and **Before a gig**.
 
 **Hot loops** sits beside **Memory cues**. It starts off, and it uses a free hot-cue pad.

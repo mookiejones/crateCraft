@@ -27,6 +27,8 @@ import { bridge } from "./bridge";
 import { el } from "./dom";
 import { clockLabel, colorHex, compare, durationLabel, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
+import { portableDriveButton } from "./portable";
+import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
 import { play } from "./player";
@@ -593,6 +595,7 @@ export function renderShell() {
   el("crate-rename").disabled = !state.writable || !crateChosen;
   el("crate-color").disabled = !state.writable || !crateChosen;
   el("crate-delete").disabled = !state.writable || !crateChosen;
+  syncPresetButtons();
   syncMergeButton();
   if (filesMode) {
     if (state.filesAtRoots) {
@@ -617,7 +620,8 @@ export function renderShell() {
   const pool = state.mode === "history" ? state.entries : footerTracks();
   const bytes = pool.reduce((sum, track) => sum + (Number(track.file_size) || 0), 0);
   const ms = pool.reduce((sum, track) => sum + (Number(track.length_ms) || 0), 0);
-  el("crate-foot").textContent = `${formatNumber(pool.length)} · ${durationLabel(ms)} · ${sizeLabel(bytes)}`;
+  const preset = state.mode === "crates" ? presetFoot(state.activeCrate) : "";
+  el("crate-foot").textContent = `${formatNumber(pool.length)} · ${durationLabel(ms)} · ${sizeLabel(bytes)}${preset}`;
 }
 
 /**
@@ -2359,6 +2363,7 @@ export async function loadLibrary() {
   state.crates = library.crates;
   state.rootId = library.root_id;
   state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)]));
+  state.presets = library.presets ?? {};
   state.expanded = new Set<number | "all">(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id));
   state.activeCrate = active === "all" || library.crates.some((crate) => crate.id === active) ? active : "all";
   state.selectedId = selected;
@@ -2741,6 +2746,8 @@ function browserRows(): FileEntry[] {
         detail: root.detail,
         kind: root.kind === "serato_drive" ? "drive" : "folder",
         missing: root.missing,
+        removable: root.removable,
+        serato: root.serato,
       };
       return entry;
     });
@@ -3024,6 +3031,7 @@ function fileRow(entry: FileEntry, index: number): HTMLDivElement {
       });
     }
     row.append(button);
+    if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
     return row;
   }
   if (entry.kind !== "file") {

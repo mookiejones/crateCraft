@@ -30,7 +30,9 @@ import drive_check
 import error_codes
 import files
 import gig_check
+import help_report
 import legacy_library
+import lost_tags
 import library
 import music_roots
 import rekordbox
@@ -38,6 +40,7 @@ import related
 import setup_flow
 import smart_presets
 import snapshots
+import tag_cleanup
 import telemetry
 import version_info
 import waveform
@@ -338,6 +341,44 @@ def _library_call(name: str, /, *args: object) -> object:
     if not callable(function):
         raise TypeError(name)
     return function(*args)
+
+
+def _help_text(value: object) -> str:
+    """Return a report field when it is text.
+
+    Args:
+        value: JSON value.
+
+    Returns:
+        The same string.
+
+    Raises:
+        ValueError: The value is not a string. ``build_issue`` turns that
+            into HTTP 400.
+    """
+    if not isinstance(value, str):
+        raise ValueError("That report field must be text.")
+    return value
+
+
+def _help_body(include_names: bool) -> dict[str, object]:
+    """Return diagnostics and the redacted local log.
+
+    Args:
+        include_names: When False, track and crate names in the log are
+            replaced. The home directory is always replaced.
+
+    Returns:
+        ``diagnostics``, ``log``, and ``log_truncated``. No library path
+        is added to the diagnostics.
+    """
+    fields = help_report.collect_diagnostics(snapshots.read_install())
+    log, truncated = app_log.read_logs()
+    return {
+        "diagnostics": help_report.format_diagnostics(fields),
+        "log": help_report.redact(log, include_names=include_names),
+        "log_truncated": truncated,
+    }
 
 
 def as_dict(value: object) -> dict[str, object]:
@@ -1196,6 +1237,8 @@ def load_library(space: str | None = None) -> dict[str, object]:
     info = as_dict(_library_call("status"))
     payload["serato"] = info
     payload["writable"] = info["writable"]
+    crates = payload.get("crates")
+    payload["presets"] = smart_presets.for_crates(chosen, crates if isinstance(crates, list) else [])
     return payload
 
 
@@ -1672,6 +1715,9 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/api/version":
             self.send_json(version_info.payload())
             return
+        if parsed.path == "/api/help":
+            self._get_help(query)
+            return
         try:
             if parsed.path == "/api/drive-check":
                 self._get_drive_check(query)
@@ -1768,6 +1814,15 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
                 self.wfile.write(body)
+                return
+            if parsed.path == "/api/tag-clusters":
+                space = require_space(query_text(query, "space"))
+                field = query_text(query, "field", "genre") or "genre"
+                self.send_json(tag_cleanup.clusters(Path(library.MASTER), space, field))
+                return
+            if parsed.path == "/api/lost-tags":
+                space = require_space(query_text(query, "space"))
+                self.send_json(lost_tags.plan(Path(library.MASTER), space))
                 return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
@@ -1898,6 +1953,12 @@ class Handler(BaseHTTPRequestHandler):
             return
         if parsed.path == "/api/logs/open":
             self._post_open_logs()
+            return
+        if parsed.path == "/api/help":
+            try:
+                self._post_help(payload)
+            except library.LibraryError as exc:
+                self.send_json({"error": exc.message}, status=exc.status)
             return
         if parsed.path not in LEGACY_ALLOWED_POSTS and setup_flow.legacy_folder() is not None:
             self.send_json({"error": legacy_library.WRITE_BLOCKED, "read_only": True}, status=409)
@@ -2075,6 +2136,11 @@ class Handler(BaseHTTPRequestHandler):
                 Booleans reject integers. ``key_notation`` must be
                 ``asis``, ``camelot``, or ``classical``. Any other shape is
                 a 400, and the file is left unchanged.
+                ``{"colorway": str}`` and ``{"icon_follows_theme": bool}``
+                may be sent together or alone. ``colorway`` must be a known
+                theme. The icon flag must be a boolean. The running icon
+                is updated after the file is saved. A platform that cannot
+                change it still saves the choice.
         """
         keys = set(payload)
         if keys == {"wizard_complete"} and isinstance(payload.get("wizard_complete"), bool):
@@ -2127,6 +2193,9 @@ class Handler(BaseHTTPRequestHandler):
                 return
             self.send_json(telemetry.public_settings())
             return
+        if keys and keys <= {"colorway", "icon_follows_theme"}:
+            self._post_appearance(payload)
+            return
         allowed = {"telemetry_consent", "rekordbox"}
         if not keys or not keys <= allowed:
             self.send_json({"error": "That request is not valid."}, status=400)
@@ -2169,6 +2238,55 @@ class Handler(BaseHTTPRequestHandler):
             )
         except ValueError:
             self.send_json({"error": "That request is not valid."}, status=400)
+
+    def _post_appearance(self, payload: dict[str, object]) -> None:
+        """Save the theme and whether the running icon follows it.
+
+        Args:
+            payload: ``colorway``, ``icon_follows_theme``, or both.
+                ``colorway`` is ``motown``, ``deep-house``, or ``daisy-age``.
+                The icon flag is a boolean. ``False`` is kept.
+
+        The file is written before the icon changes. A Dock or taskbar
+        change that this computer cannot do still returns 200. The body
+        includes ``icon`` with ``applied`` false and a reason.
+        """
+        import app_icons
+
+        colorway = payload.get("colorway") if "colorway" in payload else None
+        follow = payload.get("icon_follows_theme") if "icon_follows_theme" in payload else None
+        if colorway is not None and not isinstance(colorway, str):
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        if follow is not None and not isinstance(follow, bool):
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        try:
+            app_config.set_appearance(
+                colorway=colorway if isinstance(colorway, str) else None,
+                icon_follows_theme=follow if isinstance(follow, bool) else None,
+            )
+        except ValueError:
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        except OSError:
+            self.send_json({"error": "The theme could not be saved."}, status=500)
+            return
+        body = telemetry.public_settings()
+        try:
+            body["icon"] = app_icons.apply_saved().as_json()
+        except Exception:
+            app_log.logger.exception("The app icon could not be changed")
+            body["icon"] = {
+                "applied": False,
+                "platform": "unknown",
+                "target": "unsupported",
+                "reason": "error",
+                "colorway": body.get("colorway"),
+                "follows_theme": body.get("icon_follows_theme"),
+                "href": body.get("icon_href"),
+            }
+        self.send_json(body)
 
     def _get_setup(self, query: dict[str, list[str]]) -> None:
         """Return the library summary, or one folder listing.
@@ -2428,6 +2546,56 @@ class Handler(BaseHTTPRequestHandler):
             return False
         self.send_json({"error": "This page only answers on this computer."}, status=403)
         return True
+
+    def _get_help(self, query: dict[str, list[str]]) -> None:
+        """Return diagnostics and a redacted log. Nothing is opened or written.
+
+        Args:
+            query: Parsed query. ``include_names=1`` keeps track and crate
+                names in the log. The home directory is still replaced.
+        """
+        include_names = query.get("include_names", ["0"])[0] == "1"
+        self.send_json(_help_body(include_names))
+
+    def _post_help(self, payload: dict[str, object]) -> None:
+        """Build a GitHub issue link from the report. The library is not written.
+
+        Args:
+            payload: ``kind`` is ``bug`` or ``feature``. ``open`` true asks
+                the system browser to open a short enough link. ``page``
+                (``repo`` or ``releases``) instead opens that GitHub page
+                in the system browser, so the desktop window is not replaced.
+
+        Raises:
+            library.LibraryError: The kind or a field is not usable.
+        """
+        if "page" in payload:
+            try:
+                opened = help_report.open_page(_help_text(payload.get("page")))
+            except ValueError as exc:
+                raise library.LibraryError(str(exc), 400) from exc
+            self.send_json({"opened": opened})
+            return
+        include = payload.get("include_names", False)
+        if include is not False and include is not True:
+            raise library.LibraryError("include_names must be true or false.", 400)
+        open_browser = payload.get("open", False)
+        if open_browser is not False and open_browser is not True:
+            raise library.LibraryError("open must be true or false.", 400)
+        body = _help_body(include)
+        try:
+            link = help_report.build_issue(
+                _help_text(payload.get("kind")),
+                happened=_help_text(payload.get("happened", "")),
+                expected=_help_text(payload.get("expected", "")),
+                change=_help_text(payload.get("change", "")),
+                diagnostics=str(body["diagnostics"]),
+                include_names=include,
+                open_browser=open_browser,
+            )
+        except ValueError as exc:
+            raise library.LibraryError(str(exc), 400) from exc
+        self.send_json(link.to_dict())
 
     def _get_drive_check(self, query: dict[str, list[str]]) -> None:
         """Report whether a portable drive's crates can leave the laptop.
