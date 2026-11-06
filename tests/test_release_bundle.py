@@ -493,6 +493,7 @@ class WorkflowTests(unittest.TestCase):
                 "codeql.yml",
                 "dependency-review.yml",
                 "pages.yml",
+                "prepare-release.yml",
                 "release.yml",
             ],
         )

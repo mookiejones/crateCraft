@@ -601,5 +601,70 @@ class HeadlessLaunchTests(unittest.TestCase):
             self.assertTrue(marker.is_file())
 
 
+class MacAboutMenuTests(unittest.TestCase):
+    """Point the system About item at Settings. These cases mock AppKit."""
+
+    def test_non_mac_leaves_about_alone(self) -> None:
+        """Linux and Windows have no system About item to retarget.
+
+        Returns:
+            None. The test fails if dispatch runs on a non-Mac platform.
+        """
+        seen: list[str] = []
+        with mock.patch.object(desktop.sys, "platform", "linux"):
+            desktop._point_mac_about_at_settings(seen.append)
+        self.assertEqual(seen, [])
+
+    def test_mac_about_calls_settings_about(self) -> None:
+        """The first app-menu item keeps its title and opens Settings About.
+
+        Returns:
+            None. The test fails if the system About panel stays wired or
+            a second About item is invented.
+        """
+        import sys
+
+        seen: list[str] = []
+        about = mock.Mock()
+        about.action.return_value = "orderFrontStandardAboutPanel:"
+        submenu = mock.Mock()
+        submenu.numberOfItems.return_value = 1
+        submenu.itemAtIndex_.return_value = about
+        first = mock.Mock()
+        first.submenu.return_value = submenu
+        main = mock.Mock()
+        main.numberOfItems.return_value = 1
+        main.itemAtIndex_.return_value = first
+        app = mock.Mock()
+        app.mainMenu.return_value = main
+        appkit = mock.Mock()
+        appkit.NSApplication.sharedApplication.return_value = app
+        handler = mock.Mock()
+        cocoa = mock.Mock()
+        cocoa.menu_handler = handler
+        platforms = mock.Mock()
+        platforms.cocoa = cocoa
+        webview_mod = mock.Mock()
+        webview_mod.platforms = platforms
+        with mock.patch.object(desktop.sys, "platform", "darwin"):
+            with mock.patch.dict(
+                sys.modules,
+                {
+                    "AppKit": appkit,
+                    "webview": webview_mod,
+                    "webview.platforms": platforms,
+                    "webview.platforms.cocoa": cocoa,
+                },
+            ):
+                desktop._point_mac_about_at_settings(seen.append)
+        handler.register_action.assert_called_once()
+        self.assertEqual(handler.register_action.call_args[0][0], "about.settings")
+        handler.register_action.call_args[0][1]()
+        self.assertEqual(seen, ["about"])
+        about.setAction_.assert_called_with("handleMenuAction:")
+        about.setTarget_.assert_called_with(handler)
+        about.setRepresentedObject_.assert_called_with("about.settings")
+
+
 if __name__ == "__main__":
     unittest.main()

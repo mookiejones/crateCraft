@@ -10,6 +10,18 @@
       "justMyCode": true
     },
     {
+      "name": "Python: Run desktop.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/desktop.py",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "windows": {
+        "python": "${workspaceFolder}/.venv/Scripts/python.exe"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
       "name": "Python: Current File",
       "type": "debugpy",
       "request": "launch",

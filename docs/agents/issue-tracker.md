@@ -10,6 +10,7 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 - **Comment on an issue**: `gh issue comment <number> --body "..."`
 - **Apply / remove labels**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`
 - **Close**: `gh issue close <number> --comment "..."`
+- **Start work**: before any other write (code, comments, labels, or close) on an issue you are implementing, `gh issue edit <n> --add-assignee @me`. If the active account is already an assignee, skip. If the issue is assigned only to someone else, stop and name that assignee unless the user said to take it. Read-only view, list, and triage do not assign. QA review of a pull request is not starting issue work.
 
 Infer the repo from `git remote -v`; `gh` does this automatically when run inside a clone.
 
