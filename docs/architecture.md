@@ -300,6 +300,12 @@ Streaming is only `third_party_type` 6, Apple Music. `server.py` maps that value
 
 The live side of the diff takes cues and the beatgrid from `tags.read_serato_tags`, which opens the file with `rb`. Library text comes from the asset row. The diff is for the whole space, including when a crate was selected for the missing-file scope. With no snapshot, `snapshot_note` is `No snapshots yet` and `changes` is null.
 
+### `crate_compare.py`
+
+`crate_compare.py` compares two crates in one space (#113). It writes nothing; the library is opened with `gig_check.open_read_only`. Each crate's stored members are read through `location_container` and, in the test schema, `container_asset.container_id`, in crate order (`list_order`, then row id). With `subcrates` a crate also counts the crates under it (`library.descendant_ids`), the parent's tracks first. A track listed twice counts once. A crate row whose track is gone is listed with an empty name.
+
+`compare` returns `a` and `b` (`id`, `name` without the stored suffix, `smart`, `tracks`), `subcrates`, and `both`, `only_a`, and `only_b` as `{ id, name, artist }` rows. `both` and `only_a` follow A's order and `only_b` follows B's. A smart crate is compared by the members Serato last stored, which can be out of date; `smart` lets the page say so. The same crate twice is 400 `invalid_request`, and a crate not in the space is 404 `crate_not_in_space`. `GET /api/crate-compare?space=&a=&b=&subcrates=1` returns it, and `python3 crate_compare.py A B [--subcrates]` prints it. Saving a result as a new crate, through the crate write guards, is a later change.
+
 ### `bitrate_check.py`
 
 `bitrate_check.py` flags files that claim more quality than they have (#36). It writes nothing; files are decoded through `waveform.iter_pcm` and the library is opened with `gig_check.open_read_only`. A lossy encoder removes the top of the spectrum, leaving a cliff near 16 kHz at 128 kbps and near 20 kHz at 320 kbps, and that cliff survives re-encoding at a higher bitrate or saving as FLAC or WAV.
@@ -525,6 +531,7 @@ An error body is `{"error": "<English sentence>"}`. When the sentence is one of 
 | GET | `/api/setup` | none | `{ "found", "summary", "next", "volume", "track_count", "places", "serato_running", "status_message", "status_writable" }`. `status_message` is the same sentence as `/api/status`. A missing library is `found` false, `status_message` null, and does not include a path |
 | GET | `/api/setup` | `browse` | Child folders. An empty value lists the home directory. Shortcuts and hidden names are skipped |
 | POST | `/api/setup` | `folder` | The same object as GET when `folder` is the open library directory, or, when no library file is open, a folder that already contains a Serato library. Otherwise `found` is false. The database is not created or modified. A remembered path is not included |
+| GET | `/api/crate-compare` | `space`, `a`, `b` (crate ids), optional `subcrates=1` | `{ a, b, subcrates, both, only_a, only_b }`. Read-only. A missing or repeated crate is 400 `invalid_request`; a crate not in the space is 404 |
 | GET | `/api/history-stats` | `space`, optional `from` and `to` (Unix seconds), `top` (25), `idle_days` (365) | `{ from, to, plays, sessions, top_tracks, top_artists, idle_days, not_played, not_played_count }`. Read-only. A bad number or an empty period is 400 `invalid_request` |
 | GET | `/api/bitrate-check` | `space`, `crate` (required) | `{ crate, checked, not_found, unreadable, too_quiet, unchecked, suspects }`; each suspect `{ id, name, artist, file, reason, stated_kbps, estimated_kbps, cutoff_hz }`. Read-only. No crate is 400 `bitrate_needs_crate`; a crate not in the space is 404 |
 | GET | `/api/file-scan` | `space`, `crate` (`all` default), `depth` (`quick` default, or `full`) | `{ depth, crate, checked, not_found, unchecked, counts, problems }`; each problem `{ id, name, artist, file, problem, detail }`. Read-only. `full` without a crate is 400 `scan_full_needs_crate`; another depth is 400 `scan_depth`; a crate not in the space is 404 |
