@@ -151,7 +151,7 @@ class InstallPageTests(unittest.TestCase):
         self.assertIn("WebView2", windows)
         self.assertIn("GitHub Releases is the only download.", home)
         self.assertIn("Crates", home)
-        self.assertIn("Snapshots", home)
+        self.assertIn("Backups", home)
         self.assertIn("PREVIEW", home)
         self.assertIn(
             "Restore can rewrite the Serato tags (cue points, beatgrid, autotags) "

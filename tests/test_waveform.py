@@ -1499,6 +1499,8 @@ class NativeDecoderTests(unittest.TestCase):
 
         Two different temp directories are allowed. The library check is
         patched so the refusal does not depend on this machine's home folder.
+        The outside path is not the working directory: a checkout under the
+        system temp directory would make ``Path.cwd()`` a legal temp output.
 
         Returns:
             None. The test fails if a same-directory output is accepted.
@@ -1513,7 +1515,8 @@ class NativeDecoderTests(unittest.TestCase):
                 with mock.patch("waveform_native._library_blocked", return_value=True):
                     self.assertFalse(waveform_native.separate_temp_output(source, dest))
                 self.assertFalse(waveform_native.separate_temp_output(source, source.with_suffix(".wav")))
-                self.assertFalse(waveform_native.destination_in_temp(Path.cwd() / "song.m4a"))
+                outside = _outside_temp("song.m4a")
+                self.assertFalse(waveform_native.destination_in_temp(outside))
                 self.assertTrue(waveform_native.destination_in_temp(dest))
 
     def test_afconvert_decodes_and_deletes_the_temp_wav(self) -> None:
@@ -1753,15 +1756,17 @@ class NativeDecoderTests(unittest.TestCase):
             self.assertEqual(source.read_bytes(), payload)
 
     def test_encoder_does_not_start_media_foundation_outside_temp(self) -> None:
-        """Refuse an ``.m4a`` destination in the working directory.
+        """Refuse an ``.m4a`` destination outside the system temp directory.
 
+        The destination is not the working directory. A checkout can live
+        under temp, and ``Path.cwd()`` would then be a legal encoder output.
         COM startup is patched to fail the test if it is reached. The
         destination is deleted if a regression creates it.
 
         Returns:
             None. The test fails if a file is written outside temp.
         """
-        dest = Path.cwd() / "not-a-waveform.m4a"
+        dest = _outside_temp("not-a-waveform.m4a")
         try:
             with tempfile.TemporaryDirectory() as raw:
                 wav = Path(raw) / "tone.wav"
@@ -1774,6 +1779,43 @@ class NativeDecoderTests(unittest.TestCase):
         finally:
             if dest.exists():
                 dest.unlink()
+            parent = dest.parent
+            if parent.name == "serato-library-not-temp" and parent.is_dir() and not any(parent.iterdir()):
+                parent.rmdir()
+
+
+def _outside_temp(name: str) -> Path:
+    """Return a path that is not inside the system temp directory.
+
+    ``Path.cwd()`` is the wrong stand-in. A checkout under ``/tmp`` is
+    inside temp, so :func:`waveform_native.destination_in_temp` would
+    accept a file there. The product check is unchanged.
+
+    Args:
+        name: Final component, such as ``song.m4a``.
+
+    Returns:
+        An absolute path beside the temp directory, not inside it.
+
+    Raises:
+        AssertionError: The temp directory has no parent, or the candidate
+            still sits inside it.
+    """
+    temp_root = Path(os.path.realpath(tempfile.gettempdir()))
+    parent = temp_root.parent
+    if parent == temp_root:
+        raise AssertionError(f"temp directory {temp_root} has no parent")
+    candidate = parent / "serato-library-not-temp" / name
+    real_parent = Path(os.path.realpath(candidate.parent))
+    temp_text = os.path.normcase(os.path.normpath(os.fspath(temp_root)))
+    parent_text = os.path.normcase(os.path.normpath(os.fspath(real_parent)))
+    try:
+        common = os.path.commonpath([parent_text, temp_text])
+    except ValueError:
+        common = ""
+    if common == temp_text:
+        raise AssertionError(f"{candidate} is inside {temp_root}")
+    return candidate
 
 
 def _absolute_named(name: str) -> str:
