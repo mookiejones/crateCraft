@@ -133,12 +133,10 @@ export interface ElementIds {
   "portable-findings": HTMLUListElement;
   "portable-status": HTMLParagraphElement;
   "portable-close": HTMLButtonElement;
-  "open-shortcuts": HTMLButtonElement;
-  "shortcuts-dialog": HTMLDialogElement;
+  "shortcuts-section": HTMLElement;
   "shortcuts-title": HTMLHeadingElement;
   "shortcuts-intro": HTMLParagraphElement;
   "shortcuts-body": HTMLDivElement;
-  "shortcuts-close": HTMLButtonElement;
   "quick-open": HTMLDialogElement;
   "quick-open-title": HTMLHeadingElement;
   "quick-open-label": HTMLLabelElement;
