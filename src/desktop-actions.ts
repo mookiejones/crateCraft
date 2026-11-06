@@ -27,6 +27,7 @@ const CLICKS: Record<string, string> = {
   "review-undo": "snapshots-undo-button",
   "open-logs": "open-logs",
   "copy-version": "copy-version",
+  help: "open-help",
 };
 
 const VIEWS: Record<string, string> = {

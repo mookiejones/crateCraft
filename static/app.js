@@ -9681,7 +9681,8 @@
     "take-snapshot": "snapshots-take",
     "review-undo": "snapshots-undo-button",
     "open-logs": "open-logs",
-    "copy-version": "copy-version"
+    "copy-version": "copy-version",
+    help: "open-help"
   };
   var VIEWS = {
     "view-crates": "crates",

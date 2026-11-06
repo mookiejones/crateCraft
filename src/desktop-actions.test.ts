@@ -33,10 +33,12 @@ describe("desktop menu actions", () => {
     const seen: string[] = [];
     el("crate-new").addEventListener("click", () => seen.push("new"));
     el("export-m3u").addEventListener("click", () => seen.push("export"));
+    el("open-help").addEventListener("click", () => seen.push("help"));
     runDesktopAction("new-crate");
     runDesktopAction("export-playlist");
+    runDesktopAction("help");
     runDesktopAction("not-a-command");
-    expect(seen).toEqual(["new", "export"]);
+    expect(seen).toEqual(["new", "export", "help"]);
   });
 
   it("switches view and space without a second code path", () => {

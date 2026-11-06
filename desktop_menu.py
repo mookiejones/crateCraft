@@ -153,6 +153,7 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
         Menu(
             say("menu.help"),
             [
+                item("help.title", "help"),
                 item("shortcuts.title", "shortcuts"),
                 item("settings.openLogs", "open-logs"),
                 item("settings.copyVersion", "copy-version"),

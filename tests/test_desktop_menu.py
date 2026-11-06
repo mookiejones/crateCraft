@@ -47,13 +47,13 @@ class DesktopMenuTests(unittest.TestCase):
             "Crates",
             "All tracks",
             "Tools",
-            "Missing",
+            "Missing files",
             "Duplicates",
             "Merge copies",
             "Stems",
-            "Gig",
+            "Before a gig",
             "Take a snapshot",
-            "Snapshots",
+            "Backups",
             "Review undo",
             "Related tracks",
             "Window",
@@ -64,6 +64,7 @@ class DesktopMenuTests(unittest.TestCase):
         ):
             self.assertIn(name, titles)
         self.assertEqual(titles.count("Settings"), 2)
+        self.assertEqual(titles.count("Help"), 2)
         file_menu = next(item for item in menu if isinstance(item, Menu) and item.title == "File")
         file_menu.items[0].function()
         self.assertEqual(seen, ["find"])
