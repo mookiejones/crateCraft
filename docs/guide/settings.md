@@ -35,7 +35,12 @@ The strip has **Download**, which opens that version's page on GitHub in your br
 2. Tick **Share anonymous usage stats and crash reports** to turn sharing on. Clear the tick to turn it off.
 3. Read the line under the tick.
 4. Tick **Check GitHub for a newer version once a day** to turn the update check on, and **Include test versions (beta and release candidates)** to hear about those too. The second tick is greyed out while the first is off. If a choice cannot be saved, the line under them says **The update choice could not be saved.** and the tick goes back.
-5. Pick a **Theme**: **Motown Soul**, **Deep House**, or **Daisy Age**. A stripe on the sidebar and the icon preview use that colorway. **App icon follows the theme** is on unless you clear it. On a Mac the Dock icon of the running app changes. On Windows the window and taskbar icon change. The Finder icon and the Windows program icon stay the usual ones. On another system the line under the checkbox says the choice is saved for Mac and Windows. If the choice cannot be saved, that line says so, and the theme stays for this session.
+5. Pick a **Theme**: **Serato-like** (the default), **Dark Club**, **Light**, or **Classic**. The whole page uses that token set. A stripe on the sidebar and the icon preview follow it. **App icon follows the theme** is on unless you clear it. On a Mac the Dock icon of the running app changes. On Windows the window and taskbar icon change. The Finder icon and the Windows program icon stay the usual ones. On another system the line under the checkbox says the choice is saved for Mac and Windows. If the choice cannot be saved, that line says so, and the theme stays for this session.
+
+   ![Serato-like](../media/theme-serato-like.png)
+   ![Dark Club](../media/theme-dark-club.png)
+   ![Light](../media/theme-light.png)
+   ![Classic](../media/theme-classic.png)
 6. Read **Keyboard shortcuts**. **?** opens Settings on that heading.
 7. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
 8. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
