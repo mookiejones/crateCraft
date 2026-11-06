@@ -25,7 +25,8 @@ describe("desktop menu actions", () => {
     runDesktopAction("focus-search");
     expect(document.activeElement).toBe(el("search"));
     runDesktopAction("shortcuts");
-    expect(el("shortcuts-dialog").open).toBe(true);
+    expect(el("settings-dialog").open).toBe(true);
+    expect(el("settings-dialog").contains(el("shortcuts-section"))).toBe(true);
   });
 
   it("clicks the page button for a crate and a playlist action", () => {
