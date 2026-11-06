@@ -22,7 +22,9 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
+import crate_trees
 import legacy_library
+import smart_presets
 
 REGISTRATION_NO_SPACE = (
     "Crates were not registered. This library has no Serato Library space, "
@@ -45,6 +47,8 @@ ERROR_CODES: dict[str, str] = {
     "No Serato library was found on this computer.": "no_library",
     "No older Serato library was found.": "no_legacy_library",
     "Choose a crate for a bitrate check.": "bitrate_needs_crate",
+    "Choose a quick or full check.": "scan_depth",
+    "Choose a crate for a full decode check.": "scan_full_needs_crate",
     legacy_library.WRITE_BLOCKED: "legacy_read_only",
     "The library could not be saved.": "library_not_saved",
     "Track id is required.": "track_id_required",
@@ -59,6 +63,7 @@ ERROR_CODES: dict[str, str] = {
     "The layout could not be saved.": "layout_not_saved",
     "The sharing choice could not be saved.": "consent_not_saved",
     "The language could not be saved.": "language_not_saved",
+    "The theme could not be saved.": "theme_not_saved",
     "The logs folder could not be opened.": "logs_not_opened",
     "Confirm undo before it is saved.": "undo_needs_confirm",
     "There is no outside change to undo.": "nothing_to_undo",
@@ -89,6 +94,18 @@ ERROR_CODES: dict[str, str] = {
     "Color needs a number.": "color_not_number",
     "Color is out of range.": "color_out_of_range",
     "Smart crate rules need a rules list.": "smart_rules_list",
+    smart_presets.BAD_BAND: "preset_bad_band",
+    smart_presets.BAD_GENRE: "preset_bad_genre",
+    crate_trees.UNKNOWN_TREE: "tree_unknown",
+    crate_trees.BAD_BANDS: "tree_bad_bands",
+    crate_trees.BAD_GENRES: "tree_bad_genres",
+    crate_trees.EMPTY_TREE: "tree_empty",
+    smart_presets.UNKNOWN_PRESET: "preset_unknown",
+    smart_presets.BAD_KEY: "preset_bad_key",
+    smart_presets.BAD_BPM: "preset_bad_bpm",
+    smart_presets.BAD_MONTHS: "preset_bad_months",
+    smart_presets.NOT_A_PRESET_CRATE: "preset_not_a_preset_crate",
+    smart_presets.PRESET_CRATE_GONE: "preset_crate_gone",
     "Smart crate rules need to be JSON.": "smart_rules_json",
     "That crate name is too long.": "crate_name_too_long",
     "Use a crate name without the Serato name separator.": "crate_name_separator",

@@ -631,6 +631,40 @@ class SnapshotTests(unittest.TestCase):
                 self.assertIn("as it is now", saved["reason"])
                 self.assertIsNone(store.check_version())
 
+    def test_build_change_with_the_same_version_snapshots_once(self) -> None:
+        """A new build under the same version string snapshots exactly once.
+
+        Serato 5.0.0 build 5.0.0.1 and Serato 5.0.0 build 5.0.0.1251 are
+        different installs. The first time either is seen, nothing is
+        saved. The build change saves one version-change snapshot of the
+        library as it is now. A second check does not save another.
+
+        Returns:
+            None. The test fails if the version string changing is required,
+            or if the build change snapshots more than once.
+        """
+        with TempLibrary() as temp:
+            info = temp.root / "Info.plist"
+            _plist(info, {"CFBundleShortVersionString": "5.0.0", "CFBundleVersion": "5.0.0.1"})
+            _music, _serato, store = _drive(temp.root, temp.db)
+            with _env(SERATO_LIBRARY_APP_INFO=str(info), SERATO_LIBRARY_PREFERENCES=None):
+                self.assertIsNone(store.check_version())
+                self.assertEqual(store.list_snapshots(), [])
+                _plist(info, {"CFBundleShortVersionString": "5.0.0", "CFBundleVersion": "5.0.0.1251"})
+                saved = store.check_version()
+                assert saved is not None
+                self.assertEqual(saved["trigger"], "version-change")
+                self.assertEqual(saved["serato_version"], "5.0.0")
+                self.assertEqual(saved["serato_build"], "5.0.0.1251")
+                # "5.0.0.1" alone is a substring of "5.0.0.1251", so match
+                # the whole build text on each side of the change.
+                self.assertIn("(build 5.0.0.1) ", saved["reason"])
+                self.assertIn("(build 5.0.0.1251)", saved["reason"])
+                self.assertIn("as it is now", saved["reason"])
+                self.assertEqual(len(store.list_snapshots()), 1)
+                self.assertIsNone(store.check_version())
+                self.assertEqual(len(store.list_snapshots()), 1)
+
     def test_lexicon_write_is_named_and_excluded_folders_are_never_touched(self) -> None:
         """Treat a Lexicon write as an outside change and leave its folder alone.
 
