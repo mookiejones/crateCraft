@@ -1,0 +1,30 @@
+name: Bug report
+description: Something went wrong in Serato Library
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not attach `master.sqlite`, `root.sqlite`, or an audio file. The library stays on your machine.
+  - type: checkboxes
+    id: library-files
+    attributes:
+      label: Library files
+      options:
+        - label: I did not attach a Serato database or an audio file.
+          required: true
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: The app fills this in. Remove anything you do not want to send.
