@@ -16,7 +16,8 @@ jobs:
   test:
     name: tests (${{ matrix.os }}, Python ${{ matrix.python }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    # Windows takes about 9 minutes on main; 10 cancelled PRs that only add tests.
+    timeout-minutes: 20
     strategy:
       fail-fast: true
       matrix:
