@@ -1,10 +1,10 @@
 """Session logs name Serato 4, Serato 5, or neither.
 
-The fixtures under ``tests/log_fixtures`` are spec-derived. They are not
-a capture from a Serato install. A missing folder leaves today's version
-gate alone. A log that does not name a dotted version uses the existing
-unknown-version notice. Serato 5 stays read-only. The parser never writes
-a log.
+``tests/log_fixtures/captured-serato5`` keeps the glog line shape from a
+Serato DJ Pro 5.0.0 session. The other folders are spec-derived. A missing
+folder leaves today's version gate alone. A log that does not name a dotted
+version uses the existing unknown-version notice. Serato 5 stays read-only.
+The parser never writes a log.
 """
 
 from __future__ import annotations
@@ -55,6 +55,55 @@ def _point(folder: Path) -> mock._patch:
 
 class LogParserTests(unittest.TestCase):
     """Read the committed fixtures and refuse to follow or write them."""
+
+    def test_captured_serato_5_log_names_version_and_live_master(self) -> None:
+        """A redacted capture from Serato DJ Pro 5.0.0 names the live database.
+
+        The file name, glog prefix, Product name line, Opening library line,
+        and a later backup to ``master.sqlite.in-progress-backup`` keep the
+        bytes captured from a Serato 5.0.0 (5001251) session. Home directory,
+        host, and library UUID are placeholders. The backup suffix must not
+        become the logged path.
+
+        Returns:
+            None.
+        """
+        before = sorted(path.name for path in _logs("captured-serato5").iterdir())
+        stamps = {
+            path.name: path.stat().st_mtime_ns for path in _logs("captured-serato5").iterdir()
+        }
+        read = serato_logs.parse_logs(_logs("captured-serato5"))
+        self.assertEqual(read.state, "parsed")
+        self.assertEqual(read.version, "5.0.0")
+        self.assertEqual(read.build, "5001251")
+        self.assertEqual(read.database, "master.sqlite")
+        self.assertEqual(read.database_path, MAC_MASTER)
+        self.assertEqual(read.log_name, "20261105-193811.11717.log")
+        self.assertFalse(read.downgrade)
+        self.assertNotIn("Backups", read.database_path)
+        self.assertEqual(before, sorted(path.name for path in _logs("captured-serato5").iterdir()))
+        for path in _logs("captured-serato5").iterdir():
+            self.assertEqual(path.stat().st_mtime_ns, stamps[path.name])
+
+    def test_captured_serato_5_backup_suffix_is_not_the_database_path(self) -> None:
+        """``master.sqlite.in-progress-backup`` is not a library path.
+
+        Returns:
+            None.
+        """
+        text = (
+            "I20261105 19:38:12.382961 4090929536 :0] [Library] "
+            "Opening library asynchronously with master database at "
+            f"'{MAC_MASTER}' using SQLite version '3.36.0`.\n"
+            "I20261105 19:53:12.172672 1892020224 :0] [Library] "
+            f"Backing up database '{MAC_MASTER}' to "
+            f"'{Path(MAC_MASTER).parent.as_posix()}/Backups/master.sqlite.in-progress-backup'\n"
+            "I20261105 19:53:17.602664 1879977984 :0] [Library] "
+            "Completed backup of library database to "
+            f"'{Path(MAC_MASTER).parent.as_posix()}/Backups/"
+            "master.sqlite-backup-20261105_195313-0500.zip'.\n"
+        )
+        self.assertEqual(serato_logs._library_path(text), MAC_MASTER)
 
     def test_serato_4_fixture_names_master_sqlite(self) -> None:
         """A Serato 4 log names version 4.1.0 and master.sqlite.
@@ -322,6 +371,16 @@ class LogParserTests(unittest.TestCase):
 
 class LogGateTests(unittest.TestCase):
     """The write gate follows the logs and leaves a missing folder alone."""
+
+    def setUp(self) -> None:
+        """Treat Serato as quit so a live session does not fail these cases.
+
+        Returns:
+            None.
+        """
+        patcher = mock.patch("snapshots.serato_dj_running", return_value=False)
+        self.addCleanup(patcher.stop)
+        patcher.start()
 
     def test_missing_and_empty_logs_match_today(self) -> None:
         """No logs folder keeps the installed Serato 4 library writable.

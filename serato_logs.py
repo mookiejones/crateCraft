@@ -6,10 +6,14 @@ the session finished, and says the file names the Serato DJ Pro or Lite
 version. A published note on the Serato 5 library says the lines marked
 ``[Library]`` name the database that session opened.
 
-The exact bytes of those lines have not been captured from a Serato 4 or
-Serato 5 install. This parser accepts those published markers. A log that
-does not match is unknown, so a write is refused instead of guessed.
-Nothing here creates, edits, or deletes a log file.
+Serato DJ Pro 5.0.0 writes glog lines such as ``Product name: Serato DJ
+Pro, Version: 5.0.0 (5001251)`` and ``[Library] Opening library
+asynchronously with master database at '…/master.sqlite'``. A later
+backup can name ``master.sqlite.in-progress-backup``; that suffix is not
+the library file. The parser also accepts the published markers used in
+the older fixtures. A log that does not match is unknown, so a write is
+refused instead of guessed. Nothing here creates, edits, or deletes a
+log file.
 """
 
 from __future__ import annotations
@@ -32,20 +36,23 @@ _STAMP = re.compile(
 )
 _VERSION_LINE = re.compile(
     r"(?i)\b(?:serato\s+dj(?:\s+(?:pro|lite))?|application\s+version|product\s+version)"
+    r"(?:\s*,\s*version:)?"
     r"(?:\s+version)?"
     r"[\s:;._-]{0,8}"
     r"(\d+\.\d+(?:\.\d+){0,3})"
     r"(?!\d)"
 )
 _BUILD = re.compile(r"(?i)\bbuild\s+(\d+\.\d+(?:\.\d+){0,3})(?!\d)")
+_PAREN_BUILD = re.compile(r"\((\d{5,})\)")
+_PATH_TAIL = r"(?:master\.sqlite|database[ ]V2)(?![A-Za-z0-9._-])"
 _CACHE_LOCK = threading.Lock()
 _CACHE: tuple[tuple[object, ...], "LogRead"] | None = None
 _PATH = re.compile(
-    r"""(?ix)
+    rf"""(?ix)
     (?:
-        "(?P<double>[^"\r\n]*?(?:master\.sqlite|database[ ]V2))"
-      | '(?P<single>[^'\r\n]*?(?:master\.sqlite|database[ ]V2))'
-      | (?P<bare>(?:[A-Za-z]:[\\/]|/)(?:[^/\\\r\n]*[\\/])*[^/\\\r\n]*?(?:master\.sqlite|database[ ]V2))
+        "(?P<double>[^"\r\n]*?{_PATH_TAIL})"
+      | '(?P<single>[^'\r\n]*?{_PATH_TAIL})'
+      | (?P<bare>(?:[A-Za-z]:[\\/]|/)(?:[^/\\\r\n]*[\\/])*[^/\\\r\n]*?{_PATH_TAIL})
     )
     """
 )
@@ -470,6 +477,10 @@ def _first_version(text: str) -> tuple[str, str]:
         named = _BUILD.search(line)
         if named is not None and _DOTTED.fullmatch(named.group(1)):
             build = named.group(1)
+        else:
+            paren = _PAREN_BUILD.search(line)
+            if paren is not None and _DOTTED.fullmatch(paren.group(1)):
+                build = paren.group(1)
         return version, build
     return "", ""
 
