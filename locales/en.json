@@ -147,6 +147,8 @@
   "error.root_color": "The space root has no color.",
   "error.root_delete": "The space root cannot be deleted.",
   "error.root_rename": "The space root cannot be renamed.",
+  "error.scan_depth": "Choose a quick or full check.",
+  "error.scan_full_needs_crate": "Choose a crate for a full decode check.",
   "error.serato_version_unknown": "Serato version is unknown (build {build}). Writes and restores are off until the installed Serato version can be read. A value that is not a dotted number, including an unreadable plist, is unknown. Snapshots can still be taken and read.",
   "error.setup_needs_consent": "Choose whether to share stats before finishing setup.",
   "error.setup_not_saved": "Setup could not be saved.",

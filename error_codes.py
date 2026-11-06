@@ -46,6 +46,8 @@ ERROR_CODES: dict[str, str] = {
     "That action is not available.": "action_unavailable",
     "No Serato library was found on this computer.": "no_library",
     "No older Serato library was found.": "no_legacy_library",
+    "Choose a quick or full check.": "scan_depth",
+    "Choose a crate for a full decode check.": "scan_full_needs_crate",
     legacy_library.WRITE_BLOCKED: "legacy_read_only",
     "The library could not be saved.": "library_not_saved",
     "Track id is required.": "track_id_required",

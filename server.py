@@ -27,6 +27,7 @@ import app_log
 import audio_stream
 import crate_trees
 import drive_check
+import file_scan
 import error_codes
 import files
 import gig_check
@@ -1814,6 +1815,13 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
                 self.wfile.write(body)
+                return
+            if parsed.path == "/api/file-scan":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                depth = query_text(query, "depth", file_scan.QUICK) or file_scan.QUICK
+                file_scan.require_crate_for_full(depth, crate_id)
+                self.send_json(file_scan.scan(Path(library.MASTER), space, crate_id, depth))
                 return
             if parsed.path == "/api/tag-clusters":
                 space = require_space(query_text(query, "space"))
