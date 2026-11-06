@@ -35,6 +35,7 @@ import {
 } from "./restore";
 import { registerPlayerControls, wireShortcuts } from "./shortcuts";
 import { state } from "./state";
+import { loadUpdate, wireUpdate } from "./update";
 import { loadVersion, wireVersion } from "./version";
 import { refreshPresetsOnOpen, wirePresets } from "./presets";
 import { loadLibrary, setMode, showFailure, wireLibrary } from "./views";
@@ -104,6 +105,8 @@ wirePortable();
 wireLayout();
 wireVersion();
 void loadVersion();
+wireUpdate();
+void loadUpdate();
 bindLibraryReload(loadLibrary);
 loadLibrary()
   .then(() => refreshPresetsOnOpen())

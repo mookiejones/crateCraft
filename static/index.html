@@ -100,6 +100,14 @@
     </aside>
 
     <main class="sheet">
+      <div id="update-banner" class="update-banner" role="status" aria-label="Update available" data-i18n-attr="aria-label:update.label" hidden>
+        <p id="update-text" class="update-text"></p>
+        <div class="update-actions">
+          <button id="update-download" type="button" data-i18n="update.download">Download</button>
+          <button id="update-skip" type="button" data-i18n="update.skip">Skip this version</button>
+          <button id="update-dismiss" type="button" data-i18n="update.dismiss">Not now</button>
+        </div>
+      </div>
       <section id="browser" class="browser">
         <div class="browser-bar">
           <label class="search">
@@ -232,6 +240,15 @@
       <span data-i18n="settings.share">Share anonymous usage stats and crash reports</span>
     </label>
     <p id="telemetry-note" class="dialog-note"></p>
+    <label class="check">
+      <input id="update-toggle" type="checkbox">
+      <span data-i18n="settings.updates">Check GitHub for a newer version once a day</span>
+    </label>
+    <label class="check">
+      <input id="update-prereleases" type="checkbox">
+      <span data-i18n="settings.updatesPrereleases">Include test versions (beta and release candidates)</span>
+    </label>
+    <p id="update-status" class="dialog-note" role="status" aria-live="polite"></p>
     <div class="colorway-row">
       <label class="settings-field">
         <span data-i18n="settings.colorway">Theme</span>
@@ -472,6 +489,10 @@
     <div id="wizard-consent" class="wizard-choices" hidden>
       <button id="wizard-no" class="wizard-choice" type="button" data-i18n="wizard.no">No, don't share</button>
       <button id="wizard-yes" class="wizard-choice" type="button" data-i18n="wizard.yes">Yes, share</button>
+    </div>
+    <div id="wizard-updates" class="wizard-choices" hidden>
+      <button id="wizard-updates-no" class="wizard-choice" type="button" data-i18n="wizard.updatesNo">No, don't check</button>
+      <button id="wizard-updates-yes" class="wizard-choice" type="button" data-i18n="wizard.updatesYes">Yes, check</button>
     </div>
     <div class="wizard-actions">
       <div class="wizard-actions-start">

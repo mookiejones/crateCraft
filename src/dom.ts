@@ -97,6 +97,14 @@ export interface ElementIds {
   "consent-dialog": HTMLDialogElement;
   "settings-dialog": HTMLDialogElement;
   "telemetry-toggle": HTMLInputElement;
+  "update-toggle": HTMLInputElement;
+  "update-prereleases": HTMLInputElement;
+  "update-status": HTMLParagraphElement;
+  "update-banner": HTMLDivElement;
+  "update-text": HTMLParagraphElement;
+  "update-download": HTMLButtonElement;
+  "update-skip": HTMLButtonElement;
+  "update-dismiss": HTMLButtonElement;
   "language-select": HTMLSelectElement;
   "colorway-select": HTMLSelectElement;
   "colorway-preview": HTMLImageElement;

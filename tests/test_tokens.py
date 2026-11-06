@@ -418,6 +418,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".shortcut-table thead th", ("--color-card",), 11, 600),
     ("#quick-open-query", ("--color-card",), 15, 400),
     (".quick-open-option", ("--color-card", "--color-selection"), 15, 400),
+    (".update-banner", ("--color-selection",), 15, 400),
     (".quick-open-kind", ("--color-button",), 11, 600),
     (".quick-open-detail", ("--color-card", "--color-selection"), 11, 400),
     (".dialog-note", ("--color-card",), 15, 400),

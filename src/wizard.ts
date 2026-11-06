@@ -2,12 +2,13 @@
  * First-run wizard state machine.
  *
  * The steps are welcome, find the library, take a safety snapshot, the
- * sharing question when it has not been answered, and done. Back and
+ * sharing question when it has not been answered, the update-check
+ * question when that has not been answered, and done. Back and
  * Cancel never mark setup complete. The snapshot step stays blocked
  * while Serato DJ is running until the safety copy has been saved.
  */
 
-export type WizardStep = "welcome" | "library" | "snapshot" | "consent" | "done";
+export type WizardStep = "welcome" | "library" | "snapshot" | "consent" | "updates" | "done";
 
 export type LibraryStatus = "pending" | "found" | "missing" | "error";
 
@@ -30,6 +31,8 @@ export interface WizardContext {
   seratoRunning: boolean;
   snapshot: SnapshotPhase;
   consent: boolean | null;
+  needsUpdates: boolean;
+  updates: boolean | null;
 }
 
 export interface WizardModel {
@@ -47,6 +50,7 @@ export type WizardAction =
   | { type: "serato"; running: boolean }
   | { type: "snapshot"; phase: SnapshotPhase }
   | { type: "consent"; value: boolean }
+  | { type: "updates"; value: boolean }
   | { type: "finish" };
 
 export interface StepPosition {
@@ -76,19 +80,26 @@ const STEP_NAME: Record<WizardStep, MessageKey> = {
   library: "wizard.step.library",
   snapshot: "wizard.step.snapshot",
   consent: "wizard.step.consent",
+  updates: "wizard.step.updates",
   done: "wizard.step.done",
 };
 
 /**
  * Steps that should be on screen for this setup.
  *
- * The sharing step is omitted once a choice is already saved.
+ * The sharing step is omitted once a choice is already saved, and so is
+ * the update-check step.
  */
-export function visibleSteps(needsConsent: boolean): readonly WizardStep[] {
+export function visibleSteps(needsConsent: boolean, needsUpdates = false): readonly WizardStep[] {
   const steps: WizardStep[] = ["welcome", "library", "snapshot"];
   if (needsConsent) steps.push("consent");
+  if (needsUpdates) steps.push("updates");
   steps.push("done");
   return steps;
+}
+
+function stepsOf(model: WizardModel): readonly WizardStep[] {
+  return visibleSteps(model.context.needsConsent, model.context.needsUpdates);
 }
 
 /** Start on Welcome. Nothing is marked complete. */
@@ -96,6 +107,7 @@ export function createWizard(input: {
   needsConsent: boolean;
   library: LibraryStatus;
   seratoRunning: boolean;
+  needsUpdates?: boolean;
 }): WizardModel {
   return {
     step: "welcome",
@@ -107,6 +119,8 @@ export function createWizard(input: {
       seratoRunning: input.seratoRunning,
       snapshot: "idle",
       consent: null,
+      needsUpdates: input.needsUpdates ?? false,
+      updates: null,
     },
   };
 }
@@ -129,6 +143,9 @@ export function reduceWizard(model: WizardModel, action: WizardAction): WizardMo
       return { ...model, context: { ...model.context, snapshot: action.phase } };
     case "consent":
       return goNext({ ...model, context: { ...model.context, consent: action.value } });
+    case "updates":
+      if (model.step !== "updates") return model;
+      return goNext({ ...model, context: { ...model.context, updates: action.value } });
     case "finish":
       if (model.step !== "done") return model;
       return { ...model, complete: true };
@@ -139,7 +156,7 @@ export function reduceWizard(model: WizardModel, action: WizardAction): WizardMo
 
 /** 1-based position among the steps this run shows. */
 export function stepPosition(model: WizardModel): StepPosition {
-  const steps = visibleSteps(model.context.needsConsent);
+  const steps = stepsOf(model);
   const found = steps.indexOf(model.step);
   const index = found < 0 ? 1 : found + 1;
   return { index, count: steps.length, name: t(STEP_NAME[model.step]) };
@@ -149,7 +166,7 @@ export function stepPosition(model: WizardModel): StepPosition {
 export function canGoBack(model: WizardModel): boolean {
   if (model.dismissed || model.complete) return false;
   if (model.step === "snapshot" && model.context.snapshot === "saving") return false;
-  return visibleSteps(model.context.needsConsent).indexOf(model.step) > 0;
+  return stepsOf(model).indexOf(model.step) > 0;
 }
 
 /** True when Next would move to the following step. */
@@ -164,6 +181,8 @@ export function canAdvance(model: WizardModel): boolean {
       return model.context.snapshot === "saved";
     case "consent":
       return model.context.consent !== null;
+    case "updates":
+      return model.context.updates !== null;
     case "done":
       return false;
     default:
@@ -198,6 +217,7 @@ export function primaryAction(model: WizardModel): PrimaryAction {
       if (model.context.snapshot === "error") return "try-again";
       return "take-snapshot";
     case "consent":
+    case "updates":
       return "none";
     case "done":
       return "open-library";
@@ -224,7 +244,7 @@ export function stepAnnouncement(model: WizardModel): string {
 
 function goBack(model: WizardModel): WizardModel {
   if (!canGoBack(model)) return model;
-  const steps = visibleSteps(model.context.needsConsent);
+  const steps = stepsOf(model);
   const index = steps.indexOf(model.step);
   const previous = steps[index - 1];
   if (previous === undefined) return model;
@@ -233,7 +253,7 @@ function goBack(model: WizardModel): WizardModel {
 
 function goNext(model: WizardModel): WizardModel {
   if (!canAdvance(model)) return model;
-  const steps = visibleSteps(model.context.needsConsent);
+  const steps = stepsOf(model);
   const index = steps.indexOf(model.step);
   const next = steps[index + 1];
   if (next === undefined) return model;

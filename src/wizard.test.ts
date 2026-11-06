@@ -187,3 +187,60 @@ describe("completion", () => {
     expect(reduceWizard(saved, { type: "next" }).step).toBe("consent");
   });
 });
+
+describe("update-check step (#97)", () => {
+  function withUpdates(needsConsent = true): WizardModel {
+    return createWizard({ needsConsent, library: "found", seratoRunning: false, needsUpdates: true });
+  }
+
+  function toUpdates(source: WizardModel): WizardModel {
+    let current = atSnapshot(source, "saved");
+    current = reduceWizard(current, { type: "next" });
+    if (current.step === "consent") current = reduceWizard(current, { type: "consent", value: false });
+    return current;
+  }
+
+  it("is asked after sharing and before Done, only when unanswered", () => {
+    expect(visibleSteps(true, true)).toEqual(["welcome", "library", "snapshot", "consent", "updates", "done"]);
+    expect(visibleSteps(false, true)).toEqual(["welcome", "library", "snapshot", "updates", "done"]);
+    expect(visibleSteps(true, false)).toEqual(["welcome", "library", "snapshot", "consent", "done"]);
+    expect(visibleSteps(true)).toEqual(["welcome", "library", "snapshot", "consent", "done"]);
+    expect(model().context.needsUpdates).toBe(false);
+  });
+
+  it("needs an answer, has no primary button, and records the answer", () => {
+    const at = toUpdates(withUpdates());
+    expect(at.step).toBe("updates");
+    expect(canAdvance(at)).toBe(false);
+    expect(primaryAction(at)).toBe("none");
+    expect(primaryEnabled(at)).toBe(false);
+    expect(reduceWizard(at, { type: "next" }).step).toBe("updates");
+    const yes = reduceWizard(at, { type: "updates", value: true });
+    expect(yes.step).toBe("done");
+    expect(yes.context.updates).toBe(true);
+    const no = reduceWizard(at, { type: "updates", value: false });
+    expect(no.step).toBe("done");
+    expect(no.context.updates).toBe(false);
+  });
+
+  it("counts the step and goes back to it from Done", () => {
+    const at = toUpdates(withUpdates());
+    expect(stepPosition(at)).toMatchObject({ index: 5, count: 6 });
+    const done = reduceWizard(at, { type: "updates", value: false });
+    expect(reduceWizard(done, { type: "back" }).step).toBe("updates");
+  });
+
+  it("ignores an update answer on any other step", () => {
+    const welcome = withUpdates();
+    const after = reduceWizard(welcome, { type: "updates", value: true });
+    expect(after.step).toBe("welcome");
+    expect(after.context.updates).toBeNull();
+  });
+
+  it("is skipped straight to Done when already answered", () => {
+    let current = atSnapshot(model({ needsConsent: false }), "saved");
+    current = reduceWizard(current, { type: "next" });
+    expect(current.step).toBe("done");
+  });
+});
+

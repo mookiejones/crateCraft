@@ -21,6 +21,7 @@ var SeratoWizard = (() => {
   // src/wizard-view.ts
   var wizard_view_exports = {};
   __export(wizard_view_exports, {
+    UPDATE_CHOICE_EVENT: () => UPDATE_CHOICE_EVENT,
     open: () => open
   });
 
@@ -150,13 +151,9 @@ var SeratoWizard = (() => {
     "error.nothing_to_undo": "There is no outside change to undo.",
     "error.path_unreadable": "That path could not be read.",
     "error.playlist_empty": "The playlist is empty.",
-    "error.preset_bad_bpm": "Choose a BPM above zero and a range of 0 to 50.",
     "error.preset_bad_band": "Choose a BPM band whose low end is below its high end, up to 400.",
+    "error.preset_bad_bpm": "Choose a BPM above zero and a range of 0 to 50.",
     "error.preset_bad_genre": "Choose a genre.",
-    "error.tree_bad_bands": "Choose BPM bands between 1 and 400, 1 to 50 wide, starting no further apart than their width, and at most 60 bands.",
-    "error.tree_bad_genres": "Choose at least 1 track per genre and up to 100 genres.",
-    "error.tree_empty": "No tracks fit that crate tree.",
-    "error.tree_unknown": "That crate tree is not available.",
     "error.preset_bad_key": "Choose a musical key for the harmonic preset.",
     "error.preset_bad_months": "Choose between 1 and 240 months.",
     "error.preset_crate_gone": "That preset crate is no longer in the library.",
@@ -194,6 +191,10 @@ var SeratoWizard = (() => {
     "error.track_not_in_space_alt": "That track is not in this space.",
     "error.track_path_required": "A track path is required.",
     "error.trash_failed": "The file could not be moved to the Trash.",
+    "error.tree_bad_bands": "Choose BPM bands between 1 and 400, 1 to 50 wide, starting no further apart than their width, and at most 60 bands.",
+    "error.tree_bad_genres": "Choose at least 1 track per genre and up to 100 genres.",
+    "error.tree_empty": "No tracks fit that crate tree.",
+    "error.tree_unknown": "That crate tree is not available.",
     "error.undo_needs_confirm": "Confirm undo before it is saved.",
     "error.upload_too_large": "That upload is too large.",
     "error.write_preimage_mismatch": "The pre-write snapshot does not match its hash.",
@@ -693,6 +694,9 @@ var SeratoWizard = (() => {
     "settings.rerunSetup": "Run setup again",
     "settings.share": "Share anonymous usage stats and crash reports",
     "settings.title": "Settings",
+    "settings.updates": "Check GitHub for a newer version once a day",
+    "settings.updatesFailed": "The update choice could not be saved.",
+    "settings.updatesPrereleases": "Include test versions (beta and release candidates)",
     "sharing.canSend": "Anonymous counts and crash reports can be sent.",
     "sharing.loadFailed": "Couldn't load sharing settings.",
     "sharing.loadFailedOff": "Couldn't load sharing settings. Nothing is sent.",
@@ -941,7 +945,12 @@ var SeratoWizard = (() => {
     "tooltip.trackRating": "Choose a rating for this track.",
     "tooltip.transport": "{action}. Space plays or pauses.",
     "tooltip.transportNamed": "{action} {name}. Space plays or pauses.",
+    "tooltip.updateDismiss": "Hide this until the app opens again.",
+    "tooltip.updateDownload": "Open this release's page on GitHub in your browser.",
+    "tooltip.updatePrereleases": "Also tell you about beta versions and release candidates.",
     "tooltip.updateRelated": "Create or refresh the Related crate in Serato. Serato has to be quit.",
+    "tooltip.updateSkip": "Don't tell you about this version again.",
+    "tooltip.updateToggle": "Ask GitHub once a day whether a newer version is out.",
     "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
@@ -969,6 +978,8 @@ var SeratoWizard = (() => {
     "tooltip.wizardFolderUse": "Use this folder as the library.",
     "tooltip.wizardNo": "Don't share anonymous stats.",
     "tooltip.wizardSecondary": "Choose a folder that already has a Serato library.",
+    "tooltip.wizardUpdatesNo": "Don't check GitHub for new versions.",
+    "tooltip.wizardUpdatesYes": "Check GitHub once a day for a new version.",
     "tooltip.wizardYes": "Share anonymous stats and crash reports.",
     "tooltip.zoomIn": "Show a shorter stretch of the waveform around the playhead.",
     "tooltip.zoomOut": "Show a longer stretch of the waveform around the playhead.",
@@ -976,6 +987,13 @@ var SeratoWizard = (() => {
     "track.numbered": "Track {id}",
     "track.stemsBadge": "stems",
     "track.untitled": "Untitled",
+    "update.available": "Version {version} is out. You have {current}.",
+    "update.availableTest": "Test version {version} is out. You have {current}.",
+    "update.dismiss": "Not now",
+    "update.download": "Download",
+    "update.label": "Update available",
+    "update.openFailed": "The release page could not be opened. It is on GitHub under Releases.",
+    "update.skip": "Skip this version",
     "version.app": "App version",
     "version.copied": "Copied",
     "version.copyFailed": "Couldn't copy the version.",
@@ -1013,6 +1031,7 @@ var SeratoWizard = (() => {
     "wizard.heading.consent": "Share anonymous usage stats and crash reports?",
     "wizard.heading.library": "Find your library",
     "wizard.heading.snapshot": "Safety snapshot",
+    "wizard.heading.updates": "Check for new versions?",
     "wizard.heading.welcome": "See your Serato library",
     "wizard.lookFailed": "Couldn't look for your library.",
     "wizard.looking": "Looking for your Serato library.",
@@ -1029,8 +1048,13 @@ var SeratoWizard = (() => {
     "wizard.step.done": "Done",
     "wizard.step.library": "Find your library",
     "wizard.step.snapshot": "Safety snapshot",
+    "wizard.step.updates": "Updates",
     "wizard.step.welcome": "Welcome",
     "wizard.stepOf": "Step {index} of {count}",
+    "wizard.updatesBody": "Once a day, the app can ask GitHub whether a newer version is out. GitHub sees your IP address and this app's version. Nothing about your library is sent. Checking stays off unless you turn it on, and you can change it in Settings.",
+    "wizard.updatesFailed": "The choice could not be saved. Try again.",
+    "wizard.updatesNo": "No, don't check",
+    "wizard.updatesYes": "Yes, check",
     "wizard.useFolder": "Use this folder",
     "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
     "wizard.yes": "Yes, share"
@@ -1162,13 +1186,9 @@ var SeratoWizard = (() => {
     "error.nothing_to_undo": "No hay ningún cambio externo que deshacer.",
     "error.path_unreadable": "No se pudo leer esa ruta.",
     "error.playlist_empty": "La lista de reproducción está vacía.",
-    "error.preset_bad_bpm": "Elige un BPM mayor que cero y un margen de 0 a 50.",
     "error.preset_bad_band": "Elige una banda de BPM cuyo extremo inferior esté por debajo del superior, hasta 400.",
+    "error.preset_bad_bpm": "Elige un BPM mayor que cero y un margen de 0 a 50.",
     "error.preset_bad_genre": "Elige un género.",
-    "error.tree_bad_bands": "Elige bandas de BPM entre 1 y 400, de 1 a 50 de ancho, que empiecen como mucho a su ancho de distancia, y como máximo 60 bandas.",
-    "error.tree_bad_genres": "Elige al menos 1 pista por género y hasta 100 géneros.",
-    "error.tree_empty": "Ninguna pista encaja en ese árbol de cajas.",
-    "error.tree_unknown": "Ese árbol de cajas no está disponible.",
     "error.preset_bad_key": "Elige una tonalidad para el preajuste armónico.",
     "error.preset_bad_months": "Elige entre 1 y 240 meses.",
     "error.preset_crate_gone": "Esa caja de preajuste ya no está en la biblioteca.",
@@ -1206,6 +1226,10 @@ var SeratoWizard = (() => {
     "error.track_not_in_space_alt": "Esa pista no está en este espacio.",
     "error.track_path_required": "Se necesita la ruta de la pista.",
     "error.trash_failed": "No se pudo mover el archivo a la Papelera.",
+    "error.tree_bad_bands": "Elige bandas de BPM entre 1 y 400, de 1 a 50 de ancho, que empiecen como mucho a su ancho de distancia, y como máximo 60 bandas.",
+    "error.tree_bad_genres": "Elige al menos 1 pista por género y hasta 100 géneros.",
+    "error.tree_empty": "Ninguna pista encaja en ese árbol de cajas.",
+    "error.tree_unknown": "Ese árbol de cajas no está disponible.",
     "error.undo_needs_confirm": "Confirma la acción de deshacer antes de guardarla.",
     "error.upload_too_large": "Ese archivo es demasiado grande.",
     "error.write_preimage_mismatch": "La copia previa al cambio no coincide con su hash.",
@@ -1705,6 +1729,9 @@ var SeratoWizard = (() => {
     "settings.rerunSetup": "Repetir la configuración",
     "settings.share": "Compartir estadísticas de uso anónimas e informes de errores",
     "settings.title": "Ajustes",
+    "settings.updates": "Buscar en GitHub una versión más nueva una vez al día",
+    "settings.updatesFailed": "No se pudo guardar la opción de actualizaciones.",
+    "settings.updatesPrereleases": "Incluir versiones de prueba (beta y candidatas)",
     "sharing.canSend": "Se pueden enviar recuentos anónimos e informes de errores.",
     "sharing.loadFailed": "No se pudieron cargar los ajustes de privacidad.",
     "sharing.loadFailedOff": "No se pudieron cargar los ajustes de privacidad. No se envía nada.",
@@ -1953,7 +1980,12 @@ var SeratoWizard = (() => {
     "tooltip.trackRating": "Elige una valoración para esta pista.",
     "tooltip.transport": "{action}. Espacio reproduce o pausa.",
     "tooltip.transportNamed": "{action} {name}. Espacio reproduce o pausa.",
+    "tooltip.updateDismiss": "Ocultar hasta que la app se abra de nuevo.",
+    "tooltip.updateDownload": "Abrir en el navegador la página de esta versión en GitHub.",
+    "tooltip.updatePrereleases": "Avisar también de versiones beta y candidatas.",
     "tooltip.updateRelated": "Crea o actualiza la caja Relacionadas en Serato. Serato tiene que estar cerrado.",
+    "tooltip.updateSkip": "No volver a avisar de esta versión.",
+    "tooltip.updateToggle": "Preguntar a GitHub una vez al día si hay una versión más nueva.",
     "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
@@ -1981,6 +2013,8 @@ var SeratoWizard = (() => {
     "tooltip.wizardFolderUse": "Usa esta carpeta como biblioteca.",
     "tooltip.wizardNo": "No compartas estadísticas anónimas.",
     "tooltip.wizardSecondary": "Elige una carpeta que ya tenga una biblioteca de Serato.",
+    "tooltip.wizardUpdatesNo": "No buscar versiones nuevas en GitHub.",
+    "tooltip.wizardUpdatesYes": "Buscar en GitHub una versión nueva una vez al día.",
     "tooltip.wizardYes": "Comparte estadísticas anónimas e informes de fallos.",
     "tooltip.zoomIn": "Muestra un tramo más corto de la forma de onda alrededor del cursor.",
     "tooltip.zoomOut": "Muestra un tramo más largo de la forma de onda alrededor del cursor.",
@@ -1988,6 +2022,13 @@ var SeratoWizard = (() => {
     "track.numbered": "Pista {id}",
     "track.stemsBadge": "stems",
     "track.untitled": "Sin título",
+    "update.available": "Ya está la versión {version}. Tienes la {current}.",
+    "update.availableTest": "Ya está la versión de prueba {version}. Tienes la {current}.",
+    "update.dismiss": "Ahora no",
+    "update.download": "Descargar",
+    "update.label": "Actualización disponible",
+    "update.openFailed": "No se pudo abrir la página de la versión. Está en GitHub, en Releases.",
+    "update.skip": "Omitir esta versión",
     "version.app": "Versión de la app",
     "version.copied": "Copiada",
     "version.copyFailed": "No se pudo copiar la versión.",
@@ -2025,6 +2066,7 @@ var SeratoWizard = (() => {
     "wizard.heading.consent": "¿Compartir estadísticas de uso anónimas e informes de errores?",
     "wizard.heading.library": "Encuentra tu biblioteca",
     "wizard.heading.snapshot": "Instantánea de seguridad",
+    "wizard.heading.updates": "¿Buscar versiones nuevas?",
     "wizard.heading.welcome": "Mira tu biblioteca de Serato",
     "wizard.lookFailed": "No se pudo buscar tu biblioteca.",
     "wizard.looking": "Buscando tu biblioteca de Serato.",
@@ -2041,8 +2083,13 @@ var SeratoWizard = (() => {
     "wizard.step.done": "Listo",
     "wizard.step.library": "Encuentra tu biblioteca",
     "wizard.step.snapshot": "Instantánea de seguridad",
+    "wizard.step.updates": "Actualizaciones",
     "wizard.step.welcome": "Bienvenida",
     "wizard.stepOf": "Paso {index} de {count}",
+    "wizard.updatesBody": "Una vez al día, la app puede preguntar a GitHub si hay una versión más nueva. GitHub ve tu dirección IP y la versión de esta app. No se envía nada de tu biblioteca. La búsqueda queda desactivada salvo que la actives, y puedes cambiarlo en Ajustes.",
+    "wizard.updatesFailed": "No se pudo guardar la opción. Inténtalo de nuevo.",
+    "wizard.updatesNo": "No, no buscar",
+    "wizard.updatesYes": "Sí, buscar",
     "wizard.useFolder": "Usar esta carpeta",
     "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
     "wizard.yes": "Sí, compartir"
@@ -2141,13 +2188,18 @@ var SeratoWizard = (() => {
     library: "wizard.step.library",
     snapshot: "wizard.step.snapshot",
     consent: "wizard.step.consent",
+    updates: "wizard.step.updates",
     done: "wizard.step.done"
   };
-  function visibleSteps(needsConsent) {
+  function visibleSteps(needsConsent, needsUpdates = false) {
     const steps = ["welcome", "library", "snapshot"];
     if (needsConsent) steps.push("consent");
+    if (needsUpdates) steps.push("updates");
     steps.push("done");
     return steps;
+  }
+  function stepsOf(model2) {
+    return visibleSteps(model2.context.needsConsent, model2.context.needsUpdates);
   }
   function createWizard(input) {
     return {
@@ -2159,7 +2211,9 @@ var SeratoWizard = (() => {
         library: input.library,
         seratoRunning: input.seratoRunning,
         snapshot: "idle",
-        consent: null
+        consent: null,
+        needsUpdates: input.needsUpdates ?? false,
+        updates: null
       }
     };
   }
@@ -2180,6 +2234,9 @@ var SeratoWizard = (() => {
         return { ...model2, context: { ...model2.context, snapshot: action.phase } };
       case "consent":
         return goNext({ ...model2, context: { ...model2.context, consent: action.value } });
+      case "updates":
+        if (model2.step !== "updates") return model2;
+        return goNext({ ...model2, context: { ...model2.context, updates: action.value } });
       case "finish":
         if (model2.step !== "done") return model2;
         return { ...model2, complete: true };
@@ -2188,7 +2245,7 @@ var SeratoWizard = (() => {
     }
   }
   function stepPosition(model2) {
-    const steps = visibleSteps(model2.context.needsConsent);
+    const steps = stepsOf(model2);
     const found = steps.indexOf(model2.step);
     const index = found < 0 ? 1 : found + 1;
     return { index, count: steps.length, name: t(STEP_NAME[model2.step]) };
@@ -2196,7 +2253,7 @@ var SeratoWizard = (() => {
   function canGoBack(model2) {
     if (model2.dismissed || model2.complete) return false;
     if (model2.step === "snapshot" && model2.context.snapshot === "saving") return false;
-    return visibleSteps(model2.context.needsConsent).indexOf(model2.step) > 0;
+    return stepsOf(model2).indexOf(model2.step) > 0;
   }
   function canAdvance(model2) {
     if (model2.dismissed || model2.complete) return false;
@@ -2209,6 +2266,8 @@ var SeratoWizard = (() => {
         return model2.context.snapshot === "saved";
       case "consent":
         return model2.context.consent !== null;
+      case "updates":
+        return model2.context.updates !== null;
       case "done":
         return false;
       default:
@@ -2231,6 +2290,7 @@ var SeratoWizard = (() => {
         if (model2.context.snapshot === "error") return "try-again";
         return "take-snapshot";
       case "consent":
+      case "updates":
         return "none";
       case "done":
         return "open-library";
@@ -2252,7 +2312,7 @@ var SeratoWizard = (() => {
   }
   function goBack(model2) {
     if (!canGoBack(model2)) return model2;
-    const steps = visibleSteps(model2.context.needsConsent);
+    const steps = stepsOf(model2);
     const index = steps.indexOf(model2.step);
     const previous = steps[index - 1];
     if (previous === void 0) return model2;
@@ -2260,7 +2320,7 @@ var SeratoWizard = (() => {
   }
   function goNext(model2) {
     if (!canAdvance(model2)) return model2;
-    const steps = visibleSteps(model2.context.needsConsent);
+    const steps = stepsOf(model2);
     const index = steps.indexOf(model2.step);
     const next = steps[index + 1];
     if (next === void 0) return model2;
@@ -2365,6 +2425,13 @@ var SeratoWizard = (() => {
     wizardFolderClose: spec("tooltip.wizardFolderClose"),
     wizardNo: spec("tooltip.wizardNo"),
     wizardYes: spec("tooltip.wizardYes"),
+    wizardUpdatesNo: spec("tooltip.wizardUpdatesNo"),
+    wizardUpdatesYes: spec("tooltip.wizardUpdatesYes"),
+    updateToggle: spec("tooltip.updateToggle"),
+    updatePrereleases: spec("tooltip.updatePrereleases"),
+    updateDownload: spec("tooltip.updateDownload"),
+    updateSkip: spec("tooltip.updateSkip"),
+    updateDismiss: spec("tooltip.updateDismiss"),
     wizardBack: spec("tooltip.wizardBack"),
     wizardCancel: spec("tooltip.wizardCancel"),
     wizardSecondary: spec("tooltip.wizardSecondary"),
@@ -2519,6 +2586,7 @@ var SeratoWizard = (() => {
     library: "wizard.heading.library",
     snapshot: "wizard.heading.snapshot",
     consent: "wizard.heading.consent",
+    updates: "wizard.heading.updates",
     done: "wizard.done"
   };
   var noteKey = (key) => () => t(key);
@@ -2576,6 +2644,12 @@ var SeratoWizard = (() => {
     button("wizard-yes").addEventListener("click", () => {
       void chooseConsent(true);
     });
+    button("wizard-updates-no").addEventListener("click", () => {
+      void chooseUpdates(false);
+    });
+    button("wizard-updates-yes").addEventListener("click", () => {
+      void chooseUpdates(true);
+    });
     button("wizard-folder-up").addEventListener("click", () => {
       if (folderParent) void browse(folderParent);
     });
@@ -2604,6 +2678,8 @@ var SeratoWizard = (() => {
     const settings = await loadSettings();
     if (token !== generation) return;
     if (settings.wizard_complete && !next.force) return;
+    const needsUpdates = await updateChoiceMissing();
+    if (token !== generation) return;
     const setup = await loadSetup();
     if (token !== generation) return;
     summary = setup ? noteText(setup.summary) : noteKey("wizard.lookFailed");
@@ -2613,7 +2689,8 @@ var SeratoWizard = (() => {
     model = createWizard({
       needsConsent: settings.needs_consent_prompt,
       library,
-      seratoRunning: setup?.seratoRunning ?? false
+      seratoRunning: setup?.seratoRunning ?? false,
+      needsUpdates
     });
     paint(false);
     const dialog = wizardDialog();
@@ -2725,6 +2802,36 @@ var SeratoWizard = (() => {
       busy = false;
       statusNote = noteKey("wizard.consentFailed");
       paint(false);
+    }
+  }
+  var UPDATE_CHOICE_EVENT = "serato-update-choice";
+  async function chooseUpdates(value) {
+    if (busy || model.step !== "updates") return;
+    const token = generation;
+    busy = true;
+    statusNote = noteKey("wizard.saving");
+    paint(false);
+    try {
+      await postJSON("/api/update", { enabled: value }, 15e3);
+      if (token !== generation) return;
+      busy = false;
+      statusNote = null;
+      model = reduceWizard(model, { type: "updates", value });
+      window.dispatchEvent(new CustomEvent(UPDATE_CHOICE_EVENT, { detail: { enabled: value } }));
+      paint(true);
+    } catch {
+      if (token !== generation) return;
+      busy = false;
+      statusNote = noteKey("wizard.updatesFailed");
+      paint(false);
+    }
+  }
+  async function updateChoiceMissing() {
+    try {
+      const payload = await getJSON("/api/update", 15e3);
+      return isRecord(payload) && payload.enabled === null;
+    } catch {
+      return false;
     }
   }
   async function finish() {
@@ -2854,6 +2961,7 @@ var SeratoWizard = (() => {
     statusNode.className = status.kind ? `wizard-status is-${status.kind}` : "wizard-status";
     paintProgress();
     element("wizard-consent").hidden = model.step !== "consent";
+    element("wizard-updates").hidden = model.step !== "updates";
     element("wizard-folders").hidden = !(folderOpen && model.step === "library");
     const back = button("wizard-back");
     back.hidden = !canGoBack(model);
@@ -2869,6 +2977,8 @@ var SeratoWizard = (() => {
     primary.disabled = busy || !primaryEnabled(model);
     button("wizard-no").disabled = busy;
     button("wizard-yes").disabled = busy;
+    button("wizard-updates-no").disabled = busy;
+    button("wizard-updates-yes").disabled = busy;
     button("wizard-cancel").disabled = false;
     if (moveFocus) {
       text("wizard-announce").textContent = stepAnnouncement(model);
@@ -2886,6 +2996,8 @@ var SeratoWizard = (() => {
         return t("wizard.snapshotBody");
       case "consent":
         return t("consent.body");
+      case "updates":
+        return t("wizard.updatesBody");
       case "done":
         return "";
       default:
