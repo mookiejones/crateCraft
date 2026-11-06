@@ -41,7 +41,7 @@ The first time the page opens, setup runs until `wizard_complete` is true. It co
 3. Press F5.
 4. The debugger runs `server.py` in the integrated terminal.
 
-`.vscode/launch.json` names that launch "Python: Run server.py". A second launch, "Python: Current File", debugs the open file. "Python: Debug Tests" runs `unittest` discovery for `tests/`. Those launches use the system Python. The desktop app uses `.venv`. Format on save is on. The explorer hides `__pycache__` and `*.pyc`.
+`.vscode/launch.json` names that launch "Python: Run server.py". "Python: Run desktop.py" starts the native window with `.venv` (`.venv\\Scripts\\python.exe` on Windows). "Python: Current File" debugs the open file. "Python: Debug Tests" runs `unittest` discovery for `tests/`. F5, Current File, and Debug Tests use the system Python. Format on save is on. The explorer hides `__pycache__` and `*.pyc`.
 
 ## Containers
 

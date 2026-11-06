@@ -73,7 +73,7 @@ The commands to paste into a pull request are the full list under [After a chang
 - `docs/serato-library-tools.md` is research notes, not runtime config.
 - `docs/architecture.md` is the code reference. Update it in the same change as the behavior it describes.
 - `tests/` is a `unittest` suite. `tests/fixture.py` points `library.MASTER` at a temporary database. `tests/fixtures/` holds spec-derived Serato 4 and 5 crate, database V2, and audio fixtures built by `tests/fixtures/build_fixtures.py`. Serato 5 fixtures are marked unverified. The builder does not import the application. Tests read those synthetic Serato-format files in place against each tree's `golden.json`, and the backup tests copy the short audio into a temporary library; the files must stay synthetic and must never contain a real user's `master.sqlite`, `root.sqlite`, or other library data. `src/wizard.test.ts` is the Vitest suite for the setup steps.
-- `.vscode/launch.json` starts `server.py` on F5. "Python: Debug Tests" runs the suite. The desktop app uses `.venv`. The server launch uses the system Python.
+- `.vscode/launch.json` starts `server.py` on F5. "Python: Run desktop.py" launches the native window with `.venv`. "Python: Debug Tests" runs the suite. The server launch uses the system Python.
 
 ## Strict TypeScript
 
