@@ -443,7 +443,9 @@ def _read_flac_blocks(path: Path) -> tuple[list[tuple[int, int, bytes]], int]:
         Blocks as last-flag, type, and data, plus the audio offset.
 
     Raises:
-        FrameRewriteError: If the file is not FLAC.
+        FrameRewriteError: If the file is not FLAC, or has more than
+            ``tags.FLAC_BLOCK_LIMIT`` metadata blocks. A rewrite never
+            drops the blocks past the limit; it refuses the file instead.
     """
     blocks: list[tuple[int, int, bytes]] = []
     with path.open("rb") as handle:
@@ -453,6 +455,8 @@ def _read_flac_blocks(path: Path) -> tuple[list[tuple[int, int, bytes]], int]:
             header = handle.read(4)
             if len(header) < 4:
                 break
+            if len(blocks) >= tags.FLAC_BLOCK_LIMIT:
+                raise FrameRewriteError("This FLAC file has too many metadata blocks.")
             last = 1 if header[0] & 0x80 else 0
             block_type = header[0] & 0x7F
             length = int.from_bytes(header[1:4], "big")
