@@ -300,7 +300,9 @@ describe("version on the page", () => {
     const hostile = "<img src=x onerror=alert(1)>";
     fetchMock().mockResolvedValue(jsonResponse(versionBody({ version: hostile })));
     await loadVersion();
-    expect(document.querySelector("img")).toBeNull();
+    const images = [...document.querySelectorAll("img")];
+    expect(images.map((img) => img.id)).toEqual(["colorway-preview"]);
+    expect(images[0]?.getAttribute("src")).not.toBe("x");
     expect(el("about-version").querySelector("img")).toBeNull();
     expect(el("app-version").querySelector("img")).toBeNull();
     expect(el("about-version").children).toHaveLength(0);

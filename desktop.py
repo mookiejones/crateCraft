@@ -1019,6 +1019,30 @@ def _focus(window: object) -> None:
         show()
 
 
+def _apply_launch_icon() -> None:
+    """Apply the saved theme icon after the window is on screen.
+
+    A failure is logged. The window still opens. The Finder icon and the
+    executable are not changed.
+    """
+    try:
+        import app_icons
+
+        app_icons.apply_saved()
+    except Exception:
+        app_log.logger.exception("The app icon could not be changed")
+
+
+def _on_window_shown(window: object) -> None:
+    """Place the window, then match the icon to the saved theme.
+
+    Args:
+        window: pywebview window that has already been shown.
+    """
+    _place_on_screen(window)
+    _apply_launch_icon()
+
+
 def _place_on_screen(window: object) -> None:
     """Center the window when its title bar is not on a screen.
 
@@ -1126,8 +1150,10 @@ def open_window(
     gui = detect_gui()
     if gui not in _ALLOWED_GUI:
         raise SystemExit(f"Refusing web view {gui!r}.")
+    import app_icons
     import webview
 
+    app_icons.prepare_taskbar()
     reset_window_geometry()
     saved = app_config.load_settings().window
     options: dict[str, object] = {
@@ -1146,7 +1172,8 @@ def open_window(
         raise SystemExit("The window could not be created.")
     window.events.resized += note_window_resized
     window.events.moved += note_window_moved
-    window.events.shown += lambda: _place_on_screen(window)
+    app_icons.bind_window(window)
+    window.events.shown += lambda: _on_window_shown(window)
     window.events.closed += lambda: _close_window(url, token)
     httpd.focus_window = lambda: _focus(window)
 
