@@ -1433,6 +1433,54 @@ class MergeTests(unittest.TestCase):
             finally:
                 shutil.rmtree(sibling, ignore_errors=True)
 
+    def test_merge_failed_cue_rewrite_keeps_dest_bytes_and_lock(self) -> None:
+        """A failed frame rewrite still merges rows and leaves dest and lock.
+
+        The kept file has no grid and lock 0. The duplicate has a locked
+        grid. ``restore_stored_frames`` raises. Confirm still removes the
+        duplicate. Dest bytes stay. Lock stays 0.
+
+        Returns:
+            None. The test fails if the lock is copied or dest is rewritten.
+        """
+        with TempLibrary() as temp:
+            sibling, kept, dup = _audio_pair(temp, "keep.mp3", "dup.mp3")
+            try:
+                original = b"KEEP-AUDIO"
+                kept.write_bytes(original)
+                _write_id3(
+                    dup,
+                    [_geob_frame("Serato BeatGrid", _beatgrid_payload())],
+                    b"DUP-AUDIO",
+                )
+                _point_assets(temp.db, kept, dup)
+                with open_database(temp.db) as conn:
+                    conn.execute("UPDATE asset SET is_beatgrid_locked = 0 WHERE id = 1")
+                    conn.execute("UPDATE asset SET is_beatgrid_locked = 1 WHERE id = 2")
+                with mock.patch(
+                    "library.snapshot_frames.restore_stored_frames",
+                    side_effect=snapshot_frames.FrameRewriteError("Could not rewrite the tag."),
+                ):
+                    result = library.merge_duplicates({"keep_id": 1, "confirm": True})
+                self.assertEqual(result["cue_copy"]["status"], "failed")
+                self.assertIn("does not copy them", str(result["cue_warning"]))
+                self.assertEqual(kept.read_bytes(), original)
+                self.assertEqual(_asset_count(temp.db, 2), 0)
+                self.assertNotIn(
+                    "is_beatgrid_locked",
+                    {
+                        item["field"]
+                        for item in cast(list[dict[str, object]], result["fields"])
+                    },
+                )
+                with open_database(temp.db) as conn:
+                    lock = conn.execute(
+                        "SELECT is_beatgrid_locked FROM asset WHERE id = 1"
+                    ).fetchone()[0]
+                self.assertEqual(lock, 0)
+            finally:
+                shutil.rmtree(sibling, ignore_errors=True)
+
     def test_merge_skips_cue_copy_across_containers(self) -> None:
         """Warn and leave a FLAC dest unchanged when the duplicate is MP3.
 

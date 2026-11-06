@@ -5157,7 +5157,9 @@ def _apply_cue_copy(plan: dict[str, object]) -> None:
     """Write planned Markers2 and BeatGrid frames onto the kept file.
 
     A failed rewrite leaves the previous bytes in place and sets
-    ``cue_warning``. The library merge still runs.
+    ``cue_warning``. The planned ``is_beatgrid_locked`` update is dropped
+    so the kept row stays unlocked when the dest file still has no grid.
+    The library merge still runs.
 
     Args:
         plan: Merge plan with ``_cue_copy``.
@@ -5180,6 +5182,16 @@ def _apply_cue_copy(plan: dict[str, object]) -> None:
         if isinstance(public, dict):
             public["status"] = "failed"
             plan["cue_copy"] = public
+        updates = plan.get("_updates")
+        if isinstance(updates, dict):
+            updates.pop("is_beatgrid_locked", None)
+        fields = plan.get("fields")
+        if isinstance(fields, list):
+            plan["fields"] = [
+                item
+                for item in fields
+                if not (isinstance(item, dict) and item.get("field") == "is_beatgrid_locked")
+            ]
         return
     if isinstance(public, dict):
         public["status"] = "copied"
