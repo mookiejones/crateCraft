@@ -11,12 +11,13 @@ The HTTP banner in `server.py` is `SeratoLibrary/1.0`. A release tag does not ch
 | CI | Push to `main`, and every pull request | Tests, typechecks and rebuilds the page and setup bundles, then audits the requirements files |
 | CodeQL | Push to `main`, and every pull request | Analyzes the Python source. There is no autobuild |
 | Dependency review | Pull requests only | Reviews dependency changes. It does not comment on the pull request |
+| Prepare release | Push to `main`, or a manual run on `main` | Drafts the next `vMAJOR.MINOR.PATCH` and notes since the latest final tag, uploads them as an artifact, and updates the open **Next release** issue. It does not create a tag or a GitHub Release |
 | Release | Tag `v*.*.*`, or a manual run | Builds the macOS disk images, the Windows installer, and the portable zip. A tag also publishes a GitHub Release |
 | Pages | Push to `main` when `docs/` or `.github/workflows/pages.yml` changes, a pull request that changes those paths, or a manual run | Builds the user guide with MkDocs. A push to `main` also publishes it. A pull request builds the site and does not publish it |
 
-A push to `main` runs CI and CodeQL once. When that push also changes `docs/` or the Pages workflow, Pages runs too. A pull request runs CI, CodeQL, and dependency review. A pull request that changes the guide also builds the site. The two events do not both fire for the same commit on a feature branch, because CI, CodeQL, and Pages listen to `push` only on `main`.
+A push to `main` runs CI, CodeQL, and Prepare release once. When that push also changes `docs/` or the Pages workflow, Pages runs too. A pull request runs CI, CodeQL, and dependency review. A pull request that changes the guide also builds the site. The two events do not both fire for the same commit on a feature branch, because CI, CodeQL, Pages, and Prepare release listen to `push` only on `main`. Prepare release does not run on pull requests.
 
-Each workflow sets `permissions: contents: read` and a `timeout-minutes` value. The CI tests job allows 20 minutes, because the Windows run takes about 9 minutes and grows with the suite. A job that needs more access sets its own permissions, which replace the workflow floor. CI, CodeQL, and dependency review cancel an older run on the same ref. The release workflow does not. The Pages workflow does not cancel an in-progress run, because a publish should finish. The Pages deploy job sets `contents: read`, `pages: write`, and `id-token: write`.
+Each workflow sets `permissions: contents: read` and a `timeout-minutes` value. The CI tests job allows 20 minutes, because the Windows run takes about 9 minutes and grows with the suite. A job that needs more access sets its own permissions, which replace the workflow floor. CI, CodeQL, dependency review, and Prepare release cancel an older run on the same group. The release workflow does not. The Pages workflow does not cancel an in-progress run, because a publish should finish. The Pages deploy job sets `contents: read`, `pages: write`, and `id-token: write`. The Prepare release job sets `contents: read` and `issues: write`. It cannot push a tag.
 
 Actions are pinned to a commit SHA. The trailing comment is the version Dependabot matches. Dependabot opens a weekly Monday pull request for Python dependencies, another for the Node toolchain (`typescript`, `esbuild`, and ESLint), and another for GitHub Actions. Each group is one pull request, with a `deps` commit prefix, and at most five Python pull requests stay open. The Node group is one pull request as well.
 
@@ -73,6 +74,25 @@ The job name is `analyze Python`. It runs on Ubuntu. The job permission is `cont
 
 The job name is `review dependency changes`. It needs only `contents: read`. A pull request from a fork can run this job, the test matrix, the frontend job, the dependency audit, and CodeQL. Fork pull requests do not run the release workflow, so they do not mint attestations or publish a release.
 
+### Prepare release
+
+A push to `main` (after the usual branch-protection merges) drafts the next version. `python scripts/prepare_release.py` reads the latest final `vMAJOR.MINOR.PATCH` tag, ignores `-rcN` / `-betaN` tags, and bumps the patch. It lists non-merge commit subjects since that tag. With no final tag, or with no commits since it, the script prints a skip reason, writes no file, and does not open or edit an issue. That skip is the no-backfill path: the first run does not invent historical tags.
+
+When there is something to ship, the job writes `next-release.md`, uploads it as the `next-release` artifact, and updates the open GitHub issue titled **Next release**. If that issue is missing, the job creates one. If more than one is open, it edits the lowest number and does not open another. The issue body is the draft notes plus the reminder that publish is a tag push. A rolling pull request from `GITHUB_TOKEN` would not run CI, so the draft is that issue and the artifact. Merging this workflow, a dry-run, and `workflow_dispatch` never create a `v*.*.*` tag or a GitHub Release. The job token is `contents: read` plus `issues: write`.
+
+GitHub does not run workflows from tags created by `GITHUB_TOKEN` in another workflow. Preparation never creates that tag. Charles (@mookiejones) publishes by pushing the tag locally, which is the step `release.yml` already listens to.
+
+The job runs on `ubuntu-latest` only. It does not install the app requirements. A change to `scripts/prepare_release.py` does not start the macOS or Windows Release builds.
+
+Run the same draft locally:
+
+```bash
+python3 scripts/prepare_release.py
+python3 scripts/prepare_release.py --write /tmp/next-release.md
+```
+
+`--write` is skipped when there is nothing to prepare, and the path is left unwritten.
+
 ### Release
 
 GitHub Releases is the only download. The workflow does not publish a Homebrew formula, a winget package, or a website.
@@ -123,14 +143,22 @@ Quit Serato DJ Pro before you edit the library. The page is served on `127.0.0.1
 
 ## Cut a release
 
-Create the tag locally and push that tag. The workflow creates the GitHub Release. It does not create the tag.
+Preparation and publish are separate. Several merges can accumulate on `main` while the **Next release** issue stays current. Ordinary pushes to `main` never publish.
+
+### Prepare
+
+After a merge to `main`, Prepare release updates the **Next release** issue and the `next-release` artifact with the next patch tag and draft notes. You can also run `python3 scripts/prepare_release.py` locally. Edit the issue if the bump should be a minor or a major instead of a patch. Do not merge a bot tag. There is no bot tag.
+
+### Publish
+
+Create the tag locally and push that tag. The Release workflow creates the GitHub Release. It does not create the tag. Only Charles (@mookiejones) does this step.
 
 ```bash
 git tag -a v1.0.0 -m "Release v1.0.0."
 git push origin v1.0.0
 ```
 
-Use the next `vMAJOR.MINOR.PATCH` tag. Push the tag only when `main` is the commit you want to ship.
+Use the next `vMAJOR.MINOR.PATCH` tag from the **Next release** issue. Push the tag only when `main` is the commit you want to ship.
 
 To build without publishing, open Actions, choose Release, and run the workflow. Download the artifacts from that run. Those files are the same shape as a release, and they carry attestations, but they are not attached to a GitHub Release. `SHA256SUMS` is written by the publish job, so a manual run has the disk images, the installer, and the zip, and does not have the checksum file.
 

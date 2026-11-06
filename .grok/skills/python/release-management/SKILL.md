@@ -33,7 +33,9 @@ The HTTP banner in `server.py` is `SeratoLibrary/1.0`. A release tag does not ch
 
 ## GitHub Releases
 
-Create the tag locally and push that tag. The workflow creates the release. It does not create the tag.
+Merges to `main` run Prepare release (`scripts/prepare_release.py`). That job drafts the next patch tag and notes into the **Next release** issue and a `next-release` artifact. It does not create a tag or a GitHub Release. GitHub does not run workflows from tags created by `GITHUB_TOKEN`; this repo never creates the publish tag from Actions.
+
+Create the tag locally and push that tag. The Release workflow creates the release. It does not create the tag.
 
 ```bash
 git tag -a v1.2.3 -m "Release v1.2.3."
