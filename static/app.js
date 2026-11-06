@@ -97,6 +97,7 @@
     "error.body_not_json": "The request body is not JSON.",
     "error.body_not_object": "The request body is not an object.",
     "error.choose_copy": "Choose the copy to keep.",
+    "error.choose_folder": "Choose a folder.",
     "error.color_not_number": "Color needs a number.",
     "error.color_out_of_range": "Color is out of range.",
     "error.consent_not_saved": "The sharing choice could not be saved.",
@@ -104,6 +105,8 @@
     "error.crate_name_too_long": "That crate name is too long.",
     "error.crate_not_in_space": "That crate is not in this space.",
     "error.field_readonly": "That field cannot be edited.",
+    "error.file_already_this_track": "That file is already this track.",
+    "error.file_already_used": "Another library track already uses that file.",
     "error.file_not_on_disk": "That file is not on disk.",
     "error.focus_failed": "The window could not be focused.",
     "error.folder_not_library": "That folder is not the Serato library on this computer.",
@@ -142,6 +145,11 @@
     "error.related_not_saved": "The related-tracks file could not be saved.",
     "error.related_self": "A track cannot be related to itself.",
     "error.related_unreadable": "The related-tracks file could not be read.",
+    "error.relink_duplicate_files": "Two of those files are the same.",
+    "error.relink_duplicate_tracks": "Two of those tracks are the same.",
+    "error.relink_needs_tracks": "Choose tracks to relink.",
+    "error.relink_not_audio": "That file is not an audio file.",
+    "error.relink_still_on_disk": "That track is still on disk.",
     "error.requestFailed": "Request failed",
     "error.requestStatus": "Request failed ({status})",
     "error.root_color": "The space root has no color.",
@@ -164,6 +172,7 @@
     "error.track_not_in_library": "That track is not in the library.",
     "error.track_not_in_space": "Track is not in this space.",
     "error.track_not_in_space_alt": "That track is not in this space.",
+    "error.too_many_files": "Choose fewer files at once.",
     "error.track_path_required": "A track path is required.",
     "error.trash_failed": "The file could not be moved to the Trash.",
     "error.tree_bad_bands": "Choose BPM bands between 1 and 400, 1 to 50 wide, starting no further apart than their width, and at most 60 bands.",
@@ -459,6 +468,7 @@
     "operations.action.move": "Move file",
     "operations.action.moveFolder": "Move folder",
     "operations.action.rename": "Rename file",
+    "operations.action.relink": "Relink files",
     "operations.action.replace": "Replace file",
     "operations.action.restore": "Restore",
     "operations.action.restoreRecover": "Recover restore",
@@ -638,6 +648,49 @@
     "related.twoWayLink": "Two-way link",
     "related.typeHint": "Type a title or artist.",
     "related.updateCrate": "Update Serato crate",
+    "relink.acceptHigh": "Accept all high",
+    "relink.choose": "Choose tracks to relink.",
+    "relink.confidence": "Confidence",
+    "relink.confidence.high": "High",
+    "relink.confidence.low": "Low",
+    "relink.confidence.medium": "Medium",
+    "relink.confirm": "Relink",
+    "relink.done": {
+      one: "Pointed {count} missing track at its file.",
+      other: "Pointed {count} missing tracks at their files."
+    },
+    "relink.empty": "No missing tracks in this space, or none of them matched.",
+    "relink.find": "Find matches",
+    "relink.finding": "Searching…",
+    "relink.include": "Relink this track",
+    "relink.intro": "Point missing tracks at files that moved. Audio stays where it is. Crates, history, and related links stay attached.",
+    "relink.match": "Match",
+    "relink.none": "No matches yet. Search the music folders, or add an extra folder after a drive swap.",
+    "relink.pick": "Choose a file",
+    "relink.previewing": "Checking what will change.",
+    "relink.quitSerato": "Quit Serato before relinking.",
+    "relink.reason.folder": "Folder moved",
+    "relink.reason.name": "Same name",
+    "relink.reason.nameAndSize": "Same name and size",
+    "relink.reason.size": "Same size",
+    "relink.reason.unknown": "{reason}",
+    "relink.relinking": "Relinking…",
+    "relink.remap": "Folder moved: {from} → {to} ({count} tracks)",
+    "relink.root": "Extra folder to search",
+    "relink.rootHelp": "Optional. Paste a folder after a drive swap, for example /Volumes/NEW/DJ.",
+    "relink.scanned": "Searched {count} files.",
+    "relink.selected": {
+      one: "{count} selected",
+      other: "{count} selected"
+    },
+    "relink.title": "Relink missing files",
+    "relink.track": "Track",
+    "relink.truncated": "The search stopped after 200,000 files. Add a closer extra folder.",
+    "relink.unavailable": {
+      one: "{count} track sits on a drive that is not plugged in. It is not matched.",
+      other: "{count} tracks sit on a drive that is not plugged in. They are not matched."
+    },
+    "relink.why": "Why",
     "rules.and": "and",
     "rules.label": "Smart crate rules",
     "rules.matches": "Matches",
@@ -831,6 +884,14 @@
     "tooltip.mergeConfirm": "Merge the copies into the one you keep.",
     "tooltip.mergeConfirmTrash": "Merge the copies and move the other audio files to the Trash.",
     "tooltip.mergeDuplicates": "Merge the selected copies into the one you keep.",
+    "tooltip.relink": "Find files that moved and point missing tracks at them.",
+    "tooltip.relinkAcceptHigh": "Tick every match whose confidence is high.",
+    "tooltip.relinkCancel": "Cancel. Nothing is written. Esc.",
+    "tooltip.relinkConfirm": "Point the ticked tracks at the chosen files. Audio is not moved.",
+    "tooltip.relinkFind": "Search the music folders, and the extra folder if you pasted one.",
+    "tooltip.relinkInclude": "Include this track in the relink.",
+    "tooltip.relinkPick": "Choose which file this missing track should use.",
+    "tooltip.relinkRoot": "Extra folder to search after a drive swap. Leave blank to use the music folders.",
     "tooltip.mergeTrash": "Move the other audio files to the Trash. You can restore them from there.",
     "tooltip.merging": "Merging the copies.",
     "tooltip.missingDrive": "Connect the drive that holds {name} before opening it.",
@@ -1132,6 +1193,7 @@
     "error.body_not_json": "El cuerpo de la solicitud no es JSON.",
     "error.body_not_object": "El cuerpo de la solicitud no es un objeto.",
     "error.choose_copy": "Elige la copia que quieres conservar.",
+    "error.choose_folder": "Elige una carpeta.",
     "error.color_not_number": "El color debe ser un número.",
     "error.color_out_of_range": "El color está fuera de rango.",
     "error.consent_not_saved": "No se pudo guardar la elección sobre compartir datos.",
@@ -1139,6 +1201,8 @@
     "error.crate_name_too_long": "Ese nombre de caja es demasiado largo.",
     "error.crate_not_in_space": "Esa caja no está en este espacio.",
     "error.field_readonly": "Ese campo no se puede editar.",
+    "error.file_already_this_track": "Ese archivo ya es esta pista.",
+    "error.file_already_used": "Otra pista de la biblioteca ya usa ese archivo.",
     "error.file_not_on_disk": "Ese archivo no está en el disco.",
     "error.focus_failed": "No se pudo traer la ventana al frente.",
     "error.folder_not_library": "Esa carpeta no es la biblioteca de Serato de este equipo.",
@@ -1177,6 +1241,11 @@
     "error.related_not_saved": "No se pudo guardar el archivo de pistas relacionadas.",
     "error.related_self": "Una pista no puede estar relacionada consigo misma.",
     "error.related_unreadable": "No se pudo leer el archivo de pistas relacionadas.",
+    "error.relink_duplicate_files": "Dos de esos archivos son el mismo.",
+    "error.relink_duplicate_tracks": "Dos de esas pistas son la misma.",
+    "error.relink_needs_tracks": "Elige pistas para volver a enlazar.",
+    "error.relink_not_audio": "Ese archivo no es un archivo de audio.",
+    "error.relink_still_on_disk": "Esa pista sigue en el disco.",
     "error.requestFailed": "La solicitud falló",
     "error.requestStatus": "La solicitud falló ({status})",
     "error.root_color": "La raíz del espacio no tiene color.",
@@ -1199,6 +1268,7 @@
     "error.track_not_in_library": "Esa pista no está en la biblioteca.",
     "error.track_not_in_space": "La pista no está en este espacio.",
     "error.track_not_in_space_alt": "Esa pista no está en este espacio.",
+    "error.too_many_files": "Elige menos archivos a la vez.",
     "error.track_path_required": "Se necesita la ruta de la pista.",
     "error.trash_failed": "No se pudo mover el archivo a la Papelera.",
     "error.tree_bad_bands": "Elige bandas de BPM entre 1 y 400, de 1 a 50 de ancho, que empiecen como mucho a su ancho de distancia, y como máximo 60 bandas.",
@@ -1494,6 +1564,7 @@
     "operations.action.move": "Mover archivo",
     "operations.action.moveFolder": "Mover carpeta",
     "operations.action.rename": "Renombrar archivo",
+    "operations.action.relink": "Reenlazar archivos",
     "operations.action.replace": "Reemplazar archivo",
     "operations.action.restore": "Restaurar",
     "operations.action.restoreRecover": "Recuperar restauración",
@@ -1673,6 +1744,49 @@
     "related.twoWayLink": "Enlace en ambos sentidos",
     "related.typeHint": "Escribe un título o un artista.",
     "related.updateCrate": "Actualizar caja de Serato",
+    "relink.acceptHigh": "Aceptar todas las altas",
+    "relink.choose": "Elige pistas para volver a enlazar.",
+    "relink.confidence": "Confianza",
+    "relink.confidence.high": "Alta",
+    "relink.confidence.low": "Baja",
+    "relink.confidence.medium": "Media",
+    "relink.confirm": "Reenlazar",
+    "relink.done": {
+      one: "Se apuntó {count} pista faltante a su archivo.",
+      other: "Se apuntaron {count} pistas faltantes a sus archivos."
+    },
+    "relink.empty": "No hay pistas faltantes en este espacio, o ninguna coincidió.",
+    "relink.find": "Buscar coincidencias",
+    "relink.finding": "Buscando…",
+    "relink.include": "Reenlazar esta pista",
+    "relink.intro": "Apunta las pistas faltantes a archivos que se movieron. El audio se queda donde está. Las cajas, el historial y los enlaces relacionados se mantienen.",
+    "relink.match": "Coincidencia",
+    "relink.none": "Todavía no hay coincidencias. Busca en las carpetas de música, o añade una carpeta extra después de cambiar de disco.",
+    "relink.pick": "Elige un archivo",
+    "relink.previewing": "Comprobando qué va a cambiar.",
+    "relink.quitSerato": "Cierra Serato antes de reenlazar.",
+    "relink.reason.folder": "Carpeta movida",
+    "relink.reason.name": "Mismo nombre",
+    "relink.reason.nameAndSize": "Mismo nombre y tamaño",
+    "relink.reason.size": "Mismo tamaño",
+    "relink.reason.unknown": "{reason}",
+    "relink.relinking": "Reenlazando…",
+    "relink.remap": "Carpeta movida: {from} → {to} ({count} pistas)",
+    "relink.root": "Carpeta extra para buscar",
+    "relink.rootHelp": "Opcional. Pega una carpeta después de cambiar de disco, por ejemplo /Volumes/NEW/DJ.",
+    "relink.scanned": "Se buscaron {count} archivos.",
+    "relink.selected": {
+      one: "{count} seleccionada",
+      other: "{count} seleccionadas"
+    },
+    "relink.title": "Reenlazar archivos faltantes",
+    "relink.track": "Pista",
+    "relink.truncated": "La búsqueda se detuvo a los 200.000 archivos. Añade una carpeta extra más cercana.",
+    "relink.unavailable": {
+      one: "{count} pista está en un disco que no está conectado. No se busca coincidencia.",
+      other: "{count} pistas están en un disco que no está conectado. No se buscan coincidencias."
+    },
+    "relink.why": "Por qué",
     "rules.and": "y",
     "rules.label": "Reglas de la caja inteligente",
     "rules.matches": "Coincide",
@@ -1866,6 +1980,14 @@
     "tooltip.mergeConfirm": "Fusiona las copias en la que conservas.",
     "tooltip.mergeConfirmTrash": "Fusiona las copias y mueve los otros archivos de audio a la papelera.",
     "tooltip.mergeDuplicates": "Fusiona las copias seleccionadas en la que conservas.",
+    "tooltip.relink": "Busca archivos que se movieron y apunta las pistas faltantes a ellos.",
+    "tooltip.relinkAcceptHigh": "Marca cada coincidencia cuya confianza es alta.",
+    "tooltip.relinkCancel": "Cancela. No se escribe nada. Esc.",
+    "tooltip.relinkConfirm": "Apunta las pistas marcadas a los archivos elegidos. El audio no se mueve.",
+    "tooltip.relinkFind": "Busca en las carpetas de música, y en la carpeta extra si pegaste una.",
+    "tooltip.relinkInclude": "Incluye esta pista en el reenlace.",
+    "tooltip.relinkPick": "Elige qué archivo debe usar esta pista faltante.",
+    "tooltip.relinkRoot": "Carpeta extra para buscar después de cambiar de disco. Déjala en blanco para usar las carpetas de música.",
     "tooltip.mergeTrash": "Mueve los otros archivos de audio a la papelera. Puedes restaurarlos desde allí.",
     "tooltip.merging": "Fusionando las copias.",
     "tooltip.missingDrive": "Conecta el disco que contiene {name} antes de abrirlo.",
@@ -2280,6 +2402,20 @@
       source: payload.source
     };
   }
+  async function getRelink(space, root = "") {
+    const params = new URLSearchParams({ space });
+    const extra = root.trim();
+    if (extra) params.set("root", extra);
+    const response = await fetch(`/api/relink?${params.toString()}`);
+    const payload = await readJSONOr(response, {});
+    if (!response.ok) {
+      const error2 = new Error(serverMessage(payload, t("error.requestStatus", { status: String(response.status) })));
+      error2.status = response.status;
+      error2.payload = payload;
+      throw error2;
+    }
+    return payload;
+  }
   async function postJSON(url, body) {
     const response = await fetch(url, {
       method: "POST",
@@ -2553,6 +2689,14 @@
     space: spec("tooltip.space"),
     crateSearch: spec("tooltip.crateSearch"),
     mergeDuplicates: spec("tooltip.mergeDuplicates"),
+    relink: spec("tooltip.relink"),
+    relinkRoot: spec("tooltip.relinkRoot"),
+    relinkFind: spec("tooltip.relinkFind"),
+    relinkAcceptHigh: spec("tooltip.relinkAcceptHigh"),
+    relinkConfirm: spec("tooltip.relinkConfirm"),
+    relinkCancel: spec("tooltip.relinkCancel"),
+    relinkInclude: spec("tooltip.relinkInclude"),
+    relinkPick: spec("tooltip.relinkPick"),
     crateNew: spec("tooltip.crateNew"),
     crateRename: spec("tooltip.crateRename"),
     crateColor: spec("tooltip.crateColor"),
@@ -2760,6 +2904,12 @@
       space: tips.space,
       "crate-search": tips.crateSearch,
       "merge-duplicates": tips.mergeDuplicates,
+      "open-relink": tips.relink,
+      "relink-root": tips.relinkRoot,
+      "relink-find": tips.relinkFind,
+      "relink-accept-high": tips.relinkAcceptHigh,
+      "relink-confirm": tips.relinkConfirm,
+      "relink-cancel": tips.relinkCancel,
       "crate-new": tips.crateNew,
       "crate-rename": tips.crateRename,
       "crate-color": tips.crateColor,
@@ -3843,6 +3993,7 @@
     move: "operations.action.move",
     move_folder: "operations.action.moveFolder",
     replace: "operations.action.replace",
+    relink: "operations.action.relink",
     delete: "operations.action.delete",
     restore: "operations.action.restore",
     restore_recover: "operations.action.restoreRecover"
@@ -6348,6 +6499,7 @@
     el("crate-delete").disabled = !state.writable || !crateChosen;
     syncPresetButtons();
     syncMergeButton();
+    syncRelinkButton();
     if (filesMode) {
       if (state.filesAtRoots) {
         el("crate-foot").textContent = state.filesLoading ? t("files.readingRoots") : t("files.rootCount", { count: state.filesRoots.length });
@@ -6446,6 +6598,7 @@
   async function selectTrack(id) {
     state.selectedId = id;
     syncMergeButton();
+    syncRelinkButton();
     paintRows();
     const token3 = ++state.request;
     const pending = document.createElement("p");
@@ -7581,6 +7734,14 @@
     wrap.hidden = !show2;
     button2.disabled = !show2 || !state.writable || !selectedDuplicateGroup();
   }
+  function syncRelinkButton() {
+    const wrap = el("relink-actions");
+    const button2 = el("open-relink");
+    if (!wrap || !button2) return;
+    const show2 = state.mode === "missing";
+    wrap.hidden = !show2;
+    button2.disabled = !show2 || !state.writable;
+  }
   function crateNamesFor(assetId) {
     return state.crates.filter((crate) => !crate.smart && (crate.tracks || []).includes(assetId)).map((crate) => crate.name);
   }
@@ -8263,6 +8424,10 @@
   var filesPreview = null;
   var filesAction = "";
   var filesTrigger = null;
+  var relinkPlan = null;
+  var relinkLoading = false;
+  var relinkChosen = /* @__PURE__ */ new Map();
+  var relinkChecked = /* @__PURE__ */ new Set();
   function rekordboxExportUrl(report) {
     const crate = state.mode === "crates" ? state.activeCrate : "all";
     const memory = el("rekordbox-memory").checked ? "1" : "0";
@@ -8616,6 +8781,10 @@
       renderMergePreview(mergeLoading ? null : mergePreview);
       syncTrashChoice();
     }
+    if (el("relink-dialog").open) {
+      fillRelinkBanner();
+      renderRelinkRows();
+    }
     if (el("files-dialog").open) {
       el("files-confirm").textContent = filesAction === "delete" ? t("files.moveToTrash") : t("common.confirm");
     }
@@ -8796,6 +8965,202 @@
       confirm2.disabled = false;
     }
   }
+  function relinkReason(reason) {
+    if (reason === "same name and size") return t("relink.reason.nameAndSize");
+    if (reason === "same name") return t("relink.reason.name");
+    if (reason === "same size") return t("relink.reason.size");
+    if (reason === "folder moved") return t("relink.reason.folder");
+    return t("relink.reason.unknown", { reason });
+  }
+  function relinkConfidence(value) {
+    if (value === "high") return t("relink.confidence.high");
+    if (value === "medium") return t("relink.confidence.medium");
+    if (value === "low") return t("relink.confidence.low");
+    return value;
+  }
+  function chosenCandidate(match) {
+    const candidates = match.candidates || [];
+    const path = relinkChosen.get(match.asset_id);
+    return candidates.find((item2) => item2.path === path) || candidates[0];
+  }
+  function selectedRelinkMatches() {
+    const matches = [];
+    for (const match of relinkPlan?.matches || []) {
+      if (!relinkChecked.has(match.asset_id)) continue;
+      const chosen = chosenCandidate(match);
+      if (!chosen?.path) continue;
+      matches.push({ id: match.asset_id, path: chosen.path });
+    }
+    return matches;
+  }
+  function fillRelinkBanner() {
+    const banner = el("relink-banner");
+    const parts = [];
+    if (relinkPlan?.truncated) parts.push(t("relink.truncated"));
+    const unavailable = relinkPlan?.unavailable_drives || [];
+    if (unavailable.length) parts.push(t("relink.unavailable", { count: unavailable.length }));
+    for (const remap of relinkPlan?.remaps || []) {
+      parts.push(t("relink.remap", {
+        from: remap.from || "",
+        to: remap.to || "",
+        count: remap.count || 0
+      }));
+    }
+    if (typeof relinkPlan?.scanned === "number") {
+      parts.push(t("relink.scanned", { count: relinkPlan.scanned }));
+    }
+    banner.textContent = parts.join(" ");
+    banner.hidden = parts.length === 0;
+  }
+  function syncRelinkConfirm(refreshStatus = true) {
+    const confirm2 = el("relink-confirm");
+    const accept = el("relink-accept-high");
+    const find = el("relink-find");
+    const selected = selectedRelinkMatches();
+    confirm2.disabled = relinkLoading || !state.writable || selected.length === 0;
+    accept.disabled = relinkLoading || !relinkPlan;
+    find.disabled = relinkLoading || !state.writable;
+    if (refreshStatus && !relinkLoading && selected.length) {
+      el("relink-status").textContent = t("relink.selected", { count: selected.length });
+    }
+  }
+  function renderRelinkRows() {
+    const body = el("relink-rows");
+    body.replaceChildren();
+    const matches = (relinkPlan?.matches || []).filter((item2) => (item2.candidates || []).length > 0);
+    el("relink-empty").hidden = matches.length > 0;
+    el("relink-empty").textContent = relinkPlan ? t("relink.empty") : t("relink.none");
+    for (const match of matches) {
+      const candidates = match.candidates || [];
+      const chosen = chosenCandidate(match);
+      const row = document.createElement("tr");
+      const includeCell = document.createElement("td");
+      const box = inputEl(tips.relinkInclude);
+      box.type = "checkbox";
+      box.checked = relinkChecked.has(match.asset_id);
+      box.setAttribute("aria-label", t("relink.include"));
+      box.addEventListener("change", () => {
+        if (box.checked) relinkChecked.add(match.asset_id);
+        else relinkChecked.delete(match.asset_id);
+        syncRelinkConfirm();
+      });
+      includeCell.append(box);
+      const trackCell = document.createElement("td");
+      const title2 = document.createElement("div");
+      title2.textContent = match.title || "";
+      const artist2 = document.createElement("div");
+      artist2.textContent = match.artist || "";
+      trackCell.append(title2, artist2);
+      const matchCell = document.createElement("td");
+      if (candidates.length > 1) {
+        const select = selectEl(tips.relinkPick);
+        select.setAttribute("aria-label", t("relink.pick"));
+        for (const candidate of candidates) {
+          const option = document.createElement("option");
+          option.value = candidate.path;
+          option.textContent = candidate.path;
+          if (candidate.path === chosen?.path) option.selected = true;
+          select.append(option);
+        }
+        select.addEventListener("change", () => {
+          relinkChosen.set(match.asset_id, select.value);
+          renderRelinkRows();
+        });
+        matchCell.append(select);
+      } else {
+        const path = document.createElement("span");
+        path.textContent = chosen?.path || "";
+        matchCell.append(path);
+      }
+      const confidenceCell = document.createElement("td");
+      confidenceCell.textContent = relinkConfidence(chosen?.confidence || "");
+      const whyCell = document.createElement("td");
+      whyCell.textContent = relinkReason(chosen?.reason || "");
+      row.append(includeCell, trackCell, matchCell, confidenceCell, whyCell);
+      body.append(row);
+    }
+    syncRelinkConfirm();
+  }
+  function seedRelinkChoices(plan) {
+    relinkChosen.clear();
+    relinkChecked.clear();
+    for (const match of plan.matches || []) {
+      const first = (match.candidates || [])[0];
+      if (!first) continue;
+      relinkChosen.set(match.asset_id, first.path);
+      if (first.confidence === "high") relinkChecked.add(match.asset_id);
+    }
+  }
+  function acceptRelinkHigh() {
+    for (const match of relinkPlan?.matches || []) {
+      const chosen = chosenCandidate(match);
+      if (chosen?.confidence === "high" && chosen.path) {
+        relinkChecked.add(match.asset_id);
+      }
+    }
+    renderRelinkRows();
+  }
+  async function scanRelink() {
+    if (relinkLoading || !state.writable) return;
+    relinkLoading = true;
+    el("relink-status").textContent = t("relink.finding");
+    syncRelinkConfirm();
+    try {
+      const plan = await getRelink(state.space, el("relink-root").value);
+      relinkPlan = plan;
+      seedRelinkChoices(plan);
+      fillRelinkBanner();
+      renderRelinkRows();
+      el("relink-status").textContent = "";
+      syncRelinkConfirm();
+    } catch (error2) {
+      el("relink-status").textContent = failureOf(error2).message;
+    } finally {
+      relinkLoading = false;
+      syncRelinkConfirm();
+    }
+  }
+  async function openRelinkDialog() {
+    if (!state.writable) return;
+    if (typeof el("relink-dialog").showModal !== "function") return;
+    el("relink-status").textContent = "";
+    if (!el("relink-dialog").open) el("relink-dialog").showModal();
+    el("relink-cancel").focus();
+    await scanRelink();
+  }
+  async function confirmRelink() {
+    const matches = selectedRelinkMatches();
+    if (!matches.length || relinkLoading) return;
+    relinkLoading = true;
+    el("relink-confirm").disabled = true;
+    el("relink-status").textContent = t("relink.previewing");
+    try {
+      const preview = await postJSON("/api/files", { action: "relink", matches });
+      if (preview.serato) applyStatus(preview.serato);
+      if (!preview.ok) {
+        el("relink-status").textContent = preview.error || t("files.notSaved");
+        return;
+      }
+      el("relink-status").textContent = preview.summary || t("relink.relinking");
+      const result = await postJSON("/api/files", { action: "relink", matches, confirm: true });
+      if (result.serato) applyStatus(result.serato);
+      el("relink-dialog").close();
+      let message = t("relink.done", { count: matches.length });
+      if (result.summary) message = result.summary;
+      if (result.warning) message = `${message} ${result.warning}`;
+      setNotice(message);
+      await loadLibrary();
+    } catch (error2) {
+      el("relink-status").textContent = failureOf(error2).message;
+      if (failureOf(error2).status === 409) {
+        lockDown(error2);
+        el("relink-dialog").close();
+      }
+    } finally {
+      relinkLoading = false;
+      syncRelinkConfirm(false);
+    }
+  }
   function wireDialogs() {
     const saveExportBar = () => {
       saveRekordboxExport().catch(() => {
@@ -8841,6 +9206,19 @@
     });
     el("merge-duplicates").addEventListener("click", () => {
       openMergeDialog().catch((error2) => setNotice(failureOf(error2).message));
+    });
+    el("open-relink").addEventListener("click", () => {
+      openRelinkDialog().catch((error2) => setNotice(failureOf(error2).message));
+    });
+    el("relink-cancel").addEventListener("click", () => el("relink-dialog").close());
+    el("relink-find").addEventListener("click", () => {
+      scanRelink().catch((error2) => {
+        el("relink-status").textContent = failureOf(error2).message;
+      });
+    });
+    el("relink-accept-high").addEventListener("click", () => acceptRelinkHigh());
+    el("relink-confirm").addEventListener("click", () => {
+      confirmRelink().catch((error2) => setNotice(failureOf(error2).message));
     });
     el("merge-cancel").addEventListener("click", () => el("merge-dialog").close());
     el("merge-confirm").addEventListener("click", () => {

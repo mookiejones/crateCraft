@@ -599,6 +599,7 @@ export function renderShell() {
   el("crate-delete").disabled = !state.writable || !crateChosen;
   syncPresetButtons();
   syncMergeButton();
+  syncRelinkButton();
   if (filesMode) {
     if (state.filesAtRoots) {
       el("crate-foot").textContent = state.filesLoading
@@ -759,6 +760,7 @@ export function focusCrateItem(item: HTMLElement | undefined) {
 export async function selectTrack(id: number) {
   state.selectedId = id;
   syncMergeButton();
+  syncRelinkButton();
   paintRows();
   const token = ++state.request;
   const pending = document.createElement("p");
@@ -2458,6 +2460,22 @@ export function syncMergeButton() {
   const show = state.mode === "duplicates";
   wrap.hidden = !show;
   button.disabled = !show || !state.writable || !selectedDuplicateGroup();
+}
+
+/**
+ * Show Relink missing files on the Missing view while Serato is quit.
+ *
+ * The button lives in the missing rail. Other views hide it. Does not fetch.
+ *
+ * @returns {void}
+ */
+export function syncRelinkButton() {
+  const wrap = el("relink-actions");
+  const button = el("open-relink");
+  if (!wrap || !button) return;
+  const show = state.mode === "missing";
+  wrap.hidden = !show;
+  button.disabled = !show || !state.writable;
 }
 
 /**

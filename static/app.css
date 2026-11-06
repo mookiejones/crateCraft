@@ -4,7 +4,7 @@
   The rail holds the space menu, the view switch, and the crate or history
   list. The sheet holds the track list and the detail pane, including
   related tracks, the Files folder list, or the read-only gig check.
-  Dialogs cover sharing, settings, duplicate merge, and a file change.
+  Dialogs cover sharing, settings, duplicate merge, relink, and a file change.
   Colors, type, and spacing come from tokens.css. The names below alias
   those tokens. --row is 36px and must match ROW in app.js. This file does
   not fetch data or touch the Serato database.
@@ -1020,6 +1020,30 @@ dialog .settings-field select {
 }
 
 #merge-dialog { max-width: 36rem; }
+
+#relink-dialog { max-width: 48rem; }
+
+#relink-table-wrap {
+  max-height: 16rem;
+  overflow: auto;
+  margin: var(--space-3) 0 0;
+}
+
+#relink-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#relink-table th,
+#relink-table td {
+  text-align: left;
+  padding: var(--space-1) var(--space-2);
+  vertical-align: top;
+}
+
+#relink-table th {
+  font-weight: 600;
+}
 
 #rekordbox-dialog { max-width: 36rem; }
 
