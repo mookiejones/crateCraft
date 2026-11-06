@@ -132,7 +132,7 @@ class WikiFeaturePageTests(unittest.TestCase):
         self.assertLess(page.index("Status: preview."), page.index("images/features/"))
 
     def test_pages_use_the_nav_names(self) -> None:
-        """Use Crates, Snapshots, and Prepare as the window names them.
+        """Use Crates, Backups, and Prepare as the window names them.
 
         Returns:
             None. The test fails when a page invents a nav label.
@@ -149,7 +149,7 @@ class WikiFeaturePageTests(unittest.TestCase):
         self.assertIn("diagram, not a screenshot", where_page)
         hot = (WIKI / "Hot-Loops-and-Cue-Points.md").read_text(encoding="utf-8")
         self.assertIn("**Crates**", hot)
-        self.assertIn("**Snapshots**", hot)
+        self.assertIn("**Backups**", hot)
         self.assertIn("**Hot loops**", hot)
         self.assertIn("Uses a free hot-cue pad", hot)
         where = (WIKI / "Where-Serato-Data-Lives.md").read_text(encoding="utf-8")

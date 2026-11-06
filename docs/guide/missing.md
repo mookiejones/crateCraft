@@ -1,6 +1,6 @@
 # Missing files
 
-**Missing** lists tracks Serato has marked missing in the space you have selected. The note under the view buttons says **Tracks Serato has marked missing in this space.**
+**Missing files** lists tracks Serato has marked missing in the space you have selected. The note under the view buttons says **Tracks Serato has marked missing in this space.**
 
 A missing row shows the word **missing**.
 
