@@ -10376,7 +10376,11 @@
     "review-undo": "snapshots-undo-button",
     "open-logs": "open-logs",
     "copy-version": "copy-version",
-    help: "open-help"
+    help: "open-help",
+    "help-bug": "help-bug",
+    "help-feature": "help-feature",
+    "help-github": "help-github",
+    "help-releases": "help-releases"
   };
   var VIEWS = {
     "view-crates": "crates",
@@ -10401,6 +10405,15 @@
     }
     if (action === "shortcuts") {
       openCheatSheet();
+      return;
+    }
+    if (action === "about") {
+      const dialog = el("settings-dialog");
+      if (!dialog.open) dialog.showModal();
+      const title2 = el("about-title");
+      title2.tabIndex = -1;
+      title2.focus();
+      if (typeof title2.scrollIntoView === "function") title2.scrollIntoView({ block: "nearest" });
       return;
     }
     if (action === "view-all") {
@@ -10430,7 +10443,7 @@
     const id = CLICKS[action];
     if (!id) return;
     const node = document.getElementById(id);
-    if (node instanceof HTMLButtonElement) node.click();
+    if (node instanceof HTMLElement) node.click();
   }
   function installDesktopActions() {
     const host = window;

@@ -1,0 +1,13 @@
+Log file created at: 2026/11/05 19:38:11
+Running on machine: test-host.local
+Running duration (h:mm:ss): 0:00:00
+Log line format: [IWEF]yyyymmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I20261105 19:38:11.980582 4090929536 :0] [Log] Logging initialized, path: '/Users/dj/Music/_Serato_/Logs'
+W20261105 19:38:12.378520 4090929536 :0] [Library] Failed to read library preference for key: secondary_column
+I20261105 19:38:12.382961 4090929536 :0] [Library] Opening library asynchronously with master database at '/Users/dj/Library/Application Support/Serato/Library/master.sqlite' using SQLite version '3.36.0`.
+I20261105 19:38:12.413478 4090929536 :0] [Application] System Version: macOS Tahoe (26.6.2)
+I20261105 19:38:12.561770 1880551424 :0] [Library] Running quick_check on database '/Users/dj/Library/Application Support/Serato/Library/master.sqlite'.
+I20261105 19:38:13.619721 1880551424 :0] [Library] Master database connected with UUID 00000000-0000-0000-0000-000000000000
+I20261105 19:38:15.788589 4090929536 :0] [Application] Product name: Serato DJ Pro, Version: 5.0.0 (5001251) arm64
+I20261105 19:53:12.172672 1892020224 :0] [Library] Backing up database '/Users/dj/Library/Application Support/Serato/Library/master.sqlite' to '/Users/dj/Library/Application Support/Serato/Library/Backups/master.sqlite.in-progress-backup'
+I20261105 19:53:17.602664 1879977984 :0] [Library] Completed backup of library database to '/Users/dj/Library/Application Support/Serato/Library/Backups/master.sqlite-backup-20261105_195313-0500.zip'.
