@@ -2,7 +2,7 @@
 
 ```mermaid
 flowchart LR
-  space["Space: Library, Video, Apple Music, Prepare"] --> views["Crates, History, Missing, Duplicates, Stems, Files, Snapshots"]
+  space["Space: Library, Video, Apple Music, Prepare"] --> views["Library, Library health, Backups, Before a gig"]
   views --> detail["Track details and Cue points"]
 ```
 
@@ -18,7 +18,7 @@ The long guide is published at <https://mookiejones.github.io/serato-library-man
 
 **Library** sits at the top of the sidebar. The status line under it starts as **Checking Serato**.
 
-The views are **Crates**, **History**, **Missing**, **Duplicates**, **Stems**, **Files**, and **Snapshots**.
+The rail groups are **Library** (Crates, History, Files), **Library health** (Missing files, Duplicates, Stems), **Backups**, and **Before a gig**.
 
 Double-click a track to play it. The bar under the list has pause, seek, and volume. Playback does not change the file.
 
@@ -30,9 +30,9 @@ The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**.
 
 Cue points live in the audio file. A normal save does not rewrite them.
 
-**Snapshots** keeps hash-checked copies of the library, the crates on each drive, and the Cue point frames stored in the audio files. The music itself is not copied.
+**Backups** keeps hash-checked copies of the library, the crates on each drive, and the Cue point frames stored in the audio files. The music itself is not copied.
 
-Open **Snapshots**, choose **Review restore**, then **Restore**. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
+Open **Backups**, choose **Review restore**, then **Restore**. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 
 Quit Serato DJ Pro before a write. On Serato 5, writes and restores stay off.
 

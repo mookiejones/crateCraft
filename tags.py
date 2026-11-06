@@ -25,6 +25,11 @@ from typing import BinaryIO, NotRequired, TypedDict
 
 logger = logging.getLogger("serato.tags")
 
+# A real FLAC file has a handful of metadata blocks. A crafted file made of
+# thousands of empty blocks took about 8 seconds per 100 MB to walk (#68).
+# Reading stops here; rewriting refuses the file (snapshot_frames).
+FLAC_BLOCK_LIMIT = 1024
+
 
 class Cue(TypedDict):
     """One Serato cue point."""
@@ -539,7 +544,8 @@ def _flac_serato_frames(
     Each block header is 4 bytes: a type, a last-block flag, and a 24-bit
     length. The body of a picture or padding block is skipped with seek.
     A Vorbis comment is read in full. There is no byte cap. A length that
-    would run past the end of the file stops the walk.
+    would run past the end of the file stops the walk, and so does block
+    ``FLAC_BLOCK_LIMIT`` + 1, with a warning; frames read before it are kept.
 
     Args:
         handle: Open file positioned anywhere.
@@ -557,7 +563,15 @@ def _flac_serato_frames(
         return []
     frames: list[tuple[str, bytes]] = []
     pos = 4
+    walked = 0
     while pos + 4 <= size:
+        if walked >= FLAC_BLOCK_LIMIT:
+            logger.warning(
+                "Stopped reading FLAC metadata after %d blocks; the rest of the file was not read.",
+                FLAC_BLOCK_LIMIT,
+            )
+            break
+        walked += 1
         handle.seek(pos)
         header = handle.read(4)
         if len(header) < 4:

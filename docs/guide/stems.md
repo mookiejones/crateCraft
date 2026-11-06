@@ -12,4 +12,4 @@ A track with no stems analysis state does not appear here. It is still in **Crat
 
 Drag the line between the track list and the details to make either side wider. You can also click the line and press the left or right arrow keys. Hold Shift to move it further. Double-click the line to put it back.
 
-The width is the same in **Crates**, **History**, **Missing**, and **Duplicates**, and it is kept the next time the app opens.
+The width is the same in **Crates**, **History**, **Missing files**, and **Duplicates**, and it is kept the next time the app opens.

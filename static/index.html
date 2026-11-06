@@ -2,13 +2,13 @@
 <!--
   Serato library page.
 
-  One screen: the space menu, the view switch, the crate or history rail,
+  One screen: the space menu, grouped views, the crate or history rail,
   a virtualized track list, the detail pane, and a player bar. The Duplicates view can
   merge a group into the copy you keep. Export writes an M3U playlist.
   Rekordbox writes rekordbox.xml. The Files view browses folders
   and previews a rename, move, replace, or delete before it is saved.
-  The Snapshots view lists hash-checked library snapshots and previews a
-  restore before it is confirmed. Gig is a read-only ready score.
+  Backups lists hash-checked library snapshots and previews a
+  restore before it is confirmed. Before a gig is a read-only ready score.
   tokens.css, app.css, and app.js are local files. The page talks only to
   the library server on 127.0.0.1. It does not open master.sqlite itself.
 -->
@@ -41,15 +41,29 @@
           <option value="Prepare" data-i18n="space.prepare">Prepare</option>
         </select>
       </label>
-      <div id="views" class="view-switch" role="tablist" aria-label="Views" data-i18n-attr="aria-label:view.label">
-        <button type="button" data-view="crates" role="tab" data-i18n="view.crates">Crates</button>
-        <button type="button" data-view="history" role="tab" data-i18n="view.history">History</button>
-        <button type="button" data-view="missing" role="tab" data-i18n="view.missing">Missing</button>
-        <button type="button" data-view="duplicates" role="tab" data-i18n="view.duplicates">Duplicates</button>
-        <button type="button" data-view="stems" role="tab" data-i18n="view.stems">Stems</button>
-        <button type="button" data-view="files" role="tab" data-i18n="view.files">Files</button>
-        <button type="button" data-view="snapshots" role="tab" data-i18n="view.snapshots">Snapshots</button>
-        <button type="button" id="gig-tab" data-view="gig" role="tab" aria-controls="gig-panel" data-i18n="view.gig">Gig</button>
+      <div id="views" class="view-switch">
+        <section class="view-group">
+          <h2 id="view-group-library" class="view-group-label" data-i18n="view.group.library">Library</h2>
+          <div class="view-group-tabs" role="tablist" aria-labelledby="view-group-library">
+            <button type="button" data-view="crates" role="tab" data-i18n="view.crates">Crates</button>
+            <button type="button" data-view="history" role="tab" data-i18n="view.history">History</button>
+            <button type="button" data-view="files" role="tab" data-i18n="view.files">Files</button>
+          </div>
+        </section>
+        <section class="view-group">
+          <h2 id="view-group-health" class="view-group-label" data-i18n="view.group.health">Library health</h2>
+          <div class="view-group-tabs" role="tablist" aria-labelledby="view-group-health">
+            <button type="button" data-view="missing" role="tab" data-i18n="view.missing">Missing files</button>
+            <button type="button" data-view="duplicates" role="tab" data-i18n="view.duplicates">Duplicates</button>
+            <button type="button" data-view="stems" role="tab" data-i18n="view.stems">Stems</button>
+          </div>
+        </section>
+        <div class="view-group-tabs view-group-solo" role="tablist" aria-label="Backups" data-i18n-attr="aria-label:view.snapshots">
+          <button type="button" data-view="snapshots" role="tab" data-i18n="view.snapshots">Backups</button>
+        </div>
+        <div class="view-group-tabs view-group-solo" role="tablist" aria-label="Before a gig" data-i18n-attr="aria-label:view.gig">
+          <button type="button" id="gig-tab" data-view="gig" role="tab" aria-controls="gig-panel" data-i18n="view.gig">Before a gig</button>
+        </div>
       </div>
       <div id="crate-tools">
         <label class="rail-field">
@@ -164,7 +178,7 @@
 
       <section id="snapshots-panel" class="files-panel" hidden>
         <div class="browser-bar">
-          <p id="snapshots-heading" class="files-path" data-i18n="view.snapshots">Snapshots</p>
+          <p id="snapshots-heading" class="files-path" data-i18n="view.snapshots">Backups</p>
           <button id="snapshots-refresh" type="button" data-i18n="common.refresh">Refresh</button>
           <button id="snapshots-take" type="button" data-i18n="snapshots.take">Take a snapshot</button>
           <button id="snapshots-drives" type="button" data-i18n="snapshots.backupDrives" data-i18n-attr="aria-label:snapshots.backupDrives" aria-label="Back up drive crates">Back up drive crates</button>
@@ -176,7 +190,7 @@
           <button id="snapshots-undo-button" type="button" data-i18n="snapshots.reviewUndo">Review undo</button>
         </div>
         <p id="snapshots-status" class="notice" role="status" aria-live="polite"></p>
-        <div id="snapshots-list" class="files-list" role="list" aria-label="Snapshots" data-i18n-attr="aria-label:view.snapshots" aria-busy="false" tabindex="0"></div>
+        <div id="snapshots-list" class="files-list" role="list" aria-label="Backups" data-i18n-attr="aria-label:view.snapshots" aria-busy="false" tabindex="0"></div>
         <section id="operations" class="operations" aria-labelledby="operations-heading">
           <div class="browser-bar">
             <h2 id="operations-heading" class="operations-heading" data-i18n="operations.heading">Operation log</h2>
