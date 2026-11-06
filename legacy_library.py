@@ -18,8 +18,6 @@ import os
 from pathlib import Path, PurePath
 from typing import Callable
 
-import snapshots
-
 DATABASE_NAME = "database V2"
 SUBCRATES = "Subcrates"
 CRATE_SEPARATOR = "%%"
@@ -60,10 +58,16 @@ class LegacyLibraryError(Exception):
 def home_serato_folder() -> Path:
     """Return the usual ``_Serato_`` folder for an older library.
 
+    ``SERATO_LIBRARY_HOME_SERATO`` wins when it is absolute. A relative value is
+    ignored. The test suite sets it so a run never reads the real folder.
+
     Returns:
         ``~/Music/_Serato_`` on macOS and ``%USERPROFILE%\\Music\\_Serato_``
         on Windows. The folder may not exist.
     """
+    override = os.environ.get("SERATO_LIBRARY_HOME_SERATO", "").strip()
+    if override and Path(override).is_absolute():
+        return Path(override)
     return Path.home() / "Music" / "_Serato_"
 
 
@@ -217,6 +221,9 @@ def read_library(serato: Path, *, base: PurePath | None = None, exists: Callable
     folder = _serato_dir(serato)
     assert folder is not None
     root = base if base is not None else drive_base(folder)
+    # Imported here: snapshots -> error_codes -> this module's WRITE_BLOCKED.
+    import snapshots
+
     rows = snapshots.parse_database_v2(_read_bytes(folder / DATABASE_NAME))
     tracks: list[dict[str, object]] = []
     for row in rows:
@@ -285,6 +292,8 @@ def _read_crates(folder: Path) -> list[dict[str, object]]:
         ``{"name", "parents", "tracks"}`` rows sorted by file name.
         Shortcuts and unreadable files are skipped.
     """
+    import snapshots
+
     subcrates = folder / SUBCRATES
     try:
         if subcrates.is_symlink() or not subcrates.is_dir():

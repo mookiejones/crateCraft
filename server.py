@@ -30,6 +30,7 @@ import error_codes
 import files
 import gig_check
 import legacy_library
+import lost_tags
 import library
 import music_roots
 import rekordbox
@@ -1766,6 +1767,10 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
                 self.wfile.write(body)
+                return
+            if parsed.path == "/api/lost-tags":
+                space = require_space(query_text(query, "space"))
+                self.send_json(lost_tags.plan(Path(library.MASTER), space))
                 return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))

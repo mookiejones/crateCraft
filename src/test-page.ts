@@ -20,7 +20,9 @@ export function installPage(): void {
   }
   if (typeof dialog.close !== "function") {
     dialog.close = function close(this: HTMLDialogElement) {
+      if (!this.open) return;
       this.open = false;
+      this.dispatchEvent(new Event("close"));
     };
   }
 }
