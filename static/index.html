@@ -12,7 +12,7 @@
   tokens.css, app.css, and app.js are local files. The page talks only to
   the library server on 127.0.0.1. It does not open master.sqlite itself.
 -->
-<html lang="en" data-colorway="motown">
+<html lang="en" data-colorway="serato-like">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,620&display=swap" rel="stylesheet">
-  <link id="app-icon" rel="icon" href="/img/icons/placeholder-motown.svg" type="image/svg+xml">
+  <link id="app-icon" rel="icon" href="/img/icons/placeholder-serato-like.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/tokens.css">
   <link rel="stylesheet" href="/app.css">
 </head>
@@ -57,6 +57,7 @@
             <button type="button" data-view="missing" role="tab" data-i18n="view.missing">Missing files</button>
             <button type="button" data-view="duplicates" role="tab" data-i18n="view.duplicates">Duplicates</button>
             <button type="button" data-view="stems" role="tab" data-i18n="view.stems">Stems</button>
+            <button type="button" id="scan-tab" data-view="scan" role="tab" aria-controls="scan-panel" data-i18n="view.scan">Damaged files</button>
           </div>
         </section>
         <div class="view-group-tabs view-group-solo" role="tablist" aria-label="Backups" data-i18n-attr="aria-label:view.snapshots">
@@ -82,6 +83,9 @@
       <p id="mode-note" class="mode-note" hidden></p>
       <div id="duplicate-actions" class="crate-actions" hidden>
         <button id="merge-duplicates" type="button" data-i18n="merge.title">Merge copies</button>
+      </div>
+      <div id="relink-actions" class="crate-actions" hidden>
+        <button id="open-relink" type="button" data-i18n="relink.title">Relink missing files</button>
       </div>
       <p id="crate-foot" class="crate-foot"></p>
       <div id="crate-actions" class="crate-actions">
@@ -221,6 +225,18 @@
         <p id="gig-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="gig-report" class="gig-report"></div>
       </section>
+
+      <section id="scan-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="scan-heading" aria-busy="false">
+        <h2 id="scan-heading" class="visually-hidden" data-i18n="scan.heading">Damaged files</h2>
+        <div class="browser-bar">
+          <p id="scan-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="scan-quick" type="button" data-i18n="scan.checkQuick">Quick check</button>
+          <button id="scan-full" type="button" data-i18n="scan.checkFull">Full decode</button>
+        </div>
+        <p id="scan-hint" class="gig-note" data-i18n="scan.intro">Quick check reads the start of each file. Full decode needs a crate because it can take minutes.</p>
+        <p id="scan-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="scan-report" class="gig-report" tabindex="-1"></div>
+      </section>
       <div id="player-bar" class="player-bar"></div>
     </main>
   </div>
@@ -253,12 +269,13 @@
       <label class="settings-field">
         <span data-i18n="settings.colorway">Theme</span>
         <select id="colorway-select">
-          <option value="motown" data-i18n="settings.colorway.motown">Motown Soul</option>
-          <option value="deep-house" data-i18n="settings.colorway.deepHouse">Deep House</option>
-          <option value="daisy-age" data-i18n="settings.colorway.daisyAge">Daisy Age</option>
+          <option value="serato-like" data-i18n="settings.colorway.seratoLike">Serato-like</option>
+          <option value="dark-club" data-i18n="settings.colorway.darkClub">Dark Club</option>
+          <option value="light" data-i18n="settings.colorway.light">Light</option>
+          <option value="classic" data-i18n="settings.colorway.classic">Classic</option>
         </select>
       </label>
-      <img id="colorway-preview" class="colorway-preview" width="64" height="64" alt="Theme icon preview" src="/img/icons/placeholder-motown.svg" data-i18n-attr="alt:settings.colorwayPreview">
+      <img id="colorway-preview" class="colorway-preview" width="64" height="64" alt="Theme icon preview" src="/img/icons/placeholder-serato-like.svg" data-i18n-attr="alt:settings.colorwayPreview">
     </div>
     <label class="check">
       <input id="icon-follows-theme" type="checkbox" checked>
@@ -352,6 +369,40 @@
       <button id="merge-confirm" type="button" data-i18n="merge.title">Merge copies</button>
     </div>
     <p id="merge-status" class="dialog-status" role="status" aria-live="polite"></p>
+  </dialog>
+  <dialog id="relink-dialog" aria-labelledby="relink-title" aria-describedby="relink-intro">
+    <h2 id="relink-title" data-i18n="relink.title">Relink missing files</h2>
+    <p id="relink-intro" data-i18n="relink.intro">Point missing tracks at files that moved. Audio stays where it is. Crates, history, and related links stay attached.</p>
+    <label class="preset-field">
+      <span data-i18n="relink.root">Extra folder to search</span>
+      <input id="relink-root" type="text" autocomplete="off" spellcheck="false" aria-describedby="relink-root-help">
+      <small id="relink-root-help" class="dialog-note" data-i18n="relink.rootHelp">Optional. Paste a folder after a drive swap, for example /Volumes/NEW/DJ.</small>
+    </label>
+    <div class="dialog-actions">
+      <button id="relink-find" type="button" data-i18n="relink.find">Find matches</button>
+      <button id="relink-accept-high" type="button" data-i18n="relink.acceptHigh">Accept all high</button>
+    </div>
+    <p id="relink-banner" class="dialog-note" hidden></p>
+    <div id="relink-table-wrap">
+      <table id="relink-table">
+        <thead>
+          <tr>
+            <th scope="col"><span class="visually-hidden" data-i18n="relink.include">Relink this track</span></th>
+            <th scope="col" data-i18n="relink.track">Track</th>
+            <th scope="col" data-i18n="relink.match">Match</th>
+            <th scope="col" data-i18n="relink.confidence">Confidence</th>
+            <th scope="col" data-i18n="relink.why">Why</th>
+          </tr>
+        </thead>
+        <tbody id="relink-rows"></tbody>
+      </table>
+    </div>
+    <p id="relink-empty" class="dialog-note" data-i18n="relink.none">No matches yet. Search the music folders, or add an extra folder after a drive swap.</p>
+    <div class="dialog-actions">
+      <button id="relink-cancel" type="button" autofocus data-i18n="common.cancel">Cancel</button>
+      <button id="relink-confirm" type="button" data-i18n="relink.confirm">Relink</button>
+    </div>
+    <p id="relink-status" class="dialog-status" role="status" aria-live="polite"></p>
   </dialog>
   <dialog id="preset-dialog" aria-labelledby="preset-title" aria-describedby="preset-intro">
     <h2 id="preset-title" data-i18n="presets.title">New crate from a preset</h2>

@@ -6,6 +6,7 @@
  * loadLibrary. Settings load when the dialogs wire. server.py uses port
  * 8765. The desktop app uses a free port, and this page calls the same
  * origin. Snapshot UI is src/restore.ts. The gig check is src/gig.ts.
+ * The damaged-file scan is src/scan.ts.
  * Crate presets are src/presets.ts.
  * Help is src/help.ts. It does not post to GitHub.
  * The portable drive check is src/portable.ts. It does not write.
@@ -18,6 +19,7 @@ import { failureOf } from "./api";
 import { wireDialogs } from "./dialogs";
 import { el } from "./dom";
 import { wireGigCheck } from "./gig";
+import { wireScan } from "./scan";
 import { wireHelp } from "./help";
 import { wirePortable } from "./portable";
 import { wireLayout } from "./layout";
@@ -101,6 +103,7 @@ wireSnapshots();
 wireGigCheck(() => {
   setMode("crates");
 });
+wireScan();
 wirePortable();
 wireLayout();
 wireVersion();

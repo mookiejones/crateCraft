@@ -1,19 +1,19 @@
 """Running app icon for the selected theme colorway.
 
-The page has three colorways. Motown Soul is oxblood and cream on dusty
-pink, with no heartbeat line. Deep House is navy with teal and coral, and
-a heartbeat pulse. Daisy Age is green, sunflower yellow, and orange, and
-a heartbeat pulse. Each icon is a placeholder built from the circle in
-``packaging/menu-icon.png``: that circle is the vinyl disc, and the
-equalizer halo, straight tonearm, and crossfader are drawn on it. The word
-PLACEHOLDER is part of the picture. These are not final brand art.
+The page has four themes. Serato-like is the default: orange on near-black,
+with a heartbeat pulse. Dark Club is magenta and mint on black, with a
+pulse. Light is ink on cream, with a pulse. Classic is oxblood and cream
+on dusty pink, with no pulse. Each icon is a placeholder built from the
+circle in ``packaging/menu-icon.png``: that circle is the vinyl disc, and
+the equalizer halo, straight tonearm, and crossfader are drawn on it. The
+word PLACEHOLDER is part of the picture. These are not final brand art.
 
 On macOS the running Dock icon changes. The Finder icon, which is the
 bundle's ``.icns``, is not written. On Windows the window and taskbar icon
 change. The executable file is not written. Any other platform, or a Mac
 without the AppKit frameworks, keeps the choice and leaves the icon alone.
 
-iOS is not a target. A later iOS build would list the three images under
+iOS is not a target. A later iOS build would list the four images under
 ``CFBundleAlternateIcons`` and call ``UIApplication.shared.setAlternateIconName(_:)``.
 The system shows its own confirmation alert before the home-screen icon
 changes. ``setAlternateIconName`` only accepts names that were in the app
@@ -39,11 +39,16 @@ from pathlib import Path
 
 logger = logging.getLogger("serato.library.icons")
 
-COLORWAYS = ("motown", "deep-house", "daisy-age")
-DEFAULT_COLORWAY = "motown"
+COLORWAYS = ("serato-like", "dark-club", "light", "classic")
+DEFAULT_COLORWAY = "serato-like"
+# Saved ids from the accent-only picker. Load and save map them to Classic.
+LEGACY_COLORWAYS = {
+    "motown": "classic",
+    "deep-house": "classic",
+    "daisy-age": "classic",
+}
 ICON_SIZE = 256
-# The pulse bar is drawn through this pixel for Deep House and Daisy Age.
-# Motown Soul does not paint it.
+# The pulse bar is drawn through this pixel for every theme except Classic.
 HEARTBEAT_PIXEL = (128, 148)
 WINDOW_TITLE = "Serato Library"
 # Stable id so Windows uses this window's icon on the taskbar instead of
@@ -93,7 +98,7 @@ class Palette:
         fader: Crossfader track.
         knob: Crossfader cap.
         mark: PLACEHOLDER lettering.
-        heartbeat: Pulse line, or None for Motown Soul.
+        heartbeat: Pulse line, or None for Classic.
     """
 
     ground: Color
@@ -110,7 +115,46 @@ class Palette:
 
 
 PALETTES: dict[str, Palette] = {
-    "motown": Palette(
+    "serato-like": Palette(
+        ground=_rgba("#111111"),
+        disc=_rgba("#1A1A1A"),
+        groove=_rgba("#2A2A2A"),
+        label=_rgba("#FF6A00"),
+        arm=_rgba("#FF6A00"),
+        bar=_rgba("#FF6A00"),
+        bar_alt=_rgba("#F0F0F0"),
+        fader=_rgba("#2A2A2A"),
+        knob=_rgba("#FF6A00"),
+        mark=_rgba("#F0F0F0"),
+        heartbeat=_rgba("#FF6A00"),
+    ),
+    "dark-club": Palette(
+        ground=_rgba("#050508"),
+        disc=_rgba("#14141E"),
+        groove=_rgba("#2A2A3A"),
+        label=_rgba("#3DF0C8"),
+        arm=_rgba("#3DF0C8"),
+        bar=_rgba("#3DF0C8"),
+        bar_alt=_rgba("#FF3DBE"),
+        fader=_rgba("#2A2A3A"),
+        knob=_rgba("#FF3DBE"),
+        mark=_rgba("#F5F7FF"),
+        heartbeat=_rgba("#FF3DBE"),
+    ),
+    "light": Palette(
+        ground=_rgba("#EBE4D6"),
+        disc=_rgba("#1B140E"),
+        groove=_rgba("#5C5348"),
+        label=_rgba("#C42F10"),
+        arm=_rgba("#C42F10"),
+        bar=_rgba("#C42F10"),
+        bar_alt=_rgba("#1B140E"),
+        fader=_rgba("#D9CFBF"),
+        knob=_rgba("#C42F10"),
+        mark=_rgba("#1B140E"),
+        heartbeat=_rgba("#C42F10"),
+    ),
+    "classic": Palette(
         ground=_rgba("#E4B3BC"),
         disc=_rgba("#6E2436"),
         groove=_rgba("#4A1522"),
@@ -123,33 +167,22 @@ PALETTES: dict[str, Palette] = {
         mark=_rgba("#4A1522"),
         heartbeat=None,
     ),
-    "deep-house": Palette(
-        ground=_rgba("#14233F"),
-        disc=_rgba("#0B1730"),
-        groove=_rgba("#1E3A5F"),
-        label=_rgba("#2BBBAD"),
-        arm=_rgba("#2BBBAD"),
-        bar=_rgba("#2BBBAD"),
-        bar_alt=_rgba("#FF6F61"),
-        fader=_rgba("#1E3358"),
-        knob=_rgba("#FF6F61"),
-        mark=_rgba("#F4E4C4"),
-        heartbeat=_rgba("#FF6F61"),
-    ),
-    "daisy-age": Palette(
-        ground=_rgba("#1F6B45"),
-        disc=_rgba("#0E3D28"),
-        groove=_rgba("#145232"),
-        label=_rgba("#F5C518"),
-        arm=_rgba("#F5C518"),
-        bar=_rgba("#F5C518"),
-        bar_alt=_rgba("#F07818"),
-        fader=_rgba("#145232"),
-        knob=_rgba("#F07818"),
-        mark=_rgba("#F5C518"),
-        heartbeat=_rgba("#F07818"),
-    ),
 }
+
+
+def normalize_colorway(value: str) -> str | None:
+    """Return a current theme id, mapping a legacy accent id to Classic.
+
+    Args:
+        value: A theme id from settings or a request.
+
+    Returns:
+        A member of :data:`COLORWAYS`, or None when ``value`` is unknown.
+    """
+    if value in COLORWAYS:
+        return value
+    mapped = LEGACY_COLORWAYS.get(value)
+    return mapped if mapped in COLORWAYS else None
 
 # 5x7 glyphs for the PLACEHOLDER mark. 1 is ink.
 _GLYPHS: dict[str, tuple[str, ...]] = {
@@ -249,9 +282,10 @@ def icon_href(colorway: str, follow: bool) -> str:
     """
     if follow is not True:
         return "/img/icons/default.svg"
-    if colorway not in COLORWAYS:
-        colorway = DEFAULT_COLORWAY
-    return f"/img/icons/placeholder-{colorway}.svg"
+    resolved = normalize_colorway(colorway)
+    if resolved is None:
+        resolved = DEFAULT_COLORWAY
+    return f"/img/icons/placeholder-{resolved}.svg"
 
 
 def icons_dir() -> Path:

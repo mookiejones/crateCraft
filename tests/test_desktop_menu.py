@@ -51,6 +51,7 @@ class DesktopMenuTests(unittest.TestCase):
             "Duplicates",
             "Merge copies",
             "Stems",
+            "Damaged files",
             "Before a gig",
             "Take a snapshot",
             "Backups",

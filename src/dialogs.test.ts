@@ -203,3 +203,169 @@ describe("renderMergePreview", () => {
     expect(el("merge-preview").textContent).not.toContain("will be copied");
   });
 });
+
+function jsonResponse(body: unknown, ok = true, status = 200): Response {
+  return {
+    ok,
+    status,
+    json: async () => body,
+  } as Response;
+}
+
+describe("relink missing files", () => {
+  beforeEach(() => {
+    installPage();
+    state.mode = "missing";
+    state.space = "Serato Library";
+    state.writable = true;
+    vi.stubGlobal("fetch", vi.fn());
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  function mockFetch(handler: (url: string, init?: RequestInit) => Response): void {
+    vi.mocked(fetch).mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.startsWith("/api/settings")) {
+        return jsonResponse({
+          telemetry_consent: null,
+          needs_consent_prompt: false,
+          rekordbox: { hot_loops: false, memory_cues: true, key_notation: "asis" },
+        });
+      }
+      if (url.startsWith("/api/library")) {
+        return jsonResponse({ tracks: [], crates: [] });
+      }
+      return handler(url, init);
+    });
+  }
+
+  it("scans, ticks high matches, lets you pick, and posts preview then confirm", async () => {
+    mockFetch((url, init) => {
+      if (url.startsWith("/api/relink")) {
+        expect(url).toContain("space=Serato+Library");
+        expect(url).toContain("root=%2FVolumes%2FNEW%2FDJ");
+        return jsonResponse({
+          missing: 2,
+          scanned: 4,
+          truncated: false,
+          unavailable_drives: [],
+          remaps: [],
+          matches: [
+            {
+              asset_id: 1,
+              title: "Gone <script>",
+              artist: "Ada",
+              stored: "/OLD/gone.mp3",
+              candidates: [
+                { path: "/NEW/gone.mp3", confidence: "high", reason: "same name and size" },
+              ],
+            },
+            {
+              asset_id: 2,
+              title: "Twin",
+              artist: "Bea",
+              stored: "/OLD/twin.mp3",
+              candidates: [
+                { path: "/NEW/twin-a.mp3", confidence: "medium", reason: "same name" },
+                { path: "/NEW/twin-b.mp3", confidence: "medium", reason: "same size" },
+              ],
+            },
+          ],
+        });
+      }
+      if (url === "/api/files") {
+        const body = JSON.parse(String(init?.body)) as {
+          action: string;
+          confirm?: boolean;
+          matches: { id: number; path: string }[];
+        };
+        expect(body.action).toBe("relink");
+        expect(body.matches).toEqual([
+          { id: 1, path: "/NEW/gone.mp3" },
+          { id: 2, path: "/NEW/twin-b.mp3" },
+        ]);
+        if (!body.confirm) {
+          return jsonResponse({
+            ok: true,
+            needs_confirm: true,
+            summary: "Point 2 missing tracks at the matched files.",
+            warning: "Cue tags were not found on 1 of the new files. That may be a different edit.",
+          });
+        }
+        return jsonResponse({
+          ok: true,
+          summary: "Point 2 missing tracks at the matched files.",
+          warning: "Cue tags were not found on 1 of the new files. That may be a different edit.",
+        });
+      }
+      throw new Error(`unexpected ${url}`);
+    });
+    wireDialogs();
+    (document.getElementById("relink-root") as HTMLInputElement).value = "/Volumes/NEW/DJ";
+    (document.getElementById("open-relink") as HTMLButtonElement).click();
+    await vi.waitFor(() => {
+      expect(document.getElementById("relink-rows")?.querySelectorAll("tr")).toHaveLength(2);
+    });
+    const dialog = document.getElementById("relink-dialog") as HTMLDialogElement;
+    expect(dialog.open).toBe(true);
+    expect(document.getElementById("relink-rows")?.textContent).toContain("Gone <script>");
+    expect(document.getElementById("relink-rows")?.querySelector("script")).toBeNull();
+    const boxes = [...document.querySelectorAll<HTMLInputElement>("#relink-rows input[type=checkbox]")];
+    expect(boxes[0]?.checked).toBe(true);
+    expect(boxes[1]?.checked).toBe(false);
+    (document.getElementById("relink-accept-high") as HTMLButtonElement).click();
+    expect(document.querySelectorAll<HTMLInputElement>("#relink-rows input[type=checkbox]")[0]?.checked).toBe(true);
+    const pick = document.querySelector("#relink-rows select") as HTMLSelectElement;
+    expect(pick).toBeTruthy();
+    pick.value = "/NEW/twin-b.mp3";
+    pick.dispatchEvent(new Event("change"));
+    const afterPick = document.querySelector("#relink-rows select") as HTMLSelectElement;
+    expect(afterPick.value).toBe("/NEW/twin-b.mp3");
+    document.querySelectorAll<HTMLInputElement>("#relink-rows input[type=checkbox]")[1]!.checked = true;
+    document.querySelectorAll<HTMLInputElement>("#relink-rows input[type=checkbox]")[1]!.dispatchEvent(new Event("change"));
+    (document.getElementById("relink-confirm") as HTMLButtonElement).click();
+    await vi.waitFor(() => expect(dialog.open).toBe(false));
+    const posts = vi.mocked(fetch).mock.calls.filter((call) => call[0] === "/api/files");
+    expect(posts).toHaveLength(2);
+    expect(JSON.parse(String(posts[0]?.[1]?.body)).confirm).toBeUndefined();
+    expect(JSON.parse(String(posts[1]?.[1]?.body)).confirm).toBe(true);
+    expect(document.getElementById("notice")?.textContent).toContain("Cue tags were not found");
+  });
+
+  it("stops on a preview that is not ok and does not write", async () => {
+    mockFetch((url, init) => {
+      if (url.startsWith("/api/relink")) {
+        return jsonResponse({
+          matches: [
+            {
+              asset_id: 1,
+              title: "Gone",
+              candidates: [{ path: "/NEW/gone.mp3", confidence: "high", reason: "same name and size" }],
+            },
+          ],
+        });
+      }
+      if (url === "/api/files") {
+        const body = JSON.parse(String(init?.body)) as { confirm?: boolean };
+        expect(body.confirm).toBeUndefined();
+        return jsonResponse({ ok: false, error: "Quit Serato DJ first." });
+      }
+      throw new Error(`unexpected ${url}`);
+    });
+    wireDialogs();
+    (document.getElementById("open-relink") as HTMLButtonElement).click();
+    await vi.waitFor(() => {
+      expect(document.getElementById("relink-rows")?.querySelectorAll("tr")).toHaveLength(1);
+    });
+    (document.getElementById("relink-confirm") as HTMLButtonElement).click();
+    await vi.waitFor(() => {
+      expect(document.getElementById("relink-status")?.textContent).toBe("Quit Serato DJ first.");
+    });
+    const posts = vi.mocked(fetch).mock.calls.filter((call) => call[0] === "/api/files");
+    expect(posts).toHaveLength(1);
+    expect((document.getElementById("relink-dialog") as HTMLDialogElement).open).toBe(true);
+  });
+});

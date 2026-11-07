@@ -27,17 +27,21 @@ from tests.test_tokens import contrast
 
 ROOT = Path(__file__).resolve().parent.parent
 ICONS = ROOT / "static" / "img" / "icons"
-CORAL = (255, 111, 97, 255)
-ORANGE = (240, 120, 24, 255)
-MOTOWN_MARK = (74, 21, 34, 255)
-DEEP_MARK = (244, 228, 196, 255)
-DAISY_MARK = (245, 197, 24, 255)
-MOTOWN_LABEL = (244, 228, 196, 255)
-DEEP_LABEL = (43, 187, 173, 255)
-DAISY_LABEL = (245, 197, 24, 255)
-MOTOWN_GROUND = (228, 179, 188, 255)
-DEEP_GROUND = (20, 35, 63, 255)
-DAISY_GROUND = (31, 107, 69, 255)
+SERATO_MARK = (240, 240, 240, 255)
+CLUB_MARK = (245, 247, 255, 255)
+LIGHT_MARK = (27, 20, 14, 255)
+CLASSIC_MARK = (74, 21, 34, 255)
+SERATO_LABEL = (255, 106, 0, 255)
+CLUB_LABEL = (61, 240, 200, 255)
+LIGHT_LABEL = (196, 47, 16, 255)
+CLASSIC_LABEL = (244, 228, 196, 255)
+SERATO_GROUND = (17, 17, 17, 255)
+CLUB_GROUND = (5, 5, 8, 255)
+LIGHT_GROUND = (235, 228, 214, 255)
+CLASSIC_GROUND = (228, 179, 188, 255)
+SERATO_PULSE = (255, 106, 0, 255)
+CLUB_PULSE = (255, 61, 190, 255)
+LIGHT_PULSE = (196, 47, 16, 255)
 
 
 def _pixels(blob: bytes) -> list[tuple[int, int, int, int]]:
@@ -119,9 +123,9 @@ class IconArtTests(unittest.TestCase):
             size = struct.unpack_from("<I", ico, 14)[0]
             offset = struct.unpack_from("<I", ico, 18)[0]
             self.assertEqual(ico[offset : offset + size], png)
-        motown = (ICONS / "placeholder-motown.svg").read_text(encoding="utf-8").casefold()
-        self.assertNotIn("heartbeat", motown)
-        for colorway in ("deep-house", "daisy-age"):
+        classic = (ICONS / "placeholder-classic.svg").read_text(encoding="utf-8").casefold()
+        self.assertNotIn("heartbeat", classic)
+        for colorway in ("serato-like", "dark-club", "light"):
             text = (ICONS / f"placeholder-{colorway}.svg").read_text(encoding="utf-8")
             self.assertIn('id="heartbeat"', text)
         default = (ICONS / "default.svg").read_text(encoding="utf-8")
@@ -129,46 +133,50 @@ class IconArtTests(unittest.TestCase):
         self.assertNotIn("PLACEHOLDER", default)
 
     def test_pixels_match_the_colorway(self) -> None:
-        """Motown has no pulse. The other two paint one, and the mark is present.
+        """Classic has no pulse. The other three paint one, and the mark is present.
 
         Returns:
             None.
         """
-        motown = _pixels(app_icons.png_bytes("motown"))
-        deep = _pixels(app_icons.png_bytes("deep-house"))
-        daisy = _pixels(app_icons.png_bytes("daisy-age"))
-        self.assertEqual(_at(motown, 63, 8), MOTOWN_MARK)
-        self.assertEqual(_at(deep, 63, 8), DEEP_MARK)
-        self.assertEqual(_at(daisy, 63, 8), DAISY_MARK)
-        self.assertEqual(_at(motown, 140, 116), MOTOWN_LABEL)
-        self.assertEqual(_at(deep, 140, 116), DEEP_LABEL)
-        self.assertEqual(_at(daisy, 140, 116), DAISY_LABEL)
-        self.assertEqual(_at(motown, 16, 140), MOTOWN_GROUND)
-        self.assertEqual(_at(deep, 16, 140), DEEP_GROUND)
-        self.assertEqual(_at(daisy, 16, 140), DAISY_GROUND)
-        self.assertEqual(_at(motown, 0, 0)[3], 0)
-        self.assertNotIn(CORAL, motown)
-        self.assertNotIn(ORANGE, motown)
-        self.assertEqual(_at(motown, 128, 148)[:3], (110, 36, 54))
-        self.assertEqual(_at(deep, 128, 148), CORAL)
-        self.assertEqual(_at(daisy, 128, 148), ORANGE)
-        self.assertNotIn(CORAL, daisy)
-        self.assertNotIn(ORANGE, deep)
+        serato = _pixels(app_icons.png_bytes("serato-like"))
+        club = _pixels(app_icons.png_bytes("dark-club"))
+        light = _pixels(app_icons.png_bytes("light"))
+        classic = _pixels(app_icons.png_bytes("classic"))
+        self.assertEqual(_at(serato, 63, 8), SERATO_MARK)
+        self.assertEqual(_at(club, 63, 8), CLUB_MARK)
+        self.assertEqual(_at(light, 63, 8), LIGHT_MARK)
+        self.assertEqual(_at(classic, 63, 8), CLASSIC_MARK)
+        self.assertEqual(_at(serato, 140, 116), SERATO_LABEL)
+        self.assertEqual(_at(club, 140, 116), CLUB_LABEL)
+        self.assertEqual(_at(light, 140, 116), LIGHT_LABEL)
+        self.assertEqual(_at(classic, 140, 116), CLASSIC_LABEL)
+        self.assertEqual(_at(serato, 16, 140), SERATO_GROUND)
+        self.assertEqual(_at(club, 16, 140), CLUB_GROUND)
+        self.assertEqual(_at(light, 16, 140), LIGHT_GROUND)
+        self.assertEqual(_at(classic, 16, 140), CLASSIC_GROUND)
+        self.assertEqual(_at(classic, 0, 0)[3], 0)
+        self.assertEqual(_at(classic, 128, 148)[:3], (110, 36, 54))
+        self.assertEqual(_at(serato, 128, 148), SERATO_PULSE)
+        self.assertEqual(_at(club, 128, 148), CLUB_PULSE)
+        self.assertEqual(_at(light, 128, 148), LIGHT_PULSE)
+        self.assertNotIn(SERATO_PULSE, classic)
+        self.assertNotIn(CLUB_PULSE, serato)
 
     def test_accents_clear_the_rail(self) -> None:
-        """Each theme stripe is at least 3:1 against the walnut background.
+        """Each theme stripe is at least 3:1 against that theme's rail.
 
         Returns:
             None.
         """
         sheet = (ROOT / "static" / "tokens.css").read_text(encoding="utf-8")
-        for name, color in (
-            ("--colorway-motown-accent", "#f4e4c4"),
-            ("--colorway-deep-house-accent", "#ff6f61"),
-            ("--colorway-daisy-age-accent", "#f5c518"),
+        for name, color, rail in (
+            ("--colorway-serato-like-accent", "#ff6a00", "#111111"),
+            ("--colorway-dark-club-accent", "#ff3dbe", "#050508"),
+            ("--colorway-light-accent", "#c42f10", "#ebe4d6"),
+            ("--colorway-classic-accent", "#f4e4c4", "#231910"),
         ):
             self.assertIn(f"{name}: {color}", sheet)
-            self.assertGreaterEqual(contrast(color, "#231910"), 3, name)
+            self.assertGreaterEqual(contrast(color, rail), 3, name)
 
     def test_bad_colorway_and_ico(self) -> None:
         """An unknown theme is refused. An ICO needs a PNG.
@@ -180,8 +188,9 @@ class IconArtTests(unittest.TestCase):
             app_icons.png_bytes("house")
         with self.assertRaises(ValueError):
             app_icons.ico_bytes(b"not-a-png")
-        self.assertEqual(app_icons.icon_href("nope", True), "/img/icons/placeholder-motown.svg")
+        self.assertEqual(app_icons.icon_href("nope", True), "/img/icons/placeholder-serato-like.svg")
         self.assertEqual(app_icons.icon_href("daisy-age", False), "/img/icons/default.svg")
+        self.assertEqual(app_icons.icon_href("motown", True), "/img/icons/placeholder-classic.svg")
 
 
 class IconPathTests(unittest.TestCase):
@@ -206,9 +215,9 @@ class IconPathTests(unittest.TestCase):
         """
         missing = Path(tempfile.mkdtemp()) / "Volumes" / "Not Mounted" / "icons"
         self.assertFalse(missing.exists())
-        self.assertIsNone(app_icons.icon_file("motown", "png", root=missing))
+        self.assertIsNone(app_icons.icon_file("classic", "png", root=missing))
         result = app_icons.apply(
-            "motown",
+            "classic",
             True,
             platform="darwin",
             adapters=app_icons.IconAdapters(set_dock=lambda path: True),
@@ -227,9 +236,9 @@ class IconPathTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "Serato Library Icons"
             root.mkdir()
-            target = root / "placeholder-motown.png"
-            target.write_bytes((ICONS / "placeholder-motown.png").read_bytes())
-            found = app_icons.icon_file("motown", "png", root=root)
+            target = root / "placeholder-classic.png"
+            target.write_bytes((ICONS / "placeholder-classic.png").read_bytes())
+            found = app_icons.icon_file("classic", "png", root=root)
             self.assertIsNotNone(found)
             assert found is not None
             self.assertEqual(found.read_bytes(), target.read_bytes())
@@ -244,10 +253,10 @@ class IconPathTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "icons"
             root.mkdir()
-            icon = root / "placeholder-motown.png"
+            icon = root / "placeholder-classic.png"
             icon.write_bytes(b"png-bytes")
             with mock.patch.object(Path, "is_symlink", lambda self: self.name == icon.name):
-                self.assertIsNone(app_icons.icon_file("motown", "png", root=root))
+                self.assertIsNone(app_icons.icon_file("classic", "png", root=root))
             self.assertEqual(icon.read_bytes(), b"png-bytes")
 
     def test_real_symlink_is_not_followed(self) -> None:
@@ -261,12 +270,12 @@ class IconPathTests(unittest.TestCase):
             root.mkdir()
             outside = Path(tmp) / "secret.png"
             outside.write_bytes(b"secret")
-            link = root / "placeholder-motown.png"
+            link = root / "placeholder-classic.png"
             try:
                 link.symlink_to(outside)
             except OSError as exc:
                 self.skipTest(f"symlink creation is not permitted on this computer ({exc})")
-            self.assertIsNone(app_icons.icon_file("motown", "png", root=root))
+            self.assertIsNone(app_icons.icon_file("classic", "png", root=root))
             self.assertEqual(outside.read_bytes(), b"secret")
 
     def test_resolved_path_outside_the_directory_is_refused(self) -> None:
@@ -278,7 +287,7 @@ class IconPathTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "icons"
             root.mkdir()
-            icon = root / "placeholder-motown.png"
+            icon = root / "placeholder-classic.png"
             icon.write_bytes(b"png")
             outside = Path(tmp) / "outside.png"
             outside.write_bytes(b"out")
@@ -290,7 +299,7 @@ class IconPathTests(unittest.TestCase):
                 return real_resolve(self, *args, **kwargs)
 
             with mock.patch.object(Path, "resolve", resolve):
-                self.assertIsNone(app_icons.icon_file("motown", "png", root=root))
+                self.assertIsNone(app_icons.icon_file("classic", "png", root=root))
             self.assertEqual(outside.read_bytes(), b"out")
 
 
@@ -311,11 +320,11 @@ class IconApplyTests(unittest.TestCase):
             return real_write(self, data)
 
         with mock.patch.object(Path, "write_bytes", trap):
-            result = app_icons.apply("daisy-age", True, platform="linux")
+            result = app_icons.apply("dark-club", True, platform="linux")
         self.assertFalse(result.applied)
         self.assertEqual(result.reason, "unsupported")
         self.assertEqual(result.target, "unsupported")
-        self.assertEqual(result.href, "/img/icons/placeholder-daisy-age.svg")
+        self.assertEqual(result.href, "/img/icons/placeholder-dark-club.svg")
         self.assertEqual(written, [])
 
     def test_darwin_sets_the_dock_icon_and_leaves_the_bundle_alone(self) -> None:
@@ -331,7 +340,7 @@ class IconApplyTests(unittest.TestCase):
             icns.write_bytes(b"finder-default")
             seen: list[Path | None] = []
             result = app_icons.apply(
-                "deep-house",
+                "light",
                 True,
                 platform="darwin",
                 adapters=app_icons.IconAdapters(set_dock=lambda path: seen.append(path) or True),
@@ -341,11 +350,11 @@ class IconApplyTests(unittest.TestCase):
             self.assertEqual(result.reason, "ok")
             self.assertEqual(len(seen), 1)
             assert seen[0] is not None
-            self.assertEqual(seen[0].name, "placeholder-deep-house.png")
+            self.assertEqual(seen[0].name, "placeholder-light.png")
             self.assertEqual(icns.read_bytes(), b"finder-default")
             cleared: list[Path | None] = []
             restored = app_icons.apply(
-                "deep-house",
+                "light",
                 False,
                 platform="darwin",
                 adapters=app_icons.IconAdapters(set_dock=lambda path: cleared.append(path) or True),
@@ -362,7 +371,7 @@ class IconApplyTests(unittest.TestCase):
             None.
         """
         with mock.patch.object(app_icons, "dock_available", return_value=False):
-            result = app_icons.apply("motown", True, platform="darwin")
+            result = app_icons.apply("classic", True, platform="darwin")
         self.assertFalse(result.applied)
         self.assertEqual(result.target, "dock")
         self.assertEqual(result.reason, "unsupported")
@@ -393,7 +402,7 @@ class IconApplyTests(unittest.TestCase):
 
             loaded: list[Path] = []
             result = app_icons.apply(
-                "motown",
+                "classic",
                 True,
                 platform="win32",
                 adapters=app_icons.IconAdapters(
@@ -404,7 +413,7 @@ class IconApplyTests(unittest.TestCase):
             )
             self.assertTrue(result.applied)
             self.assertEqual(result.target, "window")
-            self.assertEqual(loaded[0].name, "placeholder-motown.ico")
+            self.assertEqual(loaded[0].name, "placeholder-classic.ico")
             self.assertEqual(exe.read_bytes(), b"MZ-original")
 
     def test_restore_reads_the_program_icon(self) -> None:
@@ -430,7 +439,7 @@ class IconApplyTests(unittest.TestCase):
             self.assertEqual(seen, [f"{exe}:0"])
             self.assertEqual(exe.read_bytes(), b"MZ-original")
             result = app_icons.apply(
-                "daisy-age",
+                "dark-club",
                 False,
                 platform="win32",
                 adapters=app_icons.IconAdapters(
@@ -451,7 +460,7 @@ class IconApplyTests(unittest.TestCase):
         """
         sent: list[int] = []
         result = app_icons.apply(
-            "motown",
+            "classic",
             True,
             platform="win32",
             adapters=app_icons.IconAdapters(
@@ -559,7 +568,7 @@ class IconApplyTests(unittest.TestCase):
         before = {path: path.read_bytes() for root in roots for path in root.rglob("*") if path.is_file()}
         with tempfile.TemporaryDirectory() as tmp:
             library = Path(tmp) / "Library" / "master.sqlite"
-            result = app_icons.apply("deep-house", True, platform="linux")
+            result = app_icons.apply("light", True, platform="linux")
             self.assertFalse(result.applied)
             self.assertFalse(library.exists())
         after = {path: path.read_bytes() for root in roots for path in root.rglob("*") if path.is_file()}
@@ -572,7 +581,7 @@ class IconApplyTests(unittest.TestCase):
             None.
         """
         with self.assertRaises(ValueError):
-            app_icons.apply("motown", 1, platform="linux")  # type: ignore[arg-type]
+            app_icons.apply("classic", 1, platform="linux")  # type: ignore[arg-type]
 
 
 class AppearanceSettingsTests(unittest.TestCase):
@@ -603,23 +612,40 @@ class AppearanceSettingsTests(unittest.TestCase):
         return json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
 
     def test_defaults_when_the_keys_are_missing(self) -> None:
-        """A file from before this choice follows the theme and uses Motown Soul.
+        """A file from before this choice follows the theme and uses Serato-like.
 
         Returns:
             None.
         """
-        self.assertEqual(app_config.load_settings().colorway, "motown")
+        self.assertEqual(app_config.load_settings().colorway, "serato-like")
         self.assertIs(app_config.load_settings().icon_follows_theme, True)
         (self.config / "settings.json").write_text("{}\n", encoding="utf-8")
         loaded = app_config.load_settings()
-        self.assertEqual(loaded.colorway, "motown")
+        self.assertEqual(loaded.colorway, "serato-like")
         self.assertIs(loaded.icon_follows_theme, True)
         import telemetry
 
         public = telemetry.public_settings()
-        self.assertEqual(public["colorway"], "motown")
+        self.assertEqual(public["colorway"], "serato-like")
         self.assertIs(public["icon_follows_theme"], True)
-        self.assertEqual(public["icon_href"], "/img/icons/placeholder-motown.svg")
+        self.assertEqual(public["icon_href"], "/img/icons/placeholder-serato-like.svg")
+
+    def test_legacy_ids_load_as_classic(self) -> None:
+        """Saved Motown, Deep House, or Daisy Age become Classic.
+
+        Returns:
+            None.
+        """
+        for raw in ("motown", "deep-house", "daisy-age"):
+            (self.config / "settings.json").write_text(
+                json.dumps({"colorway": raw}),
+                encoding="utf-8",
+            )
+            loaded = app_config.load_settings()
+            self.assertEqual(loaded.colorway, "classic", raw)
+        saved = app_config.set_appearance(colorway="motown")
+        self.assertEqual(saved.colorway, "classic")
+        self.assertEqual(self._stored()["colorway"], "classic")
 
     def test_false_is_stored_and_survives_other_saves(self) -> None:
         """False stays false, and a non-default theme stays put.
@@ -627,11 +653,11 @@ class AppearanceSettingsTests(unittest.TestCase):
         Returns:
             None.
         """
-        saved = app_config.set_appearance(colorway="daisy-age", icon_follows_theme=False)
-        self.assertEqual(saved.colorway, "daisy-age")
+        saved = app_config.set_appearance(colorway="dark-club", icon_follows_theme=False)
+        self.assertEqual(saved.colorway, "dark-club")
         self.assertIs(saved.icon_follows_theme, False)
         self.assertIs(self._stored()["icon_follows_theme"], False)
-        self.assertEqual(self._stored()["colorway"], "daisy-age")
+        self.assertEqual(self._stored()["colorway"], "dark-club")
         writers = (
             lambda: app_config.set_telemetry_consent(True),
             lambda: app_config.save_window_geometry(app_config.WindowGeometry(1, 2, 800, 600)),
@@ -641,7 +667,7 @@ class AppearanceSettingsTests(unittest.TestCase):
             lambda: app_config.set_language("es"),
             lambda: app_config.set_wizard_complete(False),
             lambda: app_config.set_telemetry_consent(False),
-            lambda: app_config.set_appearance(colorway="deep-house"),
+            lambda: app_config.set_appearance(colorway="light"),
         )
         for index, write in enumerate(writers):
             with self.subTest(writer=index):
@@ -649,12 +675,12 @@ class AppearanceSettingsTests(unittest.TestCase):
                 loaded = app_config.load_settings()
                 self.assertIs(loaded.icon_follows_theme, False)
                 if index < len(writers) - 1:
-                    self.assertEqual(loaded.colorway, "daisy-age")
-        self.assertEqual(app_config.load_settings().colorway, "deep-house")
+                    self.assertEqual(loaded.colorway, "dark-club")
+        self.assertEqual(app_config.load_settings().colorway, "light")
         self.assertEqual(app_config.load_settings().language, "es")
         turned_on = app_config.set_appearance(icon_follows_theme=True)
         self.assertIs(turned_on.icon_follows_theme, True)
-        self.assertEqual(turned_on.colorway, "deep-house")
+        self.assertEqual(turned_on.colorway, "light")
 
     def test_bad_values_are_rejected_or_ignored(self) -> None:
         """Unknown themes and integers are not stored. A bad file falls back.
@@ -662,21 +688,21 @@ class AppearanceSettingsTests(unittest.TestCase):
         Returns:
             None.
         """
-        app_config.set_appearance(colorway="motown", icon_follows_theme=False)
+        app_config.set_appearance(colorway="classic", icon_follows_theme=False)
         for bad in ("house", "", 1, True):
             with self.subTest(colorway=bad), self.assertRaises(ValueError):
                 app_config.set_appearance(colorway=bad)  # type: ignore[arg-type]
         for bad in (1, 0, "true"):
             with self.subTest(flag=bad), self.assertRaises(ValueError):
                 app_config.set_appearance(icon_follows_theme=bad)  # type: ignore[arg-type]
-        self.assertEqual(app_config.load_settings().colorway, "motown")
+        self.assertEqual(app_config.load_settings().colorway, "classic")
         self.assertIs(app_config.load_settings().icon_follows_theme, False)
         with self.assertRaises(ValueError):
             app_config.Settings(install_id=None, telemetry_consent=None, icon_follows_theme=1)  # type: ignore[arg-type]
-        for raw in ("nope", 3, ["motown"]):
+        for raw in ("nope", 3, ["serato-like"]):
             (self.config / "settings.json").write_text(json.dumps({"colorway": raw}), encoding="utf-8")
             with self.assertLogs("serato.library.config", level="WARNING"):
-                self.assertEqual(app_config.load_settings().colorway, "motown")
+                self.assertEqual(app_config.load_settings().colorway, "serato-like")
         (self.config / "settings.json").write_text(
             json.dumps({"icon_follows_theme": 0}),
             encoding="utf-8",
@@ -690,17 +716,17 @@ class AppearanceSettingsTests(unittest.TestCase):
         Returns:
             None.
         """
-        app_config.set_appearance(colorway="deep-house", icon_follows_theme=True)
+        app_config.set_appearance(colorway="light", icon_follows_theme=True)
         seen: list[Path | None] = []
         result = app_icons.apply_saved(
             platform="darwin",
             adapters=app_icons.IconAdapters(set_dock=lambda path: seen.append(path) or True),
         )
-        self.assertEqual(result.colorway, "deep-house")
+        self.assertEqual(result.colorway, "light")
         self.assertTrue(result.follows_theme)
         self.assertTrue(result.applied)
         assert seen[0] is not None
-        self.assertEqual(seen[0].name, "placeholder-deep-house.png")
+        self.assertEqual(seen[0].name, "placeholder-light.png")
         app_config.set_appearance(icon_follows_theme=False)
         cleared: list[Path | None] = []
         again = app_icons.apply_saved(
@@ -757,23 +783,23 @@ class AppearanceApiTests(unittest.TestCase):
             "darwin",
             "dock",
             "ok",
-            "deep-house",
+            "light",
             True,
-            "/img/icons/placeholder-deep-house.svg",
+            "/img/icons/placeholder-light.svg",
         )
         with mock.patch("app_icons.apply_saved", return_value=result) as apply:
-            status, body = _request(self.base, "/api/settings", {"colorway": "deep-house"})
+            status, body = _request(self.base, "/api/settings", {"colorway": "light"})
         self.assertEqual(status, 200)
         assert isinstance(body, dict)
-        self.assertEqual(body["colorway"], "deep-house")
+        self.assertEqual(body["colorway"], "light")
         self.assertIs(body["icon_follows_theme"], True)
-        self.assertEqual(body["icon_href"], "/img/icons/placeholder-deep-house.svg")
+        self.assertEqual(body["icon_href"], "/img/icons/placeholder-light.svg")
         self.assertEqual(body["icon"]["target"], "dock")
         apply.assert_called_once_with()
         status, fetched = _request(self.base, "/api/settings")
         self.assertEqual(status, 200)
         assert isinstance(fetched, dict)
-        self.assertEqual(fetched["colorway"], "deep-house")
+        self.assertEqual(fetched["colorway"], "light")
         self.assertNotIn("icon", fetched)
         with mock.patch("app_icons.apply_saved", return_value=result) as apply:
             status, cleared = _request(self.base, "/api/settings", {"icon_follows_theme": False})
@@ -781,7 +807,7 @@ class AppearanceApiTests(unittest.TestCase):
         assert isinstance(cleared, dict)
         self.assertIs(cleared["icon_follows_theme"], False)
         self.assertEqual(cleared["icon_href"], "/img/icons/default.svg")
-        self.assertEqual(cleared["colorway"], "deep-house")
+        self.assertEqual(cleared["colorway"], "light")
         apply.assert_called_once_with()
 
     def test_bad_appearance_is_refused(self) -> None:
@@ -790,7 +816,7 @@ class AppearanceApiTests(unittest.TestCase):
         Returns:
             None.
         """
-        app_config.set_appearance(colorway="daisy-age", icon_follows_theme=False)
+        app_config.set_appearance(colorway="dark-club", icon_follows_theme=False)
         before = (self.config / "settings.json").read_text(encoding="utf-8")
         payloads = (
             {"colorway": "house"},

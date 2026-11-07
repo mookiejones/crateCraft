@@ -94,7 +94,7 @@ class AssetTests(unittest.TestCase):
         names = static_assets.local_asset_names(ROOT / "static" / "index.html")
         self.assertEqual(
             names,
-            ["img/icons/placeholder-motown.svg", "tokens.css", "app.css", "wizard.js", "app.js"],
+            ["img/icons/placeholder-serato-like.svg", "tokens.css", "app.css", "wizard.js", "app.js"],
         )
         page = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
         for name in (

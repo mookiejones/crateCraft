@@ -23,7 +23,7 @@ import uuid
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
-from app_icons import COLORWAYS, DEFAULT_COLORWAY
+from app_icons import COLORWAYS, DEFAULT_COLORWAY, normalize_colorway
 import version_info
 
 CONFIG_ENV = "SERATO_LIBRARY_CONFIG_DIR"
@@ -177,7 +177,7 @@ class Settings:
             in CSS pixels. None is the default split.
         language: Page language code from ``LANGUAGES``. None follows the
             operating system language.
-        colorway: Theme id from ``COLORWAYS``. Missing means Motown Soul.
+        colorway: Theme id from ``COLORWAYS``. Missing means Serato-like.
         icon_follows_theme: True changes the running Dock or taskbar icon
             to match ``colorway``. False keeps the usual icon. Missing
             means True. False is a stored choice.
@@ -517,8 +517,9 @@ def _parse(payload: object) -> Settings:
     colorway = DEFAULT_COLORWAY
     if "colorway" in payload:
         raw_colorway = payload.get("colorway")
-        if isinstance(raw_colorway, str) and raw_colorway in COLORWAYS:
-            colorway = raw_colorway
+        mapped = normalize_colorway(raw_colorway) if isinstance(raw_colorway, str) else None
+        if mapped is not None:
+            colorway = mapped
         else:
             logger.warning("Config key 'colorway' has wrong type — ignored")
     icon_follows_theme = True
@@ -962,8 +963,13 @@ def set_appearance(
     """
     if colorway is None and icon_follows_theme is None:
         raise ValueError("appearance has no fields to save.")
-    if colorway is not None and (not isinstance(colorway, str) or colorway not in COLORWAYS):
-        raise ValueError("colorway is not a known theme.")
+    if colorway is not None:
+        if not isinstance(colorway, str):
+            raise ValueError("colorway is not a known theme.")
+        mapped = normalize_colorway(colorway)
+        if mapped is None:
+            raise ValueError("colorway is not a known theme.")
+        colorway = mapped
     if icon_follows_theme is not None and not isinstance(icon_follows_theme, bool):
         raise ValueError("icon_follows_theme must be a boolean.")
     with _settings_lock:

@@ -1,12 +1,12 @@
 /**
- * Dialogs for Rekordbox export, duplicate merge, sharing, and file changes.
+ * Dialogs for Rekordbox export, duplicate merge, relink, sharing, and file changes.
  *
  * Importing this module does not open a dialog and does not fetch.
  * wireDialogs attaches the listeners. app.ts calls it once at startup.
  * Confirm still posts only after the person confirms.
  */
 
-import { failureOf, postJSON, readJSONOr } from "./api";
+import { failureOf, getRelink, postJSON, readJSONOr } from "./api";
 import type { LibraryStatusNotice, OpenOptions } from "./wizard-view";
 import type {
   FilesBody,
@@ -14,13 +14,16 @@ import type {
   LogsPayload,
   MergeCueCopy,
   MergePreview,
+  RelinkCandidate,
+  RelinkMatch,
+  RelinkPlan,
   SettingsPayload,
 } from "./api-types";
 import { bridge } from "./bridge";
 import { el } from "./dom";
 import { applyLayout } from "./layout";
 import { state } from "./state";
-import { inputEl, setTooltip } from "./tooltip";
+import { inputEl, selectEl, setTooltip } from "./tooltip";
 import { keepCopy, tips } from "./tooltip-strings";
 import {
   applyStatus,
@@ -46,14 +49,32 @@ let consentSettled = false;
 let privacySync = false;
 let appearanceSync = false;
 
-const COLORWAYS = ["motown", "deep-house", "daisy-age"] as const;
+const COLORWAYS = ["serato-like", "dark-club", "light", "classic"] as const;
+const LEGACY_COLORWAYS: Record<string, (typeof COLORWAYS)[number]> = {
+  motown: "classic",
+  "deep-house": "classic",
+  "daisy-age": "classic",
+};
 
 function isColorway(value: unknown): value is (typeof COLORWAYS)[number] {
   return typeof value === "string" && (COLORWAYS as readonly string[]).includes(value);
 }
+
+function resolveColorway(value: unknown): (typeof COLORWAYS)[number] {
+  if (isColorway(value)) return value;
+  if (typeof value === "string") {
+    const mapped = LEGACY_COLORWAYS[value];
+    if (mapped !== undefined) return mapped;
+  }
+  return "serato-like";
+}
 let filesPreview: FilesPayload | null = null;
 let filesAction = "";
 let filesTrigger: HTMLElement | null = null;
+let relinkPlan: RelinkPlan | null = null;
+let relinkLoading = false;
+const relinkChosen = new Map<number, string>();
+const relinkChecked = new Set<number>();
 
 /**
  * Build the Rekordbox export URL for the current space and crate.
@@ -542,14 +563,13 @@ export function applyAppearance(payload: SettingsPayload): void {
   const hasFollow = "icon_follows_theme" in payload;
   const hasHref = "icon_href" in payload;
   if (!hasColorway && !hasFollow && !hasHref) return;
-  const colorway = isColorway(payload.colorway) ? payload.colorway : el("colorway-select").value;
-  const known = isColorway(colorway) ? colorway : "motown";
+  const colorway = hasColorway ? resolveColorway(payload.colorway) : resolveColorway(el("colorway-select").value);
   const follow = hasFollow ? payload.icon_follows_theme !== false : el("icon-follows-theme").checked;
   appearanceSync = true;
-  if (hasColorway) el("colorway-select").value = isColorway(payload.colorway) ? payload.colorway : "motown";
+  if (hasColorway) el("colorway-select").value = colorway;
   if (hasFollow) el("icon-follows-theme").checked = follow;
   appearanceSync = false;
-  const shown = isColorway(el("colorway-select").value) ? el("colorway-select").value : known;
+  const shown = resolveColorway(el("colorway-select").value);
   document.documentElement.dataset.colorway = shown;
   const preview = el("colorway-preview");
   preview.src = `/img/icons/placeholder-${shown}.svg`;
@@ -654,6 +674,10 @@ export function repaintDialogs(): void {
   if (el("merge-dialog").open) {
     renderMergePreview(mergeLoading ? null : mergePreview);
     syncTrashChoice();
+  }
+  if (el("relink-dialog").open) {
+    fillRelinkBanner();
+    renderRelinkRows();
   }
   if (el("files-dialog").open) {
     el("files-confirm").textContent = filesAction === "delete" ? t("files.moveToTrash") : t("common.confirm");
@@ -927,6 +951,217 @@ async function confirmFiles() {
   }
 }
 
+function relinkReason(reason: string): string {
+  if (reason === "same name and size") return t("relink.reason.nameAndSize");
+  if (reason === "same name") return t("relink.reason.name");
+  if (reason === "same size") return t("relink.reason.size");
+  if (reason === "folder moved") return t("relink.reason.folder");
+  return t("relink.reason.unknown", { reason });
+}
+
+function relinkConfidence(value: string): string {
+  if (value === "high") return t("relink.confidence.high");
+  if (value === "medium") return t("relink.confidence.medium");
+  if (value === "low") return t("relink.confidence.low");
+  return value;
+}
+
+function chosenCandidate(match: RelinkMatch): RelinkCandidate | undefined {
+  const candidates = match.candidates || [];
+  const path = relinkChosen.get(match.asset_id);
+  return candidates.find((item) => item.path === path) || candidates[0];
+}
+
+function selectedRelinkMatches(): { id: number; path: string }[] {
+  const matches: { id: number; path: string }[] = [];
+  for (const match of relinkPlan?.matches || []) {
+    if (!relinkChecked.has(match.asset_id)) continue;
+    const chosen = chosenCandidate(match);
+    if (!chosen?.path) continue;
+    matches.push({ id: match.asset_id, path: chosen.path });
+  }
+  return matches;
+}
+
+function fillRelinkBanner(): void {
+  const banner = el("relink-banner");
+  const parts: string[] = [];
+  if (relinkPlan?.truncated) parts.push(t("relink.truncated"));
+  const unavailable = relinkPlan?.unavailable_drives || [];
+  if (unavailable.length) parts.push(t("relink.unavailable", { count: unavailable.length }));
+  for (const remap of relinkPlan?.remaps || []) {
+    parts.push(t("relink.remap", {
+      from: remap.from || "",
+      to: remap.to || "",
+      count: remap.count || 0,
+    }));
+  }
+  if (typeof relinkPlan?.scanned === "number") {
+    parts.push(t("relink.scanned", { count: relinkPlan.scanned }));
+  }
+  banner.textContent = parts.join(" ");
+  banner.hidden = parts.length === 0;
+}
+
+function syncRelinkConfirm(refreshStatus = true): void {
+  const confirm = el("relink-confirm");
+  const accept = el("relink-accept-high");
+  const find = el("relink-find");
+  const selected = selectedRelinkMatches();
+  confirm.disabled = relinkLoading || !state.writable || selected.length === 0;
+  accept.disabled = relinkLoading || !relinkPlan;
+  find.disabled = relinkLoading || !state.writable;
+  if (refreshStatus && !relinkLoading && selected.length) {
+    el("relink-status").textContent = t("relink.selected", { count: selected.length });
+  }
+}
+
+function renderRelinkRows(): void {
+  const body = el("relink-rows");
+  body.replaceChildren();
+  const matches = (relinkPlan?.matches || []).filter((item) => (item.candidates || []).length > 0);
+  el("relink-empty").hidden = matches.length > 0;
+  el("relink-empty").textContent = relinkPlan ? t("relink.empty") : t("relink.none");
+  for (const match of matches) {
+    const candidates = match.candidates || [];
+    const chosen = chosenCandidate(match);
+    const row = document.createElement("tr");
+    const includeCell = document.createElement("td");
+    const box = inputEl(tips.relinkInclude);
+    box.type = "checkbox";
+    box.checked = relinkChecked.has(match.asset_id);
+    box.setAttribute("aria-label", t("relink.include"));
+    box.addEventListener("change", () => {
+      if (box.checked) relinkChecked.add(match.asset_id);
+      else relinkChecked.delete(match.asset_id);
+      syncRelinkConfirm();
+    });
+    includeCell.append(box);
+
+    const trackCell = document.createElement("td");
+    const title = document.createElement("div");
+    title.textContent = match.title || "";
+    const artist = document.createElement("div");
+    artist.textContent = match.artist || "";
+    trackCell.append(title, artist);
+
+    const matchCell = document.createElement("td");
+    if (candidates.length > 1) {
+      const select = selectEl(tips.relinkPick);
+      select.setAttribute("aria-label", t("relink.pick"));
+      for (const candidate of candidates) {
+        const option = document.createElement("option");
+        option.value = candidate.path;
+        option.textContent = candidate.path;
+        if (candidate.path === chosen?.path) option.selected = true;
+        select.append(option);
+      }
+      select.addEventListener("change", () => {
+        relinkChosen.set(match.asset_id, select.value);
+        renderRelinkRows();
+      });
+      matchCell.append(select);
+    } else {
+      const path = document.createElement("span");
+      path.textContent = chosen?.path || "";
+      matchCell.append(path);
+    }
+
+    const confidenceCell = document.createElement("td");
+    confidenceCell.textContent = relinkConfidence(chosen?.confidence || "");
+    const whyCell = document.createElement("td");
+    whyCell.textContent = relinkReason(chosen?.reason || "");
+    row.append(includeCell, trackCell, matchCell, confidenceCell, whyCell);
+    body.append(row);
+  }
+  syncRelinkConfirm();
+}
+
+function seedRelinkChoices(plan: RelinkPlan): void {
+  relinkChosen.clear();
+  relinkChecked.clear();
+  for (const match of plan.matches || []) {
+    const first = (match.candidates || [])[0];
+    if (!first) continue;
+    relinkChosen.set(match.asset_id, first.path);
+    if (first.confidence === "high") relinkChecked.add(match.asset_id);
+  }
+}
+
+function acceptRelinkHigh(): void {
+  for (const match of relinkPlan?.matches || []) {
+    const chosen = chosenCandidate(match);
+    if (chosen?.confidence === "high" && chosen.path) {
+      relinkChecked.add(match.asset_id);
+    }
+  }
+  renderRelinkRows();
+}
+
+async function scanRelink(): Promise<void> {
+  if (relinkLoading || !state.writable) return;
+  relinkLoading = true;
+  el("relink-status").textContent = t("relink.finding");
+  syncRelinkConfirm();
+  try {
+    const plan = await getRelink(state.space, el("relink-root").value);
+    relinkPlan = plan;
+    seedRelinkChoices(plan);
+    fillRelinkBanner();
+    renderRelinkRows();
+    el("relink-status").textContent = "";
+    syncRelinkConfirm();
+  } catch (error) {
+    el("relink-status").textContent = failureOf(error).message;
+  } finally {
+    relinkLoading = false;
+    syncRelinkConfirm();
+  }
+}
+
+async function openRelinkDialog(): Promise<void> {
+  if (!state.writable) return;
+  if (typeof el("relink-dialog").showModal !== "function") return;
+  el("relink-status").textContent = "";
+  if (!el("relink-dialog").open) el("relink-dialog").showModal();
+  el("relink-cancel").focus();
+  await scanRelink();
+}
+
+async function confirmRelink(): Promise<void> {
+  const matches = selectedRelinkMatches();
+  if (!matches.length || relinkLoading) return;
+  relinkLoading = true;
+  el("relink-confirm").disabled = true;
+  el("relink-status").textContent = t("relink.previewing");
+  try {
+    const preview = await postJSON<FilesPayload>("/api/files", { action: "relink", matches });
+    if (preview.serato) applyStatus(preview.serato);
+    if (!preview.ok) {
+      el("relink-status").textContent = preview.error || t("files.notSaved");
+      return;
+    }
+    el("relink-status").textContent = preview.summary || t("relink.relinking");
+    const result = await postJSON<FilesPayload>("/api/files", { action: "relink", matches, confirm: true });
+    if (result.serato) applyStatus(result.serato);
+    el("relink-dialog").close();
+    let message = t("relink.done", { count: matches.length });
+    if (result.summary) message = result.summary;
+    if (result.warning) message = `${message} ${result.warning}`;
+    setNotice(message);
+    await loadLibrary();
+  } catch (error) {
+    el("relink-status").textContent = failureOf(error).message;
+    if (failureOf(error).status === 409) {
+      lockDown(error);
+      el("relink-dialog").close();
+    }
+  } finally {
+    relinkLoading = false;
+    syncRelinkConfirm(false);
+  }
+}
+
 /**
  * Attach dialog listeners for export, merge, sharing, logs, and files.
  *
@@ -987,6 +1222,19 @@ export function wireDialogs(): void {
   });
   el("merge-duplicates").addEventListener("click", () => {
     openMergeDialog().catch((error) => setNotice(failureOf(error).message));
+  });
+  el("open-relink").addEventListener("click", () => {
+    openRelinkDialog().catch((error) => setNotice(failureOf(error).message));
+  });
+  el("relink-cancel").addEventListener("click", () => el("relink-dialog").close());
+  el("relink-find").addEventListener("click", () => {
+    scanRelink().catch((error) => {
+      el("relink-status").textContent = failureOf(error).message;
+    });
+  });
+  el("relink-accept-high").addEventListener("click", () => acceptRelinkHigh());
+  el("relink-confirm").addEventListener("click", () => {
+    confirmRelink().catch((error) => setNotice(failureOf(error).message));
   });
   el("merge-cancel").addEventListener("click", () => el("merge-dialog").close());
   el("merge-confirm").addEventListener("click", () => {

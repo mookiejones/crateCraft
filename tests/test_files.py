@@ -1,4 +1,4 @@
-"""Cue-safe move, rename, replace, and delete tests.
+"""Cue-safe move, rename, replace, relink, and delete tests.
 
 The suite uses the temporary Serato-shaped database and temporary audio
 files. It does not open a live Serato library or the real Trash.
@@ -1304,6 +1304,242 @@ class FileManagerTests(unittest.TestCase):
             httpd.shutdown()
             httpd.server_close()
             thread.join(timeout=3)
+
+    def test_relink_points_a_missing_track_and_keeps_crates(self) -> None:
+        """Rewrite the stored path of a missing track without moving audio.
+
+        Cue tags on the dest are left as they are. The crate row stays.
+        Telemetry records ``relink`` and a count, not a path.
+
+        Returns:
+            None. The test fails if the dest is moved or the crate is dropped.
+        """
+        from tags import read_serato_tags
+
+        dest = self.music / "found.mp3"
+        _id3_file(_markers_payload(), dest)
+        dest.write_bytes(dest.read_bytes() + b"FOUND")
+        before = dest.read_bytes()
+        gone = self.music / "gone.mp3"
+        with open_database(self.library.db) as conn:
+            conn.execute(
+                "UPDATE asset SET portable_id = ?, file_name = 'gone.mp3', is_missing = 1 WHERE id = 1",
+                (str(gone),),
+            )
+        payload = {
+            "action": "relink",
+            "matches": [{"id": 1, "path": str(dest)}],
+            "confirm": True,
+        }
+        with mock.patch("telemetry.capture", wraps=telemetry.capture) as captured:
+            result = files.execute(payload)
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["action"], "relink")
+        self.assertEqual(dest.read_bytes(), before)
+        self.assertTrue(read_serato_tags(str(dest))["found"])
+        asset = self._master("SELECT id, name, portable_id, file_name, is_missing FROM asset WHERE id = 1")
+        self.assertEqual(asset["name"], "Same")
+        self.assertEqual(asset["file_name"], "found.mp3")
+        self.assertEqual(asset["is_missing"], 0)
+        self._stored_is(asset["portable_id"], dest)
+        self.assertIsNotNone(
+            self._master("SELECT 1 AS ok FROM container_asset WHERE asset_id = 1 AND container_id = 3")
+        )
+        self.assertFalse((self.library.root / "Backups" / "file-ops-journal.json").exists())
+        props = next(
+            call.args[1]
+            for call in captured.call_args_list
+            if call.args[0] == telemetry.EVENT_FILES_CHANGED
+        )
+        self.assertEqual(props["change"], "relink")
+        self.assertEqual(props["file_count"], 1)
+        self.assertNotIn("path", props)
+        self.assertNotIn("found.mp3", json.dumps(props))
+
+    def test_relink_preview_does_not_write(self) -> None:
+        """Check a relink without a journal or a backup.
+
+        Returns:
+            None. The test fails if the preview writes the library path.
+        """
+        dest = self.music / "found.mp3"
+        dest.write_bytes(b"found")
+        gone = self.music / "gone.mp3"
+        with open_database(self.library.db) as conn:
+            conn.execute(
+                "UPDATE asset SET portable_id = ?, is_missing = 1 WHERE id = 1",
+                (str(gone),),
+            )
+        preview = files.plan({"action": "relink", "matches": [{"id": 1, "path": str(dest)}]})
+        self.assertTrue(preview["ok"])
+        self.assertTrue(preview["needs_confirm"])
+        self.assertIn("Cue tags were not found", str(preview["warning"]))
+        stored = self._master("SELECT portable_id FROM asset WHERE id = 1")
+        self.assertEqual(stored["portable_id"], str(gone))
+        self.assertFalse((self.library.root / "Backups" / "file-ops-journal.json").exists())
+        backups = self.library.root / "Backups"
+        stamped = list(backups.glob("serato-web-*")) if backups.is_dir() else []
+        self.assertEqual(stamped, [])
+
+    def test_relink_serato_open_refuses_before_a_backup(self) -> None:
+        """Show the refusal in the preview and raise on confirm.
+
+        Returns:
+            None. The test fails if a backup is copied.
+        """
+        dest = self.music / "found.mp3"
+        dest.write_bytes(b"found")
+        gone = self.music / "gone.mp3"
+        with open_database(self.library.db) as conn:
+            conn.execute(
+                "UPDATE asset SET portable_id = ?, is_missing = 1 WHERE id = 1",
+                (str(gone),),
+            )
+            conn.execute(
+                "INSERT INTO lock (owner_process_id, owner_process_name) VALUES (?, ?)",
+                (os.getpid(), "Serato DJ Pro"),
+            )
+        payload = {"action": "relink", "matches": [{"id": 1, "path": str(dest)}]}
+        with mock.patch("library._process_is_serato", return_value=True):
+            preview = files.plan(payload)
+            self.assertFalse(preview["ok"])
+            with self.assertRaises(library.SeratoOpen):
+                files.execute({**payload, "confirm": True})
+        backups = self.library.root / "Backups"
+        stamped = list(backups.glob("serato-web-*")) if backups.is_dir() else []
+        self.assertEqual(stamped, [])
+        stored = self._master("SELECT portable_id FROM asset WHERE id = 1")
+        self.assertEqual(stored["portable_id"], str(gone))
+
+    def test_relink_refusals_leave_the_library(self) -> None:
+        """Refuse a dest already in the library, a live file, and a duplicate dest.
+
+        Returns:
+            None. The test fails if a refused save copies a backup.
+        """
+        dest = self.music / "found.mp3"
+        dest.write_bytes(b"found")
+        with self.assertRaises(library.LibraryError) as still:
+            files.execute(
+                {
+                    "action": "relink",
+                    "matches": [{"id": 1, "path": str(self.other)}],
+                    "confirm": True,
+                }
+            )
+        self.assertEqual(still.exception.message, "That track is still on disk.")
+        gone = self.music / "gone.mp3"
+        with open_database(self.library.db) as conn:
+            conn.execute(
+                "UPDATE asset SET portable_id = ?, is_missing = 1 WHERE id = 1",
+                (str(gone),),
+            )
+        with self.assertRaises(library.LibraryError) as used:
+            files.execute(
+                {
+                    "action": "relink",
+                    "matches": [{"id": 1, "path": str(self.other)}],
+                    "confirm": True,
+                }
+            )
+        self.assertEqual(used.exception.message, "Another library track already uses that file.")
+        note = self.music / "note.txt"
+        note.write_text("not audio")
+        with self.assertRaises(library.LibraryError) as audio:
+            files.execute(
+                {
+                    "action": "relink",
+                    "matches": [{"id": 1, "path": str(note)}],
+                    "confirm": True,
+                }
+            )
+        self.assertEqual(audio.exception.message, "That file is not an audio file.")
+        extra = self.music / "also.mp3"
+        extra.write_bytes(b"also")
+        with open_database(self.library.db) as conn:
+            conn.execute(
+                "UPDATE asset SET portable_id = ?, is_missing = 1 WHERE id = 2",
+                (str(self.music / "other-gone.mp3"),),
+            )
+        with self.assertRaises(library.LibraryError) as same:
+            files.execute(
+                {
+                    "action": "relink",
+                    "matches": [
+                        {"id": 1, "path": str(dest)},
+                        {"id": 2, "path": str(dest)},
+                    ],
+                    "confirm": True,
+                }
+            )
+        self.assertEqual(same.exception.message, "Two of those files are the same.")
+        with self.assertRaises(library.LibraryError) as empty:
+            files.execute({"action": "relink", "matches": [], "confirm": True})
+        self.assertEqual(empty.exception.message, "Choose tracks to relink.")
+        with self.assertRaises(library.LibraryError) as twice:
+            files.execute(
+                {
+                    "action": "relink",
+                    "matches": [
+                        {"id": 1, "path": str(dest)},
+                        {"id": 1, "path": str(extra)},
+                    ],
+                    "confirm": True,
+                }
+            )
+        self.assertEqual(twice.exception.message, "Two of those tracks are the same.")
+        with self.assertRaises(library.LibraryError) as unknown:
+            files.execute(
+                {
+                    "action": "relink",
+                    "matches": [{"id": 99, "path": str(dest)}],
+                    "confirm": True,
+                }
+            )
+        self.assertEqual(unknown.exception.message, "That track is not in the library.")
+        with self.assertRaises(library.LibraryError) as too_many:
+            files.execute(
+                {
+                    "action": "relink",
+                    "matches": [{"id": 1, "path": str(dest)}] * 501,
+                    "confirm": True,
+                }
+            )
+        self.assertEqual(too_many.exception.message, "Choose fewer files at once.")
+        backups = self.library.root / "Backups"
+        stamped = list(backups.glob("serato-web-*")) if backups.is_dir() else []
+        self.assertEqual(stamped, [])
+
+    def test_relink_follows_a_related_track_link(self) -> None:
+        """Point a saved related-track link at the dest after a relink.
+
+        Returns:
+            None. The test fails if the link stays on the missing path.
+        """
+        config = self.library.root / "config"
+        config.mkdir()
+        dest = self.music / "found.mp3"
+        dest.write_bytes(b"found")
+        gone = self.music / "gone.mp3"
+        with open_database(self.library.db) as conn:
+            conn.execute(
+                "UPDATE asset SET portable_id = ?, is_missing = 1 WHERE id = 1",
+                (str(gone),),
+            )
+        with mock.patch.dict(os.environ, {app_config.CONFIG_ENV: str(config)}):
+            related.add_link(str(gone), str(self.other.resolve()), mutual=False)
+            result = files.execute(
+                {
+                    "action": "relink",
+                    "matches": [{"id": 1, "path": str(dest)}],
+                    "confirm": True,
+                }
+            )
+            moved = related.overview(str(dest.resolve()))
+            left = related.overview(str(gone))
+        self.assertTrue(result["ok"])
+        self.assertEqual(len(moved["saved"]), 1)
+        self.assertEqual(left["saved"], [])
 
 
 def _title_tag(text: str) -> bytes:

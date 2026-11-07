@@ -9,6 +9,7 @@ import type {
   CrateWriteResult,
   ErrorBody,
   FilesPayload,
+  RelinkPlan,
   LibraryRoot,
   LibraryRootKind,
   LibraryRootsPayload,
@@ -153,6 +154,21 @@ export async function getVersion(): Promise<VersionPayload> {
     commit: payload.commit,
     source: payload.source,
   };
+}
+
+export async function getRelink(space: string, root = ""): Promise<RelinkPlan> {
+  const params = new URLSearchParams({ space });
+  const extra = root.trim();
+  if (extra) params.set("root", extra);
+  const response = await fetch(`/api/relink?${params.toString()}`);
+  const payload = await readJSONOr<RelinkPlan & ErrorBody>(response, {} as RelinkPlan & ErrorBody);
+  if (!response.ok) {
+    const error = new Error(serverMessage(payload, t("error.requestStatus", { status: String(response.status) }))) as ApiFailure;
+    error.status = response.status;
+    error.payload = payload;
+    throw error;
+  }
+  return payload;
 }
 
 export async function postJSON<T = ServerReply>(url: string, body: unknown): Promise<T> {

@@ -1,5 +1,5 @@
 /**
- * Crates, history, missing tracks, duplicates, stems, and files.
+ * Crates, history, missing tracks, duplicates, stems, damaged files, and files.
  *
  * The functions paint from state and the elements in index.html. Nothing
  * in this module runs a request when the file is imported. Listeners are
@@ -27,6 +27,7 @@ import { bridge } from "./bridge";
 import { el } from "./dom";
 import { clockLabel, colorHex, compare, durationLabel, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
+import { loadScan, showScanFailure } from "./scan";
 import { portableDriveButton } from "./portable";
 import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
@@ -557,8 +558,9 @@ export function renderShell() {
   markHistoryColumns();
   const cratesMode = state.mode === "crates";
   const gigMode = state.mode === "gig";
+  const scanMode = state.mode === "scan";
   const historyMode = state.mode === "history";
-  const showCrates = cratesMode || gigMode;
+  const showCrates = cratesMode || gigMode || scanMode;
   el("crate-tools").hidden = !showCrates;
   el("crate-actions").hidden = !cratesMode;
   el("crate-list").hidden = !showCrates;
@@ -566,13 +568,14 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || scanMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
   el("files-panel").hidden = !filesMode;
   el("snapshots-panel").hidden = !snapshotsMode;
   el("gig-panel").hidden = !gigMode;
+  el("scan-panel").hidden = !scanMode;
   if (state.mode === "missing") el("mode-note").textContent = t("mode.missing");
   if (state.mode === "duplicates") {
     el("mode-note").textContent = t("mode.duplicates");
@@ -581,6 +584,10 @@ export function renderShell() {
   if (filesMode) el("mode-note").textContent = t("mode.files");
   if (gigMode) {
     el("mode-note").textContent = t("mode.gig");
+    document.querySelector(".rules")?.remove();
+  }
+  if (scanMode) {
+    el("mode-note").textContent = t("mode.scan");
     document.querySelector(".rules")?.remove();
   }
   if (snapshotsMode) {
@@ -599,6 +606,7 @@ export function renderShell() {
   el("crate-delete").disabled = !state.writable || !crateChosen;
   syncPresetButtons();
   syncMergeButton();
+  syncRelinkButton();
   if (filesMode) {
     if (state.filesAtRoots) {
       el("crate-foot").textContent = state.filesLoading
@@ -610,9 +618,9 @@ export function renderShell() {
     el("crate-foot").textContent = state.filesLoading ? t("files.readingFolder") : t("files.fileCount", { count: listed });
     return;
   }
-  if (gigMode) {
+  if (gigMode || scanMode) {
     const crate = state.crates.find((item) => item.id === state.activeCrate);
-    el("crate-foot").textContent = state.activeCrate === "all" ? "All tracks" : (crate?.name ?? "Selected crate");
+    el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : (crate?.name ?? t("crates.selectedCrate"));
     return;
   }
   if (snapshotsMode) {
@@ -664,6 +672,10 @@ export function renderList() {
     return;
   }
   if (state.mode === "gig") {
+    renderCrates();
+    return;
+  }
+  if (state.mode === "scan") {
     renderCrates();
     return;
   }
@@ -729,6 +741,7 @@ export function selectCrate(id: number | "all") {
   el("list").scrollTop = 0;
   renderList();
   if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
+  if (state.mode === "scan") loadScan().catch(showScanFailure);
 }
 
 /**
@@ -759,6 +772,7 @@ export function focusCrateItem(item: HTMLElement | undefined) {
 export async function selectTrack(id: number) {
   state.selectedId = id;
   syncMergeButton();
+  syncRelinkButton();
   paintRows();
   const token = ++state.request;
   const pending = document.createElement("p");
@@ -2378,8 +2392,8 @@ export async function loadLibrary() {
 }
 
 /**
- * Switch among crates, history, missing, duplicates, stems, files,
- * snapshots, and gig.
+ * Switch among crates, history, missing, duplicates, stems, damaged
+ * files, files, snapshots, and gig.
  *
  * History sorts by start time descending and loads sessions once.
  * Duplicates load when this space has not been scanned yet. Files loads
@@ -2411,6 +2425,7 @@ export function setMode(mode: string) {
     loadSnapshots().catch((error) => failSnapshots(error));
   }
   if (mode === "gig") loadGigCheck().catch(showGigFailure);
+  if (mode === "scan") loadScan("quick").catch(showScanFailure);
   renderList();
 }
 
@@ -2458,6 +2473,22 @@ export function syncMergeButton() {
   const show = state.mode === "duplicates";
   wrap.hidden = !show;
   button.disabled = !show || !state.writable || !selectedDuplicateGroup();
+}
+
+/**
+ * Show Relink missing files on the Missing view while Serato is quit.
+ *
+ * The button lives in the missing rail. Other views hide it. Does not fetch.
+ *
+ * @returns {void}
+ */
+export function syncRelinkButton() {
+  const wrap = el("relink-actions");
+  const button = el("open-relink");
+  if (!wrap || !button) return;
+  const show = state.mode === "missing";
+  wrap.hidden = !show;
+  button.disabled = !show || !state.writable;
 }
 
 /**
@@ -3232,6 +3263,7 @@ export function wireLibrary(): void {
     if (state.mode === "history") jobs.push(loadHistory());
     if (state.mode === "duplicates") jobs.push(loadDuplicates());
     if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
+    if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
     Promise.all(jobs).catch(showFailure);
   });
 
@@ -3265,6 +3297,7 @@ export function wireLibrary(): void {
     loadLibrary().then(() => {
       if (state.mode === "duplicates") return loadDuplicates();
       if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
+      if (state.mode === "scan") return loadScan().catch(showScanFailure);
       return null;
     }).catch(showFailure);
   });
