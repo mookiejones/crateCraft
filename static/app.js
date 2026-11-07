@@ -701,9 +701,10 @@
     "search.tracks": "Search tracks",
     "settings.about": "About",
     "settings.colorway": "Theme",
-    "settings.colorway.daisyAge": "Daisy Age",
-    "settings.colorway.deepHouse": "Deep House",
-    "settings.colorway.motown": "Motown Soul",
+    "settings.colorway.classic": "Classic",
+    "settings.colorway.darkClub": "Dark Club",
+    "settings.colorway.light": "Light",
+    "settings.colorway.seratoLike": "Serato-like",
     "settings.colorwayPreview": "Theme icon preview",
     "settings.copyLogs": "Copy logs",
     "settings.copyVersion": "Copy version",
@@ -1797,9 +1798,10 @@
     "search.tracks": "Buscar pistas",
     "settings.about": "Acerca de",
     "settings.colorway": "Tema",
-    "settings.colorway.daisyAge": "Daisy Age",
-    "settings.colorway.deepHouse": "Deep House",
-    "settings.colorway.motown": "Motown Soul",
+    "settings.colorway.classic": "Clásico",
+    "settings.colorway.darkClub": "Club oscuro",
+    "settings.colorway.light": "Claro",
+    "settings.colorway.seratoLike": "Estilo Serato",
     "settings.colorwayPreview": "Vista previa del icono del tema",
     "settings.copyLogs": "Copiar registros",
     "settings.copyVersion": "Copiar versión",
@@ -8417,9 +8419,22 @@
   var consentSettled = false;
   var privacySync = false;
   var appearanceSync = false;
-  var COLORWAYS = ["motown", "deep-house", "daisy-age"];
+  var COLORWAYS = ["serato-like", "dark-club", "light", "classic"];
+  var LEGACY_COLORWAYS = {
+    motown: "classic",
+    "deep-house": "classic",
+    "daisy-age": "classic"
+  };
   function isColorway(value) {
     return typeof value === "string" && COLORWAYS.includes(value);
+  }
+  function resolveColorway(value) {
+    if (isColorway(value)) return value;
+    if (typeof value === "string") {
+      const mapped = LEGACY_COLORWAYS[value];
+      if (mapped !== void 0) return mapped;
+    }
+    return "serato-like";
   }
   var filesPreview = null;
   var filesAction = "";
@@ -8710,14 +8725,13 @@
     const hasFollow = "icon_follows_theme" in payload;
     const hasHref = "icon_href" in payload;
     if (!hasColorway && !hasFollow && !hasHref) return;
-    const colorway = isColorway(payload.colorway) ? payload.colorway : el("colorway-select").value;
-    const known = isColorway(colorway) ? colorway : "motown";
+    const colorway = hasColorway ? resolveColorway(payload.colorway) : resolveColorway(el("colorway-select").value);
     const follow = hasFollow ? payload.icon_follows_theme !== false : el("icon-follows-theme").checked;
     appearanceSync = true;
-    if (hasColorway) el("colorway-select").value = isColorway(payload.colorway) ? payload.colorway : "motown";
+    if (hasColorway) el("colorway-select").value = colorway;
     if (hasFollow) el("icon-follows-theme").checked = follow;
     appearanceSync = false;
-    const shown = isColorway(el("colorway-select").value) ? el("colorway-select").value : known;
+    const shown = resolveColorway(el("colorway-select").value);
     document.documentElement.dataset.colorway = shown;
     const preview = el("colorway-preview");
     preview.src = `/img/icons/placeholder-${shown}.svg`;

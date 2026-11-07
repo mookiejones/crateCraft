@@ -436,7 +436,7 @@ export interface SettingsPayload {
   rekordbox?: RekordboxSettings;
   /** Saved page language, or null to follow the OS. */
   language?: string | null;
-  /** Theme id: motown, deep-house, or daisy-age. */
+  /** Theme id: serato-like, dark-club, light, or classic. */
   colorway?: string;
   /** True when the Dock or taskbar icon should match the theme. */
   icon_follows_theme?: boolean;

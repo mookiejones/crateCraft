@@ -2308,7 +2308,9 @@ class Handler(BaseHTTPRequestHandler):
 
         Args:
             payload: ``colorway``, ``icon_follows_theme``, or both.
-                ``colorway`` is ``motown``, ``deep-house``, or ``daisy-age``.
+                ``colorway`` is ``serato-like``, ``dark-club``, ``light``,
+                or ``classic``. Saved ``motown``, ``deep-house``, or
+                ``daisy-age`` store as Classic.
                 The icon flag is a boolean. ``False`` is kept.
 
         The file is written before the icon changes. A Dock or taskbar

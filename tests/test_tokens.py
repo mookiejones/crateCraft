@@ -240,29 +240,114 @@ def _rules(css: str) -> list[tuple[str, dict[str, str]]]:
     return found
 
 
-def _sheet_colors() -> dict[str, str]:
-    """Resolve token and alias colors to ``#rrggbb``.
+_HEX_VALUE = re.compile(r"^#[0-9A-Fa-f]{6}$")
+_VAR_VALUE = re.compile(r"^var\(\s*(--[A-Za-z0-9-]+)\s*\)$")
+_ALIASES = {
+    "--walnut": "--color-bg",
+    "--walnut-lift": "--color-panel",
+    "--manila": "--color-card",
+    "--manila-deep": "--color-button",
+    "--ink": "--color-text",
+    "--quiet": "--color-text-muted",
+    "--cadmium": "--color-primary",
+    "--missing": "--color-danger",
+    "--rule": "--color-border",
+}
+
+
+def _hex_props(props: dict[str, str]) -> dict[str, str]:
+    """Return hex custom properties from one rule.
+
+    Args:
+        props: Declaration map from :func:`_rules`.
+
+    Returns:
+        Custom property name to lowercase ``#rrggbb``.
+    """
+    return {name: value.lower() for name, value in props.items() if _HEX_VALUE.match(value)}
+
+
+def _take_tokens(props: dict[str, str], colors: dict[str, str], pending: dict[str, str]) -> None:
+    """Copy custom properties from one rule into resolved or pending maps.
+
+    Args:
+        props: Declaration map from :func:`_rules`.
+        colors: Hex values already resolved.
+        pending: ``var()`` values still to resolve.
+
+    Returns:
+        None. Hex overwrites a pending name. A ``var()`` overwrites a hex
+        name so a theme can retarget ``--colorway-accent``.
+    """
+    for name, value in props.items():
+        if not name.startswith("--"):
+            continue
+        value = value.strip()
+        if _HEX_VALUE.match(value):
+            colors[name] = value.lower()
+            pending.pop(name, None)
+        else:
+            pending[name] = value
+
+
+def _resolve_pending(colors: dict[str, str], pending: dict[str, str]) -> None:
+    """Resolve ``var(--token)`` custom properties against known hex values.
+
+    Args:
+        colors: Hex map to extend.
+        pending: Names still pointing at another custom property.
+
+    Returns:
+        None.
+    """
+    changed = True
+    while changed and pending:
+        changed = False
+        for name, value in list(pending.items()):
+            match = _VAR_VALUE.match(value)
+            if match and match.group(1) in colors:
+                colors[name] = colors[match.group(1)]
+                del pending[name]
+                changed = True
+
+
+def _theme_colors(theme: str | None = None) -> dict[str, str]:
+    """Resolve token and alias colors to ``#rrggbb`` for one theme.
+
+    Args:
+        theme: A ``data-colorway`` id. None uses ``:root`` only, which is
+            Serato-like.
 
     Returns:
         Custom property name to lowercase hex. Aliases in ``app.css``
-        point at the token sheet.
+        point at the token sheet. Theme blocks overlay ``:root``.
+        ``var()`` retargets such as ``--colorway-accent`` are resolved.
     """
-    colors = token_colors(TOKENS.read_text(encoding="utf-8"))
+    colors: dict[str, str] = {}
+    pending: dict[str, str] = {}
+    target = f'html[data-colorway="{theme}"]' if theme else ""
+    rules = _rules(TOKENS.read_text(encoding="utf-8"))
+    for selector, props in rules:
+        if selector == ":root":
+            _take_tokens(props, colors, pending)
+    if target:
+        for selector, props in rules:
+            if selector == target:
+                _take_tokens(props, colors, pending)
+    _resolve_pending(colors, pending)
     colors.update(token_colors(APP_CSS.read_text(encoding="utf-8")))
-    aliases = {
-        "--walnut": "--color-bg",
-        "--walnut-lift": "--color-panel",
-        "--manila": "--color-card",
-        "--manila-deep": "--color-button",
-        "--ink": "--color-text",
-        "--quiet": "--color-text-muted",
-        "--cadmium": "--color-primary",
-        "--missing": "--color-danger",
-        "--rule": "--color-border",
-    }
-    for name, target in aliases.items():
-        colors[name] = colors[target]
+    for name, mapped in _ALIASES.items():
+        colors[name] = colors[mapped]
     return colors
+
+
+def _sheet_colors() -> dict[str, str]:
+    """Resolve the default theme tokens to ``#rrggbb``.
+
+    Returns:
+        Custom property name to lowercase hex for ``:root``.
+    """
+    return _theme_colors()
 
 
 def _paint(value: str, colors: dict[str, str]) -> tuple[float, float, float]:
@@ -552,6 +637,9 @@ _CONTROL_EDGE = (
 )
 
 
+_THEMES = ("serato-like", "dark-club", "light", "classic")
+
+
 class ContrastTests(unittest.TestCase):
     """Measure every token pair the page paints."""
 
@@ -628,6 +716,62 @@ class ContrastTests(unittest.TestCase):
         self.assertEqual(painted - classified, set(), "text colors missing from the contrast list")
         self.assertEqual(classified - painted, set(), "contrast list names a selector that sets no color")
 
+        for theme in _THEMES:
+            with self.subTest(theme=theme):
+                self.colors = _theme_colors(theme)
+                self._assert_painted_pairs()
+
+        bordered = {
+            selector
+            for selector, props in self.app_rules
+            if any(
+                key in props and ("var(" in props[key] or "color-mix" in props[key])
+                for key in ("border", "border-top", "border-bottom", "border-left", "border-right", "border-color", "box-shadow", "outline")
+            )
+        }
+        checked_borders = _DECORATIVE | {
+            "button:focus-visible",
+            "input:focus-visible",
+            "select:focus-visible",
+            "textarea:focus-visible",
+            ".list:focus-visible",
+            ".files-list:focus-visible",
+            ".crate:focus-visible",
+            ".twist:focus-visible",
+            ".splitter:focus-visible",
+            ".files-open:focus-visible",
+            ".files-kind:focus-visible",
+            ".files-file input:focus-visible",
+            ".files-crumb:focus-visible",
+            ".files-elsewhere:focus-visible",
+            ".files-portable:focus-visible",
+            '.crate-row:has(.crate[aria-selected="true"])',
+            '.row[aria-selected="true"]',
+            ".crate-row.holds-selection",
+            ".rail",
+            "#consent-accept",
+            "#open-logs",
+            "#copy-logs",
+            "#copy-version",
+            "#rekordbox-cancel",
+            "#merge-cancel",
+            ".wizard-choice",
+            ".quick-open-option.is-active",
+            ".player-toggle",
+            ".waveform-zoom-button",
+            ".waveform-overview:focus-visible",
+            ".detail-play",
+            ".operations-alert",
+        } | {selector for selector, _, _ in _CONTROL_EDGE}
+        self.assertEqual(bordered - checked_borders, set(), "borders missing from the contrast list")
+        self.assertEqual(checked_borders - bordered, set(), "contrast list names a border that is not painted")
+
+    def _assert_painted_pairs(self) -> None:
+        """Measure text, focus, and control edges for ``self.colors``.
+
+        Returns:
+            None. The test fails if a painted pair misses its bar.
+        """
         for selector, backgrounds, size, weight in _TEXT:
             props = self._rule(selector)
             if "font-size" in props:
@@ -719,62 +863,21 @@ class ContrastTests(unittest.TestCase):
             ratio = contrast(_paint(pill[selector][prop], self.colors), self._surface(background_name))
             self.assertGreaterEqual(ratio, bar, f"{selector} {prop} is {ratio:.2f}:1")
 
-        bordered = {
-            selector
-            for selector, props in self.app_rules
-            if any(
-                key in props and ("var(" in props[key] or "color-mix" in props[key])
-                for key in ("border", "border-top", "border-bottom", "border-left", "border-right", "border-color", "box-shadow", "outline")
-            )
-        }
-        checked_borders = _DECORATIVE | {
-            "button:focus-visible",
-            "input:focus-visible",
-            "select:focus-visible",
-            "textarea:focus-visible",
-            ".list:focus-visible",
-            ".files-list:focus-visible",
-            ".crate:focus-visible",
-            ".twist:focus-visible",
-            ".splitter:focus-visible",
-            ".files-open:focus-visible",
-            ".files-kind:focus-visible",
-            ".files-file input:focus-visible",
-            ".files-crumb:focus-visible",
-            ".files-elsewhere:focus-visible",
-            ".files-portable:focus-visible",
-            '.crate-row:has(.crate[aria-selected="true"])',
-            '.row[aria-selected="true"]',
-            ".crate-row.holds-selection",
-            ".rail",
-            "#consent-accept",
-            "#open-logs",
-            "#copy-logs",
-            "#copy-version",
-            "#rekordbox-cancel",
-            "#merge-cancel",
-            ".wizard-choice",
-            ".quick-open-option.is-active",
-            ".player-toggle",
-            ".waveform-zoom-button",
-            ".waveform-overview:focus-visible",
-            ".detail-play",
-            ".operations-alert",
-        } | {selector for selector, _, _ in _CONTROL_EDGE}
-        self.assertEqual(bordered - checked_borders, set(), "borders missing from the contrast list")
-        self.assertEqual(checked_borders - bordered, set(), "contrast list names a border that is not painted")
-
-    def test_warm_palette_values(self) -> None:
-        """Fill the role tokens with the existing walnut and manila colors.
-
-        Primary is cadmium. Danger is the missing-file red. The sheet
-        must not pick up the dark navy reference.
+    def test_theme_token_values(self) -> None:
+        """Keep four named themes. :root is Serato-like. Classic is walnut.
 
         Returns:
-            None. The test fails if a role color changes.
+            None. The test fails if a role color or a theme block is missing.
         """
+        serato = _theme_colors("serato-like")
+        self.assertEqual(serato["--color-bg"], "#111111")
+        self.assertEqual(serato["--color-card"], "#242424")
+        self.assertEqual(serato["--color-text"], "#f0f0f0")
+        self.assertEqual(serato["--color-primary"], "#ff6a00")
+        self.assertEqual(serato["--color-rail-text"], "#f0f0f0")
+        classic = _theme_colors("classic")
         self.assertEqual(
-            {name: self.colors[name] for name in (
+            {name: classic[name] for name in (
                 "--color-bg",
                 "--color-panel",
                 "--color-card",
@@ -784,6 +887,7 @@ class ContrastTests(unittest.TestCase):
                 "--color-border",
                 "--color-primary",
                 "--color-danger",
+                "--color-rail-text",
             )},
             {
                 "--color-bg": "#231910",
@@ -795,9 +899,12 @@ class ContrastTests(unittest.TestCase):
                 "--color-border": "#d9cfbf",
                 "--color-primary": "#e23b16",
                 "--color-danger": "#a33a32",
+                "--color-rail-text": "#f3ecdf",
             },
         )
         sheet = TOKENS.read_text(encoding="utf-8")
+        for theme in _THEMES:
+            self.assertIn(f'html[data-colorway="{theme}"]', sheet)
         self.assertIn("Green = safe/undoable", sheet)
         self.assertIn("Amber = heads-up", sheet)
         self.assertIn("Red = data leaves the library", sheet)
