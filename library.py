@@ -31,6 +31,7 @@ from typing import Protocol, cast
 from urllib.parse import quote, unquote, urlparse
 
 import app_log
+import snapshot_frames
 import telemetry
 from tags import SeratoTags, read_serato_tags
 
@@ -4532,15 +4533,17 @@ _MERGE_FIELD_LABELS = {
     "dj_play_count": "Play count",
     "time_added": "Date added",
     "dj_recently_played": "Recently played",
+    "is_beatgrid_locked": "Beatgrid lock",
 }
 _NO_COLOR = 0xFFFFFF
 _SQL_IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _CUE_WARNING_TAIL = (
     "Those markers stay in the other audio file. "
-    "This app does not copy them, because rewriting an ID3 tag can drop Serato's frames. "
+    "This app does not copy them when the frames cannot be rewritten safely. "
     "Keep that copy instead if you need its cues."
 )
 _PUBLIC_FILE_KEYS = ("id", "file", "on_disk", "blocks_trash", "reason")
+_PUBLIC_CUE_COPY_KEYS = ("file", "markers", "beatgrid", "status")
 
 
 def _optional_bool(value: object, default: bool = False) -> bool:
@@ -4944,58 +4947,256 @@ def _classify_audio(
     return info
 
 
-def _markers_present(portable_id: object) -> bool:
-    """Return whether an audio file has Serato cues, loops, flips, or a beatgrid.
-
-    The read uses tags.read_serato_tags. It does not rewrite the file and it
-    does not record telemetry.
+def _regular_audio(portable_id: object) -> Path | None:
+    """Return a regular audio file for a stored path.
 
     Args:
         portable_id: Stored path.
 
     Returns:
-        True when a marker list is non-empty.
+        The resolved file, or None when it is missing, a shortcut, or not a file.
     """
     raw = _resolved(portable_id if isinstance(portable_id, str) else None)
     if not raw:
-        return False
+        return None
     path = Path(raw)
     try:
         if path.is_symlink() or not path.is_file():
-            return False
+            return None
     except OSError:
+        return None
+    return path
+
+
+def _marker_score(parsed: Mapping[str, object]) -> tuple[int, int, int]:
+    """Score cue, loop, and flip counts for a merge.
+
+    Args:
+        parsed: Marker lists from ``read_serato_tags``.
+
+    Returns:
+        Cue, loop, and flip counts. A missing list counts as zero.
+    """
+    cues = parsed.get("cues") if isinstance(parsed.get("cues"), list) else []
+    loops = parsed.get("loops") if isinstance(parsed.get("loops"), list) else []
+    flips = parsed.get("flips") if isinstance(parsed.get("flips"), list) else []
+    return (len(cues), len(loops), len(flips))
+
+
+def _has_beatgrid(parsed: Mapping[str, object], frames: Mapping[str, bytes]) -> bool:
+    """Return whether a file has a beatgrid payload or parsed markers.
+
+    Args:
+        parsed: Marker lists from ``read_serato_tags``.
+        frames: Stored frames from ``snapshot_frames.read_stored_frames``.
+
+    Returns:
+        True when a BeatGrid frame or a parsed marker list is present.
+    """
+    grid = parsed.get("beatgrid")
+    return bool(frames.get("BeatGrid")) or (isinstance(grid, list) and bool(grid))
+
+
+def _frames_compatible(source: Path, dest: Path) -> bool:
+    """Return whether stored Serato frames can move from source onto dest.
+
+    The bytes are container-specific. An ID3 destination with no tag is
+    written as version 2.3, so the source tag must already be 2.3.
+
+    Args:
+        source: File that holds the frames.
+        dest: File that should receive them.
+
+    Returns:
+        True when both files use the same container and ID3 versions match.
+    """
+    src_kind = snapshot_frames._sniff_container(source)
+    dst_kind = snapshot_frames._sniff_container(dest)
+    if src_kind != dst_kind:
         return False
-    parsed = read_serato_tags(str(path))
-    return bool(parsed["cues"] or parsed["loops"] or parsed["flips"] or parsed["beatgrid"])
+    if src_kind != "id3":
+        return True
+    src_ver, _, _ = snapshot_frames._split_id3(source)
+    dst_ver, dst_frames, dst_off = snapshot_frames._split_id3(dest)
+    if dst_off == 0 and not dst_frames:
+        return src_ver == 3
+    return src_ver == dst_ver
 
 
-def _cue_warning(kept: Mapping[str, object], removes: list[dict[str, object]]) -> str | None:
-    """Warn when the kept file has no cues and a duplicate file does.
+def _cannot_copy_warning(names: list[str]) -> str:
+    """Warn when a duplicate has markers that cannot be copied.
 
-    Copying the frames would mean rewriting the ID3 tag. That can drop
-    Markers2 and BeatGrid, so the markers are left where they are.
+    Args:
+        names: Duplicate file names, not paths.
+
+    Returns:
+        A warning for the preview.
+    """
+    if len(names) == 1:
+        head = f"{names[0]} has Serato cues, loops, flips, or a beatgrid."
+    else:
+        head = f"{', '.join(names[:-1])} and {names[-1]} have Serato cues, loops, flips, or a beatgrid."
+    return f"{head} The copy you are keeping does not. {_CUE_WARNING_TAIL}"
+
+
+def _plan_cue_copy(
+    kept: Mapping[str, object],
+    removes: list[dict[str, object]],
+) -> dict[str, object]:
+    """Choose the best Markers2 and BeatGrid frames to copy onto the kept file.
+
+    Markers2 comes from the copy with the most cues, then loops, then flips.
+    The kept file wins a tie. BeatGrid stays on the kept file when it has
+    one. Otherwise it comes from the first duplicate that has a grid,
+    preferring a locked grid. Frames are copied only when both files use
+    the same container. Autotags stay with the kept file.
 
     Args:
         kept: Kept asset columns.
         removes: Duplicate asset columns, in id order.
 
     Returns:
-        A warning for the preview, or None when there is nothing to warn about.
+        Dest path, frames to write, lock update, public ``cue_copy``, and
+        ``cue_warning``. ``write`` is true when the kept file should change.
     """
-    if _markers_present(kept.get("portable_id")):
-        return None
-    names = [
-        str(row.get("file_name") or f"Track {row.get('id')}")
-        for row in removes
-        if _markers_present(row.get("portable_id"))
-    ]
-    if not names:
-        return None
-    if len(names) == 1:
-        head = f"{names[0]} has Serato cues, loops, flips, or a beatgrid."
-    else:
-        head = f"{', '.join(names[:-1])} and {names[-1]} have Serato cues, loops, flips, or a beatgrid."
-    return f"{head} The copy you are keeping does not. {_CUE_WARNING_TAIL}"
+    dest = _regular_audio(kept.get("portable_id"))
+    members: list[dict[str, object]] = []
+    for index, row in enumerate([kept, *removes]):
+        path = _regular_audio(row.get("portable_id"))
+        parsed = read_serato_tags(str(path) if path is not None else None)
+        frames = snapshot_frames.read_stored_frames(path)
+        members.append(
+            {
+                "keep": index == 0,
+                "path": path,
+                "parsed": parsed,
+                "frames": frames,
+                "score": _marker_score(parsed),
+                "grid": _has_beatgrid(parsed, frames),
+                "locked": int(row.get("is_beatgrid_locked") or 0),
+                "file": str(row.get("file_name") or f"Track {row.get('id')}"),
+            }
+        )
+    dest_member = members[0]
+    others = members[1:]
+    best_markers = dest_member
+    for other in others:
+        if cast(tuple[int, int, int], other["score"]) > cast(tuple[int, int, int], best_markers["score"]):
+            best_markers = other
+    best_grid = dest_member
+    if not dest_member["grid"]:
+        for other in others:
+            if not other["grid"]:
+                continue
+            if not best_grid["grid"]:
+                best_grid = other
+                continue
+            if int(cast(int, other["locked"])) > int(cast(int, best_grid["locked"])):
+                best_grid = other
+    wanted: dict[str, bytes] = dict(snapshot_frames.read_stored_frames(dest)) if dest is not None else {}
+    copy_markers = False
+    copy_grid = False
+    source_name = ""
+    cannot: list[str] = []
+    lock: int | None = None
+    if best_markers is not dest_member:
+        src_path = best_markers["path"]
+        frames = cast(dict[str, bytes], best_markers["frames"])
+        if (
+            dest is not None
+            and isinstance(src_path, Path)
+            and "Markers2" in frames
+            and _frames_compatible(src_path, dest)
+        ):
+            wanted["Markers2"] = frames["Markers2"]
+            copy_markers = True
+            source_name = str(best_markers["file"])
+        elif cast(tuple[int, int, int], best_markers["score"]) > (0, 0, 0):
+            cannot.append(str(best_markers["file"]))
+    if best_grid is not dest_member:
+        src_path = best_grid["path"]
+        frames = cast(dict[str, bytes], best_grid["frames"])
+        if (
+            dest is not None
+            and isinstance(src_path, Path)
+            and "BeatGrid" in frames
+            and _frames_compatible(src_path, dest)
+        ):
+            wanted["BeatGrid"] = frames["BeatGrid"]
+            copy_grid = True
+            if not copy_markers:
+                source_name = str(best_grid["file"])
+            lock = int(cast(int, best_grid["locked"]))
+        elif best_grid["grid"]:
+            name = str(best_grid["file"])
+            if name not in cannot:
+                cannot.append(name)
+    write = bool(dest is not None and (copy_markers or copy_grid))
+    public: dict[str, object] | None = None
+    warning: str | None = None
+    if write:
+        public = {
+            "file": source_name,
+            "markers": copy_markers,
+            "beatgrid": copy_grid,
+            "status": "planned",
+        }
+    elif cannot:
+        warning = _cannot_copy_warning(cannot)
+    return {
+        "dest": dest,
+        "wanted": wanted,
+        "write": write,
+        "lock": lock,
+        "public": public,
+        "warning": warning,
+    }
+
+
+def _apply_cue_copy(plan: dict[str, object]) -> None:
+    """Write planned Markers2 and BeatGrid frames onto the kept file.
+
+    A failed rewrite leaves the previous bytes in place and sets
+    ``cue_warning``. The planned ``is_beatgrid_locked`` update is dropped
+    so the kept row stays unlocked when the dest file still has no grid.
+    The library merge still runs.
+
+    Args:
+        plan: Merge plan with ``_cue_copy``.
+    """
+    copy = plan.get("_cue_copy")
+    if not isinstance(copy, dict) or not copy.get("write"):
+        return
+    dest = copy.get("dest")
+    wanted = copy.get("wanted")
+    public = copy.get("public")
+    if not isinstance(dest, Path) or not isinstance(wanted, dict):
+        return
+    try:
+        snapshot_frames.restore_stored_frames(dest, wanted)
+    except (OSError, snapshot_frames.FrameRewriteError):
+        name = ""
+        if isinstance(public, dict) and isinstance(public.get("file"), str):
+            name = str(public["file"])
+        plan["cue_warning"] = _cannot_copy_warning([name or "A duplicate"])
+        if isinstance(public, dict):
+            public["status"] = "failed"
+            plan["cue_copy"] = public
+        updates = plan.get("_updates")
+        if isinstance(updates, dict):
+            updates.pop("is_beatgrid_locked", None)
+        fields = plan.get("fields")
+        if isinstance(fields, list):
+            plan["fields"] = [
+                item
+                for item in fields
+                if not (isinstance(item, dict) and item.get("field") == "is_beatgrid_locked")
+            ]
+        return
+    if isinstance(public, dict):
+        public["status"] = "copied"
+        plan["cue_copy"] = public
+    plan["cue_warning"] = None
 
 
 def _color_text(value: object) -> str:
@@ -5049,8 +5250,8 @@ def _merge_field_updates(
     Date added keeps the earliest timestamp. Recently played is set when
     any copy was recently played.
 
-    File fields are not copied. ``is_beatgrid_locked`` is not copied,
-    because that flag belongs to the audio file's own beatgrid.
+    File fields are not copied. ``is_beatgrid_locked`` is copied only when
+    the beatgrid frames themselves are copied onto the kept file.
 
     Args:
         kept: Kept asset columns.
@@ -5254,6 +5455,11 @@ def _build_merge_plan(conn: sqlite3.Connection, space: str, keep_id: int) -> dic
             crates_added.append(summary)
             new_placements.append(crate)
     updates, fields = _merge_field_updates(kept, removes)
+    cue_copy = _plan_cue_copy(kept, removes)
+    lock = cue_copy.get("lock")
+    if isinstance(lock, int) and "is_beatgrid_locked" in kept and int(kept.get("is_beatgrid_locked") or 0) != lock:
+        updates["is_beatgrid_locked"] = lock
+        fields.append(_preview_change("is_beatgrid_locked", kept.get("is_beatgrid_locked"), lock))
     history = _history_count(conn, [int(cast(int, row["id"])) for row in removes])
     drops = []
     for row in removes:
@@ -5287,8 +5493,10 @@ def _build_merge_plan(conn: sqlite3.Connection, space: str, keep_id: int) -> dic
         "fields": fields,
         "history_entries": 0 if history is None else history,
         "history_repointed": history is not None,
-        "cue_warning": _cue_warning(kept, removes),
+        "cue_warning": cue_copy.get("warning"),
+        "cue_copy": cue_copy.get("public"),
         "files": files,
+        "_cue_copy": cue_copy,
         "_updates": updates,
         "_placements": new_placements,
         "_drops": drops,
@@ -5634,8 +5842,12 @@ def _public_merge(plan: Mapping[str, object], **extra: object) -> dict[str, obje
         "history_entries": plan["history_entries"],
         "history_repointed": plan["history_repointed"],
         "cue_warning": plan["cue_warning"],
+        "cue_copy": None,
         "files": files,
     }
+    public_copy = plan.get("cue_copy")
+    if isinstance(public_copy, dict):
+        body["cue_copy"] = {key: public_copy.get(key) for key in _PUBLIC_CUE_COPY_KEYS}
     body.update(extra)
     return body
 
@@ -5919,15 +6131,20 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
     Empty text fields and an empty BPM are filled from the first duplicate
     that has a value. Play count and rating keep the highest value. White
     (no color) is filled from the first colored copy. Date added keeps the
-    earliest time. A beatgrid lock is not copied. Path, file size, bitrate,
-    sample rate, and length stay with the file that was kept.
+    earliest time. A beatgrid lock is copied only when the beatgrid frames
+    are copied onto the kept file. Path, file size, bitrate, sample rate,
+    and length stay with the file that was kept.
 
     History rows are repointed when ``history_entry.asset_id`` exists. The
     played name and file name on those rows are left as a snapshot.
 
-    Cue points live in the audio file. This function reads them and, when
-    the kept file has none and a duplicate has some, returns ``cue_warning``.
-    It does not rewrite ID3 frames.
+    Cue points live in the audio file. The merge copies the richest
+    Markers2 frame and, when the kept file has no beatgrid, the best
+    BeatGrid frame onto that file through
+    ``snapshot_frames.restore_stored_frames``. The kept audio is in the
+    pre-write snapshot. A failed rewrite leaves the file as it was and
+    returns ``cue_warning``. Frames stay in place when the containers do
+    not match.
 
     ``preview`` true returns the plan and does not write. A real merge
     requires ``confirm`` true. ``delete_files`` true also requires
@@ -6002,6 +6219,7 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
         plan = _build_merge_plan(conn, space, keep_id)
         if delete_files:
             _refuse_unsafe_trash(plan)
+        _apply_cue_copy(plan)
         _apply_merge(conn, plan)
         warnings = _mirror_merge(conn, plan)
         kept = plan.get("kept")
@@ -6037,7 +6255,13 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
         return plan, warnings
 
     kept_name = "track"
-    plan, warnings = safe_write.run("merge_duplicates", kept_name, apply)
+    extra: list[Path] = []
+    copy = early.get("_cue_copy")
+    if isinstance(copy, dict) and copy.get("write"):
+        dest = copy.get("dest")
+        if isinstance(dest, Path):
+            extra.append(dest)
+    plan, warnings = safe_write.run("merge_duplicates", kept_name, apply, extra_files=extra)
     trashed: list[str] = []
     trash_warning = None
     if delete_files:

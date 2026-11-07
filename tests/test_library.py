@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import base64
 import os
 import shutil
+import struct
 import subprocess
 import unittest
 from pathlib import Path
@@ -11,8 +13,11 @@ from typing import cast
 from unittest import mock
 
 import library
+import snapshot_frames
 from library import LibraryError, SeratoOpen
+from tags import read_serato_tags
 from tests.fixture import TempLibrary, open_database
+from tests.test_tags import _beatgrid_payload, _cue, _entry, _markers_payload
 
 
 class LibraryTests(unittest.TestCase):
@@ -536,6 +541,102 @@ def _seed_merge_group(conn: object) -> None:
             (3, 1, 3, 'Same', 'Artist', 1, 120, 'same-c.mp3', 0)
         """
     )
+
+
+def _geob_frame(name: str, payload: bytes) -> bytes:
+    """Build one ID3v2.3 Serato GEOB frame.
+
+    Args:
+        name: Frame description, such as ``Serato Markers2``.
+        payload: Stored payload bytes.
+
+    Returns:
+        The raw frame, header included.
+    """
+    description = name.encode("ascii") + b"\x00"
+    body = bytes([0]) + b"application/octet-stream\x00" + b"\x00" + description + payload
+    return b"GEOB" + len(body).to_bytes(4, "big") + b"\x00\x00" + body
+
+
+def _write_id3(path: Path, frames: list[bytes], audio: bytes) -> None:
+    """Write a tiny ID3v2.3 file with Serato frames and an audio tail.
+
+    Args:
+        path: File to create.
+        frames: Raw GEOB frames.
+        audio: Bytes stored after the tag.
+    """
+    body = b"".join(frames)
+    size = len(body)
+    synchsafe = bytes(
+        (
+            (size >> 21) & 0x7F,
+            (size >> 14) & 0x7F,
+            (size >> 7) & 0x7F,
+            size & 0x7F,
+        )
+    )
+    path.write_bytes(b"ID3" + bytes([3, 0, 0]) + synchsafe + body + audio)
+
+
+def _point_assets(db: Path, kept: Path, dup: Path) -> None:
+    """Point assets 1 and 2 at two audio files.
+
+    Args:
+        db: Fixture database.
+        kept: File for asset 1.
+        dup: File for asset 2.
+    """
+    with open_database(db) as conn:
+        conn.execute(
+            "UPDATE asset SET portable_id = ?, file_name = ? WHERE id = 1",
+            (str(kept), kept.name),
+        )
+        conn.execute(
+            "UPDATE asset SET portable_id = ?, file_name = ? WHERE id = 2",
+            (str(dup), dup.name),
+        )
+
+
+def _one_cue_payload() -> bytes:
+    """Encode a Markers2 body that holds a single cue.
+
+    Returns:
+        The Markers2 payload bytes.
+    """
+    decoded = _entry("CUE", _cue(0, 500, b"\x00\xCC\x00", "Intro"))
+    return b"\x01\x01" + base64.b64encode(decoded)
+
+
+def _grid(bpm: float) -> bytes:
+    """Encode a two-marker beatgrid at one BPM.
+
+    Args:
+        bpm: Tempo stored on the last marker.
+
+    Returns:
+        The BeatGrid payload bytes.
+    """
+    body = bytes([1, 0]) + (2).to_bytes(4, "big")
+    body += struct.pack(">f", 0.5) + (4).to_bytes(4, "big")
+    body += struct.pack(">f", 10.0) + struct.pack(">f", bpm)
+    return body
+
+
+def _audio_pair(temp: TempLibrary, kept_name: str, dup_name: str) -> tuple[Path, Path, Path]:
+    """Create two sibling audio paths beside the fixture library.
+
+    Args:
+        temp: Temporary library.
+        kept_name: File name for the kept copy.
+        dup_name: File name for the duplicate.
+
+    Returns:
+        The sibling folder, the kept path, and the duplicate path.
+    """
+    sibling = temp.db.parent.parent / f"{temp.db.parent.name}-backup"
+    sibling.mkdir()
+    return sibling, sibling / kept_name, sibling / dup_name
 
 
 def _asset_count(path: Path, asset_id: int) -> int:
@@ -1144,6 +1245,267 @@ class MergeTests(unittest.TestCase):
                 self.assertIn("does not copy them", str(result["cue_warning"]))
                 self.assertEqual(kept.read_bytes(), b"KEEP")
                 self.assertEqual(dup.read_bytes(), b"DUP")
+            finally:
+                shutil.rmtree(sibling, ignore_errors=True)
+
+    def test_merge_copies_cues_and_beatgrid_onto_the_kept_file(self) -> None:
+        """Copy Markers2 and BeatGrid from the duplicate onto an empty kept file.
+
+        The kept file is raw audio. The duplicate is ID3v2.3 with both
+        frames. After confirm, the kept file holds those frames and the
+        same audio tail. The duplicate bytes stay as they were.
+
+        Returns:
+            None. The test fails if the frames are missing or the audio
+            tail changes.
+        """
+        with TempLibrary() as temp:
+            sibling, kept, dup = _audio_pair(temp, "keep.mp3", "dup.mp3")
+            try:
+                kept.write_bytes(b"KEEP-AUDIO")
+                markers = _markers_payload()
+                grid = _beatgrid_payload()
+                _write_id3(
+                    dup,
+                    [
+                        _geob_frame("Serato Markers2", markers),
+                        _geob_frame("Serato BeatGrid", grid),
+                    ],
+                    b"DUP-AUDIO",
+                )
+                _point_assets(temp.db, kept, dup)
+                preview = library.merge_duplicates({"keep_id": 1, "preview": True})
+                self.assertEqual(preview["cue_copy"]["status"], "planned")
+                self.assertTrue(preview["cue_copy"]["markers"])
+                self.assertTrue(preview["cue_copy"]["beatgrid"])
+                self.assertEqual(preview["cue_copy"]["file"], "dup.mp3")
+                self.assertIsNone(preview["cue_warning"])
+                self.assertEqual(kept.read_bytes(), b"KEEP-AUDIO")
+                result = library.merge_duplicates({"keep_id": 1, "confirm": True})
+                self.assertEqual(result["cue_copy"]["status"], "copied")
+                self.assertIsNone(result["cue_warning"])
+                copied = snapshot_frames.read_stored_frames(kept)
+                source = snapshot_frames.read_stored_frames(dup)
+                self.assertEqual(copied.get("Markers2"), source.get("Markers2"))
+                self.assertEqual(copied.get("BeatGrid"), source.get("BeatGrid"))
+                self.assertEqual(snapshot_frames.read_audio(kept), b"KEEP-AUDIO")
+                self.assertEqual(len(read_serato_tags(str(kept))["cues"]), 1)
+                self.assertEqual(_asset_count(temp.db, 2), 0)
+            finally:
+                shutil.rmtree(sibling, ignore_errors=True)
+
+    def test_merge_preview_does_not_rewrite_planned_cue_copy(self) -> None:
+        """Leave the kept file unchanged while the plan is only a preview.
+
+        Returns:
+            None. The test fails if preview writes the audio file.
+        """
+        with TempLibrary() as temp:
+            sibling, kept, dup = _audio_pair(temp, "keep.mp3", "dup.mp3")
+            try:
+                original = b"KEEP-AUDIO"
+                kept.write_bytes(original)
+                _write_id3(
+                    dup,
+                    [_geob_frame("Serato Markers2", _markers_payload())],
+                    b"DUP-AUDIO",
+                )
+                _point_assets(temp.db, kept, dup)
+                preview = library.merge_duplicates({"keep_id": 1, "preview": True})
+                self.assertEqual(preview["cue_copy"]["status"], "planned")
+                self.assertEqual(kept.read_bytes(), original)
+                self.assertEqual(_asset_count(temp.db, 2), 1)
+            finally:
+                shutil.rmtree(sibling, ignore_errors=True)
+
+    def test_merge_copies_richer_markers_and_keeps_the_dest_beatgrid(self) -> None:
+        """Replace a thin Markers2 and leave the kept BeatGrid in place.
+
+        The kept file has one cue and a 120 BPM grid. The duplicate has
+        more markers and a 128 BPM grid. Merge copies Markers2 and keeps
+        the 120 BPM grid.
+
+        Returns:
+            None. The test fails if the dest grid is replaced or markers
+            stay thin.
+        """
+        with TempLibrary() as temp:
+            sibling, kept, dup = _audio_pair(temp, "keep.mp3", "dup.mp3")
+            try:
+                dest_grid = _grid(120.0)
+                source_markers = _markers_payload()
+                _write_id3(
+                    kept,
+                    [
+                        _geob_frame("Serato Markers2", _one_cue_payload()),
+                        _geob_frame("Serato BeatGrid", dest_grid),
+                    ],
+                    b"KEEP-AUDIO",
+                )
+                _write_id3(
+                    dup,
+                    [
+                        _geob_frame("Serato Markers2", source_markers),
+                        _geob_frame("Serato BeatGrid", _grid(128.0)),
+                    ],
+                    b"DUP-AUDIO",
+                )
+                _point_assets(temp.db, kept, dup)
+                dest_frames = snapshot_frames.read_stored_frames(kept)
+                source_frames = snapshot_frames.read_stored_frames(dup)
+                result = library.merge_duplicates({"keep_id": 1, "confirm": True})
+                self.assertTrue(result["cue_copy"]["markers"])
+                self.assertFalse(result["cue_copy"]["beatgrid"])
+                copied = snapshot_frames.read_stored_frames(kept)
+                self.assertEqual(copied.get("Markers2"), source_frames.get("Markers2"))
+                self.assertEqual(copied.get("BeatGrid"), dest_frames.get("BeatGrid"))
+                self.assertEqual(snapshot_frames.read_audio(kept), b"KEEP-AUDIO")
+            finally:
+                shutil.rmtree(sibling, ignore_errors=True)
+
+    def test_merge_leaves_richer_kept_markers_in_place(self) -> None:
+        """Skip the copy when the kept file already has more cues.
+
+        Returns:
+            None. The test fails if the kept file is rewritten.
+        """
+        with TempLibrary() as temp:
+            sibling, kept, dup = _audio_pair(temp, "keep.mp3", "dup.mp3")
+            try:
+                dest_markers = _markers_payload()
+                _write_id3(
+                    kept,
+                    [_geob_frame("Serato Markers2", dest_markers)],
+                    b"KEEP-AUDIO",
+                )
+                original = kept.read_bytes()
+                _write_id3(
+                    dup,
+                    [_geob_frame("Serato Markers2", _one_cue_payload())],
+                    b"DUP-AUDIO",
+                )
+                _point_assets(temp.db, kept, dup)
+                result = library.merge_duplicates({"keep_id": 1, "confirm": True})
+                self.assertIsNone(result["cue_copy"])
+                self.assertIsNone(result["cue_warning"])
+                self.assertEqual(kept.read_bytes(), original)
+            finally:
+                shutil.rmtree(sibling, ignore_errors=True)
+
+    def test_merge_copies_beatgrid_lock_with_the_grid(self) -> None:
+        """Copy a locked BeatGrid and the lock column onto the kept file.
+
+        The kept file has no grid and ``is_beatgrid_locked`` 0. The
+        duplicate has a grid and lock 1. After merge the kept row is
+        locked and the file holds the duplicate's BeatGrid.
+
+        Returns:
+            None. The test fails if the lock stays 0 or the grid is missing.
+        """
+        with TempLibrary() as temp:
+            sibling, kept, dup = _audio_pair(temp, "keep.mp3", "dup.mp3")
+            try:
+                kept.write_bytes(b"KEEP-AUDIO")
+                grid = _beatgrid_payload()
+                _write_id3(
+                    dup,
+                    [_geob_frame("Serato BeatGrid", grid)],
+                    b"DUP-AUDIO",
+                )
+                _point_assets(temp.db, kept, dup)
+                with open_database(temp.db) as conn:
+                    conn.execute("UPDATE asset SET is_beatgrid_locked = 0 WHERE id = 1")
+                    conn.execute("UPDATE asset SET is_beatgrid_locked = 1 WHERE id = 2")
+                source_grid = snapshot_frames.read_stored_frames(dup).get("BeatGrid")
+                result = library.merge_duplicates({"keep_id": 1, "confirm": True})
+                self.assertTrue(result["cue_copy"]["beatgrid"])
+                changes = {
+                    item["field"]: item["after"]
+                    for item in cast(list[dict[str, object]], result["fields"])
+                }
+                self.assertEqual(changes["is_beatgrid_locked"], 1)
+                self.assertEqual(snapshot_frames.read_stored_frames(kept).get("BeatGrid"), source_grid)
+                with open_database(temp.db) as conn:
+                    lock = conn.execute(
+                        "SELECT is_beatgrid_locked FROM asset WHERE id = 1"
+                    ).fetchone()[0]
+                self.assertEqual(lock, 1)
+            finally:
+                shutil.rmtree(sibling, ignore_errors=True)
+
+    def test_merge_failed_cue_rewrite_keeps_dest_bytes_and_lock(self) -> None:
+        """A failed frame rewrite still merges rows and leaves dest and lock.
+
+        The kept file has no grid and lock 0. The duplicate has a locked
+        grid. ``restore_stored_frames`` raises. Confirm still removes the
+        duplicate. Dest bytes stay. Lock stays 0.
+
+        Returns:
+            None. The test fails if the lock is copied or dest is rewritten.
+        """
+        with TempLibrary() as temp:
+            sibling, kept, dup = _audio_pair(temp, "keep.mp3", "dup.mp3")
+            try:
+                original = b"KEEP-AUDIO"
+                kept.write_bytes(original)
+                _write_id3(
+                    dup,
+                    [_geob_frame("Serato BeatGrid", _beatgrid_payload())],
+                    b"DUP-AUDIO",
+                )
+                _point_assets(temp.db, kept, dup)
+                with open_database(temp.db) as conn:
+                    conn.execute("UPDATE asset SET is_beatgrid_locked = 0 WHERE id = 1")
+                    conn.execute("UPDATE asset SET is_beatgrid_locked = 1 WHERE id = 2")
+                with mock.patch(
+                    "library.snapshot_frames.restore_stored_frames",
+                    side_effect=snapshot_frames.FrameRewriteError("Could not rewrite the tag."),
+                ):
+                    result = library.merge_duplicates({"keep_id": 1, "confirm": True})
+                self.assertEqual(result["cue_copy"]["status"], "failed")
+                self.assertIn("does not copy them", str(result["cue_warning"]))
+                self.assertEqual(kept.read_bytes(), original)
+                self.assertEqual(_asset_count(temp.db, 2), 0)
+                self.assertNotIn(
+                    "is_beatgrid_locked",
+                    {
+                        item["field"]
+                        for item in cast(list[dict[str, object]], result["fields"])
+                    },
+                )
+                with open_database(temp.db) as conn:
+                    lock = conn.execute(
+                        "SELECT is_beatgrid_locked FROM asset WHERE id = 1"
+                    ).fetchone()[0]
+                self.assertEqual(lock, 0)
+            finally:
+                shutil.rmtree(sibling, ignore_errors=True)
+
+    def test_merge_skips_cue_copy_across_containers(self) -> None:
+        """Warn and leave a FLAC dest unchanged when the duplicate is MP3.
+
+        Returns:
+            None. The test fails if the FLAC file is rewritten or the
+            warning is missing.
+        """
+        with TempLibrary() as temp:
+            sibling, kept, dup = _audio_pair(temp, "keep.flac", "dup.mp3")
+            try:
+                original = b"fLaC" + b"\x00" * 12
+                kept.write_bytes(original)
+                _write_id3(
+                    dup,
+                    [_geob_frame("Serato Markers2", _markers_payload())],
+                    b"DUP-AUDIO",
+                )
+                _point_assets(temp.db, kept, dup)
+                preview = library.merge_duplicates({"keep_id": 1, "preview": True})
+                result = library.merge_duplicates({"keep_id": 1, "confirm": True})
+                self.assertIsNone(preview["cue_copy"])
+                self.assertIn("does not copy them", str(preview["cue_warning"]))
+                self.assertIn("dup.mp3", str(preview["cue_warning"]))
+                self.assertIn("does not copy them", str(result["cue_warning"]))
+                self.assertEqual(kept.read_bytes(), original)
             finally:
                 shutil.rmtree(sibling, ignore_errors=True)
 

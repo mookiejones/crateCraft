@@ -53,14 +53,16 @@ The kept file stays the kept file. Its path, size, bitrate, sample rate, and len
 | Play count and rating | The higher value is kept. |
 | Color | White is filled from the first colored copy. |
 | Date added | The earliest time is kept. |
-| Beatgrid lock | Stays with the kept track. It is not copied. |
+| Beatgrid lock | Copied only when the beatgrid frames are copied onto the kept file. |
 | History | Plays that pointed at a removed copy now point at the kept copy. The played name stored on the history row is left as it was. |
 
 ## Cue points
 
-Cue points live in the audio file. The merge reads them and does not copy them onto another file. Rewriting the tag can drop Serato's markers.
+Cue points live in the audio file. Merge copies the richest cues, loops, and flips onto the file you keep when both files use the same container, for example MP3 to MP3. If the file you keep already has a beatgrid, that grid stays. If it has none, merge copies a beatgrid from a duplicate, preferring a locked grid. The beatgrid lock follows that grid copy.
 
-If the file you are keeping has no markers and another copy does, the plan warns you. The warning names the other file and says the markers stay there. It ends with **Keep that copy instead if you need its cues.**
+The plan names the file those frames come from. After the merge, the bar says they were copied.
+
+When the frames cannot be copied, the plan warns you. That happens when the files use different containers, or when rewriting the tag would not be safe. The warning names the other file and says the markers stay there. It ends with **Keep that copy instead if you need its cues.**
 
 1. Click **Cancel** if you need the cues on the other file.
 2. Select that file under **Copy to keep**.

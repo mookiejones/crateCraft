@@ -414,6 +414,11 @@
     "merge.addToSpace": "Add the kept copy to the {space} space.",
     "merge.alreadyInCrates": "The kept copy is already in every crate the others use. It stays where it is.",
     "merge.confirmTrash": "Merge and move files to Trash",
+    "merge.copiedCues": "{file} had the better {what}. They were copied onto the file you keep.",
+    "merge.copyCues": "{file} has the better {what}. They will be copied onto the file you keep.",
+    "merge.copyCuesWhatBoth": "cues and beatgrid",
+    "merge.copyCuesWhatGrid": "beatgrid",
+    "merge.copyCuesWhatMarkers": "cues",
     "merge.fieldChange": "{label} changes from {before} to {after}.",
     "merge.filesStay": "Audio files stay on disk.",
     "merge.intro": "Keep one copy. The others leave the library. Audio files stay on disk unless you move them to the Trash.",
@@ -1550,6 +1555,11 @@
     "merge.addToSpace": "Añadir la copia conservada al espacio {space}.",
     "merge.alreadyInCrates": "La copia conservada ya está en todas las cajas que usan las demás. Se queda donde está.",
     "merge.confirmTrash": "Combinar y mover archivos a la Papelera",
+    "merge.copiedCues": "{file} tenía los mejores {what}. Se copiaron al archivo que conservas.",
+    "merge.copyCues": "{file} tiene los mejores {what}. Se copiarán al archivo que conservas.",
+    "merge.copyCuesWhatBoth": "cues y beatgrid",
+    "merge.copyCuesWhatGrid": "beatgrid",
+    "merge.copyCuesWhatMarkers": "cues",
     "merge.fieldChange": "{label} cambia de {before} a {after}.",
     "merge.filesStay": "Los archivos de audio se quedan en el disco.",
     "merge.intro": "Conserva una copia. Las demás salen de la biblioteca. Los archivos de audio se quedan en el disco a menos que los muevas a la Papelera.",
@@ -8811,6 +8821,17 @@
     }
     return String(value);
   }
+  function mergeCopyWhat(copy) {
+    if (copy.markers && copy.beatgrid) return t("merge.copyCuesWhatBoth");
+    if (copy.markers) return t("merge.copyCuesWhatMarkers");
+    return t("merge.copyCuesWhatGrid");
+  }
+  function mergeCopyLine(copy, done) {
+    return t(done ? "merge.copiedCues" : "merge.copyCues", {
+      file: copy.file ?? "",
+      what: mergeCopyWhat(copy)
+    });
+  }
   function renderMergePreview(preview) {
     el("merge-preview").replaceChildren();
     if (!preview) {
@@ -8855,6 +8876,10 @@
     item3(t("merge.removeCopies", { count: removed }));
     for (const file of preview.files || []) {
       if (file.reason) item3(`${file.file}: ${file.reason}`);
+    }
+    const copy = preview.cue_copy;
+    if (copy && (copy.markers || copy.beatgrid) && copy.status !== "failed") {
+      item3(mergeCopyLine(copy, copy.status === "copied"));
     }
     el("merge-preview").append(list);
     if (preview.cue_warning) {
@@ -8984,6 +9009,10 @@
       const name = result.kept?.file || t("merge.keptCopy");
       let message = t("merge.merged", { count, name });
       if (result.warning) message = `${message} ${result.warning}`;
+      const copy = result.cue_copy;
+      if (copy && (copy.markers || copy.beatgrid) && copy.status === "copied") {
+        message = `${message} ${mergeCopyLine(copy, true)}`;
+      }
       if (result.cue_warning) message = `${message} ${result.cue_warning}`;
       setNotice(message);
       state.selectedId = keepId;

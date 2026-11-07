@@ -505,7 +505,7 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(after, 0)
         script = Path(__file__).resolve().parents[1].joinpath("static", "app.js").read_text(encoding="utf-8")
         page = Path(__file__).resolve().parents[1].joinpath("static", "index.html").read_text(encoding="utf-8")
-        for field in ("/api/duplicates/merge", "confirm_delete_files", "cue_warning", "crates_added", "history_entries"):
+        for field in ("/api/duplicates/merge", "confirm_delete_files", "cue_warning", "cue_copy", "crates_added", "history_entries"):
             self.assertIn(field, script)
         self.assertIn("merge-dialog", page)
         self.assertIn("Merge copies", page)
