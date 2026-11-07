@@ -11,11 +11,12 @@ A change Lexicon makes to the Serato files outside that folder is an outside
 change: the snapshot is taken after the write, the log names Lexicon when
 that can be inferred, and undo restores the previous snapshot.
 
-Serato 5 writes and restores stay off. Protect Library is the plist key
-``library_protect`` (1 on, 0 off). A missing or unreadable value is unknown.
-Lucid and Flexible beatgrid storage has no confirmed layout, so it is not
-parsed or written. Snapshots stay available. A restore also refuses while a
-Serato DJ process is running.
+Serato 5 writes and restores run when Protect Library is off. Protect Library
+is the plist key ``library_protect`` (1 on, 0 off). A missing or unreadable
+value is unknown and blocks. Lucid and Flexible beatgrid storage has no
+confirmed layout, so it is not parsed or written. Crate and database writes
+do not touch those bytes. Snapshots stay available. A restore also refuses
+while a Serato DJ process is running.
 
 Restoring writes a snapshot first, so the restore itself can be undone.
 Serato 4 and 5 delete a ``.crate`` or ``.scrate`` the database has never
@@ -93,7 +94,7 @@ TRIGGERS = frozenset({
 })
 AUDIO_SUFFIXES = {".mp3", ".flac", ".m4a", ".aiff", ".aif"}
 # Serato 5 Lucid and Flexible beatgrids have no confirmed on-disk format.
-# Leave this false until a format is verified. Do not invent a layout.
+# Crate and database writes do not use this flag. Do not invent a layout.
 LUCID_BEATGRID_VERIFIED = False
 _ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,200}$")
 _HEX_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -305,10 +306,11 @@ def write_block_notice(install: SeratoInstall | None = None) -> CodedNotice | No
     An unknown version blocks. So does an unreadable version plist, because
     that is stored as unknown. That notice carries ``serato_version_unknown``
     and the build, so the page can translate it. A session log that does not
-    name a dotted version uses that same notice. Serato 5 also blocks when
-    Protect Library is on, off, or unknown, until Lucid and Flexible beatgrid
-    storage is verified. Those sentences stay English. An explicit ``install``
-    is judged on its own and does not read the session logs.
+    name a dotted version uses that same notice. Serato 5 blocks when Protect
+    Library is on or unknown. Protect Library off allows crate and database
+    writes through the same verify-and-rollback path as Serato 4. Those
+    sentences stay English. An explicit ``install`` is judged on its own and
+    does not read the session logs.
 
     Args:
         install: Version to judge. None reads the install and the session logs.
@@ -329,8 +331,8 @@ def library_gate(
     log folder leaves the installed version in place. The log can only make
     the gate stricter. An installed version that is not a dotted number stays
     ``serato_version_unknown`` no matter what the log says. Serato 5, from the
-    log or from the installed app, stays read-only. A log that names a
-    database other than this ``master.sqlite`` refuses a Serato 4 write.
+    log or from the installed app, writes when Protect Library is off. A log
+    that names a database other than this ``master.sqlite`` refuses a write.
 
     Args:
         install: Version to judge. None reads the install and the logs.
@@ -399,7 +401,7 @@ def _generation(base: SeratoInstall, read: serato_logs.LogRead) -> dict[str, obj
         build = "unknown"
         reason = "unknown"
     confirmed = _log_confirms(read)
-    if reason not in {"downgrade", "installed", "unknown"} and not _is_serato_5(version):
+    if reason not in {"downgrade", "installed", "unknown"}:
         if read.mounted is False:
             reason = "unmounted"
         elif read.database and confirmed is False:
@@ -514,8 +516,8 @@ def _notice_for(base: SeratoInstall, generation: dict[str, object]) -> CodedNoti
         generation: Object from :func:`_generation`.
 
     Returns:
-        The refusal, or None when a known Serato older than 5 may be written
-        and the log names this library file.
+        The refusal, or None when a known Serato may be written and the log
+        names this library file. Serato 5 also needs Protect Library off.
     """
     version = str(generation.get("version") or "unknown")
     build = str(generation.get("build") or "unknown")
@@ -529,7 +531,9 @@ def _notice_for(base: SeratoInstall, generation: dict[str, object]) -> CodedNoti
         )
     if parsed[0] >= 5:
         protect = base.protect if _is_serato_5(base.version) else _read_protect()
-        return _serato5_notice(SeratoInstall(version, build, protect))
+        notice = _serato5_notice(SeratoInstall(version, build, protect))
+        if notice is not None:
+            return notice
     database = str(generation.get("database") or "")
     confirmed = generation.get("confirmed")
     mounted = generation.get("mounted")
@@ -544,27 +548,25 @@ def _notice_for(base: SeratoInstall, generation: dict[str, object]) -> CodedNoti
 
 
 def _serato5_notice(chosen: SeratoInstall) -> CodedNotice | None:
-    """Return the Serato 5 read-only notice.
+    """Return the Serato 5 write refusal when Protect Library is not off.
 
     Args:
         chosen: Version, build, and Protect Library.
 
     Returns:
-        The refusal, or None when Lucid beatgrid storage is verified and
-        Protect Library is off.
+        The refusal, or None when Protect Library is off. Lucid beatgrid
+        storage is still not parsed.
     """
-    if chosen.protect == "off" and LUCID_BEATGRID_VERIFIED:
+    if chosen.protect == "off":
         return None
     if chosen.protect == "on":
         protect = "Protect Library is on (library_protect is 1)."
-    elif chosen.protect == "off":
-        protect = "Protect Library is off."
     else:
         protect = "Protect Library is unknown because library_protect could not be read."
     return CodedNotice(
         f"Serato {chosen.version} (build {chosen.build}): writes and restores are off. "
         f"{protect} "
-        "Lucid and Flexible beatgrid storage is not verified, so this library stays read-only. "
+        "Turn Protect Library off in Serato DJ Pro before this app can save crates or restore. "
         "Snapshots can still be taken and read."
     )
 

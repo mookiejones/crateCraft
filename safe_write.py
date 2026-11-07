@@ -717,7 +717,7 @@ class Session:
             self._held = False
 
     def _gate(self) -> None:
-        """Refuse Serato and Serato 5 before a snapshot is saved.
+        """Refuse Serato when it is open, or when the version gate is closed.
 
         Raises:
             SeratoOpen: If Serato holds the library.

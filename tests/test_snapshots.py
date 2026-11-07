@@ -553,12 +553,12 @@ class SnapshotTests(unittest.TestCase):
             self.assertEqual(len(store.list_snapshots()), count)
 
     def test_serato_5_gate_reads_protect_library_and_still_snapshots(self) -> None:
-        """Refuse writes and restores for Serato 5, and still save a snapshot.
+        """Refuse writes when Protect Library is on or unknown, and still snapshot.
 
-        Protect Library on, off, missing, and unreadable each refuse.
-        Lucid and Flexible beatgrid storage stays unverified. The refusal
-        does not depend on a file lock. Build ``5.0.0.1251`` is recorded.
-        An unreadable bundle is stored as unknown.
+        Protect Library off allows a Serato 5 crate write. Lucid and Flexible
+        beatgrid storage stays unverified and is not parsed. The refusal does
+        not depend on a file lock. Build ``5.0.0.1251`` is recorded. An
+        unreadable bundle is stored as unknown.
 
         Returns:
             None. The test fails if a refused write changes the database.
@@ -576,8 +576,7 @@ class SnapshotTests(unittest.TestCase):
                 with self.assertRaises(LibraryError) as caught:
                     library.begin_write()
                 self.assertIn("Protect Library is on", caught.exception.message)
-                self.assertIn("Lucid", caught.exception.message)
-                self.assertIn("Flexible", caught.exception.message)
+                self.assertNotIn("Lucid", caught.exception.message)
                 self.assertNotIn("lock", caught.exception.message.lower())
                 self.assertEqual(temp.db.read_bytes(), before)
                 _music, serato, store = _drive(temp.root, temp.db)
@@ -589,10 +588,8 @@ class SnapshotTests(unittest.TestCase):
                     store.restore(saved["id"])
                 self.assertIn("Protect Library is on", blocked.exception.message)
                 _plist(prefs, {"library_protect": 0})
-                message = snapshots.write_block_message()
-                assert message is not None
-                self.assertIn("Protect Library is off", message)
-                self.assertIn("not verified", message)
+                self.assertIsNone(snapshots.write_block_message())
+                library.crate_action({"action": "create", "name": "Warmup"})
                 prefs.unlink()
                 self.assertIn("unknown", snapshots.write_block_message() or "")
                 _plist(prefs, {"something_else": 1})
@@ -1053,7 +1050,7 @@ class SnapshotTests(unittest.TestCase):
             assert message is not None
             self.assertIn("unknown", message.lower())
         self.assertIsNone(snapshots.write_block_message(snapshots.SeratoInstall("4.1.0", "4.1.0.1", "off")))
-        self.assertIsNotNone(snapshots.write_block_message(snapshots.SeratoInstall("5.0.0", "5.0.0.1251", "off")))
+        self.assertIsNone(snapshots.write_block_message(snapshots.SeratoInstall("5.0.0", "5.0.0.1251", "off")))
 
     def test_restore_rechecks_serato_before_audio_and_rollback(self) -> None:
         """Stop before audio, and before rollback, when Serato starts mid-restore.

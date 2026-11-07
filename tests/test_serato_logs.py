@@ -3,8 +3,8 @@
 ``tests/log_fixtures/captured-serato5`` keeps the glog line shape from a
 Serato DJ Pro 5.0.0 session. The other folders are spec-derived. A missing
 folder leaves today's version gate alone. A log that does not name a dotted
-version uses the existing unknown-version notice. Serato 5 stays read-only.
-The parser never writes a log.
+version uses the existing unknown-version notice. Serato 5 writes when
+Protect Library is off. The parser never writes a log.
 """
 
 from __future__ import annotations
@@ -487,7 +487,10 @@ class LogGateTests(unittest.TestCase):
         self.assertEqual(generation["reason"], "unknown")
 
     def test_serato_5_log_stays_read_only_on_every_write_path(self) -> None:
-        """A Serato 5 log refuses writes and restores and still allows a read.
+        """A Serato 5 log with unknown Protect Library refuses writes.
+
+        The fixture names another master file, so the generation reason is
+        mismatch. Reads still work.
 
         Returns:
             None.
@@ -495,7 +498,7 @@ class LogGateTests(unittest.TestCase):
         with TempLibrary():
             with _point(_logs("serato5")):
                 info = library.status()
-                self._assert_writes_refused("read-only")
+                self._assert_writes_refused("Protect Library is unknown")
                 with closing(library.read_conn()) as conn:
                     conn.execute("SELECT 1")
                 store = snapshots.SnapshotStore(library.MASTER, drives=[])
@@ -504,14 +507,73 @@ class LogGateTests(unittest.TestCase):
         self.assertFalse(info["writable"])
         self.assertFalse(info["open"])
         self.assertIn("Serato 5.0.0", str(info["message"]))
-        self.assertIn("read-only", str(info["message"]))
+        self.assertIn("Protect Library is unknown", str(info["message"]))
         self.assertNotIn("code", info)
         generation = info["generation"]
         assert isinstance(generation, dict)
         self.assertEqual(generation["kind"], "serato5")
-        self.assertEqual(generation["reason"], "log")
+        self.assertEqual(generation["reason"], "mismatch")
         self.assertIs(generation["confirmed"], False)
-        self.assertIn("read-only", str(blocked.exception))
+        self.assertIn("Protect Library is unknown", str(blocked.exception))
+
+    def test_serato_5_log_writes_when_protect_is_off_and_this_master_matches(self) -> None:
+        """A matching Serato 5 log saves a crate when Protect Library is off.
+
+        Returns:
+            None.
+        """
+        with TempLibrary() as temp:
+            folder = temp.root / "Logs"
+            folder.mkdir()
+            text = (_logs("serato5") / "20261019_153045.log").read_text(encoding="utf-8")
+            text = text.replace(MAC_MASTER, str(library.MASTER))
+            (folder / "20261019_153045.log").write_text(text, encoding="utf-8")
+            prefs = temp.root / "com.serato.seratodj.plist"
+            with prefs.open("wb") as handle:
+                plistlib.dump({"library_protect": 0}, handle)
+            with mock.patch.dict(
+                os.environ,
+                {
+                    "SERATO_LIBRARY_LOGS": str(folder),
+                    "SERATO_LIBRARY_PREFERENCES": str(prefs),
+                },
+            ):
+                info = library.status()
+                created = library.crate_action({"action": "create", "name": "Warmup"})
+        self.assertTrue(info["writable"])
+        self.assertEqual(created["name"], "Warmup")
+        generation = info["generation"]
+        assert isinstance(generation, dict)
+        self.assertEqual(generation["kind"], "serato5")
+        self.assertEqual(generation["reason"], "log")
+        self.assertIs(generation["confirmed"], True)
+
+    def test_serato_5_protect_off_still_refuses_a_mismatched_log(self) -> None:
+        """Protect Library off does not write when the log names another file.
+
+        Returns:
+            None.
+        """
+        with TempLibrary() as temp:
+            prefs = temp.root / "com.serato.seratodj.plist"
+            with prefs.open("wb") as handle:
+                plistlib.dump({"library_protect": 0}, handle)
+            with mock.patch.dict(
+                os.environ,
+                {
+                    "SERATO_LIBRARY_LOGS": str(_logs("serato5")),
+                    "SERATO_LIBRARY_PREFERENCES": str(prefs),
+                },
+            ):
+                info = library.status()
+                with self.assertRaises(LibraryError) as caught:
+                    library.begin_write()
+        self.assertFalse(info["writable"])
+        self.assertEqual(info["code"], "library_log_unconfirmed")
+        self.assertIn("does not confirm this library file", str(caught.exception).lower())
+        generation = info["generation"]
+        assert isinstance(generation, dict)
+        self.assertEqual(generation["reason"], "mismatch")
 
     def test_downgrade_and_installed_serato_5_stay_read_only(self) -> None:
         """A newer Serato 4 log does not reopen writes after Serato 5.
@@ -544,7 +606,7 @@ class LogGateTests(unittest.TestCase):
         for body in (downgraded, installed):
             self.assertFalse(body["writable"])
             self.assertIn("Serato 5.0.0", str(body["message"]))
-            self.assertIn("read-only", str(body["message"]))
+            self.assertIn("Protect Library is unknown", str(body["message"]))
         assert isinstance(downgraded["generation"], dict)
         assert isinstance(installed["generation"], dict)
         self.assertEqual(downgraded["generation"]["reason"], "downgrade")
