@@ -6,14 +6,15 @@ the session finished, and says the file names the Serato DJ Pro or Lite
 version. A published note on the Serato 5 library says the lines marked
 ``[Library]`` name the database that session opened.
 
-Serato DJ Pro 5.0.0 writes glog lines such as ``Product name: Serato DJ
-Pro, Version: 5.0.0 (5001251)`` and ``[Library] Opening library
-asynchronously with master database at '…/master.sqlite'``. A later
-backup can name ``master.sqlite.in-progress-backup``; that suffix is not
-the library file. The parser also accepts the published markers used in
-the older fixtures. A log that does not match is unknown, so a write is
-refused instead of guessed. Nothing here creates, edits, or deletes a
-log file.
+Serato DJ Pro 4.0.10 and 5.0.0 write glog lines such as ``Product name:
+Serato DJ Pro, Version: 4.0.10 (4010213)`` or ``Version: 5.0.0 (5001251)``
+and ``[Library] Opening library asynchronously with master database at
+'…/master.sqlite'``. A later backup can name
+``master.sqlite.in-progress-backup``; that suffix is not the library
+file. ``Surface Version: 4.1`` is OpenGL, not Serato DJ. The parser also
+accepts the published markers used in the older fixtures. A log that
+does not match is unknown, so a write is refused instead of guessed.
+Nothing here creates, edits, or deletes a log file.
 """
 
 from __future__ import annotations

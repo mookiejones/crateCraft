@@ -1,7 +1,8 @@
 """Session logs name Serato 4, Serato 5, or neither.
 
-``tests/log_fixtures/captured-serato5`` keeps the glog line shape from a
-Serato DJ Pro 5.0.0 session. The other folders are spec-derived. A missing
+``tests/log_fixtures/captured-serato4`` keeps the glog line shape from a
+Serato DJ Pro 4.0.10 session. ``captured-serato5`` keeps the same shape
+from a 5.0.0 session. The other folders are spec-derived. A missing
 folder leaves today's version gate alone. A log that does not name a dotted
 version uses the existing unknown-version notice. Serato 5 writes when
 Protect Library is off. The parser never writes a log.
@@ -55,6 +56,55 @@ def _point(folder: Path) -> mock._patch:
 
 class LogParserTests(unittest.TestCase):
     """Read the committed fixtures and refuse to follow or write them."""
+
+    def test_captured_serato_4_log_names_version_and_live_master(self) -> None:
+        """A redacted capture from Serato DJ Pro 4.0.10 names the live database.
+
+        The file name, glog prefix, Product name line, Opening library line,
+        ``Surface Version: 4.1``, and a later backup to
+        ``master.sqlite.in-progress-backup`` keep the bytes captured from a
+        Serato 4.0.10 (4010213) session. Home directory, host, and library
+        UUID are placeholders. Surface Version is OpenGL, not Serato DJ.
+
+        Returns:
+            None.
+        """
+        folder = _logs("captured-serato4")
+        before = sorted(path.name for path in folder.iterdir())
+        stamps = {path.name: path.stat().st_mtime_ns for path in folder.iterdir()}
+        read = serato_logs.parse_logs(folder)
+        self.assertEqual(read.state, "parsed")
+        self.assertEqual(read.version, "4.0.10")
+        self.assertEqual(read.build, "4010213")
+        self.assertNotEqual(read.version, "4.1")
+        self.assertEqual(read.database, "master.sqlite")
+        self.assertEqual(read.database_path, MAC_MASTER)
+        self.assertEqual(read.log_name, "20261107-080127.265.log")
+        self.assertFalse(read.downgrade)
+        self.assertNotIn("Backups", read.database_path)
+        self.assertEqual(before, sorted(path.name for path in folder.iterdir()))
+        for path in folder.iterdir():
+            self.assertEqual(path.stat().st_mtime_ns, stamps[path.name])
+
+    def test_captured_serato_4_backup_suffix_is_not_the_database_path(self) -> None:
+        """``master.sqlite.in-progress-backup`` is not a library path.
+
+        Returns:
+            None.
+        """
+        text = (
+            "I20261107 08:01:27.880321 3994182016 :0] [Library] "
+            "Opening library asynchronously with master database at "
+            f"'{MAC_MASTER}' using SQLite version '3.36.0`.\n"
+            "I20261107 08:01:33.975168 1842524160 :0] [Library] "
+            f"Backing up database '{MAC_MASTER}' to "
+            f"'{Path(MAC_MASTER).parent.as_posix()}/Backups/master.sqlite.in-progress-backup'\n"
+            "I20261107 08:01:38.450914 1832202240 :0] [Library] "
+            "Completed backup of library database to "
+            f"'{Path(MAC_MASTER).parent.as_posix()}/Backups/"
+            "master.sqlite-backup-20261107_080134-0500.zip'.\n"
+        )
+        self.assertEqual(serato_logs._library_path(text), MAC_MASTER)
 
     def test_captured_serato_5_log_names_version_and_live_master(self) -> None:
         """A redacted capture from Serato DJ Pro 5.0.0 names the live database.
