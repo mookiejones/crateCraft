@@ -623,6 +623,27 @@ export interface GigReport {
   error?: string;
 }
 
+export interface FileScanProblem {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  problem: string;
+  detail: string;
+}
+
+export interface FileScanReport {
+  depth: string;
+  crate: number | null;
+  checked: number;
+  not_found: number;
+  unchecked: number;
+  counts?: Record<string, number>;
+  problems?: FileScanProblem[];
+  error?: string;
+  code?: string;
+}
+
 export interface ErrorBody {
   error?: string;
   /** Stable code for a known error sentence. The page translates it. */

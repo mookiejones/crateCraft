@@ -57,6 +57,7 @@
             <button type="button" data-view="missing" role="tab" data-i18n="view.missing">Missing files</button>
             <button type="button" data-view="duplicates" role="tab" data-i18n="view.duplicates">Duplicates</button>
             <button type="button" data-view="stems" role="tab" data-i18n="view.stems">Stems</button>
+            <button type="button" id="scan-tab" data-view="scan" role="tab" aria-controls="scan-panel" data-i18n="view.scan">Damaged files</button>
           </div>
         </section>
         <div class="view-group-tabs view-group-solo" role="tablist" aria-label="Backups" data-i18n-attr="aria-label:view.snapshots">
@@ -223,6 +224,18 @@
         </div>
         <p id="gig-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="gig-report" class="gig-report"></div>
+      </section>
+
+      <section id="scan-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="scan-heading" aria-busy="false">
+        <h2 id="scan-heading" class="visually-hidden" data-i18n="scan.heading">Damaged files</h2>
+        <div class="browser-bar">
+          <p id="scan-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="scan-quick" type="button" data-i18n="scan.checkQuick">Quick check</button>
+          <button id="scan-full" type="button" data-i18n="scan.checkFull">Full decode</button>
+        </div>
+        <p id="scan-hint" class="gig-note" data-i18n="scan.intro">Quick check reads the start of each file. Full decode needs a crate because it can take minutes.</p>
+        <p id="scan-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="scan-report" class="gig-report" tabindex="-1"></div>
       </section>
       <div id="player-bar" class="player-bar"></div>
     </main>

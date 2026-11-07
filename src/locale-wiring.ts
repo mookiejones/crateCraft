@@ -9,6 +9,7 @@
 
 import { repaintDialogs } from "./dialogs";
 import { repaintGig } from "./gig";
+import { repaintScan } from "./scan";
 import { repaintPortable } from "./portable";
 import { applyStatic, initialLocale, onLocaleChange, setLocale } from "./i18n";
 import { repaintPlayer } from "./player";
@@ -25,8 +26,8 @@ import { repaintViews } from "./views";
  * Repaint everything on screen in the active language.
  *
  * Static markup is translated from its data-i18n attributes. The views,
- * dialogs, snapshot list, and version line repaint from what the page
- * already holds.
+ * dialogs, snapshot list, gig check, damaged-file report, and version
+ * line repaint from what the page already holds.
  *
  * @returns {void}
  */
@@ -35,6 +36,7 @@ export function repaintAll(): void {
   repaintViews();
   if (state.mode === "snapshots") renderSnapshots();
   if (state.mode === "gig") repaintGig();
+  if (state.mode === "scan") repaintScan();
   repaintPortable();
   repaintSnapshotPlan();
   repaintDialogs();

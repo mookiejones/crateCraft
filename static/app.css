@@ -1131,7 +1131,8 @@ dialog .settings-field select {
 }
 
 .files-panel,
-.gig-panel {
+.gig-panel,
+.scan-panel {
   grid-column: 1 / -1;
   grid-row: 1;
   min-width: 0;
@@ -1546,6 +1547,7 @@ dialog .settings-field select {
 .waveform-overview[hidden],
 .files-panel[hidden],
 .gig-panel[hidden],
+.scan-panel[hidden],
 .browser[hidden],
 .splitter[hidden],
 .detail[hidden],

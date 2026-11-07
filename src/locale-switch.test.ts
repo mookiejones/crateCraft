@@ -7,7 +7,7 @@ import { repaintAll, wireLocale } from "./locale-wiring";
 import { state } from "./state";
 import { installPage } from "./test-page";
 import { mountTrackList } from "./virtual-scroll";
-import { renderList, renderSessions } from "./views";
+import { renderList, renderSessions, renderShell } from "./views";
 
 const fetchMock = vi.hoisted(() => vi.fn());
 vi.stubGlobal("fetch", fetchMock);
@@ -115,6 +115,22 @@ describe("switching the language", () => {
     // One repaint: the static pass, then the list. Two listeners would double it.
     expect(spy).toHaveBeenCalledTimes(2);
     expect(el("count").textContent).toBe("2 pistas");
+  });
+
+  it("translates the Damaged files crate footer", () => {
+    wireLocale();
+    state.mode = "scan";
+    state.activeCrate = "all";
+    renderShell();
+    expect(el("crate-foot").textContent).toBe("All tracks");
+    setLocale("es");
+    expect(el("crate-foot").textContent).toBe("Todas las pistas");
+    state.activeCrate = 99;
+    state.crates = [];
+    setLocale("en");
+    expect(el("crate-foot").textContent).toBe("Selected crate");
+    setLocale("es");
+    expect(el("crate-foot").textContent).toBe("Caja seleccionada");
   });
 
   it("translates the unknown Serato version on the status line", () => {
