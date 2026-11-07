@@ -96,13 +96,17 @@ def _tree(root: Path) -> set[str]:
 
 
 @contextmanager
-def _serato_version(root: Path, version: str, build: str) -> Iterator[None]:
+def _serato_version(
+    root: Path, version: str, build: str, *, protect: str | None = None
+) -> Iterator[None]:
     """Point version detection at a plist in the temporary library.
 
     Args:
         root: Directory that receives the plist.
         version: ``CFBundleShortVersionString``.
         build: ``CFBundleVersion``.
+        protect: ``on`` or ``off`` writes ``library_protect``. None leaves
+            Protect Library unread.
 
     Yields:
         None. The previous environment value is restored afterwards.
@@ -113,15 +117,25 @@ def _serato_version(root: Path, version: str, build: str) -> Iterator[None]:
             {"CFBundleShortVersionString": version, "CFBundleVersion": build},
             handle,
         )
-    previous = os.environ.get("SERATO_LIBRARY_APP_INFO")
+    previous_info = os.environ.get("SERATO_LIBRARY_APP_INFO")
+    previous_prefs = os.environ.get("SERATO_LIBRARY_PREFERENCES")
     os.environ["SERATO_LIBRARY_APP_INFO"] = str(info)
+    if protect is not None:
+        prefs = root / "com.serato.seratodj.plist"
+        with prefs.open("wb") as handle:
+            plistlib.dump({"library_protect": 1 if protect == "on" else 0}, handle)
+        os.environ["SERATO_LIBRARY_PREFERENCES"] = str(prefs)
     try:
         yield
     finally:
-        if previous is None:
+        if previous_info is None:
             os.environ.pop("SERATO_LIBRARY_APP_INFO", None)
         else:
-            os.environ["SERATO_LIBRARY_APP_INFO"] = previous
+            os.environ["SERATO_LIBRARY_APP_INFO"] = previous_info
+        if previous_prefs is None:
+            os.environ.pop("SERATO_LIBRARY_PREFERENCES", None)
+        else:
+            os.environ["SERATO_LIBRARY_PREFERENCES"] = previous_prefs
 
 
 def _immutable_name(db: Path, asset_id: int) -> str | None:
@@ -532,6 +546,8 @@ class SafeWriteTests(unittest.TestCase):
     def test_serato_5_write_is_refused_and_untouched(self) -> None:
         """Refuse a Serato 5 library before a snapshot or a journal.
 
+        Protect Library unread is unknown, so the write stays off.
+
         Returns:
             None. The test fails if the database or the crate file changes.
         """
@@ -542,12 +558,76 @@ class SafeWriteTests(unittest.TestCase):
                 with self.assertRaises(LibraryError) as caught:
                     library.crate_action({"action": "create", "name": "Warmup"})
             record = safe_write.results(temp.db)[-1]
-            self.assertIn("read-only", caught.exception.message)
+            self.assertIn("Protect Library is unknown", caught.exception.message)
             self.assertEqual(_snapshot(temp.db, crate), before)
             self.assertFalse(_journal(temp.db).exists())
             self.assertFalse((temp.db.parent / "Backups").exists())
             self.assertEqual(record.result, "refused")
             self.assertEqual(record.rollback, "not_attempted")
+
+    def test_serato_5_write_is_verified_when_protect_is_off(self) -> None:
+        """Save a crate and a drive crate on Serato 5 when Protect is off.
+
+        Returns:
+            None. The test fails if the crate is missing or the record is not
+            verified.
+        """
+        with TempLibrary() as temp:
+            crate = _drive_crate(temp.root)
+            with _serato_version(temp.root, "5.0.0", "5.0.0.1251", protect="off"):
+                created = library.crate_action({"action": "create", "name": "Warmup"})
+
+                def apply(conn: sqlite3.Connection, session: safe_write.Session) -> None:
+                    conn.execute("UPDATE asset SET name = ? WHERE id = 1", ("Renamed",))
+
+                    def check(copied: sqlite3.Connection) -> None:
+                        row = copied.execute("SELECT name FROM asset WHERE id = 1").fetchone()
+                        if row is None or row[0] != "Renamed":
+                            raise VerifyMismatch("The track name does not match.")
+
+                    session.check(check)
+                    crate.write_bytes(b"house-crate-v2")
+
+                safe_write.run("rename_track", "Renamed", apply, extra_files=(crate,))
+            records = safe_write.results(temp.db)
+            self.assertEqual(created["name"], "Warmup")
+            self.assertEqual(records[0].result, "verified")
+            self.assertEqual(records[1].result, "verified")
+            self.assertEqual(records[1].rollback, "not_needed")
+            self.assertEqual(crate.read_bytes(), b"house-crate-v2")
+            with closing(sqlite3.connect(temp.db)) as conn:
+                name = conn.execute("SELECT name FROM asset WHERE id = 1").fetchone()
+            self.assertEqual(name[0], "Renamed")
+            self.assertFalse(_journal(temp.db).exists())
+
+    def test_serato_5_mismatch_rolls_back_when_protect_is_off(self) -> None:
+        """Put the Serato 5 library back when the post-write check fails.
+
+        Returns:
+            None. The test fails if the database or crate stays corrupted.
+        """
+        with TempLibrary() as temp:
+            crate = _drive_crate(temp.root)
+            before = _snapshot(temp.db, crate)
+
+            def apply(conn: sqlite3.Connection, session: safe_write.Session) -> None:
+                _rename(conn, session, crate)
+
+            with _serato_version(temp.root, "5.0.0", "5.0.0.1251", protect="off"):
+                with self.assertRaises(LibraryError) as caught:
+                    safe_write.run(
+                        "rename_track",
+                        "Renamed",
+                        apply,
+                        extra_files=(crate,),
+                        fault=Fault(after_commit=lambda: _corrupt(temp.db, crate)),
+                    )
+            record = safe_write.results(temp.db)[-1]
+            self.assertIn("put back", caught.exception.message)
+            self.assertEqual(_snapshot(temp.db, crate), before)
+            self.assertEqual(record.result, "rolled_back")
+            self.assertEqual(record.rollback, "verified")
+            self.assertFalse(_journal(temp.db).exists())
 
     def test_serato_5_rollback_does_not_touch_the_library(self) -> None:
         """Leave a crashed Serato 5 library as it is.
@@ -579,7 +659,7 @@ class SafeWriteTests(unittest.TestCase):
                     safe_write.recover_interrupted_write()
                 during = _snapshot(temp.db, crate)
                 self.assertTrue(_journal(temp.db).is_file())
-            self.assertIn("read-only", caught.exception.message)
+            self.assertIn("Protect Library is unknown", caught.exception.message)
             self.assertEqual(during, dirty)
             self.assertTrue(safe_write.recover_interrupted_write())
             self.assertEqual(_snapshot(temp.db, crate), before)
