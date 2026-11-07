@@ -28,6 +28,10 @@ const CLICKS: Record<string, string> = {
   "open-logs": "open-logs",
   "copy-version": "copy-version",
   help: "open-help",
+  "help-bug": "help-bug",
+  "help-feature": "help-feature",
+  "help-github": "help-github",
+  "help-releases": "help-releases",
 };
 
 const VIEWS: Record<string, string> = {
@@ -66,6 +70,15 @@ export function runDesktopAction(action: string): void {
     openCheatSheet();
     return;
   }
+  if (action === "about") {
+    const dialog = el("settings-dialog");
+    if (!dialog.open) dialog.showModal();
+    const title = el("about-title");
+    title.tabIndex = -1;
+    title.focus();
+    if (typeof title.scrollIntoView === "function") title.scrollIntoView({ block: "nearest" });
+    return;
+  }
   if (action === "view-all") {
     setMode("crates");
     selectCrate("all");
@@ -93,7 +106,7 @@ export function runDesktopAction(action: string): void {
   const id = CLICKS[action];
   if (!id) return;
   const node = document.getElementById(id);
-  if (node instanceof HTMLButtonElement) node.click();
+  if (node instanceof HTMLElement) node.click();
 }
 
 /**

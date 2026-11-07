@@ -590,7 +590,7 @@ class LayoutSettingsTests(unittest.TestCase):
         path = self.config / "settings.json"
         stored = json.loads(path.read_text(encoding="utf-8"))
         self.assertEqual(set(stored), {"rekordbox", "layout", "colorway", "icon_follows_theme"})
-        self.assertEqual(stored["colorway"], "motown")
+        self.assertEqual(stored["colorway"], "serato-like")
         self.assertIs(stored["icon_follows_theme"], True)
         self.assertEqual(stored["layout"], {"track_list_width": 400})
         self.assertIs(stored["rekordbox"]["hot_loops"], True)

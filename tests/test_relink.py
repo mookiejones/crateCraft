@@ -21,6 +21,7 @@ from contextlib import closing
 from http.server import ThreadingHTTPServer
 from pathlib import Path, PurePath
 from unittest import mock
+from urllib.parse import quote
 
 import library
 import music_roots
@@ -325,6 +326,83 @@ class RouteTests(unittest.TestCase):
         ranked = _by_id(body)
         self.assertEqual(ranked[1][0]["path"], str(found))
         self.assertEqual(ranked[2], [])
+
+    def test_route_searches_an_extra_root(self) -> None:
+        """An extra folder is searched after a drive swap."""
+        with TempLibrary() as temp, tempfile.TemporaryDirectory() as raw:
+            present = Path(raw) / "present"
+            present.mkdir()
+            extra = Path(raw) / "NEW" / "DJ"
+            found = _file(extra / "x.mp3", b"123")
+            _tracks(temp.db, [(1, str(Path(raw) / "OLD" / "DJ" / "x.mp3"), 3)])
+            roots = [{"path": str(present), "missing": False}]
+            httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+            threading.Thread(target=httpd.serve_forever, daemon=True).start()
+            host, port = httpd.server_address[:2]
+            base = f"http://{host}:{port}/api/relink"
+            try:
+                with mock.patch.object(music_roots, "music_roots", return_value=roots):
+                    with urllib.request.urlopen(
+                        base + "?space=Serato%20Library&root=" + quote(str(extra)),
+                        timeout=5,
+                    ) as response:
+                        body = json.loads(response.read().decode("utf-8"))
+                    with self.assertRaises(urllib.error.HTTPError) as relative:
+                        urllib.request.urlopen(base + "?space=Serato%20Library&root=DJ", timeout=5)
+                    relative.exception.close()
+                    with self.assertRaises(urllib.error.HTTPError) as file_path:
+                        urllib.request.urlopen(
+                            base + "?space=Serato%20Library&root=" + quote(str(found)),
+                            timeout=5,
+                        )
+                    file_path.exception.close()
+            finally:
+                httpd.shutdown()
+                httpd.server_close()
+        self.assertEqual(relative.exception.code, 400)
+        self.assertEqual(file_path.exception.code, 400)
+        ranked = _by_id(body)
+        self.assertEqual(ranked[1][0]["path"], str(found.resolve()))
+        self.assertEqual(ranked[1][0]["confidence"], "high")
+
+
+class SearchRootTests(unittest.TestCase):
+    """An extra search folder must be a real absolute directory."""
+
+    def test_search_root_refuses_relative_file_missing_and_shortcut(self) -> None:
+        """Only a real folder is appended to the scan."""
+        with tempfile.TemporaryDirectory() as raw:
+            folder = Path(raw) / "music"
+            folder.mkdir()
+            audio = _file(folder / "x.mp3")
+            self.assertEqual(relink.search_root(str(folder)), folder.resolve())
+            nested = folder / "sub"
+            nested.mkdir()
+            self.assertEqual(
+                relink.search_root(str(nested / os.pardir)),
+                folder.resolve(),
+            )
+            with self.assertRaises(library.LibraryError) as relative:
+                relink.search_root("music")
+            self.assertEqual(relative.exception.message, "That request is not valid.")
+            with self.assertRaises(library.LibraryError) as empty:
+                relink.search_root("  ")
+            self.assertEqual(empty.exception.message, "That request is not valid.")
+            with self.assertRaises(library.LibraryError) as file_path:
+                relink.search_root(str(audio))
+            self.assertEqual(file_path.exception.message, "Choose a folder.")
+            with self.assertRaises(library.LibraryError) as missing:
+                relink.search_root(str(folder / "nope"))
+            self.assertEqual(missing.exception.message, "Choose a folder.")
+            link = Path(raw) / "alias"
+            try:
+                link.symlink_to(folder, target_is_directory=True)
+            except OSError:
+                return
+            with self.assertRaises(library.LibraryError) as shortcut:
+                relink.search_root(str(link))
+            self.assertEqual(shortcut.exception.message, "Shortcuts are left alone.")
+
 
 if __name__ == "__main__":
     unittest.main()

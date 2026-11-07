@@ -66,7 +66,7 @@ python3 -m venv .venv
 
 `desktop.py` starts the local server and opens a native window titled Serato Library. The window uses the system web view (WebView2, WKWebView, or WebKitGTK / Qt WebKit) and does not bundle Chromium. On Windows, use `.venv\Scripts\python`. On macOS, also install `requirements-macos.txt`. On Linux, install WebKitGTK or Qt WebKit.
 
-`python3 server.py` serves `http://127.0.0.1:8765`. Press F5 in VS Code to run that launch.
+`python3 server.py` serves `http://127.0.0.1:8765`. Press F5 in VS Code to run that launch. **Python: Run desktop.py** debugs the native window with `.venv`.
 
 Page color and type tokens are in `static/tokens.css`. The page source is strict TypeScript in `src/`. Edit that, then run `npm run build` so the committed `static/app.js` stays current. Node 22 or newer matches `engines` in `package.json`. Do not hand-edit `static/app.js`.
 
@@ -106,6 +106,8 @@ The page checks use Node 22 or newer. `npm run typecheck` is the two `tsc` comma
 GitHub Actions runs the same discovery with `python` on Ubuntu (3.12 and 3.14) and Windows (3.12). The Windows job also runs `python scripts/release_bundle.py check-tag` with `shell: bash` and `RELEASE_TAG` set to `v0.0.0`. [docs/github.md](docs/github.md) lists the workflows.
 
 A desktop build uses `requirements-build.txt` and `python -m PyInstaller serato-library.spec`. On macOS, `requirements-macos.txt` supplies the WKWebView frameworks. Release builds are unsigned. GitHub Releases is the only download. Signing runs only when the Apple or Windows secrets in `scripts/release_sign.py` are all set.
+
+Merges to `main` refresh the **Next release** issue (`python3 scripts/prepare_release.py`). That draft does not publish. Publish is pushing tag `vMAJOR.MINOR.PATCH`, which runs [`.github/workflows/release.yml`](.github/workflows/release.yml). [docs/github.md](docs/github.md) is the prepare-versus-publish note.
 
 Python has no separate linter. The page uses ESLint, which rejects `any`. The suites are `unittest` and Vitest.
 

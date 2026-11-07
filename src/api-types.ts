@@ -315,6 +315,38 @@ export interface FilesBody {
   paths?: string[];
   destination?: string;
   replacement?: string;
+  matches?: { id: number; path: string }[];
+}
+
+export interface RelinkCandidate {
+  path: string;
+  confidence: string;
+  reason: string;
+}
+
+export interface RelinkMatch {
+  asset_id: number;
+  title?: string;
+  artist?: string;
+  stored?: string;
+  candidates?: RelinkCandidate[];
+}
+
+export interface RelinkRemap {
+  from?: string;
+  to?: string;
+  count?: number;
+}
+
+export interface RelinkPlan {
+  missing?: number;
+  unavailable_drives?: string[];
+  matches?: RelinkMatch[];
+  remaps?: RelinkRemap[];
+  scanned?: number;
+  truncated?: boolean;
+  error?: string;
+  code?: string;
 }
 
 export interface MergeCrate {
@@ -404,7 +436,7 @@ export interface SettingsPayload {
   rekordbox?: RekordboxSettings;
   /** Saved page language, or null to follow the OS. */
   language?: string | null;
-  /** Theme id: motown, deep-house, or daisy-age. */
+  /** Theme id: serato-like, dark-club, light, or classic. */
   colorway?: string;
   /** True when the Dock or taskbar icon should match the theme. */
   icon_follows_theme?: boolean;

@@ -1,0 +1,11 @@
+Log file created at: 2026/11/04 19:36:16
+Running on machine: test-host.local
+Running duration (h:mm:ss): 0:00:00
+Log line format: [IWEF]yyyymmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I20261104 19:36:16.979816 4090929536 :0] [Log] Logging initialized, path: '/Users/dj/Music/_Serato_/Logs'
+W20261104 19:36:17.352566 4090929536 :0] [Library] Failed to read library preference for key: secondary_column
+I20261104 19:36:17.361056 4090929536 :0] [Library] Opening library asynchronously with master database at '/Users/dj/Library/Application Support/Serato/Library/master.sqlite' using SQLite version '3.36.0`.
+I20261104 19:36:17.407384 4090929536 :0] [Application] System Version: macOS Tahoe (26.6.2)
+I20261104 19:36:18.030725 1816276992 :0] [Library] Running quick_check on database '/Users/dj/Library/Application Support/Serato/Library/master.sqlite'.
+I20261104 19:36:18.946156 1816276992 :0] [Library] Master database connected with UUID 00000000-0000-0000-0000-000000000000
+I20261104 19:36:21.136901 4090929536 :0] [Application] Product name: Serato DJ Pro, Version: 5.0.0 (5001251) arm64

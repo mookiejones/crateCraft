@@ -41,6 +41,29 @@ describe("desktop menu actions", () => {
     expect(seen).toEqual(["new", "export", "help"]);
   });
 
+  it("runs Help dialog actions and opens Settings About", () => {
+    const seen: string[] = [];
+    el("help-bug").addEventListener("click", () => seen.push("bug"));
+    el("help-feature").addEventListener("click", () => seen.push("feature"));
+    el("help-github").addEventListener("click", (event) => {
+      event.preventDefault();
+      seen.push("github");
+    });
+    el("help-releases").addEventListener("click", (event) => {
+      event.preventDefault();
+      seen.push("releases");
+    });
+    runDesktopAction("help-bug");
+    runDesktopAction("help-feature");
+    runDesktopAction("help-github");
+    runDesktopAction("help-releases");
+    expect(seen).toEqual(["bug", "feature", "github", "releases"]);
+    runDesktopAction("about");
+    expect(el("settings-dialog").open).toBe(true);
+    expect(el("settings-dialog").contains(el("about-title"))).toBe(true);
+    expect(document.activeElement).toBe(el("about-title"));
+  });
+
   it("switches view and space without a second code path", () => {
     const spaces: string[] = [];
     el("space").addEventListener("change", () => spaces.push(el("space").value));

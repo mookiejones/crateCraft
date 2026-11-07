@@ -1831,6 +1831,11 @@ class Handler(BaseHTTPRequestHandler):
                     for item in music_roots.music_roots()
                     if not item.get("missing") and isinstance(item.get("path"), str)
                 ]
+                extra = query_text(query, "root", "") or ""
+                if extra.strip():
+                    found = relink.search_root(extra)
+                    if found not in roots:
+                        roots.append(found)
                 self.send_json(relink.plan(Path(library.MASTER), space, roots))
                 return
             if parsed.path == "/api/crate-compare":
@@ -2303,7 +2308,9 @@ class Handler(BaseHTTPRequestHandler):
 
         Args:
             payload: ``colorway``, ``icon_follows_theme``, or both.
-                ``colorway`` is ``motown``, ``deep-house``, or ``daisy-age``.
+                ``colorway`` is ``serato-like``, ``dark-club``, ``light``,
+                or ``classic``. Saved ``motown``, ``deep-house``, or
+                ``daisy-age`` store as Classic.
                 The icon flag is a boolean. ``False`` is kept.
 
         The file is written before the icon changes. A Dock or taskbar

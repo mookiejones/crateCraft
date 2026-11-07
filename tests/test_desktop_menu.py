@@ -61,6 +61,10 @@ class DesktopMenuTests(unittest.TestCase):
             "Minimize",
             "Reset list width",
             "Help",
+            "Report a bug",
+            "Request a feature",
+            "View on GitHub",
+            "Release notes",
             "Keyboard shortcuts",
         ):
             self.assertIn(name, titles)
@@ -81,6 +85,8 @@ class DesktopMenuTests(unittest.TestCase):
         self.assertIn("Archivo", titles)
         self.assertIn("Herramientas", titles)
         self.assertIn("Ayuda", titles)
+        self.assertIn("Informar de un error", titles)
+        self.assertIn("Pedir una función", titles)
         self.assertNotIn("File", titles)
 
     def test_titles_do_not_name_a_shortcut(self) -> None:
@@ -107,6 +113,8 @@ class DesktopMenuTests(unittest.TestCase):
         self.assertNotIn("SHOW_DEFAULT_MENUS", text)
         self.assertIn('options["menu"] = menu', text)
         self.assertIn("menu=menu", text)
+        self.assertIn("_point_mac_about_at_settings", text)
+        self.assertIn("_on_window_shown(window, dispatch)", text)
         for title in _titles(desktop_menu.build_menu(lambda _action: None, "en")):
             self.assertNotIn(title, {"Edit", "View"})
 
@@ -120,3 +128,35 @@ class DesktopMenuTests(unittest.TestCase):
         file_menu = next(item for item in menu if isinstance(item, Menu) and item.title == "File")
         separators = [item for item in file_menu.items if isinstance(item, MenuSeparator)]
         self.assertGreaterEqual(len(separators), 4)
+
+    def test_help_menu_calls_the_page_help_actions(self) -> None:
+        """Help items dispatch the same ids the page Help dialog uses.
+
+        Returns:
+            None. The test fails if a Help item is missing or opens a
+            second About.
+        """
+        seen: list[str] = []
+        menu = desktop_menu.build_menu(seen.append, "en")
+        help_menu = next(item for item in menu if isinstance(item, Menu) and item.title == "Help")
+        actions = [item for item in help_menu.items if isinstance(item, MenuAction)]
+        self.assertEqual(
+            [item.title for item in actions],
+            [
+                "Help",
+                "Report a bug",
+                "Request a feature",
+                "View on GitHub",
+                "Release notes",
+                "Keyboard shortcuts",
+                "Open logs folder",
+                "Copy version",
+            ],
+        )
+        for item in actions[1:5]:
+            item.function()
+        self.assertEqual(seen, ["help-bug", "help-feature", "help-github", "help-releases"])
+        app_menu = next(item for item in menu if isinstance(item, Menu) and item.title == "__app__")
+        app_titles = [item.title for item in app_menu.items if isinstance(item, MenuAction)]
+        self.assertEqual(app_titles, ["Settings", "Run setup again"])
+        self.assertNotIn("About", app_titles)
