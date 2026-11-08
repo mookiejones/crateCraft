@@ -19,6 +19,7 @@ export interface ElementIds {
   "crate-save-view": HTMLButtonElement;
   count: HTMLParagraphElement;
   search: HTMLInputElement;
+  "search-field": HTMLSelectElement;
   detail: HTMLElement;
   browser: HTMLElement;
   "track-splitter": HTMLDivElement;

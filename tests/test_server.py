@@ -245,6 +245,34 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(payload["tracks"][0]["play_count"], 2)
         self.assertEqual(payload["tracks"][0]["time_added"], 10)
 
+    def test_library_includes_comments_grouping_composer(self) -> None:
+        """GET ``/api/library`` returns comments, grouping, and composer.
+
+        The fixture rows start blank. An UPDATE plus cache drop must show
+        those fields on the next GET. Nothing is written to a live library.
+
+        Returns:
+            None. The test fails if a field is missing or stale.
+        """
+        with open_database(self.library.db) as conn:
+            conn.execute(
+                "UPDATE asset SET comments = ?, grouping = ?, composer = ? WHERE id = 1",
+                ("peak time", "warmup", "Ada"),
+            )
+            conn.commit()
+        server.invalidate()
+        status, payload = self.request("/api/library")
+        self.assertEqual(status, 200)
+        track = payload["tracks"][0]
+        self.assertEqual(track["name"], "Same")
+        self.assertEqual(track["comments"], "peak time")
+        self.assertEqual(track["grouping"], "warmup")
+        self.assertEqual(track["composer"], "Ada")
+        other = payload["tracks"][1]
+        self.assertEqual(other["comments"], "")
+        self.assertEqual(other["grouping"], "")
+        self.assertEqual(other["composer"], "")
+
     def test_library_last_played_ignores_unplayed_history(self) -> None:
         """last_played is the latest played history_entry, not a skipped one.
 

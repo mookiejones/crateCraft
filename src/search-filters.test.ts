@@ -1,6 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "./api-types";
-import { cueFlag, keyNumber, matchesFilters, mixingKeys, parseQuery } from "./search-filters";
+import { el } from "./dom";
+import { applyStatic } from "./i18n";
+import {
+  cueFlag,
+  keyNumber,
+  matchesFilters,
+  matchesQuery,
+  mixingKeys,
+  parseQuery,
+  TEXT_SEARCH_FIELDS,
+  type TextSearchField,
+} from "./search-filters";
 import { state } from "./state";
 import { installPage } from "./test-page";
 import { buildView, renderCrates } from "./views";
@@ -18,6 +29,11 @@ function track(id: number, bpm: number | string | null, key: string, name = `Tra
 function ids(text: string, tracks: Track[]): number[] {
   const query = parseQuery(text);
   return tracks.filter((item) => matchesFilters(item, query.filters)).map((item) => item.id);
+}
+
+function matching(text: string, tracks: Track[], field?: TextSearchField): number[] {
+  const query = parseQuery(text);
+  return tracks.filter((item) => matchesQuery(item, query, field)).map((item) => item.id);
 }
 
 describe("keys", () => {
@@ -46,6 +62,19 @@ describe("parseQuery", () => {
     expect(query.filters).toHaveLength(2);
     expect(parseQuery("").filters).toEqual([]);
     expect(parseQuery(":8a").terms).toEqual([":8a"]);
+  });
+
+  it("reads comments, grouping, and composer prefixes and keeps an empty prefix as a word", () => {
+    const query = parseQuery("comments:peak grouping:warm composer:ada title:alpha");
+    expect(query.terms).toEqual([]);
+    expect(query.filters).toEqual([
+      { kind: "field", field: "comments", value: "peak" },
+      { kind: "field", field: "grouping", value: "warm" },
+      { kind: "field", field: "composer", value: "ada" },
+      { kind: "field", field: "title", value: "alpha" },
+    ]);
+    expect(parseQuery("comments:").terms).toEqual(["comments:"]);
+    expect(parseQuery("comments:").filters).toEqual([]);
   });
 });
 
@@ -136,6 +165,32 @@ describe("matchesFilters", () => {
     expect(cueFlag(rows[5]!)).toBe(true);
     expect(parseQuery("cues:yes").terms).toEqual(["cues:yes"]);
   });
+
+  it("matches comments, grouping, and composer prefixes on that field only", () => {
+    const rows = [
+      { ...track(1, 120, "1A", "Alpha"), comments: "peak time", grouping: "warmup", composer: "Ada" },
+      { ...track(2, 124, "2A", "peak"), comments: "", grouping: "peak", composer: "" },
+    ];
+    expect(ids("comments:peak", rows)).toEqual([1]);
+    expect(ids("grouping:peak", rows)).toEqual([2]);
+    expect(ids("composer:ada", rows)).toEqual([1]);
+    expect(ids("title:peak", rows)).toEqual([2]);
+    expect(ids("comments:peak grouping:warm", rows)).toEqual([1]);
+  });
+});
+
+describe("matchesQuery", () => {
+  const rows = [
+    { ...track(1, 120, "1A", "Alpha"), comments: "peak time", grouping: "warmup", composer: "Ada" },
+    { ...track(2, 124, "2A", "peak"), comments: "", grouping: "", composer: "" },
+  ];
+
+  it("does not match comments in All fields", () => {
+    expect(matching("peak", rows)).toEqual([2]);
+    expect(matching("peak", rows, "comments")).toEqual([1]);
+    expect(matching("alpha", rows, "title")).toEqual([1]);
+    expect(matching("comments:peak", rows)).toEqual([1]);
+  });
 });
 
 describe("track list", () => {
@@ -145,6 +200,7 @@ describe("track list", () => {
     state.sort = "name";
     state.sortDir = 1;
     state.query = "";
+    state.searchField = "";
     state.crateQuery = "";
     state.expanded = new Set();
     state.tracks = [
@@ -178,5 +234,25 @@ describe("track list", () => {
     renderCrates();
     const counts = [...document.querySelectorAll<HTMLElement>("#crate-list .meta")].map((node) => node.textContent ?? "");
     expect(counts).toEqual(["2", "1"]);
+  });
+
+  it("searches comments through the field picker and not through All fields", () => {
+    applyStatic(document);
+    const picker = el("search-field");
+    expect(picker).toBeInstanceOf(HTMLSelectElement);
+    expect([...picker.options].map((option) => option.value)).toEqual(["", ...TEXT_SEARCH_FIELDS]);
+    expect(picker.options[0]?.textContent).toBe("All fields");
+    state.tracks = [
+      { ...track(1, 120, "1A", "Alpha"), comments: "peak time" },
+      { ...track(2, 124, "2A", "peak"), comments: "" },
+    ];
+    state.byId = new Map(state.tracks.map((item) => [item.id, item]));
+    state.query = "peak";
+    expect(buildView().map((item) => item.id)).toEqual([2]);
+    state.searchField = "comments";
+    expect(buildView().map((item) => item.id)).toEqual([1]);
+    state.searchField = "";
+    state.query = "comments:peak";
+    expect(buildView().map((item) => item.id)).toEqual([1]);
   });
 });

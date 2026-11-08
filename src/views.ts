@@ -37,7 +37,7 @@ import { appendCueSlots, formatCueTime } from "./cue-view";
 import { syncFolderSyncButton } from "./folder-sync-view";
 import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
-import { matchesFilters, parseQuery, type ParsedQuery } from "./search-filters";
+import { isTextSearchField, matchesQuery, parseQuery, type ParsedQuery } from "./search-filters";
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
 import { getPlayerState, playOrToggle, subscribe } from "./player";
 import { playerStrings } from "./player-strings";
@@ -81,22 +81,17 @@ let lastDetail: Track | null = null;
 let detailPlayWired = false;
 
 /**
- * Return whether a track contains every search word and passes every filter.
+ * Match a list row against the search box and the field picker.
  *
- * The haystack is title, artist, album, genre, key, and file. Filter words
- * (`bpm:`, `key:`, `mix:`, `missing:yes`, `nokeybpm:yes`, `cues:none`)
- * are read by search-filters.ts. An empty query matches everything. No
- * request is made.
+ * Related-track search calls matchesQuery without a picker field.
  *
- * @param {object} track Track or history row.
+ * @param {Track} track Track or history row.
  * @param {ParsedQuery} query Words and filters from the search box.
- * @returns {boolean} True when every word occurs in the haystack and every filter passes.
+ * @returns {boolean} True when the row passes the search.
  */
-function matchesQuery(track: Track, query: ParsedQuery) {
-  if (!matchesFilters(track, query.filters)) return false;
-  if (!query.terms.length) return true;
-  const hay = `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-  return query.terms.every((term) => hay.includes(term));
+function listMatches(track: Track, query: ParsedQuery) {
+  const field = isTextSearchField(state.searchField) ? state.searchField : undefined;
+  return matchesQuery(track, query, field);
 }
 
 /**
@@ -305,7 +300,7 @@ function modeTracks() {
 export function buildView() {
   if (state.mode === "history") {
     const terms = queryTerms();
-    const result = state.entries.filter((entry) => matchesQuery(entry, terms)).map((entry) => ({
+    const result = state.entries.filter((entry) => listMatches(entry, terms)).map((entry) => ({
       id: entry.id,
       name: entry.name,
       artist: entry.artist,
@@ -328,11 +323,11 @@ export function buildView() {
     return result;
   }
   const terms = queryTerms();
-  const result = modeTracks().filter((track) => matchesQuery(track, terms));
+  const result = modeTracks().filter((track) => listMatches(track, terms));
   result.sort(compare);
   state.view = result;
   if (state.mode === "crates" && state.splitCrates) {
-    const viewB = tracksForCrate(state.secondCrate).filter((track) => matchesQuery(track, terms));
+    const viewB = tracksForCrate(state.secondCrate).filter((track) => listMatches(track, terms));
     viewB.sort(compare);
     state.viewB = viewB;
   } else {
@@ -454,7 +449,7 @@ export function renderCrates() {
     : null;
   const query = queryTerms();
   const matched = query.terms.length || query.filters.length
-    ? new Set(state.tracks.filter((track) => matchesQuery(track, query)).map((track) => track.id))
+    ? new Set(state.tracks.filter((track) => listMatches(track, query)).map((track) => track.id))
     : null;
   const crates = visibleCrates();
   const holder = hiddenSelectionHolder(crates);
@@ -3351,6 +3346,12 @@ export function wireLibrary(): void {
 
   el("search").addEventListener("input", () => {
     state.query = el("search").value;
+    el("list").scrollTop = 0;
+    renderList();
+  });
+
+  el("search-field").addEventListener("change", () => {
+    state.searchField = el("search-field").value;
     el("list").scrollTop = 0;
     renderList();
   });

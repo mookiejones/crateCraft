@@ -649,6 +649,7 @@ _DECORATIVE = {
 # The rail fields sit on walnut.
 _CONTROL_EDGE = (
     (".search input", "--color-card", "border-bottom"),
+    (".search-field select", "--color-card", "border-bottom"),
     (".rail select", "--color-bg", "border-bottom"),
     (".rail-field input", "--color-bg", "border-bottom"),
     (".rekordbox-option select", "--color-card", "border-bottom"),

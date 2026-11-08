@@ -129,6 +129,8 @@ export interface Track {
   /** Cue presence when the list already knows it. Omitted on GET /api/library. */
   has_cues?: boolean;
   comments?: string;
+  grouping?: string;
+  composer?: string;
   resolved_path?: string;
   crate_ids?: number[];
   serato?: SeratoStatus | null;

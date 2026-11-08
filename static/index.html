@@ -122,6 +122,20 @@
             <span class="visually-hidden" data-i18n="search.tracks">Search tracks</span>
             <input id="search" type="search" placeholder="Search tracks" autocomplete="off" data-i18n-attr="placeholder:search.tracks">
           </label>
+          <label class="search-field">
+            <span class="visually-hidden" data-i18n="search.fieldLabel">Search field</span>
+            <select id="search-field">
+              <option value="" data-i18n="search.fieldAll">All fields</option>
+              <option value="comments" data-i18n="field.comments">Comments</option>
+              <option value="grouping" data-i18n="field.grouping">Grouping</option>
+              <option value="composer" data-i18n="field.composer">Composer</option>
+              <option value="title" data-i18n="field.title">Title</option>
+              <option value="artist" data-i18n="field.artist">Artist</option>
+              <option value="album" data-i18n="field.album">Album</option>
+              <option value="genre" data-i18n="field.genre">Genre</option>
+              <option value="file" data-i18n="field.file">File</option>
+            </select>
+          </label>
           <p id="count" class="count" aria-live="polite" data-i18n="library.loading">Loading the library</p>
           <div class="browser-actions">
             <button id="crate-split" type="button" aria-pressed="false" data-i18n="crates.split">Split</button>
