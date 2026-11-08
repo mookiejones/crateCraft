@@ -7,6 +7,7 @@
  * 8765. The desktop app uses a free port, and this page calls the same
  * origin. Snapshot UI is src/restore.ts. The gig check is src/gig.ts.
  * The damaged-file scan is src/scan.ts.
+ * The library health report is src/health.ts.
  * Tag spellings are src/tags.ts.
  * Crate presets are src/presets.ts.
  * Folder sync is src/folder-sync.ts.
@@ -21,6 +22,7 @@ import { failureOf } from "./api";
 import { wireDialogs } from "./dialogs";
 import { el } from "./dom";
 import { wireGigCheck } from "./gig";
+import { wireHealth } from "./health";
 import { wireScan } from "./scan";
 import { wireTags } from "./tags";
 import { wireHelp } from "./help";
@@ -110,6 +112,10 @@ wireHelp();
 wireSnapshots();
 wireGigCheck(() => {
   setMode("crates");
+});
+wireHealth((action, id) => {
+  if (action === "track" && id != null) state.selectedId = id;
+  setMode(action === "missing" ? "missing" : action === "duplicates" ? "duplicates" : "crates");
 });
 wireScan();
 wireTags();

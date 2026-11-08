@@ -54,6 +54,7 @@
         <section class="view-group">
           <h2 id="view-group-health" class="view-group-label" data-i18n="view.group.health">Library health</h2>
           <div class="view-group-tabs" role="tablist" aria-labelledby="view-group-health">
+            <button type="button" id="health-tab" data-view="health" role="tab" aria-controls="health-panel" data-i18n="view.health">Library health</button>
             <button type="button" data-view="missing" role="tab" data-i18n="view.missing">Missing files</button>
             <button type="button" data-view="duplicates" role="tab" data-i18n="view.duplicates">Duplicates</button>
             <button type="button" data-view="stems" role="tab" data-i18n="view.stems">Stems</button>
@@ -241,6 +242,16 @@
         <div id="gig-report" class="gig-report"></div>
       </section>
 
+      <section id="health-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="health-heading" aria-busy="false">
+        <h2 id="health-heading" class="visually-hidden" data-i18n="health.heading">Library health</h2>
+        <div class="browser-bar">
+          <p id="health-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="health-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+        </div>
+        <p id="health-hint" class="gig-note" data-i18n="health.intro">Counts from the library database. Artwork, beatgrids in audio files, and unused files on disk come later. Each row opens the place that can fix it.</p>
+        <p id="health-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="health-report" class="gig-report" tabindex="-1"></div>
+      </section>
       <section id="scan-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="scan-heading" aria-busy="false">
         <h2 id="scan-heading" class="visually-hidden" data-i18n="scan.heading">Damaged files</h2>
         <div class="browser-bar">

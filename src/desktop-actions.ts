@@ -41,6 +41,7 @@ const VIEWS: Record<string, string> = {
   "view-missing": "missing",
   "view-duplicates": "duplicates",
   "view-stems": "stems",
+  "view-health": "health",
   "view-scan": "scan",
   "view-tags": "tags",
   "view-snapshots": "snapshots",

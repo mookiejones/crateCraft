@@ -700,6 +700,39 @@ export interface FileScanReport {
   code?: string;
 }
 
+export interface LibraryHealthTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+}
+
+export interface LibraryHealthSection {
+  count: number;
+  tracks: LibraryHealthTrack[];
+}
+
+export interface LibraryHealthDuplicateGroup {
+  name: string;
+  artist: string;
+  seconds: number;
+  ids: number[];
+}
+
+export interface LibraryHealthReport {
+  space: string;
+  crate: number | null;
+  checked: number;
+  missing: LibraryHealthSection;
+  no_bpm: LibraryHealthSection;
+  no_key: LibraryHealthSection;
+  empty_genre: LibraryHealthSection;
+  no_crate: LibraryHealthSection;
+  duplicates: { count: number; groups: LibraryHealthDuplicateGroup[] };
+  error?: string;
+  code?: string;
+}
+
 export interface TagSpelling {
   value: string;
   count: number;
