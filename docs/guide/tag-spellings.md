@@ -1,0 +1,35 @@
+# Tag spellings
+
+**Tag spellings** groups genre and artist spellings that mean the same thing, such as Hip Hop, Hip-Hop, and hiphop. Pick one spelling per group. Review the rows that would change, then Apply. The write goes through the same library path as a crate edit. Quit Serato first. Audio files stay as they are.
+
+The note under the heading says **Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.**
+
+This view covers the whole space. The crate list is hidden.
+
+## Review a group
+
+1. Open Serato Library.
+2. Click **Tag spellings** under **Library health**.
+3. Click **Genre** or **Artist**. **Genre** is the first field.
+4. Open a group. The suggested spelling is the one most tracks already use.
+5. Select the spelling you want.
+6. Click **Review**. The status line names how many rows would change, and the group lists each stored spelling and the spelling it would become.
+7. Click **Apply**. Apply stays off until Review matches the selected spelling, the library is writable, and at least one row would change.
+
+**Check again** reloads the groups. A space change or **Reload** does the same.
+
+If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
+
+When every value already uses one spelling, the report says **Every genre in this space uses one spelling.** (or artist).
+
+While Serato has the library open, Apply stays off.
+
+## What Apply writes
+
+Apply rewrites the genre or artist on those library rows. Cue points stay in the audio files. The files themselves are not rewritten.
+
+Remembering the mapping for new imports is a later change.
+
+## Resize the list and the details
+
+This view hides the crate list and the track sheet, so there is no list/details divider here. The width you set in **Crates** is kept for the next time you open a track list.

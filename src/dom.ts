@@ -82,6 +82,13 @@ export interface ElementIds {
   "scan-report": HTMLDivElement;
   "scan-quick": HTMLButtonElement;
   "scan-full": HTMLButtonElement;
+  "tags-panel": HTMLElement;
+  "tags-scope": HTMLParagraphElement;
+  "tags-genre": HTMLButtonElement;
+  "tags-artist": HTMLButtonElement;
+  "tags-refresh": HTMLButtonElement;
+  "tags-status": HTMLParagraphElement;
+  "tags-report": HTMLDivElement;
   "crate-search": HTMLInputElement;
   reload: HTMLButtonElement;
   "export-m3u": HTMLButtonElement;

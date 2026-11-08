@@ -535,6 +535,7 @@ var SeratoWizard = (() => {
     "mode.scan": "Read-only. This check does not change the library.",
     "mode.snapshots": "Hash-checked copies of the library, crates, and Serato frames inside audio files. Audio itself is not copied.",
     "mode.stems": "Tracks with a stems analysis state.",
+    "mode.tags": "Writes the library, not the audio files. Quit Serato first.",
     "operations.action.crateAdd": "Add to crate",
     "operations.action.crateColor": "Crate color",
     "operations.action.crateCreate": "Create crate",
@@ -925,6 +926,50 @@ var SeratoWizard = (() => {
     "space.video": "Video",
     "status.checking": "Checking Serato",
     "status.library": "Library",
+    "tags.apply": "Apply",
+    "tags.artist": "Artist",
+    "tags.checking": "Reading tag spellings…",
+    "tags.field": "Field",
+    "tags.genre": "Genre",
+    "tags.group": "{name} — {spellings}, {tracks}",
+    "tags.heading": "Tag spellings",
+    "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
+    "tags.noChanges": "Every track in this group already uses that spelling.",
+    "tags.preview": "Review",
+    "tags.previewLine": {
+      one: "{from} → {to} ({count} track)",
+      other: "{from} → {to} ({count} tracks)"
+    },
+    "tags.previewSummary": {
+      one: "{count} track would become {value}.",
+      other: "{count} tracks would become {value}."
+    },
+    "tags.row": "{value} ({count})",
+    "tags.spellingCount": {
+      one: "{count} spelling",
+      other: "{count} spellings"
+    },
+    "tags.suggested": "Suggested",
+    "tags.summaryArtist": {
+      one: "{values} artist spellings in this space. {count} group with more than one spelling.",
+      other: "{values} artist spellings in this space. {count} groups with more than one spelling."
+    },
+    "tags.summaryArtistClear": "Every artist in this space uses one spelling.",
+    "tags.summaryGenre": {
+      one: "{values} genre spellings in this space. {count} group with more than one spelling.",
+      other: "{values} genre spellings in this space. {count} groups with more than one spelling."
+    },
+    "tags.summaryGenreClear": "Every genre in this space uses one spelling.",
+    "tags.trackCount": {
+      one: "{count} track",
+      other: "{count} tracks"
+    },
+    "tags.unreachable": "Couldn't reach the library server. Check it's running, then press Check again.",
+    "tags.unreadable": "The tag groups could not be read.",
+    "tags.written": {
+      one: "Wrote {value} on {count} track.",
+      other: "Wrote {value} on {count} tracks."
+    },
     "tooltip.allTracks": "Show every track in this space. Ctrl/Cmd+1.",
     "tooltip.backupDrives": "Copy each connected drive's Serato folder into the backup on this computer. An unplugged drive is listed and left untouched.",
     "tooltip.beatgridLock": "Lock the beatgrid so Serato does not move it.",
@@ -1110,6 +1155,13 @@ var SeratoWizard = (() => {
     "tooltip.sortTitle": "Sort tracks by title.",
     "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
     "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
+    "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
+    "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
+    "tooltip.tagsGenre": "Show genres that are the same words written different ways.",
+    "tooltip.tagsGroup": "Open or close this spelling group.",
+    "tooltip.tagsPreview": "Show which tracks would change before writing the library.",
+    "tooltip.tagsRefresh": "Load the spelling groups again.",
+    "tooltip.tagsSpelling": "Choose this spelling for every track in the group.",
     "tooltip.telemetry": "Turn anonymous stats and crash reports on or off.",
     "tooltip.trackColor": "Choose a color for this track.",
     "tooltip.trackList": "Track list. Up arrow and Down arrow move between rows. Enter opens the row. Space plays or pauses.",
@@ -1132,6 +1184,7 @@ var SeratoWizard = (() => {
     "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
     "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Show tracks Serato has analyzed for stems. This does not separate the audio.",
+    "tooltip.viewTags": "Group genre and artist spellings that mean the same thing. Writes the library, not the audio files.",
     "tooltip.volume": "Change how loud playback is.",
     "tooltip.wizard.checkAgain": "Look for the Serato library again.",
     "tooltip.wizard.continue": "Continue to the next step.",
@@ -1184,6 +1237,7 @@ var SeratoWizard = (() => {
     "view.scan": "Damaged files",
     "view.snapshots": "Backups",
     "view.stems": "Stems",
+    "view.tags": "Tag spellings",
     "wizard.action.checkAgain": "Check again",
     "wizard.action.continue": "Continue",
     "wizard.action.getStarted": "Get started",
@@ -1745,6 +1799,7 @@ var SeratoWizard = (() => {
     "mode.scan": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.snapshots": "Copias verificadas por hash de la biblioteca, las cajas y los datos de Serato dentro de los archivos de audio. El audio en sí no se copia.",
     "mode.stems": "Pistas con un estado de análisis de stems.",
+    "mode.tags": "Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
     "operations.action.crateAdd": "Añadir a la caja",
     "operations.action.crateColor": "Color de la caja",
     "operations.action.crateCreate": "Crear caja",
@@ -2135,6 +2190,50 @@ var SeratoWizard = (() => {
     "space.video": "Vídeo",
     "status.checking": "Comprobando Serato",
     "status.library": "Biblioteca",
+    "tags.apply": "Aplicar",
+    "tags.artist": "Artista",
+    "tags.checking": "Leyendo grafías de etiquetas…",
+    "tags.field": "Campo",
+    "tags.genre": "Género",
+    "tags.group": "{name} — {spellings}, {tracks}",
+    "tags.heading": "Grafías de etiquetas",
+    "tags.intro": "Elige una grafía por grupo. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
+    "tags.noChanges": "Todas las pistas de este grupo ya usan esa grafía.",
+    "tags.preview": "Revisar",
+    "tags.previewLine": {
+      one: "{from} → {to} ({count} pista)",
+      other: "{from} → {to} ({count} pistas)"
+    },
+    "tags.previewSummary": {
+      one: "{count} pista pasaría a {value}.",
+      other: "{count} pistas pasarían a {value}."
+    },
+    "tags.row": "{value} ({count})",
+    "tags.spellingCount": {
+      one: "{count} grafía",
+      other: "{count} grafías"
+    },
+    "tags.suggested": "Sugerida",
+    "tags.summaryArtist": {
+      one: "{values} grafías de artista en este espacio. {count} grupo con más de una grafía.",
+      other: "{values} grafías de artista en este espacio. {count} grupos con más de una grafía."
+    },
+    "tags.summaryArtistClear": "Cada artista de este espacio usa una sola grafía.",
+    "tags.summaryGenre": {
+      one: "{values} grafías de género en este espacio. {count} grupo con más de una grafía.",
+      other: "{values} grafías de género en este espacio. {count} grupos con más de una grafía."
+    },
+    "tags.summaryGenreClear": "Cada género de este espacio usa una sola grafía.",
+    "tags.trackCount": {
+      one: "{count} pista",
+      other: "{count} pistas"
+    },
+    "tags.unreachable": "No se pudo contactar con el servidor de la biblioteca. Comprueba que está en marcha y pulsa Comprobar de nuevo.",
+    "tags.unreadable": "No se pudieron leer los grupos de etiquetas.",
+    "tags.written": {
+      one: "Se escribió {value} en {count} pista.",
+      other: "Se escribió {value} en {count} pistas."
+    },
     "tooltip.allTracks": "Muestra todas las pistas de este espacio. Ctrl/Cmd+1.",
     "tooltip.backupDrives": "Copia la carpeta Serato de cada unidad conectada en la copia de este equipo. Una unidad desconectada se anota y no se toca.",
     "tooltip.beatgridLock": "Bloquea la rejilla de tiempo para que Serato no la mueva.",
@@ -2320,6 +2419,13 @@ var SeratoWizard = (() => {
     "tooltip.sortTitle": "Ordena las pistas por título.",
     "tooltip.space": "Elige Biblioteca, Vídeo, Apple Music o Preparar.",
     "tooltip.splitter": "Arrastra para cambiar el ancho de la lista. Doble clic lo devuelve. Las flechas lo redimensionan.",
+    "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Los archivos de audio no cambian.",
+    "tooltip.tagsArtist": "Muestra nombres de artista que son las mismas palabras escritas de otra forma.",
+    "tooltip.tagsGenre": "Muestra géneros que son las mismas palabras escritas de otra forma.",
+    "tooltip.tagsGroup": "Abre o cierra este grupo de grafías.",
+    "tooltip.tagsPreview": "Muestra qué pistas cambiarían antes de escribir en la biblioteca.",
+    "tooltip.tagsRefresh": "Vuelve a cargar los grupos de grafías.",
+    "tooltip.tagsSpelling": "Elige esta grafía para todas las pistas del grupo.",
     "tooltip.telemetry": "Activa o desactiva las estadísticas anónimas y los informes de fallos.",
     "tooltip.trackColor": "Elige un color para esta pista.",
     "tooltip.trackList": "Lista de pistas. Arriba y Abajo cambian de fila. Intro abre la fila. Espacio reproduce o pausa.",
@@ -2342,6 +2448,7 @@ var SeratoWizard = (() => {
     "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
     "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Muestra las pistas que Serato ya analizó para stems. No separa el audio.",
+    "tooltip.viewTags": "Agrupa grafías de género y artista que significan lo mismo. Escribe en la biblioteca, no en los archivos de audio.",
     "tooltip.volume": "Cambia el volumen de la reproducción.",
     "tooltip.wizard.checkAgain": "Vuelve a buscar la biblioteca de Serato.",
     "tooltip.wizard.continue": "Sigue al paso siguiente.",
@@ -2394,6 +2501,7 @@ var SeratoWizard = (() => {
     "view.scan": "Archivos dañados",
     "view.snapshots": "Copias de seguridad",
     "view.stems": "Stems",
+    "view.tags": "Grafías de etiquetas",
     "wizard.action.checkAgain": "Volver a buscar",
     "wizard.action.continue": "Continuar",
     "wizard.action.getStarted": "Empezar",
@@ -2855,6 +2963,14 @@ var SeratoWizard = (() => {
     viewSnapshots: spec("tooltip.viewSnapshots"),
     viewGig: spec("tooltip.viewGig"),
     viewScan: spec("tooltip.viewScan"),
+    viewTags: spec("tooltip.viewTags"),
+    tagsGenre: spec("tooltip.tagsGenre"),
+    tagsArtist: spec("tooltip.tagsArtist"),
+    tagsRefresh: spec("tooltip.tagsRefresh"),
+    tagsPreview: spec("tooltip.tagsPreview"),
+    tagsApply: spec("tooltip.tagsApply"),
+    tagsGroup: spec("tooltip.tagsGroup"),
+    tagsSpelling: spec("tooltip.tagsSpelling"),
     gigRefresh: spec("tooltip.gigRefresh"),
     scanQuick: spec("tooltip.scanQuick"),
     scanFull: spec("tooltip.scanFull"),

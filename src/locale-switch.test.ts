@@ -117,6 +117,15 @@ describe("switching the language", () => {
     expect(el("count").textContent).toBe("2 pistas");
   });
 
+  it("translates the Tag spellings crate footer", () => {
+    wireLocale();
+    state.mode = "tags";
+    renderShell();
+    expect(el("crate-foot").textContent).toBe("Whole space");
+    setLocale("es");
+    expect(el("crate-foot").textContent).toBe("Todo el espacio");
+  });
+
   it("translates the Damaged files crate footer", () => {
     wireLocale();
     state.mode = "scan";

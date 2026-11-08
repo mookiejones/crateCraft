@@ -69,6 +69,8 @@ describe("desktop menu actions", () => {
     el("space").addEventListener("change", () => spaces.push(el("space").value));
     runDesktopAction("view-history");
     expect(state.mode).toBe("history");
+    runDesktopAction("view-tags");
+    expect(state.mode).toBe("tags");
     runDesktopAction("view-all");
     expect(state.mode).toBe("crates");
     runDesktopAction("space:Prepare");

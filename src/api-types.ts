@@ -677,6 +677,42 @@ export interface FileScanReport {
   code?: string;
 }
 
+export interface TagSpelling {
+  value: string;
+  count: number;
+}
+
+export interface TagClusterGroup {
+  key: string;
+  suggested: string;
+  tracks: number;
+  spellings: TagSpelling[];
+}
+
+export interface TagClusters {
+  field: string;
+  values: number;
+  groups: TagClusterGroup[];
+  error?: string;
+  code?: string;
+}
+
+export interface TagClusterChange {
+  id: number;
+  from: string;
+  to: string;
+}
+
+export interface TagClusterPlan {
+  field: string;
+  value: string;
+  key: string;
+  changes: TagClusterChange[];
+  written: boolean;
+  error?: string;
+  code?: string;
+}
+
 export interface ErrorBody {
   error?: string;
   /** Stable code for a known error sentence. The page translates it. */
