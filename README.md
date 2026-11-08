@@ -4,9 +4,11 @@
 [![Latest release](https://img.shields.io/github/v/release/mookiejones/serato-library-manager)](https://github.com/mookiejones/serato-library-manager/releases/latest)
 [![Python 3.12 and 3.14](https://img.shields.io/badge/python-3.12%20%7C%203.14-3776AB)](https://github.com/mookiejones/serato-library-manager/blob/main/.github/workflows/ci.yml)
 
-A local window for the Serato DJ Pro library on macOS and Windows. Source on `main` is app version **1.1.0**. The page stays on this computer.
+**[Quick Start](docs/wiki/Quick-Start.md).** Five steps: Download, Install (Mac and Windows), Open, First backup, Find your music.
 
-**[Quick Start](docs/wiki/Quick-Start.md).** Five steps: Download, Open, point it at your Serato library, make a Backup, start crate digging.
+![Five Quick Start moves, looping.](docs/wiki/images/quickstart-five-moves.gif)
+
+A local window for the Serato DJ Pro library on macOS and Windows. Source on `main` is app version **1.1.0**. The page stays on this computer.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="docs/images/hero-dark.svg">

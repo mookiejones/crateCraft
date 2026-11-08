@@ -1,14 +1,23 @@
 # Serato Library
 
-```mermaid
-flowchart LR
-  space["Space: Library, Video, Apple Music, Prepare"] --> views["Library, Library health, Backups, Before a gig"]
-  views --> detail["Track details and Cue points"]
-```
+<!-- The logo on the banner is not approved yet. It may change. -->
+
+![Serato Library Manager Quick Start. Backups first. Cue points safe. Then go crate digging.](images/quickstart-banner-light.png)
+
+**Five moves.** Backups first. Cue points safe. Then go crate digging.
+
+Start here: **[Quick Start](Quick-Start)**. One page. Five steps.
+
+1. 📥 Download
+2. 💿 Install (Mac and Windows)
+3. ▶️ Open
+4. 🛡️ First backup
+5. 🎧 Find your music
+
+![Five Quick Start moves, looping.](images/quickstart-five-moves.gif)
 
 A window on your computer for the Serato DJ Pro library. Crates, Cue points, and Backups stay on this machine.
 
-- [Quick Start](Quick-Start)
 - [Install on a Mac](Install-macOS)
 - [Install on Windows](Install-Windows)
 
