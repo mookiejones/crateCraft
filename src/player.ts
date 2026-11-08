@@ -11,6 +11,7 @@
  * Hotkeys import this module and call:
  *
  * - `play(trackId: number): void`
+ * - `playOrToggle(trackId: number): void`
  * - `pause(): void`
  * - `togglePlayPause(): void`
  * - `next(): void`
@@ -236,6 +237,20 @@ export function play(nextId: number): void {
   } finally {
     ignoreMediaPause = false;
   }
+}
+
+/**
+ * Play a library track, or pause it when that track is already playing.
+ *
+ * A different track starts. The same track, paused, resumes. The list
+ * Play button and the detail Play button call this so they share one
+ * player. The library is not written.
+ *
+ * @param nextId Asset id from the track list.
+ */
+export function playOrToggle(nextId: number): void {
+  if (trackId === nextId && playing) pause();
+  else play(nextId);
 }
 
 /**

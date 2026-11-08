@@ -34,7 +34,7 @@ import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
 import { matchesFilters, parseQuery, type ParsedQuery } from "./search-filters";
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
-import { play } from "./player";
+import { getPlayerState, playOrToggle, subscribe } from "./player";
 import { playerStrings } from "./player-strings";
 import { buttonEl, inputEl, selectEl, setTooltip, textareaEl } from "./tooltip";
 import {
@@ -73,6 +73,7 @@ import { codedText, formatNumber, messageParams, serverMessage, t, type MessageK
 let relatedRequest = 0;
 // Last track painted in the detail pane, so a language change can repaint it.
 let lastDetail: Track | null = null;
+let detailPlayWired = false;
 
 /**
  * Return whether a track contains every search word and passes every filter.
@@ -880,6 +881,41 @@ function fieldInput(name: string, label: string, value: string | number | null |
 }
 
 /**
+ * Show Play or Pause on the detail button from the shared player.
+ *
+ * The list Play button reads the same snapshot. Tooltips stay on
+ * `playRow`. Nothing is written.
+ *
+ * @param button Detail Play control.
+ * @param track Track shown in the pane.
+ */
+function paintDetailPlay(button: HTMLButtonElement, track: Track): void {
+  const snapshot = getPlayerState();
+  const playingThis = snapshot.trackId === track.id && snapshot.playing;
+  const name = track.title || track.name || playerStrings.untitled;
+  const action = playingThis ? playerStrings.pause : playerStrings.play;
+  button.textContent = action;
+  button.setAttribute("aria-label", `${action} ${name}`);
+  button.setAttribute("aria-pressed", String(playingThis));
+}
+
+/**
+ * Keep the detail Play button in step with the player.
+ *
+ * Subscribes once. A later renderDetail paints a new button; the
+ * listener finds it in the pane. The library is not read.
+ */
+function wireDetailPlay(): void {
+  if (detailPlayWired) return;
+  detailPlayWired = true;
+  subscribe(() => {
+    const button = document.querySelector<HTMLButtonElement>(".detail-play");
+    if (!button || !lastDetail) return;
+    paintDetailPlay(button, lastDetail);
+  });
+}
+
+/**
  * Fill the detail pane from a /api/track payload.
  *
  * The form edits the fields save_track accepts. Controls stay disabled
@@ -915,12 +951,12 @@ function renderDetail(track: Track) {
   const playTitle = track.title || track.name || playerStrings.untitled;
   const playButton = buttonEl(playRow(playTitle));
   playButton.className = "detail-play";
-  playButton.textContent = playerStrings.play;
-  playButton.setAttribute("aria-label", `${playerStrings.play} ${playTitle}`);
+  paintDetailPlay(playButton, track);
   playButton.addEventListener("click", () => {
-    play(track.id);
+    playOrToggle(track.id);
   });
   body.append(playButton);
+  wireDetailPlay();
 
   const deck = document.createElement("div");
   deck.className = "deck";

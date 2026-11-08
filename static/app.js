@@ -6082,6 +6082,10 @@
       ignoreMediaPause = false;
     }
   }
+  function playOrToggle(nextId) {
+    if (trackId === nextId && playing) pause();
+    else play(nextId);
+  }
   function pause() {
     if (trackId === null) return;
     playing = false;
@@ -6535,7 +6539,8 @@
         const playButton = buttonEl(playRow(track.name || playerStrings.untitled));
         playButton.className = "row-play";
         const labelName = track.name || playerStrings.untitled;
-        playButton.setAttribute("aria-label", `${playerStrings.play} ${labelName}`);
+        const action = playingThis ? playerStrings.pause : playerStrings.play;
+        playButton.setAttribute("aria-label", `${action} ${labelName}`);
         playButton.setAttribute("aria-pressed", String(playingThis));
         const icon = document.createElement("span");
         icon.className = "row-play-icon";
@@ -6544,7 +6549,7 @@
         playButton.addEventListener("click", (event) => {
           event.stopPropagation();
           bridge.selectTrack(track.id);
-          play(track.id);
+          playOrToggle(track.id);
           el("list").focus({ preventScroll: true });
         });
         playButton.addEventListener("dblclick", (event) => event.stopPropagation());
@@ -6670,6 +6675,7 @@
   // src/views.ts
   var relatedRequest = 0;
   var lastDetail = null;
+  var detailPlayWired = false;
   function matchesQuery(track, query) {
     if (!matchesFilters(track, query.filters)) return false;
     if (!query.terms.length) return true;
@@ -7203,6 +7209,24 @@
     wrap.append(input);
     return wrap;
   }
+  function paintDetailPlay(button2, track) {
+    const snapshot = getPlayerState();
+    const playingThis = snapshot.trackId === track.id && snapshot.playing;
+    const name = track.title || track.name || playerStrings.untitled;
+    const action = playingThis ? playerStrings.pause : playerStrings.play;
+    button2.textContent = action;
+    button2.setAttribute("aria-label", `${action} ${name}`);
+    button2.setAttribute("aria-pressed", String(playingThis));
+  }
+  function wireDetailPlay() {
+    if (detailPlayWired) return;
+    detailPlayWired = true;
+    subscribe(() => {
+      const button2 = document.querySelector(".detail-play");
+      if (!button2 || !lastDetail) return;
+      paintDetailPlay(button2, lastDetail);
+    });
+  }
   function renderDetail(track) {
     lastDetail = track;
     const writable = Boolean(track.serato?.writable && state.writable);
@@ -7226,12 +7250,12 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     const playButton = buttonEl(playRow(playTitle));
     playButton.className = "detail-play";
-    playButton.textContent = playerStrings.play;
-    playButton.setAttribute("aria-label", `${playerStrings.play} ${playTitle}`);
+    paintDetailPlay(playButton, track);
     playButton.addEventListener("click", () => {
-      play(track.id);
+      playOrToggle(track.id);
     });
     body.append(playButton);
+    wireDetailPlay();
     const deck = document.createElement("div");
     deck.className = "deck";
     const facts = [["column.bpm", track.bpm], ["column.key", track.key || "—"], ["column.time", track.length]];

@@ -2,7 +2,7 @@
 
 Play a track that is already in the library. The sound stays on this computer. The request uses the track's library id.
 
-Double-click a row, press **Enter**, or click **Play**. **Enter** on the list plays the selected track. **Enter** on a focused row plays that row.
+Double-click a row, press **Enter**, or click **Play**. **Enter** on the list plays the selected track. **Enter** on a focused row plays that row. The list Play button and the detail Play button share one player. Click **Play** on the playing track to pause. Click **Play** on another row to start that track. Both buttons show Play or Pause.
 
 The bar under the list shows the title, the artist, **Previous**, **Play** or **Pause**, **Next**, a seek bar, and volume. **Previous** and **Next** follow the list in its sort and filter order. When a track ends, the next row starts.
 

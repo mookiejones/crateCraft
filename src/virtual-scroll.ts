@@ -10,7 +10,7 @@ import type { Track } from "./api-types";
 import { bridge } from "./bridge";
 import { el } from "./dom";
 import { clockLabel, colorHex, lengthLabel } from "./format";
-import { getPlayerState, play, subscribe } from "./player";
+import { getPlayerState, play, playOrToggle, subscribe } from "./player";
 import { playerStrings } from "./player-strings";
 import { ROW, state } from "./state";
 import { formatNumber, t } from "./i18n";
@@ -80,7 +80,8 @@ export function paintRows() {
       const playButton = buttonEl(playRow(track.name || playerStrings.untitled));
       playButton.className = "row-play";
       const labelName = track.name || playerStrings.untitled;
-      playButton.setAttribute("aria-label", `${playerStrings.play} ${labelName}`);
+      const action = playingThis ? playerStrings.pause : playerStrings.play;
+      playButton.setAttribute("aria-label", `${action} ${labelName}`);
       playButton.setAttribute("aria-pressed", String(playingThis));
       const icon = document.createElement("span");
       icon.className = "row-play-icon";
@@ -89,7 +90,7 @@ export function paintRows() {
       playButton.addEventListener("click", (event) => {
         event.stopPropagation();
         bridge.selectTrack(track.id);
-        play(track.id);
+        playOrToggle(track.id);
         el("list").focus({ preventScroll: true });
       });
       playButton.addEventListener("dblclick", (event) => event.stopPropagation());
