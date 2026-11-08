@@ -158,8 +158,8 @@ class TokenSheetTests(unittest.TestCase):
         self.assertNotIn("style.color", text)
         self.assertIn('strong.className = "bpm"', text)
         self.assertIn('"swatch swatch-lg"', text)
-        self.assertIn("spacer.style.height", text)
-        self.assertIn("rows.style.transform", text)
+        self.assertIn("paneSpacer.style.height", text)
+        self.assertIn("paneRows.style.transform", text)
         self.assertIn("row.style.paddingLeft", text)
 
     def test_palette_aliases_point_at_tokens(self) -> None:
