@@ -26,6 +26,7 @@ import crate_trees
 import folder_sync
 import legacy_library
 import smart_presets
+import tag_cleanup
 
 REGISTRATION_NO_SPACE = (
     "Crates were not registered. This library has no Serato Library space, "
@@ -85,6 +86,9 @@ ERROR_CODES: dict[str, str] = {
     "Those two tracks are the same.": "replace_same_track",
     "Confirm the crate update before it runs.": "replace_needs_confirm",
     "Choose a folder.": "choose_folder",
+    tag_cleanup.CHOOSE_FIELD: "choose_genre_or_artist",
+    tag_cleanup.CHOOSE_SPELLING: "choose_spelling",
+    tag_cleanup.NOT_IN_GROUP: "spelling_not_in_group",
     "Choose fewer files at once.": "too_many_files",
     "Choose tracks to relink.": "relink_needs_tracks",
     "Two of those tracks are the same.": "relink_duplicate_tracks",
