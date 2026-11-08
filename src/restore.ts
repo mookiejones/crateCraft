@@ -7,6 +7,7 @@
 
 import { failureOf, postJSON, readJSON } from "./api";
 import type { DriveBackup, DriveCopy, FrameDiff, OperationEntry, OperationList, PlanName, RestorePlan, SnapshotList } from "./api-types";
+import { cueDiffRows, paintCueDiffRow } from "./cue-view";
 import { el } from "./dom";
 import { state } from "./state";
 import { codedText, formatDate, formatList, messageParams, serverMessage, t, type MessageKey } from "./i18n";
@@ -428,7 +429,7 @@ function paintSnapshotPlan(plan: RestorePlan) {
   appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
   appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
   appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
-  appendFrameDiffs(planBox, t("plan.cueChanges"), plan.cues);
+  appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
   appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
   const deleted = plan.deleted || {};
   appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
@@ -471,7 +472,35 @@ function appendPlanLine(parent: HTMLElement, label: string, rows: PlanName[] | u
 }
 
 /**
- * Add per-file cue or grid differences.
+ * Add per-file cue differences, with before → after for each changed pad.
+ *
+ * @param {HTMLElement} parent Plan container.
+ * @param {string} label Section name.
+ * @param {object[]|undefined} rows Files whose cue frames would change.
+ * @returns {void}
+ */
+function appendCueDiffs(parent: HTMLElement, label: string, rows: FrameDiff[] | undefined) {
+  const items = rows || [];
+  const line = document.createElement("p");
+  if (!items.length) {
+    line.textContent = t("plan.none", { label });
+    parent.append(line);
+    return;
+  }
+  line.textContent = t("plan.files", { label, count: items.length });
+  parent.append(line);
+  for (const item of items.slice(0, 12)) {
+    const row = document.createElement("p");
+    row.textContent = fileName(item.path || "");
+    parent.append(row);
+    for (const diff of cueDiffRows(item.before, item.after)) {
+      parent.append(paintCueDiffRow(diff));
+    }
+  }
+}
+
+/**
+ * Add per-file grid differences.
  *
  * @param {HTMLElement} parent Plan container.
  * @param {string} label Section name.

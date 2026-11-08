@@ -31,6 +31,7 @@ import { loadGigCheck, showGigFailure } from "./gig";
 import { loadScan, showScanFailure } from "./scan";
 import { loadTags, showTagsFailure } from "./tags";
 import { portableDriveButton } from "./portable";
+import { appendCueSlots, formatCueTime } from "./cue-view";
 import { syncFolderSyncButton } from "./folder-sync-view";
 import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
@@ -1220,8 +1221,9 @@ function renderDetail(track: Track) {
  * Build the cue, loop, flip, and beatgrid section.
  *
  * The copy says the markers were read from the audio file and are not
- * written back. A missing file is explained instead of showing an empty
- * success. Does not fetch.
+ * written back. Pads 1–8 always show, in Serato colours, when the file
+ * could be read. A missing file is explained instead of showing empty
+ * pads. Does not fetch.
  *
  * @param {object} track Track payload including cues, loops, flips, and beatgrid.
  * @returns {HTMLElement} The section, not yet inserted.
@@ -1239,19 +1241,15 @@ function markerSection(track: Track) {
   else note.textContent = t("markers.readOnly");
   section.append(note);
   /**
-   * Format a cue or loop time as m:ss.sss.
+   * Format a loop time as m:ss.sss.
    *
-   * Nested in markerSection. Three decimal places keep a cue distinguishable
-   * inside one second. Does not read the file again.
+   * Nested in markerSection. Three decimal places keep a loop distinguishable
+   * inside one second. Cue rows use `formatCueTime` in cue-view.ts.
    *
    * @param {number|string} value Time in milliseconds.
    * @returns {string} Minutes, seconds, and milliseconds.
    */
-  const ms = (value: number | string | null | undefined) => {
-    const total = Number(value) / 1000;
-    const minutes = Math.floor(total / 60);
-    return `${minutes}:${(total - minutes * 60).toFixed(3).padStart(6, "0")}`;
-  };
+  const ms = (value: number | string | null | undefined) => formatCueTime(value);
   /**
    * Format a beatgrid position for the panel.
    *
@@ -1268,19 +1266,7 @@ function markerSection(track: Track) {
     if (!Number.isFinite(number)) return "";
     return `${number.toFixed(3)}s`;
   };
-  for (const cue of track.cues || []) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    if (cue.color) swatch.style.background = cue.color;
-    const time = document.createElement("span");
-    time.textContent = ms(cue.start_ms);
-    const name = document.createElement("span");
-    name.textContent = cue.name || t("markers.cue", { number: (cue.index as number) + 1 });
-    row.append(swatch, time, name);
-    section.append(row);
-  }
+  if (!track.markers_unavailable) appendCueSlots(section, track.cues || []);
   for (const loop of track.loops || []) {
     const row = document.createElement("div");
     row.className = "marker";
@@ -1291,7 +1277,7 @@ function markerSection(track: Track) {
     time.textContent = `${ms(loop.start_ms)}–${ms(loop.end_ms)}`;
     const name = document.createElement("span");
     name.textContent = loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: (loop.index as number) + 1 });
-    row.append(swatch, time, name);
+    row.append(document.createElement("span"), swatch, time, name);
     section.append(row);
   }
   for (const flip of track.flips || []) {
@@ -1301,7 +1287,7 @@ function markerSection(track: Track) {
     time.textContent = flip.enabled ? t("common.on") : t("common.off");
     const name = document.createElement("span");
     name.textContent = flip.name || t("markers.flip", { number: (flip.index as number) + 1 });
-    row.append(document.createElement("span"), time, name);
+    row.append(document.createElement("span"), document.createElement("span"), time, name);
     section.append(row);
   }
   for (const mark of track.beatgrid || []) {
@@ -1318,7 +1304,7 @@ function markerSection(track: Track) {
     } else {
       name.textContent = "";
     }
-    row.append(document.createElement("span"), time, name);
+    row.append(document.createElement("span"), document.createElement("span"), time, name);
     section.append(row);
   }
   return section;

@@ -32,6 +32,7 @@
  */
 
 import type { Marker, Track } from "./api-types";
+import { slotColor } from "./cue-view";
 import { playerStrings } from "./player-strings";
 import { state } from "./state";
 import { buttonEl, inputEl, setTooltip } from "./tooltip";
@@ -72,8 +73,8 @@ export const SEEK_STEP_LARGE_SECONDS = 30;
 /**
  * One cue drawn on the seek bar.
  *
- * `seconds` is the position from the file. `color` is a `#` hex string, or
- * empty when the file did not give a usable color. `label` is the cue name.
+ * `seconds` is the position from the file. `color` is a `#` hex string from
+ * the file, or the Serato pad color for that index. `label` is the cue name.
  */
 export interface CueMarker {
   seconds: number;
@@ -100,7 +101,6 @@ export interface PlayableMedia {
 
 const listeners = new Set<PlayerListener>();
 const wired = new WeakSet<object>();
-const CUE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 
 let media: PlayableMedia | null = null;
 let trackId: number | null = null;
@@ -158,8 +158,8 @@ export function formatPlayerTime(seconds: number): string {
  * Turn Serato cue rows into seek-bar markers.
  *
  * A row without a finite start time is dropped. The name falls back to
- * `Cue` plus the stored index. A color that is not a `#` hex value is
- * left blank so the bar uses its default. Nothing is written.
+ * `Cue` plus the stored index. A color that is not a `#` hex value uses
+ * the Serato pad color for that index. Nothing is written.
  *
  * @param rows Cue rows from `GET /api/track`, or undefined when there are none.
  * @returns Markers in the order they were given. Empty when there are no cues.
@@ -173,7 +173,8 @@ export function markersFromCues(rows: readonly Marker[] | undefined): CueMarker[
     const index = Number(cue.index);
     const named = typeof cue.name === "string" ? cue.name.trim() : "";
     const fallback = Number.isInteger(index) ? index + 1 : found.length + 1;
-    const color = typeof cue.color === "string" && CUE_COLOR.test(cue.color) ? cue.color : "";
+    const stored = typeof cue.color === "string" ? cue.color : "";
+    const color = slotColor(Number.isInteger(index) ? index : -1, stored);
     found.push({
       seconds: start / 1000,
       color,

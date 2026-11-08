@@ -27,7 +27,11 @@ const plan: RestorePlan = {
     removed: [],
     unavailable: [],
   },
-  cues: [{ path: "Music/a.mp3" }],
+  cues: [{
+    path: "Music/a.mp3",
+    before: { cues: [{ index: 0, start_ms: 1500, color: "#CC0000", name: "Drop" }] },
+    after: { cues: [{ index: 0, start_ms: 8000, color: "#CC0000", name: "Break" }] },
+  }],
   grids: [{ path: "Music/b.mp3" }],
   deleted: {
     crates: [{ name: "Old" }],
@@ -103,6 +107,13 @@ describe("restore", () => {
     expect(text).toContain("Crates registered so Serato keeps them: none");
     expect(text).toContain("Crates skipped: none");
     expect(text).toContain("Tracks added: 1. Music/a.mp3");
+    expect(text).toContain("Cue changes: 1 file");
+    expect(text).toContain("a.mp3");
+    expect(text).toContain("0:01.500 Drop");
+    expect(text).toContain("0:08.000 Break");
+    expect(document.querySelector(".cue-diff")?.getAttribute("aria-label")).toBe(
+      "Cue point 1: 0:01.500 Drop → 0:08.000 Break",
+    );
 
     postJSON.mockResolvedValue({
       ...plan,
@@ -181,6 +192,7 @@ describe("restore", () => {
       expect(text).toContain("Cajas añadidas: 10. C0, C1, C2, C3, C4, C5, C6, C7 y 2 más");
     expect(text).toContain("Cajas registradas para que Serato las conserve: ninguno");
       expect(text).toContain("Cambios de cues: 1 archivo");
+      expect(text).toContain("a.mp3");
       expect(text).toContain("Pistas eliminadas: ninguno");
       expect(document.getElementById("snapshot-block")?.textContent).toBe("No se ha cambiado nada.");
       state.snapshotMessage = "snapshots.saved";
@@ -192,6 +204,22 @@ describe("restore", () => {
     } finally {
       setLocale("en");
     }
+  });
+
+  it("lists the file only when cue slots did not change", async () => {
+    postJSON.mockResolvedValue({
+      ...plan,
+      cues: [{
+        path: "Music/same.mp3",
+        before: { cues: [{ index: 0, start_ms: 1500, name: "Drop" }] },
+        after: { cues: [{ index: 0, start_ms: 1500, name: "Drop" }] },
+      }],
+    });
+    await openSnapshotPlan("snap-9");
+    const text = document.getElementById("snapshot-plan")?.textContent ?? "";
+    expect(text).toContain("Cue changes: 1 file");
+    expect(text).toContain("same.mp3");
+    expect(document.querySelector(".cue-diff")).toBeNull();
   });
 
   it("copies drive crates and keeps the tooltip different from the button name", async () => {
