@@ -14,6 +14,8 @@ export const bridge: {
   openMergeDialog: () => Promise<void>;
   openReplaceInCratesDialog: (fromId: number, toId?: number) => Promise<void>;
   openSetup: () => void;
+  reloadLibrary: () => void | Promise<void>;
+  lockDown: (error: unknown) => void;
 } = {
   selectTrack(_id: number) {},
   selectEntry(_id: number) {},
@@ -24,4 +26,8 @@ export const bridge: {
     return Promise.resolve();
   },
   openSetup() {},
+  reloadLibrary() {
+    return Promise.resolve();
+  },
+  lockDown(_error: unknown) {},
 };

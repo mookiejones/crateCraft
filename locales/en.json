@@ -507,6 +507,7 @@
   "mode.scan": "Read-only. This check does not change the library.",
   "mode.snapshots": "Hash-checked copies of the library, crates, and Serato frames inside audio files. Audio itself is not copied.",
   "mode.stems": "Tracks with a stems analysis state.",
+  "mode.tags": "Writes the library, not the audio files. Quit Serato first.",
   "operations.action.crateAdd": "Add to crate",
   "operations.action.crateColor": "Crate color",
   "operations.action.crateCreate": "Create crate",
@@ -897,6 +898,50 @@
   "space.video": "Video",
   "status.checking": "Checking Serato",
   "status.library": "Library",
+  "tags.apply": "Apply",
+  "tags.artist": "Artist",
+  "tags.checking": "Reading tag spellings…",
+  "tags.field": "Field",
+  "tags.genre": "Genre",
+  "tags.group": "{name} — {spellings}, {tracks}",
+  "tags.heading": "Tag spellings",
+  "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
+  "tags.noChanges": "Every track in this group already uses that spelling.",
+  "tags.preview": "Review",
+  "tags.previewLine": {
+    "one": "{from} → {to} ({count} track)",
+    "other": "{from} → {to} ({count} tracks)"
+  },
+  "tags.previewSummary": {
+    "one": "{count} track would become {value}.",
+    "other": "{count} tracks would become {value}."
+  },
+  "tags.row": "{value} ({count})",
+  "tags.spellingCount": {
+    "one": "{count} spelling",
+    "other": "{count} spellings"
+  },
+  "tags.suggested": "Suggested",
+  "tags.summaryArtist": {
+    "one": "{values} artist spellings in this space. {count} group with more than one spelling.",
+    "other": "{values} artist spellings in this space. {count} groups with more than one spelling."
+  },
+  "tags.summaryArtistClear": "Every artist in this space uses one spelling.",
+  "tags.summaryGenre": {
+    "one": "{values} genre spellings in this space. {count} group with more than one spelling.",
+    "other": "{values} genre spellings in this space. {count} groups with more than one spelling."
+  },
+  "tags.summaryGenreClear": "Every genre in this space uses one spelling.",
+  "tags.trackCount": {
+    "one": "{count} track",
+    "other": "{count} tracks"
+  },
+  "tags.unreachable": "Couldn't reach the library server. Check it's running, then press Check again.",
+  "tags.unreadable": "The tag groups could not be read.",
+  "tags.written": {
+    "one": "Wrote {value} on {count} track.",
+    "other": "Wrote {value} on {count} tracks."
+  },
   "tooltip.allTracks": "Show every track in this space. Ctrl/Cmd+1.",
   "tooltip.backupDrives": "Copy each connected drive's Serato folder into the backup on this computer. An unplugged drive is listed and left untouched.",
   "tooltip.beatgridLock": "Lock the beatgrid so Serato does not move it.",
@@ -1082,6 +1127,13 @@
   "tooltip.sortTitle": "Sort tracks by title.",
   "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
   "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
+  "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
+  "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
+  "tooltip.tagsGenre": "Show genres that are the same words written different ways.",
+  "tooltip.tagsGroup": "Open or close this spelling group.",
+  "tooltip.tagsPreview": "Show which tracks would change before writing the library.",
+  "tooltip.tagsRefresh": "Load the spelling groups again.",
+  "tooltip.tagsSpelling": "Choose this spelling for every track in the group.",
   "tooltip.telemetry": "Turn anonymous stats and crash reports on or off.",
   "tooltip.trackColor": "Choose a color for this track.",
   "tooltip.trackList": "Track list. Up arrow and Down arrow move between rows. Enter opens the row. Space plays or pauses.",
@@ -1104,6 +1156,7 @@
   "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
   "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
   "tooltip.viewStems": "Show tracks Serato has analyzed for stems. This does not separate the audio.",
+  "tooltip.viewTags": "Group genre and artist spellings that mean the same thing. Writes the library, not the audio files.",
   "tooltip.volume": "Change how loud playback is.",
   "tooltip.wizard.checkAgain": "Look for the Serato library again.",
   "tooltip.wizard.continue": "Continue to the next step.",
@@ -1156,6 +1209,7 @@
   "view.scan": "Damaged files",
   "view.snapshots": "Backups",
   "view.stems": "Stems",
+  "view.tags": "Tag spellings",
   "wizard.action.checkAgain": "Check again",
   "wizard.action.continue": "Continue",
   "wizard.action.getStarted": "Get started",

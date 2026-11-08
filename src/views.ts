@@ -1,5 +1,5 @@
 /**
- * Crates, history, missing tracks, duplicates, stems, damaged files, and files.
+ * Crates, history, missing tracks, duplicates, stems, damaged files, tag spellings, and files.
  *
  * The functions paint from state and the elements in index.html. Nothing
  * in this module runs a request when the file is imported. Listeners are
@@ -28,6 +28,7 @@ import { el } from "./dom";
 import { clockLabel, colorHex, compare, durationLabel, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
 import { loadScan, showScanFailure } from "./scan";
+import { loadTags, showTagsFailure } from "./tags";
 import { portableDriveButton } from "./portable";
 import { syncFolderSyncButton } from "./folder-sync-view";
 import { presetFoot, syncPresetButtons } from "./preset-view";
@@ -562,6 +563,7 @@ export function renderShell() {
   const cratesMode = state.mode === "crates";
   const gigMode = state.mode === "gig";
   const scanMode = state.mode === "scan";
+  const tagsMode = state.mode === "tags";
   const historyMode = state.mode === "history";
   const showCrates = cratesMode || gigMode || scanMode;
   el("crate-tools").hidden = !showCrates;
@@ -571,7 +573,7 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || scanMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || scanMode || tagsMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
@@ -579,6 +581,7 @@ export function renderShell() {
   el("snapshots-panel").hidden = !snapshotsMode;
   el("gig-panel").hidden = !gigMode;
   el("scan-panel").hidden = !scanMode;
+  el("tags-panel").hidden = !tagsMode;
   if (state.mode === "missing") {
     const offlineCount = state.tracks.filter((track) => track.offline).length;
     el("mode-note").textContent = offlineCount
@@ -596,6 +599,10 @@ export function renderShell() {
   }
   if (scanMode) {
     el("mode-note").textContent = t("mode.scan");
+    document.querySelector(".rules")?.remove();
+  }
+  if (tagsMode) {
+    el("mode-note").textContent = t("mode.tags");
     document.querySelector(".rules")?.remove();
   }
   if (snapshotsMode) {
@@ -630,6 +637,10 @@ export function renderShell() {
   if (gigMode || scanMode) {
     const crate = state.crates.find((item) => item.id === state.activeCrate);
     el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : (crate?.name ?? t("crates.selectedCrate"));
+    return;
+  }
+  if (tagsMode) {
+    el("crate-foot").textContent = t("gig.wholeSpace");
     return;
   }
   if (snapshotsMode) {
@@ -686,6 +697,9 @@ export function renderList() {
   }
   if (state.mode === "scan") {
     renderCrates();
+    return;
+  }
+  if (state.mode === "tags") {
     return;
   }
   renderColumns();
@@ -2452,7 +2466,7 @@ export async function loadLibrary() {
 
 /**
  * Switch among crates, history, missing, duplicates, stems, damaged
- * files, files, snapshots, and gig.
+ * files, tag spellings, files, snapshots, and gig.
  *
  * History sorts by start time descending and loads sessions once.
  * Duplicates load when this space has not been scanned yet. Files loads
@@ -2485,6 +2499,7 @@ export function setMode(mode: string) {
   }
   if (mode === "gig") loadGigCheck().catch(showGigFailure);
   if (mode === "scan") loadScan("quick").catch(showScanFailure);
+  if (mode === "tags") loadTags().catch(showTagsFailure);
   renderList();
 }
 
@@ -3324,6 +3339,7 @@ export function wireLibrary(): void {
     if (state.mode === "duplicates") jobs.push(loadDuplicates());
     if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
     if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
+    if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
     Promise.all(jobs).catch(showFailure);
   });
 
@@ -3358,6 +3374,7 @@ export function wireLibrary(): void {
       if (state.mode === "duplicates") return loadDuplicates();
       if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
       if (state.mode === "scan") return loadScan().catch(showScanFailure);
+      if (state.mode === "tags") return loadTags().catch(showTagsFailure);
       return null;
     }).catch(showFailure);
   });
@@ -3432,3 +3449,5 @@ export function wireLibrary(): void {
 
 bridge.selectTrack = selectTrack;
 bridge.selectEntry = selectEntry;
+bridge.reloadLibrary = loadLibrary;
+bridge.lockDown = lockDown;

@@ -510,6 +510,7 @@
     "mode.scan": "Read-only. This check does not change the library.",
     "mode.snapshots": "Hash-checked copies of the library, crates, and Serato frames inside audio files. Audio itself is not copied.",
     "mode.stems": "Tracks with a stems analysis state.",
+    "mode.tags": "Writes the library, not the audio files. Quit Serato first.",
     "operations.action.crateAdd": "Add to crate",
     "operations.action.crateColor": "Crate color",
     "operations.action.crateCreate": "Create crate",
@@ -900,6 +901,50 @@
     "space.video": "Video",
     "status.checking": "Checking Serato",
     "status.library": "Library",
+    "tags.apply": "Apply",
+    "tags.artist": "Artist",
+    "tags.checking": "Reading tag spellings…",
+    "tags.field": "Field",
+    "tags.genre": "Genre",
+    "tags.group": "{name} — {spellings}, {tracks}",
+    "tags.heading": "Tag spellings",
+    "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
+    "tags.noChanges": "Every track in this group already uses that spelling.",
+    "tags.preview": "Review",
+    "tags.previewLine": {
+      one: "{from} → {to} ({count} track)",
+      other: "{from} → {to} ({count} tracks)"
+    },
+    "tags.previewSummary": {
+      one: "{count} track would become {value}.",
+      other: "{count} tracks would become {value}."
+    },
+    "tags.row": "{value} ({count})",
+    "tags.spellingCount": {
+      one: "{count} spelling",
+      other: "{count} spellings"
+    },
+    "tags.suggested": "Suggested",
+    "tags.summaryArtist": {
+      one: "{values} artist spellings in this space. {count} group with more than one spelling.",
+      other: "{values} artist spellings in this space. {count} groups with more than one spelling."
+    },
+    "tags.summaryArtistClear": "Every artist in this space uses one spelling.",
+    "tags.summaryGenre": {
+      one: "{values} genre spellings in this space. {count} group with more than one spelling.",
+      other: "{values} genre spellings in this space. {count} groups with more than one spelling."
+    },
+    "tags.summaryGenreClear": "Every genre in this space uses one spelling.",
+    "tags.trackCount": {
+      one: "{count} track",
+      other: "{count} tracks"
+    },
+    "tags.unreachable": "Couldn't reach the library server. Check it's running, then press Check again.",
+    "tags.unreadable": "The tag groups could not be read.",
+    "tags.written": {
+      one: "Wrote {value} on {count} track.",
+      other: "Wrote {value} on {count} tracks."
+    },
     "tooltip.allTracks": "Show every track in this space. Ctrl/Cmd+1.",
     "tooltip.backupDrives": "Copy each connected drive's Serato folder into the backup on this computer. An unplugged drive is listed and left untouched.",
     "tooltip.beatgridLock": "Lock the beatgrid so Serato does not move it.",
@@ -1085,6 +1130,13 @@
     "tooltip.sortTitle": "Sort tracks by title.",
     "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
     "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
+    "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
+    "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
+    "tooltip.tagsGenre": "Show genres that are the same words written different ways.",
+    "tooltip.tagsGroup": "Open or close this spelling group.",
+    "tooltip.tagsPreview": "Show which tracks would change before writing the library.",
+    "tooltip.tagsRefresh": "Load the spelling groups again.",
+    "tooltip.tagsSpelling": "Choose this spelling for every track in the group.",
     "tooltip.telemetry": "Turn anonymous stats and crash reports on or off.",
     "tooltip.trackColor": "Choose a color for this track.",
     "tooltip.trackList": "Track list. Up arrow and Down arrow move between rows. Enter opens the row. Space plays or pauses.",
@@ -1107,6 +1159,7 @@
     "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
     "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Show tracks Serato has analyzed for stems. This does not separate the audio.",
+    "tooltip.viewTags": "Group genre and artist spellings that mean the same thing. Writes the library, not the audio files.",
     "tooltip.volume": "Change how loud playback is.",
     "tooltip.wizard.checkAgain": "Look for the Serato library again.",
     "tooltip.wizard.continue": "Continue to the next step.",
@@ -1159,6 +1212,7 @@
     "view.scan": "Damaged files",
     "view.snapshots": "Backups",
     "view.stems": "Stems",
+    "view.tags": "Tag spellings",
     "wizard.action.checkAgain": "Check again",
     "wizard.action.continue": "Continue",
     "wizard.action.getStarted": "Get started",
@@ -1720,6 +1774,7 @@
     "mode.scan": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.snapshots": "Copias verificadas por hash de la biblioteca, las cajas y los datos de Serato dentro de los archivos de audio. El audio en sí no se copia.",
     "mode.stems": "Pistas con un estado de análisis de stems.",
+    "mode.tags": "Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
     "operations.action.crateAdd": "Añadir a la caja",
     "operations.action.crateColor": "Color de la caja",
     "operations.action.crateCreate": "Crear caja",
@@ -2110,6 +2165,50 @@
     "space.video": "Vídeo",
     "status.checking": "Comprobando Serato",
     "status.library": "Biblioteca",
+    "tags.apply": "Aplicar",
+    "tags.artist": "Artista",
+    "tags.checking": "Leyendo grafías de etiquetas…",
+    "tags.field": "Campo",
+    "tags.genre": "Género",
+    "tags.group": "{name} — {spellings}, {tracks}",
+    "tags.heading": "Grafías de etiquetas",
+    "tags.intro": "Elige una grafía por grupo. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
+    "tags.noChanges": "Todas las pistas de este grupo ya usan esa grafía.",
+    "tags.preview": "Revisar",
+    "tags.previewLine": {
+      one: "{from} → {to} ({count} pista)",
+      other: "{from} → {to} ({count} pistas)"
+    },
+    "tags.previewSummary": {
+      one: "{count} pista pasaría a {value}.",
+      other: "{count} pistas pasarían a {value}."
+    },
+    "tags.row": "{value} ({count})",
+    "tags.spellingCount": {
+      one: "{count} grafía",
+      other: "{count} grafías"
+    },
+    "tags.suggested": "Sugerida",
+    "tags.summaryArtist": {
+      one: "{values} grafías de artista en este espacio. {count} grupo con más de una grafía.",
+      other: "{values} grafías de artista en este espacio. {count} grupos con más de una grafía."
+    },
+    "tags.summaryArtistClear": "Cada artista de este espacio usa una sola grafía.",
+    "tags.summaryGenre": {
+      one: "{values} grafías de género en este espacio. {count} grupo con más de una grafía.",
+      other: "{values} grafías de género en este espacio. {count} grupos con más de una grafía."
+    },
+    "tags.summaryGenreClear": "Cada género de este espacio usa una sola grafía.",
+    "tags.trackCount": {
+      one: "{count} pista",
+      other: "{count} pistas"
+    },
+    "tags.unreachable": "No se pudo contactar con el servidor de la biblioteca. Comprueba que está en marcha y pulsa Comprobar de nuevo.",
+    "tags.unreadable": "No se pudieron leer los grupos de etiquetas.",
+    "tags.written": {
+      one: "Se escribió {value} en {count} pista.",
+      other: "Se escribió {value} en {count} pistas."
+    },
     "tooltip.allTracks": "Muestra todas las pistas de este espacio. Ctrl/Cmd+1.",
     "tooltip.backupDrives": "Copia la carpeta Serato de cada unidad conectada en la copia de este equipo. Una unidad desconectada se anota y no se toca.",
     "tooltip.beatgridLock": "Bloquea la rejilla de tiempo para que Serato no la mueva.",
@@ -2295,6 +2394,13 @@
     "tooltip.sortTitle": "Ordena las pistas por título.",
     "tooltip.space": "Elige Biblioteca, Vídeo, Apple Music o Preparar.",
     "tooltip.splitter": "Arrastra para cambiar el ancho de la lista. Doble clic lo devuelve. Las flechas lo redimensionan.",
+    "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Los archivos de audio no cambian.",
+    "tooltip.tagsArtist": "Muestra nombres de artista que son las mismas palabras escritas de otra forma.",
+    "tooltip.tagsGenre": "Muestra géneros que son las mismas palabras escritas de otra forma.",
+    "tooltip.tagsGroup": "Abre o cierra este grupo de grafías.",
+    "tooltip.tagsPreview": "Muestra qué pistas cambiarían antes de escribir en la biblioteca.",
+    "tooltip.tagsRefresh": "Vuelve a cargar los grupos de grafías.",
+    "tooltip.tagsSpelling": "Elige esta grafía para todas las pistas del grupo.",
     "tooltip.telemetry": "Activa o desactiva las estadísticas anónimas y los informes de fallos.",
     "tooltip.trackColor": "Elige un color para esta pista.",
     "tooltip.trackList": "Lista de pistas. Arriba y Abajo cambian de fila. Intro abre la fila. Espacio reproduce o pausa.",
@@ -2317,6 +2423,7 @@
     "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
     "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Muestra las pistas que Serato ya analizó para stems. No separa el audio.",
+    "tooltip.viewTags": "Agrupa grafías de género y artista que significan lo mismo. Escribe en la biblioteca, no en los archivos de audio.",
     "tooltip.volume": "Cambia el volumen de la reproducción.",
     "tooltip.wizard.checkAgain": "Vuelve a buscar la biblioteca de Serato.",
     "tooltip.wizard.continue": "Sigue al paso siguiente.",
@@ -2369,6 +2476,7 @@
     "view.scan": "Archivos dañados",
     "view.snapshots": "Copias de seguridad",
     "view.stems": "Stems",
+    "view.tags": "Grafías de etiquetas",
     "wizard.action.checkAgain": "Volver a buscar",
     "wizard.action.continue": "Continuar",
     "wizard.action.getStarted": "Empezar",
@@ -2673,6 +2781,11 @@
       return Promise.resolve();
     },
     openSetup() {
+    },
+    reloadLibrary() {
+      return Promise.resolve();
+    },
+    lockDown(_error) {
     }
   };
 
@@ -2890,6 +3003,7 @@
     snapshotPlanId: "",
     gigToken: 0,
     scanToken: 0,
+    tagsToken: 0,
     view: []
   };
 
@@ -3132,6 +3246,14 @@
     viewSnapshots: spec("tooltip.viewSnapshots"),
     viewGig: spec("tooltip.viewGig"),
     viewScan: spec("tooltip.viewScan"),
+    viewTags: spec("tooltip.viewTags"),
+    tagsGenre: spec("tooltip.tagsGenre"),
+    tagsArtist: spec("tooltip.tagsArtist"),
+    tagsRefresh: spec("tooltip.tagsRefresh"),
+    tagsPreview: spec("tooltip.tagsPreview"),
+    tagsApply: spec("tooltip.tagsApply"),
+    tagsGroup: spec("tooltip.tagsGroup"),
+    tagsSpelling: spec("tooltip.tagsSpelling"),
     gigRefresh: spec("tooltip.gigRefresh"),
     scanQuick: spec("tooltip.scanQuick"),
     scanFull: spec("tooltip.scanFull"),
@@ -3180,7 +3302,8 @@
       files: tips.viewFiles,
       snapshots: tips.viewSnapshots,
       gig: tips.viewGig,
-      scan: tips.viewScan
+      scan: tips.viewScan,
+      tags: tips.viewTags
     };
     return known[view];
   }
@@ -3253,6 +3376,9 @@
       "gig-refresh": tips.gigRefresh,
       "scan-quick": tips.scanQuick,
       "scan-full": tips.scanFull,
+      "tags-genre": tips.tagsGenre,
+      "tags-artist": tips.tagsArtist,
+      "tags-refresh": tips.tagsRefresh,
       "snapshots-take": tips.snapshotsTake,
       "snapshots-drives": tips.backupDrives,
       "snapshots-undo-button": tips.snapshotsUndo,
@@ -4116,6 +4242,331 @@
     return row;
   }
 
+  // src/tags-view.ts
+  function tagsSummary(field, values, groups) {
+    if (groups === 0) {
+      return field === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
+    }
+    return field === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
+  }
+  function groupHeading(group) {
+    return t("tags.group", {
+      name: group.suggested,
+      spellings: t("tags.spellingCount", { count: group.spellings.length }),
+      tracks: t("tags.trackCount", { count: group.tracks })
+    });
+  }
+  function spellingLabel(value, count, suggested) {
+    const base = t("tags.row", { value, count });
+    return suggested ? `${base} — ${t("tags.suggested")}` : base;
+  }
+  function previewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.previewSummary", { count: plan.changes.length, value: plan.value });
+  }
+  function writtenSummary(plan) {
+    return t("tags.written", { count: plan.changes.length, value: plan.value });
+  }
+  function groupChanges(changes) {
+    const rows2 = /* @__PURE__ */ new Map();
+    for (const change of changes) {
+      const id = `${change.from}\0${change.to}`;
+      const existing = rows2.get(id);
+      if (existing) existing.count += 1;
+      else rows2.set(id, { from: change.from, to: change.to, count: 1 });
+    }
+    return [...rows2.values()];
+  }
+  function previewLines(changes) {
+    return groupChanges(changes).map(
+      (row) => t("tags.previewLine", { from: row.from, to: row.to, count: row.count })
+    );
+  }
+
+  // src/tags.ts
+  var LIST_CAP3 = 100;
+  var latest3 = null;
+  var plans = /* @__PURE__ */ new Map();
+  var selectedByKey = /* @__PURE__ */ new Map();
+  var panelBusy = false;
+  var actionKey = "";
+  function wireTags() {
+    const panel = el("tags-panel");
+    if (panel.dataset.tagsWired === "true") return;
+    panel.dataset.tagsWired = "true";
+    el("tags-genre").addEventListener("click", () => {
+      if (currentField() === "genre") return;
+      setField("genre");
+      void loadTags();
+    });
+    el("tags-artist").addEventListener("click", () => {
+      if (currentField() === "artist") return;
+      setField("artist");
+      void loadTags();
+    });
+    el("tags-refresh").addEventListener("click", () => {
+      void loadTags();
+    });
+    el("tags-report").addEventListener("change", (event) => {
+      const input = event.target.closest("input[type='radio']");
+      if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
+      const key = input.name.slice("tags-".length);
+      selectedByKey.set(key, input.value);
+      plans.delete(key);
+      if (latest3) renderTagsReport(latest3);
+    });
+    el("tags-report").addEventListener("click", (event) => {
+      const button2 = event.target.closest("[data-tags-action]");
+      if (!button2 || button2.disabled) return;
+      const key = button2.dataset.key ?? "";
+      if (!key) return;
+      if (button2.dataset.tagsAction === "preview") void previewGroup(key);
+      if (button2.dataset.tagsAction === "apply") void applyGroup(key);
+    });
+  }
+  async function loadTags() {
+    const token3 = ++state.tagsToken;
+    const field = currentField();
+    plans.clear();
+    selectedByKey.clear();
+    beginBusy3();
+    let settle = "none";
+    try {
+      const response = await fetch(
+        `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
+      );
+      if (token3 !== state.tagsToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.tagsToken) return;
+      if (!response.ok || payload === null) {
+        failStatus3(serverMessage(payload, t("tags.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest3 = payload;
+      el("tags-status").textContent = "";
+      settle = "report";
+    } catch {
+      if (token3 !== state.tagsToken) return;
+      failStatus3(t("tags.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.tagsToken) return;
+      endBusy3();
+      if (settle === "report" && latest3) renderTagsReport(latest3);
+      if (settle === "retry") el("tags-refresh").focus();
+      if (settle === "report") el("tags-report").focus();
+    }
+  }
+  function showTagsFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
+    failStatus3(message);
+    endBusy3();
+    el("tags-refresh").focus();
+  }
+  function renderTagsReport(payload) {
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    const field = currentField();
+    const report = el("tags-report");
+    const groups = payload.groups ?? [];
+    const open = openKeys();
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = tagsSummary(field, payload.values ?? 0, groups.length);
+    report.replaceChildren(summary);
+    if (!groups.length) return;
+    groups.forEach((group, index) => {
+      report.append(groupCard(group, index === 0 || open.has(group.key)));
+    });
+  }
+  function repaintTags() {
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    if (latest3) renderTagsReport(latest3);
+  }
+  async function previewGroup(key) {
+    const group = groupByKey(key);
+    const value = selectedValue(key);
+    if (!group || !value) return;
+    actionKey = key;
+    if (latest3) renderTagsReport(latest3);
+    try {
+      const plan = await postJSON("/api/tag-clusters", {
+        action: "preview",
+        space: state.space,
+        field: currentField(),
+        value
+      });
+      plans.set(key, plan);
+      el("tags-status").textContent = previewSummary(plan);
+      if (latest3) renderTagsReport(latest3);
+      applyButton(key)?.focus();
+    } catch (error2) {
+      failStatus3(failureOf(error2).message);
+    } finally {
+      actionKey = "";
+      if (latest3) renderTagsReport(latest3);
+    }
+  }
+  async function applyGroup(key) {
+    const plan = plans.get(key);
+    const value = selectedValue(key);
+    if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
+    actionKey = key;
+    panelBusy = true;
+    beginBusy3();
+    if (latest3) renderTagsReport(latest3);
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "apply",
+        space: state.space,
+        field: currentField(),
+        value
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy3();
+      await loadTags();
+      el("tags-status").textContent = writtenSummary(written);
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus3(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy3();
+      if (latest3) renderTagsReport(latest3);
+    }
+  }
+  function currentField() {
+    return el("tags-artist").getAttribute("aria-pressed") === "true" ? "artist" : "genre";
+  }
+  function setField(next2) {
+    el("tags-genre").setAttribute("aria-pressed", String(next2 === "genre"));
+    el("tags-artist").setAttribute("aria-pressed", String(next2 === "artist"));
+  }
+  function beginBusy3() {
+    panelBusy = true;
+    for (const id of ["tags-genre", "tags-artist", "tags-refresh"]) {
+      const button2 = el(id);
+      button2.disabled = true;
+      button2.setAttribute("aria-busy", "true");
+    }
+    el("tags-panel").setAttribute("aria-busy", "true");
+    el("tags-status").textContent = t("tags.checking");
+    if (latest3) renderTagsReport(latest3);
+  }
+  function endBusy3() {
+    panelBusy = false;
+    for (const id of ["tags-genre", "tags-artist", "tags-refresh"]) {
+      const button2 = el(id);
+      button2.disabled = false;
+      button2.setAttribute("aria-busy", "false");
+    }
+    el("tags-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus3(message) {
+    el("tags-status").textContent = message;
+  }
+  function openKeys() {
+    const keys = /* @__PURE__ */ new Set();
+    for (const details of el("tags-report").querySelectorAll("details[data-key]")) {
+      if (details instanceof HTMLDetailsElement && details.open && details.dataset.key) {
+        keys.add(details.dataset.key);
+      }
+    }
+    return keys;
+  }
+  function groupByKey(key) {
+    return latest3?.groups?.find((group) => group.key === key);
+  }
+  function selectedValue(key) {
+    const group = groupByKey(key);
+    return selectedByKey.get(key) ?? group?.suggested ?? "";
+  }
+  function canApply(key) {
+    const plan = plans.get(key);
+    const value = selectedValue(key);
+    return Boolean(
+      plan && plan.value === value && plan.changes.length && state.writable && !panelBusy && actionKey !== key
+    );
+  }
+  function applyButton(key) {
+    return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
+  }
+  function cssEscape(value) {
+    if (typeof CSS !== "undefined" && typeof CSS.escape === "function") return CSS.escape(value);
+    return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+  }
+  function groupCard(group, open) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = open;
+    details.dataset.key = group.key;
+    const summary = document.createElement("summary");
+    setTooltip(summary, tips.tagsGroup);
+    summary.textContent = groupHeading(group);
+    const list = document.createElement("ul");
+    list.className = "tags-spellings";
+    const chosen = selectedValue(group.key);
+    for (const spelling of group.spellings) {
+      list.append(spellingRow(group.key, spelling.value, spelling.count, spelling.value === group.suggested, spelling.value === chosen));
+    }
+    details.append(summary, list);
+    const plan = plans.get(group.key);
+    if (plan && plan.value === chosen) {
+      const lines = previewLines(plan.changes);
+      if (lines.length) {
+        const diffs = document.createElement("ul");
+        const shown = lines.slice(0, LIST_CAP3);
+        for (const line of shown) {
+          const row = document.createElement("li");
+          row.textContent = line;
+          diffs.append(row);
+        }
+        details.append(diffs);
+      }
+    }
+    details.append(groupActions(group.key, chosen, plan));
+    return details;
+  }
+  function spellingRow(key, value, count, suggested, checked) {
+    const row = document.createElement("li");
+    const label = document.createElement("label");
+    label.className = "tags-spelling";
+    const radio = inputEl(tips.tagsSpelling);
+    radio.type = "radio";
+    radio.name = `tags-${key}`;
+    radio.value = value;
+    radio.checked = checked;
+    radio.disabled = panelBusy;
+    const text2 = document.createElement("span");
+    text2.textContent = spellingLabel(value, count, suggested);
+    label.append(radio, text2);
+    row.append(label);
+    return row;
+  }
+  function groupActions(key, value, plan) {
+    const actions2 = document.createElement("div");
+    actions2.className = "tags-actions";
+    const preview = buttonEl(tips.tagsPreview);
+    preview.dataset.tagsAction = "preview";
+    preview.dataset.key = key;
+    preview.textContent = t("tags.preview");
+    preview.disabled = panelBusy || !value;
+    const apply = buttonEl(tips.tagsApply);
+    apply.dataset.tagsAction = "apply";
+    apply.dataset.key = key;
+    apply.textContent = t("tags.apply");
+    apply.disabled = !canApply(key);
+    if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
+    actions2.append(preview, apply);
+    return actions2;
+  }
+
   // src/portable.ts
   var FINDING_CAP = 100;
   var KIND_KEY = {
@@ -4127,7 +4578,7 @@
     file_size: "portable.kindFileSize"
   };
   var token = 0;
-  var latest3 = null;
+  var latest4 = null;
   var opener = null;
   var wired = false;
   function portableDriveRoot(path) {
@@ -4198,7 +4649,7 @@
     const mine = ++token;
     opener = trigger ?? null;
     const dialog = el("portable-dialog");
-    latest3 = null;
+    latest4 = null;
     el("portable-verdict").textContent = "";
     el("portable-summary").textContent = "";
     el("portable-findings").replaceChildren();
@@ -4222,7 +4673,7 @@
         fail(t("portable.unreadable"));
         return;
       }
-      latest3 = report;
+      latest4 = report;
       el("portable-status").textContent = "";
       renderPortableReport(report);
     } catch {
@@ -4236,7 +4687,7 @@
       const name = button2.dataset.portableName ?? "";
       if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
     }
-    if (latest3) renderPortableReport(latest3);
+    if (latest4) renderPortableReport(latest4);
   }
   function wirePortable() {
     if (wired) return;
@@ -4247,7 +4698,7 @@
     });
   }
   function renderPortableReport(report) {
-    latest3 = report;
+    latest4 = report;
     const verdict = el("portable-verdict");
     if (report.missing_drive) verdict.textContent = t("portable.missing");
     else if (report.ready) verdict.textContent = t("portable.ready");
@@ -4289,7 +4740,7 @@
     return key ? t(key) : kind2;
   }
   function fail(message) {
-    latest3 = null;
+    latest4 = null;
     el("portable-verdict").textContent = "";
     el("portable-summary").textContent = "";
     el("portable-findings").replaceChildren();
@@ -4558,8 +5009,8 @@
     const status = el("operations-status");
     const list = el("operations-list");
     list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest5 = state.operations[state.operations.length - 1];
-    const failed = latest5?.result === "rollback_failed";
+    const latest6 = state.operations[state.operations.length - 1];
+    const failed = latest6?.result === "rollback_failed";
     alert.hidden = !failed;
     alert.textContent = failed ? t("operations.rollbackFailed") : "";
     list.replaceChildren();
@@ -4593,12 +5044,12 @@
     card.className = "operation-card snapshot-card";
     card.setAttribute("role", "listitem");
     const actionName = item3.action || item3.operation || "";
-    const actionKey = OPERATION_ACTIONS[actionName];
+    const actionKey2 = OPERATION_ACTIONS[actionName];
     const outcomeKey = OPERATION_OUTCOMES[item3.result || ""] ?? "operations.outcome.refused";
     const title2 = document.createElement("p");
     title2.textContent = t("operations.entry", {
       time: operationTime(item3.time || ""),
-      action: actionKey ? t(actionKey) : t("operations.actionOther"),
+      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
       target: item3.target || t("operations.noTarget"),
       outcome: t(outcomeKey)
     });
@@ -7018,6 +7469,7 @@
     const cratesMode = state.mode === "crates";
     const gigMode = state.mode === "gig";
     const scanMode = state.mode === "scan";
+    const tagsMode = state.mode === "tags";
     const historyMode = state.mode === "history";
     const showCrates2 = cratesMode || gigMode || scanMode;
     el("crate-tools").hidden = !showCrates2;
@@ -7027,7 +7479,7 @@
     el("mode-note").hidden = cratesMode || historyMode;
     const filesMode = state.mode === "files";
     const snapshotsMode = state.mode === "snapshots";
-    const panelMode = filesMode || snapshotsMode || gigMode || scanMode;
+    const panelMode = filesMode || snapshotsMode || gigMode || scanMode || tagsMode;
     el("browser").hidden = panelMode;
     el("track-splitter").hidden = panelMode;
     el("detail").hidden = panelMode;
@@ -7035,6 +7487,7 @@
     el("snapshots-panel").hidden = !snapshotsMode;
     el("gig-panel").hidden = !gigMode;
     el("scan-panel").hidden = !scanMode;
+    el("tags-panel").hidden = !tagsMode;
     if (state.mode === "missing") {
       const offlineCount = state.tracks.filter((track) => track.offline).length;
       el("mode-note").textContent = offlineCount ? t("mode.missingOffline", { count: offlineCount }) : t("mode.missing");
@@ -7050,6 +7503,10 @@
     }
     if (scanMode) {
       el("mode-note").textContent = t("mode.scan");
+      document.querySelector(".rules")?.remove();
+    }
+    if (tagsMode) {
+      el("mode-note").textContent = t("mode.tags");
       document.querySelector(".rules")?.remove();
     }
     if (snapshotsMode) {
@@ -7082,6 +7539,10 @@
     if (gigMode || scanMode) {
       const crate = state.crates.find((item3) => item3.id === state.activeCrate);
       el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : crate?.name ?? t("crates.selectedCrate");
+      return;
+    }
+    if (tagsMode) {
+      el("crate-foot").textContent = t("gig.wholeSpace");
       return;
     }
     if (snapshotsMode) {
@@ -7119,6 +7580,9 @@
     }
     if (state.mode === "scan") {
       renderCrates();
+      return;
+    }
+    if (state.mode === "tags") {
       return;
     }
     renderColumns();
@@ -8320,6 +8784,7 @@
     }
     if (mode === "gig") loadGigCheck().catch(showGigFailure);
     if (mode === "scan") loadScan("quick").catch(showScanFailure);
+    if (mode === "tags") loadTags().catch(showTagsFailure);
     renderList();
   }
   function showFailure(error2) {
@@ -8887,6 +9352,7 @@
       if (state.mode === "duplicates") jobs.push(loadDuplicates());
       if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
       if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
+      if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
       Promise.all(jobs).catch(showFailure);
     });
     el("export-m3u").addEventListener("click", () => {
@@ -8918,6 +9384,7 @@
         if (state.mode === "duplicates") return loadDuplicates();
         if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
         if (state.mode === "scan") return loadScan().catch(showScanFailure);
+        if (state.mode === "tags") return loadTags().catch(showTagsFailure);
         return null;
       }).catch(showFailure);
     });
@@ -8984,6 +9451,8 @@
   }
   bridge.selectTrack = selectTrack;
   bridge.selectEntry = selectEntry;
+  bridge.reloadLibrary = loadLibrary;
+  bridge.lockDown = lockDown;
 
   // src/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;
@@ -11222,7 +11691,7 @@
 
   // src/update.ts
   var UPDATE_CHOICE_EVENT = "serato-update-choice";
-  var latest4 = null;
+  var latest5 = null;
   var dismissed = false;
   var token2 = 0;
   var wired3 = false;
@@ -11254,15 +11723,15 @@
       const response = await fetch("/api/update");
       const body = response.ok ? await response.json() : null;
       if (mine !== token2) return;
-      latest4 = parseUpdateStatus(body);
+      latest5 = parseUpdateStatus(body);
     } catch {
       if (mine !== token2) return;
-      latest4 = null;
+      latest5 = null;
     }
     paintUpdate();
   }
   function paintUpdate() {
-    const status = latest4;
+    const status = latest5;
     const toggle = el("update-toggle");
     const pre = el("update-prereleases");
     toggle.checked = status?.enabled === true;
@@ -11329,7 +11798,7 @@
     }
   }
   async function skip() {
-    const release = latest4?.latest;
+    const release = latest5?.latest;
     if (!release) return;
     try {
       await postJSON("/api/update", { skip: release.version });
@@ -11428,6 +11897,7 @@
     if (state.mode === "snapshots") renderSnapshots();
     if (state.mode === "gig") repaintGig();
     if (state.mode === "scan") repaintScan();
+    if (state.mode === "tags") repaintTags();
     repaintPortable();
     repaintSnapshotPlan();
     repaintDialogs();
@@ -11706,6 +12176,7 @@
     "view-duplicates": "duplicates",
     "view-stems": "stems",
     "view-scan": "scan",
+    "view-tags": "tags",
     "view-snapshots": "snapshots",
     "view-gig": "gig"
   };
@@ -11812,6 +12283,7 @@
     setMode("crates");
   });
   wireScan();
+  wireTags();
   wirePortable();
   wireLayout();
   wireVersion();

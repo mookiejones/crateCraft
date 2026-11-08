@@ -192,6 +192,14 @@ export const tips = {
   viewSnapshots: spec("tooltip.viewSnapshots"),
   viewGig: spec("tooltip.viewGig"),
   viewScan: spec("tooltip.viewScan"),
+  viewTags: spec("tooltip.viewTags"),
+  tagsGenre: spec("tooltip.tagsGenre"),
+  tagsArtist: spec("tooltip.tagsArtist"),
+  tagsRefresh: spec("tooltip.tagsRefresh"),
+  tagsPreview: spec("tooltip.tagsPreview"),
+  tagsApply: spec("tooltip.tagsApply"),
+  tagsGroup: spec("tooltip.tagsGroup"),
+  tagsSpelling: spec("tooltip.tagsSpelling"),
   gigRefresh: spec("tooltip.gigRefresh"),
   scanQuick: spec("tooltip.scanQuick"),
   scanFull: spec("tooltip.scanFull"),
@@ -270,6 +278,7 @@ export function viewTip(view: string): TipSpec | undefined {
     snapshots: tips.viewSnapshots,
     gig: tips.viewGig,
     scan: tips.viewScan,
+    tags: tips.viewTags,
   };
   return known[view];
 }
@@ -346,6 +355,9 @@ export function staticTip(id: string): TipSpec | undefined {
     "gig-refresh": tips.gigRefresh,
     "scan-quick": tips.scanQuick,
     "scan-full": tips.scanFull,
+    "tags-genre": tips.tagsGenre,
+    "tags-artist": tips.tagsArtist,
+    "tags-refresh": tips.tagsRefresh,
     "snapshots-take": tips.snapshotsTake,
     "snapshots-drives": tips.backupDrives,
     "snapshots-undo-button": tips.snapshotsUndo,

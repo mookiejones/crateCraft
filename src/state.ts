@@ -118,6 +118,7 @@ export interface PageState {
   snapshotPlanId: string;
   gigToken: number;
   scanToken: number;
+  tagsToken: number;
   view: Track[];
 }
 
@@ -185,5 +186,6 @@ export const state: PageState = {
   snapshotPlanId: "",
   gigToken: 0,
   scanToken: 0,
+  tagsToken: 0,
   view: [],
 };
