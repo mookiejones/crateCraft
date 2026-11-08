@@ -2108,12 +2108,14 @@ class Handler(BaseHTTPRequestHandler):
                     preset = parsed.path == "/api/smart-preset"
                     tree = parsed.path == "/api/crate-tree"
                     foldering = parsed.path == "/api/folder-sync"
+                    clustering = parsed.path == "/api/tag-clusters"
                     preview = (
                         (merging and payload.get("preview") is True)
                         or (replacing and payload.get("preview") is True)
                         or (preset and payload.get("action") in ("preview", "list"))
                         or (tree and payload.get("action") == "preview")
                         or (foldering and payload.get("action") == "preview")
+                        or (clustering and payload.get("action") == "preview")
                     )
                     if not preview:
                         invalidate()
@@ -2160,6 +2162,10 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = folder_sync.action(request)
+                    elif clustering:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = tag_cleanup.action(request)
                     elif merging:
                         result = as_dict(_library_call("merge_duplicates", payload))
                         if not preview:
