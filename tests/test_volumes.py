@@ -167,12 +167,20 @@ class AbsentVolumeTests(unittest.TestCase):
     """``absent_volume`` is the gig-check split between unplugged and missing."""
 
     def test_unplugged_posix_volume_is_absent(self) -> None:
-        """A ``/Volumes`` path whose root is not a directory is unplugged."""
-        with mock.patch.object(volumes.sys, "platform", "darwin"):
-            gone = volumes.absent_volume("/Volumes/OFFLINE208/Music/a.mp3")
-        self.assertIsNotNone(gone)
-        assert gone is not None
-        self.assertEqual(gone.name, "OFFLINE208")
+        """A ``/Volumes`` path whose root is not a directory is unplugged.
+
+        Relink uses the same ``Path.is_absolute`` gate, so a Mac library on
+        Windows is missing, not unplugged.
+        """
+        stored = "/Volumes/OFFLINE208/Music/a.mp3"
+        if Path(stored).is_absolute():
+            with mock.patch.object(volumes.sys, "platform", "darwin"):
+                gone = volumes.absent_volume(stored)
+            self.assertIsNotNone(gone)
+            assert gone is not None
+            self.assertEqual(gone.name, "OFFLINE208")
+        else:
+            self.assertIsNone(volumes.absent_volume(stored))
 
     def test_windows_letter_follows_pathlib_on_this_os(self) -> None:
         """A ``Z:`` id is a volume only when this platform treats it as absolute.
