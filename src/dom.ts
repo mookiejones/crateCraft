@@ -29,6 +29,7 @@ export interface ElementIds {
   "crate-delete": HTMLButtonElement;
   "crate-preset": HTMLButtonElement;
   "crate-folder-sync": HTMLButtonElement;
+  "crate-rename-from-tags": HTMLButtonElement;
   "crate-refresh": HTMLButtonElement;
   "preset-dialog": HTMLDialogElement;
   "folder-sync-dialog": HTMLDialogElement;
@@ -175,6 +176,7 @@ export interface ElementIds {
   "files-up": HTMLButtonElement;
   "files-elsewhere": HTMLButtonElement;
   "files-rename": HTMLButtonElement;
+  "files-rename-from-tags": HTMLButtonElement;
   "files-move": HTMLButtonElement;
   "files-move-folder": HTMLButtonElement;
   "files-replace": HTMLButtonElement;

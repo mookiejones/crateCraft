@@ -236,6 +236,7 @@
     "files.chooseDestination": "Choose the destination folder. Then confirm the move.",
     "files.chooseMove": "Choose files to move.",
     "files.chooseOneRename": "Choose one file to rename.",
+    "files.chooseRenameFromTags": "Choose files to rename from tags.",
     "files.chooseOneReplace": "Choose one file to replace.",
     "files.contents": "Folder contents",
     "files.driveMissing": "Drive not connected",
@@ -263,6 +264,7 @@
     "files.readingFolderNote": "Reading this folder.",
     "files.readingRoots": "Reading music folders",
     "files.readingRootsNote": "Reading music folders.",
+    "files.renameFromTags": "Rename from tags",
     "files.replaceFile": "Replace file",
     "files.review": "Review",
     "files.reviewTitle": "Review this change",
@@ -521,6 +523,7 @@
     "operations.action.move": "Move file",
     "operations.action.moveFolder": "Move folder",
     "operations.action.rename": "Rename file",
+    "operations.action.renameFromTags": "Rename from tags",
     "operations.action.relink": "Relink files",
     "operations.action.replace": "Replace file",
     "operations.action.replaceInCrates": "Replace in crates",
@@ -908,6 +911,7 @@
     "tooltip.crateDelete": "Delete the selected crate. The tracks stay in the library.",
     "tooltip.crateNew": "Create a new crate.",
     "tooltip.crateFolderSync": "Add library tracks whose files sit in a folder to this crate. Files that are not in the library stay skipped.",
+    "tooltip.crateRenameFromTags": "Rename this crate's files to Artist - Title and keep crate paths.",
     "tooltip.cratePreset": "Make a crate from a preset: tracks that mix with a key, a BPM range, or tracks not played lately.",
     "tooltip.folderSyncCancel": "Close without changing the crate.",
     "tooltip.folderSyncFull": "Also remove tracks whose files are not in this folder.",
@@ -942,6 +946,7 @@
     "tooltip.filesPickCancel": "Cancel choosing a folder.",
     "tooltip.filesRefresh": "Refresh this folder from disk.",
     "tooltip.filesRename": "Rename the selected file.",
+    "tooltip.filesRenameFromTags": "Rename the selected files to Artist - Title and keep crate paths.",
     "tooltip.filesReplace": "Replace the selected file and keep its cue points.",
     "tooltip.filesReplacement": "Type the path of the replacement file.",
     "tooltip.filesReview": "Review this change before it is saved.",
@@ -1438,6 +1443,7 @@
     "files.chooseDestination": "Elige la carpeta de destino. Después confirma el traslado.",
     "files.chooseMove": "Elige los archivos que quieres mover.",
     "files.chooseOneRename": "Elige un solo archivo para renombrar.",
+    "files.chooseRenameFromTags": "Elige los archivos que quieres renombrar desde las etiquetas.",
     "files.chooseOneReplace": "Elige un solo archivo para reemplazar.",
     "files.contents": "Contenido de la carpeta",
     "files.driveMissing": "Unidad no conectada",
@@ -1465,6 +1471,7 @@
     "files.readingFolderNote": "Leyendo esta carpeta.",
     "files.readingRoots": "Leyendo las carpetas de música",
     "files.readingRootsNote": "Leyendo las carpetas de música.",
+    "files.renameFromTags": "Renombrar desde etiquetas",
     "files.replaceFile": "Reemplazar archivo",
     "files.review": "Revisar",
     "files.reviewTitle": "Revisa este cambio",
@@ -1723,6 +1730,7 @@
     "operations.action.move": "Mover archivo",
     "operations.action.moveFolder": "Mover carpeta",
     "operations.action.rename": "Renombrar archivo",
+    "operations.action.renameFromTags": "Renombrar desde etiquetas",
     "operations.action.relink": "Reenlazar archivos",
     "operations.action.replace": "Reemplazar archivo",
     "operations.action.replaceInCrates": "Reemplazar en las cajas",
@@ -2110,6 +2118,7 @@
     "tooltip.crateDelete": "Elimina la caja seleccionada. Las pistas siguen en la biblioteca.",
     "tooltip.crateNew": "Crea una caja nueva.",
     "tooltip.crateFolderSync": "Añade a esta caja las pistas de la biblioteca cuyos archivos están en una carpeta. Los archivos que no están en la biblioteca se omiten.",
+    "tooltip.crateRenameFromTags": "Renombra los archivos de esta caja a Artista - Título y conserva las rutas de las cajas.",
     "tooltip.cratePreset": "Crea una caja a partir de un preajuste: pistas que mezclan con una tonalidad, un rango de BPM o pistas sin tocar últimamente.",
     "tooltip.folderSyncCancel": "Cierra sin cambiar la caja.",
     "tooltip.folderSyncFull": "También quita las pistas cuyos archivos no están en esta carpeta.",
@@ -2144,6 +2153,7 @@
     "tooltip.filesPickCancel": "Cancela la elección de carpeta.",
     "tooltip.filesRefresh": "Actualiza esta carpeta desde el disco.",
     "tooltip.filesRename": "Cambia el nombre del archivo seleccionado.",
+    "tooltip.filesRenameFromTags": "Renombra los archivos seleccionados a Artista - Título y conserva las rutas de las cajas.",
     "tooltip.filesReplace": "Sustituye el archivo seleccionado y conserva sus puntos de cue.",
     "tooltip.filesReplacement": "Escribe la ruta del archivo de sustitución.",
     "tooltip.filesReview": "Revisa este cambio antes de guardarlo.",
@@ -2966,6 +2976,7 @@
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),
     crateFolderSync: spec("tooltip.crateFolderSync"),
+    crateRenameFromTags: spec("tooltip.crateRenameFromTags"),
     crateRefresh: spec("tooltip.crateRefresh"),
     folderSyncPath: spec("tooltip.folderSyncPath"),
     folderSyncSubcrates: spec("tooltip.folderSyncSubcrates"),
@@ -3010,6 +3021,7 @@
     filesElsewhere: spec("tooltip.filesElsewhere"),
     filesMusicFolders: spec("tooltip.filesMusicFolders"),
     filesRename: spec("tooltip.filesRename"),
+    filesRenameFromTags: spec("tooltip.filesRenameFromTags"),
     filesMove: spec("tooltip.filesMove"),
     filesMoveFolder: spec("tooltip.filesMoveFolder"),
     filesReplace: spec("tooltip.filesReplace"),
@@ -3189,6 +3201,7 @@
       "crate-delete": tips.crateDelete,
       "crate-preset": tips.cratePreset,
       "crate-folder-sync": tips.crateFolderSync,
+      "crate-rename-from-tags": tips.crateRenameFromTags,
       "crate-refresh": tips.crateRefresh,
       "folder-sync-path": tips.folderSyncPath,
       "folder-sync-subcrates": tips.folderSyncSubcrates,
@@ -3221,6 +3234,7 @@
       "files-refresh": tips.filesRefresh,
       "files-elsewhere": tips.filesElsewhere,
       "files-rename": tips.filesRename,
+      "files-rename-from-tags": tips.filesRenameFromTags,
       "files-move": tips.filesMove,
       "files-move-folder": tips.filesMoveFolder,
       "files-replace": tips.filesReplace,
@@ -4294,7 +4308,9 @@
   function syncFolderSyncButton() {
     const id = state.activeCrate;
     const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
-    el("crate-folder-sync").disabled = !state.writable || id === "all" || Boolean(crate?.smart);
+    const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
+    el("crate-folder-sync").disabled = blocked;
+    el("crate-rename-from-tags").disabled = blocked;
   }
   function readFolderSyncForm() {
     const folder = el("folder-sync-path").value.trim();
@@ -4515,6 +4531,7 @@
     import_m3u: "operations.action.importM3u",
     merge_duplicates: "operations.action.mergeDuplicates",
     rename: "operations.action.rename",
+    rename_from_tags: "operations.action.renameFromTags",
     move: "operations.action.move",
     move_folder: "operations.action.moveFolder",
     replace: "operations.action.replace",
@@ -8460,6 +8477,7 @@
     const selected = selectedFiles();
     const locked = !state.writable || state.filesLoading || state.filesAtRoots;
     el("files-rename").disabled = locked || selected.length !== 1;
+    el("files-rename-from-tags").disabled = locked || !selected.length;
     el("files-move").disabled = locked || !selected.length || Boolean(state.filesPick);
     el("files-move-folder").disabled = locked || !state.filesPath || Boolean(state.filesPick);
     el("files-replace").disabled = locked || selected.length !== 1;
@@ -9027,6 +9045,7 @@
   }
   var filesPreview = null;
   var filesAction = "";
+  var filesTagScope = "paths";
   var filesTrigger = null;
   var relinkPlan = null;
   var relinkLoading = false;
@@ -9682,8 +9701,9 @@
     if (!state.wizardComplete && openWizard(false, el("search"))) return;
     if (payload.needs_consent_prompt) showConsent();
   }
-  function openFilesDialog(action, trigger) {
+  function openFilesDialog(action, trigger, scope = "paths") {
     filesAction = action;
+    filesTagScope = scope;
     filesPreview = null;
     filesTrigger = trigger instanceof HTMLElement ? trigger : null;
     el("files-name-label").hidden = action !== "rename";
@@ -9701,7 +9721,7 @@
     setTooltip(confirm2, action === "delete" ? tips.filesMoveTrash : tips.filesConfirm);
     syncFilesDialog();
     el("files-dialog").showModal();
-    if (action === "delete" || action === "move" || action === "move_folder") {
+    if (action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags") {
       el("files-cancel").focus();
       reviewFiles().catch((error2) => {
         el("files-dialog-status").textContent = failureOf(error2).message;
@@ -9714,7 +9734,7 @@
     const review = el("files-review");
     const ready = Boolean(filesPreview?.ok && state.writable && filesPreview.needs_confirm);
     confirm2.disabled = !ready;
-    review.hidden = filesAction === "delete" || filesAction === "move" || filesAction === "move_folder";
+    review.hidden = filesAction === "delete" || filesAction === "move" || filesAction === "move_folder" || filesAction === "rename_from_tags";
     if (!state.writable) {
       el("files-dialog-status").textContent = el("status").textContent;
     }
@@ -9734,6 +9754,11 @@
       const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
       const effect = change.effect === "trash" ? t("files.trash") : change.to;
       item3.textContent = `${change.from} → ${effect}${crates}`;
+      list.append(item3);
+    }
+    for (const skip2 of payload.skipped || []) {
+      const item3 = document.createElement("li");
+      item3.textContent = skip2;
       list.append(item3);
     }
     if (payload.more) {
@@ -9763,12 +9788,23 @@
       body.replacement = el("files-replacement").value.trim();
     } else if (filesAction === "delete") {
       body.paths = selectedFiles().map((entry) => entry.path);
+    } else if (filesAction === "rename_from_tags") {
+      if (filesTagScope === "crate") {
+        const crate = state.activeCrate;
+        if (typeof crate === "number") {
+          body.crate = crate;
+          body.space = state.space;
+        }
+      } else {
+        body.paths = selectedFiles().map((entry) => entry.path);
+      }
     }
     return body;
   }
   function closeFilesDialog() {
     const trigger = filesTrigger;
     filesTrigger = null;
+    filesTagScope = "paths";
     if (el("files-dialog").open) el("files-dialog").close();
     if (trigger instanceof HTMLElement) trigger.focus();
   }
@@ -9777,6 +9813,7 @@
     const confirm2 = el("files-confirm");
     confirm2.disabled = true;
     el("files-dialog-status").textContent = t("files.saving");
+    const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
     try {
       const payload = await postJSON("/api/files", filesBody(true));
       if (payload.serato) applyStatus(payload.serato);
@@ -9784,8 +9821,14 @@
       state.filesPick = null;
       state.filesPickPaths = [];
       state.filesPickSource = "";
-      state.filesMessage = payload.summary || t("files.updated");
-      if (payload.warning) state.filesMessage = `${state.filesMessage} ${payload.warning}`;
+      let message = payload.summary || t("files.updated");
+      if (payload.warning) message = `${message} ${payload.warning}`;
+      if (crateScope && state.mode !== "files") {
+        setNotice(message);
+        await loadLibrary();
+        return;
+      }
+      state.filesMessage = message;
       await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
       await loadLibrary();
       state.filesMessage = state.filesMessage;
@@ -10204,6 +10247,19 @@
         return;
       }
       openFilesDialog("rename", event.currentTarget);
+    });
+    el("files-rename-from-tags").addEventListener("click", (event) => {
+      if (!selectedFiles().length) {
+        state.filesError = t("files.chooseRenameFromTags");
+        renderFiles();
+        return;
+      }
+      openFilesDialog("rename_from_tags", event.currentTarget, "paths");
+    });
+    el("crate-rename-from-tags").addEventListener("click", (event) => {
+      const crate = state.activeCrate;
+      if (typeof crate !== "number") return;
+      openFilesDialog("rename_from_tags", event.currentTarget, "crate");
     });
     el("files-move").addEventListener("click", () => {
       const selected = selectedFiles();

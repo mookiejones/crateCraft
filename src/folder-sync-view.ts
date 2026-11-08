@@ -23,14 +23,16 @@ export interface FolderSyncReply {
 }
 
 /**
- * Enable Sync folder on a writable normal crate.
+ * Enable Sync folder and Rename from tags on a writable normal crate.
  *
  * @returns {void}
  */
 export function syncFolderSyncButton(): void {
   const id = state.activeCrate;
   const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : undefined;
-  el("crate-folder-sync").disabled = !state.writable || id === "all" || Boolean(crate?.smart);
+  const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
+  el("crate-folder-sync").disabled = blocked;
+  el("crate-rename-from-tags").disabled = blocked;
 }
 
 /**

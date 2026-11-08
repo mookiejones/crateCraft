@@ -67,6 +67,7 @@ The list shows the old path, an arrow, and the new path or **Trash**. Library tr
 | Action | How the review starts | Button that writes |
 | --- | --- | --- |
 | Rename | Type the name, then click **Review** | **Confirm** |
+| Rename from tags | The plan loads by itself | **Confirm** |
 | Replace | Type the new path, then click **Review** | **Confirm** |
 | Move | The plan loads by itself | **Confirm** |
 | Delete | The plan loads by itself | **Move to Trash** |
@@ -87,6 +88,26 @@ If Serato is open, the dialog shows the same status line as the rail and does no
 Rename one file at a time. The new name stays in the same folder. A name cannot contain a slash or a backslash. The names `.` and `..` are refused. If another file already has that name, nothing is renamed.
 
 A missing file cannot be renamed on its own.
+
+## Rename from tags
+
+Rename many files to **Artist - Title** plus the extension, in the same folder. Library tags are used first. File tags fill a blank artist or title. Crates, history, and Prepare follow the new path. Cue points stay inside the audio file.
+
+From **Files**:
+
+1. Tick one or more files.
+2. Click **Rename from tags**.
+3. Read the plan. Skipped files stay listed. They are not renamed.
+4. Click **Confirm**.
+
+From a crate:
+
+1. Select a normal crate. Smart Crates and All tracks stay off.
+2. Click **Rename from tags**.
+3. Read the plan.
+4. Click **Confirm**.
+
+A file already named that way, a missing artist and title, a name that is already taken, a shortcut, a missing file, and a file that is not in the library are skipped. The rest of the batch still runs. A slash in a tag becomes a space. Quit Serato DJ Pro first.
 
 ## Move files to a folder
 

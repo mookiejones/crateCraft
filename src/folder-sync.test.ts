@@ -97,16 +97,20 @@ describe("syncFolderSyncButton", () => {
   it("disables All tracks, smart crates, and a read-only library", () => {
     syncFolderSyncButton();
     expect(el("crate-folder-sync").disabled).toBe(false);
+    expect(el("crate-rename-from-tags").disabled).toBe(false);
     state.activeCrate = "all";
     syncFolderSyncButton();
     expect(el("crate-folder-sync").disabled).toBe(true);
+    expect(el("crate-rename-from-tags").disabled).toBe(true);
     state.activeCrate = 6;
     syncFolderSyncButton();
     expect(el("crate-folder-sync").disabled).toBe(true);
+    expect(el("crate-rename-from-tags").disabled).toBe(true);
     state.activeCrate = 5;
     state.writable = false;
     syncFolderSyncButton();
     expect(el("crate-folder-sync").disabled).toBe(true);
+    expect(el("crate-rename-from-tags").disabled).toBe(true);
   });
 });
 

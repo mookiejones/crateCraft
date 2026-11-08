@@ -180,6 +180,7 @@ const OPERATION_ACTIONS: Record<string, MessageKey> = {
   import_m3u: "operations.action.importM3u",
   merge_duplicates: "operations.action.mergeDuplicates",
   rename: "operations.action.rename",
+  rename_from_tags: "operations.action.renameFromTags",
   move: "operations.action.move",
   move_folder: "operations.action.moveFolder",
   replace: "operations.action.replace",
