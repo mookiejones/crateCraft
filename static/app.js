@@ -497,7 +497,11 @@
     "mode.duplicates": "Same title, artist, and length. Select a copy, then merge the others into it.",
     "mode.files": "Files on disk. Cue points stay in the audio file. Crates follow the path.",
     "mode.gig": "Read-only. This check does not change the library.",
-    "mode.missing": "Tracks Serato has marked missing in this space.",
+    "mode.missing": "Tracks whose files are missing on a connected drive.",
+    "mode.missingOffline": {
+      one: "Tracks whose files are missing on a connected drive. {count} track on an unplugged drive is marked offline in crates.",
+      other: "Tracks whose files are missing on a connected drive. {count} tracks on unplugged drives are marked offline in crates."
+    },
     "mode.scan": "Read-only. This check does not change the library.",
     "mode.snapshots": "Hash-checked copies of the library, crates, and Serato frames inside audio files. Audio itself is not copied.",
     "mode.stems": "Tracks with a stems analysis state.",
@@ -1091,7 +1095,7 @@
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
     "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
-    "tooltip.viewMissing": "Show tracks whose files are missing in this space.",
+    "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as offline.",
     "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
     "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Show tracks Serato has analyzed for stems. This does not separate the audio.",
@@ -1120,6 +1124,7 @@
     "tooltip.zoomIn": "Show a shorter stretch of the waveform around the playhead.",
     "tooltip.zoomOut": "Show a longer stretch of the waveform around the playhead.",
     "track.missingBadge": "missing",
+    "track.offlineBadge": "offline",
     "track.numbered": "Track {id}",
     "track.stemsBadge": "stems",
     "track.untitled": "Untitled",
@@ -1694,7 +1699,11 @@
     "mode.duplicates": "Mismo título, artista y duración. Selecciona una copia y combina las demás en ella.",
     "mode.files": "Archivos en el disco. Los cues se quedan en el archivo de audio. Las cajas siguen la ruta.",
     "mode.gig": "Solo lectura. Esta comprobación no cambia la biblioteca.",
-    "mode.missing": "Pistas que Serato ha marcado como no encontradas en este espacio.",
+    "mode.missing": "Pistas cuyo archivo falta en una unidad conectada.",
+    "mode.missingOffline": {
+      one: "Pistas cuyo archivo falta en una unidad conectada. {count} pista en una unidad desconectada se marca como desconectada en las cajas.",
+      other: "Pistas cuyo archivo falta en una unidad conectada. {count} pistas en unidades desconectadas se marcan como desconectadas en las cajas."
+    },
     "mode.scan": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.snapshots": "Copias verificadas por hash de la biblioteca, las cajas y los datos de Serato dentro de los archivos de audio. El audio en sí no se copia.",
     "mode.stems": "Pistas con un estado de análisis de stems.",
@@ -2288,7 +2297,7 @@
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
     "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
     "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
-    "tooltip.viewMissing": "Muestra las pistas de este espacio cuyo archivo no se encuentra.",
+    "tooltip.viewMissing": "Muestra las pistas cuyo archivo falta en una unidad conectada. Las pistas en una unidad desconectada se quedan en las cajas como desconectadas.",
     "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
     "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Muestra las pistas que Serato ya analizó para stems. No separa el audio.",
@@ -2317,6 +2326,7 @@
     "tooltip.zoomIn": "Muestra un tramo más corto de la forma de onda alrededor del cursor.",
     "tooltip.zoomOut": "Muestra un tramo más largo de la forma de onda alrededor del cursor.",
     "track.missingBadge": "no encontrada",
+    "track.offlineBadge": "desconectada",
     "track.numbered": "Pista {id}",
     "track.stemsBadge": "stems",
     "track.untitled": "Sin título",
@@ -6571,7 +6581,12 @@
       title2.className = "title";
       title2.textContent = track.name || t("track.untitled");
       line.append(title2);
-      if (track.missing) {
+      if (track.offline) {
+        const offline = document.createElement("span");
+        offline.className = "offline-word";
+        offline.textContent = t("track.offlineBadge");
+        line.append(offline);
+      } else if (track.missing) {
         const missing = document.createElement("span");
         missing.className = "missing-word";
         missing.textContent = t("track.missingBadge");
@@ -6997,7 +7012,10 @@
     el("snapshots-panel").hidden = !snapshotsMode;
     el("gig-panel").hidden = !gigMode;
     el("scan-panel").hidden = !scanMode;
-    if (state.mode === "missing") el("mode-note").textContent = t("mode.missing");
+    if (state.mode === "missing") {
+      const offlineCount = state.tracks.filter((track) => track.offline).length;
+      el("mode-note").textContent = offlineCount ? t("mode.missingOffline", { count: offlineCount }) : t("mode.missing");
+    }
     if (state.mode === "duplicates") {
       el("mode-note").textContent = t("mode.duplicates");
     }
@@ -9234,7 +9252,8 @@
       if (track.play_count != null) parts.push(t("merge.plays", { count: Number(track.play_count) }));
       const crates = crateNamesFor(id);
       if (crates.length) parts.push(crates.join(", "));
-      if (track.missing) parts.push(t("track.missingBadge"));
+      if (track.offline) parts.push(t("track.offlineBadge"));
+      else if (track.missing) parts.push(t("track.missingBadge"));
       meta.textContent = parts.join(" · ");
       text2.append(name, meta);
       label.append(input, text2);

@@ -579,7 +579,12 @@ export function renderShell() {
   el("snapshots-panel").hidden = !snapshotsMode;
   el("gig-panel").hidden = !gigMode;
   el("scan-panel").hidden = !scanMode;
-  if (state.mode === "missing") el("mode-note").textContent = t("mode.missing");
+  if (state.mode === "missing") {
+    const offlineCount = state.tracks.filter((track) => track.offline).length;
+    el("mode-note").textContent = offlineCount
+      ? t("mode.missingOffline", { count: offlineCount })
+      : t("mode.missing");
+  }
   if (state.mode === "duplicates") {
     el("mode-note").textContent = t("mode.duplicates");
   }

@@ -112,7 +112,12 @@ export function paintRows() {
     title.className = "title";
     title.textContent = track.name || t("track.untitled");
     line.append(title);
-    if (track.missing) {
+    if (track.offline) {
+      const offline = document.createElement("span");
+      offline.className = "offline-word";
+      offline.textContent = t("track.offlineBadge");
+      line.append(offline);
+    } else if (track.missing) {
       const missing = document.createElement("span");
       missing.className = "missing-word";
       missing.textContent = t("track.missingBadge");

@@ -186,15 +186,12 @@ def find_missing(rows: Iterable[sqlite3.Row], locations: dict[int, str]) -> tupl
         if not stored or _int(row["third_party_type"]) == APPLE_MUSIC_THIRD_PARTY:
             continue
         uri = locations.get(_int(row["location_id"]) or -1, "")
-        location_volume = volumes.external_volume(volumes.location_path(uri)) if uri else None
-        path_volume = volumes.external_volume(stored) if Path(stored).is_absolute() else None
-        gone = next(
-            (volume for volume in (location_volume, path_volume) if volume is not None and not mounts.mounted(volume)),
-            None,
-        )
+        gone = volumes.absent_volume(stored, uri, mounts)
         if gone is not None:
             absent.add(gone.name)
             continue
+        location_volume = volumes.external_volume(volumes.location_path(uri)) if uri else None
+        path_volume = volumes.external_volume(stored) if Path(stored).is_absolute() else None
         root = next((volume.root for volume in (location_volume, path_volume) if volume is not None), None)
         candidates = volumes.path_candidates(stored, root)
         if any(volumes.opens_for_read(candidate) for candidate in candidates):

@@ -151,7 +151,7 @@ describe("library views", () => {
     renderList();
     expect(titles()).toEqual(["Gone"]);
     expect(document.querySelector("#list .missing-word")?.textContent).toBe("missing");
-    expect(document.querySelector("#mode-note")?.textContent).toBe("Tracks Serato has marked missing in this space.");
+    expect(document.querySelector("#mode-note")?.textContent).toBe("Tracks whose files are missing on a connected drive.");
     expect((document.querySelector("#mode-note") as HTMLElement).hidden).toBe(false);
     expect((document.querySelector("#relink-actions") as HTMLElement).hidden).toBe(false);
     expect((document.querySelector("#open-relink") as HTMLButtonElement).disabled).toBe(true);
@@ -162,6 +162,28 @@ describe("library views", () => {
     renderList();
     expect((document.querySelector("#relink-actions") as HTMLElement).hidden).toBe(true);
     expect((document.querySelector("#open-relink") as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("keeps unplugged-drive tracks out of Missing files and badges them offline in crates", () => {
+    state.tracks = [
+      track(1, { name: "Gone", missing: true }),
+      track(2, { name: "USB cut", offline: true, offline_drive: "USB" }),
+      track(3, { name: "Here" }),
+    ];
+    state.selectedId = 1;
+    state.mode = "missing";
+    renderList();
+    expect(titles()).toEqual(["Gone"]);
+    expect(document.querySelector("#list .offline-word")).toBeNull();
+    expect(document.querySelector("#mode-note")?.textContent).toBe(
+      "Tracks whose files are missing on a connected drive. 1 track on an unplugged drive is marked offline in crates.",
+    );
+    state.mode = "crates";
+    renderList();
+    expect(titles()).toEqual(["Gone", "Here", "USB cut"]);
+    const row = [...document.querySelectorAll("#list .row")].find((node) => node.textContent?.includes("USB cut"));
+    expect(row?.querySelector(".offline-word")?.textContent).toBe("offline");
+    expect(row?.querySelector(".missing-word")).toBeNull();
   });
 
   it("waits for duplicate ids, then lists the group and enables merge when Serato is quit", () => {

@@ -107,6 +107,10 @@ export interface Track {
   color?: number | string | null;
   emoji?: string;
   missing?: boolean;
+  /** Unplugged-drive track. Distinct from `missing`. */
+  offline?: boolean;
+  /** Drive name when `offline` is set. */
+  offline_drive?: string;
   stems?: boolean;
   entry?: boolean;
   deck?: string;

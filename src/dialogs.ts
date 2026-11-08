@@ -429,7 +429,8 @@ function renderMergeChoices() {
     if (track.play_count != null) parts.push(t("merge.plays", { count: Number(track.play_count) }));
     const crates = crateNamesFor(id);
     if (crates.length) parts.push(crates.join(", "));
-    if (track.missing) parts.push(t("track.missingBadge"));
+    if (track.offline) parts.push(t("track.offlineBadge"));
+    else if (track.missing) parts.push(t("track.missingBadge"));
     meta.textContent = parts.join(" · ");
     text.append(name, meta);
     label.append(input, text);
