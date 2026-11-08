@@ -79,6 +79,7 @@ function resolveColorway(value: unknown): (typeof COLORWAYS)[number] {
 }
 let filesPreview: FilesPayload | null = null;
 let filesAction = "";
+let filesTagScope: "paths" | "crate" = "paths";
 let filesTrigger: HTMLElement | null = null;
 let relinkPlan: RelinkPlan | null = null;
 let relinkLoading = false;
@@ -1071,16 +1072,22 @@ export async function loadPrivacy() {
 /**
  * Open the review dialog for one file action.
  *
- * Delete and a chosen move load the preview immediately. Rename and
- * replace wait until Review, because those need a typed value. Cancel
- * is focused for a delete.
+ * Delete, a chosen move, and rename from tags load the preview immediately.
+ * Rename and replace wait until Review, because those need a typed value.
+ * Cancel is focused for a delete.
  *
  * @param {string} action File action.
  * @param {HTMLElement|null} trigger Control that opened the dialog.
+ * @param {"paths"|"crate"} scope Files selection or one crate's members.
  * @returns {void}
  */
-function openFilesDialog(action: string, trigger: EventTarget | null) {
+function openFilesDialog(
+  action: string,
+  trigger: EventTarget | null,
+  scope: "paths" | "crate" = "paths",
+) {
   filesAction = action;
+  filesTagScope = scope;
   filesPreview = null;
   filesTrigger = trigger instanceof HTMLElement ? trigger : null;
   el("files-name-label").hidden = action !== "rename";
@@ -1098,7 +1105,12 @@ function openFilesDialog(action: string, trigger: EventTarget | null) {
   setTooltip(confirm, action === "delete" ? tips.filesMoveTrash : tips.filesConfirm);
   syncFilesDialog();
   el("files-dialog").showModal();
-  if (action === "delete" || action === "move" || action === "move_folder") {
+  if (
+    action === "delete" ||
+    action === "move" ||
+    action === "move_folder" ||
+    action === "rename_from_tags"
+  ) {
     el("files-cancel").focus();
     reviewFiles().catch((error) => {
       el("files-dialog-status").textContent = failureOf(error).message;
@@ -1117,7 +1129,11 @@ function syncFilesDialog() {
   const review = el("files-review");
   const ready = Boolean(filesPreview?.ok && state.writable && filesPreview.needs_confirm);
   confirm.disabled = !ready;
-  review.hidden = filesAction === "delete" || filesAction === "move" || filesAction === "move_folder";
+  review.hidden =
+    filesAction === "delete" ||
+    filesAction === "move" ||
+    filesAction === "move_folder" ||
+    filesAction === "rename_from_tags";
   if (!state.writable) {
     el("files-dialog-status").textContent = el("status").textContent;
   }
@@ -1148,6 +1164,11 @@ async function reviewFiles() {
       : "";
     const effect = change.effect === "trash" ? t("files.trash") : change.to;
     item.textContent = `${change.from} → ${effect}${crates}`;
+    list.append(item);
+  }
+  for (const skip of payload.skipped || []) {
+    const item = document.createElement("li");
+    item.textContent = skip;
     list.append(item);
   }
   if (payload.more) {
@@ -1184,6 +1205,16 @@ function filesBody(confirm: boolean): FilesBody {
     body.replacement = el("files-replacement").value.trim();
   } else if (filesAction === "delete") {
     body.paths = selectedFiles().map((entry) => entry.path);
+  } else if (filesAction === "rename_from_tags") {
+    if (filesTagScope === "crate") {
+      const crate = state.activeCrate;
+      if (typeof crate === "number") {
+        body.crate = crate;
+        body.space = state.space;
+      }
+    } else {
+      body.paths = selectedFiles().map((entry) => entry.path);
+    }
   }
   return body;
 }
@@ -1196,6 +1227,7 @@ function filesBody(confirm: boolean): FilesBody {
 function closeFilesDialog() {
   const trigger = filesTrigger;
   filesTrigger = null;
+  filesTagScope = "paths";
   if (el("files-dialog").open) el("files-dialog").close();
   if (trigger instanceof HTMLElement) trigger.focus();
 }
@@ -1210,6 +1242,7 @@ async function confirmFiles() {
   const confirm = el("files-confirm");
   confirm.disabled = true;
   el("files-dialog-status").textContent = t("files.saving");
+  const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
   try {
     const payload = await postJSON("/api/files", filesBody(true));
     if (payload.serato) applyStatus(payload.serato);
@@ -1217,8 +1250,14 @@ async function confirmFiles() {
     state.filesPick = null;
     state.filesPickPaths = [];
     state.filesPickSource = "";
-    state.filesMessage = payload.summary || t("files.updated");
-    if (payload.warning) state.filesMessage = `${state.filesMessage} ${payload.warning}`;
+    let message = payload.summary || t("files.updated");
+    if (payload.warning) message = `${message} ${payload.warning}`;
+    if (crateScope && state.mode !== "files") {
+      setNotice(message);
+      await loadLibrary();
+      return;
+    }
+    state.filesMessage = message;
     await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
     await loadLibrary();
     state.filesMessage = state.filesMessage;
@@ -1687,6 +1726,21 @@ export function wireDialogs(): void {
       return;
     }
     openFilesDialog("rename", event.currentTarget);
+  });
+
+  el("files-rename-from-tags").addEventListener("click", (event) => {
+    if (!selectedFiles().length) {
+      state.filesError = t("files.chooseRenameFromTags");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("rename_from_tags", event.currentTarget, "paths");
+  });
+
+  el("crate-rename-from-tags").addEventListener("click", (event) => {
+    const crate = state.activeCrate;
+    if (typeof crate !== "number") return;
+    openFilesDialog("rename_from_tags", event.currentTarget, "crate");
   });
 
   el("files-move").addEventListener("click", () => {

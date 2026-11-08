@@ -1,4 +1,4 @@
-"""Cue-safe move, rename, replace, relink, and delete tests.
+"""Cue-safe move, rename, rename from tags, replace, relink, and delete tests.
 
 The suite uses the temporary Serato-shaped database and temporary audio
 files. It does not open a live Serato library or the real Trash.
@@ -26,6 +26,7 @@ import related
 import server
 import telemetry
 from tests.fixture import ROOT, TempLibrary, open_database
+from tests.test_lost_tags import _mp3
 from tests.test_tags import _id3_file, _markers_payload
 
 import sys
@@ -54,8 +55,8 @@ CREATE TABLE container (
 """
 
 
-class FileManagerTests(unittest.TestCase):
-    """Move, rename, replace, and delete against the fixture database."""
+class FileLibraryCase(unittest.TestCase):
+    """Temporary library and audio for file-manager tests."""
 
     def setUp(self) -> None:
         """Point the library at temporary audio and a sibling location database.
@@ -199,6 +200,10 @@ class FileManagerTests(unittest.TestCase):
         self.assertIsInstance(stored, str)
         assert isinstance(stored, str)
         self.assertEqual(files.resolve_stored(stored), path.resolve())
+
+
+class FileManagerTests(FileLibraryCase):
+    """Move, rename, replace, and delete against the fixture database."""
 
     def test_rename_updates_every_path_and_keeps_membership(self) -> None:
         """Rename one file and keep its crate, Prepare row, and history.
@@ -1004,6 +1009,8 @@ class FileManagerTests(unittest.TestCase):
         self.assertIn('data-view="files"', page)
         self.assertIn("Files", page)
         self.assertIn('id="files-dialog"', page)
+        self.assertIn('id="files-rename-from-tags"', page)
+        self.assertIn('id="crate-rename-from-tags"', page)
         self.assertIn("/api/files", script)
         self.assertIn("needs_confirm", script)
         self.assertIn("changes", script)
@@ -1540,6 +1547,279 @@ class FileManagerTests(unittest.TestCase):
         self.assertTrue(result["ok"])
         self.assertEqual(len(moved["saved"]), 1)
         self.assertEqual(left["saved"], [])
+
+
+class RenameFromTagsTests(FileLibraryCase):
+    """Bulk rename to Artist - Title using library tags, then file tags."""
+
+    def test_library_tags_rename_and_keep_crates(self) -> None:
+        """Rename from the library row and rewrite every stored path.
+
+        The file tags are ignored when the row already has artist and
+        title. Cue bytes travel with the file. The event names the
+        change type, not a path.
+
+        Returns:
+            None. The test fails if the crate or history is left behind.
+        """
+        dest = self.music / "Artist - Same.mp3"
+        _mp3(self.song, b"FileTitle", b"FileArtist")
+        payload = {
+            "action": "rename_from_tags",
+            "paths": [str(self.song)],
+            "confirm": True,
+        }
+        with mock.patch("telemetry.capture", wraps=telemetry.capture) as captured:
+            result = files.execute(payload)
+        self.assertTrue(result["ok"])
+        self.assertTrue(dest.is_file())
+        self.assertFalse(self.song.exists())
+        asset = self._master("SELECT * FROM asset WHERE id = 1")
+        self._stored_is(asset["portable_id"], dest)
+        self.assertEqual(asset["file_name"], "Artist - Same.mp3")
+        self.assertEqual(asset["name"], "Same")
+        history = self._master("SELECT * FROM history_entry WHERE id = 1")
+        self.assertEqual(history["file_name"], "Artist - Same.mp3")
+        self.assertIsNotNone(
+            self._master("SELECT 1 AS ok FROM container_asset WHERE asset_id = 1 AND container_id = 3")
+        )
+        crate = self._master("SELECT portable_id FROM container WHERE id = 3")
+        self._stored_is(crate["portable_id"], dest)
+        mirrored = self._root("SELECT * FROM asset WHERE id = 10")
+        assert mirrored is not None
+        self._stored_is(mirrored["portable_id"], dest)
+        self.assertEqual(mirrored["file_name"], "Artist - Same.mp3")
+        self.assertIn("Warmup", result["changes"][0]["crates"])
+        self.assertEqual(result["skipped"], [])
+        props = next(
+            call.args[1]
+            for call in captured.call_args_list
+            if call.args[0] == telemetry.EVENT_FILES_CHANGED
+        )
+        self.assertEqual(props["change"], "rename_from_tags")
+        self.assertNotIn("path", props)
+        self.assertNotIn("Artist - Same.mp3", json.dumps(props))
+
+    def test_crate_members_only(self) -> None:
+        """Rename the crate's tracks and leave a sibling file in place.
+
+        Returns:
+            None. The test fails if the other library file is renamed.
+        """
+        dest = self.music / "Artist - Same.mp3"
+        result = files.execute(
+            {
+                "action": "rename_from_tags",
+                "crate": 3,
+                "space": "Serato Library",
+                "confirm": True,
+            }
+        )
+        self.assertTrue(result["ok"])
+        self.assertTrue(dest.is_file())
+        self.assertTrue(self.other.is_file())
+        self.assertEqual(self.other.name, "same-b.mp3")
+        other = self._master("SELECT file_name FROM asset WHERE id = 2")
+        self.assertEqual(other["file_name"], "same-b.mp3")
+
+    def test_file_tags_fill_blank_library_fields(self) -> None:
+        """Use ID3 when the library row has no artist or title.
+
+        Returns:
+            None. The test fails if the library row wins or the file stays.
+        """
+        with open_database(self.library.db) as conn:
+            conn.execute("UPDATE asset SET name = '', artist = '' WHERE id = 1")
+        _mp3(self.song, b"Tagged", b"FileDJ")
+        dest = self.music / "FileDJ - Tagged.mp3"
+        result = files.execute(
+            {
+                "action": "rename_from_tags",
+                "paths": [str(self.song)],
+                "confirm": True,
+            }
+        )
+        self.assertTrue(result["ok"])
+        self.assertTrue(dest.is_file())
+        asset = self._master("SELECT file_name FROM asset WHERE id = 1")
+        self.assertEqual(asset["file_name"], "FileDJ - Tagged.mp3")
+
+    def test_preview_does_not_write(self) -> None:
+        """Preview the tag rename without moving the file or copying the database.
+
+        Returns:
+            None. The test fails if the preview writes.
+        """
+        preview = files.plan(
+            {"action": "rename_from_tags", "paths": [str(self.song)]}
+        )
+        self.assertTrue(preview["ok"])
+        self.assertTrue(preview["needs_confirm"])
+        self.assertTrue(preview["preview"])
+        self.assertTrue(self.song.is_file())
+        self.assertEqual(self.song.name, "same-a.mp3")
+        backups = self.library.root / "Backups"
+        stamped = list(backups.glob("serato-web-*")) if backups.is_dir() else []
+        self.assertEqual(stamped, [])
+        self.assertFalse((backups / "file-ops-journal.json").exists())
+
+    def test_skips_already_named_missing_tags_collision_and_non_library(self) -> None:
+        """Skip files that cannot be renamed and keep the rest of the batch.
+
+        A collision does not refuse the whole request. An all-skip plan is
+        ok false and writes nothing.
+
+        Returns:
+            None. The test fails if a skip writes or a collision refuses.
+        """
+        taken = self.music / "Artist - Same.mp3"
+        taken.write_bytes(b"taken")
+        taken_preview = files.plan(
+            {"action": "rename_from_tags", "paths": [str(self.song)]}
+        )
+        self.assertFalse(taken_preview["ok"])
+        self.assertIn("already taken", " ".join(taken_preview["skipped"]))
+        self.assertTrue(self.song.is_file())
+        self.assertEqual(taken.read_bytes(), b"taken")
+        taken.unlink()
+
+        collision = files.plan(
+            {
+                "action": "rename_from_tags",
+                "paths": [str(self.song), str(self.other)],
+            }
+        )
+        self.assertFalse(collision["ok"])
+        self.assertIn(
+            "another selected file would use that name",
+            " ".join(collision["skipped"]),
+        )
+        self.assertTrue(self.song.is_file())
+        self.assertTrue(self.other.is_file())
+
+        orphan = self.music / "orphan.mp3"
+        orphan.write_bytes(b"orphan")
+        orphan_preview = files.plan(
+            {"action": "rename_from_tags", "paths": [str(orphan)]}
+        )
+        self.assertFalse(orphan_preview["ok"])
+        self.assertIn("not in the library", " ".join(orphan_preview["skipped"]))
+        self.assertTrue(orphan.is_file())
+
+        named = files.execute(
+            {
+                "action": "rename_from_tags",
+                "paths": [str(self.song)],
+                "confirm": True,
+            }
+        )
+        self.assertTrue(named["ok"])
+        dest = self.music / "Artist - Same.mp3"
+        again = files.plan({"action": "rename_from_tags", "paths": [str(dest)]})
+        self.assertFalse(again["ok"])
+        self.assertIn("already named", " ".join(again["skipped"]))
+        self.assertTrue(dest.is_file())
+
+        with open_database(self.library.db) as conn:
+            conn.execute("UPDATE asset SET name = '', artist = '' WHERE id = 2")
+        blank = files.plan({"action": "rename_from_tags", "paths": [str(self.other)]})
+        self.assertFalse(blank["ok"])
+        self.assertIn("needs an artist and a title", " ".join(blank["skipped"]))
+        self.assertTrue(self.other.is_file())
+
+        gone = self.music / "gone.mp3"
+        gone.write_bytes(b"gone")
+        gone.unlink()
+        missing = files.plan({"action": "rename_from_tags", "paths": [str(gone)]})
+        self.assertFalse(missing["ok"])
+        self.assertIn("not on disk", " ".join(missing["skipped"]))
+
+    def test_slash_in_tags_is_sanitized(self) -> None:
+        """Replace a slash in the artist so the dest stays in the folder.
+
+        Returns:
+            None. The test fails if the slash is kept or the file is skipped.
+        """
+        with open_database(self.library.db) as conn:
+            conn.execute("UPDATE asset SET artist = ? WHERE id = 1", ("A/B",))
+        dest = self.music / "A B - Same.mp3"
+        result = files.execute(
+            {
+                "action": "rename_from_tags",
+                "paths": [str(self.song)],
+                "confirm": True,
+            }
+        )
+        self.assertTrue(result["ok"])
+        self.assertTrue(dest.is_file())
+        self.assertFalse((self.music / "A").exists())
+
+    def test_smart_crate_and_space_root_refuse(self) -> None:
+        """Refuse a Smart Crate and the space root without writing.
+
+        Returns:
+            None. The test fails if those crates return a writable plan.
+        """
+        with open_database(self.library.db) as conn:
+            conn.execute(
+                """
+                INSERT INTO container
+                    (id, parent_id, name, type, list_order, space_id, time_added, expanded, portable_id)
+                VALUES (9, 1, 'Smart', 2, 2, 1, 3, 0, '')
+                """
+            )
+        smart = files.plan(
+            {
+                "action": "rename_from_tags",
+                "crate": 9,
+                "space": "Serato Library",
+            }
+        )
+        self.assertFalse(smart["ok"])
+        self.assertIn("Smart crates", smart["error"])
+        root = files.plan(
+            {
+                "action": "rename_from_tags",
+                "crate": 1,
+                "space": "Serato Library",
+            }
+        )
+        self.assertFalse(root["ok"])
+        self.assertEqual(root["error"], "Choose a crate.")
+        self.assertTrue(self.song.is_file())
+
+    def test_http_crate_preview(self) -> None:
+        """Accept rename_from_tags over POST /api/files without writing.
+
+        Returns:
+            None. The test fails if the route rejects the action.
+        """
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        host, port = httpd.server_address
+        base = f"http://{host}:{port}"
+        try:
+            status, body = _request(
+                base,
+                "/api/files",
+                {
+                    "action": "rename_from_tags",
+                    "crate": 3,
+                    "space": "Serato Library",
+                },
+            )
+            self.assertEqual(status, 200)
+            assert isinstance(body, dict)
+            self.assertTrue(body["ok"])
+            self.assertTrue(body["needs_confirm"])
+            self.assertTrue(body["preview"])
+            self.assertTrue(self.song.is_file())
+            self.assertEqual(body["changes"][0]["to"], str((self.music / "Artist - Same.mp3").resolve()))
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            thread.join(timeout=3)
 
 
 def _title_tag(text: str) -> bytes:

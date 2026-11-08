@@ -309,6 +309,7 @@ export interface FilesPayload {
   more?: number;
   needs_confirm?: boolean;
   browse?: string;
+  skipped?: string[];
 }
 
 export interface FilesBody {
@@ -320,6 +321,8 @@ export interface FilesBody {
   destination?: string;
   replacement?: string;
   matches?: { id: number; path: string }[];
+  crate?: number;
+  space?: string;
 }
 
 export interface RelinkCandidate {

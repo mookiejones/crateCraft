@@ -8,7 +8,7 @@
 ```mermaid
 flowchart TD
   files["Files"] --> tick["Tick a file"]
-  tick --> action["Rename, Move to folder, Replace file, or Delete"]
+  tick --> action["Rename, Rename from tags, Move to folder, Replace file, or Delete"]
   folder["Move this folder"] --> dest["Choose the destination"]
   action --> review["Review this change"]
   dest --> review
@@ -24,6 +24,7 @@ Quit Serato DJ Pro first. Every change opens **Review this change**. The dialog 
 | Action | What happens to the audio file |
 | --- | --- |
 | **Rename** | One file gets a new name in the same folder. Click **Review**, then **Confirm**. |
+| **Rename from tags** | Selected files, or one crate's files, become **Artist - Title** plus the extension. Library tags first, then file tags. Skipped files stay listed. |
 | **Move to folder** | The ticked files move. Pick the folder, click **Move here**, then **Confirm**. A move to another drive copies, checks the size, then removes the original. |
 | **Move this folder** | The folder in the path line moves. Home, a whole drive, the library folder, and a backup folder are refused. |
 | **Replace file** | One library track points at a different file. The old file stays on disk. Cue points are copied only when the dialog says that is safe. |

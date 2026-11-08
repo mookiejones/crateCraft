@@ -2751,6 +2751,7 @@ export function renderFiles() {
   const selected = selectedFiles();
   const locked = !state.writable || state.filesLoading || state.filesAtRoots;
   el("files-rename").disabled = locked || selected.length !== 1;
+  el("files-rename-from-tags").disabled = locked || !selected.length;
   el("files-move").disabled = locked || !selected.length || Boolean(state.filesPick);
   el("files-move-folder").disabled = locked || !state.filesPath || Boolean(state.filesPick);
   el("files-replace").disabled = locked || selected.length !== 1;

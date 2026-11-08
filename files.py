@@ -1,4 +1,4 @@
-"""Move, rename, replace, relink, and trash audio without dropping Serato crates.
+"""Move, rename, rename from tags, replace, relink, and trash audio without dropping Serato crates.
 
 Serato stores the file path on the library row. Cue points stay in the
 audio file. This module rewrites path columns in ``master.sqlite`` and in
@@ -37,11 +37,18 @@ from urllib.parse import quote
 import library
 import music_roots
 import telemetry
-from tags import copy_serato_geob, plan_serato_geob, read_serato_tags
+from tags import copy_serato_geob, plan_serato_geob, read_serato_tags, read_text_tags
 
 logger = logging.getLogger("serato.files")
 
-_ACTIONS = frozenset({"rename", "move", "move_folder", "replace", "relink", "delete"})
+_ACTIONS = frozenset(
+    {"rename", "rename_from_tags", "move", "move_folder", "replace", "relink", "delete"}
+)
+_SMART_CRATE = "Smart crates choose their tracks from rules."
+_UNSAFE_CHARS = '<>:"/\\|?*'
+_RESERVED_STEMS = frozenset(
+    {"con", "prn", "aux", "nul", *[f"com{i}" for i in range(1, 10)], *[f"lpt{i}" for i in range(1, 10)]}
+)
 _AUDIO = frozenset(
     {
         ".mp3",
@@ -157,6 +164,7 @@ class Plan:
     summary: str = ""
     browse: str | None = None
     trash: list[str] = field(default_factory=list)
+    skipped: list[str] = field(default_factory=list)
 
 
 def list_directory(
@@ -1274,6 +1282,8 @@ def _build(payload: Mapping[str, object]) -> Plan:
             rows = _asset_rows(conn, "main") if _has(conn, "main", "asset") else []
             if action == "rename":
                 return _plan_rename(payload, rows, conn)
+            if action == "rename_from_tags":
+                return _plan_rename_from_tags(payload, rows, conn)
             if action == "move":
                 return _plan_move(payload, rows, conn)
             if action == "move_folder":
@@ -1320,6 +1330,323 @@ def _plan_rename(
         summary=summary,
         browse=str(src.parent),
     )
+
+
+def _plan_rename_from_tags(
+    payload: Mapping[str, object],
+    rows: list[dict[str, object]],
+    conn: sqlite3.Connection,
+) -> Plan:
+    """Plan renaming library files to ``Artist - Title`` plus the extension.
+
+    Each selected file, or each member of a crate, keeps its folder.
+    A file already named that way, a missing artist or title, a name
+    collision, and a file that is not in the library are skipped. The
+    rest go through the same path rewrite as a single rename.
+
+    Args:
+        payload: Request with ``paths``, or ``crate`` and ``space``.
+        rows: Asset rows.
+        conn: Read connection, used to name crates and read crate members.
+
+    Returns:
+        The plan. ``ok`` is false when nothing would be renamed.
+    """
+    sources, skips = _tag_sources(payload, rows, conn)
+    if not sources and not skips:
+        raise _Refuse("Choose files to rename.")
+    if len(sources) > _FILE_CAP:
+        raise _Refuse("Choose fewer files at once.")
+    proposed: list[tuple[Path, Path, list[dict[str, object]]]] = []
+    dest_owners: dict[str, list[Path]] = {}
+    for src, matched in sources:
+        dest_name, skip = _name_from_tags(src, matched)
+        if skip is not None:
+            skips.append(skip)
+            continue
+        assert dest_name is not None
+        try:
+            dest = _contained(src.parent, dest_name)
+        except _Refuse as exc:
+            skips.append(f"Skip {src.name}: {exc.message}")
+            continue
+        if dest == src or dest.name == src.name:
+            skips.append(f"Skip {src.name}: already named {dest.name}.")
+            continue
+        if dest.exists() and not _same_file(src, dest):
+            skips.append(f"Skip {src.name}: {dest.name} is already taken.")
+            continue
+        proposed.append((src, dest, matched))
+        dest_owners.setdefault(str(dest).casefold(), []).append(src)
+    collided: set[str] = set()
+    for key, owners in dest_owners.items():
+        if len(owners) > 1:
+            collided.add(key)
+            for src in owners:
+                skips.append(
+                    f"Skip {src.name}: another selected file would use that name."
+                )
+    changes: list[FileChange] = []
+    moves: list[dict[str, str]] = []
+    for src, dest, matched in proposed:
+        if str(dest).casefold() in collided:
+            continue
+        try:
+            _guard_target(dest)
+        except _Refuse as exc:
+            skips.append(f"Skip {src.name}: {exc.message}")
+            continue
+        changes.append(
+            _change_for(src, dest, rows, missing=False, conn=conn, matched=matched)
+        )
+        moves.append({"src": str(src), "dst": str(dest), "kind": "rename"})
+    if not changes:
+        message = "Nothing to rename."
+        if skips:
+            message = f"{message} {skips[0]}"
+        return Plan(
+            action="rename_from_tags",
+            ok=False,
+            error=message,
+            summary=message,
+            warnings=skips,
+            skipped=skips,
+        )
+    browse = str(changes[0].source.parent)
+    summary = _summary("rename_from_tags", changes, skips)
+    return Plan(
+        action="rename_from_tags",
+        ok=True,
+        changes=changes,
+        moves=moves,
+        summary=summary,
+        browse=browse,
+        warnings=skips,
+        skipped=skips,
+    )
+
+
+def _tag_sources(
+    payload: Mapping[str, object],
+    rows: list[dict[str, object]],
+    conn: sqlite3.Connection,
+) -> tuple[list[tuple[Path, list[dict[str, object]]]], list[str]]:
+    """Resolve the files a tag rename should consider.
+
+    Args:
+        payload: Request with ``paths``, or ``crate`` and ``space``.
+        rows: Asset rows.
+        conn: Read connection.
+
+    Returns:
+        Source files with matching asset rows, and skip sentences.
+
+    Raises:
+        LibraryError: If a path list is the wrong type.
+        _Refuse: If the crate is the space root or a Smart Crate.
+    """
+    if payload.get("crate") is not None:
+        return _crate_tag_sources(payload, rows, conn)
+    paths = _path_list(payload.get("paths"))
+    skips: list[str] = []
+    sources: list[tuple[Path, list[dict[str, object]]]] = []
+    for raw in paths:
+        path = _as_path(raw)
+        if path.is_symlink():
+            skips.append(f"Skip {path.name}: shortcuts are left alone.")
+            continue
+        resolved = path.resolve(strict=False)
+        if resolved.is_symlink():
+            skips.append(f"Skip {path.name}: shortcuts are left alone.")
+            continue
+        if not resolved.is_file():
+            skips.append(f"Skip {path.name}: that file is not on disk.")
+            continue
+        matched = _assets_at(rows, resolved)
+        if not matched:
+            skips.append(f"Skip {resolved.name}: not in the library.")
+            continue
+        sources.append((resolved, matched))
+    return sources, skips
+
+
+def _crate_tag_sources(
+    payload: Mapping[str, object],
+    rows: list[dict[str, object]],
+    conn: sqlite3.Connection,
+) -> tuple[list[tuple[Path, list[dict[str, object]]]], list[str]]:
+    """Resolve crate members for a tag rename.
+
+    Args:
+        payload: Request with ``crate`` and ``space``.
+        rows: Asset rows.
+        conn: Read connection.
+
+    Returns:
+        Source files with matching asset rows, and skip sentences.
+
+    Raises:
+        LibraryError: If the crate is missing from the space.
+        _Refuse: If the crate is the space root or a Smart Crate.
+    """
+    space = payload.get("space")
+    if not isinstance(space, str) or space not in library.ALLOWED_SPACES:
+        raise library.LibraryError("That space is not available here.")
+    crate_id = payload.get("crate")
+    if isinstance(crate_id, bool) or not isinstance(crate_id, int):
+        raise _Refuse("Choose a crate.")
+    crate = library.container_in_space(conn, crate_id, space)
+    if int(crate["type"]) == 0:
+        raise _Refuse("Choose a crate.")
+    if int(crate["type"]) == 2:
+        raise _Refuse(_SMART_CRATE)
+    member_ids = _crate_asset_ids(conn, [crate_id])
+    by_id: dict[int, list[dict[str, object]]] = {}
+    for row in rows:
+        by_id.setdefault(int(row["id"]), []).append(row)
+    sources: list[tuple[Path, list[dict[str, object]]]] = []
+    skips: list[str] = []
+    for asset_id in sorted(member_ids):
+        matched = by_id.get(asset_id, [])
+        if not matched:
+            continue
+        stored = matched[0].get("portable_id")
+        resolved = resolve_stored(stored if isinstance(stored, str) else "")
+        name = str(matched[0].get("file_name") or asset_id)
+        if resolved is None:
+            skips.append(f"Skip {name}: that file is not on disk.")
+            continue
+        if resolved.is_symlink():
+            skips.append(f"Skip {resolved.name}: shortcuts are left alone.")
+            continue
+        if not resolved.is_file():
+            skips.append(f"Skip {resolved.name}: that file is not on disk.")
+            continue
+        sources.append((resolved, matched))
+    return sources, skips
+
+
+def _crate_asset_ids(conn: sqlite3.Connection, crate_ids: list[int]) -> set[int]:
+    """Return asset ids stored in these crates.
+
+    A live Serato library links ``container_asset`` through
+    ``location_container``. The test schema also stores ``container_id``
+    on the membership row. Both are read.
+
+    Args:
+        conn: Read connection.
+        crate_ids: Container ids.
+
+    Returns:
+        Asset ids in those crates.
+    """
+    if not crate_ids:
+        return set()
+    marks = ",".join("?" for _ in crate_ids)
+    found: set[int] = set()
+    columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(container_asset)")}
+    if "location_container_id" in columns:
+        query = (
+            "SELECT ca.asset_id FROM container_asset ca JOIN location_container lc "
+            f"ON lc.id = ca.location_container_id WHERE lc.container_id IN ({marks})"
+        )
+        found.update(int(row[0]) for row in conn.execute(query, crate_ids) if row[0] is not None)
+    if "container_id" in columns:
+        query = f"SELECT asset_id FROM container_asset WHERE container_id IN ({marks})"
+        found.update(int(row[0]) for row in conn.execute(query, crate_ids) if row[0] is not None)
+    return found
+
+
+def _name_from_tags(
+    src: Path, matched: list[dict[str, object]]
+) -> tuple[str | None, str | None]:
+    """Build ``Artist - Title.ext`` from the library row, then the file tags.
+
+    Args:
+        src: Audio file.
+        matched: Asset rows for that file.
+
+    Returns:
+        The new file name and no skip, or no name and a skip sentence.
+    """
+    title = ""
+    artist = ""
+    row = matched[0]
+    stored_title = row.get("name")
+    stored_artist = row.get("artist")
+    if isinstance(stored_title, str):
+        title = stored_title.strip()
+    if isinstance(stored_artist, str):
+        artist = stored_artist.strip()
+    if not title or not artist:
+        found = read_text_tags(src)
+        if not title:
+            title = found["title"]
+        if not artist:
+            artist = found["artist"]
+    if not title or not artist:
+        return None, f"Skip {src.name}: needs an artist and a title."
+    built = _artist_title_name(artist, title, src.suffix)
+    if built is None:
+        return None, f"Skip {src.name}: that name is not a usable file name."
+    return built, None
+
+
+def _artist_title_name(artist: str, title: str, suffix: str) -> str | None:
+    """Return a single-folder file name, or None when it cannot be used.
+
+    Args:
+        artist: Artist text.
+        title: Title text.
+        suffix: Current extension, including the dot.
+
+    Returns:
+        ``Artist - Title`` plus the extension, or None.
+    """
+    left = _safe_stem(artist)
+    right = _safe_stem(title)
+    if not left or not right:
+        return None
+    ext = suffix if suffix.startswith(".") or suffix == "" else f".{suffix}"
+    max_stem = _NAME_RE_MAX - len(ext)
+    if max_stem < 5:
+        return None
+    stem = f"{left} - {right}"
+    if len(stem) > max_stem:
+        keep_left = min(len(left), max(1, max_stem // 3))
+        rest = max_stem - keep_left - 3
+        if rest < 1:
+            return None
+        stem = f"{left[:keep_left].rstrip()} - {right[:rest].rstrip()}"
+        stem = stem.strip(" .")
+    if not stem or stem.casefold() in _RESERVED_STEMS:
+        return None
+    name = stem + ext
+    try:
+        return _validate_filename(name)
+    except _Refuse:
+        return None
+
+
+def _safe_stem(text: str) -> str:
+    """Strip characters a file name cannot use.
+
+    Args:
+        text: Artist or title.
+
+    Returns:
+        A stem with no path separators, no reserved punctuation, and no
+        trailing dot or space.
+    """
+    chars: list[str] = []
+    for char in text:
+        code = ord(char)
+        if code < 32 or code == 127 or char in _UNSAFE_CHARS:
+            chars.append(" ")
+        else:
+            chars.append(char)
+    collapsed = " ".join("".join(chars).split())
+    return collapsed.strip(" .")
 
 
 def _plan_move(
@@ -1761,6 +2088,7 @@ def _public(plan: Plan) -> dict[str, object]:
         "warning": " ".join(warnings) or None,
         "cues": plan.cues,
         "browse": plan.browse,
+        "skipped": list(plan.skipped[:_CHANGE_CAP]),
     }
 
 
@@ -1779,8 +2107,10 @@ def _summary(action: str, changes: list[FileChange], warnings: list[str]) -> str
     del warnings
     library_n = sum(1 for change in changes if change.asset_ids)
     missing_n = sum(1 for change in changes if change.missing)
-    if action == "rename":
-        text = f"Rename {_count(len(changes), 'file', 'files')}. {_count(library_n, 'library track keeps', 'library tracks keep')} its crates."
+    if action in {"rename", "rename_from_tags"}:
+        text = f"Rename {_count(len(changes), 'file', 'files')} to Artist - Title. {_count(library_n, 'library track keeps', 'library tracks keep')} its crates."
+        if action == "rename":
+            text = f"Rename {_count(len(changes), 'file', 'files')}. {_count(library_n, 'library track keeps', 'library tracks keep')} its crates."
         if library_n != 1:
             text = text.replace(" its crates.", " their crates.")
     elif action == "move":
@@ -3404,7 +3734,7 @@ def _asset_rows(conn: sqlite3.Connection, schema: str) -> list[dict[str, object]
     """
     columns = _table_columns(conn, schema, "asset")
     wanted = ["id", "portable_id"]
-    for name in ("file_name", "location_id", "external_id"):
+    for name in ("file_name", "name", "artist", "location_id", "external_id"):
         if name in columns:
             wanted.append(name)
     rows = conn.execute(

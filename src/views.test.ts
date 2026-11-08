@@ -236,11 +236,24 @@ describe("library views", () => {
     expect(document.querySelector("#files-path")?.textContent).toContain("Music");
     expect((document.querySelector("#files-up") as HTMLButtonElement).disabled).toBe(true);
     expect((document.querySelector("#files-rename") as HTMLButtonElement).disabled).toBe(true);
+    expect((document.querySelector("#files-rename-from-tags") as HTMLButtonElement).disabled).toBe(true);
     expect(document.querySelector("#mode-note")?.textContent).toContain("Files on disk");
 
     state.filesSelected = new Set(["/music/a.mp3"]);
     renderFiles();
     expect((document.querySelector("#files-rename") as HTMLButtonElement).disabled).toBe(false);
+    expect((document.querySelector("#files-rename-from-tags") as HTMLButtonElement).disabled).toBe(false);
+
+    state.filesSelected = new Set(["/music/a.mp3", "/music/b.mp3"]);
+    state.filesEntries = [
+      { name: "a.mp3", kind: "file", path: "/music/a.mp3", in_library: true },
+      { name: "b.mp3", kind: "file", path: "/music/b.mp3", in_library: true },
+      { name: "alias", kind: "link", path: "/music/alias" },
+      { name: "Crates", kind: "dir", path: "/music/Crates" },
+    ];
+    renderFiles();
+    expect((document.querySelector("#files-rename") as HTMLButtonElement).disabled).toBe(true);
+    expect((document.querySelector("#files-rename-from-tags") as HTMLButtonElement).disabled).toBe(false);
 
     state.filesEntries = [];
     state.filesSelected = new Set();
