@@ -31,6 +31,7 @@ import { loadGigCheck, showGigFailure } from "./gig";
 import { loadScan, showScanFailure } from "./scan";
 import { loadTags, showTagsFailure } from "./tags";
 import { portableDriveButton } from "./portable";
+import { appendBeatgrid } from "./beatgrid-view";
 import { appendCueSlots, formatCueTime } from "./cue-view";
 import { syncFolderSyncButton } from "./folder-sync-view";
 import { presetFoot, syncPresetButtons } from "./preset-view";
@@ -1223,7 +1224,8 @@ function renderDetail(track: Track) {
  * The copy says the markers were read from the audio file and are not
  * written back. Pads 1–8 always show, in Serato colours, when the file
  * could be read. A missing file is explained instead of showing empty
- * pads. Does not fetch.
+ * pads. The beatgrid block says it is view-only and flags a grid this
+ * parser cannot read. Does not fetch.
  *
  * @param {object} track Track payload including cues, loops, flips, and beatgrid.
  * @returns {HTMLElement} The section, not yet inserted.
@@ -1250,22 +1252,6 @@ function markerSection(track: Track) {
    * @returns {string} Minutes, seconds, and milliseconds.
    */
   const ms = (value: number | string | null | undefined) => formatCueTime(value);
-  /**
-   * Format a beatgrid position for the panel.
-   *
-   * Nested in markerSection. Three decimal places hide the binary noise in
-   * a stored float, such as 1.2300000190734863. The export does not use
-   * this string. A value that is not a finite number is left blank.
-   *
-   * @param {number|string} value Position in seconds.
-   * @returns {string} Seconds with three decimal places, plus "s".
-   */
-  const beatSeconds = (value: number | string | null | undefined) => {
-    if (value === "" || value == null) return "";
-    const number = Number(value);
-    if (!Number.isFinite(number)) return "";
-    return `${number.toFixed(3)}s`;
-  };
   if (!track.markers_unavailable) appendCueSlots(section, track.cues || []);
   for (const loop of track.loops || []) {
     const row = document.createElement("div");
@@ -1290,23 +1276,7 @@ function markerSection(track: Track) {
     row.append(document.createElement("span"), document.createElement("span"), time, name);
     section.append(row);
   }
-  for (const mark of track.beatgrid || []) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const time = document.createElement("span");
-    time.textContent = beatSeconds(mark.position);
-    const name = document.createElement("span");
-    const bpmNumber = Number(mark.bpm);
-    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
-      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
-    } else if (mark.beats != null) {
-      name.textContent = t("markers.beats", { count: Number(mark.beats) });
-    } else {
-      name.textContent = "";
-    }
-    row.append(document.createElement("span"), document.createElement("span"), time, name);
-    section.append(row);
-  }
+  appendBeatgrid(section, track);
   return section;
 }
 

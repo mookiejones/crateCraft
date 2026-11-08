@@ -19,6 +19,8 @@ from tags import (
     _parse_beatgrid,
     _parse_cue,
     _parse_markers2,
+    beatgrid_issue,
+    beatgrid_issue_code,
     copy_serato_geob,
     plan_serato_geob,
     read_serato_tags,
@@ -183,6 +185,8 @@ class TagTests(unittest.TestCase):
         parsed = read_serato_tags(None)
         self.assertFalse(parsed["found"])
         self.assertEqual(parsed["cues"], [])
+        self.assertIsNone(parsed["beatgrid_warning"])
+        self.assertIsNone(parsed["beatgrid_warning_code"])
 
     def test_markers_round_trip(self) -> None:
         """Decode the cue, loop, and flip built by the fixture helpers.
@@ -257,6 +261,34 @@ class TagTests(unittest.TestCase):
         self.assertEqual(_parse_beatgrid(huge), [])
         short = bytes([1, 0]) + (2).to_bytes(4, "big") + struct.pack(">f", 1.0)
         self.assertEqual(_parse_beatgrid(short), [])
+
+    def test_beatgrid_issue_code_names_each_unread_payload(self) -> None:
+        """Map each unread BeatGrid shape to a stable code and sentence.
+
+        A version-1 grid with two markers stays quiet. The sentences match
+        the page locale keys. No file is read.
+
+        Returns:
+            None. The test fails if a code or sentence drifts, or if a
+            readable grid is flagged.
+        """
+        cases = (
+            (b"\x01\x00", "beatgrid_too_short", "The beatgrid is too short to read."),
+            (bytes([2, 0, 0, 0, 0, 1]), "beatgrid_version", "That beatgrid version is not supported."),
+            (bytes([1, 0]) + (0).to_bytes(4, "big"), "beatgrid_empty", "The beatgrid has no markers."),
+            (bytes([1, 0]) + (4097).to_bytes(4, "big"), "beatgrid_too_many", "The beatgrid has more than 4096 markers."),
+            (
+                bytes([1, 0]) + (2).to_bytes(4, "big") + struct.pack(">f", 1.0),
+                "beatgrid_truncated",
+                "The beatgrid is shorter than its marker count.",
+            ),
+        )
+        for payload, code, sentence in cases:
+            with self.subTest(code=code):
+                self.assertEqual(beatgrid_issue_code(payload), code)
+                self.assertEqual(beatgrid_issue(payload), sentence)
+        self.assertIsNone(beatgrid_issue_code(_beatgrid_payload()))
+        self.assertIsNone(beatgrid_issue(_beatgrid_payload()))
 
     def test_bad_markers_base64_is_empty(self) -> None:
         """Return no cues when the Markers2 body is not base64.
@@ -781,6 +813,28 @@ class FlacM4aMarkerTests(unittest.TestCase):
             self.assertEqual(parsed["beatgrid"][0].get("beats"), 4)
             self.assertEqual(parsed["beatgrid"][1].get("bpm"), 128.0)
             self.assertEqual(parsed["beatgrid"][0]["position"], 0.5)
+            self.assertIsNone(parsed["beatgrid_warning"])
+            self.assertIsNone(parsed["beatgrid_warning_code"])
+
+    def test_unread_flac_beatgrid_sets_the_warning_code(self) -> None:
+        """Flag a version-2 BeatGrid on a FLAC as ``beatgrid_version``.
+
+        The file is a tiny fixture. ``found`` stays true so the page can
+        show the suspect note. No markers are invented.
+
+        Returns:
+            None. The test fails if the code is missing or a marker appears.
+        """
+        payload = bytes([2, 0, 0, 0, 0, 1]) + b"\x37"
+        value = _serato_b64("Serato BeatGrid", payload, wrap=False)
+        with tempfile.TemporaryDirectory() as folder:
+            flac = Path(folder) / "bad-grid.flac"
+            _write_flac(flac, [b"SERATO_BEATGRID=" + value])
+            parsed = read_serato_tags(str(flac))
+        self.assertTrue(parsed["found"])
+        self.assertEqual(parsed["beatgrid"], [])
+        self.assertEqual(parsed["beatgrid_warning_code"], "beatgrid_version")
+        self.assertEqual(parsed["beatgrid_warning"], "That beatgrid version is not supported.")
 
     def test_markers_and_beatgrid_are_both_kept(self) -> None:
         """Read a cue and a beatgrid stored in the same file.

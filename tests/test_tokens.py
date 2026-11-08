@@ -519,6 +519,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".detail-error", ("--color-card",), 15, 400),
     (".gig-verdict.not-ready", ("--color-card",), 18, 600),
     (".detail-kicker", ("--color-card",), 15, 400),
+    (".detail-kicker.warn", ("--color-card",), 15, 400),
     (".deck .bpm", ("--color-card",), 28, 500),
     (".deck span", ("--color-card",), 13, 400),
     (".field .label", ("--color-card",), 15, 400),

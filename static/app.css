@@ -745,6 +745,16 @@ button:disabled { cursor: default; }
   font-weight: 600;
 }
 
+.group h4 {
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: var(--font-heading);
+  font-weight: 600;
+}
+
+.detail-kicker.warn {
+  color: var(--color-warn-text);
+}
+
 .field {
   display: grid;
   grid-template-columns: 148px minmax(0, 1fr);

@@ -6970,10 +6970,20 @@ def markers_for(path: str | None, on_disk: bool) -> SeratoTags:
         on_disk: False skips the file read.
 
     Returns:
-        Cue, loop, flip, and beatgrid lists, plus found and unavailable flags.
+        Cue, loop, flip, and beatgrid lists, plus found, unavailable,
+        beatgrid_warning, and beatgrid_warning_code.
     """
     if not on_disk:
-        return {"cues": [], "loops": [], "flips": [], "beatgrid": [], "found": False, "unavailable": True}
+        return {
+            "cues": [],
+            "loops": [],
+            "flips": [],
+            "beatgrid": [],
+            "found": False,
+            "unavailable": True,
+            "beatgrid_warning": None,
+            "beatgrid_warning_code": None,
+        }
     parsed = read_serato_tags(path)
     parsed["unavailable"] = False
     telemetry.capture(telemetry.EVENT_TAGS_READ)

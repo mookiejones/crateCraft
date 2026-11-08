@@ -78,6 +78,7 @@ describe("locale catalogs", () => {
     expect(en["menu.exportRekordbox"]).toBe("Export to Rekordbox");
     expect(en["snapshots.take"]).toBe("Take a backup");
     expect(en["markers.heading"]).toBe("Cue points, saved loops, and beatgrid");
+    expect(en["markers.gridViewOnly"]).toBe("View only. This app does not rewrite the beatgrid.");
     expect(en["view.snapshots"]).toBe("Backups");
     expect(es["view.files"]).toBe("Organizar archivos");
     expect(es["files.replaceFile"]).toBe("Mejorar archivo (conservar cues)");
