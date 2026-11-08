@@ -84,8 +84,10 @@ export interface ElementIds {
   "scan-full": HTMLButtonElement;
   "tags-panel": HTMLElement;
   "tags-scope": HTMLParagraphElement;
+  "tags-hint": HTMLParagraphElement;
   "tags-genre": HTMLButtonElement;
   "tags-artist": HTMLButtonElement;
+  "tags-titles": HTMLButtonElement;
   "tags-refresh": HTMLButtonElement;
   "tags-status": HTMLParagraphElement;
   "tags-report": HTMLDivElement;

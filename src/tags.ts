@@ -1,8 +1,9 @@
 /**
- * Tag spellings view: groups, preview, and apply.
+ * Tag spellings view: groups, preview, apply, and title cleanup.
  *
- * GET /api/tag-clusters lists groups. POST preview lists the rows a
- * chosen spelling would rewrite. POST apply writes through safe_write.
+ * GET /api/tag-clusters lists genre and artist groups. POST preview
+ * lists the rows a chosen spelling would rewrite. POST apply writes
+ * through safe_write. Titles uses POST clean-preview and clean-apply.
  * Audio files are not rewritten. A newer load ignores a late response.
  *
  * Page text is in the locale catalogs under tags.*.
@@ -20,6 +21,9 @@ import {
   previewSummary,
   spellingLabel,
   tagsSummary,
+  titlesPreviewSummary,
+  titlesSummary,
+  titlesWrittenSummary,
   writtenSummary,
   type TagField,
 } from "./tags-view";
@@ -27,15 +31,18 @@ import { buttonEl, inputEl, setTooltip } from "./tooltip";
 import { tips } from "./tooltip-strings";
 
 const LIST_CAP = 100;
+const FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"] as const;
+const TITLE_KEY = "clean";
 
 let latest: TagClusters | null = null;
+let titlePlan: TagClusterPlan | null = null;
 const plans = new Map<string, TagClusterPlan>();
 const selectedByKey = new Map<string, string>();
 let panelBusy = false;
 let actionKey = "";
 
 /**
- * Attach Genre, Artist, Check again, and the report actions.
+ * Attach Genre, Artist, Titles, Check again, and the report actions.
  *
  * Called once at startup. A later call is a no-op.
  *
@@ -55,6 +62,11 @@ export function wireTags(): void {
     setField("artist");
     void loadTags();
   });
+  el("tags-titles").addEventListener("click", () => {
+    if (currentField() === "titles") return;
+    setField("titles");
+    void loadTags();
+  });
   el("tags-refresh").addEventListener("click", () => {
     void loadTags();
   });
@@ -69,6 +81,10 @@ export function wireTags(): void {
   el("tags-report").addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-tags-action]");
     if (!button || button.disabled) return;
+    if (button.dataset.tagsAction === "clean-apply") {
+      void applyTitles();
+      return;
+    }
     const key = button.dataset.key ?? "";
     if (!key) return;
     if (button.dataset.tagsAction === "preview") void previewGroup(key);
@@ -80,7 +96,7 @@ export function wireTags(): void {
  * Ask for spelling groups of the open space and field.
  *
  * The previous report stays on screen until this reply arrives. Genre,
- * Artist, and Check again are disabled while the request runs.
+ * Artist, Titles, and Check again are disabled while the request runs.
  *
  * @returns {Promise<void>}
  */
@@ -92,28 +108,42 @@ export async function loadTags(): Promise<void> {
   beginBusy();
   let settle: "report" | "retry" | "none" = "none";
   try {
-    const response = await fetch(
-      `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`,
-    );
-    if (token !== state.tagsToken) return;
-    const payload = await readJSON<TagClusters>(response).catch((): null => null);
-    if (token !== state.tagsToken) return;
-    if (!response.ok || payload === null) {
-      failStatus(serverMessage(payload, t("tags.unreadable")));
-      settle = "retry";
-      return;
+    if (field === "titles") {
+      const payload = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+        action: "clean-preview",
+        space: state.space,
+      });
+      if (token !== state.tagsToken) return;
+      titlePlan = payload;
+      latest = null;
+      el("tags-status").textContent = titlesPreviewSummary(payload);
+      settle = "report";
+    } else {
+      const response = await fetch(
+        `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`,
+      );
+      if (token !== state.tagsToken) return;
+      const payload = await readJSON<TagClusters>(response).catch((): null => null);
+      if (token !== state.tagsToken) return;
+      if (!response.ok || payload === null) {
+        failStatus(serverMessage(payload, t("tags.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest = payload;
+      titlePlan = null;
+      el("tags-status").textContent = "";
+      settle = "report";
     }
-    latest = payload;
-    el("tags-status").textContent = "";
-    settle = "report";
-  } catch {
+  } catch (error) {
     if (token !== state.tagsToken) return;
-    failStatus(t("tags.unreachable"));
+    if (error instanceof TypeError) failStatus(t("tags.unreachable"));
+    else failStatus(failureOf(error).message);
     settle = "retry";
   } finally {
     if (token !== state.tagsToken) return;
     endBusy();
-    if (settle === "report" && latest) renderTagsReport(latest);
+    if (settle === "report") paintReport();
     if (settle === "retry") el("tags-refresh").focus();
     if (settle === "report") el("tags-report").focus();
   }
@@ -160,6 +190,41 @@ export function renderTagsReport(payload: TagClusters): void {
   });
 }
 
+function paintReport(): void {
+  if (currentField() === "titles") {
+    if (titlePlan) renderTitleReport(titlePlan);
+    return;
+  }
+  if (latest) renderTagsReport(latest);
+}
+
+function renderTitleReport(plan: TagClusterPlan): void {
+  el("tags-scope").textContent = t("gig.wholeSpace");
+  const report = el("tags-report");
+  const summary = document.createElement("p");
+  summary.className = "gig-note";
+  summary.textContent = titlesSummary(plan.changes.length);
+  report.replaceChildren(summary);
+  const lines = previewLines(plan.changes);
+  if (lines.length) {
+    const diffs = document.createElement("ul");
+    for (const line of lines.slice(0, LIST_CAP)) {
+      const row = document.createElement("li");
+      row.textContent = line;
+      diffs.append(row);
+    }
+    report.append(diffs);
+  }
+  const actions = document.createElement("div");
+  actions.className = "tags-actions";
+  const apply = buttonEl(tips.tagsApplyTitles);
+  apply.dataset.tagsAction = "clean-apply";
+  apply.textContent = t("tags.apply");
+  apply.disabled = !canApplyTitles(plan);
+  actions.append(apply);
+  report.append(actions);
+}
+
 /**
  * Paint the last report again in the active language.
  *
@@ -168,8 +233,9 @@ export function renderTagsReport(payload: TagClusters): void {
  * @returns {void}
  */
 export function repaintTags(): void {
+  setField(currentField());
   el("tags-scope").textContent = t("gig.wholeSpace");
-  if (latest) renderTagsReport(latest);
+  paintReport();
 }
 
 async function previewGroup(key: string): Promise<void> {
@@ -177,7 +243,7 @@ async function previewGroup(key: string): Promise<void> {
   const value = selectedValue(key);
   if (!group || !value) return;
   actionKey = key;
-  if (latest) renderTagsReport(latest);
+  paintReport();
   try {
     const plan = await postJSON<TagClusterPlan>("/api/tag-clusters", {
       action: "preview",
@@ -187,13 +253,13 @@ async function previewGroup(key: string): Promise<void> {
     });
     plans.set(key, plan);
     el("tags-status").textContent = previewSummary(plan);
-    if (latest) renderTagsReport(latest);
+    paintReport();
     applyButton(key)?.focus();
   } catch (error) {
     failStatus(failureOf(error).message);
   } finally {
     actionKey = "";
-    if (latest) renderTagsReport(latest);
+    paintReport();
   }
 }
 
@@ -204,7 +270,7 @@ async function applyGroup(key: string): Promise<void> {
   actionKey = key;
   panelBusy = true;
   beginBusy();
-  if (latest) renderTagsReport(latest);
+  paintReport();
   try {
     const written = await postJSON<TagClusterPlan>("/api/tag-clusters", {
       action: "apply",
@@ -228,39 +294,79 @@ async function applyGroup(key: string): Promise<void> {
     actionKey = "";
     panelBusy = false;
     endBusy();
-    if (latest) renderTagsReport(latest);
+    paintReport();
+  }
+}
+
+async function applyTitles(): Promise<void> {
+  const plan = titlePlan;
+  if (!plan || !canApplyTitles(plan)) return;
+  actionKey = TITLE_KEY;
+  panelBusy = true;
+  beginBusy();
+  paintReport();
+  try {
+    const written = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+      action: "clean-apply",
+      space: state.space,
+    });
+    await bridge.reloadLibrary();
+    actionKey = "";
+    panelBusy = false;
+    endBusy();
+    await loadTags();
+    el("tags-status").textContent = titlesWrittenSummary(written);
+  } catch (error) {
+    const failed = failureOf(error);
+    failStatus(failed.message);
+    if (failed.status === 409) {
+      bridge.lockDown(error);
+    }
+  } finally {
+    actionKey = "";
+    panelBusy = false;
+    endBusy();
+    paintReport();
   }
 }
 
 function currentField(): TagField {
-  return el("tags-artist").getAttribute("aria-pressed") === "true" ? "artist" : "genre";
+  if (el("tags-titles").getAttribute("aria-pressed") === "true") return "titles";
+  if (el("tags-artist").getAttribute("aria-pressed") === "true") return "artist";
+  return "genre";
 }
 
 function setField(next: TagField): void {
   el("tags-genre").setAttribute("aria-pressed", String(next === "genre"));
   el("tags-artist").setAttribute("aria-pressed", String(next === "artist"));
+  el("tags-titles").setAttribute("aria-pressed", String(next === "titles"));
+  el("tags-hint").textContent = next === "titles" ? t("tags.introTitles") : t("tags.intro");
 }
 
 function beginBusy(): void {
   panelBusy = true;
-  for (const id of ["tags-genre", "tags-artist", "tags-refresh"] as const) {
+  for (const id of FIELD_BUTTONS) {
     const button = el(id);
     button.disabled = true;
     button.setAttribute("aria-busy", "true");
   }
   el("tags-panel").setAttribute("aria-busy", "true");
-  el("tags-status").textContent = t("tags.checking");
-  if (latest) renderTagsReport(latest);
+  el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
+  paintReport();
 }
 
 function endBusy(): void {
   panelBusy = false;
-  for (const id of ["tags-genre", "tags-artist", "tags-refresh"] as const) {
+  for (const id of FIELD_BUTTONS) {
     const button = el(id);
     button.disabled = false;
     button.setAttribute("aria-busy", "false");
   }
   el("tags-panel").setAttribute("aria-busy", "false");
+}
+
+function canApplyTitles(plan: TagClusterPlan): boolean {
+  return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
 }
 
 function failStatus(message: string): void {

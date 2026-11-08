@@ -1,4 +1,4 @@
-"""Spellings of one genre or artist (#27). Groups are read-only; apply writes.
+"""Spellings of one genre or artist, and title cleanup (#27).
 
 Every case uses a temporary library. Preview, refusals, and GET leave the
 library file unchanged.
@@ -22,7 +22,7 @@ import library
 import server
 import tag_cleanup
 from library import SeratoOpen
-from tag_cleanup import normalize
+from tag_cleanup import clean_title, normalize
 from tests import test_server
 from tests.fixture import TempLibrary, open_database
 
@@ -38,6 +38,40 @@ def _tracks(db: Path, rows: list[tuple[str | None, str | None]], *, space_id: in
             conn.execute("INSERT INTO asset (id, name, genre, artist) VALUES (?, 'T', ?, ?)", (asset_id, genre, artist))
             conn.execute("INSERT INTO space_asset (asset_id, space_id) VALUES (?, ?)", (asset_id, space_id))
         conn.commit()
+
+
+def _named(
+    db: Path, rows: list[tuple[str, str | None]], *, space_id: int = 1, start: int = 1
+) -> None:
+    """Add ``(name, remixer)`` tracks to a space, replacing the fixture's when starting at 1."""
+    with closing(sqlite3.connect(db)) as conn:
+        if start == 1:
+            conn.execute("DELETE FROM space_asset")
+            conn.execute("DELETE FROM asset")
+        for offset, (name, remixer) in enumerate(rows):
+            asset_id = start + offset
+            conn.execute(
+                "INSERT INTO asset (id, name, artist, remixer) VALUES (?, ?, 'A', ?)",
+                (asset_id, name, remixer),
+            )
+            conn.execute(
+                "INSERT INTO space_asset (asset_id, space_id) VALUES (?, ?)",
+                (asset_id, space_id),
+            )
+        conn.commit()
+
+
+def _titles(db: Path) -> list[tuple[int, str | None, str | None]]:
+    """Return ``(id, name, remixer)`` for space 1, ordered by id."""
+    with closing(sqlite3.connect(db)) as conn:
+        return [
+            (int(row[0]), row[1], row[2])
+            for row in conn.execute(
+                "SELECT a.id, a.name, a.remixer FROM asset a "
+                "JOIN space_asset sa ON sa.asset_id = a.id "
+                "WHERE sa.space_id = 1 ORDER BY a.id"
+            )
+        ]
 
 
 class NormalizeTests(unittest.TestCase):
@@ -58,6 +92,43 @@ class NormalizeTests(unittest.TestCase):
         self.assertNotEqual(normalize("House"), normalize("Deep House"))
         self.assertNotEqual(normalize("Techno"), normalize("Tech House"))
         self.assertEqual(normalize(" - "), "")
+
+
+class CleanTitleTests(unittest.TestCase):
+    """Prefix, URL, Original Mix, feat., and casing rules."""
+
+    def test_prefix_url_original_mix_and_feat(self) -> None:
+        """Track numbers, URLs, Original Mix, and a feat. credit come off."""
+        cleaned = clean_title(
+            "01 - SONG TITLE (Original Mix) https://soundcloud.com/x (feat. GUEST)",
+            "",
+        )
+        self.assertEqual(cleaned["name"], "Song Title")
+        self.assertEqual(cleaned["remixer"], "Guest")
+
+    def test_dot_and_paren_prefixes(self) -> None:
+        """``01.`` and ``1)`` prefixes strip the same way as ``01 - ``."""
+        self.assertEqual(clean_title("01. midnight city", "")["name"], "Midnight City")
+        self.assertEqual(clean_title("1) midnight city", "")["name"], "Midnight City")
+
+    def test_mixed_case_and_bpm_stay(self) -> None:
+        """A mixed-case title is left alone. A number is not a track prefix."""
+        self.assertEqual(clean_title("Midnight City", "")["name"], "Midnight City")
+        self.assertEqual(clean_title("120 BPM Song", "")["remixer"], None)
+        self.assertEqual(clean_title("120 BPM SONG", "")["name"], "120 BPM Song")
+        self.assertEqual(clean_title("DJ SNAKE", "")["name"], "DJ Snake")
+
+    def test_occupied_remixer_keeps_feat_in_the_title(self) -> None:
+        """A feat. credit stays in the title when remixer already has a value."""
+        cleaned = clean_title("Song (feat. Guest)", "Other")
+        self.assertEqual(cleaned["name"], "Song (feat. Guest)")
+        self.assertIsNone(cleaned["remixer"])
+
+    def test_empty_after_rules_leaves_the_title(self) -> None:
+        """A title that is only a prefix is not wiped."""
+        cleaned = clean_title("01 - ", "")
+        self.assertEqual(cleaned["name"], "01 - ")
+        self.assertIsNone(cleaned["remixer"])
 
 
 class ClusterTests(unittest.TestCase):
@@ -265,6 +336,79 @@ class ApplyTests(unittest.TestCase):
             self.assertEqual(_genres(temp.db)[1][1], "Hip-Hop")
 
 
+class TitleCleanupTests(unittest.TestCase):
+    """Preview lists dirty titles. Apply rewrites only those rows in that space."""
+
+    def test_preview_does_not_write(self) -> None:
+        """Preview lists the dirty title. The library bytes stay the same."""
+        with TempLibrary() as temp:
+            _named(temp.db, [("01 - SONG TITLE", None), ("Midnight City", None)])
+            before = temp.db.read_bytes()
+            plan = tag_cleanup.preview_titles(temp.db, library.LIBRARY_SPACE)
+            self.assertEqual(temp.db.read_bytes(), before)
+        self.assertEqual(plan["written"], False)
+        self.assertEqual(plan["field"], "name")
+        self.assertEqual(len(plan["changes"]), 1)
+        self.assertEqual(plan["changes"][0]["from"], "01 - SONG TITLE")
+        self.assertEqual(plan["changes"][0]["to"], "Song Title")
+
+    def test_apply_rewrites_titles_and_moves_feat(self) -> None:
+        """Dirty titles and an empty remixer change. Mixed case and the other space stay."""
+        with TempLibrary() as temp:
+            _named(
+                temp.db,
+                [
+                    ("01 - SONG TITLE (feat. GUEST)", None),
+                    ("Midnight City", None),
+                    ("Song (feat. Kept)", "Already"),
+                ],
+            )
+            _named(temp.db, [("01 - OTHER SPACE", None)], space_id=2, start=50)
+            result = tag_cleanup.apply_titles(library.LIBRARY_SPACE)
+            rows = _titles(temp.db)
+            with open_database(temp.db) as conn:
+                other = conn.execute("SELECT name FROM asset WHERE id = 50").fetchone()
+        self.assertEqual(result["written"], True)
+        self.assertEqual(rows[0], (1, "Song Title", "Guest"))
+        self.assertEqual(rows[1], (2, "Midnight City", None))
+        self.assertEqual(rows[2], (3, "Song (feat. Kept)", "Already"))
+        self.assertEqual(other[0], "01 - OTHER SPACE")
+
+    def test_nothing_to_change_does_not_write(self) -> None:
+        """A space of already-clean titles returns written false."""
+        with TempLibrary() as temp:
+            _named(temp.db, [("Midnight City", None)])
+            before = temp.db.read_bytes()
+            result = tag_cleanup.apply_titles(library.LIBRARY_SPACE)
+            self.assertEqual(temp.db.read_bytes(), before)
+        self.assertEqual(result["written"], False)
+        self.assertEqual(result["changes"], [])
+
+    def test_unknown_space_does_not_write(self) -> None:
+        """A made-up space is 400 and the library stays put."""
+        with TempLibrary() as temp:
+            _named(temp.db, [("01 - SONG", None)])
+            before = temp.db.read_bytes()
+            with self.assertRaises(library.LibraryError) as caught:
+                tag_cleanup.preview_titles(temp.db, "Nope")
+            self.assertEqual(temp.db.read_bytes(), before)
+        self.assertEqual(caught.exception.message, "That space is not available here.")
+
+    def test_serato_open_blocks_the_write(self) -> None:
+        """A running Serato process refuses apply_titles. Preview still reads."""
+        with TempLibrary() as temp:
+            _named(temp.db, [("01 - SONG TITLE", None)])
+            preview = tag_cleanup.preview_titles(temp.db, library.LIBRARY_SPACE)
+            self.assertEqual(len(preview["changes"]), 1)
+            with open_database(temp.db) as conn:
+                conn.execute(
+                    "INSERT INTO lock (owner_process_id, owner_process_name) VALUES (99, 'Serato DJ Pro')"
+                )
+            with mock.patch("library._process_is_serato", return_value=True), self.assertRaises(SeratoOpen):
+                tag_cleanup.apply_titles(library.LIBRARY_SPACE)
+            self.assertEqual(_titles(temp.db)[0][1], "01 - SONG TITLE")
+
+
 class ApplyApiTests(unittest.TestCase):
     """``POST /api/tag-clusters`` against a temporary library."""
 
@@ -296,6 +440,19 @@ class ApplyApiTests(unittest.TestCase):
         self.assertEqual((status, cast_code(blank)), (400, "choose_spelling"))
         status, action = self.request("/api/tag-clusters", {"action": "wipe", "value": "Hip Hop"})
         self.assertEqual((status, cast_code(action)), (400, "action_unavailable"))
+
+    def test_clean_preview_and_apply(self) -> None:
+        """clean-preview does not write. clean-apply rewrites titles."""
+        _named(self.library.db, [("01 - SONG TITLE", None), ("Midnight City", None)])
+        status, preview = self.request("/api/tag-clusters", {"action": "clean-preview"})
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(preview), False)
+        self.assertEqual(_titles(self.library.db)[0][1], "01 - SONG TITLE")
+        status, made = self.request("/api/tag-clusters", {"action": "clean-apply"})
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(made), True)
+        self.assertEqual(_titles(self.library.db)[0][1], "Song Title")
+        self.assertEqual(_titles(self.library.db)[1][1], "Midnight City")
 
 
 def cast_written(payload: object) -> object:

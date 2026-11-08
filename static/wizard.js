@@ -929,8 +929,10 @@ var SeratoWizard = (() => {
     "tags.apply": "Apply",
     "tags.artist": "Artist",
     "tags.checking": "Reading tag spellings…",
+    "tags.checkingTitles": "Reading titles…",
     "tags.field": "Field",
     "tags.genre": "Genre",
+    "tags.introTitles": "Strips track numbers, URLs, and (Original Mix). Moves feat. into remixer when remixer is empty. Title-cases ALL CAPS or all lowercase. Writes the library, not the audio files. Quit Serato first.",
     "tags.group": "{name} — {spellings}, {tracks}",
     "tags.heading": "Tag spellings",
     "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
@@ -939,6 +941,10 @@ var SeratoWizard = (() => {
     "tags.previewLine": {
       one: "{from} → {to} ({count} track)",
       other: "{from} → {to} ({count} tracks)"
+    },
+    "tags.previewLineRemixer": {
+      one: "{from} → {to}, remixer {remixer} ({count} track)",
+      other: "{from} → {to}, remixer {remixer} ({count} tracks)"
     },
     "tags.previewSummary": {
       one: "{count} track would become {value}.",
@@ -960,6 +966,20 @@ var SeratoWizard = (() => {
       other: "{values} genre spellings in this space. {count} groups with more than one spelling."
     },
     "tags.summaryGenreClear": "Every genre in this space uses one spelling.",
+    "tags.summaryTitles": {
+      one: "{count} title in this space would change.",
+      other: "{count} titles in this space would change."
+    },
+    "tags.summaryTitlesClear": "Every title in this space already matches the cleanup rules.",
+    "tags.titles": "Titles",
+    "tags.titlesPreviewSummary": {
+      one: "{count} title would change.",
+      other: "{count} titles would change."
+    },
+    "tags.titlesWritten": {
+      one: "Wrote the cleaned title on {count} track.",
+      other: "Wrote the cleaned titles on {count} tracks."
+    },
     "tags.trackCount": {
       one: "{count} track",
       other: "{count} tracks"
@@ -1156,8 +1176,10 @@ var SeratoWizard = (() => {
     "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
     "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
     "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
+    "tooltip.tagsApplyTitles": "Write the cleaned titles. Quit Serato first. Audio files stay as they are.",
     "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
     "tooltip.tagsGenre": "Show genres that are the same words written different ways.",
+    "tooltip.tagsTitles": "Show titles that would change after stripping numbers, URLs, Original Mix, and feat., and title-casing ALL CAPS or all lowercase.",
     "tooltip.tagsGroup": "Open or close this spelling group.",
     "tooltip.tagsPreview": "Show which tracks would change before writing the library.",
     "tooltip.tagsRefresh": "Load the spelling groups again.",
@@ -2193,8 +2215,10 @@ var SeratoWizard = (() => {
     "tags.apply": "Aplicar",
     "tags.artist": "Artista",
     "tags.checking": "Leyendo grafías de etiquetas…",
+    "tags.checkingTitles": "Leyendo títulos…",
     "tags.field": "Campo",
     "tags.genre": "Género",
+    "tags.introTitles": "Quita números de pista, URL y (Original Mix). Pasa feat. a remixer cuando remixer está vacío. Pasa a mayúsculas iniciales los títulos en MAYÚSCULAS o minúsculas. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
     "tags.group": "{name} — {spellings}, {tracks}",
     "tags.heading": "Grafías de etiquetas",
     "tags.intro": "Elige una grafía por grupo. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
@@ -2203,6 +2227,10 @@ var SeratoWizard = (() => {
     "tags.previewLine": {
       one: "{from} → {to} ({count} pista)",
       other: "{from} → {to} ({count} pistas)"
+    },
+    "tags.previewLineRemixer": {
+      one: "{from} → {to}, remixer {remixer} ({count} pista)",
+      other: "{from} → {to}, remixer {remixer} ({count} pistas)"
     },
     "tags.previewSummary": {
       one: "{count} pista pasaría a {value}.",
@@ -2224,6 +2252,20 @@ var SeratoWizard = (() => {
       other: "{values} grafías de género en este espacio. {count} grupos con más de una grafía."
     },
     "tags.summaryGenreClear": "Cada género de este espacio usa una sola grafía.",
+    "tags.summaryTitles": {
+      one: "{count} título de este espacio cambiaría.",
+      other: "{count} títulos de este espacio cambiarían."
+    },
+    "tags.summaryTitlesClear": "Cada título de este espacio ya cumple las reglas de limpieza.",
+    "tags.titles": "Títulos",
+    "tags.titlesPreviewSummary": {
+      one: "{count} título cambiaría.",
+      other: "{count} títulos cambiarían."
+    },
+    "tags.titlesWritten": {
+      one: "Se escribió el título limpio en {count} pista.",
+      other: "Se escribieron los títulos limpios en {count} pistas."
+    },
     "tags.trackCount": {
       one: "{count} pista",
       other: "{count} pistas"
@@ -2420,8 +2462,10 @@ var SeratoWizard = (() => {
     "tooltip.space": "Elige Biblioteca, Vídeo, Apple Music o Preparar.",
     "tooltip.splitter": "Arrastra para cambiar el ancho de la lista. Doble clic lo devuelve. Las flechas lo redimensionan.",
     "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Los archivos de audio no cambian.",
+    "tooltip.tagsApplyTitles": "Escribe los títulos limpios. Cierra Serato primero. Los archivos de audio no cambian.",
     "tooltip.tagsArtist": "Muestra nombres de artista que son las mismas palabras escritas de otra forma.",
     "tooltip.tagsGenre": "Muestra géneros que son las mismas palabras escritas de otra forma.",
+    "tooltip.tagsTitles": "Muestra títulos que cambiarían al quitar números, URL, Original Mix y feat., y al pasar a mayúsculas iniciales los que están en MAYÚSCULAS o minúsculas.",
     "tooltip.tagsGroup": "Abre o cierra este grupo de grafías.",
     "tooltip.tagsPreview": "Muestra qué pistas cambiarían antes de escribir en la biblioteca.",
     "tooltip.tagsRefresh": "Vuelve a cargar los grupos de grafías.",
@@ -2966,9 +3010,11 @@ var SeratoWizard = (() => {
     viewTags: spec("tooltip.viewTags"),
     tagsGenre: spec("tooltip.tagsGenre"),
     tagsArtist: spec("tooltip.tagsArtist"),
+    tagsTitles: spec("tooltip.tagsTitles"),
     tagsRefresh: spec("tooltip.tagsRefresh"),
     tagsPreview: spec("tooltip.tagsPreview"),
     tagsApply: spec("tooltip.tagsApply"),
+    tagsApplyTitles: spec("tooltip.tagsApplyTitles"),
     tagsGroup: spec("tooltip.tagsGroup"),
     tagsSpelling: spec("tooltip.tagsSpelling"),
     gigRefresh: spec("tooltip.gigRefresh"),

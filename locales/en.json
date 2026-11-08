@@ -901,8 +901,10 @@
   "tags.apply": "Apply",
   "tags.artist": "Artist",
   "tags.checking": "Reading tag spellings…",
+  "tags.checkingTitles": "Reading titles…",
   "tags.field": "Field",
   "tags.genre": "Genre",
+  "tags.introTitles": "Strips track numbers, URLs, and (Original Mix). Moves feat. into remixer when remixer is empty. Title-cases ALL CAPS or all lowercase. Writes the library, not the audio files. Quit Serato first.",
   "tags.group": "{name} — {spellings}, {tracks}",
   "tags.heading": "Tag spellings",
   "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
@@ -911,6 +913,10 @@
   "tags.previewLine": {
     "one": "{from} → {to} ({count} track)",
     "other": "{from} → {to} ({count} tracks)"
+  },
+  "tags.previewLineRemixer": {
+    "one": "{from} → {to}, remixer {remixer} ({count} track)",
+    "other": "{from} → {to}, remixer {remixer} ({count} tracks)"
   },
   "tags.previewSummary": {
     "one": "{count} track would become {value}.",
@@ -932,6 +938,20 @@
     "other": "{values} genre spellings in this space. {count} groups with more than one spelling."
   },
   "tags.summaryGenreClear": "Every genre in this space uses one spelling.",
+  "tags.summaryTitles": {
+    "one": "{count} title in this space would change.",
+    "other": "{count} titles in this space would change."
+  },
+  "tags.summaryTitlesClear": "Every title in this space already matches the cleanup rules.",
+  "tags.titles": "Titles",
+  "tags.titlesPreviewSummary": {
+    "one": "{count} title would change.",
+    "other": "{count} titles would change."
+  },
+  "tags.titlesWritten": {
+    "one": "Wrote the cleaned title on {count} track.",
+    "other": "Wrote the cleaned titles on {count} tracks."
+  },
   "tags.trackCount": {
     "one": "{count} track",
     "other": "{count} tracks"
@@ -1128,8 +1148,10 @@
   "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
   "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
   "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
+  "tooltip.tagsApplyTitles": "Write the cleaned titles. Quit Serato first. Audio files stay as they are.",
   "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
   "tooltip.tagsGenre": "Show genres that are the same words written different ways.",
+  "tooltip.tagsTitles": "Show titles that would change after stripping numbers, URLs, Original Mix, and feat., and title-casing ALL CAPS or all lowercase.",
   "tooltip.tagsGroup": "Open or close this spelling group.",
   "tooltip.tagsPreview": "Show which tracks would change before writing the library.",
   "tooltip.tagsRefresh": "Load the spelling groups again.",

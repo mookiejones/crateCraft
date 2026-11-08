@@ -8,12 +8,13 @@
 import type { TagClusterChange, TagClusterGroup, TagClusterPlan } from "./api-types";
 import { t } from "./i18n";
 
-export type TagField = "genre" | "artist";
+export type TagField = "genre" | "artist" | "titles";
 
 export interface SpellingChange {
   from: string;
   to: string;
   count: number;
+  remixer?: string;
 }
 
 /**
@@ -25,6 +26,7 @@ export interface SpellingChange {
  * @returns {string}
  */
 export function tagsSummary(field: TagField, values: number, groups: number): string {
+  if (field === "titles") return titlesSummary(groups);
   if (groups === 0) {
     return field === "genre"
       ? t("tags.summaryGenreClear", { count: values })
@@ -33,6 +35,17 @@ export function tagsSummary(field: TagField, values: number, groups: number): st
   return field === "genre"
     ? t("tags.summaryGenre", { values, count: groups })
     : t("tags.summaryArtist", { values, count: groups });
+}
+
+/**
+ * One-line count of titles that would change.
+ *
+ * @param changes Rows in the title-cleanup plan.
+ * @returns {string}
+ */
+export function titlesSummary(changes: number): string {
+  if (!changes) return t("tags.summaryTitlesClear");
+  return t("tags.summaryTitles", { count: changes });
 }
 
 /**
@@ -74,6 +87,17 @@ export function previewSummary(plan: TagClusterPlan): string {
 }
 
 /**
+ * Status line after a title-cleanup preview.
+ *
+ * @param plan JSON from POST /api/tag-clusters action clean-preview.
+ * @returns {string}
+ */
+export function titlesPreviewSummary(plan: TagClusterPlan): string {
+  if (!plan.changes.length) return t("tags.summaryTitlesClear");
+  return t("tags.titlesPreviewSummary", { count: plan.changes.length });
+}
+
+/**
  * Status line after a write.
  *
  * @param plan JSON from POST /api/tag-clusters action apply.
@@ -81,6 +105,16 @@ export function previewSummary(plan: TagClusterPlan): string {
  */
 export function writtenSummary(plan: TagClusterPlan): string {
   return t("tags.written", { count: plan.changes.length, value: plan.value });
+}
+
+/**
+ * Status line after a title-cleanup write.
+ *
+ * @param plan JSON from POST /api/tag-clusters action clean-apply.
+ * @returns {string}
+ */
+export function titlesWrittenSummary(plan: TagClusterPlan): string {
+  return t("tags.titlesWritten", { count: plan.changes.length });
 }
 
 /**
@@ -92,10 +126,15 @@ export function writtenSummary(plan: TagClusterPlan): string {
 export function groupChanges(changes: TagClusterChange[]): SpellingChange[] {
   const rows = new Map<string, SpellingChange>();
   for (const change of changes) {
-    const id = `${change.from}\0${change.to}`;
+    const remixer = change.remixer ?? "";
+    const id = `${change.from}\0${change.to}\0${remixer}`;
     const existing = rows.get(id);
     if (existing) existing.count += 1;
-    else rows.set(id, { from: change.from, to: change.to, count: 1 });
+    else {
+      const row: SpellingChange = { from: change.from, to: change.to, count: 1 };
+      if (change.remixer) row.remixer = change.remixer;
+      rows.set(id, row);
+    }
   }
   return [...rows.values()];
 }
@@ -108,6 +147,13 @@ export function groupChanges(changes: TagClusterChange[]): SpellingChange[] {
  */
 export function previewLines(changes: TagClusterChange[]): string[] {
   return groupChanges(changes).map((row) =>
-    t("tags.previewLine", { from: row.from, to: row.to, count: row.count }),
+    row.remixer
+      ? t("tags.previewLineRemixer", {
+        from: row.from,
+        to: row.to,
+        remixer: row.remixer,
+        count: row.count,
+      })
+      : t("tags.previewLine", { from: row.from, to: row.to, count: row.count }),
   );
 }
