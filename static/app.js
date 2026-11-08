@@ -930,6 +930,7 @@
     "status.checking": "Checking Serato",
     "status.library": "Library",
     "tags.apply": "Apply",
+    "tags.applyMappings": "Apply saved mappings",
     "tags.artist": "Artist",
     "tags.checking": "Reading tag spellings…",
     "tags.checkingTitles": "Reading titles…",
@@ -941,9 +942,21 @@
     "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
     "tags.noChanges": "Every track in this group already uses that spelling.",
     "tags.preview": "Review",
+    "tags.mappingSummary": {
+      one: "{count} track still uses a saved spelling.",
+      other: "{count} tracks still use a saved spelling."
+    },
+    "tags.mappingWritten": {
+      one: "Wrote saved spellings on {count} track.",
+      other: "Wrote saved spellings on {count} tracks."
+    },
     "tags.previewLine": {
       one: "{from} → {to} ({count} track)",
       other: "{from} → {to} ({count} tracks)"
+    },
+    "tags.previewLineField": {
+      one: "{field}: {from} → {to} ({count} track)",
+      other: "{field}: {from} → {to} ({count} tracks)"
     },
     "tags.previewLineRemixer": {
       one: "{from} → {to}, remixer {remixer} ({count} track)",
@@ -1186,6 +1199,7 @@
     "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
     "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
     "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
+    "tooltip.tagsApplyMappings": "Write saved genre and artist spellings on tracks that still use another form. Quit Serato first. Audio files stay as they are.",
     "tooltip.tagsApplyTitles": "Write the cleaned titles. Quit Serato first. Audio files stay as they are.",
     "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
     "tooltip.tagsGenre": "Show genres that are the same words written different ways.",
@@ -2251,6 +2265,7 @@
     "status.checking": "Comprobando Serato",
     "status.library": "Biblioteca",
     "tags.apply": "Aplicar",
+    "tags.applyMappings": "Aplicar grafías guardadas",
     "tags.artist": "Artista",
     "tags.checking": "Leyendo grafías de etiquetas…",
     "tags.checkingTitles": "Leyendo títulos…",
@@ -2262,9 +2277,21 @@
     "tags.intro": "Elige una grafía por grupo. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
     "tags.noChanges": "Todas las pistas de este grupo ya usan esa grafía.",
     "tags.preview": "Revisar",
+    "tags.mappingSummary": {
+      one: "{count} pista aún usa una grafía guardada.",
+      other: "{count} pistas aún usan una grafía guardada."
+    },
+    "tags.mappingWritten": {
+      one: "Se escribió la grafía guardada en {count} pista.",
+      other: "Se escribieron las grafías guardadas en {count} pistas."
+    },
     "tags.previewLine": {
       one: "{from} → {to} ({count} pista)",
       other: "{from} → {to} ({count} pistas)"
+    },
+    "tags.previewLineField": {
+      one: "{field}: {from} → {to} ({count} pista)",
+      other: "{field}: {from} → {to} ({count} pistas)"
     },
     "tags.previewLineRemixer": {
       one: "{from} → {to}, remixer {remixer} ({count} pista)",
@@ -2507,6 +2534,7 @@
     "tooltip.space": "Elige Biblioteca, Vídeo, Apple Music o Preparar.",
     "tooltip.splitter": "Arrastra para cambiar el ancho de la lista. Doble clic lo devuelve. Las flechas lo redimensionan.",
     "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Los archivos de audio no cambian.",
+    "tooltip.tagsApplyMappings": "Escribe las grafías de género y artista guardadas en las pistas que aún usan otra forma. Cierra Serato primero. Los archivos de audio no cambian.",
     "tooltip.tagsApplyTitles": "Escribe los títulos limpios. Cierra Serato primero. Los archivos de audio no cambian.",
     "tooltip.tagsArtist": "Muestra nombres de artista que son las mismas palabras escritas de otra forma.",
     "tooltip.tagsGenre": "Muestra géneros que son las mismas palabras escritas de otra forma.",
@@ -3468,6 +3496,7 @@
     tagsPreview: spec("tooltip.tagsPreview"),
     tagsApply: spec("tooltip.tagsApply"),
     tagsApplyTitles: spec("tooltip.tagsApplyTitles"),
+    tagsApplyMappings: spec("tooltip.tagsApplyMappings"),
     tagsGroup: spec("tooltip.tagsGroup"),
     tagsSpelling: spec("tooltip.tagsSpelling"),
     gigRefresh: spec("tooltip.gigRefresh"),
@@ -4504,38 +4533,62 @@
   function titlesWrittenSummary(plan) {
     return t("tags.titlesWritten", { count: plan.changes.length });
   }
+  function mappingPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.mappingSummary", { count: plan.changes.length });
+  }
+  function mappingWrittenSummary(plan) {
+    return t("tags.mappingWritten", { count: plan.changes.length });
+  }
+  function mappingFieldLabel(field) {
+    if (field === "genre") return t("tags.genre");
+    if (field === "artist") return t("tags.artist");
+    return field;
+  }
   function groupChanges(changes) {
     const rows2 = /* @__PURE__ */ new Map();
     for (const change of changes) {
       const remixer = change.remixer ?? "";
-      const id = `${change.from}\0${change.to}\0${remixer}`;
+      const field = change.field ?? "";
+      const id = `${field}\0${change.from}\0${change.to}\0${remixer}`;
       const existing = rows2.get(id);
       if (existing) existing.count += 1;
       else {
         const row = { from: change.from, to: change.to, count: 1 };
         if (change.remixer) row.remixer = change.remixer;
+        if (change.field) row.field = change.field;
         rows2.set(id, row);
       }
     }
     return [...rows2.values()];
   }
   function previewLines(changes) {
-    return groupChanges(changes).map(
-      (row) => row.remixer ? t("tags.previewLineRemixer", {
+    return groupChanges(changes).map((row) => {
+      if (row.field) {
+        return t("tags.previewLineField", {
+          field: mappingFieldLabel(row.field),
+          from: row.from,
+          to: row.to,
+          count: row.count
+        });
+      }
+      return row.remixer ? t("tags.previewLineRemixer", {
         from: row.from,
         to: row.to,
         remixer: row.remixer,
         count: row.count
-      }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count })
-    );
+      }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count });
+    });
   }
 
   // src/tags.ts
   var LIST_CAP3 = 100;
   var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
   var TITLE_KEY = "clean";
+  var MAPPING_KEY = "saved";
   var latest3 = null;
   var titlePlan = null;
+  var mappingPlan = null;
   var plans = /* @__PURE__ */ new Map();
   var selectedByKey = /* @__PURE__ */ new Map();
   var panelBusy = false;
@@ -4577,6 +4630,10 @@
         void applyTitles();
         return;
       }
+      if (button2.dataset.tagsAction === "refresh-apply") {
+        void applyMappings();
+        return;
+      }
       const key = button2.dataset.key ?? "";
       if (!key) return;
       if (button2.dataset.tagsAction === "preview") void previewGroup(key);
@@ -4599,6 +4656,7 @@
         if (token3 !== state.tagsToken) return;
         titlePlan = payload;
         latest3 = null;
+        mappingPlan = null;
         el("tags-status").textContent = titlesPreviewSummary(payload);
         settle = "report";
       } else {
@@ -4615,6 +4673,8 @@
         }
         latest3 = payload;
         titlePlan = null;
+        mappingPlan = await readMappingPreview(token3);
+        if (token3 !== state.tagsToken) return;
         el("tags-status").textContent = "";
         settle = "report";
       }
@@ -4647,6 +4707,8 @@
     summary.className = "gig-note";
     summary.textContent = tagsSummary(field, payload.values ?? 0, groups.length);
     report.replaceChildren(summary);
+    const mapping = mappingCard();
+    if (mapping) report.append(mapping);
     if (!groups.length) return;
     groups.forEach((group, index) => {
       report.append(groupCard(group, index === 0 || open.has(group.key)));
@@ -4748,6 +4810,37 @@
       paintReport();
     }
   }
+  async function applyMappings() {
+    const plan = mappingPlan;
+    if (!plan || !canApplyMappings(plan)) return;
+    actionKey = MAPPING_KEY;
+    panelBusy = true;
+    beginBusy3();
+    paintReport();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "refresh-apply",
+        space: state.space
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy3();
+      await loadTags();
+      el("tags-status").textContent = mappingWrittenSummary(written);
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus3(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy3();
+      paintReport();
+    }
+  }
   async function applyTitles() {
     const plan = titlePlan;
     if (!plan || !canApplyTitles(plan)) return;
@@ -4812,6 +4905,57 @@
   }
   function canApplyTitles(plan) {
     return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
+  }
+  function canApplyMappings(plan) {
+    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
+  }
+  function asMappingPlan(payload) {
+    if (payload === null || typeof payload !== "object") return null;
+    const plan = payload;
+    if (!Array.isArray(plan.changes)) return null;
+    return plan;
+  }
+  async function readMappingPreview(token3) {
+    try {
+      const payload = await postJSON("/api/tag-clusters", {
+        action: "refresh-preview",
+        space: state.space
+      });
+      if (token3 !== state.tagsToken) return null;
+      return asMappingPlan(payload);
+    } catch {
+      if (token3 !== state.tagsToken) return null;
+      return null;
+    }
+  }
+  function mappingCard() {
+    const plan = mappingPlan;
+    if (!plan?.changes.length) return null;
+    const wrap = document.createElement("div");
+    wrap.className = "tags-mappings";
+    const note = document.createElement("p");
+    note.className = "gig-note";
+    note.textContent = mappingPreviewSummary(plan);
+    wrap.append(note);
+    const lines = previewLines(plan.changes);
+    if (lines.length) {
+      const diffs = document.createElement("ul");
+      for (const line of lines.slice(0, LIST_CAP3)) {
+        const row = document.createElement("li");
+        row.textContent = line;
+        diffs.append(row);
+      }
+      wrap.append(diffs);
+    }
+    const actions2 = document.createElement("div");
+    actions2.className = "tags-actions";
+    const apply = buttonEl(tips.tagsApplyMappings);
+    apply.dataset.tagsAction = "refresh-apply";
+    apply.textContent = t("tags.applyMappings");
+    apply.disabled = !canApplyMappings(plan);
+    actions2.append(apply);
+    wrap.append(actions2);
+    return wrap;
   }
   function failStatus3(message) {
     el("tags-status").textContent = message;

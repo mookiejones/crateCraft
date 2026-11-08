@@ -2122,7 +2122,8 @@ class Handler(BaseHTTPRequestHandler):
                         or (foldering and payload.get("action") == "preview")
                         or (
                             clustering
-                            and payload.get("action") in ("preview", "clean-preview")
+                            and payload.get("action")
+                            in ("preview", "clean-preview", "refresh-preview")
                         )
                     )
                     if not preview:

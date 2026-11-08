@@ -16,6 +16,8 @@ This view covers the whole space. The crate list is hidden.
 6. Click **Review**. The status line names how many rows would change, and the group lists each stored spelling and the spelling it would become.
 7. Click **Apply**. Apply stays off until Review matches the selected spelling, the library is writable, and at least one row would change.
 
+When a later track still uses another spelling of a saved mapping, a banner lists those rows and **Apply saved mappings** writes them. Opening the view does not write.
+
 **Check again** reloads the groups. A space change or **Reload** does the same.
 
 If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
@@ -39,7 +41,7 @@ When every title already matches, the report says **Every title in this space al
 
 Apply rewrites the genre or artist on those library rows, or the title and remixer for **Titles**. Cue points stay in the audio files. The files themselves are not rewritten.
 
-Remembering the mapping for new imports is a later change.
+Apply also remembers that spelling next to the app settings, not in the Serato folder. **Apply saved mappings** rewrites later tracks that still use another form of a saved spelling, including a new import that is no longer in a spelling group.
 
 ## Resize the list and the details
 

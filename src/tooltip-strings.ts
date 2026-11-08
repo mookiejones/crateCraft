@@ -202,6 +202,7 @@ export const tips = {
   tagsPreview: spec("tooltip.tagsPreview"),
   tagsApply: spec("tooltip.tagsApply"),
   tagsApplyTitles: spec("tooltip.tagsApplyTitles"),
+  tagsApplyMappings: spec("tooltip.tagsApplyMappings"),
   tagsGroup: spec("tooltip.tagsGroup"),
   tagsSpelling: spec("tooltip.tagsSpelling"),
   gigRefresh: spec("tooltip.gigRefresh"),

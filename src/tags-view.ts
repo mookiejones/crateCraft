@@ -15,6 +15,7 @@ export interface SpellingChange {
   to: string;
   count: number;
   remixer?: string;
+  field?: string;
 }
 
 /**
@@ -118,6 +119,39 @@ export function titlesWrittenSummary(plan: TagClusterPlan): string {
 }
 
 /**
+ * Status line after a saved-mapping preview.
+ *
+ * @param plan JSON from POST /api/tag-clusters action refresh-preview.
+ * @returns {string}
+ */
+export function mappingPreviewSummary(plan: TagClusterPlan): string {
+  if (!plan.changes.length) return t("tags.noChanges");
+  return t("tags.mappingSummary", { count: plan.changes.length });
+}
+
+/**
+ * Status line after a saved-mapping write.
+ *
+ * @param plan JSON from POST /api/tag-clusters action refresh-apply.
+ * @returns {string}
+ */
+export function mappingWrittenSummary(plan: TagClusterPlan): string {
+  return t("tags.mappingWritten", { count: plan.changes.length });
+}
+
+/**
+ * Field word for a mapping preview line.
+ *
+ * @param field Stored field name, usually genre or artist.
+ * @returns {string}
+ */
+export function mappingFieldLabel(field: string): string {
+  if (field === "genre") return t("tags.genre");
+  if (field === "artist") return t("tags.artist");
+  return field;
+}
+
+/**
  * Collapse identical from→to pairs and count them.
  *
  * @param changes Row diffs from a plan.
@@ -127,12 +161,14 @@ export function groupChanges(changes: TagClusterChange[]): SpellingChange[] {
   const rows = new Map<string, SpellingChange>();
   for (const change of changes) {
     const remixer = change.remixer ?? "";
-    const id = `${change.from}\0${change.to}\0${remixer}`;
+    const field = change.field ?? "";
+    const id = `${field}\0${change.from}\0${change.to}\0${remixer}`;
     const existing = rows.get(id);
     if (existing) existing.count += 1;
     else {
       const row: SpellingChange = { from: change.from, to: change.to, count: 1 };
       if (change.remixer) row.remixer = change.remixer;
+      if (change.field) row.field = change.field;
       rows.set(id, row);
     }
   }
@@ -146,14 +182,22 @@ export function groupChanges(changes: TagClusterChange[]): SpellingChange[] {
  * @returns {string[]}
  */
 export function previewLines(changes: TagClusterChange[]): string[] {
-  return groupChanges(changes).map((row) =>
-    row.remixer
+  return groupChanges(changes).map((row) => {
+    if (row.field) {
+      return t("tags.previewLineField", {
+        field: mappingFieldLabel(row.field),
+        from: row.from,
+        to: row.to,
+        count: row.count,
+      });
+    }
+    return row.remixer
       ? t("tags.previewLineRemixer", {
         from: row.from,
         to: row.to,
         remixer: row.remixer,
         count: row.count,
       })
-      : t("tags.previewLine", { from: row.from, to: row.to, count: row.count }),
-  );
+      : t("tags.previewLine", { from: row.from, to: row.to, count: row.count });
+  });
 }

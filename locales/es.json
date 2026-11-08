@@ -927,6 +927,7 @@
   "status.checking": "Comprobando Serato",
   "status.library": "Biblioteca",
   "tags.apply": "Aplicar",
+  "tags.applyMappings": "Aplicar grafías guardadas",
   "tags.artist": "Artista",
   "tags.checking": "Leyendo grafías de etiquetas…",
   "tags.checkingTitles": "Leyendo títulos…",
@@ -938,9 +939,21 @@
   "tags.intro": "Elige una grafía por grupo. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
   "tags.noChanges": "Todas las pistas de este grupo ya usan esa grafía.",
   "tags.preview": "Revisar",
+  "tags.mappingSummary": {
+    "one": "{count} pista aún usa una grafía guardada.",
+    "other": "{count} pistas aún usan una grafía guardada."
+  },
+  "tags.mappingWritten": {
+    "one": "Se escribió la grafía guardada en {count} pista.",
+    "other": "Se escribieron las grafías guardadas en {count} pistas."
+  },
   "tags.previewLine": {
     "one": "{from} → {to} ({count} pista)",
     "other": "{from} → {to} ({count} pistas)"
+  },
+  "tags.previewLineField": {
+    "one": "{field}: {from} → {to} ({count} pista)",
+    "other": "{field}: {from} → {to} ({count} pistas)"
   },
   "tags.previewLineRemixer": {
     "one": "{from} → {to}, remixer {remixer} ({count} pista)",
@@ -1183,6 +1196,7 @@
   "tooltip.space": "Elige Biblioteca, Vídeo, Apple Music o Preparar.",
   "tooltip.splitter": "Arrastra para cambiar el ancho de la lista. Doble clic lo devuelve. Las flechas lo redimensionan.",
   "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Los archivos de audio no cambian.",
+  "tooltip.tagsApplyMappings": "Escribe las grafías de género y artista guardadas en las pistas que aún usan otra forma. Cierra Serato primero. Los archivos de audio no cambian.",
   "tooltip.tagsApplyTitles": "Escribe los títulos limpios. Cierra Serato primero. Los archivos de audio no cambian.",
   "tooltip.tagsArtist": "Muestra nombres de artista que son las mismas palabras escritas de otra forma.",
   "tooltip.tagsGenre": "Muestra géneros que son las mismas palabras escritas de otra forma.",
