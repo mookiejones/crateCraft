@@ -6,6 +6,8 @@
 
 Five moves. Backups first. Cue points safe. Then go crate digging.
 
+![Five Quick Start moves, looping.](images/quickstart-five-moves.gif)
+
 GitHub Releases is the only download.
 
 ## 1 Download
@@ -28,13 +30,11 @@ Grab the build for your machine from [GitHub Releases](https://github.com/mookie
 
 The release marked Latest is **v0.1.1**. It attaches `Serato-Library-macos.zip` (Apple silicon) and `Serato-Library-windows.zip`. The pre-release **v1.1.0-rc2** has the disk images, the installer, the portable zip, and `SHA256SUMS`.
 
-Mac warnings are on [Install on a Mac](Install-macOS). Windows warnings are on [Install on Windows](Install-Windows).
-
-## 2 Open
+## 2 Install (Mac and Windows)
 
 <figure>
   <img alt="Step 2. A pointer chooses Open." src="images/step-2-light.png" width="180">
-  <figcaption>2 Open (right-click > Open)</figcaption>
+  <figcaption>2 Install (Mac and Windows)</figcaption>
 </figure>
 
 The builds are unsigned, so the computer complains once. The warning is expected.
@@ -45,14 +45,16 @@ On macOS 15 and later, open the app once. Then go to **System Settings > Privacy
 
 On Windows, SmartScreen says it protected your PC. Choose **More info**, then **Run anyway**.
 
-A window titled **Serato Library** opens. It stays on this computer. Close the window to quit.
+Mac warnings, including Removable Volumes, are on [Install on a Mac](Install-macOS). Windows warnings are on [Install on Windows](Install-Windows).
 
-## 3 Point it at your Serato library
+## 3 Open
 
 <figure>
   <img alt="Step 3. A magnifying glass over a record." src="images/step-3-light.png" width="180">
-  <figcaption>3 Point it at your Serato library</figcaption>
+  <figcaption>3 Open</figcaption>
 </figure>
+
+A window titled **Serato Library** opens. It stays on this computer. Close the window to quit.
 
 Choose **Get started**. When the page names your library, choose **Use this library**.
 
@@ -62,11 +64,16 @@ Nothing there yet? Open Serato DJ once, quit it, and choose **Check again**. If 
 
 **Get started**, **Use this library**, and **Take a safety snapshot** are in the app on `main`. They are not in the v0.1.1 download or the v1.1.0-rc2 pre-release.
 
-## 4 Make a Backup
+## 4 First backup
 
 <figure>
   <img alt="Step 4. A check mark on a record inside a shield." src="images/step-4-light.png" width="180">
-  <figcaption>4 Make a Backup</figcaption>
+  <figcaption>4 First backup</figcaption>
+</figure>
+
+<figure>
+  <img alt="Example data. Snapshots, reviewing a restore before anything is written." src="images/quickstart-backup.png" width="100%">
+  <figcaption>Backups. Example data.</figcaption>
 </figure>
 
 Quit Serato DJ Pro if it is open. Choose **Take a safety snapshot**. This copy is your first Backup.
@@ -79,14 +86,21 @@ If Serato is still open, the page says **Close Serato DJ to continue**.
 
 Later, open **Backups**. **Review restore** shows the plan before anything is written. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 
-## 5 Start crate digging
+## 5 Find your music
 
 <figure>
   <img alt="Step 5. Two records in a crate." src="images/step-5-light.png" width="180">
-  <figcaption>5 Start crate digging</figcaption>
+  <figcaption>5 Find your music</figcaption>
 </figure>
 
-You land in **Crates**. The space menu reads **Library**, **Video**, **Apple Music**, or **Prepare**.
+<figure>
+  <img alt="Example data. Crates view with a sample library." src="images/quickstart-crates.png" width="100%">
+  <figcaption>Crates. Example data.</figcaption>
+</figure>
+
+![Crates and Backups in the window.](images/quickstart-library.gif)
+
+You land in **Crates**. Time to find your music. The space menu reads **Library**, **Video**, **Apple Music**, or **Prepare**.
 
 Use **Search tracks**, then click a tune. To narrow the crate you have open, type a filter in the search: `bpm:120-128` (a range), `bpm:124~3` (124 give or take 3), `key:8A`, or `mix:8A` (keys that mix with 8A). Filters and words combine. **Split** shows a second crate list beside the first. Alt-click or Shift-click a crate to fill the other pane. **Save view** makes a crate from the tracks in the focused list. Serato DJ Pro must be quit for that write. Cue points show on the right. They are read from the audio file. Press `/` to jump to that search. Press Ctrl+K (Command+K on a Mac) to find a track or a file on disk. [Keyboard shortcuts](Keyboard-Shortcuts) lists the other keys.
 

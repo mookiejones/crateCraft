@@ -14,10 +14,25 @@ ROOT = Path(__file__).resolve().parents[1]
 
 CAPTIONS = (
     "1 Download",
-    "2 Open (right-click > Open)",
-    "3 Point it at your Serato library",
-    "4 Make a Backup",
-    "5 Start crate digging",
+    "2 Install (Mac and Windows)",
+    "3 Open",
+    "4 First backup",
+    "5 Find your music",
+)
+
+STEP_HEADINGS = tuple(f"## {caption}" for caption in CAPTIONS)
+
+QUICK_START_GIFS = (
+    "quickstart-five-moves.gif",
+    "quickstart-library.gif",
+)
+
+HOME_EMOJI_STEPS = (
+    "📥 Download",
+    "💿 Install (Mac and Windows)",
+    "▶️ Open",
+    "🛡️ First backup",
+    "🎧 Find your music",
 )
 
 RELEASE_NAMES = (
@@ -75,8 +90,23 @@ class QuickStartTests(unittest.TestCase):
         self.assertNotIn("never touched", text)
         for caption in CAPTIONS:
             self.assertIn(caption, text)
+        for heading in STEP_HEADINGS:
+            self.assertIn(heading, text)
+        self.assertEqual(
+            [line for line in text.splitlines() if line.startswith("## ")],
+            list(STEP_HEADINGS),
+        )
         for name in RELEASE_NAMES + LEGACY_NAMES:
             self.assertIn(name, text)
+        for name in QUICK_START_GIFS:
+            self.assertIn(f"images/{name}", text)
+            path = ROOT / "docs" / "wiki" / "images" / name
+            self.assertTrue(path.is_file(), name)
+            self.assertEqual(path.read_bytes()[:6], b"GIF89a", name)
+        self.assertIn("images/quickstart-crates.png", text)
+        self.assertIn("images/quickstart-backup.png", text)
+        self.assertTrue((ROOT / "docs" / "wiki" / "images" / "quickstart-crates.png").is_file())
+        self.assertTrue((ROOT / "docs" / "wiki" / "images" / "quickstart-backup.png").is_file())
 
     def test_guide_page_uses_picture_for_light_and_dark(self) -> None:
         """Switch the guide banner and the step art with a picture element.
@@ -116,6 +146,57 @@ class QuickStartTests(unittest.TestCase):
         self.assertNotIn("never touched", text)
         for caption in CAPTIONS:
             self.assertIn(caption, text)
+        for heading in STEP_HEADINGS:
+            self.assertIn(heading, text)
+        self.assertEqual(
+            [line for line in text.splitlines() if line.startswith("## ")],
+            list(STEP_HEADINGS),
+        )
+        for name in QUICK_START_GIFS:
+            self.assertIn(f"wiki/images/{name}", text)
+        self.assertIn("images/screenshot-home.png", text)
+        self.assertIn("images/screenshot-backups.png", text)
+
+    def test_readme_leads_with_the_quick_start(self) -> None:
+        """Put the Quick Start link at the top of the README, before Install.
+
+        Returns:
+            None. The test fails when the link moves below the first heading
+            or the five step names change.
+        """
+        text = (ROOT / "README.md").read_text(encoding="utf-8")
+        link = "[Quick Start](docs/wiki/Quick-Start.md)"
+        self.assertIn(link, text)
+        self.assertLess(text.index(link), text.index("## Install"))
+        self.assertLess(
+            text.index(link),
+            text.index("A local window for the Serato DJ Pro library"),
+        )
+        self.assertIn(
+            "Five steps: Download, Install (Mac and Windows), Open, First backup, Find your music.",
+            text,
+        )
+        self.assertIn("docs/wiki/images/quickstart-five-moves.gif", text)
+
+    def test_wiki_home_leads_with_the_banner_and_the_five_steps(self) -> None:
+        """Show the Quick Start banner and the five emoji steps on wiki Home.
+
+        Returns:
+            None. The test fails when Home drops the banner, the GIF, or
+            the Quick Start link.
+        """
+        text = (ROOT / "docs" / "wiki" / "Home.md").read_text(encoding="utf-8")
+        self.assertIn("The logo on the banner is not approved yet. It may change.", text)
+        self.assertIn("images/quickstart-banner-light.png", text)
+        self.assertIn("images/quickstart-five-moves.gif", text)
+        self.assertIn("](Quick-Start)", text)
+        self.assertLess(
+            text.index("images/quickstart-banner-light.png"),
+            text.index("](Quick-Start)"),
+        )
+        for step in HOME_EMOJI_STEPS:
+            self.assertIn(step, text)
+        self.assertNotIn("```mermaid", text)
 
 
 class InstallPageTests(unittest.TestCase):
