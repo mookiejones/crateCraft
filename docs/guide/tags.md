@@ -45,7 +45,7 @@ Other groups under the form, such as **Song**, **File**, and **Status**, are for
 
 ## Other copies
 
-When another track has the same title, artist, and length in whole seconds, **Other copies** lists it. Click a file name to open that copy. [Duplicates](duplicates.md) is the view for merging them.
+When another track has the same title, artist, and length in whole seconds, **Other copies** lists it. Click a file name to open that copy. **Use in crates** puts that copy in every crate this track is in, at the same position. Both can stay. [Duplicates](duplicates.md) is the view for merging them.
 
 ## Related tracks
 

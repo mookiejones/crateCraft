@@ -29,6 +29,7 @@ from server import (
     require_space,
 )
 from tests.fixture import TempLibrary, open_database
+from tests.test_library import _crate_orders, _seed_replace_crates
 import library
 from library import LibraryError
 
@@ -509,6 +510,49 @@ class ApiTests(unittest.TestCase):
             self.assertIn(field, script)
         self.assertIn("merge-dialog", page)
         self.assertIn("Merge copies", page)
+
+    def test_replace_in_crates_preview_and_confirm(self) -> None:
+        """Preview a crate replace, then confirm it over HTTP.
+
+        The preview leaves membership unchanged. A body without ``confirm``
+        returns 400. The confirmed update places asset 2 in Warmup at the
+        original list_order and keeps asset 1.
+
+        Returns:
+            None. The test fails if the preview writes or the replacement
+            is missing from Warmup.
+        """
+        with open_database(library.MASTER) as conn:
+            _seed_replace_crates(conn)
+        status, preview = self.request(
+            "/api/replace-in-crates",
+            {"from_id": 1, "to_id": 2, "space": "Serato Library", "preview": True},
+        )
+        self.assertEqual(status, 200)
+        self.assertTrue(preview["preview"])
+        self.assertEqual([item["name"] for item in preview["crates_added"]], ["Warmup"])
+        self.assertEqual(_crate_orders(library.MASTER, 10), [(1, 3)])
+        status, rejected = self.request(
+            "/api/replace-in-crates",
+            {"from_id": 1, "to_id": 2},
+        )
+        self.assertEqual(status, 400)
+        self.assertIn("error", rejected)
+        status, updated = self.request(
+            "/api/replace-in-crates",
+            {"from_id": 1, "to_id": 2, "confirm": True},
+        )
+        self.assertEqual(status, 200)
+        self.assertTrue(updated["ok"])
+        self.assertFalse(updated["preview"])
+        self.assertIn((2, 3), _crate_orders(library.MASTER, 10))
+        self.assertIn((1, 3), _crate_orders(library.MASTER, 10))
+        script = Path(__file__).resolve().parents[1].joinpath("static", "app.js").read_text(encoding="utf-8")
+        page = Path(__file__).resolve().parents[1].joinpath("static", "index.html").read_text(encoding="utf-8")
+        for field in ("/api/replace-in-crates", "crates_added", "crates_kept", "crates_removed"):
+            self.assertIn(field, script)
+        self.assertIn("crates-replace-dialog", page)
+        self.assertIn("Use in crates", page)
 
     def test_locked_library_returns_409(self) -> None:
         """Return 409 when a write finds Serato holding the lock.

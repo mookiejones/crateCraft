@@ -45,6 +45,7 @@ import {
   membershipTip,
   missingDrive,
   openCopy,
+  openReplaceCopy,
   openCrumb,
   openCrate,
   openFile,
@@ -1050,7 +1051,13 @@ function renderDetail(track: Track) {
   remove.textContent = t("detail.removeFromLibrary");
   remove.disabled = !writable;
   remove.addEventListener("click", () => removeTrack(track.id));
-  actions.append(reveal, prepare, relocate, remove);
+  const useInCrates = buttonEl(tips.useInCrates);
+  useInCrates.textContent = t("detail.useInCrates");
+  useInCrates.disabled = !writable;
+  useInCrates.addEventListener("click", () => {
+    bridge.openReplaceInCratesDialog(track.id).catch((error) => setNotice(failureOf(error).message));
+  });
+  actions.append(reveal, prepare, relocate, remove, useInCrates);
   if (state.mode === "duplicates" && selectedDuplicateGroup()) {
     const merge = buttonEl(tips.mergeDuplicates);
     merge.textContent = t("merge.title");
@@ -1064,7 +1071,7 @@ function renderDetail(track: Track) {
 
   body.append(relatedSection(track, writable));
   body.append(markerSection(track));
-  if (track.copies?.length) body.append(copySection(track.copies));
+  if (track.copies?.length) body.append(copySection(track.id, track.copies, writable));
   body.append(membershipSection(track, writable));
 
   for (const group of track.groups || []) {
@@ -1234,10 +1241,12 @@ function markerSection(track: Track) {
  * calls selectTrack, which fetches that asset. This builder only creates
  * the nodes.
  *
+ * @param {number} fromId Open track whose crates the replacement should join.
  * @param {object[]} copies Copy summaries from the track payload.
+ * @param {boolean} writable False disables Use in crates.
  * @returns {HTMLElement} The section.
  */
-function copySection(copies: CopyRow[]) {
+function copySection(fromId: number, copies: CopyRow[], writable: boolean) {
   const section = document.createElement("section");
   section.className = "group";
   const heading = document.createElement("h3");
@@ -1256,7 +1265,14 @@ function copySection(copies: CopyRow[]) {
     plays.textContent = copy.play_count == null ? "" : String(copy.play_count);
     const crates = document.createElement("span");
     crates.textContent = copy.missing ? "missing" : (copy.crates || "");
-    row.append(button, rate, plays, crates);
+    const replace = buttonEl(openReplaceCopy(copy.file || `Track ${copy.id}`));
+    replace.className = "text-button";
+    replace.textContent = t("copies.useInCrates");
+    replace.disabled = !writable;
+    replace.addEventListener("click", () => {
+      bridge.openReplaceInCratesDialog(fromId, copy.id as number).catch((error) => setNotice(failureOf(error).message));
+    });
+    row.append(button, rate, plays, crates, replace);
     section.append(row);
   }
   return section;

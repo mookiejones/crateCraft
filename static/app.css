@@ -814,7 +814,7 @@ button:disabled { cursor: default; }
   border-top: 1px solid var(--rule);
 }
 
-.copy-row { grid-template-columns: minmax(0, 1.4fr) 72px 48px minmax(0, 1fr); }
+.copy-row { grid-template-columns: minmax(0, 1.4fr) 72px 48px minmax(0, 1fr) auto; }
 
 .related-list,
 .related-results {

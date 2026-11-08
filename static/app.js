@@ -38,6 +38,7 @@
     "consent.body": "Counts and actions only, plus the app name, the app version, and the operating system. Track titles, crate names, file paths, and library contents stay on this computer. Sharing stays off unless you turn it on.",
     "consent.decline": "Don't share",
     "copies.heading": "Other copies",
+    "copies.useInCrates": "Use in crates",
     "count.plays": {
       one: "{count} play",
       other: "{count} plays"
@@ -69,6 +70,28 @@
     "crates.sort.added": "Added",
     "crates.sort.name": "Name",
     "crates.sort.order": "Order",
+    "cratesReplace.addToCrates": "Add the replacement to {crates}.",
+    "cratesReplace.alreadyInCrates": "The replacement is already in those crates. It stays where it is.",
+    "cratesReplace.confirm": "Update crates",
+    "cratesReplace.intro": "Put another track in every crate this one is in, at the same position. Both can stay. Smart crates are left alone.",
+    "cratesReplace.keepBoth": "Leave both tracks in those crates",
+    "cratesReplace.noCrates": "This track is not in any normal crate.",
+    "cratesReplace.noReplacement": "Choose the track that should go in those crates.",
+    "cratesReplace.nothingToDo": "Nothing to change in the crates.",
+    "cratesReplace.placed": {
+      one: "Added {name} to {count} crate.",
+      other: "Added {name} to {count} crates."
+    },
+    "cratesReplace.previewFailed": "Could not read the preview.",
+    "cratesReplace.quitSerato": "Quit Serato before updating crates. The preview shows the plan.",
+    "cratesReplace.readingPreview": "Reading the preview…",
+    "cratesReplace.removeFromCrates": "Remove the original from {crates}.",
+    "cratesReplace.retire": "Then remove this track from those crates",
+    "cratesReplace.retired": "Removed {name} from those crates.",
+    "cratesReplace.search": "Replacement track",
+    "cratesReplace.title": "Use in crates",
+    "cratesReplace.updated": "Crates updated.",
+    "cratesReplace.updating": "Updating…",
     "detail.bpmNumber": "BPM needs a number.",
     "detail.confirmRemove": "Remove this track from the library? The audio file stays on disk.",
     "detail.empty": "Select a track to read its attributes.",
@@ -90,6 +113,7 @@
     },
     "detail.sendPrepare": "Send to Prepare",
     "detail.sentPrepare": "Sent to Prepare.",
+    "detail.useInCrates": "Use this copy in crates",
     "duplicates.readFailed": "Could not read duplicates.",
     "error.action_unavailable": "That action is not available.",
     "error.backup_no_space": "There is not enough disk space to back up the library.",
@@ -98,6 +122,8 @@
     "error.body_not_json": "The request body is not JSON.",
     "error.body_not_object": "The request body is not an object.",
     "error.choose_copy": "Choose the copy to keep.",
+    "error.choose_replace_from": "Choose the track to replace.",
+    "error.choose_replace_to": "Choose the track to put in those crates.",
     "error.choose_folder": "Choose a folder.",
     "error.color_not_number": "Color needs a number.",
     "error.color_out_of_range": "Color is out of range.",
@@ -151,6 +177,8 @@
     "error.relink_needs_tracks": "Choose tracks to relink.",
     "error.relink_not_audio": "That file is not an audio file.",
     "error.relink_still_on_disk": "That track is still on disk.",
+    "error.replace_needs_confirm": "Confirm the crate update before it runs.",
+    "error.replace_same_track": "Those two tracks are the same.",
     "error.requestFailed": "Request failed",
     "error.requestStatus": "Request failed ({status})",
     "error.root_color": "The space root has no color.",
@@ -477,6 +505,7 @@
     "operations.action.rename": "Rename file",
     "operations.action.relink": "Relink files",
     "operations.action.replace": "Replace file",
+    "operations.action.replaceInCrates": "Replace in crates",
     "operations.action.restore": "Restore",
     "operations.action.restoreRecover": "Recover restore",
     "operations.action.saveTrack": "Save track",
@@ -864,6 +893,11 @@
     "tooltip.crateRefresh": "Pick the tracks for this preset crate again from its preset.",
     "tooltip.crateRename": "Rename the selected crate.",
     "tooltip.crateSearch": "Find a crate by name. Esc clears the search.",
+    "tooltip.cratesReplaceCancel": "Close without changing crates.",
+    "tooltip.cratesReplaceConfirm": "Put the replacement in those crates.",
+    "tooltip.cratesReplaceKeep": "Keep both tracks in those crates. The replacement sits at the same position.",
+    "tooltip.cratesReplaceRetire": "Remove this track from those crates after the replacement is added.",
+    "tooltip.cratesReplaceSearch": "Find the track that should go in those crates.",
     "tooltip.cue": "Move the playhead to {label}.",
     "tooltip.editField": "Edit {label}. Nothing is saved until you save the track.",
     "tooltip.expandCrate": "Show the crates nested under {name}.",
@@ -944,6 +978,7 @@
     "tooltip.openInLibrary": "Open this history row in the library.",
     "tooltip.openLogs": "Open the folder that holds the log.",
     "tooltip.openRelated": "Open the linked track {name}.",
+    "tooltip.openReplaceCopy": "Use {name} in the crates this track is in.",
     "tooltip.operationsList": "Operation log. Each row is one checked edit or restore.",
     "tooltip.operationsRefresh": "Refresh the operation log.",
     "tooltip.operationsRetry": "Try reading the operation log again.",
@@ -1030,6 +1065,7 @@
     "tooltip.updateRelated": "Create or refresh the Related crate in Serato. Serato has to be quit.",
     "tooltip.updateSkip": "Don't tell you about this version again.",
     "tooltip.updateToggle": "Ask GitHub once a day whether a newer version is out.",
+    "tooltip.useInCrates": "Put another track in every crate this one is in, at the same position.",
     "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
@@ -1179,6 +1215,7 @@
     "consent.body": "Solo recuentos y acciones, más el nombre de la app, su versión y el sistema operativo. Los títulos de las pistas, los nombres de las cajas, las rutas de los archivos y el contenido de la biblioteca se quedan en este equipo. No se comparte nada a menos que lo actives.",
     "consent.decline": "No compartir",
     "copies.heading": "Otras copias",
+    "copies.useInCrates": "Usar en las cajas",
     "count.plays": {
       one: "{count} reproducción",
       other: "{count} reproducciones"
@@ -1210,6 +1247,28 @@
     "crates.sort.added": "Añadidas",
     "crates.sort.name": "Nombre",
     "crates.sort.order": "Orden",
+    "cratesReplace.addToCrates": "Añadir la pista de reemplazo a {crates}.",
+    "cratesReplace.alreadyInCrates": "La pista de reemplazo ya está en esas cajas. Se queda donde está.",
+    "cratesReplace.confirm": "Actualizar cajas",
+    "cratesReplace.intro": "Pon otra pista en cada caja donde está esta, en la misma posición. Las dos pueden quedarse. Las cajas inteligentes no se tocan.",
+    "cratesReplace.keepBoth": "Dejar las dos pistas en esas cajas",
+    "cratesReplace.noCrates": "Esta pista no está en ninguna caja normal.",
+    "cratesReplace.noReplacement": "Elige la pista que debe entrar en esas cajas.",
+    "cratesReplace.nothingToDo": "Nada que cambiar en las cajas.",
+    "cratesReplace.placed": {
+      one: "Se añadió {name} a {count} caja.",
+      other: "Se añadió {name} a {count} cajas."
+    },
+    "cratesReplace.previewFailed": "No se pudo leer la vista previa.",
+    "cratesReplace.quitSerato": "Cierra Serato antes de actualizar las cajas. La vista previa muestra el plan.",
+    "cratesReplace.readingPreview": "Leyendo la vista previa…",
+    "cratesReplace.removeFromCrates": "Quitar la pista original de {crates}.",
+    "cratesReplace.retire": "Luego quitar esta pista de esas cajas",
+    "cratesReplace.retired": "Se quitó {name} de esas cajas.",
+    "cratesReplace.search": "Pista de reemplazo",
+    "cratesReplace.title": "Usar en las cajas",
+    "cratesReplace.updated": "Se actualizaron las cajas.",
+    "cratesReplace.updating": "Actualizando…",
     "detail.bpmNumber": "El BPM debe ser un número.",
     "detail.confirmRemove": "¿Quitar esta pista de la biblioteca? El archivo de audio se queda en el disco.",
     "detail.empty": "Selecciona una pista para ver sus atributos.",
@@ -1231,6 +1290,7 @@
     },
     "detail.sendPrepare": "Enviar a Prepare",
     "detail.sentPrepare": "Enviada a Prepare.",
+    "detail.useInCrates": "Usar esta copia en las cajas",
     "duplicates.readFailed": "No se pudieron leer los duplicados.",
     "error.action_unavailable": "Esa acción no está disponible.",
     "error.backup_no_space": "No hay espacio suficiente en el disco para copiar la biblioteca.",
@@ -1239,6 +1299,8 @@
     "error.body_not_json": "El cuerpo de la solicitud no es JSON.",
     "error.body_not_object": "El cuerpo de la solicitud no es un objeto.",
     "error.choose_copy": "Elige la copia que quieres conservar.",
+    "error.choose_replace_from": "Elige la pista que quieres reemplazar.",
+    "error.choose_replace_to": "Elige la pista que quieres poner en esas cajas.",
     "error.choose_folder": "Elige una carpeta.",
     "error.color_not_number": "El color debe ser un número.",
     "error.color_out_of_range": "El color está fuera de rango.",
@@ -1292,6 +1354,8 @@
     "error.relink_needs_tracks": "Elige pistas para volver a enlazar.",
     "error.relink_not_audio": "Ese archivo no es un archivo de audio.",
     "error.relink_still_on_disk": "Esa pista sigue en el disco.",
+    "error.replace_needs_confirm": "Confirma la actualización de las cajas antes de ejecutarla.",
+    "error.replace_same_track": "Esas dos pistas son la misma.",
     "error.requestFailed": "La solicitud falló",
     "error.requestStatus": "La solicitud falló ({status})",
     "error.root_color": "La raíz del espacio no tiene color.",
@@ -1618,6 +1682,7 @@
     "operations.action.rename": "Renombrar archivo",
     "operations.action.relink": "Reenlazar archivos",
     "operations.action.replace": "Reemplazar archivo",
+    "operations.action.replaceInCrates": "Reemplazar en las cajas",
     "operations.action.restore": "Restaurar",
     "operations.action.restoreRecover": "Recuperar restauración",
     "operations.action.saveTrack": "Guardar pista",
@@ -2005,6 +2070,11 @@
     "tooltip.crateRefresh": "Vuelve a elegir las pistas de esta caja según su preajuste.",
     "tooltip.crateRename": "Cambia el nombre de la caja seleccionada.",
     "tooltip.crateSearch": "Busca una caja por nombre. Esc borra la búsqueda.",
+    "tooltip.cratesReplaceCancel": "Cierra sin cambiar las cajas.",
+    "tooltip.cratesReplaceConfirm": "Pon la pista de reemplazo en esas cajas.",
+    "tooltip.cratesReplaceKeep": "Deja las dos pistas en esas cajas. La de reemplazo queda en la misma posición.",
+    "tooltip.cratesReplaceRetire": "Quita esta pista de esas cajas después de añadir la de reemplazo.",
+    "tooltip.cratesReplaceSearch": "Busca la pista que debe entrar en esas cajas.",
     "tooltip.cue": "Lleva el cursor de reproducción a {label}.",
     "tooltip.editField": "Edita {label}. No se guarda nada hasta que guardes la pista.",
     "tooltip.expandCrate": "Muestra las cajas que están dentro de {name}.",
@@ -2085,6 +2155,7 @@
     "tooltip.openInLibrary": "Abre esta fila del historial en la biblioteca.",
     "tooltip.openLogs": "Abre la carpeta que contiene el registro.",
     "tooltip.openRelated": "Abre la pista enlazada {name}.",
+    "tooltip.openReplaceCopy": "Usa {name} en las cajas donde está esta pista.",
     "tooltip.operationsList": "Registro de operaciones. Cada fila es una edición o una restauración comprobada.",
     "tooltip.operationsRefresh": "Actualiza el registro de operaciones.",
     "tooltip.operationsRetry": "Intenta leer el registro de operaciones otra vez.",
@@ -2171,6 +2242,7 @@
     "tooltip.updateRelated": "Crea o actualiza la caja Relacionadas en Serato. Serato tiene que estar cerrado.",
     "tooltip.updateSkip": "No volver a avisar de esta versión.",
     "tooltip.updateToggle": "Preguntar a GitHub una vez al día si hay una versión más nueva.",
+    "tooltip.useInCrates": "Pon otra pista en cada caja donde está esta, en la misma posición.",
     "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
@@ -2531,6 +2603,9 @@
     openMergeDialog() {
       return Promise.resolve();
     },
+    openReplaceInCratesDialog(_fromId, _toId) {
+      return Promise.resolve();
+    },
     openSetup() {
     }
   };
@@ -2540,6 +2615,47 @@
     const node = document.getElementById(id);
     if (node == null) throw new Error(`Missing #${id}`);
     return node;
+  }
+
+  // src/fuzzy.ts
+  var BOUNDARY = /[ ._/\-\\]/;
+  function fuzzyScore(needle, haystack) {
+    const query = needle.toLocaleLowerCase();
+    const text2 = haystack.toLocaleLowerCase();
+    if (!query) return null;
+    let score = 0;
+    let previous2 = -2;
+    let from = 0;
+    for (const letter of query) {
+      const found = text2.indexOf(letter, from);
+      if (found < 0) return null;
+      score += 8;
+      if (found === previous2 + 1) score += 16;
+      if (found === 0 || BOUNDARY.test(text2.charAt(found - 1))) score += 12;
+      previous2 = found;
+      from = found + 1;
+    }
+    if (text2.includes(query)) score += 40;
+    if (text2.startsWith(query)) score += 30;
+    score -= Math.floor(Math.max(0, text2.length - query.length) / 4);
+    return score;
+  }
+  function scoreQuery(query, name, parentName = "") {
+    const terms = query.trim().split(/\s+/).filter(Boolean);
+    if (!terms.length) return null;
+    let total = 0;
+    for (const term of terms) {
+      const nameScore = fuzzyScore(term, name);
+      if (nameScore != null) {
+        total += nameScore + 20;
+        continue;
+      }
+      if (!parentName) return null;
+      const parentScore = fuzzyScore(term, parentName);
+      if (parentScore == null) return null;
+      total += parentScore;
+    }
+    return total;
   }
 
   // src/splitter.ts
@@ -2780,6 +2896,12 @@
     space: spec("tooltip.space"),
     crateSearch: spec("tooltip.crateSearch"),
     mergeDuplicates: spec("tooltip.mergeDuplicates"),
+    useInCrates: spec("tooltip.useInCrates"),
+    cratesReplaceSearch: spec("tooltip.cratesReplaceSearch"),
+    cratesReplaceKeep: spec("tooltip.cratesReplaceKeep"),
+    cratesReplaceRetire: spec("tooltip.cratesReplaceRetire"),
+    cratesReplaceCancel: spec("tooltip.cratesReplaceCancel"),
+    cratesReplaceConfirm: spec("tooltip.cratesReplaceConfirm"),
     relink: spec("tooltip.relink"),
     relinkRoot: spec("tooltip.relinkRoot"),
     relinkFind: spec("tooltip.relinkFind"),
@@ -3081,6 +3203,11 @@
       "merge-trash": tips.mergeTrash,
       "merge-cancel": tips.mergeCancel,
       "merge-confirm": tips.mergeConfirm,
+      "crates-replace-search": tips.cratesReplaceSearch,
+      "crates-replace-keep": tips.cratesReplaceKeep,
+      "crates-replace-retire": tips.cratesReplaceRetire,
+      "crates-replace-cancel": tips.cratesReplaceCancel,
+      "crates-replace-confirm": tips.cratesReplaceConfirm,
       "rekordbox-cancel": tips.rekordboxCancel,
       "rekordbox-download": tips.rekordboxDownload,
       "files-name": tips.filesName,
@@ -3146,6 +3273,9 @@
   }
   function openCopy(name) {
     return spec("tooltip.openCopy", { name });
+  }
+  function openReplaceCopy(name) {
+    return spec("tooltip.openReplaceCopy", { name });
   }
   function openRelated(name) {
     return spec("tooltip.openRelated", { name });
@@ -4290,6 +4420,7 @@
     move: "operations.action.move",
     move_folder: "operations.action.moveFolder",
     replace: "operations.action.replace",
+    replace_in_crates: "operations.action.replaceInCrates",
     relink: "operations.action.relink",
     delete: "operations.action.delete",
     restore: "operations.action.restore",
@@ -7136,7 +7267,13 @@
     remove.textContent = t("detail.removeFromLibrary");
     remove.disabled = !writable;
     remove.addEventListener("click", () => removeTrack(track.id));
-    actions2.append(reveal, prepare, relocate, remove);
+    const useInCrates = buttonEl(tips.useInCrates);
+    useInCrates.textContent = t("detail.useInCrates");
+    useInCrates.disabled = !writable;
+    useInCrates.addEventListener("click", () => {
+      bridge.openReplaceInCratesDialog(track.id).catch((error2) => setNotice(failureOf(error2).message));
+    });
+    actions2.append(reveal, prepare, relocate, remove, useInCrates);
     if (state.mode === "duplicates" && selectedDuplicateGroup()) {
       const merge = buttonEl(tips.mergeDuplicates);
       merge.textContent = t("merge.title");
@@ -7149,7 +7286,7 @@
     body.append(actions2);
     body.append(relatedSection(track, writable));
     body.append(markerSection(track));
-    if (track.copies?.length) body.append(copySection(track.copies));
+    if (track.copies?.length) body.append(copySection(track.id, track.copies, writable));
     body.append(membershipSection(track, writable));
     for (const group of track.groups || []) {
       const section = document.createElement("section");
@@ -7280,7 +7417,7 @@
     }
     return section;
   }
-  function copySection(copies) {
+  function copySection(fromId, copies, writable) {
     const section = document.createElement("section");
     section.className = "group";
     const heading2 = document.createElement("h3");
@@ -7299,7 +7436,14 @@
       plays.textContent = copy.play_count == null ? "" : String(copy.play_count);
       const crates = document.createElement("span");
       crates.textContent = copy.missing ? "missing" : copy.crates || "";
-      row.append(button2, rate, plays, crates);
+      const replace = buttonEl(openReplaceCopy(copy.file || `Track ${copy.id}`));
+      replace.className = "text-button";
+      replace.textContent = t("copies.useInCrates");
+      replace.disabled = !writable;
+      replace.addEventListener("click", () => {
+        bridge.openReplaceInCratesDialog(fromId, copy.id).catch((error2) => setNotice(failureOf(error2).message));
+      });
+      row.append(button2, rate, plays, crates, replace);
       section.append(row);
     }
     return section;
@@ -8725,6 +8869,11 @@
   var mergePreview = null;
   var mergeToken = 0;
   var mergeLoading = false;
+  var replaceFromId = null;
+  var replaceToId = null;
+  var replacePreview = null;
+  var replaceToken = 0;
+  var replaceLoading = false;
   var consentSettled = false;
   var privacySync = false;
   var appearanceSync = false;
@@ -9030,6 +9179,202 @@
       syncTrashChoice();
     }
   }
+  var REPLACE_CHOICE_LIMIT = 12;
+  function rankReplaceCandidates(fromId, query, toId) {
+    const others = state.tracks.filter((track) => track.id !== fromId);
+    const trimmed = query.trim();
+    let ranked;
+    if (!trimmed) {
+      ranked = others.slice();
+    } else {
+      const scored = [];
+      for (const track of others) {
+        const haystack = [track.file, track.name, track.artist].filter(Boolean).join(" ");
+        const score = scoreQuery(trimmed, haystack);
+        if (score != null) scored.push({ track, score });
+      }
+      scored.sort((a, b) => b.score - a.score);
+      ranked = scored.map((item3) => item3.track);
+    }
+    if (toId != null) {
+      const pinned = others.find((track) => track.id === toId);
+      if (pinned) ranked = [pinned, ...ranked.filter((track) => track.id !== toId)];
+    }
+    return ranked.slice(0, REPLACE_CHOICE_LIMIT);
+  }
+  function replaceCrateLabel(crate) {
+    const name = crate.name || "";
+    return crate.space && crate.space !== state.space ? `${name} (${crate.space})` : name;
+  }
+  function renderCratesReplacePreview(preview) {
+    el("crates-replace-preview").replaceChildren();
+    if (!preview) {
+      const pending = document.createElement("p");
+      pending.textContent = t("cratesReplace.readingPreview");
+      el("crates-replace-preview").append(pending);
+      return;
+    }
+    const list = document.createElement("ul");
+    list.className = "merge-preview";
+    const item3 = (text2) => {
+      const line = document.createElement("li");
+      line.textContent = text2;
+      list.append(line);
+    };
+    const added = preview.crates_added || [];
+    const kept = preview.crates_kept || [];
+    const removed = preview.crates_removed || [];
+    if (added.length) {
+      item3(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
+    } else if (kept.length) {
+      item3(t("cratesReplace.alreadyInCrates"));
+    } else {
+      item3(t("cratesReplace.noCrates"));
+    }
+    if (preview.retire && removed.length) {
+      item3(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
+    }
+    el("crates-replace-preview").append(list);
+  }
+  function syncReplaceConfirm() {
+    const writable = replacePreview?.writable !== false;
+    el("crates-replace-confirm").disabled = replaceLoading || replaceToId == null || !replacePreview || !writable;
+    el("crates-replace-confirm").textContent = replaceLoading ? t("cratesReplace.updating") : t("cratesReplace.confirm");
+    setTooltip(el("crates-replace-confirm"), tips.cratesReplaceConfirm);
+  }
+  function renderReplaceChoices() {
+    const fromId = replaceFromId;
+    el("crates-replace-choices").replaceChildren();
+    if (fromId == null) return;
+    const ranked = rankReplaceCandidates(fromId, el("crates-replace-search").value, replaceToId ?? void 0);
+    for (const track of ranked) {
+      const label = document.createElement("label");
+      label.className = "merge-choice";
+      label.htmlFor = `crates-replace-to-${track.id}`;
+      const input = inputEl(openReplaceCopy(track.file || `Track ${track.id}`));
+      input.type = "radio";
+      input.name = "crates-replace-to";
+      input.id = `crates-replace-to-${track.id}`;
+      input.value = String(track.id);
+      input.checked = track.id === replaceToId;
+      input.addEventListener("change", () => {
+        if (!input.checked) return;
+        replaceToId = track.id;
+        refreshReplacePreview().catch((error2) => setNotice(failureOf(error2).message));
+      });
+      const text2 = document.createElement("span");
+      const name = document.createElement("span");
+      name.textContent = track.file || t("track.numbered", { id: String(track.id) });
+      const meta = document.createElement("span");
+      meta.className = "merge-meta";
+      const parts = [];
+      if (track.artist) parts.push(track.artist);
+      if (track.name && track.name !== track.file) parts.push(track.name);
+      meta.textContent = parts.join(" · ");
+      text2.append(name, meta);
+      label.append(input, text2);
+      el("crates-replace-choices").append(label);
+    }
+  }
+  async function refreshReplacePreview() {
+    const fromId = replaceFromId;
+    const toId = replaceToId;
+    const token3 = ++replaceToken;
+    replaceLoading = false;
+    replacePreview = null;
+    el("crates-replace-status").textContent = "";
+    if (fromId == null || toId == null) {
+      el("crates-replace-preview").replaceChildren();
+      const missing = document.createElement("p");
+      missing.textContent = t("cratesReplace.noReplacement");
+      el("crates-replace-preview").append(missing);
+      syncReplaceConfirm();
+      return;
+    }
+    renderCratesReplacePreview(null);
+    syncReplaceConfirm();
+    el("crates-replace-confirm").disabled = true;
+    try {
+      const preview = await postJSON("/api/replace-in-crates", {
+        space: state.space,
+        from_id: fromId,
+        to_id: toId,
+        preview: true,
+        retire: el("crates-replace-retire").checked
+      });
+      if (token3 !== replaceToken) return;
+      replacePreview = preview;
+      renderCratesReplacePreview(preview);
+      if (preview.writable === false) {
+        el("crates-replace-status").textContent = t("cratesReplace.quitSerato");
+      }
+      syncReplaceConfirm();
+    } catch (error2) {
+      if (token3 !== replaceToken) return;
+      replacePreview = null;
+      el("crates-replace-preview").replaceChildren();
+      const failed = document.createElement("p");
+      failed.textContent = t("cratesReplace.previewFailed");
+      el("crates-replace-preview").append(failed);
+      el("crates-replace-status").textContent = failureOf(error2).message;
+      syncReplaceConfirm();
+    }
+  }
+  async function openCratesReplaceDialog(fromId, toId) {
+    if (!state.writable) return;
+    if (typeof el("crates-replace-dialog").showModal !== "function") return;
+    replaceFromId = fromId;
+    replaceToId = toId ?? null;
+    replacePreview = null;
+    replaceLoading = false;
+    el("crates-replace-keep").checked = true;
+    el("crates-replace-retire").checked = false;
+    el("crates-replace-search").value = "";
+    el("crates-replace-status").textContent = "";
+    renderReplaceChoices();
+    if (!el("crates-replace-dialog").open) el("crates-replace-dialog").showModal();
+    el("crates-replace-cancel").focus();
+    await refreshReplacePreview();
+  }
+  async function confirmReplaceInCrates() {
+    const fromId = replaceFromId;
+    const toId = replaceToId;
+    if (fromId == null || toId == null || replaceLoading) return;
+    replaceLoading = true;
+    syncReplaceConfirm();
+    el("crates-replace-status").textContent = "";
+    try {
+      const result = await postJSON("/api/replace-in-crates", {
+        space: state.space,
+        from_id: fromId,
+        to_id: toId,
+        confirm: true,
+        retire: el("crates-replace-retire").checked
+      });
+      el("crates-replace-dialog").close();
+      const added = (result.crates_added || []).length;
+      const removed = (result.crates_removed || []).length;
+      const name = result.to?.file || result.to?.name || t("cratesReplace.title");
+      let message = added ? t("cratesReplace.placed", { count: added, name }) : t("cratesReplace.nothingToDo");
+      if (result.retire && removed) {
+        message = `${message} ${t("cratesReplace.retired", { name: result.from?.file || result.from?.name || "" })}`;
+      }
+      if (!added && removed && result.retire) message = t("cratesReplace.updated");
+      if (result.warning) message = `${message} ${result.warning}`;
+      setNotice(message);
+      await loadLibrary();
+      if (state.byId.has(fromId)) selectTrack(fromId);
+    } catch (error2) {
+      el("crates-replace-status").textContent = failureOf(error2).message;
+      if (failureOf(error2).status === 409) {
+        lockDown(error2);
+        el("crates-replace-dialog").close();
+      }
+    } finally {
+      replaceLoading = false;
+      syncReplaceConfirm();
+    }
+  }
   function telemetryNoteText() {
     if (!state.telemetryConfigured) {
       return t("sharing.noKeys");
@@ -9122,6 +9467,18 @@
     if (el("merge-dialog").open) {
       renderMergePreview(mergeLoading ? null : mergePreview);
       syncTrashChoice();
+    }
+    if (el("crates-replace-dialog").open) {
+      renderReplaceChoices();
+      if (replaceToId == null) {
+        el("crates-replace-preview").replaceChildren();
+        const missing = document.createElement("p");
+        missing.textContent = t("cratesReplace.noReplacement");
+        el("crates-replace-preview").append(missing);
+      } else {
+        renderCratesReplacePreview(replaceLoading ? null : replacePreview);
+      }
+      syncReplaceConfirm();
     }
     if (el("relink-dialog").open) {
       fillRelinkBanner();
@@ -9567,6 +9924,23 @@
       confirmMerge().catch((error2) => setNotice(failureOf(error2).message));
     });
     el("merge-trash").addEventListener("change", () => syncTrashChoice());
+    el("crates-replace-cancel").addEventListener("click", () => el("crates-replace-dialog").close());
+    el("crates-replace-confirm").addEventListener("click", () => {
+      confirmReplaceInCrates().catch((error2) => setNotice(failureOf(error2).message));
+    });
+    el("crates-replace-search").addEventListener("input", () => {
+      renderReplaceChoices();
+    });
+    el("crates-replace-keep").addEventListener("change", () => {
+      if (el("crates-replace-keep").checked) {
+        refreshReplacePreview().catch((error2) => setNotice(failureOf(error2).message));
+      }
+    });
+    el("crates-replace-retire").addEventListener("change", () => {
+      if (el("crates-replace-retire").checked) {
+        refreshReplacePreview().catch((error2) => setNotice(failureOf(error2).message));
+      }
+    });
     el("consent-decline").addEventListener("click", () => {
       saveConsent(false, el("consent-status")).then((ok) => {
         if (!ok) return;
@@ -9770,6 +10144,7 @@
     });
   }
   bridge.openMergeDialog = openMergeDialog;
+  bridge.openReplaceInCratesDialog = openCratesReplaceDialog;
   function openSetup() {
     const trigger = document.getElementById("files-run-setup");
     openWizard(true, trigger instanceof HTMLElement ? trigger : el("search"));
@@ -9923,47 +10298,6 @@
       });
     } catch {
     }
-  }
-
-  // src/fuzzy.ts
-  var BOUNDARY = /[ ._/\-\\]/;
-  function fuzzyScore(needle, haystack) {
-    const query = needle.toLocaleLowerCase();
-    const text2 = haystack.toLocaleLowerCase();
-    if (!query) return null;
-    let score = 0;
-    let previous2 = -2;
-    let from = 0;
-    for (const letter of query) {
-      const found = text2.indexOf(letter, from);
-      if (found < 0) return null;
-      score += 8;
-      if (found === previous2 + 1) score += 16;
-      if (found === 0 || BOUNDARY.test(text2.charAt(found - 1))) score += 12;
-      previous2 = found;
-      from = found + 1;
-    }
-    if (text2.includes(query)) score += 40;
-    if (text2.startsWith(query)) score += 30;
-    score -= Math.floor(Math.max(0, text2.length - query.length) / 4);
-    return score;
-  }
-  function scoreQuery(query, name, parentName = "") {
-    const terms = query.trim().split(/\s+/).filter(Boolean);
-    if (!terms.length) return null;
-    let total = 0;
-    for (const term of terms) {
-      const nameScore = fuzzyScore(term, name);
-      if (nameScore != null) {
-        total += nameScore + 20;
-        continue;
-      }
-      if (!parentName) return null;
-      const parentScore = fuzzyScore(term, parentName);
-      if (parentScore == null) return null;
-      total += parentScore;
-    }
-    return total;
   }
 
   // src/quick-open.ts

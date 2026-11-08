@@ -35,3 +35,5 @@ There is no drag and drop. This app does not move an existing crate to a new par
 A smart crate shows **smart**. You cannot tick it in the track's crate list. Putting a crate inside it says **A smart crate cannot contain another crate.** Adding a track by hand says **Smart crates choose their tracks from rules.**
 
 To put a song in a crate, open the track, find **Crates**, and tick a normal crate. The audio file stays where it is. Moving, renaming, or trashing the file is [Organizing files](Organizing-Files).
+
+**Use in crates** puts another track in every normal crate this one is in, at the same position. Both tracks can stay, or you can then take this one out of those crates. Smart crates and the space list stay as they are. The audio files stay. Merge copies is the tool that folds duplicates into one library row.

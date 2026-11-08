@@ -6279,6 +6279,365 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
     )
 
 
+def _require_asset_id(payload: Mapping[str, object], key: str, message: str) -> int:
+    """Read a positive asset id from a JSON body.
+
+    Args:
+        payload: Request object.
+        key: Field name.
+        message: Sentence when the field is missing or not a real id.
+
+    Returns:
+        The integer id.
+
+    Raises:
+        LibraryError: If the field is missing, a boolean, or not a positive
+            integer. ``_as_int`` treats ``True`` as 1, so booleans are
+            refused here.
+    """
+    if key not in payload or isinstance(payload.get(key), bool):
+        raise LibraryError(message)
+    try:
+        asset_id = _as_int(payload[key])
+    except (TypeError, ValueError):
+        raise LibraryError(message) from None
+    if asset_id <= 0:
+        raise LibraryError(message)
+    return asset_id
+
+
+def _asset_summary(conn: sqlite3.Connection, asset_id: int) -> dict[str, object]:
+    """Return the file name, title, and artist for one asset.
+
+    Args:
+        conn: Open connection.
+        asset_id: Asset id.
+
+    Returns:
+        A dict with id, file, name, and artist.
+
+    Raises:
+        LibraryError: If the asset row is missing.
+    """
+    row = conn.execute(
+        "SELECT id, file_name, name, artist FROM asset WHERE id = ?",
+        (asset_id,),
+    ).fetchone()
+    if row is None:
+        raise LibraryError("That track is not in the library.", 404)
+    file_name = row["file_name"] if isinstance(row["file_name"], str) else ""
+    return {
+        "id": int(row["id"]),
+        "file": file_name,
+        "name": row["name"] or "",
+        "artist": row["artist"] or "",
+    }
+
+
+def _public_replace(plan: Mapping[str, object], **extra: object) -> dict[str, object]:
+    """Copy the crate-replace fields the page is allowed to see.
+
+    Args:
+        plan: Replace plan. Private placement lists are dropped.
+        **extra: Response fields such as preview and warning.
+
+    Returns:
+        The JSON object for the page.
+    """
+    body: dict[str, object] = {
+        "ok": True,
+        "from_id": plan["from_id"],
+        "to_id": plan["to_id"],
+        "space": plan["space"],
+        "from": plan["from"],
+        "to": plan["to"],
+        "crates_added": plan["crates_added"],
+        "crates_kept": plan["crates_kept"],
+        "crates_removed": plan["crates_removed"],
+        "retire": plan["retire"],
+    }
+    body.update(extra)
+    return body
+
+
+def _build_replace_plan(
+    conn: sqlite3.Connection,
+    space: str,
+    from_id: int,
+    to_id: int,
+    retire: bool,
+) -> dict[str, object]:
+    """Plan putting ``to_id`` in every normal crate that holds ``from_id``.
+
+    Args:
+        conn: Open connection.
+        space: Space that must already contain ``from_id``.
+        from_id: Track whose crate slots are copied.
+        to_id: Track placed at those ``list_order`` values.
+        retire: True also removes ``from_id`` from those crates.
+
+    Returns:
+        The plan, including private placement lists.
+
+    Raises:
+        LibraryError: If ``from_id`` is not in the space or ``to_id`` is
+            missing from the library.
+    """
+    _space_asset(conn, from_id, space, create=False)
+    origin = _asset_summary(conn, from_id)
+    replacement = _asset_summary(conn, to_id)
+    kept_ids = {
+        int(cast(int, crate["crate_id"]))
+        for crate in _asset_crates(conn, to_id)
+        if int(cast(int, crate["type"])) not in (0, 2)
+    }
+    crates_added: list[dict[str, object]] = []
+    crates_kept: list[dict[str, object]] = []
+    crates_removed: list[dict[str, object]] = []
+    placements: list[dict[str, object]] = []
+    removals: list[dict[str, object]] = []
+    seen: set[int] = set()
+    for crate in _asset_crates(conn, from_id):
+        if int(cast(int, crate["type"])) in (0, 2):
+            continue
+        crate_id = int(cast(int, crate["crate_id"]))
+        if crate_id in seen:
+            continue
+        seen.add(crate_id)
+        summary = {
+            "id": crate_id,
+            "name": crate["name"],
+            "space": crate["space"],
+            "list_order": crate["list_order"],
+        }
+        if crate_id in kept_ids:
+            crates_kept.append({"id": crate_id, "name": crate["name"], "space": crate["space"]})
+        else:
+            crates_added.append(summary)
+            placements.append(crate)
+        if retire:
+            crates_removed.append({"id": crate_id, "name": crate["name"], "space": crate["space"]})
+            removals.append(crate)
+    crates_added.sort(key=lambda item: int(cast(int, item["id"])))
+    crates_kept.sort(key=lambda item: int(cast(int, item["id"])))
+    crates_removed.sort(key=lambda item: int(cast(int, item["id"])))
+    return {
+        "from_id": from_id,
+        "to_id": to_id,
+        "space": space,
+        "from": origin,
+        "to": replacement,
+        "crates_added": crates_added,
+        "crates_kept": crates_kept,
+        "crates_removed": crates_removed,
+        "retire": retire,
+        "_placements": placements,
+        "_removals": removals,
+    }
+
+
+def _crate_has_asset(conn: sqlite3.Connection, crate_id: int, asset_id: int) -> sqlite3.Row | None:
+    """Return the membership row for one track in one crate.
+
+    Args:
+        conn: Open connection.
+        crate_id: Container id.
+        asset_id: Asset id.
+
+    Returns:
+        The ``container_asset`` row, or None.
+    """
+    return conn.execute(
+        """
+        SELECT ca.id, ca.list_order FROM container_asset ca
+        JOIN location_container lc ON lc.id = ca.location_container_id
+        WHERE lc.container_id = ? AND ca.asset_id = ?
+        """,
+        (crate_id, asset_id),
+    ).fetchone()
+
+
+def replace_in_crates(payload: Mapping[str, object]) -> dict[str, object]:
+    """Put one track in every normal crate that holds another track.
+
+    ``from_id`` is the track whose crate slots are copied. ``to_id`` is
+    placed at that ``list_order`` in each crate. Smart crates and the
+    space root are skipped. When ``to_id`` is already in a crate, it
+    stays at its current position. ``retire`` true then removes
+    ``from_id`` from those crates only. The asset row, audio file, cues,
+    and history stay.
+
+    Duplicate ``list_order`` values are allowed, so both tracks can sit
+    at the same playlist position. Empty crate lists are a no-op and do
+    not open a write. ``preview`` true returns the plan and does not
+    write. A real update requires ``confirm`` true.
+
+    Args:
+        payload: JSON object with ``from_id``, ``to_id``, and ``space``.
+            ``preview``, ``confirm``, and ``retire`` are booleans.
+
+    Returns:
+        The plan. ``preview`` is true when nothing was written.
+        ``warning`` is set when a drive database was skipped.
+
+    Raises:
+        LibraryError: If the request is invalid or a track is missing.
+        SeratoOpen: If Serato still has the library open and a write
+            would run.
+    """
+    space = cast(str, payload.get("space") or LIBRARY_SPACE)
+    from_id = _require_asset_id(payload, "from_id", "Choose the track to replace.")
+    to_id = _require_asset_id(payload, "to_id", "Choose the track to put in those crates.")
+    if from_id == to_id:
+        raise LibraryError("Those two tracks are the same.")
+    preview = _optional_bool(payload.get("preview"), False)
+    confirm = _optional_bool(payload.get("confirm"), False)
+    retire = _optional_bool(payload.get("retire"), False)
+    if preview:
+        with closing(read_conn()) as conn:
+            plan = _build_replace_plan(conn, space, from_id, to_id, retire)
+        info = status()
+        return _public_replace(
+            plan,
+            preview=True,
+            writable=bool(info.get("writable")),
+            warning=None,
+        )
+    if not confirm:
+        raise LibraryError("Confirm the crate update before it runs.")
+    with closing(read_conn()) as conn:
+        early = _build_replace_plan(conn, space, from_id, to_id, retire)
+    if not early["_placements"] and not early["_removals"]:
+        info = status()
+        return _public_replace(
+            early,
+            preview=False,
+            writable=bool(info.get("writable")),
+            warning=None,
+        )
+    import safe_write
+
+    def apply(conn: sqlite3.Connection, write: safe_write.Session) -> tuple[dict[str, object], list[str | None]]:
+        """Place the replacement and optionally retire the original.
+
+        Args:
+            conn: Open write connection.
+            write: Session that records the expected rows.
+
+        Returns:
+            The plan and any mirror warnings.
+        """
+        plan = _build_replace_plan(conn, space, from_id, to_id, retire)
+        for crate in cast(list[dict[str, object]], plan["_placements"]):
+            order = crate["list_order"]
+            _insert_at_order(
+                conn,
+                int(cast(int, crate["crate_id"])),
+                to_id,
+                str(crate["space"]),
+                None if order is None else int(cast(int, order)),
+            )
+        for crate in cast(list[dict[str, object]], plan["_removals"]):
+            conn.execute(
+                """
+                DELETE FROM container_asset
+                WHERE asset_id = ? AND location_container_id IN (
+                    SELECT id FROM location_container WHERE container_id = ?
+                )
+                """,
+                (from_id, int(cast(int, crate["crate_id"]))),
+            )
+        warnings: list[str | None] = []
+        for crate in cast(list[dict[str, object]], plan["_placements"]):
+            order = crate["list_order"]
+            warnings.append(
+                _mirror_placed_membership(
+                    conn,
+                    int(cast(int, crate["crate_id"])),
+                    to_id,
+                    str(crate["space"]),
+                    None if order is None else int(cast(int, order)),
+                )
+            )
+        for crate in cast(list[dict[str, object]], plan["_removals"]):
+            warnings.append(
+                _mirror_membership(
+                    conn,
+                    int(cast(int, crate["crate_id"])),
+                    from_id,
+                    str(crate["space"]),
+                    False,
+                )
+            )
+        placed = plan.get("to")
+        if isinstance(placed, dict) and isinstance(placed.get("name"), str) and placed["name"]:
+            write.set_target(str(placed["name"]))
+        placements = tuple(
+            (
+                int(cast(int, crate["crate_id"])),
+                None if crate["list_order"] is None else int(cast(int, crate["list_order"])),
+            )
+            for crate in cast(list[dict[str, object]], plan["_placements"])
+        )
+        removals = tuple(
+            int(cast(int, crate["crate_id"]))
+            for crate in cast(list[dict[str, object]], plan["_removals"])
+        )
+        keep_from = not bool(plan["retire"])
+
+        def check(
+            copied: sqlite3.Connection,
+            to_id: int = to_id,
+            from_id: int = from_id,
+            placements: tuple[tuple[int, int | None], ...] = placements,
+            removals: tuple[int, ...] = removals,
+            keep_from: bool = keep_from,
+        ) -> None:
+            """Fail when crate membership does not match the plan.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                to_id: Asset that should sit in each added crate.
+                from_id: Asset whose crates were copied.
+                placements: Crate ids and positions that were added.
+                removals: Crate ids the original should leave.
+                keep_from: True when the original should stay in those crates.
+
+            Raises:
+                VerifyMismatch: If a membership or asset row is wrong.
+            """
+            kept = copied.execute("SELECT COUNT(*) FROM asset WHERE id = ?", (from_id,)).fetchone()
+            if kept is None or int(kept[0]) != 1:
+                raise safe_write.VerifyMismatch("The original track was removed from the library.")
+            present = copied.execute("SELECT COUNT(*) FROM asset WHERE id = ?", (to_id,)).fetchone()
+            if present is None or int(present[0]) != 1:
+                raise safe_write.VerifyMismatch("The replacement track is missing.")
+            for crate_id, order in placements:
+                row = _crate_has_asset(copied, crate_id, to_id)
+                if row is None:
+                    raise safe_write.VerifyMismatch("The replacement track is missing from a crate.")
+                if order is not None and int(row["list_order"]) != order:
+                    raise safe_write.VerifyMismatch("The replacement track is not at the crate position.")
+            for crate_id in removals:
+                row = _crate_has_asset(copied, crate_id, from_id)
+                if keep_from:
+                    if row is None:
+                        raise safe_write.VerifyMismatch("The original track left a crate.")
+                elif row is not None:
+                    raise safe_write.VerifyMismatch("The original track is still in a crate.")
+
+        write.check(check)
+        return plan, warnings
+
+    target = "track"
+    to_row = early.get("to")
+    if isinstance(to_row, dict) and isinstance(to_row.get("name"), str) and to_row["name"]:
+        target = str(to_row["name"])
+    plan, warnings = safe_write.run("replace_in_crates", target, apply)
+    warning = _join_merge_warnings([item for item in warnings if item])
+    return _public_replace(plan, preview=False, writable=True, warning=warning)
+
+
 def _resolved(portable_id: str | None) -> str | None:
     """Resolve a portable id to a path string.
 

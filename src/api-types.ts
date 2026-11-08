@@ -350,8 +350,26 @@ export interface RelinkPlan {
 }
 
 export interface MergeCrate {
+  id?: number;
   name?: string;
   space?: string;
+  list_order?: number | null;
+}
+
+export interface CratesReplacePreview {
+  ok?: boolean;
+  from_id?: number;
+  to_id?: number;
+  space?: string;
+  from?: { id?: number; file?: string; name?: string; artist?: string };
+  to?: { id?: number; file?: string; name?: string; artist?: string };
+  crates_added?: MergeCrate[];
+  crates_kept?: MergeCrate[];
+  crates_removed?: MergeCrate[];
+  retire?: boolean;
+  writable?: boolean;
+  preview?: boolean;
+  warning?: string | null;
 }
 
 export interface MergeField {

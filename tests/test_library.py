@@ -1539,5 +1539,249 @@ class MergeTests(unittest.TestCase):
                 shutil.rmtree(sibling, ignore_errors=True)
 
 
+def _seed_replace_crates(conn: object) -> None:
+    """Put asset 1 in normal crates, a smart crate, and the space root.
+
+    Asset 2 already sits in Closing at a later ``list_order``. Warmup is
+    the crate the replacement should join at the original position.
+
+    Args:
+        conn: Open connection for the fixture database.
+
+    The connection is left uncommitted. The caller commits by closing the
+    ``open_database`` block.
+    """
+    connection = cast("library.sqlite3.Connection", conn)
+    connection.execute(
+        """
+        INSERT INTO container
+            (id, parent_id, name, type, list_order, space_id, time_added, expanded, portable_id)
+        VALUES
+            (10, 1, 'Warmup', 1, 1, 1, 1, 0, ''),
+            (11, 1, 'Closing', 1, 2, 1, 1, 0, ''),
+            (12, 1, 'Smart', 2, 3, 1, 1, 0, '')
+        """
+    )
+    connection.execute(
+        """
+        INSERT INTO location_container (id, container_id, location_id, external_container_id)
+        VALUES (10, 10, 1, NULL), (11, 11, 1, NULL), (12, 12, 1, NULL), (13, 1, 1, NULL)
+        """
+    )
+    connection.execute(
+        """
+        INSERT INTO container_asset
+            (id, asset_id, location_container_id, space_asset_id, list_order, time_added)
+        VALUES
+            (1, 1, 10, 1, 3, 1),
+            (2, 1, 11, 1, 1, 1),
+            (3, 1, 12, 1, 4, 1),
+            (4, 1, 13, 1, 0, 1),
+            (5, 2, 11, 2, 9, 1)
+        """
+    )
+
+
+def _crate_orders(path: Path, crate_id: int) -> list[tuple[int, int | None]]:
+    """Return ``(asset_id, list_order)`` rows for one crate.
+
+    Args:
+        path: Fixture database.
+        crate_id: Container id.
+
+    Returns:
+        Membership rows in crate order.
+    """
+    with open_database(path) as conn:
+        rows = conn.execute(
+            """
+            SELECT ca.asset_id, ca.list_order FROM container_asset ca
+            JOIN location_container lc ON lc.id = ca.location_container_id
+            WHERE lc.container_id = ?
+            ORDER BY ca.list_order, ca.asset_id
+            """,
+            (crate_id,),
+        ).fetchall()
+    return [
+        (int(row[0]), int(row[1]) if row[1] is not None else None)
+        for row in rows
+    ]
+
+
+class ReplaceInCratesTests(unittest.TestCase):
+    """Copy crate slots from one track onto another.
+
+    Each case points ``library.MASTER`` at the fixture and closes it before
+    the directory is removed. The live Serato library is not opened.
+    """
+
+    def test_keep_both_places_the_replacement_at_list_order(self) -> None:
+        """Add the replacement at the original crate position and keep both.
+
+        Asset 2 joins Warmup at list_order 3 beside asset 1. Closing already
+        holds asset 2, so that row stays at 9. Smart crates and the space
+        root are skipped. Both asset rows stay.
+
+        Returns:
+            None. The test fails if the replacement sits at a new position
+            or the original leaves a crate.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                _seed_replace_crates(conn)
+            result = library.replace_in_crates(
+                {"from_id": 1, "to_id": 2, "confirm": True}
+            )
+            warmup = _crate_orders(temp.db, 10)
+            closing = _crate_orders(temp.db, 11)
+            smart = _crate_orders(temp.db, 12)
+            root = _crate_orders(temp.db, 1)
+            self.assertEqual(_asset_count(temp.db, 1), 1)
+            self.assertEqual(_asset_count(temp.db, 2), 1)
+        self.assertTrue(result["ok"])
+        self.assertFalse(result["preview"])
+        self.assertFalse(result["retire"])
+        added = cast(list[dict[str, object]], result["crates_added"])
+        kept = cast(list[dict[str, object]], result["crates_kept"])
+        self.assertEqual([item["name"] for item in added], ["Warmup"])
+        self.assertEqual(added[0]["list_order"], 3)
+        self.assertEqual([item["name"] for item in kept], ["Closing"])
+        self.assertEqual(result["crates_removed"], [])
+        self.assertIn((1, 3), warmup)
+        self.assertIn((2, 3), warmup)
+        self.assertIn((1, 1), closing)
+        self.assertIn((2, 9), closing)
+        self.assertEqual(smart, [(1, 4)])
+        self.assertEqual(root, [(1, 0)])
+
+    def test_retire_leaves_the_original_in_smart_and_root_crates(self) -> None:
+        """Remove the original from the copied crates only.
+
+        Warmup and Closing drop asset 1. The smart crate and the space
+        root still hold it. The asset row stays.
+
+        Returns:
+            None. The test fails if the original is deleted or leaves the
+            smart crate.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                _seed_replace_crates(conn)
+            result = library.replace_in_crates(
+                {"from_id": 1, "to_id": 2, "confirm": True, "retire": True}
+            )
+            warmup = _crate_orders(temp.db, 10)
+            closing = _crate_orders(temp.db, 11)
+            smart = _crate_orders(temp.db, 12)
+            root = _crate_orders(temp.db, 1)
+            self.assertEqual(_asset_count(temp.db, 1), 1)
+        self.assertTrue(result["retire"])
+        removed = [item["name"] for item in cast(list[dict[str, object]], result["crates_removed"])]
+        self.assertEqual(removed, ["Warmup", "Closing"])
+        self.assertEqual(warmup, [(2, 3)])
+        self.assertEqual(closing, [(2, 9)])
+        self.assertEqual(smart, [(1, 4)])
+        self.assertEqual(root, [(1, 0)])
+
+    def test_preview_does_not_write(self) -> None:
+        """Return the plan without changing membership.
+
+        Returns:
+            None. The test fails if a crate row is added.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                _seed_replace_crates(conn)
+            before = _crate_orders(temp.db, 10)
+            result = library.replace_in_crates(
+                {"from_id": 1, "to_id": 2, "preview": True}
+            )
+            after = _crate_orders(temp.db, 10)
+            self.assertFalse((temp.db.parent / "Backups").exists())
+        self.assertTrue(result["preview"])
+        self.assertEqual([item["name"] for item in cast(list[dict[str, object]], result["crates_added"])], ["Warmup"])
+        self.assertEqual(before, after)
+        self.assertEqual(before, [(1, 3)])
+
+    def test_confirm_and_ids_are_required(self) -> None:
+        """Refuse a write that is not confirmed or that names a bad id.
+
+        A missing confirmation, the same track twice, a boolean id, a
+        missing field, and a track that is not in the library are each
+        rejected. No backup is taken.
+
+        Returns:
+            None. The test fails if a refusal still changes the library.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                _seed_replace_crates(conn)
+            before = _crate_orders(temp.db, 10)
+            with self.assertRaisesRegex(LibraryError, "Confirm the crate update"):
+                library.replace_in_crates({"from_id": 1, "to_id": 2})
+            with self.assertRaisesRegex(LibraryError, "same"):
+                library.replace_in_crates({"from_id": 1, "to_id": 1, "confirm": True})
+            with self.assertRaisesRegex(LibraryError, "Choose the track to replace"):
+                library.replace_in_crates({"from_id": True, "to_id": 2, "confirm": True})
+            with self.assertRaisesRegex(LibraryError, "Choose the track to put"):
+                library.replace_in_crates({"from_id": 1, "to_id": True, "confirm": True})
+            with self.assertRaisesRegex(LibraryError, "Choose the track to replace"):
+                library.replace_in_crates({"to_id": 2, "confirm": True})
+            with self.assertRaisesRegex(LibraryError, "not in this space"):
+                library.replace_in_crates({"from_id": 99, "to_id": 2, "confirm": True})
+            with self.assertRaisesRegex(LibraryError, "not in the library"):
+                library.replace_in_crates({"from_id": 1, "to_id": 99, "confirm": True})
+            after = _crate_orders(temp.db, 10)
+            self.assertFalse((temp.db.parent / "Backups").exists())
+        self.assertEqual(before, after)
+
+    def test_empty_crates_are_a_noop_while_serato_is_open(self) -> None:
+        """Skip the write when no normal crate would change.
+
+        The fixture has no crate memberships. Serato holding the lock
+        must not raise, and no backup is taken.
+
+        Returns:
+            None. The test fails if ``SeratoOpen`` is raised or a backup
+            folder appears.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                conn.execute(
+                    "INSERT INTO lock (owner_process_id, owner_process_name) VALUES (99, 'Serato DJ Pro')"
+                )
+            with mock.patch.object(library, "_process_is_serato", return_value=True):
+                result = library.replace_in_crates(
+                    {"from_id": 1, "to_id": 2, "confirm": True}
+                )
+            self.assertFalse((temp.db.parent / "Backups").exists())
+        self.assertTrue(result["ok"])
+        self.assertFalse(result["preview"])
+        self.assertEqual(result["crates_added"], [])
+        self.assertEqual(result["crates_removed"], [])
+
+    def test_refuses_while_serato_is_open_when_crates_would_change(self) -> None:
+        """Refuse a real crate update before a backup when Serato holds the lock.
+
+        Returns:
+            None. The test fails if ``SeratoOpen`` is not raised or Warmup
+            already holds the replacement.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                _seed_replace_crates(conn)
+                conn.execute(
+                    "INSERT INTO lock (owner_process_id, owner_process_name) VALUES (99, 'Serato DJ Pro')"
+                )
+            with mock.patch.object(library, "_process_is_serato", return_value=True):
+                with self.assertRaises(SeratoOpen):
+                    library.replace_in_crates(
+                        {"from_id": 1, "to_id": 2, "confirm": True}
+                    )
+            warmup = _crate_orders(temp.db, 10)
+            self.assertFalse((temp.db.parent / "Backups").exists())
+        self.assertEqual(warmup, [(1, 3)])
+
+
 if __name__ == "__main__":
     unittest.main()

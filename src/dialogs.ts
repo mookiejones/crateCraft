@@ -1,5 +1,5 @@
 /**
- * Dialogs for Rekordbox export, duplicate merge, relink, sharing, and file changes.
+ * Dialogs for Rekordbox export, duplicate merge, crate replace, relink, sharing, and file changes.
  *
  * Importing this module does not open a dialog and does not fetch.
  * wireDialogs attaches the listeners. app.ts calls it once at startup.
@@ -9,22 +9,26 @@
 import { failureOf, getRelink, postJSON, readJSONOr } from "./api";
 import type { LibraryStatusNotice, OpenOptions } from "./wizard-view";
 import type {
+  CratesReplacePreview,
   FilesBody,
   FilesPayload,
   LogsPayload,
+  MergeCrate,
   MergeCueCopy,
   MergePreview,
   RelinkCandidate,
   RelinkMatch,
   RelinkPlan,
   SettingsPayload,
+  Track,
 } from "./api-types";
 import { bridge } from "./bridge";
 import { el } from "./dom";
+import { scoreQuery } from "./fuzzy";
 import { applyLayout } from "./layout";
 import { state } from "./state";
 import { inputEl, selectEl, setTooltip } from "./tooltip";
-import { keepCopy, tips } from "./tooltip-strings";
+import { keepCopy, openReplaceCopy, tips } from "./tooltip-strings";
 import {
   applyStatus,
   crateNamesFor,
@@ -45,6 +49,11 @@ let rekordboxXml = "";
 let mergePreview: MergePreview | null = null;
 let mergeToken = 0;
 let mergeLoading = false;
+let replaceFromId: number | null = null;
+let replaceToId: number | null = null;
+let replacePreview: CratesReplacePreview | null = null;
+let replaceToken = 0;
+let replaceLoading = false;
 let consentSettled = false;
 let privacySync = false;
 let appearanceSync = false;
@@ -498,6 +507,263 @@ async function confirmMerge() {
   }
 }
 
+const REPLACE_CHOICE_LIMIT = 12;
+
+/**
+ * Rank tracks that can sit in the original track's crates.
+ *
+ * The original is excluded. A blank query keeps library order. A scored
+ * query uses file, title, and artist. A pinned id stays first.
+ *
+ * @param {number} fromId Track whose crate slots are copied.
+ * @param {string} query Search text. Blank keeps library order.
+ * @param {number} [toId] Replacement already chosen, kept first.
+ * @returns {object[]} At most twelve tracks.
+ */
+export function rankReplaceCandidates(fromId: number, query: string, toId?: number): Track[] {
+  const others = state.tracks.filter((track) => track.id !== fromId);
+  const trimmed = query.trim();
+  let ranked: Track[];
+  if (!trimmed) {
+    ranked = others.slice();
+  } else {
+    const scored: Array<{ track: Track; score: number }> = [];
+    for (const track of others) {
+      const haystack = [track.file, track.name, track.artist].filter(Boolean).join(" ");
+      const score = scoreQuery(trimmed, haystack);
+      if (score != null) scored.push({ track, score });
+    }
+    scored.sort((a, b) => b.score - a.score);
+    ranked = scored.map((item) => item.track);
+  }
+  if (toId != null) {
+    const pinned = others.find((track) => track.id === toId);
+    if (pinned) ranked = [pinned, ...ranked.filter((track) => track.id !== toId)];
+  }
+  return ranked.slice(0, REPLACE_CHOICE_LIMIT);
+}
+
+function replaceCrateLabel(crate: MergeCrate): string {
+  const name = crate.name || "";
+  return crate.space && crate.space !== state.space ? `${name} (${crate.space})` : name;
+}
+
+/**
+ * Show one crate-replace plan in the dialog.
+ *
+ * The list is built with text nodes. Does not fetch.
+ *
+ * @param {object|null} preview Plan from POST /api/replace-in-crates, or null while it loads.
+ * @returns {void}
+ */
+export function renderCratesReplacePreview(preview: CratesReplacePreview | null): void {
+  el("crates-replace-preview").replaceChildren();
+  if (!preview) {
+    const pending = document.createElement("p");
+    pending.textContent = t("cratesReplace.readingPreview");
+    el("crates-replace-preview").append(pending);
+    return;
+  }
+  const list = document.createElement("ul");
+  list.className = "merge-preview";
+  const item = (text: string) => {
+    const line = document.createElement("li");
+    line.textContent = text;
+    list.append(line);
+  };
+  const added = preview.crates_added || [];
+  const kept = preview.crates_kept || [];
+  const removed = preview.crates_removed || [];
+  if (added.length) {
+    item(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
+  } else if (kept.length) {
+    item(t("cratesReplace.alreadyInCrates"));
+  } else {
+    item(t("cratesReplace.noCrates"));
+  }
+  if (preview.retire && removed.length) {
+    item(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
+  }
+  el("crates-replace-preview").append(list);
+}
+
+function syncReplaceConfirm(): void {
+  const writable = replacePreview?.writable !== false;
+  el("crates-replace-confirm").disabled = (
+    replaceLoading || replaceToId == null || !replacePreview || !writable
+  );
+  el("crates-replace-confirm").textContent = replaceLoading
+    ? t("cratesReplace.updating")
+    : t("cratesReplace.confirm");
+  setTooltip(el("crates-replace-confirm"), tips.cratesReplaceConfirm);
+}
+
+function renderReplaceChoices(): void {
+  const fromId = replaceFromId;
+  el("crates-replace-choices").replaceChildren();
+  if (fromId == null) return;
+  const ranked = rankReplaceCandidates(fromId, el("crates-replace-search").value, replaceToId ?? undefined);
+  for (const track of ranked) {
+    const label = document.createElement("label");
+    label.className = "merge-choice";
+    label.htmlFor = `crates-replace-to-${track.id}`;
+    const input = inputEl(openReplaceCopy(track.file || `Track ${track.id}`));
+    input.type = "radio";
+    input.name = "crates-replace-to";
+    input.id = `crates-replace-to-${track.id}`;
+    input.value = String(track.id);
+    input.checked = track.id === replaceToId;
+    input.addEventListener("change", () => {
+      if (!input.checked) return;
+      replaceToId = track.id;
+      refreshReplacePreview().catch((error) => setNotice(failureOf(error).message));
+    });
+    const text = document.createElement("span");
+    const name = document.createElement("span");
+    name.textContent = track.file || t("track.numbered", { id: String(track.id) });
+    const meta = document.createElement("span");
+    meta.className = "merge-meta";
+    const parts = [];
+    if (track.artist) parts.push(track.artist);
+    if (track.name && track.name !== track.file) parts.push(track.name);
+    meta.textContent = parts.join(" · ");
+    text.append(name, meta);
+    label.append(input, text);
+    el("crates-replace-choices").append(label);
+  }
+}
+
+/**
+ * Ask for a crate-replace plan for the chosen replacement.
+ *
+ * POST /api/replace-in-crates with preview true. A slow reply is ignored
+ * when a newer choice has already been made.
+ *
+ * @returns {Promise<void>}
+ */
+async function refreshReplacePreview(): Promise<void> {
+  const fromId = replaceFromId;
+  const toId = replaceToId;
+  const token = ++replaceToken;
+  replaceLoading = false;
+  replacePreview = null;
+  el("crates-replace-status").textContent = "";
+  if (fromId == null || toId == null) {
+    el("crates-replace-preview").replaceChildren();
+    const missing = document.createElement("p");
+    missing.textContent = t("cratesReplace.noReplacement");
+    el("crates-replace-preview").append(missing);
+    syncReplaceConfirm();
+    return;
+  }
+  renderCratesReplacePreview(null);
+  syncReplaceConfirm();
+  el("crates-replace-confirm").disabled = true;
+  try {
+    const preview = await postJSON<CratesReplacePreview>("/api/replace-in-crates", {
+      space: state.space,
+      from_id: fromId,
+      to_id: toId,
+      preview: true,
+      retire: el("crates-replace-retire").checked,
+    });
+    if (token !== replaceToken) return;
+    replacePreview = preview;
+    renderCratesReplacePreview(preview);
+    if (preview.writable === false) {
+      el("crates-replace-status").textContent = t("cratesReplace.quitSerato");
+    }
+    syncReplaceConfirm();
+  } catch (error) {
+    if (token !== replaceToken) return;
+    replacePreview = null;
+    el("crates-replace-preview").replaceChildren();
+    const failed = document.createElement("p");
+    failed.textContent = t("cratesReplace.previewFailed");
+    el("crates-replace-preview").append(failed);
+    el("crates-replace-status").textContent = failureOf(error).message;
+    syncReplaceConfirm();
+  }
+}
+
+/**
+ * Open the crate-replace dialog for one library track.
+ *
+ * Keep both starts on. The plan loads when a replacement is already
+ * chosen. Cancel closes the dialog without a write.
+ *
+ * @param {number} fromId Track whose crate slots are copied.
+ * @param {number} [toId] Replacement already chosen from Other copies.
+ * @returns {Promise<void>}
+ */
+async function openCratesReplaceDialog(fromId: number, toId?: number): Promise<void> {
+  if (!state.writable) return;
+  if (typeof el("crates-replace-dialog").showModal !== "function") return;
+  replaceFromId = fromId;
+  replaceToId = toId ?? null;
+  replacePreview = null;
+  replaceLoading = false;
+  el("crates-replace-keep").checked = true;
+  el("crates-replace-retire").checked = false;
+  el("crates-replace-search").value = "";
+  el("crates-replace-status").textContent = "";
+  renderReplaceChoices();
+  if (!el("crates-replace-dialog").open) el("crates-replace-dialog").showModal();
+  el("crates-replace-cancel").focus();
+  await refreshReplacePreview();
+}
+
+/**
+ * Put the replacement in the original track's crates.
+ *
+ * POST /api/replace-in-crates with confirm true. The button stays
+ * disabled until the request finishes. A 409 locks the page and closes
+ * the dialog.
+ *
+ * @returns {Promise<void>}
+ */
+async function confirmReplaceInCrates(): Promise<void> {
+  const fromId = replaceFromId;
+  const toId = replaceToId;
+  if (fromId == null || toId == null || replaceLoading) return;
+  replaceLoading = true;
+  syncReplaceConfirm();
+  el("crates-replace-status").textContent = "";
+  try {
+    const result = await postJSON<CratesReplacePreview>("/api/replace-in-crates", {
+      space: state.space,
+      from_id: fromId,
+      to_id: toId,
+      confirm: true,
+      retire: el("crates-replace-retire").checked,
+    });
+    el("crates-replace-dialog").close();
+    const added = (result.crates_added || []).length;
+    const removed = (result.crates_removed || []).length;
+    const name = result.to?.file || result.to?.name || t("cratesReplace.title");
+    let message = added
+      ? t("cratesReplace.placed", { count: added, name })
+      : t("cratesReplace.nothingToDo");
+    if (result.retire && removed) {
+      message = `${message} ${t("cratesReplace.retired", { name: result.from?.file || result.from?.name || "" })}`;
+    }
+    if (!added && removed && result.retire) message = t("cratesReplace.updated");
+    if (result.warning) message = `${message} ${result.warning}`;
+    setNotice(message);
+    await loadLibrary();
+    if (state.byId.has(fromId)) selectTrack(fromId);
+  } catch (error) {
+    el("crates-replace-status").textContent = failureOf(error).message;
+    if (failureOf(error).status === 409) {
+      lockDown(error);
+      el("crates-replace-dialog").close();
+    }
+  } finally {
+    replaceLoading = false;
+    syncReplaceConfirm();
+  }
+}
+
 /**
  * Describe the current sharing choice in one sentence.
  *
@@ -674,6 +940,18 @@ export function repaintDialogs(): void {
   if (el("merge-dialog").open) {
     renderMergePreview(mergeLoading ? null : mergePreview);
     syncTrashChoice();
+  }
+  if (el("crates-replace-dialog").open) {
+    renderReplaceChoices();
+    if (replaceToId == null) {
+      el("crates-replace-preview").replaceChildren();
+      const missing = document.createElement("p");
+      missing.textContent = t("cratesReplace.noReplacement");
+      el("crates-replace-preview").append(missing);
+    } else {
+      renderCratesReplacePreview(replaceLoading ? null : replacePreview);
+    }
+    syncReplaceConfirm();
   }
   if (el("relink-dialog").open) {
     fillRelinkBanner();
@@ -1241,6 +1519,23 @@ export function wireDialogs(): void {
     confirmMerge().catch((error) => setNotice(failureOf(error).message));
   });
   el("merge-trash").addEventListener("change", () => syncTrashChoice());
+  el("crates-replace-cancel").addEventListener("click", () => el("crates-replace-dialog").close());
+  el("crates-replace-confirm").addEventListener("click", () => {
+    confirmReplaceInCrates().catch((error) => setNotice(failureOf(error).message));
+  });
+  el("crates-replace-search").addEventListener("input", () => {
+    renderReplaceChoices();
+  });
+  el("crates-replace-keep").addEventListener("change", () => {
+    if (el("crates-replace-keep").checked) {
+      refreshReplacePreview().catch((error) => setNotice(failureOf(error).message));
+    }
+  });
+  el("crates-replace-retire").addEventListener("change", () => {
+    if (el("crates-replace-retire").checked) {
+      refreshReplacePreview().catch((error) => setNotice(failureOf(error).message));
+    }
+  });
   el("consent-decline").addEventListener("click", () => {
     saveConsent(false, el("consent-status")).then((ok) => {
       if (!ok) return;
@@ -1476,6 +1771,7 @@ export function wireDialogs(): void {
 }
 
 bridge.openMergeDialog = openMergeDialog;
+bridge.openReplaceInCratesDialog = openCratesReplaceDialog;
 
 /**
  * Open the first-run wizard from the Files empty state.

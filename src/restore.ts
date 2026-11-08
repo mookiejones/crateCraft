@@ -183,6 +183,7 @@ const OPERATION_ACTIONS: Record<string, MessageKey> = {
   move: "operations.action.move",
   move_folder: "operations.action.moveFolder",
   replace: "operations.action.replace",
+  replace_in_crates: "operations.action.replaceInCrates",
   relink: "operations.action.relink",
   delete: "operations.action.delete",
   restore: "operations.action.restore",
