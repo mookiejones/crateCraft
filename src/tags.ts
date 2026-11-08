@@ -3,8 +3,10 @@
  *
  * GET /api/tag-clusters lists genre and artist groups. POST preview
  * lists the rows a chosen spelling would rewrite. POST apply writes
- * through safe_write. Titles uses POST clean-preview and clean-apply.
- * Audio files are not rewritten. A newer load ignores a late response.
+ * through safe_write and remembers the spelling. Genre and Artist also
+ * POST refresh-preview; Apply saved mappings POSTs refresh-apply.
+ * Titles uses POST clean-preview and clean-apply. Audio files are not
+ * rewritten. A newer load ignores a late response.
  *
  * Page text is in the locale catalogs under tags.*.
  */
@@ -17,6 +19,8 @@ import { serverMessage, t } from "./i18n";
 import { state } from "./state";
 import {
   groupHeading,
+  mappingPreviewSummary,
+  mappingWrittenSummary,
   previewLines,
   previewSummary,
   spellingLabel,
@@ -33,9 +37,11 @@ import { tips } from "./tooltip-strings";
 const LIST_CAP = 100;
 const FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"] as const;
 const TITLE_KEY = "clean";
+const MAPPING_KEY = "saved";
 
 let latest: TagClusters | null = null;
 let titlePlan: TagClusterPlan | null = null;
+let mappingPlan: TagClusterPlan | null = null;
 const plans = new Map<string, TagClusterPlan>();
 const selectedByKey = new Map<string, string>();
 let panelBusy = false;
@@ -85,6 +91,10 @@ export function wireTags(): void {
       void applyTitles();
       return;
     }
+    if (button.dataset.tagsAction === "refresh-apply") {
+      void applyMappings();
+      return;
+    }
     const key = button.dataset.key ?? "";
     if (!key) return;
     if (button.dataset.tagsAction === "preview") void previewGroup(key);
@@ -116,6 +126,7 @@ export async function loadTags(): Promise<void> {
       if (token !== state.tagsToken) return;
       titlePlan = payload;
       latest = null;
+      mappingPlan = null;
       el("tags-status").textContent = titlesPreviewSummary(payload);
       settle = "report";
     } else {
@@ -132,6 +143,8 @@ export async function loadTags(): Promise<void> {
       }
       latest = payload;
       titlePlan = null;
+      mappingPlan = await readMappingPreview(token);
+      if (token !== state.tagsToken) return;
       el("tags-status").textContent = "";
       settle = "report";
     }
@@ -184,6 +197,8 @@ export function renderTagsReport(payload: TagClusters): void {
   summary.className = "gig-note";
   summary.textContent = tagsSummary(field, payload.values ?? 0, groups.length);
   report.replaceChildren(summary);
+  const mapping = mappingCard();
+  if (mapping) report.append(mapping);
   if (!groups.length) return;
   groups.forEach((group, index) => {
     report.append(groupCard(group, index === 0 || open.has(group.key)));
@@ -298,6 +313,38 @@ async function applyGroup(key: string): Promise<void> {
   }
 }
 
+async function applyMappings(): Promise<void> {
+  const plan = mappingPlan;
+  if (!plan || !canApplyMappings(plan)) return;
+  actionKey = MAPPING_KEY;
+  panelBusy = true;
+  beginBusy();
+  paintReport();
+  try {
+    const written = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+      action: "refresh-apply",
+      space: state.space,
+    });
+    await bridge.reloadLibrary();
+    actionKey = "";
+    panelBusy = false;
+    endBusy();
+    await loadTags();
+    el("tags-status").textContent = mappingWrittenSummary(written);
+  } catch (error) {
+    const failed = failureOf(error);
+    failStatus(failed.message);
+    if (failed.status === 409) {
+      bridge.lockDown(error);
+    }
+  } finally {
+    actionKey = "";
+    panelBusy = false;
+    endBusy();
+    paintReport();
+  }
+}
+
 async function applyTitles(): Promise<void> {
   const plan = titlePlan;
   if (!plan || !canApplyTitles(plan)) return;
@@ -367,6 +414,61 @@ function endBusy(): void {
 
 function canApplyTitles(plan: TagClusterPlan): boolean {
   return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
+}
+
+function canApplyMappings(plan: TagClusterPlan): boolean {
+  return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
+}
+
+function asMappingPlan(payload: unknown): TagClusterPlan | null {
+  if (payload === null || typeof payload !== "object") return null;
+  const plan = payload as TagClusterPlan;
+  if (!Array.isArray(plan.changes)) return null;
+  return plan;
+}
+
+async function readMappingPreview(token: number): Promise<TagClusterPlan | null> {
+  try {
+    const payload = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+      action: "refresh-preview",
+      space: state.space,
+    });
+    if (token !== state.tagsToken) return null;
+    return asMappingPlan(payload);
+  } catch {
+    if (token !== state.tagsToken) return null;
+    return null;
+  }
+}
+
+function mappingCard(): HTMLDivElement | null {
+  const plan = mappingPlan;
+  if (!plan?.changes.length) return null;
+  const wrap = document.createElement("div");
+  wrap.className = "tags-mappings";
+  const note = document.createElement("p");
+  note.className = "gig-note";
+  note.textContent = mappingPreviewSummary(plan);
+  wrap.append(note);
+  const lines = previewLines(plan.changes);
+  if (lines.length) {
+    const diffs = document.createElement("ul");
+    for (const line of lines.slice(0, LIST_CAP)) {
+      const row = document.createElement("li");
+      row.textContent = line;
+      diffs.append(row);
+    }
+    wrap.append(diffs);
+  }
+  const actions = document.createElement("div");
+  actions.className = "tags-actions";
+  const apply = buttonEl(tips.tagsApplyMappings);
+  apply.dataset.tagsAction = "refresh-apply";
+  apply.textContent = t("tags.applyMappings");
+  apply.disabled = !canApplyMappings(plan);
+  actions.append(apply);
+  wrap.append(actions);
+  return wrap;
 }
 
 function failStatus(message: string): void {

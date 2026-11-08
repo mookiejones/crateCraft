@@ -20,17 +20,26 @@ moves a trailing feat./ft./featuring credit into remixer when that field is
 empty, and title-cases a title that is all upper or all lower. Mixed case
 stays. ``preview_titles`` lists the rows that would change.
 ``apply_titles`` writes those titles through ``safe_write`` with Serato
-closed. Audio files are not rewritten. Remembering the mapping for new
-imports is a later change.
+closed. Audio files are not rewritten.
+
+``apply`` also stores the chosen spelling in ``tag-spellings.json`` beside
+``settings.json``, keyed by the library file and the ``normalize`` key.
+``preview_mappings`` lists rows that still use another spelling of a saved
+key. ``apply_mappings`` writes those rows through ``safe_write`` with Serato
+closed, so a later import that uses Hip-Hop becomes Hip Hop without picking
+the group again. A damaged store reads as empty. Audio files are not
+rewritten.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sqlite3
 import sys
+import tempfile
 import time
 import unicodedata
 from collections.abc import Mapping, Sequence
@@ -38,6 +47,7 @@ from contextlib import closing
 from pathlib import Path
 from typing import NotRequired, TypedDict
 
+import app_config
 import gig_check
 import library
 
@@ -45,6 +55,10 @@ FIELDS = ("genre", "artist")
 CHOOSE_FIELD = "Choose genre or artist."
 CHOOSE_SPELLING = "Choose a spelling."
 NOT_IN_GROUP = "That spelling is not in a group."
+STORE_NAME = "tag-spellings.json"
+MAPPING_FIELD = "mappings"
+MAPPING_VALUE = "saved"
+MAPPING_KEY = "saved"
 # The SQL names come from this table, never from the request.
 _SQL = {
     "genre": (
@@ -135,7 +149,13 @@ class Clusters(TypedDict):
 
 Change = TypedDict(
     "Change",
-    {"id": int, "from": str, "to": str, "remixer": NotRequired[str]},
+    {
+        "id": int,
+        "from": str,
+        "to": str,
+        "remixer": NotRequired[str],
+        "field": NotRequired[str],
+    },
 )
 
 
@@ -405,6 +425,113 @@ def _in_group(groups: Sequence[Group], spelling: str) -> str:
     raise library.LibraryError(NOT_IN_GROUP, 400)
 
 
+def _store_path() -> Path:
+    """Return ``tag-spellings.json`` beside ``settings.json``.
+
+    Returns:
+        The path. The file may not exist yet.
+    """
+    return app_config.config_dir() / STORE_NAME
+
+
+def _library_key() -> str:
+    """Key stored mappings by the library file they belong to.
+
+    Returns:
+        The resolved path of ``library.MASTER``.
+    """
+    return str(Path(library.MASTER).resolve())
+
+
+def _read_store() -> dict[str, dict[str, dict[str, str]]]:
+    """Read every remembered spelling.
+
+    Returns:
+        ``{library path: {field: {normalize key: spelling}}}``. A missing or
+        damaged file reads as empty, so a bad file never blocks the library.
+    """
+    try:
+        data = json.loads(_store_path().read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    libraries: dict[str, dict[str, dict[str, str]]] = {}
+    for path, fields in data.items():
+        if not isinstance(fields, dict):
+            continue
+        held: dict[str, dict[str, str]] = {}
+        for field in FIELDS:
+            raw = fields.get(field)
+            if not isinstance(raw, dict):
+                continue
+            held[field] = {
+                str(key): str(value)
+                for key, value in raw.items()
+                if isinstance(key, str) and isinstance(value, str) and key and value.strip()
+            }
+        if held:
+            libraries[str(path)] = held
+    return libraries
+
+
+def _write_store(data: Mapping[str, Mapping[str, Mapping[str, str]]]) -> None:
+    """Replace ``tag-spellings.json`` in one step.
+
+    Args:
+        data: The whole store.
+
+    Writes a temporary file in the same folder and renames it over the old one.
+    """
+    path = _store_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    handle, temp = tempfile.mkstemp(prefix=".tag-spellings-", suffix=".json", dir=path.parent)
+    try:
+        with os.fdopen(handle, "w", encoding="utf-8") as out:
+            json.dump(data, out, indent=2, sort_keys=True, ensure_ascii=False)
+        os.replace(temp, path)
+    except BaseException:
+        Path(temp).unlink(missing_ok=True)
+        raise
+
+
+def _remember(field: str, key: str, spelling: str) -> None:
+    """Save the chosen spelling for this library and key.
+
+    Args:
+        field: ``genre`` or ``artist``.
+        key: ``normalize`` key.
+        spelling: Canonical stored value.
+    """
+    data = _read_store()
+    library_key = _library_key()
+    fields = data.setdefault(library_key, {})
+    bucket = dict(fields.get(field, {}))
+    bucket[key] = spelling
+    fields[field] = bucket
+    data[library_key] = fields
+    _write_store(data)
+
+
+def _library_mappings() -> dict[str, dict[str, str]]:
+    """Return saved genre and artist spellings for this library.
+
+    Returns:
+        ``{field: {key: spelling}}``. Entries whose spelling does not
+        normalize to the key are dropped.
+    """
+    held = _read_store().get(_library_key(), {})
+    cleaned: dict[str, dict[str, str]] = {}
+    for field in FIELDS:
+        items: dict[str, str] = {}
+        for key, spelling in held.get(field, {}).items():
+            if normalize(spelling) == key:
+                items[key] = spelling
+        if items:
+            cleaned[field] = items
+    return cleaned
+
+
 def _changes(
     conn: sqlite3.Connection, space: str, field: str, spelling: str, key: str
 ) -> list[Change]:
@@ -509,6 +636,7 @@ def apply(space: str, field: str, value: object) -> Plan:
     database = Path(library.MASTER)
     plan = _plan(database, space, field, value)
     if not plan["changes"]:
+        _remember(plan["field"], plan["key"], plan["value"])
         return plan
     field_name = plan["field"]
     spelling = plan["value"]
@@ -578,6 +706,177 @@ def apply(space: str, field: str, value: object) -> Plan:
         for change in result["changes"]:
             library._mirror_asset(  # pyright: ignore[reportPrivateUsage]
                 master, change["id"], {field_name: spelling}
+            )
+    _remember(field_name, key, spelling)
+    return result
+
+
+def _mapping_changes(conn: sqlite3.Connection, space: str) -> list[Change]:
+    """List rows that still use another spelling of a saved mapping.
+
+    Args:
+        conn: Open library connection.
+        space: Space name.
+
+    Returns:
+        ``{ id, from, to, field }`` rows, genre then artist, then id.
+    """
+    changes: list[Change] = []
+    for field, items in _library_mappings().items():
+        for key, spelling in items.items():
+            for change in _changes(conn, space, field, spelling, key):
+                changes.append(
+                    {
+                        "id": change["id"],
+                        "from": change["from"],
+                        "to": change["to"],
+                        "field": field,
+                    }
+                )
+    changes.sort(key=lambda item: (item.get("field") or "", item["id"]))
+    return changes
+
+
+def _mapping_plan(database: Path, space: str) -> Plan:
+    """Build the saved-mapping plan without writing.
+
+    Args:
+        database: ``master.sqlite``.
+        space: Space name.
+
+    Returns:
+        Plan JSON with ``field`` ``mappings`` and ``written`` false.
+
+    Raises:
+        library.LibraryError: The space is unknown or the database cannot
+            be opened read-only.
+    """
+    if space not in library.ALLOWED_SPACES:
+        raise library.LibraryError("That space is not available here.")
+    conn = gig_check.open_read_only(database)
+    try:
+        changes = _mapping_changes(conn, space)
+    finally:
+        conn.close()
+    return {
+        "field": MAPPING_FIELD,
+        "value": MAPPING_VALUE,
+        "key": MAPPING_KEY,
+        "changes": changes,
+        "written": False,
+    }
+
+
+def preview_mappings(database: Path, space: str) -> Plan:
+    """List the rows saved mappings would rewrite, without writing.
+
+    Args:
+        database: ``master.sqlite``.
+        space: Space name.
+
+    Returns:
+        Plan JSON with ``written`` false.
+
+    Raises:
+        library.LibraryError: The space is unknown or the database cannot
+            be opened read-only.
+    """
+    return _mapping_plan(database, space)
+
+
+def apply_mappings(space: str) -> Plan:
+    """Rewrite saved mapping rows through ``safe_write``.
+
+    Args:
+        space: Space name.
+
+    Returns:
+        Plan JSON. ``written`` is false when every matching row already
+        holds the saved spelling.
+
+    Raises:
+        library.LibraryError: The space is unknown.
+        library.SeratoOpen: If Serato still has the library open.
+    """
+    import safe_write
+
+    database = Path(library.MASTER)
+    plan = _mapping_plan(database, space)
+    if not plan["changes"]:
+        return plan
+
+    def run(conn: sqlite3.Connection, write: safe_write.Session) -> Plan:
+        """Rewrite the live rows and register the field check.
+
+        Args:
+            conn: Open write connection.
+            write: Session that records the expected rows.
+
+        Returns:
+            The result dict with ``written`` true.
+        """
+        live = _mapping_changes(conn, space)
+        write.set_target("mappings")
+        now = int(time.time())
+        expected: dict[int, dict[str, str]] = {}
+        for change in live:
+            field_name = change.get("field")
+            if field_name not in FIELDS:
+                continue
+            library._assign(  # pyright: ignore[reportPrivateUsage]
+                conn,
+                "asset",
+                {field_name: change["to"], "time_modified": now},
+                "id = ?",
+                change["id"],
+            )
+            expected.setdefault(change["id"], {})[field_name] = change["to"]
+
+        def check(
+            copied: sqlite3.Connection,
+            expected: dict[int, dict[str, str]] = expected,
+        ) -> None:
+            """Fail when a rewritten row does not hold the saved spelling.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                expected: Asset id to field values this write assigned.
+
+            Raises:
+                VerifyMismatch: If a row is missing or different.
+            """
+            if not expected:
+                return
+            ids = tuple(expected)
+            placeholders = ",".join("?" * len(ids))
+            sql = f"SELECT id, genre, artist FROM asset WHERE id IN ({placeholders})"
+            rows = copied.execute(sql, ids).fetchall()
+            got = {int(row[0]): {"genre": row[1], "artist": row[2]} for row in rows}
+            for asset_id, fields in expected.items():
+                have = got.get(asset_id)
+                if have is None:
+                    raise safe_write.VerifyMismatch("The track fields do not match.")
+                for field_name, spelling in fields.items():
+                    if have.get(field_name) != spelling:
+                        raise safe_write.VerifyMismatch("The track fields do not match.")
+
+        write.check(check)
+        return {
+            "field": MAPPING_FIELD,
+            "value": MAPPING_VALUE,
+            "key": MAPPING_KEY,
+            "changes": live,
+            "written": True,
+        }
+
+    result = safe_write.run("tag_cleanup", "mappings", run)
+    with closing(library.read_conn()) as master:
+        for change in result["changes"]:
+            field_name = change.get("field")
+            if field_name not in FIELDS:
+                continue
+            library._mirror_asset(  # pyright: ignore[reportPrivateUsage]
+                master, change["id"], {field_name: change["to"]}
             )
     return result
 
@@ -767,9 +1066,10 @@ def action(payload: Mapping[str, object]) -> Plan:
     """Run one ``POST /api/tag-clusters`` request.
 
     Args:
-        payload: ``action`` is ``preview``, ``apply``, ``clean-preview``, or
-            ``clean-apply``. Spelling actions take ``space``, ``field``, and
-            ``value``. Title cleanup takes ``space``.
+        payload: ``action`` is ``preview``, ``apply``, ``clean-preview``,
+            ``clean-apply``, ``refresh-preview``, or ``refresh-apply``.
+            Spelling actions take ``space``, ``field``, and ``value``. Title
+            cleanup and mapping refresh take ``space``.
 
     Returns:
         That action's result.
@@ -785,6 +1085,10 @@ def action(payload: Mapping[str, object]) -> Plan:
         return preview_titles(Path(library.MASTER), space)
     if kind == "clean-apply":
         return apply_titles(space)
+    if kind == "refresh-preview":
+        return preview_mappings(Path(library.MASTER), space)
+    if kind == "refresh-apply":
+        return apply_mappings(space)
     field = payload.get("field", "genre")
     if field is None:
         field = "genre"
@@ -809,7 +1113,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         written.
     """
     parser = argparse.ArgumentParser(
-        description="Group spellings of one genre or artist, apply one, or clean titles."
+        description="Group spellings of one genre or artist, apply one, clean titles, or refresh saved mappings."
     )
     parser.add_argument("field", choices=FIELDS, nargs="?")
     parser.add_argument("--database", type=Path, default=Path(library.MASTER))
@@ -823,20 +1127,31 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--apply",
         action="store_true",
-        help="Write through safe_write. With --clean, writes titles.",
+        help="Write through safe_write. With --clean, writes titles. With --refresh, writes saved mappings.",
+    )
+    parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Preview or apply saved mappings instead of spelling groups.",
     )
     args = parser.parse_args(argv)
+    if args.clean and args.refresh:
+        parser.error("Title cleanup and mapping refresh cannot run together.")
     if args.clean and args.field is not None:
         parser.error("Title cleanup does not take a field.")
-    if not args.clean and args.field is None:
+    if args.refresh and args.field is not None:
+        parser.error("Mapping refresh does not take a field.")
+    if not args.clean and not args.refresh and args.field is None:
         parser.error("Choose genre or artist.")
-    if args.apply and not args.clean and args.value is None:
+    if args.apply and not args.clean and not args.refresh and args.value is None:
         parser.error("Choose a spelling with --value.")
     previous = library.MASTER
     try:
         library.MASTER = str(args.database)
         if args.clean:
             result = apply_titles(args.space) if args.apply else preview_titles(args.database, args.space)
+        elif args.refresh:
+            result = apply_mappings(args.space) if args.apply else preview_mappings(args.database, args.space)
         elif args.value is None:
             result = clusters(args.database, args.space, args.field)
         elif args.apply:

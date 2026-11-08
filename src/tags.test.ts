@@ -70,6 +70,45 @@ const titlePreview: TagClusterPlan = {
   ],
 };
 
+const emptyMapping: TagClusterPlan = {
+  field: "mappings",
+  value: "saved",
+  key: "saved",
+  written: false,
+  changes: [],
+};
+
+const mappingPreview: TagClusterPlan = {
+  field: "mappings",
+  value: "saved",
+  key: "saved",
+  written: false,
+  changes: [
+    { id: 10, from: "Hip-Hop", to: "Hip Hop", field: "genre" },
+    { id: 11, from: "dj shadow", to: "DJ Shadow", field: "artist" },
+  ],
+};
+
+function postAction(body: unknown): string {
+  if (typeof body === "object" && body !== null && "action" in body) {
+    return String((body as { action: unknown }).action);
+  }
+  return "";
+}
+
+function stubPosts(handlers: Record<string, unknown> = {}): void {
+  postJSON.mockImplementation(async (_url: string, body: unknown) => {
+    const action = postAction(body);
+    if (Object.prototype.hasOwnProperty.call(handlers, action)) {
+      const value = handlers[action];
+      if (value instanceof Error) throw value;
+      return value;
+    }
+    if (action === "refresh-preview") return emptyMapping;
+    throw new Error(`unexpected postJSON action ${action}`);
+  });
+}
+
 function reply(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 }
@@ -117,6 +156,18 @@ describe("tag spelling helpers", () => {
     expect(titlesSummary(0)).toBe("Every title in this space already matches the cleanup rules.");
     expect(titlesSummary(2)).toBe("2 titles in this space would change.");
   });
+
+  it("keeps mapping pairs on different fields separate", () => {
+    setLocale("en");
+    expect(groupChanges(mappingPreview.changes)).toEqual([
+      { from: "Hip-Hop", to: "Hip Hop", count: 1, field: "genre" },
+      { from: "dj shadow", to: "DJ Shadow", count: 1, field: "artist" },
+    ]);
+    expect(previewLines(mappingPreview.changes)).toEqual([
+      "Genre: Hip-Hop → Hip Hop (1 track)",
+      "Artist: dj shadow → DJ Shadow (1 track)",
+    ]);
+  });
 });
 
 describe("tags", () => {
@@ -127,6 +178,7 @@ describe("tags", () => {
     state.tagsToken = 0;
     state.writable = true;
     postJSON.mockReset();
+    stubPosts();
     bridge.reloadLibrary = vi.fn(async () => {});
     bridge.lockDown = vi.fn();
     wireTags();
@@ -167,7 +219,7 @@ describe("tags", () => {
   it("previews titles without asking for spelling groups", async () => {
     const fetchMock = vi.fn(async () => reply(groups));
     vi.stubGlobal("fetch", fetchMock);
-    postJSON.mockResolvedValue(titlePreview);
+    stubPosts({ "clean-preview": titlePreview });
     document.getElementById("tags-titles")!.click();
     await vi.waitFor(() => expect(postJSON).toHaveBeenCalled());
     expect(fetchMock).not.toHaveBeenCalled();
@@ -182,7 +234,7 @@ describe("tags", () => {
   });
 
   it("disables title Apply when nothing would change", async () => {
-    postJSON.mockResolvedValue({ ...titlePreview, changes: [] });
+    stubPosts({ "clean-preview": { ...titlePreview, changes: [] } });
     document.getElementById("tags-titles")!.click();
     await vi.waitFor(() => expect(postJSON).toHaveBeenCalled());
     expect(reportText()).toContain("Every title in this space already matches the cleanup rules.");
@@ -190,9 +242,10 @@ describe("tags", () => {
   });
 
   it("applies cleaned titles, reloads the library, and shows the written sentence", async () => {
-    postJSON.mockResolvedValueOnce(titlePreview);
-    postJSON.mockResolvedValueOnce({ ...titlePreview, written: true });
-    postJSON.mockResolvedValueOnce({ ...titlePreview, changes: [], written: false });
+    stubPosts({
+      "clean-preview": titlePreview,
+      "clean-apply": { ...titlePreview, written: true },
+    });
     document.getElementById("tags-titles")!.click();
     await vi.waitFor(() => expect(document.querySelector('[data-tags-action="clean-apply"]')).not.toBeNull());
     document.querySelector<HTMLButtonElement>('[data-tags-action="clean-apply"]')!.click();
@@ -205,12 +258,14 @@ describe("tags", () => {
   });
 
   it("locks the page on a 409 from title apply", async () => {
-    postJSON.mockResolvedValueOnce(titlePreview);
     const locked = Object.assign(new Error("Quit Serato DJ before writing."), {
       status: 409,
       payload: { error: "Quit Serato DJ before writing.", serato: { writable: false } },
     });
-    postJSON.mockRejectedValueOnce(locked);
+    stubPosts({
+      "clean-preview": titlePreview,
+      "clean-apply": locked,
+    });
     document.getElementById("tags-titles")!.click();
     await vi.waitFor(() => expect(document.querySelector('[data-tags-action="clean-apply"]')).not.toBeNull());
     bridge.lockDown = vi.fn(() => {
@@ -258,7 +313,7 @@ describe("tags", () => {
 
   it("reviews a spelling then enables Apply when the radio still matches", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
-    postJSON.mockResolvedValue(preview);
+    stubPosts({ preview });
     await loadTags();
     previewFor("hiphop").click();
     await vi.waitFor(() => expect(postJSON).toHaveBeenCalled());
@@ -275,7 +330,7 @@ describe("tags", () => {
 
   it("disables Apply when the radio no longer matches the preview", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
-    postJSON.mockResolvedValue(preview);
+    stubPosts({ preview });
     await loadTags();
     previewFor("hiphop").click();
     await vi.waitFor(() => expect(applyFor("hiphop").disabled).toBe(false));
@@ -288,7 +343,7 @@ describe("tags", () => {
   it("disables Apply while the library is locked", async () => {
     state.writable = false;
     vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
-    postJSON.mockResolvedValue(preview);
+    stubPosts({ preview });
     await loadTags();
     previewFor("hiphop").click();
     await vi.waitFor(() => expect(postJSON).toHaveBeenCalled());
@@ -298,14 +353,16 @@ describe("tags", () => {
   it("applies the preview, reloads the library, and shows the written sentence", async () => {
     const fetchMock = vi.fn(async () => reply(groups));
     vi.stubGlobal("fetch", fetchMock);
-    postJSON.mockResolvedValueOnce(preview);
-    postJSON.mockResolvedValueOnce({ ...preview, written: true });
+    stubPosts({
+      preview,
+      apply: { ...preview, written: true },
+    });
     await loadTags();
     previewFor("hiphop").click();
     await vi.waitFor(() => expect(applyFor("hiphop").disabled).toBe(false));
     applyFor("hiphop").click();
     await vi.waitFor(() => expect(bridge.reloadLibrary).toHaveBeenCalled());
-    expect(postJSON).toHaveBeenLastCalledWith("/api/tag-clusters", {
+    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
       action: "apply",
       space: "Serato Library",
       field: "genre",
@@ -317,12 +374,14 @@ describe("tags", () => {
 
   it("locks the page on a 409 and disables Apply", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
-    postJSON.mockResolvedValueOnce(preview);
     const locked = Object.assign(new Error("Quit Serato DJ before writing."), {
       status: 409,
       payload: { error: "Quit Serato DJ before writing.", serato: { writable: false } },
     });
-    postJSON.mockRejectedValueOnce(locked);
+    stubPosts({
+      preview,
+      apply: locked,
+    });
     await loadTags();
     previewFor("hiphop").click();
     await vi.waitFor(() => expect(applyFor("hiphop").disabled).toBe(false));
@@ -347,8 +406,98 @@ describe("tags", () => {
     expect(document.getElementById("tags-scope")!.textContent).toBe("Todo el espacio");
   });
 
+  it("asks for saved mappings on genre load and hides the banner when none are pending", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
+    await loadTags();
+    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+      action: "refresh-preview",
+      space: "Serato Library",
+    });
+    expect(reportText()).not.toContain("saved spelling");
+    expect(document.querySelector('[data-tags-action="refresh-apply"]')).toBeNull();
+  });
+
+  it("shows Apply saved mappings when later rows still use a saved spelling", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
+    stubPosts({ "refresh-preview": mappingPreview });
+    await loadTags();
+    expect(reportText()).toContain("2 tracks still use a saved spelling.");
+    expect(reportText()).toContain("Genre: Hip-Hop → Hip Hop (1 track)");
+    expect(reportText()).toContain("Artist: dj shadow → DJ Shadow (1 track)");
+    expect(document.querySelector<HTMLButtonElement>('[data-tags-action="refresh-apply"]')!.disabled).toBe(false);
+  });
+
+  it("skips mapping preview on Titles", async () => {
+    const fetchMock = vi.fn(async () => reply(groups));
+    vi.stubGlobal("fetch", fetchMock);
+    stubPosts({ "clean-preview": titlePreview });
+    document.getElementById("tags-titles")!.click();
+    await vi.waitFor(() => expect(postJSON).toHaveBeenCalled());
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(postJSON).not.toHaveBeenCalledWith("/api/tag-clusters", {
+      action: "refresh-preview",
+      space: "Serato Library",
+    });
+    expect(document.querySelector('[data-tags-action="refresh-apply"]')).toBeNull();
+  });
+
+  it("treats a missing or failed mapping preview as no banner", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
+    postJSON.mockRejectedValue(new Error("boom"));
+    await loadTags();
+    expect(reportText()).toContain("Hip Hop");
+    expect(document.querySelector('[data-tags-action="refresh-apply"]')).toBeNull();
+    stubPosts({ "refresh-preview": { field: "mappings" } });
+    await loadTags();
+    expect(document.querySelector('[data-tags-action="refresh-apply"]')).toBeNull();
+  });
+
+  it("applies saved mappings, reloads the library, and shows the written sentence", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
+    let pending: TagClusterPlan = mappingPreview;
+    postJSON.mockImplementation(async (_url: string, body: unknown) => {
+      const action = postAction(body);
+      if (action === "refresh-preview") return pending;
+      if (action === "refresh-apply") {
+        pending = emptyMapping;
+        return { ...mappingPreview, written: true };
+      }
+      throw new Error(`unexpected postJSON action ${action}`);
+    });
+    await loadTags();
+    document.querySelector<HTMLButtonElement>('[data-tags-action="refresh-apply"]')!.click();
+    await vi.waitFor(() => expect(bridge.reloadLibrary).toHaveBeenCalled());
+    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+      action: "refresh-apply",
+      space: "Serato Library",
+    });
+    expect(document.getElementById("tags-status")!.textContent).toContain("Wrote saved spellings on 2 tracks");
+    expect(document.querySelector('[data-tags-action="refresh-apply"]')).toBeNull();
+  });
+
+  it("locks the page on a 409 from mapping apply", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
+    const locked = Object.assign(new Error("Quit Serato DJ before writing."), {
+      status: 409,
+      payload: { error: "Quit Serato DJ before writing.", serato: { writable: false } },
+    });
+    stubPosts({
+      "refresh-preview": mappingPreview,
+      "refresh-apply": locked,
+    });
+    await loadTags();
+    bridge.lockDown = vi.fn(() => {
+      state.writable = false;
+    });
+    document.querySelector<HTMLButtonElement>('[data-tags-action="refresh-apply"]')!.click();
+    await vi.waitFor(() => expect(bridge.lockDown).toHaveBeenCalled());
+    expect(document.getElementById("tags-status")!.textContent).toContain("Quit Serato DJ before writing.");
+    expect(document.querySelector<HTMLButtonElement>('[data-tags-action="refresh-apply"]')!.disabled).toBe(true);
+  });
+
   it("gives every tags control a tooltip", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
+    stubPosts({ "refresh-preview": mappingPreview });
     await loadTags();
     applyStaticTooltips();
     expect(document.getElementById("tags-genre")!.dataset.tooltipKey).toBe("tooltip.tagsGenre");
@@ -356,6 +505,7 @@ describe("tags", () => {
     expect(document.getElementById("tags-titles")!.dataset.tooltipKey).toBe("tooltip.tagsTitles");
     expect(document.getElementById("tags-refresh")!.dataset.tooltipKey).toBe("tooltip.tagsRefresh");
     expect(document.querySelector<HTMLElement>('[data-view="tags"]')!.dataset.tooltipKey).toBe("tooltip.viewTags");
+    expect(document.querySelector<HTMLElement>('[data-tags-action="refresh-apply"]')!.dataset.tooltipKey).toBe("tooltip.tagsApplyMappings");
     const untipped = [...document.querySelectorAll<HTMLElement>("#tags-panel button, #tags-panel input, #tags-panel summary")].filter(
       (node) => !node.dataset.tooltipKey,
     );

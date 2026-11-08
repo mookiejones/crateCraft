@@ -927,6 +927,7 @@
   "status.checking": "Checking Serato",
   "status.library": "Library",
   "tags.apply": "Apply",
+  "tags.applyMappings": "Apply saved mappings",
   "tags.artist": "Artist",
   "tags.checking": "Reading tag spellings…",
   "tags.checkingTitles": "Reading titles…",
@@ -938,9 +939,21 @@
   "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
   "tags.noChanges": "Every track in this group already uses that spelling.",
   "tags.preview": "Review",
+  "tags.mappingSummary": {
+    "one": "{count} track still uses a saved spelling.",
+    "other": "{count} tracks still use a saved spelling."
+  },
+  "tags.mappingWritten": {
+    "one": "Wrote saved spellings on {count} track.",
+    "other": "Wrote saved spellings on {count} tracks."
+  },
   "tags.previewLine": {
     "one": "{from} → {to} ({count} track)",
     "other": "{from} → {to} ({count} tracks)"
+  },
+  "tags.previewLineField": {
+    "one": "{field}: {from} → {to} ({count} track)",
+    "other": "{field}: {from} → {to} ({count} tracks)"
   },
   "tags.previewLineRemixer": {
     "one": "{from} → {to}, remixer {remixer} ({count} track)",
@@ -1183,6 +1196,7 @@
   "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
   "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
   "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
+  "tooltip.tagsApplyMappings": "Write saved genre and artist spellings on tracks that still use another form. Quit Serato first. Audio files stay as they are.",
   "tooltip.tagsApplyTitles": "Write the cleaned titles. Quit Serato first. Audio files stay as they are.",
   "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
   "tooltip.tagsGenre": "Show genres that are the same words written different ways.",

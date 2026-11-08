@@ -955,6 +955,7 @@ var SeratoWizard = (() => {
     "status.checking": "Checking Serato",
     "status.library": "Library",
     "tags.apply": "Apply",
+    "tags.applyMappings": "Apply saved mappings",
     "tags.artist": "Artist",
     "tags.checking": "Reading tag spellings…",
     "tags.checkingTitles": "Reading titles…",
@@ -966,9 +967,21 @@ var SeratoWizard = (() => {
     "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
     "tags.noChanges": "Every track in this group already uses that spelling.",
     "tags.preview": "Review",
+    "tags.mappingSummary": {
+      one: "{count} track still uses a saved spelling.",
+      other: "{count} tracks still use a saved spelling."
+    },
+    "tags.mappingWritten": {
+      one: "Wrote saved spellings on {count} track.",
+      other: "Wrote saved spellings on {count} tracks."
+    },
     "tags.previewLine": {
       one: "{from} → {to} ({count} track)",
       other: "{from} → {to} ({count} tracks)"
+    },
+    "tags.previewLineField": {
+      one: "{field}: {from} → {to} ({count} track)",
+      other: "{field}: {from} → {to} ({count} tracks)"
     },
     "tags.previewLineRemixer": {
       one: "{from} → {to}, remixer {remixer} ({count} track)",
@@ -1211,6 +1224,7 @@ var SeratoWizard = (() => {
     "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
     "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
     "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
+    "tooltip.tagsApplyMappings": "Write saved genre and artist spellings on tracks that still use another form. Quit Serato first. Audio files stay as they are.",
     "tooltip.tagsApplyTitles": "Write the cleaned titles. Quit Serato first. Audio files stay as they are.",
     "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
     "tooltip.tagsGenre": "Show genres that are the same words written different ways.",
@@ -2276,6 +2290,7 @@ var SeratoWizard = (() => {
     "status.checking": "Comprobando Serato",
     "status.library": "Biblioteca",
     "tags.apply": "Aplicar",
+    "tags.applyMappings": "Aplicar grafías guardadas",
     "tags.artist": "Artista",
     "tags.checking": "Leyendo grafías de etiquetas…",
     "tags.checkingTitles": "Leyendo títulos…",
@@ -2287,9 +2302,21 @@ var SeratoWizard = (() => {
     "tags.intro": "Elige una grafía por grupo. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
     "tags.noChanges": "Todas las pistas de este grupo ya usan esa grafía.",
     "tags.preview": "Revisar",
+    "tags.mappingSummary": {
+      one: "{count} pista aún usa una grafía guardada.",
+      other: "{count} pistas aún usan una grafía guardada."
+    },
+    "tags.mappingWritten": {
+      one: "Se escribió la grafía guardada en {count} pista.",
+      other: "Se escribieron las grafías guardadas en {count} pistas."
+    },
     "tags.previewLine": {
       one: "{from} → {to} ({count} pista)",
       other: "{from} → {to} ({count} pistas)"
+    },
+    "tags.previewLineField": {
+      one: "{field}: {from} → {to} ({count} pista)",
+      other: "{field}: {from} → {to} ({count} pistas)"
     },
     "tags.previewLineRemixer": {
       one: "{from} → {to}, remixer {remixer} ({count} pista)",
@@ -2532,6 +2559,7 @@ var SeratoWizard = (() => {
     "tooltip.space": "Elige Biblioteca, Vídeo, Apple Music o Preparar.",
     "tooltip.splitter": "Arrastra para cambiar el ancho de la lista. Doble clic lo devuelve. Las flechas lo redimensionan.",
     "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Los archivos de audio no cambian.",
+    "tooltip.tagsApplyMappings": "Escribe las grafías de género y artista guardadas en las pistas que aún usan otra forma. Cierra Serato primero. Los archivos de audio no cambian.",
     "tooltip.tagsApplyTitles": "Escribe los títulos limpios. Cierra Serato primero. Los archivos de audio no cambian.",
     "tooltip.tagsArtist": "Muestra nombres de artista que son las mismas palabras escritas de otra forma.",
     "tooltip.tagsGenre": "Muestra géneros que son las mismas palabras escritas de otra forma.",
@@ -3087,6 +3115,7 @@ var SeratoWizard = (() => {
     tagsPreview: spec("tooltip.tagsPreview"),
     tagsApply: spec("tooltip.tagsApply"),
     tagsApplyTitles: spec("tooltip.tagsApplyTitles"),
+    tagsApplyMappings: spec("tooltip.tagsApplyMappings"),
     tagsGroup: spec("tooltip.tagsGroup"),
     tagsSpelling: spec("tooltip.tagsSpelling"),
     gigRefresh: spec("tooltip.gigRefresh"),

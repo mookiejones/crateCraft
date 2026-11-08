@@ -725,6 +725,7 @@ export interface TagClusterChange {
   from: string;
   to: string;
   remixer?: string;
+  field?: string;
 }
 
 export interface TagClusterPlan {
