@@ -23,6 +23,12 @@ spacer.className = "spacer";
 rows.className = "rows";
 spacer.append(rows);
 
+const spacerB = document.createElement("div");
+const rowsB = document.createElement("div");
+spacerB.className = "spacer";
+rowsB.className = "rows";
+spacerB.append(rowsB);
+
 /**
  * Append the scroll spacer to the track list.
  *
@@ -37,6 +43,18 @@ export function mountTrackList(): void {
 }
 
 /**
+ * Append the scroll spacer to the second crate pane.
+ *
+ * Called once when the page starts, and again in a test after the
+ * document body is replaced. Does not fetch.
+ *
+ * @returns {void}
+ */
+export function mountTrackListB(): void {
+  el("list-b").append(spacerB);
+}
+
+/**
  * Paint only the track rows inside the scroll window.
  *
  * Row height is ROW. Six extra rows above and below the window keep a
@@ -46,19 +64,25 @@ export function mountTrackList(): void {
  * @returns {void}
  */
 export function paintRows() {
-  const view = state.view || [];
-  const height = el("list").clientHeight || 600;
+  paintPane(el("list"), spacer, rows, state.view || []);
+  if (state.splitCrates && state.mode === "crates") {
+    paintPane(el("list-b"), spacerB, rowsB, state.viewB || []);
+  }
+}
+
+function paintPane(list: HTMLDivElement, paneSpacer: HTMLDivElement, paneRows: HTMLDivElement, view: Track[]): void {
+  const height = list.clientHeight || 600;
   // Paint six rows past the window so a fast scroll does not flash empty space.
-  const start = Math.max(0, Math.floor(el("list").scrollTop / ROW) - 6);
-  const end = Math.min(view.length, Math.ceil((el("list").scrollTop + height) / ROW) + 6);
-  spacer.style.height = `${view.length * ROW}px`;
-  rows.style.transform = `translateY(${start * ROW}px)`;
-  rows.replaceChildren();
+  const start = Math.max(0, Math.floor(list.scrollTop / ROW) - 6);
+  const end = Math.min(view.length, Math.ceil((list.scrollTop + height) / ROW) + 6);
+  paneSpacer.style.height = `${view.length * ROW}px`;
+  paneRows.style.transform = `translateY(${start * ROW}px)`;
+  paneRows.replaceChildren();
   if (!view.length) {
     const empty = document.createElement("p");
     empty.className = "empty-list";
     empty.textContent = state.mode === "duplicates" && !state.duplicateIds ? t("list.readingDuplicates") : t("list.noMatches");
-    rows.append(empty);
+    paneRows.append(empty);
     return;
   }
   for (let index = start; index < end; index += 1) {
@@ -91,7 +115,7 @@ export function paintRows() {
         event.stopPropagation();
         bridge.selectTrack(track.id);
         playOrToggle(track.id);
-        el("list").focus({ preventScroll: true });
+        list.focus({ preventScroll: true });
       });
       playButton.addEventListener("dblclick", (event) => event.stopPropagation());
       line.append(playButton);
@@ -155,12 +179,12 @@ export function paintRows() {
     button.addEventListener("click", () => {
       if (track.entry) bridge.selectEntry(track.id);
       else bridge.selectTrack(track.id);
-      el("list").focus({ preventScroll: true });
+      list.focus({ preventScroll: true });
     });
     button.addEventListener("dblclick", () => {
       if (!track.entry) play(track.id);
     });
-    rows.append(button);
+    paneRows.append(button);
   }
 }
 
@@ -183,7 +207,8 @@ export function paintRows() {
  * @returns {void}
  */
 export function moveTrackList(delta: number): void {
-  moveSelection(delta);
+  const list = focusedList();
+  moveSelection(delta, viewForList(list), list);
 }
 
 /**
@@ -195,24 +220,33 @@ export function moveTrackList(delta: number): void {
  * @returns {void}
  */
 export function openTrackList(): void {
-  const view = state.view || [];
+  const view = viewForList(focusedList());
   const current = view.find((track) => track.id === state.selectedId) ?? view[0];
   if (!current) return;
   if (current.entry) bridge.selectEntry(current.id);
   else void bridge.selectTrack(current.id);
 }
 
-function moveSelection(delta: number) {
-  const view = state.view || [];
+function focusedList(): HTMLDivElement {
+  if (state.splitCrates && state.focusedPane === "b") return el("list-b");
+  return el("list");
+}
+
+function viewForList(list: HTMLElement): Track[] {
+  if (list.id === "list-b") return state.viewB || [];
+  return state.view || [];
+}
+
+function moveSelection(delta: number, view: Track[], list: HTMLDivElement) {
   const index = view.findIndex((track) => track.id === state.selectedId);
   const next = view[Math.max(0, Math.min(view.length - 1, index + delta))];
   if (!next) return;
   if (next.entry) bridge.selectEntry(next.id);
   else bridge.selectTrack(next.id);
   const rowTop = view.indexOf(next) * ROW;
-  if (rowTop < el("list").scrollTop) el("list").scrollTop = rowTop;
-  if (rowTop + ROW > el("list").scrollTop + el("list").clientHeight) {
-    el("list").scrollTop = rowTop + ROW - el("list").clientHeight;
+  if (rowTop < list.scrollTop) list.scrollTop = rowTop;
+  if (rowTop + ROW > list.scrollTop + list.clientHeight) {
+    list.scrollTop = rowTop + ROW - list.clientHeight;
   }
 }
 
@@ -226,13 +260,13 @@ function moveSelection(delta: number) {
  * @param target Event target.
  * @returns The visible row, or undefined when the target is not a row.
  */
-function focusedTrack(target: EventTarget | null): Track | undefined {
+function focusedTrack(target: EventTarget | null, view: Track[]): Track | undefined {
   if (!(target instanceof Element)) return undefined;
   const row = target.closest(".row");
   if (!row) return undefined;
   const id = Number(row.getAttribute("data-id"));
   if (!Number.isInteger(id)) return undefined;
-  return state.view.find((item) => item.id === id);
+  return view.find((item) => item.id === id);
 }
 
 /**
@@ -243,23 +277,29 @@ function focusedTrack(target: EventTarget | null): Track | undefined {
  *
  * @returns {void}
  */
-export function wireVirtualScroll(): void {
-  el("list").addEventListener("scroll", () => paintRows());
-  el("list").addEventListener("keydown", (event) => {
+function wireListKeys(list: HTMLDivElement): void {
+  list.addEventListener("scroll", () => paintRows());
+  list.addEventListener("keydown", (event) => {
+    const view = viewForList(list);
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      moveSelection(1);
+      moveSelection(1, view, list);
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
-      moveSelection(-1);
+      moveSelection(-1, view, list);
     } else if (event.key === "Enter") {
-      const chosen = focusedTrack(event.target) ?? state.view.find((item) => item.id === state.selectedId);
+      const chosen = focusedTrack(event.target, view) ?? view.find((item) => item.id === state.selectedId);
       if (!chosen || chosen.entry) return;
       event.preventDefault();
       void bridge.selectTrack(chosen.id);
       play(chosen.id);
     }
   });
+}
+
+export function wireVirtualScroll(): void {
+  wireListKeys(el("list"));
+  wireListKeys(el("list-b"));
   let paintedId: number | null = null;
   let paintedPlaying = false;
   subscribe((next) => {

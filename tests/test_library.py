@@ -176,6 +176,74 @@ class LibraryTests(unittest.TestCase):
         self.assertIn("#EXTINF:180,", playlist)
         self.assertEqual(left, 0)
 
+    def test_crate_create_adds_assets_in_one_write(self) -> None:
+        """Create a crate and add the listed tracks in the same write.
+
+        Duplicate ids keep first-seen order. A missing assets list still
+        creates an empty crate. The audio files are not moved.
+
+        Returns:
+            None. The test fails if membership order differs from the request.
+        """
+        with TempLibrary() as temp:
+            created = library.crate_action(
+                {"action": "create", "name": "Warmup", "assets": [2, 1, 2]}
+            )
+            empty = library.crate_action({"action": "create", "name": "Empty"})
+            with open_database(temp.db) as conn:
+                members = [
+                    int(row[0])
+                    for row in conn.execute(
+                        """
+                        SELECT ca.asset_id FROM container_asset ca
+                        JOIN location_container lc ON lc.id = ca.location_container_id
+                        WHERE lc.container_id = ?
+                        ORDER BY ca.list_order
+                        """,
+                        (created["id"],),
+                    )
+                ]
+                empty_count = conn.execute(
+                    """
+                    SELECT COUNT(*) FROM container_asset ca
+                    JOIN location_container lc ON lc.id = ca.location_container_id
+                    WHERE lc.container_id = ?
+                    """,
+                    (empty["id"],),
+                ).fetchone()[0]
+        self.assertEqual(created["added"], 2)
+        self.assertEqual(members, [2, 1])
+        self.assertEqual(empty_count, 0)
+
+    def test_crate_create_refuses_bad_assets_before_insert(self) -> None:
+        """Reject a bad assets list without leaving a crate row.
+
+        A smart crate cannot take members. A track that is not in the space
+        is 404. A non-list, a bool, or a non-integer is 400.
+
+        Returns:
+            None. The test fails if a crate row remains after the refusal.
+        """
+        cases: list[tuple[dict[str, object], int, str]] = [
+            ({"action": "create", "name": "Smart", "smart": True, "assets": [1]}, 400, "That request is not valid."),
+            ({"action": "create", "name": "Ghost", "assets": [99]}, 404, "That track is not in this space."),
+            ({"action": "create", "name": "Bad", "assets": 1}, 400, "That request is not valid."),
+            ({"action": "create", "name": "Bool", "assets": [True]}, 400, "That request is not valid."),
+            ({"action": "create", "name": "Float", "assets": [1.5]}, 400, "That request is not valid."),
+        ]
+        for payload, status, message in cases:
+            with self.subTest(name=payload["name"]):
+                with TempLibrary() as temp:
+                    with self.assertRaises(LibraryError) as caught:
+                        library.crate_action(payload)
+                    with open_database(temp.db) as conn:
+                        left = conn.execute(
+                            "SELECT COUNT(*) FROM container WHERE space_id = 1 AND type != 0"
+                        ).fetchone()[0]
+                self.assertEqual(caught.exception.status, status)
+                self.assertEqual(caught.exception.message, message)
+                self.assertEqual(left, 0)
+
     def test_export_names_a_track_with_no_path(self) -> None:
         """Comment a track that has no portable id and keep it out of the playlist.
 

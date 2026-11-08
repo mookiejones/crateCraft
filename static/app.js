@@ -43,6 +43,7 @@
       one: "{count} play",
       other: "{count} plays"
     },
+    "count.split": "{a} · {b}",
     "count.tracks": {
       one: "{count} track",
       other: "{count} tracks"
@@ -60,9 +61,18 @@
     "crates.heading": "Crates",
     "crates.new": "New",
     "crates.newPrompt": "New crate name",
+    "crates.paneA": "Left crate",
+    "crates.paneB": "Right crate",
     "crates.rename": "Rename",
     "crates.renamePrompt": "Rename crate",
     "crates.renamed": "Crate renamed.",
+    "crates.saveView": "Save view",
+    "crates.saveViewCreated": {
+      one: "Saved {count} track as a crate.",
+      other: "Saved {count} tracks as a crate."
+    },
+    "crates.saveViewEmpty": "This list has no tracks to save.",
+    "crates.saveViewPrompt": "New crate name",
     "crates.selectedCrate": "Selected crate",
     "crates.smartBadge": "smart",
     "crates.smartList": "Smart crates: {names}",
@@ -70,6 +80,7 @@
     "crates.sort.added": "Added",
     "crates.sort.name": "Name",
     "crates.sort.order": "Order",
+    "crates.split": "Split",
     "cratesReplace.addToCrates": "Add the replacement to {crates}.",
     "cratesReplace.alreadyInCrates": "The replacement is already in those crates. It stays where it is.",
     "cratesReplace.confirm": "Update crates",
@@ -988,7 +999,9 @@
     "tooltip.folderSyncSubcrates": "Put files in this folder into the crate, and make a subcrate for each subfolder.",
     "tooltip.crateRefresh": "Pick the tracks for this preset crate again from its preset.",
     "tooltip.crateRename": "Rename the selected crate.",
+    "tooltip.crateSaveView": "Save the tracks in this list as a new crate. Serato DJ Pro must be quit.",
     "tooltip.crateSearch": "Find a crate by name. Esc clears the search.",
+    "tooltip.crateSplit": "Show two crates at once. Alt-click or Shift-click fills the other list.",
     "tooltip.cratesReplaceCancel": "Close without changing crates.",
     "tooltip.cratesReplaceConfirm": "Put the replacement in those crates.",
     "tooltip.cratesReplaceKeep": "Keep both tracks in those crates. The replacement sits at the same position.",
@@ -1329,6 +1342,7 @@
       one: "{count} reproducción",
       other: "{count} reproducciones"
     },
+    "count.split": "{a} · {b}",
     "count.tracks": {
       one: "{count} pista",
       other: "{count} pistas"
@@ -1346,9 +1360,18 @@
     "crates.heading": "Cajas",
     "crates.new": "Nueva",
     "crates.newPrompt": "Nombre de la nueva caja",
+    "crates.paneA": "Caja izquierda",
+    "crates.paneB": "Caja derecha",
     "crates.rename": "Renombrar",
     "crates.renamePrompt": "Renombrar caja",
     "crates.renamed": "Caja renombrada.",
+    "crates.saveView": "Guardar vista",
+    "crates.saveViewCreated": {
+      one: "Se guardó {count} pista como caja.",
+      other: "Se guardaron {count} pistas como caja."
+    },
+    "crates.saveViewEmpty": "Esta lista no tiene pistas para guardar.",
+    "crates.saveViewPrompt": "Nombre de la caja",
     "crates.selectedCrate": "Caja seleccionada",
     "crates.smartBadge": "inteligente",
     "crates.smartList": "Cajas inteligentes: {names}",
@@ -1356,6 +1379,7 @@
     "crates.sort.added": "Añadidas",
     "crates.sort.name": "Nombre",
     "crates.sort.order": "Orden",
+    "crates.split": "Dividir",
     "cratesReplace.addToCrates": "Añadir la pista de reemplazo a {crates}.",
     "cratesReplace.alreadyInCrates": "La pista de reemplazo ya está en esas cajas. Se queda donde está.",
     "cratesReplace.confirm": "Actualizar cajas",
@@ -2274,7 +2298,9 @@
     "tooltip.folderSyncSubcrates": "Pone en la caja los archivos de esta carpeta y crea una subcaja por cada subcarpeta.",
     "tooltip.crateRefresh": "Vuelve a elegir las pistas de esta caja según su preajuste.",
     "tooltip.crateRename": "Cambia el nombre de la caja seleccionada.",
+    "tooltip.crateSaveView": "Guarda las pistas de esta lista como una caja nueva. Hay que salir de Serato DJ Pro.",
     "tooltip.crateSearch": "Busca una caja por nombre. Esc borra la búsqueda.",
+    "tooltip.crateSplit": "Muestra dos cajas a la vez. Alt-clic o Mayús-clic llena la otra lista.",
     "tooltip.cratesReplaceCancel": "Cierra sin cambiar las cajas.",
     "tooltip.cratesReplaceConfirm": "Pon la pista de reemplazo en esas cajas.",
     "tooltip.cratesReplaceKeep": "Deja las dos pistas en esas cajas. La de reemplazo queda en la misma posición.",
@@ -2991,6 +3017,9 @@
     presets: {},
     rootId: null,
     activeCrate: "all",
+    secondCrate: "all",
+    splitCrates: false,
+    focusedPane: "a",
     query: "",
     crateQuery: "",
     crateSort: "order",
@@ -3048,8 +3077,66 @@
     gigToken: 0,
     scanToken: 0,
     tagsToken: 0,
-    view: []
+    view: [],
+    viewB: []
   };
+
+  // src/dual-crate-view.ts
+  function clickPane(split, focused, altKey) {
+    if (!split) return "a";
+    if (altKey) return focused === "a" ? "b" : "a";
+    return focused;
+  }
+  function paneCrates(active2, second, split) {
+    return { a: active2, b: split ? second : null };
+  }
+  function railMark(id, a, b) {
+    const inA = id === a;
+    const inB = b != null && id === b;
+    if (inA && inB) return "both";
+    if (inA) return "a";
+    if (inB) return "b";
+    return null;
+  }
+  function saveViewIds(view) {
+    const seen = /* @__PURE__ */ new Set();
+    const ids = [];
+    for (const track of view) {
+      if (track.entry) continue;
+      if (!Number.isInteger(track.id) || track.id < 0) continue;
+      if (seen.has(track.id)) continue;
+      seen.add(track.id);
+      ids.push(track.id);
+    }
+    return ids;
+  }
+  function focusedView() {
+    if (state.splitCrates && state.focusedPane === "b") return state.viewB;
+    return state.view;
+  }
+  function paintDualChrome() {
+    const cratesMode = state.mode === "crates";
+    const split = state.splitCrates && cratesMode;
+    el("crate-panes").classList.toggle("split", split);
+    el("crate-pane-b").hidden = !split;
+    el("crate-pane-a-label").hidden = !split;
+    const toggle = el("crate-split");
+    toggle.hidden = !cratesMode;
+    toggle.setAttribute("aria-pressed", String(split));
+    const save3 = el("crate-save-view");
+    save3.hidden = !cratesMode;
+    save3.disabled = !state.writable;
+    el("crate-pane-a").dataset.focused = String(!split || state.focusedPane === "a");
+    el("crate-pane-b").dataset.focused = String(split && state.focusedPane === "b");
+    const panes = paneCrates(state.activeCrate, state.secondCrate, split);
+    for (const button2 of el("crate-list").querySelectorAll(".crate")) {
+      const raw = button2.dataset.id;
+      const id = raw === "all" ? "all" : Number(raw);
+      const mark = Number.isFinite(id) || id === "all" ? railMark(id, panes.a, panes.b) : null;
+      if (mark) button2.dataset.pane = mark;
+      else delete button2.dataset.pane;
+    }
+  }
 
   // src/format.ts
   function lengthLabel(ms) {
@@ -3136,6 +3223,8 @@
     relinkPick: spec("tooltip.relinkPick"),
     crateNew: spec("tooltip.crateNew"),
     crateRename: spec("tooltip.crateRename"),
+    crateSplit: spec("tooltip.crateSplit"),
+    crateSaveView: spec("tooltip.crateSaveView"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),
@@ -3371,6 +3460,8 @@
       "relink-confirm": tips.relinkConfirm,
       "relink-cancel": tips.relinkCancel,
       "crate-new": tips.crateNew,
+      "crate-split": tips.crateSplit,
+      "crate-save-view": tips.crateSaveView,
       "crate-rename": tips.crateRename,
       "crate-color": tips.crateColor,
       "crate-delete": tips.crateDelete,
@@ -3493,6 +3584,7 @@
       "wizard-secondary": tips.wizardSecondary,
       "wizard-primary": spec("tooltip.wizard.getStarted"),
       list: tips.trackList,
+      "list-b": tips.trackList,
       "files-list": tips.filesList,
       "snapshots-list": tips.snapshotsList,
       "track-splitter": tips.splitter
@@ -6879,7 +6971,13 @@
     return row.id;
   }
   function playableRows() {
-    return state.view.filter((row) => !row.entry && Number.isInteger(row.id) && row.id >= 0);
+    let source = state.view;
+    if (trackId !== null && state.splitCrates && state.viewB.some((row) => row.id === trackId && !row.entry)) {
+      source = state.viewB;
+    } else if (state.splitCrates && state.focusedPane === "b") {
+      source = state.viewB;
+    }
+    return source.filter((row) => !row.entry && Number.isInteger(row.id) && row.id >= 0);
   }
   function anchorIndex(rows2) {
     if (trackId !== null) {
@@ -7154,22 +7252,35 @@
   spacer.className = "spacer";
   rows.className = "rows";
   spacer.append(rows);
+  var spacerB = document.createElement("div");
+  var rowsB = document.createElement("div");
+  spacerB.className = "spacer";
+  rowsB.className = "rows";
+  spacerB.append(rowsB);
   function mountTrackList() {
     el("list").append(spacer);
   }
+  function mountTrackListB() {
+    el("list-b").append(spacerB);
+  }
   function paintRows() {
-    const view = state.view || [];
-    const height = el("list").clientHeight || 600;
-    const start = Math.max(0, Math.floor(el("list").scrollTop / ROW) - 6);
-    const end = Math.min(view.length, Math.ceil((el("list").scrollTop + height) / ROW) + 6);
-    spacer.style.height = `${view.length * ROW}px`;
-    rows.style.transform = `translateY(${start * ROW}px)`;
-    rows.replaceChildren();
+    paintPane(el("list"), spacer, rows, state.view || []);
+    if (state.splitCrates && state.mode === "crates") {
+      paintPane(el("list-b"), spacerB, rowsB, state.viewB || []);
+    }
+  }
+  function paintPane(list, paneSpacer, paneRows, view) {
+    const height = list.clientHeight || 600;
+    const start = Math.max(0, Math.floor(list.scrollTop / ROW) - 6);
+    const end = Math.min(view.length, Math.ceil((list.scrollTop + height) / ROW) + 6);
+    paneSpacer.style.height = `${view.length * ROW}px`;
+    paneRows.style.transform = `translateY(${start * ROW}px)`;
+    paneRows.replaceChildren();
     if (!view.length) {
       const empty = document.createElement("p");
       empty.className = "empty-list";
       empty.textContent = state.mode === "duplicates" && !state.duplicateIds ? t("list.readingDuplicates") : t("list.noMatches");
-      rows.append(empty);
+      paneRows.append(empty);
       return;
     }
     for (let index = start; index < end; index += 1) {
@@ -7201,7 +7312,7 @@
           event.stopPropagation();
           bridge.selectTrack(track.id);
           playOrToggle(track.id);
-          el("list").focus({ preventScroll: true });
+          list.focus({ preventScroll: true });
         });
         playButton.addEventListener("dblclick", (event) => event.stopPropagation());
         line.append(playButton);
@@ -7262,62 +7373,75 @@
       button2.addEventListener("click", () => {
         if (track.entry) bridge.selectEntry(track.id);
         else bridge.selectTrack(track.id);
-        el("list").focus({ preventScroll: true });
+        list.focus({ preventScroll: true });
       });
       button2.addEventListener("dblclick", () => {
         if (!track.entry) play(track.id);
       });
-      rows.append(button2);
+      paneRows.append(button2);
     }
   }
   function moveTrackList(delta) {
-    moveSelection(delta);
+    const list = focusedList();
+    moveSelection(delta, viewForList(list), list);
   }
   function openTrackList() {
-    const view = state.view || [];
+    const view = viewForList(focusedList());
     const current2 = view.find((track) => track.id === state.selectedId) ?? view[0];
     if (!current2) return;
     if (current2.entry) bridge.selectEntry(current2.id);
     else void bridge.selectTrack(current2.id);
   }
-  function moveSelection(delta) {
-    const view = state.view || [];
+  function focusedList() {
+    if (state.splitCrates && state.focusedPane === "b") return el("list-b");
+    return el("list");
+  }
+  function viewForList(list) {
+    if (list.id === "list-b") return state.viewB || [];
+    return state.view || [];
+  }
+  function moveSelection(delta, view, list) {
     const index = view.findIndex((track) => track.id === state.selectedId);
     const next2 = view[Math.max(0, Math.min(view.length - 1, index + delta))];
     if (!next2) return;
     if (next2.entry) bridge.selectEntry(next2.id);
     else bridge.selectTrack(next2.id);
     const rowTop = view.indexOf(next2) * ROW;
-    if (rowTop < el("list").scrollTop) el("list").scrollTop = rowTop;
-    if (rowTop + ROW > el("list").scrollTop + el("list").clientHeight) {
-      el("list").scrollTop = rowTop + ROW - el("list").clientHeight;
+    if (rowTop < list.scrollTop) list.scrollTop = rowTop;
+    if (rowTop + ROW > list.scrollTop + list.clientHeight) {
+      list.scrollTop = rowTop + ROW - list.clientHeight;
     }
   }
-  function focusedTrack(target) {
+  function focusedTrack(target, view) {
     if (!(target instanceof Element)) return void 0;
     const row = target.closest(".row");
     if (!row) return void 0;
     const id = Number(row.getAttribute("data-id"));
     if (!Number.isInteger(id)) return void 0;
-    return state.view.find((item3) => item3.id === id);
+    return view.find((item3) => item3.id === id);
   }
-  function wireVirtualScroll() {
-    el("list").addEventListener("scroll", () => paintRows());
-    el("list").addEventListener("keydown", (event) => {
+  function wireListKeys(list) {
+    list.addEventListener("scroll", () => paintRows());
+    list.addEventListener("keydown", (event) => {
+      const view = viewForList(list);
       if (event.key === "ArrowDown") {
         event.preventDefault();
-        moveSelection(1);
+        moveSelection(1, view, list);
       } else if (event.key === "ArrowUp") {
         event.preventDefault();
-        moveSelection(-1);
+        moveSelection(-1, view, list);
       } else if (event.key === "Enter") {
-        const chosen = focusedTrack(event.target) ?? state.view.find((item3) => item3.id === state.selectedId);
+        const chosen = focusedTrack(event.target, view) ?? view.find((item3) => item3.id === state.selectedId);
         if (!chosen || chosen.entry) return;
         event.preventDefault();
         void bridge.selectTrack(chosen.id);
         play(chosen.id);
       }
     });
+  }
+  function wireVirtualScroll() {
+    wireListKeys(el("list"));
+    wireListKeys(el("list-b"));
     let paintedId = null;
     let paintedPlaying = false;
     subscribe((next2) => {
@@ -7433,6 +7557,11 @@
     }
     return null;
   }
+  function tracksForCrate(crate) {
+    if (crate === "all") return state.tracks;
+    const ids = state.crateTracks.get(crate);
+    return ids ? state.tracks.filter((track) => ids.has(track.id)) : [];
+  }
   function modeTracks() {
     let tracks = state.tracks;
     if (state.mode === "missing") tracks = tracks.filter((track) => track.missing);
@@ -7441,8 +7570,7 @@
       const ids = state.duplicateIds;
       tracks = ids ? tracks.filter((track) => ids.has(track.id)) : [];
     } else if (state.mode === "crates" && state.activeCrate !== "all") {
-      const ids = state.crateTracks.get(state.activeCrate);
-      tracks = ids ? tracks.filter((track) => ids.has(track.id)) : [];
+      tracks = tracksForCrate(state.activeCrate);
     }
     return tracks;
   }
@@ -7475,6 +7603,13 @@
     const result = modeTracks().filter((track) => matchesQuery(track, terms));
     result.sort(compare);
     state.view = result;
+    if (state.mode === "crates" && state.splitCrates) {
+      const viewB = tracksForCrate(state.secondCrate).filter((track) => matchesQuery(track, terms));
+      viewB.sort(compare);
+      state.viewB = viewB;
+    } else {
+      state.viewB = [];
+    }
     return result;
   }
   function crateRow(crate) {
@@ -7503,7 +7638,9 @@
     if (crate.parent != null) button2.dataset.parent = String(crate.parent);
     button2.setAttribute("role", "treeitem");
     button2.setAttribute("aria-level", String(crate.depth + 1));
-    button2.setAttribute("aria-selected", String(state.activeCrate === crate.id));
+    const split = state.splitCrates && state.mode === "crates";
+    const panes = paneCrates(state.activeCrate, state.secondCrate, split);
+    button2.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
     if (crate.childCount) {
       button2.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
     }
@@ -7528,7 +7665,7 @@
     meta.className = "meta";
     meta.textContent = formatNumber(crate.count);
     button2.append(meta);
-    button2.addEventListener("click", () => selectCrate(crate.id));
+    button2.addEventListener("click", (event) => selectCrate(crate.id, event));
     row.append(button2);
     return row;
   }
@@ -7739,24 +7876,36 @@
     renderShell();
     if (state.mode === "files") {
       renderFiles();
+      paintDualChrome();
       return;
     }
     if (state.mode === "gig") {
       renderCrates();
+      paintDualChrome();
       return;
     }
     if (state.mode === "scan") {
       renderCrates();
+      paintDualChrome();
       return;
     }
     if (state.mode === "tags") {
+      paintDualChrome();
       return;
     }
     renderColumns();
     const view = buildView();
-    el("count").textContent = t(state.mode === "history" ? "count.plays" : "count.tracks", { count: view.length });
+    if (state.mode === "crates" && state.splitCrates) {
+      el("count").textContent = t("count.split", {
+        a: t("count.tracks", { count: view.length }),
+        b: t("count.tracks", { count: state.viewB.length })
+      });
+    } else {
+      el("count").textContent = t(state.mode === "history" ? "count.plays" : "count.tracks", { count: view.length });
+    }
     if (state.mode === "crates") renderCrates();
     else document.querySelector(".rules")?.remove();
+    paintDualChrome();
     paintRows();
     if (!view.some((track) => track.id === state.selectedId)) {
       if (!view.length) {
@@ -7787,10 +7936,15 @@
       else setNotice(failureOf(error2).message);
     });
   }
-  function selectCrate(id) {
-    state.activeCrate = id;
+  function selectCrate(id, event) {
+    const alt = Boolean(event?.altKey || event?.shiftKey);
+    const pane = clickPane(state.splitCrates && state.mode === "crates", state.focusedPane, alt);
+    if (pane === "b") state.secondCrate = id;
+    else state.activeCrate = id;
+    if (!alt && state.splitCrates && state.mode === "crates") state.focusedPane = pane;
     if (id !== "all") expandAncestors(id);
-    el("list").scrollTop = 0;
+    const list = pane === "b" ? el("list-b") : el("list");
+    list.scrollTop = 0;
     renderList();
     if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
     if (state.mode === "scan") loadScan().catch(showScanFailure);
@@ -12405,6 +12559,63 @@
     host.seratoDesktop = { run: runDesktopAction };
   }
 
+  // src/dual-crate.ts
+  var saving = false;
+  function toggleSplit() {
+    state.splitCrates = !state.splitCrates;
+    if (state.splitCrates) {
+      state.secondCrate = "all";
+      state.focusedPane = "a";
+    }
+    renderList();
+  }
+  async function saveFocusedView() {
+    if (saving || !state.writable) return;
+    const assets = saveViewIds(focusedView());
+    if (!assets.length) {
+      setNotice(t("crates.saveViewEmpty"));
+      return;
+    }
+    const name = prompt(t("crates.saveViewPrompt"));
+    if (!name || !name.trim()) return;
+    const source = state.splitCrates && state.focusedPane === "b" ? state.secondCrate : state.activeCrate;
+    const parent = source === "all" ? state.rootId : source;
+    saving = true;
+    try {
+      const result = await postJSON("/api/crate", {
+        action: "create",
+        name: name.trim(),
+        parent,
+        assets,
+        space: state.space
+      });
+      setNotice(result.warning || t("crates.saveViewCreated", { count: Number(result.added) || assets.length }));
+      await loadLibrary();
+      if (typeof result.id === "number") selectCrate(result.id);
+    } catch (error2) {
+      if (failureOf(error2).status === 409) lockDown(error2);
+      else setNotice(failureOf(error2).message);
+    } finally {
+      saving = false;
+    }
+  }
+  function wireDualCrates() {
+    el("crate-split").addEventListener("click", () => toggleSplit());
+    el("crate-save-view").addEventListener("click", () => {
+      saveFocusedView().catch((error2) => setNotice(failureOf(error2).message));
+    });
+    el("crate-pane-a").addEventListener("focusin", () => {
+      if (!state.splitCrates || state.focusedPane === "a") return;
+      state.focusedPane = "a";
+      paintDualChrome();
+    });
+    el("crate-pane-b").addEventListener("focusin", () => {
+      if (!state.splitCrates || state.focusedPane === "b") return;
+      state.focusedPane = "b";
+      paintDualChrome();
+    });
+  }
+
   // src/app.ts
   function wireSnapshots() {
     el("snapshots-refresh").addEventListener("click", () => {
@@ -12435,6 +12646,8 @@
   installTooltips();
   applyStaticTooltips();
   mountTrackList();
+  mountTrackListB();
+  wireDualCrates();
   mountPlayer();
   registerPlayerControls(playerControls);
   wireLibrary();

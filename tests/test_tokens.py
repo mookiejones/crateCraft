@@ -470,7 +470,11 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".crate .smart", ("--color-bg", "--color-panel"), 12, 400),
     (".search input::placeholder", ("--color-card",), 15, 400),
     (".count", ("--color-card",), 15, 400),
+    (".pane-label", ("--color-card",), 11, 400),
+    ('.crate-pane[data-focused="true"] .pane-label', ("--color-card",), 11, 400),
     ("#reload", ("--color-card",), 15, 400),
+    ("#crate-split", ("--color-card",), 15, 400),
+    ("#crate-save-view", ("--color-card",), 15, 400),
     ("#export-m3u", ("--color-card",), 15, 400),
     ("#export-rekordbox", ("--color-card",), 15, 400),
     ("#import-m3u", ("--color-card",), 15, 400),
@@ -581,6 +585,7 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 # --color-border on --color-card:
 #   .detail border-left, and border-top in the narrow layout
 #   .columns border-bottom
+#   .crate-panes.split #crate-pane-a border-right
 #   .field border-top
 #   .marker and .copy-row border-top
 #   .related-row border-top
@@ -594,6 +599,7 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 _DECORATIVE = {
     ".detail",
     ".columns",
+    ".crate-panes.split #crate-pane-a",
     ".field",
     ".marker",
     ".copy-row",

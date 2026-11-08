@@ -2886,6 +2886,38 @@ def _tables(conn: sqlite3.Connection) -> set[str]:
     return {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
 
 
+def _create_asset_ids(payload: Mapping[str, object]) -> list[int]:
+    """Parse optional create assets as unique integer ids in request order.
+
+    A missing ``assets`` key is an empty list. bool is rejected before
+    ``_as_int``, which would treat ``True`` as 1.
+
+    Args:
+        payload: The crate_action JSON.
+
+    Returns:
+        Unique asset ids in first-seen order.
+
+    Raises:
+        LibraryError: If assets is present and is not a list of integers.
+    """
+    if "assets" not in payload:
+        return []
+    raw = payload["assets"]
+    if not isinstance(raw, list):
+        raise LibraryError("That request is not valid.")
+    ids: list[int] = []
+    seen: set[int] = set()
+    for item in raw:
+        if isinstance(item, bool) or not isinstance(item, int):
+            raise LibraryError("That request is not valid.")
+        if item in seen:
+            continue
+        seen.add(item)
+        ids.append(item)
+    return ids
+
+
 def _create_crate(conn: sqlite3.Connection, space: str, parent_id: object, name: str, smart: bool, rules: object) -> dict[str, object]:
     """Insert a crate and mirror it to the main drive database.
 
@@ -3961,13 +3993,17 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
     Args:
         payload: JSON object with action and the fields that action requires.
             Actions are create, rename, delete, color, expanded, rules, add,
-            remove, prepare, and remove_library.
+            remove, prepare, and remove_library. Create may include assets,
+            a list of unique integer track ids added in request order.
 
     Returns:
-        The action result dict.
+        The action result dict. Create includes added, the number of tracks
+        stored on the new crate.
 
     Raises:
         LibraryError: If the action is unknown or its fields are invalid.
+            A smart crate cannot take members. A track not in the space is
+            404. A non-list, a bool, or a non-integer assets value is 400.
         SeratoOpen: If Serato still has the library open.
         KeyError: If a required id is missing.
     """
@@ -3991,14 +4027,24 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
             KeyError: If a required id is missing.
         """
         if action == "create":
+            assets = _create_asset_ids(payload)
+            smart = bool(payload.get("smart"))
+            if smart and assets:
+                raise LibraryError("That request is not valid.")
+            for asset_id in assets:
+                _space_asset(conn, asset_id, space, create=False)
             result = _create_crate(
                 conn,
                 space,
                 payload.get("parent"),
                 cast(str, payload.get("name") or ""),
-                bool(payload.get("smart")),
+                smart,
                 payload.get("rules"),
             )
+            crate_id = int(result["id"])
+            for asset_id in assets:
+                _membership(conn, crate_id, asset_id, space, True)
+            result["added"] = len(assets)
         elif action == "rename":
             result = _rename_crate(conn, space, _as_int(payload["id"]), cast(str, payload.get("name") or ""))
         elif action == "delete":

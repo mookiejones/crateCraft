@@ -137,7 +137,9 @@ A write to a track or crate updates `master.sqlite`, then mirrors the change int
 
 `save_track` accepts `name`, `artist`, `album`, `genre`, `year`, `composer`, `remixer`, `label`, `grouping`, `comments`, `key`, `emoji`, `bpm`, `color`, `rating`, `is_beatgrid_locked`, and `portable_id`. A new `portable_id` also sets `file_name`, clears `is_missing`, and records `file_size`. If that file's size cannot be read, the save is refused. Every save sets `time_modified`.
 
-`crate_action` accepts `create`, `rename`, `delete`, `color`, `expanded`, `rules`, `add`, `remove`, `prepare`, and `remove_library`. Delete removes the crate and its descendants. `remove_library` removes the track from the space and its crates. It does not delete the audio file. `prepare` adds or removes the track in the Prepare space.
+`crate_action` accepts `create`, `rename`, `delete`, `color`, `expanded`, `rules`, `add`, `remove`, `prepare`, and `remove_library`. Create may include `assets`, a list of unique integer track ids added in request order in the same write. A missing list creates an empty crate. A smart crate cannot take members. A track not in the space is 404. A non-list, a bool, or a non-integer is 400. The result includes `added`. Delete removes the crate and its descendants. `remove_library` removes the track from the space and its crates. It does not delete the audio file. `prepare` adds or removes the track in the Prepare space.
+
+The page dual panes are `src/dual-crate.ts` and `src/dual-crate-view.ts`. **Split** shows two crate lists that share search and sort. Alt-click or Shift-click fills the other pane. **Save view** posts create with `assets` from the focused list. Serato must be quit for that write.
 
 `history_sessions` and `history_entries` read `history_session` and `history_entry`. `duplicate_groups` groups tracks in one space by title, artist, and length in whole seconds. Rows with an empty title, an empty artist, or no length are skipped. Asset ids in a group are sorted.
 

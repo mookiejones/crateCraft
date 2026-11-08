@@ -430,6 +430,8 @@ body.is-resizing {
 }
 
 #reload,
+#crate-split,
+#crate-save-view,
 #export-m3u,
 #export-rekordbox,
 #import-m3u,
@@ -533,6 +535,36 @@ button:disabled { cursor: default; }
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.crate-panes {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.crate-pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.crate-panes.split #crate-pane-a {
+  border-right: 1px solid var(--rule);
+}
+
+.pane-label {
+  margin: 0;
+  padding: var(--space-1) var(--space-4);
+  color: var(--quiet);
+  font-size: var(--font-caption);
+}
+
+.crate-pane[data-focused="true"] .pane-label {
+  color: var(--ink);
 }
 
 .list {
