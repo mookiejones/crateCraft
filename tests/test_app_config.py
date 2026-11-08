@@ -63,7 +63,7 @@ class SettingsTests(unittest.TestCase):
         self.assertIsNone(settings.install_id)
         self.assertFalse(settings.rekordbox.hot_loops)
         self.assertTrue(settings.rekordbox.memory_cues)
-        self.assertEqual(settings.rekordbox.key_notation, "asis")
+        self.assertEqual(settings.rekordbox.key_notation, "camelot")
         self.assertFalse(self.config.joinpath(app_config.SETTINGS_NAME).exists())
 
     def test_false_is_kept(self) -> None:
@@ -97,7 +97,7 @@ class SettingsTests(unittest.TestCase):
         )
         self.assertEqual(
             payload["rekordbox"],
-            {"hot_loops": False, "memory_cues": True, "key_notation": "asis"},
+            {"hot_loops": False, "memory_cues": True, "key_notation": "camelot"},
         )
 
     def test_true_is_kept(self) -> None:
@@ -904,7 +904,7 @@ class SettingsIntegrityTests(unittest.TestCase):
         temp = path.with_suffix(".json.tmp")
         self.assertIn("classical", temp.read_text(encoding="utf-8"))
         loaded = app_config.load_settings()
-        self.assertEqual(loaded.rekordbox.key_notation, "asis")
+        self.assertEqual(loaded.rekordbox.key_notation, "camelot")
         self.assertIs(loaded.telemetry_consent, False)
 
 

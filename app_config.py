@@ -125,9 +125,9 @@ def default_rekordbox() -> RekordboxSettings:
     """Return the export bar the page shows before a choice is saved.
 
     Returns:
-        Hot loops off, memory cues on, and the key left as stored.
+        Hot loops off, memory cues on, and Camelot key notation.
     """
-    return RekordboxSettings(hot_loops=False, memory_cues=True, key_notation="asis")
+    return RekordboxSettings(hot_loops=False, memory_cues=True, key_notation="camelot")
 
 
 @dataclass(frozen=True)

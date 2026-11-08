@@ -1,6 +1,6 @@
-# Files
+# Organize files
 
-**Files** browses folders on this computer. Rename, move, replace, and delete update Serato's library so crates, history, and Prepare stay on the track. Cue points stay inside the audio file.
+**Organize files** browses folders on this computer. Rename, move, replace, and delete update Serato's library so crates, history, and Prepare stay on the track. Cue points stay inside the audio file.
 
 The note under the view buttons says **Files on disk. Cue points stay in the audio file. Crates follow the path.**
 
@@ -15,7 +15,7 @@ Quit Serato DJ Pro before any of these actions. The buttons stay off while Serat
 
 ## Browse
 
-1. Click **Files**.
+1. Click **Organize files**.
 2. The first screen lists the music folders Serato uses. The name is the folder or volume, such as **Music**. When two folders share that name, the parent is added, such as **Music (GIGDRIVE)**. The path sits underneath the name. A drive is not listed again when one of those folders is already on it. A folder whose drive is unmounted is greyed out, says **Drive not connected**, and does not open. **Refresh** reads the drives again after you plug one in. **Browse elsewhere…** still cannot open the computer, `/Volumes`, or a bare drive.
 3. Click a name to open it. The path line starts at that name. **Up** does not go above it.
 4. Click a folder name to open it. The button reads **Open** plus the folder name.
@@ -32,9 +32,9 @@ The line at the bottom of the rail counts the files in the folder, or the music 
 
 ## Check a portable drive
 
-**Check drive** is on the first Files screen, beside a removable folder that has a Serato library. **Music** on the internal disk does not get the button. A folder you have already opened does not get it either. The check reads the drive that folder sits on, including the `_Serato_` folder at the top of the drive. It does not write. A drive that is not plugged in is reported missing. It is not deleted.
+**Check drive** is on the first Organize files screen, beside a removable folder that has a Serato library. **Music** on the internal disk does not get the button. A folder you have already opened does not get it either. The check reads the drive that folder sits on, including the `_Serato_` folder at the top of the drive. It does not write. A drive that is not plugged in is reported missing. It is not deleted.
 
-1. Click **Files**.
+1. Click **Organize files**.
 2. On a row such as **Music (GIGDRIVE)**, click **Check drive**.
 3. The dialog title is **Portable drive**. The note says **This only reads the drive. Nothing is copied or deleted.** While the check runs, the line says **Checking this drive.**
 4. Read the result. **Close** leaves the dialog. Nothing was copied or deleted.
@@ -93,7 +93,7 @@ A missing file cannot be renamed on its own.
 
 Rename many files to **Artist - Title** plus the extension, in the same folder. Library tags are used first. File tags fill a blank artist or title. Crates, history, and Prepare follow the new path. Cue points stay inside the audio file.
 
-From **Files**:
+From **Organize files**:
 
 1. Tick one or more files.
 2. Click **Rename from tags**.
@@ -143,7 +143,7 @@ The home folder, a whole drive, the library folder, and a folder of backups cann
 Replace points one library track at a different audio file. Crates, history, and the other library fields stay on that track. The old file stays on disk.
 
 1. Tick one file that is **In library**.
-2. Click **Replace file**.
+2. Click **Upgrade file (keep cues)**.
 3. In **New file**, type the full path of the replacement.
 4. Click **Review**.
 5. Read the plan and the cue note.

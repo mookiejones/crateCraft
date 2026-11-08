@@ -21,7 +21,7 @@ The gig check is in the app. Open **Before a gig**, or run `python3 gig_check.py
 |---|---|
 | Crates and subcrates, on every drive | The audio stream. It is hash-checked before and after. If it would change, the file is left as it was. |
 | Serato's library database | Tracks on drives that aren't plugged in (marked unavailable, never deleted) |
-| Serato tags in each audio file: cue points, the beatgrid, and autotags. Tags the snapshot lacked are removed. | A move, rename, or trash you make in **Files**. That view can move, rename, and trash audio files. |
+| Serato tags in each audio file: cue points, the beatgrid, and autotags. Tags the snapshot lacked are removed. | A move, rename, or trash you make in **Organize files**. That view can move, rename, and trash audio files. |
 
 Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 
@@ -36,7 +36,7 @@ Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each
 
 ![Backups rewind. Example layout, labeled Mock, example data. A seven-day chart and a list of changes, with a Snapshot and rewind button.](media/layout-v4-rewind.png)
 
-*Example layout, not the current window. The picture lists audio files under what a rewind will not undo. That line is not how restore works. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was. **Files** can move, rename, and trash audio files. The current control is **Backups**, then **Review restore**.*
+*Example layout, not the current window. The picture lists audio files under what a rewind will not undo. That line is not how restore works. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was. **Organize files** can move, rename, and trash audio files. The current control is **Backups**, then **Review restore**.*
 
 ![Outside change. Example data. A notice that the Serato folder changed, with See changes, Undo, and Keep it. The picture is labeled Sample data.](media/layout-v3-outside-change.png)
 

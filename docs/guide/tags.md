@@ -49,4 +49,4 @@ When another track has the same title, artist, and length in whole seconds, **Ot
 
 ## Related tracks
 
-The **Related tracks** section is on every track that has a file path. [Related tracks](related.md) explains links, suggestions, and the live view.
+The **Mixes well with** section is on every track that has a file path. [Related tracks](related.md) explains links, suggestions, and the live view.

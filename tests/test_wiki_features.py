@@ -115,7 +115,7 @@ class WikiFeaturePageTests(unittest.TestCase):
         text = (WIKI / "Organizing-Files.md").read_text(encoding="utf-8")
         self.assertIn("move, rename, and trash audio files", text)
         self.assertIn("Files and Folders > Removable Volumes", text)
-        self.assertIn("**Files**", text)
+        self.assertIn("**Organize files**", text)
 
     def test_export_keeps_the_preview_label(self) -> None:
         """Keep the existing preview label on the Rekordbox export page.

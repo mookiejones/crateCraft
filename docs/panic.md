@@ -25,7 +25,7 @@ The gig check is in the app. Open **Before a gig**, or run `python3 gig_check.py
 ## A. Red or missing tracks
 1. Plug in every drive your music lives on.
 2. In Serato, drag the folder that holds the music onto **Relocate Lost Files** (in the Files panel).
-3. Don't restore a backup for a file that only moved. Restore puts crates back and can rewrite Serato tags in the audio file. It does not point a track at a new path. **Files** can move, rename, and trash audio files. [Files](guide/files.md) is that view.
+3. Don't restore a backup for a file that only moved. Restore puts crates back and can rewrite Serato tags in the audio file. It does not point a track at a new path. **Organize files** can move, rename, and trash audio files. [Organize files](guide/files.md) is that view.
 
 ## B. Crates gone or empty
 1. Check that every drive is plugged in and shows up in Finder or Explorer.

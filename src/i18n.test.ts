@@ -71,6 +71,21 @@ describe("locale catalogs", () => {
     });
   }
 
+  it("uses DJ words for the rail, related heading, backups, and Rekordbox export", () => {
+    expect(en["view.files"]).toBe("Organize files");
+    expect(en["files.replaceFile"]).toBe("Upgrade file (keep cues)");
+    expect(en["related.heading"]).toBe("Mixes well with");
+    expect(en["menu.exportRekordbox"]).toBe("Export to Rekordbox");
+    expect(en["snapshots.take"]).toBe("Take a backup");
+    expect(en["markers.heading"]).toBe("Cue points, saved loops, and beatgrid");
+    expect(en["view.snapshots"]).toBe("Backups");
+    expect(es["view.files"]).toBe("Organizar archivos");
+    expect(es["files.replaceFile"]).toBe("Mejorar archivo (conservar cues)");
+    expect(es["related.heading"]).toBe("Mezcla bien con");
+    expect(es["menu.exportRekordbox"]).toBe("Exportar a Rekordbox");
+    expect(es["snapshots.take"]).toBe("Hacer una copia de seguridad");
+  });
+
   it("translates Spanish rather than copying English for most keys", () => {
     // Brand names and units may match. Everything else should differ.
     const same = Object.keys(en).filter((key) => JSON.stringify(es[key as keyof typeof es]) === JSON.stringify(en[key as keyof typeof en]));

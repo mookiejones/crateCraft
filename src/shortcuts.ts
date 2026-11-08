@@ -136,7 +136,7 @@ const SHORTCUT_DEFS = [
   },
   {
     id: "view-files",
-    label: "Files",
+    label: "Organize files",
     group: "Views",
     keys: [{ key: "3", mod: true }],
     whileTyping: false,

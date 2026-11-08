@@ -19,7 +19,7 @@ flowchart TD
 Related tracks are songs you want to remember together. The links live in `related.sqlite`, next to this app's settings, not in Serato's library. Saving or removing a link works while Serato DJ Pro is open.
 
 1. Open a track that has a file path. A track with no path says **This track has no file path, so it cannot be linked.**
-2. Find **Related tracks**.
+2. Find **Mixes well with**.
 3. In **Find a track to link**, type a title or an artist.
 4. Add a **Note** if you want one. The hint is **blend out of**. The box holds 500 characters.
 5. Choose a **Link rating** from **Not rated** through **5**.
@@ -39,4 +39,4 @@ The live view while a deck is playing is a different app, [serato-listener](http
 | Mac | `~/Library/Application Support/Serato Library/related.sqlite` |
 | Windows | `%APPDATA%\Serato Library\related.sqlite` |
 
-That folder is **Serato Library**, with a space. It is not `Serato/Library`, which holds `master.sqlite`. A move in **Files** updates these paths. [Where Serato data lives](Where-Serato-Data-Lives).
+That folder is **Serato Library**, with a space. It is not `Serato/Library`, which holds `master.sqlite`. A move in **Organize files** updates these paths. [Where Serato data lives](Where-Serato-Data-Lives).
