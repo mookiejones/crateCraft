@@ -2115,7 +2115,10 @@ class Handler(BaseHTTPRequestHandler):
                         or (preset and payload.get("action") in ("preview", "list"))
                         or (tree and payload.get("action") == "preview")
                         or (foldering and payload.get("action") == "preview")
-                        or (clustering and payload.get("action") == "preview")
+                        or (
+                            clustering
+                            and payload.get("action") in ("preview", "clean-preview")
+                        )
                     )
                     if not preview:
                         invalidate()

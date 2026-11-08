@@ -1,8 +1,8 @@
 # Tag spellings
 
-**Tag spellings** groups genre and artist spellings that mean the same thing, such as Hip Hop, Hip-Hop, and hiphop. Pick one spelling per group. Review the rows that would change, then Apply. The write goes through the same library path as a crate edit. Quit Serato first. Audio files stay as they are.
+**Tag spellings** groups genre and artist spellings that mean the same thing, such as Hip Hop, Hip-Hop, and hiphop. Pick one spelling per group. Review the rows that would change, then Apply. **Titles** strips track numbers, URLs, and (Original Mix), moves feat. into remixer when remixer is empty, and title-cases ALL CAPS or all lowercase. The write goes through the same library path as a crate edit. Quit Serato first. Audio files stay as they are.
 
-The note under the heading says **Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.**
+The note under the heading says **Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.** On **Titles** it names those cleanup rules instead.
 
 This view covers the whole space. The crate list is hidden.
 
@@ -24,9 +24,20 @@ When every value already uses one spelling, the report says **Every genre in thi
 
 While Serato has the library open, Apply stays off.
 
+## Clean titles
+
+1. Open Serato Library.
+2. Click **Tag spellings** under **Library health**.
+3. Click **Titles**. The report lists each title that would change, including a remixer move.
+4. Click **Apply**. Apply stays off when every title already matches, or while Serato has the library open.
+
+**Check again** reloads the title plan.
+
+When every title already matches, the report says **Every title in this space already matches the cleanup rules.**
+
 ## What Apply writes
 
-Apply rewrites the genre or artist on those library rows. Cue points stay in the audio files. The files themselves are not rewritten.
+Apply rewrites the genre or artist on those library rows, or the title and remixer for **Titles**. Cue points stay in the audio files. The files themselves are not rewritten.
 
 Remembering the mapping for new imports is a later change.
 

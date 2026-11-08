@@ -904,8 +904,10 @@
     "tags.apply": "Apply",
     "tags.artist": "Artist",
     "tags.checking": "Reading tag spellings…",
+    "tags.checkingTitles": "Reading titles…",
     "tags.field": "Field",
     "tags.genre": "Genre",
+    "tags.introTitles": "Strips track numbers, URLs, and (Original Mix). Moves feat. into remixer when remixer is empty. Title-cases ALL CAPS or all lowercase. Writes the library, not the audio files. Quit Serato first.",
     "tags.group": "{name} — {spellings}, {tracks}",
     "tags.heading": "Tag spellings",
     "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
@@ -914,6 +916,10 @@
     "tags.previewLine": {
       one: "{from} → {to} ({count} track)",
       other: "{from} → {to} ({count} tracks)"
+    },
+    "tags.previewLineRemixer": {
+      one: "{from} → {to}, remixer {remixer} ({count} track)",
+      other: "{from} → {to}, remixer {remixer} ({count} tracks)"
     },
     "tags.previewSummary": {
       one: "{count} track would become {value}.",
@@ -935,6 +941,20 @@
       other: "{values} genre spellings in this space. {count} groups with more than one spelling."
     },
     "tags.summaryGenreClear": "Every genre in this space uses one spelling.",
+    "tags.summaryTitles": {
+      one: "{count} title in this space would change.",
+      other: "{count} titles in this space would change."
+    },
+    "tags.summaryTitlesClear": "Every title in this space already matches the cleanup rules.",
+    "tags.titles": "Titles",
+    "tags.titlesPreviewSummary": {
+      one: "{count} title would change.",
+      other: "{count} titles would change."
+    },
+    "tags.titlesWritten": {
+      one: "Wrote the cleaned title on {count} track.",
+      other: "Wrote the cleaned titles on {count} tracks."
+    },
     "tags.trackCount": {
       one: "{count} track",
       other: "{count} tracks"
@@ -1131,8 +1151,10 @@
     "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
     "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
     "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
+    "tooltip.tagsApplyTitles": "Write the cleaned titles. Quit Serato first. Audio files stay as they are.",
     "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
     "tooltip.tagsGenre": "Show genres that are the same words written different ways.",
+    "tooltip.tagsTitles": "Show titles that would change after stripping numbers, URLs, Original Mix, and feat., and title-casing ALL CAPS or all lowercase.",
     "tooltip.tagsGroup": "Open or close this spelling group.",
     "tooltip.tagsPreview": "Show which tracks would change before writing the library.",
     "tooltip.tagsRefresh": "Load the spelling groups again.",
@@ -2168,8 +2190,10 @@
     "tags.apply": "Aplicar",
     "tags.artist": "Artista",
     "tags.checking": "Leyendo grafías de etiquetas…",
+    "tags.checkingTitles": "Leyendo títulos…",
     "tags.field": "Campo",
     "tags.genre": "Género",
+    "tags.introTitles": "Quita números de pista, URL y (Original Mix). Pasa feat. a remixer cuando remixer está vacío. Pasa a mayúsculas iniciales los títulos en MAYÚSCULAS o minúsculas. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
     "tags.group": "{name} — {spellings}, {tracks}",
     "tags.heading": "Grafías de etiquetas",
     "tags.intro": "Elige una grafía por grupo. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
@@ -2178,6 +2202,10 @@
     "tags.previewLine": {
       one: "{from} → {to} ({count} pista)",
       other: "{from} → {to} ({count} pistas)"
+    },
+    "tags.previewLineRemixer": {
+      one: "{from} → {to}, remixer {remixer} ({count} pista)",
+      other: "{from} → {to}, remixer {remixer} ({count} pistas)"
     },
     "tags.previewSummary": {
       one: "{count} pista pasaría a {value}.",
@@ -2199,6 +2227,20 @@
       other: "{values} grafías de género en este espacio. {count} grupos con más de una grafía."
     },
     "tags.summaryGenreClear": "Cada género de este espacio usa una sola grafía.",
+    "tags.summaryTitles": {
+      one: "{count} título de este espacio cambiaría.",
+      other: "{count} títulos de este espacio cambiarían."
+    },
+    "tags.summaryTitlesClear": "Cada título de este espacio ya cumple las reglas de limpieza.",
+    "tags.titles": "Títulos",
+    "tags.titlesPreviewSummary": {
+      one: "{count} título cambiaría.",
+      other: "{count} títulos cambiarían."
+    },
+    "tags.titlesWritten": {
+      one: "Se escribió el título limpio en {count} pista.",
+      other: "Se escribieron los títulos limpios en {count} pistas."
+    },
     "tags.trackCount": {
       one: "{count} pista",
       other: "{count} pistas"
@@ -2395,8 +2437,10 @@
     "tooltip.space": "Elige Biblioteca, Vídeo, Apple Music o Preparar.",
     "tooltip.splitter": "Arrastra para cambiar el ancho de la lista. Doble clic lo devuelve. Las flechas lo redimensionan.",
     "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Los archivos de audio no cambian.",
+    "tooltip.tagsApplyTitles": "Escribe los títulos limpios. Cierra Serato primero. Los archivos de audio no cambian.",
     "tooltip.tagsArtist": "Muestra nombres de artista que son las mismas palabras escritas de otra forma.",
     "tooltip.tagsGenre": "Muestra géneros que son las mismas palabras escritas de otra forma.",
+    "tooltip.tagsTitles": "Muestra títulos que cambiarían al quitar números, URL, Original Mix y feat., y al pasar a mayúsculas iniciales los que están en MAYÚSCULAS o minúsculas.",
     "tooltip.tagsGroup": "Abre o cierra este grupo de grafías.",
     "tooltip.tagsPreview": "Muestra qué pistas cambiarían antes de escribir en la biblioteca.",
     "tooltip.tagsRefresh": "Vuelve a cargar los grupos de grafías.",
@@ -3249,9 +3293,11 @@
     viewTags: spec("tooltip.viewTags"),
     tagsGenre: spec("tooltip.tagsGenre"),
     tagsArtist: spec("tooltip.tagsArtist"),
+    tagsTitles: spec("tooltip.tagsTitles"),
     tagsRefresh: spec("tooltip.tagsRefresh"),
     tagsPreview: spec("tooltip.tagsPreview"),
     tagsApply: spec("tooltip.tagsApply"),
+    tagsApplyTitles: spec("tooltip.tagsApplyTitles"),
     tagsGroup: spec("tooltip.tagsGroup"),
     tagsSpelling: spec("tooltip.tagsSpelling"),
     gigRefresh: spec("tooltip.gigRefresh"),
@@ -3378,6 +3424,7 @@
       "scan-full": tips.scanFull,
       "tags-genre": tips.tagsGenre,
       "tags-artist": tips.tagsArtist,
+      "tags-titles": tips.tagsTitles,
       "tags-refresh": tips.tagsRefresh,
       "snapshots-take": tips.snapshotsTake,
       "snapshots-drives": tips.backupDrives,
@@ -4244,10 +4291,15 @@
 
   // src/tags-view.ts
   function tagsSummary(field, values, groups) {
+    if (field === "titles") return titlesSummary(groups);
     if (groups === 0) {
       return field === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
     }
     return field === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
+  }
+  function titlesSummary(changes) {
+    if (!changes) return t("tags.summaryTitlesClear");
+    return t("tags.summaryTitles", { count: changes });
   }
   function groupHeading(group) {
     return t("tags.group", {
@@ -4264,28 +4316,48 @@
     if (!plan.changes.length) return t("tags.noChanges");
     return t("tags.previewSummary", { count: plan.changes.length, value: plan.value });
   }
+  function titlesPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.summaryTitlesClear");
+    return t("tags.titlesPreviewSummary", { count: plan.changes.length });
+  }
   function writtenSummary(plan) {
     return t("tags.written", { count: plan.changes.length, value: plan.value });
+  }
+  function titlesWrittenSummary(plan) {
+    return t("tags.titlesWritten", { count: plan.changes.length });
   }
   function groupChanges(changes) {
     const rows2 = /* @__PURE__ */ new Map();
     for (const change of changes) {
-      const id = `${change.from}\0${change.to}`;
+      const remixer = change.remixer ?? "";
+      const id = `${change.from}\0${change.to}\0${remixer}`;
       const existing = rows2.get(id);
       if (existing) existing.count += 1;
-      else rows2.set(id, { from: change.from, to: change.to, count: 1 });
+      else {
+        const row = { from: change.from, to: change.to, count: 1 };
+        if (change.remixer) row.remixer = change.remixer;
+        rows2.set(id, row);
+      }
     }
     return [...rows2.values()];
   }
   function previewLines(changes) {
     return groupChanges(changes).map(
-      (row) => t("tags.previewLine", { from: row.from, to: row.to, count: row.count })
+      (row) => row.remixer ? t("tags.previewLineRemixer", {
+        from: row.from,
+        to: row.to,
+        remixer: row.remixer,
+        count: row.count
+      }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count })
     );
   }
 
   // src/tags.ts
   var LIST_CAP3 = 100;
+  var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
+  var TITLE_KEY = "clean";
   var latest3 = null;
+  var titlePlan = null;
   var plans = /* @__PURE__ */ new Map();
   var selectedByKey = /* @__PURE__ */ new Map();
   var panelBusy = false;
@@ -4304,6 +4376,11 @@
       setField("artist");
       void loadTags();
     });
+    el("tags-titles").addEventListener("click", () => {
+      if (currentField() === "titles") return;
+      setField("titles");
+      void loadTags();
+    });
     el("tags-refresh").addEventListener("click", () => {
       void loadTags();
     });
@@ -4318,6 +4395,10 @@
     el("tags-report").addEventListener("click", (event) => {
       const button2 = event.target.closest("[data-tags-action]");
       if (!button2 || button2.disabled) return;
+      if (button2.dataset.tagsAction === "clean-apply") {
+        void applyTitles();
+        return;
+      }
       const key = button2.dataset.key ?? "";
       if (!key) return;
       if (button2.dataset.tagsAction === "preview") void previewGroup(key);
@@ -4332,28 +4413,42 @@
     beginBusy3();
     let settle = "none";
     try {
-      const response = await fetch(
-        `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
-      );
-      if (token3 !== state.tagsToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.tagsToken) return;
-      if (!response.ok || payload === null) {
-        failStatus3(serverMessage(payload, t("tags.unreadable")));
-        settle = "retry";
-        return;
+      if (field === "titles") {
+        const payload = await postJSON("/api/tag-clusters", {
+          action: "clean-preview",
+          space: state.space
+        });
+        if (token3 !== state.tagsToken) return;
+        titlePlan = payload;
+        latest3 = null;
+        el("tags-status").textContent = titlesPreviewSummary(payload);
+        settle = "report";
+      } else {
+        const response = await fetch(
+          `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
+        );
+        if (token3 !== state.tagsToken) return;
+        const payload = await readJSON(response).catch(() => null);
+        if (token3 !== state.tagsToken) return;
+        if (!response.ok || payload === null) {
+          failStatus3(serverMessage(payload, t("tags.unreadable")));
+          settle = "retry";
+          return;
+        }
+        latest3 = payload;
+        titlePlan = null;
+        el("tags-status").textContent = "";
+        settle = "report";
       }
-      latest3 = payload;
-      el("tags-status").textContent = "";
-      settle = "report";
-    } catch {
+    } catch (error2) {
       if (token3 !== state.tagsToken) return;
-      failStatus3(t("tags.unreachable"));
+      if (error2 instanceof TypeError) failStatus3(t("tags.unreachable"));
+      else failStatus3(failureOf(error2).message);
       settle = "retry";
     } finally {
       if (token3 !== state.tagsToken) return;
       endBusy3();
-      if (settle === "report" && latest3) renderTagsReport(latest3);
+      if (settle === "report") paintReport();
       if (settle === "retry") el("tags-refresh").focus();
       if (settle === "report") el("tags-report").focus();
     }
@@ -4379,16 +4474,50 @@
       report.append(groupCard(group, index === 0 || open.has(group.key)));
     });
   }
-  function repaintTags() {
-    el("tags-scope").textContent = t("gig.wholeSpace");
+  function paintReport() {
+    if (currentField() === "titles") {
+      if (titlePlan) renderTitleReport(titlePlan);
+      return;
+    }
     if (latest3) renderTagsReport(latest3);
+  }
+  function renderTitleReport(plan) {
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    const report = el("tags-report");
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = titlesSummary(plan.changes.length);
+    report.replaceChildren(summary);
+    const lines = previewLines(plan.changes);
+    if (lines.length) {
+      const diffs = document.createElement("ul");
+      for (const line of lines.slice(0, LIST_CAP3)) {
+        const row = document.createElement("li");
+        row.textContent = line;
+        diffs.append(row);
+      }
+      report.append(diffs);
+    }
+    const actions2 = document.createElement("div");
+    actions2.className = "tags-actions";
+    const apply = buttonEl(tips.tagsApplyTitles);
+    apply.dataset.tagsAction = "clean-apply";
+    apply.textContent = t("tags.apply");
+    apply.disabled = !canApplyTitles(plan);
+    actions2.append(apply);
+    report.append(actions2);
+  }
+  function repaintTags() {
+    setField(currentField());
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    paintReport();
   }
   async function previewGroup(key) {
     const group = groupByKey(key);
     const value = selectedValue(key);
     if (!group || !value) return;
     actionKey = key;
-    if (latest3) renderTagsReport(latest3);
+    paintReport();
     try {
       const plan = await postJSON("/api/tag-clusters", {
         action: "preview",
@@ -4398,13 +4527,13 @@
       });
       plans.set(key, plan);
       el("tags-status").textContent = previewSummary(plan);
-      if (latest3) renderTagsReport(latest3);
+      paintReport();
       applyButton(key)?.focus();
     } catch (error2) {
       failStatus3(failureOf(error2).message);
     } finally {
       actionKey = "";
-      if (latest3) renderTagsReport(latest3);
+      paintReport();
     }
   }
   async function applyGroup(key) {
@@ -4414,7 +4543,7 @@
     actionKey = key;
     panelBusy = true;
     beginBusy3();
-    if (latest3) renderTagsReport(latest3);
+    paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
         action: "apply",
@@ -4438,35 +4567,73 @@
       actionKey = "";
       panelBusy = false;
       endBusy3();
-      if (latest3) renderTagsReport(latest3);
+      paintReport();
+    }
+  }
+  async function applyTitles() {
+    const plan = titlePlan;
+    if (!plan || !canApplyTitles(plan)) return;
+    actionKey = TITLE_KEY;
+    panelBusy = true;
+    beginBusy3();
+    paintReport();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "clean-apply",
+        space: state.space
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy3();
+      await loadTags();
+      el("tags-status").textContent = titlesWrittenSummary(written);
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus3(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy3();
+      paintReport();
     }
   }
   function currentField() {
-    return el("tags-artist").getAttribute("aria-pressed") === "true" ? "artist" : "genre";
+    if (el("tags-titles").getAttribute("aria-pressed") === "true") return "titles";
+    if (el("tags-artist").getAttribute("aria-pressed") === "true") return "artist";
+    return "genre";
   }
   function setField(next2) {
     el("tags-genre").setAttribute("aria-pressed", String(next2 === "genre"));
     el("tags-artist").setAttribute("aria-pressed", String(next2 === "artist"));
+    el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
+    el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
   }
   function beginBusy3() {
     panelBusy = true;
-    for (const id of ["tags-genre", "tags-artist", "tags-refresh"]) {
+    for (const id of FIELD_BUTTONS) {
       const button2 = el(id);
       button2.disabled = true;
       button2.setAttribute("aria-busy", "true");
     }
     el("tags-panel").setAttribute("aria-busy", "true");
-    el("tags-status").textContent = t("tags.checking");
-    if (latest3) renderTagsReport(latest3);
+    el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
+    paintReport();
   }
   function endBusy3() {
     panelBusy = false;
-    for (const id of ["tags-genre", "tags-artist", "tags-refresh"]) {
+    for (const id of FIELD_BUTTONS) {
       const button2 = el(id);
       button2.disabled = false;
       button2.setAttribute("aria-busy", "false");
     }
     el("tags-panel").setAttribute("aria-busy", "false");
+  }
+  function canApplyTitles(plan) {
+    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
   }
   function failStatus3(message) {
     el("tags-status").textContent = message;
@@ -10849,7 +11016,7 @@
       void copyLog();
     });
     document.addEventListener("serato-locale", () => {
-      if (el("help-report-dialog").open) paintReport();
+      if (el("help-report-dialog").open) paintReport2();
     });
   }
   async function openReport(next2) {
@@ -10860,7 +11027,7 @@
     el("help-log-fallback").hidden = true;
     el("help-report-status").textContent = "";
     el("help-diagnostics").textContent = t("help.loading");
-    paintReport();
+    paintReport2();
     el("help-dialog").close();
     el("help-report-dialog").showModal();
     try {
@@ -10872,7 +11039,7 @@
       el("help-diagnostics").textContent = t("help.loadFailed");
     }
   }
-  function paintReport() {
+  function paintReport2() {
     const feature = kind === "feature";
     el("help-report-title").textContent = t(feature ? "help.featureTitle" : "help.bugTitle");
     el("help-happened-name").textContent = t(feature ? "help.change" : "help.happened");

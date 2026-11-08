@@ -5,7 +5,7 @@ import { bridge } from "./bridge";
 import { setLocale } from "./i18n";
 import { state } from "./state";
 import { loadTags, repaintTags, wireTags } from "./tags";
-import { groupChanges, previewLines, tagsSummary } from "./tags-view";
+import { groupChanges, previewLines, tagsSummary, titlesSummary } from "./tags-view";
 import { installPage } from "./test-page";
 import { applyStaticTooltips } from "./tooltip";
 
@@ -54,6 +54,22 @@ const preview: TagClusterPlan = {
   ],
 };
 
+const titlePreview: TagClusterPlan = {
+  field: "name",
+  value: "titles",
+  key: "clean",
+  written: false,
+  changes: [
+    { id: 1, from: "01 - TRACK (Original Mix) http://x", to: "Track" },
+    {
+      id: 2,
+      from: "Song feat. Guest",
+      to: "Song",
+      remixer: "Guest",
+    },
+  ],
+};
+
 function reply(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 }
@@ -86,6 +102,20 @@ describe("tag spelling helpers", () => {
     setLocale("en");
     expect(tagsSummary("genre", 8, 0)).toBe("Every genre in this space uses one spelling.");
     expect(previewLines(preview.changes)).toEqual(["Hip-Hop → Hip Hop (2 tracks)"]);
+  });
+
+  it("keeps remixer pairs separate and names a title cleanup", () => {
+    setLocale("en");
+    expect(groupChanges(titlePreview.changes)).toEqual([
+      { from: "01 - TRACK (Original Mix) http://x", to: "Track", count: 1 },
+      { from: "Song feat. Guest", to: "Song", count: 1, remixer: "Guest" },
+    ]);
+    expect(previewLines(titlePreview.changes)).toEqual([
+      "01 - TRACK (Original Mix) http://x → Track (1 track)",
+      "Song feat. Guest → Song, remixer Guest (1 track)",
+    ]);
+    expect(titlesSummary(0)).toBe("Every title in this space already matches the cleanup rules.");
+    expect(titlesSummary(2)).toBe("2 titles in this space would change.");
   });
 });
 
@@ -132,6 +162,64 @@ describe("tags", () => {
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/tag-clusters?space=Serato%20Library&field=artist",
     );
+  });
+
+  it("previews titles without asking for spelling groups", async () => {
+    const fetchMock = vi.fn(async () => reply(groups));
+    vi.stubGlobal("fetch", fetchMock);
+    postJSON.mockResolvedValue(titlePreview);
+    document.getElementById("tags-titles")!.click();
+    await vi.waitFor(() => expect(postJSON).toHaveBeenCalled());
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+      action: "clean-preview",
+      space: "Serato Library",
+    });
+    expect(reportText()).toContain("2 titles in this space would change.");
+    expect(reportText()).toContain("Song feat. Guest → Song, remixer Guest (1 track)");
+    expect(document.getElementById("tags-hint")!.textContent).toContain("Strips track numbers");
+    expect(document.querySelector<HTMLButtonElement>('[data-tags-action="clean-apply"]')!.disabled).toBe(false);
+  });
+
+  it("disables title Apply when nothing would change", async () => {
+    postJSON.mockResolvedValue({ ...titlePreview, changes: [] });
+    document.getElementById("tags-titles")!.click();
+    await vi.waitFor(() => expect(postJSON).toHaveBeenCalled());
+    expect(reportText()).toContain("Every title in this space already matches the cleanup rules.");
+    expect(document.querySelector<HTMLButtonElement>('[data-tags-action="clean-apply"]')!.disabled).toBe(true);
+  });
+
+  it("applies cleaned titles, reloads the library, and shows the written sentence", async () => {
+    postJSON.mockResolvedValueOnce(titlePreview);
+    postJSON.mockResolvedValueOnce({ ...titlePreview, written: true });
+    postJSON.mockResolvedValueOnce({ ...titlePreview, changes: [], written: false });
+    document.getElementById("tags-titles")!.click();
+    await vi.waitFor(() => expect(document.querySelector('[data-tags-action="clean-apply"]')).not.toBeNull());
+    document.querySelector<HTMLButtonElement>('[data-tags-action="clean-apply"]')!.click();
+    await vi.waitFor(() => expect(bridge.reloadLibrary).toHaveBeenCalled());
+    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+      action: "clean-apply",
+      space: "Serato Library",
+    });
+    expect(document.getElementById("tags-status")!.textContent).toContain("Wrote the cleaned titles on 2 tracks");
+  });
+
+  it("locks the page on a 409 from title apply", async () => {
+    postJSON.mockResolvedValueOnce(titlePreview);
+    const locked = Object.assign(new Error("Quit Serato DJ before writing."), {
+      status: 409,
+      payload: { error: "Quit Serato DJ before writing.", serato: { writable: false } },
+    });
+    postJSON.mockRejectedValueOnce(locked);
+    document.getElementById("tags-titles")!.click();
+    await vi.waitFor(() => expect(document.querySelector('[data-tags-action="clean-apply"]')).not.toBeNull());
+    bridge.lockDown = vi.fn(() => {
+      state.writable = false;
+    });
+    document.querySelector<HTMLButtonElement>('[data-tags-action="clean-apply"]')!.click();
+    await vi.waitFor(() => expect(bridge.lockDown).toHaveBeenCalled());
+    expect(document.getElementById("tags-status")!.textContent).toContain("Quit Serato DJ before writing.");
+    expect(document.querySelector<HTMLButtonElement>('[data-tags-action="clean-apply"]')!.disabled).toBe(true);
   });
 
   it("shows a clean report when every spelling is unique", async () => {
@@ -265,6 +353,7 @@ describe("tags", () => {
     applyStaticTooltips();
     expect(document.getElementById("tags-genre")!.dataset.tooltipKey).toBe("tooltip.tagsGenre");
     expect(document.getElementById("tags-artist")!.dataset.tooltipKey).toBe("tooltip.tagsArtist");
+    expect(document.getElementById("tags-titles")!.dataset.tooltipKey).toBe("tooltip.tagsTitles");
     expect(document.getElementById("tags-refresh")!.dataset.tooltipKey).toBe("tooltip.tagsRefresh");
     expect(document.querySelector<HTMLElement>('[data-view="tags"]')!.dataset.tooltipKey).toBe("tooltip.viewTags");
     const untipped = [...document.querySelectorAll<HTMLElement>("#tags-panel button, #tags-panel input, #tags-panel summary")].filter(
