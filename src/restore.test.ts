@@ -188,7 +188,7 @@ describe("restore", () => {
       state.snapshotError = "";
       state.snapshots = [];
       renderSnapshots();
-      expect(document.getElementById("snapshots-status")?.textContent).toBe("Instantánea guardada.");
+      expect(document.getElementById("snapshots-status")?.textContent).toBe("Copia guardada.");
     } finally {
       setLocale("en");
     }
@@ -339,7 +339,7 @@ describe("restore", () => {
     postJSON.mockRejectedValue(new Error(t("error.backup_no_space")));
     await backupDriveCrates();
     expect(document.getElementById("snapshots-drives-note")?.textContent).toBe(t("error.backup_no_space"));
-    expect(document.getElementById("snapshots-list")?.textContent).toContain("No snapshots yet");
+    expect(document.getElementById("snapshots-list")?.textContent).toContain("No backups yet");
   });
 
   it("does not repaint a closed plan dialog", async () => {

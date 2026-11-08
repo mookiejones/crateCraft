@@ -684,7 +684,7 @@ class ApiPrivacyTests(unittest.TestCase):
         caught.exception.close()
         self.assertIs(payload["rekordbox"]["hot_loops"], False)
         self.assertIs(payload["rekordbox"]["memory_cues"], True)
-        self.assertEqual(payload["rekordbox"]["key_notation"], "asis")
+        self.assertEqual(payload["rekordbox"]["key_notation"], "camelot")
 
     def test_rekordbox_settings_round_trip_and_reject_bad_types(self) -> None:
         """Save the export bar and refuse a value of the wrong type.

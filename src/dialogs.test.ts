@@ -133,10 +133,10 @@ describe("Rekordbox export settings", () => {
     await expect(loadPrivacy()).rejects.toThrow(/offline|fetch/i);
     expect(hotLoops().checked).toBe(false);
     expect(memoryCues().checked).toBe(true);
-    expect(keyNotation().value).toBe("asis");
+    expect(keyNotation().value).toBe("camelot");
     expect(rekordboxExportUrl(false)).toContain("hot_loops=0");
     expect(rekordboxExportUrl(false)).toContain("memory=1");
-    expect(rekordboxExportUrl(false)).toContain("key=asis");
+    expect(rekordboxExportUrl(false)).toContain("key=camelot");
     fetchMock.mockResolvedValue(settingsResponse({ error: "nope" }, false));
     await expect(loadPrivacy()).rejects.toThrow(/nope/);
     expect(rekordboxExportUrl(true)).toContain("report=1");

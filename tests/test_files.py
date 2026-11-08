@@ -1007,7 +1007,7 @@ class FileManagerTests(FileLibraryCase):
         page = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
         script = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
         self.assertIn('data-view="files"', page)
-        self.assertIn("Files", page)
+        self.assertIn("Organize files", page)
         self.assertIn('id="files-dialog"', page)
         self.assertIn('id="files-rename-from-tags"', page)
         self.assertIn('id="crate-rename-from-tags"', page)

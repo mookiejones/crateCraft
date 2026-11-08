@@ -31,7 +31,7 @@ Ctrl+K or Command+K opens **Find a track or file**.
 
 1. Type a name. A few letters are enough. Each word has to appear in the name, or in the folder name.
 2. Tracks from the open library show at once. Files on disk follow. A file row says **File**. A track row says **Track**.
-3. Use Up and Down to move. Enter opens that row. A track opens in the library. A file opens in **Files**, in its folder.
+3. Use Up and Down to move. Enter opens that row. A track opens in the library. A file opens in **Organize files**, in its folder.
 4. Esc closes the box and leaves the search behind it as it was.
 
 If the disk search cannot be read, the box says so and keeps the track matches. **Try again** asks for the files again.
@@ -44,6 +44,6 @@ Up and Down move the highlight. Enter opens it.
 
 In **Crates**, the crate list keeps its own keys when that list is focused. Right opens a crate. Left closes it. Those keys are not the seek keys while the crate list has focus.
 
-In **Files**, Up and Down move through the folder. Enter opens a folder or ticks a file.
+In **Organize files**, Up and Down move through the folder. Enter opens a folder or ticks a file.
 
 In **Backups**, Up and Down move through the saved copies. Enter opens **Review restore**. Nothing is written until you confirm that dialog.

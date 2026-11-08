@@ -21,7 +21,7 @@ The file holds paths, titles, artists, lengths, notes, and ratings. It stays on 
 ## Save a link
 
 1. Open a track that has a file path. A track with no path says **This track has no file path, so it cannot be linked.**
-2. Find **Related tracks**.
+2. Find **Mixes well with**.
 3. In **Find a track to link**, type a title or an artist. The matches are tracks already loaded in this space.
 4. Click the track.
 5. Type a **Note** if you want one. The box holds 500 characters. The hint text is **blend out of**.

@@ -29,7 +29,7 @@ On a Mac: Finder, **Go**, **Go to Folder**, paste `~/Library/Application Support
 
 On Windows: Windows key and R, paste `%LOCALAPPDATA%\Serato\Library`.
 
-Cue points, loops, and the beatgrid live in the audio file, not in the crate row. A normal save does not rewrite that file. **Files** can move, rename, and trash the audio file. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
+Cue points, loops, and the beatgrid live in the audio file, not in the crate row. A normal save does not rewrite that file. **Organize files** can move, rename, and trash the audio file. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 
 Each drive with a Serato folder has `_Serato_` at its root, including `database V2`. **Backups** keeps those crates. An unplugged drive is marked unavailable, never deleted.
 
