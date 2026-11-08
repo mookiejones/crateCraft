@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import unittest
+from contextlib import closing
 from pathlib import Path
 from typing import cast
 from unittest import mock
@@ -182,11 +183,11 @@ class FolderSyncTests(unittest.TestCase):
             result = folder_sync.sync("Serato Library", crate_id, str(folder), subcrates=True)
             self.assertEqual(sorted(_members(crate_id)), [3])
             self.assertEqual(sorted(_members(existing)), [4])
-            with library.read_conn() as conn:
+            with closing(library.read_conn()) as conn:
                 deep_id = library._find_child(conn, existing, "Deep", 1)
             self.assertIsNotNone(deep_id)
             self.assertEqual(sorted(_members(int(deep_id))), [5])
-            with library.read_conn() as conn:
+            with closing(library.read_conn()) as conn:
                 self.assertIsNone(library._find_child(conn, crate_id, "Empty", 1))
             self.assertEqual(result["created"], 1)
 
