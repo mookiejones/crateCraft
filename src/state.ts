@@ -62,6 +62,9 @@ export interface PageState {
   presets: Record<string, PresetRecord>;
   rootId: number | null | undefined;
   activeCrate: number | "all";
+  secondCrate: number | "all";
+  splitCrates: boolean;
+  focusedPane: "a" | "b";
   query: string;
   crateQuery: string;
   crateSort: string;
@@ -120,6 +123,7 @@ export interface PageState {
   scanToken: number;
   tagsToken: number;
   view: Track[];
+  viewB: Track[];
 }
 
 export const state: PageState = {
@@ -130,6 +134,9 @@ export const state: PageState = {
   presets: {},
   rootId: null,
   activeCrate: "all",
+  secondCrate: "all",
+  splitCrates: false,
+  focusedPane: "a",
   query: "",
   crateQuery: "",
   crateSort: "order",
@@ -188,4 +195,5 @@ export const state: PageState = {
   scanToken: 0,
   tagsToken: 0,
   view: [],
+  viewB: [],
 };

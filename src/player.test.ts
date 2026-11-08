@@ -67,6 +67,9 @@ beforeEach(() => {
   state.selectedId = null;
   state.byId = new Map();
   state.view = [];
+  state.viewB = [];
+  state.splitCrates = false;
+  state.focusedPane = "a";
   state.tracks = [];
 });
 
@@ -233,6 +236,21 @@ describe("next and previous", () => {
     fake.dispatchEvent(new Event("ended"));
     expect(fake.src).toContain("id=2");
     expect(isPlaying()).toBe(false);
+  });
+
+  it("walks pane B when that list is focused", () => {
+    state.splitCrates = true;
+    state.focusedPane = "b";
+    state.view = [track(3, "C")];
+    state.viewB = [track(1, "A"), track(2, "B")];
+    state.byId.set(1, track(1, "A"));
+    state.byId.set(2, track(2, "B"));
+    play(1);
+    next();
+    expect(fake.src).toContain("id=2");
+    state.splitCrates = false;
+    state.focusedPane = "a";
+    state.viewB = [];
   });
 
   it("skips a history row and stays inside the filtered list", () => {

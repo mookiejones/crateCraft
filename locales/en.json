@@ -40,6 +40,7 @@
     "one": "{count} play",
     "other": "{count} plays"
   },
+  "count.split": "{a} · {b}",
   "count.tracks": {
     "one": "{count} track",
     "other": "{count} tracks"
@@ -57,9 +58,18 @@
   "crates.heading": "Crates",
   "crates.new": "New",
   "crates.newPrompt": "New crate name",
+  "crates.paneA": "Left crate",
+  "crates.paneB": "Right crate",
   "crates.rename": "Rename",
   "crates.renamePrompt": "Rename crate",
   "crates.renamed": "Crate renamed.",
+  "crates.saveView": "Save view",
+  "crates.saveViewCreated": {
+    "one": "Saved {count} track as a crate.",
+    "other": "Saved {count} tracks as a crate."
+  },
+  "crates.saveViewEmpty": "This list has no tracks to save.",
+  "crates.saveViewPrompt": "New crate name",
   "crates.selectedCrate": "Selected crate",
   "crates.smartBadge": "smart",
   "crates.smartList": "Smart crates: {names}",
@@ -67,6 +77,7 @@
   "crates.sort.added": "Added",
   "crates.sort.name": "Name",
   "crates.sort.order": "Order",
+  "crates.split": "Split",
   "cratesReplace.addToCrates": "Add the replacement to {crates}.",
   "cratesReplace.alreadyInCrates": "The replacement is already in those crates. It stays where it is.",
   "cratesReplace.confirm": "Update crates",
@@ -985,7 +996,9 @@
   "tooltip.folderSyncSubcrates": "Put files in this folder into the crate, and make a subcrate for each subfolder.",
   "tooltip.crateRefresh": "Pick the tracks for this preset crate again from its preset.",
   "tooltip.crateRename": "Rename the selected crate.",
+  "tooltip.crateSaveView": "Save the tracks in this list as a new crate. Serato DJ Pro must be quit.",
   "tooltip.crateSearch": "Find a crate by name. Esc clears the search.",
+  "tooltip.crateSplit": "Show two crates at once. Alt-click or Shift-click fills the other list.",
   "tooltip.cratesReplaceCancel": "Close without changing crates.",
   "tooltip.cratesReplaceConfirm": "Put the replacement in those crates.",
   "tooltip.cratesReplaceKeep": "Keep both tracks in those crates. The replacement sits at the same position.",

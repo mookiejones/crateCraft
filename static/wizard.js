@@ -68,6 +68,7 @@ var SeratoWizard = (() => {
       one: "{count} play",
       other: "{count} plays"
     },
+    "count.split": "{a} · {b}",
     "count.tracks": {
       one: "{count} track",
       other: "{count} tracks"
@@ -85,9 +86,18 @@ var SeratoWizard = (() => {
     "crates.heading": "Crates",
     "crates.new": "New",
     "crates.newPrompt": "New crate name",
+    "crates.paneA": "Left crate",
+    "crates.paneB": "Right crate",
     "crates.rename": "Rename",
     "crates.renamePrompt": "Rename crate",
     "crates.renamed": "Crate renamed.",
+    "crates.saveView": "Save view",
+    "crates.saveViewCreated": {
+      one: "Saved {count} track as a crate.",
+      other: "Saved {count} tracks as a crate."
+    },
+    "crates.saveViewEmpty": "This list has no tracks to save.",
+    "crates.saveViewPrompt": "New crate name",
     "crates.selectedCrate": "Selected crate",
     "crates.smartBadge": "smart",
     "crates.smartList": "Smart crates: {names}",
@@ -95,6 +105,7 @@ var SeratoWizard = (() => {
     "crates.sort.added": "Added",
     "crates.sort.name": "Name",
     "crates.sort.order": "Order",
+    "crates.split": "Split",
     "cratesReplace.addToCrates": "Add the replacement to {crates}.",
     "cratesReplace.alreadyInCrates": "The replacement is already in those crates. It stays where it is.",
     "cratesReplace.confirm": "Update crates",
@@ -1013,7 +1024,9 @@ var SeratoWizard = (() => {
     "tooltip.folderSyncSubcrates": "Put files in this folder into the crate, and make a subcrate for each subfolder.",
     "tooltip.crateRefresh": "Pick the tracks for this preset crate again from its preset.",
     "tooltip.crateRename": "Rename the selected crate.",
+    "tooltip.crateSaveView": "Save the tracks in this list as a new crate. Serato DJ Pro must be quit.",
     "tooltip.crateSearch": "Find a crate by name. Esc clears the search.",
+    "tooltip.crateSplit": "Show two crates at once. Alt-click or Shift-click fills the other list.",
     "tooltip.cratesReplaceCancel": "Close without changing crates.",
     "tooltip.cratesReplaceConfirm": "Put the replacement in those crates.",
     "tooltip.cratesReplaceKeep": "Keep both tracks in those crates. The replacement sits at the same position.",
@@ -1354,6 +1367,7 @@ var SeratoWizard = (() => {
       one: "{count} reproducción",
       other: "{count} reproducciones"
     },
+    "count.split": "{a} · {b}",
     "count.tracks": {
       one: "{count} pista",
       other: "{count} pistas"
@@ -1371,9 +1385,18 @@ var SeratoWizard = (() => {
     "crates.heading": "Cajas",
     "crates.new": "Nueva",
     "crates.newPrompt": "Nombre de la nueva caja",
+    "crates.paneA": "Caja izquierda",
+    "crates.paneB": "Caja derecha",
     "crates.rename": "Renombrar",
     "crates.renamePrompt": "Renombrar caja",
     "crates.renamed": "Caja renombrada.",
+    "crates.saveView": "Guardar vista",
+    "crates.saveViewCreated": {
+      one: "Se guardó {count} pista como caja.",
+      other: "Se guardaron {count} pistas como caja."
+    },
+    "crates.saveViewEmpty": "Esta lista no tiene pistas para guardar.",
+    "crates.saveViewPrompt": "Nombre de la caja",
     "crates.selectedCrate": "Caja seleccionada",
     "crates.smartBadge": "inteligente",
     "crates.smartList": "Cajas inteligentes: {names}",
@@ -1381,6 +1404,7 @@ var SeratoWizard = (() => {
     "crates.sort.added": "Añadidas",
     "crates.sort.name": "Nombre",
     "crates.sort.order": "Orden",
+    "crates.split": "Dividir",
     "cratesReplace.addToCrates": "Añadir la pista de reemplazo a {crates}.",
     "cratesReplace.alreadyInCrates": "La pista de reemplazo ya está en esas cajas. Se queda donde está.",
     "cratesReplace.confirm": "Actualizar cajas",
@@ -2299,7 +2323,9 @@ var SeratoWizard = (() => {
     "tooltip.folderSyncSubcrates": "Pone en la caja los archivos de esta carpeta y crea una subcaja por cada subcarpeta.",
     "tooltip.crateRefresh": "Vuelve a elegir las pistas de esta caja según su preajuste.",
     "tooltip.crateRename": "Cambia el nombre de la caja seleccionada.",
+    "tooltip.crateSaveView": "Guarda las pistas de esta lista como una caja nueva. Hay que salir de Serato DJ Pro.",
     "tooltip.crateSearch": "Busca una caja por nombre. Esc borra la búsqueda.",
+    "tooltip.crateSplit": "Muestra dos cajas a la vez. Alt-clic o Mayús-clic llena la otra lista.",
     "tooltip.cratesReplaceCancel": "Cierra sin cambiar las cajas.",
     "tooltip.cratesReplaceConfirm": "Pon la pista de reemplazo en esas cajas.",
     "tooltip.cratesReplaceKeep": "Deja las dos pistas en esas cajas. La de reemplazo queda en la misma posición.",
@@ -2853,6 +2879,8 @@ var SeratoWizard = (() => {
     relinkPick: spec("tooltip.relinkPick"),
     crateNew: spec("tooltip.crateNew"),
     crateRename: spec("tooltip.crateRename"),
+    crateSplit: spec("tooltip.crateSplit"),
+    crateSaveView: spec("tooltip.crateSaveView"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),

@@ -48,7 +48,8 @@ import { loadLibrary, setMode, showFailure, wireLibrary } from "./views";
 import { mountPlayer, playerControls } from "./player";
 import { installDesktopActions } from "./desktop-actions";
 import { applyStaticTooltips, installTooltips } from "./tooltip";
-import { mountTrackList, wireVirtualScroll } from "./virtual-scroll";
+import { wireDualCrates } from "./dual-crate";
+import { mountTrackList, mountTrackListB, wireVirtualScroll } from "./virtual-scroll";
 
 /**
  * Attach the snapshot-list listeners.
@@ -94,6 +95,8 @@ wireLocale();
 installTooltips();
 applyStaticTooltips();
 mountTrackList();
+mountTrackListB();
+wireDualCrates();
 mountPlayer();
 registerPlayerControls(playerControls);
 wireLibrary();

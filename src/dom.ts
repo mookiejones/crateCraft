@@ -9,6 +9,14 @@ export interface ElementIds {
   "crate-list": HTMLDivElement;
   "session-list": HTMLDivElement;
   list: HTMLDivElement;
+  "list-b": HTMLDivElement;
+  "crate-panes": HTMLDivElement;
+  "crate-pane-a": HTMLDivElement;
+  "crate-pane-b": HTMLDivElement;
+  "crate-pane-a-label": HTMLParagraphElement;
+  "crate-pane-b-label": HTMLParagraphElement;
+  "crate-split": HTMLButtonElement;
+  "crate-save-view": HTMLButtonElement;
   count: HTMLParagraphElement;
   search: HTMLInputElement;
   detail: HTMLElement;

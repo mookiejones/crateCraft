@@ -40,6 +40,7 @@
     "one": "{count} reproducción",
     "other": "{count} reproducciones"
   },
+  "count.split": "{a} · {b}",
   "count.tracks": {
     "one": "{count} pista",
     "other": "{count} pistas"
@@ -57,9 +58,18 @@
   "crates.heading": "Cajas",
   "crates.new": "Nueva",
   "crates.newPrompt": "Nombre de la nueva caja",
+  "crates.paneA": "Caja izquierda",
+  "crates.paneB": "Caja derecha",
   "crates.rename": "Renombrar",
   "crates.renamePrompt": "Renombrar caja",
   "crates.renamed": "Caja renombrada.",
+  "crates.saveView": "Guardar vista",
+  "crates.saveViewCreated": {
+    "one": "Se guardó {count} pista como caja.",
+    "other": "Se guardaron {count} pistas como caja."
+  },
+  "crates.saveViewEmpty": "Esta lista no tiene pistas para guardar.",
+  "crates.saveViewPrompt": "Nombre de la caja",
   "crates.selectedCrate": "Caja seleccionada",
   "crates.smartBadge": "inteligente",
   "crates.smartList": "Cajas inteligentes: {names}",
@@ -67,6 +77,7 @@
   "crates.sort.added": "Añadidas",
   "crates.sort.name": "Nombre",
   "crates.sort.order": "Orden",
+  "crates.split": "Dividir",
   "cratesReplace.addToCrates": "Añadir la pista de reemplazo a {crates}.",
   "cratesReplace.alreadyInCrates": "La pista de reemplazo ya está en esas cajas. Se queda donde está.",
   "cratesReplace.confirm": "Actualizar cajas",
@@ -985,7 +996,9 @@
   "tooltip.folderSyncSubcrates": "Pone en la caja los archivos de esta carpeta y crea una subcaja por cada subcarpeta.",
   "tooltip.crateRefresh": "Vuelve a elegir las pistas de esta caja según su preajuste.",
   "tooltip.crateRename": "Cambia el nombre de la caja seleccionada.",
+  "tooltip.crateSaveView": "Guarda las pistas de esta lista como una caja nueva. Hay que salir de Serato DJ Pro.",
   "tooltip.crateSearch": "Busca una caja por nombre. Esc borra la búsqueda.",
+  "tooltip.crateSplit": "Muestra dos cajas a la vez. Alt-clic o Mayús-clic llena la otra lista.",
   "tooltip.cratesReplaceCancel": "Cierra sin cambiar las cajas.",
   "tooltip.cratesReplaceConfirm": "Pon la pista de reemplazo en esas cajas.",
   "tooltip.cratesReplaceKeep": "Deja las dos pistas en esas cajas. La de reemplazo queda en la misma posición.",

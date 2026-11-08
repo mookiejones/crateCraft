@@ -123,6 +123,8 @@
           </label>
           <p id="count" class="count" aria-live="polite" data-i18n="library.loading">Loading the library</p>
           <div class="browser-actions">
+            <button id="crate-split" type="button" aria-pressed="false" data-i18n="crates.split">Split</button>
+            <button id="crate-save-view" type="button" data-i18n="crates.saveView">Save view</button>
             <button id="export-m3u" type="button" data-i18n="export.m3u">Export</button>
             <button id="export-rekordbox" type="button" title="Download rekordbox.xml" data-i18n-attr="title:rekordbox.downloadTitle">Rekordbox</button>
             <button id="import-m3u" type="button" data-i18n="import.button">Import</button>
@@ -159,7 +161,16 @@
           <button type="button" data-sort="key">Key</button>
           <button type="button" data-sort="length_ms">Time</button>
         </div>
-        <div id="list" class="list" tabindex="0" role="listbox" aria-label="Tracks" data-i18n-attr="aria-label:list.label"></div>
+        <div id="crate-panes" class="crate-panes">
+          <div id="crate-pane-a" class="crate-pane" data-pane="a">
+            <p id="crate-pane-a-label" class="pane-label" hidden data-i18n="crates.paneA">Left crate</p>
+            <div id="list" class="list" tabindex="0" role="listbox" aria-label="Tracks" data-i18n-attr="aria-label:list.label"></div>
+          </div>
+          <div id="crate-pane-b" class="crate-pane" data-pane="b" hidden>
+            <p id="crate-pane-b-label" class="pane-label" data-i18n="crates.paneB">Right crate</p>
+            <div id="list-b" class="list" tabindex="0" role="listbox" aria-label="Right crate" data-i18n-attr="aria-label:crates.paneB"></div>
+          </div>
+        </div>
       </section>
 
       <div id="track-splitter" class="splitter" role="separator" tabindex="0" aria-orientation="vertical" aria-controls="browser" aria-label="Resize the track list" title="Drag to resize. Double-click to reset." data-i18n-attr="aria-label:layout.resize;title:layout.resizeHint"></div>

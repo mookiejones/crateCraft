@@ -26,6 +26,9 @@ function resetState(): void {
   state.crateTracks = new Map();
   state.rootId = null;
   state.activeCrate = "all";
+  state.secondCrate = "all";
+  state.splitCrates = false;
+  state.focusedPane = "a";
   state.query = "";
   state.crateQuery = "";
   state.crateSort = "order";
@@ -64,6 +67,7 @@ function resetState(): void {
   state.filesQuery = "";
   state.filesSearching = false;
   state.view = [];
+  state.viewB = [];
 }
 
 describe("library views", () => {

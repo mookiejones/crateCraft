@@ -88,7 +88,7 @@ Later, open **Backups**. **Review restore** shows the plan before anything is wr
 
 You land in **Crates**. The space menu reads **Library**, **Video**, **Apple Music**, or **Prepare**.
 
-Use **Search tracks**, then click a tune. To narrow the crate you have open, type a filter in the search: `bpm:120-128` (a range), `bpm:124~3` (124 give or take 3), `key:8A`, or `mix:8A` (keys that mix with 8A). Filters and words combine. Cue points show on the right. They are read from the audio file. Press `/` to jump to that search. Press Ctrl+K (Command+K on a Mac) to find a track or a file on disk. [Keyboard shortcuts](Keyboard-Shortcuts) lists the other keys.
+Use **Search tracks**, then click a tune. To narrow the crate you have open, type a filter in the search: `bpm:120-128` (a range), `bpm:124~3` (124 give or take 3), `key:8A`, or `mix:8A` (keys that mix with 8A). Filters and words combine. **Split** shows a second crate list beside the first. Alt-click or Shift-click a crate to fill the other pane. **Save view** makes a crate from the tracks in the focused list. Serato DJ Pro must be quit for that write. Cue points show on the right. They are read from the audio file. Press `/` to jump to that search. Press Ctrl+K (Command+K on a Mac) to find a track or a file on disk. [Keyboard shortcuts](Keyboard-Shortcuts) lists the other keys.
 
 The other groups are **Library health** (Missing files, Duplicates, Stems, Damaged files, Tag spellings), **Files** under Library, **Backups**, and **Before a gig**.
 

@@ -517,7 +517,13 @@ function selectedPlayableId(): number | null {
 }
 
 function playableRows(): Track[] {
-  return state.view.filter((row) => !row.entry && Number.isInteger(row.id) && row.id >= 0);
+  let source = state.view;
+  if (trackId !== null && state.splitCrates && state.viewB.some((row) => row.id === trackId && !row.entry)) {
+    source = state.viewB;
+  } else if (state.splitCrates && state.focusedPane === "b") {
+    source = state.viewB;
+  }
+  return source.filter((row) => !row.entry && Number.isInteger(row.id) && row.id >= 0);
 }
 
 function anchorIndex(rows: readonly Track[]): number {

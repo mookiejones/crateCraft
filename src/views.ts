@@ -25,6 +25,7 @@ import type {
 } from "./api-types";
 import { bridge } from "./bridge";
 import { el } from "./dom";
+import { clickPane, paintDualChrome, paneCrates } from "./dual-crate-view";
 import { clockLabel, colorHex, compare, durationLabel, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
 import { loadScan, showScanFailure } from "./scan";
@@ -269,6 +270,12 @@ function hiddenSelectionHolder(visible: Crate[]) {
  *
  * @returns {object[]} Tracks for the active mode.
  */
+function tracksForCrate(crate: number | "all"): Track[] {
+  if (crate === "all") return state.tracks;
+  const ids = state.crateTracks.get(crate);
+  return ids ? state.tracks.filter((track) => ids.has(track.id)) : [];
+}
+
 function modeTracks() {
   let tracks = state.tracks;
   if (state.mode === "missing") tracks = tracks.filter((track) => track.missing);
@@ -277,8 +284,7 @@ function modeTracks() {
     const ids = state.duplicateIds;
     tracks = ids ? tracks.filter((track) => ids.has(track.id)) : [];
   } else if (state.mode === "crates" && state.activeCrate !== "all") {
-    const ids = state.crateTracks.get(state.activeCrate);
-    tracks = ids ? tracks.filter((track) => ids.has(track.id)) : [];
+    tracks = tracksForCrate(state.activeCrate);
   }
   return tracks;
 }
@@ -321,6 +327,13 @@ export function buildView() {
   const result = modeTracks().filter((track) => matchesQuery(track, terms));
   result.sort(compare);
   state.view = result;
+  if (state.mode === "crates" && state.splitCrates) {
+    const viewB = tracksForCrate(state.secondCrate).filter((track) => matchesQuery(track, terms));
+    viewB.sort(compare);
+    state.viewB = viewB;
+  } else {
+    state.viewB = [];
+  }
   return result;
 }
 
@@ -372,7 +385,9 @@ function crateRow(crate: {
   if (crate.parent != null) button.dataset.parent = String(crate.parent);
   button.setAttribute("role", "treeitem");
   button.setAttribute("aria-level", String((crate.depth as number) + 1));
-  button.setAttribute("aria-selected", String(state.activeCrate === crate.id));
+  const split = state.splitCrates && state.mode === "crates";
+  const panes = paneCrates(state.activeCrate, state.secondCrate, split);
+  button.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
   if (crate.childCount) {
     button.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
   }
@@ -397,7 +412,7 @@ function crateRow(crate: {
   meta.className = "meta";
   meta.textContent = formatNumber(crate.count as number);
   button.append(meta);
-  button.addEventListener("click", () => selectCrate(crate.id));
+  button.addEventListener("click", (event) => selectCrate(crate.id, event));
   row.append(button);
   return row;
 }
@@ -689,24 +704,36 @@ export function renderList() {
   renderShell();
   if (state.mode === "files") {
     renderFiles();
+    paintDualChrome();
     return;
   }
   if (state.mode === "gig") {
     renderCrates();
+    paintDualChrome();
     return;
   }
   if (state.mode === "scan") {
     renderCrates();
+    paintDualChrome();
     return;
   }
   if (state.mode === "tags") {
+    paintDualChrome();
     return;
   }
   renderColumns();
   const view = buildView();
-  el("count").textContent = t(state.mode === "history" ? "count.plays" : "count.tracks", { count: view.length });
+  if (state.mode === "crates" && state.splitCrates) {
+    el("count").textContent = t("count.split", {
+      a: t("count.tracks", { count: view.length }),
+      b: t("count.tracks", { count: state.viewB.length }),
+    });
+  } else {
+    el("count").textContent = t(state.mode === "history" ? "count.plays" : "count.tracks", { count: view.length });
+  }
   if (state.mode === "crates") renderCrates();
   else document.querySelector(".rules")?.remove();
+  paintDualChrome();
   paintRows();
   if (!view.some((track) => track.id === state.selectedId)) {
     if (!view.length) {
@@ -756,12 +783,18 @@ export function toggleCrate(id: number | "all") {
  * database; membership changes go through the detail pane.
  *
  * @param {number|string} id Crate id, or "all".
+ * @param {MouseEvent} [event] Click that chose the crate. Alt or Shift fills the other pane.
  * @returns {void}
  */
-export function selectCrate(id: number | "all") {
-  state.activeCrate = id;
+export function selectCrate(id: number | "all", event?: MouseEvent) {
+  const alt = Boolean(event?.altKey || event?.shiftKey);
+  const pane = clickPane(state.splitCrates && state.mode === "crates", state.focusedPane, alt);
+  if (pane === "b") state.secondCrate = id;
+  else state.activeCrate = id;
+  if (!alt && state.splitCrates && state.mode === "crates") state.focusedPane = pane;
   if (id !== "all") expandAncestors(id);
-  el("list").scrollTop = 0;
+  const list = pane === "b" ? el("list-b") : el("list");
+  list.scrollTop = 0;
   renderList();
   if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
   if (state.mode === "scan") loadScan().catch(showScanFailure);
