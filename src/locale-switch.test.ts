@@ -60,7 +60,7 @@ describe("switching the language", () => {
     wireLocale();
     renderList();
     expect(el("count").textContent).toBe("2 tracks");
-    expect(columns()).toEqual(["Title", "Artist", "BPM", "Key", "Time"]);
+    expect(columns()).toEqual(["Title", "Artist", "BPM", "Key", "Energy", "Genre", "Added", "Last", "Plays", "Time"]);
     expect(document.querySelector('[data-view="crates"]')?.textContent).toBe("Crates");
     expect(el("search").placeholder).toBe("Search tracks");
     expect(el("crate-foot").textContent).toBe("2 · 6m · 4.0 KB");
@@ -68,7 +68,7 @@ describe("switching the language", () => {
     setLocale("es");
 
     expect(el("count").textContent).toBe("2 pistas");
-    expect(columns()).toEqual(["Título", "Artista", "BPM", "Tono", "Tiempo"]);
+    expect(columns()).toEqual(["Título", "Artista", "BPM", "Tono", "Energía", "Género", "Añadida", "Última", "Veces", "Tiempo"]);
     expect(document.querySelector('[data-view="crates"]')?.textContent).toBe("Cajas");
     expect(el("search").placeholder).toBe("Buscar pistas");
     expect(el("crate-foot").textContent).toBe("2 · 6 min · 4,0 KB");

@@ -26,7 +26,7 @@ import type {
 import { bridge } from "./bridge";
 import { el } from "./dom";
 import { clickPane, paintDualChrome, paneCrates } from "./dual-crate-view";
-import { clockLabel, colorHex, compare, durationLabel, sizeLabel } from "./format";
+import { clockLabel, colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
 import { loadScan, showScanFailure } from "./scan";
 import { loadTags, showTagsFailure } from "./tags";
@@ -83,8 +83,9 @@ let detailPlayWired = false;
  * Return whether a track contains every search word and passes every filter.
  *
  * The haystack is title, artist, album, genre, key, and file. Filter words
- * (`bpm:`, `key:`, `mix:`) are read by search-filters.ts. An empty query
- * matches everything. No request is made.
+ * (`bpm:`, `key:`, `mix:`, `missing:yes`, `nokeybpm:yes`, `cues:none`)
+ * are read by search-filters.ts. An empty query matches everything. No
+ * request is made.
  *
  * @param {object} track Track or history row.
  * @param {ParsedQuery} query Words and filters from the search box.
@@ -540,30 +541,53 @@ function renderRules() {
  * Relabel the list headers for tracks or for history.
  *
  * History shows deck, played, and start time. Other views show BPM, key,
- * and length. The active sort is marked. Does not reorder rows; renderList
- * does that.
+ * energy, genre, date added, last played, plays, and length. The header
+ * is rebuilt so the button count matches. The active sort is marked.
+ * Does not reorder rows; renderList does that.
  *
  * @returns {void}
  */
 function markHistoryColumns(): void {
   const history = state.mode === "history";
   document.querySelector(".columns")?.classList.toggle("for-history", history);
+  document.querySelector(".browser")?.classList.toggle("for-history", history);
   el("list").classList.toggle("for-history", history);
 }
 
+const HISTORY_COLUMNS: Array<[string, MessageKey]> = [
+  ["name", "column.title"],
+  ["artist", "column.artist"],
+  ["deck", "column.deck"],
+  ["played", "column.played"],
+  ["start", "column.time"],
+];
+
+const TRACK_COLUMNS: Array<[string, MessageKey]> = [
+  ["name", "column.title"],
+  ["artist", "column.artist"],
+  ["bpm", "column.bpm"],
+  ["key", "column.key"],
+  ["energy", "column.energy"],
+  ["genre", "column.genre"],
+  ["time_added", "column.added"],
+  ["last_played", "column.lastPlayed"],
+  ["play_count", "column.plays"],
+  ["length_ms", "column.time"],
+];
+
 export function renderColumns() {
   markHistoryColumns();
-  const columns: Array<[string, MessageKey]> = state.mode === "history"
-    ? [["name", "column.title"], ["artist", "column.artist"], ["deck", "column.deck"], ["played", "column.played"], ["start", "column.time"]]
-    : [["name", "column.title"], ["artist", "column.artist"], ["bpm", "column.bpm"], ["key", "column.key"], ["length_ms", "column.time"]];
-  const buttons = [...document.querySelectorAll<HTMLButtonElement>(".columns button")];
-  columns.forEach(([key, label], index) => {
-    const button = buttons[index]!;
+  const columns = state.mode === "history" ? HISTORY_COLUMNS : TRACK_COLUMNS;
+  const header = document.querySelector(".columns");
+  if (!(header instanceof HTMLElement)) return;
+  header.replaceChildren();
+  for (const [key, label] of columns) {
+    const button = buttonEl(sortTip(key, t(label)));
     button.dataset.sort = key;
     button.textContent = t(label);
-    button.dataset.active = String(button.dataset.sort === state.sort);
-    setTooltip(button, sortTip(key, t(label)));
-  });
+    button.dataset.active = String(key === state.sort);
+    header.append(button);
+  }
 }
 
 /**
@@ -3392,7 +3416,7 @@ export function wireLibrary(): void {
     else {
       state.sort = key;
       // Numbers open high-to-low. Titles open A-to-Z.
-      state.sortDir = key === "bpm" || key === "length_ms" || key === "start" ? -1 : 1;
+      state.sortDir = isNumericSort(key) ? -1 : 1;
     }
     renderColumns();
     renderList();

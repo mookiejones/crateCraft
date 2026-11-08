@@ -11,11 +11,16 @@
     "color.purple": "Purple",
     "color.red": "Red",
     "color.yellow": "Yellow",
+    "column.added": "Added",
     "column.artist": "Artist",
     "column.bpm": "BPM",
     "column.deck": "Deck",
+    "column.energy": "Energy",
+    "column.genre": "Genre",
     "column.key": "Key",
+    "column.lastPlayed": "Last",
     "column.played": "Played",
+    "column.plays": "Plays",
     "column.time": "Time",
     "column.title": "Title",
     "common.back": "Back",
@@ -1142,7 +1147,7 @@
     "tooltip.saveTrack": "Save these track details.",
     "tooltip.scanFull": "Decode every file in the selected crate. Choose a crate first. This can take minutes. Nothing is written.",
     "tooltip.scanQuick": "Read the start of each audio file. Empty files and the wrong format show up here. Nothing is written.",
-    "tooltip.search": "Search tracks by title or artist. Filter with bpm:120-128, bpm:124~3, key:8A, or mix:8A (keys that mix with 8A). Ctrl/Cmd+F or /. Esc clears the search.",
+    "tooltip.search": "Search tracks by title or artist. Filter with bpm:120-128, bpm:124~3, bpm:none, key:8A, key:none, mix:8A, missing:yes, nokeybpm:yes, or cues:none. Ctrl/Cmd+F or /. Esc clears the search.",
     "tooltip.seek": "Move through the track. Left arrow goes back 5 seconds. Right arrow goes forward 5 seconds. Shift with an arrow jumps 30 seconds.",
     "tooltip.selectFile": "Select {name} for rename, move, or delete.",
     "tooltip.selectFilePath": "Select {name} at {path} for rename, move, or delete.",
@@ -1166,11 +1171,16 @@
     "tooltip.sortBpm": "Sort tracks by tempo.",
     "tooltip.sortBy": "Sort by {label}.",
     "tooltip.sortCrateName": "Sort crates by name.",
+    "tooltip.sortDateAdded": "Sort tracks by the date they were added.",
     "tooltip.sortDeck": "Sort history by deck.",
+    "tooltip.sortEnergy": "Sort tracks by energy (the star rating as 1 to 5).",
+    "tooltip.sortGenre": "Sort tracks by genre.",
     "tooltip.sortKey": "Sort tracks by key.",
+    "tooltip.sortLastPlayed": "Sort tracks by the last time they were played.",
     "tooltip.sortLength": "Sort tracks by length.",
     "tooltip.sortOrder": "Sort crates in the saved order.",
     "tooltip.sortPlayed": "Sort history by whether the track was played.",
+    "tooltip.sortPlays": "Sort tracks by play count.",
     "tooltip.sortStart": "Sort history by the time it started.",
     "tooltip.sortTitle": "Sort tracks by title.",
     "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
@@ -1322,11 +1332,16 @@
     "color.purple": "Morado",
     "color.red": "Rojo",
     "color.yellow": "Amarillo",
+    "column.added": "Añadida",
     "column.artist": "Artista",
     "column.bpm": "BPM",
     "column.deck": "Deck",
+    "column.energy": "Energía",
+    "column.genre": "Género",
     "column.key": "Tono",
+    "column.lastPlayed": "Última",
     "column.played": "Reproducida",
+    "column.plays": "Veces",
     "column.time": "Tiempo",
     "column.title": "Título",
     "common.back": "Atrás",
@@ -2453,7 +2468,7 @@
     "tooltip.saveTrack": "Guarda estos datos de la pista.",
     "tooltip.scanFull": "Decodifica cada archivo de la caja seleccionada. Elige una caja primero. Puede tardar minutos. No se escribe nada.",
     "tooltip.scanQuick": "Lee el inicio de cada archivo de audio. Aquí aparecen los archivos vacíos y el formato incorrecto. No se escribe nada.",
-    "tooltip.search": "Busca pistas por título o artista. Filtra con bpm:120-128, bpm:124~3, key:8A o mix:8A (tonalidades que mezclan con 8A). Ctrl/Cmd+F o /. Esc borra la búsqueda.",
+    "tooltip.search": "Busca pistas por título o artista. Filtra con bpm:120-128, bpm:124~3, bpm:none, key:8A, key:none, mix:8A, missing:yes, nokeybpm:yes o cues:none. Ctrl/Cmd+F o /. Esc borra la búsqueda.",
     "tooltip.seek": "Avanza por la pista. Izquierda retrocede 5 segundos. Derecha avanza 5 segundos. Mayús con una flecha salta 30 segundos.",
     "tooltip.selectFile": "Selecciona {name} para renombrar, mover o eliminar.",
     "tooltip.selectFilePath": "Selecciona {name} en {path} para renombrar, mover o eliminar.",
@@ -2477,11 +2492,16 @@
     "tooltip.sortBpm": "Ordena las pistas por tempo.",
     "tooltip.sortBy": "Ordena por {label}.",
     "tooltip.sortCrateName": "Ordena las cajas por nombre.",
+    "tooltip.sortDateAdded": "Ordena las pistas por la fecha en que se añadieron.",
     "tooltip.sortDeck": "Ordena el historial por plato.",
+    "tooltip.sortEnergy": "Ordena las pistas por energía (la valoración en estrellas, de 1 a 5).",
+    "tooltip.sortGenre": "Ordena las pistas por género.",
     "tooltip.sortKey": "Ordena las pistas por tonalidad.",
+    "tooltip.sortLastPlayed": "Ordena las pistas por la última vez que se reprodujeron.",
     "tooltip.sortLength": "Ordena las pistas por duración.",
     "tooltip.sortOrder": "Ordena las cajas en el orden guardado.",
     "tooltip.sortPlayed": "Ordena el historial según si la pista se reprodujo.",
+    "tooltip.sortPlays": "Ordena las pistas por número de reproducciones.",
     "tooltip.sortStart": "Ordena el historial por la hora de inicio.",
     "tooltip.sortTitle": "Ordena las pistas por título.",
     "tooltip.space": "Elige Biblioteca, Vídeo, Apple Music o Preparar.",
@@ -3176,6 +3196,43 @@
     if (Number.isNaN(date.getTime())) return "";
     return formatDate(date, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
   }
+  function dateLabel(stamp) {
+    if (stamp == null || stamp === "") return "";
+    const date = new Date(Number(stamp) * 1e3);
+    if (Number.isNaN(date.getTime())) return "";
+    return formatDate(date, { month: "short", day: "numeric", year: "numeric" });
+  }
+  function energyValue(rating) {
+    if (rating == null || rating === "") return null;
+    const score = Number(rating);
+    if (!Number.isFinite(score) || score <= 0) return null;
+    const filled = Math.round(score * 5);
+    if (filled < 1) return null;
+    return Math.min(5, filled);
+  }
+  function energyLabel(rating) {
+    const value = energyValue(rating);
+    return value == null ? "" : formatNumber(value);
+  }
+  var NUMERIC_SORT = /* @__PURE__ */ new Set([
+    "bpm",
+    "length_ms",
+    "start",
+    "energy",
+    "time_added",
+    "last_played",
+    "play_count"
+  ]);
+  function isNumericSort(key) {
+    return NUMERIC_SORT.has(key);
+  }
+  function sortNumber(track, key) {
+    if (key === "energy") return energyValue(track.rating);
+    const raw = track[key];
+    if (raw == null || raw === "") return null;
+    const value = Number(raw);
+    return Number.isFinite(value) ? value : null;
+  }
   function durationLabel(ms) {
     const total = Math.round(Number(ms) / 1e3);
     const hours = Math.floor(total / 3600);
@@ -3204,9 +3261,9 @@
     const dir = state.sortDir;
     let av = a[key];
     let bv = b[key];
-    if (key === "bpm" || key === "length_ms" || key === "start") {
-      const an = av == null || av === "" ? null : Number(av);
-      const bn = bv == null || bv === "" ? null : Number(bv);
+    if (NUMERIC_SORT.has(key)) {
+      const an = sortNumber(a, key);
+      const bn = sortNumber(b, key);
       if (an == null && bn == null) return a.id - b.id;
       if (an == null) return 1;
       if (bn == null) return -1;
@@ -3442,6 +3499,11 @@
       artist: "tooltip.sortArtist",
       bpm: "tooltip.sortBpm",
       key: "tooltip.sortKey",
+      energy: "tooltip.sortEnergy",
+      genre: "tooltip.sortGenre",
+      time_added: "tooltip.sortDateAdded",
+      last_played: "tooltip.sortLastPlayed",
+      play_count: "tooltip.sortPlays",
       length_ms: "tooltip.sortLength",
       deck: "tooltip.sortDeck",
       played: "tooltip.sortPlayed",
@@ -5868,6 +5930,32 @@
   var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
   var ABOVE = new RegExp(`^>${NUMBER}$`);
   var BELOW = new RegExp(`^<${NUMBER}$`);
+  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
+  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
+  function isNone(value) {
+    return NONE.has(value);
+  }
+  function isYes(value) {
+    return YES.has(value);
+  }
+  function hasBpm(track) {
+    const bpm = Number(track.bpm);
+    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
+  }
+  function hasKey2(track) {
+    return Boolean(String(track.key ?? "").trim());
+  }
+  function cueFlag(track) {
+    if (track.has_cues === true) return true;
+    if (track.has_cues === false) return false;
+    if (track.markers_found === true) return true;
+    if (track.markers_found === false) return false;
+    if (Array.isArray(track.cues)) {
+      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
+      return track.cues.length > 0 || loops > 0;
+    }
+    return null;
+  }
   function keyNumber(value) {
     if (!value) return -1;
     return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
@@ -5909,7 +5997,12 @@
       const name = colon > 0 ? word.slice(0, colon) : "";
       const value = colon > 0 ? word.slice(colon + 1) : "";
       let filter = null;
-      if (name === "bpm") filter = bpmFilter(value);
+      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
+      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
+      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
+      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
+      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
+      else if (name === "bpm") filter = bpmFilter(value);
       else if (name === "key" || name === "mix") {
         const key = keyNumber(value);
         if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
@@ -5922,9 +6015,19 @@
   function matchesFilters(track, filters) {
     for (const filter of filters) {
       if (filter.kind === "bpm") {
+        if (!hasBpm(track)) return false;
         const bpm = Number(track.bpm);
-        if (!(track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0)) return false;
         if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
+      } else if (filter.kind === "missing") {
+        if (!track.missing) return false;
+      } else if (filter.kind === "nokey") {
+        if (hasKey2(track)) return false;
+      } else if (filter.kind === "nobpm") {
+        if (hasBpm(track)) return false;
+      } else if (filter.kind === "nokeybpm") {
+        if (hasKey2(track) && hasBpm(track)) return false;
+      } else if (filter.kind === "nocues") {
+        if (cueFlag(track) !== false) return false;
       } else if (!filter.keys.has(keyNumber(track.key))) {
         return false;
       }
@@ -7626,22 +7729,31 @@
       const artist2 = document.createElement("span");
       artist2.className = "cell";
       artist2.textContent = track.artist ?? "";
-      const third = document.createElement("span");
-      third.className = "cell num";
-      const fourth = document.createElement("span");
-      fourth.className = "cell num";
-      const fifth = document.createElement("span");
-      fifth.className = "cell num";
+      const cells = [];
+      const add = (text2, numeric = false) => {
+        const cell = document.createElement("span");
+        cell.className = numeric ? "cell num" : "cell";
+        cell.textContent = text2;
+        cells.push(cell);
+      };
       if (track.entry) {
-        third.textContent = track.deck || "";
-        fourth.textContent = track.played || "";
-        fifth.textContent = clockLabel(track.start);
+        add(track.deck || "");
+        add(track.played || "");
+        add(clockLabel(track.start), true);
       } else {
-        third.textContent = track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 });
-        fourth.textContent = track.key ?? "";
-        fifth.textContent = lengthLabel(track.length_ms);
+        add(
+          track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 }),
+          true
+        );
+        add(track.key ?? "");
+        add(energyLabel(track.rating), true);
+        add(track.genre ?? "");
+        add(dateLabel(track.time_added), true);
+        add(dateLabel(track.last_played), true);
+        add(track.play_count == null ? "" : formatNumber(Number(track.play_count)), true);
+        add(lengthLabel(track.length_ms), true);
       }
-      button2.append(titleCell, artist2, third, fourth, fifth);
+      button2.append(titleCell, artist2, ...cells);
       button2.addEventListener("click", () => {
         if (track.entry) bridge.selectEntry(track.id);
         else bridge.selectTrack(track.id);
@@ -8026,19 +8138,41 @@
   function markHistoryColumns() {
     const history = state.mode === "history";
     document.querySelector(".columns")?.classList.toggle("for-history", history);
+    document.querySelector(".browser")?.classList.toggle("for-history", history);
     el("list").classList.toggle("for-history", history);
   }
+  var HISTORY_COLUMNS = [
+    ["name", "column.title"],
+    ["artist", "column.artist"],
+    ["deck", "column.deck"],
+    ["played", "column.played"],
+    ["start", "column.time"]
+  ];
+  var TRACK_COLUMNS = [
+    ["name", "column.title"],
+    ["artist", "column.artist"],
+    ["bpm", "column.bpm"],
+    ["key", "column.key"],
+    ["energy", "column.energy"],
+    ["genre", "column.genre"],
+    ["time_added", "column.added"],
+    ["last_played", "column.lastPlayed"],
+    ["play_count", "column.plays"],
+    ["length_ms", "column.time"]
+  ];
   function renderColumns() {
     markHistoryColumns();
-    const columns = state.mode === "history" ? [["name", "column.title"], ["artist", "column.artist"], ["deck", "column.deck"], ["played", "column.played"], ["start", "column.time"]] : [["name", "column.title"], ["artist", "column.artist"], ["bpm", "column.bpm"], ["key", "column.key"], ["length_ms", "column.time"]];
-    const buttons = [...document.querySelectorAll(".columns button")];
-    columns.forEach(([key, label], index) => {
-      const button2 = buttons[index];
+    const columns = state.mode === "history" ? HISTORY_COLUMNS : TRACK_COLUMNS;
+    const header = document.querySelector(".columns");
+    if (!(header instanceof HTMLElement)) return;
+    header.replaceChildren();
+    for (const [key, label] of columns) {
+      const button2 = buttonEl(sortTip(key, t(label)));
       button2.dataset.sort = key;
       button2.textContent = t(label);
-      button2.dataset.active = String(button2.dataset.sort === state.sort);
-      setTooltip(button2, sortTip(key, t(label)));
-    });
+      button2.dataset.active = String(key === state.sort);
+      header.append(button2);
+    }
   }
   function renderShell() {
     markHistoryColumns();
@@ -9965,7 +10099,7 @@
       if (state.sort === key) state.sortDir *= -1;
       else {
         state.sort = key;
-        state.sortDir = key === "bpm" || key === "length_ms" || key === "start" ? -1 : 1;
+        state.sortDir = isNumericSort(key) ? -1 : 1;
       }
       renderColumns();
       renderList();

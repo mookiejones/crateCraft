@@ -6,11 +6,17 @@
  *
  * - `bpm:124` rounds to 124, `bpm:120-128` is a range, `bpm:124~3` is
  *   124 plus or minus 3, and `bpm:>120` or `bpm:<100` is open-ended.
- *   Every bound is inclusive.
+ *   Every bound is inclusive. `bpm:none` or `bpm:no` is no BPM.
  * - `key:8A` is that key, written as Camelot or as a key name (`Am`).
+ *   `key:none` or `key:no` is a blank key.
  * - `mix:8A` is that key, one Camelot step either way in the same letter,
  *   or the relative key. It is the rule related-track suggestions and the
  *   harmonic crate preset use.
+ * - `missing:yes` is a connected-drive missing file. Offline is not missing.
+ * - `nokeybpm:yes` is a blank key or no BPM.
+ * - `cues:none` or `cues:no` is a track whose cue flag is empty
+ *   (`has_cues` false, `markers_found` false, or an empty `cues` list).
+ *   A list row without those fields does not match.
  *
  * A word that looks like a filter but cannot be read (`bpm:fast`) stays a
  * plain search word, so a typo narrows the list instead of being dropped.
@@ -21,7 +27,12 @@ import type { Track } from "./api-types";
 
 export type SearchFilter =
   | { kind: "bpm"; min: number; max: number }
-  | { kind: "key"; keys: ReadonlySet<number> };
+  | { kind: "key"; keys: ReadonlySet<number> }
+  | { kind: "missing" }
+  | { kind: "nokey" }
+  | { kind: "nobpm" }
+  | { kind: "nokeybpm" }
+  | { kind: "nocues" };
 
 export interface ParsedQuery {
   /** Lowercased plain words. */
@@ -63,6 +74,46 @@ const RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
 const AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
 const ABOVE = new RegExp(`^>${NUMBER}$`);
 const BELOW = new RegExp(`^<${NUMBER}$`);
+const NONE = new Set(["none", "no", "off"]);
+const YES = new Set(["yes", "true", "1"]);
+
+function isNone(value: string): boolean {
+  return NONE.has(value);
+}
+
+function isYes(value: string): boolean {
+  return YES.has(value);
+}
+
+function hasBpm(track: Track): boolean {
+  const bpm = Number(track.bpm);
+  return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
+}
+
+function hasKey(track: Track): boolean {
+  return Boolean(String(track.key ?? "").trim());
+}
+
+/**
+ * Read whether the track has cue data the list already knows.
+ *
+ * GET /api/library does not open audio files, so most rows omit these
+ * fields and this returns null. Tests and GET /api/track can set them.
+ *
+ * @param {Track} track Track or history row.
+ * @returns {boolean | null} True, false, or null when unknown.
+ */
+export function cueFlag(track: Track): boolean | null {
+  if (track.has_cues === true) return true;
+  if (track.has_cues === false) return false;
+  if (track.markers_found === true) return true;
+  if (track.markers_found === false) return false;
+  if (Array.isArray(track.cues)) {
+    const loops = Array.isArray(track.loops) ? track.loops.length : 0;
+    return track.cues.length > 0 || loops > 0;
+  }
+  return null;
+}
 
 /**
  * Map a key name to Serato's key number.
@@ -134,7 +185,12 @@ export function parseQuery(text: string): ParsedQuery {
     const name = colon > 0 ? word.slice(0, colon) : "";
     const value = colon > 0 ? word.slice(colon + 1) : "";
     let filter: SearchFilter | null = null;
-    if (name === "bpm") filter = bpmFilter(value);
+    if (name === "missing" && isYes(value)) filter = { kind: "missing" };
+    else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
+    else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
+    else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
+    else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
+    else if (name === "bpm") filter = bpmFilter(value);
     else if (name === "key" || name === "mix") {
       const key = keyNumber(value);
       if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : new Set([key]) };
@@ -148,8 +204,9 @@ export function parseQuery(text: string): ParsedQuery {
 /**
  * Tell whether a track passes every filter.
  *
- * A track with no BPM, or a BPM of zero, never passes a BPM filter. A
- * track whose key cannot be read never passes a key filter.
+ * A track with no BPM, or a BPM of zero, never passes a BPM range
+ * filter. A track whose key cannot be read never passes a key filter.
+ * `cues:none` does not match a row whose cue flag is unknown.
  *
  * @param {Track} track Track or history row.
  * @param {SearchFilter[]} filters Filters from parseQuery.
@@ -158,9 +215,19 @@ export function parseQuery(text: string): ParsedQuery {
 export function matchesFilters(track: Track, filters: readonly SearchFilter[]): boolean {
   for (const filter of filters) {
     if (filter.kind === "bpm") {
+      if (!hasBpm(track)) return false;
       const bpm = Number(track.bpm);
-      if (!(track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0)) return false;
       if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
+    } else if (filter.kind === "missing") {
+      if (!track.missing) return false;
+    } else if (filter.kind === "nokey") {
+      if (hasKey(track)) return false;
+    } else if (filter.kind === "nobpm") {
+      if (hasBpm(track)) return false;
+    } else if (filter.kind === "nokeybpm") {
+      if (hasKey(track) && hasBpm(track)) return false;
+    } else if (filter.kind === "nocues") {
+      if (cueFlag(track) !== false) return false;
     } else if (!filter.keys.has(keyNumber(track.key))) {
       return false;
     }

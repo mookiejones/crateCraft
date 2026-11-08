@@ -10,7 +10,7 @@ flowchart TD
   space["Space: Library, Video, Apple Music, Prepare"] --> crates["Crates"]
   crates --> all["All tracks"]
   crates --> one["One crate"]
-  one --> tracks["Title, Artist, BPM, Key, Time"]
+  one --> tracks["Title, Artist, BPM, Key, Energy, Genre, Added, Last, Plays, Time"]
   tracks --> tick["Tick a crate on the track"]
   tools["New, Rename, Color, Delete"] --> quit["Quit Serato DJ Pro first"]
 ```

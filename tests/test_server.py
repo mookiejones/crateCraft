@@ -240,6 +240,38 @@ class ApiTests(unittest.TestCase):
         self.assertTrue(payload["writable"])
         self.assertEqual(payload["serato"]["file_manager"], library.file_manager_name())
         self.assertEqual(payload["tracks"][0]["name"], "Same")
+        self.assertEqual(payload["tracks"][0]["last_played"], 100)
+        self.assertIsNone(payload["tracks"][1]["last_played"])
+        self.assertEqual(payload["tracks"][0]["play_count"], 2)
+        self.assertEqual(payload["tracks"][0]["time_added"], 10)
+
+    def test_library_last_played_ignores_unplayed_history(self) -> None:
+        """last_played is the latest played history_entry, not a skipped one.
+
+        The fixture already has a played row for track 1 at start_time 100.
+        An unplayed later row must lose to a played later row. Track 2 has
+        no plays. Nothing is written to the live Serato library.
+
+        Returns:
+            None. The test fails if an unplayed row wins or a never-played
+            track gets a stamp.
+        """
+        with open_database(self.library.db) as conn:
+            conn.execute(
+                """
+                INSERT INTO history_entry
+                    (id, session_id, asset_id, name, artist, played, start_time, file_name, is_missing)
+                VALUES
+                    (2, 1, 1, 'Same', 'Artist', 0, 999, 'same-a.mp3', 0),
+                    (3, 1, 1, 'Same', 'Artist', 1, 250, 'same-a.mp3', 0)
+                """
+            )
+        server.invalidate()
+        status, payload = self.request("/api/library")
+        self.assertEqual(status, 200)
+        by_id = {row["id"]: row for row in payload["tracks"]}
+        self.assertEqual(by_id[1]["last_played"], 250)
+        self.assertIsNone(by_id[2]["last_played"])
 
     def test_static_path_stays_in_the_directory(self) -> None:
         """Refuse a request that climbs out of static/.

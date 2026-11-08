@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "./api-types";
-import { keyNumber, matchesFilters, mixingKeys, parseQuery } from "./search-filters";
+import { cueFlag, keyNumber, matchesFilters, mixingKeys, parseQuery } from "./search-filters";
 import { state } from "./state";
 import { installPage } from "./test-page";
 import { buildView, renderCrates } from "./views";
@@ -91,6 +91,50 @@ describe("matchesFilters", () => {
   it("needs every filter to pass", () => {
     expect(ids("mix:1A bpm:120-125", tracks)).toEqual([1, 2]);
     expect(ids("key:1A key:2A", tracks)).toEqual([]);
+  });
+
+  it("matches missing files and skips offline rows", () => {
+    const rows = [
+      track(1, 120, "1A"),
+      { ...track(2, 120, "1A"), missing: true },
+      { ...track(3, 120, "1A"), missing: false, offline: true },
+    ];
+    expect(ids("missing:yes", rows)).toEqual([2]);
+    expect(parseQuery("missing:nope").terms).toEqual(["missing:nope"]);
+  });
+
+  it("matches a blank key, no BPM, and either", () => {
+    expect(ids("key:none", tracks)).toEqual([]);
+    expect(ids("bpm:none", tracks)).toEqual([4, 5, 6]);
+    expect(ids("bpm:no", tracks)).toEqual([4, 5, 6]);
+    const blankKey = [
+      track(1, 120, "1A"),
+      track(8, 120, ""),
+      track(9, 120, "  "),
+      track(10, null, "8A"),
+      track(11, 0, ""),
+    ];
+    expect(ids("key:none", blankKey)).toEqual([8, 9, 11]);
+    expect(ids("key:no", blankKey)).toEqual([8, 9, 11]);
+    expect(ids("nokeybpm:yes", blankKey)).toEqual([8, 9, 10, 11]);
+    expect(ids("key:none bpm:none", blankKey)).toEqual([11]);
+  });
+
+  it("matches cues:none only when the list already knows there are none", () => {
+    const rows = [
+      track(1, 120, "1A"),
+      { ...track(2, 120, "1A"), has_cues: false },
+      { ...track(3, 120, "1A"), has_cues: true },
+      { ...track(4, 120, "1A"), markers_found: false },
+      { ...track(5, 120, "1A"), cues: [] },
+      { ...track(6, 120, "1A"), cues: [], loops: [{ start_ms: 0 }] },
+      { ...track(7, 120, "1A"), cues: [{ start_ms: 1000 }] },
+    ];
+    expect(ids("cues:none", rows)).toEqual([2, 4, 5]);
+    expect(ids("cues:no", rows)).toEqual([2, 4, 5]);
+    expect(cueFlag(rows[0]!)).toBeNull();
+    expect(cueFlag(rows[5]!)).toBe(true);
+    expect(parseQuery("cues:yes").terms).toEqual(["cues:yes"]);
   });
 });
 
