@@ -131,6 +131,7 @@
     "error.crate_name_separator": "Use a crate name without the Serato name separator.",
     "error.crate_name_too_long": "That crate name is too long.",
     "error.crate_not_in_space": "That crate is not in this space.",
+    "error.crate_not_root": "Tracks live in a crate, not the space root.",
     "error.field_readonly": "That field cannot be edited.",
     "error.file_already_this_track": "That file is already this track.",
     "error.file_already_used": "Another library track already uses that file.",
@@ -190,6 +191,7 @@
     "error.setup_needs_consent": "Choose whether to share stats before finishing setup.",
     "error.setup_not_saved": "Setup could not be saved.",
     "error.shortcut_skipped": "Shortcuts are left alone.",
+    "error.smart_crate_tracks": "Smart crates choose their tracks from rules.",
     "error.smart_rules_json": "Smart crate rules need to be JSON.",
     "error.smart_rules_list": "Smart crate rules need a rules list.",
     "error.snapshot_id_invalid": "That snapshot id is not valid.",
@@ -281,6 +283,18 @@
     "files.trash": "Trash",
     "files.truncated": "Some files are not listed.",
     "files.updated": "The files were updated.",
+    "folderSync.button": "Sync folder",
+    "folderSync.counting": "Counting tracks…",
+    "folderSync.done": "{name} updated: {added} added, {removed} removed.",
+    "folderSync.folder": "Folder",
+    "folderSync.full": "Remove tracks whose files are not in this folder",
+    "folderSync.intro": "Add library tracks whose files sit in this folder. Files that are not in the library stay skipped. Nothing is imported.",
+    "folderSync.subcrates": "Make a subcrate for each subfolder",
+    "folderSync.summary": "{added} to add, {removed} to remove. {skipped} files not in the library.",
+    "folderSync.summaryNone": "Already in sync. {skipped} files not in the library.",
+    "folderSync.sync": "Sync crate",
+    "folderSync.title": "Sync crate with a folder",
+    "folderSync.unchanged": "{name} already matches that folder.",
     "format.bytes": {
       one: "{count} byte",
       other: "{count} bytes"
@@ -889,7 +903,13 @@
     "tooltip.crateColor": "Set the color of the selected crate.",
     "tooltip.crateDelete": "Delete the selected crate. The tracks stay in the library.",
     "tooltip.crateNew": "Create a new crate.",
+    "tooltip.crateFolderSync": "Add library tracks whose files sit in a folder to this crate. Files that are not in the library stay skipped.",
     "tooltip.cratePreset": "Make a crate from a preset: tracks that mix with a key, a BPM range, or tracks not played lately.",
+    "tooltip.folderSyncCancel": "Close without changing the crate.",
+    "tooltip.folderSyncFull": "Also remove tracks whose files are not in this folder.",
+    "tooltip.folderSyncPath": "Folder on this computer whose files should match this crate.",
+    "tooltip.folderSyncRun": "Update this crate to match the folder. Serato DJ Pro must be quit.",
+    "tooltip.folderSyncSubcrates": "Put files in this folder into the crate, and make a subcrate for each subfolder.",
     "tooltip.crateRefresh": "Pick the tracks for this preset crate again from its preset.",
     "tooltip.crateRename": "Rename the selected crate.",
     "tooltip.crateSearch": "Find a crate by name. Esc clears the search.",
@@ -1308,6 +1328,7 @@
     "error.crate_name_separator": "Usa un nombre de caja sin el separador de nombres de Serato.",
     "error.crate_name_too_long": "Ese nombre de caja es demasiado largo.",
     "error.crate_not_in_space": "Esa caja no está en este espacio.",
+    "error.crate_not_root": "Las pistas viven en una caja, no en la raíz del espacio.",
     "error.field_readonly": "Ese campo no se puede editar.",
     "error.file_already_this_track": "Ese archivo ya es esta pista.",
     "error.file_already_used": "Otra pista de la biblioteca ya usa ese archivo.",
@@ -1367,6 +1388,7 @@
     "error.setup_needs_consent": "Elige si quieres compartir estadísticas antes de terminar la configuración.",
     "error.setup_not_saved": "No se pudo guardar la configuración.",
     "error.shortcut_skipped": "Los accesos directos no se tocan.",
+    "error.smart_crate_tracks": "Las cajas inteligentes eligen sus pistas a partir de reglas.",
     "error.smart_rules_json": "Las reglas de la caja inteligente deben estar en JSON.",
     "error.smart_rules_list": "Las reglas de la caja inteligente necesitan una lista de reglas.",
     "error.snapshot_id_invalid": "Ese identificador de instantánea no es válido.",
@@ -1458,6 +1480,18 @@
     "files.trash": "Papelera",
     "files.truncated": "Algunos archivos no aparecen en la lista.",
     "files.updated": "Se actualizaron los archivos.",
+    "folderSync.button": "Sincronizar carpeta",
+    "folderSync.counting": "Contando pistas…",
+    "folderSync.done": "{name} actualizada: {added} añadidas, {removed} quitadas.",
+    "folderSync.folder": "Carpeta",
+    "folderSync.full": "Quitar pistas cuyos archivos no están en esta carpeta",
+    "folderSync.intro": "Añade las pistas de la biblioteca cuyos archivos están en esta carpeta. Los archivos que no están en la biblioteca se omiten. No se importa nada.",
+    "folderSync.subcrates": "Crear una subcaja por cada subcarpeta",
+    "folderSync.summary": "{added} para añadir, {removed} para quitar. {skipped} archivos no están en la biblioteca.",
+    "folderSync.summaryNone": "Ya está sincronizada. {skipped} archivos no están en la biblioteca.",
+    "folderSync.sync": "Sincronizar caja",
+    "folderSync.title": "Sincronizar la caja con una carpeta",
+    "folderSync.unchanged": "{name} ya coincide con esa carpeta.",
     "format.bytes": {
       one: "{count} byte",
       other: "{count} bytes"
@@ -2066,7 +2100,13 @@
     "tooltip.crateColor": "Elige el color de la caja seleccionada.",
     "tooltip.crateDelete": "Elimina la caja seleccionada. Las pistas siguen en la biblioteca.",
     "tooltip.crateNew": "Crea una caja nueva.",
+    "tooltip.crateFolderSync": "Añade a esta caja las pistas de la biblioteca cuyos archivos están en una carpeta. Los archivos que no están en la biblioteca se omiten.",
     "tooltip.cratePreset": "Crea una caja a partir de un preajuste: pistas que mezclan con una tonalidad, un rango de BPM o pistas sin tocar últimamente.",
+    "tooltip.folderSyncCancel": "Cierra sin cambiar la caja.",
+    "tooltip.folderSyncFull": "También quita las pistas cuyos archivos no están en esta carpeta.",
+    "tooltip.folderSyncPath": "Carpeta de este ordenador cuyos archivos deben coincidir con esta caja.",
+    "tooltip.folderSyncRun": "Actualiza esta caja para que coincida con la carpeta. Hay que salir de Serato DJ Pro.",
+    "tooltip.folderSyncSubcrates": "Pone en la caja los archivos de esta carpeta y crea una subcaja por cada subcarpeta.",
     "tooltip.crateRefresh": "Vuelve a elegir las pistas de esta caja según su preajuste.",
     "tooltip.crateRename": "Cambia el nombre de la caja seleccionada.",
     "tooltip.crateSearch": "Busca una caja por nombre. Esc borra la búsqueda.",
@@ -2915,7 +2955,13 @@
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),
+    crateFolderSync: spec("tooltip.crateFolderSync"),
     crateRefresh: spec("tooltip.crateRefresh"),
+    folderSyncPath: spec("tooltip.folderSyncPath"),
+    folderSyncSubcrates: spec("tooltip.folderSyncSubcrates"),
+    folderSyncFull: spec("tooltip.folderSyncFull"),
+    folderSyncCancel: spec("tooltip.folderSyncCancel"),
+    folderSyncRun: spec("tooltip.folderSyncRun"),
     presetKind: spec("tooltip.presetKind"),
     presetKey: spec("tooltip.presetKey"),
     presetBpm: spec("tooltip.presetBpm"),
@@ -3132,7 +3178,13 @@
       "crate-color": tips.crateColor,
       "crate-delete": tips.crateDelete,
       "crate-preset": tips.cratePreset,
+      "crate-folder-sync": tips.crateFolderSync,
       "crate-refresh": tips.crateRefresh,
+      "folder-sync-path": tips.folderSyncPath,
+      "folder-sync-subcrates": tips.folderSyncSubcrates,
+      "folder-sync-full": tips.folderSyncFull,
+      "folder-sync-cancel": tips.folderSyncCancel,
+      "folder-sync-run": tips.folderSyncRun,
       "preset-kind": tips.presetKind,
       "preset-key": tips.presetKey,
       "preset-bpm": tips.presetBpm,
@@ -4226,6 +4278,42 @@
     if (typeof value.code === "string") body.code = value.code;
     if (body.error === void 0 && body.code === void 0) return null;
     return body;
+  }
+
+  // src/folder-sync-view.ts
+  function syncFolderSyncButton() {
+    const id = state.activeCrate;
+    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
+    el("crate-folder-sync").disabled = !state.writable || id === "all" || Boolean(crate?.smart);
+  }
+  function readFolderSyncForm() {
+    const folder = el("folder-sync-path").value.trim();
+    if (!folder) return null;
+    return {
+      folder,
+      subcrates: el("folder-sync-subcrates").checked,
+      full: el("folder-sync-full").checked
+    };
+  }
+  function folderSyncPreviewText(reply) {
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    const created = Number(reply.created) || 0;
+    const skipped = Number(reply.skipped_count) || 0;
+    if (added === 0 && removed === 0 && created === 0) {
+      return t("folderSync.summaryNone", { skipped });
+    }
+    return t("folderSync.summary", { added, removed, skipped });
+  }
+  function folderSyncDoneText(reply) {
+    const name = reply.crate?.name?.trim() || "";
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    if (!reply.written) return t("folderSync.unchanged", { name });
+    return t("folderSync.done", { name, added, removed });
+  }
+  function folderSyncHasWork(reply) {
+    return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
   }
 
   // src/preset-view.ts
@@ -6932,6 +7020,7 @@
     el("crate-color").disabled = !state.writable || !crateChosen;
     el("crate-delete").disabled = !state.writable || !crateChosen;
     syncPresetButtons();
+    syncFolderSyncButton();
     syncMergeButton();
     syncRelinkButton();
     if (filesMode) {
@@ -11252,16 +11341,112 @@
     stop = onLocaleChange(repaintAll);
   }
 
-  // src/presets.ts
+  // src/folder-sync.ts
   var PREVIEW_DELAY_MS = 250;
   var previewTimer = 0;
   var previewToken = 0;
+  var syncing = false;
+  async function previewFolderSync() {
+    const token3 = ++previewToken;
+    const form = readFolderSyncForm();
+    const crate = state.activeCrate;
+    if (!form || typeof crate !== "number") {
+      el("folder-sync-preview").textContent = "";
+      el("folder-sync-run").disabled = true;
+      return;
+    }
+    el("folder-sync-preview").textContent = t("folderSync.counting");
+    el("folder-sync-run").disabled = true;
+    try {
+      const reply = await postJSON("/api/folder-sync", {
+        action: "preview",
+        space: state.space,
+        crate,
+        folder: form.folder,
+        subcrates: form.subcrates,
+        full: form.full
+      });
+      if (token3 !== previewToken) return;
+      el("folder-sync-preview").textContent = folderSyncPreviewText(reply);
+      el("folder-sync-run").disabled = syncing || !folderSyncHasWork(reply);
+    } catch (error2) {
+      if (token3 !== previewToken) return;
+      el("folder-sync-preview").textContent = failureOf(error2).message;
+      el("folder-sync-run").disabled = true;
+    }
+  }
+  function schedulePreview() {
+    window.clearTimeout(previewTimer);
+    previewTimer = window.setTimeout(() => {
+      void previewFolderSync();
+    }, PREVIEW_DELAY_MS);
+  }
+  async function openFolderSyncDialog() {
+    if (!state.writable || typeof state.activeCrate !== "number") {
+      setNotice(el("status").textContent || "");
+      return;
+    }
+    el("folder-sync-status").textContent = "";
+    if (!el("folder-sync-dialog").open) el("folder-sync-dialog").showModal();
+    el("folder-sync-path").focus();
+    await previewFolderSync();
+  }
+  async function runFolderSync() {
+    const form = readFolderSyncForm();
+    const crate = state.activeCrate;
+    if (!form || typeof crate !== "number" || syncing) return;
+    syncing = true;
+    el("folder-sync-run").disabled = true;
+    el("folder-sync-status").textContent = "";
+    try {
+      const reply = await postJSON("/api/folder-sync", {
+        action: "sync",
+        space: state.space,
+        crate,
+        folder: form.folder,
+        subcrates: form.subcrates,
+        full: form.full
+      });
+      el("folder-sync-dialog").close();
+      setNotice(folderSyncDoneText(reply));
+      await loadLibrary();
+    } catch (error2) {
+      el("folder-sync-status").textContent = failureOf(error2).message;
+      if (failureOf(error2).status === 409) {
+        lockDown(error2);
+        el("folder-sync-dialog").close();
+      }
+    } finally {
+      syncing = false;
+    }
+  }
+  function wireFolderSync() {
+    el("crate-folder-sync").addEventListener("click", () => {
+      openFolderSyncDialog().catch((error2) => setNotice(failureOf(error2).message));
+    });
+    el("folder-sync-path").addEventListener("input", schedulePreview);
+    el("folder-sync-subcrates").addEventListener("change", () => {
+      void previewFolderSync();
+    });
+    el("folder-sync-full").addEventListener("change", () => {
+      void previewFolderSync();
+    });
+    el("folder-sync-cancel").addEventListener("click", () => el("folder-sync-dialog").close());
+    el("folder-sync-run").addEventListener("click", () => {
+      runFolderSync().catch((error2) => setNotice(failureOf(error2).message));
+    });
+  }
+
+  // src/presets.ts
+  var PREVIEW_DELAY_MS2 = 250;
+  var previewTimer2 = 0;
+  var previewToken2 = 0;
   var creating = false;
   function syncNamePlaceholder(preset) {
     el("preset-name").placeholder = preset ? presetName(preset) : "";
   }
   async function previewPreset() {
-    const token3 = ++previewToken;
+    const token3 = ++previewToken2;
     const preset = readPresetForm();
     syncNamePlaceholder(preset);
     el("preset-create").disabled = !preset || creating;
@@ -11272,19 +11457,19 @@
     el("preset-preview").textContent = t("presets.counting");
     try {
       const reply = await postJSON("/api/smart-preset", { action: "preview", space: state.space, preset });
-      if (token3 !== previewToken) return;
+      if (token3 !== previewToken2) return;
       el("preset-preview").textContent = t("presets.matches", { count: Number(reply.count) || 0 });
     } catch (error2) {
-      if (token3 !== previewToken) return;
+      if (token3 !== previewToken2) return;
       el("preset-preview").textContent = failureOf(error2).message;
       el("preset-create").disabled = true;
     }
   }
-  function schedulePreview() {
-    window.clearTimeout(previewTimer);
-    previewTimer = window.setTimeout(() => {
+  function schedulePreview2() {
+    window.clearTimeout(previewTimer2);
+    previewTimer2 = window.setTimeout(() => {
       void previewPreset();
-    }, PREVIEW_DELAY_MS);
+    }, PREVIEW_DELAY_MS2);
   }
   async function openPresetDialog() {
     if (!state.writable) {
@@ -11375,7 +11560,7 @@
       void previewPreset();
     });
     for (const id of ["preset-key", "preset-bpm", "preset-range", "preset-months"]) {
-      el(id).addEventListener("input", schedulePreview);
+      el(id).addEventListener("input", schedulePreview2);
     }
     el("preset-scope").addEventListener("change", () => {
       void previewPreset();
@@ -11515,6 +11700,7 @@
   installDesktopActions();
   wireDialogs();
   wirePresets();
+  wireFolderSync();
   wireHelp();
   wireSnapshots();
   wireGigCheck(() => {

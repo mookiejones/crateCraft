@@ -28,6 +28,7 @@ import audio_stream
 import bitrate_check
 import crate_compare
 import crate_trees
+import folder_sync
 import drive_check
 import file_scan
 import error_codes
@@ -2047,11 +2048,13 @@ class Handler(BaseHTTPRequestHandler):
                     replacing = parsed.path == "/api/replace-in-crates"
                     preset = parsed.path == "/api/smart-preset"
                     tree = parsed.path == "/api/crate-tree"
+                    foldering = parsed.path == "/api/folder-sync"
                     preview = (
                         (merging and payload.get("preview") is True)
                         or (replacing and payload.get("preview") is True)
                         or (preset and payload.get("action") in ("preview", "list"))
                         or (tree and payload.get("action") == "preview")
+                        or (foldering and payload.get("action") == "preview")
                     )
                     if not preview:
                         invalidate()
@@ -2094,6 +2097,10 @@ class Handler(BaseHTTPRequestHandler):
                         result = crate_trees.action(request)
                         if request.get("action") == "create":
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif foldering:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = folder_sync.action(request)
                     elif merging:
                         result = as_dict(_library_call("merge_duplicates", payload))
                         if not preview:
