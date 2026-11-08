@@ -22,6 +22,12 @@ export const tips = {
   space: spec("tooltip.space"),
   crateSearch: spec("tooltip.crateSearch"),
   mergeDuplicates: spec("tooltip.mergeDuplicates"),
+  useInCrates: spec("tooltip.useInCrates"),
+  cratesReplaceSearch: spec("tooltip.cratesReplaceSearch"),
+  cratesReplaceKeep: spec("tooltip.cratesReplaceKeep"),
+  cratesReplaceRetire: spec("tooltip.cratesReplaceRetire"),
+  cratesReplaceCancel: spec("tooltip.cratesReplaceCancel"),
+  cratesReplaceConfirm: spec("tooltip.cratesReplaceConfirm"),
   relink: spec("tooltip.relink"),
   relinkRoot: spec("tooltip.relinkRoot"),
   relinkFind: spec("tooltip.relinkFind"),
@@ -356,6 +362,11 @@ export function staticTip(id: string): TipSpec | undefined {
     "merge-trash": tips.mergeTrash,
     "merge-cancel": tips.mergeCancel,
     "merge-confirm": tips.mergeConfirm,
+    "crates-replace-search": tips.cratesReplaceSearch,
+    "crates-replace-keep": tips.cratesReplaceKeep,
+    "crates-replace-retire": tips.cratesReplaceRetire,
+    "crates-replace-cancel": tips.cratesReplaceCancel,
+    "crates-replace-confirm": tips.cratesReplaceConfirm,
     "rekordbox-cancel": tips.rekordboxCancel,
     "rekordbox-download": tips.rekordboxDownload,
     "files-name": tips.filesName,
@@ -431,6 +442,10 @@ export function revealTip(manager: string): TipSpec {
 
 export function openCopy(name: string): TipSpec {
   return spec("tooltip.openCopy", { name });
+}
+
+export function openReplaceCopy(name: string): TipSpec {
+  return spec("tooltip.openReplaceCopy", { name });
 }
 
 export function openRelated(name: string): TipSpec {

@@ -6,7 +6,7 @@
 
 Empty titles and empty artists are left out of the groups. A track with a different length, counted in whole seconds, is not a duplicate.
 
-Open a track to see **Other copies**. Each line shows the file, the bitrate, the play count, and the crates. A missing copy says **missing**. Click a file name to open that copy.
+Open a track to see **Other copies**. Each line shows the file, the bitrate, the play count, and the crates. A missing copy says **missing**. Click a file name to open that copy. **Use in crates** puts that file in every crate the open track is in, at the same position. Both files can stay. **Merge copies** folds the group into one library row and can move the other files to the Trash.
 
 While the scan is running, the list says **Reading duplicates**.
 

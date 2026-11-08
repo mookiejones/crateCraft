@@ -480,6 +480,9 @@ class OpenErrorHttpTests(unittest.TestCase):
                 "track": self.request("/api/track", {"id": 1, "fields": {"name": "Renamed"}}),
                 "related": self.request("/api/related", {"action": "crate", "asset": 1}),
                 "merge": self.request("/api/duplicates/merge", {"keep_id": 1, "confirm": True}),
+                "replace": self.request(
+                    "/api/replace-in-crates", {"from_id": 1, "to_id": 2, "confirm": True}
+                ),
                 "m3u": self.request(
                     "/api/import.m3u",
                     {"space": library.LIBRARY_SPACE, "name": "Imported", "text": "#EXTM3U\n"},

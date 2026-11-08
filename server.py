@@ -2044,10 +2044,12 @@ class Handler(BaseHTTPRequestHandler):
             with _lock:
                 with snapshots.own_writes():
                     merging = parsed.path == "/api/duplicates/merge"
+                    replacing = parsed.path == "/api/replace-in-crates"
                     preset = parsed.path == "/api/smart-preset"
                     tree = parsed.path == "/api/crate-tree"
                     preview = (
                         (merging and payload.get("preview") is True)
+                        or (replacing and payload.get("preview") is True)
                         or (preset and payload.get("action") in ("preview", "list"))
                         or (tree and payload.get("action") == "preview")
                     )
@@ -2096,6 +2098,8 @@ class Handler(BaseHTTPRequestHandler):
                         result = as_dict(_library_call("merge_duplicates", payload))
                         if not preview:
                             telemetry.capture(telemetry.EVENT_DUPLICATES_MERGED)
+                    elif replacing:
+                        result = as_dict(_library_call("replace_in_crates", payload))
                     elif parsed.path == "/api/files":
                         if payload.get("confirm") is True:
                             result = files.execute(payload)

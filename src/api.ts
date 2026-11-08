@@ -7,6 +7,7 @@
 
 import type {
   CrateWriteResult,
+  CratesReplacePreview,
   ErrorBody,
   FilesPayload,
   RelinkPlan,
@@ -28,6 +29,7 @@ export type ServerReply =
   & CrateWriteResult
   & FilesPayload
   & MergePreview
+  & CratesReplacePreview
   & RelatedPayload
   & SettingsPayload
   & RestorePlan

@@ -29,7 +29,7 @@ Pictures in this guide use a small sample library, not your collection.
 
 ## Duplicate merge
 
-The recording below is also on the [Duplicates](guide/duplicates.md) page, where it plays in the page. Select the picture to open the video file.
+The recording below is also on the [Duplicates](guide/duplicates.md) page, where it plays in the page. Select the picture to open the video file. **Use in crates** on Other copies puts a replacement in those crates without merging the library rows.
 
 [![Merge copies dialog. One file is selected to keep, and the plan lists crates and fields.](media/duplicate-merge-poster.jpg)](media/duplicate-merge.mp4)
 

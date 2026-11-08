@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { loadPrivacy, rekordboxExportUrl, renderMergePreview, saveRekordboxExport, wireDialogs } from "./dialogs";
+import { loadPrivacy, rankReplaceCandidates, rekordboxExportUrl, renderCratesReplacePreview, renderMergePreview, saveRekordboxExport, wireDialogs } from "./dialogs";
 import { el } from "./dom";
 import { state } from "./state";
 import { installPage } from "./test-page";
@@ -201,6 +201,68 @@ describe("renderMergePreview", () => {
       "dup.mp3 has Serato cues",
     );
     expect(el("merge-preview").textContent).not.toContain("will be copied");
+  });
+});
+
+describe("renderCratesReplacePreview", () => {
+  beforeEach(() => {
+    installPage();
+  });
+
+  it("names crates the replacement will join", () => {
+    renderCratesReplacePreview({
+      crates_added: [{ name: "Warmup", space: "Serato Library", list_order: 3 }],
+      crates_kept: [{ name: "Closing", space: "Serato Library" }],
+      crates_removed: [],
+      retire: false,
+    });
+    expect(el("crates-replace-preview").textContent).toContain("Add the replacement to Warmup.");
+    expect(el("crates-replace-preview").textContent).not.toContain("Remove the original");
+  });
+
+  it("says the replacement is already in those crates", () => {
+    renderCratesReplacePreview({
+      crates_added: [],
+      crates_kept: [{ name: "Closing", space: "Serato Library" }],
+      crates_removed: [{ name: "Closing", space: "Serato Library" }],
+      retire: true,
+    });
+    expect(el("crates-replace-preview").textContent).toContain("already in those crates");
+    expect(el("crates-replace-preview").textContent).toContain("Remove the original from Closing.");
+  });
+
+  it("says there are no normal crates", () => {
+    renderCratesReplacePreview({
+      crates_added: [],
+      crates_kept: [],
+      crates_removed: [],
+      retire: false,
+    });
+    expect(el("crates-replace-preview").textContent).toContain("not in any normal crate");
+  });
+});
+
+describe("rankReplaceCandidates", () => {
+  beforeEach(() => {
+    state.tracks = [
+      { id: 1, file: "old.mp3", name: "Old", artist: "A" },
+      { id: 2, file: "intro.mp3", name: "Intro Edit", artist: "A" },
+      { id: 3, file: "other.wav", name: "Other", artist: "B" },
+    ];
+  });
+
+  afterEach(() => {
+    state.tracks = [];
+  });
+
+  it("excludes the original and pins a chosen replacement", () => {
+    const ranked = rankReplaceCandidates(1, "", 3);
+    expect(ranked.map((track) => track.id)).toEqual([3, 2]);
+  });
+
+  it("scores file, title, and artist and still pins the chosen id", () => {
+    const ranked = rankReplaceCandidates(1, "intro", 3);
+    expect(ranked.map((track) => track.id)).toEqual([3, 2]);
   });
 });
 

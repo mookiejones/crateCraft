@@ -99,6 +99,15 @@ export interface ElementIds {
   "merge-choices": HTMLDivElement;
   "merge-preview": HTMLDivElement;
   "merge-status": HTMLParagraphElement;
+  "crates-replace-dialog": HTMLDialogElement;
+  "crates-replace-search": HTMLInputElement;
+  "crates-replace-choices": HTMLDivElement;
+  "crates-replace-keep": HTMLInputElement;
+  "crates-replace-retire": HTMLInputElement;
+  "crates-replace-preview": HTMLDivElement;
+  "crates-replace-cancel": HTMLButtonElement;
+  "crates-replace-confirm": HTMLButtonElement;
+  "crates-replace-status": HTMLParagraphElement;
   "relink-actions": HTMLDivElement;
   "open-relink": HTMLButtonElement;
   "relink-dialog": HTMLDialogElement;
