@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { Track } from "./api-types";
-import { clockLabel, compare, durationLabel, lengthLabel, sizeLabel } from "./format";
+import { clockLabel, compare, dateLabel, durationLabel, energyLabel, energyValue, isNumericSort, lengthLabel, sizeLabel } from "./format";
 import { setLocale } from "./i18n";
 import { state } from "./state";
 
@@ -33,6 +33,44 @@ describe("compare", () => {
     const timed = { id: 3, bpm: 120 } as Track;
     expect(compare(empty, timed)).toBe(1);
     expect(compare({ id: 4, bpm: 128 } as Track, { id: 5, bpm: 100 } as Track)).toBeGreaterThan(0);
+  });
+
+  it("sorts energy from the rating and keeps an unrated row last", () => {
+    state.sort = "energy";
+    state.sortDir = 1;
+    const empty = { id: 1, rating: 0 } as Track;
+    const mid = { id: 2, rating: 0.4 } as Track;
+    const high = { id: 3, rating: 1 } as Track;
+    expect(compare(empty, mid)).toBe(1);
+    expect(compare(mid, high)).toBeLessThan(0);
+    expect(compare(high, mid)).toBeGreaterThan(0);
+  });
+});
+
+describe("energy and dates", () => {
+  it("maps a 0–1 rating to 1–5 and leaves unrated blank", () => {
+    expect(energyValue(1)).toBe(5);
+    expect(energyValue(0.8)).toBe(4);
+    expect(energyValue(0.2)).toBe(1);
+    expect(energyValue(0)).toBeNull();
+    expect(energyValue(null)).toBeNull();
+    expect(energyLabel(0.8)).toBe("4");
+    expect(energyLabel(0)).toBe("");
+  });
+
+  it("names numeric sort keys so those columns open high-to-low", () => {
+    expect(isNumericSort("energy")).toBe(true);
+    expect(isNumericSort("time_added")).toBe(true);
+    expect(isNumericSort("last_played")).toBe(true);
+    expect(isNumericSort("play_count")).toBe(true);
+    expect(isNumericSort("genre")).toBe(false);
+    expect(isNumericSort("name")).toBe(false);
+  });
+
+  it("formats a date without the clock", () => {
+    expect(dateLabel(null)).toBe("");
+    expect(dateLabel("")).toBe("");
+    expect(dateLabel(Date.UTC(2026, 0, 2, 12) / 1000)).toMatch(/2026/);
   });
 });
 

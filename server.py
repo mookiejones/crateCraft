@@ -1319,7 +1319,9 @@ def _load_library(space: str) -> dict[str, object]:
                    a.length_ms, a.color, a.is_missing, a.format, a.file_name,
                    a.file_size, a.time_added, a.rating, a.emoji,
                    a.is_beatgrid_locked, a.dj_play_count, a.stems_analyze_state,
-                   a.file_bit_rate, a.portable_id, a.location_id
+                   a.file_bit_rate, a.portable_id, a.location_id,
+                   (SELECT MAX(e.start_time) FROM history_entry e
+                    WHERE e.asset_id = a.id AND e.played) AS last_played
             FROM asset a
             JOIN space_asset sa ON sa.asset_id = a.id
             JOIN space s ON s.id = sa.space_id
@@ -1348,6 +1350,7 @@ def _load_library(space: str) -> dict[str, object]:
                 "file": text_cell(row, "file_name"),
                 "file_size": cell(row, "file_size"),
                 "time_added": cell(row, "time_added"),
+                "last_played": cell(row, "last_played"),
                 "rating": cell(row, "rating"),
                 "emoji": text_cell(row, "emoji"),
                 "beatgrid_locked": int_flag(cell(row, "is_beatgrid_locked")),

@@ -9,7 +9,7 @@
 import type { Track } from "./api-types";
 import { bridge } from "./bridge";
 import { el } from "./dom";
-import { clockLabel, colorHex, lengthLabel } from "./format";
+import { clockLabel, colorHex, dateLabel, energyLabel, lengthLabel } from "./format";
 import { getPlayerState, play, playOrToggle, subscribe } from "./player";
 import { playerStrings } from "./player-strings";
 import { ROW, state } from "./state";
@@ -159,23 +159,32 @@ function paintPane(list: HTMLDivElement, paneSpacer: HTMLDivElement, paneRows: H
     artist.className = "cell";
     artist.textContent = track.artist ?? "";
 
-    const third = document.createElement("span");
-    third.className = "cell num";
-    const fourth = document.createElement("span");
-    fourth.className = "cell num";
-    const fifth = document.createElement("span");
-    fifth.className = "cell num";
+    const cells: HTMLSpanElement[] = [];
+    const add = (text: string, numeric = false) => {
+      const cell = document.createElement("span");
+      cell.className = numeric ? "cell num" : "cell";
+      cell.textContent = text;
+      cells.push(cell);
+    };
     if (track.entry) {
-      third.textContent = track.deck || "";
-      fourth.textContent = track.played || "";
-      fifth.textContent = clockLabel(track.start);
+      add(track.deck || "");
+      add(track.played || "");
+      add(clockLabel(track.start), true);
     } else {
-      third.textContent = track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 });
-      fourth.textContent = track.key ?? "";
-      fifth.textContent = lengthLabel(track.length_ms);
+      add(
+        track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 }),
+        true,
+      );
+      add(track.key ?? "");
+      add(energyLabel(track.rating), true);
+      add(track.genre ?? "");
+      add(dateLabel(track.time_added), true);
+      add(dateLabel(track.last_played), true);
+      add(track.play_count == null ? "" : formatNumber(Number(track.play_count)), true);
+      add(lengthLabel(track.length_ms), true);
     }
 
-    button.append(titleCell, artist, third, fourth, fifth);
+    button.append(titleCell, artist, ...cells);
     button.addEventListener("click", () => {
       if (track.entry) bridge.selectEntry(track.id);
       else bridge.selectTrack(track.id);

@@ -146,6 +146,31 @@ describe("library views", () => {
     state.mode = "crates";
     renderList();
     expect(document.querySelector(".columns")?.classList.contains("for-history")).toBe(false);
+    const crateColumns = [...document.querySelectorAll<HTMLButtonElement>(".columns button")].map((button) => button.textContent);
+    expect(crateColumns).toEqual(["Title", "Artist", "BPM", "Key", "Energy", "Genre", "Added", "Last", "Plays", "Time"]);
+  });
+
+  it("paints energy, genre, dates, and plays on a crate row", () => {
+    state.tracks = [track(1, {
+      name: "Alpha",
+      bpm: 124,
+      key: "8A",
+      rating: 0.8,
+      genre: "House",
+      time_added: 1_700_000_000,
+      last_played: 1_700_000_100,
+      play_count: 4,
+      length_ms: 180000,
+    })];
+    renderList();
+    const cells = [...document.querySelectorAll("#list .row .cell")].map((node) => node.textContent ?? "");
+    expect(cells[2]).toBe("124");
+    expect(cells[3]).toBe("8A");
+    expect(cells[4]).toBe("4");
+    expect(cells[5]).toBe("House");
+    expect(cells[8]).toBe("4");
+    expect(cells[9]).toBe("3:00");
+    expect(cells).toHaveLength(10);
   });
 
   it("shows missing tracks and the missing note", () => {

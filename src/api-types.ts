@@ -120,6 +120,14 @@ export interface Track {
   file_on_disk?: boolean;
   in_prepare?: boolean;
   play_count?: number | null;
+  /** Serato star rating 0–1. The Energy column maps this to 1–5. */
+  rating?: number | null;
+  /** Unix seconds when the library row was added. */
+  time_added?: number | string | null;
+  /** Latest played history_entry.start_time, or null. */
+  last_played?: number | string | null;
+  /** Cue presence when the list already knows it. Omitted on GET /api/library. */
+  has_cues?: boolean;
   comments?: string;
   resolved_path?: string;
   crate_ids?: number[];

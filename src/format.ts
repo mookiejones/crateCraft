@@ -44,6 +44,80 @@ export function clockLabel(stamp: number | string | null | undefined) {
 }
 
 /**
+ * Format a Unix timestamp as a short date for list columns.
+ *
+ * Date added and last played use a date without the clock so the extra
+ * columns stay narrow. Empty or unreadable stamps stay blank.
+ *
+ * @param {number|string|null|undefined} stamp Seconds since the Unix epoch.
+ * @returns {string} A short local date, or an empty string.
+ */
+export function dateLabel(stamp: number | string | null | undefined) {
+  if (stamp == null || stamp === "") return "";
+  const date = new Date(Number(stamp) * 1000);
+  if (Number.isNaN(date.getTime())) return "";
+  return formatDate(date, { month: "short", day: "numeric", year: "numeric" });
+}
+
+/**
+ * Map Serato's 0–1 rating to an Energy value 1–5.
+ *
+ * Unrated and a rounded zero stay empty. This is the star-rating
+ * workaround; the database has no energy column.
+ *
+ * @param {number|string|null|undefined} rating Stored rating from 0 to 1.
+ * @returns {number | null} 1 through 5, or null.
+ */
+export function energyValue(rating: number | string | null | undefined): number | null {
+  if (rating == null || rating === "") return null;
+  const score = Number(rating);
+  if (!Number.isFinite(score) || score <= 0) return null;
+  const filled = Math.round(score * 5);
+  if (filled < 1) return null;
+  return Math.min(5, filled);
+}
+
+/**
+ * Format Energy for a track row.
+ *
+ * @param {number|string|null|undefined} rating Stored rating from 0 to 1.
+ * @returns {string} 1–5, or an empty string.
+ */
+export function energyLabel(rating: number | string | null | undefined) {
+  const value = energyValue(rating);
+  return value == null ? "" : formatNumber(value);
+}
+
+/** Sort keys that compare as numbers, empty last. */
+const NUMERIC_SORT = new Set([
+  "bpm",
+  "length_ms",
+  "start",
+  "energy",
+  "time_added",
+  "last_played",
+  "play_count",
+]);
+
+/**
+ * Return whether a list sort key opens high-to-low.
+ *
+ * @param {string} key Column dataset.sort value.
+ * @returns {boolean} True for numeric columns.
+ */
+export function isNumericSort(key: string): boolean {
+  return NUMERIC_SORT.has(key);
+}
+
+function sortNumber(track: Track, key: string): number | null {
+  if (key === "energy") return energyValue(track.rating);
+  const raw = track[key];
+  if (raw == null || raw === "") return null;
+  const value = Number(raw);
+  return Number.isFinite(value) ? value : null;
+}
+
+/**
  * Format a total duration for the crate footer.
  *
  * Hours are included only when the total reaches one hour. The footer
@@ -113,11 +187,11 @@ export function compare(a: Track, b: Track) {
   const dir = state.sortDir;
   let av = a[key];
   let bv = b[key];
-  if (key === "bpm" || key === "length_ms" || key === "start") {
-    const an = av == null || av === "" ? null : Number(av);
-    const bn = bv == null || bv === "" ? null : Number(bv);
+  if (NUMERIC_SORT.has(key)) {
+    const an = sortNumber(a, key);
+    const bn = sortNumber(b, key);
     if (an == null && bn == null) return a.id - b.id;
-    // Empty BPM, length, or start sorts after every real number.
+    // Empty numbers sort after every real value.
     if (an == null) return 1;
     if (bn == null) return -1;
     if (an !== bn) return (an - bn) * dir;
