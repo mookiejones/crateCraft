@@ -453,6 +453,16 @@
     "markers.cue": "Cue point {number}",
     "markers.cueEmpty": "Empty",
     "markers.flip": "Flip {number}",
+    "markers.gridEmpty": "The beatgrid has no markers.",
+    "markers.gridHeading": "Beatgrid",
+    "markers.gridNone": "No beatgrid in this file.",
+    "markers.gridSuspect": "Suspect beatgrid. {reason}",
+    "markers.gridTooMany": "The beatgrid has more than 4096 markers.",
+    "markers.gridTooShort": "The beatgrid is too short to read.",
+    "markers.gridTruncated": "The beatgrid is shorter than its marker count.",
+    "markers.gridUnknown": "The beatgrid could not be read.",
+    "markers.gridVersion": "That beatgrid version is not supported.",
+    "markers.gridViewOnly": "View only. This app does not rewrite the beatgrid.",
     "markers.heading": "Cue points, saved loops, and beatgrid",
     "markers.loop": "Saved loop {number}",
     "markers.loopLocked": "Saved loop {number} locked",
@@ -1754,6 +1764,16 @@
     "markers.cue": "Punto de cue {number}",
     "markers.cueEmpty": "Vacío",
     "markers.flip": "Flip {number}",
+    "markers.gridEmpty": "El beatgrid no tiene marcadores.",
+    "markers.gridHeading": "Beatgrid",
+    "markers.gridNone": "Este archivo no tiene beatgrid.",
+    "markers.gridSuspect": "Beatgrid sospechoso. {reason}",
+    "markers.gridTooMany": "El beatgrid tiene más de 4096 marcadores.",
+    "markers.gridTooShort": "El beatgrid es demasiado corto para leerlo.",
+    "markers.gridTruncated": "El beatgrid es más corto que el número de marcadores.",
+    "markers.gridUnknown": "No se pudo leer el beatgrid.",
+    "markers.gridVersion": "Esa versión de beatgrid no está admitida.",
+    "markers.gridViewOnly": "Solo lectura. Esta app no reescribe el beatgrid.",
     "markers.heading": "Puntos de cue, bucles guardados y beatgrid",
     "markers.loop": "Bucle guardado {number}",
     "markers.loopLocked": "Bucle guardado {number} bloqueado",
@@ -5022,6 +5042,78 @@
     if (typeof value.code === "string") body.code = value.code;
     if (body.error === void 0 && body.code === void 0) return null;
     return body;
+  }
+
+  // src/beatgrid-view.ts
+  var GRID_WARNING_KEYS = {
+    beatgrid_too_short: "markers.gridTooShort",
+    beatgrid_version: "markers.gridVersion",
+    beatgrid_empty: "markers.gridEmpty",
+    beatgrid_too_many: "markers.gridTooMany",
+    beatgrid_truncated: "markers.gridTruncated"
+  };
+  function beatgridViewOnly(unavailable) {
+    return unavailable !== true;
+  }
+  function beatgridIsSuspect(code) {
+    return typeof code === "string" && code !== "";
+  }
+  function beatgridWarningKey(code) {
+    if (!beatgridIsSuspect(code) || code == null) return null;
+    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
+      return GRID_WARNING_KEYS[code];
+    }
+    return "markers.gridUnknown";
+  }
+  function beatSeconds(value) {
+    if (value === "" || value == null) return "";
+    const number = Number(value);
+    if (!Number.isFinite(number)) return "";
+    return `${number.toFixed(3)}s`;
+  }
+  function appendBeatgrid(section, track) {
+    if (!beatgridViewOnly(track.markers_unavailable)) return;
+    const heading2 = document.createElement("h4");
+    heading2.textContent = t("markers.gridHeading");
+    section.append(heading2);
+    const viewOnly = document.createElement("p");
+    viewOnly.className = "detail-kicker";
+    viewOnly.textContent = t("markers.gridViewOnly");
+    section.append(viewOnly);
+    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
+      const warn = document.createElement("p");
+      warn.className = "detail-kicker warn";
+      warn.setAttribute("role", "status");
+      const key = beatgridWarningKey(track.beatgrid_warning_code);
+      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
+      warn.textContent = t("markers.gridSuspect", { reason });
+      section.append(warn);
+    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
+      const empty = document.createElement("p");
+      empty.className = "detail-kicker";
+      empty.textContent = t("markers.gridNone");
+      section.append(empty);
+    }
+    for (const mark of track.beatgrid || []) {
+      section.append(paintBeatMarker(mark));
+    }
+  }
+  function paintBeatMarker(mark) {
+    const row = document.createElement("div");
+    row.className = "marker";
+    const time = document.createElement("span");
+    time.textContent = beatSeconds(mark.position);
+    const name = document.createElement("span");
+    const bpmNumber = Number(mark.bpm);
+    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
+      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
+    } else if (mark.beats != null) {
+      name.textContent = t("markers.beats", { count: Number(mark.beats) });
+    } else {
+      name.textContent = "";
+    }
+    row.append(document.createElement("span"), document.createElement("span"), time, name);
+    return row;
   }
 
   // src/cue-view.ts
@@ -8471,12 +8563,6 @@
     else note.textContent = t("markers.readOnly");
     section.append(note);
     const ms = (value) => formatCueTime(value);
-    const beatSeconds = (value) => {
-      if (value === "" || value == null) return "";
-      const number = Number(value);
-      if (!Number.isFinite(number)) return "";
-      return `${number.toFixed(3)}s`;
-    };
     if (!track.markers_unavailable) appendCueSlots(section, track.cues || []);
     for (const loop of track.loops || []) {
       const row = document.createElement("div");
@@ -8501,23 +8587,7 @@
       row.append(document.createElement("span"), document.createElement("span"), time, name);
       section.append(row);
     }
-    for (const mark of track.beatgrid || []) {
-      const row = document.createElement("div");
-      row.className = "marker";
-      const time = document.createElement("span");
-      time.textContent = beatSeconds(mark.position);
-      const name = document.createElement("span");
-      const bpmNumber = Number(mark.bpm);
-      if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
-        name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
-      } else if (mark.beats != null) {
-        name.textContent = t("markers.beats", { count: Number(mark.beats) });
-      } else {
-        name.textContent = "";
-      }
-      row.append(document.createElement("span"), document.createElement("span"), time, name);
-      section.append(row);
-    }
+    appendBeatgrid(section, track);
     return section;
   }
   function copySection(fromId, copies, writable) {

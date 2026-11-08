@@ -91,6 +91,7 @@ class SeratoTags(TypedDict):
     found: bool
     unavailable: NotRequired[bool]
     beatgrid_warning: NotRequired[str | None]
+    beatgrid_warning_code: NotRequired[str | None]
 
 
 class CueCopy(TypedDict):
@@ -120,10 +121,11 @@ def read_serato_tags(path: str | None) -> SeratoTags:
         path: Filesystem path of the audio file, or None.
 
     Returns:
-        A dict with keys cues, loops, flips, beatgrid, beatgrid_warning, and found.
-        beatgrid_warning is a sentence when a BeatGrid frame was present and
-        could not be read, including a version this parser does not know
-        and a grid with more than 4096 markers.
+        A dict with keys cues, loops, flips, beatgrid, beatgrid_warning,
+        beatgrid_warning_code, and found. beatgrid_warning is a sentence when
+        a BeatGrid frame was present and could not be read, including a
+        version this parser does not know and a grid with more than 4096
+        markers. beatgrid_warning_code is the stable token for that sentence.
 
     Example:
         >>> read_serato_tags(None)["found"]
@@ -135,6 +137,7 @@ def read_serato_tags(path: str | None) -> SeratoTags:
         "flips": [],
         "beatgrid": [],
         "beatgrid_warning": None,
+        "beatgrid_warning_code": None,
         "found": False,
     }
     if not path:
@@ -181,13 +184,15 @@ def _tags_from_frames(frames: list[tuple[str, bytes]]) -> SeratoTags:
         frames: Frame name and payload pairs, ID3 or container.
 
     Returns:
-        Cues, loops, flips, beatgrid, beatgrid_warning, and found.
+        Cues, loops, flips, beatgrid, beatgrid_warning,
+        beatgrid_warning_code, and found.
     """
     cues: list[Cue] = []
     loops: list[Loop] = []
     flips: list[Flip] = []
     beatgrid: list[BeatMarker] = []
     beatgrid_warning: str | None = None
+    beatgrid_warning_code: str | None = None
     found = False
     for name, payload in frames:
         if name == "Serato Markers2":
@@ -198,13 +203,15 @@ def _tags_from_frames(frames: list[tuple[str, bytes]]) -> SeratoTags:
             flips.extend(parsed["flips"])
         elif name == "Serato BeatGrid":
             found = True
-            issue = beatgrid_issue(payload)
-            if issue:
+            code = beatgrid_issue_code(payload)
+            if code:
                 beatgrid = []
-                beatgrid_warning = issue
+                beatgrid_warning = _BEATGRID_ISSUES[code]
+                beatgrid_warning_code = code
             else:
                 beatgrid = _parse_beatgrid(payload)
                 beatgrid_warning = None
+                beatgrid_warning_code = None
     cues.sort(key=lambda item: (item["index"], item["start_ms"]))
     loops.sort(key=lambda item: (item["index"], item["start_ms"]))
     return {
@@ -213,6 +220,7 @@ def _tags_from_frames(frames: list[tuple[str, bytes]]) -> SeratoTags:
         "flips": flips,
         "beatgrid": beatgrid,
         "beatgrid_warning": beatgrid_warning,
+        "beatgrid_warning_code": beatgrid_warning_code,
         "found": found,
     }
 
@@ -239,15 +247,18 @@ def _apply_frames(parsed: SeratoTags, frames: list[tuple[str, bytes]]) -> Serato
     loops.sort(key=lambda item: (item["index"], item["start_ms"]))
     beatgrid = parsed["beatgrid"]
     warning = parsed.get("beatgrid_warning")
+    warning_code = parsed.get("beatgrid_warning_code")
     if extra["beatgrid"] or extra.get("beatgrid_warning"):
         beatgrid = extra["beatgrid"]
         warning = extra.get("beatgrid_warning")
+        warning_code = extra.get("beatgrid_warning_code")
     return {
         "cues": cues,
         "loops": loops,
         "flips": flips,
         "beatgrid": beatgrid,
         "beatgrid_warning": warning,
+        "beatgrid_warning_code": warning_code,
         "found": bool(parsed["found"] or extra["found"]),
     }
 
@@ -1147,6 +1158,41 @@ def _parse_flip(blob: bytes) -> Flip | None:
     return {"index": blob[1], "enabled": bool(blob[2]), "name": name}
 
 
+_BEATGRID_ISSUES: dict[str, str] = {
+    "beatgrid_too_short": "The beatgrid is too short to read.",
+    "beatgrid_version": "That beatgrid version is not supported.",
+    "beatgrid_empty": "The beatgrid has no markers.",
+    "beatgrid_too_many": "The beatgrid has more than 4096 markers.",
+    "beatgrid_truncated": "The beatgrid is shorter than its marker count.",
+}
+
+
+def beatgrid_issue_code(payload: bytes) -> str | None:
+    """Return a stable code when a BeatGrid payload cannot be read.
+
+    Args:
+        payload: BeatGrid bytes, including the version byte.
+
+    Returns:
+        A ``beatgrid_*`` code when the payload is not a supported grid.
+        None when ``_parse_beatgrid`` can read it. Version byte 1 with
+        at most 4096 markers is supported, including a Serato 5.0 grid
+        that stores one marker per tempo change.
+    """
+    if len(payload) < 6:
+        return "beatgrid_too_short"
+    if payload[0] != 1:
+        return "beatgrid_version"
+    count = int.from_bytes(payload[2:6], "big")
+    if count <= 0:
+        return "beatgrid_empty"
+    if count > 4096:
+        return "beatgrid_too_many"
+    if 6 + count * 8 > len(payload):
+        return "beatgrid_truncated"
+    return None
+
+
 def beatgrid_issue(payload: bytes) -> str | None:
     """Explain why a BeatGrid payload cannot be read.
 
@@ -1159,18 +1205,10 @@ def beatgrid_issue(payload: bytes) -> str | None:
         at most 4096 markers is supported, including a Serato 5.0 grid
         that stores one marker per tempo change.
     """
-    if len(payload) < 6:
-        return "The beatgrid is too short to read."
-    if payload[0] != 1:
-        return "That beatgrid version is not supported."
-    count = int.from_bytes(payload[2:6], "big")
-    if count <= 0:
-        return "The beatgrid has no markers."
-    if count > 4096:
-        return "The beatgrid has more than 4096 markers."
-    if 6 + count * 8 > len(payload):
-        return "The beatgrid is shorter than its marker count."
-    return None
+    code = beatgrid_issue_code(payload)
+    if code is None:
+        return None
+    return _BEATGRID_ISSUES[code]
 
 
 def _parse_beatgrid(payload: bytes) -> list[BeatMarker]:

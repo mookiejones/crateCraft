@@ -15,7 +15,7 @@ flowchart TD
   frames --> audio["Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was."]
 ```
 
-Cue points, loops, and the beatgrid live in the audio file. Open a track from **Crates**. The section is **Cues, loops, and beatgrid**. The line under it reads **Read from the audio file. These are not written back.** Pads **1–8** always show, in Serato's pad colors. A cue that already has a color keeps it. An unused pad still shows its number and color, and reads **Empty**.
+Cue points, loops, and the beatgrid live in the audio file. Open a track from **Crates**. The section is **Cues, loops, and beatgrid**. The line under it reads **Read from the audio file. These are not written back.** Pads **1–8** always show, in Serato's pad colors. A cue that already has a color keeps it. An unused pad still shows its number and color, and reads **Empty**. **Beatgrid** says **View only. This app does not rewrite the beatgrid.** A grid this parser cannot read is flagged **Suspect beatgrid** with the reason.
 
 **Save track** writes the library. It does not rewrite the audio file. A missing file says **The file is not on disk, so cues cannot be read.** and does not invent pads. A file with no Serato markers still shows the eight empty pads and says **No Serato cues in this file.**
 

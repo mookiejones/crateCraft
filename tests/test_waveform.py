@@ -965,8 +965,36 @@ class WaveformRouteTests(unittest.TestCase):
         self.assertAlmostEqual(spacing, 0.5)
         self.assertEqual(grid[0]["position"], "0.000")
         self.assertAlmostEqual(60.0 / grid[-1]["bpm"], 60.0 / 174.0)
+        self.assertIsNone(payload["beatgrid_warning"])
+        self.assertIsNone(payload["beatgrid_warning_code"])
         self.assertEqual(copied.read_bytes(), original)
         self.assertEqual(source.read_bytes(), original)
+
+    def test_track_route_flags_an_unreadable_beatgrid(self) -> None:
+        """Return ``beatgrid_version`` from ``GET /api/track`` for version 2.
+
+        The file is a tiny FLAC with a Serato BeatGrid frame whose version
+        byte is 2. The parser cannot read that grid. The file is not rewritten.
+
+        Returns:
+            None. The test fails if the code or sentence is missing, or if
+            markers are invented.
+        """
+        raw = bytes([2, 0, 0, 0, 0, 1]) + b"\x37"
+        value = serato_b64("Serato BeatGrid", raw, wrap=False)
+        flac = self.library.root / "music" / "bad-grid.flac"
+        flac.parent.mkdir(parents=True, exist_ok=True)
+        write_flac_fixture(flac, [b"SERATO_BEATGRID=" + value])
+        before = flac.read_bytes()
+        asset_id = self.insert_asset(flac)
+        status, _headers, body = self.exchange(f"/api/track?id={asset_id}")
+        self.assertEqual(status, 200)
+        payload = json.loads(body)
+        self.assertEqual(payload["beatgrid"], [])
+        self.assertEqual(payload["beatgrid_warning_code"], "beatgrid_version")
+        self.assertEqual(payload["beatgrid_warning"], "That beatgrid version is not supported.")
+        self.assertTrue(payload["markers_found"])
+        self.assertEqual(flac.read_bytes(), before)
 
     def test_waveform_and_playback_for_an_undecodable_file(self) -> None:
         """Keep playback when the waveform route cannot decode.

@@ -129,6 +129,10 @@ export interface Track {
   loops?: Marker[];
   flips?: Flip[];
   beatgrid?: Marker[];
+  beatgrid_warning?: string | null;
+  beatgrid_warning_code?: string | null;
+  markers_found?: boolean;
+  markers_unavailable?: boolean;
   copies?: CopyRow[];
   crates?: MembershipCrate[] | string;
   groups?: FieldGroup[];

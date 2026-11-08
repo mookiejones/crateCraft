@@ -1657,6 +1657,8 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
         "loops": markers["loops"],
         "flips": markers["flips"],
         "beatgrid": display_beatgrid(markers["beatgrid"]),
+        "beatgrid_warning": markers.get("beatgrid_warning"),
+        "beatgrid_warning_code": markers.get("beatgrid_warning_code"),
         "markers_found": markers["found"],
         "markers_unavailable": markers["unavailable"],
         "serato": as_dict(_library_call("status")),
