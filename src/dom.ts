@@ -84,6 +84,11 @@ export interface ElementIds {
   "gig-status": HTMLParagraphElement;
   "gig-report": HTMLDivElement;
   "gig-refresh": HTMLButtonElement;
+  "health-panel": HTMLElement;
+  "health-scope": HTMLParagraphElement;
+  "health-status": HTMLParagraphElement;
+  "health-report": HTMLDivElement;
+  "health-refresh": HTMLButtonElement;
   "scan-panel": HTMLElement;
   "scan-scope": HTMLParagraphElement;
   "scan-status": HTMLParagraphElement;

@@ -1,0 +1,155 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import type { LibraryHealthReport } from "./api-types";
+import { loadHealth, repaintHealth, wireHealth } from "./health";
+import { setLocale } from "./i18n";
+import { applyStaticTooltips } from "./tooltip";
+import { state } from "./state";
+import { installPage } from "./test-page";
+
+const report: LibraryHealthReport = {
+  space: "Serato Library",
+  crate: 5,
+  checked: 12,
+  missing: {
+    count: 1,
+    tracks: [{ id: 10, name: "Gone", artist: "A", file: "gone.mp3" }],
+  },
+  no_bpm: {
+    count: 1,
+    tracks: [{ id: 11, name: "NoBpm", artist: "B", file: "nobpm.mp3" }],
+  },
+  no_key: { count: 0, tracks: [] },
+  empty_genre: { count: 0, tracks: [] },
+  no_crate: { count: 0, tracks: [] },
+  duplicates: {
+    count: 1,
+    groups: [{ name: "Same", artist: "Artist", seconds: 180, ids: [1, 2] }],
+  },
+};
+
+const clear: LibraryHealthReport = {
+  space: "Serato Library",
+  crate: null,
+  checked: 8,
+  missing: { count: 0, tracks: [] },
+  no_bpm: { count: 0, tracks: [] },
+  no_key: { count: 0, tracks: [] },
+  empty_genre: { count: 0, tracks: [] },
+  no_crate: { count: 0, tracks: [] },
+  duplicates: { count: 0, groups: [] },
+};
+
+function reply(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+}
+
+function reportText(): string {
+  return document.getElementById("health-report")!.textContent || "";
+}
+
+describe("health", () => {
+  const navigate = vi.fn();
+
+  beforeEach(() => {
+    installPage();
+    setLocale("en");
+    state.space = "Serato Library";
+    state.activeCrate = 5;
+    state.healthToken = 0;
+    state.crates = [{ id: 5, name: "Friday" }];
+    navigate.mockReset();
+    wireHealth(navigate);
+    document.getElementById("health-panel")!.hidden = false;
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    setLocale("en");
+  });
+
+  it("asks for the selected crate and paints sections", async () => {
+    const fetchMock = vi.fn(async () => reply(report));
+    vi.stubGlobal("fetch", fetchMock);
+    await loadHealth();
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/library-health?space=Serato%20Library&crate=5",
+    );
+    expect(document.getElementById("health-scope")!.textContent).toBe("Friday");
+    expect(reportText()).toContain("12 tracks checked.");
+    expect(reportText()).toContain("Missing files (1)");
+    expect(reportText()).toContain("A — Gone");
+    expect(reportText()).toContain("No BPM (1)");
+    expect(reportText()).toContain("Duplicate groups (1)");
+    expect(reportText()).toContain("Artist — Same");
+    expect(document.getElementById("health-refresh")!.getAttribute("aria-busy")).toBe("false");
+  });
+
+  it("shows a clean report when every count is zero", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(clear)));
+    state.activeCrate = "all";
+    await loadHealth();
+    expect(document.getElementById("health-scope")!.textContent).toBe("Whole space");
+    expect(reportText()).toContain("8 tracks checked.");
+    expect(reportText()).toContain("Nothing to fix in this check.");
+  });
+
+  it("opens Missing files, Duplicates, and a track from the report", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
+    await loadHealth();
+    document.querySelector<HTMLButtonElement>("[data-health-action='missing']")!.click();
+    document.querySelector<HTMLButtonElement>("[data-health-action='duplicates']")!.click();
+    document.querySelector<HTMLButtonElement>("[data-health-action='track']")!.click();
+    expect(navigate.mock.calls).toEqual([["missing"], ["duplicates"], ["track", 10]]);
+  });
+
+  it("ignores a late reply after a newer check started", async () => {
+    let finish: (value: Response) => void = () => {};
+    vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>((resolve) => { finish = resolve; })));
+    const first = loadHealth();
+    const firstFinish = finish;
+    const second = loadHealth();
+    finish(reply(clear));
+    await second;
+    firstFinish(reply(report));
+    await first;
+    expect(reportText()).toContain("Nothing to fix");
+    expect(reportText()).not.toContain("gone.mp3");
+  });
+
+  it("shows the server error sentence when the check cannot be read", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply({ error: "That crate is not in this space." }, 404)));
+    await loadHealth();
+    expect(document.getElementById("health-status")!.textContent).toBe("That crate is not in this space.");
+    expect(document.activeElement).toBe(document.getElementById("health-refresh"));
+  });
+
+  it("shows the unreachable sentence when the request fails", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("Failed to fetch"); }));
+    await loadHealth();
+    expect(document.getElementById("health-status")!.textContent).toContain("Couldn't reach the library server");
+  });
+
+  it("repaints the last report on a language change without asking the server again", async () => {
+    const fetchMock = vi.fn(() => Promise.resolve(reply(report)));
+    vi.stubGlobal("fetch", fetchMock);
+    await loadHealth();
+    setLocale("es");
+    repaintHealth();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(reportText()).toContain("12 pistas comprobadas");
+    expect(reportText()).toContain("Archivos no encontrados");
+    expect(reportText()).not.toContain("Missing files");
+    expect(document.getElementById("health-scope")!.textContent).toBe("Friday");
+  });
+
+  it("gives every health control a tooltip", () => {
+    applyStaticTooltips();
+    expect(document.getElementById("health-refresh")!.dataset.tooltipKey).toBe("tooltip.healthRefresh");
+    expect(document.querySelector<HTMLElement>('[data-view="health"]')!.dataset.tooltipKey).toBe("tooltip.viewHealth");
+    const untipped = [...document.querySelectorAll<HTMLButtonElement>("#health-panel button")].filter(
+      (button) => !button.dataset.tooltipKey,
+    );
+    expect(untipped).toEqual([]);
+  });
+});

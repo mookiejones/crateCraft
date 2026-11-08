@@ -2,7 +2,7 @@
  * Rail groups: Library, Library health, Backups, and Before a gig.
  *
  * The markup is index.html. Group labels are headings. Each tab still
- * has a tooltip. The view ids stay crates, history, files, missing,
+ * has a tooltip. The view ids stay crates, history, files, health, missing,
  * duplicates, stems, scan, tags, snapshots, and gig.
  */
 
@@ -28,10 +28,11 @@ describe("rail groups", () => {
     );
     expect(groups).toEqual([
       ["crates", "history", "files"],
-      ["missing", "duplicates", "stems", "scan", "tags"],
+      ["health", "missing", "duplicates", "stems", "scan", "tags"],
       ["snapshots"],
       ["gig"],
     ]);
+    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Library health");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Missing files");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Damaged files");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Tag spellings");
@@ -54,6 +55,7 @@ describe("rail groups", () => {
     applyStatic(document);
     const labels = [...document.querySelectorAll(".view-group-label")].map((node) => node.textContent);
     expect(labels).toEqual(["Biblioteca", "Salud de la biblioteca"]);
+    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Salud de la biblioteca");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Archivos no encontrados");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Archivos dañados");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Grafías de etiquetas");

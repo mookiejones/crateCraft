@@ -388,6 +388,33 @@
     "gig.wholeSpaceInline": "the whole space",
     "gig.wordNotReady": "not ready",
     "gig.wordReady": "ready",
+    "health.checking": "Checking the library…",
+    "health.clear": "Nothing to fix in this check.",
+    "health.duplicateRow": {
+      one: "{title} ({count} copy)",
+      other: "{title} ({count} copies)"
+    },
+    "health.duplicates": "Duplicate groups",
+    "health.emptyGenre": "Empty genre",
+    "health.heading": "Library health",
+    "health.intro": "Counts from the library database. Artwork, beatgrids in audio files, and unused files on disk come later. Each row opens the place that can fix it.",
+    "health.missing": "Missing files",
+    "health.more": {
+      one: "{count} more.",
+      other: "{count} more."
+    },
+    "health.noBpm": "No BPM",
+    "health.noCrate": "Not in a crate",
+    "health.noKey": "No key",
+    "health.openDuplicates": "Open Duplicates",
+    "health.openMissing": "Open Missing files",
+    "health.row": "{title}",
+    "health.summary": {
+      one: "{count} track checked.",
+      other: "{count} tracks checked."
+    },
+    "health.unreadable": "Couldn't read the health report.",
+    "health.unreachable": "Couldn't reach the library server. Check it's running, then press Check again.",
     "help.bug": "Report a bug",
     "help.bugTitle": "Report a bug",
     "help.change": "What should change",
@@ -529,6 +556,7 @@
     "mode.duplicates": "Same title, artist, and length. Select a copy, then merge the others into it.",
     "mode.files": "Files on disk. Cue points stay in the audio file. Crates follow the path.",
     "mode.gig": "Read-only. This check does not change the library.",
+    "mode.health": "Read-only. This report does not change the library.",
     "mode.missing": "Tracks whose files are missing on a connected drive.",
     "mode.missingOffline": {
       one: "Tracks whose files are missing on a connected drive. {count} track on an unplugged drive is marked offline in crates.",
@@ -1069,6 +1097,10 @@
     "tooltip.gigNext": "Go to the next step.",
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.healthOpenDuplicates": "Open the Duplicates view.",
+    "tooltip.healthOpenMissing": "Open the Missing files view.",
+    "tooltip.healthRefresh": "Run the library health report again. Read-only.",
+    "tooltip.healthTrack": "Open this track in Crates.",
     "tooltip.help": "Open Help. Report a bug or request a feature on GitHub. The app does not post it.",
     "tooltip.helpBug": "Describe a bug. GitHub opens so you can review it.",
     "tooltip.helpClose": "Close Help. Esc.",
@@ -1225,6 +1257,7 @@
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
+    "tooltip.viewHealth": "One-page counts of missing files, missing BPM or key, empty genre, tracks in no crate, and duplicates. Read-only.",
     "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
     "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as offline.",
     "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
@@ -1277,6 +1310,7 @@
     "view.gig": "Before a gig",
     "view.group.health": "Library health",
     "view.group.library": "Library",
+    "view.health": "Library health",
     "view.history": "History",
     "view.label": "Views",
     "view.missing": "Missing files",
@@ -1723,6 +1757,33 @@
     "gig.wholeSpaceInline": "todo el espacio",
     "gig.wordNotReady": "no listo",
     "gig.wordReady": "listo",
+    "health.checking": "Comprobando la biblioteca…",
+    "health.clear": "Nada que corregir en esta comprobación.",
+    "health.duplicateRow": {
+      one: "{title} ({count} copia)",
+      other: "{title} ({count} copias)"
+    },
+    "health.duplicates": "Grupos duplicados",
+    "health.emptyGenre": "Género vacío",
+    "health.heading": "Salud de la biblioteca",
+    "health.intro": "Cifras de la base de datos. La carátula, las rejillas de beats en los archivos de audio y los archivos no usados en el disco llegan después. Cada fila abre el sitio que puede corregirlo.",
+    "health.missing": "Archivos no encontrados",
+    "health.more": {
+      one: "{count} más.",
+      other: "{count} más."
+    },
+    "health.noBpm": "Sin BPM",
+    "health.noCrate": "En ninguna caja",
+    "health.noKey": "Sin tonalidad",
+    "health.openDuplicates": "Abrir Duplicados",
+    "health.openMissing": "Abrir Archivos no encontrados",
+    "health.row": "{title}",
+    "health.summary": {
+      one: "{count} pista comprobada.",
+      other: "{count} pistas comprobadas."
+    },
+    "health.unreadable": "No se pudo leer el informe de salud.",
+    "health.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Volver a comprobar.",
     "help.bug": "Informar de un error",
     "help.bugTitle": "Informar de un error",
     "help.change": "Qué debería cambiar",
@@ -1864,6 +1925,7 @@
     "mode.duplicates": "Mismo título, artista y duración. Selecciona una copia y combina las demás en ella.",
     "mode.files": "Archivos en el disco. Los cues se quedan en el archivo de audio. Las cajas siguen la ruta.",
     "mode.gig": "Solo lectura. Esta comprobación no cambia la biblioteca.",
+    "mode.health": "Solo lectura. Este informe no cambia la biblioteca.",
     "mode.missing": "Pistas cuyo archivo falta en una unidad conectada.",
     "mode.missingOffline": {
       one: "Pistas cuyo archivo falta en una unidad conectada. {count} pista en una unidad desconectada se marca como desconectada en las cajas.",
@@ -2404,6 +2466,10 @@
     "tooltip.gigNext": "Pasa al siguiente paso.",
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
+    "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
+    "tooltip.healthOpenMissing": "Abre la vista Archivos no encontrados.",
+    "tooltip.healthRefresh": "Vuelve a generar el informe de salud de la biblioteca. Solo lectura.",
+    "tooltip.healthTrack": "Abre esta pista en Cajas.",
     "tooltip.help": "Abre Ayuda. Informa de un error o pide una función en GitHub. La app no lo publica.",
     "tooltip.helpBug": "Describe un error. GitHub se abre para que lo revises.",
     "tooltip.helpClose": "Cierra Ayuda. Esc.",
@@ -2560,6 +2626,7 @@
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
     "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
+    "tooltip.viewHealth": "Cifras en una página de archivos no encontrados, BPM o tonalidad faltantes, género vacío, pistas en ninguna caja y duplicados. Solo lectura.",
     "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
     "tooltip.viewMissing": "Muestra las pistas cuyo archivo falta en una unidad conectada. Las pistas en una unidad desconectada se quedan en las cajas como desconectadas.",
     "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
@@ -2612,6 +2679,7 @@
     "view.gig": "Antes del bolo",
     "view.group.health": "Salud de la biblioteca",
     "view.group.library": "Biblioteca",
+    "view.health": "Salud de la biblioteca",
     "view.history": "Historial",
     "view.label": "Vistas",
     "view.missing": "Archivos no encontrados",
@@ -3147,6 +3215,7 @@
     seratoRunning: false,
     snapshotPlanId: "",
     gigToken: 0,
+    healthToken: 0,
     scanToken: 0,
     tagsToken: 0,
     view: [],
@@ -3487,8 +3556,13 @@
     viewFiles: spec("tooltip.viewFiles"),
     viewSnapshots: spec("tooltip.viewSnapshots"),
     viewGig: spec("tooltip.viewGig"),
+    viewHealth: spec("tooltip.viewHealth"),
     viewScan: spec("tooltip.viewScan"),
     viewTags: spec("tooltip.viewTags"),
+    healthRefresh: spec("tooltip.healthRefresh"),
+    healthOpenMissing: spec("tooltip.healthOpenMissing"),
+    healthOpenDuplicates: spec("tooltip.healthOpenDuplicates"),
+    healthTrack: spec("tooltip.healthTrack"),
     tagsGenre: spec("tooltip.tagsGenre"),
     tagsArtist: spec("tooltip.tagsArtist"),
     tagsTitles: spec("tooltip.tagsTitles"),
@@ -3552,6 +3626,7 @@
       files: tips.viewFiles,
       snapshots: tips.viewSnapshots,
       gig: tips.viewGig,
+      health: tips.viewHealth,
       scan: tips.viewScan,
       tags: tips.viewTags
     };
@@ -3626,6 +3701,7 @@
       "operations-list": tips.operationsList,
       "snapshots-refresh": tips.snapshotsRefresh,
       "gig-refresh": tips.gigRefresh,
+      "health-refresh": tips.healthRefresh,
       "scan-quick": tips.scanQuick,
       "scan-full": tips.scanFull,
       "tags-genre": tips.tagsGenre,
@@ -4296,6 +4372,190 @@
     return fragment;
   }
 
+  // src/health.ts
+  var SECTIONS = [
+    { key: "missing", label: "health.missing", action: "missing" },
+    { key: "no_bpm", label: "health.noBpm" },
+    { key: "no_key", label: "health.noKey" },
+    { key: "empty_genre", label: "health.emptyGenre" },
+    { key: "no_crate", label: "health.noCrate" }
+  ];
+  var latest2 = null;
+  var go = null;
+  function wireHealth(navigate) {
+    go = navigate;
+    const panel = el("health-panel");
+    if (panel.dataset.healthWired === "true") return;
+    panel.dataset.healthWired = "true";
+    el("health-refresh").addEventListener("click", () => {
+      void loadHealth();
+    });
+    panel.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const button2 = target.closest("button");
+      if (!(button2 instanceof HTMLButtonElement)) return;
+      const action = button2.dataset.healthAction;
+      if (action === "missing" || action === "duplicates") {
+        go?.(action);
+        return;
+      }
+      if (action === "track") {
+        const id = Number(button2.dataset.healthId);
+        if (Number.isInteger(id) && id > 0) go?.("track", id);
+      }
+    });
+  }
+  async function loadHealth() {
+    const token3 = ++state.healthToken;
+    beginBusy2();
+    let settle = "none";
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/library-health?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+      );
+      if (token3 !== state.healthToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.healthToken) return;
+      if (!response.ok || payload === null) {
+        failStatus2(serverMessage(payload, t("health.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest2 = payload;
+      el("health-status").textContent = "";
+      renderHealthReport(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.healthToken) return;
+      failStatus2(t("health.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.healthToken) return;
+      endBusy2();
+      if (settle === "retry") el("health-refresh").focus();
+      if (settle === "report") el("health-report").focus();
+    }
+  }
+  function showHealthFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
+    failStatus2(message);
+    endBusy2();
+    el("health-refresh").focus();
+  }
+  function renderHealthReport(payload) {
+    el("health-scope").textContent = scopeLabel();
+    const report = el("health-report");
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = t("health.summary", { count: payload.checked });
+    report.replaceChildren(summary);
+    let listed = 0;
+    for (const spec2 of SECTIONS) {
+      listed += paintSection(report, t(spec2.label), payload[spec2.key], spec2.action);
+    }
+    listed += paintDuplicates(report, payload.duplicates);
+    if (!listed) report.append(noteLine2(t("health.clear")));
+  }
+  function repaintHealth() {
+    el("health-scope").textContent = scopeLabel();
+    if (latest2) renderHealthReport(latest2);
+  }
+  function beginBusy2() {
+    const button2 = el("health-refresh");
+    button2.disabled = true;
+    button2.setAttribute("aria-busy", "true");
+    el("health-panel").setAttribute("aria-busy", "true");
+    el("health-status").textContent = t("health.checking");
+  }
+  function endBusy2() {
+    const button2 = el("health-refresh");
+    button2.disabled = false;
+    button2.setAttribute("aria-busy", "false");
+    el("health-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus2(message) {
+    el("health-status").textContent = message;
+  }
+  function scopeLabel() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function noteLine2(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+  function paintSection(report, label, section, action) {
+    const count = section?.count ?? 0;
+    const tracks = section?.tracks ?? [];
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading2 = document.createElement("summary");
+    heading2.textContent = t("gig.groupCount", { label, count });
+    details.append(heading2);
+    if (action === "missing") details.append(openButton("missing", "health.openMissing", tips.healthOpenMissing));
+    const list = document.createElement("ul");
+    for (const track of tracks) list.append(trackItem(track));
+    details.append(list);
+    if (count > tracks.length) {
+      details.append(noteLine2(t("health.more", { count: count - tracks.length })));
+    }
+    report.append(details);
+    return count;
+  }
+  function paintDuplicates(report, section) {
+    const count = section?.count ?? 0;
+    const groups = section?.groups ?? [];
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading2 = document.createElement("summary");
+    heading2.textContent = t("gig.groupCount", { label: t("health.duplicates"), count });
+    details.append(heading2);
+    details.append(openButton("duplicates", "health.openDuplicates", tips.healthOpenDuplicates));
+    const list = document.createElement("ul");
+    for (const group of groups) list.append(groupItem(group));
+    details.append(list);
+    if (count > groups.length) {
+      details.append(noteLine2(t("health.more", { count: count - groups.length })));
+    }
+    report.append(details);
+    return count;
+  }
+  function openButton(action, label, tip) {
+    const button2 = buttonEl(tip);
+    button2.dataset.healthAction = action;
+    button2.textContent = t(label);
+    return button2;
+  }
+  function trackItem(track) {
+    const row = document.createElement("li");
+    const button2 = buttonEl(tips.healthTrack);
+    button2.dataset.healthAction = "track";
+    button2.dataset.healthId = String(track.id);
+    button2.textContent = trackLine(track);
+    row.append(button2);
+    return row;
+  }
+  function groupItem(group) {
+    const row = document.createElement("li");
+    row.textContent = t("health.duplicateRow", {
+      title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
+      count: group.ids.length
+    });
+    return row;
+  }
+  function trackLine(track) {
+    return t("health.row", {
+      title: [track.artist, track.name].filter(Boolean).join(" — ") || track.file
+    });
+  }
+
   // src/scan.ts
   var LIST_CAP2 = 100;
   var PROBLEM_ORDER = [
@@ -4316,7 +4576,7 @@
     decode_error: "scan.problem.decode_error",
     short: "scan.problem.short"
   };
-  var latest2 = null;
+  var latest3 = null;
   var lastDepth = "quick";
   function wireScan() {
     const panel = el("scan-panel");
@@ -4332,11 +4592,11 @@
   async function loadScan(depth) {
     const chosen = resolveDepth(depth);
     const token3 = ++state.scanToken;
-    beginBusy2();
+    beginBusy3();
     let settle = "none";
     if (chosen === "full" && state.activeCrate === "all") {
-      failStatus2(t("error.scan_full_needs_crate"));
-      endBusy2();
+      failStatus3(t("error.scan_full_needs_crate"));
+      endBusy3();
       el("scan-full").focus();
       return;
     }
@@ -4350,33 +4610,33 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.scanToken) return;
       if (!response.ok || payload === null) {
-        failStatus2(serverMessage(payload, t("scan.unreadable")));
+        failStatus3(serverMessage(payload, t("scan.unreadable")));
         settle = "retry";
         return;
       }
-      latest2 = payload;
+      latest3 = payload;
       el("scan-status").textContent = "";
       renderScanReport(payload);
       settle = "report";
     } catch {
       if (token3 !== state.scanToken) return;
-      failStatus2(t("scan.unreachable"));
+      failStatus3(t("scan.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.scanToken) return;
-      endBusy2();
+      endBusy3();
       if (settle === "retry") el("scan-quick").focus();
       if (settle === "report") el("scan-report").focus();
     }
   }
   function showScanFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
-    failStatus2(message);
-    endBusy2();
+    failStatus3(message);
+    endBusy3();
     el("scan-quick").focus();
   }
   function renderScanReport(payload) {
-    el("scan-scope").textContent = scopeLabel();
+    el("scan-scope").textContent = scopeLabel2();
     const report = el("scan-report");
     const problems = payload.problems || [];
     const summary = document.createElement("p");
@@ -4384,13 +4644,13 @@
     summary.textContent = problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked });
     report.replaceChildren(summary);
     if (payload.not_found) {
-      report.append(noteLine2(t("scan.notFound", { count: payload.not_found })));
+      report.append(noteLine3(t("scan.notFound", { count: payload.not_found })));
     }
     if (payload.unchecked) {
-      report.append(noteLine2(t("scan.unchecked", { count: payload.unchecked })));
+      report.append(noteLine3(t("scan.unchecked", { count: payload.unchecked })));
     }
     if (!problems.length) {
-      report.append(noteLine2(t("scan.empty")));
+      report.append(noteLine3(t("scan.empty")));
       return;
     }
     for (const kind2 of problemKinds(problems)) {
@@ -4399,15 +4659,15 @@
     }
   }
   function repaintScan() {
-    el("scan-scope").textContent = scopeLabel();
-    if (latest2) renderScanReport(latest2);
+    el("scan-scope").textContent = scopeLabel2();
+    if (latest3) renderScanReport(latest3);
   }
   function resolveDepth(depth) {
     if (depth === "quick" || depth === "full") return depth;
     if (lastDepth === "full" && state.activeCrate === "all") return "quick";
     return lastDepth;
   }
-  function beginBusy2() {
+  function beginBusy3() {
     for (const id of ["scan-quick", "scan-full"]) {
       const button2 = el(id);
       button2.disabled = true;
@@ -4416,7 +4676,7 @@
     el("scan-panel").setAttribute("aria-busy", "true");
     el("scan-status").textContent = t("scan.checking");
   }
-  function endBusy2() {
+  function endBusy3() {
     el("scan-quick").disabled = false;
     el("scan-quick").setAttribute("aria-busy", "false");
     const full = el("scan-full");
@@ -4424,15 +4684,15 @@
     full.setAttribute("aria-busy", "false");
     el("scan-panel").setAttribute("aria-busy", "false");
   }
-  function failStatus2(message) {
+  function failStatus3(message) {
     el("scan-status").textContent = message;
   }
-  function scopeLabel() {
+  function scopeLabel2() {
     if (state.activeCrate === "all") return t("gig.wholeSpace");
     const crate = state.crates.find((row) => row.id === state.activeCrate);
     return crate?.name || t("gig.wholeSpace");
   }
-  function noteLine2(text2) {
+  function noteLine3(text2) {
     const line = document.createElement("p");
     line.className = "gig-note";
     line.textContent = text2;
@@ -4586,7 +4846,7 @@
   var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
   var TITLE_KEY = "clean";
   var MAPPING_KEY = "saved";
-  var latest3 = null;
+  var latest4 = null;
   var titlePlan = null;
   var mappingPlan = null;
   var plans = /* @__PURE__ */ new Map();
@@ -4621,7 +4881,7 @@
       const key = input.name.slice("tags-".length);
       selectedByKey.set(key, input.value);
       plans.delete(key);
-      if (latest3) renderTagsReport(latest3);
+      if (latest4) renderTagsReport(latest4);
     });
     el("tags-report").addEventListener("click", (event) => {
       const button2 = event.target.closest("[data-tags-action]");
@@ -4645,7 +4905,7 @@
     const field = currentField();
     plans.clear();
     selectedByKey.clear();
-    beginBusy3();
+    beginBusy4();
     let settle = "none";
     try {
       if (field === "titles") {
@@ -4655,7 +4915,7 @@
         });
         if (token3 !== state.tagsToken) return;
         titlePlan = payload;
-        latest3 = null;
+        latest4 = null;
         mappingPlan = null;
         el("tags-status").textContent = titlesPreviewSummary(payload);
         settle = "report";
@@ -4667,11 +4927,11 @@
         const payload = await readJSON(response).catch(() => null);
         if (token3 !== state.tagsToken) return;
         if (!response.ok || payload === null) {
-          failStatus3(serverMessage(payload, t("tags.unreadable")));
+          failStatus4(serverMessage(payload, t("tags.unreadable")));
           settle = "retry";
           return;
         }
-        latest3 = payload;
+        latest4 = payload;
         titlePlan = null;
         mappingPlan = await readMappingPreview(token3);
         if (token3 !== state.tagsToken) return;
@@ -4680,12 +4940,12 @@
       }
     } catch (error2) {
       if (token3 !== state.tagsToken) return;
-      if (error2 instanceof TypeError) failStatus3(t("tags.unreachable"));
-      else failStatus3(failureOf(error2).message);
+      if (error2 instanceof TypeError) failStatus4(t("tags.unreachable"));
+      else failStatus4(failureOf(error2).message);
       settle = "retry";
     } finally {
       if (token3 !== state.tagsToken) return;
-      endBusy3();
+      endBusy4();
       if (settle === "report") paintReport();
       if (settle === "retry") el("tags-refresh").focus();
       if (settle === "report") el("tags-report").focus();
@@ -4693,8 +4953,8 @@
   }
   function showTagsFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
-    failStatus3(message);
-    endBusy3();
+    failStatus4(message);
+    endBusy4();
     el("tags-refresh").focus();
   }
   function renderTagsReport(payload) {
@@ -4719,7 +4979,7 @@
       if (titlePlan) renderTitleReport(titlePlan);
       return;
     }
-    if (latest3) renderTagsReport(latest3);
+    if (latest4) renderTagsReport(latest4);
   }
   function renderTitleReport(plan) {
     el("tags-scope").textContent = t("gig.wholeSpace");
@@ -4770,7 +5030,7 @@
       paintReport();
       applyButton(key)?.focus();
     } catch (error2) {
-      failStatus3(failureOf(error2).message);
+      failStatus4(failureOf(error2).message);
     } finally {
       actionKey = "";
       paintReport();
@@ -4782,7 +5042,7 @@
     if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
     actionKey = key;
     panelBusy = true;
-    beginBusy3();
+    beginBusy4();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -4794,19 +5054,19 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy3();
+      endBusy4();
       await loadTags();
       el("tags-status").textContent = writtenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus3(failed.message);
+      failStatus4(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy3();
+      endBusy4();
       paintReport();
     }
   }
@@ -4815,7 +5075,7 @@
     if (!plan || !canApplyMappings(plan)) return;
     actionKey = MAPPING_KEY;
     panelBusy = true;
-    beginBusy3();
+    beginBusy4();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -4825,19 +5085,19 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy3();
+      endBusy4();
       await loadTags();
       el("tags-status").textContent = mappingWrittenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus3(failed.message);
+      failStatus4(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy3();
+      endBusy4();
       paintReport();
     }
   }
@@ -4846,7 +5106,7 @@
     if (!plan || !canApplyTitles(plan)) return;
     actionKey = TITLE_KEY;
     panelBusy = true;
-    beginBusy3();
+    beginBusy4();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -4856,19 +5116,19 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy3();
+      endBusy4();
       await loadTags();
       el("tags-status").textContent = titlesWrittenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus3(failed.message);
+      failStatus4(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy3();
+      endBusy4();
       paintReport();
     }
   }
@@ -4883,7 +5143,7 @@
     el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
     el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
   }
-  function beginBusy3() {
+  function beginBusy4() {
     panelBusy = true;
     for (const id of FIELD_BUTTONS) {
       const button2 = el(id);
@@ -4894,7 +5154,7 @@
     el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
     paintReport();
   }
-  function endBusy3() {
+  function endBusy4() {
     panelBusy = false;
     for (const id of FIELD_BUTTONS) {
       const button2 = el(id);
@@ -4957,7 +5217,7 @@
     wrap.append(actions2);
     return wrap;
   }
-  function failStatus3(message) {
+  function failStatus4(message) {
     el("tags-status").textContent = message;
   }
   function openKeys() {
@@ -4970,7 +5230,7 @@
     return keys;
   }
   function groupByKey(key) {
-    return latest3?.groups?.find((group) => group.key === key);
+    return latest4?.groups?.find((group) => group.key === key);
   }
   function selectedValue(key) {
     const group = groupByKey(key);
@@ -5067,7 +5327,7 @@
     file_size: "portable.kindFileSize"
   };
   var token = 0;
-  var latest4 = null;
+  var latest5 = null;
   var opener = null;
   var wired = false;
   function portableDriveRoot(path) {
@@ -5138,7 +5398,7 @@
     const mine = ++token;
     opener = trigger ?? null;
     const dialog = el("portable-dialog");
-    latest4 = null;
+    latest5 = null;
     el("portable-verdict").textContent = "";
     el("portable-summary").textContent = "";
     el("portable-findings").replaceChildren();
@@ -5162,7 +5422,7 @@
         fail(t("portable.unreadable"));
         return;
       }
-      latest4 = report;
+      latest5 = report;
       el("portable-status").textContent = "";
       renderPortableReport(report);
     } catch {
@@ -5176,7 +5436,7 @@
       const name = button2.dataset.portableName ?? "";
       if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
     }
-    if (latest4) renderPortableReport(latest4);
+    if (latest5) renderPortableReport(latest5);
   }
   function wirePortable() {
     if (wired) return;
@@ -5187,7 +5447,7 @@
     });
   }
   function renderPortableReport(report) {
-    latest4 = report;
+    latest5 = report;
     const verdict = el("portable-verdict");
     if (report.missing_drive) verdict.textContent = t("portable.missing");
     else if (report.ready) verdict.textContent = t("portable.ready");
@@ -5229,7 +5489,7 @@
     return key ? t(key) : kind2;
   }
   function fail(message) {
-    latest4 = null;
+    latest5 = null;
     el("portable-verdict").textContent = "";
     el("portable-summary").textContent = "";
     el("portable-findings").replaceChildren();
@@ -5727,8 +5987,8 @@
     const status = el("operations-status");
     const list = el("operations-list");
     list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest6 = state.operations[state.operations.length - 1];
-    const failed = latest6?.result === "rollback_failed";
+    const latest7 = state.operations[state.operations.length - 1];
+    const failed = latest7?.result === "rollback_failed";
     alert.hidden = !failed;
     alert.textContent = failed ? t("operations.rollbackFailed") : "";
     list.replaceChildren();
@@ -8322,10 +8582,11 @@
     markHistoryColumns();
     const cratesMode = state.mode === "crates";
     const gigMode = state.mode === "gig";
+    const healthMode = state.mode === "health";
     const scanMode = state.mode === "scan";
     const tagsMode = state.mode === "tags";
     const historyMode = state.mode === "history";
-    const showCrates2 = cratesMode || gigMode || scanMode;
+    const showCrates2 = cratesMode || gigMode || healthMode || scanMode;
     el("crate-tools").hidden = !showCrates2;
     el("crate-actions").hidden = !cratesMode;
     el("crate-list").hidden = !showCrates2;
@@ -8333,13 +8594,14 @@
     el("mode-note").hidden = cratesMode || historyMode;
     const filesMode = state.mode === "files";
     const snapshotsMode = state.mode === "snapshots";
-    const panelMode = filesMode || snapshotsMode || gigMode || scanMode || tagsMode;
+    const panelMode = filesMode || snapshotsMode || gigMode || healthMode || scanMode || tagsMode;
     el("browser").hidden = panelMode;
     el("track-splitter").hidden = panelMode;
     el("detail").hidden = panelMode;
     el("files-panel").hidden = !filesMode;
     el("snapshots-panel").hidden = !snapshotsMode;
     el("gig-panel").hidden = !gigMode;
+    el("health-panel").hidden = !healthMode;
     el("scan-panel").hidden = !scanMode;
     el("tags-panel").hidden = !tagsMode;
     if (state.mode === "missing") {
@@ -8353,6 +8615,10 @@
     if (filesMode) el("mode-note").textContent = t("mode.files");
     if (gigMode) {
       el("mode-note").textContent = t("mode.gig");
+      document.querySelector(".rules")?.remove();
+    }
+    if (healthMode) {
+      el("mode-note").textContent = t("mode.health");
       document.querySelector(".rules")?.remove();
     }
     if (scanMode) {
@@ -8390,7 +8656,7 @@
       el("crate-foot").textContent = state.filesLoading ? t("files.readingFolder") : t("files.fileCount", { count: listed });
       return;
     }
-    if (gigMode || scanMode) {
+    if (gigMode || healthMode || scanMode) {
       const crate = state.crates.find((item3) => item3.id === state.activeCrate);
       el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : crate?.name ?? t("crates.selectedCrate");
       return;
@@ -8430,6 +8696,11 @@
       return;
     }
     if (state.mode === "gig") {
+      renderCrates();
+      paintDualChrome();
+      return;
+    }
+    if (state.mode === "health") {
       renderCrates();
       paintDualChrome();
       return;
@@ -8497,6 +8768,7 @@
     list.scrollTop = 0;
     renderList();
     if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
+    if (state.mode === "health") loadHealth().catch(showHealthFailure);
     if (state.mode === "scan") loadScan().catch(showScanFailure);
   }
   function focusCrateItem(item3) {
@@ -9616,6 +9888,7 @@
       loadSnapshots().catch((error2) => failSnapshots(error2));
     }
     if (mode === "gig") loadGigCheck().catch(showGigFailure);
+    if (mode === "health") loadHealth().catch(showHealthFailure);
     if (mode === "scan") loadScan("quick").catch(showScanFailure);
     if (mode === "tags") loadTags().catch(showTagsFailure);
     renderList();
@@ -10184,6 +10457,7 @@
       if (state.mode === "history") jobs.push(loadHistory());
       if (state.mode === "duplicates") jobs.push(loadDuplicates());
       if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
+      if (state.mode === "health") jobs.push(loadHealth().catch(showHealthFailure));
       if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
       if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
       Promise.all(jobs).catch(showFailure);
@@ -10216,6 +10490,7 @@
       loadLibrary().then(() => {
         if (state.mode === "duplicates") return loadDuplicates();
         if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
+        if (state.mode === "health") return loadHealth().catch(showHealthFailure);
         if (state.mode === "scan") return loadScan().catch(showScanFailure);
         if (state.mode === "tags") return loadTags().catch(showTagsFailure);
         return null;
@@ -12524,7 +12799,7 @@
 
   // src/update.ts
   var UPDATE_CHOICE_EVENT = "serato-update-choice";
-  var latest5 = null;
+  var latest6 = null;
   var dismissed = false;
   var token2 = 0;
   var wired3 = false;
@@ -12556,15 +12831,15 @@
       const response = await fetch("/api/update");
       const body = response.ok ? await response.json() : null;
       if (mine !== token2) return;
-      latest5 = parseUpdateStatus(body);
+      latest6 = parseUpdateStatus(body);
     } catch {
       if (mine !== token2) return;
-      latest5 = null;
+      latest6 = null;
     }
     paintUpdate();
   }
   function paintUpdate() {
-    const status = latest5;
+    const status = latest6;
     const toggle = el("update-toggle");
     const pre = el("update-prereleases");
     toggle.checked = status?.enabled === true;
@@ -12631,7 +12906,7 @@
     }
   }
   async function skip() {
-    const release = latest5?.latest;
+    const release = latest6?.latest;
     if (!release) return;
     try {
       await postJSON("/api/update", { skip: release.version });
@@ -12729,6 +13004,7 @@
     repaintViews();
     if (state.mode === "snapshots") renderSnapshots();
     if (state.mode === "gig") repaintGig();
+    if (state.mode === "health") repaintHealth();
     if (state.mode === "scan") repaintScan();
     if (state.mode === "tags") repaintTags();
     repaintPortable();
@@ -13008,6 +13284,7 @@
     "view-missing": "missing",
     "view-duplicates": "duplicates",
     "view-stems": "stems",
+    "view-health": "health",
     "view-scan": "scan",
     "view-tags": "tags",
     "view-snapshots": "snapshots",
@@ -13173,6 +13450,10 @@
   wireSnapshots();
   wireGigCheck(() => {
     setMode("crates");
+  });
+  wireHealth((action, id) => {
+    if (action === "track" && id != null) state.selectedId = id;
+    setMode(action === "missing" ? "missing" : action === "duplicates" ? "duplicates" : "crates");
   });
   wireScan();
   wireTags();

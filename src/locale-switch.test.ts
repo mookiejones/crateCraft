@@ -126,6 +126,16 @@ describe("switching the language", () => {
     expect(el("crate-foot").textContent).toBe("Todo el espacio");
   });
 
+  it("translates the Library health crate footer", () => {
+    wireLocale();
+    state.mode = "health";
+    state.activeCrate = "all";
+    renderShell();
+    expect(el("crate-foot").textContent).toBe("All tracks");
+    setLocale("es");
+    expect(el("crate-foot").textContent).toBe("Todas las pistas");
+  });
+
   it("translates the Damaged files crate footer", () => {
     wireLocale();
     state.mode = "scan";

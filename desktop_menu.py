@@ -129,6 +129,7 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
         Menu(
             say("menu.tools"),
             [
+                item("view.health", "view-health"),
                 item("view.missing", "view-missing"),
                 item("view.duplicates", "view-duplicates"),
                 item("merge.title", "merge"),

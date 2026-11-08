@@ -120,6 +120,7 @@ export interface PageState {
   seratoRunning: boolean;
   snapshotPlanId: string;
   gigToken: number;
+  healthToken: number;
   scanToken: number;
   tagsToken: number;
   view: Track[];
@@ -192,6 +193,7 @@ export const state: PageState = {
   seratoRunning: false,
   snapshotPlanId: "",
   gigToken: 0,
+  healthToken: 0,
   scanToken: 0,
   tagsToken: 0,
   view: [],

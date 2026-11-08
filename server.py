@@ -39,6 +39,7 @@ import history_stats
 import legacy_library
 import lost_tags
 import library
+import library_health
 import music_roots
 import rekordbox
 import related
@@ -1940,6 +1941,11 @@ class Handler(BaseHTTPRequestHandler):
                 depth = query_text(query, "depth", file_scan.QUICK) or file_scan.QUICK
                 file_scan.require_crate_for_full(depth, crate_id)
                 self.send_json(file_scan.scan(Path(library.MASTER), space, crate_id, depth))
+                return
+            if parsed.path == "/api/library-health":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                self.send_json(library_health.report(Path(library.MASTER), space, crate_id))
                 return
             if parsed.path == "/api/tag-clusters":
                 space = require_space(query_text(query, "space"))
