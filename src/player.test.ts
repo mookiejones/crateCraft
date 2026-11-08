@@ -444,6 +444,21 @@ describe("track rows", () => {
   });
 });
 
+function rowPlay(id: number): HTMLButtonElement | null {
+  return document.querySelector<HTMLButtonElement>(`.row[data-id="${id}"] .row-play`);
+}
+
+function expectPlayControls(id: number, name: string, playing: boolean): void {
+  const action = playing ? playerStrings.pause : playerStrings.play;
+  const detail = document.querySelector<HTMLButtonElement>(".detail-play");
+  expect(detail?.textContent).toBe(action);
+  expect(detail?.getAttribute("aria-label")).toBe(`${action} ${name}`);
+  expect(detail?.getAttribute("aria-pressed")).toBe(String(playing));
+  const row = rowPlay(id);
+  expect(row?.getAttribute("aria-label")).toBe(`${action} ${name}`);
+  expect(row?.getAttribute("aria-pressed")).toBe(String(playing));
+}
+
 describe("detail play", () => {
   it("starts the open track from the detail button", async () => {
     vi.stubGlobal("fetch", (input: RequestInfo | URL) => {
@@ -468,5 +483,63 @@ describe("detail play", () => {
     button?.click();
     expect(fake.src).toContain("id=4");
     expect(isPlaying()).toBe(true);
+  });
+
+  it("keeps the detail Play and list Play buttons on one player", async () => {
+    vi.stubGlobal("fetch", (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.startsWith("/api/track")) {
+        const id = Number(new URL(url, "http://127.0.0.1").searchParams.get("id"));
+        const row = id === 5
+          ? { id: 5, title: "Dawn", artist: "Ada" }
+          : { id: 4, title: "Night", artist: "Ada" };
+        return Promise.resolve(new Response(JSON.stringify(row), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }));
+      }
+      return Promise.resolve(new Response(JSON.stringify({ links: [], suggestions: [] }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }));
+    });
+    mountTrackList();
+    wireVirtualScroll();
+    const night = track(4, "Night", "Ada");
+    const dawn = track(5, "Dawn", "Ada");
+    state.view = [night, dawn];
+    state.byId.set(4, night);
+    state.byId.set(5, dawn);
+    paintRows();
+    const { selectTrack } = await import("./views");
+    await selectTrack(4);
+
+    document.querySelector<HTMLButtonElement>(".detail-play")?.click();
+    expect(isPlaying()).toBe(true);
+    expect(getPlayerState().trackId).toBe(4);
+    expectPlayControls(4, "Night", true);
+    expect(rowPlay(5)?.getAttribute("aria-pressed")).toBe("false");
+
+    rowPlay(4)?.click();
+    await vi.waitUntil(() => document.querySelector(".detail-play") !== null);
+    expect(isPlaying()).toBe(false);
+    expectPlayControls(4, "Night", false);
+
+    rowPlay(4)?.click();
+    await vi.waitUntil(() => document.querySelector(".detail-play") !== null);
+    expect(isPlaying()).toBe(true);
+    expectPlayControls(4, "Night", true);
+
+    document.querySelector<HTMLButtonElement>(".detail-play")?.click();
+    expect(isPlaying()).toBe(false);
+    expectPlayControls(4, "Night", false);
+
+    document.querySelector<HTMLButtonElement>(".detail-play")?.click();
+    rowPlay(5)?.click();
+    await vi.waitUntil(() => document.querySelector(".detail-play")?.getAttribute("aria-label") === "Pause Dawn");
+    expect(isPlaying()).toBe(true);
+    expect(getPlayerState().trackId).toBe(5);
+    expectPlayControls(5, "Dawn", true);
+    expect(rowPlay(4)?.getAttribute("aria-pressed")).toBe("false");
   });
 });
