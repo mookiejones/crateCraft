@@ -451,6 +451,7 @@
     },
     "markers.bpm": "{bpm} BPM",
     "markers.cue": "Cue point {number}",
+    "markers.cueEmpty": "Empty",
     "markers.flip": "Flip {number}",
     "markers.heading": "Cue points, saved loops, and beatgrid",
     "markers.loop": "Saved loop {number}",
@@ -567,6 +568,7 @@
     "plan.cratesSkipped": "Crates skipped",
     "plan.cratesUnavailable": "Crates on an unavailable drive",
     "plan.cueChanges": "Cue changes",
+    "plan.cueDiff": "{before} → {after}",
     "plan.deletedCrates": "Deleted crates",
     "plan.deletedCues": "Deleted cues",
     "plan.deletedGrids": "Deleted grids",
@@ -1750,6 +1752,7 @@
     },
     "markers.bpm": "{bpm} BPM",
     "markers.cue": "Punto de cue {number}",
+    "markers.cueEmpty": "Vacío",
     "markers.flip": "Flip {number}",
     "markers.heading": "Puntos de cue, bucles guardados y beatgrid",
     "markers.loop": "Bucle guardado {number}",
@@ -1866,6 +1869,7 @@
     "plan.cratesSkipped": "Cajas omitidas",
     "plan.cratesUnavailable": "Cajas en una unidad no disponible",
     "plan.cueChanges": "Cambios de cues",
+    "plan.cueDiff": "{before} → {after}",
     "plan.deletedCrates": "Cajas eliminadas",
     "plan.deletedCues": "Cues eliminados",
     "plan.deletedGrids": "Beatgrids eliminados",
@@ -5020,6 +5024,163 @@
     return body;
   }
 
+  // src/cue-view.ts
+  var CUE_SLOT_COUNT = 8;
+  function cueSlotVar(index) {
+    return `var(--cue-slot-${index + 1})`;
+  }
+  var CUE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+  function isCueColor(value) {
+    return CUE_COLOR.test(value);
+  }
+  function slotColor(index, stored) {
+    if (typeof stored === "string" && isCueColor(stored)) return stored;
+    if (Number.isInteger(index) && index >= 0 && index < CUE_SLOT_COUNT) {
+      return cueSlotVar(index);
+    }
+    return "";
+  }
+  function cueSlots(cues2) {
+    const slots = Array.from({ length: CUE_SLOT_COUNT }, () => null);
+    if (!cues2) return slots;
+    for (const cue of cues2) {
+      const index = Number(cue.index);
+      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) continue;
+      if (slots[index] == null) slots[index] = cue;
+    }
+    return slots;
+  }
+  function extraCues(cues2) {
+    if (!cues2) return [];
+    const seen = /* @__PURE__ */ new Set();
+    const extra = [];
+    for (const cue of cues2) {
+      const index = Number(cue.index);
+      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) {
+        extra.push(cue);
+        continue;
+      }
+      if (seen.has(index)) extra.push(cue);
+      else seen.add(index);
+    }
+    return extra;
+  }
+  function formatCueTime(value) {
+    const total = Number(value) / 1e3;
+    const minutes = Math.floor(total / 60);
+    return `${minutes}:${(total - minutes * 60).toFixed(3).padStart(6, "0")}`;
+  }
+  function cuesFromFrame(value) {
+    if (value == null || Array.isArray(value)) return [];
+    return Array.isArray(value.cues) ? value.cues : [];
+  }
+  function cueSummary(cue, empty) {
+    if (!cue) return empty;
+    const named = typeof cue.name === "string" ? cue.name.trim() : "";
+    const time = formatCueTime(cue.start_ms);
+    return named ? `${time} ${named}` : time;
+  }
+  function cueDiffRows(before, after) {
+    const beforeCues = cuesFromFrame(before);
+    const afterCues = cuesFromFrame(after);
+    const beforeSlots = cueSlots(beforeCues);
+    const afterSlots = cueSlots(afterCues);
+    const diffs = [];
+    for (let slot = 0; slot < CUE_SLOT_COUNT; slot += 1) {
+      const left = beforeSlots[slot] ?? null;
+      const right = afterSlots[slot] ?? null;
+      if (cueSignature(left) === cueSignature(right)) continue;
+      diffs.push({ slot, before: left, after: right });
+    }
+    const beforeExtra = extraCues(beforeCues);
+    const afterExtra = extraCues(afterCues);
+    const indexes = /* @__PURE__ */ new Set();
+    for (const cue of [...beforeExtra, ...afterExtra]) {
+      const index = Number(cue.index);
+      if (Number.isInteger(index)) indexes.add(index);
+    }
+    const sorted = [...indexes].sort((left, right) => left - right);
+    for (const index of sorted) {
+      const left = beforeExtra.find((cue) => Number(cue.index) === index) ?? null;
+      const right = afterExtra.find((cue) => Number(cue.index) === index) ?? null;
+      if (cueSignature(left) === cueSignature(right)) continue;
+      diffs.push({ slot: index, before: left, after: right });
+    }
+    return diffs;
+  }
+  function appendCueSlots(section, cues2) {
+    const slots = cueSlots(cues2);
+    for (let slot = 0; slot < slots.length; slot += 1) {
+      section.append(paintCueSlot(slot, slots[slot] ?? null));
+    }
+    for (const extra of extraCues(cues2)) {
+      const index = Number(extra.index);
+      const slot = Number.isInteger(index) ? index : -1;
+      section.append(paintCueSlot(slot, extra));
+    }
+  }
+  function paintCueSlot(slot, cue) {
+    const row = document.createElement("div");
+    row.className = cue ? "marker" : "marker marker-empty";
+    const number = document.createElement("span");
+    number.className = "marker-slot";
+    number.textContent = slot >= 0 ? String(slot + 1) : "";
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    const color = slotColor(slot, cue?.color);
+    if (color) swatch.style.background = color;
+    const time = document.createElement("span");
+    time.textContent = cue ? formatCueTime(cue.start_ms) : "—";
+    const name = document.createElement("span");
+    const named = cue && typeof cue.name === "string" ? cue.name.trim() : "";
+    if (cue) {
+      name.textContent = named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 });
+    } else {
+      name.textContent = t("markers.cueEmpty");
+    }
+    row.append(number, swatch, time, name);
+    return row;
+  }
+  function paintCueDiffRow(diff) {
+    const row = document.createElement("p");
+    row.className = "cue-diff";
+    const empty = t("markers.cueEmpty");
+    const beforeText = cueSummary(diff.before, empty);
+    const afterText = cueSummary(diff.after, empty);
+    row.setAttribute(
+      "aria-label",
+      `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`
+    );
+    const number = document.createElement("span");
+    number.className = "marker-slot";
+    number.textContent = String(diff.slot + 1);
+    const arrow = document.createElement("span");
+    arrow.className = "cue-diff-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+    row.append(number, paintCueSide(diff.before, diff.slot), arrow, paintCueSide(diff.after, diff.slot));
+    return row;
+  }
+  function cueSignature(cue) {
+    if (!cue) return "";
+    const start = Number(cue.start_ms);
+    const color = typeof cue.color === "string" ? cue.color : "";
+    const name = typeof cue.name === "string" ? cue.name : "";
+    return `${start}\0${color}\0${name}`;
+  }
+  function paintCueSide(cue, slot) {
+    const side = document.createElement("span");
+    side.className = cue ? "cue-diff-side" : "cue-diff-side marker-empty";
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    const color = slotColor(slot, cue?.color);
+    if (color) swatch.style.background = color;
+    const text2 = document.createElement("span");
+    text2.textContent = cueSummary(cue, t("markers.cueEmpty"));
+    side.append(swatch, text2);
+    return side;
+  }
+
   // src/folder-sync-view.ts
   function syncFolderSyncButton() {
     const id = state.activeCrate;
@@ -5434,7 +5595,7 @@
     appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
     appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
     appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
-    appendFrameDiffs(planBox, t("plan.cueChanges"), plan.cues);
+    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
     appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
     const deleted = plan.deleted || {};
     appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
@@ -5465,6 +5626,25 @@
       line.textContent = t("plan.listed", { label, count: items.length, names: listed });
     }
     parent.append(line);
+  }
+  function appendCueDiffs(parent, label, rows2) {
+    const items = rows2 || [];
+    const line = document.createElement("p");
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+      parent.append(line);
+      return;
+    }
+    line.textContent = t("plan.files", { label, count: items.length });
+    parent.append(line);
+    for (const item3 of items.slice(0, 12)) {
+      const row = document.createElement("p");
+      row.textContent = fileName(item3.path || "");
+      parent.append(row);
+      for (const diff of cueDiffRows(item3.before, item3.after)) {
+        parent.append(paintCueDiffRow(diff));
+      }
+    }
   }
   function appendFrameDiffs(parent, label, rows2) {
     const items = rows2 || [];
@@ -6730,7 +6910,6 @@
   var SEEK_STEP_LARGE_SECONDS = 30;
   var listeners = /* @__PURE__ */ new Set();
   var wired2 = /* @__PURE__ */ new WeakSet();
-  var CUE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
   var media = null;
   var trackId = null;
   var title = "";
@@ -6781,7 +6960,8 @@
       const index = Number(cue.index);
       const named = typeof cue.name === "string" ? cue.name.trim() : "";
       const fallback = Number.isInteger(index) ? index + 1 : found.length + 1;
-      const color = typeof cue.color === "string" && CUE_COLOR.test(cue.color) ? cue.color : "";
+      const stored = typeof cue.color === "string" ? cue.color : "";
+      const color = slotColor(Number.isInteger(index) ? index : -1, stored);
       found.push({
         seconds: start / 1e3,
         color,
@@ -8290,30 +8470,14 @@
     else if (!track.markers_found) note.textContent = t("markers.none");
     else note.textContent = t("markers.readOnly");
     section.append(note);
-    const ms = (value) => {
-      const total = Number(value) / 1e3;
-      const minutes = Math.floor(total / 60);
-      return `${minutes}:${(total - minutes * 60).toFixed(3).padStart(6, "0")}`;
-    };
+    const ms = (value) => formatCueTime(value);
     const beatSeconds = (value) => {
       if (value === "" || value == null) return "";
       const number = Number(value);
       if (!Number.isFinite(number)) return "";
       return `${number.toFixed(3)}s`;
     };
-    for (const cue of track.cues || []) {
-      const row = document.createElement("div");
-      row.className = "marker";
-      const swatch = document.createElement("span");
-      swatch.className = "swatch";
-      if (cue.color) swatch.style.background = cue.color;
-      const time = document.createElement("span");
-      time.textContent = ms(cue.start_ms);
-      const name = document.createElement("span");
-      name.textContent = cue.name || t("markers.cue", { number: cue.index + 1 });
-      row.append(swatch, time, name);
-      section.append(row);
-    }
+    if (!track.markers_unavailable) appendCueSlots(section, track.cues || []);
     for (const loop of track.loops || []) {
       const row = document.createElement("div");
       row.className = "marker";
@@ -8324,7 +8488,7 @@
       time.textContent = `${ms(loop.start_ms)}–${ms(loop.end_ms)}`;
       const name = document.createElement("span");
       name.textContent = loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 });
-      row.append(swatch, time, name);
+      row.append(document.createElement("span"), swatch, time, name);
       section.append(row);
     }
     for (const flip of track.flips || []) {
@@ -8334,7 +8498,7 @@
       time.textContent = flip.enabled ? t("common.on") : t("common.off");
       const name = document.createElement("span");
       name.textContent = flip.name || t("markers.flip", { number: flip.index + 1 });
-      row.append(document.createElement("span"), time, name);
+      row.append(document.createElement("span"), document.createElement("span"), time, name);
       section.append(row);
     }
     for (const mark of track.beatgrid || []) {
@@ -8351,7 +8515,7 @@
       } else {
         name.textContent = "";
       }
-      row.append(document.createElement("span"), time, name);
+      row.append(document.createElement("span"), document.createElement("span"), time, name);
       section.append(row);
     }
     return section;

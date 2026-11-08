@@ -845,11 +845,45 @@ button:disabled { cursor: default; }
 
 .marker, .copy-row {
   display: grid;
-  grid-template-columns: 18px 88px minmax(0, 1fr);
+  grid-template-columns: 1.5rem 18px 88px minmax(0, 1fr);
   gap: var(--space-2);
   align-items: center;
   padding: var(--space-1) 0;
   border-top: 1px solid var(--rule);
+}
+
+.marker-slot {
+  font-variant-numeric: tabular-nums;
+  color: var(--quiet);
+  text-align: end;
+}
+
+.marker-empty {
+  opacity: 0.55;
+}
+
+.cue-diff {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: center;
+  margin: 0;
+  padding: var(--space-1) 0 0 0.5rem;
+}
+
+.cue-diff-side {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.cue-diff-side .swatch {
+  flex: 0 0 auto;
+}
+
+.cue-diff-arrow {
+  color: var(--quiet);
 }
 
 .copy-row { grid-template-columns: minmax(0, 1.4fr) 72px 48px minmax(0, 1fr) auto; }

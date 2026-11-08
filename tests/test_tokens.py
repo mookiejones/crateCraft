@@ -141,6 +141,31 @@ class TokenSheetTests(unittest.TestCase):
         self.assertNotIn("rgba(", text)
         self.assertNotIn("rgb(", text)
 
+    def test_serato_cue_slot_colors(self) -> None:
+        """Keep Mixxx Serato DJ Pro GUI pad colors on --cue-slot-1..8.
+
+        Hex stays in tokens.css so app.js has no #rrggbb literals.
+        The assignment is Mixxx kSeratoDJProHotcueColorPalette at
+        {0, 2, 12, 3, 6, 15, 9, 14}.
+
+        Returns:
+            None. The test fails if a pad color drifts from that palette.
+        """
+        colors = token_colors(TOKENS.read_text(encoding="utf-8"))
+        self.assertEqual(
+            [colors[f"--cue-slot-{n}"] for n in range(1, 9)],
+            [
+                "#c02626",
+                "#f8821a",
+                "#173ba2",
+                "#fac313",
+                "#1fad26",
+                "#ce359e",
+                "#1dbebd",
+                "#6823b6",
+            ],
+        )
+
     def test_app_js_has_no_hex_colors(self) -> None:
         """Keep CSS colors out of app.js.
 
@@ -498,6 +523,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".deck span", ("--color-card",), 13, 400),
     (".field .label", ("--color-card",), 15, 400),
     (".field .column", ("--color-card",), 12, 400),
+    (".marker-slot", ("--color-card",), 13, 400),
+    (".cue-diff-arrow", ("--color-card",), 13, 400),
     (".rules", ("--color-card",), 13, 400),
     (".rules strong", ("--color-card",), 13, 500),
     (".related-meta", ("--color-card",), 15, 400),

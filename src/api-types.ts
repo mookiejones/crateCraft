@@ -522,8 +522,19 @@ export interface PlanGroup {
   unavailable?: PlanName[];
 }
 
+/** Markers2 cues, loops, and flips on one restore frame side. */
+export interface FrameCueSet {
+  cues?: Marker[];
+  loops?: Marker[];
+  flips?: Flip[];
+}
+
 export interface FrameDiff {
   path?: string;
+  drive_id?: string;
+  /** Cue set, grid markers, or null when that side has no file. */
+  before?: FrameCueSet | unknown[] | null;
+  after?: FrameCueSet | unknown[] | null;
 }
 
 export interface DeletedPlan {

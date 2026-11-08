@@ -92,6 +92,16 @@
   --illus-surface: var(--color-card);
   --illus-ink: var(--color-text);
   --illus-accent: var(--color-safe);
+
+  /* Serato DJ Pro GUI pads 1–8. Mixxx kSeratoDJProHotcueColorPalette {0, 2, 12, 3, 6, 15, 9, 14}. */
+  --cue-slot-1: #C02626;
+  --cue-slot-2: #F8821A;
+  --cue-slot-3: #173BA2;
+  --cue-slot-4: #FAC313;
+  --cue-slot-5: #1FAD26;
+  --cue-slot-6: #CE359E;
+  --cue-slot-7: #1DBEBD;
+  --cue-slot-8: #6823B6;
 }
 
 html[data-colorway="serato-like"] {

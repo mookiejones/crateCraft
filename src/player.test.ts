@@ -339,7 +339,7 @@ describe("cue markers", () => {
       { start_ms: 8000, color: "red", index: 3 },
     ])).toEqual([
       { seconds: 1.5, color: "#CC0000", label: "Drop" },
-      { seconds: 8, color: "", label: "Cue 4" },
+      { seconds: 8, color: "var(--cue-slot-4)", label: "Cue 4" },
     ]);
   });
 
