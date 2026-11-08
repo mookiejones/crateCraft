@@ -163,6 +163,59 @@ class DirectoryExistsTests(unittest.TestCase):
             self.assertFalse(volumes.directory_exists("\\\\nas\\music", timeout=1.0))
 
 
+class AbsentVolumeTests(unittest.TestCase):
+    """``absent_volume`` is the gig-check split between unplugged and missing."""
+
+    def test_unplugged_posix_volume_is_absent(self) -> None:
+        """A ``/Volumes`` path whose root is not a directory is unplugged."""
+        with mock.patch.object(volumes.sys, "platform", "darwin"):
+            gone = volumes.absent_volume("/Volumes/OFFLINE208/Music/a.mp3")
+        self.assertIsNotNone(gone)
+        assert gone is not None
+        self.assertEqual(gone.name, "OFFLINE208")
+
+    def test_windows_letter_follows_pathlib_on_this_os(self) -> None:
+        """A ``Z:`` id is a volume only when this platform treats it as absolute.
+
+        Relink uses the same ``Path.is_absolute`` gate, so a PC library on
+        macOS is missing, not unplugged.
+        """
+        stored = r"Z:\Music\a.mp3"
+        if Path(stored).is_absolute():
+            with mock.patch.object(volumes.sys, "platform", "win32"), mock.patch.object(
+                volumes.os, "listdrives", create=True, return_value=["C:\\"]
+            ):
+                gone = volumes.absent_volume(stored)
+            self.assertIsNotNone(gone)
+            assert gone is not None
+            self.assertEqual(gone.name, "Z:")
+        else:
+            self.assertIsNone(volumes.absent_volume(stored))
+
+    def test_relative_path_is_not_a_drive(self) -> None:
+        """A relative stored id does not name a volume on this platform."""
+        self.assertIsNone(volumes.absent_volume("Music/a.mp3"))
+
+    def test_location_uri_names_the_drive_when_the_id_is_relative(self) -> None:
+        """A relative id on an unplugged location is absent under that drive."""
+        with mock.patch.object(volumes.sys, "platform", "darwin"):
+            gone = volumes.absent_volume(
+                "Music/a.mp3",
+                "file:///Volumes/OFFLINE208/Library/location.sqlite",
+            )
+        self.assertIsNotNone(gone)
+        assert gone is not None
+        self.assertEqual(gone.name, "OFFLINE208")
+
+    def test_mounted_posix_volume_is_not_absent(self) -> None:
+        """A path on a directory that exists is not unplugged."""
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            mounts = volumes.Mounts()
+            with mock.patch.object(volumes, "posix_volume", return_value=volumes.Volume("TEMP", str(root), "posix")):
+                self.assertIsNone(volumes.absent_volume(str(root / "a.mp3"), mounts=mounts))
+
+
 class FileTests(unittest.TestCase):
     """``opens_for_read`` and ``path_candidates``."""
 

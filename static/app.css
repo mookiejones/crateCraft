@@ -640,6 +640,12 @@ button:disabled { cursor: default; }
   flex: none;
 }
 
+.offline-word {
+  color: var(--quiet);
+  font-style: italic;
+  flex: none;
+}
+
 .empty-list {
   padding: 28px var(--space-4);
   color: var(--quiet);

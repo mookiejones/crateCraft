@@ -484,6 +484,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ('.columns button[data-active="true"]', ("--color-card",), 15, 400),
     (".cell.num", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".missing-word", ("--color-card", "--color-selection", "hover"), 15, 400),
+    (".offline-word", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".empty-list", ("--color-card",), 15, 400),
     (".detail-empty", ("--color-card",), 15, 400),
     (".detail-error", ("--color-card",), 15, 400),

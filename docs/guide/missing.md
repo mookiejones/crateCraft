@@ -1,8 +1,8 @@
 # Missing files
 
-**Missing files** lists tracks Serato has marked missing in the space you have selected. The note under the view buttons says **Tracks Serato has marked missing in this space.**
+**Missing files** lists tracks whose files are missing on a connected drive. The note under the view buttons says **Tracks whose files are missing on a connected drive.** When tracks sit on an unplugged drive, the note says how many, and those rows stay in crates with the word **offline**. They are not listed here, so Relink does not point them at another file.
 
-A missing row shows the word **missing**.
+A missing row shows the word **missing**. An offline row uses a quieter **offline** label, not the missing color.
 
 ## Relink missing files
 

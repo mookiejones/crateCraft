@@ -50,6 +50,7 @@ import tag_cleanup
 import telemetry
 import update_check
 import version_info
+import volumes
 import waveform
 
 
@@ -482,6 +483,45 @@ def required_int(value: object) -> int:
     if isinstance(value, str):
         return int(value)
     raise ValueError(value)
+
+
+def _connection_uris(conn: sqlite3.Connection) -> dict[int, str]:
+    """Map location id to ``connection.database_uri``.
+
+    Args:
+        conn: Open library connection.
+
+    Returns:
+        ``location_id`` to URI. Empty when the table is missing or unreadable.
+    """
+    tables = {str(row[0]) for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+    if "connection" not in tables:
+        return {}
+    uris: dict[int, str] = {}
+    try:
+        for row in conn.execute("SELECT location_id, database_uri FROM connection"):
+            location = cell(row, "location_id")
+            uri = cell(row, "database_uri")
+            if isinstance(location, int) and isinstance(uri, str) and uri:
+                uris[location] = uri
+    except sqlite3.OperationalError:
+        return uris
+    return uris
+
+
+def _offline_drive(portable_id: str, location_uri: str, mounts: volumes.Mounts | None = None) -> str | None:
+    """Return the unplugged drive name for a stored path, if any.
+
+    Args:
+        portable_id: Path Serato stored.
+        location_uri: ``connection.database_uri``, or empty.
+        mounts: Shared mount cache. A new cache is used when omitted.
+
+    Returns:
+        Drive name when the path is on an unplugged drive, otherwise None.
+    """
+    gone = volumes.absent_volume(portable_id, location_uri, mounts)
+    return gone.name if gone is not None else None
 
 
 def int_flag(value: object) -> int:
@@ -1271,13 +1311,15 @@ def _load_library(space: str) -> dict[str, object]:
 
     with closing(connect()) as conn:
         tracks: list[dict[str, object]] = []
+        uris = _connection_uris(conn)
+        mounts = volumes.Mounts()
         for row in conn.execute(
             """
             SELECT a.id, a.name, a.artist, a.album, a.genre, a.bpm, a.key,
                    a.length_ms, a.color, a.is_missing, a.format, a.file_name,
                    a.file_size, a.time_added, a.rating, a.emoji,
                    a.is_beatgrid_locked, a.dj_play_count, a.stems_analyze_state,
-                   a.file_bit_rate
+                   a.file_bit_rate, a.portable_id, a.location_id
             FROM asset a
             JOIN space_asset sa ON sa.asset_id = a.id
             JOIN space s ON s.id = sa.space_id
@@ -1286,30 +1328,37 @@ def _load_library(space: str) -> dict[str, object]:
             """,
             (space,),
         ):
-            tracks.append(
-                {
-                    "id": cell(row, "id"),
-                    "name": text_cell(row, "name"),
-                    "artist": text_cell(row, "artist"),
-                    "album": text_cell(row, "album"),
-                    "genre": text_cell(row, "genre"),
-                    "bpm": cell(row, "bpm"),
-                    "key": text_cell(row, "key"),
-                    "length_ms": cell(row, "length_ms"),
-                    "color": cell(row, "color"),
-                    "missing": int_flag(cell(row, "is_missing")),
-                    "format": text_cell(row, "format"),
-                    "file": text_cell(row, "file_name"),
-                    "file_size": cell(row, "file_size"),
-                    "time_added": cell(row, "time_added"),
-                    "rating": cell(row, "rating"),
-                    "emoji": text_cell(row, "emoji"),
-                    "beatgrid_locked": int_flag(cell(row, "is_beatgrid_locked")),
-                    "play_count": cell(row, "dj_play_count"),
-                    "stems": int_flag(cell(row, "stems_analyze_state")),
-                    "bitrate": cell(row, "file_bit_rate"),
-                }
-            )
+            marked_missing = int_flag(cell(row, "is_missing"))
+            portable = text_cell(row, "portable_id")
+            location = cell(row, "location_id")
+            uri = uris.get(location, "") if isinstance(location, int) else ""
+            drive = _offline_drive(portable, uri, mounts) if marked_missing else None
+            track: dict[str, object] = {
+                "id": cell(row, "id"),
+                "name": text_cell(row, "name"),
+                "artist": text_cell(row, "artist"),
+                "album": text_cell(row, "album"),
+                "genre": text_cell(row, "genre"),
+                "bpm": cell(row, "bpm"),
+                "key": text_cell(row, "key"),
+                "length_ms": cell(row, "length_ms"),
+                "color": cell(row, "color"),
+                "missing": 0 if drive is not None else marked_missing,
+                "format": text_cell(row, "format"),
+                "file": text_cell(row, "file_name"),
+                "file_size": cell(row, "file_size"),
+                "time_added": cell(row, "time_added"),
+                "rating": cell(row, "rating"),
+                "emoji": text_cell(row, "emoji"),
+                "beatgrid_locked": int_flag(cell(row, "is_beatgrid_locked")),
+                "play_count": cell(row, "dj_play_count"),
+                "stems": int_flag(cell(row, "stems_analyze_state")),
+                "bitrate": cell(row, "file_bit_rate"),
+            }
+            if drive is not None:
+                track["offline"] = 1
+                track["offline_drive"] = drive
+            tracks.append(track)
 
         crates: list[_Crate] = []
         root_id: object | None = None
@@ -1473,6 +1522,10 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
             ).fetchone()
             is not None
         )
+        location = data.get("location_id")
+        location_uri = ""
+        if isinstance(location, int):
+            location_uri = _connection_uris(conn).get(location, "")
         copies: list[dict[str, object]] = []
         track_name = data.get("name")
         track_artist = data.get("artist")
@@ -1543,6 +1596,8 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
     resolved, exists = resolve_path(portable)
     data["resolved_path"] = resolved
     data["file_on_disk"] = None if exists is None else int(exists)
+    marked_missing = bool(data.get("is_missing"))
+    drive = _offline_drive(portable or "", location_uri) if marked_missing else None
     data["crates"] = ", ".join(crate_names)
     on_disk = exists is True
     markers = as_dict(_library_call("markers_for", resolved, on_disk))
@@ -1581,7 +1636,7 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
     if color_value is not None and required_int(color_value) != 0xFFFFFF:
         color_hex = f"#{required_int(color_value):06X}"
 
-    return {
+    payload: dict[str, object] = {
         "id": data["id"],
         "title": text_or_empty(data.get("name")) or "Untitled",
         "artist": text_or_empty(data.get("artist")),
@@ -1590,7 +1645,7 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
         "key": text_or_empty(data.get("key")),
         "length": format_length(data.get("length_ms"), data.get("length_sec")),
         "color": color_hex,
-        "missing": bool(data.get("is_missing")),
+        "missing": marked_missing and drive is None,
         "groups": [{"name": name, "fields": fields} for name, fields in groups.items()],
         "edit": edit,
         "crate_ids": crate_ids,
@@ -1606,6 +1661,10 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
         "markers_unavailable": markers["unavailable"],
         "serato": as_dict(_library_call("status")),
     }
+    if drive is not None:
+        payload["offline"] = True
+        payload["offline_drive"] = drive
+    return payload
 
 
 _LOCAL_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})

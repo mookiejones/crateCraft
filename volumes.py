@@ -1,10 +1,11 @@
 """Find the drive a stored Serato path lives on, and whether it is plugged in.
 
-Shared by the gig check and relink. A track on a drive that is not mounted
-is unavailable, not missing: the file may be fine on a drive that is in a
-bag. Every function here only reads. ``Mounts`` caches one answer per drive
-root for a single pass, and a UNC root that does not answer within a second
-and a half counts as absent so one dead share cannot stall a check.
+Shared by the gig check, relink, and the library track list. A track on a
+drive that is not mounted is unavailable, not missing: the file may be fine
+on a drive that is in a bag. Every function here only reads. ``Mounts``
+caches one answer per drive root for a single pass, and a UNC root that
+does not answer within a second and a half counts as absent so one dead
+share cannot stall a check.
 """
 
 from __future__ import annotations
@@ -136,6 +137,31 @@ def external_volume(path: str) -> Volume | None:
         if volume.name.upper() == system:
             return None
     return volume
+
+
+def absent_volume(portable_id: str, location_uri: str = "", mounts: Mounts | None = None) -> Volume | None:
+    """Return the unplugged drive a stored path lives on, if any.
+
+    Same rule as the gig check and relink: a location-database URI is
+    tried first, then an absolute stored path. A relative stored path on
+    this platform does not name a drive. The boot volume is never returned.
+
+    Args:
+        portable_id: Path Serato stored.
+        location_uri: ``connection.database_uri`` for the track's location, or empty.
+        mounts: Shared mount cache. A new cache is used when omitted.
+
+    Returns:
+        The absent volume, or None when the drive is plugged in or the
+        path is not on an external volume.
+    """
+    cache = mounts if mounts is not None else Mounts()
+    location_volume = external_volume(location_path(location_uri)) if location_uri else None
+    path_volume = external_volume(portable_id) if Path(portable_id).is_absolute() else None
+    for volume in (location_volume, path_volume):
+        if volume is not None and not cache.mounted(volume):
+            return volume
+    return None
 
 
 class Mounts:
