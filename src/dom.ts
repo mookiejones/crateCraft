@@ -28,8 +28,17 @@ export interface ElementIds {
   "crate-color": HTMLButtonElement;
   "crate-delete": HTMLButtonElement;
   "crate-preset": HTMLButtonElement;
+  "crate-folder-sync": HTMLButtonElement;
   "crate-refresh": HTMLButtonElement;
   "preset-dialog": HTMLDialogElement;
+  "folder-sync-dialog": HTMLDialogElement;
+  "folder-sync-path": HTMLInputElement;
+  "folder-sync-subcrates": HTMLInputElement;
+  "folder-sync-full": HTMLInputElement;
+  "folder-sync-preview": HTMLParagraphElement;
+  "folder-sync-cancel": HTMLButtonElement;
+  "folder-sync-run": HTMLButtonElement;
+  "folder-sync-status": HTMLParagraphElement;
   "preset-kind": HTMLSelectElement;
   "preset-key": HTMLInputElement;
   "preset-bpm": HTMLInputElement;

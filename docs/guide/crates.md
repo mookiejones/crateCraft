@@ -101,3 +101,29 @@ You cannot tick a smart crate in the track's crate list. The page names those cr
 3. Tick a normal crate to add the track. Clear the tick to remove it.
 
 The audio file stays where it is.
+
+## Sync with a folder
+
+Select a normal crate. **All tracks** and a smart crate cannot sync.
+
+1. Click **Sync folder**.
+2. Type the folder path on this computer.
+3. Optional: tick **Make a subcrate for each subfolder**. Files in the folder stay in this crate. Each subfolder gets a child crate of that name, or reuses one that already exists.
+4. Optional: tick **Remove tracks whose files are not in this folder**.
+5. Read the preview. Files that are not in the library stay skipped. Nothing is imported.
+6. Click **Sync crate**.
+
+The page says the crate was updated, or that it already matches that folder. Quit Serato DJ Pro first.
+
+## Sync with a folder
+
+Select a normal crate. **All tracks** and a smart crate cannot sync.
+
+1. Click **Sync folder**.
+2. Type the folder path on this computer.
+3. Optional: tick **Make a subcrate for each subfolder**. Files in the folder stay in this crate. Each subfolder gets a child crate of that name, or reuses one that already exists.
+4. Optional: tick **Remove tracks whose files are not in this folder**.
+5. Read the preview. Files that are not in the library stay skipped. Nothing is imported.
+6. Click **Sync crate**.
+
+The page says the crate was updated, or that it already matches that folder. Quit Serato DJ Pro first.

@@ -94,6 +94,7 @@
         <button id="crate-color" type="button" data-i18n="field.color">Color</button>
         <button id="crate-delete" type="button" data-i18n="common.delete">Delete</button>
         <button id="crate-preset" type="button" aria-haspopup="dialog" data-i18n="presets.button">Preset</button>
+        <button id="crate-folder-sync" type="button" aria-haspopup="dialog" data-i18n="folderSync.button">Sync folder</button>
         <button id="crate-refresh" type="button" data-i18n="presets.refresh" hidden>Refresh</button>
       </div>
       <footer class="rail-foot">
@@ -472,6 +473,28 @@
       <button id="preset-create" type="button" data-i18n="presets.create">Create crate</button>
     </div>
     <p id="preset-status" class="dialog-status" role="status" aria-live="polite"></p>
+  </dialog>
+  <dialog id="folder-sync-dialog" aria-labelledby="folder-sync-title" aria-describedby="folder-sync-intro">
+    <h2 id="folder-sync-title" data-i18n="folderSync.title">Sync crate with a folder</h2>
+    <p id="folder-sync-intro" data-i18n="folderSync.intro">Add library tracks whose files sit in this folder. Files that are not in the library stay skipped. Nothing is imported.</p>
+    <label class="preset-field">
+      <span data-i18n="folderSync.folder">Folder</span>
+      <input id="folder-sync-path" type="text" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="check">
+      <input id="folder-sync-subcrates" type="checkbox">
+      <span data-i18n="folderSync.subcrates">Make a subcrate for each subfolder</span>
+    </label>
+    <label class="check">
+      <input id="folder-sync-full" type="checkbox">
+      <span data-i18n="folderSync.full">Remove tracks whose files are not in this folder</span>
+    </label>
+    <p id="folder-sync-preview" class="dialog-note" aria-live="polite"></p>
+    <div class="dialog-actions">
+      <button id="folder-sync-cancel" type="button" data-i18n="common.cancel">Cancel</button>
+      <button id="folder-sync-run" type="button" data-i18n="folderSync.sync">Sync crate</button>
+    </div>
+    <p id="folder-sync-status" class="dialog-status" role="status" aria-live="polite"></p>
   </dialog>
   <dialog id="rekordbox-dialog" aria-labelledby="rekordbox-title" aria-describedby="rekordbox-intro">
     <h2 id="rekordbox-title" data-i18n="rekordbox.dialogTitle">Download rekordbox.xml?</h2>

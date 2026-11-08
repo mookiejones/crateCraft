@@ -29,6 +29,7 @@ import { clockLabel, colorHex, compare, durationLabel, sizeLabel } from "./forma
 import { loadGigCheck, showGigFailure } from "./gig";
 import { loadScan, showScanFailure } from "./scan";
 import { portableDriveButton } from "./portable";
+import { syncFolderSyncButton } from "./folder-sync-view";
 import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
 import { matchesFilters, parseQuery, type ParsedQuery } from "./search-filters";
@@ -606,6 +607,7 @@ export function renderShell() {
   el("crate-color").disabled = !state.writable || !crateChosen;
   el("crate-delete").disabled = !state.writable || !crateChosen;
   syncPresetButtons();
+  syncFolderSyncButton();
   syncMergeButton();
   syncRelinkButton();
   if (filesMode) {

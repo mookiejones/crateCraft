@@ -23,6 +23,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 
 import crate_trees
+import folder_sync
 import legacy_library
 import smart_presets
 
@@ -113,6 +114,8 @@ ERROR_CODES: dict[str, str] = {
     crate_trees.BAD_BANDS: "tree_bad_bands",
     crate_trees.BAD_GENRES: "tree_bad_genres",
     crate_trees.EMPTY_TREE: "tree_empty",
+    folder_sync.SMART: "smart_crate_tracks",
+    folder_sync.ROOT_CRATE: "crate_not_root",
     smart_presets.UNKNOWN_PRESET: "preset_unknown",
     smart_presets.BAD_KEY: "preset_bad_key",
     smart_presets.BAD_BPM: "preset_bad_bpm",
