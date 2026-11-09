@@ -63,6 +63,7 @@ describe("switching the language", () => {
     expect(columns()).toEqual(["Title", "Artist", "BPM", "Key", "Energy", "Genre", "Added", "Last", "Plays", "Time"]);
     expect(document.querySelector('[data-view="crates"]')?.textContent).toBe("Crates");
     expect(el("search").placeholder).toBe("Search tracks");
+    expect(el("search-field").options[0]?.textContent).toBe("All fields");
     expect(el("crate-foot").textContent).toBe("2 · 6m · 4.0 KB");
 
     setLocale("es");
@@ -71,6 +72,7 @@ describe("switching the language", () => {
     expect(columns()).toEqual(["Título", "Artista", "BPM", "Tono", "Energía", "Género", "Añadida", "Última", "Veces", "Tiempo"]);
     expect(document.querySelector('[data-view="crates"]')?.textContent).toBe("Cajas");
     expect(el("search").placeholder).toBe("Buscar pistas");
+    expect(el("search-field").options[0]?.textContent).toBe("Todos los campos");
     expect(el("crate-foot").textContent).toBe("2 · 6 min · 4,0 KB");
     expect(document.querySelector("#crate-list .name")?.textContent).toBe("Todas las pistas");
     expect(document.querySelector("#list .row .cell.num")?.textContent).toBe("124,5");

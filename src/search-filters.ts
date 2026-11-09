@@ -2,7 +2,11 @@
  * Filter words in the track search box (#13).
  *
  * Plain words still search title, artist, album, genre, key, and file.
- * These words filter instead, and combine with the selected crate:
+ * The field picker (`#search-field`) scopes those remaining words to one
+ * field. Comments, grouping, and composer are not in All fields; they
+ * match through that picker or through `comments:`, `grouping:`, and
+ * `composer:`. These words filter instead, and combine with the selected
+ * crate:
  *
  * - `bpm:124` rounds to 124, `bpm:120-128` is a range, `bpm:124~3` is
  *   124 plus or minus 3, and `bpm:>120` or `bpm:<100` is open-ended.
@@ -17,6 +21,9 @@
  * - `cues:none` or `cues:no` is a track whose cue flag is empty
  *   (`has_cues` false, `markers_found` false, or an empty `cues` list).
  *   A list row without those fields does not match.
+ * - `comments:peak`, `grouping:warm`, `composer:ada`, and the same
+ *   prefixes for title, artist, album, genre, and file search that one
+ *   field. An empty value (`comments:`) stays a plain word.
  *
  * A word that looks like a filter but cannot be read (`bpm:fast`) stays a
  * plain search word, so a typo narrows the list instead of being dropped.
@@ -25,6 +32,19 @@
 
 import type { Track } from "./api-types";
 
+export const TEXT_SEARCH_FIELDS = [
+  "comments",
+  "grouping",
+  "composer",
+  "title",
+  "artist",
+  "album",
+  "genre",
+  "file",
+] as const;
+
+export type TextSearchField = (typeof TEXT_SEARCH_FIELDS)[number];
+
 export type SearchFilter =
   | { kind: "bpm"; min: number; max: number }
   | { kind: "key"; keys: ReadonlySet<number> }
@@ -32,7 +52,8 @@ export type SearchFilter =
   | { kind: "nokey" }
   | { kind: "nobpm" }
   | { kind: "nokeybpm" }
-  | { kind: "nocues" };
+  | { kind: "nocues" }
+  | { kind: "field"; field: TextSearchField; value: string };
 
 export interface ParsedQuery {
   /** Lowercased plain words. */
@@ -83,6 +104,47 @@ function isNone(value: string): boolean {
 
 function isYes(value: string): boolean {
   return YES.has(value);
+}
+
+const TEXT_FIELD_SET: ReadonlySet<string> = new Set(TEXT_SEARCH_FIELDS);
+
+/**
+ * Tell whether a search-field value is one of the picker fields.
+ *
+ * @param {string} value Select value or prefix name.
+ * @returns {boolean} True for comments, grouping, composer, title, artist, album, genre, or file.
+ */
+export function isTextSearchField(value: string): value is TextSearchField {
+  return TEXT_FIELD_SET.has(value);
+}
+
+/**
+ * Read one searchable text field from a track.
+ *
+ * Title is `name` on the library payload. A missing field is empty.
+ *
+ * @param {Track} track Track or history row.
+ * @param {TextSearchField} field Picker or prefix field.
+ * @returns {string} Stored text, or an empty string.
+ */
+export function textField(track: Track, field: TextSearchField): string {
+  if (field === "title") return String(track.name ?? "");
+  return String(track[field] ?? "");
+}
+
+/**
+ * Build the lowercase haystack for remaining search words.
+ *
+ * All fields is title, artist, album, genre, key, and file. Comments,
+ * grouping, and composer stay out of that haystack.
+ *
+ * @param {Track} track Track or history row.
+ * @param {TextSearchField} [field] One field from the picker, or all fields.
+ * @returns {string} Lowercased text to match against.
+ */
+export function trackHaystack(track: Track, field?: TextSearchField): string {
+  if (field) return textField(track, field).toLocaleLowerCase();
+  return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
 }
 
 function hasBpm(track: Track): boolean {
@@ -194,6 +256,8 @@ export function parseQuery(text: string): ParsedQuery {
     else if (name === "key" || name === "mix") {
       const key = keyNumber(value);
       if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : new Set([key]) };
+    } else if (isTextSearchField(name) && value) {
+      filter = { kind: "field", field: name, value };
     }
     if (filter) filters.push(filter);
     else terms.push(word);
@@ -228,9 +292,29 @@ export function matchesFilters(track: Track, filters: readonly SearchFilter[]): 
       if (hasKey(track) && hasBpm(track)) return false;
     } else if (filter.kind === "nocues") {
       if (cueFlag(track) !== false) return false;
+    } else if (filter.kind === "field") {
+      if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
     } else if (!filter.keys.has(keyNumber(track.key))) {
       return false;
     }
   }
   return true;
+}
+
+/**
+ * Return whether a track contains every search word and passes every filter.
+ *
+ * Remaining words search the haystack from trackHaystack. An empty query
+ * matches everything. No request is made.
+ *
+ * @param {Track} track Track or history row.
+ * @param {ParsedQuery} query Words and filters from parseQuery.
+ * @param {TextSearchField} [field] Picker field for remaining words.
+ * @returns {boolean} True when every word occurs and every filter passes.
+ */
+export function matchesQuery(track: Track, query: ParsedQuery, field?: TextSearchField): boolean {
+  if (!matchesFilters(track, query.filters)) return false;
+  if (!query.terms.length) return true;
+  const hay = trackHaystack(track, field);
+  return query.terms.every((term) => hay.includes(term));
 }

@@ -1297,7 +1297,9 @@ def _load_library(space: str) -> dict[str, object]:
         space: An allowed space name.
 
     Returns:
-        The cached payload for that space. The cache drops when the database stamp changes.
+        The cached payload for that space. Each track includes comments,
+        grouping, and composer so the page can search those fields. The
+        cache drops when the database stamp changes.
 
     Raises:
         FileNotFoundError: If the master database is missing.
@@ -1319,6 +1321,7 @@ def _load_library(space: str) -> dict[str, object]:
             SELECT a.id, a.name, a.artist, a.album, a.genre, a.bpm, a.key,
                    a.length_ms, a.color, a.is_missing, a.format, a.file_name,
                    a.file_size, a.time_added, a.rating, a.emoji,
+                   a.comments, a.grouping, a.composer,
                    a.is_beatgrid_locked, a.dj_play_count, a.stems_analyze_state,
                    a.file_bit_rate, a.portable_id, a.location_id,
                    (SELECT MAX(e.start_time) FROM history_entry e
@@ -1354,6 +1357,9 @@ def _load_library(space: str) -> dict[str, object]:
                 "last_played": cell(row, "last_played"),
                 "rating": cell(row, "rating"),
                 "emoji": text_cell(row, "emoji"),
+                "comments": text_cell(row, "comments"),
+                "grouping": text_cell(row, "grouping"),
+                "composer": text_cell(row, "composer"),
                 "beatgrid_locked": int_flag(cell(row, "is_beatgrid_locked")),
                 "play_count": cell(row, "dj_play_count"),
                 "stems": int_flag(cell(row, "stems_analyze_state")),

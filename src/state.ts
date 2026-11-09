@@ -66,6 +66,8 @@ export interface PageState {
   splitCrates: boolean;
   focusedPane: "a" | "b";
   query: string;
+  /** Picker value: empty is all fields, otherwise one TextSearchField. */
+  searchField: string;
   crateQuery: string;
   crateSort: string;
   sort: string;
@@ -139,6 +141,7 @@ export const state: PageState = {
   splitCrates: false,
   focusedPane: "a",
   query: "",
+  searchField: "",
   crateQuery: "",
   crateSort: "order",
   sort: "name",

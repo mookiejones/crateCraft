@@ -236,16 +236,19 @@
     "error.write_undo_failed": "The write failed, and putting the library back failed.",
     "export.m3u": "Export",
     "field.album": "Album",
+    "field.artist": "Artist",
     "field.beatgridLocked": "Beatgrid locked",
     "field.color": "Color",
     "field.comments": "Comments",
     "field.composer": "Composer",
     "field.emoji": "Emoji",
+    "field.file": "File",
     "field.genre": "Genre",
     "field.grouping": "Grouping",
     "field.label": "Label",
     "field.rating": "Rating",
     "field.remixer": "Remixer",
+    "field.title": "Title",
     "field.year": "Year",
     "files.andMore": "And {count} more.",
     "files.browseElsewhere": "Browse elsewhere…",
@@ -848,6 +851,8 @@
     "scan.unreachable": "Couldn't reach the library server. Check it's running, then press Quick check",
     "scan.unreadable": "The file check could not be read.",
     "scan.wrongFormatDetail": "Looks like {detail}",
+    "search.fieldAll": "All fields",
+    "search.fieldLabel": "Search field",
     "search.tracks": "Search tracks",
     "settings.about": "About",
     "settings.colorway": "Theme",
@@ -1192,7 +1197,8 @@
     "tooltip.saveTrack": "Save these track details.",
     "tooltip.scanFull": "Decode every file in the selected crate. Choose a crate first. This can take minutes. Nothing is written.",
     "tooltip.scanQuick": "Read the start of each audio file. Empty files and the wrong format show up here. Nothing is written.",
-    "tooltip.search": "Search tracks by title or artist. Filter with bpm:120-128, bpm:124~3, bpm:none, key:8A, key:none, mix:8A, missing:yes, nokeybpm:yes, or cues:none. Ctrl/Cmd+F or /. Esc clears the search.",
+    "tooltip.search": "Search tracks by title or artist. Use the field menu to search comments, grouping, or composer. Filter with bpm:120-128, bpm:124~3, bpm:none, key:8A, key:none, mix:8A, missing:yes, nokeybpm:yes, cues:none, comments:, grouping:, or composer:. Ctrl/Cmd+F or /. Esc clears the search.",
+    "tooltip.searchField": "Search one field. All fields is title, artist, album, genre, key, and file. Comments, grouping, and composer need this menu or comments:, grouping:, composer:.",
     "tooltip.seek": "Move through the track. Left arrow goes back 5 seconds. Right arrow goes forward 5 seconds. Shift with an arrow jumps 30 seconds.",
     "tooltip.selectFile": "Select {name} for rename, move, or delete.",
     "tooltip.selectFilePath": "Select {name} at {path} for rename, move, or delete.",
@@ -1605,16 +1611,19 @@
     "error.write_undo_failed": "El cambio falló, y no se pudo devolver la biblioteca.",
     "export.m3u": "Exportar",
     "field.album": "Álbum",
+    "field.artist": "Artista",
     "field.beatgridLocked": "Beatgrid bloqueado",
     "field.color": "Color",
     "field.comments": "Comentarios",
     "field.composer": "Compositor",
     "field.emoji": "Emoji",
+    "field.file": "Archivo",
     "field.genre": "Género",
     "field.grouping": "Agrupación",
     "field.label": "Sello",
     "field.rating": "Valoración",
     "field.remixer": "Remezclador",
+    "field.title": "Título",
     "field.year": "Año",
     "files.andMore": "Y {count} más.",
     "files.browseElsewhere": "Explorar otra ubicación…",
@@ -2217,6 +2226,8 @@
     "scan.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Comprobación rápida",
     "scan.unreadable": "No se pudo leer la comprobación de archivos.",
     "scan.wrongFormatDetail": "Parece {detail}",
+    "search.fieldAll": "Todos los campos",
+    "search.fieldLabel": "Campo de búsqueda",
     "search.tracks": "Buscar pistas",
     "settings.about": "Acerca de",
     "settings.colorway": "Tema",
@@ -2561,7 +2572,8 @@
     "tooltip.saveTrack": "Guarda estos datos de la pista.",
     "tooltip.scanFull": "Decodifica cada archivo de la caja seleccionada. Elige una caja primero. Puede tardar minutos. No se escribe nada.",
     "tooltip.scanQuick": "Lee el inicio de cada archivo de audio. Aquí aparecen los archivos vacíos y el formato incorrecto. No se escribe nada.",
-    "tooltip.search": "Busca pistas por título o artista. Filtra con bpm:120-128, bpm:124~3, bpm:none, key:8A, key:none, mix:8A, missing:yes, nokeybpm:yes o cues:none. Ctrl/Cmd+F o /. Esc borra la búsqueda.",
+    "tooltip.search": "Busca pistas por título o artista. Usa el menú de campo para comentarios, agrupación o compositor. Filtra con bpm:120-128, bpm:124~3, bpm:none, key:8A, key:none, mix:8A, missing:yes, nokeybpm:yes, cues:none, comments:, grouping: o composer:. Ctrl/Cmd+F o /. Esc borra la búsqueda.",
+    "tooltip.searchField": "Busca en un solo campo. Todos los campos es título, artista, álbum, género, tono y archivo. Comentarios, agrupación y compositor usan este menú o comments:, grouping:, composer:.",
     "tooltip.seek": "Avanza por la pista. Izquierda retrocede 5 segundos. Derecha avanza 5 segundos. Mayús con una flecha salta 30 segundos.",
     "tooltip.selectFile": "Selecciona {name} para renombrar, mover o eliminar.",
     "tooltip.selectFilePath": "Selecciona {name} en {path} para renombrar, mover o eliminar.",
@@ -3161,6 +3173,7 @@
     splitCrates: false,
     focusedPane: "a",
     query: "",
+    searchField: "",
     crateQuery: "",
     crateSort: "order",
     sort: "name",
@@ -3438,6 +3451,7 @@
     helpReport: spec("tooltip.helpReport"),
     settings: spec("tooltip.settings"),
     search: spec("tooltip.search"),
+    searchField: spec("tooltip.searchField"),
     exportM3u: spec("tooltip.exportM3u"),
     exportRekordbox: spec("tooltip.exportRekordbox"),
     memoryCues: spec("tooltip.memoryCues"),
@@ -3677,6 +3691,7 @@
       "shortcuts-title": tips.shortcuts,
       "open-settings": tips.settings,
       search: tips.search,
+      "search-field": tips.searchField,
       "export-m3u": tips.exportM3u,
       "export-rekordbox": tips.exportRekordbox,
       "rekordbox-memory": tips.memoryCues,
@@ -6268,6 +6283,16 @@
   }
 
   // src/search-filters.ts
+  var TEXT_SEARCH_FIELDS = [
+    "comments",
+    "grouping",
+    "composer",
+    "title",
+    "artist",
+    "album",
+    "genre",
+    "file"
+  ];
   var KEY_VALUES = {
     "g#m": 0,
     abm: 0,
@@ -6342,6 +6367,18 @@
   function isYes(value) {
     return YES.has(value);
   }
+  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
+  function isTextSearchField(value) {
+    return TEXT_FIELD_SET.has(value);
+  }
+  function textField(track, field) {
+    if (field === "title") return String(track.name ?? "");
+    return String(track[field] ?? "");
+  }
+  function trackHaystack(track, field) {
+    if (field) return textField(track, field).toLocaleLowerCase();
+    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
+  }
   function hasBpm(track) {
     const bpm = Number(track.bpm);
     return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
@@ -6410,6 +6447,8 @@
       else if (name === "key" || name === "mix") {
         const key = keyNumber(value);
         if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
+      } else if (isTextSearchField(name) && value) {
+        filter = { kind: "field", field: name, value };
       }
       if (filter) filters.push(filter);
       else terms.push(word);
@@ -6432,11 +6471,19 @@
         if (hasKey2(track) && hasBpm(track)) return false;
       } else if (filter.kind === "nocues") {
         if (cueFlag(track) !== false) return false;
+      } else if (filter.kind === "field") {
+        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
       } else if (!filter.keys.has(keyNumber(track.key))) {
         return false;
       }
     }
     return true;
+  }
+  function matchesQuery(track, query, field) {
+    if (!matchesFilters(track, query.filters)) return false;
+    if (!query.terms.length) return true;
+    const hay = trackHaystack(track, field);
+    return query.terms.every((term) => hay.includes(term));
   }
 
   // src/player-strings.ts
@@ -8244,11 +8291,9 @@
   var relatedRequest = 0;
   var lastDetail = null;
   var detailPlayWired = false;
-  function matchesQuery(track, query) {
-    if (!matchesFilters(track, query.filters)) return false;
-    if (!query.terms.length) return true;
-    const hay = `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-    return query.terms.every((term) => hay.includes(term));
+  function listMatches(track, query) {
+    const field = isTextSearchField(state.searchField) ? state.searchField : void 0;
+    return matchesQuery(track, query, field);
   }
   function queryTerms() {
     return parseQuery(state.query);
@@ -8365,7 +8410,7 @@
   function buildView() {
     if (state.mode === "history") {
       const terms2 = queryTerms();
-      const result2 = state.entries.filter((entry) => matchesQuery(entry, terms2)).map((entry) => ({
+      const result2 = state.entries.filter((entry) => listMatches(entry, terms2)).map((entry) => ({
         id: entry.id,
         name: entry.name,
         artist: entry.artist,
@@ -8388,11 +8433,11 @@
       return result2;
     }
     const terms = queryTerms();
-    const result = modeTracks().filter((track) => matchesQuery(track, terms));
+    const result = modeTracks().filter((track) => listMatches(track, terms));
     result.sort(compare);
     state.view = result;
     if (state.mode === "crates" && state.splitCrates) {
-      const viewB = tracksForCrate(state.secondCrate).filter((track) => matchesQuery(track, terms));
+      const viewB = tracksForCrate(state.secondCrate).filter((track) => listMatches(track, terms));
       viewB.sort(compare);
       state.viewB = viewB;
     } else {
@@ -8469,7 +8514,7 @@
     const active2 = document.activeElement;
     const restore = el("crate-list").contains(active2) ? active2.closest(".crate-row")?.querySelector(".crate")?.dataset.id ?? null : null;
     const query = queryTerms();
-    const matched = query.terms.length || query.filters.length ? new Set(state.tracks.filter((track) => matchesQuery(track, query)).map((track) => track.id)) : null;
+    const matched = query.terms.length || query.filters.length ? new Set(state.tracks.filter((track) => listMatches(track, query)).map((track) => track.id)) : null;
     const crates = visibleCrates();
     const holder = hiddenSelectionHolder(crates);
     el("crate-list").replaceChildren();
@@ -10445,6 +10490,11 @@
     });
     el("search").addEventListener("input", () => {
       state.query = el("search").value;
+      el("list").scrollTop = 0;
+      renderList();
+    });
+    el("search-field").addEventListener("change", () => {
+      state.searchField = el("search-field").value;
       el("list").scrollTop = 0;
       renderList();
     });
