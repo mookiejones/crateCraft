@@ -1,7 +1,8 @@
 """Native menu for the desktop window.
 
 Titles come from ``locales/en.json`` and ``locales/es.json``, so the menu
-uses the same words as the page. pywebview 6.2.1 ``MenuAction`` has no
+uses the same words as the page. A frozen app reads those files from
+``sys._MEIPASS``, the same extract directory as ``static/``. pywebview 6.2.1 ``MenuAction`` has no
 shortcut field, so a title never includes a key chord. The Mac Edit and
 View menus stay the ones pywebview draws when ``SHOW_DEFAULT_MENUS`` is
 left on.
@@ -16,8 +17,20 @@ import json
 from collections.abc import Callable
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
 Dispatch = Callable[[str], None]
+
+
+def catalog_root() -> Path:
+    """Return the directory that holds the locale JSON files.
+
+    Returns:
+        ``locales`` under :func:`server.app_root`. A frozen app reads
+        that directory from ``sys._MEIPASS``. A source checkout reads
+        ``locales`` beside this file.
+    """
+    import server
+
+    return server.app_root() / "locales"
 
 
 def menu_catalog(language: str | None) -> dict[str, str]:
@@ -33,11 +46,14 @@ def menu_catalog(language: str | None) -> dict[str, str]:
         left out. The menu does not use them.
 
     Raises:
+        FileNotFoundError: The catalog file is not next to the page
+            assets. A frozen build must copy ``locales/`` into the
+            bundle.
         KeyError: The catalog file is missing a string the menu needs.
             That is reported by :func:`build_menu`, not here.
     """
     code = language if language in {"en", "es"} else "en"
-    payload = json.loads((ROOT / "locales" / f"{code}.json").read_text(encoding="utf-8"))
+    payload = json.loads((catalog_root() / f"{code}.json").read_text(encoding="utf-8"))
     return {key: value for key, value in payload.items() if isinstance(value, str)}
 
 

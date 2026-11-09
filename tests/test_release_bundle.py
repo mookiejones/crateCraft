@@ -148,6 +148,24 @@ class AssetTests(unittest.TestCase):
         text = (ROOT / "serato-library.spec").read_text(encoding="utf-8")
         self.assertIn("missing_static_files", text)
         self.assertIn("SystemExit", text)
+        self.assertIn('(str(root / "locales"), "locales")', text)
+        self.assertIn('locales/{name}', text)
+
+    def test_verify_tree_requires_bundled_locales(self) -> None:
+        """Refuse a bundle whose extract directory has no menu catalogs.
+
+        Writes ``static/index.html`` and skips ``locales/``. No zip is built.
+
+        Returns:
+            None. The test fails if a missing catalog is ignored.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "static").mkdir()
+            (root / "static" / "index.html").write_text("<p>ok</p>", encoding="utf-8")
+            with self.assertRaises(SystemExit) as caught:
+                release_bundle.assert_locales_match(root, release_bundle.source_locales())
+        self.assertIn("has no locales/en.json", str(caught.exception))
 
 
 class PinTests(unittest.TestCase):
@@ -318,6 +336,10 @@ class ZipTests(unittest.TestCase):
         bundled.mkdir()
         for name in ("index.html", "app.js"):
             (bundled / name).write_bytes((static / name).read_bytes())
+        locales = root / "locales"
+        locales.mkdir()
+        for name in release_bundle.MENU_LOCALE_FILES:
+            (locales / name).write_bytes((ROOT / "locales" / name).read_bytes())
         link = dist / "Serato Library.app" / "Contents" / "Frameworks"
         link.mkdir()
         (link / "current").symlink_to(Path("..") / "MacOS" / "Serato Library")
@@ -362,6 +384,29 @@ class ZipTests(unittest.TestCase):
             restored = unpacked / "Serato Library.app" / "Contents" / "Frameworks" / "current"
             self.assertTrue(restored.is_symlink())
             self.assertEqual(os.readlink(restored), os.path.join("..", "MacOS", "Serato Library"))
+
+    def test_zip_without_locales_is_refused(self) -> None:
+        """Refuse a release zip that has the page and no menu catalogs.
+
+        Writes ``static/index.html`` next to the executable and omits
+        ``locales/``. No real bundle is built.
+
+        Returns:
+            None. The test fails if a missing catalog is ignored.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            archive = Path(tmp) / "nomenu.zip"
+            with zipfile.ZipFile(archive, "w") as zipped:
+                zipped.writestr("Serato Library/Serato Library.exe", _pe(0x8664))
+                zipped.writestr("Serato Library/static/index.html", b"<script src=\"app.js\"></script>")
+                zipped.writestr("Serato Library/static/app.js", b"ok")
+            source = Path(tmp) / "static"
+            source.mkdir()
+            (source / "index.html").write_bytes(b"<script src=\"app.js\"></script>")
+            (source / "app.js").write_bytes(b"ok")
+            with self.assertRaises(SystemExit) as caught:
+                release_bundle.assert_zip(archive, source, min_bytes=1, max_bytes=5_000_000)
+        self.assertIn("locales/en.json", str(caught.exception))
 
     def test_symlink_out_of_the_bundle_is_refused(self) -> None:
         """Refuse to zip a symlink whose target is outside the bundle.
@@ -860,6 +905,10 @@ class PackageTests(unittest.TestCase):
                 dest = root / "static" / path.relative_to(static)
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 dest.write_bytes(path.read_bytes())
+            locales = root / "locales"
+            locales.mkdir()
+            for name in release_bundle.MENU_LOCALE_FILES:
+                (locales / name).write_bytes((ROOT / "locales" / name).read_bytes())
             exe = root / "Serato Library.exe"
             exe.write_bytes(_pe(0x14C))
             narrow = base / "narrow.zip"

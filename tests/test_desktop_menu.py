@@ -5,10 +5,13 @@ These cases build the menu in process. They do not open a window.
 
 from __future__ import annotations
 
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import desktop_menu
+import server
 from webview.menu import Menu, MenuAction, MenuSeparator
 
 
@@ -32,6 +35,44 @@ def _titles(menu: list[object]) -> list[str]:
 
 
 class DesktopMenuTests(unittest.TestCase):
+    def test_menu_catalog_reads_locales_from_the_frozen_root(self) -> None:
+        """A frozen app reads the catalog from ``sys._MEIPASS``, not the checkout.
+
+        Writes a one-key ``en.json`` in a temporary extract directory and
+        patches ``sys.frozen``. No window is opened.
+
+        Returns:
+            None. The test fails if the catalog still comes from the
+            source tree beside ``desktop_menu.py``.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            locales = Path(tmp) / "locales"
+            locales.mkdir()
+            (locales / "en.json").write_text(
+                '{"menu.file": "FROM-BUNDLE"}', encoding="utf-8"
+            )
+            with mock.patch.object(server.sys, "frozen", True, create=True), mock.patch.object(
+                server.sys, "_MEIPASS", tmp, create=True
+            ):
+                catalog = desktop_menu.menu_catalog("en")
+        self.assertEqual(catalog["menu.file"], "FROM-BUNDLE")
+
+    def test_menu_catalog_refuses_a_frozen_bundle_without_locales(self) -> None:
+        """A frozen extract directory without catalogs must not fall back to the checkout.
+
+        Patches ``sys.frozen`` and ``sys._MEIPASS`` to an empty temporary
+        directory. No window is opened.
+
+        Returns:
+            None. The test fails if the catalog is read from the source tree.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(server.sys, "frozen", True, create=True), mock.patch.object(
+                server.sys, "_MEIPASS", tmp, create=True
+            ):
+                with self.assertRaises(FileNotFoundError):
+                    desktop_menu.menu_catalog("en")
+
     def test_english_menu_names_the_page_actions(self) -> None:
         """Use the English catalog, including Settings under File and the app menu.
 

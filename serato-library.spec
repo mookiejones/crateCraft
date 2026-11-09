@@ -21,6 +21,9 @@ from static_assets import missing_static_files
 missing = missing_static_files(root / "static")
 if missing:
     raise SystemExit("Missing build inputs: " + ", ".join(missing))
+for name in ("en.json", "es.json"):
+    if not (root / "locales" / name).is_file():
+        raise SystemExit(f"Missing build inputs: locales/{name}")
 
 if importlib.util.find_spec("webview") is None:
     raise SystemExit("Missing build inputs: pywebview")
@@ -73,6 +76,7 @@ hidden = [
 binaries = collect_dynamic_libs("webview")
 datas = [
     (str(root / "static"), "static"),
+    (str(root / "locales"), "locales"),
     (str(root / "THIRD_PARTY_NOTICES.md"), "."),
 ]
 datas += collect_data_files("webview")
