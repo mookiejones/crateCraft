@@ -136,6 +136,6 @@ Use **Search tracks**, then click a tune. The field menu next to search can limi
 
 Double-click a row, press **Enter**, or click **Play**, to hear it. **Space** plays or pauses. **Left** and **Right** move 5 seconds. The bar under the list shows the title, the artist, previous and next, pause, a seek bar with the file's cue points, and volume. Playback does not write to the audio file and does not add a history row.
 
-The other groups are **Library health** (Missing files, Duplicates, Stems, Damaged files, Tag spellings), **Organize files** under Library, **Backups**, and **Before a gig**.
+The other groups are **Library health** (Missing files, Duplicates, Stems, Damaged files, Tag spellings), **Organize files** under Library, **Backups**, and **Before a gig** (Before a gig, Tempo drift).
 
 **Hot loops** sits beside **Memory cues**. It starts off, and it uses a free hot-cue pad.

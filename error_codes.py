@@ -49,6 +49,7 @@ ERROR_CODES: dict[str, str] = {
     "No Serato library was found on this computer.": "no_library",
     "No older Serato library was found.": "no_legacy_library",
     "Choose a crate for a bitrate check.": "bitrate_needs_crate",
+    "Choose a crate for a tempo check.": "tempo_needs_crate",
     "Choose a quick or full check.": "scan_depth",
     "Choose a crate for a full decode check.": "scan_full_needs_crate",
     legacy_library.WRITE_BLOCKED: "legacy_read_only",

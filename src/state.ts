@@ -122,6 +122,7 @@ export interface PageState {
   seratoRunning: boolean;
   snapshotPlanId: string;
   gigToken: number;
+  driftToken: number;
   healthToken: number;
   scanToken: number;
   tagsToken: number;
@@ -196,6 +197,7 @@ export const state: PageState = {
   seratoRunning: false,
   snapshotPlanId: "",
   gigToken: 0,
+  driftToken: 0,
   healthToken: 0,
   scanToken: 0,
   tagsToken: 0,

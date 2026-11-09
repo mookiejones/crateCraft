@@ -681,6 +681,29 @@ export interface GigReport {
   error?: string;
 }
 
+export interface TempoDriftFlag {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  reasons: string[];
+  bpm_min: number | null;
+  bpm_max: number | null;
+}
+
+export interface TempoDriftReport {
+  crate: number | null;
+  checked: number;
+  not_found: number;
+  unreadable: number;
+  too_quiet: number;
+  unchecked: number;
+  mapped: number;
+  flags: TempoDriftFlag[];
+  error?: string;
+  code?: string;
+}
+
 export interface FileScanProblem {
   id: number;
   name: string;

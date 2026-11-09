@@ -1,5 +1,5 @@
 /**
- * Crates, history, missing tracks, duplicates, stems, library health, damaged files, tag spellings, and files.
+ * Crates, history, missing tracks, duplicates, stems, library health, damaged files, tag spellings, files, and tempo drift.
  *
  * The functions paint from state and the elements in index.html. Nothing
  * in this module runs a request when the file is imported. Listeners are
@@ -28,6 +28,7 @@ import { el } from "./dom";
 import { clickPane, paintDualChrome, paneCrates } from "./dual-crate-view";
 import { clockLabel, colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
+import { loadDrift, showDriftFailure } from "./drift";
 import { loadHealth, showHealthFailure } from "./health";
 import { loadScan, showScanFailure } from "./scan";
 import { loadTags, showTagsFailure } from "./tags";
@@ -599,11 +600,12 @@ export function renderShell() {
   markHistoryColumns();
   const cratesMode = state.mode === "crates";
   const gigMode = state.mode === "gig";
+  const driftMode = state.mode === "drift";
   const healthMode = state.mode === "health";
   const scanMode = state.mode === "scan";
   const tagsMode = state.mode === "tags";
   const historyMode = state.mode === "history";
-  const showCrates = cratesMode || gigMode || healthMode || scanMode;
+  const showCrates = cratesMode || gigMode || driftMode || healthMode || scanMode;
   el("crate-tools").hidden = !showCrates;
   el("crate-actions").hidden = !cratesMode;
   el("crate-list").hidden = !showCrates;
@@ -611,13 +613,14 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || healthMode || scanMode || tagsMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || driftMode || healthMode || scanMode || tagsMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
   el("files-panel").hidden = !filesMode;
   el("snapshots-panel").hidden = !snapshotsMode;
   el("gig-panel").hidden = !gigMode;
+  el("drift-panel").hidden = !driftMode;
   el("health-panel").hidden = !healthMode;
   el("scan-panel").hidden = !scanMode;
   el("tags-panel").hidden = !tagsMode;
@@ -634,6 +637,10 @@ export function renderShell() {
   if (filesMode) el("mode-note").textContent = t("mode.files");
   if (gigMode) {
     el("mode-note").textContent = t("mode.gig");
+    document.querySelector(".rules")?.remove();
+  }
+  if (driftMode) {
+    el("mode-note").textContent = t("mode.drift");
     document.querySelector(".rules")?.remove();
   }
   if (healthMode) {
@@ -830,6 +837,7 @@ export function selectCrate(id: number | "all", event?: MouseEvent) {
   list.scrollTop = 0;
   renderList();
   if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
+  if (state.mode === "drift") loadDrift().catch(showDriftFailure);
   if (state.mode === "health") loadHealth().catch(showHealthFailure);
   if (state.mode === "scan") loadScan().catch(showScanFailure);
 }
@@ -2487,7 +2495,7 @@ export async function loadLibrary() {
 
 /**
  * Switch among crates, history, missing, duplicates, stems, library
- * health, damaged files, tag spellings, files, snapshots, and gig.
+ * health, damaged files, tag spellings, files, snapshots, gig, and tempo drift.
  *
  * History sorts by start time descending and loads sessions once.
  * Duplicates load when this space has not been scanned yet. Files loads
@@ -2519,6 +2527,7 @@ export function setMode(mode: string) {
     loadSnapshots().catch((error) => failSnapshots(error));
   }
   if (mode === "gig") loadGigCheck().catch(showGigFailure);
+  if (mode === "drift") loadDrift().catch(showDriftFailure);
   if (mode === "health") loadHealth().catch(showHealthFailure);
   if (mode === "scan") loadScan("quick").catch(showScanFailure);
   if (mode === "tags") loadTags().catch(showTagsFailure);
@@ -3366,6 +3375,7 @@ export function wireLibrary(): void {
     if (state.mode === "history") jobs.push(loadHistory());
     if (state.mode === "duplicates") jobs.push(loadDuplicates());
     if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
+    if (state.mode === "drift") jobs.push(loadDrift().catch(showDriftFailure));
     if (state.mode === "health") jobs.push(loadHealth().catch(showHealthFailure));
     if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
     if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
@@ -3402,6 +3412,7 @@ export function wireLibrary(): void {
     loadLibrary().then(() => {
       if (state.mode === "duplicates") return loadDuplicates();
       if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
+      if (state.mode === "drift") return loadDrift().catch(showDriftFailure);
       if (state.mode === "health") return loadHealth().catch(showHealthFailure);
       if (state.mode === "scan") return loadScan().catch(showScanFailure);
       if (state.mode === "tags") return loadTags().catch(showTagsFailure);
