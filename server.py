@@ -48,6 +48,7 @@ import setup_flow
 import smart_presets
 import snapshots
 import tag_cleanup
+import tempo_drift
 import telemetry
 import update_check
 import version_info
@@ -1768,7 +1769,7 @@ class Handler(BaseHTTPRequestHandler):
         Health, version, and the portable-drive check are answered before the library is opened.
         Settings and logs are answered before the library routes. Library,
         status, track, history, duplicate, file, related-track, gig-check,
-        M3U, and rekordbox XML paths return data. Every other path is a file
+        tempo-drift, M3U, and rekordbox XML paths return data. Every other path is a file
         under static/. A Host or Origin that is not this computer is refused first.
         """
         try:
@@ -1782,7 +1783,7 @@ class Handler(BaseHTTPRequestHandler):
         """Answer a GET request.
 
         Health, version, and the portable-drive check do not open the library.
-        Library, status, track, history, duplicate, file, related-track, gig-check, M3U, and rekordbox
+        Library, status, track, history, duplicate, file, related-track, gig-check, tempo-drift, M3U, and rekordbox
         XML paths return data. Every other path is a file under static/.
         """
         parsed = urlparse(self.path)
@@ -1940,6 +1941,12 @@ class Handler(BaseHTTPRequestHandler):
                 crate_id = crate_query(query_text(query, "crate", "all") or "all")
                 bitrate_check.require_crate(crate_id)
                 self.send_json(bitrate_check.scan(Path(library.MASTER), space, crate_id))
+                return
+            if parsed.path == "/api/tempo-drift":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                tempo_drift.require_crate(crate_id)
+                self.send_json(tempo_drift.scan(Path(library.MASTER), space, crate_id))
                 return
             if parsed.path == "/api/file-scan":
                 space = require_space(query_text(query, "space"))

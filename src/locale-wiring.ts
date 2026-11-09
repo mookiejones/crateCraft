@@ -9,6 +9,7 @@
 
 import { repaintDialogs } from "./dialogs";
 import { repaintGig } from "./gig";
+import { repaintDrift } from "./drift";
 import { repaintHealth } from "./health";
 import { repaintScan } from "./scan";
 import { repaintTags } from "./tags";
@@ -38,6 +39,7 @@ export function repaintAll(): void {
   repaintViews();
   if (state.mode === "snapshots") renderSnapshots();
   if (state.mode === "gig") repaintGig();
+  if (state.mode === "drift") repaintDrift();
   if (state.mode === "health") repaintHealth();
   if (state.mode === "scan") repaintScan();
   if (state.mode === "tags") repaintTags();

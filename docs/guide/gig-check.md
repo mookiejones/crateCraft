@@ -37,4 +37,6 @@ A missing drive, or a missing file in the crate you selected, is **Not ready** e
 
 ## What changed
 
+**Tempo drift** sits beside this check in the same rail group. It lists tracks whose tempo wanders or that look live, so you can give them a flexible beatgrid. It needs a crate. See [Tempo drift](tempo-drift.md).
+
 When a snapshot exists, **Since last gig** lists crates, cues, beatgrids, and tags that differ from the latest one. The snapshots are the ones in **Backups**. The check compares the library copy and the cues and beatgrids saved in that snapshot with the library now. It does not restore or change the snapshot. With no snapshot, that section says **No snapshots yet**.

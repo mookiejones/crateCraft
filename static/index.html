@@ -65,9 +65,13 @@
         <div class="view-group-tabs view-group-solo" role="tablist" aria-label="Backups" data-i18n-attr="aria-label:view.snapshots">
           <button type="button" data-view="snapshots" role="tab" data-i18n="view.snapshots">Backups</button>
         </div>
-        <div class="view-group-tabs view-group-solo" role="tablist" aria-label="Before a gig" data-i18n-attr="aria-label:view.gig">
-          <button type="button" id="gig-tab" data-view="gig" role="tab" aria-controls="gig-panel" data-i18n="view.gig">Before a gig</button>
-        </div>
+        <section class="view-group" aria-labelledby="view-group-gig">
+          <h2 id="view-group-gig" class="view-group-label" data-i18n="view.group.gig">Before a gig</h2>
+          <div class="view-group-tabs" role="tablist" aria-labelledby="view-group-gig">
+            <button type="button" id="gig-tab" data-view="gig" role="tab" aria-controls="gig-panel" data-i18n="view.gig">Before a gig</button>
+            <button type="button" id="drift-tab" data-view="drift" role="tab" aria-controls="drift-panel" data-i18n="view.drift">Tempo drift</button>
+          </div>
+        </section>
       </div>
       <div id="crate-tools">
         <label class="rail-field">
@@ -254,6 +258,17 @@
         </div>
         <p id="gig-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="gig-report" class="gig-report"></div>
+      </section>
+
+      <section id="drift-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="drift-heading" aria-busy="false">
+        <h2 id="drift-heading" class="visually-hidden" data-i18n="drift.heading">Tempo drift</h2>
+        <div class="browser-bar">
+          <p id="drift-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="drift-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+        </div>
+        <p id="drift-hint" class="gig-note" data-i18n="drift.intro">Needs a crate because it decodes audio. Flags a wandering tempo, a live-looking name, or Serato's pending tempo-map mark. A grid that already changes tempo is skipped. This does not rewrite BPM.</p>
+        <p id="drift-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="drift-report" class="gig-report" tabindex="-1"></div>
       </section>
 
       <section id="health-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="health-heading" aria-busy="false">

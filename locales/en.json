@@ -127,11 +127,49 @@
   "detail.sendPrepare": "Send to Prepare",
   "detail.sentPrepare": "Sent to Prepare.",
   "detail.useInCrates": "Use this copy in crates",
+  "drift.bpmRange": " ({min}–{max} BPM)",
+  "drift.checking": "Checking tempo…",
+  "drift.empty": "No drifting or live-looking tracks in this crate.",
+  "drift.heading": "Tempo drift",
+  "drift.intro": "Needs a crate because it decodes audio. Flags a wandering tempo, a live-looking name, or Serato's pending tempo-map mark. A grid that already changes tempo is skipped. This does not rewrite BPM.",
+  "drift.mapped": {
+    "one": "{count} track already has a flexible beatgrid.",
+    "other": "{count} tracks already have a flexible beatgrid."
+  },
+  "drift.notFound": {
+    "one": "{count} missing track was skipped. See Missing files.",
+    "other": "{count} missing tracks were skipped. See Missing files."
+  },
+  "drift.reason.drifting": "Tempo wanders",
+  "drift.reason.live": "Looks like a live recording",
+  "drift.reason.pending_map": "Serato marked a pending tempo map",
+  "drift.reason.unknown": "Needs a flexible beatgrid",
+  "drift.row": "{title} ({file}) — {reasons}{bpm}",
+  "drift.summary": {
+    "one": "{checked} files checked. {count} track may need a flexible beatgrid.",
+    "other": "{checked} files checked. {count} tracks may need a flexible beatgrid."
+  },
+  "drift.summaryClear": "{checked} files checked. None need a flexible beatgrid.",
+  "drift.tooQuiet": {
+    "one": "{count} file was too quiet or too short to measure.",
+    "other": "{count} files were too quiet or too short to measure."
+  },
+  "drift.unchecked": {
+    "one": "{count} file has an extension this check does not know.",
+    "other": "{count} files have an extension this check does not know."
+  },
+  "drift.unreadableFiles": {
+    "one": "{count} file could not be read.",
+    "other": "{count} files could not be read."
+  },
+  "drift.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+  "drift.unreadable": "The tempo check could not be read.",
   "duplicates.readFailed": "Could not read duplicates.",
   "error.action_unavailable": "That action is not available.",
   "error.backup_no_space": "There is not enough disk space to back up the library.",
   "error.backup_serato_running": "Quit Serato DJ Pro before backing up drive crates. Serato DJ is still running, so nothing was copied.",
   "error.bitrate_needs_crate": "Choose a crate for a bitrate check.",
+  "error.tempo_needs_crate": "Choose a crate for a tempo check.",
   "error.body_not_json": "The request body is not JSON.",
   "error.body_not_object": "The request body is not an object.",
   "error.choose_copy": "Choose the copy to keep.",
@@ -558,6 +596,7 @@
   "merge.trashFiles": "Move {files} to the Trash.",
   "merge.trashLabel": "Move the other audio files to the Trash",
   "merge.trashNote": "Off by default. Files go to the Trash, where you can restore them. They are not permanently deleted.",
+  "mode.drift": "Read-only. This check does not change the library.",
   "mode.duplicates": "Same title, artist, and length. Select a copy, then merge the others into it.",
   "mode.files": "Files on disk. Cue points stay in the audio file. Crates follow the path.",
   "mode.gig": "Read-only. This check does not change the library.",
@@ -1263,6 +1302,8 @@
   "tooltip.updateToggle": "Ask GitHub once a day whether a newer version is out.",
   "tooltip.useInCrates": "Put another track in every crate this one is in, at the same position.",
   "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
+  "tooltip.viewDrift": "Flag tracks whose tempo wanders, or that look like live recordings. Needs a crate. Read-only.",
+  "tooltip.driftRefresh": "Run the tempo check again on the selected crate.",
   "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
   "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
   "tooltip.viewGig": "Check the library before a gig. Read-only.",
@@ -1314,9 +1355,11 @@
   "version.copyFailed": "Couldn't copy the version.",
   "version.unavailable": "Version unavailable",
   "view.crates": "Crates",
+  "view.drift": "Tempo drift",
   "view.duplicates": "Duplicates",
   "view.files": "Organize files",
   "view.gig": "Before a gig",
+  "view.group.gig": "Before a gig",
   "view.group.health": "Library health",
   "view.group.library": "Library",
   "view.health": "Library health",

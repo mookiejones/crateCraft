@@ -130,11 +130,49 @@
     "detail.sendPrepare": "Send to Prepare",
     "detail.sentPrepare": "Sent to Prepare.",
     "detail.useInCrates": "Use this copy in crates",
+    "drift.bpmRange": " ({min}–{max} BPM)",
+    "drift.checking": "Checking tempo…",
+    "drift.empty": "No drifting or live-looking tracks in this crate.",
+    "drift.heading": "Tempo drift",
+    "drift.intro": "Needs a crate because it decodes audio. Flags a wandering tempo, a live-looking name, or Serato's pending tempo-map mark. A grid that already changes tempo is skipped. This does not rewrite BPM.",
+    "drift.mapped": {
+      one: "{count} track already has a flexible beatgrid.",
+      other: "{count} tracks already have a flexible beatgrid."
+    },
+    "drift.notFound": {
+      one: "{count} missing track was skipped. See Missing files.",
+      other: "{count} missing tracks were skipped. See Missing files."
+    },
+    "drift.reason.drifting": "Tempo wanders",
+    "drift.reason.live": "Looks like a live recording",
+    "drift.reason.pending_map": "Serato marked a pending tempo map",
+    "drift.reason.unknown": "Needs a flexible beatgrid",
+    "drift.row": "{title} ({file}) — {reasons}{bpm}",
+    "drift.summary": {
+      one: "{checked} files checked. {count} track may need a flexible beatgrid.",
+      other: "{checked} files checked. {count} tracks may need a flexible beatgrid."
+    },
+    "drift.summaryClear": "{checked} files checked. None need a flexible beatgrid.",
+    "drift.tooQuiet": {
+      one: "{count} file was too quiet or too short to measure.",
+      other: "{count} files were too quiet or too short to measure."
+    },
+    "drift.unchecked": {
+      one: "{count} file has an extension this check does not know.",
+      other: "{count} files have an extension this check does not know."
+    },
+    "drift.unreadableFiles": {
+      one: "{count} file could not be read.",
+      other: "{count} files could not be read."
+    },
+    "drift.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+    "drift.unreadable": "The tempo check could not be read.",
     "duplicates.readFailed": "Could not read duplicates.",
     "error.action_unavailable": "That action is not available.",
     "error.backup_no_space": "There is not enough disk space to back up the library.",
     "error.backup_serato_running": "Quit Serato DJ Pro before backing up drive crates. Serato DJ is still running, so nothing was copied.",
     "error.bitrate_needs_crate": "Choose a crate for a bitrate check.",
+    "error.tempo_needs_crate": "Choose a crate for a tempo check.",
     "error.body_not_json": "The request body is not JSON.",
     "error.body_not_object": "The request body is not an object.",
     "error.choose_copy": "Choose the copy to keep.",
@@ -561,6 +599,7 @@
     "merge.trashFiles": "Move {files} to the Trash.",
     "merge.trashLabel": "Move the other audio files to the Trash",
     "merge.trashNote": "Off by default. Files go to the Trash, where you can restore them. They are not permanently deleted.",
+    "mode.drift": "Read-only. This check does not change the library.",
     "mode.duplicates": "Same title, artist, and length. Select a copy, then merge the others into it.",
     "mode.files": "Files on disk. Cue points stay in the audio file. Crates follow the path.",
     "mode.gig": "Read-only. This check does not change the library.",
@@ -1266,6 +1305,8 @@
     "tooltip.updateToggle": "Ask GitHub once a day whether a newer version is out.",
     "tooltip.useInCrates": "Put another track in every crate this one is in, at the same position.",
     "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
+    "tooltip.viewDrift": "Flag tracks whose tempo wanders, or that look like live recordings. Needs a crate. Read-only.",
+    "tooltip.driftRefresh": "Run the tempo check again on the selected crate.",
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
@@ -1317,9 +1358,11 @@
     "version.copyFailed": "Couldn't copy the version.",
     "version.unavailable": "Version unavailable",
     "view.crates": "Crates",
+    "view.drift": "Tempo drift",
     "view.duplicates": "Duplicates",
     "view.files": "Organize files",
     "view.gig": "Before a gig",
+    "view.group.gig": "Before a gig",
     "view.group.health": "Library health",
     "view.group.library": "Library",
     "view.health": "Library health",
@@ -1511,11 +1554,49 @@
     "detail.sendPrepare": "Enviar a Prepare",
     "detail.sentPrepare": "Enviada a Prepare.",
     "detail.useInCrates": "Usar esta copia en las cajas",
+    "drift.bpmRange": " ({min}–{max} BPM)",
+    "drift.checking": "Comprobando el tempo…",
+    "drift.empty": "Ninguna pista con tempo inestable o aspecto en vivo en esta caja.",
+    "drift.heading": "Tempo inestable",
+    "drift.intro": "Necesita una caja porque decodifica el audio. Marca un tempo que se mueve, un nombre que parece en vivo o la marca de mapa de tempo pendiente de Serato. Se omite una parrilla que ya cambia de tempo. No reescribe el BPM.",
+    "drift.mapped": {
+      one: "{count} pista ya tiene una parrilla flexible.",
+      other: "{count} pistas ya tienen una parrilla flexible."
+    },
+    "drift.notFound": {
+      one: "Se omitió {count} pista no encontrada. Mira Archivos no encontrados.",
+      other: "Se omitieron {count} pistas no encontradas. Mira Archivos no encontrados."
+    },
+    "drift.reason.drifting": "El tempo se mueve",
+    "drift.reason.live": "Parece una grabación en vivo",
+    "drift.reason.pending_map": "Serato marcó un mapa de tempo pendiente",
+    "drift.reason.unknown": "Necesita una parrilla flexible",
+    "drift.row": "{title} ({file}) — {reasons}{bpm}",
+    "drift.summary": {
+      one: "{checked} archivos comprobados. {count} pista puede necesitar una parrilla flexible.",
+      other: "{checked} archivos comprobados. {count} pistas pueden necesitar una parrilla flexible."
+    },
+    "drift.summaryClear": "{checked} archivos comprobados. Ninguna necesita una parrilla flexible.",
+    "drift.tooQuiet": {
+      one: "{count} archivo era demasiado silencioso o corto para medirlo.",
+      other: "{count} archivos eran demasiado silenciosos o cortos para medirlos."
+    },
+    "drift.unchecked": {
+      one: "{count} archivo tiene una extensión que esta comprobación no conoce.",
+      other: "{count} archivos tienen una extensión que esta comprobación no conoce."
+    },
+    "drift.unreadableFiles": {
+      one: "No se pudo leer {count} archivo.",
+      other: "No se pudieron leer {count} archivos."
+    },
+    "drift.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Volver a comprobar",
+    "drift.unreadable": "No se pudo leer la comprobación de tempo.",
     "duplicates.readFailed": "No se pudieron leer los duplicados.",
     "error.action_unavailable": "Esa acción no está disponible.",
     "error.backup_no_space": "No hay espacio suficiente en el disco para copiar la biblioteca.",
     "error.backup_serato_running": "Cierra Serato DJ Pro antes de copiar las cajas de las unidades. Serato DJ sigue abierto, así que no se copió nada.",
     "error.bitrate_needs_crate": "Elige una caja para comprobar la tasa de bits.",
+    "error.tempo_needs_crate": "Elige una caja para comprobar el tempo.",
     "error.body_not_json": "El cuerpo de la solicitud no es JSON.",
     "error.body_not_object": "El cuerpo de la solicitud no es un objeto.",
     "error.choose_copy": "Elige la copia que quieres conservar.",
@@ -1942,6 +2023,7 @@
     "merge.trashFiles": "Mover {files} a la Papelera.",
     "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
     "merge.trashNote": "Desactivado por defecto. Los archivos van a la Papelera, desde donde puedes restaurarlos. No se eliminan para siempre.",
+    "mode.drift": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.duplicates": "Mismo título, artista y duración. Selecciona una copia y combina las demás en ella.",
     "mode.files": "Archivos en el disco. Los cues se quedan en el archivo de audio. Las cajas siguen la ruta.",
     "mode.gig": "Solo lectura. Esta comprobación no cambia la biblioteca.",
@@ -2647,6 +2729,8 @@
     "tooltip.updateToggle": "Preguntar a GitHub una vez al día si hay una versión más nueva.",
     "tooltip.useInCrates": "Pon otra pista en cada caja donde está esta, en la misma posición.",
     "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
+    "tooltip.viewDrift": "Marca pistas cuyo tempo se mueve, o que parecen grabaciones en vivo. Necesita una caja. Solo lectura.",
+    "tooltip.driftRefresh": "Vuelve a comprobar el tempo de la caja seleccionada.",
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
     "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
@@ -2698,9 +2782,11 @@
     "version.copyFailed": "No se pudo copiar la versión.",
     "version.unavailable": "Versión no disponible",
     "view.crates": "Cajas",
+    "view.drift": "Tempo inestable",
     "view.duplicates": "Duplicados",
     "view.files": "Organizar archivos",
     "view.gig": "Antes del bolo",
+    "view.group.gig": "Antes del bolo",
     "view.group.health": "Salud de la biblioteca",
     "view.group.library": "Biblioteca",
     "view.health": "Salud de la biblioteca",
@@ -2871,8 +2957,8 @@
   function messageParams(value) {
     if (!value || typeof value !== "object") return void 0;
     const params = {};
-    for (const [name, item3] of Object.entries(value)) {
-      if (typeof item3 === "string" || typeof item3 === "number" && Number.isFinite(item3)) params[name] = item3;
+    for (const [name, item4] of Object.entries(value)) {
+      if (typeof item4 === "string" || typeof item4 === "number" && Number.isFinite(item4)) params[name] = item4;
     }
     return Object.keys(params).length ? params : void 0;
   }
@@ -3240,6 +3326,7 @@
     seratoRunning: false,
     snapshotPlanId: "",
     gigToken: 0,
+    driftToken: 0,
     healthToken: 0,
     scanToken: 0,
     tagsToken: 0,
@@ -3582,6 +3669,8 @@
     viewFiles: spec("tooltip.viewFiles"),
     viewSnapshots: spec("tooltip.viewSnapshots"),
     viewGig: spec("tooltip.viewGig"),
+    viewDrift: spec("tooltip.viewDrift"),
+    driftRefresh: spec("tooltip.driftRefresh"),
     viewHealth: spec("tooltip.viewHealth"),
     viewScan: spec("tooltip.viewScan"),
     viewTags: spec("tooltip.viewTags"),
@@ -3653,6 +3742,7 @@
       files: tips.viewFiles,
       snapshots: tips.viewSnapshots,
       gig: tips.viewGig,
+      drift: tips.viewDrift,
       health: tips.viewHealth,
       scan: tips.viewScan,
       tags: tips.viewTags
@@ -3729,6 +3819,7 @@
       "operations-list": tips.operationsList,
       "snapshots-refresh": tips.snapshotsRefresh,
       "gig-refresh": tips.gigRefresh,
+      "drift-refresh": tips.driftRefresh,
       "health-refresh": tips.healthRefresh,
       "scan-quick": tips.scanQuick,
       "scan-full": tips.scanFull,
@@ -4276,9 +4367,9 @@
         (drive) => t("gig.driveUnavailable", { name: drive.name, count: drive.track_count })
       );
     }
-    if (index === 1) return (payload.missing_files || []).map((item3) => item3.path);
-    if (index === 2) return (payload.streaming_tracks || []).map((item3) => `${item3.service}: ${item3.title}`);
-    if (index === 3) return (payload.empty_crates || []).map((item3) => `${item3.name} — ${item3.warning}`);
+    if (index === 1) return (payload.missing_files || []).map((item4) => item4.path);
+    if (index === 2) return (payload.streaming_tracks || []).map((item4) => `${item4.service}: ${item4.title}`);
+    if (index === 3) return (payload.empty_crates || []).map((item4) => `${item4.name} — ${item4.warning}`);
     return [];
   }
   function renderStepList(parent, step, lines) {
@@ -4394,10 +4485,178 @@
       time: formatCheckedAt(checkedAt)
     });
     fragment.append(art, line);
-    const holding = (payload.holding_it_back || []).map((item3) => item3.summary);
+    const holding = (payload.holding_it_back || []).map((item4) => item4.summary);
     if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
     fragment.append(actions(null));
     return fragment;
+  }
+
+  // src/drift.ts
+  var LIST_CAP2 = 100;
+  var REASON_ORDER = ["drifting", "live", "pending_map"];
+  var REASON_KEYS = {
+    drifting: "drift.reason.drifting",
+    live: "drift.reason.live",
+    pending_map: "drift.reason.pending_map"
+  };
+  var latest2 = null;
+  function wireDrift() {
+    const panel = el("drift-panel");
+    if (panel.dataset.driftWired === "true") return;
+    panel.dataset.driftWired = "true";
+    el("drift-refresh").addEventListener("click", () => {
+      void loadDrift();
+    });
+  }
+  async function loadDrift() {
+    const token3 = ++state.driftToken;
+    beginBusy2();
+    let settle = "none";
+    if (state.activeCrate === "all") {
+      failStatus2(t("error.tempo_needs_crate"));
+      endBusy2();
+      el("drift-refresh").focus();
+      return;
+    }
+    const crate = String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/tempo-drift?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+      );
+      if (token3 !== state.driftToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.driftToken) return;
+      if (!response.ok || payload === null) {
+        failStatus2(serverMessage(payload, t("drift.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest2 = payload;
+      el("drift-status").textContent = "";
+      renderDriftReport(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.driftToken) return;
+      failStatus2(t("drift.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.driftToken) return;
+      endBusy2();
+      if (settle === "retry") el("drift-refresh").focus();
+      if (settle === "report") el("drift-report").focus();
+    }
+  }
+  function showDriftFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("drift.unreadable");
+    failStatus2(message);
+    endBusy2();
+    el("drift-refresh").focus();
+  }
+  function renderDriftReport(payload) {
+    el("drift-scope").textContent = scopeLabel();
+    const report = el("drift-report");
+    const flags = payload.flags || [];
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked });
+    report.replaceChildren(summary);
+    if (payload.not_found) {
+      report.append(noteLine2(t("drift.notFound", { count: payload.not_found })));
+    }
+    if (payload.unreadable) {
+      report.append(noteLine2(t("drift.unreadableFiles", { count: payload.unreadable })));
+    }
+    if (payload.unchecked) {
+      report.append(noteLine2(t("drift.unchecked", { count: payload.unchecked })));
+    }
+    if (payload.too_quiet) {
+      report.append(noteLine2(t("drift.tooQuiet", { count: payload.too_quiet })));
+    }
+    if (payload.mapped) {
+      report.append(noteLine2(t("drift.mapped", { count: payload.mapped })));
+    }
+    if (!flags.length) {
+      report.append(noteLine2(t("drift.empty")));
+      return;
+    }
+    for (const kind2 of reasonKinds(flags)) {
+      const rows2 = flags.filter((item4) => item4.reasons.includes(kind2));
+      report.append(detailsGroup2(reasonHeading(kind2), rows2.map(flagLine)));
+    }
+  }
+  function repaintDrift() {
+    el("drift-scope").textContent = scopeLabel();
+    if (latest2) renderDriftReport(latest2);
+  }
+  function beginBusy2() {
+    const button2 = el("drift-refresh");
+    button2.disabled = true;
+    button2.setAttribute("aria-busy", "true");
+    el("drift-panel").setAttribute("aria-busy", "true");
+    el("drift-status").textContent = t("drift.checking");
+  }
+  function endBusy2() {
+    const button2 = el("drift-refresh");
+    button2.disabled = state.activeCrate === "all";
+    button2.setAttribute("aria-busy", "false");
+    el("drift-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus2(message) {
+    el("drift-status").textContent = message;
+  }
+  function scopeLabel() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function noteLine2(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+  function reasonKinds(flags) {
+    const seen = new Set(flags.flatMap((item4) => item4.reasons));
+    const known = REASON_ORDER.filter((kind2) => seen.has(kind2));
+    const extra = [...seen].filter((kind2) => !REASON_ORDER.includes(kind2)).sort();
+    return [...known, ...extra];
+  }
+  function reasonHeading(kind2) {
+    return t(REASON_KEYS[kind2] ?? "drift.reason.unknown");
+  }
+  function flagLine(item4) {
+    const title2 = [item4.artist, item4.name].filter(Boolean).join(" — ") || item4.file;
+    const reasons = item4.reasons.map(reasonHeading).join(", ");
+    const bpm = item4.bpm_min != null && item4.bpm_max != null ? t("drift.bpmRange", { min: item4.bpm_min, max: item4.bpm_max }) : "";
+    return t("drift.row", { title: title2, file: item4.file, reasons, bpm });
+  }
+  function detailsGroup2(label, lines) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = true;
+    const summary = document.createElement("summary");
+    summary.textContent = t("gig.groupCount", { label, count: lines.length });
+    const list = document.createElement("ul");
+    const shown = lines.slice(0, LIST_CAP2);
+    for (const line of shown) list.append(item2(line));
+    details.append(summary, list);
+    if (lines.length > LIST_CAP2) {
+      const show2 = buttonEl(tips.gigShowAll);
+      show2.className = "gig-show-all";
+      show2.textContent = t("gig.showAll", { count: lines.length });
+      show2.addEventListener("click", () => {
+        list.replaceChildren();
+        for (const line of lines) list.append(item2(line));
+        show2.remove();
+      });
+      details.append(show2);
+    }
+    return details;
+  }
+  function item2(text2) {
+    const row = document.createElement("li");
+    row.textContent = text2;
+    return row;
   }
 
   // src/health.ts
@@ -4410,7 +4669,7 @@
     { key: "empty_genre", label: "health.emptyGenre" },
     { key: "no_crate", label: "health.noCrate" }
   ];
-  var latest2 = null;
+  var latest3 = null;
   var go = null;
   function wireHealth(navigate) {
     go = navigate;
@@ -4438,7 +4697,7 @@
   }
   async function loadHealth() {
     const token3 = ++state.healthToken;
-    beginBusy2();
+    beginBusy3();
     let settle = "none";
     const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
     try {
@@ -4449,33 +4708,33 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.healthToken) return;
       if (!response.ok || payload === null) {
-        failStatus2(serverMessage(payload, t("health.unreadable")));
+        failStatus3(serverMessage(payload, t("health.unreadable")));
         settle = "retry";
         return;
       }
-      latest2 = payload;
+      latest3 = payload;
       el("health-status").textContent = "";
       renderHealthReport(payload);
       settle = "report";
     } catch {
       if (token3 !== state.healthToken) return;
-      failStatus2(t("health.unreachable"));
+      failStatus3(t("health.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.healthToken) return;
-      endBusy2();
+      endBusy3();
       if (settle === "retry") el("health-refresh").focus();
       if (settle === "report") el("health-report").focus();
     }
   }
   function showHealthFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
-    failStatus2(message);
-    endBusy2();
+    failStatus3(message);
+    endBusy3();
     el("health-refresh").focus();
   }
   function renderHealthReport(payload) {
-    el("health-scope").textContent = scopeLabel();
+    el("health-scope").textContent = scopeLabel2();
     const report = el("health-report");
     const summary = document.createElement("p");
     summary.className = "gig-note";
@@ -4487,34 +4746,34 @@
     }
     listed += paintUnused(report, payload.unused);
     listed += paintDuplicates(report, payload.duplicates);
-    if (!listed) report.append(noteLine2(t("health.clear")));
+    if (!listed) report.append(noteLine3(t("health.clear")));
   }
   function repaintHealth() {
-    el("health-scope").textContent = scopeLabel();
-    if (latest2) renderHealthReport(latest2);
+    el("health-scope").textContent = scopeLabel2();
+    if (latest3) renderHealthReport(latest3);
   }
-  function beginBusy2() {
+  function beginBusy3() {
     const button2 = el("health-refresh");
     button2.disabled = true;
     button2.setAttribute("aria-busy", "true");
     el("health-panel").setAttribute("aria-busy", "true");
     el("health-status").textContent = t("health.checking");
   }
-  function endBusy2() {
+  function endBusy3() {
     const button2 = el("health-refresh");
     button2.disabled = false;
     button2.setAttribute("aria-busy", "false");
     el("health-panel").setAttribute("aria-busy", "false");
   }
-  function failStatus2(message) {
+  function failStatus3(message) {
     el("health-status").textContent = message;
   }
-  function scopeLabel() {
+  function scopeLabel2() {
     if (state.activeCrate === "all") return t("gig.wholeSpace");
     const crate = state.crates.find((row) => row.id === state.activeCrate);
     return crate?.name || t("gig.wholeSpace");
   }
-  function noteLine2(text2) {
+  function noteLine3(text2) {
     const line = document.createElement("p");
     line.className = "gig-note";
     line.textContent = text2;
@@ -4534,7 +4793,7 @@
     for (const track of tracks) list.append(trackItem(track));
     details.append(list);
     if (count > tracks.length) {
-      details.append(noteLine2(t("health.more", { count: count - tracks.length })));
+      details.append(noteLine3(t("health.more", { count: count - tracks.length })));
     }
     report.append(details);
     return count;
@@ -4551,13 +4810,13 @@
     details.append(openButton("files", "health.openFiles", tips.healthOpenFiles));
     const list = document.createElement("ul");
     for (const row of files) {
-      const item3 = document.createElement("li");
-      item3.textContent = t("health.fileRow", { file: row.file });
-      list.append(item3);
+      const item4 = document.createElement("li");
+      item4.textContent = t("health.fileRow", { file: row.file });
+      list.append(item4);
     }
     details.append(list);
     if (count > files.length) {
-      details.append(noteLine2(t("health.more", { count: count - files.length })));
+      details.append(noteLine3(t("health.more", { count: count - files.length })));
     }
     report.append(details);
     return count;
@@ -4576,7 +4835,7 @@
     for (const group of groups) list.append(groupItem(group));
     details.append(list);
     if (count > groups.length) {
-      details.append(noteLine2(t("health.more", { count: count - groups.length })));
+      details.append(noteLine3(t("health.more", { count: count - groups.length })));
     }
     report.append(details);
     return count;
@@ -4611,7 +4870,7 @@
   }
 
   // src/scan.ts
-  var LIST_CAP2 = 100;
+  var LIST_CAP3 = 100;
   var PROBLEM_ORDER = [
     "empty",
     "unreadable",
@@ -4630,7 +4889,7 @@
     decode_error: "scan.problem.decode_error",
     short: "scan.problem.short"
   };
-  var latest3 = null;
+  var latest4 = null;
   var lastDepth = "quick";
   function wireScan() {
     const panel = el("scan-panel");
@@ -4646,11 +4905,11 @@
   async function loadScan(depth) {
     const chosen = resolveDepth(depth);
     const token3 = ++state.scanToken;
-    beginBusy3();
+    beginBusy4();
     let settle = "none";
     if (chosen === "full" && state.activeCrate === "all") {
-      failStatus3(t("error.scan_full_needs_crate"));
-      endBusy3();
+      failStatus4(t("error.scan_full_needs_crate"));
+      endBusy4();
       el("scan-full").focus();
       return;
     }
@@ -4664,33 +4923,33 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.scanToken) return;
       if (!response.ok || payload === null) {
-        failStatus3(serverMessage(payload, t("scan.unreadable")));
+        failStatus4(serverMessage(payload, t("scan.unreadable")));
         settle = "retry";
         return;
       }
-      latest3 = payload;
+      latest4 = payload;
       el("scan-status").textContent = "";
       renderScanReport(payload);
       settle = "report";
     } catch {
       if (token3 !== state.scanToken) return;
-      failStatus3(t("scan.unreachable"));
+      failStatus4(t("scan.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.scanToken) return;
-      endBusy3();
+      endBusy4();
       if (settle === "retry") el("scan-quick").focus();
       if (settle === "report") el("scan-report").focus();
     }
   }
   function showScanFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
-    failStatus3(message);
-    endBusy3();
+    failStatus4(message);
+    endBusy4();
     el("scan-quick").focus();
   }
   function renderScanReport(payload) {
-    el("scan-scope").textContent = scopeLabel2();
+    el("scan-scope").textContent = scopeLabel3();
     const report = el("scan-report");
     const problems = payload.problems || [];
     const summary = document.createElement("p");
@@ -4698,30 +4957,30 @@
     summary.textContent = problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked });
     report.replaceChildren(summary);
     if (payload.not_found) {
-      report.append(noteLine3(t("scan.notFound", { count: payload.not_found })));
+      report.append(noteLine4(t("scan.notFound", { count: payload.not_found })));
     }
     if (payload.unchecked) {
-      report.append(noteLine3(t("scan.unchecked", { count: payload.unchecked })));
+      report.append(noteLine4(t("scan.unchecked", { count: payload.unchecked })));
     }
     if (!problems.length) {
-      report.append(noteLine3(t("scan.empty")));
+      report.append(noteLine4(t("scan.empty")));
       return;
     }
     for (const kind2 of problemKinds(problems)) {
-      const rows2 = problems.filter((item3) => item3.problem === kind2);
-      report.append(detailsGroup2(problemHeading(kind2), rows2.map(problemLine)));
+      const rows2 = problems.filter((item4) => item4.problem === kind2);
+      report.append(detailsGroup3(problemHeading(kind2), rows2.map(problemLine)));
     }
   }
   function repaintScan() {
-    el("scan-scope").textContent = scopeLabel2();
-    if (latest3) renderScanReport(latest3);
+    el("scan-scope").textContent = scopeLabel3();
+    if (latest4) renderScanReport(latest4);
   }
   function resolveDepth(depth) {
     if (depth === "quick" || depth === "full") return depth;
     if (lastDepth === "full" && state.activeCrate === "all") return "quick";
     return lastDepth;
   }
-  function beginBusy3() {
+  function beginBusy4() {
     for (const id of ["scan-quick", "scan-full"]) {
       const button2 = el(id);
       button2.disabled = true;
@@ -4730,7 +4989,7 @@
     el("scan-panel").setAttribute("aria-busy", "true");
     el("scan-status").textContent = t("scan.checking");
   }
-  function endBusy3() {
+  function endBusy4() {
     el("scan-quick").disabled = false;
     el("scan-quick").setAttribute("aria-busy", "false");
     const full = el("scan-full");
@@ -4738,22 +4997,22 @@
     full.setAttribute("aria-busy", "false");
     el("scan-panel").setAttribute("aria-busy", "false");
   }
-  function failStatus3(message) {
+  function failStatus4(message) {
     el("scan-status").textContent = message;
   }
-  function scopeLabel2() {
+  function scopeLabel3() {
     if (state.activeCrate === "all") return t("gig.wholeSpace");
     const crate = state.crates.find((row) => row.id === state.activeCrate);
     return crate?.name || t("gig.wholeSpace");
   }
-  function noteLine3(text2) {
+  function noteLine4(text2) {
     const line = document.createElement("p");
     line.className = "gig-note";
     line.textContent = text2;
     return line;
   }
   function problemKinds(problems) {
-    const seen = new Set(problems.map((item3) => item3.problem));
+    const seen = new Set(problems.map((item4) => item4.problem));
     const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
     const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
     return [...known, ...extra];
@@ -4761,50 +5020,50 @@
   function problemHeading(kind2) {
     return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
   }
-  function problemLine(item3) {
-    const title2 = [item3.artist, item3.name].filter(Boolean).join(" — ") || item3.file;
-    const label = problemDetail(item3);
-    return t("scan.row", { title: title2, file: item3.file, problem: label });
+  function problemLine(item4) {
+    const title2 = [item4.artist, item4.name].filter(Boolean).join(" — ") || item4.file;
+    const label = problemDetail(item4);
+    return t("scan.row", { title: title2, file: item4.file, problem: label });
   }
-  function problemDetail(item3) {
-    const heading2 = problemHeading(item3.problem);
-    if (item3.problem === "wrong_format" && item3.detail) {
-      return t("scan.wrongFormatDetail", { detail: item3.detail });
+  function problemDetail(item4) {
+    const heading2 = problemHeading(item4.problem);
+    if (item4.problem === "wrong_format" && item4.detail) {
+      return t("scan.wrongFormatDetail", { detail: item4.detail });
     }
-    if ((item3.problem === "decode_error" || item3.problem === "short") && item3.detail) {
-      return t(item3.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
-        detail: item3.detail
+    if ((item4.problem === "decode_error" || item4.problem === "short") && item4.detail) {
+      return t(item4.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
+        detail: item4.detail
       });
     }
-    if (item3.problem === "serato_flagged" && item3.detail) {
-      return `${heading2}: ${item3.detail}`;
+    if (item4.problem === "serato_flagged" && item4.detail) {
+      return `${heading2}: ${item4.detail}`;
     }
     return heading2;
   }
-  function detailsGroup2(label, lines) {
+  function detailsGroup3(label, lines) {
     const details = document.createElement("details");
     details.className = "gig-group";
     details.open = true;
     const summary = document.createElement("summary");
     summary.textContent = t("gig.groupCount", { label, count: lines.length });
     const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP2);
-    for (const line of shown) list.append(item2(line));
+    const shown = lines.slice(0, LIST_CAP3);
+    for (const line of shown) list.append(item3(line));
     details.append(summary, list);
-    if (lines.length > LIST_CAP2) {
+    if (lines.length > LIST_CAP3) {
       const show2 = buttonEl(tips.gigShowAll);
       show2.className = "gig-show-all";
       show2.textContent = t("gig.showAll", { count: lines.length });
       show2.addEventListener("click", () => {
         list.replaceChildren();
-        for (const line of lines) list.append(item2(line));
+        for (const line of lines) list.append(item3(line));
         show2.remove();
       });
       details.append(show2);
     }
     return details;
   }
-  function item2(text2) {
+  function item3(text2) {
     const row = document.createElement("li");
     row.textContent = text2;
     return row;
@@ -4896,11 +5155,11 @@
   }
 
   // src/tags.ts
-  var LIST_CAP3 = 100;
+  var LIST_CAP4 = 100;
   var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
   var TITLE_KEY = "clean";
   var MAPPING_KEY = "saved";
-  var latest4 = null;
+  var latest5 = null;
   var titlePlan = null;
   var mappingPlan = null;
   var plans = /* @__PURE__ */ new Map();
@@ -4935,7 +5194,7 @@
       const key = input.name.slice("tags-".length);
       selectedByKey.set(key, input.value);
       plans.delete(key);
-      if (latest4) renderTagsReport(latest4);
+      if (latest5) renderTagsReport(latest5);
     });
     el("tags-report").addEventListener("click", (event) => {
       const button2 = event.target.closest("[data-tags-action]");
@@ -4959,7 +5218,7 @@
     const field = currentField();
     plans.clear();
     selectedByKey.clear();
-    beginBusy4();
+    beginBusy5();
     let settle = "none";
     try {
       if (field === "titles") {
@@ -4969,7 +5228,7 @@
         });
         if (token3 !== state.tagsToken) return;
         titlePlan = payload;
-        latest4 = null;
+        latest5 = null;
         mappingPlan = null;
         el("tags-status").textContent = titlesPreviewSummary(payload);
         settle = "report";
@@ -4981,11 +5240,11 @@
         const payload = await readJSON(response).catch(() => null);
         if (token3 !== state.tagsToken) return;
         if (!response.ok || payload === null) {
-          failStatus4(serverMessage(payload, t("tags.unreadable")));
+          failStatus5(serverMessage(payload, t("tags.unreadable")));
           settle = "retry";
           return;
         }
-        latest4 = payload;
+        latest5 = payload;
         titlePlan = null;
         mappingPlan = await readMappingPreview(token3);
         if (token3 !== state.tagsToken) return;
@@ -4994,12 +5253,12 @@
       }
     } catch (error2) {
       if (token3 !== state.tagsToken) return;
-      if (error2 instanceof TypeError) failStatus4(t("tags.unreachable"));
-      else failStatus4(failureOf(error2).message);
+      if (error2 instanceof TypeError) failStatus5(t("tags.unreachable"));
+      else failStatus5(failureOf(error2).message);
       settle = "retry";
     } finally {
       if (token3 !== state.tagsToken) return;
-      endBusy4();
+      endBusy5();
       if (settle === "report") paintReport();
       if (settle === "retry") el("tags-refresh").focus();
       if (settle === "report") el("tags-report").focus();
@@ -5007,8 +5266,8 @@
   }
   function showTagsFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
-    failStatus4(message);
-    endBusy4();
+    failStatus5(message);
+    endBusy5();
     el("tags-refresh").focus();
   }
   function renderTagsReport(payload) {
@@ -5033,7 +5292,7 @@
       if (titlePlan) renderTitleReport(titlePlan);
       return;
     }
-    if (latest4) renderTagsReport(latest4);
+    if (latest5) renderTagsReport(latest5);
   }
   function renderTitleReport(plan) {
     el("tags-scope").textContent = t("gig.wholeSpace");
@@ -5045,7 +5304,7 @@
     const lines = previewLines(plan.changes);
     if (lines.length) {
       const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP3)) {
+      for (const line of lines.slice(0, LIST_CAP4)) {
         const row = document.createElement("li");
         row.textContent = line;
         diffs.append(row);
@@ -5084,7 +5343,7 @@
       paintReport();
       applyButton(key)?.focus();
     } catch (error2) {
-      failStatus4(failureOf(error2).message);
+      failStatus5(failureOf(error2).message);
     } finally {
       actionKey = "";
       paintReport();
@@ -5096,7 +5355,7 @@
     if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
     actionKey = key;
     panelBusy = true;
-    beginBusy4();
+    beginBusy5();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -5108,19 +5367,19 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy4();
+      endBusy5();
       await loadTags();
       el("tags-status").textContent = writtenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus4(failed.message);
+      failStatus5(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy4();
+      endBusy5();
       paintReport();
     }
   }
@@ -5129,7 +5388,7 @@
     if (!plan || !canApplyMappings(plan)) return;
     actionKey = MAPPING_KEY;
     panelBusy = true;
-    beginBusy4();
+    beginBusy5();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -5139,19 +5398,19 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy4();
+      endBusy5();
       await loadTags();
       el("tags-status").textContent = mappingWrittenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus4(failed.message);
+      failStatus5(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy4();
+      endBusy5();
       paintReport();
     }
   }
@@ -5160,7 +5419,7 @@
     if (!plan || !canApplyTitles(plan)) return;
     actionKey = TITLE_KEY;
     panelBusy = true;
-    beginBusy4();
+    beginBusy5();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -5170,19 +5429,19 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy4();
+      endBusy5();
       await loadTags();
       el("tags-status").textContent = titlesWrittenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus4(failed.message);
+      failStatus5(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy4();
+      endBusy5();
       paintReport();
     }
   }
@@ -5197,7 +5456,7 @@
     el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
     el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
   }
-  function beginBusy4() {
+  function beginBusy5() {
     panelBusy = true;
     for (const id of FIELD_BUTTONS) {
       const button2 = el(id);
@@ -5208,7 +5467,7 @@
     el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
     paintReport();
   }
-  function endBusy4() {
+  function endBusy5() {
     panelBusy = false;
     for (const id of FIELD_BUTTONS) {
       const button2 = el(id);
@@ -5254,7 +5513,7 @@
     const lines = previewLines(plan.changes);
     if (lines.length) {
       const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP3)) {
+      for (const line of lines.slice(0, LIST_CAP4)) {
         const row = document.createElement("li");
         row.textContent = line;
         diffs.append(row);
@@ -5271,7 +5530,7 @@
     wrap.append(actions2);
     return wrap;
   }
-  function failStatus4(message) {
+  function failStatus5(message) {
     el("tags-status").textContent = message;
   }
   function openKeys() {
@@ -5284,7 +5543,7 @@
     return keys;
   }
   function groupByKey(key) {
-    return latest4?.groups?.find((group) => group.key === key);
+    return latest5?.groups?.find((group) => group.key === key);
   }
   function selectedValue(key) {
     const group = groupByKey(key);
@@ -5324,7 +5583,7 @@
       const lines = previewLines(plan.changes);
       if (lines.length) {
         const diffs = document.createElement("ul");
-        const shown = lines.slice(0, LIST_CAP3);
+        const shown = lines.slice(0, LIST_CAP4);
         for (const line of shown) {
           const row = document.createElement("li");
           row.textContent = line;
@@ -5381,7 +5640,7 @@
     file_size: "portable.kindFileSize"
   };
   var token = 0;
-  var latest5 = null;
+  var latest6 = null;
   var opener = null;
   var wired = false;
   function portableDriveRoot(path) {
@@ -5408,21 +5667,21 @@
     if (typeof value.summary !== "string") return null;
     if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
     const findings = [];
-    for (const item3 of value.findings) {
-      if (!isRecord(item3) || typeof item3.kind !== "string" || typeof item3.fix !== "string") return null;
+    for (const item4 of value.findings) {
+      if (!isRecord(item4) || typeof item4.kind !== "string" || typeof item4.fix !== "string") return null;
       findings.push({
-        kind: item3.kind,
-        crate: text(item3.crate),
-        track: text(item3.track),
-        path: text(item3.path),
-        found: text(item3.found),
-        fix: item3.fix
+        kind: item4.kind,
+        crate: text(item4.crate),
+        track: text(item4.track),
+        path: text(item4.path),
+        found: text(item4.found),
+        fix: item4.fix
       });
     }
     const errors = [];
-    for (const item3 of value.errors) {
-      if (!isRecord(item3) || typeof item3.message !== "string") return null;
-      errors.push({ crate: text(item3.crate), message: item3.message });
+    for (const item4 of value.errors) {
+      if (!isRecord(item4) || typeof item4.message !== "string") return null;
+      errors.push({ crate: text(item4.crate), message: item4.message });
     }
     return {
       drive: text(value.drive),
@@ -5452,7 +5711,7 @@
     const mine = ++token;
     opener = trigger ?? null;
     const dialog = el("portable-dialog");
-    latest5 = null;
+    latest6 = null;
     el("portable-verdict").textContent = "";
     el("portable-summary").textContent = "";
     el("portable-findings").replaceChildren();
@@ -5476,7 +5735,7 @@
         fail(t("portable.unreadable"));
         return;
       }
-      latest5 = report;
+      latest6 = report;
       el("portable-status").textContent = "";
       renderPortableReport(report);
     } catch {
@@ -5490,7 +5749,7 @@
       const name = button2.dataset.portableName ?? "";
       if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
     }
-    if (latest5) renderPortableReport(latest5);
+    if (latest6) renderPortableReport(latest6);
   }
   function wirePortable() {
     if (wired) return;
@@ -5501,7 +5760,7 @@
     });
   }
   function renderPortableReport(report) {
-    latest5 = report;
+    latest6 = report;
     const verdict = el("portable-verdict");
     if (report.missing_drive) verdict.textContent = t("portable.missing");
     else if (report.ready) verdict.textContent = t("portable.ready");
@@ -5543,7 +5802,7 @@
     return key ? t(key) : kind2;
   }
   function fail(message) {
-    latest5 = null;
+    latest6 = null;
     el("portable-verdict").textContent = "";
     el("portable-summary").textContent = "";
     el("portable-findings").replaceChildren();
@@ -5850,7 +6109,7 @@
   }
   function scopeCrate() {
     if (state.activeCrate === "all") return null;
-    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
+    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
     return crate && !crate.smart ? crate : null;
   }
   function readPresetForm() {
@@ -5988,19 +6247,19 @@
       list.append(empty);
       return;
     }
-    for (const item3 of state.snapshots) {
+    for (const item4 of state.snapshots) {
       const card = document.createElement("article");
       card.className = "snapshot-card";
       card.setAttribute("role", "listitem");
       const title2 = document.createElement("p");
-      title2.textContent = `${item3.created || t("snapshots.unknownTime")} · ${item3.trigger || t("snapshots.trigger")}`;
+      title2.textContent = `${item4.created || t("snapshots.unknownTime")} · ${item4.trigger || t("snapshots.trigger")}`;
       const detail = document.createElement("p");
-      const version = item3.serato_version && item3.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item3.serato_version, build: String(item3.serato_build ?? "") }) : t("snapshots.seratoUnknown");
-      const drives = (item3.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item3.unavailable_drives || []) })}` : "";
-      detail.textContent = `${version}. ${item3.reason || ""}${drives}`;
+      const version = item4.serato_version && item4.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item4.serato_version, build: String(item4.serato_build ?? "") }) : t("snapshots.seratoUnknown");
+      const drives = (item4.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item4.unavailable_drives || []) })}` : "";
+      detail.textContent = `${version}. ${item4.reason || ""}${drives}`;
       const restore = buttonEl(tips.reviewRestore);
       restore.textContent = t("snapshots.reviewRestore");
-      restore.addEventListener("click", () => openSnapshotPlan(item3.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
+      restore.addEventListener("click", () => openSnapshotPlan(item4.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
       card.append(title2, detail, restore);
       list.append(card);
     }
@@ -6041,8 +6300,8 @@
     const status = el("operations-status");
     const list = el("operations-list");
     list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest7 = state.operations[state.operations.length - 1];
-    const failed = latest7?.result === "rollback_failed";
+    const latest8 = state.operations[state.operations.length - 1];
+    const failed = latest8?.result === "rollback_failed";
     alert.hidden = !failed;
     alert.textContent = failed ? t("operations.rollbackFailed") : "";
     list.replaceChildren();
@@ -6067,35 +6326,35 @@
       list.append(empty);
       return;
     }
-    for (const item3 of [...state.operations].reverse()) {
-      list.append(operationCard(item3));
+    for (const item4 of [...state.operations].reverse()) {
+      list.append(operationCard(item4));
     }
   }
-  function operationCard(item3) {
+  function operationCard(item4) {
     const card = document.createElement("article");
     card.className = "operation-card snapshot-card";
     card.setAttribute("role", "listitem");
-    const actionName = item3.action || item3.operation || "";
+    const actionName = item4.action || item4.operation || "";
     const actionKey2 = OPERATION_ACTIONS[actionName];
-    const outcomeKey = OPERATION_OUTCOMES[item3.result || ""] ?? "operations.outcome.refused";
+    const outcomeKey = OPERATION_OUTCOMES[item4.result || ""] ?? "operations.outcome.refused";
     const title2 = document.createElement("p");
     title2.textContent = t("operations.entry", {
-      time: operationTime(item3.time || ""),
+      time: operationTime(item4.time || ""),
       action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
-      target: item3.target || t("operations.noTarget"),
+      target: item4.target || t("operations.noTarget"),
       outcome: t(outcomeKey)
     });
     card.append(title2);
-    if (item3.snapshot_before && item3.snapshot_after) {
+    if (item4.snapshot_before && item4.snapshot_after) {
       const detail = document.createElement("p");
       detail.textContent = t("operations.snapshots", {
-        before: item3.snapshot_before,
-        after: item3.snapshot_after
+        before: item4.snapshot_before,
+        after: item4.snapshot_after
       });
       card.append(detail);
-    } else if (item3.snapshot_before) {
+    } else if (item4.snapshot_before) {
       const detail = document.createElement("p");
-      detail.textContent = t("operations.beforeOnly", { before: item3.snapshot_before });
+      detail.textContent = t("operations.beforeOnly", { before: item4.snapshot_before });
       card.append(detail);
     }
     return card;
@@ -6232,7 +6491,7 @@
     if (!items.length) {
       line.textContent = t("plan.none", { label });
     } else {
-      const names = items.slice(0, 8).map((item3) => item3.name || item3.path || item3.drive_label || t("plan.item"));
+      const names = items.slice(0, 8).map((item4) => item4.name || item4.path || item4.drive_label || t("plan.item"));
       const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
       const listed = `${names.join(", ")}${extra}`;
       line.textContent = t("plan.listed", { label, count: items.length, names: listed });
@@ -6249,11 +6508,11 @@
     }
     line.textContent = t("plan.files", { label, count: items.length });
     parent.append(line);
-    for (const item3 of items.slice(0, 12)) {
+    for (const item4 of items.slice(0, 12)) {
       const row = document.createElement("p");
-      row.textContent = fileName(item3.path || "");
+      row.textContent = fileName(item4.path || "");
       parent.append(row);
-      for (const diff of cueDiffRows(item3.before, item3.after)) {
+      for (const diff of cueDiffRows(item4.before, item4.after)) {
         parent.append(paintCueDiffRow(diff));
       }
     }
@@ -6268,9 +6527,9 @@
     }
     line.textContent = t("plan.files", { label, count: items.length });
     parent.append(line);
-    for (const item3 of items.slice(0, 12)) {
+    for (const item4 of items.slice(0, 12)) {
       const row = document.createElement("p");
-      row.textContent = fileName(item3.path || "");
+      row.textContent = fileName(item4.path || "");
       parent.append(row);
     }
   }
@@ -6309,7 +6568,7 @@
       await loadSnapshots();
       await reloadLibrary();
       if (skipped.length) {
-        const names = skipped.map((item3) => item3.name || item3.path || t("plan.item")).join(", ");
+        const names = skipped.map((item4) => item4.name || item4.path || t("plan.item")).join(", ");
         el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
       }
     } catch (error2) {
@@ -8292,7 +8551,7 @@
     if (!row) return void 0;
     const id = Number(row.getAttribute("data-id"));
     if (!Number.isInteger(id)) return void 0;
-    return view.find((item3) => item3.id === id);
+    return view.find((item4) => item4.id === id);
   }
   function wireListKeys(list) {
     list.addEventListener("scroll", () => paintRows());
@@ -8305,7 +8564,7 @@
         event.preventDefault();
         moveSelection(-1, view, list);
       } else if (event.key === "Enter") {
-        const chosen = focusedTrack(event.target, view) ?? view.find((item3) => item3.id === state.selectedId);
+        const chosen = focusedTrack(event.target, view) ?? view.find((item4) => item4.id === state.selectedId);
         if (!chosen || chosen.entry) return;
         event.preventDefault();
         void bridge.selectTrack(chosen.id);
@@ -8393,7 +8652,7 @@
     for (const crate of state.crates) {
       if (seen.has(crate.id)) continue;
       if (keep && !keep.has(crate.id)) continue;
-      const parentListed = state.crates.some((item3) => item3.id === crate.parent);
+      const parentListed = state.crates.some((item4) => item4.id === crate.parent);
       if (parentListed) continue;
       seen.add(crate.id);
       crate.depth = 0;
@@ -8544,8 +8803,8 @@
   function placeCrateFocus(previousId) {
     const items = [...el("crate-list").querySelectorAll(".crate")];
     if (!items.length) return null;
-    const current2 = items.find((item3) => item3.dataset.id === previousId) || items[0];
-    for (const item3 of items) item3.tabIndex = item3 === current2 ? 0 : -1;
+    const current2 = items.find((item4) => item4.dataset.id === previousId) || items[0];
+    for (const item4 of items) item4.tabIndex = item4 === current2 ? 0 : -1;
     return current2;
   }
   function renderCrates() {
@@ -8592,7 +8851,7 @@
   function renderRules() {
     document.querySelector(".rules")?.remove();
     document.querySelector(".rule-edit")?.remove();
-    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
+    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
     if (!crate || !crate.rules || state.mode !== "crates") return;
     const line = document.createElement("p");
     line.className = "rules";
@@ -8666,11 +8925,12 @@
     markHistoryColumns();
     const cratesMode = state.mode === "crates";
     const gigMode = state.mode === "gig";
+    const driftMode = state.mode === "drift";
     const healthMode = state.mode === "health";
     const scanMode = state.mode === "scan";
     const tagsMode = state.mode === "tags";
     const historyMode = state.mode === "history";
-    const showCrates2 = cratesMode || gigMode || healthMode || scanMode;
+    const showCrates2 = cratesMode || gigMode || driftMode || healthMode || scanMode;
     el("crate-tools").hidden = !showCrates2;
     el("crate-actions").hidden = !cratesMode;
     el("crate-list").hidden = !showCrates2;
@@ -8678,13 +8938,14 @@
     el("mode-note").hidden = cratesMode || historyMode;
     const filesMode = state.mode === "files";
     const snapshotsMode = state.mode === "snapshots";
-    const panelMode = filesMode || snapshotsMode || gigMode || healthMode || scanMode || tagsMode;
+    const panelMode = filesMode || snapshotsMode || gigMode || driftMode || healthMode || scanMode || tagsMode;
     el("browser").hidden = panelMode;
     el("track-splitter").hidden = panelMode;
     el("detail").hidden = panelMode;
     el("files-panel").hidden = !filesMode;
     el("snapshots-panel").hidden = !snapshotsMode;
     el("gig-panel").hidden = !gigMode;
+    el("drift-panel").hidden = !driftMode;
     el("health-panel").hidden = !healthMode;
     el("scan-panel").hidden = !scanMode;
     el("tags-panel").hidden = !tagsMode;
@@ -8699,6 +8960,10 @@
     if (filesMode) el("mode-note").textContent = t("mode.files");
     if (gigMode) {
       el("mode-note").textContent = t("mode.gig");
+      document.querySelector(".rules")?.remove();
+    }
+    if (driftMode) {
+      el("mode-note").textContent = t("mode.drift");
       document.querySelector(".rules")?.remove();
     }
     if (healthMode) {
@@ -8741,7 +9006,7 @@
       return;
     }
     if (gigMode || healthMode || scanMode) {
-      const crate = state.crates.find((item3) => item3.id === state.activeCrate);
+      const crate = state.crates.find((item4) => item4.id === state.activeCrate);
       el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : crate?.name ?? t("crates.selectedCrate");
       return;
     }
@@ -8852,14 +9117,15 @@
     list.scrollTop = 0;
     renderList();
     if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
+    if (state.mode === "drift") loadDrift().catch(showDriftFailure);
     if (state.mode === "health") loadHealth().catch(showHealthFailure);
     if (state.mode === "scan") loadScan().catch(showScanFailure);
   }
-  function focusCrateItem(item3) {
-    if (!item3) return;
+  function focusCrateItem(item4) {
+    if (!item4) return;
     for (const button2 of el("crate-list").querySelectorAll(".crate")) button2.tabIndex = -1;
-    item3.tabIndex = 0;
-    item3.focus();
+    item4.tabIndex = 0;
+    item4.focus();
   }
   async function selectTrack(id) {
     state.selectedId = id;
@@ -8889,7 +9155,7 @@
   function selectEntry(id) {
     state.selectedId = id;
     paintRows();
-    const entry = state.entries.find((item3) => item3.id === id);
+    const entry = state.entries.find((item4) => item4.id === id);
     if (!entry) return;
     const body = document.createElement("div");
     body.className = "detail-body";
@@ -9324,8 +9590,8 @@
     const list = document.createElement("ul");
     list.className = "related-list";
     for (const link of saved) {
-      const item3 = document.createElement("li");
-      item3.className = "related-row";
+      const item4 = document.createElement("li");
+      item4.className = "related-row";
       const main = document.createElement("div");
       const other = link.track || {};
       const label = other.title || t("track.untitled");
@@ -9362,8 +9628,8 @@
       remove.textContent = t("common.remove");
       remove.setAttribute("aria-label", t("related.removeLink", { name: label }));
       remove.addEventListener("click", () => removeRelated(track, section, link));
-      item3.append(main, remove);
-      list.append(item3);
+      item4.append(main, remove);
+      list.append(item4);
     }
     return list;
   }
@@ -9396,7 +9662,7 @@
         results.append(hint);
         return;
       }
-      const hits2 = state.tracks.filter((item3) => item3.id !== track.id && matchesQuery(item3, query2)).slice(0, 8);
+      const hits2 = state.tracks.filter((item4) => item4.id !== track.id && matchesQuery(item4, query2)).slice(0, 8);
       if (!hits2.length) {
         const empty = document.createElement("li");
         empty.className = "related-meta";
@@ -9405,14 +9671,14 @@
         return;
       }
       for (const hit of hits2) {
-        const item3 = document.createElement("li");
+        const item4 = document.createElement("li");
         const name = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         const choose = buttonEl(chooseRelated(name));
         choose.className = "text-button";
         choose.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         choose.addEventListener("click", () => relatedLinkForm(track, section, form, hit, input.value));
-        item3.append(choose);
-        results.append(item3);
+        item4.append(choose);
+        results.append(item4);
       }
     };
     input.addEventListener("input", paint3);
@@ -9468,26 +9734,26 @@
   function relatedSuggestList(track, section, suggested) {
     const list = document.createElement("ul");
     list.className = "related-list";
-    for (const item3 of suggested) {
+    for (const item4 of suggested) {
       const row = document.createElement("li");
       row.className = "related-row";
       const main = document.createElement("div");
       const name = document.createElement("span");
-      name.textContent = item3.artist ? `${item3.title || t("track.untitled")} · ${item3.artist}` : item3.title || t("track.untitled");
+      name.textContent = item4.artist ? `${item4.title || t("track.untitled")} · ${item4.artist}` : item4.title || t("track.untitled");
       const reasons = document.createElement("p");
       reasons.className = "related-meta";
-      reasons.textContent = Array.isArray(item3.reasons) ? item3.reasons.join(" · ") : "";
+      reasons.textContent = Array.isArray(item4.reasons) ? item4.reasons.join(" · ") : "";
       main.append(name, reasons);
-      const save3 = buttonEl(saveSuggestion(item3.title || "Untitled"));
+      const save3 = buttonEl(saveSuggestion(item4.title || "Untitled"));
       save3.className = "text-button";
       save3.textContent = t("common.save");
-      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item3.title || t("track.untitled") }));
+      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item4.title || t("track.untitled") }));
       save3.addEventListener("click", () => {
         save3.disabled = true;
         saveRelated(track, section, {
           action: "add",
           asset: track.id,
-          target: item3.asset_id,
+          target: item4.asset_id,
           mutual: true,
           note: "",
           rating: null,
@@ -9791,7 +10057,7 @@
     }
   }
   async function renameCrate() {
-    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
+    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
     if (!crate) return;
     const name = prompt(t("crates.renamePrompt"), crate.name);
     if (!name || !name.trim() || name.trim() === crate.name) return;
@@ -9812,7 +10078,7 @@
     return COLORS.find(([, key]) => t(key).toLocaleLowerCase() === wanted)?.[0];
   }
   async function colorCrate() {
-    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
+    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
     if (!crate) return;
     const names = COLORS.map(([, key]) => t(key).toLocaleLowerCase());
     const choice = prompt(t("crates.colorPrompt", { names: names.join(", ") }));
@@ -9837,7 +10103,7 @@
     }
   }
   async function deleteCrate() {
-    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
+    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
     if (!crate) return;
     if (!confirm(t("crates.confirmDelete", { name: crate.name }))) return;
     try {
@@ -9972,6 +10238,7 @@
       loadSnapshots().catch((error2) => failSnapshots(error2));
     }
     if (mode === "gig") loadGigCheck().catch(showGigFailure);
+    if (mode === "drift") loadDrift().catch(showDriftFailure);
     if (mode === "health") loadHealth().catch(showHealthFailure);
     if (mode === "scan") loadScan("quick").catch(showScanFailure);
     if (mode === "tags") loadTags().catch(showTagsFailure);
@@ -10153,7 +10420,7 @@
     list.className = "files-crumbs";
     const crumbs = visibleCrumbs();
     crumbs.forEach((crumb, index) => {
-      const item3 = document.createElement("li");
+      const item4 = document.createElement("li");
       const last = index === crumbs.length - 1;
       if (!last && crumb.path) {
         const button2 = buttonEl(openCrumb(crumb.name));
@@ -10162,22 +10429,22 @@
         button2.addEventListener("click", () => {
           loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
         });
-        item3.append(button2);
+        item4.append(button2);
       } else {
         const current2 = document.createElement("span");
         current2.className = "files-crumb";
         current2.setAttribute("aria-current", "page");
         current2.textContent = crumb.name;
-        item3.append(current2);
+        item4.append(current2);
       }
       if (!last) {
         const sep = document.createElement("span");
         sep.className = "files-sep";
         sep.setAttribute("aria-hidden", "true");
         sep.textContent = "/";
-        item3.append(sep);
+        item4.append(sep);
       }
-      list.append(item3);
+      list.append(item4);
     });
     nav.append(list);
   }
@@ -10546,6 +10813,7 @@
       if (state.mode === "history") jobs.push(loadHistory());
       if (state.mode === "duplicates") jobs.push(loadDuplicates());
       if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
+      if (state.mode === "drift") jobs.push(loadDrift().catch(showDriftFailure));
       if (state.mode === "health") jobs.push(loadHealth().catch(showHealthFailure));
       if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
       if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
@@ -10579,6 +10847,7 @@
       loadLibrary().then(() => {
         if (state.mode === "duplicates") return loadDuplicates();
         if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
+        if (state.mode === "drift") return loadDrift().catch(showDriftFailure);
         if (state.mode === "health") return loadHealth().catch(showHealthFailure);
         if (state.mode === "scan") return loadScan().catch(showScanFailure);
         if (state.mode === "tags") return loadTags().catch(showTagsFailure);
@@ -10613,11 +10882,11 @@
       renderList();
     });
     el("crate-list").addEventListener("keydown", (event) => {
-      const item3 = event.target.closest(".crate");
-      if (!item3 || !el("crate-list").contains(item3)) return;
+      const item4 = event.target.closest(".crate");
+      if (!item4 || !el("crate-list").contains(item4)) return;
       const items = [...el("crate-list").querySelectorAll(".crate")];
-      const index = items.indexOf(item3);
-      const id = item3.dataset.id === "all" ? "all" : Number(item3.dataset.id);
+      const index = items.indexOf(item4);
+      const id = item4.dataset.id === "all" ? "all" : Number(item4.dataset.id);
       if (event.key === "ArrowDown") {
         event.preventDefault();
         focusCrateItem(items[Math.min(items.length - 1, index + 1)]);
@@ -10632,13 +10901,13 @@
         focusCrateItem(items[items.length - 1]);
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
-        if (!state.crateQuery && item3.getAttribute("aria-expanded") === "false") toggleCrate(id);
-        else if (item3.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
+        if (!state.crateQuery && item4.getAttribute("aria-expanded") === "false") toggleCrate(id);
+        else if (item4.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
-        if (!state.crateQuery && item3.getAttribute("aria-expanded") === "true") toggleCrate(id);
-        else if (item3.dataset.parent) {
-          focusCrateItem(items.find((button2) => button2.dataset.id === item3.dataset.parent));
+        if (!state.crateQuery && item4.getAttribute("aria-expanded") === "true") toggleCrate(id);
+        else if (item4.dataset.parent) {
+          focusCrateItem(items.find((button2) => button2.dataset.id === item4.dataset.parent));
         }
       } else if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -10765,9 +11034,9 @@
     const list = el("rekordbox-report");
     list.replaceChildren();
     for (const line of lines) {
-      const item3 = document.createElement("li");
-      item3.textContent = line;
-      list.append(item3);
+      const item4 = document.createElement("li");
+      item4.textContent = line;
+      list.append(item4);
     }
   }
   function selectedMergeKeepId() {
@@ -10814,43 +11083,43 @@
     const list = document.createElement("ul");
     list.className = "merge-preview";
     const added = preview.crates_added || [];
-    const item3 = (text2) => {
+    const item4 = (text2) => {
       const line = document.createElement("li");
       line.textContent = text2;
       list.append(line);
     };
     if (added.length) {
       const names = added.map((crate) => crate.space && crate.space !== state.space ? `${crate.name} (${crate.space})` : crate.name);
-      item3(t("merge.addToCrates", { crates: names.join(", ") }));
+      item4(t("merge.addToCrates", { crates: names.join(", ") }));
     } else if ((preview.crates_kept || []).length) {
-      item3(t("merge.alreadyInCrates"));
+      item4(t("merge.alreadyInCrates"));
     } else {
-      item3(t("merge.noCrates"));
+      item4(t("merge.noCrates"));
     }
-    for (const space of preview.spaces_added || []) item3(t("merge.addToSpace", { space }));
+    for (const space of preview.spaces_added || []) item4(t("merge.addToSpace", { space }));
     if ((preview.fields || []).length) {
       for (const field of preview.fields || []) {
         const before = previewFieldValue(field.field || "", field.before);
         const after = previewFieldValue(field.field || "", field.after);
-        item3(t("merge.fieldChange", { label: field.label ?? "", before, after }));
+        item4(t("merge.fieldChange", { label: field.label ?? "", before, after }));
       }
     } else {
-      item3(t("merge.noFields"));
+      item4(t("merge.noFields"));
     }
     if (preview.history_repointed) {
       const count = Number(preview.history_entries) || 0;
-      item3(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
+      item4(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
     } else {
-      item3(t("merge.noHistoryId"));
+      item4(t("merge.noHistoryId"));
     }
     const removed = (preview.removed || []).length;
-    item3(t("merge.removeCopies", { count: removed }));
+    item4(t("merge.removeCopies", { count: removed }));
     for (const file of preview.files || []) {
-      if (file.reason) item3(`${file.file}: ${file.reason}`);
+      if (file.reason) item4(`${file.file}: ${file.reason}`);
     }
     const copy = preview.cue_copy;
     if (copy && (copy.markers || copy.beatgrid) && copy.status !== "failed") {
-      item3(mergeCopyLine(copy, copy.status === "copied"));
+      item4(mergeCopyLine(copy, copy.status === "copied"));
     }
     el("merge-preview").append(list);
     if (preview.cue_warning) {
@@ -11017,7 +11286,7 @@
         if (score != null) scored.push({ track, score });
       }
       scored.sort((a, b) => b.score - a.score);
-      ranked = scored.map((item3) => item3.track);
+      ranked = scored.map((item4) => item4.track);
     }
     if (toId != null) {
       const pinned = others.find((track) => track.id === toId);
@@ -11039,7 +11308,7 @@
     }
     const list = document.createElement("ul");
     list.className = "merge-preview";
-    const item3 = (text2) => {
+    const item4 = (text2) => {
       const line = document.createElement("li");
       line.textContent = text2;
       list.append(line);
@@ -11048,14 +11317,14 @@
     const kept = preview.crates_kept || [];
     const removed = preview.crates_removed || [];
     if (added.length) {
-      item3(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
+      item4(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
     } else if (kept.length) {
-      item3(t("cratesReplace.alreadyInCrates"));
+      item4(t("cratesReplace.alreadyInCrates"));
     } else {
-      item3(t("cratesReplace.noCrates"));
+      item4(t("cratesReplace.noCrates"));
     }
     if (preview.retire && removed.length) {
-      item3(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
+      item4(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
     }
     el("crates-replace-preview").append(list);
   }
@@ -11422,16 +11691,16 @@
     const list = el("files-changes");
     list.replaceChildren();
     for (const change of payload.changes || []) {
-      const item3 = document.createElement("li");
+      const item4 = document.createElement("li");
       const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
       const effect = change.effect === "trash" ? t("files.trash") : change.to;
-      item3.textContent = `${change.from} → ${effect}${crates}`;
-      list.append(item3);
+      item4.textContent = `${change.from} → ${effect}${crates}`;
+      list.append(item4);
     }
     for (const skip2 of payload.skipped || []) {
-      const item3 = document.createElement("li");
-      item3.textContent = skip2;
-      list.append(item3);
+      const item4 = document.createElement("li");
+      item4.textContent = skip2;
+      list.append(item4);
     }
     if (payload.more) {
       const more = document.createElement("li");
@@ -11527,7 +11796,7 @@
   function chosenCandidate(match) {
     const candidates = match.candidates || [];
     const path = relinkChosen.get(match.asset_id);
-    return candidates.find((item3) => item3.path === path) || candidates[0];
+    return candidates.find((item4) => item4.path === path) || candidates[0];
   }
   function selectedRelinkMatches() {
     const matches = [];
@@ -11573,7 +11842,7 @@
   function renderRelinkRows() {
     const body = el("relink-rows");
     body.replaceChildren();
-    const matches = (relinkPlan?.matches || []).filter((item3) => (item3.candidates || []).length > 0);
+    const matches = (relinkPlan?.matches || []).filter((item4) => (item4.candidates || []).length > 0);
     el("relink-empty").hidden = matches.length > 0;
     el("relink-empty").textContent = relinkPlan ? t("relink.empty") : t("relink.none");
     for (const match of matches) {
@@ -12362,7 +12631,7 @@
     else if (!hits.length) status.textContent = t("quickOpen.none", { query });
     else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
     hits.forEach((hit, index) => {
-      const item3 = document.createElement("li");
+      const item4 = document.createElement("li");
       const button2 = buttonEl(quickOpenHit(
         hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
         hit.title,
@@ -12388,8 +12657,8 @@
         active = index;
         void activate(hit);
       });
-      item3.append(button2);
-      list.append(item3);
+      item4.append(button2);
+      list.append(item4);
     });
     const field = el("quick-open-query");
     const current2 = hits[active];
@@ -12888,7 +13157,7 @@
 
   // src/update.ts
   var UPDATE_CHOICE_EVENT = "serato-update-choice";
-  var latest6 = null;
+  var latest7 = null;
   var dismissed = false;
   var token2 = 0;
   var wired3 = false;
@@ -12901,9 +13170,9 @@
     let release = null;
     const raw = body.latest;
     if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
-      const item3 = raw;
-      if (typeof item3.version === "string" && typeof item3.url === "string") {
-        release = { version: item3.version, url: item3.url, prerelease: item3.prerelease === true };
+      const item4 = raw;
+      if (typeof item4.version === "string" && typeof item4.url === "string") {
+        release = { version: item4.version, url: item4.url, prerelease: item4.prerelease === true };
       }
     }
     return {
@@ -12920,15 +13189,15 @@
       const response = await fetch("/api/update");
       const body = response.ok ? await response.json() : null;
       if (mine !== token2) return;
-      latest6 = parseUpdateStatus(body);
+      latest7 = parseUpdateStatus(body);
     } catch {
       if (mine !== token2) return;
-      latest6 = null;
+      latest7 = null;
     }
     paintUpdate();
   }
   function paintUpdate() {
-    const status = latest6;
+    const status = latest7;
     const toggle = el("update-toggle");
     const pre = el("update-prereleases");
     toggle.checked = status?.enabled === true;
@@ -12995,7 +13264,7 @@
     }
   }
   async function skip() {
-    const release = latest6?.latest;
+    const release = latest7?.latest;
     if (!release) return;
     try {
       await postJSON("/api/update", { skip: release.version });
@@ -13093,6 +13362,7 @@
     repaintViews();
     if (state.mode === "snapshots") renderSnapshots();
     if (state.mode === "gig") repaintGig();
+    if (state.mode === "drift") repaintDrift();
     if (state.mode === "health") repaintHealth();
     if (state.mode === "scan") repaintScan();
     if (state.mode === "tags") repaintTags();
@@ -13292,7 +13562,7 @@
   async function refreshActivePreset() {
     const id = state.activeCrate;
     if (id === "all" || !state.writable) return;
-    const crate = state.crates.find((item3) => item3.id === id);
+    const crate = state.crates.find((item4) => item4.id === id);
     try {
       const reply = await postJSON("/api/smart-preset", { action: "refresh", id });
       const message = t("presets.refreshed", {
@@ -13377,7 +13647,8 @@
     "view-scan": "scan",
     "view-tags": "tags",
     "view-snapshots": "snapshots",
-    "view-gig": "gig"
+    "view-gig": "gig",
+    "view-drift": "drift"
   };
   function runDesktopAction(action) {
     if (action === "find") {
@@ -13547,6 +13818,7 @@
     else if (action === "files") setMode("files");
     else setMode("crates");
   });
+  wireDrift();
   wireScan();
   wireTags();
   wirePortable();

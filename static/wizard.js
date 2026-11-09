@@ -155,11 +155,49 @@ var SeratoWizard = (() => {
     "detail.sendPrepare": "Send to Prepare",
     "detail.sentPrepare": "Sent to Prepare.",
     "detail.useInCrates": "Use this copy in crates",
+    "drift.bpmRange": " ({min}–{max} BPM)",
+    "drift.checking": "Checking tempo…",
+    "drift.empty": "No drifting or live-looking tracks in this crate.",
+    "drift.heading": "Tempo drift",
+    "drift.intro": "Needs a crate because it decodes audio. Flags a wandering tempo, a live-looking name, or Serato's pending tempo-map mark. A grid that already changes tempo is skipped. This does not rewrite BPM.",
+    "drift.mapped": {
+      one: "{count} track already has a flexible beatgrid.",
+      other: "{count} tracks already have a flexible beatgrid."
+    },
+    "drift.notFound": {
+      one: "{count} missing track was skipped. See Missing files.",
+      other: "{count} missing tracks were skipped. See Missing files."
+    },
+    "drift.reason.drifting": "Tempo wanders",
+    "drift.reason.live": "Looks like a live recording",
+    "drift.reason.pending_map": "Serato marked a pending tempo map",
+    "drift.reason.unknown": "Needs a flexible beatgrid",
+    "drift.row": "{title} ({file}) — {reasons}{bpm}",
+    "drift.summary": {
+      one: "{checked} files checked. {count} track may need a flexible beatgrid.",
+      other: "{checked} files checked. {count} tracks may need a flexible beatgrid."
+    },
+    "drift.summaryClear": "{checked} files checked. None need a flexible beatgrid.",
+    "drift.tooQuiet": {
+      one: "{count} file was too quiet or too short to measure.",
+      other: "{count} files were too quiet or too short to measure."
+    },
+    "drift.unchecked": {
+      one: "{count} file has an extension this check does not know.",
+      other: "{count} files have an extension this check does not know."
+    },
+    "drift.unreadableFiles": {
+      one: "{count} file could not be read.",
+      other: "{count} files could not be read."
+    },
+    "drift.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+    "drift.unreadable": "The tempo check could not be read.",
     "duplicates.readFailed": "Could not read duplicates.",
     "error.action_unavailable": "That action is not available.",
     "error.backup_no_space": "There is not enough disk space to back up the library.",
     "error.backup_serato_running": "Quit Serato DJ Pro before backing up drive crates. Serato DJ is still running, so nothing was copied.",
     "error.bitrate_needs_crate": "Choose a crate for a bitrate check.",
+    "error.tempo_needs_crate": "Choose a crate for a tempo check.",
     "error.body_not_json": "The request body is not JSON.",
     "error.body_not_object": "The request body is not an object.",
     "error.choose_copy": "Choose the copy to keep.",
@@ -586,6 +624,7 @@ var SeratoWizard = (() => {
     "merge.trashFiles": "Move {files} to the Trash.",
     "merge.trashLabel": "Move the other audio files to the Trash",
     "merge.trashNote": "Off by default. Files go to the Trash, where you can restore them. They are not permanently deleted.",
+    "mode.drift": "Read-only. This check does not change the library.",
     "mode.duplicates": "Same title, artist, and length. Select a copy, then merge the others into it.",
     "mode.files": "Files on disk. Cue points stay in the audio file. Crates follow the path.",
     "mode.gig": "Read-only. This check does not change the library.",
@@ -1291,6 +1330,8 @@ var SeratoWizard = (() => {
     "tooltip.updateToggle": "Ask GitHub once a day whether a newer version is out.",
     "tooltip.useInCrates": "Put another track in every crate this one is in, at the same position.",
     "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
+    "tooltip.viewDrift": "Flag tracks whose tempo wanders, or that look like live recordings. Needs a crate. Read-only.",
+    "tooltip.driftRefresh": "Run the tempo check again on the selected crate.",
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
@@ -1342,9 +1383,11 @@ var SeratoWizard = (() => {
     "version.copyFailed": "Couldn't copy the version.",
     "version.unavailable": "Version unavailable",
     "view.crates": "Crates",
+    "view.drift": "Tempo drift",
     "view.duplicates": "Duplicates",
     "view.files": "Organize files",
     "view.gig": "Before a gig",
+    "view.group.gig": "Before a gig",
     "view.group.health": "Library health",
     "view.group.library": "Library",
     "view.health": "Library health",
@@ -1536,11 +1579,49 @@ var SeratoWizard = (() => {
     "detail.sendPrepare": "Enviar a Prepare",
     "detail.sentPrepare": "Enviada a Prepare.",
     "detail.useInCrates": "Usar esta copia en las cajas",
+    "drift.bpmRange": " ({min}–{max} BPM)",
+    "drift.checking": "Comprobando el tempo…",
+    "drift.empty": "Ninguna pista con tempo inestable o aspecto en vivo en esta caja.",
+    "drift.heading": "Tempo inestable",
+    "drift.intro": "Necesita una caja porque decodifica el audio. Marca un tempo que se mueve, un nombre que parece en vivo o la marca de mapa de tempo pendiente de Serato. Se omite una parrilla que ya cambia de tempo. No reescribe el BPM.",
+    "drift.mapped": {
+      one: "{count} pista ya tiene una parrilla flexible.",
+      other: "{count} pistas ya tienen una parrilla flexible."
+    },
+    "drift.notFound": {
+      one: "Se omitió {count} pista no encontrada. Mira Archivos no encontrados.",
+      other: "Se omitieron {count} pistas no encontradas. Mira Archivos no encontrados."
+    },
+    "drift.reason.drifting": "El tempo se mueve",
+    "drift.reason.live": "Parece una grabación en vivo",
+    "drift.reason.pending_map": "Serato marcó un mapa de tempo pendiente",
+    "drift.reason.unknown": "Necesita una parrilla flexible",
+    "drift.row": "{title} ({file}) — {reasons}{bpm}",
+    "drift.summary": {
+      one: "{checked} archivos comprobados. {count} pista puede necesitar una parrilla flexible.",
+      other: "{checked} archivos comprobados. {count} pistas pueden necesitar una parrilla flexible."
+    },
+    "drift.summaryClear": "{checked} archivos comprobados. Ninguna necesita una parrilla flexible.",
+    "drift.tooQuiet": {
+      one: "{count} archivo era demasiado silencioso o corto para medirlo.",
+      other: "{count} archivos eran demasiado silenciosos o cortos para medirlos."
+    },
+    "drift.unchecked": {
+      one: "{count} archivo tiene una extensión que esta comprobación no conoce.",
+      other: "{count} archivos tienen una extensión que esta comprobación no conoce."
+    },
+    "drift.unreadableFiles": {
+      one: "No se pudo leer {count} archivo.",
+      other: "No se pudieron leer {count} archivos."
+    },
+    "drift.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Volver a comprobar",
+    "drift.unreadable": "No se pudo leer la comprobación de tempo.",
     "duplicates.readFailed": "No se pudieron leer los duplicados.",
     "error.action_unavailable": "Esa acción no está disponible.",
     "error.backup_no_space": "No hay espacio suficiente en el disco para copiar la biblioteca.",
     "error.backup_serato_running": "Cierra Serato DJ Pro antes de copiar las cajas de las unidades. Serato DJ sigue abierto, así que no se copió nada.",
     "error.bitrate_needs_crate": "Elige una caja para comprobar la tasa de bits.",
+    "error.tempo_needs_crate": "Elige una caja para comprobar el tempo.",
     "error.body_not_json": "El cuerpo de la solicitud no es JSON.",
     "error.body_not_object": "El cuerpo de la solicitud no es un objeto.",
     "error.choose_copy": "Elige la copia que quieres conservar.",
@@ -1967,6 +2048,7 @@ var SeratoWizard = (() => {
     "merge.trashFiles": "Mover {files} a la Papelera.",
     "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
     "merge.trashNote": "Desactivado por defecto. Los archivos van a la Papelera, desde donde puedes restaurarlos. No se eliminan para siempre.",
+    "mode.drift": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.duplicates": "Mismo título, artista y duración. Selecciona una copia y combina las demás en ella.",
     "mode.files": "Archivos en el disco. Los cues se quedan en el archivo de audio. Las cajas siguen la ruta.",
     "mode.gig": "Solo lectura. Esta comprobación no cambia la biblioteca.",
@@ -2672,6 +2754,8 @@ var SeratoWizard = (() => {
     "tooltip.updateToggle": "Preguntar a GitHub una vez al día si hay una versión más nueva.",
     "tooltip.useInCrates": "Pon otra pista en cada caja donde está esta, en la misma posición.",
     "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
+    "tooltip.viewDrift": "Marca pistas cuyo tempo se mueve, o que parecen grabaciones en vivo. Necesita una caja. Solo lectura.",
+    "tooltip.driftRefresh": "Vuelve a comprobar el tempo de la caja seleccionada.",
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
     "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
@@ -2723,9 +2807,11 @@ var SeratoWizard = (() => {
     "version.copyFailed": "No se pudo copiar la versión.",
     "version.unavailable": "Versión no disponible",
     "view.crates": "Cajas",
+    "view.drift": "Tempo inestable",
     "view.duplicates": "Duplicados",
     "view.files": "Organizar archivos",
     "view.gig": "Antes del bolo",
+    "view.group.gig": "Antes del bolo",
     "view.group.health": "Salud de la biblioteca",
     "view.group.library": "Biblioteca",
     "view.health": "Salud de la biblioteca",
@@ -3199,6 +3285,8 @@ var SeratoWizard = (() => {
     viewFiles: spec("tooltip.viewFiles"),
     viewSnapshots: spec("tooltip.viewSnapshots"),
     viewGig: spec("tooltip.viewGig"),
+    viewDrift: spec("tooltip.viewDrift"),
+    driftRefresh: spec("tooltip.driftRefresh"),
     viewHealth: spec("tooltip.viewHealth"),
     viewScan: spec("tooltip.viewScan"),
     viewTags: spec("tooltip.viewTags"),

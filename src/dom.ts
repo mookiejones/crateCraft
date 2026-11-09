@@ -85,6 +85,11 @@ export interface ElementIds {
   "gig-status": HTMLParagraphElement;
   "gig-report": HTMLDivElement;
   "gig-refresh": HTMLButtonElement;
+  "drift-panel": HTMLElement;
+  "drift-scope": HTMLParagraphElement;
+  "drift-status": HTMLParagraphElement;
+  "drift-report": HTMLDivElement;
+  "drift-refresh": HTMLButtonElement;
   "health-panel": HTMLElement;
   "health-scope": HTMLParagraphElement;
   "health-status": HTMLParagraphElement;
