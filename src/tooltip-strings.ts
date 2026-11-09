@@ -200,6 +200,7 @@ export const tips = {
   healthRefresh: spec("tooltip.healthRefresh"),
   healthOpenMissing: spec("tooltip.healthOpenMissing"),
   healthOpenDuplicates: spec("tooltip.healthOpenDuplicates"),
+  healthOpenFiles: spec("tooltip.healthOpenFiles"),
   healthTrack: spec("tooltip.healthTrack"),
   tagsGenre: spec("tooltip.tagsGenre"),
   tagsArtist: spec("tooltip.tagsArtist"),

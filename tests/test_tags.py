@@ -23,6 +23,7 @@ from tags import (
     beatgrid_issue_code,
     copy_serato_geob,
     plan_serato_geob,
+    read_file_health,
     read_serato_tags,
     serato_tags_from_regions,
 )
@@ -166,6 +167,46 @@ def _id3_file(payload: bytes, path: Path) -> None:
         )
     )
     path.write_bytes(b"ID3" + bytes([3, 0, 0]) + synchsafe + frame)
+
+
+def _id3_pack(frames: list[bytes]) -> bytes:
+    """Build one ID3v2.3 tag from already-encoded frames.
+
+    Args:
+        frames: Complete frame bytes including the 10-byte header.
+
+    Returns:
+        An ID3 tag. No audio file is written.
+    """
+    inner = b"".join(frames)
+    size = len(inner)
+    synchsafe = bytes(((size >> shift) & 0x7F) for shift in (21, 14, 7, 0))
+    return b"ID3" + bytes([3, 0, 0]) + synchsafe + inner
+
+
+def _geob_frame(name: str, payload: bytes) -> bytes:
+    """Build one ID3v2.3 GEOB frame.
+
+    Args:
+        name: GEOB description, such as ``Serato BeatGrid``.
+        payload: Frame data after the description.
+
+    Returns:
+        The encoded frame. No audio file is written.
+    """
+    description = name.encode("ascii") + b"\x00"
+    body = bytes([0]) + b"application/octet-stream\x00" + b"\x00" + description + payload
+    return b"GEOB" + len(body).to_bytes(4, "big") + b"\x00\x00" + body
+
+
+def _apic_frame() -> bytes:
+    """Build a tiny JPEG APIC frame.
+
+    Returns:
+        The encoded frame. No audio file is written.
+    """
+    body = b"\x00" + b"image/jpeg\x00" + b"\x03" + b"\x00" + b"\xff\xd8\xff"
+    return b"APIC" + len(body).to_bytes(4, "big") + b"\x00\x00" + body
 
 
 class TagTests(unittest.TestCase):
@@ -1102,6 +1143,58 @@ class FlacM4aMarkerTests(unittest.TestCase):
             self.assertIn(copied["status"], {"unsupported", "skipped"})
             self.assertEqual(source.read_bytes(), before_source)
             self.assertEqual(dest.read_bytes(), before_dest)
+
+
+class FileHealthTests(unittest.TestCase):
+    """Artwork and beatgrid presence for the library health report."""
+
+    def test_missing_path_is_both_false(self) -> None:
+        """A missing path or missing file has no artwork and no beatgrid."""
+        self.assertEqual(read_file_health(None), {"artwork": False, "beatgrid": False})
+        with tempfile.TemporaryDirectory() as folder:
+            gone = Path(folder) / "gone.mp3"
+            self.assertEqual(read_file_health(str(gone)), {"artwork": False, "beatgrid": False})
+
+    def test_id3_apic_and_beatgrid(self) -> None:
+        """APIC is artwork. A readable BeatGrid is a grid."""
+        with tempfile.TemporaryDirectory() as folder:
+            both = Path(folder) / "both.mp3"
+            both.write_bytes(_id3_pack([_apic_frame(), _geob_frame("Serato BeatGrid", _beatgrid_payload())]))
+            self.assertEqual(read_file_health(str(both)), {"artwork": True, "beatgrid": True})
+            art = Path(folder) / "art.mp3"
+            art.write_bytes(_id3_pack([_apic_frame()]))
+            self.assertEqual(read_file_health(str(art)), {"artwork": True, "beatgrid": False})
+            grid = Path(folder) / "grid.mp3"
+            grid.write_bytes(_id3_pack([_geob_frame("Serato BeatGrid", _beatgrid_payload())]))
+            self.assertEqual(read_file_health(str(grid)), {"artwork": False, "beatgrid": True})
+
+    def test_unreadable_beatgrid_still_counts(self) -> None:
+        """A BeatGrid frame this parser cannot read still counts as a grid."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "warn.mp3"
+            path.write_bytes(_id3_pack([_geob_frame("Serato BeatGrid", b"\x01\x00")]))
+            self.assertEqual(read_file_health(str(path)), {"artwork": False, "beatgrid": True})
+
+    def test_flac_picture_block(self) -> None:
+        """FLAC metadata block type 6 is artwork."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "pic.flac"
+            blocks = _flac_block(0, bytes(34), False)
+            blocks += _flac_block(6, b"\x00" * 8, True)
+            path.write_bytes(b"fLaC" + blocks + b"\xff\xf8" + bytes(32))
+            self.assertEqual(read_file_health(str(path)), {"artwork": True, "beatgrid": False})
+
+    def test_mp4_covr_atom(self) -> None:
+        """An MP4 ``covr`` atom inside ``moov`` is artwork."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "cover.m4a"
+            covr = _atom(b"covr", b"\x00\x00\x00\x00\xff\xd8")
+            ilst = _atom(b"ilst", covr)
+            meta = _atom(b"meta", bytes(4) + ilst)
+            moov = _atom(b"moov", _atom(b"udta", meta))
+            ftyp = _atom(b"ftyp", b"M4A " + bytes(4))
+            path.write_bytes(ftyp + moov)
+            self.assertEqual(read_file_health(str(path)), {"artwork": True, "beatgrid": False})
 
 
 if __name__ == "__main__":
