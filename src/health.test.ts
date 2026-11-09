@@ -20,8 +20,17 @@ const report: LibraryHealthReport = {
     tracks: [{ id: 11, name: "NoBpm", artist: "B", file: "nobpm.mp3" }],
   },
   no_key: { count: 0, tracks: [] },
+  no_beatgrid: {
+    count: 1,
+    tracks: [{ id: 12, name: "NoGrid", artist: "C", file: "nogrid.mp3" }],
+  },
+  no_artwork: { count: 0, tracks: [] },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
+  unused: {
+    count: 1,
+    files: [{ file: "orphan.mp3", path: "/tmp/orphan.mp3" }],
+  },
   duplicates: {
     count: 1,
     groups: [{ name: "Same", artist: "Artist", seconds: 180, ids: [1, 2] }],
@@ -35,8 +44,11 @@ const clear: LibraryHealthReport = {
   missing: { count: 0, tracks: [] },
   no_bpm: { count: 0, tracks: [] },
   no_key: { count: 0, tracks: [] },
+  no_beatgrid: { count: 0, tracks: [] },
+  no_artwork: { count: 0, tracks: [] },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
+  unused: { count: 0, files: [] },
   duplicates: { count: 0, groups: [] },
 };
 
@@ -80,6 +92,9 @@ describe("health", () => {
     expect(reportText()).toContain("Missing files (1)");
     expect(reportText()).toContain("A — Gone");
     expect(reportText()).toContain("No BPM (1)");
+    expect(reportText()).toContain("No beatgrid (1)");
+    expect(reportText()).toContain("Unused files (1)");
+    expect(reportText()).toContain("orphan.mp3");
     expect(reportText()).toContain("Duplicate groups (1)");
     expect(reportText()).toContain("Artist — Same");
     expect(document.getElementById("health-refresh")!.getAttribute("aria-busy")).toBe("false");
@@ -94,13 +109,14 @@ describe("health", () => {
     expect(reportText()).toContain("Nothing to fix in this check.");
   });
 
-  it("opens Missing files, Duplicates, and a track from the report", async () => {
+  it("opens Missing files, Duplicates, Files, and a track from the report", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
     await loadHealth();
     document.querySelector<HTMLButtonElement>("[data-health-action='missing']")!.click();
     document.querySelector<HTMLButtonElement>("[data-health-action='duplicates']")!.click();
+    document.querySelector<HTMLButtonElement>("[data-health-action='files']")!.click();
     document.querySelector<HTMLButtonElement>("[data-health-action='track']")!.click();
-    expect(navigate.mock.calls).toEqual([["missing"], ["duplicates"], ["track", 10]]);
+    expect(navigate.mock.calls).toEqual([["missing"], ["duplicates"], ["files"], ["track", 10]]);
   });
 
   it("ignores a late reply after a newer check started", async () => {

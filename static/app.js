@@ -399,17 +399,21 @@
     },
     "health.duplicates": "Duplicate groups",
     "health.emptyGenre": "Empty genre",
+    "health.fileRow": "{file}",
     "health.heading": "Library health",
-    "health.intro": "Counts from the library database. Artwork, beatgrids in audio files, and unused files on disk come later. Each row opens the place that can fix it.",
+    "health.intro": "Counts from the library and from audio files on disk. Each row opens the place that can fix it.",
     "health.missing": "Missing files",
     "health.more": {
       one: "{count} more.",
       other: "{count} more."
     },
+    "health.noArtwork": "No artwork",
+    "health.noBeatgrid": "No beatgrid",
     "health.noBpm": "No BPM",
     "health.noCrate": "Not in a crate",
     "health.noKey": "No key",
     "health.openDuplicates": "Open Duplicates",
+    "health.openFiles": "Open Files",
     "health.openMissing": "Open Missing files",
     "health.row": "{title}",
     "health.summary": {
@@ -418,6 +422,7 @@
     },
     "health.unreadable": "Couldn't read the health report.",
     "health.unreachable": "Couldn't reach the library server. Check it's running, then press Check again.",
+    "health.unused": "Unused files",
     "help.bug": "Report a bug",
     "help.bugTitle": "Report a bug",
     "help.change": "What should change",
@@ -1103,6 +1108,7 @@
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigShowAll": "Show every item in this list.",
     "tooltip.healthOpenDuplicates": "Open the Duplicates view.",
+    "tooltip.healthOpenFiles": "Open the Files view.",
     "tooltip.healthOpenMissing": "Open the Missing files view.",
     "tooltip.healthRefresh": "Run the library health report again. Read-only.",
     "tooltip.healthTrack": "Open this track in Crates.",
@@ -1774,17 +1780,21 @@
     },
     "health.duplicates": "Grupos duplicados",
     "health.emptyGenre": "Género vacío",
+    "health.fileRow": "{file}",
     "health.heading": "Salud de la biblioteca",
-    "health.intro": "Cifras de la base de datos. La carátula, las rejillas de beats en los archivos de audio y los archivos no usados en el disco llegan después. Cada fila abre el sitio que puede corregirlo.",
+    "health.intro": "Cifras de la biblioteca y de los archivos de audio en el disco. Cada fila abre el sitio que puede corregirlo.",
     "health.missing": "Archivos no encontrados",
     "health.more": {
       one: "{count} más.",
       other: "{count} más."
     },
+    "health.noArtwork": "Sin carátula",
+    "health.noBeatgrid": "Sin beatgrid",
     "health.noBpm": "Sin BPM",
     "health.noCrate": "En ninguna caja",
     "health.noKey": "Sin tonalidad",
     "health.openDuplicates": "Abrir Duplicados",
+    "health.openFiles": "Abrir Archivos",
     "health.openMissing": "Abrir Archivos no encontrados",
     "health.row": "{title}",
     "health.summary": {
@@ -1793,6 +1803,7 @@
     },
     "health.unreadable": "No se pudo leer el informe de salud.",
     "health.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Volver a comprobar.",
+    "health.unused": "Archivos no usados",
     "help.bug": "Informar de un error",
     "help.bugTitle": "Informar de un error",
     "help.change": "Qué debería cambiar",
@@ -2478,6 +2489,7 @@
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
     "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
+    "tooltip.healthOpenFiles": "Abre la vista Archivos.",
     "tooltip.healthOpenMissing": "Abre la vista Archivos no encontrados.",
     "tooltip.healthRefresh": "Vuelve a generar el informe de salud de la biblioteca. Solo lectura.",
     "tooltip.healthTrack": "Abre esta pista en Cajas.",
@@ -3576,6 +3588,7 @@
     healthRefresh: spec("tooltip.healthRefresh"),
     healthOpenMissing: spec("tooltip.healthOpenMissing"),
     healthOpenDuplicates: spec("tooltip.healthOpenDuplicates"),
+    healthOpenFiles: spec("tooltip.healthOpenFiles"),
     healthTrack: spec("tooltip.healthTrack"),
     tagsGenre: spec("tooltip.tagsGenre"),
     tagsArtist: spec("tooltip.tagsArtist"),
@@ -4392,6 +4405,8 @@
     { key: "missing", label: "health.missing", action: "missing" },
     { key: "no_bpm", label: "health.noBpm" },
     { key: "no_key", label: "health.noKey" },
+    { key: "no_beatgrid", label: "health.noBeatgrid" },
+    { key: "no_artwork", label: "health.noArtwork" },
     { key: "empty_genre", label: "health.emptyGenre" },
     { key: "no_crate", label: "health.noCrate" }
   ];
@@ -4411,7 +4426,7 @@
       const button2 = target.closest("button");
       if (!(button2 instanceof HTMLButtonElement)) return;
       const action = button2.dataset.healthAction;
-      if (action === "missing" || action === "duplicates") {
+      if (action === "missing" || action === "duplicates" || action === "files") {
         go?.(action);
         return;
       }
@@ -4470,6 +4485,7 @@
     for (const spec2 of SECTIONS) {
       listed += paintSection(report, t(spec2.label), payload[spec2.key], spec2.action);
     }
+    listed += paintUnused(report, payload.unused);
     listed += paintDuplicates(report, payload.duplicates);
     if (!listed) report.append(noteLine2(t("health.clear")));
   }
@@ -4519,6 +4535,29 @@
     details.append(list);
     if (count > tracks.length) {
       details.append(noteLine2(t("health.more", { count: count - tracks.length })));
+    }
+    report.append(details);
+    return count;
+  }
+  function paintUnused(report, section) {
+    const count = section?.count ?? 0;
+    const files = section?.files ?? [];
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading2 = document.createElement("summary");
+    heading2.textContent = t("gig.groupCount", { label: t("health.unused"), count });
+    details.append(heading2);
+    details.append(openButton("files", "health.openFiles", tips.healthOpenFiles));
+    const list = document.createElement("ul");
+    for (const row of files) {
+      const item3 = document.createElement("li");
+      item3.textContent = t("health.fileRow", { file: row.file });
+      list.append(item3);
+    }
+    details.append(list);
+    if (count > files.length) {
+      details.append(noteLine2(t("health.more", { count: count - files.length })));
     }
     report.append(details);
     return count;
@@ -13503,7 +13542,10 @@
   });
   wireHealth((action, id) => {
     if (action === "track" && id != null) state.selectedId = id;
-    setMode(action === "missing" ? "missing" : action === "duplicates" ? "duplicates" : "crates");
+    if (action === "missing") setMode("missing");
+    else if (action === "duplicates") setMode("duplicates");
+    else if (action === "files") setMode("files");
+    else setMode("crates");
   });
   wireScan();
   wireTags();
