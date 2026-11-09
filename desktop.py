@@ -1253,6 +1253,9 @@ def open_window(
 
     menu = desktop_menu.build_menu(dispatch, saved_settings.language)
     options["menu"] = menu
+    icon_path = app_icons.default_window_icon()
+    if icon_path is not None:
+        options["icon"] = str(icon_path)
     window = webview.create_window(WINDOW_TITLE, url, **options)
     holder["window"] = window
     if window is None:

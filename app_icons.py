@@ -20,9 +20,18 @@ changes. ``setAlternateIconName`` only accepts names that were in the app
 bundle when it was signed, so the images cannot be swapped in later. Passing
 ``nil`` restores the primary icon. That call is not made here.
 
-Nothing in this module writes the Serato library, a bundle icon, or an
-executable. ``write_assets`` regenerates the committed PNG and ICO files
-and refuses to write anywhere but the source ``static/img/icons`` directory.
+The packaged default is a 256-pixel drawing of ``static/img/icons/default.svg``
+(brown rounded square, cream disc). ``write_bundle_icons`` writes that PNG,
+ICO, and ICNS under ``packaging/``. The word PLACEHOLDER is not part of
+that picture. PyInstaller bakes the ICNS into the macOS app and the ICO
+into the Windows executable. This module does not rewrite those files at
+runtime.
+
+Nothing in this module writes the Serato library or an executable.
+``write_assets`` regenerates the committed PNG and ICO files and refuses
+to write anywhere but the source ``static/img/icons`` directory.
+``write_bundle_icons`` refuses to write anywhere but the source
+``packaging`` directory.
 """
 
 from __future__ import annotations
@@ -48,6 +57,9 @@ LEGACY_COLORWAYS = {
     "daisy-age": "classic",
 }
 ICON_SIZE = 256
+BUNDLE_ICON_PNG = "app-icon.png"
+BUNDLE_ICON_ICO = "app-icon.ico"
+BUNDLE_ICON_ICNS = "app-icon.icns"
 # The pulse bar is drawn through this pixel for every theme except Classic.
 HEARTBEAT_PIXEL = (128, 148)
 WINDOW_TITLE = "Serato Library"
@@ -81,6 +93,11 @@ def _rgba(hex_color: str) -> Color:
         int(hex_color[5:7], 16),
         255,
     )
+
+
+# Baked default. Matches static/img/icons/default.svg. Not a colorway.
+DEFAULT_GROUND = _rgba("#231910")
+DEFAULT_DISC = _rgba("#f3ecdf")
 
 
 @dataclass(frozen=True)
@@ -368,8 +385,109 @@ def ico_bytes(png: bytes) -> bytes:
     return header + entry + png
 
 
+def default_png_bytes() -> bytes:
+    """Draw the baked default icon.
+
+    Returns:
+        A 256 by 256 RGBA PNG matching ``static/img/icons/default.svg``.
+        The word PLACEHOLDER is not drawn.
+    """
+    buffer = bytearray(ICON_SIZE * ICON_SIZE * 4)
+    _fill_round_rect(buffer, 0, 0, ICON_SIZE, ICON_SIZE, 56, DEFAULT_GROUND)
+    _fill_circle(buffer, 128, 128, 78, DEFAULT_DISC)
+    return _png(buffer)
+
+
+def icns_bytes(png: bytes) -> bytes:
+    """Wrap a 256 by 256 PNG in an ICNS.
+
+    Args:
+        png: PNG bytes from :func:`default_png_bytes`.
+
+    Returns:
+        An ICNS whose only image is that PNG as type ``ic08``. Finder and
+        the Dock load this on macOS 10.8 and later. The bundle is not
+        opened for writing.
+
+    Raises:
+        ValueError: If ``png`` is not a 256 by 256 PNG.
+    """
+    if not png.startswith(b"\x89PNG\r\n\x1a\n"):
+        raise ValueError("icns needs a png")
+    width, height = struct.unpack_from(">II", png, 16)
+    if width != ICON_SIZE or height != ICON_SIZE:
+        raise ValueError("icns ic08 needs a 256 png")
+    chunk_len = 8 + len(png)
+    total = 8 + chunk_len
+    return b"icns" + struct.pack(">I", total) + b"ic08" + struct.pack(">I", chunk_len) + png
+
+
+def packaging_dir() -> Path:
+    """Return the directory of the baked bundle icon files.
+
+    Returns:
+        ``packaging`` beside this module, including a frozen build.
+    """
+    return Path(__file__).resolve().parent / "packaging"
+
+
+def default_window_icon() -> Path | None:
+    """Return the baked default the window toolkit can load.
+
+    Returns:
+        ``packaging/app-icon.ico`` when that file is a real file inside
+        :func:`packaging_dir`, else the PNG, else None. A symlink is
+        refused. The file is not opened for writing.
+    """
+    directory = packaging_dir()
+    try:
+        base = directory.resolve()
+    except OSError:
+        return None
+    for name in (BUNDLE_ICON_ICO, BUNDLE_ICON_PNG):
+        path = directory / name
+        try:
+            if path.is_symlink() or not path.is_file():
+                continue
+            resolved = path.resolve()
+            if not resolved.is_relative_to(base):
+                continue
+        except OSError:
+            continue
+        return path
+    return None
+
+
+def write_bundle_icons() -> None:
+    """Regenerate the baked PNG, ICO, and ICNS from :func:`default_png_bytes`.
+
+    Raises:
+        ValueError: If the packaging directory is not the source tree's
+            ``packaging``. A frozen build and any other path are refused
+            before a file is opened for writing.
+    """
+    directory = packaging_dir()
+    source = Path(__file__).resolve().parent / "packaging"
+    if directory.resolve() != source.resolve():
+        raise ValueError("Refusing to write bundle icons outside the source tree.")
+    if directory.is_symlink():
+        raise ValueError("Refusing to write bundle icons through a symlink.")
+    png = default_png_bytes()
+    files = {
+        directory / BUNDLE_ICON_PNG: png,
+        directory / BUNDLE_ICON_ICO: ico_bytes(png),
+        directory / BUNDLE_ICON_ICNS: icns_bytes(png),
+    }
+    for path, data in files.items():
+        if path.is_symlink():
+            raise ValueError("Refusing to replace a symlinked icon.")
+        path.write_bytes(data)
+
+
 def write_assets() -> None:
     """Regenerate the committed PNG and ICO files from :func:`png_bytes`.
+
+    Also writes the baked bundle icons through :func:`write_bundle_icons`.
 
     Raises:
         ValueError: If the icon directory is not the source tree's
@@ -393,6 +511,7 @@ def write_assets() -> None:
             raise ValueError("Refusing to replace a symlinked icon.")
         png_path.write_bytes(png)
         ico_path.write_bytes(ico_bytes(png))
+    write_bundle_icons()
 
 
 def apply(
