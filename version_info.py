@@ -22,11 +22,11 @@ import _version
 ROOT = Path(__file__).resolve().parent
 VERSION_PATH = ROOT / "_version.py"
 FALLBACK_VERSION = "0.0.0+dev"
-PRODUCT_NAME = "Serato Library"
-COMPANY_NAME = "Serato Library"
-FILE_DESCRIPTION = "Serato Library"
-INTERNAL_NAME = "Serato Library"
-ORIGINAL_FILENAME = "Serato Library.exe"
+PRODUCT_NAME = "crateCraft"
+COMPANY_NAME = "crateCraft"
+FILE_DESCRIPTION = "crateCraft"
+INTERNAL_NAME = "crateCraft"
+ORIGINAL_FILENAME = "crateCraft.exe"
 SOURCES = ("release", "git", "dev")
 # Same shapes as scripts/release_bundle.TAG_RE. The groups are the triple.
 TAG_RE = re.compile(r"v([0-9]+)\.([0-9]+)\.([0-9]+)(?:-(?:rc|beta)[0-9]+)?")
@@ -217,7 +217,7 @@ def windows_version(version: str) -> WindowsVersion:
     Returns:
         Numeric file and product versions, plus the string table. File
         and product text are the same string. Company and product names
-        are ``Serato Library``.
+        are ``crateCraft``.
 
     Raises:
         ValueError: If a numeric component does not fit in 16 bits.

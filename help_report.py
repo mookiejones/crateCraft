@@ -19,7 +19,7 @@ from pathlib import Path
 
 import version_info
 
-REPO = "mookiejones/serato-library-manager"
+REPO = "mookiejones/crateCraft"
 NEW_ISSUE = f"https://github.com/{REPO}/issues/new"
 BUG_TEMPLATE = "bug_report.yml"
 FEATURE_TEMPLATE = "feature_request.yml"
@@ -305,7 +305,7 @@ def _allowed(url: str) -> bool:
         url: Candidate browser target.
 
     Returns:
-        True only for https://github.com/mookiejones/serato-library-manager/issues/new
+        True only for https://github.com/mookiejones/crateCraft/issues/new
         with a known template and no userinfo.
     """
     parsed = urllib.parse.urlsplit(url)

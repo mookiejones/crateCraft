@@ -117,7 +117,7 @@ class WordingTests(unittest.TestCase):
         """Ignore a ``database V2`` in the host's ``~/Music/_Serato_`` (#185).
 
         The fake home holds the synthetic Serato 4 ``database V2``. Without
-        the suite's ``SERATO_LIBRARY_HOME_SERATO`` that folder is found, so
+        the suite's ``CRATECRAFT_HOME_SERATO`` that folder is found, so
         the second half proves the first half is not passing by accident.
 
         Returns:
@@ -136,7 +136,7 @@ class WordingTests(unittest.TestCase):
                 self.assertFalse(payload.get("legacy", False))
                 self.assertEqual(payload["summary"], setup_flow.NOT_FOUND_SUMMARY)
                 with mock.patch.dict(os.environ):
-                    os.environ.pop("SERATO_LIBRARY_HOME_SERATO", None)
+                    os.environ.pop("CRATECRAFT_HOME_SERATO", None)
                     self.assertEqual(setup_flow.legacy_folder(), serato)
 
     def test_chosen_folder_must_be_the_library_folder(self) -> None:
@@ -519,7 +519,7 @@ class MissingLibraryServerTests(unittest.TestCase):
             env["PYTHONPATH"] = user_site if not previous else user_site + os.pathsep + previous
         env.pop("HOMEDRIVE", None)
         env.pop("HOMEPATH", None)
-        env.pop("SERATO_LIBRARY_SMOKE", None)
+        env.pop("CRATECRAFT_SMOKE", None)
         script = (
             "import json, sys, threading\n"
             "sys.stderr.write('child-start\\n')\n"
@@ -664,7 +664,7 @@ class ChosenLibraryTests(unittest.TestCase):
             {
                 app_config.CONFIG_ENV: str(self.config),
                 app_config.LOG_ENV: str(self.logs),
-                "SERATO_LIBRARY_DISABLE_WATCH": "1",
+                "CRATECRAFT_DISABLE_WATCH": "1",
             },
         )
         self._env.start()

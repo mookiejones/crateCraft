@@ -32,7 +32,7 @@ import app_config
 
 logger = logging.getLogger("serato.update")
 
-REPO = "mookiejones/serato-library-manager"
+REPO = "mookiejones/crateCraft"
 API_URL = f"https://api.github.com/repos/{REPO}/releases?per_page=20"
 RELEASES_PAGE = f"https://github.com/{REPO}/releases"
 STATE_NAME = "updates.json"
@@ -237,7 +237,7 @@ def fetch_releases() -> list[dict[str, object]]:
         API_URL,
         headers={
             "Accept": "application/vnd.github+json",
-            "User-Agent": f"serato-library-manager/{_current_version()}",
+            "User-Agent": f"crateCraft/{_current_version()}",
         },
     )
     with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:

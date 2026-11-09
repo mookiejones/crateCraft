@@ -10,7 +10,7 @@ Serato DJ Pro still has the library, or the database is locked.
 
 1. Read the status line under **Library**.
 2. Quit Serato DJ Pro. Quit it fully. A window in the Dock or on the taskbar still counts.
-3. Return to Serato Library.
+3. Return to crateCraft.
 4. Click **Reload**.
 
 The line you want is **Serato is quit. Edits save to the library.**
@@ -23,7 +23,7 @@ Setup says **No Serato library was found on this computer.** The app stays open.
 
 1. Install Serato DJ Pro if it is not installed.
 2. Open Serato DJ Pro once, then quit it.
-3. Return to Serato Library and choose **Check again**.
+3. Return to crateCraft and choose **Check again**.
 
 The usual folder is in [Install](install.md#where-serato-keeps-the-library). **Choose a folder** opens a library that is already in that folder when the usual one is not there. It does not create a library, and it does not switch away from the library the app already has open. If that chosen library is gone the next time you open the app, setup says **The library you chose before is not on this computer. This is the library in the usual place.**
 
@@ -31,7 +31,7 @@ The usual folder is in [Install](install.md#where-serato-keeps-the-library). **C
 
 The download is unsigned. Gatekeeper shows a warning. macOS 15 and later uses **System Settings › Privacy & Security › Open Anyway**. Earlier macOS uses a right-click **Open**. The steps are in [First install](../first-install.md#why-youll-see-a-warning).
 
-On a Mac, drag **Serato Library** from the disk image into Applications before you open it.
+On a Mac, drag **crateCraft** from the disk image into Applications before you open it.
 
 ## macOS cannot see an external drive
 
@@ -40,14 +40,14 @@ Reading music on an external drive needs **Removable Volumes**. That is not Full
 1. Open **System Settings**.
 2. Go to **Privacy & Security**.
 3. Go to **Files and Folders**.
-4. Select **Serato Library**.
+4. Select **crateCraft**.
 5. Turn on **Removable Volumes**.
 
 These builds are unsigned, so macOS may ask again after an update, or the switch may be off. Turn it back on for the new copy. The same steps are next to Open Anyway in [First install](../first-install.md#mac-external-drives).
 
 ## Windows SmartScreen stops the app
 
-1. Double-click `Serato-Library-windows-setup.exe`, or `Serato Library.exe` from the unzipped portable folder.
+1. Double-click `crateCraft-windows-setup.exe`, or `crateCraft.exe` from the unzipped portable folder.
 2. Choose More info.
 3. Choose Run anyway.
 
@@ -57,7 +57,7 @@ If you used the portable zip, run the exe from the extracted folder. Do not run 
 
 Another copy may already be running.
 
-1. Find the **Serato Library** window and close it.
+1. Find the **crateCraft** window and close it.
 2. Open the app again.
 
 A second double-click focuses the window that is already open. If you started it from a terminal, the message is **http://127.0.0.1:8765 is already in use.** Quit the other copy. The desktop app uses a free port and does not show that message.
@@ -67,7 +67,7 @@ A second double-click focuses the window that is already open. If you started it
 The main library was saved, and a drive database was not. The bar includes **Saved in the main library.** and a sentence about the other drive.
 
 1. Connect the drive that holds the tracks.
-2. Quit Serato Library.
+2. Quit crateCraft.
 3. Open Serato DJ Pro so it can read both databases.
 4. Check the crate again.
 
@@ -96,9 +96,9 @@ A plain MP3 is the case where the dialog can say the cue points will be copied.
 A Files action stopped halfway, and the journal does not match the database. The message is **An interrupted file change does not match the library. Restore the copy in Library/Backups.**
 
 1. Quit Serato DJ Pro.
-2. Quit Serato Library.
+2. Quit crateCraft.
 3. Follow [Restore a backup](safety.md#restore-an-older-database-copy-by-hand). Pick the newest `serato-web-` folder from before the interrupted change that contains `COMPLETE`. A name ending in `-02` through `-99` is another copy from that same second, and a later number is a later copy. Skip a name that ends with `-failed` or `-failed-` and digits (any capitalization), a hidden name that ends with `.partial`, and a folder that contains `INCOMPLETE`. A folder with no `COMPLETE` file is legacy, unverified.
-4. Open Serato Library again.
+4. Open crateCraft again.
 
 Do not delete `file-ops-journal.json` by hand before the restore.
 

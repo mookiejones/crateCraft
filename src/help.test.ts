@@ -48,7 +48,7 @@ describe("help", () => {
     el("help-happened").value = "Show the drive";
     vi.mocked(fetch).mockResolvedValue(jsonResponse({
       mode: "open",
-      url: "https://github.com/mookiejones/serato-library-manager/issues/new?template=feature_request.yml",
+      url: "https://github.com/mookiejones/crateCraft/issues/new?template=feature_request.yml",
       text: "What should change\nShow the drive",
       opened: true,
     }));
@@ -69,7 +69,7 @@ describe("help", () => {
     vi.stubGlobal("navigator", { clipboard: { writeText } });
     vi.mocked(fetch).mockResolvedValue(jsonResponse({
       mode: "clipboard",
-      url: "https://github.com/mookiejones/serato-library-manager/issues/new?template=bug_report.yml",
+      url: "https://github.com/mookiejones/crateCraft/issues/new?template=bug_report.yml",
       text: "What happened\n" + "x".repeat(20),
       opened: false,
     }));

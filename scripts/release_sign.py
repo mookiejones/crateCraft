@@ -163,7 +163,7 @@ def sign_macos(app: Path, environ: Mapping[str, str]) -> None:
     """Codesign ``app``, notarize it, and staple the ticket.
 
     Args:
-        app: ``Serato Library.app`` bundle.
+        app: ``crateCraft.app`` bundle.
         environ: Mapping that holds the Apple secrets.
 
     Raises:
@@ -180,12 +180,12 @@ def sign_macos(app: Path, environ: Mapping[str, str]) -> None:
     hidden = [password, environ["APPLE_NOTARY_KEY_BASE64"], environ["APPLE_CERTIFICATE_P12_BASE64"]]
     keychain_password = os.urandom(16).hex()
     hidden.append(keychain_password)
-    with tempfile.TemporaryDirectory(prefix="serato-library-sign-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="cratecraft-sign-") as tmp:
         folder = Path(tmp)
         certificate = folder / "developer-id.p12"
         key = folder / "AuthKey.p8"
         keychain = folder / "signing.keychain-db"
-        archive = folder / "SeratoLibrary.zip"
+        archive = folder / "crateCraft.zip"
         _write_secret_file(environ["APPLE_CERTIFICATE_P12_BASE64"], certificate)
         _write_secret_file(environ["APPLE_NOTARY_KEY_BASE64"], key)
         try:
@@ -315,7 +315,7 @@ def sign_windows(target: Path, environ: Mapping[str, str]) -> None:
     """Authenticode-sign an executable, or every exe and dll under a folder.
 
     Args:
-        target: ``Serato Library.exe``, the installer, or the PyInstaller folder.
+        target: ``crateCraft.exe``, the installer, or the PyInstaller folder.
         environ: Mapping that holds the Windows secrets.
 
     Raises:
@@ -336,7 +336,7 @@ def sign_windows(target: Path, environ: Mapping[str, str]) -> None:
     if not files:
         raise SystemExit(f"No executables under {target}")
     tool = _signtool()
-    with tempfile.TemporaryDirectory(prefix="serato-library-sign-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="cratecraft-sign-") as tmp:
         certificate = Path(tmp) / "codesign.pfx"
         _write_secret_file(environ["WINDOWS_CERTIFICATE_PFX_BASE64"], certificate)
         for path in files:
@@ -376,13 +376,13 @@ def _bundle(path: Path, platform: str) -> Path:
     if platform == "darwin":
         if path.name.endswith(".app") and path.is_dir():
             return path
-        app = path / "Serato Library.app"
+        app = path / "crateCraft.app"
         if app.is_dir():
             return app
         raise SystemExit(f"No macOS app to sign in {path}")
     if path.is_file() and path.suffix.lower() == ".exe":
         return path
-    folder = path / "Serato Library" if (path / "Serato Library").is_dir() else path
+    folder = path / "crateCraft" if (path / "crateCraft").is_dir() else path
     if folder.is_dir():
         return folder
     raise SystemExit(f"No Windows build to sign in {path}")
@@ -398,7 +398,7 @@ def main(argv: list[str] | None = None) -> None:
         SystemExit: If the target is missing, the secrets are incomplete,
             or a signing tool fails.
     """
-    parser = argparse.ArgumentParser(description="Sign a Serato Library build, or skip.")
+    parser = argparse.ArgumentParser(description="Sign a crateCraft build, or skip.")
     parser.add_argument("target", type=Path)
     parser.add_argument("--platform", default=sys.platform)
     args = parser.parse_args(argv)

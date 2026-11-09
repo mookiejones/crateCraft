@@ -3,7 +3,7 @@
 
 macOS jobs write a UDIF disk image. The Windows job writes a portable zip
 and an Inno Setup installer. Each pack command launches the frozen app
-outside the repository with SERATO_LIBRARY_SMOKE. The app binds a free
+outside the repository with CRATECRAFT_SMOKE. The app binds a free
 port, the harness requests /api/health, then it shuts the app down.
 Publishing checks the files again and does not launch them: a Linux
 runner cannot start the macOS or Windows app.
@@ -36,14 +36,14 @@ import server  # noqa: E402
 import static_assets  # noqa: E402
 import version_info  # noqa: E402
 
-APP_NAME = "Serato Library"
-MACOS_APP = "Serato Library.app"
-MACOS_EXE = Path("Contents/MacOS/Serato Library")
-WINDOWS_EXE = Path("Serato Library.exe")
-MACOS_ARM_DMG = "Serato-Library-macos-arm64.dmg"
-MACOS_INTEL_DMG = "Serato-Library-macos-x64.dmg"
-WINDOWS_ZIP = "Serato-Library-windows.zip"
-WINDOWS_SETUP = "Serato-Library-windows-setup.exe"
+APP_NAME = "crateCraft"
+MACOS_APP = "crateCraft.app"
+MACOS_EXE = Path("Contents/MacOS/crateCraft")
+WINDOWS_EXE = Path("crateCraft.exe")
+MACOS_ARM_DMG = "crateCraft-macos-arm64.dmg"
+MACOS_INTEL_DMG = "crateCraft-macos-x64.dmg"
+WINDOWS_ZIP = "crateCraft-windows.zip"
+WINDOWS_SETUP = "crateCraft-windows-setup.exe"
 CHECKSUMS_NAME = "SHA256SUMS"
 RELEASE_FILES = (MACOS_ARM_DMG, MACOS_INTEL_DMG, WINDOWS_SETUP, WINDOWS_ZIP)
 # Inno Setup 6.7.3, downloaded from the jrsoftware GitHub release and
@@ -51,7 +51,7 @@ RELEASE_FILES = (MACOS_ARM_DMG, MACOS_INTEL_DMG, WINDOWS_SETUP, WINDOWS_ZIP)
 INNO_VERSION = "6.7.3"
 INNO_URL = "https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe"
 INNO_SHA256 = "9c73c3bae7ed48d44112a0f48e66742c00090bdb5bef71d9d3c056c66e97b732"
-ISS_PATH = ROOT / "packaging" / "serato-library.iss"
+ISS_PATH = ROOT / "packaging" / "crateCraft.iss"
 PE_MACHINE_AMD64 = 0x8664
 # Final tags are vMAJOR.MINOR.PATCH. A prerelease is that plus -rcN or -betaN.
 TAG_RE = re.compile(r"v[0-9]+\.[0-9]+\.[0-9]+(?:-(?:rc|beta)[0-9]+)?")
@@ -80,7 +80,7 @@ class Bundle:
         """Return the frozen executable inside this bundle.
 
         The path is the macOS binary under Contents/MacOS, or
-        ``Serato Library.exe`` on Windows. It is not launched here.
+        ``crateCraft.exe`` on Windows. It is not launched here.
 
         Returns:
             Absolute or relative path of the executable, joined onto ``root``.
@@ -202,8 +202,8 @@ def footer(repo: str) -> str:
 def find_bundle(dist: Path) -> Bundle:
     """Find the macOS app or the Windows folder inside ``dist``.
 
-    A PyInstaller onedir build is ``Serato Library.app`` on macOS and a
-    ``Serato Library`` folder containing ``Serato Library.exe`` on Windows.
+    A PyInstaller onedir build is ``crateCraft.app`` on macOS and a
+    ``crateCraft`` folder containing ``crateCraft.exe`` on Windows.
     One tree must not hold both.
 
     Args:
@@ -232,7 +232,7 @@ def find_bundle(dist: Path) -> Bundle:
         return Bundle("macos", app, MACOS_EXE)
     if has_windows:
         return Bundle("windows", folder, WINDOWS_EXE)
-    raise SystemExit(f"No Serato Library build in {dist}")
+    raise SystemExit(f"No crateCraft build in {dist}")
 
 
 def directory_bytes(root: Path) -> int:
@@ -641,15 +641,15 @@ def _zip_kind(names: list[str]) -> str:
     Raises:
         SystemExit: If both executables are present, or neither is.
     """
-    macos = any(name.endswith("Serato Library.app/Contents/MacOS/Serato Library") for name in names)
-    windows = any(name.endswith("Serato Library/Serato Library.exe") for name in names)
+    macos = any(name.endswith("crateCraft.app/Contents/MacOS/crateCraft") for name in names)
+    windows = any(name.endswith("crateCraft/crateCraft.exe") for name in names)
     if macos and windows:
         raise SystemExit("Zip contains both macOS and Windows executables.")
     if macos:
         return "macos"
     if windows:
         return "windows"
-    raise SystemExit("Zip has no Serato Library executable")
+    raise SystemExit("Zip has no crateCraft executable")
 
 
 def _exe_name(names: list[str], kind: str) -> str:
@@ -666,9 +666,9 @@ def _exe_name(names: list[str], kind: str) -> str:
         SystemExit: If the archive does not contain exactly one match.
     """
     suffix = (
-        "Serato Library.app/Contents/MacOS/Serato Library"
+        "crateCraft.app/Contents/MacOS/crateCraft"
         if kind == "macos"
-        else "Serato Library/Serato Library.exe"
+        else "crateCraft/crateCraft.exe"
     )
     matches = [name for name in names if name.endswith(suffix)]
     if len(matches) != 1:
@@ -909,7 +909,7 @@ def launch_unzipped(archive: Path) -> None:
 
     Creates a temporary directory, extracts the zip, and starts the executable.
     """
-    with tempfile.TemporaryDirectory(prefix="serato-library-artifact-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="cratecraft-artifact-") as tmp:
         dest = Path(tmp) / "unzipped"
         unzip_bundle(archive, dest)
         bundle = find_bundle(dest)
@@ -1067,7 +1067,7 @@ def assert_frozen_version(dist: Path) -> None:
     """Require the Windows executable's version resource to match the bake.
 
     Args:
-        dist: Directory that contains ``Serato Library``.
+        dist: Directory that contains ``crateCraft``.
 
     Raises:
         SystemExit: If the tree is not a Windows build, no version was
@@ -1204,7 +1204,7 @@ def assert_installer_script(path: Path | None = None) -> None:
     """Require the Inno script to install a 64-bit app.
 
     Args:
-        path: Script to read. Defaults to ``packaging/serato-library.iss``.
+        path: Script to read. Defaults to ``packaging/crateCraft.iss``.
 
     Raises:
         SystemExit: If ``ArchitecturesInstallIn64BitMode`` or
@@ -1238,7 +1238,7 @@ def assert_setup(
     executable inside the portable zip is the file that must be x64.
 
     Args:
-        archive: ``Serato-Library-windows-setup.exe``.
+        archive: ``crateCraft-windows-setup.exe``.
         min_bytes: Smallest accepted size, inclusive.
         max_bytes: Largest accepted size, inclusive.
 
@@ -1246,7 +1246,7 @@ def assert_setup(
         SystemExit: If the size is outside the bounds, the file is not a
             PE, or the installer script does not select 64-bit mode.
 
-    Reads the installer header and ``packaging/serato-library.iss``.
+    Reads the installer header and ``packaging/crateCraft.iss``.
     Does not launch the installer.
     """
     assert_size(archive.name, archive.stat().st_size, min_bytes, max_bytes)
@@ -1360,7 +1360,7 @@ def make_dmg(app: Path, dest: Path) -> None:
     """Write a compressed disk image that contains ``app`` and an Applications link.
 
     Args:
-        app: ``Serato Library.app``.
+        app: ``crateCraft.app``.
         dest: ``.dmg`` path to create.
 
     Raises:
@@ -1373,7 +1373,7 @@ def make_dmg(app: Path, dest: Path) -> None:
         raise SystemExit("Disk images are built on macOS.")
     if dest.exists():
         raise SystemExit(f"Refusing to overwrite {dest}")
-    with tempfile.TemporaryDirectory(prefix="serato-library-dmg-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="cratecraft-dmg-") as tmp:
         staging = Path(tmp) / "stage"
         staging.mkdir()
         subprocess.run(["ditto", str(app), str(staging / MACOS_APP)], check=True)
@@ -1438,7 +1438,7 @@ def smoke_dmg(archive: Path, arch: str) -> None:
         assert_static_matches(app, source_static())
         assert_locales_match(app, source_locales())
         assert_frozen_arch(app / MACOS_EXE, arch)
-        with tempfile.TemporaryDirectory(prefix="serato-library-artifact-") as tmp:
+        with tempfile.TemporaryDirectory(prefix="cratecraft-artifact-") as tmp:
             copied = Path(tmp) / MACOS_APP
             subprocess.run(["ditto", str(app), str(copied)], check=True)
             run_smoke(copied / MACOS_EXE, Path(tmp))
@@ -1533,9 +1533,9 @@ def build_setup(dist: Path, dest: Path) -> None:
     """Compile the Inno Setup installer from the PyInstaller folder.
 
     Args:
-        dist: Directory that contains ``Serato Library``.
+        dist: Directory that contains ``crateCraft``.
         dest: Installer path to create. Its file name must be
-            ``Serato-Library-windows-setup.exe``.
+            ``crateCraft-windows-setup.exe``.
 
     Raises:
         SystemExit: If this is not Windows, the script or the build is
@@ -1587,7 +1587,7 @@ def smoke_setup(setup: Path) -> None:
     """
     if sys.platform != "win32":
         raise SystemExit("The installer smoke test runs on Windows.")
-    with tempfile.TemporaryDirectory(prefix="serato-library-install-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="cratecraft-install-") as tmp:
         folder = Path(tmp)
         installed = folder / "app"
         subprocess.run(
@@ -1601,7 +1601,7 @@ def smoke_setup(setup: Path) -> None:
             check=True,
             timeout=LAUNCH_TIMEOUT_SECONDS,
         )
-        exe = installed / "Serato Library.exe"
+        exe = installed / "crateCraft.exe"
         if not exe.is_file():
             raise SystemExit(f"Installer did not write {exe}")
         run_smoke(exe, folder)
@@ -1625,7 +1625,7 @@ def main(argv: list[str] | None = None) -> None:
     Raises:
         SystemExit: If the arguments are incomplete or a check fails.
     """
-    parser = argparse.ArgumentParser(description="Check and pack a Serato Library build.")
+    parser = argparse.ArgumentParser(description="Check and pack a crateCraft build.")
     sub = parser.add_subparsers(dest="command", required=True)
 
     verify = sub.add_parser("verify", help="check a dist directory")

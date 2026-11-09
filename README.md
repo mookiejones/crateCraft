@@ -1,42 +1,46 @@
-# Serato Library
+# crateCraft
 
-[![CI](https://github.com/mookiejones/serato-library-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/mookiejones/serato-library-manager/actions/workflows/ci.yml)
-[![Latest release](https://img.shields.io/github/v/release/mookiejones/serato-library-manager)](https://github.com/mookiejones/serato-library-manager/releases/latest)
-[![Python 3.12 and 3.14](https://img.shields.io/badge/python-3.12%20%7C%203.14-3776AB)](https://github.com/mookiejones/serato-library-manager/blob/main/.github/workflows/ci.yml)
+[![CI](https://github.com/mookiejones/crateCraft/actions/workflows/ci.yml/badge.svg)](https://github.com/mookiejones/crateCraft/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/mookiejones/crateCraft)](https://github.com/mookiejones/crateCraft/releases/latest)
+[![Python 3.12 and 3.14](https://img.shields.io/badge/python-3.12%20%7C%203.14-3776AB)](https://github.com/mookiejones/crateCraft/blob/main/.github/workflows/ci.yml)
 
 **[Quick Start](docs/wiki/Quick-Start.md).** Five steps: Download, Install (Mac and Windows), Open, First backup, Find your music.
 
 ![Five Quick Start moves, looping.](docs/wiki/images/quickstart-five-moves.gif)
 
-A local window for the Serato DJ Pro library on macOS and Windows. Source on `main` is app version **1.1.0**. The page stays on this computer.
+crateCraft is a library manager for Serato DJ: a local window for the Serato DJ Pro library on macOS and Windows. It was called Serato Library Manager before the rename. Source on `main` is app version **1.1.0**. The page stays on this computer.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="docs/images/hero-dark.svg">
   <source media="(prefers-color-scheme: dark)" type="image/png" srcset="docs/images/hero-dark.png">
   <source type="image/svg+xml" srcset="docs/images/hero-light.svg">
-  <img alt="Serato Library Manager: restore your library to any point in time, checked against the saved backup, on every drive." src="docs/images/hero-light.png" width="100%">
+  <img alt="crateCraft: restore your library to any point in time, checked against the saved backup, on every drive." src="docs/images/hero-light.png" width="100%">
 </picture>
 
 The hero is a product illustration. The screenshots below show example data of the crates, snapshots, and Prepare views. The app has one theme, so there is no dark variant.
 
 ## Install
 
-Download from [GitHub Releases](https://github.com/mookiejones/serato-library-manager/releases). That is the only download. There is no Homebrew formula, winget package, or separate website.
+Download from [GitHub Releases](https://github.com/mookiejones/crateCraft/releases). That is the only download. There is no Homebrew formula, winget package, or separate website.
 
-The builds are unsigned. The Mac and Windows warnings, including Removable Volumes, are in [First install](docs/first-install.md). The published copy is [First install](https://mookiejones.github.io/serato-library-manager/first-install.html).
+The builds are unsigned. The Mac and Windows warnings, including Removable Volumes, are in [First install](docs/first-install.md). The published copy is [First install](https://mookiejones.github.io/crateCraft/first-install.html).
 
 The release on that page today is **v0.1.1**. It attaches `Serato-Library-macos.zip` and `Serato-Library-windows.zip`.
 
-App version **1.1.0** is in source and is not a GitHub Release yet. Merges to `main` draft the next version on the **Next release** issue. They do not publish. The [release workflow](.github/workflows/release.yml) builds these unsigned files when a `vMAJOR.MINOR.PATCH` tag is pushed. The pre-release [v1.1.0-rc2](https://github.com/mookiejones/serato-library-manager/releases/tag/v1.1.0-rc2) already attaches them, and it is not marked Latest.
+App version **1.1.0** is in source and is not a GitHub Release yet. Merges to `main` draft the next version on the **Next release** issue. They do not publish. The [release workflow](.github/workflows/release.yml) builds these unsigned files when a `vMAJOR.MINOR.PATCH` tag is pushed. The pre-release [v1.1.0-rc2](https://github.com/mookiejones/crateCraft/releases/tag/v1.1.0-rc2) attaches the same files under their pre-rename `Serato-Library-…` names, and it is not marked Latest.
 
 | Computer | File |
 | --- | --- |
-| Mac, Apple silicon | `Serato-Library-macos-arm64.dmg` |
-| Mac, Intel | `Serato-Library-macos-x64.dmg` |
-| Windows installer | `Serato-Library-windows-setup.exe` |
-| Windows, no installer | `Serato-Library-windows.zip` |
+| Mac, Apple silicon | `crateCraft-macos-arm64.dmg` |
+| Mac, Intel | `crateCraft-macos-x64.dmg` |
+| Windows installer | `crateCraft-windows-setup.exe` |
+| Windows, no installer | `crateCraft-windows.zip` |
 
-`SHA256SUMS` is on that same release. [First install](docs/first-install.md) uses these names.
+`SHA256SUMS` is on that same release. [First install](docs/first-install.md) uses these names. Releases published before the rename use `Serato-Library-` in place of `crateCraft-`.
+
+### Upgrading from Serato Library
+
+The first launch of crateCraft copies the old app folder (`Serato Library` on macOS and Windows, `serato-library` on Linux) to the new `crateCraft` / `cratecraft` folder. The old folder is left in place and nothing in Serato's own folders is touched. Until that copy succeeds the old folder keeps being read. The `SERATO_LIBRARY_*` environment variables still work; `CRATECRAFT_*` wins when both are set.
 
 ## Features
 
@@ -84,7 +88,7 @@ The page source is strict TypeScript in `src/`. `npm run build` writes the `stat
   <img alt="The UI (static/app.js) talks over HTTP to server.py on 127.0.0.1. The safe-write layer (library.py, files.py, tags.py, snapshot_frames.py, snapshots.py, serato_web/completeness.py) writes the _Serato_ folder on every drive and saves to the snapshot store first." src="docs/images/architecture-light.png" width="100%">
 </picture>
 
-`desktop.py` opens a native window titled Serato Library. The window uses the system web view: WebView2 on Windows, WKWebView on macOS, and WebKitGTK or Qt WebKit on Linux. Chromium is not bundled. Color and type tokens live in `static/tokens.css`. The code reference is [docs/architecture.md](docs/architecture.md).
+`desktop.py` opens a native window titled crateCraft. The window uses the system web view: WebView2 on Windows, WKWebView on macOS, and WebKitGTK or Qt WebKit on Linux. Chromium is not bundled. Color and type tokens live in `static/tokens.css`. The code reference is [docs/architecture.md](docs/architecture.md).
 
 ## Run from source
 
@@ -106,13 +110,13 @@ python3 -m venv .venv
 .venv/bin/python desktop.py
 ```
 
-The app binds `127.0.0.1` on a free port and opens a window titled Serato Library. Close the window to quit. A second launch focuses that window. On Windows, use `.venv\Scripts\python`, and install the WebView2 runtime when Windows does not already have it. On macOS, also install `requirements-macos.txt` in that environment so WKWebView can load. On Linux, install WebKitGTK (GTK 3 and WebKit2), or Qt WebKit without Qt WebEngine. `SERATO_LIBRARY_NO_WINDOW=1` or `--no-window` skips the window.
+The app binds `127.0.0.1` on a free port and opens a window titled crateCraft. Close the window to quit. A second launch focuses that window. On Windows, use `.venv\Scripts\python`, and install the WebView2 runtime when Windows does not already have it. On macOS, also install `requirements-macos.txt` in that environment so WKWebView can load. On Linux, install WebKitGTK (GTK 3 and WebKit2), or Qt WebKit without Qt WebEngine. `CRATECRAFT_NO_WINDOW=1` or `--no-window` skips the window.
 
 A local unsigned build of the current operating system:
 
 ```bash
 .venv/bin/pip install -r requirements-build.txt
-.venv/bin/python -m PyInstaller serato-library.spec
+.venv/bin/python -m PyInstaller crateCraft.spec
 ```
 
 Release disk images and the Windows installer come from GitHub Actions, not from this command.
@@ -146,6 +150,6 @@ CI runs that discovery with `python` in [`.github/workflows/ci.yml`](.github/wor
 
 ## More
 
-The user guide is [docs/index.md](docs/index.md) and [the published site](https://mookiejones.github.io/serato-library-manager/). Contributing is [CONTRIBUTING.md](CONTRIBUTING.md). Security reports are [SECURITY.md](SECURITY.md). Actions and releases are [docs/github.md](docs/github.md). The roadmap is the [Serato Tools Roadmap](https://github.com/users/mookiejones/projects/3).
+The user guide is [docs/index.md](docs/index.md) and [the published site](https://mookiejones.github.io/crateCraft/). Contributing is [CONTRIBUTING.md](CONTRIBUTING.md). Security reports are [SECURITY.md](SECURITY.md). Actions and releases are [docs/github.md](docs/github.md). The roadmap is the [Serato Tools Roadmap](https://github.com/users/mookiejones/projects/3).
 
 This repository has no `LICENSE` file. GitHub reports the license as not specified. Third-party license notes, including the GCC Runtime Library Exception for `libgfortran` and `libquadmath` inside the NumPy wheel, are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

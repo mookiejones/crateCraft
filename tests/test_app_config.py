@@ -1,7 +1,7 @@
 """Settings file tests.
 
 The cases use a temporary directory. They do not read the machine's
-Serato Library settings, and they do not open a database.
+crateCraft settings, and they do not open a database.
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ import version_info
 class SettingsTests(unittest.TestCase):
     """Check the sharing choice round-trip.
 
-    Each test points ``SERATO_LIBRARY_CONFIG_DIR`` at a fresh directory.
+    Each test points ``CRATECRAFT_CONFIG_DIR`` at a fresh directory.
     Nothing is sent over the network.
     """
 
@@ -309,8 +309,8 @@ class DirectoryTests(unittest.TestCase):
         with mock.patch("app_config.sys.platform", "darwin"):
             config = app_config.default_config_dir()
             logs = app_config.default_log_dir()
-        self.assertEqual(config, Path.home() / "Library" / "Application Support" / "Serato Library")
-        self.assertEqual(logs, Path.home() / "Library" / "Logs" / "Serato Library")
+        self.assertEqual(config, Path.home() / "Library" / "Application Support" / "crateCraft")
+        self.assertEqual(logs, Path.home() / "Library" / "Logs" / "crateCraft")
 
     def test_windows_paths(self) -> None:
         """Use APPDATA for settings and LOCALAPPDATA for logs on Windows.
@@ -322,8 +322,8 @@ class DirectoryTests(unittest.TestCase):
         with mock.patch.dict(os.environ, environ), mock.patch("app_config.sys.platform", "win32"):
             config = app_config.default_config_dir()
             logs = app_config.default_log_dir()
-        self.assertEqual(config, Path(r"C:\Users\dj\AppData\Roaming") / "Serato Library")
-        self.assertEqual(logs, Path(r"C:\Users\dj\AppData\Local") / "Serato Library" / "Logs")
+        self.assertEqual(config, Path(r"C:\Users\dj\AppData\Roaming") / "crateCraft")
+        self.assertEqual(logs, Path(r"C:\Users\dj\AppData\Local") / "crateCraft" / "Logs")
 
     def test_linux_paths(self) -> None:
         """Use the XDG config and state directories on Linux.
@@ -334,8 +334,212 @@ class DirectoryTests(unittest.TestCase):
         with mock.patch("app_config.sys.platform", "linux"):
             config = app_config.default_config_dir()
             logs = app_config.default_log_dir()
-        self.assertEqual(config, Path.home() / ".config" / "serato-library")
-        self.assertEqual(logs, Path.home() / ".local" / "state" / "serato-library" / "logs")
+        self.assertEqual(config, Path.home() / ".config" / "cratecraft")
+        self.assertEqual(logs, Path.home() / ".local" / "state" / "cratecraft" / "logs")
+
+
+class LegacyDirectoryTests(unittest.TestCase):
+    """Keep settings from an install made before the crateCraft rename.
+
+    The platform folders are pointed at a temporary home. The override
+    variables are removed so the default folders are what is resolved.
+    """
+
+    def setUp(self) -> None:
+        """Point XDG_CONFIG_HOME at a temporary folder and clear overrides.
+
+        Returns:
+            None.
+        """
+        self._tmp = tempfile.TemporaryDirectory()
+        self.base = Path(self._tmp.name)
+        cleared = {
+            key: value
+            for key, value in os.environ.items()
+            if key not in (app_config.CONFIG_ENV, app_config.LEGACY_CONFIG_ENV)
+        }
+        cleared["XDG_CONFIG_HOME"] = str(self.base)
+        self._env = mock.patch.dict(os.environ, cleared, clear=True)
+        self._env.start()
+        self._platform = mock.patch("app_config.sys.platform", "linux")
+        self._platform.start()
+        self.legacy = self.base / "serato-library"
+        self.current = self.base / "cratecraft"
+
+    def tearDown(self) -> None:
+        """Restore the environment and remove the temporary folder.
+
+        Returns:
+            None.
+        """
+        self._platform.stop()
+        self._env.stop()
+        self._tmp.cleanup()
+
+    def _seed_legacy(self) -> None:
+        """Write a pre-rename settings folder with a cache and a lock.
+
+        Returns:
+            None.
+        """
+        self.legacy.mkdir()
+        (self.legacy / "settings.json").write_text('{"telemetry_consent": false}', encoding="utf-8")
+        (self.legacy / "related.sqlite").write_bytes(b"SQLite format 3\x00links")
+        (self.legacy / "write-checks").mkdir()
+        (self.legacy / "write-checks" / "key").write_text("ok", encoding="utf-8")
+        (self.legacy / "waveforms").mkdir()
+        (self.legacy / "waveforms" / "big.swf").write_bytes(b"SWF1")
+        (self.legacy / "instance.lock").write_text("", encoding="utf-8")
+
+    def test_legacy_names(self) -> None:
+        """Name the old folder per platform.
+
+        Returns:
+            None. The test fails if an old folder name changes.
+        """
+        self.assertEqual(app_config.legacy_config_dir(), self.legacy)
+        with mock.patch("app_config.sys.platform", "darwin"):
+            self.assertEqual(
+                app_config.legacy_config_dir(),
+                Path.home() / "Library" / "Application Support" / "Serato Library",
+            )
+        with mock.patch.dict(os.environ, {"APPDATA": r"C:\Users\dj\AppData\Roaming"}), mock.patch(
+            "app_config.sys.platform", "win32"
+        ):
+            self.assertEqual(
+                app_config.legacy_config_dir(), Path(r"C:\Users\dj\AppData\Roaming") / "Serato Library"
+            )
+
+    def test_reads_old_folder_until_it_is_copied(self) -> None:
+        """Read the old folder while it is the only one.
+
+        Returns:
+            None. The test fails if a fresh install path hides old settings.
+        """
+        self.assertEqual(app_config.config_dir(), self.current)
+        self._seed_legacy()
+        self.assertEqual(app_config.config_dir(), self.legacy)
+        self.assertFalse(self.current.exists())
+
+    def test_migration_copies_and_keeps_the_old_folder(self) -> None:
+        """Copy settings to the new folder and leave the old one intact.
+
+        Returns:
+            None. The test fails if a file is lost, moved, or the cache
+            and lock file are carried over.
+        """
+        self._seed_legacy()
+        before = sorted(str(p.relative_to(self.legacy)) for p in self.legacy.rglob("*"))
+        moved = app_config.migrate_legacy_config()
+        self.assertEqual(moved, self.current)
+        self.assertEqual(app_config.config_dir(), self.current)
+        self.assertEqual(
+            (self.current / "settings.json").read_text(encoding="utf-8"), '{"telemetry_consent": false}'
+        )
+        self.assertEqual((self.current / "related.sqlite").read_bytes(), b"SQLite format 3\x00links")
+        self.assertTrue((self.current / "write-checks" / "key").is_file())
+        self.assertFalse((self.current / "waveforms").exists())
+        self.assertFalse((self.current / "instance.lock").exists())
+        after = sorted(str(p.relative_to(self.legacy)) for p in self.legacy.rglob("*"))
+        self.assertEqual(before, after)
+        self.assertEqual(list(self.base.glob("*.migrating-*")), [])
+        self.assertIs(app_config.load_settings().telemetry_consent, False)
+
+    def test_migration_runs_once(self) -> None:
+        """Leave an existing crateCraft folder alone.
+
+        Returns:
+            None. The test fails if newer settings are overwritten.
+        """
+        self._seed_legacy()
+        self.current.mkdir()
+        (self.current / "settings.json").write_text("{}", encoding="utf-8")
+        self.assertIsNone(app_config.migrate_legacy_config())
+        self.assertEqual((self.current / "settings.json").read_text(encoding="utf-8"), "{}")
+        self.assertEqual(app_config.config_dir(), self.current)
+
+    def test_nothing_to_migrate(self) -> None:
+        """Do nothing on a fresh install.
+
+        Returns:
+            None. The test fails if a folder is created.
+        """
+        self.assertIsNone(app_config.migrate_legacy_config())
+        self.assertFalse(self.current.exists())
+
+    def test_override_skips_migration(self) -> None:
+        """Leave both folders alone when an override directory is set.
+
+        Returns:
+            None. The test fails if the override is ignored.
+        """
+        self._seed_legacy()
+        override = self.base / "override"
+        with mock.patch.dict(os.environ, {app_config.CONFIG_ENV: str(override)}):
+            self.assertIsNone(app_config.migrate_legacy_config())
+            self.assertEqual(app_config.config_dir(), override)
+        self.assertFalse(self.current.exists())
+
+    def test_failed_copy_keeps_reading_the_old_folder(self) -> None:
+        """Fall back to the old folder when the copy fails.
+
+        Returns:
+            None. The test fails if a partial folder is left or the old
+            folder is no longer read.
+        """
+        self._seed_legacy()
+        with mock.patch("app_config.shutil.copytree", side_effect=OSError("disk full")):
+            with self.assertLogs("serato.library.config", level="WARNING"):
+                self.assertIsNone(app_config.migrate_legacy_config())
+        self.assertFalse(self.current.exists())
+        self.assertEqual(list(self.base.glob("*.migrating-*")), [])
+        self.assertEqual(app_config.config_dir(), self.legacy)
+        self.assertTrue((self.legacy / "settings.json").is_file())
+
+
+class EnvironmentNameTests(unittest.TestCase):
+    """Read CRATECRAFT_* first and fall back to SERATO_LIBRARY_*."""
+
+    def test_new_name_wins(self) -> None:
+        """Prefer the new config variable when both are set.
+
+        Returns:
+            None. The test fails if the old variable wins.
+        """
+        with tempfile.TemporaryDirectory() as raw:
+            new, old = Path(raw) / "new", Path(raw) / "old"
+            with mock.patch.dict(
+                os.environ, {app_config.CONFIG_ENV: str(new), app_config.LEGACY_CONFIG_ENV: str(old)}
+            ):
+                self.assertEqual(app_config.config_dir(), new)
+
+    def test_old_name_still_works(self) -> None:
+        """Read SERATO_LIBRARY_CONFIG_DIR and _LOG_DIR when the new names are unset.
+
+        Returns:
+            None. The test fails if an older script loses its override.
+        """
+        with tempfile.TemporaryDirectory() as raw:
+            config, logs = Path(raw) / "config", Path(raw) / "logs"
+            env = {key: value for key, value in os.environ.items() if not key.startswith("CRATECRAFT_")}
+            env[app_config.LEGACY_CONFIG_ENV] = str(config)
+            env[app_config.LEGACY_LOG_ENV] = str(logs)
+            with mock.patch.dict(os.environ, env, clear=True):
+                self.assertEqual(app_config.config_dir(), config)
+                self.assertEqual(app_config.log_dir(), logs)
+
+    def test_blank_new_name_falls_back(self) -> None:
+        """Treat a blank new variable as unset.
+
+        Returns:
+            None. The test fails if a blank value hides the old one.
+        """
+        with tempfile.TemporaryDirectory() as raw:
+            old = Path(raw) / "old"
+            with mock.patch.dict(
+                os.environ, {app_config.CONFIG_ENV: "  ", app_config.LEGACY_CONFIG_ENV: str(old)}
+            ):
+                self.assertEqual(app_config.config_dir(), old)
 
 
 class WindowSettingsTests(unittest.TestCase):
@@ -651,7 +855,7 @@ class LayoutSettingsTests(unittest.TestCase):
 class SettingsIntegrityTests(unittest.TestCase):
     """Gaps that let a settings save drop or tear another field.
 
-    Each test uses a fresh directory via ``SERATO_LIBRARY_CONFIG_DIR``.
+    Each test uses a fresh directory via ``CRATECRAFT_CONFIG_DIR``.
     Nothing here opens a Serato database or the machine's settings file.
     """
 

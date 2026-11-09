@@ -36,10 +36,10 @@ HOME_EMOJI_STEPS = (
 )
 
 RELEASE_NAMES = (
-    "Serato-Library-macos-arm64.dmg",
-    "Serato-Library-macos-x64.dmg",
-    "Serato-Library-windows-setup.exe",
-    "Serato-Library-windows.zip",
+    "crateCraft-macos-arm64.dmg",
+    "crateCraft-macos-x64.dmg",
+    "crateCraft-windows-setup.exe",
+    "crateCraft-windows.zip",
     "SHA256SUMS",
 )
 
@@ -170,7 +170,7 @@ class QuickStartTests(unittest.TestCase):
         self.assertLess(text.index(link), text.index("## Install"))
         self.assertLess(
             text.index(link),
-            text.index("A local window for the Serato DJ Pro library"),
+            text.index("a local window for the Serato DJ Pro library"),
         )
         self.assertIn(
             "Five steps: Download, Install (Mac and Windows), Open, First backup, Find your music.",
@@ -221,7 +221,7 @@ class InstallPageTests(unittest.TestCase):
         self.assertNotIn("These builds are unsigned", mac)
         self.assertNotIn("The builds are unsigned", mac)
         self.assertIn(
-            'xattr -dr com.apple.quarantine "/Applications/Serato Library.app"',
+            'xattr -dr com.apple.quarantine "/Applications/crateCraft.app"',
             mac,
         )
         self.assertIn("Removable Volumes", mac)

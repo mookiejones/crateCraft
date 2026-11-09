@@ -127,7 +127,7 @@ class WikiFeaturePageTests(unittest.TestCase):
         page = (WIKI / "Export-to-Rekordbox.md").read_text(encoding="utf-8")
         guide = (ROOT / "docs" / "coming-from-rekordbox.md").read_text(encoding="utf-8")
         self.assertIn("Status: preview.", page)
-        self.assertIn("https://github.com/mookiejones/serato-library-manager/pull/39", page)
+        self.assertIn("https://github.com/mookiejones/crateCraft/pull/39", page)
         self.assertIn("Status: preview.", guide)
         self.assertLess(page.index("Status: preview."), page.index("images/features/"))
 

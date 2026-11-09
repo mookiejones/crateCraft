@@ -43,7 +43,7 @@ def _logs(name: str) -> Path:
 
 
 def _point(folder: Path) -> mock._patch:
-    """Point ``SERATO_LIBRARY_LOGS`` at a folder for one test.
+    """Point ``CRATECRAFT_LOGS`` at a folder for one test.
 
     Args:
         folder: Logs directory.
@@ -51,7 +51,7 @@ def _point(folder: Path) -> mock._patch:
     Returns:
         A patch that restores the environment.
     """
-    return mock.patch.dict(os.environ, {"SERATO_LIBRARY_LOGS": str(folder)})
+    return mock.patch.dict(os.environ, {"CRATECRAFT_LOGS": str(folder)})
 
 
 class LogParserTests(unittest.TestCase):
@@ -473,7 +473,7 @@ class LogGateTests(unittest.TestCase):
             self.assertEqual(serato_logs.parse_logs(logs).version, "5.0.0")
             with mock.patch("pathlib.Path.home", return_value=home):
                 info = library.status()
-            with mock.patch.dict(os.environ, {"SERATO_LIBRARY_LOGS": "logs"}):
+            with mock.patch.dict(os.environ, {"CRATECRAFT_LOGS": "logs"}):
                 relative = library.status()
         for body in (info, relative):
             self.assertTrue(body["writable"])
@@ -584,8 +584,8 @@ class LogGateTests(unittest.TestCase):
             with mock.patch.dict(
                 os.environ,
                 {
-                    "SERATO_LIBRARY_LOGS": str(folder),
-                    "SERATO_LIBRARY_PREFERENCES": str(prefs),
+                    "CRATECRAFT_LOGS": str(folder),
+                    "CRATECRAFT_PREFERENCES": str(prefs),
                 },
             ):
                 info = library.status()
@@ -611,8 +611,8 @@ class LogGateTests(unittest.TestCase):
             with mock.patch.dict(
                 os.environ,
                 {
-                    "SERATO_LIBRARY_LOGS": str(_logs("serato5")),
-                    "SERATO_LIBRARY_PREFERENCES": str(prefs),
+                    "CRATECRAFT_LOGS": str(_logs("serato5")),
+                    "CRATECRAFT_PREFERENCES": str(prefs),
                 },
             ):
                 info = library.status()
@@ -648,8 +648,8 @@ class LogGateTests(unittest.TestCase):
             with mock.patch.dict(
                 os.environ,
                 {
-                    "SERATO_LIBRARY_LOGS": str(folder),
-                    "SERATO_LIBRARY_APP_INFO": str(plist),
+                    "CRATECRAFT_LOGS": str(folder),
+                    "CRATECRAFT_APP_INFO": str(plist),
                 },
             ):
                 installed = library.status()
@@ -711,12 +711,12 @@ class LogGateTests(unittest.TestCase):
                 "[Application] Serato DJ Pro 4.0.1\n",
                 encoding="utf-8",
             )
-            base_env = {"SERATO_LIBRARY_APP_INFO": str(bad)}
-            with mock.patch.dict(os.environ, {**base_env, "SERATO_LIBRARY_LOGS": str(named_dir)}):
+            base_env = {"CRATECRAFT_APP_INFO": str(bad)}
+            with mock.patch.dict(os.environ, {**base_env, "CRATECRAFT_LOGS": str(named_dir)}):
                 named = library.status()
                 with self.assertRaises(LibraryError) as caught:
                     library.begin_write()
-            with mock.patch.dict(os.environ, {**base_env, "SERATO_LIBRARY_LOGS": str(bare_dir)}):
+            with mock.patch.dict(os.environ, {**base_env, "CRATECRAFT_LOGS": str(bare_dir)}):
                 bare = library.status()
                 with self.assertRaises(LibraryError) as bare_write:
                     library.begin_write()

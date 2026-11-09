@@ -117,25 +117,25 @@ def _serato_version(
             {"CFBundleShortVersionString": version, "CFBundleVersion": build},
             handle,
         )
-    previous_info = os.environ.get("SERATO_LIBRARY_APP_INFO")
-    previous_prefs = os.environ.get("SERATO_LIBRARY_PREFERENCES")
-    os.environ["SERATO_LIBRARY_APP_INFO"] = str(info)
+    previous_info = os.environ.get("CRATECRAFT_APP_INFO")
+    previous_prefs = os.environ.get("CRATECRAFT_PREFERENCES")
+    os.environ["CRATECRAFT_APP_INFO"] = str(info)
     if protect is not None:
         prefs = root / "com.serato.seratodj.plist"
         with prefs.open("wb") as handle:
             plistlib.dump({"library_protect": 1 if protect == "on" else 0}, handle)
-        os.environ["SERATO_LIBRARY_PREFERENCES"] = str(prefs)
+        os.environ["CRATECRAFT_PREFERENCES"] = str(prefs)
     try:
         yield
     finally:
         if previous_info is None:
-            os.environ.pop("SERATO_LIBRARY_APP_INFO", None)
+            os.environ.pop("CRATECRAFT_APP_INFO", None)
         else:
-            os.environ["SERATO_LIBRARY_APP_INFO"] = previous_info
+            os.environ["CRATECRAFT_APP_INFO"] = previous_info
         if previous_prefs is None:
-            os.environ.pop("SERATO_LIBRARY_PREFERENCES", None)
+            os.environ.pop("CRATECRAFT_PREFERENCES", None)
         else:
-            os.environ["SERATO_LIBRARY_PREFERENCES"] = previous_prefs
+            os.environ["CRATECRAFT_PREFERENCES"] = previous_prefs
 
 
 def _immutable_name(db: Path, asset_id: int) -> str | None:

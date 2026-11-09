@@ -1,8 +1,8 @@
-# Serato Library
+# crateCraft
 
 <!-- The logo on the banner is not approved yet. It may change. -->
 
-![Serato Library Manager Quick Start. Backups first. Cue points safe. Then go crate digging.](images/quickstart-banner-light.png)
+![crateCraft Quick Start. Backups first. Cue points safe. Then go crate digging.](images/quickstart-banner-light.png)
 
 **Five moves.** Backups first. Cue points safe. Then go crate digging.
 
@@ -21,7 +21,7 @@ A window on your computer for the Serato DJ Pro library. Crates, Cue points, and
 - [Install on a Mac](Install-macOS)
 - [Install on Windows](Install-Windows)
 
-The long guide is published at <https://mookiejones.github.io/serato-library-manager/>.
+The long guide is published at <https://mookiejones.github.io/crateCraft/>.
 
 ## What you click
 

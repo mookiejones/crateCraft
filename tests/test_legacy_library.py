@@ -330,19 +330,19 @@ class FindLegacyTests(unittest.TestCase):
 
 
 class HomeSeratoFolderTests(unittest.TestCase):
-    """``SERATO_LIBRARY_HOME_SERATO`` keeps a run away from the real ``~/Music/_Serato_`` (#185)."""
+    """``CRATECRAFT_HOME_SERATO`` keeps a run away from the real ``~/Music/_Serato_`` (#185)."""
 
     def test_absolute_override_wins(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp) / "_Serato_"
-            with mock.patch.dict(os.environ, {"SERATO_LIBRARY_HOME_SERATO": f"  {folder}  "}), \
+            with mock.patch.dict(os.environ, {"CRATECRAFT_HOME_SERATO": f"  {folder}  "}), \
                     mock.patch.object(Path, "home", return_value=Path(tmp) / "home"):
                 self.assertEqual(legacy_library.home_serato_folder(), folder)
 
     def test_relative_override_is_ignored(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             home = Path(tmp) / "home"
-            with mock.patch.dict(os.environ, {"SERATO_LIBRARY_HOME_SERATO": "Music/_Serato_"}), \
+            with mock.patch.dict(os.environ, {"CRATECRAFT_HOME_SERATO": "Music/_Serato_"}), \
                     mock.patch.object(Path, "home", return_value=home):
                 self.assertEqual(legacy_library.home_serato_folder(), home / "Music" / "_Serato_")
 
@@ -350,13 +350,13 @@ class HomeSeratoFolderTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             home = Path(tmp) / "home"
             with mock.patch.dict(os.environ), mock.patch.object(Path, "home", return_value=home):
-                os.environ.pop("SERATO_LIBRARY_HOME_SERATO", None)
+                os.environ.pop("CRATECRAFT_HOME_SERATO", None)
                 self.assertEqual(legacy_library.home_serato_folder(), home / "Music" / "_Serato_")
-                os.environ["SERATO_LIBRARY_HOME_SERATO"] = ""
+                os.environ["CRATECRAFT_HOME_SERATO"] = ""
                 self.assertEqual(legacy_library.home_serato_folder(), home / "Music" / "_Serato_")
 
     def test_suite_points_the_folder_at_an_empty_temp_folder(self) -> None:
-        folder = Path(os.environ["SERATO_LIBRARY_HOME_SERATO"])
+        folder = Path(os.environ["CRATECRAFT_HOME_SERATO"])
         self.assertTrue(folder.is_absolute())
         self.assertEqual(legacy_library.home_serato_folder(), folder)
         self.assertNotEqual(folder, Path.home() / "Music" / "_Serato_")

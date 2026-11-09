@@ -49,9 +49,9 @@ A library edit does not add a `Backups` folder beside `master.sqlite`. The app k
 After the save is committed, the app reads a copy of the database, including a `-wal` file when one is present. It does not open the live database for that check. If the rows or the file hashes are not the change you asked for, the app puts the pre-write copy back and checks those hashes. That copy, the write journal, and the operation note are kept in this app's data folder, not in Serato's library folder. Serato 5 uses that same rollback when Protect Library is off. If the copy cannot be saved because the disk is full, the save does not run. The Snapshots page lists each of these notes.
 
 1. Quit Serato DJ Pro.
-2. Open Serato Library.
+2. Open crateCraft.
 3. Make one small edit you can stand to keep, if you want a fresh copy before a larger change.
-4. Close Serato Library.
+4. Close crateCraft.
 5. Open it again before the larger change.
 
 The copy is a folder next to `master.sqlite`:
@@ -73,7 +73,7 @@ The backup is the database and the drive's `_Serato_` crates, not your audio. A 
 The snapshot list is the restore to use. The steps below are only for a `serato-web-` folder made by the first save in a session. Restoring that folder replaces the live library database with an older copy. Tracks you added after that copy are not in it. Cue points inside audio files are not in that folder.
 
 1. Quit Serato DJ Pro.
-2. Quit Serato Library. Close the window.
+2. Quit crateCraft. Close the window.
 3. Open the [library folder](install.md#where-serato-keeps-the-library).
 4. Open `Backups`.
 5. Open a `serato-web-` folder that contains `COMPLETE`. A suffix `-02` through `-99` is a later copy from that same second. Skip a name that ends with `-failed` or `-failed-` and digits (any capitalization), a hidden name that ends with `.partial`, and a folder that contains `INCOMPLETE`. An older folder with no `COMPLETE` file is legacy, unverified. Do not use it unless you mean to, and stop if its check does not come back ok.

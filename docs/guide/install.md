@@ -2,14 +2,14 @@
 
 Download a release build. You do not need Python, and you do not need to build the app. The open steps, the unsigned-app warnings, and the Mac external-drive permission are in [First install](../first-install.md).
 
-Open the [releases page](https://github.com/mookiejones/serato-library-manager/releases).
+Open the [releases page](https://github.com/mookiejones/crateCraft/releases).
 
 | Computer | File |
 | --- | --- |
-| Mac with Apple silicon | `Serato-Library-macos-arm64.dmg` |
-| Mac with an Intel processor | `Serato-Library-macos-x64.dmg` |
-| Windows installer | `Serato-Library-windows-setup.exe` |
-| Windows, if you cannot run an installer | `Serato-Library-windows.zip` |
+| Mac with Apple silicon | `crateCraft-macos-arm64.dmg` |
+| Mac with an Intel processor | `crateCraft-macos-x64.dmg` |
+| Windows installer | `crateCraft-windows-setup.exe` |
+| Windows, if you cannot run an installer | `crateCraft-windows.zip` |
 
 `SHA256SUMS` on that release lists the SHA-256 of each file. GitHub Releases is the only download.
 
@@ -22,7 +22,7 @@ The builds are unsigned. macOS Gatekeeper and Windows SmartScreen warn before th
 
 Quit Serato DJ Pro if it is open and you plan to edit the library. Then open the app the way [First install](../first-install.md) describes.
 
-A window titled **Serato Library** opens. The page is served on `127.0.0.1`. The first time, setup runs before the library is yours to browse.
+A window titled **crateCraft** opens. The page is served on `127.0.0.1`. The first time, setup runs before the library is yours to browse.
 
 1. **Welcome.** Read the one sentence. Choose **Get started**.
 2. **Find your library.** The page names the disk and how many tracks it found. Choose **Use this library**. If it found nothing, open Serato DJ once, quit it, and choose **Check again**. If the library is already in another folder, choose **Choose a folder**, open that folder, and choose **Use this folder**. The app does not create a library. It does not switch away from a library it already has open.
@@ -43,7 +43,7 @@ Read [Settings and privacy](settings.md) before you choose **Yes, share**. **No,
 
 ## Where Serato keeps the library
 
-Serato DJ Pro stores the library in a database named `master.sqlite`. A second file, `root.sqlite`, often sits in the same folder. Serato Library reads both. It updates `root.sqlite` when that file is present.
+Serato DJ Pro stores the library in a database named `master.sqlite`. A second file, `root.sqlite`, often sits in the same folder. crateCraft reads both. It updates `root.sqlite` when that file is present.
 
 | System | Folder |
 | --- | --- |
@@ -71,6 +71,6 @@ If that file is missing, the app stays open. Setup says **No Serato library was 
 
 ## If the window does not open
 
-Another copy may already be running. Its window should come forward. If it does not, close the Serato Library window and try again. If you started `server.py` from a terminal, the message is **http://127.0.0.1:8765 is already in use. Quit the other Serato library server (server.py or the desktop app) and try again.**
+Another copy may already be running. Its window should come forward. If it does not, close the crateCraft window and try again. If you started `server.py` from a terminal, the message is **http://127.0.0.1:8765 is already in use. Quit the other Serato library server (server.py or the desktop app) and try again.**
 
 Gatekeeper, SmartScreen, and Removable Volumes steps are in [First install](../first-install.md) and [Troubleshooting](troubleshooting.md).

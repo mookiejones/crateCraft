@@ -11,10 +11,10 @@ The links are stored in a file named `related.sqlite`, next to this app's settin
 
 | System | File |
 | --- | --- |
-| macOS | `~/Library/Application Support/Serato Library/related.sqlite` |
-| Windows | `%APPDATA%\Serato Library\related.sqlite` |
+| macOS | `~/Library/Application Support/crateCraft/related.sqlite` |
+| Windows | `%APPDATA%\crateCraft\related.sqlite` |
 
-This is the **Serato Library** folder, with a space. It is not the **Serato/Library** folder that holds `master.sqlite`.
+This is the **crateCraft** app folder (named **Serato Library** before the rename). It is not the **Serato/Library** folder that holds `master.sqlite`.
 
 The file holds paths, titles, artists, lengths, notes, and ratings. It stays on this computer. [Settings and privacy](settings.md) lists what sharing can send. Notes and titles are not part of that.
 
@@ -68,7 +68,7 @@ While Serato is open, the button stays off and the note says **Quit Serato befor
 
 ## While a track is playing
 
-The live view is a different app, [serato-listener](https://github.com/mookiejones/serato-listener). Serato Library is where you save links and read suggestions. The listener is what you open while a deck is playing.
+The live view is a different app, [serato-listener](https://github.com/mookiejones/serato-listener). crateCraft is where you save links and read suggestions. The listener is what you open while a deck is playing.
 
 The listener reads `related.sqlite` and does not change it. On a Mac, with Serato DJ Pro open on the same computer, Serato can connect to it. Open `http://127.0.0.1:8787/` to see the decks and the related tracks for the song that is loaded. Pairing does not start on Windows. The listener page on Windows can still read the library and the saved links.
 

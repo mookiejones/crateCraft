@@ -1,4 +1,4 @@
-**Serato Library**
+**crateCraft**
 
 [Home](Home)
 [Quick Start](Quick-Start)

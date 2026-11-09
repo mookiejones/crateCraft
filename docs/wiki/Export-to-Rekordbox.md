@@ -1,6 +1,6 @@
 # Export to Rekordbox
 
-> **Status: preview.** Rekordbox XML export is in the app ([PR #39](https://github.com/mookiejones/serato-library-manager/pull/39) is merged). The export is one-way. It does not write the Serato library back.
+> **Status: preview.** Rekordbox XML export is in the app ([PR #39](https://github.com/mookiejones/crateCraft/pull/39) is merged). The export is one-way. It does not write the Serato library back.
 
 <figure>
   <img alt="The Download rekordbox.xml dialog over Crates, with Memory cues on and Hot loops off." src="images/features/export-to-rekordbox.png">
@@ -31,7 +31,7 @@ Subcrates become nested playlist folders. A crate that has tracks and subcrates 
 
 In Rekordbox 6 and 7 the import is **Preferences**, **Advanced**, **Database**, **rekordbox xml**. A track already in the collection stays as it is until you select the tracks in that list, choose **Import to Collection**, and answer **Yes** to **load information from imported library**. That replaces cues, the beatgrid, and tags in Rekordbox.
 
-The same sentences are in [Moving between Serato and Rekordbox](https://github.com/mookiejones/serato-library-manager/blob/main/docs/coming-from-rekordbox.md). That page keeps **Status: preview.**
+The same sentences are in [Moving between Serato and Rekordbox](https://github.com/mookiejones/crateCraft/blob/main/docs/coming-from-rekordbox.md). That page keeps **Status: preview.**
 
 From the project folder, the same file and the same report:
 

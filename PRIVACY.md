@@ -20,7 +20,7 @@ The install is identified by a random id created when you save a choice. That id
 
 The app can tell you when a newer release is on GitHub. That check is **off** until you turn it on. Setup asks **Check for new versions?** on its own step, with **No, don't check** first, and Settings has **Check GitHub for a newer version once a day**. While it is off, or before you have answered, the app does not contact GitHub. If setup cannot read the current choice, it does not ask, and the check stays off.
 
-When it is on, the Python process asks `https://api.github.com/repos/mookiejones/serato-library-manager/releases` at most once every 24 hours. GitHub sees your IP address and a User-Agent of `serato-library-manager/<version>`. Nothing else is sent: no install id, no path, no track, crate, or library data. Only each release's tag, its pre-release and draft flags, and its page address are kept. Pre-releases are offered only if you opt in. A version you skip is not offered again. **Download** opens that release's page on github.com in your browser; the app does not download or install anything itself.
+When it is on, the Python process asks `https://api.github.com/repos/mookiejones/crateCraft/releases` at most once every 24 hours. GitHub sees your IP address and a User-Agent of `crateCraft/<version>`. Nothing else is sent: no install id, no path, no track, crate, or library data. Only each release's tag, its pre-release and draft flags, and its page address are kept. Pre-releases are offered only if you opt in. A version you skip is not offered again. **Download** opens that release's page on github.com in your browser; the app does not download or install anything itself.
 
 The choice, the skipped version, and the last answer are stored in `updates.json` beside `settings.json`. They stay on this machine.
 
@@ -34,9 +34,9 @@ A missing `SENTRY_DSN` keeps crash reports off even after you opt in. A missing 
 
 | System | Settings | Logs |
 |--------|----------|------|
-| macOS | `~/Library/Application Support/Serato Library/settings.json`, `library.json`, `related.sqlite`, and `preset-crates.json` | `~/Library/Logs/Serato Library/` |
-| Windows | `%APPDATA%\Serato Library\settings.json`, `library.json`, `related.sqlite`, and `preset-crates.json` | `%LOCALAPPDATA%\Serato Library\Logs\` |
-| Linux | `$XDG_CONFIG_HOME/serato-library/settings.json`, `library.json`, `related.sqlite`, and `preset-crates.json`, or `~/.config/serato-library/` | `$XDG_STATE_HOME/serato-library/logs`, or `~/.local/state/serato-library/logs` |
+| macOS | `~/Library/Application Support/crateCraft/settings.json`, `library.json`, `related.sqlite`, and `preset-crates.json` | `~/Library/Logs/crateCraft/` |
+| Windows | `%APPDATA%\crateCraft\settings.json`, `library.json`, `related.sqlite`, and `preset-crates.json` | `%LOCALAPPDATA%\crateCraft\Logs\` |
+| Linux | `$XDG_CONFIG_HOME/cratecraft/settings.json`, `library.json`, `related.sqlite`, and `preset-crates.json`, or `~/.config/cratecraft/` | `$XDG_STATE_HOME/cratecraft/logs`, or `~/.local/state/cratecraft/logs` |
 
 `settings.json` also stores the Rekordbox dialog choices: whether hot loops and memory cues are on, and which key notation was chosen. Those choices are not sent.
 
@@ -44,7 +44,7 @@ A missing `SENTRY_DSN` keeps crash reports off even after you opt in. A missing 
 
 `related.sqlite` stores which tracks you marked as going well together, including file paths, titles, artists, lengths, notes, and ratings. That file stays on this machine. It is not a usage report. The schema is in [docs/related-tracks.md](docs/related-tracks.md).
 
-The log file is `serato-library.log`. It rotates at 1 MiB and keeps three older files. Logs stay on this machine. They can include the path of the library database. They are not uploaded. Settings has **Open logs folder** and **Copy logs**.
+The log file is `cratecraft.log`. It rotates at 1 MiB and keeps three older files. Logs stay on this machine. They can include the path of the library database. They are not uploaded. Settings has **Open logs folder** and **Copy logs**.
 
 `preset-crates.json` remembers which crates were made from a crate preset: the library file's path, the crate id and added time, and the preset (key, BPM range, or months, and the crate it is limited to). It stays on this machine. It is not a usage report.
 
