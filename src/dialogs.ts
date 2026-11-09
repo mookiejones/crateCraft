@@ -37,6 +37,7 @@ import {
   loadFolder,
   loadLibrary,
   lockDown,
+  playlistCrate,
   renderFiles,
   selectTrack,
   selectedDuplicateGroup,
@@ -93,13 +94,14 @@ const relinkChecked = new Set<number>();
  * XML download, which starts only after the dialog is confirmed.
  * Hot loops sends ``hot_loops=1`` while the box is checked and
  * ``hot_loops=0`` while it is clear. The box starts clear.
- * wireDialogs loads the saved export bar before the person exports.
+ * wireDialogs loads the saved dialog options before the person exports.
+ * Off Crates the crate is ``all``, but the Rekordbox button does not fetch.
  *
  * @param {boolean} report True asks for the loss report instead of the file.
  * @returns {string} The request path and query.
  */
 export function rekordboxExportUrl(report: boolean) {
-  const crate = state.mode === "crates" ? state.activeCrate : "all";
+  const crate = playlistCrate() ?? "all";
   const memory = el("rekordbox-memory").checked ? "1" : "0";
   const hotLoops = el("rekordbox-hot-loops").checked ? "1" : "0";
   const key = el("rekordbox-key").value;
@@ -107,11 +109,13 @@ export function rekordboxExportUrl(report: boolean) {
   return report ? `${base}&report=1` : base;
 }
 
-/** Bumps when the export bar changes, so a late settings response is ignored. */
+/** Bumps when the Rekordbox options change, so a late settings response is ignored. */
 let rekordboxToken = 0;
+/** Bumps when a new report fetch starts, so a late report is ignored. */
+let rekordboxReportToken = 0;
 
 /**
- * Apply a saved export bar to the three controls.
+ * Apply saved Rekordbox options to the three dialog controls.
  *
  * Only boolean cues and a known key notation are copied. A missing
  * section leaves the controls as they are. Does not fetch.
@@ -138,7 +142,7 @@ export function applyRekordboxExport(payload: SettingsPayload): void {
 }
 
 /**
- * POST the export bar.
+ * POST the Rekordbox dialog options.
  *
  * The body is the three controls as they are now. A failed request leaves
  * those controls in place, and the export reads them directly.
@@ -179,6 +183,40 @@ function fillRekordboxReport(lines: string[]) {
     item.textContent = line;
     list.append(item);
   }
+}
+
+/**
+ * Fetch the loss report and XML, then open the dialog when it is closed.
+ *
+ * A later call ignores an earlier reply. Failure writes the dialog status
+ * while the dialog is open, and the notice bar otherwise.
+ *
+ * @returns {void}
+ */
+function requestRekordboxReport(): void {
+  const token = ++rekordboxReportToken;
+  rekordboxXml = "";
+  fetch(rekordboxExportUrl(true))
+    .then((response) => response.json().then((body) => ({ ok: response.ok, body })))
+    .then(({ ok, body }) => {
+      if (token !== rekordboxReportToken) return;
+      if (!ok || typeof body.xml !== "string" || !body.xml.startsWith("<?xml")) {
+        const message = serverMessage(body, t("rekordbox.failed"));
+        if (el("rekordbox-dialog").open) el("rekordbox-status").textContent = message;
+        else setNotice(message);
+        return;
+      }
+      rekordboxXml = body.xml;
+      fillRekordboxReport(body.report || []);
+      el("rekordbox-status").textContent = "";
+      if (!el("rekordbox-dialog").open) el("rekordbox-dialog").showModal();
+    })
+    .catch((error) => {
+      if (token !== rekordboxReportToken) return;
+      const message = failureOf(error).message;
+      if (el("rekordbox-dialog").open) el("rekordbox-status").textContent = message;
+      else setNotice(message);
+    });
 }
 
 /**
@@ -1493,6 +1531,7 @@ export function wireDialogs(): void {
     saveRekordboxExport().catch(() => {
       // saveRekordboxExport already keeps the boxes. This catch is the listener boundary.
     });
+    if (el("rekordbox-dialog").open) requestRekordboxReport();
   };
   el("rekordbox-hot-loops").addEventListener("change", saveExportBar);
   el("rekordbox-memory").addEventListener("change", saveExportBar);
@@ -1501,20 +1540,8 @@ export function wireDialogs(): void {
     setNotice(failureOf(error).message || t("sharing.loadFailedOff"));
   });
   el("export-rekordbox").addEventListener("click", () => {
-    rekordboxXml = "";
-    fetch(rekordboxExportUrl(true))
-      .then((response) => response.json().then((body) => ({ ok: response.ok, body })))
-      .then(({ ok, body }) => {
-        if (!ok || typeof body.xml !== "string" || !body.xml.startsWith("<?xml")) {
-          setNotice(serverMessage(body, t("rekordbox.failed")));
-          return;
-        }
-        rekordboxXml = body.xml;
-        fillRekordboxReport(body.report || []);
-        el("rekordbox-status").textContent = "";
-        el("rekordbox-dialog").showModal();
-      })
-      .catch((error) => setNotice(failureOf(error).message));
+    if (playlistCrate() == null) return;
+    requestRekordboxReport();
   });
 
   el("rekordbox-cancel").addEventListener("click", () => {

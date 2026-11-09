@@ -106,4 +106,4 @@ Use **Search tracks**, then click a tune. The field menu next to search can limi
 
 The other groups are **Library health** (Library health, Missing files, Duplicates, Stems, Damaged files, Tag spellings), **Organize files** under Library, **Backups**, and **Before a gig** (Before a gig, Tempo drift).
 
-**Hot loops** sits beside **Memory cues**. It starts off, and it uses a free hot-cue pad.
+**Hot loops** sits beside **Memory cues** in the Rekordbox dialog. It starts off, and it uses a free hot-cue pad.

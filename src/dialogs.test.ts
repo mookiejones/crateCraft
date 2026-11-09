@@ -3,6 +3,7 @@ import { loadPrivacy, rankReplaceCandidates, rekordboxExportUrl, renderCratesRep
 import { el } from "./dom";
 import { state } from "./state";
 import { installPage } from "./test-page";
+import { playlistCrate, renderShell } from "./views";
 
 describe("rekordboxExportUrl", () => {
   beforeEach(() => {
@@ -31,9 +32,71 @@ describe("rekordboxExportUrl", () => {
     state.activeCrate = 4;
     memory.checked = false;
     hotLoops.checked = false;
+    expect(playlistCrate()).toBeNull();
     expect(rekordboxExportUrl(false)).toContain("crate=all");
     expect(rekordboxExportUrl(false)).toContain("memory=0");
     expect(rekordboxExportUrl(false)).toContain("hot_loops=0");
+  });
+});
+
+describe("playlist export chrome", () => {
+  beforeEach(() => {
+    installPage();
+    state.mode = "crates";
+    state.space = "Serato Library";
+    state.activeCrate = "all";
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("keeps Memory cues, Hot loops, and the key in the Rekordbox dialog", () => {
+    const dialog = el("rekordbox-dialog");
+    expect(dialog.contains(el("rekordbox-memory"))).toBe(true);
+    expect(dialog.contains(el("rekordbox-hot-loops"))).toBe(true);
+    expect(dialog.contains(el("rekordbox-key"))).toBe(true);
+    const bar = document.querySelector(".browser-bar");
+    expect(bar?.contains(el("rekordbox-memory"))).toBe(false);
+    expect(bar?.contains(el("rekordbox-hot-loops"))).toBe(false);
+    expect(bar?.contains(el("rekordbox-key"))).toBe(false);
+  });
+
+  it("shows Export, Import, and Rekordbox only on Crates", () => {
+    renderShell();
+    expect(el("export-m3u").hidden).toBe(false);
+    expect(el("export-rekordbox").hidden).toBe(false);
+    expect(el("import-m3u").hidden).toBe(false);
+    expect(playlistCrate()).toBe("all");
+    for (const mode of ["history", "missing", "duplicates", "stems"] as const) {
+      state.mode = mode;
+      renderShell();
+      expect(el("export-m3u").hidden).toBe(true);
+      expect(el("export-rekordbox").hidden).toBe(true);
+      expect(el("import-m3u").hidden).toBe(true);
+      expect(playlistCrate()).toBeNull();
+    }
+    state.mode = "crates";
+    state.activeCrate = 4;
+    renderShell();
+    expect(el("export-m3u").hidden).toBe(false);
+    expect(playlistCrate()).toBe(4);
+  });
+
+  it("does not fetch Rekordbox XML from History", async () => {
+    vi.stubGlobal("fetch", vi.fn());
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({ xml: "<?xml version=\"1.0\"?><DJ_PLAYLISTS/>", report: [] }),
+    } as Response);
+    state.mode = "history";
+    wireDialogs();
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    fetchMock.mockClear();
+    el("export-rekordbox").click();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(el("rekordbox-dialog").open).toBe(false);
   });
 });
 

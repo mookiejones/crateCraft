@@ -75,6 +75,9 @@ describe("tooltip behavior", () => {
   });
 
   it("shows on focus, describes the control, and restores the previous description", () => {
+    const dialog = document.getElementById("rekordbox-dialog");
+    if (!(dialog instanceof HTMLDialogElement)) throw new Error("missing rekordbox dialog");
+    dialog.showModal();
     const loops = document.getElementById("rekordbox-hot-loops");
     if (!(loops instanceof HTMLElement)) throw new Error("missing hot loops");
     expect(loops.getAttribute("aria-describedby")).toBe("rekordbox-hot-loops-help");
@@ -83,6 +86,7 @@ describe("tooltip behavior", () => {
     expect(tip().textContent).toBe(tipText(tips.hotLoops));
     expect(loops.getAttribute("aria-describedby")).toBe(`rekordbox-hot-loops-help ${TOOLTIP_ID}`);
     expect(tip().getAttribute("role")).toBe("tooltip");
+    dialog.close();
 
     const reload = document.getElementById("reload");
     if (!(reload instanceof HTMLElement)) throw new Error("missing reload");

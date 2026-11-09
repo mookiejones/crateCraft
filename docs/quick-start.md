@@ -138,4 +138,4 @@ Double-click a row, press **Enter**, or click **Play**, to hear it. **Space** pl
 
 The other groups are **Library health** (Library health, Missing files, Duplicates, Stems, Damaged files, Tag spellings), **Organize files** under Library, **Backups**, and **Before a gig** (Before a gig, Tempo drift).
 
-**Hot loops** sits beside **Memory cues**. It starts off, and it uses a free hot-cue pad.
+**Hot loops** sits beside **Memory cues** in the Rekordbox dialog. It starts off, and it uses a free hot-cue pad.

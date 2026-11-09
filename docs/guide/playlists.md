@@ -10,7 +10,7 @@ Quit Serato before you import. Export and Rekordbox only read the library. Rekor
 2. Select the crate to export. Select **All tracks** to export the whole space.
 3. Click **Export**.
 
-The browser downloads `crate.m3u`. In History, Missing, Duplicates, or Stems, **Export** uses the whole current space.
+The browser downloads `crate.m3u`. **Export**, **Import**, and **Rekordbox** show only on **Crates**.
 
 The file is an extended M3U. It has a playlist name, a length, and a path for each track. A track with no path is a comment line that says it was omitted. Open the file in a text editor if you want to read it.
 
@@ -37,7 +37,7 @@ Import matches a line to a track that is already in the library. Put the audio i
 2. Select the crate to export. Select **All tracks** to export the whole space.
 3. Click **Rekordbox**.
 
-**Rekordbox** opens a dialog that lists what could not be copied. The file downloads after you confirm. The download is the XML from that same check, so a failed request is not saved as `rekordbox.xml`. A file that is locked or cannot be opened is still in the XML, without its cue points, and the dialog names that file. A path that contains a null character is exported as a missing file, and the dialog names that file too. A beatgrid marker whose time or BPM is not a real number is left out and counted. In History, Missing, Duplicates, or Stems, **Rekordbox** uses the whole current space.
+**Rekordbox** opens a dialog that lists what could not be copied. Memory cues, Hot loops, and the key notation sit in that dialog. Changing them saves `settings.json` and refreshes the report. The file downloads after you confirm. The download is the XML from that same check, so a failed request is not saved as `rekordbox.xml`. A file that is locked or cannot be opened is still in the XML, without its cue points, and the dialog names that file. A path that contains a null character is exported as a missing file, and the dialog names that file too. A beatgrid marker whose time or BPM is not a real number is left out and counted.
 
 **Memory cues** starts on. Each hot cue is then also saved as a memory cue, which is what some CDJ screens show. **Hot loops** starts off. The app stores Memory cues, Hot loops, and the key notation in `settings.json` and restores them the next time you open the page, including after a relaunch. If that save fails, the export still uses the boxes you see. The help line says Uses a free hot-cue pad. A saved loop then takes its own pad when that pad is free and the pad is one of the first eight. A loop whose pad is already taken stays a memory loop. A loop past those eight pads stays a memory loop too. While the box is clear, every saved loop stays a memory loop. **Key as stored** leaves the key text Serato has. Choose **Camelot key** or **Classical key** when Rekordbox is set to the other notation.
 
@@ -45,7 +45,7 @@ The file lists each track's location, title, artist, album, genre, BPM, key, len
 
 Crates become playlist folders. A subcrate stays inside its parent. A crate that has both tracks and subcrates becomes a folder, and its own tracks are a playlist with the same name inside that folder.
 
-From the project folder, the same file can be written without opening the page. The command prints the same loss report the bar shows:
+From the project folder, the same file can be written without opening the page. The command prints the same loss report the dialog shows:
 
 ```bash
 python3 rekordbox.py -o rekordbox.xml

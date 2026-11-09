@@ -8921,6 +8921,10 @@
       header.append(button2);
     }
   }
+  function playlistCrate() {
+    if (state.mode !== "crates") return null;
+    return state.activeCrate;
+  }
   function renderShell() {
     markHistoryColumns();
     const cratesMode = state.mode === "crates";
@@ -8934,6 +8938,9 @@
     el("crate-tools").hidden = !showCrates2;
     el("crate-actions").hidden = !cratesMode;
     el("crate-list").hidden = !showCrates2;
+    el("export-m3u").hidden = !cratesMode;
+    el("export-rekordbox").hidden = !cratesMode;
+    el("import-m3u").hidden = !cratesMode;
     el("session-list").hidden = !historyMode;
     el("mode-note").hidden = cratesMode || historyMode;
     const filesMode = state.mode === "files";
@@ -10820,13 +10827,15 @@
       Promise.all(jobs).catch(showFailure);
     });
     el("export-m3u").addEventListener("click", () => {
-      const crate = state.mode === "crates" ? state.activeCrate : "all";
+      const crate = playlistCrate();
+      if (crate == null) return;
       const link = document.createElement("a");
       link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
       link.download = "crate.m3u";
       link.click();
     });
     el("import-m3u").addEventListener("click", () => {
+      if (playlistCrate() == null) return;
       if (!state.writable) {
         setNotice(el("status").textContent);
         return;
@@ -10993,7 +11002,7 @@
   var relinkChosen = /* @__PURE__ */ new Map();
   var relinkChecked = /* @__PURE__ */ new Set();
   function rekordboxExportUrl(report) {
-    const crate = state.mode === "crates" ? state.activeCrate : "all";
+    const crate = playlistCrate() ?? "all";
     const memory = el("rekordbox-memory").checked ? "1" : "0";
     const hotLoops = el("rekordbox-hot-loops").checked ? "1" : "0";
     const key = el("rekordbox-key").value;
@@ -11001,6 +11010,7 @@
     return report ? `${base}&report=1` : base;
   }
   var rekordboxToken = 0;
+  var rekordboxReportToken = 0;
   function applyRekordboxExport(payload) {
     const section = payload.rekordbox;
     if (section == null) return;
@@ -11038,6 +11048,28 @@
       item4.textContent = line;
       list.append(item4);
     }
+  }
+  function requestRekordboxReport() {
+    const token3 = ++rekordboxReportToken;
+    rekordboxXml = "";
+    fetch(rekordboxExportUrl(true)).then((response) => response.json().then((body) => ({ ok: response.ok, body }))).then(({ ok, body }) => {
+      if (token3 !== rekordboxReportToken) return;
+      if (!ok || typeof body.xml !== "string" || !body.xml.startsWith("<?xml")) {
+        const message = serverMessage(body, t("rekordbox.failed"));
+        if (el("rekordbox-dialog").open) el("rekordbox-status").textContent = message;
+        else setNotice(message);
+        return;
+      }
+      rekordboxXml = body.xml;
+      fillRekordboxReport(body.report || []);
+      el("rekordbox-status").textContent = "";
+      if (!el("rekordbox-dialog").open) el("rekordbox-dialog").showModal();
+    }).catch((error2) => {
+      if (token3 !== rekordboxReportToken) return;
+      const message = failureOf(error2).message;
+      if (el("rekordbox-dialog").open) el("rekordbox-status").textContent = message;
+      else setNotice(message);
+    });
   }
   function selectedMergeKeepId() {
     const checked = el("merge-choices").querySelector("input:checked");
@@ -11980,6 +12012,7 @@
     const saveExportBar = () => {
       saveRekordboxExport().catch(() => {
       });
+      if (el("rekordbox-dialog").open) requestRekordboxReport();
     };
     el("rekordbox-hot-loops").addEventListener("change", saveExportBar);
     el("rekordbox-memory").addEventListener("change", saveExportBar);
@@ -11988,17 +12021,8 @@
       setNotice(failureOf(error2).message || t("sharing.loadFailedOff"));
     });
     el("export-rekordbox").addEventListener("click", () => {
-      rekordboxXml = "";
-      fetch(rekordboxExportUrl(true)).then((response) => response.json().then((body) => ({ ok: response.ok, body }))).then(({ ok, body }) => {
-        if (!ok || typeof body.xml !== "string" || !body.xml.startsWith("<?xml")) {
-          setNotice(serverMessage(body, t("rekordbox.failed")));
-          return;
-        }
-        rekordboxXml = body.xml;
-        fillRekordboxReport(body.report || []);
-        el("rekordbox-status").textContent = "";
-        el("rekordbox-dialog").showModal();
-      }).catch((error2) => setNotice(failureOf(error2).message));
+      if (playlistCrate() == null) return;
+      requestRekordboxReport();
     });
     el("rekordbox-cancel").addEventListener("click", () => {
       rekordboxXml = "";

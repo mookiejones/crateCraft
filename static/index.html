@@ -150,27 +150,6 @@
             <input id="import-file" type="file" accept=".m3u,.m3u8,audio/x-mpegurl" hidden>
             <button id="reload" type="button" data-i18n="common.reload">Reload</button>
           </div>
-          <span class="rekordbox-options">
-            <label class="rekordbox-option">
-              <input id="rekordbox-memory" type="checkbox" checked>
-              <span data-i18n="rekordbox.memoryCues">Memory cues</span>
-            </label>
-            <span class="rekordbox-option rekordbox-hot-loops">
-              <label>
-                <input id="rekordbox-hot-loops" type="checkbox" aria-describedby="rekordbox-hot-loops-help">
-                <span data-i18n="rekordbox.hotLoops">Hot loops</span>
-              </label>
-              <span id="rekordbox-hot-loops-help" class="rekordbox-help" data-i18n="rekordbox.hotLoopsHelp">Uses a free hot-cue pad</span>
-            </span>
-          </span>
-          <label class="rekordbox-option">
-            <span class="visually-hidden" data-i18n="rekordbox.keyNotation">Rekordbox key notation</span>
-            <select id="rekordbox-key" aria-label="Rekordbox key notation" data-i18n-attr="aria-label:rekordbox.keyNotation">
-              <option value="asis" data-i18n="rekordbox.keyAsis">Key as stored</option>
-              <option value="camelot" selected data-i18n="rekordbox.keyCamelot">Camelot key</option>
-              <option value="classical" data-i18n="rekordbox.keyClassical">Classical key</option>
-            </select>
-          </label>
         </div>
         <p id="notice" class="notice" hidden></p>
         <div class="columns" aria-hidden="true">
@@ -569,6 +548,27 @@
   <dialog id="rekordbox-dialog" aria-labelledby="rekordbox-title" aria-describedby="rekordbox-intro">
     <h2 id="rekordbox-title" data-i18n="rekordbox.dialogTitle">Download rekordbox.xml?</h2>
     <p id="rekordbox-intro" data-i18n="rekordbox.intro">These items are not copied into Rekordbox. The file downloads after you confirm.</p>
+    <span class="rekordbox-options">
+      <label class="rekordbox-option">
+        <input id="rekordbox-memory" type="checkbox" checked>
+        <span data-i18n="rekordbox.memoryCues">Memory cues</span>
+      </label>
+      <span class="rekordbox-option rekordbox-hot-loops">
+        <label>
+          <input id="rekordbox-hot-loops" type="checkbox" aria-describedby="rekordbox-hot-loops-help">
+          <span data-i18n="rekordbox.hotLoops">Hot loops</span>
+        </label>
+        <span id="rekordbox-hot-loops-help" class="rekordbox-help" data-i18n="rekordbox.hotLoopsHelp">Uses a free hot-cue pad</span>
+      </span>
+      <label class="rekordbox-option">
+        <span class="visually-hidden" data-i18n="rekordbox.keyNotation">Rekordbox key notation</span>
+        <select id="rekordbox-key" aria-label="Rekordbox key notation" data-i18n-attr="aria-label:rekordbox.keyNotation">
+          <option value="asis" data-i18n="rekordbox.keyAsis">Key as stored</option>
+          <option value="camelot" selected data-i18n="rekordbox.keyCamelot">Camelot key</option>
+          <option value="classical" data-i18n="rekordbox.keyClassical">Classical key</option>
+        </select>
+      </label>
+    </span>
     <ul id="rekordbox-report" aria-label="What is not copied" data-i18n-attr="aria-label:rekordbox.reportLabel"></ul>
     <div class="dialog-actions">
       <button id="rekordbox-cancel" type="button" autofocus data-i18n="common.cancel">Cancel</button>

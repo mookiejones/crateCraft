@@ -588,6 +588,19 @@ export function renderColumns() {
 }
 
 /**
+ * Crate id Export, Import, and Rekordbox may use.
+ *
+ * Those controls live on Crates. Other views return null so a click
+ * does not export the whole space.
+ *
+ * @returns {number|"all"|null} The selected crate, or null off Crates.
+ */
+export function playlistCrate(): number | "all" | null {
+  if (state.mode !== "crates") return null;
+  return state.activeCrate;
+}
+
+/**
  * Show the controls and footer that belong to the current view.
  *
  * Hides crate tools outside the crate view, marks the selected view and
@@ -609,6 +622,9 @@ export function renderShell() {
   el("crate-tools").hidden = !showCrates;
   el("crate-actions").hidden = !cratesMode;
   el("crate-list").hidden = !showCrates;
+  el("export-m3u").hidden = !cratesMode;
+  el("export-rekordbox").hidden = !cratesMode;
+  el("import-m3u").hidden = !cratesMode;
   el("session-list").hidden = !historyMode;
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
@@ -3383,13 +3399,15 @@ export function wireLibrary(): void {
   });
 
   el("export-m3u").addEventListener("click", () => {
-    const crate = state.mode === "crates" ? state.activeCrate : "all";
+    const crate = playlistCrate();
+    if (crate == null) return;
     const link = document.createElement("a");
     link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
     link.download = "crate.m3u";
     link.click();
   });
   el("import-m3u").addEventListener("click", () => {
+    if (playlistCrate() == null) return;
     if (!state.writable) {
       setNotice(el("status").textContent);
       return;
