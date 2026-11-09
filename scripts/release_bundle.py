@@ -99,6 +99,20 @@ def source_static() -> Path:
     return ROOT / "static"
 
 
+MENU_LOCALE_FILES = ("en.json", "es.json")
+
+
+def source_locales() -> Path:
+    """Return the repository ``locales`` directory.
+
+    The frozen menu reads these catalogs from the extract directory.
+
+    Returns:
+        ``locales`` beside the repository root. The directory is not read here.
+    """
+    return ROOT / "locales"
+
+
 def check_tag(tag: str) -> None:
     """Refuse a tag that is not a final version or an ``-rcN`` / ``-betaN`` prerelease.
 
@@ -337,6 +351,41 @@ def assert_static_matches(root: Path, source: Path) -> None:
                 raise SystemExit(f"Bundled static/{name} does not match source")
 
 
+def assert_locales_match(root: Path, source: Path) -> None:
+    """Require every bundled ``locales`` directory to match ``source``.
+
+    The native menu reads ``en.json`` and ``es.json`` from the extract
+    directory. Release smoke does not open a window, so a missing catalog
+    would ship.
+
+    Args:
+        root: Bundle root that should contain one or more ``locales`` folders.
+        source: Repository ``locales`` directory.
+
+    Returns:
+        None.
+
+    Raises:
+        SystemExit: If no bundled catalog is present, or a copy differs.
+
+    Reads file bytes from both trees. Does not write.
+    """
+    found = [
+        path.parent
+        for path in root.rglob("en.json")
+        if path.parent.name == "locales" and path.is_file() and not path.is_symlink()
+    ]
+    if not found:
+        raise SystemExit(f"{root} has no locales/en.json")
+    for locale_dir in found:
+        for name in MENU_LOCALE_FILES:
+            bundled = locale_dir / name
+            if not bundled.is_file() or bundled.is_symlink():
+                raise SystemExit(f"{locale_dir} is missing {name}")
+            if bundled.read_bytes() != (source / name).read_bytes():
+                raise SystemExit(f"Bundled locales/{name} does not match source")
+
+
 def _unsafe_member(name: str) -> bool:
     """Return whether a zip entry name could write outside the destination.
 
@@ -533,6 +582,19 @@ def assert_zip(
                 if _is_symlink_member(info):
                     raise SystemExit(f"{member} is a symlink")
                 if zipped.read(info) != (source / name).read_bytes():
+                    raise SystemExit(f"{member} does not match source")
+        locales = source_locales()
+        for static_prefix in prefixes:
+            locale_prefix = static_prefix[: -len("static/")] + "locales/"
+            for name in MENU_LOCALE_FILES:
+                member = locale_prefix + name
+                try:
+                    info = zipped.getinfo(member)
+                except KeyError as exc:
+                    raise SystemExit(f"{archive} is missing {member}") from exc
+                if _is_symlink_member(info):
+                    raise SystemExit(f"{member} is a symlink")
+                if zipped.read(info) != (locales / name).read_bytes():
                     raise SystemExit(f"{member} does not match source")
     return kind
 
@@ -907,7 +969,7 @@ def assert_notices_bundled(root: Path) -> None:
 
 
 def verify_tree(dist: Path) -> Bundle:
-    """Check bundle size and that its page matches ``static/``.
+    """Check bundle size and that its page and locale catalogs match source.
 
     Args:
         dist: PyInstaller ``dist`` directory, or a folder that contains the app.
@@ -923,6 +985,7 @@ def verify_tree(dist: Path) -> Bundle:
     bundle = find_bundle(dist)
     assert_size(str(bundle.root), directory_bytes(bundle.root), MIN_BUNDLE_BYTES, MAX_BUNDLE_BYTES)
     assert_static_matches(bundle.root, source_static())
+    assert_locales_match(bundle.root, source_locales())
     assert_miniaudio_bundled(bundle.root)
     assert_notices_bundled(bundle.root)
     return bundle
@@ -1373,6 +1436,7 @@ def smoke_dmg(archive: Path, arch: str) -> None:
         if not app.is_dir():
             raise SystemExit(f"{archive.name} has no {MACOS_APP}")
         assert_static_matches(app, source_static())
+        assert_locales_match(app, source_locales())
         assert_frozen_arch(app / MACOS_EXE, arch)
         with tempfile.TemporaryDirectory(prefix="serato-library-artifact-") as tmp:
             copied = Path(tmp) / MACOS_APP

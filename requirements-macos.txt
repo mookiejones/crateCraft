@@ -1,6 +1,6 @@
-pyobjc-core==12.2.2
-pyobjc-framework-Cocoa==12.2.2
-pyobjc-framework-Quartz==12.2.2
-pyobjc-framework-WebKit==12.2.2
-pyobjc-framework-Security==12.2.2
-pyobjc-framework-UniformTypeIdentifiers==12.2.2
+pyobjc-core==13.0
+pyobjc-framework-Cocoa==13.0
+pyobjc-framework-Quartz==13.0
+pyobjc-framework-WebKit==13.0
+pyobjc-framework-Security==13.0
+pyobjc-framework-UniformTypeIdentifiers==13.0
