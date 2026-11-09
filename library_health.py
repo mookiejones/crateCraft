@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""One-page library health report from the database (#29, part 1).
+"""One-page library health report from the database and on-disk files (#29).
 
 ``report`` reads the library with ``gig_check.open_read_only``. It counts
 missing files, tracks with no BPM or key, empty genre, tracks in no crate,
-and duplicate groups. Sample rows are capped. Artwork, beatgrids inside
-audio files, and unused files on disk are later. Nothing is written, so
-the report is safe while Serato DJ is open.
+duplicate groups, present files with no artwork or beatgrid, and unused
+audio files under the collapsed folders of those present files. Sample
+rows are capped. Nothing is written, so the report is safe while Serato
+DJ is open.
 
 ``python3 library_health.py`` prints the JSON. ``GET /api/library-health``
 returns the same object.
@@ -15,18 +16,23 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sqlite3
 import sys
 from collections.abc import Sequence
-from pathlib import Path
+from pathlib import Path, PurePath
 from typing import Any
 
 import file_scan
+import files
 import gig_check
 import library
+import music_roots
+import tags
 
 ROW_CAP = 100
 SPACE_ROOT = 0
+_UNUSED_SKIP_DIRS = files._SEARCH_SKIP_DIRS | frozenset({"Recording", "DJ Sessions"})
 
 
 def _blank_text(value: object) -> bool:
@@ -57,6 +63,91 @@ def _track(row: sqlite3.Row) -> dict[str, object]:
 def _section(rows: list[dict[str, object]]) -> dict[str, object]:
     """Return count plus a capped sample."""
     return {"count": len(rows), "tracks": rows[:ROW_CAP]}
+
+
+def _file_section(rows: list[dict[str, object]]) -> dict[str, object]:
+    """Return unused-file count plus a capped sample."""
+    return {"count": len(rows), "files": rows[:ROW_CAP]}
+
+
+def _present_path(portable_id: object) -> str | None:
+    """Return a filesystem path when the stored file is on disk.
+
+    Args:
+        portable_id: Stored path from ``asset.portable_id``.
+
+    Returns:
+        An existing regular file path, or None when the id is empty or
+        the file is missing, offline, or unreadable.
+    """
+    stored = portable_id if isinstance(portable_id, str) else None
+    resolved = library.resolved_path(stored)
+    if not resolved:
+        return None
+    path = Path(resolved)
+    try:
+        if path.is_file():
+            return str(path)
+    except (OSError, ValueError):
+        return None
+    return None
+
+
+def _unused_files(present: Sequence[str], crate_id: int | None) -> list[dict[str, object]]:
+    """List audio files under library folders that are not in the library.
+
+    Walks collapsed parents of *existing* library files only. Hidden
+    names, ``_Serato_``, ``.git``, ``node_modules``, ``Recording``, and
+    ``DJ Sessions`` are skipped. A crate scope returns an empty list.
+
+    Args:
+        present: Absolute paths of library files that exist on disk.
+        crate_id: A crate id, or None for the whole space.
+
+    Returns:
+        ``{ file, path }`` rows sorted by path. The library is not written.
+    """
+    if crate_id is not None or not present:
+        return []
+    known: set[str] = set()
+    parents: list[PurePath] = []
+    for raw in present:
+        path = Path(raw)
+        try:
+            real = path.resolve()
+        except OSError:
+            continue
+        known.add(os.path.normcase(str(real)))
+        parents.append(real.parent)
+    unused: list[dict[str, object]] = []
+    for root in music_roots.collapse_track_folders(parents):
+        root_path = Path(root)
+        try:
+            if not root_path.is_dir():
+                continue
+        except OSError:
+            continue
+        for dirpath, dirnames, filenames in os.walk(root_path):
+            dirnames[:] = [
+                name
+                for name in dirnames
+                if name not in _UNUSED_SKIP_DIRS and not name.startswith(".")
+            ]
+            for name in filenames:
+                if name.startswith("."):
+                    continue
+                if Path(name).suffix.lower() not in files._AUDIO:
+                    continue
+                full = Path(dirpath) / name
+                try:
+                    key = os.path.normcase(str(full.resolve()))
+                except OSError:
+                    continue
+                if key in known:
+                    continue
+                unused.append({"file": name, "path": str(full)})
+    unused.sort(key=lambda row: str(row["path"]).casefold())
+    return unused
 
 
 def _crate_ids_in_space(conn: sqlite3.Connection, space_id: int) -> list[int]:
@@ -114,7 +205,7 @@ def _duplicate_groups(
 
 
 def report(database: Path, space: str, crate_id: int | None = None) -> dict[str, Any]:
-    """Count sqlite-backed health problems for a space, or one crate.
+    """Count library health problems for a space, or one crate.
 
     Args:
         database: ``master.sqlite``.
@@ -123,10 +214,13 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
 
     Returns:
         ``space``, ``crate``, ``checked``, and sections ``missing``,
-        ``no_bpm``, ``no_key``, ``empty_genre``, ``no_crate``, and
-        ``duplicates``. Each track section is ``{ count, tracks }`` with at
-        most ``ROW_CAP`` sample rows. ``duplicates`` is ``{ count, groups }``.
-        ``no_crate`` is empty when a crate is selected.
+        ``no_bpm``, ``no_key``, ``no_beatgrid``, ``no_artwork``,
+        ``empty_genre``, ``no_crate``, ``unused``, and ``duplicates``.
+        Each track section is ``{ count, tracks }`` with at most
+        ``ROW_CAP`` sample rows. ``unused`` is ``{ count, files }``.
+        ``duplicates`` is ``{ count, groups }``. ``no_crate`` and
+        ``unused`` are empty when a crate is selected. Artwork and
+        beatgrid skip files that are missing or not on disk.
 
     Raises:
         library.LibraryError: Unknown space, a crate not in the space (404),
@@ -142,7 +236,8 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
         space_id = int(space_row[0])
         rows = conn.execute(
             """
-            SELECT a.id, a.name, a.artist, a.file_name, a.bpm, a.key, a.genre, a.is_missing
+            SELECT a.id, a.name, a.artist, a.file_name, a.bpm, a.key, a.genre,
+                   a.is_missing, a.portable_id
             FROM asset a
             JOIN space_asset sa ON sa.asset_id = a.id
             JOIN space s ON s.id = sa.space_id
@@ -160,8 +255,11 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
         missing: list[dict[str, object]] = []
         no_bpm: list[dict[str, object]] = []
         no_key: list[dict[str, object]] = []
+        no_beatgrid: list[dict[str, object]] = []
+        no_artwork: list[dict[str, object]] = []
         empty_genre: list[dict[str, object]] = []
         no_crate: list[dict[str, object]] = []
+        present: list[str] = []
         for row in rows:
             item = _track(row)
             if int(row["is_missing"] or 0):
@@ -174,7 +272,17 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
                 empty_genre.append(item)
             if crate_id is None and int(row["id"]) not in in_crate:
                 no_crate.append(item)
+            path = _present_path(row["portable_id"])
+            if path is None:
+                continue
+            present.append(path)
+            health = tags.read_file_health(path)
+            if not health["beatgrid"]:
+                no_beatgrid.append(item)
+            if not health["artwork"]:
+                no_artwork.append(item)
         groups = _duplicate_groups(conn, space, members)
+        unused = _unused_files(present, crate_id)
     finally:
         conn.close()
     return {
@@ -184,8 +292,11 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
         "missing": _section(missing),
         "no_bpm": _section(no_bpm),
         "no_key": _section(no_key),
+        "no_beatgrid": _section(no_beatgrid),
+        "no_artwork": _section(no_artwork),
         "empty_genre": _section(empty_genre),
         "no_crate": _section(no_crate),
+        "unused": _file_section(unused),
         "duplicates": {"count": len(groups), "groups": groups[:ROW_CAP]},
     }
 

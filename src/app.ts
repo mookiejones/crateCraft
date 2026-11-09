@@ -117,7 +117,10 @@ wireGigCheck(() => {
 });
 wireHealth((action, id) => {
   if (action === "track" && id != null) state.selectedId = id;
-  setMode(action === "missing" ? "missing" : action === "duplicates" ? "duplicates" : "crates");
+  if (action === "missing") setMode("missing");
+  else if (action === "duplicates") setMode("duplicates");
+  else if (action === "files") setMode("files");
+  else setMode("crates");
 });
 wireDrift();
 wireScan();

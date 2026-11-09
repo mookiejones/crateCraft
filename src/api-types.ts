@@ -737,6 +737,16 @@ export interface LibraryHealthSection {
   tracks: LibraryHealthTrack[];
 }
 
+export interface LibraryHealthFile {
+  file: string;
+  path: string;
+}
+
+export interface LibraryHealthFiles {
+  count: number;
+  files: LibraryHealthFile[];
+}
+
 export interface LibraryHealthDuplicateGroup {
   name: string;
   artist: string;
@@ -751,8 +761,11 @@ export interface LibraryHealthReport {
   missing: LibraryHealthSection;
   no_bpm: LibraryHealthSection;
   no_key: LibraryHealthSection;
+  no_beatgrid: LibraryHealthSection;
+  no_artwork: LibraryHealthSection;
   empty_genre: LibraryHealthSection;
   no_crate: LibraryHealthSection;
+  unused: LibraryHealthFiles;
   duplicates: { count: number; groups: LibraryHealthDuplicateGroup[] };
   error?: string;
   code?: string;

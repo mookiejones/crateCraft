@@ -3,8 +3,8 @@
  *
  * Typed against the fields GET /api/library-health returns. The request
  * does not write. A newer selection ignores a late response. The report
- * is painted with text nodes. Missing and duplicate sections open those
- * views. A track row opens Crates on that id.
+ * is painted with text nodes. Missing, duplicate, and unused sections
+ * open those views. A track row opens Crates on that id.
  *
  * Page text is in the locale catalogs under health.*.
  */
@@ -22,16 +22,18 @@ import { state } from "./state";
 import { buttonEl } from "./tooltip";
 import { tips } from "./tooltip-strings";
 
-type HealthAction = "missing" | "duplicates" | "track";
+type HealthAction = "missing" | "duplicates" | "track" | "files";
 
 const SECTIONS: Array<{
-  key: "missing" | "no_bpm" | "no_key" | "empty_genre" | "no_crate";
+  key: "missing" | "no_bpm" | "no_key" | "no_beatgrid" | "no_artwork" | "empty_genre" | "no_crate";
   label: MessageKey;
   action?: "missing";
 }> = [
   { key: "missing", label: "health.missing", action: "missing" },
   { key: "no_bpm", label: "health.noBpm" },
   { key: "no_key", label: "health.noKey" },
+  { key: "no_beatgrid", label: "health.noBeatgrid" },
+  { key: "no_artwork", label: "health.noArtwork" },
   { key: "empty_genre", label: "health.emptyGenre" },
   { key: "no_crate", label: "health.noCrate" },
 ];
@@ -61,7 +63,7 @@ export function wireHealth(navigate: (action: HealthAction, id?: number) => void
     const button = target.closest("button");
     if (!(button instanceof HTMLButtonElement)) return;
     const action = button.dataset.healthAction;
-    if (action === "missing" || action === "duplicates") {
+    if (action === "missing" || action === "duplicates" || action === "files") {
       go?.(action);
       return;
     }
@@ -149,6 +151,7 @@ export function renderHealthReport(payload: LibraryHealthReport): void {
   for (const spec of SECTIONS) {
     listed += paintSection(report, t(spec.label), payload[spec.key], spec.action);
   }
+  listed += paintUnused(report, payload.unused);
   listed += paintDuplicates(report, payload.duplicates);
   if (!listed) report.append(noteLine(t("health.clear")));
 }
@@ -222,6 +225,33 @@ function paintSection(
   return count;
 }
 
+function paintUnused(
+  report: HTMLElement,
+  section: LibraryHealthReport["unused"] | undefined,
+): number {
+  const count = section?.count ?? 0;
+  const files = section?.files ?? [];
+  const details = document.createElement("details");
+  details.className = "gig-group";
+  details.open = count > 0;
+  const heading = document.createElement("summary");
+  heading.textContent = t("gig.groupCount", { label: t("health.unused"), count });
+  details.append(heading);
+  details.append(openButton("files", "health.openFiles", tips.healthOpenFiles));
+  const list = document.createElement("ul");
+  for (const row of files) {
+    const item = document.createElement("li");
+    item.textContent = t("health.fileRow", { file: row.file });
+    list.append(item);
+  }
+  details.append(list);
+  if (count > files.length) {
+    details.append(noteLine(t("health.more", { count: count - files.length })));
+  }
+  report.append(details);
+  return count;
+}
+
 function paintDuplicates(
   report: HTMLElement,
   section: LibraryHealthReport["duplicates"] | undefined,
@@ -245,7 +275,11 @@ function paintDuplicates(
   return count;
 }
 
-function openButton(action: "missing" | "duplicates", label: MessageKey, tip: (typeof tips)["healthOpenMissing"]): HTMLButtonElement {
+function openButton(
+  action: "missing" | "duplicates" | "files",
+  label: MessageKey,
+  tip: (typeof tips)["healthOpenMissing"],
+): HTMLButtonElement {
   const button = buttonEl(tip);
   button.dataset.healthAction = action;
   button.textContent = t(label);

@@ -1,8 +1,7 @@
-"""Library health report (#29, part 1), read-only.
+"""Library health report (#29), read-only.
 
 ``library_health.report`` is checked against a temporary library. The
-library file must be unchanged. Artwork, beatgrids, and unused files on
-disk are later.
+library file must be unchanged.
 """
 
 from __future__ import annotations
@@ -23,6 +22,7 @@ import library
 import library_health
 import server
 from tests.fixture import TempLibrary, open_database
+from tests.test_tags import _apic_frame, _beatgrid_payload, _geob_frame, _id3_pack
 
 
 def _digest(path: Path) -> str:
@@ -99,6 +99,9 @@ class ReportTests(unittest.TestCase):
         self.assertEqual(body["no_crate"]["count"], 2)
         self.assertEqual(body["duplicates"]["count"], 1)
         self.assertEqual(body["duplicates"]["groups"][0]["ids"], [1, 2])
+        self.assertEqual(body["no_artwork"]["count"], 0)
+        self.assertEqual(body["no_beatgrid"]["count"], 0)
+        self.assertEqual(body["unused"]["count"], 0)
 
     def test_sections_split_problems_and_crate_hides_no_crate(self) -> None:
         """Each flag lands in its section. A crate scope leaves no_crate empty."""
@@ -188,6 +191,76 @@ class ReportTests(unittest.TestCase):
             body = library_health.report(temp.db, library.LIBRARY_SPACE)
         self.assertEqual(body["empty_genre"]["count"], library_health.ROW_CAP + 5)
         self.assertEqual(len(body["empty_genre"]["tracks"]), library_health.ROW_CAP)
+
+    def test_present_files_split_artwork_beatgrid_and_unused(self) -> None:
+        """On-disk files fill no_artwork, no_beatgrid, and unused. Missing stays out."""
+        with TempLibrary() as temp:
+            music = temp.root / "music"
+            album_a = music / "a"
+            album_b = music / "b"
+            album_a.mkdir(parents=True)
+            album_b.mkdir(parents=True)
+            complete = album_a / "complete.mp3"
+            complete.write_bytes(
+                _id3_pack([_apic_frame(), _geob_frame("Serato BeatGrid", _beatgrid_payload())])
+            )
+            bare = album_b / "bare.mp3"
+            bare.write_bytes(_id3_pack([]))
+            unused = music / "orphan.mp3"
+            unused.write_bytes(_id3_pack([]))
+            serato_dir = music / "_Serato_"
+            serato_dir.mkdir()
+            (serato_dir / "crate-copy.mp3").write_bytes(_id3_pack([]))
+            (music / ".hidden.mp3").write_bytes(_id3_pack([]))
+            gone = temp.root / "missing" / "gone.mp3"
+            with open_database(temp.db) as conn:
+                _add_track(conn, 30, name="Complete")
+                _add_track(conn, 31, name="Bare")
+                _add_track(conn, 32, name="MissingOnDisk", missing=1)
+                conn.execute(
+                    "UPDATE asset SET portable_id = ? WHERE id = 30",
+                    (str(complete),),
+                )
+                conn.execute(
+                    "UPDATE asset SET portable_id = ? WHERE id = 31",
+                    (str(bare),),
+                )
+                conn.execute(
+                    "UPDATE asset SET portable_id = ? WHERE id = 32",
+                    (str(gone),),
+                )
+            with mock.patch(
+                "music_roots.music_roots",
+                side_effect=AssertionError("do not scan all music roots"),
+            ):
+                body = library_health.report(temp.db, library.LIBRARY_SPACE)
+            crate_id = 5
+            with open_database(temp.db) as conn:
+                _crate(conn, crate_id, "Gig")
+                _member(conn, crate_id, 30)
+            crate = library_health.report(temp.db, library.LIBRARY_SPACE, crate_id)
+        self.assertEqual(sorted(_ids(body["no_artwork"])), [31])
+        self.assertEqual(sorted(_ids(body["no_beatgrid"])), [31])
+        self.assertNotIn(30, _ids(body["no_artwork"]))
+        self.assertNotIn(32, _ids(body["no_artwork"]))
+        self.assertNotIn(32, _ids(body["no_beatgrid"]))
+        self.assertEqual(body["unused"]["count"], 1)
+        self.assertEqual(body["unused"]["files"][0]["file"], "orphan.mp3")
+        self.assertEqual(crate["unused"]["count"], 0)
+        self.assertEqual(crate["no_crate"]["count"], 0)
+
+    def test_unreadable_grid_is_not_no_beatgrid(self) -> None:
+        """A BeatGrid this parser cannot read is still a grid."""
+        with TempLibrary() as temp:
+            path = temp.root / "warn.mp3"
+            path.write_bytes(_id3_pack([_geob_frame("Serato BeatGrid", b"\x01\x00")]))
+            with open_database(temp.db) as conn:
+                conn.execute(
+                    "UPDATE asset SET portable_id = ? WHERE id = 1",
+                    (str(path),),
+                )
+            body = library_health.report(temp.db, library.LIBRARY_SPACE)
+        self.assertNotIn(1, _ids(body["no_beatgrid"]))
 
 
 class ApiTests(unittest.TestCase):

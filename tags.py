@@ -1,4 +1,4 @@
-"""Read Serato cue points, loops, flips, beatgrids, and overviews from audio files.
+"""Read Serato cue points, loops, flips, beatgrids, artwork, and overviews from audio files.
 
 Serato stores these outside the library database. MP3, AIFF, and WAV keep
 them in ID3 GEOB frames. FLAC keeps them in Vorbis comments. M4A and MP4
@@ -105,6 +105,13 @@ class CueCopy(TypedDict):
     detail: str
 
 
+class FileHealth(TypedDict):
+    """Artwork and beatgrid presence from one audio file."""
+
+    artwork: bool
+    beatgrid: bool
+
+
 def read_serato_tags(path: str | None) -> SeratoTags:
     """Read Serato cue, loop, flip, and beatgrid data from an audio file.
 
@@ -158,6 +165,47 @@ def read_serato_tags(path: str | None) -> SeratoTags:
     except OSError:
         return empty
     return _apply_frames(serato_tags_from_regions(head, tail), container)
+
+
+def read_file_health(path: str | None) -> FileHealth:
+    """Return whether one audio file has artwork and a beatgrid.
+
+    The file is opened once. Artwork is an ID3 ``APIC`` frame, a FLAC
+    picture block (type 6), or an MP4 ``covr`` atom. A BeatGrid frame
+    that this parser cannot read still counts as a grid. A missing path
+    or an unreadable file is both false. The file is not rewritten.
+
+    Args:
+        path: Filesystem path of the audio file, or None.
+
+    Returns:
+        ``artwork`` and ``beatgrid`` booleans.
+    """
+    empty: FileHealth = {"artwork": False, "beatgrid": False}
+    if not path:
+        return empty
+    file = Path(path)
+    try:
+        if not file.is_file():
+            return empty
+        size = file.stat().st_size
+        with file.open("rb") as handle:
+            head = handle.read(min(size, _HEAD_READ))
+            tail = b""
+            if size > _HEAD_READ:
+                handle.seek(max(0, size - _TAIL_READ))
+                tail = handle.read(_TAIL_READ)
+            container = _container_frames(handle, file, size, head)
+            parsed = _apply_frames(serato_tags_from_regions(head, tail), container)
+            artwork = _id3_has_apic(head) or _id3_has_apic(tail)
+            if not artwork:
+                artwork = _flac_has_picture(handle, size, head) or _mp4_has_covr(
+                    handle, size, file, head
+                )
+    except OSError:
+        return empty
+    beatgrid = bool(parsed["beatgrid"] or parsed.get("beatgrid_warning"))
+    return {"artwork": artwork, "beatgrid": beatgrid}
 
 
 def serato_tags_from_regions(head: bytes, tail: bytes = b"") -> SeratoTags:
@@ -344,6 +392,62 @@ def _parse_id3(blob: bytes, offset: int) -> list[tuple[str, bytes]] | None:
         if name:
             frames.append((name, payload))
     return frames
+
+
+def _id3_has_apic(blob: bytes) -> bool:
+    """Return True when an ID3v2.3 or ID3v2.4 tag in ``blob`` has ``APIC``.
+
+    Args:
+        blob: Bytes that may contain one or more ID3 tags.
+
+    Returns:
+        True when an attached-picture frame is present.
+    """
+    cursor = 0
+    while cursor < len(blob) - 10:
+        offset = blob.find(b"ID3", cursor)
+        if offset < 0:
+            return False
+        cursor = offset + 3
+        if _id3_tag_has_frame(blob, offset, b"APIC"):
+            return True
+    return False
+
+
+def _id3_tag_has_frame(blob: bytes, offset: int, frame_id: bytes) -> bool:
+    """Return True when one ID3 tag at ``offset`` contains ``frame_id``.
+
+    Args:
+        blob: The buffer that contains the tag.
+        offset: Index of the ID3 header.
+        frame_id: Four-byte frame id such as ``APIC``.
+
+    Returns:
+        True when that frame is present in a supported tag.
+    """
+    if blob[offset:offset + 3] != b"ID3":
+        return False
+    if offset + 10 > len(blob):
+        return False
+    version = blob[offset + 3]
+    if version not in (3, 4):
+        return False
+    tag_size = _synchsafe(blob[offset + 6:offset + 10])
+    start = offset + 10
+    end = min(len(blob), start + tag_size)
+    pos = start
+    while pos + 10 <= end:
+        current = blob[pos:pos + 4]
+        if current == b"\x00\x00\x00\x00" or current[0] == 0:
+            break
+        if version == 4:
+            frame_size = _synchsafe(blob[pos + 4:pos + 8])
+        else:
+            frame_size = int.from_bytes(blob[pos + 4:pos + 8], "big")
+        if current == frame_id and frame_size > 0:
+            return True
+        pos += 10 + frame_size
+    return False
 
 
 def _geob_body(body: bytes) -> tuple[str, bytes]:
@@ -610,6 +714,51 @@ def _flac_serato_frames(
     return frames
 
 
+def _flac_has_picture(handle: BinaryIO, size: int, head: bytes) -> bool:
+    """Return True when a FLAC file has a picture metadata block.
+
+    Args:
+        handle: Open file positioned anywhere.
+        size: File size in bytes.
+        head: Leading bytes already read.
+
+    Returns:
+        True when block type 6 is present. The picture body is not read.
+    """
+    if size < 8 or not head.startswith(b"fLaC"):
+        return False
+    handle.seek(0)
+    if handle.read(4) != b"fLaC":
+        return False
+    pos = 4
+    walked = 0
+    while pos + 4 <= size:
+        if walked >= FLAC_BLOCK_LIMIT:
+            break
+        walked += 1
+        handle.seek(pos)
+        header = handle.read(4)
+        if len(header) < 4:
+            break
+        block_type = header[0] & 0x7F
+        is_last = bool(header[0] & 0x80)
+        length = int.from_bytes(header[1:4], "big")
+        data_at = pos + 4
+        if length > size - data_at:
+            break
+        if block_type == 127:
+            break
+        if block_type == 6:
+            return True
+        if is_last:
+            break
+        next_pos = data_at + length
+        if next_pos <= pos:
+            break
+        pos = next_pos
+    return False
+
+
 def _vorbis_comment_frames(
     block: bytes,
     names: frozenset[str] | None = None,
@@ -705,6 +854,73 @@ def _mp4_moov_frames(
             frames.extend(_mp4_serato_frames(handle.read(body_len), names))
         pos += atom_size
     return frames
+
+
+def _mp4_has_covr(handle: BinaryIO, size: int, path: Path, head: bytes) -> bool:
+    """Return True when an MP4-family file has a ``covr`` atom in ``moov``.
+
+    Args:
+        handle: Open MP4 file.
+        size: File size in bytes.
+        path: Filesystem path, used for the suffix check.
+        head: Leading bytes already read.
+
+    Returns:
+        True when a ``covr`` atom sits inside a top-level ``moov``.
+    """
+    if not _is_mp4_family(path, head):
+        return False
+    pos = 0
+    for _ in range(64):
+        if pos + 8 > size:
+            break
+        handle.seek(pos)
+        header = handle.read(8)
+        if len(header) < 8:
+            break
+        atom_size = int.from_bytes(header[:4], "big")
+        kind = header[4:8]
+        header_len = 8
+        if atom_size == 1:
+            extended = handle.read(8)
+            if len(extended) < 8:
+                break
+            atom_size = int.from_bytes(extended, "big")
+            header_len = 16
+        elif atom_size == 0:
+            atom_size = size - pos
+        if atom_size < header_len or pos + atom_size > size:
+            break
+        if kind == b"moov":
+            body_len = min(atom_size - header_len, _TAG_LIMIT)
+            body = handle.read(body_len)
+            if _mp4_blob_has_atom(body, b"covr"):
+                return True
+        pos += atom_size
+    return False
+
+
+def _mp4_blob_has_atom(blob: bytes, kind: bytes) -> bool:
+    """Return True when ``blob`` contains an atom of ``kind``.
+
+    Args:
+        blob: Bytes that may contain nested atoms.
+        kind: Four-byte atom type.
+
+    Returns:
+        True when a size-prefixed atom of that type is present.
+    """
+    pos = 0
+    while pos + 8 <= len(blob):
+        index = blob.find(kind, pos)
+        if index < 0:
+            return False
+        if index >= 4:
+            atom_size = int.from_bytes(blob[index - 4:index], "big")
+            if 8 <= atom_size <= len(blob) - (index - 4):
+                return True
+        pos = index + 4
+    return False
 
 
 def _mp4_serato_frames(
