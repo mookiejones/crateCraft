@@ -9,9 +9,9 @@
 
 ```mermaid
 flowchart TD
-  crates["Select Crates, then a crate or All tracks"] --> boxes["Memory cues, Hot loops, key notation"]
-  boxes --> button["Rekordbox"]
-  button --> report["Loss report in the dialog"]
+  crates["Select Crates, then a crate or All tracks"] --> button["Rekordbox"]
+  button --> boxes["Memory cues, Hot loops, key notation in the dialog"]
+  boxes --> report["Loss report in the dialog"]
   report --> download["Download rekordbox.xml"]
   download --> rb["Rekordbox: Preferences, Advanced, Database, rekordbox xml"]
   rb --> usb["Export the USB in Rekordbox"]
@@ -21,9 +21,9 @@ flowchart TD
 
 1. Select **Crates**.
 2. Select the crate, or **All tracks** for the whole space.
-3. Leave **Memory cues** on if CDJ screens should see those cues. **Hot loops** starts off. The help line reads **Uses a free hot-cue pad.**
-4. Leave **Key as stored**, or choose **Camelot key** or **Classical key**.
-5. Click **Rekordbox**.
+3. Click **Rekordbox**.
+4. In the dialog, leave **Memory cues** on if CDJ screens should see those cues. **Hot loops** starts off. The help line reads **Uses a free hot-cue pad.**
+5. Leave **Key as stored**, or choose **Camelot key** or **Classical key**.
 6. Read the dialog **Download rekordbox.xml?**
 7. Click **Download**. **Cancel** writes nothing.
 

@@ -42,7 +42,7 @@ What can leave, and only after you choose share and only when a key is present, 
 
 **About** shows the version of this copy, such as **v1.4.2**. The same text sits at the bottom of the sidebar, so you can see it without opening Settings. **Copy version** puts that line on the clipboard and the next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the sidebar line is blank.
 
-The same settings file remembers the window, the track-list width, the language, the theme, whether the app icon follows that theme, that setup finished, and the Rekordbox bar: Memory cues, Hot loops, and the key notation. If setup was pointed at a library that is not in the usual folder, `library.json` in that same folder remembers the file. The path stays on this computer.
+The same settings file remembers the window, the track-list width, the language, the theme, whether the app icon follows that theme, that setup finished, and the Rekordbox dialog: Memory cues, Hot loops, and the key notation. If setup was pointed at a library that is not in the usual folder, `library.json` in that same folder remembers the file. The path stays on this computer.
 
 | System | Settings | Logs |
 | --- | --- | --- |

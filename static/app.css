@@ -400,8 +400,7 @@ body.is-resizing {
   min-width: min(100%, 8rem);
 }
 
-/* Export, Import, and Reload stay together. The Rekordbox options wrap
-   under them, so a longer translation does not leave Reload on its own row. */
+/* Export, Import, Rekordbox, and Reload stay on Crates. */
 .browser-actions {
   display: flex;
   flex: 0 0 auto;
@@ -1161,6 +1160,10 @@ dialog .settings-field select {
 }
 
 #rekordbox-dialog { max-width: 36rem; }
+
+#rekordbox-dialog .rekordbox-options {
+  margin-top: var(--space-3);
+}
 
 #rekordbox-report {
   margin: 12px 0 0;
