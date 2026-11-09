@@ -21,6 +21,9 @@ from static_assets import missing_static_files
 missing = missing_static_files(root / "static")
 if missing:
     raise SystemExit("Missing build inputs: " + ", ".join(missing))
+for name in ("en.json", "es.json"):
+    if not (root / "locales" / name).is_file():
+        raise SystemExit(f"Missing build inputs: locales/{name}")
 
 if importlib.util.find_spec("webview") is None:
     raise SystemExit("Missing build inputs: pywebview")
@@ -73,6 +76,7 @@ hidden = [
 binaries = collect_dynamic_libs("webview")
 datas = [
     (str(root / "static"), "static"),
+    (str(root / "locales"), "locales"),
     (str(root / "THIRD_PARTY_NOTICES.md"), "."),
 ]
 datas += collect_data_files("webview")
@@ -163,6 +167,17 @@ if sys.platform == "win32":
     version_info.write_windows_version_file(windows_version_path)
     windows_version_file = str(windows_version_path)
 
+bundle_icns = root / "packaging" / "app-icon.icns"
+bundle_ico = root / "packaging" / "app-icon.ico"
+missing_icons = [
+    str(path.relative_to(root))
+    for path in (bundle_icns, bundle_ico)
+    if not path.is_file()
+]
+if missing_icons:
+    raise SystemExit("Missing build inputs: " + ", ".join(missing_icons))
+exe_icon = str(bundle_ico) if sys.platform == "win32" else None
+
 exe = EXE(
     pyz,
     a.scripts,
@@ -180,6 +195,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     version=windows_version_file,
+    icon=exe_icon,
 )
 coll = COLLECT(
     exe,
@@ -193,7 +209,7 @@ if sys.platform == "darwin":
     app = BUNDLE(
         coll,
         name="Serato Library.app",
-        icon=None,
+        icon=str(bundle_icns),
         bundle_identifier="local.seratolibrary.browser",
         info_plist={
             "CFBundleShortVersionString": bundle_version,
