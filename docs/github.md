@@ -19,7 +19,7 @@ A push to `main` runs CI, CodeQL, and Prepare release once. When that push also 
 
 Each workflow sets `permissions: contents: read` and a `timeout-minutes` value. The CI tests job allows 20 minutes, because the Windows run takes about 9 minutes and grows with the suite. A job that needs more access sets its own permissions, which replace the workflow floor. CI, CodeQL, dependency review, and Prepare release cancel an older run on the same group. The release workflow does not. The Pages workflow does not cancel an in-progress run, because a publish should finish. The Pages deploy job sets `contents: read`, `pages: write`, and `id-token: write`. The Prepare release job sets `contents: read` and `issues: write`. It cannot push a tag.
 
-Actions are pinned to a commit SHA. The trailing comment is the version Dependabot matches. Dependabot opens a weekly Monday pull request for Python dependencies, another for the Node toolchain (`typescript`, `esbuild`, and ESLint), and another for GitHub Actions. Each group is one pull request, with a `deps` commit prefix, and at most five Python pull requests stay open. The Node group is one pull request as well.
+Actions are pinned to a commit SHA. The trailing comment is the version Dependabot matches. Dependabot opens a weekly Monday pull request for Python dependencies, another for the Node toolchain (`typescript`, `esbuild`, and ESLint), and another for GitHub Actions. Each group is one pull request, with a `deps` commit prefix, and at most five Python pull requests stay open. The Node group is one pull request as well. TypeScript major versions stay out of that group while `typescript-eslint` 8.x asks for TypeScript below 6.1.
 
 ### CI
 
