@@ -167,6 +167,17 @@ if sys.platform == "win32":
     version_info.write_windows_version_file(windows_version_path)
     windows_version_file = str(windows_version_path)
 
+bundle_icns = root / "packaging" / "app-icon.icns"
+bundle_ico = root / "packaging" / "app-icon.ico"
+missing_icons = [
+    str(path.relative_to(root))
+    for path in (bundle_icns, bundle_ico)
+    if not path.is_file()
+]
+if missing_icons:
+    raise SystemExit("Missing build inputs: " + ", ".join(missing_icons))
+exe_icon = str(bundle_ico) if sys.platform == "win32" else None
+
 exe = EXE(
     pyz,
     a.scripts,
@@ -184,6 +195,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     version=windows_version_file,
+    icon=exe_icon,
 )
 coll = COLLECT(
     exe,
@@ -197,7 +209,7 @@ if sys.platform == "darwin":
     app = BUNDLE(
         coll,
         name="Serato Library.app",
-        icon=None,
+        icon=str(bundle_icns),
         bundle_identifier="local.seratolibrary.browser",
         info_plist={
             "CFBundleShortVersionString": bundle_version,

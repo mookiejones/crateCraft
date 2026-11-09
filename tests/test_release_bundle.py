@@ -845,6 +845,7 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(len(release_bundle.INNO_SHA256), 64)
         self.assertIn("ArchitecturesInstallIn64BitMode=x64compatible", text)
         self.assertIn("ArchitecturesAllowed=x64compatible", text)
+        self.assertIn("SetupIconFile=app-icon.ico", text)
 
     def test_installer_stub_may_be_32_bit(self) -> None:
         """Accept Inno's 32-bit setup stub and still require a PE.

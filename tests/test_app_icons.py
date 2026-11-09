@@ -537,14 +537,55 @@ class IconApplyTests(unittest.TestCase):
             app_icons.bind_window(None)
 
     def test_packaged_icon_stays_the_default(self) -> None:
-        """The PyInstaller spec does not bake a colorway into the executable.
+        """The spec bakes the default icon and does not bake a colorway.
 
         Returns:
             None.
         """
         spec = (ROOT / "serato-library.spec").read_text(encoding="utf-8")
-        self.assertIn("icon=None", spec)
+        self.assertIn("app-icon.icns", spec)
+        self.assertIn("app-icon.ico", spec)
+        self.assertIn("icon=exe_icon", spec)
+        self.assertIn("icon=str(bundle_icns)", spec)
+        self.assertNotIn("icon=None", spec)
+        self.assertIn("Missing build inputs", spec)
+        png = app_icons.default_png_bytes()
+        packaging = ROOT / "packaging"
+        self.assertEqual((packaging / "app-icon.png").read_bytes(), png)
+        self.assertEqual((packaging / "app-icon.ico").read_bytes(), app_icons.ico_bytes(png))
+        icns = (packaging / "app-icon.icns").read_bytes()
+        self.assertEqual(icns, app_icons.icns_bytes(png))
+        self.assertTrue(icns.startswith(b"icns"))
+        self.assertIn(png, icns)
+        self.assertNotIn(b"PLACEHOLDER", png)
+        self.assertNotIn(b"PLACEHOLDER", icns)
+        pixels = _pixels(png)
+        self.assertEqual(_at(pixels, 0, 0)[3], 0)
+        self.assertEqual(_at(pixels, 16, 140), app_icons.DEFAULT_GROUND)
+        self.assertEqual(_at(pixels, 128, 128), app_icons.DEFAULT_DISC)
+        origin_x, origin_y = app_icons.placeholder_origin()
+        self.assertEqual(_at(pixels, origin_x, origin_y), app_icons.DEFAULT_GROUND)
+        for colorway in app_icons.COLORWAYS:
+            themed = app_icons.png_bytes(colorway)
+            self.assertNotEqual(png, themed)
+            self.assertNotEqual(
+                (packaging / "app-icon.ico").read_bytes(),
+                (ICONS / f"placeholder-{colorway}.ico").read_bytes(),
+            )
         self.assertEqual(app_icons.WINDOW_TITLE, desktop.WINDOW_TITLE)
+        self.assertEqual(app_icons.default_window_icon(), packaging / "app-icon.ico")
+
+    def test_icns_wraps_only_a_256_png(self) -> None:
+        """An ICNS writer refuses bytes that are not a 256 PNG.
+
+        Returns:
+            None.
+        """
+        with self.assertRaisesRegex(ValueError, "icns needs a png"):
+            app_icons.icns_bytes(b"not-a-png")
+        tiny = b"\x89PNG\r\n\x1a\n" + b"\x00" * 24
+        with self.assertRaisesRegex(ValueError, "256 png"):
+            app_icons.icns_bytes(tiny)
 
     def test_launch_applies_the_saved_icon_and_keeps_going(self) -> None:
         """Startup asks for the saved icon. A failure does not stop the window.

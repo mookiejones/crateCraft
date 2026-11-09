@@ -12,6 +12,7 @@ from pathlib import Path
 from unittest import mock
 
 import app_config
+import app_icons
 import desktop
 import server
 
@@ -402,6 +403,8 @@ class GeometryTests(unittest.TestCase):
         import sys
         import types
 
+        import webview.menu as webview_menu
+
         class FakeEvent:
             """Record handlers and call them the way pywebview's Event does."""
 
@@ -442,6 +445,8 @@ class GeometryTests(unittest.TestCase):
                 self.shown_called = True
 
         fake = types.ModuleType("webview")
+        fake.__path__ = []  # type: ignore[attr-defined]
+        fake.menu = webview_menu  # type: ignore[attr-defined]
         window = FakeWindow()
 
         def create_window(title: str, url: str, **kwargs: object) -> FakeWindow:
@@ -467,7 +472,9 @@ class GeometryTests(unittest.TestCase):
         url = f"http://{host}:{port}"
         try:
             with mock.patch.object(desktop, "detect_gui", return_value="gtk"):
-                with mock.patch.dict(sys.modules, {"webview": fake}):
+                with mock.patch.dict(
+                    sys.modules, {"webview": fake, "webview.menu": webview_menu}
+                ):
                     desktop.open_window(url, httpd, thread, token)
             thread.join(5)
             self.assertFalse(thread.is_alive())
@@ -475,6 +482,10 @@ class GeometryTests(unittest.TestCase):
             self.assertEqual(fake.created["url"], url)  # type: ignore[attr-defined]
             self.assertIs(fake.created["text_select"], True)  # type: ignore[attr-defined]
             self.assertEqual(fake.created["background_color"], desktop.WINDOW_BACKGROUND)  # type: ignore[attr-defined]
+            self.assertEqual(
+                Path(str(fake.created["icon"])),  # type: ignore[attr-defined]
+                app_icons.default_window_icon(),
+            )
             self.assertEqual(fake.start_kwargs["gui"], "gtk")  # type: ignore[attr-defined]
             self.assertNotIn(fake.start_kwargs["gui"], ("cef", "mshtml"))  # type: ignore[attr-defined]
             loaded = app_config.load_settings()

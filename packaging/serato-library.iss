@@ -28,6 +28,7 @@ OutputBaseFilename=Serato-Library-windows-setup
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=app-icon.ico
 UninstallDisplayIcon={app}\Serato Library.exe
 CloseApplications=yes
 RestartApplications=no
