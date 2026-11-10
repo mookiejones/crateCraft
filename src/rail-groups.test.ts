@@ -2,8 +2,8 @@
  * Rail groups: Library, Library health, Backups, and Before a gig.
  *
  * The markup is index.html. Group labels are headings. Each tab still
- * has a tooltip. The view ids stay crates, history, files, health, missing,
- * duplicates, stems, scan, tags, snapshots, gig, and drift.
+ * has a tooltip. The view ids stay crates, history, stats, files, health, missing,
+ * duplicates, stems, scan, bitrate, tags, snapshots, gig, portable, and drift.
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
@@ -27,17 +27,20 @@ describe("rail groups", () => {
       [...list.querySelectorAll<HTMLElement>("[data-view]")].map((button) => button.dataset.view),
     );
     expect(groups).toEqual([
-      ["crates", "history", "files"],
-      ["health", "missing", "duplicates", "stems", "scan", "tags"],
+      ["crates", "history", "stats", "files"],
+      ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags"],
       ["snapshots"],
-      ["gig", "drift"],
+      ["gig", "portable", "drift"],
     ]);
+    expect(document.querySelector("[data-view='stats']")?.textContent).toBe("Play stats");
     expect(document.querySelector("[data-view='health']")?.textContent).toBe("Library health");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Missing files");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Damaged files");
+    expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Suspect quality");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Tag spellings");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Before a gig");
+    expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Check drive");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo drift");
   });
 
@@ -56,12 +59,15 @@ describe("rail groups", () => {
     applyStatic(document);
     const labels = [...document.querySelectorAll(".view-group-label")].map((node) => node.textContent);
     expect(labels).toEqual(["Biblioteca", "Salud de la biblioteca", "Antes del bolo"]);
+    expect(document.querySelector("[data-view='stats']")?.textContent).toBe("Estadísticas");
     expect(document.querySelector("[data-view='health']")?.textContent).toBe("Salud de la biblioteca");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Archivos no encontrados");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Archivos dañados");
+    expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Calidad dudosa");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Grafías de etiquetas");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Copias de seguridad");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Antes del bolo");
+    expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Comprobar unidad");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo inestable");
   });
 });

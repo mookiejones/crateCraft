@@ -24,7 +24,10 @@ const report: LibraryHealthReport = {
     count: 1,
     tracks: [{ id: 12, name: "NoGrid", artist: "C", file: "nogrid.mp3" }],
   },
-  no_artwork: { count: 0, tracks: [] },
+  no_artwork: {
+    count: 1,
+    tracks: [{ id: 13, name: "NoArt", artist: "D", file: "noart.mp3" }],
+  },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
   unused: {
@@ -93,6 +96,8 @@ describe("health", () => {
     expect(reportText()).toContain("A — Gone");
     expect(reportText()).toContain("No BPM (1)");
     expect(reportText()).toContain("No beatgrid (1)");
+    expect(reportText()).toContain("No artwork (1)");
+    expect(reportText()).toContain("Find art");
     expect(reportText()).toContain("Unused files (1)");
     expect(reportText()).toContain("orphan.mp3");
     expect(reportText()).toContain("Duplicate groups (1)");
@@ -109,14 +114,25 @@ describe("health", () => {
     expect(reportText()).toContain("Nothing to fix in this check.");
   });
 
-  it("opens Missing files, Duplicates, Files, and a track from the report", async () => {
+  it("opens Missing files, Duplicates, Files, Suspect quality, and a track from the report", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
     await loadHealth();
     document.querySelector<HTMLButtonElement>("[data-health-action='missing']")!.click();
     document.querySelector<HTMLButtonElement>("[data-health-action='duplicates']")!.click();
     document.querySelector<HTMLButtonElement>("[data-health-action='files']")!.click();
+    document.querySelector<HTMLButtonElement>("[data-health-action='bitrate']")!.click();
     document.querySelector<HTMLButtonElement>("[data-health-action='track']")!.click();
-    expect(navigate.mock.calls).toEqual([["missing"], ["duplicates"], ["files"], ["track", 10]]);
+    expect(navigate.mock.calls).toEqual([["missing"], ["duplicates"], ["files"], ["bitrate"], ["track", 10]]);
+  });
+
+  it("always offers Open Suspect quality, including a clean report", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(clear)));
+    state.activeCrate = "all";
+    await loadHealth();
+    const open = document.querySelector<HTMLButtonElement>("[data-health-action='bitrate']");
+    expect(open).not.toBeNull();
+    expect(open!.textContent).toBe("Open Suspect quality");
+    expect(reportText()).toContain("Fake 320s and lossless files");
   });
 
   it("ignores a late reply after a newer check started", async () => {
@@ -167,5 +183,15 @@ describe("health", () => {
       (button) => !button.dataset.tooltipKey,
     );
     expect(untipped).toEqual([]);
+  });
+
+  it("offers Find art on a no-artwork row with a tooltip", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
+    await loadHealth();
+    const find = document.querySelector<HTMLButtonElement>("[data-health-action='artwork']");
+    expect(find).not.toBeNull();
+    expect(find!.textContent).toBe("Find art");
+    expect(find!.dataset.healthId).toBe("13");
+    expect(find!.dataset.tooltipKey).toBe("tooltip.healthFindArt");
   });
 });
