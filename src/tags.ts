@@ -107,7 +107,7 @@ export function selectSpelling(key: string, value: string): void {
 }
 
 /**
- * Attach Genre, Artist, Titles, Check again, and the report actions.
+ * Mount Genre, Artist, Titles, Check again, and the report.
  *
  * Called once at startup. A later call remounts the same host.
  *
@@ -121,14 +121,6 @@ export function wireTags(): void {
     panelRoot = undefined;
   }
   panelHost = panel;
-  if (panel.dataset.tagsWired !== "true") {
-    panel.dataset.tagsWired = "true";
-    panel.addEventListener("change", (event) => {
-      const input = (event.target as HTMLElement).closest("input[type='radio']");
-      if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
-      selectSpelling(input.name.slice("tags-".length), input.value);
-    });
-  }
   panelRoot = mountIsland(panel, createElement(TagsPanel), panelRoot);
 }
 

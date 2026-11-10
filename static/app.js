@@ -20195,27 +20195,6 @@
       health.setTagsField(next2);
       void health.loadTags();
     }
-    function onReportChange(event) {
-      const input = event.target.closest("input[type='radio']");
-      if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
-      health.selectSpelling(input.name.slice("tags-".length), input.value);
-    }
-    function onReportClick(event) {
-      const button2 = event.target.closest("[data-tags-action]");
-      if (!button2 || button2.disabled) return;
-      if (button2.dataset.tagsAction === "clean-apply") {
-        void health.applyTitles();
-        return;
-      }
-      if (button2.dataset.tagsAction === "refresh-apply") {
-        void health.applyMappings();
-        return;
-      }
-      const key = button2.dataset.key ?? "";
-      if (!key) return;
-      if (button2.dataset.tagsAction === "preview") void health.previewGroup(key);
-      if (button2.dataset.tagsAction === "apply") void health.applyGroup(key);
-    }
     function canApply(key) {
       const plan = health.tagsPlans.get(key);
       const group = groups.find((row) => row.key === key);
@@ -20292,48 +20271,38 @@
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
       /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
-        "div",
-        {
-          id: "tags-report",
-          className: "gig-report",
-          tabIndex: -1,
-          onChange: onReportChange,
-          onClick: onReportClick,
-          children: [
-            field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => void health.applyTitles() }) : null,
-            field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
-              health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                MappingCard,
-                {
-                  plan: health.mappingPlan,
-                  canApply: canApplyMappings,
-                  onApply: () => void health.applyMappings()
-                }
-              ) : null,
-              groups.map((group, index) => {
-                const chosen = health.tagsSelected.get(group.key) ?? group.suggested ?? "";
-                return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                  GroupCard,
-                  {
-                    group,
-                    open: index === 0 || health.tagsOpen.has(group.key),
-                    chosen,
-                    plan: health.tagsPlans.get(group.key),
-                    busy: health.tagsBusy,
-                    canApply: canApply(group.key),
-                    onPreview: () => void health.previewGroup(group.key),
-                    onApply: () => void health.applyGroup(group.key),
-                    onSelect: (value) => health.selectSpelling(group.key, value)
-                  },
-                  group.key
-                );
-              })
-            ] }) : null
-          ]
-        }
-      )
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
+        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => void health.applyTitles() }) : null,
+        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
+          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+            MappingCard,
+            {
+              plan: health.mappingPlan,
+              canApply: canApplyMappings,
+              onApply: () => void health.applyMappings()
+            }
+          ) : null,
+          groups.map((group, index) => {
+            const chosen = health.tagsSelected.get(group.key) ?? group.suggested ?? "";
+            return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+              GroupCard,
+              {
+                group,
+                open: index === 0 || health.tagsOpen.has(group.key),
+                chosen,
+                plan: health.tagsPlans.get(group.key),
+                busy: health.tagsBusy,
+                canApply: canApply(group.key),
+                onPreview: () => void health.previewGroup(group.key),
+                onApply: () => void health.applyGroup(group.key),
+                onSelect: (value) => health.selectSpelling(group.key, value)
+              },
+              group.key
+            );
+          })
+        ] }) : null
+      ] })
     ] });
   }
 
@@ -20384,14 +20353,6 @@
       panelRoot2 = void 0;
     }
     panelHost2 = panel;
-    if (panel.dataset.tagsWired !== "true") {
-      panel.dataset.tagsWired = "true";
-      panel.addEventListener("change", (event) => {
-        const input = event.target.closest("input[type='radio']");
-        if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
-        selectSpelling(input.name.slice("tags-".length), input.value);
-      });
-    }
     panelRoot2 = mountIsland(panel, (0, import_react4.createElement)(TagsPanel), panelRoot2);
   }
   async function loadTags() {

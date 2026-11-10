@@ -2,7 +2,6 @@
  * Tag spellings report painted from HealthContext.
  */
 
-import type { ChangeEvent, MouseEvent } from "react";
 import type { TagClusterGroup, TagClusterPlan } from "../api-types";
 import { useHealth } from "../context/HealthContext";
 import { t } from "../i18n";
@@ -175,29 +174,6 @@ export function TagsPanel() {
     void health.loadTags();
   }
 
-  function onReportChange(event: ChangeEvent<HTMLDivElement>): void {
-    const input = (event.target as HTMLElement).closest("input[type='radio']");
-    if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
-    health.selectSpelling(input.name.slice("tags-".length), input.value);
-  }
-
-  function onReportClick(event: MouseEvent<HTMLDivElement>): void {
-    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-tags-action]");
-    if (!button || button.disabled) return;
-    if (button.dataset.tagsAction === "clean-apply") {
-      void health.applyTitles();
-      return;
-    }
-    if (button.dataset.tagsAction === "refresh-apply") {
-      void health.applyMappings();
-      return;
-    }
-    const key = button.dataset.key ?? "";
-    if (!key) return;
-    if (button.dataset.tagsAction === "preview") void health.previewGroup(key);
-    if (button.dataset.tagsAction === "apply") void health.applyGroup(key);
-  }
-
   function canApply(key: string): boolean {
     const plan = health.tagsPlans.get(key);
     const group = groups.find((row) => row.key === key);
@@ -272,13 +248,7 @@ export function TagsPanel() {
         {field === "titles" ? t("tags.introTitles") : t("tags.intro")}
       </p>
       <p id="tags-status" className="gig-status" role="status" aria-live="polite">{health.tagsStatus}</p>
-      <div
-        id="tags-report"
-        className="gig-report"
-        tabIndex={-1}
-        onChange={onReportChange}
-        onClick={onReportClick}
-      >
+      <div id="tags-report" className="gig-report" tabIndex={-1}>
         {field === "titles" && health.titlePlan ? (
           <TitlesReport plan={health.titlePlan} canApply={canApplyTitles} onApply={() => void health.applyTitles()} />
         ) : null}
