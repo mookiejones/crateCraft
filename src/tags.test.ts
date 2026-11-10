@@ -250,6 +250,7 @@ describe("tags", () => {
     await vi.waitFor(() => expect(document.querySelector('[data-tags-action="clean-apply"]')).not.toBeNull());
     document.querySelector<HTMLButtonElement>('[data-tags-action="clean-apply"]')!.click();
     await vi.waitFor(() => expect(bridge.reloadLibrary).toHaveBeenCalled());
+    expect(postJSON.mock.calls.filter((call) => postAction(call[1]) === "clean-apply")).toHaveLength(1);
     expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
       action: "clean-apply",
       space: "Serato Library",
@@ -335,8 +336,7 @@ describe("tags", () => {
     previewFor("hiphop").click();
     await vi.waitFor(() => expect(applyFor("hiphop").disabled).toBe(false));
     const other = document.querySelector<HTMLInputElement>("input[name='tags-hiphop'][value='Hip-Hop']")!;
-    other.checked = true;
-    other.dispatchEvent(new Event("change", { bubbles: true }));
+    other.click();
     expect(applyFor("hiphop").disabled).toBe(true);
   });
 
@@ -362,6 +362,7 @@ describe("tags", () => {
     await vi.waitFor(() => expect(applyFor("hiphop").disabled).toBe(false));
     applyFor("hiphop").click();
     await vi.waitFor(() => expect(bridge.reloadLibrary).toHaveBeenCalled());
+    expect(postJSON.mock.calls.filter((call) => postAction(call[1]) === "apply")).toHaveLength(1);
     expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
       action: "apply",
       space: "Serato Library",
@@ -467,6 +468,7 @@ describe("tags", () => {
     await loadTags();
     document.querySelector<HTMLButtonElement>('[data-tags-action="refresh-apply"]')!.click();
     await vi.waitFor(() => expect(bridge.reloadLibrary).toHaveBeenCalled());
+    expect(postJSON.mock.calls.filter((call) => postAction(call[1]) === "refresh-apply")).toHaveLength(1);
     expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
       action: "refresh-apply",
       space: "Serato Library",

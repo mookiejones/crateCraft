@@ -39,4 +39,12 @@ export default async function globalSetup(): Promise<void> {
     target: "es2022",
     outfile: "e2e/dist/snapshots.js",
   });
+  await esbuild.build({
+    entryPoints: ["e2e/health-fixture.ts"],
+    bundle: true,
+    format: "iife",
+    platform: "browser",
+    target: "es2022",
+    outfile: "e2e/dist/health.js",
+  });
 }

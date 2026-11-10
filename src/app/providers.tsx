@@ -7,13 +7,14 @@
  * detail fields are an eighth. Snapshots is a ninth. The first-run
  * wizard is a tenth; this file mounts an idle value so the domain is
  * present on every island. The wizard bundle supplies the live value.
- * Later screens add their own context file and one wrapper here. This
- * module reads those engines; it does not own fetch, playback, crate
- * writes, history loads, the folder load, the settings file, restore
- * writes, or setup fetch.
+ * Library health is an eleventh. Later screens add their own context
+ * file and one wrapper here. This module reads those engines; it does
+ * not own fetch, playback, crate writes, history loads, the folder
+ * load, the settings file, restore writes, setup fetch, or health
+ * fetches.
  */
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { failureOf } from "../api";
 import { CrateProvider as CrateContextProvider } from "../context/CrateContext";
@@ -25,6 +26,10 @@ import {
   GigStateProvider,
   type GigContextValue,
 } from "../context/GigContext";
+import {
+  HealthProvider as HealthContextProvider,
+  type HealthContextValue,
+} from "../context/HealthContext";
 import {
   HistoryProvider as HistoryContextProvider,
   historyActions,
@@ -75,6 +80,20 @@ import {
   subscribeGig,
 } from "../gig";
 import { getDriftSnapshot, subscribeDrift } from "../drift";
+import { subscribeHealth } from "../health-events";
+import { getHealthListSnapshot } from "../health-list";
+import { getHealthSnapshot, loadHealth, navigateHealth } from "../health";
+import { expandScan, getScanSnapshot, loadScan } from "../scan";
+import {
+  applyGroup,
+  applyMappings,
+  applyTitles,
+  getTagsSnapshot,
+  loadTags,
+  previewGroup,
+  selectSpelling,
+  setTagsField,
+} from "../tags";
 import { LOCALE_EVENT, onLocaleChange } from "../i18n";
 import {
   SettingsProvider as SettingsContextProvider,
@@ -512,6 +531,44 @@ export function WizardProvider({ children }: { children: ReactNode }) {
   return <WizardContextProvider value={value}>{children}</WizardContextProvider>;
 }
 
+function readHealthValue(): HealthContextValue {
+  return {
+    ...getHealthSnapshot(),
+    ...getScanSnapshot(),
+    ...getTagsSnapshot(),
+    ...getHealthListSnapshot(),
+    loadHealth,
+    loadScan,
+    expandScan,
+    loadTags,
+    setTagsField,
+    selectSpelling,
+    previewGroup,
+    applyGroup,
+    applyTitles,
+    applyMappings,
+    navigate: navigateHealth,
+  };
+}
+
+/**
+ * Mount the Library health domain at the root of one React island.
+ *
+ * @param children Island that calls `useHealth`.
+ */
+export function HealthProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readHealthValue);
+  useLayoutEffect(() => {
+    return subscribeHealth(() => {
+      flushSync(() => {
+        setValue(readHealthValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <HealthContextProvider value={current}>{children}</HealthContextProvider>;
+}
+
 /**
  * Nest every domain provider.
  *
@@ -519,7 +576,8 @@ export function WizardProvider({ children }: { children: ReactNode }) {
  * inside crates. Before a gig wraps inside waveform. Files wraps inside
  * Before a gig. History wraps inside Files. Settings wraps inside History.
  * Track list wraps inside Settings. Snapshots wraps inside Track list.
- * An idle wizard wraps the island so `useWizard` is defined.
+ * An idle wizard wraps the island so `useWizard` is defined. Library
+ * health wraps inside the wizard.
  *
  * @param children Page island.
  */
@@ -534,7 +592,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
                 <SettingsProvider>
                   <TrackListRoot>
                     <SnapshotsProvider>
-                      <WizardProvider>{children}</WizardProvider>
+                      <WizardProvider>
+                        <HealthProvider>{children}</HealthProvider>
+                      </WizardProvider>
                     </SnapshotsProvider>
                   </TrackListRoot>
                 </SettingsProvider>
