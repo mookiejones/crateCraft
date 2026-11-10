@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import stat
 import subprocess
 import sys
@@ -538,6 +539,7 @@ class WorkflowTests(unittest.TestCase):
                 "codeql.yml",
                 "dependency-review.yml",
                 "pages.yml",
+                "pr-labels.yml",
                 "prepare-release.yml",
                 "release.yml",
             ],
@@ -702,6 +704,250 @@ class WorkflowTests(unittest.TestCase):
         guide = (ROOT / "docs" / "github.md").read_text(encoding="utf-8")
         self.assertIn("python3 -m unittest discover -s tests -t . -v", guide)
         self.assertIn("127.0.0.1", guide)
+        self.assertIn("| PR labels |", guide)
+        self.assertIn("require a release-notes label", guide)
+        self.assertIn(".github/release.yml", guide)
+
+
+# Labels that exist on mookiejones/serato-library-manager (`gh label list`).
+# A name in release.yml that is missing here is a typo or a label not created yet.
+_REPO_LABELS = frozenset(
+    {
+        "accessibility",
+        "area:ci",
+        "area:crates",
+        "area:cues",
+        "area:duplicates",
+        "area:export",
+        "area:files",
+        "area:history",
+        "area:live",
+        "area:packaging",
+        "area:related-tracks",
+        "area:serato5",
+        "area:snapshots",
+        "area:tags",
+        "area:telemetry",
+        "area:ui",
+        "bug",
+        "buildable",
+        "chore",
+        "ci",
+        "data-safety",
+        "dependencies",
+        "documentation",
+        "duplicate",
+        "enhancement",
+        "feature-gap",
+        "github_actions",
+        "good first issue",
+        "help wanted",
+        "invalid",
+        "javascript",
+        "needs-djay",
+        "needs-engine-dj",
+        "needs-rekordbox",
+        "needs-serato",
+        "needs-serato-4",
+        "needs-serato-5",
+        "needs-traktor",
+        "needs-usb",
+        "needs-virtualdj",
+        "P0",
+        "P1",
+        "P2",
+        "P3",
+        "partly-buildable",
+        "priority:high",
+        "priority:low",
+        "priority:medium",
+        "python",
+        "question",
+        "release",
+        "research",
+        "tests",
+        "wontfix",
+    }
+)
+
+
+def _yaml_dash_items(block: str) -> list[str]:
+    """Return ``- item`` values from a YAML snippet, skipping ``- title:`` rows.
+
+    Args:
+        block: A slice of ``.github/release.yml``.
+
+    Returns:
+        The item texts in file order.
+    """
+    items: list[str] = []
+    for line in block.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("- title:"):
+            continue
+        if stripped.startswith("- "):
+            items.append(stripped[2:].strip().strip("'\""))
+    return items
+
+
+def _release_yml_label_sets() -> tuple[frozenset[str], frozenset[str]]:
+    """Read shown and hidden labels from ``.github/release.yml``.
+
+    Returns:
+        ``(shown, hidden)``. Shown is the category labels. Hidden is the
+        exclude list.
+    """
+    text = (ROOT / ".github" / "release.yml").read_text(encoding="utf-8")
+    exclude = text.split("exclude:", 1)[1].split("authors:", 1)[0]
+    hidden = frozenset(_yaml_dash_items(exclude))
+    shown = frozenset(_yaml_dash_items(text.split("categories:", 1)[1]))
+    return shown, hidden
+
+
+def _workflow_label_sets() -> tuple[frozenset[str], frozenset[str]]:
+    """Read shown and hidden labels from the PR-labels workflow bash lists.
+
+    Returns:
+        ``(shown, hidden)`` parsed from the ``shown='…'`` and ``hidden='…'``
+        assignments.
+
+    Raises:
+        AssertionError: The workflow is missing one of those assignments.
+    """
+    text = (ROOT / ".github" / "workflows" / "pr-labels.yml").read_text(encoding="utf-8")
+    shown_match = re.search(r"shown='([^']+)'", text)
+    hidden_match = re.search(r"hidden='([^']+)'", text)
+    if shown_match is None or hidden_match is None:
+        raise AssertionError("pr-labels.yml is missing shown= or hidden=")
+    return frozenset(shown_match.group(1).split()), frozenset(hidden_match.group(1).split())
+
+
+def _pr_has_release_notes_label(names: list[str], known: frozenset[str]) -> bool:
+    """Return True when any PR label is in the release-notes allow list.
+
+    Matches ``.github/workflows/pr-labels.yml``: one known label is enough.
+    Extra labels such as ``P2`` do not fail the check.
+
+    Args:
+        names: Label names on the pull request.
+        known: Union of shown and hidden labels.
+
+    Returns:
+        True when at least one name is in ``known``.
+    """
+    return any(name in known for name in names)
+
+
+class ReleaseNotesTests(unittest.TestCase):
+    """Check ``.github/release.yml`` and the PR-labels workflow.
+
+    The cases read those files. They do not call GitHub or create a release.
+    """
+
+    def test_release_yml_labels_exist_and_have_no_catchall(self) -> None:
+        """Keep generated notes on real repo labels, with no catch-all category.
+
+        Reads ``.github/release.yml``. Every referenced label must already
+        exist on the repository. A ``*`` category would dump unlabeled
+        chores into the notes.
+
+        Returns:
+            None. The test fails if a name is unknown or a catch-all is present.
+        """
+        text = (ROOT / ".github" / "release.yml").read_text(encoding="utf-8")
+        shown, hidden = _release_yml_label_sets()
+        self.assertTrue(shown)
+        self.assertTrue(hidden)
+        self.assertFalse(shown & hidden)
+        referenced = shown | hidden
+        self.assertTrue(referenced <= _REPO_LABELS, referenced - _REPO_LABELS)
+        self.assertNotIn("*", referenced)
+        self.assertNotIn('labels:\n        - "*"', text)
+        self.assertIn('title: "✨ New features"', text)
+        self.assertIn('title: "🛡️ Library safety"', text)
+        self.assertIn('title: "🐛 Fixes"', text)
+        self.assertIn('title: "🎨 Look and feel"', text)
+        release_wf = (ROOT / ".github" / "workflows" / "release.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("--generate-notes", release_wf)
+        self.assertEqual(shown, frozenset({
+            "enhancement",
+            "feature-gap",
+            "data-safety",
+            "area:snapshots",
+            "bug",
+            "area:ui",
+            "accessibility",
+        }))
+        self.assertEqual(
+            hidden,
+            frozenset(
+                {
+                    "dependencies",
+                    "github_actions",
+                    "javascript",
+                    "python",
+                    "ci",
+                    "area:ci",
+                    "chore",
+                    "tests",
+                    "release",
+                    "documentation",
+                    "research",
+                    "duplicate",
+                    "invalid",
+                    "wontfix",
+                }
+            ),
+        )
+
+    def test_pr_labels_workflow_matches_release_yml(self) -> None:
+        """Keep the label check on the same names generate-notes uses.
+
+        Reads the workflow bash lists and ``release.yml``. The check must
+        use read-only permissions, skip a checkout, and refuse
+        ``pull_request_target``.
+
+        Returns:
+            None. The test fails if the lists drift or the job grows extra
+            credentials.
+        """
+        shown, hidden = _release_yml_label_sets()
+        self.assertEqual(_workflow_label_sets(), (shown, hidden))
+        text = (ROOT / ".github" / "workflows" / "pr-labels.yml").read_text(encoding="utf-8")
+        self.assertIn("name: require a release-notes label", text)
+        self.assertIn("contents: read", text)
+        self.assertNotIn("pull_request_target", text)
+        self.assertNotIn("uses:", text)
+        self.assertNotIn("actions/checkout", text)
+        self.assertIn("labeled", text)
+        self.assertIn("unlabeled", text)
+        self.assertIn("cancel-in-progress: true", text)
+        self.assertIn("for known in $shown $hidden", text)
+        self.assertLess(text.index("exit 0"), text.index("::error::"))
+        self.assertGreater(text.index("exit 1"), text.index("::error::"))
+
+    def test_one_known_label_is_enough(self) -> None:
+        """Pass when any label is shown or hidden; fail when none are.
+
+        ``["chore"]`` is hidden from notes and still counts.
+        ``["area:ui", "P2"]`` counts because ``area:ui`` is shown.
+        ``["P1"]`` and ``[]`` have no known label.
+
+        Returns:
+            None. The test fails if the check requires every label to be
+            known, or requires a shown label only.
+        """
+        shown, hidden = _release_yml_label_sets()
+        known = shown | hidden
+        self.assertTrue(_pr_has_release_notes_label(["chore"], known))
+        self.assertTrue(_pr_has_release_notes_label(["area:ui", "P2"], known))
+        self.assertTrue(_pr_has_release_notes_label(["enhancement"], known))
+        self.assertTrue(_pr_has_release_notes_label(["dependencies"], known))
+        self.assertFalse(_pr_has_release_notes_label(["P1"], known))
+        self.assertFalse(_pr_has_release_notes_label([], known))
+        self.assertFalse(_pr_has_release_notes_label(["P2"], known))
 
 
 class OutsideLaunchTests(unittest.TestCase):
