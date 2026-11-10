@@ -1,18 +1,31 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. Waveform zoom and overview are another.
- * Each has its own context file and one wrapper here. This module reads
- * the player engine; it does not own playback.
+ * Player is one domain. Waveform zoom and overview are another. Before
+ * a gig (gig check and Tempo drift) is a third. Later screens add their
+ * own context file and one wrapper here. This module reads those
+ * engines; it does not own fetch or playback.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import {
+  GigStateProvider,
+  type GigContextValue,
+} from "../context/GigContext";
+import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
 import { WaveformProvider } from "../context/WaveformContext";
+import {
+  backGigStep,
+  exitGigCheck,
+  getGigSnapshot,
+  nextGigStep,
+  subscribeGig,
+} from "../gig";
+import { getDriftSnapshot, subscribeDrift } from "../drift";
 import {
   SEEK_STEP_LARGE_SECONDS,
   SEEK_STEP_SECONDS,
@@ -59,6 +72,16 @@ function readPlayerValue(): PlayerContextValue {
   };
 }
 
+function readGigValue(): GigContextValue {
+  return {
+    gig: getGigSnapshot(),
+    drift: getDriftSnapshot(),
+    nextStep: nextGigStep,
+    backStep: backGigStep,
+    exit: exitGigCheck,
+  };
+}
+
 /**
  * Mount the player domain at the root of one React island.
  *
@@ -81,16 +104,46 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Mount the Before a gig domain at the root of one React island.
+ *
+ * Updates are flushed so existing tests see the report in the same turn
+ * as the engine change.
+ *
+ * @param children Island that calls `useGig`.
+ */
+export function GigProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readGigValue);
+  useEffect(() => {
+    const refresh = () => {
+      flushSync(() => {
+        setValue(readGigValue());
+      });
+    };
+    const stopGig = subscribeGig(refresh);
+    const stopDrift = subscribeDrift(refresh);
+    return () => {
+      stopGig();
+      stopDrift();
+    };
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <GigStateProvider value={current}>{children}</GigStateProvider>;
+}
+
+/**
  * Nest every domain provider.
  *
  * Player is the first domain. Waveform zoom and overview wrap inside it.
+ * Before a gig wraps inside waveform.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <WaveformProvider>{children}</WaveformProvider>
+      <WaveformProvider>
+        <GigProvider>{children}</GigProvider>
+      </WaveformProvider>
     </PlayerProvider>
   );
 }
