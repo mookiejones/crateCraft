@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners2 = [], signal = this.signal = {
+        var listeners3 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners2.push(listener);
+            listeners3.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners2.forEach(function(listener) {
+          listeners3.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners2 = currentEntangledListeners;
+          var listeners3 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])();
+          for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners2 = [], thenableWithOverride = {
+        var listeners3 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners2.push(resolve);
+            listeners3.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])(result);
+            for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners2.length; error2++)
-              (0, listeners2[error2])(void 0);
+            for (error2 = 0; error2 < listeners3.length; error2++)
+              (0, listeners3[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners2 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners3 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners2.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners3.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners2.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners3.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners2;
+          if (3 === targetFiber.tag) return listeners3;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners2 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners3 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners2.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners3.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners2.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners3.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners2.length && dispatchQueue.push({ event, listeners: listeners2 });
+        0 !== listeners3.length && dispatchQueue.push({ event, listeners: listeners3 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners2 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners2, type, listener, optionsOrUseCapture)) {
+        var listeners3 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners3, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners2.push({
+          listeners3.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners2;
+        this._eventListeners = listeners3;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners2 = this._eventListeners;
-        if (null !== listeners2 && (listener = indexOfEventListener(
-          listeners2,
+        var listeners3 = this._eventListeners;
+        if (null !== listeners3 && (listener = indexOfEventListener(
+          listeners3,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners2[listener];
+          var _listeners$index = listeners3[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners2.splice(listener, 1);
+          listeners3.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -12652,8 +12652,8 @@
         if (0 === eventListeners.length) return -1;
         optionsOrUseCapture = normalizeListenerOptions(optionsOrUseCapture);
         for (var i = 0; i < eventListeners.length; i++) {
-          var item4 = eventListeners[i];
-          if (item4.type === type && item4.listener === listener && normalizeListenerOptions(item4.optionsOrUseCapture) === optionsOrUseCapture)
+          var item3 = eventListeners[i];
+          if (item3.type === type && item3.listener === listener && normalizeListenerOptions(item3.optionsOrUseCapture) === optionsOrUseCapture)
             return i;
         }
         return -1;
@@ -12795,8 +12795,8 @@
           var pending = pendingIntersectionUnobserves;
           pendingIntersectionUnobserves = [];
           for (var i = 0; i < pending.length; i++) {
-            var item4 = pending[i];
-            item4.observer.unobserve(item4.instance);
+            var item3 = pending[i];
+            item3.observer.unobserve(item3.instance);
           }
         }));
       }
@@ -17531,8 +17531,8 @@
   function messageParams(value) {
     if (!value || typeof value !== "object") return void 0;
     const params = {};
-    for (const [name, item4] of Object.entries(value)) {
-      if (typeof item4 === "string" || typeof item4 === "number" && Number.isFinite(item4)) params[name] = item4;
+    for (const [name, item3] of Object.entries(value)) {
+      if (typeof item3 === "string" || typeof item3 === "number" && Number.isFinite(item3)) params[name] = item3;
     }
     return Object.keys(params).length ? params : void 0;
   }
@@ -18941,9 +18941,9 @@
         (drive) => t("gig.driveUnavailable", { name: drive.name, count: drive.track_count })
       );
     }
-    if (index === 1) return (payload.missing_files || []).map((item4) => item4.path);
-    if (index === 2) return (payload.streaming_tracks || []).map((item4) => `${item4.service}: ${item4.title}`);
-    if (index === 3) return (payload.empty_crates || []).map((item4) => `${item4.name} — ${item4.warning}`);
+    if (index === 1) return (payload.missing_files || []).map((item3) => item3.path);
+    if (index === 2) return (payload.streaming_tracks || []).map((item3) => `${item3.service}: ${item3.title}`);
+    if (index === 3) return (payload.empty_crates || []).map((item3) => `${item3.name} — ${item3.warning}`);
     return [];
   }
   function renderStepList(parent, step, lines) {
@@ -19059,7 +19059,7 @@
       time: formatCheckedAt(checkedAt)
     });
     fragment.append(art, line);
-    const holding = (payload.holding_it_back || []).map((item4) => item4.summary);
+    const holding = (payload.holding_it_back || []).map((item3) => item3.summary);
     if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
     fragment.append(actions(null));
     return fragment;
@@ -19154,7 +19154,7 @@
       return;
     }
     for (const kind2 of reasonKinds(flags)) {
-      const rows2 = flags.filter((item4) => item4.reasons.includes(kind2));
+      const rows2 = flags.filter((item3) => item3.reasons.includes(kind2));
       report.append(detailsGroup2(reasonHeading(kind2), rows2.map(flagLine)));
     }
   }
@@ -19190,7 +19190,7 @@
     return line;
   }
   function reasonKinds(flags) {
-    const seen = new Set(flags.flatMap((item4) => item4.reasons));
+    const seen = new Set(flags.flatMap((item3) => item3.reasons));
     const known = REASON_ORDER.filter((kind2) => seen.has(kind2));
     const extra = [...seen].filter((kind2) => !REASON_ORDER.includes(kind2)).sort();
     return [...known, ...extra];
@@ -19198,11 +19198,11 @@
   function reasonHeading(kind2) {
     return t(REASON_KEYS[kind2] ?? "drift.reason.unknown");
   }
-  function flagLine(item4) {
-    const title2 = [item4.artist, item4.name].filter(Boolean).join(" — ") || item4.file;
-    const reasons = item4.reasons.map(reasonHeading).join(", ");
-    const bpm = item4.bpm_min != null && item4.bpm_max != null ? t("drift.bpmRange", { min: item4.bpm_min, max: item4.bpm_max }) : "";
-    return t("drift.row", { title: title2, file: item4.file, reasons, bpm });
+  function flagLine(item3) {
+    const title2 = [item3.artist, item3.name].filter(Boolean).join(" — ") || item3.file;
+    const reasons = item3.reasons.map(reasonHeading).join(", ");
+    const bpm = item3.bpm_min != null && item3.bpm_max != null ? t("drift.bpmRange", { min: item3.bpm_min, max: item3.bpm_max }) : "";
+    return t("drift.row", { title: title2, file: item3.file, reasons, bpm });
   }
   function detailsGroup2(label, lines) {
     const details = document.createElement("details");
@@ -19234,216 +19234,108 @@
   }
 
   // src/health.ts
-  var SECTIONS = [
-    { key: "missing", label: "health.missing", action: "missing" },
-    { key: "no_bpm", label: "health.noBpm" },
-    { key: "no_key", label: "health.noKey" },
-    { key: "no_beatgrid", label: "health.noBeatgrid" },
-    { key: "no_artwork", label: "health.noArtwork" },
-    { key: "empty_genre", label: "health.emptyGenre" },
-    { key: "no_crate", label: "health.noCrate" }
-  ];
-  var latest3 = null;
-  var go = null;
-  function wireHealth(navigate) {
-    go = navigate;
-    const panel = el("health-panel");
-    if (panel.dataset.healthWired === "true") return;
-    panel.dataset.healthWired = "true";
-    el("health-refresh").addEventListener("click", () => {
-      void loadHealth();
-    });
-    panel.addEventListener("click", (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement)) return;
-      const action = button2.dataset.healthAction;
-      if (action === "missing" || action === "duplicates" || action === "files") {
-        go?.(action);
-        return;
-      }
-      if (action === "track") {
-        const id = Number(button2.dataset.healthId);
-        if (Number.isInteger(id) && id > 0) go?.("track", id);
-      }
-    });
+  var import_react8 = __toESM(require_react(), 1);
+
+  // src/app/mount.tsx
+  var import_react_dom2 = __toESM(require_react_dom(), 1);
+  var import_client = __toESM(require_client(), 1);
+
+  // src/app/providers.tsx
+  var import_react7 = __toESM(require_react(), 1);
+  var import_react_dom = __toESM(require_react_dom(), 1);
+
+  // src/context/HealthContext.tsx
+  var import_react = __toESM(require_react(), 1);
+  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+  var HealthContext = (0, import_react.createContext)(null);
+  function HealthProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HealthContext, { value, children });
   }
-  async function loadHealth() {
-    const token3 = ++state.healthToken;
-    beginBusy3();
-    let settle = "none";
-    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      const response = await fetch(
-        `/api/library-health?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
-      );
-      if (token3 !== state.healthToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.healthToken) return;
-      if (!response.ok || payload === null) {
-        failStatus3(serverMessage(payload, t("health.unreadable")));
-        settle = "retry";
-        return;
-      }
-      latest3 = payload;
-      el("health-status").textContent = "";
-      renderHealthReport(payload);
-      settle = "report";
-    } catch {
-      if (token3 !== state.healthToken) return;
-      failStatus3(t("health.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.healthToken) return;
-      endBusy3();
-      if (settle === "retry") el("health-refresh").focus();
-      if (settle === "report") el("health-report").focus();
+  function useHealth() {
+    const value = (0, import_react.useContext)(HealthContext);
+    if (value === null) {
+      throw new Error("useHealth must be used within HealthProvider");
     }
+    return value;
   }
-  function showHealthFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
-    failStatus3(message);
-    endBusy3();
-    el("health-refresh").focus();
+
+  // src/context/PlayerContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var PlayerContext = (0, import_react2.createContext)(null);
+  function PlayerProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PlayerContext, { value, children });
   }
-  function renderHealthReport(payload) {
-    el("health-scope").textContent = scopeLabel2();
-    const report = el("health-report");
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = t("health.summary", { count: payload.checked });
-    report.replaceChildren(summary);
-    let listed = 0;
-    for (const spec2 of SECTIONS) {
-      listed += paintSection(report, t(spec2.label), payload[spec2.key], spec2.action);
+  function usePlayer() {
+    const value = (0, import_react2.useContext)(PlayerContext);
+    if (value === null) {
+      throw new Error("usePlayer must be used within PlayerProvider");
     }
-    listed += paintUnused(report, payload.unused);
-    listed += paintDuplicates(report, payload.duplicates);
-    if (!listed) report.append(noteLine3(t("health.clear")));
+    return value;
   }
-  function repaintHealth() {
-    el("health-scope").textContent = scopeLabel2();
-    if (latest3) renderHealthReport(latest3);
+
+  // src/health-events.ts
+  var listeners = /* @__PURE__ */ new Set();
+  function subscribeHealth(listener) {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
   }
-  function beginBusy3() {
-    const button2 = el("health-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
-    el("health-panel").setAttribute("aria-busy", "true");
-    el("health-status").textContent = t("health.checking");
+  function emitHealth() {
+    for (const listener of [...listeners]) listener();
   }
-  function endBusy3() {
-    const button2 = el("health-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
-    el("health-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus3(message) {
-    el("health-status").textContent = message;
-  }
-  function scopeLabel2() {
+
+  // src/health-list.ts
+  function crateScopeLabel() {
     if (state.activeCrate === "all") return t("gig.wholeSpace");
     const crate = state.crates.find((row) => row.id === state.activeCrate);
     return crate?.name || t("gig.wholeSpace");
   }
-  function noteLine3(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function paintSection(report, label, section, action) {
-    const count = section?.count ?? 0;
-    const tracks = section?.tracks ?? [];
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label, count });
-    details.append(heading2);
-    if (action === "missing") details.append(openButton("missing", "health.openMissing", tips.healthOpenMissing));
-    const list = document.createElement("ul");
-    for (const track of tracks) list.append(trackItem(track));
-    details.append(list);
-    if (count > tracks.length) {
-      details.append(noteLine3(t("health.more", { count: count - tracks.length })));
+  function healthListNote() {
+    if (state.mode === "missing") {
+      const offlineCount = state.tracks.filter((track) => track.offline).length;
+      return offlineCount ? t("mode.missingOffline", { count: offlineCount }) : t("mode.missing");
     }
-    report.append(details);
-    return count;
+    if (state.mode === "duplicates") return t("mode.duplicates");
+    if (state.mode === "stems") return t("mode.stems");
+    return "";
   }
-  function paintUnused(report, section) {
-    const count = section?.count ?? 0;
-    const files = section?.files ?? [];
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label: t("health.unused"), count });
-    details.append(heading2);
-    details.append(openButton("files", "health.openFiles", tips.healthOpenFiles));
-    const list = document.createElement("ul");
-    for (const row of files) {
-      const item4 = document.createElement("li");
-      item4.textContent = t("health.fileRow", { file: row.file });
-      list.append(item4);
-    }
-    details.append(list);
-    if (count > files.length) {
-      details.append(noteLine3(t("health.more", { count: count - files.length })));
-    }
-    report.append(details);
-    return count;
+  function selectedDuplicateGroupOpen() {
+    if (state.mode !== "duplicates" || state.selectedId == null) return false;
+    return (state.duplicateGroups || []).some((group) => (group.ids || []).includes(state.selectedId));
   }
-  function paintDuplicates(report, section) {
-    const count = section?.count ?? 0;
-    const groups = section?.groups ?? [];
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label: t("health.duplicates"), count });
-    details.append(heading2);
-    details.append(openButton("duplicates", "health.openDuplicates", tips.healthOpenDuplicates));
-    const list = document.createElement("ul");
-    for (const group of groups) list.append(groupItem(group));
-    details.append(list);
-    if (count > groups.length) {
-      details.append(noteLine3(t("health.more", { count: count - groups.length })));
-    }
-    report.append(details);
-    return count;
-  }
-  function openButton(action, label, tip) {
-    const button2 = buttonEl(tip);
-    button2.dataset.healthAction = action;
-    button2.textContent = t(label);
-    return button2;
-  }
-  function trackItem(track) {
-    const row = document.createElement("li");
-    const button2 = buttonEl(tips.healthTrack);
-    button2.dataset.healthAction = "track";
-    button2.dataset.healthId = String(track.id);
-    button2.textContent = trackLine(track);
-    row.append(button2);
-    return row;
-  }
-  function groupItem(group) {
-    const row = document.createElement("li");
-    row.textContent = t("health.duplicateRow", {
-      title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
-      count: group.ids.length
-    });
-    return row;
-  }
-  function trackLine(track) {
-    return t("health.row", {
-      title: [track.artist, track.name].filter(Boolean).join(" — ") || track.file
-    });
+  function getHealthListSnapshot() {
+    const mergeVisible = state.mode === "duplicates";
+    const relinkVisible = state.mode === "missing";
+    return {
+      mode: state.mode,
+      modeNote: healthListNote(),
+      mergeVisible,
+      mergeDisabled: !mergeVisible || !state.writable || !selectedDuplicateGroupOpen(),
+      relinkVisible,
+      relinkDisabled: !relinkVisible || !state.writable
+    };
   }
 
   // src/scan.ts
+  var import_react3 = __toESM(require_react(), 1);
+
+  // src/components/tooltip-ref.ts
+  function tooltipRef(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+
+  // src/components/ScanPanel.tsx
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var LIST_CAP3 = 100;
   var PROBLEM_ORDER = [
     "empty",
@@ -19463,27 +19355,144 @@
     decode_error: "scan.problem.decode_error",
     short: "scan.problem.short"
   };
-  var latest4 = null;
+  function problemHeading(kind2) {
+    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
+  }
+  function problemDetail(item3) {
+    const heading2 = problemHeading(item3.problem);
+    if (item3.problem === "wrong_format" && item3.detail) {
+      return t("scan.wrongFormatDetail", { detail: item3.detail });
+    }
+    if ((item3.problem === "decode_error" || item3.problem === "short") && item3.detail) {
+      return t(item3.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
+        detail: item3.detail
+      });
+    }
+    if (item3.problem === "serato_flagged" && item3.detail) {
+      return `${heading2}: ${item3.detail}`;
+    }
+    return heading2;
+  }
+  function problemLine(item3) {
+    const title2 = [item3.artist, item3.name].filter(Boolean).join(" — ") || item3.file;
+    return t("scan.row", { title: title2, file: item3.file, problem: problemDetail(item3) });
+  }
+  function problemKinds(problems) {
+    const seen = new Set(problems.map((item3) => item3.problem));
+    const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
+    const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
+    return [...known, ...extra];
+  }
+  function ProblemGroup({
+    kind: kind2,
+    rows: rows2,
+    expanded: expanded2,
+    onExpand
+  }) {
+    const lines = rows2.map(problemLine);
+    const shown = expanded2 ? lines : lines.slice(0, LIST_CAP3);
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("details", { className: "gig-group", open: true, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("summary", { children: t("gig.groupCount", { label: problemHeading(kind2), count: lines.length }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { children: shown.map((line) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: line }, line)) }),
+      lines.length > LIST_CAP3 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", ref: tooltipRef(tips.gigShowAll), className: "gig-show-all", onClick: onExpand, children: t("gig.showAll", { count: lines.length }) }) : null
+    ] });
+  }
+  function ScanPanel() {
+    const health = useHealth();
+    const payload = health.scanReport;
+    const problems = payload?.problems ?? [];
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          "button",
+          {
+            id: "scan-quick",
+            type: "button",
+            ref: tooltipRef(tips.scanQuick),
+            disabled: health.scanBusy,
+            "aria-busy": health.scanBusy ? "true" : "false",
+            onClick: () => {
+              void health.loadScan("quick");
+            },
+            children: t("scan.checkQuick")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          "button",
+          {
+            id: "scan-full",
+            type: "button",
+            ref: tooltipRef(tips.scanFull),
+            disabled: health.scanBusy || health.scanFullDisabled,
+            "aria-busy": health.scanBusy ? "true" : "false",
+            onClick: () => {
+              void health.loadScan("full");
+            },
+            children: t("scan.checkFull")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
+        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
+        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
+        problems.length ? problemKinds(problems).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          ProblemGroup,
+          {
+            kind: kind2,
+            rows: problems.filter((item3) => item3.problem === kind2),
+            expanded: health.scanExpanded.has(kind2),
+            onExpand: () => health.expandScan(kind2)
+          },
+          kind2
+        )) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gig-note", children: t("scan.empty") })
+      ] }) : null })
+    ] });
+  }
+
+  // src/scan.ts
+  var latest3 = null;
+  var status = "";
+  var busy = false;
   var lastDepth = "quick";
+  var expanded = /* @__PURE__ */ new Set();
+  var panelRoot;
+  var panelHost = null;
+  function getScanSnapshot() {
+    return {
+      scanReport: latest3,
+      scanStatus: status,
+      scanBusy: busy,
+      scanScope: crateScopeLabel(),
+      scanFullDisabled: state.activeCrate === "all",
+      scanExpanded: expanded
+    };
+  }
+  function expandScan(kind2) {
+    expanded.add(kind2);
+    emitHealth();
+  }
   function wireScan() {
     const panel = el("scan-panel");
-    if (panel.dataset.scanWired === "true") return;
-    panel.dataset.scanWired = "true";
-    el("scan-quick").addEventListener("click", () => {
-      void loadScan("quick");
-    });
-    el("scan-full").addEventListener("click", () => {
-      void loadScan("full");
-    });
+    if (panelRoot && panelHost !== panel) {
+      panelRoot.unmount();
+      panelRoot = void 0;
+    }
+    panelHost = panel;
+    panelRoot = mountIsland(panel, (0, import_react3.createElement)(ScanPanel), panelRoot);
   }
   async function loadScan(depth) {
     const chosen = resolveDepth(depth);
     const token3 = ++state.scanToken;
-    beginBusy4();
+    beginBusy3();
     let settle = "none";
     if (chosen === "full" && state.activeCrate === "all") {
-      failStatus4(t("error.scan_full_needs_crate"));
-      endBusy4();
+      failStatus3(t("error.scan_full_needs_crate"));
+      endBusy3();
       el("scan-full").focus();
       return;
     }
@@ -19497,159 +19506,66 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.scanToken) return;
       if (!response.ok || payload === null) {
-        failStatus4(serverMessage(payload, t("scan.unreadable")));
+        failStatus3(serverMessage(payload, t("scan.unreadable")));
         settle = "retry";
         return;
       }
-      latest4 = payload;
-      el("scan-status").textContent = "";
-      renderScanReport(payload);
+      latest3 = payload;
+      expanded.clear();
+      status = "";
+      emitHealth();
       settle = "report";
     } catch {
       if (token3 !== state.scanToken) return;
-      failStatus4(t("scan.unreachable"));
+      failStatus3(t("scan.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.scanToken) return;
-      endBusy4();
+      endBusy3();
       if (settle === "retry") el("scan-quick").focus();
       if (settle === "report") el("scan-report").focus();
     }
   }
   function showScanFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
-    failStatus4(message);
-    endBusy4();
+    failStatus3(message);
+    endBusy3();
     el("scan-quick").focus();
   }
-  function renderScanReport(payload) {
-    el("scan-scope").textContent = scopeLabel3();
-    const report = el("scan-report");
-    const problems = payload.problems || [];
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked });
-    report.replaceChildren(summary);
-    if (payload.not_found) {
-      report.append(noteLine4(t("scan.notFound", { count: payload.not_found })));
-    }
-    if (payload.unchecked) {
-      report.append(noteLine4(t("scan.unchecked", { count: payload.unchecked })));
-    }
-    if (!problems.length) {
-      report.append(noteLine4(t("scan.empty")));
-      return;
-    }
-    for (const kind2 of problemKinds(problems)) {
-      const rows2 = problems.filter((item4) => item4.problem === kind2);
-      report.append(detailsGroup3(problemHeading(kind2), rows2.map(problemLine)));
-    }
-  }
   function repaintScan() {
-    el("scan-scope").textContent = scopeLabel3();
-    if (latest4) renderScanReport(latest4);
+    emitHealth();
   }
   function resolveDepth(depth) {
     if (depth === "quick" || depth === "full") return depth;
     if (lastDepth === "full" && state.activeCrate === "all") return "quick";
     return lastDepth;
   }
-  function beginBusy4() {
-    for (const id of ["scan-quick", "scan-full"]) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
-    }
+  function beginBusy3() {
+    busy = true;
+    status = t("scan.checking");
     el("scan-panel").setAttribute("aria-busy", "true");
-    el("scan-status").textContent = t("scan.checking");
+    emitHealth();
   }
-  function endBusy4() {
-    el("scan-quick").disabled = false;
-    el("scan-quick").setAttribute("aria-busy", "false");
-    const full = el("scan-full");
-    full.disabled = state.activeCrate === "all";
-    full.setAttribute("aria-busy", "false");
+  function endBusy3() {
+    busy = false;
     el("scan-panel").setAttribute("aria-busy", "false");
+    emitHealth();
   }
-  function failStatus4(message) {
-    el("scan-status").textContent = message;
-  }
-  function scopeLabel3() {
-    if (state.activeCrate === "all") return t("gig.wholeSpace");
-    const crate = state.crates.find((row) => row.id === state.activeCrate);
-    return crate?.name || t("gig.wholeSpace");
-  }
-  function noteLine4(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function problemKinds(problems) {
-    const seen = new Set(problems.map((item4) => item4.problem));
-    const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
-    const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
-    return [...known, ...extra];
-  }
-  function problemHeading(kind2) {
-    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
-  }
-  function problemLine(item4) {
-    const title2 = [item4.artist, item4.name].filter(Boolean).join(" — ") || item4.file;
-    const label = problemDetail(item4);
-    return t("scan.row", { title: title2, file: item4.file, problem: label });
-  }
-  function problemDetail(item4) {
-    const heading2 = problemHeading(item4.problem);
-    if (item4.problem === "wrong_format" && item4.detail) {
-      return t("scan.wrongFormatDetail", { detail: item4.detail });
-    }
-    if ((item4.problem === "decode_error" || item4.problem === "short") && item4.detail) {
-      return t(item4.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
-        detail: item4.detail
-      });
-    }
-    if (item4.problem === "serato_flagged" && item4.detail) {
-      return `${heading2}: ${item4.detail}`;
-    }
-    return heading2;
-  }
-  function detailsGroup3(label, lines) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = true;
-    const summary = document.createElement("summary");
-    summary.textContent = t("gig.groupCount", { label, count: lines.length });
-    const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP3);
-    for (const line of shown) list.append(item3(line));
-    details.append(summary, list);
-    if (lines.length > LIST_CAP3) {
-      const show2 = buttonEl(tips.gigShowAll);
-      show2.className = "gig-show-all";
-      show2.textContent = t("gig.showAll", { count: lines.length });
-      show2.addEventListener("click", () => {
-        list.replaceChildren();
-        for (const line of lines) list.append(item3(line));
-        show2.remove();
-      });
-      details.append(show2);
-    }
-    return details;
-  }
-  function item3(text2) {
-    const row = document.createElement("li");
-    row.textContent = text2;
-    return row;
+  function failStatus3(message) {
+    status = message;
+    emitHealth();
   }
 
+  // src/tags.ts
+  var import_react4 = __toESM(require_react(), 1);
+
   // src/tags-view.ts
-  function tagsSummary(field, values, groups) {
-    if (field === "titles") return titlesSummary(groups);
+  function tagsSummary(field2, values, groups) {
+    if (field2 === "titles") return titlesSummary(groups);
     if (groups === 0) {
-      return field === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
+      return field2 === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
     }
-    return field === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
+    return field2 === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
   }
   function titlesSummary(changes) {
     if (!changes) return t("tags.summaryTitlesClear");
@@ -19687,17 +19603,17 @@
   function mappingWrittenSummary(plan) {
     return t("tags.mappingWritten", { count: plan.changes.length });
   }
-  function mappingFieldLabel(field) {
-    if (field === "genre") return t("tags.genre");
-    if (field === "artist") return t("tags.artist");
-    return field;
+  function mappingFieldLabel(field2) {
+    if (field2 === "genre") return t("tags.genre");
+    if (field2 === "artist") return t("tags.artist");
+    return field2;
   }
   function groupChanges(changes) {
     const rows2 = /* @__PURE__ */ new Map();
     for (const change of changes) {
       const remixer = change.remixer ?? "";
-      const field = change.field ?? "";
-      const id = `${field}\0${change.from}\0${change.to}\0${remixer}`;
+      const field2 = change.field ?? "";
+      const id = `${field2}\0${change.from}\0${change.to}\0${remixer}`;
       const existing = rows2.get(id);
       if (existing) existing.count += 1;
       else {
@@ -19728,71 +19644,331 @@
     });
   }
 
-  // src/tags.ts
+  // src/components/TagsPanel.tsx
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   var LIST_CAP4 = 100;
-  var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
   var TITLE_KEY = "clean";
   var MAPPING_KEY = "saved";
-  var latest5 = null;
-  var titlePlan = null;
-  var mappingPlan = null;
-  var plans = /* @__PURE__ */ new Map();
-  var selectedByKey = /* @__PURE__ */ new Map();
-  var panelBusy = false;
-  var actionKey = "";
-  function wireTags() {
-    const panel = el("tags-panel");
-    if (panel.dataset.tagsWired === "true") return;
-    panel.dataset.tagsWired = "true";
-    el("tags-genre").addEventListener("click", () => {
-      if (currentField() === "genre") return;
-      setField("genre");
-      void loadTags();
-    });
-    el("tags-artist").addEventListener("click", () => {
-      if (currentField() === "artist") return;
-      setField("artist");
-      void loadTags();
-    });
-    el("tags-titles").addEventListener("click", () => {
-      if (currentField() === "titles") return;
-      setField("titles");
-      void loadTags();
-    });
-    el("tags-refresh").addEventListener("click", () => {
-      void loadTags();
-    });
-    el("tags-report").addEventListener("change", (event) => {
+  function DiffLines({ plan }) {
+    const lines = previewLines(plan.changes).slice(0, LIST_CAP4);
+    if (!lines.length) return null;
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { children: lines.map((line) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { children: line }, line)) });
+  }
+  function MappingCard({
+    plan,
+    canApply,
+    onApply
+  }) {
+    if (!plan.changes.length) return null;
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "tags-mappings", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef(tips.tagsApplyMappings),
+          "data-tags-action": "refresh-apply",
+          disabled: !canApply,
+          onClick: onApply,
+          children: t("tags.applyMappings")
+        }
+      ) })
+    ] });
+  }
+  function GroupCard({
+    group,
+    open,
+    chosen,
+    plan,
+    busy: busy3,
+    canApply,
+    onPreview,
+    onApply,
+    onSelect
+  }) {
+    const showPlan = plan && plan.value === chosen;
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("details", { className: "gig-group", open, "data-key": group.key, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("summary", { ref: tooltipRef(tips.tagsGroup), children: groupHeading(group) }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "tags-spelling", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          "input",
+          {
+            ref: tooltipRef(tips.tagsSpelling),
+            type: "radio",
+            name: `tags-${group.key}`,
+            value: spelling.value,
+            checked: spelling.value === chosen,
+            disabled: busy3,
+            onChange: (event) => onSelect(event.currentTarget.value)
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
+      ] }) }, spelling.value)) }),
+      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(DiffLines, { plan }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "tags-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.tagsPreview),
+            "data-tags-action": "preview",
+            "data-key": group.key,
+            disabled: busy3 || !chosen,
+            onClick: onPreview,
+            children: t("tags.preview")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.tagsApply),
+            "data-tags-action": "apply",
+            "data-key": group.key,
+            disabled: !canApply || Boolean(plan && plan.value === chosen && !plan.changes.length),
+            onClick: onApply,
+            children: t("tags.apply")
+          }
+        )
+      ] })
+    ] });
+  }
+  function TitlesReport({
+    plan,
+    canApply,
+    onApply
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef(tips.tagsApplyTitles),
+          "data-tags-action": "clean-apply",
+          disabled: !canApply,
+          onClick: onApply,
+          children: t("tags.apply")
+        }
+      ) })
+    ] });
+  }
+  function TagsPanel() {
+    const health = useHealth();
+    const field2 = health.tagsField;
+    const groups = health.tagsClusters?.groups ?? [];
+    function onField(next2) {
+      if (health.tagsField === next2) return;
+      health.setTagsField(next2);
+      void health.loadTags();
+    }
+    function onReportChange(event) {
       const input = event.target.closest("input[type='radio']");
       if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
-      const key = input.name.slice("tags-".length);
-      selectedByKey.set(key, input.value);
-      plans.delete(key);
-      if (latest5) renderTagsReport(latest5);
-    });
-    el("tags-report").addEventListener("click", (event) => {
+      health.selectSpelling(input.name.slice("tags-".length), input.value);
+    }
+    function onReportClick(event) {
       const button2 = event.target.closest("[data-tags-action]");
       if (!button2 || button2.disabled) return;
       if (button2.dataset.tagsAction === "clean-apply") {
-        void applyTitles();
+        void health.applyTitles();
         return;
       }
       if (button2.dataset.tagsAction === "refresh-apply") {
-        void applyMappings();
+        void health.applyMappings();
         return;
       }
       const key = button2.dataset.key ?? "";
       if (!key) return;
-      if (button2.dataset.tagsAction === "preview") void previewGroup(key);
-      if (button2.dataset.tagsAction === "apply") void applyGroup(key);
-    });
+      if (button2.dataset.tagsAction === "preview") void health.previewGroup(key);
+      if (button2.dataset.tagsAction === "apply") void health.applyGroup(key);
+    }
+    function canApply(key) {
+      const plan = health.tagsPlans.get(key);
+      const group = groups.find((row) => row.key === key);
+      const value = health.tagsSelected.get(key) ?? group?.suggested ?? "";
+      return Boolean(
+        plan && plan.value === value && plan.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== key
+      );
+    }
+    const canApplyTitles = Boolean(
+      health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY
+    );
+    const canApplyMappings = Boolean(
+      health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY
+    );
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+            "button",
+            {
+              id: "tags-genre",
+              type: "button",
+              ref: tooltipRef(tips.tagsGenre),
+              "aria-pressed": field2 === "genre",
+              disabled: health.tagsBusy,
+              "aria-busy": health.tagsBusy ? "true" : "false",
+              onClick: () => onField("genre"),
+              children: t("tags.genre")
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+            "button",
+            {
+              id: "tags-artist",
+              type: "button",
+              ref: tooltipRef(tips.tagsArtist),
+              "aria-pressed": field2 === "artist",
+              disabled: health.tagsBusy,
+              "aria-busy": health.tagsBusy ? "true" : "false",
+              onClick: () => onField("artist"),
+              children: t("tags.artist")
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+            "button",
+            {
+              id: "tags-titles",
+              type: "button",
+              ref: tooltipRef(tips.tagsTitles),
+              "aria-pressed": field2 === "titles",
+              disabled: health.tagsBusy,
+              "aria-busy": health.tagsBusy ? "true" : "false",
+              onClick: () => onField("titles"),
+              children: t("tags.titles")
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          "button",
+          {
+            id: "tags-refresh",
+            type: "button",
+            ref: tooltipRef(tips.tagsRefresh),
+            disabled: health.tagsBusy,
+            "aria-busy": health.tagsBusy ? "true" : "false",
+            onClick: () => {
+              void health.loadTags();
+            },
+            children: t("gig.checkAgain")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+        "div",
+        {
+          id: "tags-report",
+          className: "gig-report",
+          tabIndex: -1,
+          onChange: onReportChange,
+          onClick: onReportClick,
+          children: [
+            field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => void health.applyTitles() }) : null,
+            field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
+              health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+                MappingCard,
+                {
+                  plan: health.mappingPlan,
+                  canApply: canApplyMappings,
+                  onApply: () => void health.applyMappings()
+                }
+              ) : null,
+              groups.map((group, index) => {
+                const chosen = health.tagsSelected.get(group.key) ?? group.suggested ?? "";
+                return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+                  GroupCard,
+                  {
+                    group,
+                    open: index === 0 || health.tagsOpen.has(group.key),
+                    chosen,
+                    plan: health.tagsPlans.get(group.key),
+                    busy: health.tagsBusy,
+                    canApply: canApply(group.key),
+                    onPreview: () => void health.previewGroup(group.key),
+                    onApply: () => void health.applyGroup(group.key),
+                    onSelect: (value) => health.selectSpelling(group.key, value)
+                  },
+                  group.key
+                );
+              })
+            ] }) : null
+          ]
+        }
+      )
+    ] });
+  }
+
+  // src/tags.ts
+  var TITLE_KEY2 = "clean";
+  var MAPPING_KEY2 = "saved";
+  var latest4 = null;
+  var titlePlan = null;
+  var mappingPlan = null;
+  var plans = /* @__PURE__ */ new Map();
+  var selectedByKey = /* @__PURE__ */ new Map();
+  var openKeys = /* @__PURE__ */ new Set();
+  var field = "genre";
+  var status2 = "";
+  var panelBusy = false;
+  var actionKey = "";
+  var panelRoot2;
+  var panelHost2 = null;
+  function getTagsSnapshot() {
+    return {
+      tagsField: field,
+      tagsClusters: latest4,
+      titlePlan,
+      mappingPlan,
+      tagsPlans: plans,
+      tagsSelected: selectedByKey,
+      tagsOpen: openKeys,
+      tagsStatus: status2,
+      tagsBusy: panelBusy,
+      tagsActionKey: actionKey,
+      tagsWritable: state.writable
+    };
+  }
+  function setTagsField(next2) {
+    field = next2;
+    emitHealth();
+  }
+  function selectSpelling(key, value) {
+    selectedByKey.set(key, value);
+    plans.delete(key);
+    emitHealth();
+  }
+  function wireTags() {
+    field = "genre";
+    const panel = el("tags-panel");
+    if (panelRoot2 && panelHost2 !== panel) {
+      panelRoot2.unmount();
+      panelRoot2 = void 0;
+    }
+    panelHost2 = panel;
+    if (panel.dataset.tagsWired !== "true") {
+      panel.dataset.tagsWired = "true";
+      panel.addEventListener("change", (event) => {
+        const input = event.target.closest("input[type='radio']");
+        if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
+        selectSpelling(input.name.slice("tags-".length), input.value);
+      });
+    }
+    panelRoot2 = mountIsland(panel, (0, import_react4.createElement)(TagsPanel), panelRoot2);
   }
   async function loadTags() {
     const token3 = ++state.tagsToken;
-    const field = currentField();
     plans.clear();
     selectedByKey.clear();
-    beginBusy5();
+    openKeys.clear();
+    beginBusy4();
     let settle = "none";
     try {
       if (field === "titles") {
@@ -19802,9 +19978,9 @@
         });
         if (token3 !== state.tagsToken) return;
         titlePlan = payload;
-        latest5 = null;
+        latest4 = null;
         mappingPlan = null;
-        el("tags-status").textContent = titlesPreviewSummary(payload);
+        status2 = titlesPreviewSummary(payload);
         settle = "report";
       } else {
         const response = await fetch(
@@ -19814,113 +19990,61 @@
         const payload = await readJSON(response).catch(() => null);
         if (token3 !== state.tagsToken) return;
         if (!response.ok || payload === null) {
-          failStatus5(serverMessage(payload, t("tags.unreadable")));
+          failStatus4(serverMessage(payload, t("tags.unreadable")));
           settle = "retry";
           return;
         }
-        latest5 = payload;
+        latest4 = payload;
         titlePlan = null;
         mappingPlan = await readMappingPreview(token3);
         if (token3 !== state.tagsToken) return;
-        el("tags-status").textContent = "";
+        status2 = "";
         settle = "report";
       }
     } catch (error2) {
       if (token3 !== state.tagsToken) return;
-      if (error2 instanceof TypeError) failStatus5(t("tags.unreachable"));
-      else failStatus5(failureOf(error2).message);
+      if (error2 instanceof TypeError) failStatus4(t("tags.unreachable"));
+      else failStatus4(failureOf(error2).message);
       settle = "retry";
     } finally {
       if (token3 !== state.tagsToken) return;
-      endBusy5();
-      if (settle === "report") paintReport();
+      endBusy4();
+      emitHealth();
       if (settle === "retry") el("tags-refresh").focus();
       if (settle === "report") el("tags-report").focus();
     }
   }
   function showTagsFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
-    failStatus5(message);
-    endBusy5();
+    failStatus4(message);
+    endBusy4();
     el("tags-refresh").focus();
   }
-  function renderTagsReport(payload) {
-    el("tags-scope").textContent = t("gig.wholeSpace");
-    const field = currentField();
-    const report = el("tags-report");
-    const groups = payload.groups ?? [];
-    const open = openKeys();
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = tagsSummary(field, payload.values ?? 0, groups.length);
-    report.replaceChildren(summary);
-    const mapping = mappingCard();
-    if (mapping) report.append(mapping);
-    if (!groups.length) return;
-    groups.forEach((group, index) => {
-      report.append(groupCard(group, index === 0 || open.has(group.key)));
-    });
-  }
-  function paintReport() {
-    if (currentField() === "titles") {
-      if (titlePlan) renderTitleReport(titlePlan);
-      return;
-    }
-    if (latest5) renderTagsReport(latest5);
-  }
-  function renderTitleReport(plan) {
-    el("tags-scope").textContent = t("gig.wholeSpace");
-    const report = el("tags-report");
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = titlesSummary(plan.changes.length);
-    report.replaceChildren(summary);
-    const lines = previewLines(plan.changes);
-    if (lines.length) {
-      const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP4)) {
-        const row = document.createElement("li");
-        row.textContent = line;
-        diffs.append(row);
-      }
-      report.append(diffs);
-    }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
-    const apply = buttonEl(tips.tagsApplyTitles);
-    apply.dataset.tagsAction = "clean-apply";
-    apply.textContent = t("tags.apply");
-    apply.disabled = !canApplyTitles(plan);
-    actions2.append(apply);
-    report.append(actions2);
-  }
   function repaintTags() {
-    setField(currentField());
-    el("tags-scope").textContent = t("gig.wholeSpace");
-    paintReport();
+    emitHealth();
   }
   async function previewGroup(key) {
     const group = groupByKey(key);
     const value = selectedValue(key);
     if (!group || !value) return;
     actionKey = key;
-    paintReport();
+    emitHealth();
     try {
       const plan = await postJSON("/api/tag-clusters", {
         action: "preview",
         space: state.space,
-        field: currentField(),
+        field: field === "titles" ? "genre" : field,
         value
       });
       plans.set(key, plan);
-      el("tags-status").textContent = previewSummary(plan);
-      paintReport();
+      status2 = previewSummary(plan);
+      emitHealth();
       applyButton(key)?.focus();
     } catch (error2) {
-      failStatus5(failureOf(error2).message);
+      failStatus4(failureOf(error2).message);
     } finally {
       actionKey = "";
-      paintReport();
+      emitHealth();
     }
   }
   async function applyGroup(key) {
@@ -19929,41 +20053,42 @@
     if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
     actionKey = key;
     panelBusy = true;
-    beginBusy5();
-    paintReport();
+    beginBusy4();
+    emitHealth();
     try {
       const written = await postJSON("/api/tag-clusters", {
         action: "apply",
         space: state.space,
-        field: currentField(),
+        field: field === "titles" ? "genre" : field,
         value
       });
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy5();
+      endBusy4();
       await loadTags();
-      el("tags-status").textContent = writtenSummary(written);
+      status2 = writtenSummary(written);
+      emitHealth();
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus5(failed.message);
+      failStatus4(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy5();
-      paintReport();
+      endBusy4();
+      emitHealth();
     }
   }
   async function applyMappings() {
     const plan = mappingPlan;
-    if (!plan || !canApplyMappings(plan)) return;
-    actionKey = MAPPING_KEY;
+    if (!plan || !plan.changes.length || !state.writable) return;
+    actionKey = MAPPING_KEY2;
     panelBusy = true;
-    beginBusy5();
-    paintReport();
+    beginBusy4();
+    emitHealth();
     try {
       const written = await postJSON("/api/tag-clusters", {
         action: "refresh-apply",
@@ -19972,29 +20097,30 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy5();
+      endBusy4();
       await loadTags();
-      el("tags-status").textContent = mappingWrittenSummary(written);
+      status2 = mappingWrittenSummary(written);
+      emitHealth();
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus5(failed.message);
+      failStatus4(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy5();
-      paintReport();
+      endBusy4();
+      emitHealth();
     }
   }
   async function applyTitles() {
     const plan = titlePlan;
-    if (!plan || !canApplyTitles(plan)) return;
-    actionKey = TITLE_KEY;
+    if (!plan || !plan.changes.length || !state.writable) return;
+    actionKey = TITLE_KEY2;
     panelBusy = true;
-    beginBusy5();
-    paintReport();
+    beginBusy4();
+    emitHealth();
     try {
       const written = await postJSON("/api/tag-clusters", {
         action: "clean-apply",
@@ -20003,58 +20129,33 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy5();
+      endBusy4();
       await loadTags();
-      el("tags-status").textContent = titlesWrittenSummary(written);
+      status2 = titlesWrittenSummary(written);
+      emitHealth();
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus5(failed.message);
+      failStatus4(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy5();
-      paintReport();
+      endBusy4();
+      emitHealth();
     }
   }
-  function currentField() {
-    if (el("tags-titles").getAttribute("aria-pressed") === "true") return "titles";
-    if (el("tags-artist").getAttribute("aria-pressed") === "true") return "artist";
-    return "genre";
-  }
-  function setField(next2) {
-    el("tags-genre").setAttribute("aria-pressed", String(next2 === "genre"));
-    el("tags-artist").setAttribute("aria-pressed", String(next2 === "artist"));
-    el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
-    el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
-  }
-  function beginBusy5() {
+  function beginBusy4() {
     panelBusy = true;
-    for (const id of FIELD_BUTTONS) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
-    }
     el("tags-panel").setAttribute("aria-busy", "true");
-    el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
-    paintReport();
+    status2 = field === "titles" ? t("tags.checkingTitles") : t("tags.checking");
+    emitHealth();
   }
-  function endBusy5() {
+  function endBusy4() {
     panelBusy = false;
-    for (const id of FIELD_BUTTONS) {
-      const button2 = el(id);
-      button2.disabled = false;
-      button2.setAttribute("aria-busy", "false");
-    }
     el("tags-panel").setAttribute("aria-busy", "false");
-  }
-  function canApplyTitles(plan) {
-    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
-  }
-  function canApplyMappings(plan) {
-    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
+    emitHealth();
   }
   function asMappingPlan(payload) {
     if (payload === null || typeof payload !== "object") return null;
@@ -20075,60 +20176,16 @@
       return null;
     }
   }
-  function mappingCard() {
-    const plan = mappingPlan;
-    if (!plan?.changes.length) return null;
-    const wrap = document.createElement("div");
-    wrap.className = "tags-mappings";
-    const note = document.createElement("p");
-    note.className = "gig-note";
-    note.textContent = mappingPreviewSummary(plan);
-    wrap.append(note);
-    const lines = previewLines(plan.changes);
-    if (lines.length) {
-      const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP4)) {
-        const row = document.createElement("li");
-        row.textContent = line;
-        diffs.append(row);
-      }
-      wrap.append(diffs);
-    }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
-    const apply = buttonEl(tips.tagsApplyMappings);
-    apply.dataset.tagsAction = "refresh-apply";
-    apply.textContent = t("tags.applyMappings");
-    apply.disabled = !canApplyMappings(plan);
-    actions2.append(apply);
-    wrap.append(actions2);
-    return wrap;
-  }
-  function failStatus5(message) {
-    el("tags-status").textContent = message;
-  }
-  function openKeys() {
-    const keys = /* @__PURE__ */ new Set();
-    for (const details of el("tags-report").querySelectorAll("details[data-key]")) {
-      if (details instanceof HTMLDetailsElement && details.open && details.dataset.key) {
-        keys.add(details.dataset.key);
-      }
-    }
-    return keys;
+  function failStatus4(message) {
+    status2 = message;
+    emitHealth();
   }
   function groupByKey(key) {
-    return latest5?.groups?.find((group) => group.key === key);
+    return latest4?.groups?.find((group) => group.key === key);
   }
   function selectedValue(key) {
     const group = groupByKey(key);
     return selectedByKey.get(key) ?? group?.suggested ?? "";
-  }
-  function canApply(key) {
-    const plan = plans.get(key);
-    const value = selectedValue(key);
-    return Boolean(
-      plan && plan.value === value && plan.changes.length && state.writable && !panelBusy && actionKey !== key
-    );
   }
   function applyButton(key) {
     return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
@@ -20136,337 +20193,6 @@
   function cssEscape(value) {
     if (typeof CSS !== "undefined" && typeof CSS.escape === "function") return CSS.escape(value);
     return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
-  }
-  function groupCard(group, open) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = open;
-    details.dataset.key = group.key;
-    const summary = document.createElement("summary");
-    setTooltip(summary, tips.tagsGroup);
-    summary.textContent = groupHeading(group);
-    const list = document.createElement("ul");
-    list.className = "tags-spellings";
-    const chosen = selectedValue(group.key);
-    for (const spelling of group.spellings) {
-      list.append(spellingRow(group.key, spelling.value, spelling.count, spelling.value === group.suggested, spelling.value === chosen));
-    }
-    details.append(summary, list);
-    const plan = plans.get(group.key);
-    if (plan && plan.value === chosen) {
-      const lines = previewLines(plan.changes);
-      if (lines.length) {
-        const diffs = document.createElement("ul");
-        const shown = lines.slice(0, LIST_CAP4);
-        for (const line of shown) {
-          const row = document.createElement("li");
-          row.textContent = line;
-          diffs.append(row);
-        }
-        details.append(diffs);
-      }
-    }
-    details.append(groupActions(group.key, chosen, plan));
-    return details;
-  }
-  function spellingRow(key, value, count, suggested, checked) {
-    const row = document.createElement("li");
-    const label = document.createElement("label");
-    label.className = "tags-spelling";
-    const radio = inputEl(tips.tagsSpelling);
-    radio.type = "radio";
-    radio.name = `tags-${key}`;
-    radio.value = value;
-    radio.checked = checked;
-    radio.disabled = panelBusy;
-    const text2 = document.createElement("span");
-    text2.textContent = spellingLabel(value, count, suggested);
-    label.append(radio, text2);
-    row.append(label);
-    return row;
-  }
-  function groupActions(key, value, plan) {
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
-    const preview = buttonEl(tips.tagsPreview);
-    preview.dataset.tagsAction = "preview";
-    preview.dataset.key = key;
-    preview.textContent = t("tags.preview");
-    preview.disabled = panelBusy || !value;
-    const apply = buttonEl(tips.tagsApply);
-    apply.dataset.tagsAction = "apply";
-    apply.dataset.key = key;
-    apply.textContent = t("tags.apply");
-    apply.disabled = !canApply(key);
-    if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
-    actions2.append(preview, apply);
-    return actions2;
-  }
-
-  // src/portable.ts
-  var FINDING_CAP = 100;
-  var KIND_KEY = {
-    off_drive: "portable.kindOffDrive",
-    missing: "portable.kindMissing",
-    smart_crate: "portable.kindSmartCrate",
-    unsafe_name: "portable.kindUnsafeName",
-    path_length: "portable.kindPathLength",
-    file_size: "portable.kindFileSize"
-  };
-  var token = 0;
-  var latest6 = null;
-  var opener = null;
-  var wired = false;
-  function portableDriveRoot(path) {
-    const trimmed = path.trim();
-    if (!trimmed) return "";
-    const unified = trimmed.replace(/\\/g, "/");
-    const marker = unified.search(/\/_Serato_(\/|$)/i);
-    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
-    const volumes = /^\/Volumes\/[^/]+/.exec(base);
-    if (volumes) return volumes[0];
-    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
-    if (media2) return media2[0];
-    const mnt = /^\/mnt\/[^/]+/.exec(base);
-    if (mnt) return mnt[0];
-    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
-    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
-    const win = /^[A-Za-z]:/.exec(trimmed);
-    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
-    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
-  }
-  function parseDriveReport(value) {
-    if (!isRecord(value)) return null;
-    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
-    if (typeof value.summary !== "string") return null;
-    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
-    const findings = [];
-    for (const item4 of value.findings) {
-      if (!isRecord(item4) || typeof item4.kind !== "string" || typeof item4.fix !== "string") return null;
-      findings.push({
-        kind: item4.kind,
-        crate: text(item4.crate),
-        track: text(item4.track),
-        path: text(item4.path),
-        found: text(item4.found),
-        fix: item4.fix
-      });
-    }
-    const errors = [];
-    for (const item4 of value.errors) {
-      if (!isRecord(item4) || typeof item4.message !== "string") return null;
-      errors.push({ crate: text(item4.crate), message: item4.message });
-    }
-    return {
-      drive: text(value.drive),
-      name: text(value.name),
-      ready: value.ready,
-      missing_drive: value.missing_drive,
-      summary: value.summary,
-      findings,
-      errors
-    };
-  }
-  function portableDriveButton(name, path) {
-    const button2 = buttonEl(portableCheck(name));
-    button2.className = "files-portable";
-    button2.dataset.portableName = name;
-    button2.textContent = t("portable.check");
-    button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    button2.addEventListener("click", (event) => {
-      event.stopPropagation();
-      void openPortableCheck(path, button2);
-    });
-    return button2;
-  }
-  async function openPortableCheck(path, trigger) {
-    wirePortable();
-    const drive = portableDriveRoot(path);
-    const mine = ++token;
-    opener = trigger ?? null;
-    const dialog = el("portable-dialog");
-    latest6 = null;
-    el("portable-verdict").textContent = "";
-    el("portable-summary").textContent = "";
-    el("portable-findings").replaceChildren();
-    el("portable-status").textContent = t("portable.checking");
-    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
-    if (!drive) {
-      el("portable-status").textContent = t("portable.unreadable");
-      return;
-    }
-    try {
-      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
-      if (mine !== token) return;
-      const body = await readJSON(response).catch(() => null);
-      if (mine !== token) return;
-      if (!response.ok) {
-        fail(serverMessage(errorBody(body), t("portable.unreadable")));
-        return;
-      }
-      const report = parseDriveReport(body);
-      if (!report) {
-        fail(t("portable.unreadable"));
-        return;
-      }
-      latest6 = report;
-      el("portable-status").textContent = "";
-      renderPortableReport(report);
-    } catch {
-      if (mine !== token) return;
-      fail(t("portable.unreachable"));
-    }
-  }
-  function repaintPortable() {
-    for (const button2 of document.querySelectorAll(".files-portable")) {
-      button2.textContent = t("portable.check");
-      const name = button2.dataset.portableName ?? "";
-      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    }
-    if (latest6) renderPortableReport(latest6);
-  }
-  function wirePortable() {
-    if (wired) return;
-    wired = true;
-    el("portable-close").addEventListener("click", () => {
-      el("portable-dialog").close();
-      if (opener?.isConnected) opener.focus();
-    });
-  }
-  function renderPortableReport(report) {
-    latest6 = report;
-    const verdict = el("portable-verdict");
-    if (report.missing_drive) verdict.textContent = t("portable.missing");
-    else if (report.ready) verdict.textContent = t("portable.ready");
-    else verdict.textContent = t("portable.notReady");
-    el("portable-summary").textContent = report.summary;
-    const list = el("portable-findings");
-    const items = [];
-    const shown = report.findings.slice(0, FINDING_CAP);
-    for (const finding of shown) {
-      const row = document.createElement("li");
-      const kind2 = document.createElement("span");
-      kind2.className = "portable-kind";
-      kind2.textContent = kindLabel(finding.kind);
-      row.append(kind2);
-      if (finding.fix) {
-        row.append(document.createTextNode(" "));
-        const fix = document.createElement("span");
-        fix.className = "portable-fix";
-        fix.textContent = finding.fix;
-        row.append(fix);
-      }
-      items.push(row);
-    }
-    for (const error2 of report.errors) {
-      const row = document.createElement("li");
-      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
-      items.push(row);
-    }
-    const hidden = report.findings.length - shown.length;
-    if (hidden > 0) {
-      const row = document.createElement("li");
-      row.textContent = t("files.andMore", { count: hidden });
-      items.push(row);
-    }
-    list.replaceChildren(...items);
-  }
-  function kindLabel(kind2) {
-    const key = KIND_KEY[kind2];
-    return key ? t(key) : kind2;
-  }
-  function fail(message) {
-    latest6 = null;
-    el("portable-verdict").textContent = "";
-    el("portable-summary").textContent = "";
-    el("portable-findings").replaceChildren();
-    el("portable-status").textContent = message;
-  }
-  function isRecord(value) {
-    return typeof value === "object" && value !== null && !Array.isArray(value);
-  }
-  function text(value) {
-    return typeof value === "string" ? value : "";
-  }
-  function errorBody(value) {
-    if (!isRecord(value)) return null;
-    const body = {};
-    if (typeof value.error === "string") body.error = value.error;
-    if (typeof value.code === "string") body.code = value.code;
-    if (body.error === void 0 && body.code === void 0) return null;
-    return body;
-  }
-
-  // src/beatgrid-view.ts
-  var GRID_WARNING_KEYS = {
-    beatgrid_too_short: "markers.gridTooShort",
-    beatgrid_version: "markers.gridVersion",
-    beatgrid_empty: "markers.gridEmpty",
-    beatgrid_too_many: "markers.gridTooMany",
-    beatgrid_truncated: "markers.gridTruncated"
-  };
-  function beatgridViewOnly(unavailable) {
-    return unavailable !== true;
-  }
-  function beatgridIsSuspect(code) {
-    return typeof code === "string" && code !== "";
-  }
-  function beatgridWarningKey(code) {
-    if (!beatgridIsSuspect(code) || code == null) return null;
-    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
-      return GRID_WARNING_KEYS[code];
-    }
-    return "markers.gridUnknown";
-  }
-  function beatSeconds(value) {
-    if (value === "" || value == null) return "";
-    const number = Number(value);
-    if (!Number.isFinite(number)) return "";
-    return `${number.toFixed(3)}s`;
-  }
-  function appendBeatgrid(section, track) {
-    if (!beatgridViewOnly(track.markers_unavailable)) return;
-    const heading2 = document.createElement("h4");
-    heading2.textContent = t("markers.gridHeading");
-    section.append(heading2);
-    const viewOnly = document.createElement("p");
-    viewOnly.className = "detail-kicker";
-    viewOnly.textContent = t("markers.gridViewOnly");
-    section.append(viewOnly);
-    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
-      const warn = document.createElement("p");
-      warn.className = "detail-kicker warn";
-      warn.setAttribute("role", "status");
-      const key = beatgridWarningKey(track.beatgrid_warning_code);
-      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
-      warn.textContent = t("markers.gridSuspect", { reason });
-      section.append(warn);
-    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
-      const empty = document.createElement("p");
-      empty.className = "detail-kicker";
-      empty.textContent = t("markers.gridNone");
-      section.append(empty);
-    }
-    for (const mark of track.beatgrid || []) {
-      section.append(paintBeatMarker(mark));
-    }
-  }
-  function paintBeatMarker(mark) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const time = document.createElement("span");
-    time.textContent = beatSeconds(mark.position);
-    const name = document.createElement("span");
-    const bpmNumber = Number(mark.bpm);
-    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
-      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
-    } else if (mark.beats != null) {
-      name.textContent = t("markers.beats", { count: Number(mark.beats) });
-    } else {
-      name.textContent = "";
-    }
-    row.append(document.createElement("span"), document.createElement("span"), time, name);
-    return row;
   }
 
   // src/cue-view.ts
@@ -20626,772 +20352,11 @@
     return side;
   }
 
-  // src/folder-sync-view.ts
-  function syncFolderSyncButton() {
-    const id = state.activeCrate;
-    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
-    const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
-    el("crate-folder-sync").disabled = blocked;
-    el("crate-rename-from-tags").disabled = blocked;
-  }
-  function readFolderSyncForm() {
-    const folder = el("folder-sync-path").value.trim();
-    if (!folder) return null;
-    return {
-      folder,
-      subcrates: el("folder-sync-subcrates").checked,
-      full: el("folder-sync-full").checked
-    };
-  }
-  function folderSyncPreviewText(reply) {
-    const added = Number(reply.added) || 0;
-    const removed = Number(reply.removed) || 0;
-    const created = Number(reply.created) || 0;
-    const skipped = Number(reply.skipped_count) || 0;
-    if (added === 0 && removed === 0 && created === 0) {
-      return t("folderSync.summaryNone", { skipped });
-    }
-    return t("folderSync.summary", { added, removed, skipped });
-  }
-  function folderSyncDoneText(reply) {
-    const name = reply.crate?.name?.trim() || "";
-    const added = Number(reply.added) || 0;
-    const removed = Number(reply.removed) || 0;
-    if (!reply.written) return t("folderSync.unchanged", { name });
-    return t("folderSync.done", { name, added, removed });
-  }
-  function folderSyncHasWork(reply) {
-    return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
-  }
-
-  // src/preset-view.ts
-  function presetName(preset) {
-    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
-    if (preset.kind === "bpm") {
-      return t("presets.name.bpm", {
-        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
-        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
-      });
-    }
-    return t("presets.name.unplayed", { count: preset.months });
-  }
-  function numberFrom(input) {
-    const text2 = input.value.trim();
-    if (!text2) return null;
-    const value = Number(text2);
-    return Number.isFinite(value) ? value : null;
-  }
-  function scopeCrate() {
-    if (state.activeCrate === "all") return null;
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
-    return crate && !crate.smart ? crate : null;
-  }
-  function readPresetForm() {
-    const kind2 = el("preset-kind").value;
-    const scope = scopeCrate();
-    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
-    if (kind2 === "harmonic") {
-      const key = el("preset-key").value.trim();
-      return key ? { kind: kind2, key, ...crate } : null;
-    }
-    if (kind2 === "bpm") {
-      const bpm = numberFrom(el("preset-bpm"));
-      const range = numberFrom(el("preset-range")) ?? 3;
-      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
-      return { kind: kind2, bpm, range, ...crate };
-    }
-    if (kind2 === "unplayed") {
-      const months = numberFrom(el("preset-months")) ?? 12;
-      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
-      return { kind: kind2, months, ...crate };
-    }
-    return null;
-  }
-  function syncPresetFields() {
-    const kind2 = el("preset-kind").value;
-    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
-      field.hidden = field.dataset.presetKind !== kind2;
-    }
-  }
-  function isPresetCrate(id) {
-    return id !== "all" && Object.hasOwn(state.presets, String(id));
-  }
-  function presetFoot(id) {
-    if (!isPresetCrate(id)) return "";
-    const updated = Number(state.presets[String(id)]?.updated);
-    if (!Number.isFinite(updated) || updated <= 0) return "";
-    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-    return ` · ${t("presets.updated", { date })}`;
-  }
-  function syncPresetButtons() {
-    el("crate-preset").disabled = !state.writable;
-    const preset = isPresetCrate(state.activeCrate);
-    el("crate-refresh").hidden = !preset;
-    el("crate-refresh").disabled = !state.writable || !preset;
-  }
-
-  // src/restore.ts
-  var reloadLibrary = async () => {
-  };
-  function bindLibraryReload(reload) {
-    reloadLibrary = reload;
-  }
-  async function loadSnapshots() {
-    state.snapshotLoading = true;
-    state.snapshotError = "";
-    const operationsPromise = loadOperations();
-    renderSnapshots();
-    try {
-      const response = await fetch("/api/snapshots");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
-      state.snapshots = payload.snapshots || [];
-      state.snapshotUndo = payload.pending_undo || null;
-      state.writeBlock = payload.write_block || "";
-      state.writeBlockCode = payload.write_block_code || "";
-      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
-      state.seratoRunning = Boolean(payload.serato_running);
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotLoading = false;
-      renderSnapshots();
-    } finally {
-      await operationsPromise;
-    }
-  }
-  async function loadOperations() {
-    state.operationsLoading = true;
-    state.operationsError = "";
-    renderOperations();
-    try {
-      const response = await fetch("/api/operations");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
-      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
-      state.operationsLoading = false;
-    } catch (error2) {
-      state.operationsLoading = false;
-      state.operationsError = failureOf(error2).message || t("operations.unreadable");
-    }
-    renderOperations();
-  }
-  function failSnapshots(error2) {
-    state.snapshotLoading = false;
-    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
-    renderSnapshots();
-  }
-  function renderSnapshots() {
-    renderOperations();
-    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
-    const status = el("snapshots-status");
-    const block = el("snapshots-block");
-    const undo = el("snapshots-undo");
-    const list = el("snapshots-list");
-    list.setAttribute("aria-busy", String(state.snapshotLoading));
-    paintDriveCopies();
-    if (state.writeBlock) {
-      block.hidden = false;
-      block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
-    } else {
-      block.hidden = true;
-      block.textContent = "";
-    }
-    if (state.snapshotUndo && state.snapshotUndo.restore_id) {
-      undo.hidden = false;
-      el("snapshots-undo-text").textContent = state.snapshotUndo.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange");
-    } else {
-      undo.hidden = true;
-    }
-    list.replaceChildren();
-    if (state.snapshotLoading) {
-      status.textContent = t("snapshots.reading");
-      return;
-    }
-    if (state.snapshotError) {
-      status.textContent = state.snapshotError;
-      const retry = buttonEl(tips.snapshotsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => loadSnapshots().catch((error2) => failSnapshots(error2)));
-      list.append(retry);
-      return;
-    }
-    status.textContent = state.snapshotMessage ? t(state.snapshotMessage) : "";
-    if (!state.snapshots.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("snapshots.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item4 of state.snapshots) {
-      const card = document.createElement("article");
-      card.className = "snapshot-card";
-      card.setAttribute("role", "listitem");
-      const title2 = document.createElement("p");
-      title2.textContent = `${item4.created || t("snapshots.unknownTime")} · ${item4.trigger || t("snapshots.trigger")}`;
-      const detail = document.createElement("p");
-      const version = item4.serato_version && item4.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item4.serato_version, build: String(item4.serato_build ?? "") }) : t("snapshots.seratoUnknown");
-      const drives = (item4.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item4.unavailable_drives || []) })}` : "";
-      detail.textContent = `${version}. ${item4.reason || ""}${drives}`;
-      const restore = buttonEl(tips.reviewRestore);
-      restore.textContent = t("snapshots.reviewRestore");
-      restore.addEventListener("click", () => openSnapshotPlan(item4.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
-      card.append(title2, detail, restore);
-      list.append(card);
-    }
-  }
-  var OPERATION_ACTIONS = {
-    crate_create: "operations.action.crateCreate",
-    crate_rename: "operations.action.crateRename",
-    crate_delete: "operations.action.crateDelete",
-    crate_color: "operations.action.crateColor",
-    crate_expanded: "operations.action.crateExpanded",
-    crate_rules: "operations.action.crateRules",
-    crate_add: "operations.action.crateAdd",
-    crate_remove: "operations.action.crateRemove",
-    crate_prepare: "operations.action.cratePrepare",
-    crate_remove_library: "operations.action.crateRemoveLibrary",
-    save_track: "operations.action.saveTrack",
-    import_m3u: "operations.action.importM3u",
-    merge_duplicates: "operations.action.mergeDuplicates",
-    rename: "operations.action.rename",
-    rename_from_tags: "operations.action.renameFromTags",
-    move: "operations.action.move",
-    move_folder: "operations.action.moveFolder",
-    replace: "operations.action.replace",
-    replace_in_crates: "operations.action.replaceInCrates",
-    relink: "operations.action.relink",
-    delete: "operations.action.delete",
-    restore: "operations.action.restore",
-    restore_recover: "operations.action.restoreRecover"
-  };
-  var OPERATION_OUTCOMES = {
-    verified: "operations.outcome.verified",
-    rolled_back: "operations.outcome.rolledBack",
-    refused: "operations.outcome.refused",
-    rollback_failed: "operations.outcome.rollbackFailed"
-  };
-  function renderOperations() {
-    const alert = el("operations-alert");
-    const status = el("operations-status");
-    const list = el("operations-list");
-    list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest8 = state.operations[state.operations.length - 1];
-    const failed = latest8?.result === "rollback_failed";
-    alert.hidden = !failed;
-    alert.textContent = failed ? t("operations.rollbackFailed") : "";
-    list.replaceChildren();
-    if (state.operationsLoading && state.operations.length === 0) {
-      status.textContent = t("operations.reading");
-      return;
-    }
-    if (state.operationsError) {
-      status.textContent = state.operationsError;
-      const retry = buttonEl(tips.operationsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => {
-        loadOperations().catch(() => void 0);
-      });
-      list.append(retry);
-      return;
-    }
-    status.textContent = "";
-    if (!state.operations.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("operations.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item4 of [...state.operations].reverse()) {
-      list.append(operationCard(item4));
-    }
-  }
-  function operationCard(item4) {
-    const card = document.createElement("article");
-    card.className = "operation-card snapshot-card";
-    card.setAttribute("role", "listitem");
-    const actionName = item4.action || item4.operation || "";
-    const actionKey2 = OPERATION_ACTIONS[actionName];
-    const outcomeKey = OPERATION_OUTCOMES[item4.result || ""] ?? "operations.outcome.refused";
-    const title2 = document.createElement("p");
-    title2.textContent = t("operations.entry", {
-      time: operationTime(item4.time || ""),
-      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
-      target: item4.target || t("operations.noTarget"),
-      outcome: t(outcomeKey)
-    });
-    card.append(title2);
-    if (item4.snapshot_before && item4.snapshot_after) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.snapshots", {
-        before: item4.snapshot_before,
-        after: item4.snapshot_after
-      });
-      card.append(detail);
-    } else if (item4.snapshot_before) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.beforeOnly", { before: item4.snapshot_before });
-      card.append(detail);
-    }
-    return card;
-  }
-  function operationTime(value) {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
-    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
-  }
-  async function openSnapshotPlan(snapshotId) {
-    state.snapshotPlanId = snapshotId;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    block.textContent = t("snapshots.readingPlan");
-    confirm2.disabled = true;
-    setSnapshotDialogStatus("");
-    el("snapshot-dialog").showModal();
-    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
-    paintSnapshotPlan(plan);
-  }
-  var lastPlan = null;
-  function repaintSnapshotPlan() {
-    if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
-  }
-  function isDriveCopy(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
-  }
-  function driveBackupFrom(value) {
-    if (!value || typeof value !== "object") return null;
-    const record = value;
-    if (record.verified !== true) return null;
-    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
-    return {
-      folder: typeof record.folder === "string" ? record.folder : "",
-      verified: true,
-      drives
-    };
-  }
-  function driveName(drive, status) {
-    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
-    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
-    if (status === "permission") return t("snapshots.drivePermission", { name });
-    return name;
-  }
-  function driveCopyText() {
-    const report = state.driveBackup;
-    const drives = report?.drives ?? [];
-    if (!report?.verified || !drives.length) {
-      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
-    }
-    const parts = [];
-    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
-    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
-    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
-    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
-    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
-    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
-    return parts.join(" ") || t("snapshots.drivesIntro");
-  }
-  function paintDriveCopies() {
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = driveCopyText();
-  }
-  async function backupDriveCrates() {
-    const button2 = el("snapshots-drives");
-    button2.disabled = true;
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = t("snapshots.backupDrivesBusy");
-    try {
-      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
-      renderSnapshots();
-    } catch (error2) {
-      state.snapshotMessage = "";
-      renderSnapshots();
-      const shown = el("snapshots-drives-note");
-      shown.hidden = false;
-      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
-    } finally {
-      button2.disabled = false;
-    }
-  }
-  function paintSnapshotPlan(plan) {
-    lastPlan = plan;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    const crates = plan.crates || {};
-    const tracks = plan.tracks || {};
-    appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
-    appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
-    appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
-    appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
-    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
-    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
-    if (plan.registration_warning) {
-      const warning = document.createElement("p");
-      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
-      planBox.append(warning);
-    }
-    appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
-    appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
-    appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
-    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
-    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
-    const deleted = plan.deleted || {};
-    appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
-    appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
-    appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
-    appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
-    if (plan.restore_blocked) {
-      block.textContent = codedText(
-        plan.restore_blocked,
-        plan.restore_blocked_code,
-        messageParams(plan.restore_blocked_params)
-      );
-      confirm2.disabled = true;
-    } else {
-      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
-      confirm2.disabled = false;
-    }
-  }
-  function appendPlanLine(parent, label, rows2) {
-    const line = document.createElement("p");
-    const items = rows2 || [];
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-    } else {
-      const names = items.slice(0, 8).map((item4) => item4.name || item4.path || item4.drive_label || t("plan.item"));
-      const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
-      const listed = `${names.join(", ")}${extra}`;
-      line.textContent = t("plan.listed", { label, count: items.length, names: listed });
-    }
-    parent.append(line);
-  }
-  function appendCueDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item4 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item4.path || "");
-      parent.append(row);
-      for (const diff of cueDiffRows(item4.before, item4.after)) {
-        parent.append(paintCueDiffRow(diff));
-      }
-    }
-  }
-  function appendFrameDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item4 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item4.path || "");
-      parent.append(row);
-    }
-  }
-  function fileName(path) {
-    const parts = String(path).split(/[/\\]/);
-    return parts[parts.length - 1] || path;
-  }
-  function setSnapshotDialogStatus(message) {
-    el("snapshot-status").textContent = message;
-  }
-  async function takeSnapshot() {
-    const button2 = el("snapshots-take");
-    button2.disabled = true;
-    button2.textContent = t("snapshots.saving");
-    try {
-      await postJSON("/api/snapshots", { action: "create" });
-      state.snapshotMessage = "snapshots.saved";
-      await loadSnapshots();
-    } finally {
-      button2.disabled = false;
-      button2.textContent = t("snapshots.take");
-    }
-  }
-  async function confirmSnapshotRestore() {
-    const confirm2 = el("snapshot-confirm");
-    confirm2.disabled = true;
-    confirm2.textContent = t("snapshots.restoring");
-    setSnapshotDialogStatus("");
-    try {
-      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
-      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
-      const result = await postJSON("/api/snapshots", body);
-      const skipped = result.crates_skipped || [];
-      el("snapshot-dialog").close();
-      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
-      await loadSnapshots();
-      await reloadLibrary();
-      if (skipped.length) {
-        const names = skipped.map((item4) => item4.name || item4.path || t("plan.item")).join(", ");
-        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
-      }
-    } catch (error2) {
-      setSnapshotDialogStatus(failureOf(error2).message);
-      confirm2.disabled = false;
-      await loadOperations();
-    } finally {
-      confirm2.textContent = t("snapshots.restore");
-    }
-  }
-
-  // src/search-filters.ts
-  var TEXT_SEARCH_FIELDS = [
-    "comments",
-    "grouping",
-    "composer",
-    "title",
-    "artist",
-    "album",
-    "genre",
-    "file"
-  ];
-  var KEY_VALUES = {
-    "g#m": 0,
-    abm: 0,
-    "1a": 0,
-    ebm: 1,
-    "d#m": 1,
-    "2a": 1,
-    bbm: 2,
-    "a#m": 2,
-    "3a": 2,
-    fm: 3,
-    "4a": 3,
-    cm: 4,
-    "5a": 4,
-    gm: 5,
-    "6a": 5,
-    dm: 6,
-    "7a": 6,
-    am: 7,
-    "8a": 7,
-    em: 8,
-    "9a": 8,
-    bm: 9,
-    "10a": 9,
-    "f#m": 10,
-    gbm: 10,
-    "11a": 10,
-    "c#m": 11,
-    dbm: 11,
-    "12a": 11,
-    b: 12,
-    "1b": 12,
-    "f#": 13,
-    gb: 13,
-    "2b": 13,
-    "c#": 14,
-    db: 14,
-    "3b": 14,
-    "g#": 15,
-    ab: 15,
-    "4b": 15,
-    "d#": 16,
-    eb: 16,
-    "5b": 16,
-    "a#": 17,
-    bb: 17,
-    "6b": 17,
-    f: 18,
-    "7b": 18,
-    c: 19,
-    "8b": 19,
-    g: 20,
-    "9b": 20,
-    d: 21,
-    "10b": 21,
-    a: 22,
-    "11b": 22,
-    e: 23,
-    "12b": 23
-  };
-  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
-  var EXACT = new RegExp(`^${NUMBER}$`);
-  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
-  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
-  var ABOVE = new RegExp(`^>${NUMBER}$`);
-  var BELOW = new RegExp(`^<${NUMBER}$`);
-  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
-  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
-  function isNone(value) {
-    return NONE.has(value);
-  }
-  function isYes(value) {
-    return YES.has(value);
-  }
-  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
-  function isTextSearchField(value) {
-    return TEXT_FIELD_SET.has(value);
-  }
-  function textField(track, field) {
-    if (field === "title") return String(track.name ?? "");
-    return String(track[field] ?? "");
-  }
-  function trackHaystack(track, field) {
-    if (field) return textField(track, field).toLocaleLowerCase();
-    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-  }
-  function hasBpm(track) {
-    const bpm = Number(track.bpm);
-    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
-  }
-  function hasKey2(track) {
-    return Boolean(String(track.key ?? "").trim());
-  }
-  function cueFlag(track) {
-    if (track.has_cues === true) return true;
-    if (track.has_cues === false) return false;
-    if (track.markers_found === true) return true;
-    if (track.markers_found === false) return false;
-    if (Array.isArray(track.cues)) {
-      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
-      return track.cues.length > 0 || loops > 0;
-    }
-    return null;
-  }
-  function keyNumber(value) {
-    if (!value) return -1;
-    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
-  }
-  function mixingKeys(key) {
-    const base = key < 12 ? 0 : 12;
-    const index = key - base;
-    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
-  }
-  function bpmFilter(value) {
-    let match = RANGE.exec(value);
-    if (match) {
-      const low = Number(match[1]);
-      const high = Number(match[2]);
-      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
-    }
-    match = AROUND.exec(value);
-    if (match) {
-      const center = Number(match[1]);
-      const spread = Number(match[2]);
-      return { kind: "bpm", min: center - spread, max: center + spread };
-    }
-    match = ABOVE.exec(value);
-    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
-    match = BELOW.exec(value);
-    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
-    match = EXACT.exec(value);
-    if (match) {
-      const whole = Number(match[1]);
-      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
-    }
-    return null;
-  }
-  function parseQuery(text2) {
-    const terms = [];
-    const filters = [];
-    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
-      const colon = word.indexOf(":");
-      const name = colon > 0 ? word.slice(0, colon) : "";
-      const value = colon > 0 ? word.slice(colon + 1) : "";
-      let filter = null;
-      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
-      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
-      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
-      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
-      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
-      else if (name === "bpm") filter = bpmFilter(value);
-      else if (name === "key" || name === "mix") {
-        const key = keyNumber(value);
-        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
-      } else if (isTextSearchField(name) && value) {
-        filter = { kind: "field", field: name, value };
-      }
-      if (filter) filters.push(filter);
-      else terms.push(word);
-    }
-    return { terms, filters };
-  }
-  function matchesFilters(track, filters) {
-    for (const filter of filters) {
-      if (filter.kind === "bpm") {
-        if (!hasBpm(track)) return false;
-        const bpm = Number(track.bpm);
-        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
-      } else if (filter.kind === "missing") {
-        if (!track.missing) return false;
-      } else if (filter.kind === "nokey") {
-        if (hasKey2(track)) return false;
-      } else if (filter.kind === "nobpm") {
-        if (hasBpm(track)) return false;
-      } else if (filter.kind === "nokeybpm") {
-        if (hasKey2(track) && hasBpm(track)) return false;
-      } else if (filter.kind === "nocues") {
-        if (cueFlag(track) !== false) return false;
-      } else if (filter.kind === "field") {
-        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
-      } else if (!filter.keys.has(keyNumber(track.key))) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function matchesQuery(track, query, field) {
-    if (!matchesFilters(track, query.filters)) return false;
-    if (!query.terms.length) return true;
-    const hay = trackHaystack(track, field);
-    return query.terms.every((term) => hay.includes(term));
-  }
-
-  // src/views.ts
+  // src/player.ts
   var import_react6 = __toESM(require_react(), 1);
 
-  // src/app/mount.tsx
-  var import_react_dom2 = __toESM(require_react_dom(), 1);
-  var import_client = __toESM(require_client(), 1);
-
-  // src/app/providers.tsx
-  var import_react4 = __toESM(require_react(), 1);
-  var import_react_dom = __toESM(require_react_dom(), 1);
-
-  // src/context/PlayerContext.tsx
-  var import_react = __toESM(require_react(), 1);
-  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-  var PlayerContext = (0, import_react.createContext)(null);
-  function PlayerProvider({
-    value,
-    children
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlayerContext, { value, children });
-  }
-  function usePlayer() {
-    const value = (0, import_react.useContext)(PlayerContext);
-    if (value === null) {
-      throw new Error("usePlayer must be used within PlayerProvider");
-    }
-    return value;
-  }
-
-  // src/player.ts
-  var import_react3 = __toESM(require_react(), 1);
-
   // src/components/PlayerBar.tsx
-  var import_react2 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -21458,8 +20423,8 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef(spec2) {
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -21486,25 +20451,25 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
       "button",
       {
         type: "button",
-        ref: tooltipRef(spec2),
+        ref: tooltipRef2(spec2),
         className,
         disabled,
         "aria-label": labelled,
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef2(spec2) {
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -21515,11 +20480,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_jsx_runtime6.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
         "button",
         {
           type: "button",
@@ -21539,7 +20504,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react2.useState)(null);
+    const [hold, setHold] = (0, import_react5.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -21566,18 +20531,18 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           "button",
           {
             type: "button",
-            ref: tooltipRef2(tips.previous),
+            ref: tooltipRef3(tips.previous),
             className: "player-toggle",
             disabled: !player2.canSkipPrevious,
             "aria-label": playerStrings.previous,
@@ -21585,12 +20550,12 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           "button",
           {
             type: "button",
-            ref: tooltipRef2(tips.next),
+            ref: tooltipRef3(tips.next),
             className: "player-toggle",
             disabled: !player2.canSkipNext,
             "aria-label": playerStrings.next,
@@ -21599,16 +20564,16 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
             "input",
             {
-              ref: tooltipRef2(tips.seek),
+              ref: tooltipRef3(tips.seek),
               type: "range",
               className: "player-range",
               min: 0,
@@ -21624,19 +20589,19 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           "input",
           {
-            ref: tooltipRef2(tips.volume),
+            ref: tooltipRef3(tips.volume),
             type: "range",
             min: 0,
             max: 1,
@@ -22653,8 +21618,8 @@
   // src/player.ts
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
-  var listeners = /* @__PURE__ */ new Set();
-  var wired2 = /* @__PURE__ */ new WeakSet();
+  var listeners2 = /* @__PURE__ */ new Set();
+  var wired = /* @__PURE__ */ new WeakSet();
   var media = null;
   var trackId = null;
   var title = "";
@@ -22700,8 +21665,8 @@
     }
     return found;
   }
-  function playbackErrorText(status) {
-    if (status === 403 || status === 404) return playerStrings.notInLibrary;
+  function playbackErrorText(status4) {
+    if (status4 === 403 || status4 === 404) return playerStrings.notInLibrary;
     return playerStrings.cannotPlay;
   }
   function play(nextId) {
@@ -22797,9 +21762,9 @@
     emit();
   }
   function subscribe(listener) {
-    listeners.add(listener);
+    listeners2.add(listener);
     return () => {
-      listeners.delete(listener);
+      listeners2.delete(listener);
     };
   }
   function mountPlayer(host) {
@@ -22839,7 +21804,7 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react3.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react6.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -22870,8 +21835,8 @@
     return audio;
   }
   function wire(element) {
-    if (wired2.has(element)) return;
-    wired2.add(element);
+    if (wired.has(element)) return;
+    wired.add(element);
     element.addEventListener("play", () => {
       playing = true;
       emit();
@@ -22994,7 +21959,7 @@
   }
   function emit() {
     const snapshot = getPlayerState();
-    for (const listener of [...listeners]) listener(snapshot);
+    for (const listener of [...listeners2]) listener(snapshot);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -23006,7 +21971,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -23025,34 +21990,1346 @@
       setVolume
     };
   }
+  function readHealthValue() {
+    return {
+      ...getHealthSnapshot(),
+      ...getScanSnapshot(),
+      ...getTagsSnapshot(),
+      ...getHealthListSnapshot(),
+      loadHealth,
+      loadScan,
+      expandScan,
+      loadTags,
+      setTagsField,
+      selectSpelling,
+      previewGroup,
+      applyGroup,
+      applyTitles,
+      applyMappings,
+      navigate: navigateHealth
+    };
+  }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react4.useState)(readPlayerValue);
-    (0, import_react4.useEffect)(() => {
+    const [value, setValue] = (0, import_react7.useState)(readPlayerValue);
+    (0, import_react7.useEffect)(() => {
       return subscribe(() => {
         (0, import_react_dom.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react4.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react7.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayerProvider, { value: current2, children });
+  }
+  function HealthProvider2({ children }) {
+    const [value, setValue] = (0, import_react7.useState)(readHealthValue);
+    (0, import_react7.useLayoutEffect)(() => {
+      return subscribeHealth(() => {
+        (0, import_react_dom.flushSync)(() => {
+          setValue(readHealthValue());
+        });
+      });
+    }, []);
+    const current2 = (0, import_react7.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(HealthProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider2, { children });
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(HealthProvider2, { children }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
     (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AppProviders, { children: node }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime8.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
 
+  // src/components/HealthPanel.tsx
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  var SECTIONS = [
+    { key: "missing", label: "health.missing", action: "missing" },
+    { key: "no_bpm", label: "health.noBpm" },
+    { key: "no_key", label: "health.noKey" },
+    { key: "no_beatgrid", label: "health.noBeatgrid" },
+    { key: "no_artwork", label: "health.noArtwork" },
+    { key: "empty_genre", label: "health.emptyGenre" },
+    { key: "no_crate", label: "health.noCrate" }
+  ];
+  function trackLine(track) {
+    return t("health.row", {
+      title: [track.artist, track.name].filter(Boolean).join(" — ") || track.file
+    });
+  }
+  function Section({
+    label,
+    section,
+    action,
+    onNavigate
+  }) {
+    const count = section?.count ?? 0;
+    const tracks = section?.tracks ?? [];
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("details", { className: "gig-group", open: count > 0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("summary", { children: t("gig.groupCount", { label, count }) }),
+      action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef(tips.healthOpenMissing),
+          "data-health-action": "missing",
+          onClick: () => onNavigate("missing"),
+          children: t("health.openMissing")
+        }
+      ) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef(tips.healthTrack),
+          "data-health-action": "track",
+          "data-health-id": String(track.id),
+          onClick: () => onNavigate("track", track.id),
+          children: trackLine(track)
+        }
+      ) }, track.id)) }),
+      count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
+    ] });
+  }
+  function Unused({
+    section,
+    onNavigate
+  }) {
+    const count = section?.count ?? 0;
+    const files = section?.files ?? [];
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("details", { className: "gig-group", open: count > 0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("summary", { children: t("gig.groupCount", { label: t("health.unused"), count }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef(tips.healthOpenFiles),
+          "data-health-action": "files",
+          onClick: () => onNavigate("files"),
+          children: t("health.openFiles")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
+      count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
+    ] });
+  }
+  function Duplicates({
+    section,
+    onNavigate
+  }) {
+    const count = section?.count ?? 0;
+    const groups = section?.groups ?? [];
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("details", { className: "gig-group", open: count > 0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("summary", { children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef(tips.healthOpenDuplicates),
+          "data-health-action": "duplicates",
+          onClick: () => onNavigate("duplicates"),
+          children: t("health.openDuplicates")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: t("health.duplicateRow", {
+        title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
+        count: group.ids.length
+      }) }, group.ids.join(","))) }),
+      count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
+    ] });
+  }
+  function HealthPanel() {
+    const health = useHealth();
+    const payload = health.healthReport;
+    let listed = 0;
+    if (payload) {
+      listed += payload.missing.count;
+      listed += payload.no_bpm.count;
+      listed += payload.no_key.count;
+      listed += payload.no_beatgrid.count;
+      listed += payload.no_artwork.count;
+      listed += payload.empty_genre.count;
+      listed += payload.no_crate.count;
+      listed += payload.unused.count;
+      listed += payload.duplicates.count;
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+          "button",
+          {
+            id: "health-refresh",
+            type: "button",
+            ref: tooltipRef(tips.healthRefresh),
+            disabled: health.healthBusy,
+            "aria-busy": health.healthBusy ? "true" : "false",
+            onClick: () => {
+              void health.loadHealth();
+            },
+            children: t("gig.checkAgain")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
+        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+          Section,
+          {
+            label: t(spec2.label),
+            section: payload[spec2.key],
+            ...spec2.action ? { action: spec2.action } : {},
+            onNavigate: health.navigate
+          },
+          spec2.key
+        )),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
+        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.clear") })
+      ] }) : null })
+    ] });
+  }
+
+  // src/components/HealthListChrome.tsx
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
+  function HealthListChrome() {
+    const health = useHealth();
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+        "button",
+        {
+          id: "merge-duplicates",
+          type: "button",
+          ref: tooltipRef(tips.mergeDuplicates),
+          disabled: health.mergeDisabled,
+          children: t("merge.title")
+        }
+      ) }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+        "button",
+        {
+          id: "open-relink",
+          type: "button",
+          ref: tooltipRef(tips.relink),
+          disabled: health.relinkDisabled,
+          children: t("relink.title")
+        }
+      ) })
+    ] });
+  }
+
+  // src/health.ts
+  var latest5 = null;
+  var status3 = "";
+  var busy2 = false;
+  var go = null;
+  var panelRoot3;
+  var panelHost3 = null;
+  var listRoot;
+  var listHost = null;
+  function getHealthSnapshot() {
+    return {
+      healthReport: latest5,
+      healthStatus: status3,
+      healthBusy: busy2,
+      healthScope: crateScopeLabel()
+    };
+  }
+  function navigateHealth(action, id) {
+    if (typeof id === "number") go?.(action, id);
+    else go?.(action);
+  }
+  function wireHealth(navigate) {
+    go = navigate;
+    const panel = el("health-panel");
+    if (panelRoot3 && panelHost3 !== panel) {
+      panelRoot3.unmount();
+      panelRoot3 = void 0;
+    }
+    panelHost3 = panel;
+    panelRoot3 = mountIsland(panel, (0, import_react8.createElement)(HealthPanel), panelRoot3);
+    mountHealthListChrome();
+  }
+  function mountHealthListChrome() {
+    const host = document.getElementById("health-list-chrome");
+    if (!(host instanceof HTMLElement)) return;
+    if (listRoot && listHost !== host) {
+      listRoot.unmount();
+      listRoot = void 0;
+    }
+    listHost = host;
+    listRoot = mountIsland(host, (0, import_react8.createElement)(HealthListChrome), listRoot);
+    emitHealth();
+  }
+  async function loadHealth() {
+    const token3 = ++state.healthToken;
+    beginBusy5();
+    let settle = "none";
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/library-health?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+      );
+      if (token3 !== state.healthToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.healthToken) return;
+      if (!response.ok || payload === null) {
+        failStatus5(serverMessage(payload, t("health.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest5 = payload;
+      status3 = "";
+      emitHealth();
+      settle = "report";
+    } catch {
+      if (token3 !== state.healthToken) return;
+      failStatus5(t("health.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.healthToken) return;
+      endBusy5();
+      if (settle === "retry") el("health-refresh").focus();
+      if (settle === "report") el("health-report").focus();
+    }
+  }
+  function showHealthFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
+    failStatus5(message);
+    endBusy5();
+    el("health-refresh").focus();
+  }
+  function repaintHealth() {
+    emitHealth();
+  }
+  function beginBusy5() {
+    busy2 = true;
+    status3 = t("health.checking");
+    el("health-panel").setAttribute("aria-busy", "true");
+    emitHealth();
+  }
+  function endBusy5() {
+    busy2 = false;
+    el("health-panel").setAttribute("aria-busy", "false");
+    emitHealth();
+  }
+  function failStatus5(message) {
+    status3 = message;
+    emitHealth();
+  }
+
+  // src/portable.ts
+  var FINDING_CAP = 100;
+  var KIND_KEY = {
+    off_drive: "portable.kindOffDrive",
+    missing: "portable.kindMissing",
+    smart_crate: "portable.kindSmartCrate",
+    unsafe_name: "portable.kindUnsafeName",
+    path_length: "portable.kindPathLength",
+    file_size: "portable.kindFileSize"
+  };
+  var token = 0;
+  var latest6 = null;
+  var opener = null;
+  var wired2 = false;
+  function portableDriveRoot(path) {
+    const trimmed = path.trim();
+    if (!trimmed) return "";
+    const unified = trimmed.replace(/\\/g, "/");
+    const marker = unified.search(/\/_Serato_(\/|$)/i);
+    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
+    const volumes = /^\/Volumes\/[^/]+/.exec(base);
+    if (volumes) return volumes[0];
+    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
+    if (media2) return media2[0];
+    const mnt = /^\/mnt\/[^/]+/.exec(base);
+    if (mnt) return mnt[0];
+    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
+    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
+    const win = /^[A-Za-z]:/.exec(trimmed);
+    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
+    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
+  }
+  function parseDriveReport(value) {
+    if (!isRecord(value)) return null;
+    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
+    if (typeof value.summary !== "string") return null;
+    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
+    const findings = [];
+    for (const item3 of value.findings) {
+      if (!isRecord(item3) || typeof item3.kind !== "string" || typeof item3.fix !== "string") return null;
+      findings.push({
+        kind: item3.kind,
+        crate: text(item3.crate),
+        track: text(item3.track),
+        path: text(item3.path),
+        found: text(item3.found),
+        fix: item3.fix
+      });
+    }
+    const errors = [];
+    for (const item3 of value.errors) {
+      if (!isRecord(item3) || typeof item3.message !== "string") return null;
+      errors.push({ crate: text(item3.crate), message: item3.message });
+    }
+    return {
+      drive: text(value.drive),
+      name: text(value.name),
+      ready: value.ready,
+      missing_drive: value.missing_drive,
+      summary: value.summary,
+      findings,
+      errors
+    };
+  }
+  function portableDriveButton(name, path) {
+    const button2 = buttonEl(portableCheck(name));
+    button2.className = "files-portable";
+    button2.dataset.portableName = name;
+    button2.textContent = t("portable.check");
+    button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    button2.addEventListener("click", (event) => {
+      event.stopPropagation();
+      void openPortableCheck(path, button2);
+    });
+    return button2;
+  }
+  async function openPortableCheck(path, trigger) {
+    wirePortable();
+    const drive = portableDriveRoot(path);
+    const mine = ++token;
+    opener = trigger ?? null;
+    const dialog = el("portable-dialog");
+    latest6 = null;
+    el("portable-verdict").textContent = "";
+    el("portable-summary").textContent = "";
+    el("portable-findings").replaceChildren();
+    el("portable-status").textContent = t("portable.checking");
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    if (!drive) {
+      el("portable-status").textContent = t("portable.unreadable");
+      return;
+    }
+    try {
+      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
+      if (mine !== token) return;
+      const body = await readJSON(response).catch(() => null);
+      if (mine !== token) return;
+      if (!response.ok) {
+        fail(serverMessage(errorBody(body), t("portable.unreadable")));
+        return;
+      }
+      const report = parseDriveReport(body);
+      if (!report) {
+        fail(t("portable.unreadable"));
+        return;
+      }
+      latest6 = report;
+      el("portable-status").textContent = "";
+      renderPortableReport(report);
+    } catch {
+      if (mine !== token) return;
+      fail(t("portable.unreachable"));
+    }
+  }
+  function repaintPortable() {
+    for (const button2 of document.querySelectorAll(".files-portable")) {
+      button2.textContent = t("portable.check");
+      const name = button2.dataset.portableName ?? "";
+      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    }
+    if (latest6) renderPortableReport(latest6);
+  }
+  function wirePortable() {
+    if (wired2) return;
+    wired2 = true;
+    el("portable-close").addEventListener("click", () => {
+      el("portable-dialog").close();
+      if (opener?.isConnected) opener.focus();
+    });
+  }
+  function renderPortableReport(report) {
+    latest6 = report;
+    const verdict = el("portable-verdict");
+    if (report.missing_drive) verdict.textContent = t("portable.missing");
+    else if (report.ready) verdict.textContent = t("portable.ready");
+    else verdict.textContent = t("portable.notReady");
+    el("portable-summary").textContent = report.summary;
+    const list = el("portable-findings");
+    const items = [];
+    const shown = report.findings.slice(0, FINDING_CAP);
+    for (const finding of shown) {
+      const row = document.createElement("li");
+      const kind2 = document.createElement("span");
+      kind2.className = "portable-kind";
+      kind2.textContent = kindLabel(finding.kind);
+      row.append(kind2);
+      if (finding.fix) {
+        row.append(document.createTextNode(" "));
+        const fix = document.createElement("span");
+        fix.className = "portable-fix";
+        fix.textContent = finding.fix;
+        row.append(fix);
+      }
+      items.push(row);
+    }
+    for (const error2 of report.errors) {
+      const row = document.createElement("li");
+      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
+      items.push(row);
+    }
+    const hidden = report.findings.length - shown.length;
+    if (hidden > 0) {
+      const row = document.createElement("li");
+      row.textContent = t("files.andMore", { count: hidden });
+      items.push(row);
+    }
+    list.replaceChildren(...items);
+  }
+  function kindLabel(kind2) {
+    const key = KIND_KEY[kind2];
+    return key ? t(key) : kind2;
+  }
+  function fail(message) {
+    latest6 = null;
+    el("portable-verdict").textContent = "";
+    el("portable-summary").textContent = "";
+    el("portable-findings").replaceChildren();
+    el("portable-status").textContent = message;
+  }
+  function isRecord(value) {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+  }
+  function text(value) {
+    return typeof value === "string" ? value : "";
+  }
+  function errorBody(value) {
+    if (!isRecord(value)) return null;
+    const body = {};
+    if (typeof value.error === "string") body.error = value.error;
+    if (typeof value.code === "string") body.code = value.code;
+    if (body.error === void 0 && body.code === void 0) return null;
+    return body;
+  }
+
+  // src/beatgrid-view.ts
+  var GRID_WARNING_KEYS = {
+    beatgrid_too_short: "markers.gridTooShort",
+    beatgrid_version: "markers.gridVersion",
+    beatgrid_empty: "markers.gridEmpty",
+    beatgrid_too_many: "markers.gridTooMany",
+    beatgrid_truncated: "markers.gridTruncated"
+  };
+  function beatgridViewOnly(unavailable) {
+    return unavailable !== true;
+  }
+  function beatgridIsSuspect(code) {
+    return typeof code === "string" && code !== "";
+  }
+  function beatgridWarningKey(code) {
+    if (!beatgridIsSuspect(code) || code == null) return null;
+    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
+      return GRID_WARNING_KEYS[code];
+    }
+    return "markers.gridUnknown";
+  }
+  function beatSeconds(value) {
+    if (value === "" || value == null) return "";
+    const number = Number(value);
+    if (!Number.isFinite(number)) return "";
+    return `${number.toFixed(3)}s`;
+  }
+  function appendBeatgrid(section, track) {
+    if (!beatgridViewOnly(track.markers_unavailable)) return;
+    const heading2 = document.createElement("h4");
+    heading2.textContent = t("markers.gridHeading");
+    section.append(heading2);
+    const viewOnly = document.createElement("p");
+    viewOnly.className = "detail-kicker";
+    viewOnly.textContent = t("markers.gridViewOnly");
+    section.append(viewOnly);
+    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
+      const warn = document.createElement("p");
+      warn.className = "detail-kicker warn";
+      warn.setAttribute("role", "status");
+      const key = beatgridWarningKey(track.beatgrid_warning_code);
+      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
+      warn.textContent = t("markers.gridSuspect", { reason });
+      section.append(warn);
+    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
+      const empty = document.createElement("p");
+      empty.className = "detail-kicker";
+      empty.textContent = t("markers.gridNone");
+      section.append(empty);
+    }
+    for (const mark of track.beatgrid || []) {
+      section.append(paintBeatMarker(mark));
+    }
+  }
+  function paintBeatMarker(mark) {
+    const row = document.createElement("div");
+    row.className = "marker";
+    const time = document.createElement("span");
+    time.textContent = beatSeconds(mark.position);
+    const name = document.createElement("span");
+    const bpmNumber = Number(mark.bpm);
+    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
+      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
+    } else if (mark.beats != null) {
+      name.textContent = t("markers.beats", { count: Number(mark.beats) });
+    } else {
+      name.textContent = "";
+    }
+    row.append(document.createElement("span"), document.createElement("span"), time, name);
+    return row;
+  }
+
+  // src/folder-sync-view.ts
+  function syncFolderSyncButton() {
+    const id = state.activeCrate;
+    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
+    const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
+    el("crate-folder-sync").disabled = blocked;
+    el("crate-rename-from-tags").disabled = blocked;
+  }
+  function readFolderSyncForm() {
+    const folder = el("folder-sync-path").value.trim();
+    if (!folder) return null;
+    return {
+      folder,
+      subcrates: el("folder-sync-subcrates").checked,
+      full: el("folder-sync-full").checked
+    };
+  }
+  function folderSyncPreviewText(reply) {
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    const created = Number(reply.created) || 0;
+    const skipped = Number(reply.skipped_count) || 0;
+    if (added === 0 && removed === 0 && created === 0) {
+      return t("folderSync.summaryNone", { skipped });
+    }
+    return t("folderSync.summary", { added, removed, skipped });
+  }
+  function folderSyncDoneText(reply) {
+    const name = reply.crate?.name?.trim() || "";
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    if (!reply.written) return t("folderSync.unchanged", { name });
+    return t("folderSync.done", { name, added, removed });
+  }
+  function folderSyncHasWork(reply) {
+    return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
+  }
+
+  // src/preset-view.ts
+  function presetName(preset) {
+    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
+    if (preset.kind === "bpm") {
+      return t("presets.name.bpm", {
+        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
+        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
+      });
+    }
+    return t("presets.name.unplayed", { count: preset.months });
+  }
+  function numberFrom(input) {
+    const text2 = input.value.trim();
+    if (!text2) return null;
+    const value = Number(text2);
+    return Number.isFinite(value) ? value : null;
+  }
+  function scopeCrate() {
+    if (state.activeCrate === "all") return null;
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
+    return crate && !crate.smart ? crate : null;
+  }
+  function readPresetForm() {
+    const kind2 = el("preset-kind").value;
+    const scope = scopeCrate();
+    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
+    if (kind2 === "harmonic") {
+      const key = el("preset-key").value.trim();
+      return key ? { kind: kind2, key, ...crate } : null;
+    }
+    if (kind2 === "bpm") {
+      const bpm = numberFrom(el("preset-bpm"));
+      const range = numberFrom(el("preset-range")) ?? 3;
+      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
+      return { kind: kind2, bpm, range, ...crate };
+    }
+    if (kind2 === "unplayed") {
+      const months = numberFrom(el("preset-months")) ?? 12;
+      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
+      return { kind: kind2, months, ...crate };
+    }
+    return null;
+  }
+  function syncPresetFields() {
+    const kind2 = el("preset-kind").value;
+    for (const field2 of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
+      field2.hidden = field2.dataset.presetKind !== kind2;
+    }
+  }
+  function isPresetCrate(id) {
+    return id !== "all" && Object.hasOwn(state.presets, String(id));
+  }
+  function presetFoot(id) {
+    if (!isPresetCrate(id)) return "";
+    const updated = Number(state.presets[String(id)]?.updated);
+    if (!Number.isFinite(updated) || updated <= 0) return "";
+    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    return ` · ${t("presets.updated", { date })}`;
+  }
+  function syncPresetButtons() {
+    el("crate-preset").disabled = !state.writable;
+    const preset = isPresetCrate(state.activeCrate);
+    el("crate-refresh").hidden = !preset;
+    el("crate-refresh").disabled = !state.writable || !preset;
+  }
+
+  // src/restore.ts
+  var reloadLibrary = async () => {
+  };
+  function bindLibraryReload(reload) {
+    reloadLibrary = reload;
+  }
+  async function loadSnapshots() {
+    state.snapshotLoading = true;
+    state.snapshotError = "";
+    const operationsPromise = loadOperations();
+    renderSnapshots();
+    try {
+      const response = await fetch("/api/snapshots");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
+      state.snapshots = payload.snapshots || [];
+      state.snapshotUndo = payload.pending_undo || null;
+      state.writeBlock = payload.write_block || "";
+      state.writeBlockCode = payload.write_block_code || "";
+      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
+      state.seratoRunning = Boolean(payload.serato_running);
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotLoading = false;
+      renderSnapshots();
+    } finally {
+      await operationsPromise;
+    }
+  }
+  async function loadOperations() {
+    state.operationsLoading = true;
+    state.operationsError = "";
+    renderOperations();
+    try {
+      const response = await fetch("/api/operations");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
+      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
+      state.operationsLoading = false;
+    } catch (error2) {
+      state.operationsLoading = false;
+      state.operationsError = failureOf(error2).message || t("operations.unreadable");
+    }
+    renderOperations();
+  }
+  function failSnapshots(error2) {
+    state.snapshotLoading = false;
+    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
+    renderSnapshots();
+  }
+  function renderSnapshots() {
+    renderOperations();
+    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
+    const status4 = el("snapshots-status");
+    const block = el("snapshots-block");
+    const undo = el("snapshots-undo");
+    const list = el("snapshots-list");
+    list.setAttribute("aria-busy", String(state.snapshotLoading));
+    paintDriveCopies();
+    if (state.writeBlock) {
+      block.hidden = false;
+      block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
+    } else {
+      block.hidden = true;
+      block.textContent = "";
+    }
+    if (state.snapshotUndo && state.snapshotUndo.restore_id) {
+      undo.hidden = false;
+      el("snapshots-undo-text").textContent = state.snapshotUndo.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange");
+    } else {
+      undo.hidden = true;
+    }
+    list.replaceChildren();
+    if (state.snapshotLoading) {
+      status4.textContent = t("snapshots.reading");
+      return;
+    }
+    if (state.snapshotError) {
+      status4.textContent = state.snapshotError;
+      const retry = buttonEl(tips.snapshotsRetry);
+      retry.textContent = t("common.tryAgain");
+      retry.addEventListener("click", () => loadSnapshots().catch((error2) => failSnapshots(error2)));
+      list.append(retry);
+      return;
+    }
+    status4.textContent = state.snapshotMessage ? t(state.snapshotMessage) : "";
+    if (!state.snapshots.length) {
+      const empty = document.createElement("p");
+      empty.textContent = t("snapshots.empty");
+      list.append(empty);
+      return;
+    }
+    for (const item3 of state.snapshots) {
+      const card = document.createElement("article");
+      card.className = "snapshot-card";
+      card.setAttribute("role", "listitem");
+      const title2 = document.createElement("p");
+      title2.textContent = `${item3.created || t("snapshots.unknownTime")} · ${item3.trigger || t("snapshots.trigger")}`;
+      const detail = document.createElement("p");
+      const version = item3.serato_version && item3.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item3.serato_version, build: String(item3.serato_build ?? "") }) : t("snapshots.seratoUnknown");
+      const drives = (item3.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item3.unavailable_drives || []) })}` : "";
+      detail.textContent = `${version}. ${item3.reason || ""}${drives}`;
+      const restore = buttonEl(tips.reviewRestore);
+      restore.textContent = t("snapshots.reviewRestore");
+      restore.addEventListener("click", () => openSnapshotPlan(item3.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
+      card.append(title2, detail, restore);
+      list.append(card);
+    }
+  }
+  var OPERATION_ACTIONS = {
+    crate_create: "operations.action.crateCreate",
+    crate_rename: "operations.action.crateRename",
+    crate_delete: "operations.action.crateDelete",
+    crate_color: "operations.action.crateColor",
+    crate_expanded: "operations.action.crateExpanded",
+    crate_rules: "operations.action.crateRules",
+    crate_add: "operations.action.crateAdd",
+    crate_remove: "operations.action.crateRemove",
+    crate_prepare: "operations.action.cratePrepare",
+    crate_remove_library: "operations.action.crateRemoveLibrary",
+    save_track: "operations.action.saveTrack",
+    import_m3u: "operations.action.importM3u",
+    merge_duplicates: "operations.action.mergeDuplicates",
+    rename: "operations.action.rename",
+    rename_from_tags: "operations.action.renameFromTags",
+    move: "operations.action.move",
+    move_folder: "operations.action.moveFolder",
+    replace: "operations.action.replace",
+    replace_in_crates: "operations.action.replaceInCrates",
+    relink: "operations.action.relink",
+    delete: "operations.action.delete",
+    restore: "operations.action.restore",
+    restore_recover: "operations.action.restoreRecover"
+  };
+  var OPERATION_OUTCOMES = {
+    verified: "operations.outcome.verified",
+    rolled_back: "operations.outcome.rolledBack",
+    refused: "operations.outcome.refused",
+    rollback_failed: "operations.outcome.rollbackFailed"
+  };
+  function renderOperations() {
+    const alert = el("operations-alert");
+    const status4 = el("operations-status");
+    const list = el("operations-list");
+    list.setAttribute("aria-busy", String(state.operationsLoading));
+    const latest8 = state.operations[state.operations.length - 1];
+    const failed = latest8?.result === "rollback_failed";
+    alert.hidden = !failed;
+    alert.textContent = failed ? t("operations.rollbackFailed") : "";
+    list.replaceChildren();
+    if (state.operationsLoading && state.operations.length === 0) {
+      status4.textContent = t("operations.reading");
+      return;
+    }
+    if (state.operationsError) {
+      status4.textContent = state.operationsError;
+      const retry = buttonEl(tips.operationsRetry);
+      retry.textContent = t("common.tryAgain");
+      retry.addEventListener("click", () => {
+        loadOperations().catch(() => void 0);
+      });
+      list.append(retry);
+      return;
+    }
+    status4.textContent = "";
+    if (!state.operations.length) {
+      const empty = document.createElement("p");
+      empty.textContent = t("operations.empty");
+      list.append(empty);
+      return;
+    }
+    for (const item3 of [...state.operations].reverse()) {
+      list.append(operationCard(item3));
+    }
+  }
+  function operationCard(item3) {
+    const card = document.createElement("article");
+    card.className = "operation-card snapshot-card";
+    card.setAttribute("role", "listitem");
+    const actionName = item3.action || item3.operation || "";
+    const actionKey2 = OPERATION_ACTIONS[actionName];
+    const outcomeKey = OPERATION_OUTCOMES[item3.result || ""] ?? "operations.outcome.refused";
+    const title2 = document.createElement("p");
+    title2.textContent = t("operations.entry", {
+      time: operationTime(item3.time || ""),
+      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
+      target: item3.target || t("operations.noTarget"),
+      outcome: t(outcomeKey)
+    });
+    card.append(title2);
+    if (item3.snapshot_before && item3.snapshot_after) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.snapshots", {
+        before: item3.snapshot_before,
+        after: item3.snapshot_after
+      });
+      card.append(detail);
+    } else if (item3.snapshot_before) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.beforeOnly", { before: item3.snapshot_before });
+      card.append(detail);
+    }
+    return card;
+  }
+  function operationTime(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
+    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
+  }
+  async function openSnapshotPlan(snapshotId) {
+    state.snapshotPlanId = snapshotId;
+    const planBox = el("snapshot-plan");
+    const block = el("snapshot-block");
+    const confirm2 = el("snapshot-confirm");
+    planBox.replaceChildren();
+    block.textContent = t("snapshots.readingPlan");
+    confirm2.disabled = true;
+    setSnapshotDialogStatus("");
+    el("snapshot-dialog").showModal();
+    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
+    paintSnapshotPlan(plan);
+  }
+  var lastPlan = null;
+  function repaintSnapshotPlan() {
+    if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
+  }
+  function isDriveCopy(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
+  }
+  function driveBackupFrom(value) {
+    if (!value || typeof value !== "object") return null;
+    const record = value;
+    if (record.verified !== true) return null;
+    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
+    return {
+      folder: typeof record.folder === "string" ? record.folder : "",
+      verified: true,
+      drives
+    };
+  }
+  function driveName(drive, status4) {
+    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
+    if (status4 === "read-only") return t("snapshots.driveReadOnly", { name });
+    if (status4 === "permission") return t("snapshots.drivePermission", { name });
+    return name;
+  }
+  function driveCopyText() {
+    const report = state.driveBackup;
+    const drives = report?.drives ?? [];
+    if (!report?.verified || !drives.length) {
+      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
+    }
+    const parts = [];
+    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
+    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
+    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
+    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
+    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
+    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
+    return parts.join(" ") || t("snapshots.drivesIntro");
+  }
+  function paintDriveCopies() {
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = driveCopyText();
+  }
+  async function backupDriveCrates() {
+    const button2 = el("snapshots-drives");
+    button2.disabled = true;
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = t("snapshots.backupDrivesBusy");
+    try {
+      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
+      renderSnapshots();
+    } catch (error2) {
+      state.snapshotMessage = "";
+      renderSnapshots();
+      const shown = el("snapshots-drives-note");
+      shown.hidden = false;
+      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
+    } finally {
+      button2.disabled = false;
+    }
+  }
+  function paintSnapshotPlan(plan) {
+    lastPlan = plan;
+    const planBox = el("snapshot-plan");
+    const block = el("snapshot-block");
+    const confirm2 = el("snapshot-confirm");
+    planBox.replaceChildren();
+    const crates = plan.crates || {};
+    const tracks = plan.tracks || {};
+    appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
+    appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
+    appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
+    appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
+    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
+    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
+    if (plan.registration_warning) {
+      const warning = document.createElement("p");
+      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
+      planBox.append(warning);
+    }
+    appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
+    appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
+    appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
+    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
+    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
+    const deleted = plan.deleted || {};
+    appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
+    appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
+    appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
+    appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
+    if (plan.restore_blocked) {
+      block.textContent = codedText(
+        plan.restore_blocked,
+        plan.restore_blocked_code,
+        messageParams(plan.restore_blocked_params)
+      );
+      confirm2.disabled = true;
+    } else {
+      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
+      confirm2.disabled = false;
+    }
+  }
+  function appendPlanLine(parent, label, rows2) {
+    const line = document.createElement("p");
+    const items = rows2 || [];
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+    } else {
+      const names = items.slice(0, 8).map((item3) => item3.name || item3.path || item3.drive_label || t("plan.item"));
+      const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
+      const listed = `${names.join(", ")}${extra}`;
+      line.textContent = t("plan.listed", { label, count: items.length, names: listed });
+    }
+    parent.append(line);
+  }
+  function appendCueDiffs(parent, label, rows2) {
+    const items = rows2 || [];
+    const line = document.createElement("p");
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+      parent.append(line);
+      return;
+    }
+    line.textContent = t("plan.files", { label, count: items.length });
+    parent.append(line);
+    for (const item3 of items.slice(0, 12)) {
+      const row = document.createElement("p");
+      row.textContent = fileName(item3.path || "");
+      parent.append(row);
+      for (const diff of cueDiffRows(item3.before, item3.after)) {
+        parent.append(paintCueDiffRow(diff));
+      }
+    }
+  }
+  function appendFrameDiffs(parent, label, rows2) {
+    const items = rows2 || [];
+    const line = document.createElement("p");
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+      parent.append(line);
+      return;
+    }
+    line.textContent = t("plan.files", { label, count: items.length });
+    parent.append(line);
+    for (const item3 of items.slice(0, 12)) {
+      const row = document.createElement("p");
+      row.textContent = fileName(item3.path || "");
+      parent.append(row);
+    }
+  }
+  function fileName(path) {
+    const parts = String(path).split(/[/\\]/);
+    return parts[parts.length - 1] || path;
+  }
+  function setSnapshotDialogStatus(message) {
+    el("snapshot-status").textContent = message;
+  }
+  async function takeSnapshot() {
+    const button2 = el("snapshots-take");
+    button2.disabled = true;
+    button2.textContent = t("snapshots.saving");
+    try {
+      await postJSON("/api/snapshots", { action: "create" });
+      state.snapshotMessage = "snapshots.saved";
+      await loadSnapshots();
+    } finally {
+      button2.disabled = false;
+      button2.textContent = t("snapshots.take");
+    }
+  }
+  async function confirmSnapshotRestore() {
+    const confirm2 = el("snapshot-confirm");
+    confirm2.disabled = true;
+    confirm2.textContent = t("snapshots.restoring");
+    setSnapshotDialogStatus("");
+    try {
+      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
+      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
+      const result = await postJSON("/api/snapshots", body);
+      const skipped = result.crates_skipped || [];
+      el("snapshot-dialog").close();
+      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
+      await loadSnapshots();
+      await reloadLibrary();
+      if (skipped.length) {
+        const names = skipped.map((item3) => item3.name || item3.path || t("plan.item")).join(", ");
+        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
+      }
+    } catch (error2) {
+      setSnapshotDialogStatus(failureOf(error2).message);
+      confirm2.disabled = false;
+      await loadOperations();
+    } finally {
+      confirm2.textContent = t("snapshots.restore");
+    }
+  }
+
+  // src/search-filters.ts
+  var TEXT_SEARCH_FIELDS = [
+    "comments",
+    "grouping",
+    "composer",
+    "title",
+    "artist",
+    "album",
+    "genre",
+    "file"
+  ];
+  var KEY_VALUES = {
+    "g#m": 0,
+    abm: 0,
+    "1a": 0,
+    ebm: 1,
+    "d#m": 1,
+    "2a": 1,
+    bbm: 2,
+    "a#m": 2,
+    "3a": 2,
+    fm: 3,
+    "4a": 3,
+    cm: 4,
+    "5a": 4,
+    gm: 5,
+    "6a": 5,
+    dm: 6,
+    "7a": 6,
+    am: 7,
+    "8a": 7,
+    em: 8,
+    "9a": 8,
+    bm: 9,
+    "10a": 9,
+    "f#m": 10,
+    gbm: 10,
+    "11a": 10,
+    "c#m": 11,
+    dbm: 11,
+    "12a": 11,
+    b: 12,
+    "1b": 12,
+    "f#": 13,
+    gb: 13,
+    "2b": 13,
+    "c#": 14,
+    db: 14,
+    "3b": 14,
+    "g#": 15,
+    ab: 15,
+    "4b": 15,
+    "d#": 16,
+    eb: 16,
+    "5b": 16,
+    "a#": 17,
+    bb: 17,
+    "6b": 17,
+    f: 18,
+    "7b": 18,
+    c: 19,
+    "8b": 19,
+    g: 20,
+    "9b": 20,
+    d: 21,
+    "10b": 21,
+    a: 22,
+    "11b": 22,
+    e: 23,
+    "12b": 23
+  };
+  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
+  var EXACT = new RegExp(`^${NUMBER}$`);
+  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
+  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
+  var ABOVE = new RegExp(`^>${NUMBER}$`);
+  var BELOW = new RegExp(`^<${NUMBER}$`);
+  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
+  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
+  function isNone(value) {
+    return NONE.has(value);
+  }
+  function isYes(value) {
+    return YES.has(value);
+  }
+  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
+  function isTextSearchField(value) {
+    return TEXT_FIELD_SET.has(value);
+  }
+  function textField(track, field2) {
+    if (field2 === "title") return String(track.name ?? "");
+    return String(track[field2] ?? "");
+  }
+  function trackHaystack(track, field2) {
+    if (field2) return textField(track, field2).toLocaleLowerCase();
+    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
+  }
+  function hasBpm(track) {
+    const bpm = Number(track.bpm);
+    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
+  }
+  function hasKey2(track) {
+    return Boolean(String(track.key ?? "").trim());
+  }
+  function cueFlag(track) {
+    if (track.has_cues === true) return true;
+    if (track.has_cues === false) return false;
+    if (track.markers_found === true) return true;
+    if (track.markers_found === false) return false;
+    if (Array.isArray(track.cues)) {
+      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
+      return track.cues.length > 0 || loops > 0;
+    }
+    return null;
+  }
+  function keyNumber(value) {
+    if (!value) return -1;
+    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
+  }
+  function mixingKeys(key) {
+    const base = key < 12 ? 0 : 12;
+    const index = key - base;
+    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
+  }
+  function bpmFilter(value) {
+    let match = RANGE.exec(value);
+    if (match) {
+      const low = Number(match[1]);
+      const high = Number(match[2]);
+      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
+    }
+    match = AROUND.exec(value);
+    if (match) {
+      const center = Number(match[1]);
+      const spread = Number(match[2]);
+      return { kind: "bpm", min: center - spread, max: center + spread };
+    }
+    match = ABOVE.exec(value);
+    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
+    match = BELOW.exec(value);
+    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
+    match = EXACT.exec(value);
+    if (match) {
+      const whole = Number(match[1]);
+      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
+    }
+    return null;
+  }
+  function parseQuery(text2) {
+    const terms = [];
+    const filters = [];
+    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
+      const colon = word.indexOf(":");
+      const name = colon > 0 ? word.slice(0, colon) : "";
+      const value = colon > 0 ? word.slice(colon + 1) : "";
+      let filter = null;
+      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
+      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
+      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
+      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
+      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
+      else if (name === "bpm") filter = bpmFilter(value);
+      else if (name === "key" || name === "mix") {
+        const key = keyNumber(value);
+        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
+      } else if (isTextSearchField(name) && value) {
+        filter = { kind: "field", field: name, value };
+      }
+      if (filter) filters.push(filter);
+      else terms.push(word);
+    }
+    return { terms, filters };
+  }
+  function matchesFilters(track, filters) {
+    for (const filter of filters) {
+      if (filter.kind === "bpm") {
+        if (!hasBpm(track)) return false;
+        const bpm = Number(track.bpm);
+        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
+      } else if (filter.kind === "missing") {
+        if (!track.missing) return false;
+      } else if (filter.kind === "nokey") {
+        if (hasKey2(track)) return false;
+      } else if (filter.kind === "nobpm") {
+        if (hasBpm(track)) return false;
+      } else if (filter.kind === "nokeybpm") {
+        if (hasKey2(track) && hasBpm(track)) return false;
+      } else if (filter.kind === "nocues") {
+        if (cueFlag(track) !== false) return false;
+      } else if (filter.kind === "field") {
+        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
+      } else if (!filter.keys.has(keyNumber(track.key))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function matchesQuery(track, query, field2) {
+    if (!matchesFilters(track, query.filters)) return false;
+    if (!query.terms.length) return true;
+    const hay = trackHaystack(track, field2);
+    return query.terms.every((term) => hay.includes(term));
+  }
+
+  // src/views.ts
+  var import_react10 = __toESM(require_react(), 1);
+
   // src/virtual-scroll.ts
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react9 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -23112,7 +23389,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react5.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react9.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -23236,7 +23513,7 @@
     if (!row) return void 0;
     const id = Number(row.getAttribute("data-id"));
     if (!Number.isInteger(id)) return void 0;
-    return view.find((item4) => item4.id === id);
+    return view.find((item3) => item3.id === id);
   }
   function wireListKeys(list) {
     list.addEventListener("scroll", () => paintRows());
@@ -23249,7 +23526,7 @@
         event.preventDefault();
         moveSelection(-1, view, list);
       } else if (event.key === "Enter") {
-        const chosen = focusedTrack(event.target, view) ?? view.find((item4) => item4.id === state.selectedId);
+        const chosen = focusedTrack(event.target, view) ?? view.find((item3) => item3.id === state.selectedId);
         if (!chosen || chosen.entry) return;
         event.preventDefault();
         void bridge.selectTrack(chosen.id);
@@ -23279,8 +23556,8 @@
     detailPlayRoot = null;
   }
   function listMatches(track, query) {
-    const field = isTextSearchField(state.searchField) ? state.searchField : void 0;
-    return matchesQuery(track, query, field);
+    const field2 = isTextSearchField(state.searchField) ? state.searchField : void 0;
+    return matchesQuery(track, query, field2);
   }
   function queryTerms() {
     return parseQuery(state.query);
@@ -23341,7 +23618,7 @@
     for (const crate of state.crates) {
       if (seen.has(crate.id)) continue;
       if (keep && !keep.has(crate.id)) continue;
-      const parentListed = state.crates.some((item4) => item4.id === crate.parent);
+      const parentListed = state.crates.some((item3) => item3.id === crate.parent);
       if (parentListed) continue;
       seen.add(crate.id);
       crate.depth = 0;
@@ -23492,8 +23769,8 @@
   function placeCrateFocus(previousId) {
     const items = [...el("crate-list").querySelectorAll(".crate")];
     if (!items.length) return null;
-    const current2 = items.find((item4) => item4.dataset.id === previousId) || items[0];
-    for (const item4 of items) item4.tabIndex = item4 === current2 ? 0 : -1;
+    const current2 = items.find((item3) => item3.dataset.id === previousId) || items[0];
+    for (const item3 of items) item3.tabIndex = item3 === current2 ? 0 : -1;
     return current2;
   }
   function renderCrates() {
@@ -23540,7 +23817,7 @@
   function renderRules() {
     document.querySelector(".rules")?.remove();
     document.querySelector(".rule-edit")?.remove();
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate || !crate.rules || state.mode !== "crates") return;
     const line = document.createElement("p");
     line.className = "rules";
@@ -23645,14 +23922,8 @@
     el("health-panel").hidden = !healthMode;
     el("scan-panel").hidden = !scanMode;
     el("tags-panel").hidden = !tagsMode;
-    if (state.mode === "missing") {
-      const offlineCount = state.tracks.filter((track) => track.offline).length;
-      el("mode-note").textContent = offlineCount ? t("mode.missingOffline", { count: offlineCount }) : t("mode.missing");
-    }
-    if (state.mode === "duplicates") {
-      el("mode-note").textContent = t("mode.duplicates");
-    }
-    if (state.mode === "stems") el("mode-note").textContent = t("mode.stems");
+    const listNote = healthListNote();
+    if (listNote) el("mode-note").textContent = listNote;
     if (filesMode) el("mode-note").textContent = t("mode.files");
     if (gigMode) {
       el("mode-note").textContent = t("mode.gig");
@@ -23702,7 +23973,7 @@
       return;
     }
     if (gigMode || healthMode || scanMode) {
-      const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+      const crate = state.crates.find((item3) => item3.id === state.activeCrate);
       el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : crate?.name ?? t("crates.selectedCrate");
       return;
     }
@@ -23818,11 +24089,11 @@
     if (state.mode === "health") loadHealth().catch(showHealthFailure);
     if (state.mode === "scan") loadScan().catch(showScanFailure);
   }
-  function focusCrateItem(item4) {
-    if (!item4) return;
+  function focusCrateItem(item3) {
+    if (!item3) return;
     for (const button2 of el("crate-list").querySelectorAll(".crate")) button2.tabIndex = -1;
-    item4.tabIndex = 0;
-    item4.focus();
+    item3.tabIndex = 0;
+    item3.focus();
   }
   async function selectTrack(id) {
     state.selectedId = id;
@@ -23854,7 +24125,7 @@
   function selectEntry(id) {
     state.selectedId = id;
     paintRows();
-    const entry = state.entries.find((item4) => item4.id === id);
+    const entry = state.entries.find((item3) => item3.id === id);
     if (!entry) return;
     const body = document.createElement("div");
     body.className = "detail-body";
@@ -23930,7 +24201,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react10.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -24102,28 +24373,28 @@
         });
         body.append(toggle);
       }
-      for (const field of group.fields) {
+      for (const field2 of group.fields) {
         const row = document.createElement("div");
         row.className = "field";
         const label = document.createElement("div");
         label.className = "label";
-        label.textContent = field.label ?? "";
+        label.textContent = field2.label ?? "";
         const column = document.createElement("span");
         column.className = "column";
-        column.textContent = field.column ?? "";
+        column.textContent = field2.column ?? "";
         label.append(column);
         const value = document.createElement("div");
         value.className = "value";
-        if (field.column === "color" && field.display.startsWith("#")) {
+        if (field2.column === "color" && field2.display.startsWith("#")) {
           const wrap = document.createElement("span");
           wrap.className = "color-value";
           const swatch = document.createElement("span");
           swatch.className = "swatch";
-          swatch.style.background = field.display;
-          wrap.append(swatch, document.createTextNode(field.display));
+          swatch.style.background = field2.display;
+          wrap.append(swatch, document.createTextNode(field2.display));
           value.append(wrap);
         } else {
-          value.textContent = field.display;
+          value.textContent = field2.display;
         }
         row.append(label, value);
         section.append(row);
@@ -24212,12 +24483,12 @@
     heading2.textContent = t("related.heading");
     section.setAttribute("aria-labelledby", heading2.id);
     section.setAttribute("aria-busy", "true");
-    const status = document.createElement("p");
-    status.className = "detail-kicker";
-    status.setAttribute("role", "status");
+    const status4 = document.createElement("p");
+    status4.className = "detail-kicker";
+    status4.setAttribute("role", "status");
     const path = track.resolved_path || track.edit?.portable_id || "";
-    status.textContent = path ? t("related.loading") : t("related.noPath");
-    section.append(heading2, status);
+    status4.textContent = path ? t("related.loading") : t("related.noPath");
+    section.append(heading2, status4);
     if (path) loadRelated(track, section, writable, "");
     return section;
   }
@@ -24234,8 +24505,8 @@
     } catch (error2) {
       if (token3 !== relatedRequest || !section.isConnected) return;
       section.setAttribute("aria-busy", "false");
-      const status = section.querySelector("[role=status]");
-      if (status) status.textContent = failureOf(error2).message;
+      const status4 = section.querySelector("[role=status]");
+      if (status4) status4.textContent = failureOf(error2).message;
     }
   }
   function renderRelated(track, section, writable, payload, query) {
@@ -24244,11 +24515,11 @@
     section.setAttribute("aria-busy", "false");
     const saved = Array.isArray(payload.saved) ? payload.saved : [];
     const suggested = Array.isArray(payload.suggested) ? payload.suggested : [];
-    const status = document.createElement("p");
-    status.className = "detail-kicker";
-    status.setAttribute("role", "status");
-    status.textContent = saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved");
-    section.append(status);
+    const status4 = document.createElement("p");
+    status4.className = "detail-kicker";
+    status4.setAttribute("role", "status");
+    status4.textContent = saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved");
+    section.append(status4);
     if (saved.length) section.append(relatedSavedList(track, section, saved));
     section.append(relatedSearch(track, section, query));
     const suggestHeading = document.createElement("p");
@@ -24272,8 +24543,8 @@
     const list = document.createElement("ul");
     list.className = "related-list";
     for (const link of saved) {
-      const item4 = document.createElement("li");
-      item4.className = "related-row";
+      const item3 = document.createElement("li");
+      item3.className = "related-row";
       const main = document.createElement("div");
       const other = link.track || {};
       const label = other.title || t("track.untitled");
@@ -24310,8 +24581,8 @@
       remove.textContent = t("common.remove");
       remove.setAttribute("aria-label", t("related.removeLink", { name: label }));
       remove.addEventListener("click", () => removeRelated(track, section, link));
-      item4.append(main, remove);
-      list.append(item4);
+      item3.append(main, remove);
+      list.append(item3);
     }
     return list;
   }
@@ -24344,7 +24615,7 @@
         results.append(hint);
         return;
       }
-      const hits2 = state.tracks.filter((item4) => item4.id !== track.id && matchesQuery(item4, query2)).slice(0, 8);
+      const hits2 = state.tracks.filter((item3) => item3.id !== track.id && matchesQuery(item3, query2)).slice(0, 8);
       if (!hits2.length) {
         const empty = document.createElement("li");
         empty.className = "related-meta";
@@ -24353,14 +24624,14 @@
         return;
       }
       for (const hit of hits2) {
-        const item4 = document.createElement("li");
+        const item3 = document.createElement("li");
         const name = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         const choose = buttonEl(chooseRelated(name));
         choose.className = "text-button";
         choose.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         choose.addEventListener("click", () => relatedLinkForm(track, section, form, hit, input.value));
-        item4.append(choose);
-        results.append(item4);
+        item3.append(choose);
+        results.append(item3);
       }
     };
     input.addEventListener("input", paint3);
@@ -24416,26 +24687,26 @@
   function relatedSuggestList(track, section, suggested) {
     const list = document.createElement("ul");
     list.className = "related-list";
-    for (const item4 of suggested) {
+    for (const item3 of suggested) {
       const row = document.createElement("li");
       row.className = "related-row";
       const main = document.createElement("div");
       const name = document.createElement("span");
-      name.textContent = item4.artist ? `${item4.title || t("track.untitled")} · ${item4.artist}` : item4.title || t("track.untitled");
+      name.textContent = item3.artist ? `${item3.title || t("track.untitled")} · ${item3.artist}` : item3.title || t("track.untitled");
       const reasons = document.createElement("p");
       reasons.className = "related-meta";
-      reasons.textContent = Array.isArray(item4.reasons) ? item4.reasons.join(" · ") : "";
+      reasons.textContent = Array.isArray(item3.reasons) ? item3.reasons.join(" · ") : "";
       main.append(name, reasons);
-      const save3 = buttonEl(saveSuggestion(item4.title || "Untitled"));
+      const save3 = buttonEl(saveSuggestion(item3.title || "Untitled"));
       save3.className = "text-button";
       save3.textContent = t("common.save");
-      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item4.title || t("track.untitled") }));
+      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item3.title || t("track.untitled") }));
       save3.addEventListener("click", () => {
         save3.disabled = true;
         saveRelated(track, section, {
           action: "add",
           asset: track.id,
-          target: item4.asset_id,
+          target: item3.asset_id,
           mutual: true,
           note: "",
           rating: null,
@@ -24456,8 +24727,8 @@
     } catch (error2) {
       if (failureOf(error2).status === 409) lockDown(error2);
       else setNotice(failureOf(error2).message);
-      const status = section.querySelector("[role=status]");
-      if (status) status.textContent = failureOf(error2).message;
+      const status4 = section.querySelector("[role=status]");
+      if (status4) status4.textContent = failureOf(error2).message;
     }
   }
   async function removeRelated(track, section, link) {
@@ -24739,7 +25010,7 @@
     }
   }
   async function renameCrate() {
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate) return;
     const name = prompt(t("crates.renamePrompt"), crate.name);
     if (!name || !name.trim() || name.trim() === crate.name) return;
@@ -24760,7 +25031,7 @@
     return COLORS.find(([, key]) => t(key).toLocaleLowerCase() === wanted)?.[0];
   }
   async function colorCrate() {
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate) return;
     const names = COLORS.map(([, key]) => t(key).toLocaleLowerCase());
     const choice = prompt(t("crates.colorPrompt", { names: names.join(", ") }));
@@ -24785,7 +25056,7 @@
     }
   }
   async function deleteCrate() {
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate) return;
     if (!confirm(t("crates.confirmDelete", { name: crate.name }))) return;
     try {
@@ -24939,20 +25210,10 @@
     return (state.duplicateGroups || []).find((group) => (group.ids || []).includes(state.selectedId)) || null;
   }
   function syncMergeButton() {
-    const wrap = el("duplicate-actions");
-    const button2 = el("merge-duplicates");
-    if (!wrap || !button2) return;
-    const show2 = state.mode === "duplicates";
-    wrap.hidden = !show2;
-    button2.disabled = !show2 || !state.writable || !selectedDuplicateGroup();
+    mountHealthListChrome();
   }
   function syncRelinkButton() {
-    const wrap = el("relink-actions");
-    const button2 = el("open-relink");
-    if (!wrap || !button2) return;
-    const show2 = state.mode === "missing";
-    wrap.hidden = !show2;
-    button2.disabled = !show2 || !state.writable;
+    mountHealthListChrome();
   }
   function crateNamesFor(assetId) {
     return state.crates.filter((crate) => !crate.smart && (crate.tracks || []).includes(assetId)).map((crate) => crate.name);
@@ -25103,7 +25364,7 @@
     list.className = "files-crumbs";
     const crumbs = visibleCrumbs();
     crumbs.forEach((crumb, index) => {
-      const item4 = document.createElement("li");
+      const item3 = document.createElement("li");
       const last = index === crumbs.length - 1;
       if (!last && crumb.path) {
         const button2 = buttonEl(openCrumb(crumb.name));
@@ -25112,22 +25373,22 @@
         button2.addEventListener("click", () => {
           loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
         });
-        item4.append(button2);
+        item3.append(button2);
       } else {
         const current2 = document.createElement("span");
         current2.className = "files-crumb";
         current2.setAttribute("aria-current", "page");
         current2.textContent = crumb.name;
-        item4.append(current2);
+        item3.append(current2);
       }
       if (!last) {
         const sep = document.createElement("span");
         sep.className = "files-sep";
         sep.setAttribute("aria-hidden", "true");
         sep.textContent = "/";
-        item4.append(sep);
+        item3.append(sep);
       }
-      list.append(item4);
+      list.append(item3);
     });
     nav.append(list);
   }
@@ -25567,11 +25828,11 @@
       renderList();
     });
     el("crate-list").addEventListener("keydown", (event) => {
-      const item4 = event.target.closest(".crate");
-      if (!item4 || !el("crate-list").contains(item4)) return;
+      const item3 = event.target.closest(".crate");
+      if (!item3 || !el("crate-list").contains(item3)) return;
       const items = [...el("crate-list").querySelectorAll(".crate")];
-      const index = items.indexOf(item4);
-      const id = item4.dataset.id === "all" ? "all" : Number(item4.dataset.id);
+      const index = items.indexOf(item3);
+      const id = item3.dataset.id === "all" ? "all" : Number(item3.dataset.id);
       if (event.key === "ArrowDown") {
         event.preventDefault();
         focusCrateItem(items[Math.min(items.length - 1, index + 1)]);
@@ -25586,13 +25847,13 @@
         focusCrateItem(items[items.length - 1]);
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
-        if (!state.crateQuery && item4.getAttribute("aria-expanded") === "false") toggleCrate(id);
-        else if (item4.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
+        if (!state.crateQuery && item3.getAttribute("aria-expanded") === "false") toggleCrate(id);
+        else if (item3.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
-        if (!state.crateQuery && item4.getAttribute("aria-expanded") === "true") toggleCrate(id);
-        else if (item4.dataset.parent) {
-          focusCrateItem(items.find((button2) => button2.dataset.id === item4.dataset.parent));
+        if (!state.crateQuery && item3.getAttribute("aria-expanded") === "true") toggleCrate(id);
+        else if (item3.dataset.parent) {
+          focusCrateItem(items.find((button2) => button2.dataset.id === item3.dataset.parent));
         }
       } else if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -25720,9 +25981,9 @@
     const list = el("rekordbox-report");
     list.replaceChildren();
     for (const line of lines) {
-      const item4 = document.createElement("li");
-      item4.textContent = line;
-      list.append(item4);
+      const item3 = document.createElement("li");
+      item3.textContent = line;
+      list.append(item3);
     }
   }
   function requestRekordboxReport() {
@@ -25752,9 +26013,9 @@
     if (checked) return Number(checked.value);
     return state.selectedId;
   }
-  function previewFieldValue(field, value) {
+  function previewFieldValue(field2, value) {
     if (value == null || value === "") return "empty";
-    if (field === "time_added") {
+    if (field2 === "time_added") {
       const date = new Date(Number(value) * 1e3);
       if (!Number.isNaN(date.getTime())) {
         return date.toLocaleString(void 0, {
@@ -25791,43 +26052,43 @@
     const list = document.createElement("ul");
     list.className = "merge-preview";
     const added = preview.crates_added || [];
-    const item4 = (text2) => {
+    const item3 = (text2) => {
       const line = document.createElement("li");
       line.textContent = text2;
       list.append(line);
     };
     if (added.length) {
       const names = added.map((crate) => crate.space && crate.space !== state.space ? `${crate.name} (${crate.space})` : crate.name);
-      item4(t("merge.addToCrates", { crates: names.join(", ") }));
+      item3(t("merge.addToCrates", { crates: names.join(", ") }));
     } else if ((preview.crates_kept || []).length) {
-      item4(t("merge.alreadyInCrates"));
+      item3(t("merge.alreadyInCrates"));
     } else {
-      item4(t("merge.noCrates"));
+      item3(t("merge.noCrates"));
     }
-    for (const space of preview.spaces_added || []) item4(t("merge.addToSpace", { space }));
+    for (const space of preview.spaces_added || []) item3(t("merge.addToSpace", { space }));
     if ((preview.fields || []).length) {
-      for (const field of preview.fields || []) {
-        const before = previewFieldValue(field.field || "", field.before);
-        const after = previewFieldValue(field.field || "", field.after);
-        item4(t("merge.fieldChange", { label: field.label ?? "", before, after }));
+      for (const field2 of preview.fields || []) {
+        const before = previewFieldValue(field2.field || "", field2.before);
+        const after = previewFieldValue(field2.field || "", field2.after);
+        item3(t("merge.fieldChange", { label: field2.label ?? "", before, after }));
       }
     } else {
-      item4(t("merge.noFields"));
+      item3(t("merge.noFields"));
     }
     if (preview.history_repointed) {
       const count = Number(preview.history_entries) || 0;
-      item4(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
+      item3(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
     } else {
-      item4(t("merge.noHistoryId"));
+      item3(t("merge.noHistoryId"));
     }
     const removed = (preview.removed || []).length;
-    item4(t("merge.removeCopies", { count: removed }));
+    item3(t("merge.removeCopies", { count: removed }));
     for (const file of preview.files || []) {
-      if (file.reason) item4(`${file.file}: ${file.reason}`);
+      if (file.reason) item3(`${file.file}: ${file.reason}`);
     }
     const copy = preview.cue_copy;
     if (copy && (copy.markers || copy.beatgrid) && copy.status !== "failed") {
-      item4(mergeCopyLine(copy, copy.status === "copied"));
+      item3(mergeCopyLine(copy, copy.status === "copied"));
     }
     el("merge-preview").append(list);
     if (preview.cue_warning) {
@@ -25994,7 +26255,7 @@
         if (score != null) scored.push({ track, score });
       }
       scored.sort((a, b) => b.score - a.score);
-      ranked = scored.map((item4) => item4.track);
+      ranked = scored.map((item3) => item3.track);
     }
     if (toId != null) {
       const pinned = others.find((track) => track.id === toId);
@@ -26016,7 +26277,7 @@
     }
     const list = document.createElement("ul");
     list.className = "merge-preview";
-    const item4 = (text2) => {
+    const item3 = (text2) => {
       const line = document.createElement("li");
       line.textContent = text2;
       list.append(line);
@@ -26025,14 +26286,14 @@
     const kept = preview.crates_kept || [];
     const removed = preview.crates_removed || [];
     if (added.length) {
-      item4(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
+      item3(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
     } else if (kept.length) {
-      item4(t("cratesReplace.alreadyInCrates"));
+      item3(t("cratesReplace.alreadyInCrates"));
     } else {
-      item4(t("cratesReplace.noCrates"));
+      item3(t("cratesReplace.noCrates"));
     }
     if (preview.retire && removed.length) {
-      item4(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
+      item3(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
     }
     el("crates-replace-preview").append(list);
   }
@@ -26297,15 +26558,15 @@
     privacySync = false;
     el("telemetry-note").textContent = telemetryNoteText();
   }
-  async function saveConsent(value, status) {
-    status.textContent = t("wizard.saving");
+  async function saveConsent(value, status4) {
+    status4.textContent = t("wizard.saving");
     try {
       const payload = await postJSON("/api/settings", { telemetry_consent: value });
       applyPrivacy(payload);
-      status.textContent = value ? t("sharing.on") : t("sharing.off");
+      status4.textContent = value ? t("sharing.on") : t("sharing.off");
       return true;
     } catch (error2) {
-      status.textContent = t("wizard.consentFailed");
+      status4.textContent = t("wizard.consentFailed");
       return false;
     }
   }
@@ -26399,16 +26660,16 @@
     const list = el("files-changes");
     list.replaceChildren();
     for (const change of payload.changes || []) {
-      const item4 = document.createElement("li");
+      const item3 = document.createElement("li");
       const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
       const effect = change.effect === "trash" ? t("files.trash") : change.to;
-      item4.textContent = `${change.from} → ${effect}${crates}`;
-      list.append(item4);
+      item3.textContent = `${change.from} → ${effect}${crates}`;
+      list.append(item3);
     }
     for (const skip2 of payload.skipped || []) {
-      const item4 = document.createElement("li");
-      item4.textContent = skip2;
-      list.append(item4);
+      const item3 = document.createElement("li");
+      item3.textContent = skip2;
+      list.append(item3);
     }
     if (payload.more) {
       const more = document.createElement("li");
@@ -26504,7 +26765,7 @@
   function chosenCandidate(match) {
     const candidates = match.candidates || [];
     const path = relinkChosen.get(match.asset_id);
-    return candidates.find((item4) => item4.path === path) || candidates[0];
+    return candidates.find((item3) => item3.path === path) || candidates[0];
   }
   function selectedRelinkMatches() {
     const matches = [];
@@ -26550,7 +26811,7 @@
   function renderRelinkRows() {
     const body = el("relink-rows");
     body.replaceChildren();
-    const matches = (relinkPlan?.matches || []).filter((item4) => (item4.candidates || []).length > 0);
+    const matches = (relinkPlan?.matches || []).filter((item3) => (item3.candidates || []).length > 0);
     el("relink-empty").hidden = matches.length > 0;
     el("relink-empty").textContent = relinkPlan ? t("relink.empty") : t("relink.none");
     for (const match of matches) {
@@ -26719,11 +26980,15 @@
       rekordboxXml = "";
       el("rekordbox-dialog").close();
     });
-    el("merge-duplicates").addEventListener("click", () => {
-      openMergeDialog().catch((error2) => setNotice(failureOf(error2).message));
-    });
-    el("open-relink").addEventListener("click", () => {
-      openRelinkDialog().catch((error2) => setNotice(failureOf(error2).message));
+    el("health-list-chrome").addEventListener("click", (event) => {
+      const button2 = event.target.closest("button");
+      if (button2?.id === "merge-duplicates") {
+        openMergeDialog().catch((error2) => setNotice(failureOf(error2).message));
+        return;
+      }
+      if (button2?.id === "open-relink") {
+        openRelinkDialog().catch((error2) => setNotice(failureOf(error2).message));
+      }
     });
     el("relink-cancel").addEventListener("click", () => el("relink-dialog").close());
     el("relink-find").addEventListener("click", () => {
@@ -27015,7 +27280,7 @@
       void copyLog();
     });
     document.addEventListener("serato-locale", () => {
-      if (el("help-report-dialog").open) paintReport2();
+      if (el("help-report-dialog").open) paintReport();
     });
   }
   async function openReport(next2) {
@@ -27026,7 +27291,7 @@
     el("help-log-fallback").hidden = true;
     el("help-report-status").textContent = "";
     el("help-diagnostics").textContent = t("help.loading");
-    paintReport2();
+    paintReport();
     el("help-dialog").close();
     el("help-report-dialog").showModal();
     try {
@@ -27038,7 +27303,7 @@
       el("help-diagnostics").textContent = t("help.loadFailed");
     }
   }
-  function paintReport2() {
+  function paintReport() {
     const feature = kind === "feature";
     el("help-report-title").textContent = t(feature ? "help.featureTitle" : "help.bugTitle");
     el("help-happened-name").textContent = t(feature ? "help.change" : "help.happened");
@@ -27319,19 +27584,19 @@
     focusFileByPath(hit.path);
   }
   function paint() {
-    const status = el("quick-open-status");
+    const status4 = el("quick-open-status");
     const list = el("quick-open-list");
     const retry = el("quick-open-retry");
     const query = pendingQuery.trim();
     retry.hidden = phase !== "error";
     list.replaceChildren();
-    if (!query) status.textContent = t("quickOpen.empty");
-    else if (phase === "loading") status.textContent = t("quickOpen.searching");
-    else if (phase === "error") status.textContent = t("quickOpen.fileError");
-    else if (!hits.length) status.textContent = t("quickOpen.none", { query });
-    else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
+    if (!query) status4.textContent = t("quickOpen.empty");
+    else if (phase === "loading") status4.textContent = t("quickOpen.searching");
+    else if (phase === "error") status4.textContent = t("quickOpen.fileError");
+    else if (!hits.length) status4.textContent = t("quickOpen.none", { query });
+    else status4.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
     hits.forEach((hit, index) => {
-      const item4 = document.createElement("li");
+      const item3 = document.createElement("li");
       const button2 = buttonEl(quickOpenHit(
         hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
         hit.title,
@@ -27357,13 +27622,13 @@
         active = index;
         void activate(hit);
       });
-      item4.append(button2);
-      list.append(item4);
+      item3.append(button2);
+      list.append(item3);
     });
-    const field = el("quick-open-query");
+    const field2 = el("quick-open-query");
     const current2 = hits[active];
-    if (current2) field.setAttribute("aria-activedescendant", `quick-open-option-${active}`);
-    else field.removeAttribute("aria-activedescendant");
+    if (current2) field2.setAttribute("aria-activedescendant", `quick-open-option-${active}`);
+    else field2.removeAttribute("aria-activedescendant");
     const chosen = list.querySelector(".is-active");
     if (chosen && typeof chosen.scrollIntoView === "function") chosen.scrollIntoView({ block: "nearest" });
   }
@@ -27540,11 +27805,11 @@
   function isTypingTarget(target) {
     if (!(target instanceof HTMLElement)) return false;
     if (target.isContentEditable) return true;
-    const field = target.closest("input, textarea, select");
-    if (!(field instanceof HTMLElement)) return false;
-    if (field instanceof HTMLInputElement) {
+    const field2 = target.closest("input, textarea, select");
+    if (!(field2 instanceof HTMLElement)) return false;
+    if (field2 instanceof HTMLInputElement) {
       const inert = /* @__PURE__ */ new Set(["button", "checkbox", "radio", "file", "range", "color", "submit", "reset"]);
-      if (inert.has(field.type)) return false;
+      if (inert.has(field2.type)) return false;
     }
     return true;
   }
@@ -27671,18 +27936,18 @@
   }
   function focusCurrentSearch() {
     if (state.mode === "files") {
-      const field2 = el("files-search");
-      field2.focus();
-      field2.select();
+      const field3 = el("files-search");
+      field3.focus();
+      field3.select();
       return;
     }
     if (state.mode === "snapshots") {
       el("snapshots-status").textContent = t("snapshots.noSearch");
       return;
     }
-    const field = el("search");
-    field.focus();
-    field.select();
+    const field2 = el("search");
+    field2.focus();
+    field2.select();
   }
   function showLibrary() {
     setMode("crates");
@@ -27762,8 +28027,8 @@
     }
     if (clearViewSearch()) event.preventDefault();
   }
-  function isSearchField(field) {
-    return field.id === "search" || field.id === "crate-search" || field.id === "files-search" || field.id === "quick-open-query";
+  function isSearchField(field2) {
+    return field2.id === "search" || field2.id === "crate-search" || field2.id === "files-search" || field2.id === "quick-open-query";
   }
   function clearViewSearch() {
     if (state.mode === "files" && el("files-search").value) {
@@ -27784,9 +28049,9 @@
     }
     return false;
   }
-  function replaceInput(field, value) {
-    field.value = value;
-    field.dispatchEvent(new Event("input", { bubbles: true }));
+  function replaceInput(field2, value) {
+    field2.value = value;
+    field2.dispatchEvent(new Event("input", { bubbles: true }));
   }
   function repaintCheatSheet() {
     if (!document.getElementById("shortcuts-body")) return;
@@ -27870,9 +28135,9 @@
     let release = null;
     const raw = body.latest;
     if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
-      const item4 = raw;
-      if (typeof item4.version === "string" && typeof item4.url === "string") {
-        release = { version: item4.version, url: item4.url, prerelease: item4.prerelease === true };
+      const item3 = raw;
+      if (typeof item3.version === "string" && typeof item3.url === "string") {
+        release = { version: item3.version, url: item3.url, prerelease: item3.prerelease === true };
       }
     }
     return {
@@ -27897,20 +28162,20 @@
     paintUpdate();
   }
   function paintUpdate() {
-    const status = latest7;
+    const status4 = latest7;
     const toggle = el("update-toggle");
     const pre = el("update-prereleases");
-    toggle.checked = status?.enabled === true;
-    pre.checked = status?.include_prereleases === true;
-    pre.disabled = status?.enabled !== true;
+    toggle.checked = status4?.enabled === true;
+    pre.checked = status4?.include_prereleases === true;
+    pre.disabled = status4?.enabled !== true;
     const banner = el("update-banner");
-    const release = status?.latest ?? null;
-    if (!status || status.enabled !== true || !status.update || !release || dismissed) {
+    const release = status4?.latest ?? null;
+    if (!status4 || status4.enabled !== true || !status4.update || !release || dismissed) {
       banner.hidden = true;
       return;
     }
     const key = release.prerelease ? "update.availableTest" : "update.available";
-    el("update-text").textContent = t(key, { version: release.version, current: status.current });
+    el("update-text").textContent = t(key, { version: release.version, current: status4.current });
     banner.hidden = false;
   }
   function repaintUpdate() {
@@ -28033,21 +28298,21 @@
     }
   }
   async function copyVersion() {
-    const status = el("version-copy-status");
+    const status4 = el("version-copy-status");
     if (!copyText2) {
-      status.textContent = t("version.unavailable");
+      status4.textContent = t("version.unavailable");
       return;
     }
     const writeText = navigator.clipboard?.writeText;
     if (!writeText || !window.isSecureContext) {
-      status.textContent = t("version.copyFailed");
+      status4.textContent = t("version.copyFailed");
       return;
     }
     try {
       await writeText.call(navigator.clipboard, copyText2);
-      status.textContent = t("version.copied");
+      status4.textContent = t("version.copied");
     } catch {
-      status.textContent = t("version.copyFailed");
+      status4.textContent = t("version.copyFailed");
     }
   }
   function wireVersion() {
@@ -28262,7 +28527,7 @@
   async function refreshActivePreset() {
     const id = state.activeCrate;
     if (id === "all" || !state.writable) return;
-    const crate = state.crates.find((item4) => item4.id === id);
+    const crate = state.crates.find((item3) => item3.id === id);
     try {
       const reply = await postJSON("/api/smart-preset", { action: "refresh", id });
       const message = t("presets.refreshed", {
@@ -28356,9 +28621,9 @@
       return;
     }
     if (action === "focus-search") {
-      const field = state.mode === "files" ? el("files-search") : el("search");
-      field.focus();
-      if (typeof field.select === "function") field.select();
+      const field2 = state.mode === "files" ? el("files-search") : el("search");
+      field2.focus();
+      if (typeof field2.select === "function") field2.select();
       return;
     }
     if (action === "shortcuts") {

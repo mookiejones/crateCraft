@@ -29,7 +29,8 @@ import { clickPane, paintDualChrome, paneCrates } from "./dual-crate-view";
 import { clockLabel, colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
 import { loadDrift, showDriftFailure } from "./drift";
-import { loadHealth, showHealthFailure } from "./health";
+import { loadHealth, mountHealthListChrome, showHealthFailure } from "./health";
+import { healthListNote } from "./health-list";
 import { loadScan, showScanFailure } from "./scan";
 import { loadTags, showTagsFailure } from "./tags";
 import { portableDriveButton } from "./portable";
@@ -646,16 +647,8 @@ export function renderShell() {
   el("health-panel").hidden = !healthMode;
   el("scan-panel").hidden = !scanMode;
   el("tags-panel").hidden = !tagsMode;
-  if (state.mode === "missing") {
-    const offlineCount = state.tracks.filter((track) => track.offline).length;
-    el("mode-note").textContent = offlineCount
-      ? t("mode.missingOffline", { count: offlineCount })
-      : t("mode.missing");
-  }
-  if (state.mode === "duplicates") {
-    el("mode-note").textContent = t("mode.duplicates");
-  }
-  if (state.mode === "stems") el("mode-note").textContent = t("mode.stems");
+  const listNote = healthListNote();
+  if (listNote) el("mode-note").textContent = listNote;
   if (filesMode) el("mode-note").textContent = t("mode.files");
   if (gigMode) {
     el("mode-note").textContent = t("mode.gig");
@@ -2564,12 +2557,7 @@ export function selectedDuplicateGroup() {
  * @returns {void}
  */
 export function syncMergeButton() {
-  const wrap = el("duplicate-actions");
-  const button = el("merge-duplicates");
-  if (!wrap || !button) return;
-  const show = state.mode === "duplicates";
-  wrap.hidden = !show;
-  button.disabled = !show || !state.writable || !selectedDuplicateGroup();
+  mountHealthListChrome();
 }
 
 /**
@@ -2580,12 +2568,7 @@ export function syncMergeButton() {
  * @returns {void}
  */
 export function syncRelinkButton() {
-  const wrap = el("relink-actions");
-  const button = el("open-relink");
-  if (!wrap || !button) return;
-  const show = state.mode === "missing";
-  wrap.hidden = !show;
-  button.disabled = !show || !state.writable;
+  mountHealthListChrome();
 }
 
 /**

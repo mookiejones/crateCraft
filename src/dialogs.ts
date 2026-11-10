@@ -1565,11 +1565,15 @@ export function wireDialogs(): void {
     rekordboxXml = "";
     el("rekordbox-dialog").close();
   });
-  el("merge-duplicates").addEventListener("click", () => {
-    openMergeDialog().catch((error) => setNotice(failureOf(error).message));
-  });
-  el("open-relink").addEventListener("click", () => {
-    openRelinkDialog().catch((error) => setNotice(failureOf(error).message));
+  el("health-list-chrome").addEventListener("click", (event) => {
+    const button = (event.target as Element).closest("button");
+    if (button?.id === "merge-duplicates") {
+      openMergeDialog().catch((error) => setNotice(failureOf(error).message));
+      return;
+    }
+    if (button?.id === "open-relink") {
+      openRelinkDialog().catch((error) => setNotice(failureOf(error).message));
+    }
   });
   el("relink-cancel").addEventListener("click", () => el("relink-dialog").close());
   el("relink-find").addEventListener("click", () => {

@@ -128,6 +128,7 @@ export interface ElementIds {
   "snapshots-refresh": HTMLButtonElement;
   "snapshots-undo-button": HTMLButtonElement;
   "snapshot-cancel": HTMLButtonElement;
+  "health-list-chrome": HTMLDivElement;
   "merge-duplicates": HTMLButtonElement;
   "merge-cancel": HTMLButtonElement;
   "merge-confirm": HTMLButtonElement;

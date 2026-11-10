@@ -1,41 +1,36 @@
 /**
- * Tag spellings view: groups, preview, apply, and title cleanup.
+ * Tag spellings: groups, preview, apply, and title cleanup.
  *
  * GET /api/tag-clusters lists genre and artist groups. POST preview
  * lists the rows a chosen spelling would rewrite. POST apply writes
  * through safe_write and remembers the spelling. Genre and Artist also
  * POST refresh-preview; Apply saved mappings POSTs refresh-apply.
  * Titles uses POST clean-preview and clean-apply. Audio files are not
- * rewritten. A newer load ignores a late response.
+ * rewritten. A newer load ignores a late response. TagsPanel paints
+ * from HealthContext.
  *
  * Page text is in the locale catalogs under tags.*.
  */
 
+import { createElement } from "react";
 import { failureOf, postJSON, readJSON } from "./api";
 import type { TagClusterGroup, TagClusterPlan, TagClusters } from "./api-types";
+import { mountIsland, type IslandRoot } from "./app/mount";
+import { TagsPanel } from "./components/TagsPanel";
 import { bridge } from "./bridge";
 import { el } from "./dom";
+import { emitHealth } from "./health-events";
 import { serverMessage, t } from "./i18n";
 import { state } from "./state";
 import {
-  groupHeading,
-  mappingPreviewSummary,
   mappingWrittenSummary,
-  previewLines,
   previewSummary,
-  spellingLabel,
-  tagsSummary,
   titlesPreviewSummary,
-  titlesSummary,
   titlesWrittenSummary,
   writtenSummary,
   type TagField,
 } from "./tags-view";
-import { buttonEl, inputEl, setTooltip } from "./tooltip";
-import { tips } from "./tooltip-strings";
 
-const LIST_CAP = 100;
-const FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"] as const;
 const TITLE_KEY = "clean";
 const MAPPING_KEY = "saved";
 
@@ -44,62 +39,97 @@ let titlePlan: TagClusterPlan | null = null;
 let mappingPlan: TagClusterPlan | null = null;
 const plans = new Map<string, TagClusterPlan>();
 const selectedByKey = new Map<string, string>();
+const openKeys = new Set<string>();
+let field: TagField = "genre";
+let status = "";
 let panelBusy = false;
 let actionKey = "";
+let panelRoot: IslandRoot | undefined;
+let panelHost: HTMLElement | null = null;
+
+/**
+ * Snapshot HealthProvider reads for Tag spellings.
+ *
+ * @returns Field, groups, plans, and busy flags.
+ */
+export function getTagsSnapshot(): {
+  tagsField: TagField;
+  tagsClusters: TagClusters | null;
+  titlePlan: TagClusterPlan | null;
+  mappingPlan: TagClusterPlan | null;
+  tagsPlans: ReadonlyMap<string, TagClusterPlan>;
+  tagsSelected: ReadonlyMap<string, string>;
+  tagsOpen: ReadonlySet<string>;
+  tagsStatus: string;
+  tagsBusy: boolean;
+  tagsActionKey: string;
+  tagsWritable: boolean;
+} {
+  return {
+    tagsField: field,
+    tagsClusters: latest,
+    titlePlan,
+    mappingPlan,
+    tagsPlans: plans,
+    tagsSelected: selectedByKey,
+    tagsOpen: openKeys,
+    tagsStatus: status,
+    tagsBusy: panelBusy,
+    tagsActionKey: actionKey,
+    tagsWritable: state.writable,
+  };
+}
+
+/**
+ * Switch Genre, Artist, or Titles.
+ *
+ * Does not fetch. loadTags follows a field change from the panel.
+ *
+ * @param next Field to show.
+ * @returns {void}
+ */
+export function setTagsField(next: TagField): void {
+  field = next;
+  emitHealth();
+}
+
+/**
+ * Remember the radio for one cluster and drop its preview.
+ *
+ * @param key Cluster key.
+ * @param value Stored spelling.
+ * @returns {void}
+ */
+export function selectSpelling(key: string, value: string): void {
+  selectedByKey.set(key, value);
+  plans.delete(key);
+  emitHealth();
+}
 
 /**
  * Attach Genre, Artist, Titles, Check again, and the report actions.
  *
- * Called once at startup. A later call is a no-op.
+ * Called once at startup. A later call remounts the same host.
  *
  * @returns {void}
  */
 export function wireTags(): void {
+  field = "genre";
   const panel = el("tags-panel");
-  if (panel.dataset.tagsWired === "true") return;
-  panel.dataset.tagsWired = "true";
-  el("tags-genre").addEventListener("click", () => {
-    if (currentField() === "genre") return;
-    setField("genre");
-    void loadTags();
-  });
-  el("tags-artist").addEventListener("click", () => {
-    if (currentField() === "artist") return;
-    setField("artist");
-    void loadTags();
-  });
-  el("tags-titles").addEventListener("click", () => {
-    if (currentField() === "titles") return;
-    setField("titles");
-    void loadTags();
-  });
-  el("tags-refresh").addEventListener("click", () => {
-    void loadTags();
-  });
-  el("tags-report").addEventListener("change", (event) => {
-    const input = (event.target as HTMLElement).closest("input[type='radio']");
-    if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
-    const key = input.name.slice("tags-".length);
-    selectedByKey.set(key, input.value);
-    plans.delete(key);
-    if (latest) renderTagsReport(latest);
-  });
-  el("tags-report").addEventListener("click", (event) => {
-    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-tags-action]");
-    if (!button || button.disabled) return;
-    if (button.dataset.tagsAction === "clean-apply") {
-      void applyTitles();
-      return;
-    }
-    if (button.dataset.tagsAction === "refresh-apply") {
-      void applyMappings();
-      return;
-    }
-    const key = button.dataset.key ?? "";
-    if (!key) return;
-    if (button.dataset.tagsAction === "preview") void previewGroup(key);
-    if (button.dataset.tagsAction === "apply") void applyGroup(key);
-  });
+  if (panelRoot && panelHost !== panel) {
+    panelRoot.unmount();
+    panelRoot = undefined;
+  }
+  panelHost = panel;
+  if (panel.dataset.tagsWired !== "true") {
+    panel.dataset.tagsWired = "true";
+    panel.addEventListener("change", (event) => {
+      const input = (event.target as HTMLElement).closest("input[type='radio']");
+      if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
+      selectSpelling(input.name.slice("tags-".length), input.value);
+    });
+  }
+  panelRoot = mountIsland(panel, createElement(TagsPanel), panelRoot);
 }
 
 /**
@@ -112,9 +142,9 @@ export function wireTags(): void {
  */
 export async function loadTags(): Promise<void> {
   const token = ++state.tagsToken;
-  const field = currentField();
   plans.clear();
   selectedByKey.clear();
+  openKeys.clear();
   beginBusy();
   let settle: "report" | "retry" | "none" = "none";
   try {
@@ -127,7 +157,7 @@ export async function loadTags(): Promise<void> {
       titlePlan = payload;
       latest = null;
       mappingPlan = null;
-      el("tags-status").textContent = titlesPreviewSummary(payload);
+      status = titlesPreviewSummary(payload);
       settle = "report";
     } else {
       const response = await fetch(
@@ -145,7 +175,7 @@ export async function loadTags(): Promise<void> {
       titlePlan = null;
       mappingPlan = await readMappingPreview(token);
       if (token !== state.tagsToken) return;
-      el("tags-status").textContent = "";
+      status = "";
       settle = "report";
     }
   } catch (error) {
@@ -156,7 +186,7 @@ export async function loadTags(): Promise<void> {
   } finally {
     if (token !== state.tagsToken) return;
     endBusy();
-    if (settle === "report") paintReport();
+    emitHealth();
     if (settle === "retry") el("tags-refresh").focus();
     if (settle === "report") el("tags-report").focus();
   }
@@ -180,64 +210,14 @@ export function showTagsFailure(error: unknown): void {
 }
 
 /**
- * Paint the groups and the chosen spelling for each.
- *
- * Color is not the only signal: each row names the spelling in words.
+ * Store groups and paint them.
  *
  * @param payload JSON from GET /api/tag-clusters.
  * @returns {void}
  */
 export function renderTagsReport(payload: TagClusters): void {
-  el("tags-scope").textContent = t("gig.wholeSpace");
-  const field = currentField();
-  const report = el("tags-report");
-  const groups = payload.groups ?? [];
-  const open = openKeys();
-  const summary = document.createElement("p");
-  summary.className = "gig-note";
-  summary.textContent = tagsSummary(field, payload.values ?? 0, groups.length);
-  report.replaceChildren(summary);
-  const mapping = mappingCard();
-  if (mapping) report.append(mapping);
-  if (!groups.length) return;
-  groups.forEach((group, index) => {
-    report.append(groupCard(group, index === 0 || open.has(group.key)));
-  });
-}
-
-function paintReport(): void {
-  if (currentField() === "titles") {
-    if (titlePlan) renderTitleReport(titlePlan);
-    return;
-  }
-  if (latest) renderTagsReport(latest);
-}
-
-function renderTitleReport(plan: TagClusterPlan): void {
-  el("tags-scope").textContent = t("gig.wholeSpace");
-  const report = el("tags-report");
-  const summary = document.createElement("p");
-  summary.className = "gig-note";
-  summary.textContent = titlesSummary(plan.changes.length);
-  report.replaceChildren(summary);
-  const lines = previewLines(plan.changes);
-  if (lines.length) {
-    const diffs = document.createElement("ul");
-    for (const line of lines.slice(0, LIST_CAP)) {
-      const row = document.createElement("li");
-      row.textContent = line;
-      diffs.append(row);
-    }
-    report.append(diffs);
-  }
-  const actions = document.createElement("div");
-  actions.className = "tags-actions";
-  const apply = buttonEl(tips.tagsApplyTitles);
-  apply.dataset.tagsAction = "clean-apply";
-  apply.textContent = t("tags.apply");
-  apply.disabled = !canApplyTitles(plan);
-  actions.append(apply);
-  report.append(actions);
+  latest = payload;
+  emitHealth();
 }
 
 /**
@@ -248,49 +228,59 @@ function renderTitleReport(plan: TagClusterPlan): void {
  * @returns {void}
  */
 export function repaintTags(): void {
-  setField(currentField());
-  el("tags-scope").textContent = t("gig.wholeSpace");
-  paintReport();
+  emitHealth();
 }
 
-async function previewGroup(key: string): Promise<void> {
+/**
+ * Preview the rows a chosen spelling would rewrite.
+ *
+ * @param key Cluster key.
+ * @returns {Promise<void>}
+ */
+export async function previewGroup(key: string): Promise<void> {
   const group = groupByKey(key);
   const value = selectedValue(key);
   if (!group || !value) return;
   actionKey = key;
-  paintReport();
+  emitHealth();
   try {
     const plan = await postJSON<TagClusterPlan>("/api/tag-clusters", {
       action: "preview",
       space: state.space,
-      field: currentField(),
+      field: field === "titles" ? "genre" : field,
       value,
     });
     plans.set(key, plan);
-    el("tags-status").textContent = previewSummary(plan);
-    paintReport();
+    status = previewSummary(plan);
+    emitHealth();
     applyButton(key)?.focus();
   } catch (error) {
     failStatus(failureOf(error).message);
   } finally {
     actionKey = "";
-    paintReport();
+    emitHealth();
   }
 }
 
-async function applyGroup(key: string): Promise<void> {
+/**
+ * Write the previewed spelling through safe_write.
+ *
+ * @param key Cluster key.
+ * @returns {Promise<void>}
+ */
+export async function applyGroup(key: string): Promise<void> {
   const plan = plans.get(key);
   const value = selectedValue(key);
   if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
   actionKey = key;
   panelBusy = true;
   beginBusy();
-  paintReport();
+  emitHealth();
   try {
     const written = await postJSON<TagClusterPlan>("/api/tag-clusters", {
       action: "apply",
       space: state.space,
-      field: currentField(),
+      field: field === "titles" ? "genre" : field,
       value,
     });
     await bridge.reloadLibrary();
@@ -298,7 +288,8 @@ async function applyGroup(key: string): Promise<void> {
     panelBusy = false;
     endBusy();
     await loadTags();
-    el("tags-status").textContent = writtenSummary(written);
+    status = writtenSummary(written);
+    emitHealth();
   } catch (error) {
     const failed = failureOf(error);
     failStatus(failed.message);
@@ -309,17 +300,22 @@ async function applyGroup(key: string): Promise<void> {
     actionKey = "";
     panelBusy = false;
     endBusy();
-    paintReport();
+    emitHealth();
   }
 }
 
-async function applyMappings(): Promise<void> {
+/**
+ * Write saved spelling mappings through safe_write.
+ *
+ * @returns {Promise<void>}
+ */
+export async function applyMappings(): Promise<void> {
   const plan = mappingPlan;
-  if (!plan || !canApplyMappings(plan)) return;
+  if (!plan || !plan.changes.length || !state.writable) return;
   actionKey = MAPPING_KEY;
   panelBusy = true;
   beginBusy();
-  paintReport();
+  emitHealth();
   try {
     const written = await postJSON<TagClusterPlan>("/api/tag-clusters", {
       action: "refresh-apply",
@@ -330,7 +326,8 @@ async function applyMappings(): Promise<void> {
     panelBusy = false;
     endBusy();
     await loadTags();
-    el("tags-status").textContent = mappingWrittenSummary(written);
+    status = mappingWrittenSummary(written);
+    emitHealth();
   } catch (error) {
     const failed = failureOf(error);
     failStatus(failed.message);
@@ -341,17 +338,22 @@ async function applyMappings(): Promise<void> {
     actionKey = "";
     panelBusy = false;
     endBusy();
-    paintReport();
+    emitHealth();
   }
 }
 
-async function applyTitles(): Promise<void> {
+/**
+ * Write cleaned titles through safe_write.
+ *
+ * @returns {Promise<void>}
+ */
+export async function applyTitles(): Promise<void> {
   const plan = titlePlan;
-  if (!plan || !canApplyTitles(plan)) return;
+  if (!plan || !plan.changes.length || !state.writable) return;
   actionKey = TITLE_KEY;
   panelBusy = true;
   beginBusy();
-  paintReport();
+  emitHealth();
   try {
     const written = await postJSON<TagClusterPlan>("/api/tag-clusters", {
       action: "clean-apply",
@@ -362,7 +364,8 @@ async function applyTitles(): Promise<void> {
     panelBusy = false;
     endBusy();
     await loadTags();
-    el("tags-status").textContent = titlesWrittenSummary(written);
+    status = titlesWrittenSummary(written);
+    emitHealth();
   } catch (error) {
     const failed = failureOf(error);
     failStatus(failed.message);
@@ -373,51 +376,21 @@ async function applyTitles(): Promise<void> {
     actionKey = "";
     panelBusy = false;
     endBusy();
-    paintReport();
+    emitHealth();
   }
-}
-
-function currentField(): TagField {
-  if (el("tags-titles").getAttribute("aria-pressed") === "true") return "titles";
-  if (el("tags-artist").getAttribute("aria-pressed") === "true") return "artist";
-  return "genre";
-}
-
-function setField(next: TagField): void {
-  el("tags-genre").setAttribute("aria-pressed", String(next === "genre"));
-  el("tags-artist").setAttribute("aria-pressed", String(next === "artist"));
-  el("tags-titles").setAttribute("aria-pressed", String(next === "titles"));
-  el("tags-hint").textContent = next === "titles" ? t("tags.introTitles") : t("tags.intro");
 }
 
 function beginBusy(): void {
   panelBusy = true;
-  for (const id of FIELD_BUTTONS) {
-    const button = el(id);
-    button.disabled = true;
-    button.setAttribute("aria-busy", "true");
-  }
   el("tags-panel").setAttribute("aria-busy", "true");
-  el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
-  paintReport();
+  status = field === "titles" ? t("tags.checkingTitles") : t("tags.checking");
+  emitHealth();
 }
 
 function endBusy(): void {
   panelBusy = false;
-  for (const id of FIELD_BUTTONS) {
-    const button = el(id);
-    button.disabled = false;
-    button.setAttribute("aria-busy", "false");
-  }
   el("tags-panel").setAttribute("aria-busy", "false");
-}
-
-function canApplyTitles(plan: TagClusterPlan): boolean {
-  return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
-}
-
-function canApplyMappings(plan: TagClusterPlan): boolean {
-  return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
+  emitHealth();
 }
 
 function asMappingPlan(payload: unknown): TagClusterPlan | null {
@@ -441,48 +414,9 @@ async function readMappingPreview(token: number): Promise<TagClusterPlan | null>
   }
 }
 
-function mappingCard(): HTMLDivElement | null {
-  const plan = mappingPlan;
-  if (!plan?.changes.length) return null;
-  const wrap = document.createElement("div");
-  wrap.className = "tags-mappings";
-  const note = document.createElement("p");
-  note.className = "gig-note";
-  note.textContent = mappingPreviewSummary(plan);
-  wrap.append(note);
-  const lines = previewLines(plan.changes);
-  if (lines.length) {
-    const diffs = document.createElement("ul");
-    for (const line of lines.slice(0, LIST_CAP)) {
-      const row = document.createElement("li");
-      row.textContent = line;
-      diffs.append(row);
-    }
-    wrap.append(diffs);
-  }
-  const actions = document.createElement("div");
-  actions.className = "tags-actions";
-  const apply = buttonEl(tips.tagsApplyMappings);
-  apply.dataset.tagsAction = "refresh-apply";
-  apply.textContent = t("tags.applyMappings");
-  apply.disabled = !canApplyMappings(plan);
-  actions.append(apply);
-  wrap.append(actions);
-  return wrap;
-}
-
 function failStatus(message: string): void {
-  el("tags-status").textContent = message;
-}
-
-function openKeys(): Set<string> {
-  const keys = new Set<string>();
-  for (const details of el("tags-report").querySelectorAll("details[data-key]")) {
-    if (details instanceof HTMLDetailsElement && details.open && details.dataset.key) {
-      keys.add(details.dataset.key);
-    }
-  }
-  return keys;
+  status = message;
+  emitHealth();
 }
 
 function groupByKey(key: string): TagClusterGroup | undefined {
@@ -494,14 +428,6 @@ function selectedValue(key: string): string {
   return selectedByKey.get(key) ?? group?.suggested ?? "";
 }
 
-function canApply(key: string): boolean {
-  const plan = plans.get(key);
-  const value = selectedValue(key);
-  return Boolean(
-    plan && plan.value === value && plan.changes.length && state.writable && !panelBusy && actionKey !== key,
-  );
-}
-
 function applyButton(key: string): HTMLButtonElement | null {
   return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
 }
@@ -509,78 +435,4 @@ function applyButton(key: string): HTMLButtonElement | null {
 function cssEscape(value: string): string {
   if (typeof CSS !== "undefined" && typeof CSS.escape === "function") return CSS.escape(value);
   return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
-}
-
-function groupCard(group: TagClusterGroup, open: boolean): HTMLDetailsElement {
-  const details = document.createElement("details");
-  details.className = "gig-group";
-  details.open = open;
-  details.dataset.key = group.key;
-  const summary = document.createElement("summary");
-  setTooltip(summary, tips.tagsGroup);
-  summary.textContent = groupHeading(group);
-  const list = document.createElement("ul");
-  list.className = "tags-spellings";
-  const chosen = selectedValue(group.key);
-  for (const spelling of group.spellings) {
-    list.append(spellingRow(group.key, spelling.value, spelling.count, spelling.value === group.suggested, spelling.value === chosen));
-  }
-  details.append(summary, list);
-  const plan = plans.get(group.key);
-  if (plan && plan.value === chosen) {
-    const lines = previewLines(plan.changes);
-    if (lines.length) {
-      const diffs = document.createElement("ul");
-      const shown = lines.slice(0, LIST_CAP);
-      for (const line of shown) {
-        const row = document.createElement("li");
-        row.textContent = line;
-        diffs.append(row);
-      }
-      details.append(diffs);
-    }
-  }
-  details.append(groupActions(group.key, chosen, plan));
-  return details;
-}
-
-function spellingRow(
-  key: string,
-  value: string,
-  count: number,
-  suggested: boolean,
-  checked: boolean,
-): HTMLLIElement {
-  const row = document.createElement("li");
-  const label = document.createElement("label");
-  label.className = "tags-spelling";
-  const radio = inputEl(tips.tagsSpelling);
-  radio.type = "radio";
-  radio.name = `tags-${key}`;
-  radio.value = value;
-  radio.checked = checked;
-  radio.disabled = panelBusy;
-  const text = document.createElement("span");
-  text.textContent = spellingLabel(value, count, suggested);
-  label.append(radio, text);
-  row.append(label);
-  return row;
-}
-
-function groupActions(key: string, value: string, plan: TagClusterPlan | undefined): HTMLDivElement {
-  const actions = document.createElement("div");
-  actions.className = "tags-actions";
-  const preview = buttonEl(tips.tagsPreview);
-  preview.dataset.tagsAction = "preview";
-  preview.dataset.key = key;
-  preview.textContent = t("tags.preview");
-  preview.disabled = panelBusy || !value;
-  const apply = buttonEl(tips.tagsApply);
-  apply.dataset.tagsAction = "apply";
-  apply.dataset.key = key;
-  apply.textContent = t("tags.apply");
-  apply.disabled = !canApply(key);
-  if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
-  actions.append(preview, apply);
-  return actions;
 }
