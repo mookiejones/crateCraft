@@ -11,6 +11,7 @@ import { el } from "./dom";
 import { focusedView, paintDualChrome, saveViewIds } from "./dual-crate-view";
 import { t } from "./i18n";
 import { state } from "./state";
+import { bindCrateActions } from "./crate-store";
 import { loadLibrary, lockDown, renderList, selectCrate, setNotice } from "./views";
 
 interface CreateReply {
@@ -101,3 +102,10 @@ export function wireDualCrates(): void {
     paintDualChrome();
   });
 }
+
+bindCrateActions({
+  split: toggleSplit,
+  saveView: () => {
+    saveFocusedView().catch((error) => setNotice(failureOf(error).message));
+  },
+});

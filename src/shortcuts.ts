@@ -9,6 +9,7 @@
 
 import { el } from "./dom";
 import { t, type MessageKey } from "./i18n";
+import { notifySettings, settingsIslandMounted } from "./settings";
 import { state } from "./state";
 import { setTooltip } from "./tooltip";
 import { tips } from "./tooltip-strings";
@@ -186,6 +187,37 @@ const GROUP_KEY = {
   Play: "shortcuts.groupPlay",
   Views: "shortcuts.groupViews",
 } as const satisfies Record<(typeof SHORTCUT_DEFS)[number]["group"], MessageKey>;
+
+export type CheatSheetGroup = {
+  group: string;
+  headingKey: MessageKey;
+  playNote: boolean;
+  rows: { id: ShortcutId; actionKey: MessageKey; chords: readonly ShortcutChord[] }[];
+};
+
+/**
+ * Return the cheat-sheet rows grouped like the Settings table.
+ *
+ * React paints from this list. The imperative fill uses the same order.
+ *
+ * @returns Groups in table order.
+ */
+export function cheatSheetModel(): CheatSheetGroup[] {
+  const groups: string[] = [];
+  for (const shortcut of SHORTCUTS) {
+    if (!groups.includes(shortcut.group)) groups.push(shortcut.group);
+  }
+  return groups.map((group) => ({
+    group,
+    headingKey: GROUP_KEY[group as keyof typeof GROUP_KEY],
+    playNote: group === "Play",
+    rows: SHORTCUTS.filter((shortcut) => shortcut.group === group).map((shortcut) => ({
+      id: shortcut.id as ShortcutId,
+      actionKey: LABEL_KEY[shortcut.id as ShortcutId],
+      chords: shortcut.keys,
+    })),
+  }));
+}
 
 let player: PlayerControls | null = null;
 let returnFocus: HTMLElement | null = null;
@@ -576,11 +608,20 @@ function replaceInput(field: HTMLInputElement, value: string): void {
  * @returns {void}
  */
 export function repaintCheatSheet(): void {
+  if (settingsIslandMounted()) {
+    notifySettings();
+    return;
+  }
   if (!document.getElementById("shortcuts-body")) return;
   renderCheatSheet();
 }
 
 function renderCheatSheet(): void {
+  if (settingsIslandMounted()) {
+    notifySettings();
+    return;
+  }
+  if (!document.getElementById("shortcuts-body")) return;
   const title = el("shortcuts-title");
   title.textContent = t("shortcuts.title");
   setTooltip(title, tips.shortcuts);
