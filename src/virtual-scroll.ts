@@ -10,12 +10,15 @@ import type { Track } from "./api-types";
 import { bridge } from "./bridge";
 import { el } from "./dom";
 import { clockLabel, colorHex, dateLabel, energyLabel, lengthLabel } from "./format";
-import { getPlayerState, play, playOrToggle, subscribe } from "./player";
+import { createElement } from "react";
+import { mountIsland, type IslandRoot } from "./app/mount";
+import { PlayButton } from "./components/PlayButton";
+import { play, subscribe } from "./player";
 import { playerStrings } from "./player-strings";
 import { ROW, state } from "./state";
 import { formatNumber, t } from "./i18n";
-import { buttonEl, setTooltip } from "./tooltip";
-import { playRow, selectRow } from "./tooltip-strings";
+import { setTooltip } from "./tooltip";
+import { selectRow } from "./tooltip-strings";
 
 const spacer = document.createElement("div");
 const rows = document.createElement("div");
@@ -28,6 +31,15 @@ const rowsB = document.createElement("div");
 spacerB.className = "spacer";
 rowsB.className = "rows";
 spacerB.append(rowsB);
+
+const playRoots = new WeakMap<HTMLElement, IslandRoot[]>();
+
+function unmountPlayButtons(paneRows: HTMLElement): void {
+  const roots = playRoots.get(paneRows);
+  if (!roots) return;
+  for (const root of roots) root.unmount();
+  playRoots.set(paneRows, []);
+}
 
 /**
  * Append the scroll spacer to the track list.
@@ -77,6 +89,7 @@ function paintPane(list: HTMLDivElement, paneSpacer: HTMLDivElement, paneRows: H
   const end = Math.min(view.length, Math.ceil((list.scrollTop + height) / ROW) + 6);
   paneSpacer.style.height = `${view.length * ROW}px`;
   paneRows.style.transform = `translateY(${start * ROW}px)`;
+  unmountPlayButtons(paneRows);
   paneRows.replaceChildren();
   if (!view.length) {
     const empty = document.createElement("p");
@@ -99,26 +112,21 @@ function paintPane(list: HTMLDivElement, paneSpacer: HTMLDivElement, paneRows: H
     const line = document.createElement("span");
     line.className = "title-line";
     if (!track.entry) {
-      const playingNow = getPlayerState();
-      const playingThis = playingNow.trackId === track.id && playingNow.playing;
-      const playButton = buttonEl(playRow(track.name || playerStrings.untitled));
-      playButton.className = "row-play";
       const labelName = track.name || playerStrings.untitled;
-      const action = playingThis ? playerStrings.pause : playerStrings.play;
-      playButton.setAttribute("aria-label", `${action} ${labelName}`);
-      playButton.setAttribute("aria-pressed", String(playingThis));
-      const icon = document.createElement("span");
-      icon.className = "row-play-icon";
-      icon.setAttribute("aria-hidden", "true");
-      playButton.append(icon);
-      playButton.addEventListener("click", (event) => {
-        event.stopPropagation();
-        bridge.selectTrack(track.id);
-        playOrToggle(track.id);
-        list.focus({ preventScroll: true });
-      });
-      playButton.addEventListener("dblclick", (event) => event.stopPropagation());
-      line.append(playButton);
+      const playHost = document.createElement("span");
+      const root = mountIsland(playHost, createElement(PlayButton, {
+        variant: "row",
+        trackId: track.id,
+        name: labelName,
+        onClickExtra: () => {
+          bridge.selectTrack(track.id);
+          list.focus({ preventScroll: true });
+        },
+      }));
+      const mounted = playRoots.get(paneRows) ?? [];
+      mounted.push(root);
+      playRoots.set(paneRows, mounted);
+      line.append(playHost);
     }
     const hex = colorHex(track.color);
     if (hex) {

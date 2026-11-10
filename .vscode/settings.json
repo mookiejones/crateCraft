@@ -1,4 +1,8 @@
 {
+  "python.testing.unittestEnabled": true,
+  "python.testing.pytestEnabled": false,
+  "python.testing.unittestArgs": ["-v", "-s", "tests", "-p", "test*.py"],
+  "debug.javascript.autoAttachFilter": "smart",
   "editor.formatOnSave": true,
   "files.exclude": {
     "**/__pycache__": true,

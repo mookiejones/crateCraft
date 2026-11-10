@@ -1,10 +1,12 @@
 /**
  * Playback for one library track.
  *
- * One `<audio>` element plays `GET /api/audio`. The bar shows the title,
- * the artist, previous, play/pause, next, a seek bar with cue markers,
- * elapsed and total time, volume, and the waveform. Strings live in
- * `player-strings.ts`. Cue points, loops, and the beatgrid come from
+ * One `<audio>` element plays `GET /api/audio`. The bar, list Play, and
+ * detail Play are React components on `PlayerContext`. The engine in this
+ * file is the single store those islands subscribe to. The bar shows the
+ * title, the artist, previous, play/pause, next, a seek bar with cue
+ * markers, elapsed and total time, volume, and the waveform. Strings live
+ * in `player-strings.ts`. Cue points, loops, and the beatgrid come from
  * `GET /api/track` and are not written back. The waveform is
  * `waveform-view.ts`. Space and the seek keys stay in the shortcut table.
  *
@@ -20,6 +22,8 @@
  * - `seekBy(deltaSeconds: number): void`
  * - `isPlaying(): boolean`
  * - `getPlayerState(): PlayerSnapshot`
+ * - `getPlayerCues(): readonly CueMarker[]`
+ * - `setVolume(volume: number): void`
  * - `subscribe(listener: (state: PlayerSnapshot) => void): () => void`
  *
  * `playerControls` is what `app.ts` passes to `registerPlayerControls` right
@@ -33,10 +37,11 @@
 
 import type { Marker, Track } from "./api-types";
 import { slotColor } from "./cue-view";
+import { createElement } from "react";
+import { mountIsland, type IslandRoot } from "./app/mount";
+import { PlayerBar } from "./components/PlayerBar";
 import { playerStrings } from "./player-strings";
 import { state } from "./state";
-import { buttonEl, inputEl, setTooltip } from "./tooltip";
-import { cueTip, playTip, tips } from "./tooltip-strings";
 import { beatgridFromMarkers, loopsFromMarkers } from "./waveform";
 import { mountWaveform, type WaveformController } from "./waveform-view";
 
@@ -111,27 +116,11 @@ let currentTime = 0;
 let duration = 0;
 let volume = 1;
 let error = "";
-let seeking = false;
 let ignoreMediaPause = false;
 let cueToken = 0;
 let cues: CueMarker[] = [];
-let paintedCueKey = "";
-let barUnsubscribe: (() => void) | null = null;
+let barRoot: IslandRoot | null = null;
 let waveform: WaveformController | null = null;
-
-let titleNode: HTMLElement | null = null;
-let artistNode: HTMLElement | null = null;
-let statusNode: HTMLElement | null = null;
-let toggleNode: HTMLButtonElement | null = null;
-let previousNode: HTMLButtonElement | null = null;
-let nextNode: HTMLButtonElement | null = null;
-let seekNode: HTMLInputElement | null = null;
-let cueLayer: HTMLElement | null = null;
-let elapsedNode: HTMLElement | null = null;
-let totalNode: HTMLElement | null = null;
-let elapsedLabelNode: HTMLElement | null = null;
-let totalLabelNode: HTMLElement | null = null;
-let volumeTextNode: HTMLElement | null = null;
 
 /**
  * Format a playback position as m:ss, or h:mm:ss past an hour.
@@ -372,6 +361,53 @@ export function getPlayerState(): PlayerSnapshot {
 }
 
 /**
+ * Cue marks currently drawn on the seek bar.
+ *
+ * Empty when nothing is loaded or the track has no cues. The array is
+ * the live list; do not mutate it.
+ *
+ * @returns Cue markers for the loaded track.
+ */
+export function getPlayerCues(): readonly CueMarker[] {
+  return cues;
+}
+
+/**
+ * Whether Play can start or pause something.
+ *
+ * True when a track is loaded, or when a library row is selected.
+ *
+ * @returns True when the bar Play button should be enabled.
+ */
+export function canTogglePlay(): boolean {
+  return trackId !== null || selectedPlayableId() !== null;
+}
+
+/**
+ * Whether Previous or Next has a row to move to.
+ *
+ * @param delta `-1` for Previous, `1` for Next.
+ * @returns True when that control should be enabled.
+ */
+export function canSkip(delta: 1 | -1): boolean {
+  return canMove(delta);
+}
+
+/**
+ * Set playback volume from 0 to 1.
+ *
+ * A non-finite number is ignored. Zero is silence, not missing.
+ *
+ * @param next Volume from the slider.
+ */
+export function setVolume(next: number): void {
+  if (!Number.isFinite(next)) return;
+  volume = Math.min(1, Math.max(0, next));
+  if (media) media.volume = volume;
+  emit();
+}
+
+/**
  * Run a callback after each playback change.
  *
  * The callback is not run immediately. Call `getPlayerState` for the
@@ -410,8 +446,8 @@ export function attachMedia(next: PlayableMedia): void {
  * @param host Element to fill. Defaults to `#player-bar`.
  */
 export function mountPlayer(host?: HTMLElement | null): void {
-  barUnsubscribe?.();
-  barUnsubscribe = null;
+  barRoot?.unmount();
+  barRoot = null;
   waveform?.destroy();
   waveform = null;
   resetPlayback();
@@ -423,9 +459,30 @@ export function mountPlayer(host?: HTMLElement | null): void {
   const element = ensureMedia();
   root.replaceChildren();
   if (element instanceof Node) root.append(element);
-  root.append(buildBar());
-  barUnsubscribe = subscribe(() => paintBar());
-  paintBar();
+  const waveHost = document.createElement("div");
+  waveform = mountWaveform(waveHost, {
+    seek,
+    seekBy,
+    getTime: () => {
+      const value = ensureMedia().currentTime;
+      return Number.isFinite(value) ? value : currentTime;
+    },
+    getDuration: () => {
+      const value = ensureMedia().duration;
+      if (Number.isFinite(value) && value > 0) return value;
+      return duration;
+    },
+    getPlaying: () => playing,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
+  });
+  const controls = document.createElement("div");
+  const stack = document.createElement("div");
+  stack.className = "player-stack";
+  stack.append(waveHost, controls);
+  root.append(stack);
+  barRoot = mountIsland(controls, createElement(PlayerBar));
 }
 
 /**
@@ -439,7 +496,7 @@ export function repaintPlayer(): void {
   const root = document.getElementById("player-bar");
   if (root) root.setAttribute("aria-label", playerStrings.region);
   waveform?.relabel();
-  paintBar();
+  emit();
 }
 
 function resetPlayback(): void {
@@ -451,9 +508,7 @@ function resetPlayback(): void {
   currentTime = 0;
   duration = 0;
   error = "";
-  seeking = false;
   cues = [];
-  paintedCueKey = "";
 }
 
 function ensureMedia(): PlayableMedia {
@@ -608,209 +663,10 @@ function emit(): void {
   waveform?.sync();
 }
 
-function buildBar(): HTMLElement {
-  const meta = document.createElement("div");
-  meta.className = "player-meta";
-  titleNode = document.createElement("p");
-  titleNode.className = "player-title";
-  artistNode = document.createElement("p");
-  artistNode.className = "player-artist";
-  statusNode = document.createElement("p");
-  statusNode.className = "player-status";
-  statusNode.setAttribute("role", "status");
-  meta.append(titleNode, artistNode, statusNode);
-
-  previousNode = buttonEl(tips.previous);
-  previousNode.className = "player-toggle";
-  previousNode.textContent = playerStrings.previous;
-  previousNode.addEventListener("click", () => previous());
-
-  toggleNode = buttonEl(playTip(playerStrings.play, ""));
-  toggleNode.className = "player-toggle player-play";
-  toggleNode.addEventListener("click", () => togglePlayPause());
-
-  nextNode = buttonEl(tips.next);
-  nextNode.className = "player-toggle";
-  nextNode.textContent = playerStrings.next;
-  nextNode.addEventListener("click", () => next());
-
-  const transport = document.createElement("div");
-  transport.className = "player-transport";
-  transport.append(previousNode, toggleNode, nextNode);
-
-  const seekWrap = document.createElement("div");
-  seekWrap.className = "player-seek";
-  const elapsedWrap = document.createElement("span");
-  elapsedWrap.className = "player-time";
-  elapsedLabelNode = document.createElement("span");
-  elapsedLabelNode.className = "visually-hidden";
-  elapsedLabelNode.textContent = playerStrings.elapsed;
-  const elapsedLabel = elapsedLabelNode;
-  elapsedNode = document.createElement("span");
-  elapsedWrap.append(elapsedLabel, elapsedNode);
-
-  const track = document.createElement("div");
-  track.className = "player-seek-track";
-  seekNode = inputEl(tips.seek);
-  seekNode.type = "range";
-  seekNode.className = "player-range";
-  seekNode.min = "0";
-  seekNode.max = "0";
-  seekNode.step = "0.1";
-  seekNode.value = "0";
-  seekNode.setAttribute("aria-label", playerStrings.seek);
-  seekNode.addEventListener("pointerdown", () => {
-    seeking = true;
-  });
-  const release = () => {
-    seeking = false;
-  };
-  seekNode.addEventListener("pointerup", release);
-  seekNode.addEventListener("pointercancel", release);
-  seekNode.addEventListener("input", () => {
-    if (!seekNode) return;
-    seek(Number(seekNode.value));
-  });
-  seekNode.addEventListener("keydown", onSeekKey);
-  cueLayer = document.createElement("div");
-  cueLayer.className = "player-cues";
-  track.append(seekNode, cueLayer);
-
-  const totalWrap = document.createElement("span");
-  totalWrap.className = "player-time";
-  totalLabelNode = document.createElement("span");
-  totalLabelNode.className = "visually-hidden";
-  totalLabelNode.textContent = playerStrings.duration;
-  const totalLabel = totalLabelNode;
-  totalNode = document.createElement("span");
-  totalWrap.append(totalLabel, totalNode);
-  seekWrap.append(elapsedWrap, track, totalWrap);
-
-  const volumeLabel = document.createElement("label");
-  volumeLabel.className = "player-volume";
-  volumeTextNode = document.createElement("span");
-  volumeTextNode.textContent = playerStrings.volume;
-  const volumeText = volumeTextNode;
-  const volumeInput = inputEl(tips.volume);
-  volumeInput.type = "range";
-  volumeInput.min = "0";
-  volumeInput.max = "1";
-  volumeInput.step = "0.01";
-  volumeInput.value = String(volume);
-  volumeInput.addEventListener("input", () => {
-    const next = Number(volumeInput.value);
-    if (!Number.isFinite(next)) return;
-    volume = Math.min(1, Math.max(0, next));
-    ensureMedia().volume = volume;
-    emit();
-  });
-  volumeLabel.append(volumeText, volumeInput);
-
-  const bar = document.createElement("div");
-  bar.className = "player-controls";
-  bar.append(meta, transport, seekWrap, volumeLabel);
-
-  const waveHost = document.createElement("div");
-  waveform = mountWaveform(waveHost, {
-    seek,
-    seekBy,
-    getTime: () => {
-      const value = ensureMedia().currentTime;
-      return Number.isFinite(value) ? value : currentTime;
-    },
-    getDuration: () => {
-      const value = ensureMedia().duration;
-      if (Number.isFinite(value) && value > 0) return value;
-      return duration;
-    },
-    getPlaying: () => playing,
-    formatTime: formatPlayerTime,
-    seekStep: SEEK_STEP_SECONDS,
-    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
-  });
-  const stack = document.createElement("div");
-  stack.className = "player-stack";
-  stack.append(waveHost, bar);
-  return stack;
-}
-
-function onSeekKey(event: KeyboardEvent): void {
-  if (event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
-  const forward = event.key === "ArrowRight" || event.key === "ArrowUp";
-  const back = event.key === "ArrowLeft" || event.key === "ArrowDown";
-  if (!forward && !back) return;
-  event.preventDefault();
-  event.stopPropagation();
-  const step = event.shiftKey ? SEEK_STEP_LARGE_SECONDS : SEEK_STEP_SECONDS;
-  seekBy((forward ? 1 : -1) * step);
-}
-
-function paintBar(): void {
-  if (!titleNode || !artistNode || !statusNode || !toggleNode || !previousNode || !nextNode) return;
-  if (!seekNode || !elapsedNode || !totalNode) return;
-  const loaded = trackId !== null;
-  const shownTitle = loaded ? (title || playerStrings.untitled) : playerStrings.nothingPlaying;
-  titleNode.textContent = shownTitle;
-  titleNode.title = shownTitle;
-  artistNode.textContent = artist;
-  artistNode.hidden = artist === "";
-  artistNode.title = artist;
-  statusNode.textContent = error;
-  statusNode.hidden = error === "";
-  statusNode.title = error;
-  if (elapsedLabelNode) elapsedLabelNode.textContent = playerStrings.elapsed;
-  if (totalLabelNode) totalLabelNode.textContent = playerStrings.duration;
-  if (volumeTextNode) volumeTextNode.textContent = playerStrings.volume;
-  if (previousNode) previousNode.textContent = playerStrings.previous;
-  if (nextNode) nextNode.textContent = playerStrings.next;
-  seekNode.setAttribute("aria-label", playerStrings.seek);
-  const action = playing ? playerStrings.pause : playerStrings.play;
-  const named = loaded ? (title || playerStrings.untitled) : "";
-  toggleNode.textContent = action;
-  setTooltip(toggleNode, playTip(action, named));
-  toggleNode.disabled = !loaded && selectedPlayableId() === null;
-  toggleNode.setAttribute("aria-pressed", String(playing));
-  toggleNode.setAttribute("aria-label", named ? `${action} ${named}` : action);
-  previousNode.disabled = !canMove(-1);
-  nextNode.disabled = !canMove(1);
-  previousNode.setAttribute("aria-label", playerStrings.previous);
-  nextNode.setAttribute("aria-label", playerStrings.next);
-  const limit = Number.isFinite(duration) && duration > 0 ? duration : 0;
-  seekNode.max = String(limit);
-  seekNode.disabled = !loaded || limit === 0;
-  if (!seeking) seekNode.value = String(Math.min(currentTime, limit || currentTime));
-  elapsedNode.textContent = formatPlayerTime(currentTime);
-  totalNode.textContent = formatPlayerTime(duration);
-  paintCues(limit);
-}
-
 function canMove(delta: 1 | -1): boolean {
   const rows = playableRows();
   if (rows.length === 0) return false;
   const index = anchorIndex(rows);
   if (index < 0) return true;
   return Boolean(rows[index + delta]);
-}
-
-function paintCues(limit: number): void {
-  if (!cueLayer) return;
-  const key = `${limit}|${cues.map((cue) => `${cue.seconds}:${cue.label}:${cue.color}`).join(";")}`;
-  if (key === paintedCueKey) return;
-  paintedCueKey = key;
-  cueLayer.replaceChildren();
-  if (!(limit > 0) || cues.length === 0) return;
-  for (const cue of cues) {
-    const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
-    const button = buttonEl(cueTip(label));
-    button.className = "player-cue";
-    const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
-    const percent = Math.round(ratio * 1000) / 10;
-    button.style.left = `${percent}%`;
-    if (cue.color) button.style.setProperty("--cue", cue.color);
-    button.setAttribute("aria-label", label);
-    button.addEventListener("click", () => {
-      seek(cue.seconds);
-    });
-    cueLayer.append(button);
-  }
 }

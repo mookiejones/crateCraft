@@ -20,6 +20,7 @@ import app_config
 import app_log
 import library
 import telemetry
+from tests.test_tokens import src_page_text
 
 try:
     import sentry_sdk
@@ -565,7 +566,7 @@ class PageContractTests(unittest.TestCase):
         self.assertIn("telemetry_consent", script)
         self.assertIn("/api/settings", script)
         self.assertIn("/api/logs", script)
-        self.assertNotIn("innerHTML", script)
+        self.assertNotIn("innerHTML", src_page_text())
         self.assertNotIn("posthog-js", script)
         self.assertNotIn("sentry-js", page)
         self.assertIn("the app name", page)

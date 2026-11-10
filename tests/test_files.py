@@ -23,6 +23,7 @@ import app_config
 import files
 import library
 import related
+from tests.test_tokens import src_page_text
 import server
 import telemetry
 from tests.fixture import ROOT, TempLibrary, open_database
@@ -1015,7 +1016,7 @@ class FileManagerTests(FileLibraryCase):
         self.assertIn("needs_confirm", script)
         self.assertIn("changes", script)
         self.assertIn("Move to Trash", script)
-        self.assertNotIn("innerHTML", script)
+        self.assertNotIn("innerHTML", src_page_text())
 
     def test_empty_browse_lists_music_roots(self) -> None:
         """Open Files on the music folder, not the computer root.

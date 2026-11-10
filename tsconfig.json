@@ -14,7 +14,8 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "useUnknownInCatchVariables": true,
+    "jsx": "react-jsx",
     "types": []
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

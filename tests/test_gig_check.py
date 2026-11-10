@@ -31,6 +31,7 @@ import gig_snapshots
 import library
 import server
 import snapshots
+from tests.test_tokens import src_page_text
 from gig_snapshots import (
     ChangeReport,
     CueMark,
@@ -1182,7 +1183,7 @@ class GigCheckTests(unittest.TestCase):
             "changes",
         ):
             self.assertIn(field, script)
-        self.assertNotIn("innerHTML", script)
+        self.assertNotIn("innerHTML", src_page_text())
         guide = (ROOT / "docs" / "guide" / "gig-check.md").read_text(encoding="utf-8")
         self.assertIn(gig_check.EMPTY_CRATE_WARNING, guide)
         self.assertIn(gig_check.NO_SNAPSHOTS, guide)

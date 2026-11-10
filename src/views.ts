@@ -42,7 +42,9 @@ import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
 import { isTextSearchField, matchesQuery, parseQuery, type ParsedQuery } from "./search-filters";
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
-import { getPlayerState, playOrToggle, subscribe } from "./player";
+import { createElement } from "react";
+import { mountIsland, type IslandRoot } from "./app/mount";
+import { PlayButton } from "./components/PlayButton";
 import { playerStrings } from "./player-strings";
 import { buttonEl, inputEl, selectEl, setTooltip, textareaEl } from "./tooltip";
 import {
@@ -59,7 +61,6 @@ import {
   openCrate,
   openFile,
   openRelated,
-  playRow,
   removeRelatedTip,
   revealTip,
   saveSuggestion,
@@ -81,7 +82,12 @@ import { codedText, formatNumber, messageParams, serverMessage, t, type MessageK
 let relatedRequest = 0;
 // Last track painted in the detail pane, so a language change can repaint it.
 let lastDetail: Track | null = null;
-let detailPlayWired = false;
+let detailPlayRoot: IslandRoot | null = null;
+
+function clearDetailPlay(): void {
+  detailPlayRoot?.unmount();
+  detailPlayRoot = null;
+}
 
 /**
  * Match a list row against the search box and the field picker.
@@ -830,6 +836,7 @@ export function renderList() {
       const empty = document.createElement("p");
       empty.className = "detail-empty";
       empty.textContent = state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches");
+      clearDetailPlay();
       el("detail").replaceChildren(empty);
     } else if (state.mode === "history") selectEntry(view[0]!.id);
     else selectTrack(view[0]!.id);
@@ -926,6 +933,7 @@ export async function selectTrack(id: number) {
   const pending = document.createElement("p");
   pending.className = "detail-empty";
   pending.textContent = t("detail.reading");
+  clearDetailPlay();
   el("detail").replaceChildren(pending);
   try {
     const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
@@ -939,6 +947,7 @@ export async function selectTrack(id: number) {
     const failure = document.createElement("p");
     failure.className = "detail-error";
     failure.textContent = failureOf(error).message;
+    clearDetailPlay();
     el("detail").replaceChildren(failure);
   }
 }
@@ -994,6 +1003,7 @@ export function selectEntry(id: number) {
     open.addEventListener("click", () => openInLibrary(entry.asset_id as number));
     body.append(open);
   }
+  clearDetailPlay();
   el("detail").replaceChildren(body);
 }
 
@@ -1022,41 +1032,6 @@ function fieldInput(name: string, label: string, value: string | number | null |
   if (name === "bpm") input.inputMode = "decimal";
   wrap.append(input);
   return wrap;
-}
-
-/**
- * Show Play or Pause on the detail button from the shared player.
- *
- * The list Play button reads the same snapshot. Tooltips stay on
- * `playRow`. Nothing is written.
- *
- * @param button Detail Play control.
- * @param track Track shown in the pane.
- */
-function paintDetailPlay(button: HTMLButtonElement, track: Track): void {
-  const snapshot = getPlayerState();
-  const playingThis = snapshot.trackId === track.id && snapshot.playing;
-  const name = track.title || track.name || playerStrings.untitled;
-  const action = playingThis ? playerStrings.pause : playerStrings.play;
-  button.textContent = action;
-  button.setAttribute("aria-label", `${action} ${name}`);
-  button.setAttribute("aria-pressed", String(playingThis));
-}
-
-/**
- * Keep the detail Play button in step with the player.
- *
- * Subscribes once. A later renderDetail paints a new button; the
- * listener finds it in the pane. The library is not read.
- */
-function wireDetailPlay(): void {
-  if (detailPlayWired) return;
-  detailPlayWired = true;
-  subscribe(() => {
-    const button = document.querySelector<HTMLButtonElement>(".detail-play");
-    if (!button || !lastDetail) return;
-    paintDetailPlay(button, lastDetail);
-  });
 }
 
 /**
@@ -1093,14 +1068,14 @@ function renderDetail(track: Track) {
   }
 
   const playTitle = track.title || track.name || playerStrings.untitled;
-  const playButton = buttonEl(playRow(playTitle));
-  playButton.className = "detail-play";
-  paintDetailPlay(playButton, track);
-  playButton.addEventListener("click", () => {
-    playOrToggle(track.id);
-  });
-  body.append(playButton);
-  wireDetailPlay();
+  clearDetailPlay();
+  const playHost = document.createElement("span");
+  detailPlayRoot = mountIsland(playHost, createElement(PlayButton, {
+    variant: "detail",
+    trackId: track.id,
+    name: playTitle,
+  }));
+  body.append(playHost);
 
   const deck = document.createElement("div");
   deck.className = "deck";
@@ -2601,6 +2576,7 @@ export function showFailure(error: unknown) {
   const failure = document.createElement("p");
   failure.className = "detail-error";
   failure.textContent = failureOf(error).message;
+  clearDetailPlay();
   el("detail").replaceChildren(failure);
 }
 

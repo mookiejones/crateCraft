@@ -23,6 +23,7 @@ import library
 import related
 import server
 import telemetry
+from tests.test_tokens import src_page_text
 from tests.fixture import TempLibrary, open_database
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -627,7 +628,7 @@ class ApiTests(unittest.TestCase):
             None. The test fails if the suggestion or the saved link is missing.
         """
         page = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
-        self.assertNotIn("innerHTML", page)
+        self.assertNotIn("innerHTML", src_page_text())
         for field in ("saved", "suggested", "mutual", "note", "rating", "reasons", "crate_name"):
             self.assertIn(field, page)
         query = urllib.parse.urlencode({"path": "Music/same-a.mp3"})
