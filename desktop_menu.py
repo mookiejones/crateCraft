@@ -155,6 +155,7 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
                 item("view.tags", "view-tags"),
                 MenuSeparator(),
                 item("view.gig", "view-gig"),
+                item("view.portable", "view-portable"),
                 item("view.drift", "view-drift"),
                 MenuSeparator(),
                 item("snapshots.take", "take-snapshot"),

@@ -14,7 +14,7 @@
  * Crate presets are src/presets.ts.
  * Folder sync is src/folder-sync.ts.
  * Help is src/help.ts. It does not post to GitHub.
- * The portable drive check is src/portable.ts. It does not write.
+ * The portable drive check is src/portable.ts, on Files and under Before a gig. It does not write.
  * This file does not open master.sqlite itself. The page language is set
  * before the first paint and every view repaints when it changes; see
  * src/i18n.ts.
