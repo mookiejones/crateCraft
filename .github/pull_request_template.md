@@ -45,5 +45,6 @@ Saying "done", without the issue link, the pull request link, the commit SHA, an
 - [ ] `CLAUDE.md` and `AGENTS.md` are updated together when the run command or the layout summary changes
 - [ ] `docs/github.md` is updated when a workflow, a release check, or a GitHub setting changes
 - [ ] `PRIVACY.md` and the README are updated when sharing, local logs, or telemetry keys change
+- [ ] `docs/wiki/` and the user guide (`docs/index.md`, `docs/guide/`) are updated when a DJ can see the change
 - [ ] `_build_config.py` stays empty, and no DSN or PostHog project key is in the diff
 - [ ] No `master.sqlite`, `root.sqlite`, or other Serato library file is in the diff
