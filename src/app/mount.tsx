@@ -2,9 +2,9 @@
  * Mount a React island into an existing DOM host.
  *
  * The page is still mostly hand-written DOM. Each island wraps
- * `AppProviders` so list Play, detail Play, the player bar, and the
- * History view share those domain contexts. `flushSync` keeps the paint
- * in the same turn as the engine update.
+ * `AppProviders` so list Play, detail Play, the player bar, the
+ * History view, and the waveform share those domain contexts.
+ * `flushSync` keeps the paint in the same turn as the engine update.
  */
 
 import { type ReactNode } from "react";

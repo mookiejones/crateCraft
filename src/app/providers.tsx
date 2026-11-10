@@ -1,9 +1,9 @@
 /**
  * React providers for the page.
  *
- * Player and History are separate domains. A later screen adds its own
- * context file and one wrapper here. This module reads those stores; it
- * does not own playback or history fetches.
+ * Player, History, and waveform zoom/overview are separate domains.
+ * Each has its own context file and one wrapper here. This module reads
+ * those stores; it does not own playback or history fetches.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -18,9 +18,15 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import { WaveformProvider } from "../context/WaveformContext";
 import {
+  SEEK_STEP_LARGE_SECONDS,
+  SEEK_STEP_SECONDS,
   canSkip,
   canTogglePlay,
+  formatPlayerTime,
+  getMediaDuration,
+  getMediaTime,
   getPlayerCues,
   getPlayerState,
   next,
@@ -52,6 +58,11 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+    mediaTime: getMediaTime,
+    mediaDuration: getMediaDuration,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
   };
 }
 
@@ -113,15 +124,17 @@ export function HistoryProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player is the first domain. History is the second. A later screen
- * adds one line here.
+ * Player is the first domain. Waveform zoom and overview wrap inside it.
+ * History is the second. A later screen adds one line here.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <HistoryProvider>{children}</HistoryProvider>
+      <WaveformProvider>
+        <HistoryProvider>{children}</HistoryProvider>
+      </WaveformProvider>
     </PlayerProvider>
   );
 }
