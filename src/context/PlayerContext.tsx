@@ -23,6 +23,11 @@ export type PlayerContextValue = PlayerSnapshot & {
   seek: (seconds: number) => void;
   seekBy: (deltaSeconds: number) => void;
   setVolume: (volume: number) => void;
+  mediaTime: () => number;
+  mediaDuration: () => number;
+  formatTime: (seconds: number) => string;
+  seekStep: number;
+  seekStepLarge: number;
 };
 
 const PlayerContext = createContext<PlayerContextValue | null>(null);

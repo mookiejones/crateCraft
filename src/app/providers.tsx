@@ -1,10 +1,10 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. The crate rail is the next. Each screen
- * adds its own context file and one wrapper here. This module reads the
- * player engine and the crate snapshot; it does not own playback or
- * crate writes.
+ * Player state is one domain. The crate rail is the next. Waveform zoom
+ * and overview are another. Each screen adds its own context file and
+ * one wrapper here. This module reads the player engine and the crate
+ * snapshot; it does not own playback or crate writes.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -14,10 +14,16 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import { WaveformProvider } from "../context/WaveformContext";
 import { readCrateValue, subscribeCrates } from "../crate-store";
 import {
+  SEEK_STEP_LARGE_SECONDS,
+  SEEK_STEP_SECONDS,
   canSkip,
   canTogglePlay,
+  formatPlayerTime,
+  getMediaDuration,
+  getMediaTime,
   getPlayerCues,
   getPlayerState,
   next,
@@ -48,6 +54,11 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+    mediaTime: getMediaTime,
+    mediaDuration: getMediaDuration,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
   };
 }
 
@@ -96,14 +107,17 @@ export function CrateProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player is the first domain. Crates add one wrapper here.
+ * Player is the first domain. Crates add one wrapper here. Waveform zoom
+ * and overview wrap inside that.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <CrateProvider>{children}</CrateProvider>
+      <CrateProvider>
+        <WaveformProvider>{children}</WaveformProvider>
+      </CrateProvider>
     </PlayerProvider>
   );
 }
