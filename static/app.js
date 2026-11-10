@@ -18234,12 +18234,12 @@
     el("crate-pane-a").dataset.focused = String(!split || state.focusedPane === "a");
     el("crate-pane-b").dataset.focused = String(split && state.focusedPane === "b");
     const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-    for (const button2 of el("crate-list").querySelectorAll(".crate")) {
-      const raw = button2.dataset.id;
+    for (const button of el("crate-list").querySelectorAll(".crate")) {
+      const raw = button.dataset.id;
       const id = raw === "all" ? "all" : Number(raw);
       const mark = Number.isFinite(id) || id === "all" ? railMark(id, panes.a, panes.b) : null;
-      if (mark) button2.dataset.pane = mark;
-      else delete button2.dataset.pane;
+      if (mark) button.dataset.pane = mark;
+      else delete button.dataset.pane;
     }
   }
 
@@ -19128,9 +19128,9 @@
     panel.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement) || !latest) return;
-      const action = button2.dataset.gigAction;
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement) || !latest) return;
+      const action = button.dataset.gigAction;
       if (action === "next") stepIndex = Math.min(stepIndex + 1, STEP_COUNT);
       else if (action === "back") stepIndex = Math.max(0, stepIndex - 1);
       else if (action === "exit") {
@@ -19199,16 +19199,16 @@
     if (latest) renderGigReport(latest);
   }
   function beginBusy() {
-    const button2 = el("gig-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("gig-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("gig-panel").setAttribute("aria-busy", "true");
     el("gig-status").textContent = t("gig.checking");
   }
   function endBusy() {
-    const button2 = el("gig-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("gig-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
     el("gig-panel").setAttribute("aria-busy", "false");
   }
   function failStatus(message) {
@@ -19476,16 +19476,16 @@
     if (latest2) renderDriftReport(latest2);
   }
   function beginBusy2() {
-    const button2 = el("drift-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("drift-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("drift-panel").setAttribute("aria-busy", "true");
     el("drift-status").textContent = t("drift.checking");
   }
   function endBusy2() {
-    const button2 = el("drift-refresh");
-    button2.disabled = state.activeCrate === "all";
-    button2.setAttribute("aria-busy", "false");
+    const button = el("drift-refresh");
+    button.disabled = state.activeCrate === "all";
+    button.setAttribute("aria-busy", "false");
     el("drift-panel").setAttribute("aria-busy", "false");
   }
   function failStatus2(message) {
@@ -19661,8 +19661,8 @@
     return chosen?.value || null;
   }
   function syncEmbedEnabled() {
-    const button2 = el("album-art-embed");
-    button2.disabled = busy || !state.writable || selectedRelease() === null;
+    const button = el("album-art-embed");
+    button.disabled = busy || !state.writable || selectedRelease() === null;
   }
   function failStatus3(message) {
     el("album-art-status").textContent = message;
@@ -19694,20 +19694,20 @@
     panel.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement)) return;
-      const action = button2.dataset.healthAction;
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement)) return;
+      const action = button.dataset.healthAction;
       if (action === "missing" || action === "duplicates" || action === "files" || action === "bitrate") {
         go?.(action);
         return;
       }
       if (action === "track") {
-        const id = Number(button2.dataset.healthId);
+        const id = Number(button.dataset.healthId);
         if (Number.isInteger(id) && id > 0) go?.("track", id);
         return;
       }
       if (action === "artwork") {
-        const id = Number(button2.dataset.healthId);
+        const id = Number(button.dataset.healthId);
         if (Number.isInteger(id) && id > 0) void openAlbumArt(id);
       }
     });
@@ -19778,16 +19778,16 @@
     repaintAlbumArt();
   }
   function beginBusy3() {
-    const button2 = el("health-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("health-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("health-panel").setAttribute("aria-busy", "true");
     el("health-status").textContent = t("health.checking");
   }
   function endBusy3() {
-    const button2 = el("health-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("health-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
     el("health-panel").setAttribute("aria-busy", "false");
   }
   function failStatus4(message) {
@@ -19877,19 +19877,19 @@
     report.append(details);
   }
   function openButton(action, label, tip) {
-    const button2 = buttonEl(tip);
-    button2.dataset.healthAction = action;
-    button2.textContent = t(label);
-    return button2;
+    const button = buttonEl(tip);
+    button.dataset.healthAction = action;
+    button.textContent = t(label);
+    return button;
   }
   function trackItem(track, findArt = false) {
     const row = document.createElement("li");
     row.className = "health-art-row";
-    const button2 = buttonEl(tips.healthTrack);
-    button2.dataset.healthAction = "track";
-    button2.dataset.healthId = String(track.id);
-    button2.textContent = trackLine(track);
-    row.append(button2);
+    const button = buttonEl(tips.healthTrack);
+    button.dataset.healthAction = "track";
+    button.dataset.healthId = String(track.id);
+    button.textContent = trackLine(track);
+    row.append(button);
     if (findArt) {
       const art = buttonEl(tips.healthFindArt);
       art.dataset.healthAction = "artwork";
@@ -19984,9 +19984,9 @@
     panel.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement)) return;
-      if (button2.dataset.statsAction === "crate") void makeIdleCrate();
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement)) return;
+      if (button.dataset.statsAction === "crate") void makeIdleCrate();
     });
     syncPeriodFields();
   }
@@ -20064,16 +20064,16 @@
     el("stats-to").disabled = !custom;
   }
   function beginBusy4() {
-    const button2 = el("stats-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("stats-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("stats-panel").setAttribute("aria-busy", "true");
     el("stats-status").textContent = t("stats.checking");
   }
   function endBusy4() {
-    const button2 = el("stats-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("stats-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
     el("stats-panel").setAttribute("aria-busy", "false");
   }
   function failStatus5(message) {
@@ -20356,9 +20356,9 @@
   }
   function beginBusy5() {
     for (const id of ["scan-quick", "scan-full"]) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
     }
     el("scan-panel").setAttribute("aria-busy", "true");
     el("scan-status").textContent = t("scan.checking");
@@ -20463,9 +20463,9 @@
       void previewCrate();
     });
     el("bitrate-report").addEventListener("click", (event) => {
-      const button2 = event.target.closest("[data-bitrate-action]");
-      if (!button2 || button2.disabled) return;
-      if (button2.dataset.bitrateAction === "confirm") void createCrate();
+      const button = event.target.closest("[data-bitrate-action]");
+      if (!button || button.disabled) return;
+      if (button.dataset.bitrateAction === "confirm") void createCrate();
     });
   }
   async function loadBitrate() {
@@ -20609,9 +20609,9 @@
   }
   function beginBusy6(kind2 = "check") {
     for (const id of ["bitrate-refresh", "bitrate-save"]) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
     }
     el("bitrate-panel").setAttribute("aria-busy", "true");
     const status = kind2 === "create" ? t("bitrate.saving") : kind2 === "preview" ? t("bitrate.checking") : t("bitrate.checking");
@@ -20831,20 +20831,20 @@
       if (latest8) renderTagsReport(latest8);
     });
     el("tags-report").addEventListener("click", (event) => {
-      const button2 = event.target.closest("[data-tags-action]");
-      if (!button2 || button2.disabled) return;
-      if (button2.dataset.tagsAction === "clean-apply") {
+      const button = event.target.closest("[data-tags-action]");
+      if (!button || button.disabled) return;
+      if (button.dataset.tagsAction === "clean-apply") {
         void applyTitles();
         return;
       }
-      if (button2.dataset.tagsAction === "refresh-apply") {
+      if (button.dataset.tagsAction === "refresh-apply") {
         void applyMappings();
         return;
       }
-      const key = button2.dataset.key ?? "";
+      const key = button.dataset.key ?? "";
       if (!key) return;
-      if (button2.dataset.tagsAction === "preview") void previewGroup(key);
-      if (button2.dataset.tagsAction === "apply") void applyGroup(key);
+      if (button.dataset.tagsAction === "preview") void previewGroup(key);
+      if (button.dataset.tagsAction === "apply") void applyGroup(key);
     });
   }
   async function loadTags() {
@@ -21093,9 +21093,9 @@
   function beginBusy7() {
     panelBusy = true;
     for (const id of FIELD_BUTTONS) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
     }
     el("tags-panel").setAttribute("aria-busy", "true");
     el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
@@ -21104,9 +21104,9 @@
   function endBusy7() {
     panelBusy = false;
     for (const id of FIELD_BUTTONS) {
-      const button2 = el(id);
-      button2.disabled = false;
-      button2.setAttribute("aria-busy", "false");
+      const button = el(id);
+      button.disabled = false;
+      button.setAttribute("aria-busy", "false");
     }
     el("tags-panel").setAttribute("aria-busy", "false");
   }
@@ -21343,16 +21343,16 @@
     };
   }
   function portableDriveButton(name, path) {
-    const button2 = buttonEl(portableCheck(name));
-    button2.className = "files-portable";
-    button2.dataset.portableName = name;
-    button2.textContent = t("portable.check");
-    button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    button2.addEventListener("click", (event) => {
+    const button = buttonEl(portableCheck(name));
+    button.className = "files-portable";
+    button.dataset.portableName = name;
+    button.textContent = t("portable.check");
+    button.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    button.addEventListener("click", (event) => {
       event.stopPropagation();
-      void openPortableCheck(path, button2);
+      void openPortableCheck(path, button);
     });
-    return button2;
+    return button;
   }
   async function openPortableCheck(path, trigger) {
     wirePortable();
@@ -21395,10 +21395,10 @@
     el("portable-check").focus();
   }
   function repaintPortable() {
-    for (const button2 of document.querySelectorAll(".files-portable")) {
-      button2.textContent = t("portable.check");
-      const name = button2.dataset.portableName ?? "";
-      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    for (const button of document.querySelectorAll(".files-portable")) {
+      button.textContent = t("portable.check");
+      const name = button.dataset.portableName ?? "";
+      if (name) button.setAttribute("aria-label", t("portable.checkLabel", { name }));
     }
     el("portable-check").textContent = t("portable.check");
     if (lastRoots.length) paintDrivePicker(lastRoots);
@@ -21560,15 +21560,15 @@
     for (const surface of surfaces()) surface.status.textContent = message;
   }
   function beginBusy8() {
-    const button2 = el("portable-check");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("portable-check");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("portable-panel").setAttribute("aria-busy", "true");
   }
   function endBusy8() {
-    const button2 = el("portable-check");
-    button2.disabled = !hasConnected;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("portable-check");
+    button.disabled = !hasConnected;
+    button.setAttribute("aria-busy", "false");
     el("portable-panel").setAttribute("aria-busy", "false");
   }
   function isRecord(value) {
@@ -22187,8 +22187,8 @@
     note.textContent = driveCopyText();
   }
   async function backupDriveCrates() {
-    const button2 = el("snapshots-drives");
-    button2.disabled = true;
+    const button = el("snapshots-drives");
+    button.disabled = true;
     const note = el("snapshots-drives-note");
     note.hidden = false;
     note.textContent = t("snapshots.backupDrivesBusy");
@@ -22204,7 +22204,7 @@
       shown.hidden = false;
       shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
     } finally {
-      button2.disabled = false;
+      button.disabled = false;
     }
   }
   function paintSnapshotPlan(plan) {
@@ -22304,16 +22304,16 @@
     el("snapshot-status").textContent = message;
   }
   async function takeSnapshot() {
-    const button2 = el("snapshots-take");
-    button2.disabled = true;
-    button2.textContent = t("snapshots.saving");
+    const button = el("snapshots-take");
+    button.disabled = true;
+    button.textContent = t("snapshots.saving");
     try {
       await postJSON("/api/snapshots", { action: "create" });
       state.snapshotMessage = "snapshots.saved";
       await loadSnapshots();
     } finally {
-      button2.disabled = false;
-      button2.textContent = t("snapshots.take");
+      button.disabled = false;
+      button.textContent = t("snapshots.take");
     }
   }
   async function confirmSnapshotRestore() {
@@ -22548,15 +22548,15 @@
   }
 
   // src/views.ts
-  var import_react8 = __toESM(require_react(), 1);
+  var import_react11 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
-  var import_react_dom2 = __toESM(require_react_dom(), 1);
+  var import_react_dom3 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react7 = __toESM(require_react(), 1);
-  var import_react_dom = __toESM(require_react_dom(), 1);
+  var import_react10 = __toESM(require_react(), 1);
+  var import_react_dom2 = __toESM(require_react_dom(), 1);
 
   // src/context/PlayerContext.tsx
   var import_react = __toESM(require_react(), 1);
@@ -22576,285 +22576,9 @@
     return value;
   }
 
-  // src/context/SettingsContext.tsx
+  // src/context/WaveformContext.tsx
   var import_react2 = __toESM(require_react(), 1);
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-  var SettingsContext = (0, import_react2.createContext)(null);
-  function SettingsProvider({
-    value,
-    children
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SettingsContext, { value, children });
-  }
-  function useSettings() {
-    const value = (0, import_react2.useContext)(SettingsContext);
-    if (value === null) {
-      throw new Error("useSettings must be used within SettingsProvider");
-    }
-    return value;
-  }
-
-  // src/player.ts
-  var import_react4 = __toESM(require_react(), 1);
-
-  // src/components/PlayerBar.tsx
-  var import_react3 = __toESM(require_react(), 1);
-
-  // src/player-strings.ts
-  var playerStrings = {
-    get region() {
-      return t("player.region");
-    },
-    get play() {
-      return t("player.play");
-    },
-    get pause() {
-      return t("player.pause");
-    },
-    get seek() {
-      return t("player.seek");
-    },
-    get volume() {
-      return t("player.volume");
-    },
-    get elapsed() {
-      return t("player.elapsed");
-    },
-    get duration() {
-      return t("player.duration");
-    },
-    get nothingPlaying() {
-      return t("player.nothingPlaying");
-    },
-    get untitled() {
-      return t("track.untitled");
-    },
-    get previous() {
-      return t("player.previous");
-    },
-    get next() {
-      return t("player.next");
-    },
-    get cue() {
-      return t("player.cue");
-    },
-    get cannotPlay() {
-      return t("player.cannotPlay");
-    },
-    get notInLibrary() {
-      return t("player.notInLibrary");
-    },
-    get zoomIn() {
-      return t("player.zoomIn");
-    },
-    get zoomOut() {
-      return t("player.zoomOut");
-    },
-    get overview() {
-      return t("player.overview");
-    },
-    get overviewSeek() {
-      return t("player.overviewSeek");
-    },
-    get waveformReading() {
-      return t("player.waveformReading");
-    },
-    get waveformUnavailable() {
-      return t("player.waveformUnavailable");
-    }
-  };
-
-  // src/components/PlayButton.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef(spec2) {
-    return (element) => {
-      if (element) setTooltip(element, spec2);
-    };
-  }
-  function PlayButton({ variant, trackId: trackId3, name, onClickExtra }) {
-    const player2 = usePlayer();
-    const playingThis = variant === "bar" ? player2.playing : player2.trackId === trackId3 && player2.playing;
-    const action = playingThis ? playerStrings.pause : playerStrings.play;
-    const labelled = name ? `${action} ${name}` : action;
-    const spec2 = variant === "bar" ? playTip(action, name) : playRow(name);
-    const className = variant === "row" ? "row-play" : variant === "detail" ? "detail-play" : "player-toggle player-play";
-    const disabled = variant === "bar" && !player2.canTogglePlay;
-    function onClick(event) {
-      if (variant === "row") {
-        event.stopPropagation();
-      }
-      onClickExtra?.(event);
-      if (variant === "bar") {
-        player2.togglePlayPause();
-        return;
-      }
-      if (trackId3 !== void 0) player2.playOrToggle(trackId3);
-    }
-    function onDoubleClick(event) {
-      if (variant === "row") event.stopPropagation();
-    }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-      "button",
-      {
-        type: "button",
-        ref: tooltipRef(spec2),
-        className,
-        disabled,
-        "aria-label": labelled,
-        "aria-pressed": playingThis,
-        onClick,
-        onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
-      }
-    );
-  }
-
-  // src/components/PlayerBar.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef2(spec2) {
-    return (element) => {
-      if (element) setTooltip(element, spec2);
-    };
-  }
-  function CueMarks({
-    cues: cues2,
-    limit,
-    seek: seek2
-  }) {
-    if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: cues2.map((cue) => {
-      const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
-      const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
-      const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-        "button",
-        {
-          type: "button",
-          ref: (element) => {
-            if (!element) return;
-            setTooltip(element, cueTip(label));
-            if (cue.color) element.style.setProperty("--cue", cue.color);
-          },
-          className: "player-cue",
-          style: { left: `${percent}%` },
-          "aria-label": label,
-          onClick: () => seek2(cue.seconds)
-        },
-        `${cue.seconds}:${cue.label}:${cue.color}`
-      );
-    }) });
-  }
-  function PlayerBar() {
-    const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react3.useState)(null);
-    const loaded = player2.trackId !== null;
-    const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
-    const named = loaded ? player2.title || playerStrings.untitled : "";
-    const limit = Number.isFinite(player2.duration) && player2.duration > 0 ? player2.duration : 0;
-    const shownTime = hold ?? Math.min(player2.currentTime, limit || player2.currentTime);
-    function onSeekKey(event) {
-      if (event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
-      const forward = event.key === "ArrowRight" || event.key === "ArrowUp";
-      const back = event.key === "ArrowLeft" || event.key === "ArrowDown";
-      if (!forward && !back) return;
-      event.preventDefault();
-      event.stopPropagation();
-      const step = event.shiftKey ? SEEK_STEP_LARGE_SECONDS : SEEK_STEP_SECONDS;
-      player2.seekBy((forward ? 1 : -1) * step);
-    }
-    function onSeekInput(event) {
-      const next2 = Number(event.currentTarget.value);
-      setHold(next2);
-      player2.seek(next2);
-    }
-    function onSeekPointerDown() {
-      setHold(player2.currentTime);
-    }
-    function onSeekPointerUp(_event) {
-      setHold(null);
-    }
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          "button",
-          {
-            type: "button",
-            ref: tooltipRef2(tips.previous),
-            className: "player-toggle",
-            disabled: !player2.canSkipPrevious,
-            "aria-label": playerStrings.previous,
-            onClick: () => player2.previous(),
-            children: playerStrings.previous
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          "button",
-          {
-            type: "button",
-            ref: tooltipRef2(tips.next),
-            className: "player-toggle",
-            disabled: !player2.canSkipNext,
-            "aria-label": playerStrings.next,
-            onClick: () => player2.next(),
-            children: playerStrings.next
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-            "input",
-            {
-              ref: tooltipRef2(tips.seek),
-              type: "range",
-              className: "player-range",
-              min: 0,
-              max: limit,
-              step: 0.1,
-              value: shownTime,
-              disabled: !loaded || limit === 0,
-              "aria-label": playerStrings.seek,
-              onPointerDown: onSeekPointerDown,
-              onPointerUp: onSeekPointerUp,
-              onPointerCancel: onSeekPointerUp,
-              onInput: onSeekInput,
-              onKeyDown: onSeekKey
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.duration) })
-        ] })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          "input",
-          {
-            ref: tooltipRef2(tips.volume),
-            type: "range",
-            min: 0,
-            max: 1,
-            step: 0.01,
-            value: player2.volume,
-            onInput: (event) => player2.setVolume(Number(event.currentTarget.value))
-          }
-        )
-      ] })
-    ] });
-  }
+  var import_react_dom = __toESM(require_react_dom(), 1);
 
   // src/waveform.ts
   var TILE_CSS_WIDTH = 256;
@@ -23371,25 +23095,518 @@
     return value;
   }
 
+  // src/context/WaveformContext.tsx
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var defaultUi = {
+    pps: ZOOM_DEFAULT_PPS,
+    phase: "idle",
+    overviewSource: ""
+  };
+  var WaveformContext = (0, import_react2.createContext)(null);
+  var WaveformClockContext = (0, import_react2.createContext)(null);
+  function WaveformProvider({ children }) {
+    const [ui, setUi] = (0, import_react2.useState)(defaultUi);
+    const value = (0, import_react2.useMemo)(() => {
+      const blocked = ui.phase === "reading" || ui.phase === "unavailable";
+      return {
+        ...ui,
+        canZoomIn: !blocked && ui.pps < ZOOM_MAX_PPS - 1e-9,
+        canZoomOut: !blocked && ui.pps > ZOOM_MIN_PPS + 1e-9,
+        publish: (next2) => {
+          (0, import_react_dom.flushSync)(() => {
+            setUi(next2);
+          });
+        }
+      };
+    }, [ui]);
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(WaveformContext, { value, children });
+  }
+  function WaveformClockProvider({
+    clock,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(WaveformClockContext, { value: clock, children });
+  }
+  function useWaveform() {
+    const value = (0, import_react2.useContext)(WaveformContext);
+    if (value === null) {
+      throw new Error("useWaveform must be used within WaveformProvider");
+    }
+    return value;
+  }
+  function useWaveformClockOverride() {
+    return (0, import_react2.useContext)(WaveformClockContext);
+  }
+
+  // src/context/SettingsContext.tsx
+  var import_react3 = __toESM(require_react(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var SettingsContext = (0, import_react3.createContext)(null);
+  function SettingsProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SettingsContext, { value, children });
+  }
+  function useSettings() {
+    const value = (0, import_react3.useContext)(SettingsContext);
+    if (value === null) {
+      throw new Error("useSettings must be used within SettingsProvider");
+    }
+    return value;
+  }
+
+  // src/player.ts
+  var import_react7 = __toESM(require_react(), 1);
+
+  // src/components/PlayerBar.tsx
+  var import_react4 = __toESM(require_react(), 1);
+
+  // src/player-strings.ts
+  var playerStrings = {
+    get region() {
+      return t("player.region");
+    },
+    get play() {
+      return t("player.play");
+    },
+    get pause() {
+      return t("player.pause");
+    },
+    get seek() {
+      return t("player.seek");
+    },
+    get volume() {
+      return t("player.volume");
+    },
+    get elapsed() {
+      return t("player.elapsed");
+    },
+    get duration() {
+      return t("player.duration");
+    },
+    get nothingPlaying() {
+      return t("player.nothingPlaying");
+    },
+    get untitled() {
+      return t("track.untitled");
+    },
+    get previous() {
+      return t("player.previous");
+    },
+    get next() {
+      return t("player.next");
+    },
+    get cue() {
+      return t("player.cue");
+    },
+    get cannotPlay() {
+      return t("player.cannotPlay");
+    },
+    get notInLibrary() {
+      return t("player.notInLibrary");
+    },
+    get zoomIn() {
+      return t("player.zoomIn");
+    },
+    get zoomOut() {
+      return t("player.zoomOut");
+    },
+    get overview() {
+      return t("player.overview");
+    },
+    get overviewSeek() {
+      return t("player.overviewSeek");
+    },
+    get waveformReading() {
+      return t("player.waveformReading");
+    },
+    get waveformUnavailable() {
+      return t("player.waveformUnavailable");
+    }
+  };
+
+  // src/components/PlayButton.tsx
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function PlayButton({ variant, trackId: trackId3, name, onClickExtra }) {
+    const player2 = usePlayer();
+    const playingThis = variant === "bar" ? player2.playing : player2.trackId === trackId3 && player2.playing;
+    const action = playingThis ? playerStrings.pause : playerStrings.play;
+    const labelled = name ? `${action} ${name}` : action;
+    const spec2 = variant === "bar" ? playTip(action, name) : playRow(name);
+    const className = variant === "row" ? "row-play" : variant === "detail" ? "detail-play" : "player-toggle player-play";
+    const disabled = variant === "bar" && !player2.canTogglePlay;
+    function onClick(event) {
+      if (variant === "row") {
+        event.stopPropagation();
+      }
+      onClickExtra?.(event);
+      if (variant === "bar") {
+        player2.togglePlayPause();
+        return;
+      }
+      if (trackId3 !== void 0) player2.playOrToggle(trackId3);
+    }
+    function onDoubleClick(event) {
+      if (variant === "row") event.stopPropagation();
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      "button",
+      {
+        type: "button",
+        ref: tooltipRef(spec2),
+        className,
+        disabled,
+        "aria-label": labelled,
+        "aria-pressed": playingThis,
+        onClick,
+        onDoubleClick,
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+      }
+    );
+  }
+
+  // src/components/PlayerBar.tsx
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef2(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function CueMarks({
+    cues: cues2,
+    limit,
+    seek: seek2
+  }) {
+    if (!(limit > 0) || cues2.length === 0) return null;
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_jsx_runtime5.Fragment, { children: cues2.map((cue) => {
+      const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
+      const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
+      const percent = Math.round(ratio * 1e3) / 10;
+      return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: (element) => {
+            if (!element) return;
+            setTooltip(element, cueTip(label));
+            if (cue.color) element.style.setProperty("--cue", cue.color);
+          },
+          className: "player-cue",
+          style: { left: `${percent}%` },
+          "aria-label": label,
+          onClick: () => seek2(cue.seconds)
+        },
+        `${cue.seconds}:${cue.label}:${cue.color}`
+      );
+    }) });
+  }
+  function PlayerBar() {
+    const player2 = usePlayer();
+    const [hold, setHold] = (0, import_react4.useState)(null);
+    const loaded = player2.trackId !== null;
+    const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
+    const named = loaded ? player2.title || playerStrings.untitled : "";
+    const limit = Number.isFinite(player2.duration) && player2.duration > 0 ? player2.duration : 0;
+    const shownTime = hold ?? Math.min(player2.currentTime, limit || player2.currentTime);
+    function onSeekKey(event) {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
+      const forward = event.key === "ArrowRight" || event.key === "ArrowUp";
+      const back = event.key === "ArrowLeft" || event.key === "ArrowDown";
+      if (!forward && !back) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const step = event.shiftKey ? SEEK_STEP_LARGE_SECONDS : SEEK_STEP_SECONDS;
+      player2.seekBy((forward ? 1 : -1) * step);
+    }
+    function onSeekInput(event) {
+      const next2 = Number(event.currentTarget.value);
+      setHold(next2);
+      player2.seek(next2);
+    }
+    function onSeekPointerDown() {
+      setHold(player2.currentTime);
+    }
+    function onSeekPointerUp(_event) {
+      setHold(null);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef2(tips.previous),
+            className: "player-toggle",
+            disabled: !player2.canSkipPrevious,
+            "aria-label": playerStrings.previous,
+            onClick: () => player2.previous(),
+            children: playerStrings.previous
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef2(tips.next),
+            className: "player-toggle",
+            disabled: !player2.canSkipNext,
+            "aria-label": playerStrings.next,
+            onClick: () => player2.next(),
+            children: playerStrings.next
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "input",
+            {
+              ref: tooltipRef2(tips.seek),
+              type: "range",
+              className: "player-range",
+              min: 0,
+              max: limit,
+              step: 0.1,
+              value: shownTime,
+              disabled: !loaded || limit === 0,
+              "aria-label": playerStrings.seek,
+              onPointerDown: onSeekPointerDown,
+              onPointerUp: onSeekPointerUp,
+              onPointerCancel: onSeekPointerUp,
+              onInput: onSeekInput,
+              onKeyDown: onSeekKey
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "input",
+          {
+            ref: tooltipRef2(tips.volume),
+            type: "range",
+            min: 0,
+            max: 1,
+            step: 0.01,
+            value: player2.volume,
+            onInput: (event) => player2.setVolume(Number(event.currentTarget.value))
+          }
+        )
+      ] })
+    ] });
+  }
+
+  // src/waveform-view.ts
+  var import_react6 = __toESM(require_react(), 1);
+
+  // src/components/WaveformPanel.tsx
+  var import_react5 = __toESM(require_react(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function clockFromPlayer(player2) {
+    return {
+      seek: player2.seek,
+      seekBy: player2.seekBy,
+      getTime: player2.mediaTime,
+      getDuration: player2.mediaDuration,
+      getPlaying: () => player2.playing,
+      formatTime: player2.formatTime,
+      seekStep: player2.seekStep,
+      seekStepLarge: player2.seekStepLarge
+    };
+  }
+  function WaveformPanel({
+    engine,
+    host
+  }) {
+    const player2 = usePlayer();
+    const wave = useWaveform();
+    const override = useWaveformClockOverride();
+    const clock = override ?? clockFromPlayer(player2);
+    const detailRef = (0, import_react5.useRef)(null);
+    const overviewCanvasRef = (0, import_react5.useRef)(null);
+    const overviewHitRef = (0, import_react5.useRef)(null);
+    engine.setClock(clock);
+    engine.setPublish(wave.publish);
+    (0, import_react5.useLayoutEffect)(() => {
+      const detail = detailRef.current;
+      const overviewCanvas = overviewCanvasRef.current;
+      const overviewHit = overviewHitRef.current;
+      if (!detail || !overviewCanvas || !overviewHit) return;
+      engine.attach({
+        host,
+        detail,
+        overviewCanvas,
+        overviewHit
+      });
+      return () => {
+        engine.detach();
+      };
+    }, [engine, host]);
+    (0, import_react5.useEffect)(() => {
+      if (override) return;
+      engine.setTrack(player2.trackId);
+    }, [engine, override, player2.trackId]);
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-wave-main", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+          WaveformOverview,
+          {
+            canvasRef: overviewCanvasRef,
+            hitRef: overviewHitRef,
+            hidden: wave.overviewSource === "",
+            source: wave.overviewSource,
+            pps: wave.pps
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        WaveformZoom,
+        {
+          canZoomIn: wave.canZoomIn,
+          canZoomOut: wave.canZoomOut,
+          pps: wave.pps,
+          onZoomIn: () => engine.zoom(1),
+          onZoomOut: () => engine.zoom(-1)
+        }
+      )
+    ] });
+  }
+  function WaveformDetail({
+    canvasRef,
+    phase: phase2
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
+    ] });
+  }
+  function WaveformOverview({
+    canvasRef,
+    hitRef,
+    hidden,
+    source,
+    pps
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      "div",
+      {
+        ref: (element) => {
+          hitRef.current = element;
+          if (element) setTooltip(element, tips.overview);
+        },
+        className: "waveform-overview",
+        tabIndex: 0,
+        role: "slider",
+        hidden,
+        "aria-label": playerStrings.overview,
+        "aria-orientation": "horizontal",
+        "data-pps": String(pps),
+        "data-waveform-overview": source || void 0,
+        children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
+      }
+    );
+  }
+  function WaveformZoom({
+    canZoomIn,
+    canZoomOut,
+    pps,
+    onZoomIn,
+    onZoomOut
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef3(tips.zoomIn),
+          className: "waveform-zoom-button",
+          disabled: !canZoomIn,
+          "aria-label": playerStrings.zoomIn,
+          onClick: onZoomIn,
+          children: "+"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef3(tips.zoomOut),
+          className: "waveform-zoom-button",
+          disabled: !canZoomOut,
+          "aria-label": playerStrings.zoomOut,
+          onClick: onZoomOut,
+          children: "−"
+        }
+      )
+    ] });
+  }
+
   // src/waveform-view.ts
   var emptyMarkers = () => ({ cues: [], loops: [], beatgrid: [] });
+  var idleClock = {
+    seek() {
+    },
+    seekBy() {
+    },
+    getTime: () => 0,
+    getDuration: () => 0,
+    getPlaying: () => false,
+    formatTime: (seconds) => String(seconds),
+    seekStep: 5,
+    seekStepLarge: 30
+  };
   function mountWaveform(host, hooks) {
-    return new WaveformView(host, hooks);
+    const engine = new WaveformEngine();
+    host.classList.add("player-wave");
+    host.hidden = true;
+    if (hooks) engine.setClock(hooks);
+    const panel = (0, import_react6.createElement)(WaveformPanel, { engine, host });
+    const tree = hooks ? (0, import_react6.createElement)(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
+    const root = mountIsland(host, tree);
+    engine.bindRoot(root);
+    return engine;
   }
-  var WaveformView = class {
-    host;
-    hooks;
-    detail;
-    overviewCanvas;
-    overviewHit;
-    reading;
-    note;
-    detailWrap;
-    zoomIn;
-    zoomOut;
+  var WaveformEngine = class {
+    host = null;
+    detail = null;
+    overviewCanvas = null;
+    overviewHit = null;
+    clock = idleClock;
+    publishUi = null;
+    root = null;
     trackId = null;
     token = 0;
     pps = ZOOM_DEFAULT_PPS;
+    phase = "idle";
     markers = emptyMarkers();
     tiles = null;
     parsed = null;
@@ -23400,65 +23617,90 @@
     raf = 0;
     dragging = false;
     disposed = false;
+    attached = false;
     detailImage = null;
     overviewImage = null;
     lastAriaKey = "";
     ariaImmediate = false;
     onWheel;
     onResize;
+    onPointerDown;
+    onPointerMove;
+    onPointerUp;
+    onOverviewKey;
     resizeObserver = null;
-    constructor(host, hooks) {
-      this.host = host;
-      this.hooks = hooks;
-      host.classList.add("player-wave");
-      host.hidden = true;
-      const main = document.createElement("div");
-      main.className = "player-wave-main";
-      this.detailWrap = document.createElement("div");
-      this.detailWrap.className = "waveform-detail-wrap";
-      this.detail = document.createElement("canvas");
-      this.detail.className = "waveform-detail";
-      this.detail.setAttribute("aria-hidden", "true");
-      this.reading = document.createElement("p");
-      this.reading.className = "waveform-reading";
-      this.reading.textContent = playerStrings.waveformReading;
-      this.detailWrap.append(this.detail, this.reading);
-      this.note = document.createElement("p");
-      this.note.className = "waveform-note";
-      this.note.hidden = true;
-      this.note.textContent = playerStrings.waveformUnavailable;
-      this.overviewHit = document.createElement("div");
-      this.overviewHit.className = "waveform-overview";
-      this.overviewHit.tabIndex = 0;
-      this.overviewHit.setAttribute("role", "slider");
-      this.overviewHit.setAttribute("aria-label", playerStrings.overview);
-      this.overviewHit.setAttribute("aria-orientation", "horizontal");
-      setTooltip(this.overviewHit, tips.overview);
-      this.overviewCanvas = document.createElement("canvas");
-      this.overviewCanvas.setAttribute("aria-hidden", "true");
-      this.overviewHit.append(this.overviewCanvas);
-      main.append(this.detailWrap, this.note, this.overviewHit);
-      const zoom = document.createElement("div");
-      zoom.className = "waveform-zoom";
-      this.zoomIn = button(playerStrings.zoomIn, "+", tips.zoomIn);
-      this.zoomOut = button(playerStrings.zoomOut, "−", tips.zoomOut);
-      this.zoomIn.addEventListener("click", () => this.setZoom(zoomPixelsPerSecond(this.pps, 1)));
-      this.zoomOut.addEventListener("click", () => this.setZoom(zoomPixelsPerSecond(this.pps, -1)));
-      zoom.append(this.zoomIn, this.zoomOut);
-      host.append(main, zoom);
+    constructor() {
       this.onWheel = (event) => this.wheel(event);
-      host.addEventListener("wheel", this.onWheel, { passive: false });
-      this.overviewHit.addEventListener("pointerdown", (event) => this.pointerDown(event));
-      this.overviewHit.addEventListener("pointermove", (event) => this.pointerMove(event));
-      this.overviewHit.addEventListener("pointerup", (event) => this.pointerUp(event));
-      this.overviewHit.addEventListener("pointercancel", (event) => this.pointerUp(event));
-      this.overviewHit.addEventListener("keydown", (event) => this.overviewKeyDown(event));
       this.onResize = () => this.paint();
+      this.onPointerDown = (event) => this.pointerDown(event);
+      this.onPointerMove = (event) => this.pointerMove(event);
+      this.onPointerUp = (event) => this.pointerUp(event);
+      this.onOverviewKey = (event) => this.overviewKeyDown(event);
+    }
+    /**
+     * Keep the React root so destroy can unmount it.
+     *
+     * @param root Island created by `mountIsland`.
+     */
+    bindRoot(root) {
+      this.root = root;
+    }
+    /**
+     * Replace the seek/time clock. Tests pass hooks; the page uses the player.
+     *
+     * @param clock Seek and time callbacks.
+     */
+    setClock(clock) {
+      this.clock = clock;
+    }
+    /**
+     * Push zoom and phase into WaveformContext.
+     *
+     * @param publish Context setter. Flushed by the provider.
+     */
+    setPublish(publish) {
+      this.publishUi = publish;
+    }
+    /**
+     * Bind canvases after React commits them.
+     *
+     * @param nodes Host, detail canvas, overview canvas, and overview hit target.
+     */
+    attach(nodes) {
+      if (this.disposed) return;
+      this.detach();
+      this.host = nodes.host;
+      this.detail = nodes.detail;
+      this.overviewCanvas = nodes.overviewCanvas;
+      this.overviewHit = nodes.overviewHit;
+      this.attached = true;
+      this.host.addEventListener("wheel", this.onWheel, { passive: false });
+      this.overviewHit.addEventListener("pointerdown", this.onPointerDown);
+      this.overviewHit.addEventListener("pointermove", this.onPointerMove);
+      this.overviewHit.addEventListener("pointerup", this.onPointerUp);
+      this.overviewHit.addEventListener("pointercancel", this.onPointerUp);
+      this.overviewHit.addEventListener("keydown", this.onOverviewKey);
       if (typeof ResizeObserver === "function") {
         this.resizeObserver = new ResizeObserver(this.onResize);
-        this.resizeObserver.observe(host);
+        this.resizeObserver.observe(this.host);
       }
-      this.syncZoomButtons();
+      this.paint();
+    }
+    /**
+     * Drop canvas listeners. Does not unmount React.
+     */
+    detach() {
+      if (!this.attached) return;
+      this.stopLoop();
+      this.host?.removeEventListener("wheel", this.onWheel);
+      this.overviewHit?.removeEventListener("pointerdown", this.onPointerDown);
+      this.overviewHit?.removeEventListener("pointermove", this.onPointerMove);
+      this.overviewHit?.removeEventListener("pointerup", this.onPointerUp);
+      this.overviewHit?.removeEventListener("pointercancel", this.onPointerUp);
+      this.overviewHit?.removeEventListener("keydown", this.onOverviewKey);
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = null;
+      this.attached = false;
     }
     /**
      * Load one track, or hide the waveform when playback is cleared.
@@ -23470,7 +23712,7 @@
      */
     setTrack(id) {
       if (this.disposed) return;
-      if (id !== null && id === this.trackId) return;
+      if (id === this.trackId) return;
       this.token += 1;
       this.trackId = id;
       this.parsed = null;
@@ -23479,14 +23721,14 @@
       this.overviewCache = null;
       this.overviewKey = "";
       this.overviewSource = "";
-      this.seratoColumns = [];
-      delete this.overviewHit.dataset.waveformOverview;
+      if (this.overviewHit) delete this.overviewHit.dataset.waveformOverview;
       if (id === null || !Number.isInteger(id) || id < 0) {
-        this.host.hidden = true;
+        if (this.host) this.host.hidden = true;
         this.stopLoop();
+        this.setPhase("idle");
         return;
       }
-      this.host.hidden = false;
+      if (this.host) this.host.hidden = false;
       this.setPhase("reading");
       const mine = this.token;
       void this.load(id, mine);
@@ -23513,19 +23755,12 @@
      */
     showComputed(parsed) {
       this.trackId = this.trackId ?? 1;
-      this.host.hidden = false;
+      if (this.host) this.host.hidden = false;
       this.applyComputed(parsed);
     }
     /** Refresh titles and notes in the active language. Playback is not touched. */
     relabel() {
-      this.reading.textContent = playerStrings.waveformReading;
-      if (!this.note.hidden) this.note.textContent = playerStrings.waveformUnavailable;
-      this.overviewHit.setAttribute("aria-label", playerStrings.overview);
-      setTooltip(this.overviewHit, tips.overview);
-      this.zoomIn.setAttribute("aria-label", playerStrings.zoomIn);
-      setTooltip(this.zoomIn, tips.zoomIn);
-      this.zoomOut.setAttribute("aria-label", playerStrings.zoomOut);
-      setTooltip(this.zoomOut, tips.zoomOut);
+      this.pushUi();
     }
     /**
      * Show the format note and hide the canvases.
@@ -23541,8 +23776,8 @@
       this.seratoColumns = [];
       this.overviewCache = null;
       this.overviewKey = "";
-      delete this.overviewHit.dataset.waveformOverview;
-      this.host.hidden = false;
+      if (this.overviewHit) delete this.overviewHit.dataset.waveformOverview;
+      if (this.host) this.host.hidden = false;
       this.setPhase("unavailable");
     }
     /**
@@ -23552,8 +23787,8 @@
      * A paused seek paints once.
      */
     sync() {
-      if (this.disposed || this.host.hidden) return;
-      if (this.hooks.getPlaying()) this.startLoop();
+      if (this.disposed || this.host?.hidden) return;
+      if (this.clock.getPlaying()) this.startLoop();
       else this.stopLoop();
       this.paint();
     }
@@ -23566,15 +23801,22 @@
       return this.pps;
     }
     /**
-     * Remove listeners and stop the animation frame.
+     * Step zoom in or out around the playhead.
+     *
+     * @param direction Positive zooms in.
+     */
+    zoom(direction) {
+      this.setZoom(zoomPixelsPerSecond(this.pps, direction));
+    }
+    /**
+     * Remove listeners, stop the animation frame, and unmount the island.
      */
     destroy() {
       this.disposed = true;
       this.token += 1;
-      this.stopLoop();
-      this.host.removeEventListener("wheel", this.onWheel);
-      this.resizeObserver?.disconnect();
-      this.resizeObserver = null;
+      this.detach();
+      this.root?.unmount();
+      this.root = null;
     }
     async load(id, mine) {
       const overview = this.fetchOverview(id);
@@ -23584,10 +23826,10 @@
         if (this.overviewSource === "computed") return;
         this.seratoColumns = serato;
         this.overviewSource = "serato";
-        this.overviewHit.dataset.waveformOverview = "serato";
+        if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "serato";
         this.overviewCache = null;
         this.overviewKey = "";
-        this.overviewHit.hidden = false;
+        this.pushUi();
         this.paint();
       });
       const waveform2 = await body;
@@ -23606,7 +23848,7 @@
       const rate = parsed.pointsPerSecond > 0 ? parsed.pointsPerSecond : 150;
       this.tiles = new DetailTiles(parsed.detail, parsed.detailCount, rate);
       this.overviewSource = "computed";
-      this.overviewHit.dataset.waveformOverview = "computed";
+      if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "computed";
       this.overviewCache = null;
       this.overviewKey = "";
       this.setPhase("ready");
@@ -23654,39 +23896,36 @@
       }
     }
     setPhase(phase2) {
-      this.host.dataset.waveformState = phase2;
-      const unavailable = phase2 === "unavailable";
-      this.note.hidden = !unavailable;
-      this.reading.hidden = phase2 !== "reading";
-      this.detailWrap.hidden = unavailable;
-      this.overviewHit.hidden = this.overviewSource === "";
-      this.syncZoomButtons();
+      this.phase = phase2;
+      if (this.host) this.host.dataset.waveformState = phase2 === "idle" ? "" : phase2;
+      this.pushUi();
     }
     setZoom(next2) {
       if (next2 === this.pps) {
-        this.syncZoomButtons();
+        this.pushUi();
         return;
       }
       this.pps = next2;
       this.tiles?.clear();
-      this.syncZoomButtons();
+      this.pushUi();
       this.paint();
     }
-    syncZoomButtons() {
-      const phase2 = this.host.dataset.waveformState;
-      const blocked = phase2 === "reading" || phase2 === "unavailable";
-      this.zoomIn.disabled = blocked || this.pps >= ZOOM_MAX_PPS - 1e-9;
-      this.zoomOut.disabled = blocked || this.pps <= ZOOM_MIN_PPS + 1e-9;
+    pushUi() {
+      this.publishUi?.({
+        pps: this.pps,
+        phase: this.phase,
+        overviewSource: this.overviewSource
+      });
     }
     wheel(event) {
       if (!event.ctrlKey && !event.metaKey) return;
-      if (this.host.dataset.waveformState !== "ready") return;
+      if (this.phase !== "ready") return;
       event.preventDefault();
       if (event.deltaY < 0) this.setZoom(zoomPixelsPerSecond(this.pps, 1));
       else if (event.deltaY > 0) this.setZoom(zoomPixelsPerSecond(this.pps, -1));
     }
     pointerDown(event) {
-      if (event.button !== 0) return;
+      if (event.button !== 0 || !this.overviewHit) return;
       this.dragging = true;
       if (typeof this.overviewHit.setPointerCapture === "function") {
         this.overviewHit.setPointerCapture(event.pointerId);
@@ -23698,18 +23937,19 @@
       this.seekOverview(event);
     }
     pointerUp(event) {
-      if (!this.dragging) return;
+      if (!this.dragging || !this.overviewHit) return;
       this.dragging = false;
       if (typeof this.overviewHit.hasPointerCapture === "function" && this.overviewHit.hasPointerCapture(event.pointerId)) {
         this.overviewHit.releasePointerCapture(event.pointerId);
       }
     }
     seekOverview(event) {
+      if (!this.overviewHit) return;
       const rect = this.overviewHit.getBoundingClientRect();
       const duration2 = this.duration();
       const x = event.clientX - rect.left;
       this.ariaImmediate = true;
-      this.hooks.seek(overviewXToTime(x, rect.width, duration2));
+      this.clock.seek(overviewXToTime(x, rect.width, duration2));
     }
     overviewKeyDown(event) {
       if (event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
@@ -23718,15 +23958,15 @@
       if (!forward && !back) return;
       event.preventDefault();
       event.stopPropagation();
-      const step = event.shiftKey ? this.hooks.seekStepLarge : this.hooks.seekStep;
+      const step = event.shiftKey ? this.clock.seekStepLarge : this.clock.seekStep;
       this.ariaImmediate = true;
-      this.hooks.seekBy((forward ? 1 : -1) * step);
+      this.clock.seekBy((forward ? 1 : -1) * step);
     }
     startLoop() {
       if (this.raf !== 0) return;
       const loop = () => {
         this.paint();
-        if (this.hooks.getPlaying() && !this.disposed) this.raf = requestAnimationFrame(loop);
+        if (this.clock.getPlaying() && !this.disposed) this.raf = requestAnimationFrame(loop);
         else this.raf = 0;
       };
       this.raf = requestAnimationFrame(loop);
@@ -23737,8 +23977,8 @@
       this.raf = 0;
     }
     paint() {
-      if (this.disposed || this.host.hidden) return;
-      const time = this.hooks.getTime();
+      if (this.disposed || !this.host || this.host.hidden) return;
+      const time = this.clock.getTime();
       const duration2 = this.duration();
       this.paintDetail(time);
       this.paintOverview(time, duration2);
@@ -23747,7 +23987,7 @@
       this.updateSlider(time, duration2, immediate);
     }
     paintDetail(time) {
-      if (!this.tiles || !this.parsed) return;
+      if (!this.tiles || !this.parsed || !this.detail) return;
       const size = sizeCanvas(this.detail, 96);
       if (!size) return;
       const context = this.detail.getContext("2d");
@@ -23757,6 +23997,7 @@
       context.putImageData(image, 0, 0);
     }
     paintOverview(time, duration2) {
+      if (!this.overviewCanvas) return;
       const size = sizeCanvas(this.overviewCanvas, 36);
       if (!size) return;
       const source = this.overviewPixels(size.width, size.height);
@@ -23800,18 +24041,19 @@
           height
         );
         this.overviewKey = key;
-        this.overviewHit.dataset.waveformOverview = "computed";
+        if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "computed";
         return this.overviewCache;
       }
       if (this.overviewSource === "serato" && this.seratoColumns.length > 0) {
         this.overviewCache = renderOverview({ kind: "serato", columns: this.seratoColumns }, width, height);
         this.overviewKey = key;
-        this.overviewHit.dataset.waveformOverview = "serato";
+        if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "serato";
         return this.overviewCache;
       }
       return null;
     }
     updateSlider(time, duration2, immediate) {
+      if (!this.overviewHit) return;
       const max = duration2 > 0 ? duration2 : 0;
       const now = Math.min(max, Math.max(0, Number.isFinite(time) ? time : 0));
       const key = `${Math.floor(now)}|${max}`;
@@ -23820,10 +24062,10 @@
       this.overviewHit.setAttribute("aria-valuemin", "0");
       this.overviewHit.setAttribute("aria-valuemax", String(max));
       this.overviewHit.setAttribute("aria-valuenow", String(now));
-      this.overviewHit.setAttribute("aria-valuetext", this.hooks.formatTime(now));
+      this.overviewHit.setAttribute("aria-valuetext", this.clock.formatTime(now));
     }
     duration() {
-      const fromAudio = this.hooks.getDuration();
+      const fromAudio = this.clock.getDuration();
       if (Number.isFinite(fromAudio) && fromAudio > 0) return fromAudio;
       return this.headerDuration();
     }
@@ -23832,13 +24074,6 @@
       return this.parsed.durationMs / 1e3;
     }
   };
-  function button(label, text2, tooltip) {
-    const element = buttonEl(tooltip);
-    element.className = "waveform-zoom-button";
-    element.textContent = text2;
-    element.setAttribute("aria-label", label);
-    return element;
-  }
   function waveformUrl(id, overview) {
     const params = new URLSearchParams({ id: String(id), space: state.space });
     const path = overview ? "/api/waveform/overview" : "/api/waveform";
@@ -23988,6 +24223,14 @@
   function getPlayerState() {
     return { trackId: trackId2, title, artist, playing, currentTime, duration, volume, error };
   }
+  function getMediaTime() {
+    if (media && Number.isFinite(media.currentTime)) return media.currentTime;
+    return currentTime;
+  }
+  function getMediaDuration() {
+    if (media && Number.isFinite(media.duration) && media.duration > 0) return media.duration;
+    return duration;
+  }
   function getPlayerCues() {
     return cues;
   }
@@ -24024,29 +24267,13 @@
     root.replaceChildren();
     if (element instanceof Node) root.append(element);
     const waveHost = document.createElement("div");
-    waveform = mountWaveform(waveHost, {
-      seek,
-      seekBy,
-      getTime: () => {
-        const value = ensureMedia().currentTime;
-        return Number.isFinite(value) ? value : currentTime;
-      },
-      getDuration: () => {
-        const value = ensureMedia().duration;
-        if (Number.isFinite(value) && value > 0) return value;
-        return duration;
-      },
-      getPlaying: () => playing,
-      formatTime: formatPlayerTime,
-      seekStep: SEEK_STEP_SECONDS,
-      seekStepLarge: SEEK_STEP_LARGE_SECONDS
-    });
+    waveform = mountWaveform(waveHost);
     const controls = document.createElement("div");
     const stack = document.createElement("div");
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react4.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react7.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -24213,10 +24440,10 @@
   }
 
   // src/settings.ts
-  var import_react6 = __toESM(require_react(), 1);
+  var import_react9 = __toESM(require_react(), 1);
 
   // src/virtual-scroll.ts
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react8 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -24263,12 +24490,12 @@
     }
     for (let index = start; index < end; index += 1) {
       const track = view[index];
-      const button2 = document.createElement("div");
-      button2.className = "row";
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(track.id === state.selectedId));
-      button2.dataset.id = String(track.id);
-      setTooltip(button2, selectRow(track.name || "Untitled"));
+      const button = document.createElement("div");
+      button.className = "row";
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(track.id === state.selectedId));
+      button.dataset.id = String(track.id);
+      setTooltip(button, selectRow(track.name || "Untitled"));
       const titleCell = document.createElement("span");
       titleCell.className = "cell";
       const line = document.createElement("span");
@@ -24276,7 +24503,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react5.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react8.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -24351,16 +24578,16 @@
         add(track.play_count == null ? "" : formatNumber(Number(track.play_count)), true);
         add(lengthLabel(track.length_ms), true);
       }
-      button2.append(titleCell, artist2, ...cells);
-      button2.addEventListener("click", () => {
+      button.append(titleCell, artist2, ...cells);
+      button.addEventListener("click", () => {
         if (track.entry) bridge.selectEntry(track.id);
         else bridge.selectTrack(track.id);
         list.focus({ preventScroll: true });
       });
-      button2.addEventListener("dblclick", () => {
+      button.addEventListener("dblclick", () => {
         if (!track.entry) play(track.id);
       });
-      paneRows.append(button2);
+      paneRows.append(button);
     }
   }
   function moveTrackList(delta) {
@@ -24637,17 +24864,17 @@
     else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
     hits.forEach((hit, index) => {
       const item5 = document.createElement("li");
-      const button2 = buttonEl(quickOpenHit(
+      const button = buttonEl(quickOpenHit(
         hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
         hit.title,
         hit.detail
       ));
-      button2.className = "quick-open-option";
-      button2.id = `quick-open-option-${index}`;
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(index === active));
-      button2.tabIndex = -1;
-      if (index === active) button2.classList.add("is-active");
+      button.className = "quick-open-option";
+      button.id = `quick-open-option-${index}`;
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(index === active));
+      button.tabIndex = -1;
+      if (index === active) button.classList.add("is-active");
       const kind2 = document.createElement("span");
       kind2.className = "quick-open-kind";
       kind2.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
@@ -24657,12 +24884,12 @@
       const detail = document.createElement("span");
       detail.className = "quick-open-detail";
       detail.textContent = hit.detail;
-      button2.append(kind2, title2, detail);
-      button2.addEventListener("click", () => {
+      button.append(kind2, title2, detail);
+      button.addEventListener("click", () => {
         active = index;
         void activate(hit);
       });
-      item5.append(button2);
+      item5.append(button);
       list.append(item5);
     });
     const field = el("quick-open-query");
@@ -25186,14 +25413,14 @@
   }
 
   // src/components/SettingsPanel.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
   var COLORWAY_KEY = {
     "serato-like": "settings.colorway.seratoLike",
     "dark-club": "settings.colorway.darkClub",
     light: "settings.colorway.light",
     classic: "settings.colorway.classic"
   };
-  function tooltipRef3(spec2) {
+  function tooltipRef4(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -25205,22 +25432,22 @@
   }
   function CheatSheet() {
     const groups = cheatSheetModel();
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { id: "shortcuts-section", className: "shortcuts-section", "aria-labelledby": "shortcuts-title", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { id: "shortcuts-title", tabIndex: -1, ref: tooltipRef3(tips.shortcuts), children: t("shortcuts.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "shortcuts-intro", children: t("shortcuts.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { id: "shortcuts-body", children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: t(group.headingKey) }),
-        group.playNote ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "dialog-note", children: t("shortcuts.playNote") }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("table", { className: "shortcut-table", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("tr", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("th", { scope: "col", children: t("shortcuts.action") }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("th", { scope: "col", children: t("shortcuts.key") })
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { id: "shortcuts-section", className: "shortcuts-section", "aria-labelledby": "shortcuts-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { id: "shortcuts-title", tabIndex: -1, ref: tooltipRef4(tips.shortcuts), children: t("shortcuts.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "shortcuts-intro", children: t("shortcuts.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { id: "shortcuts-body", children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { children: t(group.headingKey) }),
+        group.playNote ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "dialog-note", children: t("shortcuts.playNote") }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("table", { className: "shortcut-table", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("th", { scope: "col", children: t("shortcuts.action") }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("th", { scope: "col", children: t("shortcuts.key") })
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("tbody", { children: group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("tr", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("th", { scope: "row", children: t(row.actionKey) }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("td", { children: row.chords.map((chord, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("tbody", { children: group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("th", { scope: "row", children: t(row.actionKey) }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("td", { children: row.chords.map((chord, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { children: [
               index > 0 ? " or " : null,
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("kbd", { children: chordLabel(chord) })
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("kbd", { children: chordLabel(chord) })
             ] }, `${row.id}-${index}`)) })
           ] }, row.id)) })
         ] })
@@ -25230,14 +25457,14 @@
   function SettingsPanel() {
     const settings = useSettings();
     const preview = `/img/icons/placeholder-${settings.colorway}.svg`;
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { "data-settings-react": "true", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { id: "settings-title", children: t("settings.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { "data-settings-react": "true", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { id: "settings-title", children: t("settings.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "input",
           {
             id: "telemetry-toggle",
-            ref: tooltipRef3(tips.telemetry),
+            ref: tooltipRef4(tips.telemetry),
             type: "checkbox",
             checked: settings.telemetryOn,
             disabled: settings.sharingBusy,
@@ -25246,15 +25473,15 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.share") })
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.share") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "telemetry-note", className: "dialog-note", children: telemetryNote() }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "telemetry-note", className: "dialog-note", children: telemetryNote() }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "input",
           {
             id: "update-toggle",
-            ref: tooltipRef3(tips.updateToggle),
+            ref: tooltipRef4(tips.updateToggle),
             type: "checkbox",
             checked: settings.updateEnabled,
             disabled: settings.updateBusy,
@@ -25263,14 +25490,14 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.updates") })
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.updates") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "input",
           {
             id: "update-prereleases",
-            ref: tooltipRef3(tips.updatePrereleases),
+            ref: tooltipRef4(tips.updatePrereleases),
             type: "checkbox",
             checked: settings.updatePrereleases,
             disabled: settings.updatePrereleasesDisabled || settings.updateBusy,
@@ -25279,26 +25506,26 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.updatesPrereleases") })
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.updatesPrereleases") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "update-status", className: "dialog-note", role: "status", "aria-live": "polite", children: settings.updateStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "colorway-row", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "settings-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.colorway") }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "update-status", className: "dialog-note", role: "status", "aria-live": "polite", children: settings.updateStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "colorway-row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "settings-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.colorway") }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
             "select",
             {
               id: "colorway-select",
-              ref: tooltipRef3(tips.colorway),
+              ref: tooltipRef4(tips.colorway),
               value: settings.colorway,
               onChange: (event) => {
                 void settings.saveColorway(event.currentTarget.value);
               },
-              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
+              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "img",
           {
             id: "colorway-preview",
@@ -25310,12 +25537,12 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "input",
           {
             id: "icon-follows-theme",
-            ref: tooltipRef3(tips.iconFollowsTheme),
+            ref: tooltipRef4(tips.iconFollowsTheme),
             type: "checkbox",
             checked: settings.iconFollowsTheme,
             onChange: (event) => {
@@ -25323,46 +25550,46 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.iconFollowsTheme") })
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.iconFollowsTheme") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "icon-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.iconStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "settings-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.language") }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "icon-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.iconStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "settings-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.language") }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
           "select",
           {
             id: "language-select",
-            ref: tooltipRef3(tips.language),
+            ref: tooltipRef4(tips.language),
             value: settings.language,
             onChange: (event) => {
               void settings.saveLanguage(event.currentTarget.value);
             },
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: "", children: t("settings.languageSystem") }),
-              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("option", { value: "", children: t("settings.languageSystem") }),
+              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
             ]
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "language-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.languageStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CheatSheet, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "about", "aria-labelledby": "about-title", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { id: "about-title", children: t("settings.about") }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "about-version", className: "about-version", children: settings.aboutVersion }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "language-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.languageStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CheatSheet, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { className: "about", "aria-labelledby": "about-title", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { id: "about-title", children: t("settings.about") }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "about-version", className: "about-version", children: settings.aboutVersion }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "a",
           {
             id: "about-github",
-            ref: tooltipRef3(tips.helpGithub),
+            ref: tooltipRef4(tips.helpGithub),
             href: "https://github.com/mookiejones/crateCraft",
             children: t("help.github")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "button",
           {
             id: "copy-version",
-            ref: tooltipRef3(tips.copyVersion),
+            ref: tooltipRef4(tips.copyVersion),
             type: "button",
             onClick: () => {
               void settings.copyVersion();
@@ -25370,25 +25597,25 @@
             children: t("settings.copyVersion")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "version-copy-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "version-copy-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "dialog-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "button",
           {
             id: "rerun-wizard",
-            ref: tooltipRef3(tips.rerunWizard),
+            ref: tooltipRef4(tips.rerunWizard),
             className: "wizard-quiet",
             type: "button",
             onClick: () => settings.rerunSetup(),
             children: t("settings.rerunSetup")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "button",
           {
             id: "open-logs",
-            ref: tooltipRef3(tips.openLogs),
+            ref: tooltipRef4(tips.openLogs),
             type: "button",
             disabled: settings.logsBusy,
             onClick: () => {
@@ -25397,11 +25624,11 @@
             children: t("settings.openLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "button",
           {
             id: "copy-logs",
-            ref: tooltipRef3(tips.copyLogs),
+            ref: tooltipRef4(tips.copyLogs),
             type: "button",
             disabled: settings.logsBusy,
             onClick: () => {
@@ -25410,23 +25637,23 @@
             children: t("settings.copyLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "button",
           {
             id: "settings-close",
-            ref: tooltipRef3(tips.settingsClose),
+            ref: tooltipRef4(tips.settingsClose),
             type: "button",
             onClick: () => settings.close(),
             children: t("common.close")
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "settings-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "settings-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
         "textarea",
         {
           id: "log-fallback",
-          ref: tooltipRef3(tips.logFallback),
+          ref: tooltipRef4(tips.logFallback),
           className: "log-fallback",
           readOnly: true,
           hidden: settings.logFallbackHidden,
@@ -25508,7 +25735,7 @@
     islandRoot = null;
     const root = host === void 0 ? document.getElementById("settings-dialog") : host;
     if (!root) return;
-    islandRoot = mountIsland(root, (0, import_react6.createElement)(SettingsPanel));
+    islandRoot = mountIsland(root, (0, import_react9.createElement)(SettingsPanel));
   }
   function systemLanguages() {
     return Array.isArray(navigator.languages) && navigator.languages.length ? [...navigator.languages] : [navigator.language || "en"];
@@ -25774,7 +26001,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -25790,7 +26017,12 @@
       previous,
       seek,
       seekBy,
-      setVolume
+      setVolume,
+      mediaTime: getMediaTime,
+      mediaDuration: getMediaDuration,
+      formatTime: formatPlayerTime,
+      seekStep: SEEK_STEP_SECONDS,
+      seekStepLarge: SEEK_STEP_LARGE_SECONDS
     };
   }
   function readSettingsValue() {
@@ -25812,22 +26044,22 @@
     };
   }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react7.useState)(readPlayerValue);
-    (0, import_react7.useEffect)(() => {
+    const [value, setValue] = (0, import_react10.useState)(readPlayerValue);
+    (0, import_react10.useEffect)(() => {
       return subscribe(() => {
-        (0, import_react_dom.flushSync)(() => {
+        (0, import_react_dom2.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react7.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react10.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(PlayerProvider, { value: current2, children });
   }
   function SettingsProvider2({ children }) {
-    const [value, setValue] = (0, import_react7.useState)(readSettingsValue);
-    (0, import_react7.useEffect)(() => {
+    const [value, setValue] = (0, import_react10.useState)(readSettingsValue);
+    (0, import_react10.useEffect)(() => {
       const refresh = () => {
-        (0, import_react_dom.flushSync)(() => {
+        (0, import_react_dom2.flushSync)(() => {
           setValue(readSettingsValue());
         });
       };
@@ -25838,19 +26070,19 @@
         stopLocale();
       };
     }, []);
-    const current2 = (0, import_react7.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(SettingsProvider, { value: current2, children });
+    const current2 = (0, import_react10.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(SettingsProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(SettingsProvider2, { children }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(SettingsProvider2, { children }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
-    (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AppProviders, { children: node }));
+    (0, import_react_dom3.flushSync)(() => {
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime9.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
@@ -26037,17 +26269,17 @@
       gap.setAttribute("aria-hidden", "true");
       row.append(gap);
     }
-    const button2 = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
-    button2.className = "crate";
-    button2.dataset.id = String(crate.id);
-    if (crate.parent != null) button2.dataset.parent = String(crate.parent);
-    button2.setAttribute("role", "treeitem");
-    button2.setAttribute("aria-level", String(crate.depth + 1));
+    const button = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
+    button.className = "crate";
+    button.dataset.id = String(crate.id);
+    if (crate.parent != null) button.dataset.parent = String(crate.parent);
+    button.setAttribute("role", "treeitem");
+    button.setAttribute("aria-level", String(crate.depth + 1));
     const split = state.splitCrates && state.mode === "crates";
     const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-    button2.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
+    button.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
     if (crate.childCount) {
-      button2.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
+      button.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
     }
     const name = document.createElement("span");
     name.className = "name";
@@ -26059,19 +26291,19 @@
       name.append(swatch);
     }
     name.append(document.createTextNode(crate.name));
-    button2.append(name);
+    button.append(name);
     if (crate.smart) {
       const smart = document.createElement("span");
       smart.className = "smart";
       smart.textContent = t("crates.smartBadge");
-      button2.append(smart);
+      button.append(smart);
     }
     const meta = document.createElement("span");
     meta.className = "meta";
     meta.textContent = formatNumber(crate.count);
-    button2.append(meta);
-    button2.addEventListener("click", (event) => selectCrate(crate.id, event));
-    row.append(button2);
+    button.append(meta);
+    button.addEventListener("click", (event) => selectCrate(crate.id, event));
+    row.append(button);
     return row;
   }
   function placeCrateFocus(previousId) {
@@ -26188,11 +26420,11 @@
     if (!(header instanceof HTMLElement)) return;
     header.replaceChildren();
     for (const [key, label] of columns) {
-      const button2 = buttonEl(sortTip(key, t(label)));
-      button2.dataset.sort = key;
-      button2.textContent = t(label);
-      button2.dataset.active = String(key === state.sort);
-      header.append(button2);
+      const button = buttonEl(sortTip(key, t(label)));
+      button.dataset.sort = key;
+      button.textContent = t(label);
+      button.dataset.active = String(key === state.sort);
+      header.append(button);
     }
   }
   function playlistCrate() {
@@ -26280,11 +26512,11 @@
     if (snapshotsMode) {
       el("mode-note").textContent = t("mode.snapshots");
     }
-    for (const button2 of document.querySelectorAll("#views button")) {
-      button2.setAttribute("aria-selected", String(button2.dataset.view === state.mode));
+    for (const button of document.querySelectorAll("#views button")) {
+      button.setAttribute("aria-selected", String(button.dataset.view === state.mode));
     }
-    for (const button2 of document.querySelectorAll("[data-crate-sort]")) {
-      button2.setAttribute("aria-pressed", String(button2.dataset.crateSort === state.crateSort));
+    for (const button of document.querySelectorAll("[data-crate-sort]")) {
+      button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
     }
     const crateChosen = state.activeCrate !== "all";
     el("crate-new").disabled = !state.writable;
@@ -26437,7 +26669,7 @@
   }
   function focusCrateItem(item5) {
     if (!item5) return;
-    for (const button2 of el("crate-list").querySelectorAll(".crate")) button2.tabIndex = -1;
+    for (const button of el("crate-list").querySelectorAll(".crate")) button.tabIndex = -1;
     item5.tabIndex = 0;
     item5.focus();
   }
@@ -26547,7 +26779,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react8.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react11.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -26798,10 +27030,10 @@
     for (const copy of copies) {
       const row = document.createElement("div");
       row.className = "copy-row";
-      const button2 = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
-      button2.className = "text-button";
-      button2.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
-      button2.addEventListener("click", () => selectTrack(copy.id));
+      const button = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
+      button.className = "text-button";
+      button.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
+      button.addEventListener("click", () => selectTrack(copy.id));
       const rate = document.createElement("span");
       rate.textContent = copy.bitrate == null ? "" : String(copy.bitrate);
       const plays = document.createElement("span");
@@ -26815,7 +27047,7 @@
       replace.addEventListener("click", () => {
         bridge.openReplaceInCratesDialog(fromId, copy.id).catch((error2) => setNotice(failureOf(error2).message));
       });
-      row.append(button2, rate, plays, crates, replace);
+      row.append(button, rate, plays, crates, replace);
       section.append(row);
     }
     return section;
@@ -27090,8 +27322,8 @@
     }
   }
   async function refreshRelatedCrate(track, section) {
-    const button2 = section.querySelector("[data-related-crate]");
-    if (button2) button2.disabled = true;
+    const button = section.querySelector("[data-related-crate]");
+    if (button) button.disabled = true;
     try {
       const result = await postJSON("/api/related", { action: "crate", asset: track.id, space: state.space });
       setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") }));
@@ -27100,10 +27332,10 @@
     } catch (error2) {
       if (failureOf(error2).status === 409) {
         lockDown(error2);
-        if (button2) button2.disabled = true;
+        if (button) button.disabled = true;
       } else {
         setNotice(failureOf(error2).message);
-        if (button2) button2.disabled = !state.writable;
+        if (button) button.disabled = !state.writable;
       }
     }
   }
@@ -27192,22 +27424,22 @@
     });
   }
   function paintGeneration(info) {
-    const button2 = document.getElementById("library-generation");
-    if (!(button2 instanceof HTMLButtonElement)) return;
+    const button = document.getElementById("library-generation");
+    if (!(button instanceof HTMLButtonElement)) return;
     const kind2 = t(generationKind(info));
-    button2.textContent = kind2;
-    button2.setAttribute("aria-label", t("generation.named", { kind: kind2 }));
-    setTooltip(button2, tips.libraryGeneration);
+    button.textContent = kind2;
+    button.setAttribute("aria-label", t("generation.named", { kind: kind2 }));
+    setTooltip(button, tips.libraryGeneration);
     const note = document.getElementById("library-generation-note");
     if (note) {
       note.textContent = generationReason(info);
-      note.hidden = button2.getAttribute("aria-expanded") !== "true";
+      note.hidden = button.getAttribute("aria-expanded") !== "true";
     }
-    if (button2.dataset.bound === "1") return;
-    button2.dataset.bound = "1";
-    button2.addEventListener("click", () => {
-      const next2 = button2.getAttribute("aria-expanded") !== "true";
-      button2.setAttribute("aria-expanded", next2 ? "true" : "false");
+    if (button.dataset.bound === "1") return;
+    button.dataset.bound = "1";
+    button.addEventListener("click", () => {
+      const next2 = button.getAttribute("aria-expanded") !== "true";
+      button.setAttribute("aria-expanded", next2 ? "true" : "false");
       const panel = document.getElementById("library-generation-note");
       if (panel) panel.hidden = !next2;
     });
@@ -27433,19 +27665,19 @@
   function renderSessions() {
     el("session-list").replaceChildren();
     for (const session of state.historySessions) {
-      const button2 = buttonEl(sessionTip(session.name || "Session"));
-      button2.className = "crate";
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(session.id === state.historyId));
+      const button = buttonEl(sessionTip(session.name || "Session"));
+      button.className = "crate";
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(session.id === state.historyId));
       const name = document.createElement("span");
       name.className = "name";
       name.textContent = session.name || t("history.session");
       const meta = document.createElement("span");
       meta.className = "meta";
       meta.textContent = String(session.played || 0);
-      button2.append(name, meta);
-      button2.addEventListener("click", () => openSession(session.id));
-      el("session-list").append(button2);
+      button.append(name, meta);
+      button.addEventListener("click", () => openSession(session.id));
+      el("session-list").append(button);
     }
   }
   async function loadHistory() {
@@ -27560,19 +27792,19 @@
   }
   function syncMergeButton() {
     const wrap = el("duplicate-actions");
-    const button2 = el("merge-duplicates");
-    if (!wrap || !button2) return;
+    const button = el("merge-duplicates");
+    if (!wrap || !button) return;
     const show2 = state.mode === "duplicates";
     wrap.hidden = !show2;
-    button2.disabled = !show2 || !state.writable || !selectedDuplicateGroup();
+    button.disabled = !show2 || !state.writable || !selectedDuplicateGroup();
   }
   function syncRelinkButton() {
     const wrap = el("relink-actions");
-    const button2 = el("open-relink");
-    if (!wrap || !button2) return;
+    const button = el("open-relink");
+    if (!wrap || !button) return;
     const show2 = state.mode === "missing";
     wrap.hidden = !show2;
-    button2.disabled = !show2 || !state.writable;
+    button.disabled = !show2 || !state.writable;
   }
   function crateNamesFor(assetId) {
     return state.crates.filter((crate) => !crate.smart && (crate.tracks || []).includes(assetId)).map((crate) => crate.name);
@@ -27726,13 +27958,13 @@
       const item5 = document.createElement("li");
       const last = index === crumbs.length - 1;
       if (!last && crumb.path) {
-        const button2 = buttonEl(openCrumb(crumb.name));
-        button2.className = "files-crumb";
-        button2.textContent = crumb.name;
-        button2.addEventListener("click", () => {
+        const button = buttonEl(openCrumb(crumb.name));
+        button.className = "files-crumb";
+        button.textContent = crumb.name;
+        button.addEventListener("click", () => {
           loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
         });
-        item5.append(button2);
+        item5.append(button);
       } else {
         const current2 = document.createElement("span");
         current2.className = "files-crumb";
@@ -27862,12 +28094,12 @@
     heading2.textContent = t("files.noRoots");
     const copy = document.createElement("p");
     copy.textContent = t("files.noRootsBody");
-    const button2 = buttonEl(tips.runSetup);
-    button2.id = "files-run-setup";
-    button2.className = "files-primary";
-    button2.textContent = t("files.runSetup");
-    button2.addEventListener("click", () => bridge.openSetup());
-    box.append(heading2, copy, button2);
+    const button = buttonEl(tips.runSetup);
+    button.id = "files-run-setup";
+    button.className = "files-primary";
+    button.textContent = t("files.runSetup");
+    button.addEventListener("click", () => bridge.openSetup());
+    box.append(heading2, copy, button);
     return box;
   }
   function focusFilesIndex(index) {
@@ -27932,12 +28164,12 @@
     row.setAttribute("role", "listitem");
     const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
     if (openKind) {
-      const button2 = buttonEl(entry.missing ? missingDrive(entry.name) : openFile(entry.name));
-      button2.className = "files-open";
-      button2.dataset.filesIndex = String(index);
-      button2.id = `files-item-${index}`;
-      button2.tabIndex = index === state.filesActive ? 0 : -1;
-      if (entry.kind === "drive" || entry.kind === "folder") button2.append(fileIcon(entry.kind === "drive" ? "drive" : "folder"));
+      const button = buttonEl(entry.missing ? missingDrive(entry.name) : openFile(entry.name));
+      button.className = "files-open";
+      button.dataset.filesIndex = String(index);
+      button.id = `files-item-${index}`;
+      button.tabIndex = index === state.filesActive ? 0 : -1;
+      if (entry.kind === "drive" || entry.kind === "folder") button.append(fileIcon(entry.kind === "drive" ? "drive" : "folder"));
       if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) {
         const copy = document.createElement("span");
         copy.className = "files-root-copy";
@@ -27948,36 +28180,36 @@
         detail.className = "files-root-detail";
         detail.textContent = entry.detail;
         copy.append(label2, detail);
-        button2.append(copy);
+        button.append(copy);
       } else {
         const name2 = document.createElement("span");
         name2.textContent = entry.name;
-        button2.append(name2);
+        button.append(name2);
         if (entry.detail) {
           const detail = document.createElement("span");
           detail.className = "files-match-detail";
           detail.textContent = entry.detail;
-          button2.append(detail);
+          button.append(detail);
         }
       }
       if (entry.missing) {
-        button2.setAttribute("aria-disabled", "true");
-        button2.setAttribute("aria-label", t("files.driveMissingLabel", { name: entry.name }));
+        button.setAttribute("aria-disabled", "true");
+        button.setAttribute("aria-label", t("files.driveMissingLabel", { name: entry.name }));
         const badge = document.createElement("span");
         badge.className = "files-badge";
         badge.textContent = t("files.driveMissing");
-        button2.append(badge);
-        button2.addEventListener("click", () => {
+        button.append(badge);
+        button.addEventListener("click", () => {
           state.filesActive = index;
         });
       } else {
-        button2.setAttribute("aria-label", t("files.open", { name: entry.name }));
-        button2.addEventListener("click", () => {
+        button.setAttribute("aria-label", t("files.open", { name: entry.name }));
+        button.addEventListener("click", () => {
           state.filesActive = index;
           openBrowserRow(entry);
         });
       }
-      row.append(button2);
+      row.append(button);
       if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
       return row;
     }
@@ -28166,13 +28398,13 @@
       }).catch(showFailure);
     });
     el("views").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (button2?.dataset.view) setMode(button2.dataset.view);
+      const button = event.target.closest("button");
+      if (button?.dataset.view) setMode(button.dataset.view);
     });
     document.querySelector(".sort-crates").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (!button2?.dataset.crateSort) return;
-      state.crateSort = button2.dataset.crateSort;
+      const button = event.target.closest("button");
+      if (!button?.dataset.crateSort) return;
+      state.crateSort = button.dataset.crateSort;
       renderCrates();
       renderShell();
     });
@@ -28181,9 +28413,9 @@
     el("crate-color").addEventListener("click", () => colorCrate().catch((error2) => setNotice(failureOf(error2).message)));
     el("crate-delete").addEventListener("click", () => deleteCrate().catch((error2) => setNotice(failureOf(error2).message)));
     document.querySelector(".columns").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (!button2?.dataset.sort) return;
-      const key = button2.dataset.sort;
+      const button = event.target.closest("button");
+      if (!button?.dataset.sort) return;
+      const key = button.dataset.sort;
       if (state.sort === key) state.sortDir *= -1;
       else {
         state.sort = key;
@@ -28218,7 +28450,7 @@
         event.preventDefault();
         if (!state.crateQuery && item5.getAttribute("aria-expanded") === "true") toggleCrate(id);
         else if (item5.dataset.parent) {
-          focusCrateItem(items.find((button2) => button2.dataset.id === item5.dataset.parent));
+          focusCrateItem(items.find((button) => button.dataset.id === item5.dataset.parent));
         }
       } else if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -29329,20 +29561,20 @@
         });
       });
       el("open-logs").addEventListener("click", () => {
-        const button2 = el("open-logs");
-        button2.disabled = true;
+        const button = el("open-logs");
+        button.disabled = true;
         el("settings-status").textContent = t("wizard.opening");
         postJSON("/api/logs/open", {}).then(() => {
           el("settings-status").textContent = t("logs.opened");
         }).catch(() => {
           el("settings-status").textContent = t("logs.openFailed");
         }).finally(() => {
-          button2.disabled = false;
+          button.disabled = false;
         });
       });
       el("copy-logs").addEventListener("click", async () => {
-        const button2 = el("copy-logs");
-        button2.disabled = true;
+        const button = el("copy-logs");
+        button.disabled = true;
         el("settings-status").textContent = t("logs.copying");
         try {
           const response = await fetch("/api/logs");
@@ -29375,7 +29607,7 @@
         } catch {
           el("settings-status").textContent = t("logs.copyFailed");
         } finally {
-          button2.disabled = false;
+          button.disabled = false;
         }
       });
     }
@@ -29556,8 +29788,8 @@
     el("help-expected-label").hidden = feature;
   }
   async function submitReport() {
-    const button2 = el("help-open-github");
-    button2.disabled = true;
+    const button = el("help-open-github");
+    button.disabled = true;
     el("help-report-status").textContent = t("help.opening");
     try {
       const response = await fetch("/api/help", {
@@ -29590,7 +29822,7 @@
     } catch {
       el("help-report-status").textContent = t("help.loadFailed");
     } finally {
-      button2.disabled = false;
+      button.disabled = false;
     }
   }
   async function copyLog() {

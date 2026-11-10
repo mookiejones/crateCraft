@@ -7,8 +7,8 @@
  * title, the artist, previous, play/pause, next, a seek bar with cue
  * markers, elapsed and total time, volume, and the waveform. Strings live
  * in `player-strings.ts`. Cue points, loops, and the beatgrid come from
- * `GET /api/track` and are not written back. The waveform is
- * `waveform-view.ts`. Space and the seek keys stay in the shortcut table.
+ * `GET /api/track` and are not written back. The waveform is React on
+ * `WaveformContext`. Space and the seek keys stay in the shortcut table.
  *
  * Hotkeys import this module and call:
  *
@@ -361,6 +361,32 @@ export function getPlayerState(): PlayerSnapshot {
 }
 
 /**
+ * Audio clock used by the waveform while a frame paints.
+ *
+ * Prefers the media element's `currentTime` so requestAnimationFrame is
+ * not stuck on the last `timeupdate`. Falls back to the snapshot.
+ *
+ * @returns Seconds from the start of the file.
+ */
+export function getMediaTime(): number {
+  if (media && Number.isFinite(media.currentTime)) return media.currentTime;
+  return currentTime;
+}
+
+/**
+ * Known duration used by the waveform overview.
+ *
+ * Prefers the media element's duration when it is a positive finite
+ * number. Falls back to the snapshot.
+ *
+ * @returns Seconds, or 0 when unknown.
+ */
+export function getMediaDuration(): number {
+  if (media && Number.isFinite(media.duration) && media.duration > 0) return media.duration;
+  return duration;
+}
+
+/**
  * Cue marks currently drawn on the seek bar.
  *
  * Empty when nothing is loaded or the track has no cues. The array is
@@ -460,23 +486,7 @@ export function mountPlayer(host?: HTMLElement | null): void {
   root.replaceChildren();
   if (element instanceof Node) root.append(element);
   const waveHost = document.createElement("div");
-  waveform = mountWaveform(waveHost, {
-    seek,
-    seekBy,
-    getTime: () => {
-      const value = ensureMedia().currentTime;
-      return Number.isFinite(value) ? value : currentTime;
-    },
-    getDuration: () => {
-      const value = ensureMedia().duration;
-      if (Number.isFinite(value) && value > 0) return value;
-      return duration;
-    },
-    getPlaying: () => playing,
-    formatTime: formatPlayerTime,
-    seekStep: SEEK_STEP_SECONDS,
-    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
-  });
+  waveform = mountWaveform(waveHost);
   const controls = document.createElement("div");
   const stack = document.createElement("div");
   stack.className = "player-stack";

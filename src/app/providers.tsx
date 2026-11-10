@@ -1,9 +1,9 @@
 /**
  * React providers for the page.
  *
- * Player and Settings are separate domains. Later screens add their own
- * context file and one wrapper here. This module reads those stores; it
- * does not own playback or the settings file.
+ * Player, waveform zoom, and Settings are separate domains. Each has
+ * its own context file and one wrapper here. This module reads those
+ * stores; it does not own playback or the settings file.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -12,14 +12,20 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import { WaveformProvider } from "../context/WaveformContext";
 import {
   SettingsProvider as SettingsContextProvider,
   type SettingsContextValue,
 } from "../context/SettingsContext";
 import { onLocaleChange } from "../i18n";
 import {
+  SEEK_STEP_LARGE_SECONDS,
+  SEEK_STEP_SECONDS,
   canSkip,
   canTogglePlay,
+  formatPlayerTime,
+  getMediaDuration,
+  getMediaTime,
   getPlayerCues,
   getPlayerState,
   next,
@@ -65,6 +71,11 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+    mediaTime: getMediaTime,
+    mediaDuration: getMediaDuration,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
   };
 }
 
@@ -139,14 +150,17 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player is the first domain. Settings is the second.
+ * Player is the first domain. Waveform zoom and overview wrap inside
+ * it. Settings is the third.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <SettingsProvider>{children}</SettingsProvider>
+      <WaveformProvider>
+        <SettingsProvider>{children}</SettingsProvider>
+      </WaveformProvider>
     </PlayerProvider>
   );
 }
