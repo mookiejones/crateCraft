@@ -44,6 +44,7 @@ const VIEWS: Record<string, string> = {
   "view-stems": "stems",
   "view-health": "health",
   "view-scan": "scan",
+  "view-bitrate": "bitrate",
   "view-tags": "tags",
   "view-snapshots": "snapshots",
   "view-gig": "gig",

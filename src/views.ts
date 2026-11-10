@@ -1,5 +1,5 @@
 /**
- * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, tag spellings, files, tempo drift, and the portable drive check.
+ * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, files, tempo drift, and the portable drive check.
  *
  * The functions paint from state and the elements in index.html. Nothing
  * in this module runs a request when the file is imported. Listeners are
@@ -32,6 +32,7 @@ import { loadDrift, showDriftFailure } from "./drift";
 import { loadHealth, showHealthFailure } from "./health";
 import { loadHistoryStats, showHistoryStatsFailure } from "./history-stats";
 import { loadScan, showScanFailure } from "./scan";
+import { loadBitrate, showBitrateFailure } from "./bitrate";
 import { loadTags, showTagsFailure } from "./tags";
 import { loadPortableView, portableDriveButton, showPortableFailure } from "./portable";
 import { appendBeatgrid } from "./beatgrid-view";
@@ -619,9 +620,10 @@ export function renderShell() {
   const healthMode = state.mode === "health";
   const statsMode = state.mode === "stats";
   const scanMode = state.mode === "scan";
+  const bitrateMode = state.mode === "bitrate";
   const tagsMode = state.mode === "tags";
   const historyMode = state.mode === "history";
-  const showCrates = cratesMode || gigMode || driftMode || healthMode || scanMode;
+  const showCrates = cratesMode || gigMode || driftMode || healthMode || scanMode || bitrateMode;
   el("crate-tools").hidden = !showCrates;
   el("crate-actions").hidden = !cratesMode;
   el("crate-list").hidden = !showCrates;
@@ -632,7 +634,7 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || statsMode || scanMode || tagsMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || statsMode || scanMode || bitrateMode || tagsMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
@@ -644,6 +646,7 @@ export function renderShell() {
   el("health-panel").hidden = !healthMode;
   el("stats-panel").hidden = !statsMode;
   el("scan-panel").hidden = !scanMode;
+  el("bitrate-panel").hidden = !bitrateMode;
   el("tags-panel").hidden = !tagsMode;
   if (state.mode === "missing") {
     const offlineCount = state.tracks.filter((track) => track.offline).length;
@@ -678,6 +681,10 @@ export function renderShell() {
   }
   if (scanMode) {
     el("mode-note").textContent = t("mode.scan");
+    document.querySelector(".rules")?.remove();
+  }
+  if (bitrateMode) {
+    el("mode-note").textContent = t("mode.bitrate");
     document.querySelector(".rules")?.remove();
   }
   if (tagsMode) {
@@ -717,12 +724,12 @@ export function renderShell() {
     el("crate-foot").textContent = state.filesLoading ? t("files.readingFolder") : t("files.fileCount", { count: listed });
     return;
   }
-  if (gigMode || healthMode || scanMode) {
+  if (gigMode || healthMode || scanMode || bitrateMode) {
     const crate = state.crates.find((item) => item.id === state.activeCrate);
     el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : (crate?.name ?? t("crates.selectedCrate"));
     return;
   }
-  if (tagsMode) {
+  if (tagsMode || statsMode) {
     el("crate-foot").textContent = t("gig.wholeSpace");
     return;
   }
@@ -790,6 +797,11 @@ export function renderList() {
     return;
   }
   if (state.mode === "scan") {
+    renderCrates();
+    paintDualChrome();
+    return;
+  }
+  if (state.mode === "bitrate") {
     renderCrates();
     paintDualChrome();
     return;
@@ -877,6 +889,7 @@ export function selectCrate(id: number | "all", event?: MouseEvent) {
   if (state.mode === "drift") loadDrift().catch(showDriftFailure);
   if (state.mode === "health") loadHealth().catch(showHealthFailure);
   if (state.mode === "scan") loadScan().catch(showScanFailure);
+  if (state.mode === "bitrate") loadBitrate().catch(showBitrateFailure);
 }
 
 /**
@@ -2532,7 +2545,7 @@ export async function loadLibrary() {
 
 /**
  * Switch among crates, history, play stats, missing, duplicates, stems, library
- * health, damaged files, tag spellings, files, snapshots, gig, Check drive, and tempo drift.
+ * health, damaged files, suspect quality, tag spellings, files, snapshots, gig, Check drive, and tempo drift.
  *
  * History sorts by start time descending and loads sessions once.
  * Duplicates load when this space has not been scanned yet. Files loads
@@ -2569,6 +2582,7 @@ export function setMode(mode: string) {
   if (mode === "health") loadHealth().catch(showHealthFailure);
   if (mode === "stats") loadHistoryStats().catch(showHistoryStatsFailure);
   if (mode === "scan") loadScan("quick").catch(showScanFailure);
+  if (mode === "bitrate") loadBitrate().catch(showBitrateFailure);
   if (mode === "tags") loadTags().catch(showTagsFailure);
   renderList();
 }
@@ -3419,6 +3433,7 @@ export function wireLibrary(): void {
     if (state.mode === "health") jobs.push(loadHealth().catch(showHealthFailure));
     if (state.mode === "stats") jobs.push(loadHistoryStats().catch(showHistoryStatsFailure));
     if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
+    if (state.mode === "bitrate") jobs.push(loadBitrate().catch(showBitrateFailure));
     if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
     Promise.all(jobs).catch(showFailure);
   });
@@ -3460,6 +3475,7 @@ export function wireLibrary(): void {
       if (state.mode === "health") return loadHealth().catch(showHealthFailure);
       if (state.mode === "stats") return loadHistoryStats().catch(showHistoryStatsFailure);
       if (state.mode === "scan") return loadScan().catch(showScanFailure);
+      if (state.mode === "bitrate") return loadBitrate().catch(showBitrateFailure);
       if (state.mode === "tags") return loadTags().catch(showTagsFailure);
       return null;
     }).catch(showFailure);

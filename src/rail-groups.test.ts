@@ -3,7 +3,7 @@
  *
  * The markup is index.html. Group labels are headings. Each tab still
  * has a tooltip. The view ids stay crates, history, stats, files, health, missing,
- * duplicates, stems, scan, tags, snapshots, gig, portable, and drift.
+ * duplicates, stems, scan, bitrate, tags, snapshots, gig, portable, and drift.
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
@@ -28,7 +28,7 @@ describe("rail groups", () => {
     );
     expect(groups).toEqual([
       ["crates", "history", "stats", "files"],
-      ["health", "missing", "duplicates", "stems", "scan", "tags"],
+      ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags"],
       ["snapshots"],
       ["gig", "portable", "drift"],
     ]);
@@ -36,6 +36,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='health']")?.textContent).toBe("Library health");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Missing files");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Damaged files");
+    expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Suspect quality");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Tag spellings");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Before a gig");
@@ -62,6 +63,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='health']")?.textContent).toBe("Salud de la biblioteca");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Archivos no encontrados");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Archivos dañados");
+    expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Calidad dudosa");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Grafías de etiquetas");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Copias de seguridad");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Antes del bolo");
