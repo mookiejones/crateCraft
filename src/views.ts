@@ -95,6 +95,7 @@ import {
 } from "./tooltip-strings";
 import { paintRows } from "./virtual-scroll";
 import { codedText, formatNumber, messageParams, serverMessage, t, type MessageKey } from "./i18n";
+import { modeForGroup, paintNav, rememberMode } from "./nav";
 
 /**
  * Related-track request counter.
@@ -572,9 +573,7 @@ export function renderShell() {
   if (snapshotsMode) {
     el("mode-note").textContent = t("mode.snapshots");
   }
-  for (const button of document.querySelectorAll<HTMLButtonElement>("#views button")) {
-    button.setAttribute("aria-selected", String(button.dataset.view === state.mode));
-  }
+  paintNav(state.mode);
   for (const button of document.querySelectorAll<HTMLButtonElement>("[data-crate-sort]")) {
     button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
   }
@@ -2376,6 +2375,7 @@ export async function loadLibrary() {
  * @returns {void}
  */
 export function setMode(mode: string) {
+  rememberMode(mode);
   state.mode = mode;
   el("list").scrollTop = 0;
   if (mode === "history") {
@@ -2552,6 +2552,10 @@ export function wireLibrary(): void {
   });
 
   el("views").addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement).closest("button");
+    if (button?.dataset.nav) setMode(modeForGroup(button.dataset.nav));
+  });
+  el("view-children").addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest("button");
     if (button?.dataset.view) setMode(button.dataset.view);
   });

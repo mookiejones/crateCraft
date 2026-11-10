@@ -28,7 +28,7 @@ The recording has no sound. It is about 28 seconds. It shows three copies of one
 
 Quit Serato first. The **Merge copies** button stays off while Serato has the library. You can still open the dialog from a track only when edits are allowed.
 
-1. Click **Duplicates**.
+1. Click **Library health** in the rail, then **Duplicates** above the sheet.
 2. Select the copy you want to keep.
 3. Click **Merge copies** in the track pane, or the **Merge copies** button in the rail.
 4. Under **Copy to keep**, select the file to keep. Each choice shows the file name, the play count, and the crates.

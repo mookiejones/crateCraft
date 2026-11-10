@@ -6,6 +6,7 @@
  * so related tracks and the editor are on the page for the audit.
  */
 
+import { modeForGroup, paintNav, rememberMode } from "../src/nav";
 import { mountPlayer } from "../src/player";
 import { mountSettings } from "../src/settings";
 import { state } from "../src/state";
@@ -96,6 +97,20 @@ installTooltips();
 mountPlayer();
 mountSettings();
 applyStaticTooltips();
+paintNav(state.mode);
+document.getElementById("views")?.addEventListener("click", (event) => {
+  const button = (event.target as HTMLElement).closest("button");
+  if (!button?.dataset.nav) return;
+  const mode = modeForGroup(button.dataset.nav);
+  rememberMode(mode);
+  paintNav(mode);
+});
+document.getElementById("view-children")?.addEventListener("click", (event) => {
+  const button = (event.target as HTMLElement).closest("button");
+  if (!button?.dataset.view) return;
+  rememberMode(button.dataset.view);
+  paintNav(button.dataset.view);
+});
 mountTrackList();
 state.mode = "files";
 renderFiles();

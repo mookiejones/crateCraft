@@ -36,4 +36,4 @@ A successful move also updates related-track links. [Related tracks](Related-Tra
 
 On a Mac, external drives need **Files and Folders > Removable Volumes**. The steps are on [Install on a Mac](Install-macOS). An unplugged drive is not in the folder list. It is not deleted from the library. [Backups and restore](Backups-and-Restore) marks that drive unavailable.
 
-**Check drive** on a removable Serato root, and under **Before a gig**, reads that drive. It does not write. An unplugged drive is named and is not treated as a missing file.
+**Check drive** on a removable Serato root, and **Check drive** under **Before a gig**, reads that drive. It does not write. An unplugged drive is named and is not treated as a missing file.

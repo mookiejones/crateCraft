@@ -338,13 +338,49 @@ html[data-colorway="light"] .rail select { color-scheme: light; }
   --track-list-width: 1.15fr;
   display: grid;
   grid-template-columns: minmax(0, var(--track-list-width)) 9px minmax(300px, 0.85fr);
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   min-width: 0;
   min-height: 0;
   margin: var(--space-3) var(--space-3) var(--space-3) 0;
   background: var(--manila);
   border-radius: 10px;
   overflow: hidden;
+}
+
+.update-banner {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.view-children {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) 12px;
+  padding: var(--space-2) var(--space-4) 0;
+  border-bottom: 1px solid var(--rule);
+  background: var(--manila);
+}
+
+.view-children[hidden] { display: none; }
+
+.view-children button {
+  min-height: 44px;
+  padding: 8px 0;
+  color: var(--color-text-muted);
+}
+
+.view-children button[aria-selected="true"] {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.browser,
+.detail,
+.splitter {
+  grid-row: 3;
 }
 
 .browser, .detail {
@@ -1260,7 +1296,7 @@ dialog .settings-field select {
 .gig-panel,
 .scan-panel {
   grid-column: 1 / -1;
-  grid-row: 1;
+  grid-row: 3;
   min-width: 0;
   min-height: 0;
   display: flex;
@@ -1312,7 +1348,7 @@ dialog .settings-field select {
 
 .player-bar {
   grid-column: 1 / -1;
-  grid-row: 2;
+  grid-row: 4;
   border-top: 1px solid var(--rule);
   background: var(--manila);
 }
@@ -2057,9 +2093,14 @@ dialog .settings-field select {
   .files-list { order: 2; flex: none; max-height: 46vh; }
   .gig-report { max-height: 70vh; }
   .splitter { display: none; }
-  .detail { border-top: 1px solid var(--rule); grid-row: 2; }
-  .browser { grid-row: 1; }
-  .player-bar { grid-row: 3; }
+  .update-banner { grid-row: 1; }
+  .view-children { grid-row: 2; }
+  .browser { grid-row: 3; }
+  .files-panel,
+  .gig-panel,
+  .scan-panel { grid-row: 3; }
+  .detail { border-top: 1px solid var(--rule); grid-row: 4; }
+  .player-bar { grid-row: 5; }
   .detail h2 { font-size: 32px; }
   .player-controls {
     grid-template-columns: minmax(0, 1fr) auto;

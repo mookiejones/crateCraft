@@ -15887,6 +15887,9 @@
     "tooltip.mergeTrash": "Move the other audio files to the Trash. You can restore them from there.",
     "tooltip.merging": "Merging the copies.",
     "tooltip.missingDrive": "Connect the drive that holds {name} before opening it.",
+    "tooltip.navGig": "Gig check, portable drive check, and tempo drift.",
+    "tooltip.navHealth": "Library health, missing files, duplicates, stems, damaged files, suspect quality, and tag spellings.",
+    "tooltip.navLibrary": "Crates, history, and play stats.",
     "tooltip.next": "Play the next track in this list.",
     "tooltip.openCopy": "Open this other copy, {name}.",
     "tooltip.openCrate": "Show the tracks in the crate {name}.",
@@ -17447,6 +17450,9 @@
     "tooltip.mergeTrash": "Mueve los otros archivos de audio a la papelera. Puedes restaurarlos desde allí.",
     "tooltip.merging": "Fusionando las copias.",
     "tooltip.missingDrive": "Conecta el disco que contiene {name} antes de abrirlo.",
+    "tooltip.navGig": "Comprobación del bolo, comprobar unidad y tempo inestable.",
+    "tooltip.navHealth": "Salud de la biblioteca, archivos no encontrados, duplicados, stems, archivos dañados, calidad dudosa y grafías de etiquetas.",
+    "tooltip.navLibrary": "Cajas, historial y estadísticas de reproducción.",
     "tooltip.next": "Reproduce la pista siguiente de esta lista.",
     "tooltip.openCopy": "Abre esta otra copia, {name}.",
     "tooltip.openCrate": "Muestra las pistas de la caja {name}.",
@@ -20215,6 +20221,9 @@
     snapshotsRetry: spec("tooltip.snapshotsRetry"),
     reviewRestore: spec("tooltip.reviewRestore"),
     allTracks: spec("tooltip.allTracks"),
+    navLibrary: spec("tooltip.navLibrary"),
+    navHealth: spec("tooltip.navHealth"),
+    navGig: spec("tooltip.navGig"),
     viewCrates: spec("tooltip.viewCrates"),
     viewHistory: spec("tooltip.viewHistory"),
     viewStats: spec("tooltip.viewStats"),
@@ -20305,6 +20314,16 @@
     const message = known[key];
     if (message) return spec(message);
     return spec("tooltip.sortBy", { label });
+  }
+  function navTip(id) {
+    const known = {
+      library: tips.navLibrary,
+      files: tips.viewFiles,
+      health: tips.navHealth,
+      backups: tips.viewSnapshots,
+      gig: tips.navGig
+    };
+    return known[id];
   }
   function viewTip(view) {
     const known = {
@@ -20643,6 +20662,10 @@
   function applyStaticTooltips(root = document) {
     root.querySelectorAll("[id]").forEach((node) => {
       const text2 = staticTip(node.id);
+      if (text2) setTooltip(node, text2);
+    });
+    root.querySelectorAll("[data-nav]").forEach((node) => {
+      const text2 = navTip(node.dataset.nav ?? "");
       if (text2) setTooltip(node, text2);
     });
     root.querySelectorAll("[data-view]").forEach((node) => {
@@ -29265,6 +29288,55 @@
     return /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(TrackBody, { track: detail2.track });
   }
 
+  // src/nav.ts
+  var NAV_GROUPS = [
+    { id: "library", labelKey: "view.group.library", modes: ["crates", "history", "stats"] },
+    { id: "files", labelKey: "view.files", modes: ["files"] },
+    { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags"] },
+    { id: "backups", labelKey: "view.snapshots", modes: ["snapshots"] },
+    { id: "gig", labelKey: "view.group.gig", modes: ["gig", "portable", "drift"] }
+  ];
+  var lastMode = {};
+  function groupOf(id) {
+    return NAV_GROUPS.find((group) => group.id === id) ?? NAV_GROUPS[0];
+  }
+  function groupForMode(mode) {
+    const group = NAV_GROUPS.find((item2) => item2.modes.includes(mode));
+    return group?.id ?? "library";
+  }
+  function rememberMode(mode) {
+    const group = NAV_GROUPS.find((item2) => item2.modes.includes(mode));
+    if (!group) return;
+    lastMode[group.id] = mode;
+  }
+  function modeForGroup(id) {
+    const group = groupOf(id);
+    const remembered = lastMode[group.id];
+    if (remembered && group.modes.includes(remembered)) return remembered;
+    return group.modes[0];
+  }
+  function paintNav(mode) {
+    const groupId = groupForMode(mode);
+    const group = groupOf(groupId);
+    const views = document.getElementById("views");
+    if (views) {
+      for (const button of views.querySelectorAll("[data-nav]")) {
+        button.setAttribute("aria-selected", String(button.dataset.nav === groupId));
+      }
+    }
+    const strip = document.getElementById("view-children");
+    if (!(strip instanceof HTMLElement)) return;
+    const showStrip = group.modes.length > 1;
+    strip.hidden = !showStrip;
+    strip.setAttribute("aria-label", t(group.labelKey));
+    for (const button of strip.querySelectorAll("[data-view]")) {
+      const view = button.dataset.view ?? "";
+      const inGroup = group.modes.includes(view);
+      button.hidden = !inGroup;
+      button.setAttribute("aria-selected", String(view === mode));
+    }
+  }
+
   // src/views.ts
   var detailRoot = null;
   var detailPlayRoot = null;
@@ -29590,9 +29662,7 @@
     if (snapshotsMode) {
       el("mode-note").textContent = t("mode.snapshots");
     }
-    for (const button of document.querySelectorAll("#views button")) {
-      button.setAttribute("aria-selected", String(button.dataset.view === state.mode));
-    }
+    paintNav(state.mode);
     for (const button of document.querySelectorAll("[data-crate-sort]")) {
       button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
     }
@@ -30148,6 +30218,7 @@
     renderList();
   }
   function setMode(mode) {
+    rememberMode(mode);
     state.mode = mode;
     el("list").scrollTop = 0;
     if (mode === "history") {
@@ -30261,6 +30332,10 @@
       }).catch(showFailure);
     });
     el("views").addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (button?.dataset.nav) setMode(modeForGroup(button.dataset.nav));
+    });
+    el("view-children").addEventListener("click", (event) => {
       const button = event.target.closest("button");
       if (button?.dataset.view) setMode(button.dataset.view);
     });

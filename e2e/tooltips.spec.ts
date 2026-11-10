@@ -93,9 +93,13 @@ test("reduced motion shows the tooltip as soon as the pointer arrives", async ({
 });
 
 test("Check drive sits under Before a gig with a labelled picker", async ({ page }) => {
-  const tabs = page.locator("[aria-labelledby='view-group-gig'] [data-view]");
-  await expect(tabs).toHaveText(["Before a gig", "Check drive", "Tempo drift"]);
+  await expect(page.locator('[data-nav="gig"]')).toHaveText("Before a gig");
+  await page.locator('[data-nav="gig"]').click();
+  await expect(page.locator("#view-children [data-view='gig']")).toHaveText("Before a gig");
+  await expect(page.locator("#view-children [data-view='portable']")).toHaveText("Check drive");
+  await expect(page.locator("#view-children [data-view='drift']")).toHaveText("Tempo drift");
   const tab = page.locator('[data-view="portable"]');
+  await tab.click();
   await tab.focus();
   await expect(page.locator("#app-tooltip")).toContainText("Pick a connected drive");
   await page.locator("#portable-panel").evaluate((node) => {

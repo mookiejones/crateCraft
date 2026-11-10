@@ -150,6 +150,7 @@ export interface ElementIds {
   "import-m3u": HTMLButtonElement;
   "import-file": HTMLInputElement;
   views: HTMLDivElement;
+  "view-children": HTMLDivElement;
   "snapshots-refresh": HTMLButtonElement;
   "snapshots-undo-button": HTMLButtonElement;
   "snapshot-cancel": HTMLButtonElement;

@@ -186,6 +186,9 @@ export const tips = {
   snapshotsRetry: spec("tooltip.snapshotsRetry"),
   reviewRestore: spec("tooltip.reviewRestore"),
   allTracks: spec("tooltip.allTracks"),
+  navLibrary: spec("tooltip.navLibrary"),
+  navHealth: spec("tooltip.navHealth"),
+  navGig: spec("tooltip.navGig"),
   viewCrates: spec("tooltip.viewCrates"),
   viewHistory: spec("tooltip.viewHistory"),
   viewStats: spec("tooltip.viewStats"),
@@ -303,6 +306,18 @@ export function sortTip(key: string, label: string): TipSpec {
   const message = known[key];
   if (message) return spec(message);
   return spec("tooltip.sortBy", { label });
+}
+
+/** Rail primary, or undefined when that parent has no tooltip yet. */
+export function navTip(id: string): TipSpec | undefined {
+  const known: Record<string, TipSpec> = {
+    library: tips.navLibrary,
+    files: tips.viewFiles,
+    health: tips.navHealth,
+    backups: tips.viewSnapshots,
+    gig: tips.navGig,
+  };
+  return known[id];
 }
 
 /** View tab, or undefined when that view has no tooltip yet. */
