@@ -6,16 +6,16 @@
  */
 
 import { useState, type KeyboardEvent, type PointerEvent } from "react";
-import { usePlayer } from "../context/PlayerContext";
+import { usePlayer } from "../containers/PlayerContext";
 import {
   SEEK_STEP_LARGE_SECONDS,
   SEEK_STEP_SECONDS,
   formatPlayerTime,
   type CueMarker,
-} from "../player";
-import { playerStrings } from "../player-strings";
-import { setTooltip } from "../tooltip";
-import { cueTip, tips, type TipSpec } from "../tooltip-strings";
+} from "../lib/player/player";
+import { playerStrings } from "../lib/player/player-strings";
+import { setTooltip } from "../lib/ui/tooltip";
+import { cueTip, tips, type TipSpec } from "../lib/ui/tooltip-strings";
 import { PlayButton } from "./PlayButton";
 
 function tooltipRef(spec: TipSpec) {

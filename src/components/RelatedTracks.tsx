@@ -6,20 +6,20 @@
  */
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { failureOf, postJSON, readJSONOr } from "../api";
-import type { RelatedPayload, RelatedTrack, Track } from "../api-types";
-import { bridge } from "../bridge";
-import { useTrackList } from "../context/TrackListContext";
-import { t } from "../i18n";
-import { matchesQuery, parseQuery } from "../search-filters";
-import { tooltipRef } from "../tooltip";
+import { failureOf, postJSON, readJSONOr } from "../lib/api";
+import type { RelatedPayload, RelatedTrack, Track } from "../lib/api-types";
+import { bridge } from "../lib/bridge";
+import { useTrackList } from "../containers/TrackListContext";
+import { t } from "../lib/i18n";
+import { matchesQuery, parseQuery } from "../lib/ui/search-filters";
+import { tooltipRef } from "../lib/ui/tooltip";
 import {
   chooseRelated,
   openRelated,
   removeRelatedTip,
   saveSuggestion,
   tips,
-} from "../tooltip-strings";
+} from "../lib/ui/tooltip-strings";
 
 function relatedPath(track: Track): string {
   return track.resolved_path || track.edit?.portable_id || "";

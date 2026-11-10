@@ -4,11 +4,11 @@
  * The request is GET /api/drive-check. Nothing on the drive is written.
  */
 
-import { useFiles } from "../context/FilesContext";
-import { t } from "../i18n";
-import { FINDING_CAP, closePortable, portableKindLabel } from "../portable";
-import { setTooltip } from "../tooltip";
-import { tips } from "../tooltip-strings";
+import { useFiles } from "../containers/FilesContext";
+import { t } from "../lib/i18n";
+import { FINDING_CAP, closePortable, portableKindLabel } from "../lib/gig/portable";
+import { setTooltip } from "../lib/ui/tooltip";
+import { tips } from "../lib/ui/tooltip-strings";
 
 /**
  * Portable drive dialog body.

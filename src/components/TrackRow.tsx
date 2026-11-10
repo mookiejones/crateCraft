@@ -3,13 +3,13 @@
  */
 
 import type { MouseEvent } from "react";
-import type { Track } from "../api-types";
-import { useTrackList } from "../context/TrackListContext";
-import { clockLabel, colorHex, dateLabel, energyLabel, lengthLabel } from "../format";
-import { formatNumber, t } from "../i18n";
-import { playerStrings } from "../player-strings";
-import { tooltipRef } from "../tooltip";
-import { selectRow } from "../tooltip-strings";
+import type { Track } from "../lib/api-types";
+import { useTrackList } from "../containers/TrackListContext";
+import { clockLabel, colorHex, dateLabel, energyLabel, lengthLabel } from "../lib/format";
+import { formatNumber, t } from "../lib/i18n";
+import { playerStrings } from "../lib/player/player-strings";
+import { tooltipRef } from "../lib/ui/tooltip";
+import { selectRow } from "../lib/ui/tooltip-strings";
 import { PlayButton } from "./PlayButton";
 
 export type TrackRowProps = {

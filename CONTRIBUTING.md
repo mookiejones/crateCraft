@@ -72,7 +72,7 @@ Page color and type tokens are in `static/tokens.css`. The page source is strict
 
 ## Tests
 
-Every behavior change or bug fix ships with tests in the same pull request: Python `unittest` under `tests/`, page code as Vitest `*.test.ts` in `src/`. A bug fix needs a test that fails before the fix. Use only synthetic fixtures (`tests/fixtures/`), never a real `master.sqlite`, `root.sqlite`, or audio file.
+Every behavior change or bug fix ships with tests in the same pull request: Python `unittest` under `tests/`, page code as Vitest `*.test.ts` in `src/tests/`. A bug fix needs a test that fails before the fix. Use only synthetic fixtures (`tests/fixtures/`), never a real `master.sqlite`, `root.sqlite`, or audio file.
 
 QA (Gatekeeper, account `mookiejones-qa`) blocks a pull request whose tests do not meet this bar:
 

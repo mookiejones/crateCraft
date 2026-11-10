@@ -5,9 +5,9 @@
  * for each endpoint. Nothing is written.
  */
 
-import { loadDrift, wireDrift } from "../src/drift";
-import { loadGigCheck, wireGigCheck } from "../src/gig";
-import { state } from "../src/state";
+import { loadDrift, wireDrift } from "../src/lib/gig/drift";
+import { loadGigCheck, wireGigCheck } from "../src/lib/gig/gig";
+import { state } from "../src/lib/state";
 
 window.fetch = (input: RequestInfo | URL) => {
   const url = String(input);

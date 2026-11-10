@@ -6,12 +6,12 @@
  * so related tracks and the editor are on the page for the audit.
  */
 
-import { mountPlayer } from "../src/player";
-import { mountSettings } from "../src/settings";
-import { state } from "../src/state";
-import { applyStaticTooltips, installTooltips, missingTooltipLabels } from "../src/tooltip";
-import { mountTrackList, paintRows } from "../src/virtual-scroll";
-import { renderCrates, renderFiles, renderSessions, selectTrack } from "../src/views";
+import { mountPlayer } from "../src/lib/player/player";
+import { mountSettings } from "../src/lib/ui/settings";
+import { state } from "../src/lib/state";
+import { applyStaticTooltips, installTooltips, missingTooltipLabels } from "../src/lib/ui/tooltip";
+import { mountTrackList, paintRows } from "../src/lib/ui/virtual-scroll";
+import { renderCrates, renderFiles, renderSessions, selectTrack } from "../src/lib/ui/views";
 
 declare global {
   interface Window {

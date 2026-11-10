@@ -1,0 +1,76 @@
+/**
+ * Start the page in the right language and repaint it on a change.
+ *
+ * app.ts calls wireLocale once, before the first paint. A later change,
+ * from Settings or from the saved choice arriving with GET /api/settings,
+ * repaints what is on screen from the data the page already holds. The
+ * library is not read again.
+ */
+
+import { repaintDialogs } from "./dialogs";
+import { repaintGig } from "../gig/gig";
+import { repaintDrift } from "../gig/drift";
+import { repaintHealth } from "../health/health";
+import { repaintHistoryStats } from "../history/history-stats";
+import { repaintScan } from "../health/scan";
+import { repaintBitrate } from "../health/bitrate";
+import { repaintTags } from "../health/tags";
+import { repaintPortable } from "../gig/portable";
+import { applyStatic, initialLocale, onLocaleChange, setLocale } from "../i18n";
+import { repaintPlayer } from "../player/player";
+import { repaintQuickOpen } from "./quick-open";
+import { renderSnapshots, repaintSnapshotPlan } from "../snapshots/restore";
+import { repaintCheatSheet } from "./shortcuts";
+import { state } from "../state";
+import { refreshTooltips } from "./tooltip";
+import { repaintUpdate } from "./update";
+import { repaintVersion } from "./version";
+import { repaintViews } from "./views";
+
+/**
+ * Repaint everything on screen in the active language.
+ *
+ * Static markup is translated from its data-i18n attributes. The views,
+ * dialogs, snapshot list, gig check, damaged-file report, tag spellings, and version
+ * line repaint from what the page already holds.
+ *
+ * @returns {void}
+ */
+export function repaintAll(): void {
+  applyStatic(document);
+  repaintViews();
+  if (state.mode === "snapshots") renderSnapshots();
+  if (state.mode === "gig") repaintGig();
+  if (state.mode === "drift") repaintDrift();
+  if (state.mode === "health") repaintHealth();
+  if (state.mode === "stats") repaintHistoryStats();
+  if (state.mode === "scan") repaintScan();
+  if (state.mode === "bitrate") repaintBitrate();
+  if (state.mode === "tags") repaintTags();
+  repaintPortable();
+  repaintSnapshotPlan();
+  repaintDialogs();
+  repaintCheatSheet();
+  repaintQuickOpen();
+  repaintPlayer();
+  repaintVersion();
+  repaintUpdate();
+  refreshTooltips();
+}
+
+let stop: (() => void) | null = null;
+
+/**
+ * Pick the first locale, translate the markup, and listen for changes.
+ *
+ * Calling it again replaces the earlier listener, so the page repaints
+ * once per change.
+ *
+ * @returns {void}
+ */
+export function wireLocale(): void {
+  stop?.();
+  setLocale(initialLocale());
+  applyStatic(document);
+  stop = onLocaleChange(repaintAll);
+}
