@@ -7,19 +7,23 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { libraryRootsFixture } from "./library-roots.fixture";
+import { applyStatic, setLocale } from "./i18n";
 import {
   FINDING_CAP,
+  loadPortableView,
   openPortableCheck,
   parseDriveReport,
   portableDriveRoot,
+  portableSeratoRoots,
   renderPortableReport,
   repaintPortable,
+  wirePortable,
   type DriveReport,
 } from "./portable";
+import { applyStaticTooltips } from "./tooltip";
 import { state } from "./state";
 import { installPage } from "./test-page";
 import { renderFiles } from "./views";
-import { setLocale } from "./i18n";
 
 const fetchMock = vi.fn();
 
@@ -66,6 +70,52 @@ describe("portableDriveRoot", () => {
     expect(portableDriveRoot("\\\\server\\share\\Music")).toBe("\\\\server\\share");
     expect(portableDriveRoot("")).toBe("");
     expect(portableDriveRoot("/Users/dj/Music")).toBe("/Users/dj/Music");
+  });
+});
+
+describe("portableSeratoRoots", () => {
+  it("keeps connected removable Serato drives and names an unplugged one", () => {
+    const { connected, missing } = portableSeratoRoots(libraryRootsFixture.roots);
+    expect(connected.map((root) => root.label)).toEqual(["Music (GIGDRIVE)"]);
+    expect(missing.map((root) => root.label)).toEqual(["Music (OLDDRIVE)"]);
+    expect(missing[0]?.missing).toBe(true);
+  });
+
+  it("dedupes two folders on one volume and skips an internal library", () => {
+    const { connected, missing } = portableSeratoRoots([
+      {
+        id: "home",
+        path: "/Users/dj/Music",
+        label: "Music (dj)",
+        detail: "/Users/dj/Music",
+        kind: "music_library",
+        serato: true,
+        removable: false,
+        missing: false,
+      },
+      {
+        id: "gig-house",
+        path: "E:\\Music\\House",
+        label: "House",
+        detail: "E:\\Music\\House",
+        kind: "music_library",
+        serato: true,
+        removable: true,
+        missing: false,
+      },
+      {
+        id: "gig-peak",
+        path: "E:\\Music\\Peak",
+        label: "Peak",
+        detail: "E:\\Music\\Peak",
+        kind: "music_library",
+        serato: true,
+        removable: true,
+        missing: false,
+      },
+    ]);
+    expect(connected.map((root) => root.path)).toEqual(["E:\\Music\\House"]);
+    expect(missing).toEqual([]);
   });
 });
 
@@ -177,5 +227,110 @@ describe("portable drive check", () => {
     );
     expect(document.querySelector(".portable-kind")?.textContent).toBe("No está");
     expect(document.querySelector(".portable-fix")?.textContent).toBe("Missing t0.mp3");
+  });
+});
+
+describe("portable drive view", () => {
+  beforeEach(() => {
+    installPage();
+    setLocale("en");
+    applyStatic(document);
+    applyStaticTooltips();
+    fetchMock.mockReset();
+    vi.stubGlobal("fetch", fetchMock);
+    wirePortable();
+    document.getElementById("portable-panel")!.hidden = false;
+  });
+
+  it("lets the person pick a connected drive and does not write", async () => {
+    fetchMock.mockImplementation((url: string) => {
+      if (String(url).includes("/api/library-roots")) {
+        return Promise.resolve(jsonResponse(libraryRootsFixture));
+      }
+      return Promise.resolve(jsonResponse(report()));
+    });
+    await loadPortableView();
+    const select = document.querySelector<HTMLSelectElement>("#portable-drive")!;
+    const options = [...select.options].map((option) => option.textContent);
+    expect(options).toEqual(["Music (GIGDRIVE)"]);
+    expect(select.value).toBe("/Volumes/GIGDRIVE/Music");
+    expect(document.querySelector("#portable-offline")?.textContent).toBe(
+      "Music (OLDDRIVE) is not connected. Nothing was deleted.",
+    );
+    expect(document.querySelector("#portable-offline")?.textContent).not.toContain("missing file");
+    expect(fetchMock.mock.calls.map((call) => call[0])).toEqual([
+      "/api/library-roots",
+      "/api/drive-check?drive=%2FVolumes%2FGIGDRIVE",
+    ]);
+    expect(document.querySelector("#portable-view-verdict")?.textContent).toBe(
+      "Not ready. Fix these on the laptop first.",
+    );
+    expect(document.querySelector("#portable-view-findings .portable-kind")?.textContent).toBe(
+      "Not on this drive",
+    );
+    expect((document.querySelector("#portable-dialog") as HTMLDialogElement).open).toBe(false);
+    expect(document.querySelector("#portable-hint")?.textContent).toBe(
+      "This only reads the drive. Nothing is copied or deleted.",
+    );
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(jsonResponse(report({ ready: true, findings: [], summary: "ok" })));
+    document.getElementById("portable-check")!.click();
+    await vi.waitFor(() => {
+      expect(document.querySelector("#portable-view-verdict")?.textContent).toBe(
+        "Ready to leave the laptop.",
+      );
+    });
+    expect(fetchMock.mock.calls[0]).toEqual(["/api/drive-check?drive=%2FVolumes%2FGIGDRIVE"]);
+  });
+
+  it("names an unplugged drive when none are connected", async () => {
+    fetchMock.mockResolvedValue(jsonResponse({
+      computed_at: "2026-10-29T13:00:00Z",
+      roots: libraryRootsFixture.roots.filter((root) => root.missing || !root.removable),
+    }));
+    await loadPortableView();
+    expect(document.querySelector("#portable-drive")?.querySelectorAll("option")).toHaveLength(0);
+    expect(document.querySelector<HTMLButtonElement>("#portable-check")?.disabled).toBe(true);
+    expect(document.querySelector("#portable-offline")?.textContent).toBe(
+      "Music (OLDDRIVE) is not connected. Nothing was deleted.",
+    );
+    expect(document.querySelector("#portable-view-status")?.textContent).toBe(
+      "No connected drive with a _Serato_ folder.",
+    );
+    expect(fetchMock.mock.calls.map((call) => call[0])).toEqual(["/api/library-roots"]);
+  });
+
+  it("gives every new control a tooltip and keeps the picker a labelled select", () => {
+    const select = document.querySelector<HTMLSelectElement>("#portable-drive")!;
+    expect(select.closest("label")).not.toBeNull();
+    expect(select.dataset.tooltipKey).toBe("tooltip.portableDrive");
+    expect(document.getElementById("portable-check")!.dataset.tooltipKey).toBe("tooltip.portableRun");
+    expect(document.querySelector<HTMLElement>('[data-view="portable"]')!.dataset.tooltipKey).toBe(
+      "tooltip.viewPortable",
+    );
+    const untipped = [...document.querySelectorAll<HTMLElement>("#portable-panel button, #portable-panel select")].filter(
+      (node) => !node.dataset.tooltipKey,
+    );
+    expect(untipped).toEqual([]);
+  });
+
+  it("translates the view and the unplugged-drive line", async () => {
+    fetchMock.mockImplementation((url: string) => {
+      if (String(url).includes("/api/library-roots")) {
+        return Promise.resolve(jsonResponse(libraryRootsFixture));
+      }
+      return Promise.resolve(jsonResponse(report({ missing_drive: true, findings: [], summary: "GIGDRIVE is not connected." })));
+    });
+    await loadPortableView();
+    setLocale("es");
+    applyStatic(document);
+    repaintPortable();
+    expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Comprobar unidad");
+    expect(document.querySelector("#portable-offline")?.textContent).toBe(
+      "Music (OLDDRIVE) no está conectada. No se ha borrado nada.",
+    );
+    expect(document.querySelector("#portable-view-verdict")?.textContent).toBe(
+      "Esta unidad no está conectada. No se ha borrado nada.",
+    );
   });
 });

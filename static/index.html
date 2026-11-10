@@ -2,13 +2,14 @@
 <!--
   crateCraft page.
 
-  One screen: the space menu, grouped views, the crate or history rail,
+  One screen: the space menu, grouped views, the crate, history, or play-stats rail,
   a virtualized track list, the detail pane, and a player bar. The Duplicates view can
   merge a group into the copy you keep. Export writes an M3U playlist.
   Rekordbox writes rekordbox.xml. The Files view browses folders
   and previews a rename, move, replace, or delete before it is saved.
   Backups lists hash-checked library snapshots and previews a
-  restore before it is confirmed. Before a gig is a read-only ready score.
+  restore before it is confirmed. Before a gig is a read-only ready score,
+  Check drive, and Tempo drift.
   tokens.css, app.css, and app.js are local files. The page talks only to
   the library server on 127.0.0.1. It does not open master.sqlite itself.
 -->
@@ -48,6 +49,7 @@
           <div class="view-group-tabs" role="tablist" aria-labelledby="view-group-library">
             <button type="button" data-view="crates" role="tab" data-i18n="view.crates">Crates</button>
             <button type="button" data-view="history" role="tab" data-i18n="view.history">History</button>
+            <button type="button" id="stats-tab" data-view="stats" role="tab" aria-controls="stats-panel" data-i18n="view.stats">Play stats</button>
             <button type="button" data-view="files" role="tab" data-i18n="view.files">Organize files</button>
           </div>
         </section>
@@ -59,6 +61,7 @@
             <button type="button" data-view="duplicates" role="tab" data-i18n="view.duplicates">Duplicates</button>
             <button type="button" data-view="stems" role="tab" data-i18n="view.stems">Stems</button>
             <button type="button" id="scan-tab" data-view="scan" role="tab" aria-controls="scan-panel" data-i18n="view.scan">Damaged files</button>
+            <button type="button" id="bitrate-tab" data-view="bitrate" role="tab" aria-controls="bitrate-panel" data-i18n="view.bitrate">Suspect quality</button>
             <button type="button" id="tags-tab" data-view="tags" role="tab" aria-controls="tags-panel" data-i18n="view.tags">Tag spellings</button>
           </div>
         </section>
@@ -69,6 +72,7 @@
           <h2 id="view-group-gig" class="view-group-label" data-i18n="view.group.gig">Before a gig</h2>
           <div class="view-group-tabs" role="tablist" aria-labelledby="view-group-gig">
             <button type="button" id="gig-tab" data-view="gig" role="tab" aria-controls="gig-panel" data-i18n="view.gig">Before a gig</button>
+            <button type="button" id="portable-tab" data-view="portable" role="tab" aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
             <button type="button" id="drift-tab" data-view="drift" role="tab" aria-controls="drift-panel" data-i18n="view.drift">Tempo drift</button>
           </div>
         </section>
@@ -239,6 +243,23 @@
         <div id="gig-report" class="gig-report"></div>
       </section>
 
+      <section id="portable-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="portable-heading" aria-busy="false">
+        <h2 id="portable-heading" class="visually-hidden" data-i18n="portable.title">Portable drive</h2>
+        <div class="browser-bar">
+          <label class="rail-field">
+            <span class="visually-hidden" data-i18n="portable.driveLabel">Drive</span>
+            <select id="portable-drive"></select>
+          </label>
+          <button id="portable-check" type="button" data-i18n="portable.check">Check drive</button>
+        </div>
+        <p id="portable-hint" class="gig-note" data-i18n="portable.readOnly">This only reads the drive. Nothing is copied or deleted.</p>
+        <p id="portable-offline"></p>
+        <p id="portable-view-status" class="gig-status" role="status" aria-live="polite"></p>
+        <p id="portable-view-verdict" tabindex="-1"></p>
+        <p id="portable-view-summary"></p>
+        <ul id="portable-view-findings"></ul>
+      </section>
+
       <section id="drift-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="drift-heading" aria-busy="false">
         <h2 id="drift-heading" class="visually-hidden" data-i18n="drift.heading">Tempo drift</h2>
         <div class="browser-bar">
@@ -250,6 +271,40 @@
         <div id="drift-report" class="gig-report" tabindex="-1"></div>
       </section>
 
+      <section id="stats-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="stats-heading" aria-busy="false">
+        <h2 id="stats-heading" class="visually-hidden" data-i18n="stats.heading">Play stats</h2>
+        <div class="browser-bar">
+          <p id="stats-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <label class="stats-field">
+            <span data-i18n="stats.period">Period</span>
+            <select id="stats-period">
+              <option value="all" data-i18n="stats.period.all">All time</option>
+              <option value="7" data-i18n="stats.period.7">Last 7 days</option>
+              <option value="30" data-i18n="stats.period.30">Last 30 days</option>
+              <option value="90" data-i18n="stats.period.90">Last 90 days</option>
+              <option value="365" data-i18n="stats.period.365">Last 365 days</option>
+              <option value="custom" data-i18n="stats.period.custom">Custom dates</option>
+            </select>
+          </label>
+          <label class="stats-field">
+            <span data-i18n="stats.from">From</span>
+            <input id="stats-from" type="date">
+          </label>
+          <label class="stats-field">
+            <span data-i18n="stats.to">To</span>
+            <input id="stats-to" type="date">
+          </label>
+          <label class="stats-field">
+            <span data-i18n="stats.idleDays">Idle days</span>
+            <input id="stats-idle-days" type="number" min="1" max="3650" value="365" inputmode="numeric">
+          </label>
+          <button id="stats-refresh" type="button" data-i18n="stats.show">Show</button>
+          <button id="stats-csv" type="button" data-i18n="stats.csv">Download CSV</button>
+        </div>
+        <p id="stats-hint" class="gig-note" data-i18n="stats.intro">Most played tracks and artists in a period. The idle list can become a crate. Serato must be quit. This report does not change the library until you confirm the crate.</p>
+        <p id="stats-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="stats-report" class="gig-report" tabindex="-1"></div>
+      </section>
       <section id="health-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="health-heading" aria-busy="false">
         <h2 id="health-heading" class="visually-hidden" data-i18n="health.heading">Library health</h2>
         <div class="browser-bar">
@@ -270,6 +325,17 @@
         <p id="scan-hint" class="gig-note" data-i18n="scan.intro">Quick check reads the start of each file. Full decode needs a crate because it can take minutes.</p>
         <p id="scan-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="scan-report" class="gig-report" tabindex="-1"></div>
+      </section>
+      <section id="bitrate-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="bitrate-heading" aria-busy="false">
+        <h2 id="bitrate-heading" class="visually-hidden" data-i18n="bitrate.heading">Suspect quality</h2>
+        <div class="browser-bar">
+          <p id="bitrate-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="bitrate-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+          <button id="bitrate-save" type="button" data-i18n="bitrate.saveCrate">Save crate</button>
+        </div>
+        <p id="bitrate-hint" class="gig-note" data-i18n="bitrate.intro">Needs a crate because it decodes audio. Flags a file whose stated bitrate is much higher than the spectrum shows, or a lossless file made from a lossy one. This is a suspicion, not proof. Quit Serato before saving a crate.</p>
+        <p id="bitrate-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="bitrate-report" class="gig-report" tabindex="-1"></div>
       </section>
 
       <section id="tags-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="tags-heading" aria-busy="false">
@@ -419,6 +485,20 @@
       <button id="merge-confirm" type="button" data-i18n="merge.title">Merge copies</button>
     </div>
     <p id="merge-status" class="dialog-status" role="status" aria-live="polite"></p>
+  </dialog>
+  <dialog id="album-art-dialog" aria-labelledby="album-art-title" aria-describedby="album-art-intro">
+    <h2 id="album-art-title" data-i18n="health.artTitle">Find album art</h2>
+    <p id="album-art-intro" data-i18n="health.artIntro">Looks up Cover Art Archive. Preview the cover, then embed it into the audio file. Cue points stay. Quit Serato first.</p>
+    <p id="album-art-track" class="dialog-note"></p>
+    <fieldset>
+      <legend data-i18n="health.artPick">Cover to embed</legend>
+      <div id="album-art-choices"></div>
+    </fieldset>
+    <div class="dialog-actions">
+      <button id="album-art-cancel" type="button" autofocus data-i18n="common.cancel">Cancel</button>
+      <button id="album-art-embed" type="button" data-i18n="health.artEmbed">Embed cover</button>
+    </div>
+    <p id="album-art-status" class="dialog-status" role="status" aria-live="polite"></p>
   </dialog>
   <dialog id="crates-replace-dialog" aria-labelledby="crates-replace-title" aria-describedby="crates-replace-intro">
     <h2 id="crates-replace-title" data-i18n="cratesReplace.title">Use in crates</h2>
