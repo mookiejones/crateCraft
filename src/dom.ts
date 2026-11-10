@@ -17,6 +17,7 @@ export interface ElementIds {
   "crate-pane-b-label": HTMLParagraphElement;
   "crate-split": HTMLButtonElement;
   "crate-save-view": HTMLButtonElement;
+  "crate-browser-actions": HTMLDivElement;
   count: HTMLParagraphElement;
   search: HTMLInputElement;
   "search-field": HTMLSelectElement;

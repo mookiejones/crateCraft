@@ -22,7 +22,7 @@ import type {
 } from "./api-types";
 import { bridge } from "./bridge";
 import { el } from "./dom";
-import { clickPane, paintDualChrome, paneCrates } from "./dual-crate-view";
+import { clickPane, paintDualChrome } from "./dual-crate-view";
 import { colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
 import { loadDrift, showDriftFailure } from "./drift";
@@ -62,26 +62,26 @@ import { isTextSearchField, matchesQuery, parseQuery, type ParsedQuery } from ".
 import { COLOR_NAMES, COLORS, state } from "./state";
 import { createElement, type ReactNode } from "react";
 import { mountIsland, type IslandRoot } from "./app/mount";
+import { CrateActions } from "./components/CrateActions";
+import { CrateBrowserActions } from "./components/CrateBrowserActions";
+import { CrateTree } from "./components/CrateTree";
 import { HistoryDetail } from "./components/HistoryDetail";
 import { HistorySessions } from "./components/HistorySessions";
 import { PlayButton } from "./components/PlayButton";
+import { bindCrateActions, emitCrates } from "./crate-store";
 import { historyActions, notifyHistory } from "./context/HistoryContext";
 import { playerStrings } from "./player-strings";
 import { buttonEl, inputEl, selectEl, setTooltip, textareaEl } from "./tooltip";
 import {
   chooseRelated,
-  collapseCrate,
   editField,
-  expandCrate,
   membershipTip,
   openCopy,
   openReplaceCopy,
-  openCrate,
   openRelated,
   removeRelatedTip,
   revealTip,
   saveSuggestion,
-  selectRow,
   sortTip,
   tips,
 } from "./tooltip-strings";
@@ -98,6 +98,12 @@ let relatedRequest = 0;
 // Last track painted in the detail pane, so a language change can repaint it.
 let lastDetail: Track | null = null;
 let detailPlayRoot: IslandRoot | null = null;
+let crateListRoot: IslandRoot | null = null;
+let crateListHost: HTMLElement | null = null;
+let crateActionsRoot: IslandRoot | null = null;
+let crateActionsHost: HTMLElement | null = null;
+let crateBrowserRoot: IslandRoot | null = null;
+let crateBrowserHost: HTMLElement | null = null;
 let historyDetailRoot: IslandRoot | null = null;
 let historyDetailHost: HTMLElement | null = null;
 let sessionRoot: IslandRoot | null = null;
@@ -122,6 +128,59 @@ function remountIsland(host: HTMLElement, node: ReactNode, slot: {
   slot.host = host;
   slot.root = mountIsland(host, node, slot.root ?? undefined);
   return slot.root;
+}
+
+function mountCrateIsland(
+  host: HTMLElement | null,
+  node: ReactNode,
+  root: IslandRoot | null,
+  previous: HTMLElement | null,
+): { root: IslandRoot | null; host: HTMLElement | null } {
+  if (!host) return { root: null, host: null };
+  if (root && previous === host) {
+    return { root: mountIsland(host, node, root), host };
+  }
+  root?.unmount();
+  return { root: mountIsland(host, node), host };
+}
+
+/**
+ * Paint the crate tree and crate actions into their page hosts.
+ *
+ * Called from renderCrates and renderShell. A missing host is skipped so
+ * a test page that omitted that markup can still load tracks.
+ *
+ * @returns {void}
+ */
+export function mountCrates(): void {
+  const list = document.getElementById("crate-list");
+  const listMount = mountCrateIsland(
+    list instanceof HTMLElement ? list : null,
+    createElement(CrateTree),
+    crateListRoot,
+    crateListHost,
+  );
+  crateListRoot = listMount.root;
+  crateListHost = listMount.host;
+  const actions = document.getElementById("crate-actions");
+  const actionsMount = mountCrateIsland(
+    actions instanceof HTMLElement ? actions : null,
+    createElement(CrateActions),
+    crateActionsRoot,
+    crateActionsHost,
+  );
+  crateActionsRoot = actionsMount.root;
+  crateActionsHost = actionsMount.host;
+  const browser = document.getElementById("crate-browser-actions");
+  const browserMount = mountCrateIsland(
+    browser instanceof HTMLElement ? browser : null,
+    createElement(CrateBrowserActions),
+    crateBrowserRoot,
+    crateBrowserHost,
+  );
+  crateBrowserRoot = browserMount.root;
+  crateBrowserHost = browserMount.host;
+  emitCrates();
 }
 
 /**
@@ -151,113 +210,6 @@ function queryTerms() {
 }
 
 /**
- * Group crates by parent and sort each group.
- *
- * The sort follows the crate-sort control: library order, name, or date
- * added. A missing parent is grouped under 0 so those crates still appear.
- * Does not write the database or the DOM.
- *
- * @returns {Map<number, object[]>} Parent id to ordered child crates.
- */
-function childLists() {
-  const children = new Map<number | null, Crate[]>();
-  for (const crate of state.crates) {
-    const key = crate.parent ?? 0;
-    if (!children.has(key)) children.set(key, []);
-    const bucket = children.get(key);
-    bucket!.push(crate);
-  }
-  for (const list of children.values()) {
-    list.sort((a: Crate, b: Crate) => {
-      if (state.crateSort === "name") {
-        return a.name.localeCompare(b.name, undefined, { sensitivity: "base" }) || a.id - b.id;
-      }
-      if (state.crateSort === "added") return (b.added || 0) - (a.added || 0) || a.id - b.id;
-      return (a.order as number) - (b.order as number) || a.id - b.id;
-    });
-  }
-  return children;
-}
-
-/**
- * Return the crates that match the crate search, plus their parents.
- *
- * Parents stay so a matching child is not stranded without a path from
- * the root. A cycle in parent ids is stopped by the guard set. Null means
- * the search box is empty and every crate may show. Does not write.
- *
- * @returns {Set<number>|null} Crate ids to keep, or null when there is no query.
- */
-function crateKeep() {
-  const terms = state.crateQuery.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-  if (!terms.length) return null;
-  const byId = new Map(state.crates.map((crate) => [crate.id, crate]));
-  const keep = new Set();
-  for (const crate of state.crates) {
-    if (!terms.every((term) => crate.name.toLocaleLowerCase().includes(term))) continue;
-    let current: Crate | undefined = crate;
-    const guard = new Set<number>();
-    // guard stops a parent cycle from walking the same crate forever.
-    while (current && !guard.has(current.id)) {
-      guard.add(current.id);
-      keep.add(current.id);
-      current = byId.get(current.parent as number);
-    }
-  }
-  return keep;
-}
-
-/**
- * Flatten the crate tree in the order the rail should show.
- *
- * A crate search expands every matching branch. Otherwise only crates
- * whose parent is in state.expanded are walked. Crates whose parent is
- * missing from the payload are listed at the root so they are not hidden.
- *
- * @returns {object[]} Crates with depth and childCount set for the rail.
- */
-export function visibleCrates() {
-  const children = childLists();
-  const keep = crateKeep();
-  const ordered = [];
-  const seen = new Set();
-  /**
-   * Append one parent's visible children, then their open descendants.
-   *
-   * Nested inside visibleCrates. Skips an id already seen so a cycle cannot
-   * recurse forever. Does not touch the database.
-   *
-   * @param {number} parent Parent crate id, or the space root id.
-   * @param {number} depth Indent level, starting at 0 under the space root.
-   * @returns {void}
-   */
-  function walk(parent: number | null, depth: number) {
-    for (const crate of children.get(parent) || []) {
-      if (seen.has(crate.id)) continue;
-      if (keep && !keep.has(crate.id)) continue;
-      seen.add(crate.id);
-      crate.depth = depth;
-      crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
-      ordered.push(crate);
-      if (keep || state.expanded.has(crate.id)) walk(crate.id, depth + 1);
-    }
-  }
-  walk(state.rootId ?? null, 0);
-  for (const crate of state.crates) {
-    if (seen.has(crate.id)) continue;
-    if (keep && !keep.has(crate.id)) continue;
-    const parentListed = state.crates.some((item) => item.id === crate.parent);
-    if (parentListed) continue;
-    seen.add(crate.id);
-    crate.depth = 0;
-    crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
-    ordered.push(crate);
-    if (keep || state.expanded.has(crate.id)) walk(crate.id, 1);
-  }
-  return ordered;
-}
-
-/**
  * Open every ancestor of a crate so the selection stays on screen.
  *
  * Writes those ancestor ids into state.expanded. Stops if the parent
@@ -278,31 +230,6 @@ function expandAncestors(id: number | "all") {
     state.expanded.add(parent.id);
     crate = parent;
   }
-}
-
-/**
- * Find the visible ancestor of a crate the search has hidden.
- *
- * The rail marks that ancestor so the selection is not lost while the
- * child is filtered out. Returns null when the selection is All tracks
- * or the selected crate is already visible.
- *
- * @param {object[]} visible Crates currently listed.
- * @returns {number|null} Visible ancestor id, or null.
- */
-function hiddenSelectionHolder(visible: Crate[]) {
-  if (state.activeCrate === "all") return null;
-  if (visible.some((crate) => crate.id === state.activeCrate)) return null;
-  const byId = new Map(state.crates.map((crate) => [crate.id, crate]));
-  const visibleIds = new Set(visible.map((crate) => crate.id));
-  let crate = byId.get(state.activeCrate);
-  const guard = new Set();
-  while (crate && !guard.has(crate.id)) {
-    guard.add(crate.id);
-    crate = byId.get(crate.parent as number);
-    if (crate && visibleIds.has(crate.id)) return crate.id;
-  }
-  return null;
 }
 
 /**
@@ -381,86 +308,6 @@ export function buildView() {
 }
 
 /**
- * Build one crate-rail row, including its disclosure button.
- *
- * The row is a treeitem. A crate with children gets an expand button that
- * calls toggleCrate. Clicking the name calls selectCrate. Smart crates
- * are labeled. Nothing is written until those handlers run.
- *
- * @param {object} crate Crate fields, plus depth, childCount, and count.
- * @returns {HTMLDivElement} The row, not yet inserted.
- */
-function crateRow(crate: {
-  id: number | "all";
-  name: string;
-  depth?: number;
-  childCount?: number;
-  smart?: boolean;
-  count?: number | null;
-  parent?: number | null;
-  color?: number | string | null;
-  holds?: boolean;
-}) {
-  const row = document.createElement("div");
-  row.className = "crate-row";
-  if (crate.holds) row.classList.add("holds-selection");
-  row.style.paddingLeft = `${(crate.depth as number) * 14}px`;
-
-  if (crate.childCount) {
-    const open = state.crateQuery ? true : state.expanded.has(crate.id);
-    const twist = buttonEl(open ? collapseCrate(crate.name) : expandCrate(crate.name));
-    twist.className = "twist";
-    twist.tabIndex = -1;
-    twist.setAttribute("aria-expanded", String(open));
-    twist.setAttribute("aria-label", t(open ? "crates.collapse" : "crates.expand", { name: crate.name }));
-    twist.addEventListener("click", () => toggleCrate(crate.id));
-    row.append(twist);
-  } else {
-    const gap = document.createElement("span");
-    gap.className = "twist-gap";
-    gap.setAttribute("aria-hidden", "true");
-    row.append(gap);
-  }
-
-  const button = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
-  button.className = "crate";
-  button.dataset.id = String(crate.id);
-  if (crate.parent != null) button.dataset.parent = String(crate.parent);
-  button.setAttribute("role", "treeitem");
-  button.setAttribute("aria-level", String((crate.depth as number) + 1));
-  const split = state.splitCrates && state.mode === "crates";
-  const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-  button.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
-  if (crate.childCount) {
-    button.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
-  }
-  const name = document.createElement("span");
-  name.className = "name";
-  const hex = colorHex(crate.color);
-  if (hex) {
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    swatch.style.background = hex;
-    name.append(swatch);
-  }
-  name.append(document.createTextNode(crate.name));
-  button.append(name);
-  if (crate.smart) {
-    const smart = document.createElement("span");
-    smart.className = "smart";
-    smart.textContent = t("crates.smartBadge");
-    button.append(smart);
-  }
-  const meta = document.createElement("span");
-  meta.className = "meta";
-  meta.textContent = formatNumber(crate.count as number);
-  button.append(meta);
-  button.addEventListener("click", (event) => selectCrate(crate.id, event));
-  row.append(button);
-  return row;
-}
-
-/**
  * Keep one crate row tabbable after the rail is redrawn.
  *
  * The roving tabindex stays on the crate that had focus, or the first
@@ -481,55 +328,21 @@ function placeCrateFocus(previousId: string | number | null) {
  * Redraw the crate rail and restore scroll and focus.
  *
  * Counts reflect the current track search. An All tracks row is always
- * first. Replaces the rail's children. Does not fetch or write the library.
+ * first. Paints the React crate islands. Does not fetch or write the library.
  *
  * @returns {void}
  */
 export function renderCrates() {
-  const scroll = el("crate-list").scrollTop;
+  const list = el("crate-list");
+  const scroll = list.scrollTop;
   const active = document.activeElement;
-  const restore = el("crate-list").contains(active)
+  const restore = list.contains(active)
     ? active!.closest(".crate-row")?.querySelector<HTMLElement>(".crate")?.dataset.id ?? null
     : null;
-  const query = queryTerms();
-  const matched = query.terms.length || query.filters.length
-    ? new Set(state.tracks.filter((track) => listMatches(track, query)).map((track) => track.id))
-    : null;
-  const crates = visibleCrates();
-  const holder = hiddenSelectionHolder(crates);
-  el("crate-list").replaceChildren();
-
-  el("crate-list").append(crateRow({
-    id: "all",
-    name: t("crates.allTracks"),
-    depth: 0,
-    childCount: 0,
-    smart: false,
-    count: matched ? matched.size : state.tracks.length,
-  }));
-
-  for (const crate of crates) {
-    const members = state.crateTracks.get(crate.id) || new Set();
-    let shown = members.size;
-    if (matched) {
-      shown = 0;
-      for (const id of members) if (matched.has(id)) shown += 1;
-    }
-    el("crate-list").append(crateRow({
-      id: crate.id,
-      name: crate.name,
-      depth: crate.depth || 0,
-      childCount: crate.childCount || 0,
-      smart: Boolean(crate.smart),
-      parent: crate.parent ?? null,
-      color: crate.color ?? null,
-      count: shown,
-      holds: holder === crate.id,
-    }));
-  }
+  mountCrates();
   const focused = placeCrateFocus(restore);
   if (restore && focused) focused.focus({ preventScroll: true });
-  el("crate-list").scrollTop = scroll;
+  list.scrollTop = scroll;
   renderRules();
 }
 
@@ -644,6 +457,22 @@ export function playlistCrate(): number | "all" | null {
 }
 
 /**
+ * Download an M3U of the selected crate.
+ *
+ * Off Crates this does nothing. Does not write the library.
+ *
+ * @returns {void}
+ */
+export function exportPlaylistM3u(): void {
+  const crate = playlistCrate();
+  if (crate == null) return;
+  const link = document.createElement("a");
+  link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
+  link.download = "crate.m3u";
+  link.click();
+}
+
+/**
  * Show the controls and footer that belong to the current view.
  *
  * Hides crate tools outside the crate view, marks the selected view and
@@ -741,6 +570,7 @@ export function renderShell() {
   for (const button of document.querySelectorAll<HTMLButtonElement>("[data-crate-sort]")) {
     button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
   }
+  mountCrates();
   const crateChosen = state.activeCrate !== "all";
   el("crate-new").disabled = !state.writable;
   el("crate-rename").disabled = !state.writable || !crateChosen;
@@ -2680,14 +2510,7 @@ export function wireLibrary(): void {
     Promise.all(jobs).catch(showFailure);
   });
 
-  el("export-m3u").addEventListener("click", () => {
-    const crate = playlistCrate();
-    if (crate == null) return;
-    const link = document.createElement("a");
-    link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
-    link.download = "crate.m3u";
-    link.click();
-  });
+  el("export-m3u").addEventListener("click", () => exportPlaylistM3u());
   el("import-m3u").addEventListener("click", () => {
     if (playlistCrate() == null) return;
     if (!state.writable) {
@@ -2795,6 +2618,23 @@ bridge.selectTrack = selectTrack;
 bridge.selectEntry = selectEntry;
 bridge.reloadLibrary = loadLibrary;
 bridge.lockDown = lockDown;
+bindCrateActions({
+  select: selectCrate,
+  toggle: toggleCrate,
+  create: () => {
+    createCrate().catch((error) => setNotice(failureOf(error).message));
+  },
+  rename: () => {
+    renameCrate().catch((error) => setNotice(failureOf(error).message));
+  },
+  color: () => {
+    colorCrate().catch((error) => setNotice(failureOf(error).message));
+  },
+  remove: () => {
+    deleteCrate().catch((error) => setNotice(failureOf(error).message));
+  },
+  exportM3u: exportPlaylistM3u,
+});
 historyActions.loadHistory = loadHistory;
 historyActions.openSession = openSession;
 historyActions.selectEntry = selectEntry;

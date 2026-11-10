@@ -1,16 +1,17 @@
 /**
  * React providers for the page.
  *
- * Player is one domain. Waveform zoom and overview are another. Before
- * a gig (gig check and Tempo drift) is a third. Files is a fourth.
- * History is a fifth. Later screens add their own context file and one
+ * Player is one domain. The crate rail is the next. Waveform zoom and
+ * overview are another. Before a gig is a fourth. Files is a fifth.
+ * History is a sixth. Later screens add their own context file and one
  * wrapper here. This module reads those engines; it does not own fetch,
- * playback, history loads, or the folder load.
+ * playback, crate writes, history loads, or the folder load.
  */
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { failureOf } from "../api";
+import { CrateProvider as CrateContextProvider } from "../context/CrateContext";
 import {
   FilesProvider as FilesContextProvider,
   type FilesContextValue,
@@ -30,6 +31,7 @@ import {
   type PlayerContextValue,
 } from "../context/PlayerContext";
 import { WaveformProvider } from "../context/WaveformContext";
+import { readCrateValue, subscribeCrates } from "../crate-store";
 import {
   browserRows,
   cancelFilesPick,
@@ -313,24 +315,47 @@ export function FilesProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Mount the crate domain at the root of one React island.
+ *
+ * Updates are flushed so the rail and action buttons match `state` in
+ * the same turn as emitCrates.
+ *
+ * @param children Island that calls `useCrates`.
+ */
+export function CrateProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readCrateValue);
+  useEffect(() => {
+    return subscribeCrates(() => {
+      flushSync(() => {
+        setValue(readCrateValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <CrateContextProvider value={current}>{children}</CrateContextProvider>;
+}
+
+/**
  * Nest every domain provider.
  *
- * Player is the first domain. Waveform zoom and overview wrap inside it.
- * Before a gig wraps inside waveform. Files wraps inside Before a gig.
- * History wraps inside Files.
+ * Player is the first domain. Crates wrap inside it. Waveform wraps
+ * inside crates. Before a gig wraps inside waveform. Files wraps inside
+ * Before a gig. History wraps inside Files.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <WaveformProvider>
-        <GigProvider>
-          <FilesProvider>
-            <HistoryProvider>{children}</HistoryProvider>
-          </FilesProvider>
-        </GigProvider>
-      </WaveformProvider>
+      <CrateProvider>
+        <WaveformProvider>
+          <GigProvider>
+            <FilesProvider>
+              <HistoryProvider>{children}</HistoryProvider>
+            </FilesProvider>
+          </GigProvider>
+        </WaveformProvider>
+      </CrateProvider>
     </PlayerProvider>
   );
 }
