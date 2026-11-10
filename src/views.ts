@@ -1,21 +1,18 @@
 /**
- * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, files, tempo drift, and the portable drive check.
+ * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, tempo drift, and the portable drive check.
  *
- * The functions paint from state and the elements in index.html. Nothing
- * in this module runs a request when the file is imported. Listeners are
- * attached by wireLibrary, which app.ts calls once at startup.
+ * Files is React on FilesContext. This module re-exports that store so
+ * existing callers keep one import. Nothing in this module runs a
+ * request when the file is imported. Listeners are attached by
+ * wireLibrary, which app.ts calls once at startup.
  */
 
-import { failureOf, fetchLibraryRoots, isLibraryRoot, postJSON, readJSONOr } from "./api";
+import { failureOf, postJSON, readJSONOr } from "./api";
 import type {
   CopyRow,
   Crate,
   DuplicatePayload,
   ErrorBody,
-  FileCrumb,
-  FileEntry,
-  FileRoot,
-  FilesPayload,
   HistoryPayload,
   LibraryPayload,
   RelatedPayload,
@@ -25,8 +22,8 @@ import type {
 } from "./api-types";
 import { bridge } from "./bridge";
 import { el } from "./dom";
-import { clickPane, paintDualChrome, paneCrates } from "./dual-crate-view";
-import { clockLabel, colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "./format";
+import { clickPane, paintDualChrome } from "./dual-crate-view";
+import { colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
 import { loadDrift, showDriftFailure } from "./drift";
 import { loadHealth, showHealthFailure } from "./health";
@@ -34,53 +31,171 @@ import { loadHistoryStats, showHistoryStatsFailure } from "./history-stats";
 import { loadScan, showScanFailure } from "./scan";
 import { loadBitrate, showBitrateFailure } from "./bitrate";
 import { loadTags, showTagsFailure } from "./tags";
-import { loadPortableView, portableDriveButton, showPortableFailure } from "./portable";
+import { loadPortableView, showPortableFailure } from "./portable";
+import { mountFilesIslands } from "./files-mount";
+import {
+  FILES_SEARCH_MS,
+  failFiles,
+  focusFileByPath,
+  loadFolder,
+  moveFileList,
+  openFileList,
+  renderFiles,
+  selectedFiles,
+} from "./files";
+export {
+  FILES_SEARCH_MS,
+  failFiles,
+  focusFileByPath,
+  loadFolder,
+  moveFileList,
+  openFileList,
+  renderFiles,
+  selectedFiles,
+};
+import { appendBeatgrid } from "./beatgrid-view";
+import { appendCueSlots, formatCueTime } from "./cue-view";
 import { syncFolderSyncButton } from "./folder-sync-view";
 import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
 import { isTextSearchField, matchesQuery, parseQuery, type ParsedQuery } from "./search-filters";
-import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
-import { createElement } from "react";
+import { COLOR_NAMES, COLORS, state } from "./state";
+import { createElement, type ReactNode } from "react";
 import { mountIsland, type IslandRoot } from "./app/mount";
+import { CrateActions } from "./components/CrateActions";
+import { CrateBrowserActions } from "./components/CrateBrowserActions";
+import { CrateTree } from "./components/CrateTree";
+import { HistoryDetail } from "./components/HistoryDetail";
+import { HistorySessions } from "./components/HistorySessions";
+import { PlayButton } from "./components/PlayButton";
 import { TrackDetailPane } from "./components/TrackDetail";
+import { bindCrateActions, emitCrates } from "./crate-store";
+import { historyActions, notifyHistory } from "./context/HistoryContext";
 import { play } from "./player";
-import { buttonEl, inputEl, selectEl, setTooltip, textareaEl } from "./tooltip";
+import { playerStrings } from "./player-strings";
 import {
   registerTrackListActions,
   setTrackDetail,
   type TrackSaveFields,
 } from "./track-list-store";
+import { buttonEl, inputEl, selectEl, setTooltip, textareaEl } from "./tooltip";
 import {
   chooseRelated,
-  collapseCrate,
   editField,
-  expandCrate,
-  fileShortcut,
   membershipTip,
-  missingDrive,
   openCopy,
   openReplaceCopy,
-  openCrumb,
-  openCrate,
-  openFile,
   openRelated,
   removeRelatedTip,
   revealTip,
   saveSuggestion,
-  selectFile,
-  selectRow,
-  sessionTip,
   sortTip,
   tips,
 } from "./tooltip-strings";
 import { paintRows } from "./virtual-scroll";
 import { codedText, formatNumber, messageParams, serverMessage, t, type MessageKey } from "./i18n";
 
+/**
+ * Related-track request counter.
+ *
+ * A slow reply must not paint into a track the user has already left.
+ * Incremented by loadRelated. Not sent anywhere.
+ */
+let relatedRequest = 0;
+// Last track painted in the detail pane, so a language change can repaint it.
+let lastDetail: Track | null = null;
 let detailRoot: IslandRoot | null = null;
+let detailPlayRoot: IslandRoot | null = null;
+let crateListRoot: IslandRoot | null = null;
+let crateListHost: HTMLElement | null = null;
+let crateActionsRoot: IslandRoot | null = null;
+let crateActionsHost: HTMLElement | null = null;
+let crateBrowserRoot: IslandRoot | null = null;
+let crateBrowserHost: HTMLElement | null = null;
+let historyDetailRoot: IslandRoot | null = null;
+let historyDetailHost: HTMLElement | null = null;
+let sessionRoot: IslandRoot | null = null;
+let sessionHost: HTMLElement | null = null;
+
+function clearDetailIslands(): void {
+  detailRoot?.unmount();
+  detailRoot = null;
+  detailPlayRoot?.unmount();
+  detailPlayRoot = null;
+  historyDetailRoot?.unmount();
+  historyDetailRoot = null;
+  historyDetailHost = null;
+}
 
 function paintDetailIsland(): void {
-  detailRoot?.unmount();
+  clearDetailIslands();
   detailRoot = mountIsland(el("detail"), createElement(TrackDetailPane));
+}
+
+function remountIsland(host: HTMLElement, node: ReactNode, slot: {
+  host: HTMLElement | null;
+  root: IslandRoot | null;
+}): IslandRoot {
+  if (slot.root && slot.host !== host) {
+    slot.root.unmount();
+    slot.root = null;
+  }
+  slot.host = host;
+  slot.root = mountIsland(host, node, slot.root ?? undefined);
+  return slot.root;
+}
+
+function mountCrateIsland(
+  host: HTMLElement | null,
+  node: ReactNode,
+  root: IslandRoot | null,
+  previous: HTMLElement | null,
+): { root: IslandRoot | null; host: HTMLElement | null } {
+  if (!host) return { root: null, host: null };
+  if (root && previous === host) {
+    return { root: mountIsland(host, node, root), host };
+  }
+  root?.unmount();
+  return { root: mountIsland(host, node), host };
+}
+
+/**
+ * Paint the crate tree and crate actions into their page hosts.
+ *
+ * Called from renderCrates and renderShell. A missing host is skipped so
+ * a test page that omitted that markup can still load tracks.
+ *
+ * @returns {void}
+ */
+export function mountCrates(): void {
+  const list = document.getElementById("crate-list");
+  const listMount = mountCrateIsland(
+    list instanceof HTMLElement ? list : null,
+    createElement(CrateTree),
+    crateListRoot,
+    crateListHost,
+  );
+  crateListRoot = listMount.root;
+  crateListHost = listMount.host;
+  const actions = document.getElementById("crate-actions");
+  const actionsMount = mountCrateIsland(
+    actions instanceof HTMLElement ? actions : null,
+    createElement(CrateActions),
+    crateActionsRoot,
+    crateActionsHost,
+  );
+  crateActionsRoot = actionsMount.root;
+  crateActionsHost = actionsMount.host;
+  const browser = document.getElementById("crate-browser-actions");
+  const browserMount = mountCrateIsland(
+    browser instanceof HTMLElement ? browser : null,
+    createElement(CrateBrowserActions),
+    crateBrowserRoot,
+    crateBrowserHost,
+  );
+  crateBrowserRoot = browserMount.root;
+  crateBrowserHost = browserMount.host;
+  emitCrates();
 }
 
 /**
@@ -110,113 +225,6 @@ function queryTerms() {
 }
 
 /**
- * Group crates by parent and sort each group.
- *
- * The sort follows the crate-sort control: library order, name, or date
- * added. A missing parent is grouped under 0 so those crates still appear.
- * Does not write the database or the DOM.
- *
- * @returns {Map<number, object[]>} Parent id to ordered child crates.
- */
-function childLists() {
-  const children = new Map<number | null, Crate[]>();
-  for (const crate of state.crates) {
-    const key = crate.parent ?? 0;
-    if (!children.has(key)) children.set(key, []);
-    const bucket = children.get(key);
-    bucket!.push(crate);
-  }
-  for (const list of children.values()) {
-    list.sort((a: Crate, b: Crate) => {
-      if (state.crateSort === "name") {
-        return a.name.localeCompare(b.name, undefined, { sensitivity: "base" }) || a.id - b.id;
-      }
-      if (state.crateSort === "added") return (b.added || 0) - (a.added || 0) || a.id - b.id;
-      return (a.order as number) - (b.order as number) || a.id - b.id;
-    });
-  }
-  return children;
-}
-
-/**
- * Return the crates that match the crate search, plus their parents.
- *
- * Parents stay so a matching child is not stranded without a path from
- * the root. A cycle in parent ids is stopped by the guard set. Null means
- * the search box is empty and every crate may show. Does not write.
- *
- * @returns {Set<number>|null} Crate ids to keep, or null when there is no query.
- */
-function crateKeep() {
-  const terms = state.crateQuery.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-  if (!terms.length) return null;
-  const byId = new Map(state.crates.map((crate) => [crate.id, crate]));
-  const keep = new Set();
-  for (const crate of state.crates) {
-    if (!terms.every((term) => crate.name.toLocaleLowerCase().includes(term))) continue;
-    let current: Crate | undefined = crate;
-    const guard = new Set<number>();
-    // guard stops a parent cycle from walking the same crate forever.
-    while (current && !guard.has(current.id)) {
-      guard.add(current.id);
-      keep.add(current.id);
-      current = byId.get(current.parent as number);
-    }
-  }
-  return keep;
-}
-
-/**
- * Flatten the crate tree in the order the rail should show.
- *
- * A crate search expands every matching branch. Otherwise only crates
- * whose parent is in state.expanded are walked. Crates whose parent is
- * missing from the payload are listed at the root so they are not hidden.
- *
- * @returns {object[]} Crates with depth and childCount set for the rail.
- */
-export function visibleCrates() {
-  const children = childLists();
-  const keep = crateKeep();
-  const ordered = [];
-  const seen = new Set();
-  /**
-   * Append one parent's visible children, then their open descendants.
-   *
-   * Nested inside visibleCrates. Skips an id already seen so a cycle cannot
-   * recurse forever. Does not touch the database.
-   *
-   * @param {number} parent Parent crate id, or the space root id.
-   * @param {number} depth Indent level, starting at 0 under the space root.
-   * @returns {void}
-   */
-  function walk(parent: number | null, depth: number) {
-    for (const crate of children.get(parent) || []) {
-      if (seen.has(crate.id)) continue;
-      if (keep && !keep.has(crate.id)) continue;
-      seen.add(crate.id);
-      crate.depth = depth;
-      crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
-      ordered.push(crate);
-      if (keep || state.expanded.has(crate.id)) walk(crate.id, depth + 1);
-    }
-  }
-  walk(state.rootId ?? null, 0);
-  for (const crate of state.crates) {
-    if (seen.has(crate.id)) continue;
-    if (keep && !keep.has(crate.id)) continue;
-    const parentListed = state.crates.some((item) => item.id === crate.parent);
-    if (parentListed) continue;
-    seen.add(crate.id);
-    crate.depth = 0;
-    crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
-    ordered.push(crate);
-    if (keep || state.expanded.has(crate.id)) walk(crate.id, 1);
-  }
-  return ordered;
-}
-
-/**
  * Open every ancestor of a crate so the selection stays on screen.
  *
  * Writes those ancestor ids into state.expanded. Stops if the parent
@@ -237,31 +245,6 @@ function expandAncestors(id: number | "all") {
     state.expanded.add(parent.id);
     crate = parent;
   }
-}
-
-/**
- * Find the visible ancestor of a crate the search has hidden.
- *
- * The rail marks that ancestor so the selection is not lost while the
- * child is filtered out. Returns null when the selection is All tracks
- * or the selected crate is already visible.
- *
- * @param {object[]} visible Crates currently listed.
- * @returns {number|null} Visible ancestor id, or null.
- */
-function hiddenSelectionHolder(visible: Crate[]) {
-  if (state.activeCrate === "all") return null;
-  if (visible.some((crate) => crate.id === state.activeCrate)) return null;
-  const byId = new Map(state.crates.map((crate) => [crate.id, crate]));
-  const visibleIds = new Set(visible.map((crate) => crate.id));
-  let crate = byId.get(state.activeCrate);
-  const guard = new Set();
-  while (crate && !guard.has(crate.id)) {
-    guard.add(crate.id);
-    crate = byId.get(crate.parent as number);
-    if (crate && visibleIds.has(crate.id)) return crate.id;
-  }
-  return null;
 }
 
 /**
@@ -340,86 +323,6 @@ export function buildView() {
 }
 
 /**
- * Build one crate-rail row, including its disclosure button.
- *
- * The row is a treeitem. A crate with children gets an expand button that
- * calls toggleCrate. Clicking the name calls selectCrate. Smart crates
- * are labeled. Nothing is written until those handlers run.
- *
- * @param {object} crate Crate fields, plus depth, childCount, and count.
- * @returns {HTMLDivElement} The row, not yet inserted.
- */
-function crateRow(crate: {
-  id: number | "all";
-  name: string;
-  depth?: number;
-  childCount?: number;
-  smart?: boolean;
-  count?: number | null;
-  parent?: number | null;
-  color?: number | string | null;
-  holds?: boolean;
-}) {
-  const row = document.createElement("div");
-  row.className = "crate-row";
-  if (crate.holds) row.classList.add("holds-selection");
-  row.style.paddingLeft = `${(crate.depth as number) * 14}px`;
-
-  if (crate.childCount) {
-    const open = state.crateQuery ? true : state.expanded.has(crate.id);
-    const twist = buttonEl(open ? collapseCrate(crate.name) : expandCrate(crate.name));
-    twist.className = "twist";
-    twist.tabIndex = -1;
-    twist.setAttribute("aria-expanded", String(open));
-    twist.setAttribute("aria-label", t(open ? "crates.collapse" : "crates.expand", { name: crate.name }));
-    twist.addEventListener("click", () => toggleCrate(crate.id));
-    row.append(twist);
-  } else {
-    const gap = document.createElement("span");
-    gap.className = "twist-gap";
-    gap.setAttribute("aria-hidden", "true");
-    row.append(gap);
-  }
-
-  const button = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
-  button.className = "crate";
-  button.dataset.id = String(crate.id);
-  if (crate.parent != null) button.dataset.parent = String(crate.parent);
-  button.setAttribute("role", "treeitem");
-  button.setAttribute("aria-level", String((crate.depth as number) + 1));
-  const split = state.splitCrates && state.mode === "crates";
-  const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-  button.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
-  if (crate.childCount) {
-    button.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
-  }
-  const name = document.createElement("span");
-  name.className = "name";
-  const hex = colorHex(crate.color);
-  if (hex) {
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    swatch.style.background = hex;
-    name.append(swatch);
-  }
-  name.append(document.createTextNode(crate.name));
-  button.append(name);
-  if (crate.smart) {
-    const smart = document.createElement("span");
-    smart.className = "smart";
-    smart.textContent = t("crates.smartBadge");
-    button.append(smart);
-  }
-  const meta = document.createElement("span");
-  meta.className = "meta";
-  meta.textContent = formatNumber(crate.count as number);
-  button.append(meta);
-  button.addEventListener("click", (event) => selectCrate(crate.id, event));
-  row.append(button);
-  return row;
-}
-
-/**
  * Keep one crate row tabbable after the rail is redrawn.
  *
  * The roving tabindex stays on the crate that had focus, or the first
@@ -440,55 +343,21 @@ function placeCrateFocus(previousId: string | number | null) {
  * Redraw the crate rail and restore scroll and focus.
  *
  * Counts reflect the current track search. An All tracks row is always
- * first. Replaces the rail's children. Does not fetch or write the library.
+ * first. Paints the React crate islands. Does not fetch or write the library.
  *
  * @returns {void}
  */
 export function renderCrates() {
-  const scroll = el("crate-list").scrollTop;
+  const list = el("crate-list");
+  const scroll = list.scrollTop;
   const active = document.activeElement;
-  const restore = el("crate-list").contains(active)
+  const restore = list.contains(active)
     ? active!.closest(".crate-row")?.querySelector<HTMLElement>(".crate")?.dataset.id ?? null
     : null;
-  const query = queryTerms();
-  const matched = query.terms.length || query.filters.length
-    ? new Set(state.tracks.filter((track) => listMatches(track, query)).map((track) => track.id))
-    : null;
-  const crates = visibleCrates();
-  const holder = hiddenSelectionHolder(crates);
-  el("crate-list").replaceChildren();
-
-  el("crate-list").append(crateRow({
-    id: "all",
-    name: t("crates.allTracks"),
-    depth: 0,
-    childCount: 0,
-    smart: false,
-    count: matched ? matched.size : state.tracks.length,
-  }));
-
-  for (const crate of crates) {
-    const members = state.crateTracks.get(crate.id) || new Set();
-    let shown = members.size;
-    if (matched) {
-      shown = 0;
-      for (const id of members) if (matched.has(id)) shown += 1;
-    }
-    el("crate-list").append(crateRow({
-      id: crate.id,
-      name: crate.name,
-      depth: crate.depth || 0,
-      childCount: crate.childCount || 0,
-      smart: Boolean(crate.smart),
-      parent: crate.parent ?? null,
-      color: crate.color ?? null,
-      count: shown,
-      holds: holder === crate.id,
-    }));
-  }
+  mountCrates();
   const focused = placeCrateFocus(restore);
   if (restore && focused) focused.focus({ preventScroll: true });
-  el("crate-list").scrollTop = scroll;
+  list.scrollTop = scroll;
   renderRules();
 }
 
@@ -603,6 +472,22 @@ export function playlistCrate(): number | "all" | null {
 }
 
 /**
+ * Download an M3U of the selected crate.
+ *
+ * Off Crates this does nothing. Does not write the library.
+ *
+ * @returns {void}
+ */
+export function exportPlaylistM3u(): void {
+  const crate = playlistCrate();
+  if (crate == null) return;
+  const link = document.createElement("a");
+  link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
+  link.download = "crate.m3u";
+  link.click();
+}
+
+/**
  * Show the controls and footer that belong to the current view.
  *
  * Hides crate tools outside the crate view, marks the selected view and
@@ -700,6 +585,7 @@ export function renderShell() {
   for (const button of document.querySelectorAll<HTMLButtonElement>("[data-crate-sort]")) {
     button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
   }
+  mountCrates();
   const crateChosen = state.activeCrate !== "all";
   el("crate-new").disabled = !state.writable;
   el("crate-rename").disabled = !state.writable || !crateChosen;
@@ -827,11 +713,19 @@ export function renderList() {
   if (!view.some((track) => track.id === state.selectedId)) {
     if (!view.length) {
       state.selectedId = null;
-      setTrackDetail({
-        kind: "empty",
-        message: state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches"),
-      });
-      paintDetailIsland();
+      if (state.mode === "history") {
+        const empty = document.createElement("p");
+        empty.className = "detail-empty";
+        empty.textContent = !state.historyId ? t("history.chooseSession") : t("list.noMatches");
+        clearDetailIslands();
+        el("detail").replaceChildren(empty);
+      } else {
+        setTrackDetail({
+          kind: "empty",
+          message: t("list.noMatches"),
+        });
+        paintDetailIsland();
+      }
     } else if (state.mode === "history") selectEntry(view[0]!.id);
     else selectTrack(view[0]!.id);
   }
@@ -953,20 +847,888 @@ export async function selectTrack(id: number) {
 export function selectEntry(id: number) {
   state.selectedId = id;
   paintRows();
-  const entry = state.entries.find((item) => item.id === id);
-  if (!entry) return;
-  setTrackDetail({ kind: "entry", entry });
-  paintDetailIsland();
+  notifyHistory();
+  if (!state.entries.some((item) => item.id === id)) return;
+  const host = el("detail");
+  detailRoot?.unmount();
+  detailRoot = null;
+  detailPlayRoot?.unmount();
+  detailPlayRoot = null;
+  historyDetailRoot = remountIsland(host, createElement(HistoryDetail), {
+    host: historyDetailHost,
+    root: historyDetailRoot,
+  });
+  historyDetailHost = host;
 }
 
+/**
+ * Build one labeled editor control for a track field.
+ *
+ * Comments use a textarea. BPM asks for a decimal keyboard. The control
+ * name matches the field save_track accepts. Nothing is saved until the
+ * form is submitted.
+ *
+ * @param {string} name Field name.
+ * @param {string} label Visible label.
+ * @param {string|number|null|undefined} value Current value.
+ * @param {boolean} [wide=false] True when the control spans the pane.
+ * @returns {HTMLLabelElement} The labeled control.
+ */
+function fieldInput(name: string, label: string, value: string | number | null | undefined, wide: boolean = false) {
+  const wrap = document.createElement("label");
+  if (wide) wrap.className = "wide";
+  wrap.append(document.createTextNode(label));
+  const input = name === "comments"
+    ? textareaEl(editField(label))
+    : inputEl(editField(label));
+  input.name = name;
+  input.value = String(value ?? "");
+  if (name === "bpm") input.inputMode = "decimal";
+  wrap.append(input);
+  return wrap;
+}
+
+/**
+ * Fill the detail pane from a /api/track payload.
+ *
+ * The form edits the fields save_track accepts. Controls stay disabled
+ * while the library is locked. Reveal, Prepare, relocate, and remove call
+ * the matching POST routes. Related tracks load from /api/related. Cue
+ * data is shown and is not written back.
+ *
+ * @param {object} track Payload from GET /api/track.
+ * @returns {void}
+ */
+function renderDetail(track: Track) {
+  lastDetail = track;
+  const writable = Boolean(track.serato?.writable && state.writable);
+  const body = document.createElement("div");
+  body.className = "detail-body";
+
+  if (track.album) {
+    const kicker = document.createElement("p");
+    kicker.className = "detail-kicker";
+    kicker.textContent = track.album;
+    body.append(kicker);
+  }
+  const title = document.createElement("h2");
+  title.textContent = track.title ?? "";
+  body.append(title);
+  if (track.artist) {
+    const artist = document.createElement("p");
+    artist.className = "artist";
+    artist.textContent = track.artist ?? "";
+    body.append(artist);
+  }
+
+  const playTitle = track.title || track.name || playerStrings.untitled;
+  clearDetailIslands();
+  const playHost = document.createElement("span");
+  detailPlayRoot = mountIsland(playHost, createElement(PlayButton, {
+    variant: "detail",
+    trackId: track.id,
+    name: playTitle,
+  }));
+  body.append(playHost);
+
+  const deck = document.createElement("div");
+  deck.className = "deck";
+  const facts: Array<[MessageKey, string | number | null | undefined]> = [["column.bpm", track.bpm], ["column.key", track.key || "—"], ["column.time", track.length]];
+  for (const [key, value] of facts) {
+    const label = t(key);
+    const cell = document.createElement("div");
+    const strong = document.createElement("strong");
+    strong.textContent = String(value || "—");
+    if (key === "column.bpm") strong.className = "bpm";
+    const span = document.createElement("span");
+    span.textContent = label;
+    cell.append(strong, span);
+    deck.append(cell);
+  }
+  if (track.color) {
+    const cell = document.createElement("div");
+    const swatch = document.createElement("span");
+    swatch.className = "swatch swatch-lg";
+    swatch.style.background = String(track.color ?? "");
+    const span = document.createElement("span");
+    span.textContent = t("field.color");
+    cell.append(swatch, span);
+    deck.append(cell);
+  }
+  body.append(deck);
+
+  const note = document.createElement("p");
+  note.className = "lock-note";
+  note.textContent = track.serato?.message || el("status").textContent;
+  body.append(note);
+
+  const form = document.createElement("form");
+  form.className = "editor";
+  const edit = track.edit || {};
+  const editorFields: Array<[string, MessageKey, boolean]> = [
+    ["name", "column.title", true],
+    ["artist", "column.artist", false],
+    ["album", "field.album", false],
+    ["genre", "field.genre", false],
+    ["year", "field.year", false],
+    ["composer", "field.composer", false],
+    ["remixer", "field.remixer", false],
+    ["label", "field.label", false],
+    ["grouping", "field.grouping", false],
+    ["key", "column.key", false],
+    ["bpm", "column.bpm", false],
+    ["emoji", "field.emoji", false],
+    ["comments", "field.comments", true],
+  ];
+  for (const [name, label, wide] of editorFields) {
+    form.append(fieldInput(name, t(label), String(edit[name] ?? ""), wide));
+  }
+
+  const colorLabel = document.createElement("label");
+  colorLabel.append(document.createTextNode(t("field.color")));
+  const colorSelect = selectEl(tips.trackColor);
+  colorSelect.name = "color";
+  const currentColor = Number(edit.color ?? 0xffffff);
+  const palette: Array<[number, string]> = COLORS.map(([value, key]) => [value, t(key)]);
+  if (!COLORS.some(([value]) => value === currentColor)) palette.push([currentColor, colorHex(currentColor) || t("color.custom")]);
+  for (const [value, label] of palette) {
+    const option = document.createElement("option");
+    option.value = String(value);
+    option.textContent = label;
+    option.selected = value === currentColor;
+    colorSelect.append(option);
+  }
+  colorLabel.append(colorSelect);
+  form.append(colorLabel);
+
+  const ratingLabel = document.createElement("label");
+  ratingLabel.append(document.createTextNode(t("field.rating")));
+  const ratingSelect = selectEl(tips.trackRating);
+  ratingSelect.name = "rating";
+  const ratings: Array<[string, string]> = [
+    ["", t("rating.none")],
+    ...([["0.2", 1], ["0.4", 2], ["0.6", 3], ["0.8", 4], ["1", 5]] as const).map(([value, stars]): [string, string] => [value, t("rating.stars", { count: stars })]),
+  ];
+  if (edit.rating != null && !ratings.some(([value]) => Number(value) === Number(edit.rating))) {
+    ratings.push([String(edit.rating), `${edit.rating}`]);
+  }
+  for (const [value, label] of ratings) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label ?? "";
+    option.selected = value === (edit.rating == null ? "" : String(edit.rating));
+    ratingSelect.append(option);
+  }
+  ratingLabel.append(ratingSelect);
+  form.append(ratingLabel);
+
+  const lock = document.createElement("label");
+  lock.className = "check";
+  const lockInput = inputEl(tips.beatgridLock);
+  lockInput.type = "checkbox";
+  lockInput.name = "is_beatgrid_locked";
+  lockInput.checked = Boolean(edit.is_beatgrid_locked);
+  lock.append(lockInput, document.createTextNode(t("field.beatgridLocked")));
+  form.append(lock);
+
+  const save = buttonEl(tips.saveTrack);
+  save.type = "submit";
+  save.className = "text-button wide";
+  save.textContent = t("detail.saveTrack");
+  form.append(save);
+  for (const control of form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | HTMLButtonElement>("input, select, textarea, button")) control.disabled = !writable;
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveTrackFromForm(track.id, form);
+  });
+  body.append(form);
+
+  const actions = document.createElement("div");
+  actions.className = "actions";
+  const reveal = buttonEl(revealTip(track.serato?.file_manager || state.serato?.file_manager || "Finder"));
+  const manager = track.serato?.file_manager || state.serato?.file_manager || "Finder";
+  reveal.textContent = t("detail.reveal", { manager });
+  reveal.disabled = !track.file_on_disk;
+  reveal.addEventListener("click", () => revealTrack(track.id));
+  const prepare = buttonEl(track.in_prepare ? tips.prepareRemove : tips.prepareAdd);
+  prepare.textContent = track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare");
+  prepare.disabled = !writable;
+  prepare.addEventListener("click", () => prepareTrack(track.id, !track.in_prepare));
+  const relocate = buttonEl(tips.relocate);
+  relocate.textContent = t("detail.relocate");
+  relocate.disabled = !writable;
+  relocate.addEventListener("click", () => relocateTrack(track));
+  const remove = buttonEl(tips.removeTrack);
+  remove.textContent = t("detail.removeFromLibrary");
+  remove.disabled = !writable;
+  remove.addEventListener("click", () => removeTrack(track.id));
+  const useInCrates = buttonEl(tips.useInCrates);
+  useInCrates.textContent = t("detail.useInCrates");
+  useInCrates.disabled = !writable;
+  useInCrates.addEventListener("click", () => {
+    bridge.openReplaceInCratesDialog(track.id).catch((error) => setNotice(failureOf(error).message));
+  });
+  actions.append(reveal, prepare, relocate, remove, useInCrates);
+  if (state.mode === "duplicates" && selectedDuplicateGroup()) {
+    const merge = buttonEl(tips.mergeDuplicates);
+    merge.textContent = t("merge.title");
+    merge.disabled = !writable;
+    merge.addEventListener("click", () => {
+      bridge.openMergeDialog().catch((error) => setNotice(failureOf(error).message));
+    });
+    actions.append(merge);
+  }
+  body.append(actions);
+
+  body.append(relatedSection(track, writable));
+  body.append(markerSection(track));
+  if (track.copies?.length) body.append(copySection(track.id, track.copies, writable));
+  body.append(membershipSection(track, writable));
+
+  for (const group of track.groups || []) {
+    const section = document.createElement("section");
+    section.className = "group";
+    const heading = document.createElement("h3");
+    heading.textContent = group.name ?? "";
+    section.append(heading);
+    const open = group.name !== "Search copies";
+    if (!open) {
+      const toggle = buttonEl(tips.showSearchCopies);
+      toggle.className = "text-button";
+      toggle.textContent = t("detail.searchCopies", { count: group.fields.length });
+      let shown = false;
+      section.hidden = true;
+      toggle.addEventListener("click", () => {
+        shown = !shown;
+        section.hidden = !shown;
+        toggle.textContent = shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length });
+        setTooltip(toggle, shown ? tips.hideSearchCopies : tips.showSearchCopies);
+      });
+      body.append(toggle);
+    }
+    for (const field of group.fields) {
+      const row = document.createElement("div");
+      row.className = "field";
+      const label = document.createElement("div");
+      label.className = "label";
+      label.textContent = field.label ?? "";
+      const column = document.createElement("span");
+      column.className = "column";
+      column.textContent = field.column ?? "";
+      label.append(column);
+      const value = document.createElement("div");
+      value.className = "value";
+      if (field.column === "color" && field.display.startsWith("#")) {
+        const wrap = document.createElement("span");
+        wrap.className = "color-value";
+        const swatch = document.createElement("span");
+        swatch.className = "swatch";
+        swatch.style.background = field.display;
+        wrap.append(swatch, document.createTextNode(field.display));
+        value.append(wrap);
+      } else {
+        value.textContent = field.display;
+      }
+      row.append(label, value);
+      section.append(row);
+    }
+    body.append(section);
+  }
+  el("detail").replaceChildren(body);
+}
+
+/**
+ * Build the cue, loop, flip, and beatgrid section.
+ *
+ * The copy says the markers were read from the audio file and are not
+ * written back. Pads 1–8 always show, in Serato colours, when the file
+ * could be read. A missing file is explained instead of showing empty
+ * pads. The beatgrid block says it is view-only and flags a grid this
+ * parser cannot read. Does not fetch.
+ *
+ * @param {object} track Track payload including cues, loops, flips, and beatgrid.
+ * @returns {HTMLElement} The section, not yet inserted.
+ */
+function markerSection(track: Track) {
+  const section = document.createElement("section");
+  section.className = "group";
+  const heading = document.createElement("h3");
+  heading.textContent = t("markers.heading");
+  section.append(heading);
+  const note = document.createElement("p");
+  note.className = "detail-kicker";
+  if (track.markers_unavailable) note.textContent = t("markers.unavailable");
+  else if (!track.markers_found) note.textContent = t("markers.none");
+  else note.textContent = t("markers.readOnly");
+  section.append(note);
+  /**
+   * Format a loop time as m:ss.sss.
+   *
+   * Nested in markerSection. Three decimal places keep a loop distinguishable
+   * inside one second. Cue rows use `formatCueTime` in cue-view.ts.
+   *
+   * @param {number|string} value Time in milliseconds.
+   * @returns {string} Minutes, seconds, and milliseconds.
+   */
+  const ms = (value: number | string | null | undefined) => formatCueTime(value);
+  if (!track.markers_unavailable) appendCueSlots(section, track.cues || []);
+  for (const loop of track.loops || []) {
+    const row = document.createElement("div");
+    row.className = "marker";
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    if (loop.color) swatch.style.background = loop.color;
+    const time = document.createElement("span");
+    time.textContent = `${ms(loop.start_ms)}–${ms(loop.end_ms)}`;
+    const name = document.createElement("span");
+    name.textContent = loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: (loop.index as number) + 1 });
+    row.append(document.createElement("span"), swatch, time, name);
+    section.append(row);
+  }
+  for (const flip of track.flips || []) {
+    const row = document.createElement("div");
+    row.className = "marker";
+    const time = document.createElement("span");
+    time.textContent = flip.enabled ? t("common.on") : t("common.off");
+    const name = document.createElement("span");
+    name.textContent = flip.name || t("markers.flip", { number: (flip.index as number) + 1 });
+    row.append(document.createElement("span"), document.createElement("span"), time, name);
+    section.append(row);
+  }
+  appendBeatgrid(section, track);
+  return section;
+}
+
+/**
+ * List other copies of this track and let a click select one.
+ *
+ * Copies share title, artist, and whole-second length. Selecting one
+ * calls selectTrack, which fetches that asset. This builder only creates
+ * the nodes.
+ *
+ * @param {number} fromId Open track whose crates the replacement should join.
+ * @param {object[]} copies Copy summaries from the track payload.
+ * @param {boolean} writable False disables Use in crates.
+ * @returns {HTMLElement} The section.
+ */
+function copySection(fromId: number, copies: CopyRow[], writable: boolean) {
+  const section = document.createElement("section");
+  section.className = "group";
+  const heading = document.createElement("h3");
+  heading.textContent = t("copies.heading");
+  section.append(heading);
+  for (const copy of copies) {
+    const row = document.createElement("div");
+    row.className = "copy-row";
+    const button = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
+    button.className = "text-button";
+    button.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
+    button.addEventListener("click", () => selectTrack(copy.id as number));
+    const rate = document.createElement("span");
+    rate.textContent = copy.bitrate == null ? "" : String(copy.bitrate);
+    const plays = document.createElement("span");
+    plays.textContent = copy.play_count == null ? "" : String(copy.play_count);
+    const crates = document.createElement("span");
+    crates.textContent = copy.missing ? "missing" : (copy.crates || "");
+    const replace = buttonEl(openReplaceCopy(copy.file || `Track ${copy.id}`));
+    replace.className = "text-button";
+    replace.textContent = t("copies.useInCrates");
+    replace.disabled = !writable;
+    replace.addEventListener("click", () => {
+      bridge.openReplaceInCratesDialog(fromId, copy.id as number).catch((error) => setNotice(failureOf(error).message));
+    });
+    row.append(button, rate, plays, crates, replace);
+    section.append(row);
+  }
+  return section;
+}
+
+/**
+ * Build the related-tracks section and start its request.
+ *
+ * The section lists saved links, a search box that links another track,
+ * and suggestions. Saving a link writes the sidecar file and does not
+ * require Serato to be quit. The Serato crate button does. Text from the
+ * server is assigned with textContent.
+ *
+ * @param {object} track Track payload from GET /api/track.
+ * @param {boolean} writable False disables the Serato crate button.
+ * @returns {HTMLElement} The section, with a loading line until the reply arrives.
+ */
+function relatedSection(track: Track, writable: boolean) {
+  const section = document.createElement("section");
+  section.className = "group";
+  section.dataset.trackId = String(track.id);
+  const heading = document.createElement("h3");
+  heading.id = `related-heading-${track.id}`;
+  heading.textContent = t("related.heading");
+  section.setAttribute("aria-labelledby", heading.id);
+  section.setAttribute("aria-busy", "true");
+  const status = document.createElement("p");
+  status.className = "detail-kicker";
+  status.setAttribute("role", "status");
+  const path = track.resolved_path || track.edit?.portable_id || "";
+  status.textContent = path ? t("related.loading") : t("related.noPath");
+  section.append(heading, status);
+  if (path) loadRelated(track, section, writable, "");
+  return section;
+}
+
+/**
+ * Fetch related tracks for the open track.
+ *
+ * GET /api/related uses the resolved path. A reply for an older selection
+ * is ignored. Does not write the Serato library.
+ *
+ * @param {object} track Track payload.
+ * @param {HTMLElement} section Section built by relatedSection.
+ * @param {boolean} writable False disables the Serato crate button.
+ * @param {string} query Search text to keep after a refresh.
+ * @returns {Promise<void>}
+ */
+async function loadRelated(track: Track, section: HTMLElement, writable: boolean, query: string) {
+  const token = ++relatedRequest;
+  const path = track.resolved_path || track.edit?.portable_id || "";
+  const params = new URLSearchParams({ path, space: state.space });
+  try {
+    const response = await fetch(`/api/related?${params}`);
+    const payload = await readJSONOr<RelatedPayload>(response, {});
+    if (token !== relatedRequest || !section.isConnected) return;
+    if (!response.ok) throw new Error(serverMessage(payload, t("related.loadFailed")));
+    renderRelated(track, section, writable, payload, query);
+  } catch (error) {
+    if (token !== relatedRequest || !section.isConnected) return;
+    section.setAttribute("aria-busy", "false");
+    const status = section.querySelector("[role=status]");
+    if (status) status.textContent = failureOf(error).message;
+  }
+}
+
+/**
+ * Paint saved links, the link form, and suggestions.
+ *
+ * Replaces the section body except the heading. Notes and titles are
+ * text, not HTML. Does not fetch.
+ *
+ * @param {object} track Open track.
+ * @param {HTMLElement} section Related section.
+ * @param {boolean} writable False disables the Serato crate button.
+ * @param {object} payload GET /api/related body.
+ * @param {string} query Search text to restore.
+ * @returns {void}
+ */
+function renderRelated(track: Track, section: HTMLElement, writable: boolean, payload: RelatedPayload, query: string) {
+  const heading = section.querySelector("h3");
+  section.replaceChildren(heading!);
+  section.setAttribute("aria-busy", "false");
+  const saved = Array.isArray(payload.saved) ? payload.saved : [];
+  const suggested = Array.isArray(payload.suggested) ? payload.suggested : [];
+  const status = document.createElement("p");
+  status.className = "detail-kicker";
+  status.setAttribute("role", "status");
+  status.textContent = saved.length
+    ? t("related.savedCount", { count: saved.length })
+    : t("related.noneSaved");
+  section.append(status);
+  if (saved.length) section.append(relatedSavedList(track, section, saved));
+
+  section.append(relatedSearch(track, section, query));
+
+  const suggestHeading = document.createElement("p");
+  suggestHeading.className = "detail-kicker";
+  suggestHeading.textContent = suggested.length
+    ? t("related.suggested")
+    : t("related.noSuggestions");
+  section.append(suggestHeading);
+  if (suggested.length) section.append(relatedSuggestList(track, section, suggested));
+
+  const crate = buttonEl(tips.updateRelated);
+  crate.className = "text-button";
+  crate.dataset.relatedCrate = "true";
+  const crateName = payload.crate_name || "Related";
+  crate.textContent = t("related.updateCrate");
+  crate.disabled = !writable;
+  crate.addEventListener("click", () => refreshRelatedCrate(track, section));
+  const crateNote = document.createElement("p");
+  crateNote.className = "detail-kicker";
+  crateNote.textContent = writable
+    ? t("related.crateNote", { name: crateName })
+    : t("related.quitSerato");
+  section.append(crate, crateNote);
+}
+
+/**
+ * List saved links with a remove button.
+ *
+ * A track that is still in the library opens when its name is clicked.
+ * Does not fetch until the user removes a link.
+ *
+ * @param {object} track Open track.
+ * @param {HTMLElement} section Related section.
+ * @param {object[]} saved Saved link objects.
+ * @returns {HTMLElement} The list.
+ */
+function relatedSavedList(track: Track, section: HTMLElement, saved: RelatedTrack[]) {
+  const list = document.createElement("ul");
+  list.className = "related-list";
+  for (const link of saved) {
+    const item = document.createElement("li");
+    item.className = "related-row";
+    const main = document.createElement("div");
+    const other = link.track || {};
+    const label = other.title || t("track.untitled");
+    if (other.asset_id != null && other.in_library) {
+      const open = buttonEl(openRelated(label));
+      open.className = "text-button";
+      open.textContent = label;
+      open.addEventListener("click", () => selectTrack(other.asset_id as number));
+      main.append(open);
+    } else {
+      const name = document.createElement("span");
+      name.textContent = label;
+      main.append(name);
+    }
+    const meta = document.createElement("p");
+    meta.className = "related-meta";
+    const bits = [];
+    if (other.artist) bits.push(other.artist);
+    if (other.key) bits.push(other.key);
+    if (other.bpm != null && other.bpm !== "") bits.push(t("markers.bpm", { bpm: String(other.bpm) }));
+    bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay"));
+    if (link.rating != null) bits.push(t("related.ratingOutOf", { rating: String(link.rating) }));
+    if (!other.in_library) bits.push(t("related.notInLibrary"));
+    meta.textContent = bits.join(" · ");
+    main.append(meta);
+    if (link.note) {
+      const note = document.createElement("p");
+      note.className = "related-note";
+      note.textContent = link.note;
+      main.append(note);
+    }
+    const remove = buttonEl(removeRelatedTip(label));
+    remove.className = "text-button";
+    remove.textContent = t("common.remove");
+    remove.setAttribute("aria-label", t("related.removeLink", { name: label }));
+    remove.addEventListener("click", () => removeRelated(track, section, link));
+    item.append(main, remove);
+    list.append(item);
+  }
+  return list;
+}
+
+/**
+ * Build the search box used to link another track.
+ *
+ * Matches the tracks already loaded in this space. Choosing one reveals
+ * the note, rating, and two-way controls. Does not fetch.
+ *
+ * @param {object} track Open track.
+ * @param {HTMLElement} section Related section.
+ * @param {string} query Current search text.
+ * @returns {HTMLElement} The search block.
+ */
+function relatedSearch(track: Track, section: HTMLElement, query: string) {
+  const block = document.createElement("div");
+  block.className = "related-search";
+  const label = document.createElement("label");
+  label.append(document.createTextNode(t("related.find")));
+  const input = inputEl(tips.findRelated);
+  input.type = "search";
+  input.autocomplete = "off";
+  input.placeholder = t("related.findPlaceholder");
+  input.value = query || "";
+  label.append(input);
+  const results = document.createElement("ul");
+  results.className = "related-results";
+  const form = document.createElement("div");
+  form.className = "related-form";
+  form.hidden = true;
+  block.append(label, results, form);
+
+  /**
+   * Show matches for the current search text.
+   *
+   * Nested in relatedSearch. An empty box explains what to type. Does
+   * not fetch.
+   *
+   * @returns {void}
+   */
+  const paint = () => {
+    results.replaceChildren();
+    form.hidden = true;
+    form.replaceChildren();
+    const query = parseQuery(input.value);
+    if (!query.terms.length && !query.filters.length) {
+      const hint = document.createElement("li");
+      hint.className = "related-meta";
+      hint.textContent = t("related.typeHint");
+      results.append(hint);
+      return;
+    }
+    const hits = state.tracks
+      .filter((item) => item.id !== track.id && matchesQuery(item, query))
+      .slice(0, 8);
+    if (!hits.length) {
+      const empty = document.createElement("li");
+      empty.className = "related-meta";
+      empty.textContent = t("list.noMatches");
+      results.append(empty);
+      return;
+    }
+    for (const hit of hits) {
+      const item = document.createElement("li");
+      const name = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : (hit.name || t("track.untitled"));
+      const choose = buttonEl(chooseRelated(name));
+      choose.className = "text-button";
+      choose.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : (hit.name || t("track.untitled"));
+      choose.addEventListener("click", () => relatedLinkForm(track, section, form, hit, input.value));
+      item.append(choose);
+      results.append(item);
+    }
+  };
+  input.addEventListener("input", paint);
+  paint();
+  return block;
+}
+
+/**
+ * Show the note, rating, and direction controls for one chosen track.
+ *
+ * Save posts /api/related. The default direction is two-way. Does not
+ * fetch until Save is clicked.
+ *
+ * @param {object} track Open track.
+ * @param {HTMLElement} section Related section.
+ * @param {HTMLElement} form Form container inside the search block.
+ * @param {object} hit Track from the library list.
+ * @param {string} query Search text to restore after a save.
+ * @returns {void}
+ */
+function relatedLinkForm(track: Track, section: HTMLElement, form: HTMLElement, hit: RelatedTrack, query: string) {
+  form.hidden = false;
+  form.replaceChildren();
+  const chosen = document.createElement("p");
+  chosen.className = "related-meta";
+  chosen.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : (hit.name || t("track.untitled"));
+  const noteLabel = document.createElement("label");
+  noteLabel.append(document.createTextNode(t("related.note")));
+  const note = inputEl(tips.linkNote);
+  note.type = "text";
+  note.maxLength = 500;
+  note.placeholder = t("related.notePlaceholder");
+  noteLabel.append(note);
+  const ratingLabel = document.createElement("label");
+  ratingLabel.append(document.createTextNode(t("related.linkRating")));
+  const rating = selectEl(tips.linkRating);
+  for (const [value, text] of [["", t("rating.none")], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]] as Array<[string, string]>) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = text;
+    rating.append(option);
+  }
+  ratingLabel.append(rating);
+  const mutualLabel = document.createElement("label");
+  mutualLabel.className = "check";
+  const mutual = inputEl(tips.linkMutual);
+  mutual.type = "checkbox";
+  mutual.checked = true;
+  mutualLabel.append(mutual, document.createTextNode(t("related.twoWayLink")));
+  const save = buttonEl(tips.saveLink);
+  save.className = "text-button";
+  save.textContent = t("related.saveLink");
+  save.addEventListener("click", () => {
+    save.disabled = true;
+    saveRelated(track, section, {
+      action: "add",
+      asset: track.id,
+      target: hit.id,
+      mutual: mutual.checked,
+      note: note.value,
+      rating: rating.value === "" ? null : Number(rating.value),
+      space: state.space,
+    }, query);
+  });
+  form.append(chosen, noteLabel, ratingLabel, mutualLabel, save);
+}
+
+/**
+ * List suggestions with a one-click save.
+ *
+ * Each Save posts a two-way link with no note and no rating. Does not
+ * fetch until Save is clicked.
+ *
+ * @param {object} track Open track.
+ * @param {HTMLElement} section Related section.
+ * @param {object[]} suggested Suggestion objects.
+ * @returns {HTMLElement} The list.
+ */
+function relatedSuggestList(track: Track, section: HTMLElement, suggested: RelatedTrack[]) {
+  const list = document.createElement("ul");
+  list.className = "related-list";
+  for (const item of suggested) {
+    const row = document.createElement("li");
+    row.className = "related-row";
+    const main = document.createElement("div");
+    const name = document.createElement("span");
+    name.textContent = item.artist ? `${item.title || t("track.untitled")} · ${item.artist}` : (item.title || t("track.untitled"));
+    const reasons = document.createElement("p");
+    reasons.className = "related-meta";
+    reasons.textContent = Array.isArray(item.reasons) ? item.reasons.join(" · ") : "";
+    main.append(name, reasons);
+    const save = buttonEl(saveSuggestion(item.title || "Untitled"));
+    save.className = "text-button";
+    save.textContent = t("common.save");
+    save.setAttribute("aria-label", t("related.saveLinkTo", { name: item.title || t("track.untitled") }));
+    save.addEventListener("click", () => {
+      save.disabled = true;
+      saveRelated(track, section, {
+        action: "add",
+        asset: track.id,
+        target: item.asset_id,
+        mutual: true,
+        note: "",
+        rating: null,
+        space: state.space,
+      }, "");
+    });
+    row.append(main, save);
+    list.append(row);
+  }
+  return list;
+}
+
+/**
+ * POST a new related-track link and reload the section.
+ *
+ * The body is the add action. A failure stays in the section status and
+ * the notice. Titles and paths are not added to the request beyond the
+ * asset ids the server already knows.
+ *
+ * @param {object} track Open track.
+ * @param {HTMLElement} section Related section.
+ * @param {object} body POST /api/related body.
+ * @param {string} query Search text to restore.
+ * @returns {Promise<void>}
+ */
+async function saveRelated(track: Track, section: HTMLElement, body: Record<string, unknown>, query: string) {
+  try {
+    await postJSON("/api/related", body);
+    setNotice(t("related.saved"));
+    const kept = section.querySelector<HTMLInputElement>(".related-search input");
+    await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : query);
+  } catch (error) {
+    if (failureOf(error).status === 409) lockDown(error);
+    else setNotice(failureOf(error).message);
+    const status = section.querySelector("[role=status]");
+    if (status) status.textContent = failureOf(error).message;
+  }
+}
+
+/**
+ * Remove one saved link after a confirmation.
+ *
+ * POST /api/related with action remove. The audio file and the Serato
+ * library are not changed.
+ *
+ * @param {object} track Open track.
+ * @param {HTMLElement} section Related section.
+ * @param {object} link Saved link, including its id and track title.
+ * @returns {Promise<void>}
+ */
+async function removeRelated(track: Track, section: HTMLElement, link: RelatedTrack) {
+  const label = link.track?.title || t("related.thisTrack");
+  if (!confirm(t("related.confirmRemove", { name: label }))) return;
+  try {
+    await postJSON("/api/related", { action: "remove", id: link.id });
+    setNotice(t("related.removed"));
+    const kept = section.querySelector<HTMLInputElement>(".related-search input");
+    await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : "");
+  } catch (error) {
+    setNotice(failureOf(error).message);
+  }
+}
+
+/**
+ * Create or refresh the Serato crate for this track's saved links.
+ *
+ * POST /api/related with action crate. Serato must be quit. A 409 locks
+ * the page the same way other library writes do.
+ *
+ * @param {object} track Open track.
+ * @param {HTMLElement} section Related section.
+ * @returns {Promise<void>}
+ */
+async function refreshRelatedCrate(track: Track, section: HTMLElement) {
+  const button = section.querySelector<HTMLButtonElement>("[data-related-crate]");
+  if (button) button.disabled = true;
+  try {
+    const result = await postJSON("/api/related", { action: "crate", asset: track.id, space: state.space });
+    setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") }));
+    await loadLibrary();
+    selectTrack(track.id);
+  } catch (error) {
+    if (failureOf(error).status === 409) {
+      lockDown(error);
+      if (button) button.disabled = true;
+    } else {
+      setNotice(failureOf(error).message);
+      if (button) button.disabled = !state.writable;
+    }
+  }
+}
+
+/**
+ * List normal crates as checkboxes and name the smart crates.
+ *
+ * Checking a box posts an add or remove. Smart crates are shown but not
+ * edited here because their membership comes from rules. The list is
+ * built from state.crates, not from a new request.
+ *
+ * @param {object} track Track payload with crate_ids.
+ * @param {boolean} writable False disables every checkbox.
+ * @returns {HTMLElement} The section.
+ */
+function membershipSection(track: Track, writable: boolean) {
+  const section = document.createElement("section");
+  section.className = "group";
+  const heading = document.createElement("h3");
+  heading.textContent = t("crates.heading");
+  section.append(heading);
+  const holder = document.createElement("div");
+  holder.className = "member-list";
+  const chosen = new Set(track.crate_ids || []);
+  const crates = [...state.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name));
+  for (const crate of crates) {
+    const label = document.createElement("label");
+    label.className = "member";
+    const input = inputEl(membershipTip(crate.name));
+    input.type = "checkbox";
+    input.checked = chosen.has(crate.id);
+    input.disabled = !writable;
+    input.addEventListener("change", () => setMembership(track.id, crate.id, input.checked, input));
+    const name = document.createElement("span");
+    name.textContent = crate.name;
+    label.append(input, name);
+    holder.append(label);
+  }
+  const smart = state.crates.filter((crate) => crate.smart && chosen.has(crate.id));
+  if (smart.length) {
+    const line = document.createElement("p");
+    line.className = "detail-kicker";
+    line.textContent = t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") });
+    section.append(line);
+  }
+  section.append(holder);
+  return section;
+}
 
 /**
  * Paint the library screen again in the active language.
  *
  * Repaints the shell, list headers, crates, rows, files, history
  * sessions, and the open detail pane from what the page already has.
- * The library is not fetched again. Related tracks already on screen
- * re-translate without a second GET.
+ * The library is not fetched again. The related-tracks list in the
+ * detail pane is read again from GET /api/related.
  *
  * @returns {void}
  */
@@ -1131,7 +1893,7 @@ export function lockDown(error: unknown) {
  * same track is selected again. A 409 locks the page.
  *
  * @param {number} id Asset id.
- * @param {object} fields Editor values `save_track` accepts.
+ * @param {TrackSaveFields} fields Editor values from the React detail pane.
  * @returns {Promise<void>}
  */
 async function saveTrack(id: number, fields: TrackSaveFields) {
@@ -1148,6 +1910,30 @@ async function saveTrack(id: number, fields: TrackSaveFields) {
     if (failureOf(error).status === 409) lockDown(error);
     else setNotice(failureOf(error).message);
   }
+}
+
+async function saveTrackFromForm(id: number, form: HTMLFormElement) {
+  const data = new FormData(form);
+  const bpm = data.get("bpm");
+  const fields: TrackSaveFields = {
+    name: String(data.get("name") ?? ""),
+    artist: String(data.get("artist") ?? ""),
+    album: String(data.get("album") ?? ""),
+    genre: String(data.get("genre") ?? ""),
+    year: String(data.get("year") ?? ""),
+    composer: String(data.get("composer") ?? ""),
+    remixer: String(data.get("remixer") ?? ""),
+    label: String(data.get("label") ?? ""),
+    grouping: String(data.get("grouping") ?? ""),
+    comments: String(data.get("comments") ?? ""),
+    key: String(data.get("key") ?? ""),
+    emoji: String(data.get("emoji") ?? ""),
+    bpm: bpm === "" ? null : Number(bpm),
+    color: Number(data.get("color")),
+    rating: data.get("rating") === "" ? null : Number(data.get("rating")),
+    is_beatgrid_locked: Boolean(form.querySelector<HTMLInputElement>("[name=is_beatgrid_locked]")?.checked),
+  };
+  await saveTrack(id, fields);
 }
 
 /**
@@ -1250,9 +2036,10 @@ async function removeTrack(id: number) {
  * @param {number} assetId Asset id.
  * @param {number} crateId Crate id.
  * @param {boolean} add True adds the membership.
- * @returns {Promise<boolean>} False when the write failed.
+ * @param {HTMLInputElement} [input] Checkbox to restore on failure.
+ * @returns {Promise<boolean>} True when the membership write succeeded.
  */
-async function setMembership(assetId: number, crateId: number, add: boolean): Promise<boolean> {
+async function setMembership(assetId: number, crateId: number, add: boolean, input?: HTMLInputElement): Promise<boolean> {
   try {
     const result = await postJSON("/api/crate", {
       action: add ? "add" : "remove",
@@ -1265,6 +2052,7 @@ async function setMembership(assetId: number, crateId: number, add: boolean): Pr
     selectTrack(assetId);
     return true;
   } catch (error) {
+    if (input) input.checked = !add;
     if (failureOf(error).status === 409) lockDown(error);
     else setNotice(failureOf(error).message);
     return false;
@@ -1457,22 +2245,13 @@ export async function importPlaylist(file: File) {
  * @returns {void}
  */
 export function renderSessions() {
-  el("session-list").replaceChildren();
-  for (const session of state.historySessions) {
-    const button = buttonEl(sessionTip(session.name || "Session"));
-    button.className = "crate";
-    button.setAttribute("role", "option");
-    button.setAttribute("aria-selected", String(session.id === state.historyId));
-    const name = document.createElement("span");
-    name.className = "name";
-    name.textContent = session.name || t("history.session");
-    const meta = document.createElement("span");
-    meta.className = "meta";
-    meta.textContent = String(session.played || 0);
-    button.append(name, meta);
-    button.addEventListener("click", () => openSession(session.id));
-    el("session-list").append(button);
-  }
+  notifyHistory();
+  const host = el("session-list");
+  sessionRoot = remountIsland(host, createElement(HistorySessions), {
+    host: sessionHost,
+    root: sessionRoot,
+  });
+  sessionHost = host;
 }
 
 /**
@@ -1488,6 +2267,7 @@ export async function loadHistory() {
   const payload = await readJSONOr<HistoryPayload>(response, {});
   if (!response.ok) throw new Error(serverMessage(payload, t("history.readFailed")));
   state.historySessions = payload.sessions || [];
+  notifyHistory();
   renderSessions();
 }
 
@@ -1503,6 +2283,7 @@ export async function loadHistory() {
 export async function openSession(id: number) {
   state.historyId = id;
   state.selectedId = null;
+  notifyHistory();
   renderSessions();
   const response = await fetch(`/api/history?session=${id}`);
   const payload = await readJSONOr<HistoryPayload>(response, {});
@@ -1511,6 +2292,7 @@ export async function openSession(id: number) {
     return;
   }
   state.entries = payload.entries || [];
+  notifyHistory();
   el("list").scrollTop = 0;
   renderList();
 }
@@ -1708,714 +2490,6 @@ export function crateNamesFor(assetId: number) {
 }
 
 /**
- * Show a folder error in the Files view.
- *
- * @param {Error} error Failed folder read or save.
- * @returns {void}
- */
-export function failFiles(error: unknown) {
-  state.filesLoading = false;
-  state.filesError = failureOf(error).message || t("error.folder_unreadable");
-  renderFiles();
-}
-
-/**
- * Folder request counter.
- *
- * A slow reply must not paint a folder the user has already left.
- */
-let filesRequest = 0;
-
-/** Wait before searching the disk, so a fast typist does not search every letter. */
-export const FILES_SEARCH_MS = 200;
-
-let filesSearchTimer = 0;
-
-const FILE_OVERSCAN = 8;
-
-/**
- * Load music roots, or one folder.
- *
- * An empty path asks GET /api/library-roots. A folder asks GET /api/files.
- * ``elsewhere`` asks to browse outside those folders. ``refresh`` recomputes
- * the roots. Selection is cleared because the previous paths are no longer
- * the rows on screen. A success message can be kept when the reload follows
- * a save.
- *
- * @param {string} path Folder to open. Empty selects the music roots.
- * @param {{keepMessage?: boolean, elsewhere?: boolean, refresh?: boolean}} [options] keepMessage retains the last save note. elsewhere lists outside the roots. refresh recomputes the roots.
- * @returns {Promise<void>}
- */
-export async function loadFolder(path: string, options: { keepMessage?: boolean; elsewhere?: boolean; refresh?: boolean } = {}) {
-  window.clearTimeout(filesSearchTimer);
-  state.filesQuery = "";
-  state.filesSearching = false;
-  const searchField = document.getElementById("files-search");
-  if (searchField instanceof HTMLInputElement) searchField.value = "";
-  const elsewhere = options.elsewhere === true;
-  const refresh = options.refresh === true;
-  const atRoots = path === "" && !elsewhere;
-  const token = ++filesRequest;
-  state.filesLoading = true;
-  state.filesError = "";
-  if (!options.keepMessage) state.filesMessage = "";
-  state.filesSelected = new Set();
-  state.filesActive = 0;
-  state.filesAtRoots = atRoots;
-  state.filesElsewhere = elsewhere;
-  if (atRoots) {
-    state.filesPath = "";
-    state.filesParent = null;
-    state.filesEntries = [];
-    state.filesBreadcrumb = [];
-    state.filesRoot = null;
-  }
-  renderFiles();
-  if (refresh || atRoots) {
-    const rootsPayload = await fetchLibraryRoots(refresh);
-    if (token !== filesRequest) return;
-    state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
-  }
-  if (atRoots) {
-    state.filesPath = "";
-    state.filesParent = null;
-    state.filesEntries = [];
-    state.filesBreadcrumb = [];
-    state.filesRoot = null;
-    state.filesElsewhere = false;
-    state.filesAtRoots = true;
-    state.filesTruncated = false;
-    state.filesLoading = false;
-    el("files-list").scrollTop = 0;
-    renderFiles();
-    return;
-  }
-  const params = new URLSearchParams();
-  if (path) params.set("path", path);
-  if (elsewhere) params.set("elsewhere", "1");
-  const query = params.size ? `?${params.toString()}` : "";
-  const response = await fetch(`/api/files${query}`);
-  const payload = await readJSONOr<FilesPayload>(response, {});
-  if (token !== filesRequest) return;
-  if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
-  state.filesPath = payload.path || "";
-  state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
-  state.filesEntries = Array.isArray(payload.entries) ? payload.entries : [];
-  state.filesRoot = isFileRoot(payload.root) ? payload.root : null;
-  state.filesBreadcrumb = Array.isArray(payload.breadcrumb) ? payload.breadcrumb.filter(isFileCrumb) : [];
-  state.filesElsewhere = Boolean(payload.elsewhere);
-  state.filesAtRoots = !state.filesPath && !state.filesElsewhere;
-  state.filesTruncated = Boolean(payload.truncated);
-  state.filesLoading = false;
-  el("files-list").scrollTop = 0;
-  if (payload.serato) applyStatus(payload.serato);
-  renderFiles();
-}
-
-/**
- * Search file names under the open folder, or under every music folder.
- *
- * Uses GET /api/files?q=. The request is read-only. A newer folder open
- * or a newer search replaces a slow reply.
- *
- * @param query Name to find.
- * @returns {Promise<void>}
- */
-async function searchFiles(query: string): Promise<void> {
-  const token = ++filesRequest;
-  const scope = state.filesAtRoots ? "" : state.filesPath;
-  const elsewhere = state.filesElsewhere && !state.filesAtRoots;
-  state.filesLoading = true;
-  state.filesError = "";
-  state.filesSearching = true;
-  state.filesQuery = query;
-  renderFiles();
-  const params = new URLSearchParams();
-  params.set("q", query);
-  if (scope) params.set("path", scope);
-  if (elsewhere) params.set("elsewhere", "1");
-  const response = await fetch(`/api/files?${params.toString()}`);
-  const payload = await readJSONOr<FilesPayload>(response, {});
-  if (token !== filesRequest) return;
-  if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
-  const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
-  state.filesEntries = entries;
-  state.filesTruncated = Boolean(payload.truncated);
-  state.filesLoading = false;
-  state.filesSearching = true;
-  state.filesActive = 0;
-  state.filesSelected = new Set();
-  el("files-list").scrollTop = 0;
-  renderFiles();
-}
-
-/**
- * Return whether a JSON value is a file-list row.
- *
- * @param value Candidate.
- * @returns True when name, path, and kind are strings.
- */
-function isListedFile(value: unknown): value is FileEntry {
-  if (!value || typeof value !== "object") return false;
-  const row = value as FileEntry;
-  return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
-}
-
-/**
- * Paint the folder, the empty and loading states, and the action buttons.
- *
- * Uses text nodes. Shortcuts are labeled and cannot be selected. Writes
- * stay disabled while Serato holds the library.
- *
- * @returns {void}
- */
-export function renderFiles() {
-  if (state.mode !== "files") return;
-  const pick = el("files-pick");
-  const moveHere = el("files-move-here");
-  const pickCancel = el("files-pick-cancel");
-  pick.hidden = !state.filesPick;
-  moveHere.hidden = !state.filesPick;
-  pickCancel.hidden = !state.filesPick;
-  renderBreadcrumb();
-  const elsewhere = el("files-elsewhere");
-  elsewhere.textContent = state.filesElsewhere ? t("files.roots") : t("files.browseElsewhere");
-  setTooltip(elsewhere, state.filesElsewhere ? tips.filesMusicFolders : tips.filesElsewhere);
-  el("files-up").disabled = !state.filesParent || state.filesLoading;
-  const notes = [];
-  if (state.filesLoading) notes.push(state.filesAtRoots ? t("files.readingRootsNote") : t("files.readingFolderNote"));
-  if (state.filesError) notes.push(state.filesError);
-  if (state.filesMessage) notes.push(state.filesMessage);
-  if (state.filesTruncated) notes.push(state.filesSearching ? t("files.searchTruncated") : t("files.truncated"));
-  el("files-status").textContent = notes.join(" ");
-  const scroll = el("files-list").scrollTop;
-  paintFileWindow();
-  if (el("files-list").scrollTop !== scroll) el("files-list").scrollTop = scroll;
-  const selected = selectedFiles();
-  const locked = !state.writable || state.filesLoading || state.filesAtRoots;
-  el("files-rename").disabled = locked || selected.length !== 1;
-  el("files-rename-from-tags").disabled = locked || !selected.length;
-  el("files-move").disabled = locked || !selected.length || Boolean(state.filesPick);
-  el("files-move-folder").disabled = locked || !state.filesPath || Boolean(state.filesPick);
-  el("files-replace").disabled = locked || selected.length !== 1;
-  el("files-delete").disabled = locked || !selected.length;
-  moveHere.disabled = locked;
-  renderShell();
-}
-
-/**
- * Paint the folder path, starting at the music-root name.
- *
- * The current folder is text. Earlier crumbs are buttons. There is no
- * crumb above the root unless the browse is elsewhere.
- *
- * @returns {void}
- */
-function renderBreadcrumb(): void {
-  const nav = el("files-path");
-  nav.replaceChildren();
-  const list = document.createElement("ol");
-  list.className = "files-crumbs";
-  const crumbs = visibleCrumbs();
-  crumbs.forEach((crumb, index) => {
-    const item = document.createElement("li");
-    const last = index === crumbs.length - 1;
-    if (!last && crumb.path) {
-      const button = buttonEl(openCrumb(crumb.name));
-      button.className = "files-crumb";
-      button.textContent = crumb.name;
-      button.addEventListener("click", () => {
-        loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error) => failFiles(error));
-      });
-      item.append(button);
-    } else {
-      const current = document.createElement("span");
-      current.className = "files-crumb";
-      current.setAttribute("aria-current", "page");
-      current.textContent = crumb.name;
-      item.append(current);
-    }
-    if (!last) {
-      const sep = document.createElement("span");
-      sep.className = "files-sep";
-      sep.setAttribute("aria-hidden", "true");
-      sep.textContent = "/";
-      item.append(sep);
-    }
-    list.append(item);
-  });
-  nav.append(list);
-}
-
-/**
- * Return the crumbs for the open location.
- *
- * @returns {FileCrumb[]} Path crumbs. The root list is one crumb.
- */
-function visibleCrumbs(): FileCrumb[] {
-  if (state.filesBreadcrumb.length) return state.filesBreadcrumb;
-  if (state.filesAtRoots) return [{ name: t("files.roots"), path: "" }];
-  if (state.filesPath) return [{ name: state.filesPath, path: state.filesPath }];
-  return [{ name: t("files.roots"), path: "" }];
-}
-
-/**
- * Return the rows in the order they are shown.
- *
- * Roots keep the order from the server. A folder lists directories, then
- * files, then shortcuts.
- *
- * @returns {FileEntry[]} Rows for the virtual window.
- */
-function filesRowHeight(): number {
-  if (state.filesSearching) return FILE_ROW;
-  return state.filesAtRoots ? ROOT_ROW : FILE_ROW;
-}
-
-function browserRows(): FileEntry[] {
-  if (state.filesSearching) return state.filesEntries;
-  if (state.filesAtRoots) {
-    return state.filesRoots.map((root) => {
-      const entry: FileEntry = {
-        name: root.label,
-        path: root.path,
-        detail: root.detail,
-        kind: root.kind === "serato_drive" ? "drive" : "folder",
-        missing: root.missing,
-        removable: root.removable,
-        serato: root.serato,
-      };
-      return entry;
-    });
-  }
-  const rank: Record<string, number> = { dir: 0, file: 1, link: 2 };
-  return [...state.filesEntries].sort((left, right) => {
-    return (rank[left.kind] ?? 3) - (rank[right.kind] ?? 3)
-      || left.name.localeCompare(right.name, undefined, { numeric: true, sensitivity: "base" });
-  });
-}
-
-/**
- * Paint only the file rows inside the scroll window.
- *
- * Row height is FILE_ROW. Extra rows above and below the window keep a
- * fast scroll from flashing empty space. The spacer is the full height,
- * so the last row can be scrolled into view.
- *
- * @returns {void}
- */
-function paintFileWindow(): void {
-  const list = el("files-list");
-  const rows = browserRows();
-  list.setAttribute("aria-busy", String(state.filesLoading));
-  list.setAttribute(
-    "aria-label",
-    state.filesSearching ? t("files.searchResults") : state.filesAtRoots ? t("files.roots") : t("files.contents"),
-  );
-  if (state.filesLoading && !rows.length) {
-    const reading = state.filesSearching
-      ? t("files.searching")
-      : state.filesAtRoots
-        ? t("files.readingRootsNote")
-        : t("files.readingFolderNote");
-    list.replaceChildren(fileNote(reading));
-    list.tabIndex = 0;
-    return;
-  }
-  if (state.filesError && !rows.length) {
-    list.replaceChildren(fileNote(state.filesError));
-    list.tabIndex = 0;
-    return;
-  }
-  if (state.filesAtRoots && !state.filesRoots.length) {
-    list.replaceChildren(rootsEmpty());
-    list.tabIndex = -1;
-    return;
-  }
-  if (!rows.length) {
-    const empty = state.filesSearching
-      ? t("files.noMatches", { query: state.filesQuery })
-      : t("files.empty");
-    list.replaceChildren(fileNote(empty));
-    list.tabIndex = 0;
-    return;
-  }
-  list.tabIndex = -1;
-  if (state.filesActive >= rows.length) state.filesActive = rows.length - 1;
-  if (state.filesActive < 0) state.filesActive = 0;
-  const rowHeight = filesRowHeight();
-  const view = list.clientHeight || 600;
-  const maxScroll = Math.max(0, rows.length * rowHeight - view);
-  const scrollTop = Math.min(Math.max(0, list.scrollTop), maxScroll);
-  const start = Math.max(0, Math.floor(scrollTop / rowHeight) - FILE_OVERSCAN);
-  const end = Math.min(rows.length, Math.ceil((scrollTop + view) / rowHeight) + FILE_OVERSCAN);
-  const spacer = fileSpacer(list);
-  const windowEl = spacer.querySelector<HTMLDivElement>(".files-window");
-  if (!windowEl) return;
-  spacer.style.height = `${rows.length * rowHeight}px`;
-  windowEl.style.transform = `translateY(${start * rowHeight}px)`;
-  windowEl.replaceChildren();
-  for (let index = start; index < end; index += 1) {
-    const entry = rows[index];
-    if (entry) windowEl.append(fileRow(entry, index));
-  }
-  if (state.filesActive >= start && state.filesActive < end) {
-    list.setAttribute("aria-activedescendant", `files-item-${state.filesActive}`);
-  } else list.removeAttribute("aria-activedescendant");
-}
-
-/**
- * Return the scroll spacer, creating it when the list is showing rows.
- *
- * @param {HTMLElement} list Files list element.
- * @returns {HTMLDivElement} The spacer that holds the window.
- */
-function fileSpacer(list: HTMLElement): HTMLDivElement {
-  const first = list.firstElementChild;
-  if (first instanceof HTMLDivElement && first.classList.contains("files-spacer") && list.childElementCount === 1) {
-    return first;
-  }
-  list.replaceChildren();
-  const spacer = document.createElement("div");
-  spacer.className = "files-spacer";
-  const windowEl = document.createElement("div");
-  windowEl.className = "files-window";
-  spacer.append(windowEl);
-  list.append(spacer);
-  return spacer;
-}
-
-/**
- * Build a short status line inside the file list.
- *
- * @param {string} text Sentence to show.
- * @returns {HTMLParagraphElement} The note.
- */
-function fileNote(text: string): HTMLParagraphElement {
-  const note = document.createElement("p");
-  note.className = "files-empty";
-  note.textContent = text;
-  return note;
-}
-
-/**
- * Build the empty state for a library with no music folders.
- *
- * One primary button opens setup. Browse elsewhere stays in the bar.
- *
- * @returns {HTMLDivElement} The empty state.
- */
-function rootsEmpty(): HTMLDivElement {
-  const box = document.createElement("div");
-  box.className = "files-empty-state";
-  const heading = document.createElement("h2");
-  heading.textContent = t("files.noRoots");
-  const copy = document.createElement("p");
-  copy.textContent = t("files.noRootsBody");
-  const button = buttonEl(tips.runSetup);
-  button.id = "files-run-setup";
-  button.className = "files-primary";
-  button.textContent = t("files.runSetup");
-  button.addEventListener("click", () => bridge.openSetup());
-  box.append(heading, copy, button);
-  return box;
-}
-
-/**
- * Move the keyboard cursor to one row and keep that row on screen.
- *
- * @param {number} index Row index in browserRows.
- * @returns {void}
- */
-function focusFilesIndex(index: number): void {
-  const rows = browserRows();
-  if (!rows.length) return;
-  state.filesActive = Math.max(0, Math.min(rows.length - 1, index));
-  const list = el("files-list");
-  const rowHeight = filesRowHeight();
-  const view = list.clientHeight || 600;
-  const top = state.filesActive * rowHeight;
-  const maxScroll = Math.max(0, rows.length * rowHeight - view);
-  if (top < list.scrollTop) list.scrollTop = top;
-  if (top + rowHeight > list.scrollTop + view) list.scrollTop = Math.min(maxScroll, top + rowHeight - view);
-  paintFileWindow();
-  const control = list.querySelector<HTMLElement>(`[data-files-index="${state.filesActive}"]`);
-  control?.focus();
-}
-
-/**
- * Open the active folder or toggle the active file.
- *
- * @param {number} index Row index in browserRows.
- * @returns {void}
- */
-function activateFilesIndex(index: number): void {
-  const entry = browserRows()[index];
-  if (!entry) return;
-  if (entry.kind === "file") {
-    if (state.filesSelected.has(entry.path)) state.filesSelected.delete(entry.path);
-    else state.filesSelected.add(entry.path);
-    renderFiles();
-    focusFilesIndex(index);
-    return;
-  }
-  if (entry.kind === "link") return;
-  openBrowserRow(entry);
-}
-
-/**
- * Open a folder, a music root, or a drive.
- *
- * A folder opened while browsing elsewhere stays outside the roots.
- * A root returns to rooted browsing.
- *
- * @param {FileEntry} entry Row to open.
- * @returns {void}
- */
-function openBrowserRow(entry: FileEntry): void {
-  if (entry.missing) return;
-  const elsewhere = state.filesElsewhere && entry.kind === "dir";
-  loadFolder(entry.path, { elsewhere }).catch((error) => failFiles(error));
-}
-
-/**
- * Handle arrow keys, Home, and End for the file list.
- *
- * @param {KeyboardEvent} event Key event from the list or a row.
- * @returns {void}
- */
-function onFilesKey(event: KeyboardEvent): void {
-  if (state.mode !== "files") return;
-  const list = el("files-list");
-  if (!(event.target instanceof Node) || !list.contains(event.target)) return;
-  const rows = browserRows();
-  if (!rows.length) return;
-  if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
-    event.preventDefault();
-    if (event.key === "ArrowDown") focusFilesIndex(state.filesActive + 1);
-    else if (event.key === "ArrowUp") focusFilesIndex(state.filesActive - 1);
-    else if (event.key === "Home") focusFilesIndex(0);
-    else focusFilesIndex(rows.length - 1);
-    return;
-  }
-  if (event.key !== "Enter" && event.key !== " ") return;
-  const control = event.target instanceof HTMLElement ? event.target.closest("button, input") : null;
-  if (control && list.contains(control)) return;
-  event.preventDefault();
-  activateFilesIndex(state.filesActive);
-}
-
-/**
- * Build one folder row.
- *
- * @param {FileEntry} entry Directory entry or music root.
- * @param {number} index Index in browserRows. Used for keyboard focus.
- * @returns {HTMLDivElement} The row.
- */
-function fileRow(entry: FileEntry, index: number): HTMLDivElement {
-  const row = document.createElement("div");
-  row.className = "files-row";
-  if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) row.classList.add("is-root");
-  if (entry.missing) row.classList.add("is-missing");
-  if (index === state.filesActive) row.classList.add("is-active");
-  row.setAttribute("role", "listitem");
-  const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
-  if (openKind) {
-    const button = buttonEl(entry.missing ? missingDrive(entry.name) : openFile(entry.name));
-    button.className = "files-open";
-    button.dataset.filesIndex = String(index);
-    button.id = `files-item-${index}`;
-    button.tabIndex = index === state.filesActive ? 0 : -1;
-    if (entry.kind === "drive" || entry.kind === "folder") button.append(fileIcon(entry.kind === "drive" ? "drive" : "folder"));
-    if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) {
-      const copy = document.createElement("span");
-      copy.className = "files-root-copy";
-      const label = document.createElement("span");
-      label.className = "files-root-label";
-      label.textContent = entry.name;
-      const detail = document.createElement("span");
-      detail.className = "files-root-detail";
-      detail.textContent = entry.detail;
-      copy.append(label, detail);
-      button.append(copy);
-    } else {
-      const name = document.createElement("span");
-      name.textContent = entry.name;
-      button.append(name);
-      if (entry.detail) {
-        const detail = document.createElement("span");
-        detail.className = "files-match-detail";
-        detail.textContent = entry.detail;
-        button.append(detail);
-      }
-    }
-    if (entry.missing) {
-      button.setAttribute("aria-disabled", "true");
-      button.setAttribute("aria-label", t("files.driveMissingLabel", { name: entry.name }));
-      const badge = document.createElement("span");
-      badge.className = "files-badge";
-      badge.textContent = t("files.driveMissing");
-      button.append(badge);
-      button.addEventListener("click", () => {
-        state.filesActive = index;
-      });
-    } else {
-      button.setAttribute("aria-label", t("files.open", { name: entry.name }));
-      button.addEventListener("click", () => {
-        state.filesActive = index;
-        openBrowserRow(entry);
-      });
-    }
-    row.append(button);
-    if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
-    return row;
-  }
-  if (entry.kind !== "file") {
-    const label = buttonEl(fileShortcut(entry.name));
-    label.className = "files-kind";
-    label.dataset.filesIndex = String(index);
-    label.id = `files-item-${index}`;
-    label.tabIndex = index === state.filesActive ? 0 : -1;
-    label.textContent = t("files.shortcut", { name: entry.name });
-    label.setAttribute("aria-label", t("files.shortcut", { name: entry.name }));
-    row.append(label);
-    return row;
-  }
-  const label = document.createElement("label");
-  label.className = "files-file";
-  const box = inputEl(selectFile(entry.name, entry.path));
-  box.type = "checkbox";
-  box.dataset.filesIndex = String(index);
-  box.id = `files-item-${index}`;
-  box.tabIndex = index === state.filesActive ? 0 : -1;
-  box.checked = state.filesSelected.has(entry.path);
-  box.setAttribute("aria-label", entry.name);
-  box.addEventListener("change", () => {
-    state.filesActive = index;
-    if (box.checked) state.filesSelected.add(entry.path);
-    else state.filesSelected.delete(entry.path);
-    renderFiles();
-  });
-  const name = document.createElement("span");
-  name.className = "files-name";
-  name.textContent = entry.name;
-  label.append(box, name);
-  if (entry.detail) {
-    const detail = document.createElement("span");
-    detail.className = "files-match-detail";
-    detail.textContent = entry.detail;
-    label.append(detail);
-  }
-  if (entry.in_library) {
-    const badge = document.createElement("span");
-    badge.className = "files-badge";
-    badge.textContent = t("files.inLibrary");
-    label.append(badge);
-  }
-  row.append(label);
-  return row;
-}
-
-/**
- * Draw a folder or drive mark with the text color.
- *
- * The shapes are part of the page. They are not a separate icon font.
- *
- * @param {"folder" | "drive"} kind Which mark to draw.
- * @returns {SVGSVGElement} A decorative icon.
- */
-function fileIcon(kind: "folder" | "drive"): SVGSVGElement {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("width", "20");
-  svg.setAttribute("height", "20");
-  svg.setAttribute("aria-hidden", "true");
-  svg.classList.add("files-icon", kind === "drive" ? "files-icon-drive" : "files-icon-folder");
-  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  path.setAttribute("fill", "none");
-  path.setAttribute("stroke", "currentColor");
-  path.setAttribute("stroke-width", "1.5");
-  path.setAttribute("stroke-linejoin", "round");
-  path.setAttribute(
-    "d",
-    kind === "drive"
-      ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4"
-      : "M4 8.5h6l2 2h8v7.5H4z",
-  );
-  svg.append(path);
-  return svg;
-}
-
-/**
- * Return whether a JSON value is a music root.
- *
- * @param {unknown} value Candidate.
- * @returns {boolean} True when name, path, and kind are strings.
- */
-function isFileRoot(value: unknown): value is FileRoot {
-  if (!value || typeof value !== "object") return false;
-  const record = value as FileRoot;
-  return typeof record.name === "string" && typeof record.path === "string" && typeof record.kind === "string";
-}
-
-/**
- * Return whether a JSON value is a breadcrumb.
- *
- * @param {unknown} value Candidate.
- * @returns {boolean} True when name and path are strings.
- */
-function isFileCrumb(value: unknown): value is FileCrumb {
-  if (!value || typeof value !== "object") return false;
-  const record = value as FileCrumb;
-  return typeof record.name === "string" && typeof record.path === "string";
-}
-
-/**
- * Return the selected files that are still in this folder.
- *
- * @returns {object[]} Selected file entries.
- */
-/**
- * Move the file-list cursor by one row.
- *
- * @param delta 1 for the next row, -1 for the previous row.
- * @returns {void}
- */
-export function moveFileList(delta: number): void {
-  if (!browserRows().length) return;
-  focusFilesIndex(state.filesActive + delta);
-}
-
-/**
- * Open the active file row.
- *
- * A folder opens. A file toggles its checkbox. Does nothing when the
- * list is empty.
- *
- * @returns {void}
- */
-export function openFileList(): void {
-  if (!browserRows().length) return;
-  activateFilesIndex(state.filesActive);
-}
-
-/**
- * Move the file-list cursor to a path from quick-open.
- *
- * @param path File path returned by the search.
- * @returns {void}
- */
-export function focusFileByPath(path: string): void {
-  const index = browserRows().findIndex((entry) => entry.path === path);
-  if (index < 0) return;
-  focusFilesIndex(index);
-}
-
-export function selectedFiles() {
-  return state.filesEntries.filter((entry) => entry.kind === "file" && state.filesSelected.has(entry.path));
-}
-
-/**
  * Attach the library, crate, history, and list-header listeners.
  *
  * Called once from app.ts after the spacer is mounted. The handlers call
@@ -2424,31 +2498,7 @@ export function selectedFiles() {
  * @returns {void}
  */
 export function wireLibrary(): void {
-  el("files-list").addEventListener("scroll", () => {
-    if (state.mode === "files") paintFileWindow();
-  });
-  el("files-list").addEventListener("keydown", onFilesKey);
-  el("files-search").addEventListener("input", () => {
-    window.clearTimeout(filesSearchTimer);
-    const value = el("files-search").value;
-    state.filesQuery = value;
-    if (!value.trim()) {
-      if (state.filesAtRoots && !state.filesPath) {
-        state.filesSearching = false;
-        state.filesEntries = [];
-        state.filesError = "";
-        state.filesTruncated = false;
-        state.filesLoading = false;
-        renderFiles();
-        return;
-      }
-      loadFolder(state.filesPath, { elsewhere: state.filesElsewhere && Boolean(state.filesPath) }).catch((error) => failFiles(error));
-      return;
-    }
-    filesSearchTimer = window.setTimeout(() => {
-      searchFiles(value.trim()).catch((error) => failFiles(error));
-    }, FILES_SEARCH_MS);
-  });
+  mountFilesIslands();
 
   el("search").addEventListener("input", () => {
     state.query = el("search").value;
@@ -2482,14 +2532,7 @@ export function wireLibrary(): void {
     Promise.all(jobs).catch(showFailure);
   });
 
-  el("export-m3u").addEventListener("click", () => {
-    const crate = playlistCrate();
-    if (crate == null) return;
-    const link = document.createElement("a");
-    link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
-    link.download = "crate.m3u";
-    link.click();
-  });
+  el("export-m3u").addEventListener("click", () => exportPlaylistM3u());
   el("import-m3u").addEventListener("click", () => {
     if (playlistCrate() == null) return;
     if (!state.writable) {
@@ -2615,3 +2658,27 @@ registerTrackListActions({
   },
   setNotice,
 });
+bindCrateActions({
+  select: selectCrate,
+  toggle: toggleCrate,
+  create: () => {
+    createCrate().catch((error) => setNotice(failureOf(error).message));
+  },
+  rename: () => {
+    renameCrate().catch((error) => setNotice(failureOf(error).message));
+  },
+  color: () => {
+    colorCrate().catch((error) => setNotice(failureOf(error).message));
+  },
+  remove: () => {
+    deleteCrate().catch((error) => setNotice(failureOf(error).message));
+  },
+  exportM3u: exportPlaylistM3u,
+});
+historyActions.loadHistory = loadHistory;
+historyActions.openSession = openSession;
+historyActions.selectEntry = selectEntry;
+historyActions.openInLibrary = openInLibrary;
+bridge.applyStatus = applyStatus;
+bridge.renderShell = renderShell;
+bridge.setNotice = setNotice;

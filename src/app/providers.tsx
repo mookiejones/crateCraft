@@ -1,20 +1,82 @@
 /**
  * React providers for the page.
  *
- * Player is one domain. Waveform zoom and overview are another.
- * List selection and detail fields are a third. Each domain has its
- * own context file and one wrapper here. This module reads the player
- * engine and the track-list store; it does not own playback or the
- * library.
+ * Player is one domain. The crate rail is the next. Waveform zoom and
+ * overview are another. Before a gig is a fourth. Files is a fifth.
+ * History is a sixth. Settings is a seventh. Track list selection and
+ * detail fields are an eighth. Later screens add their own context file
+ * and one wrapper here. This module reads those engines; it does not own
+ * fetch, playback, crate writes, history loads, the folder load, or the
+ * settings file.
  */
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
+import { failureOf } from "../api";
+import { CrateProvider as CrateContextProvider } from "../context/CrateContext";
+import {
+  FilesProvider as FilesContextProvider,
+  type FilesContextValue,
+} from "../context/FilesContext";
+import {
+  GigStateProvider,
+  type GigContextValue,
+} from "../context/GigContext";
+import {
+  HistoryProvider as HistoryContextProvider,
+  historyActions,
+  subscribeHistory,
+  type HistoryContextValue,
+} from "../context/HistoryContext";
 import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
 import { WaveformProvider } from "../context/WaveformContext";
+import { readCrateValue, subscribeCrates } from "../crate-store";
+import {
+  browserRows,
+  cancelFilesPick,
+  closeFilesDialog,
+  confirmFiles,
+  confirmMoveHere,
+  filesRowHeight,
+  getFilesDialog,
+  goFilesUp,
+  markFilesActive,
+  onFilesKey,
+  onFilesSearchInput,
+  openBrowserRow,
+  openFilesCrumb,
+  refreshFiles,
+  reviewFiles,
+  selectedFiles,
+  setDialogName,
+  setDialogReplacement,
+  setDialogStatus,
+  startDelete,
+  startMoveFiles,
+  startMoveFolder,
+  startRename,
+  startRenameFromTags,
+  startReplace,
+  subscribeFiles,
+  toggleFile,
+  toggleFilesElsewhere,
+} from "../files";
+import {
+  backGigStep,
+  exitGigCheck,
+  getGigSnapshot,
+  nextGigStep,
+  subscribeGig,
+} from "../gig";
+import { getDriftSnapshot, subscribeDrift } from "../drift";
+import { LOCALE_EVENT, onLocaleChange } from "../i18n";
+import {
+  SettingsProvider as SettingsContextProvider,
+  type SettingsContextValue,
+} from "../context/SettingsContext";
 import {
   TrackListProvider as TrackListContextProvider,
   type TrackListContextValue,
@@ -40,6 +102,23 @@ import {
   subscribe,
   togglePlayPause,
 } from "../player";
+import { portableSnapshot } from "../portable";
+import {
+  closeSettings,
+  copyLogs,
+  copySettingsVersion,
+  getSettingsState,
+  openLogs,
+  rerunSetup,
+  saveColorway,
+  saveIconFollow,
+  saveLanguage,
+  saveSharing,
+  saveUpdateEnabled,
+  saveUpdatePrereleases,
+  subscribeSettings,
+} from "../settings";
+import { state } from "../state";
 import {
   getTrackListActions,
   readTrackList,
@@ -70,6 +149,104 @@ function readPlayerValue(): PlayerContextValue {
   };
 }
 
+function readSettingsValue(): SettingsContextValue {
+  return {
+    ...getSettingsState(),
+    saveLanguage,
+    saveColorway,
+    saveIconFollow,
+    saveSharing: async (on) => {
+      await saveSharing(on);
+    },
+    saveUpdateEnabled,
+    saveUpdatePrereleases,
+    openLogs,
+    copyLogs,
+    copyVersion: copySettingsVersion,
+    rerunSetup,
+    close: closeSettings,
+  };
+}
+
+function readGigValue(): GigContextValue {
+  return {
+    gig: getGigSnapshot(),
+    drift: getDriftSnapshot(),
+    nextStep: nextGigStep,
+    backStep: backGigStep,
+    exit: exitGigCheck,
+  };
+}
+
+function readFilesValue(): FilesContextValue {
+  const dialog = getFilesDialog();
+  const portable = portableSnapshot();
+  const selectedEntries = selectedFiles();
+  return {
+    writable: state.writable,
+    path: state.filesPath,
+    parent: state.filesParent,
+    entries: state.filesEntries,
+    selected: state.filesSelected,
+    pick: state.filesPick,
+    pickPaths: state.filesPickPaths,
+    pickSource: state.filesPickSource,
+    loading: state.filesLoading,
+    error: state.filesError,
+    message: state.filesMessage,
+    truncated: state.filesTruncated,
+    atRoots: state.filesAtRoots,
+    roots: state.filesRoots,
+    root: state.filesRoot,
+    breadcrumb: state.filesBreadcrumb,
+    elsewhere: state.filesElsewhere,
+    active: state.filesActive,
+    query: state.filesQuery,
+    searching: state.filesSearching,
+    rows: browserRows(),
+    selectedEntries,
+    locked: !state.writable || state.filesLoading || state.filesAtRoots,
+    rowHeight: filesRowHeight(),
+    dialogAction: dialog.action,
+    dialogName: dialog.name,
+    dialogReplacement: dialog.replacement,
+    dialogStatus: dialog.status,
+    dialogPreview: dialog.preview,
+    dialogScope: dialog.scope,
+    portableReport: portable.report,
+    portableStatus: portable.status,
+    goUp: goFilesUp,
+    refresh: refreshFiles,
+    toggleElsewhere: toggleFilesElsewhere,
+    openCrumb: openFilesCrumb,
+    openRow: (entry, index) => {
+      state.filesActive = index;
+      openBrowserRow(entry);
+    },
+    toggleFile,
+    markActive: markFilesActive,
+    onListKey: onFilesKey,
+    onSearchInput: onFilesSearchInput,
+    startRename,
+    startRenameFromTags: (trigger) => startRenameFromTags(trigger, "paths"),
+    startMove: startMoveFiles,
+    startMoveFolder,
+    startReplace,
+    startDelete,
+    confirmMoveHere,
+    cancelPick: cancelFilesPick,
+    setDialogName,
+    setDialogReplacement,
+    review: () => reviewFiles().catch((error: unknown) => {
+      setDialogStatus(failureOf(error).message);
+    }),
+    confirm: () => confirmFiles().catch((error: unknown) => {
+      setDialogStatus(failureOf(error).message);
+    }),
+    closeDialog: closeFilesDialog,
+  };
+}
+
 /**
  * Mount the player domain at the root of one React island.
  *
@@ -89,6 +266,150 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }, []);
   const current = useMemo(() => value, [value]);
   return <PlayerContextProvider value={current}>{children}</PlayerContextProvider>;
+}
+
+function readHistoryValue(): HistoryContextValue {
+  return {
+    sessions: state.historySessions,
+    historyId: state.historyId,
+    entries: state.entries,
+    selectedId: state.selectedId,
+    loadHistory: () => historyActions.loadHistory(),
+    openSession: (id) => historyActions.openSession(id),
+    selectEntry: (id) => historyActions.selectEntry(id),
+    openInLibrary: (assetId) => historyActions.openInLibrary(assetId),
+  };
+}
+
+/**
+ * Mount the history domain at the root of one React island.
+ *
+ * Updates are flushed so the session list and history detail stay in
+ * step with `state`.
+ *
+ * @param children Island that calls `useHistory`.
+ */
+export function HistoryProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readHistoryValue);
+  useEffect(() => {
+    return subscribeHistory(() => {
+      flushSync(() => {
+        setValue(readHistoryValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <HistoryContextProvider value={current}>{children}</HistoryContextProvider>;
+}
+
+/**
+ * Mount the Before a gig domain at the root of one React island.
+ *
+ * Updates are flushed so existing tests see the report in the same turn
+ * as the engine change.
+ *
+ * @param children Island that calls `useGig`.
+ */
+export function GigProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readGigValue);
+  useEffect(() => {
+    const refresh = () => {
+      flushSync(() => {
+        setValue(readGigValue());
+      });
+    };
+    const stopGig = subscribeGig(refresh);
+    const stopDrift = subscribeDrift(refresh);
+    return () => {
+      stopGig();
+      stopDrift();
+    };
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <GigStateProvider value={current}>{children}</GigStateProvider>;
+}
+
+/**
+ * Mount the Files domain at the root of one React island.
+ *
+ * Updates are flushed so existing tests see the folder in the same turn
+ * as the store change.
+ *
+ * @param children Island that calls `useFiles`.
+ */
+export function FilesProvider({ children }: { children: ReactNode }) {
+  const hostRef = useRef<HTMLSpanElement>(null);
+  const [value, setValue] = useState(readFilesValue);
+  useEffect(() => {
+    const refresh = () => {
+      if (!hostRef.current?.isConnected) return;
+      flushSync(() => {
+        setValue(readFilesValue());
+      });
+    };
+    const unsub = subscribeFiles(refresh);
+    document.addEventListener(LOCALE_EVENT, refresh);
+    return () => {
+      unsub();
+      document.removeEventListener(LOCALE_EVENT, refresh);
+    };
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return (
+    <FilesContextProvider value={current}>
+      <span ref={hostRef} hidden />
+      {children}
+    </FilesContextProvider>
+  );
+}
+
+/**
+ * Mount the crate domain at the root of one React island.
+ *
+ * Updates are flushed so the rail and action buttons match `state` in
+ * the same turn as emitCrates.
+ *
+ * @param children Island that calls `useCrates`.
+ */
+export function CrateProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readCrateValue);
+  useEffect(() => {
+    return subscribeCrates(() => {
+      flushSync(() => {
+        setValue(readCrateValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <CrateContextProvider value={current}>{children}</CrateContextProvider>;
+}
+
+/**
+ * Mount the Settings domain at the root of one React island.
+ *
+ * Updates are flushed so tests see the picker and About in the same
+ * turn as a save. A language change also repaints, because labels live
+ * in the catalogs.
+ *
+ * @param children Island that calls `useSettings`.
+ */
+export function SettingsProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readSettingsValue);
+  useEffect(() => {
+    const refresh = (): void => {
+      flushSync(() => {
+        setValue(readSettingsValue());
+      });
+    };
+    const stopStore = subscribeSettings(refresh);
+    const stopLocale = onLocaleChange(refresh);
+    return () => {
+      stopStore();
+      stopLocale();
+    };
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <SettingsContextProvider value={current}>{children}</SettingsContextProvider>;
 }
 
 function readTrackListValue(): TrackListContextValue {
@@ -121,17 +442,29 @@ export function TrackListRoot({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player is first. Waveform zoom and overview wrap inside it. List
- * selection and detail fields wrap inside that.
+ * Player is the first domain. Crates wrap inside it. Waveform wraps
+ * inside crates. Before a gig wraps inside waveform. Files wraps inside
+ * Before a gig. History wraps inside Files. Settings wraps inside History.
+ * Track list wraps inside Settings.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <WaveformProvider>
-        <TrackListRoot>{children}</TrackListRoot>
-      </WaveformProvider>
+      <CrateProvider>
+        <WaveformProvider>
+          <GigProvider>
+            <FilesProvider>
+              <HistoryProvider>
+                <SettingsProvider>
+                  <TrackListRoot>{children}</TrackListRoot>
+                </SettingsProvider>
+              </HistoryProvider>
+            </FilesProvider>
+          </GigProvider>
+        </WaveformProvider>
+      </CrateProvider>
     </PlayerProvider>
   );
 }
