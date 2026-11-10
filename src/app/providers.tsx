@@ -3,9 +3,9 @@
  *
  * Player is one domain. Waveform zoom and overview are another. Before
  * a gig (gig check and Tempo drift) is a third. Files is a fourth.
- * Later screens add their own context file and one wrapper here. This
- * module reads those engines; it does not own fetch, playback, or the
- * folder load.
+ * History is a fifth. Later screens add their own context file and one
+ * wrapper here. This module reads those engines; it does not own fetch,
+ * playback, history loads, or the folder load.
  */
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -19,6 +19,12 @@ import {
   GigStateProvider,
   type GigContextValue,
 } from "../context/GigContext";
+import {
+  HistoryProvider as HistoryContextProvider,
+  historyActions,
+  subscribeHistory,
+  type HistoryContextValue,
+} from "../context/HistoryContext";
 import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
@@ -211,6 +217,40 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   return <PlayerContextProvider value={current}>{children}</PlayerContextProvider>;
 }
 
+function readHistoryValue(): HistoryContextValue {
+  return {
+    sessions: state.historySessions,
+    historyId: state.historyId,
+    entries: state.entries,
+    selectedId: state.selectedId,
+    loadHistory: () => historyActions.loadHistory(),
+    openSession: (id) => historyActions.openSession(id),
+    selectEntry: (id) => historyActions.selectEntry(id),
+    openInLibrary: (assetId) => historyActions.openInLibrary(assetId),
+  };
+}
+
+/**
+ * Mount the history domain at the root of one React island.
+ *
+ * Updates are flushed so the session list and history detail stay in
+ * step with `state`.
+ *
+ * @param children Island that calls `useHistory`.
+ */
+export function HistoryProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readHistoryValue);
+  useEffect(() => {
+    return subscribeHistory(() => {
+      flushSync(() => {
+        setValue(readHistoryValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <HistoryContextProvider value={current}>{children}</HistoryContextProvider>;
+}
+
 /**
  * Mount the Before a gig domain at the root of one React island.
  *
@@ -277,6 +317,7 @@ export function FilesProvider({ children }: { children: ReactNode }) {
  *
  * Player is the first domain. Waveform zoom and overview wrap inside it.
  * Before a gig wraps inside waveform. Files wraps inside Before a gig.
+ * History wraps inside Files.
  *
  * @param children Page island.
  */
@@ -285,7 +326,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
     <PlayerProvider>
       <WaveformProvider>
         <GigProvider>
-          <FilesProvider>{children}</FilesProvider>
+          <FilesProvider>
+            <HistoryProvider>{children}</HistoryProvider>
+          </FilesProvider>
         </GigProvider>
       </WaveformProvider>
     </PlayerProvider>
