@@ -126,6 +126,7 @@ export interface PageState {
   healthToken: number;
   statsToken: number;
   scanToken: number;
+  bitrateToken: number;
   tagsToken: number;
   view: Track[];
   viewB: Track[];
@@ -202,6 +203,7 @@ export const state: PageState = {
   healthToken: 0,
   statsToken: 0,
   scanToken: 0,
+  bitrateToken: 0,
   tagsToken: 0,
   view: [],
   viewB: [],

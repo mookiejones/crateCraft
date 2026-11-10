@@ -23,7 +23,7 @@ import { state } from "./state";
 import { buttonEl } from "./tooltip";
 import { tips } from "./tooltip-strings";
 
-type HealthAction = "missing" | "duplicates" | "track" | "files";
+type HealthAction = "missing" | "duplicates" | "track" | "files" | "bitrate";
 
 const SECTIONS: Array<{
   key: "missing" | "no_bpm" | "no_key" | "no_beatgrid" | "no_artwork" | "empty_genre" | "no_crate";
@@ -67,7 +67,7 @@ export function wireHealth(navigate: (action: HealthAction, id?: number) => void
     const button = target.closest("button");
     if (!(button instanceof HTMLButtonElement)) return;
     const action = button.dataset.healthAction;
-    if (action === "missing" || action === "duplicates" || action === "files") {
+    if (action === "missing" || action === "duplicates" || action === "files" || action === "bitrate") {
       go?.(action);
       return;
     }
@@ -169,6 +169,7 @@ export function renderHealthReport(payload: LibraryHealthReport): void {
   listed += paintUnused(report, payload.unused);
   listed += paintDuplicates(report, payload.duplicates);
   if (!listed) report.append(noteLine(t("health.clear")));
+  paintBitrateLink(report);
 }
 
 /**
@@ -292,8 +293,20 @@ function paintDuplicates(
   return count;
 }
 
+function paintBitrateLink(report: HTMLElement): void {
+  const details = document.createElement("details");
+  details.className = "gig-group";
+  details.open = true;
+  const heading = document.createElement("summary");
+  heading.textContent = t("health.bitrate");
+  details.append(heading);
+  details.append(openButton("bitrate", "health.openBitrate", tips.healthOpenBitrate));
+  details.append(noteLine(t("health.bitrateNote")));
+  report.append(details);
+}
+
 function openButton(
-  action: "missing" | "duplicates" | "files",
+  action: "missing" | "duplicates" | "files" | "bitrate",
   label: MessageKey,
   tip: (typeof tips)["healthOpenMissing"],
 ): HTMLButtonElement {

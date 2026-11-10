@@ -27,7 +27,7 @@ The long guide is published at <https://mookiejones.github.io/crateCraft/>.
 
 **Library** sits at the top of the sidebar. The status line under it starts as **Checking Serato**.
 
-The rail groups are **Library** (Crates, History, Play stats, Files), **Library health** (Library health, Missing files, Duplicates, Stems, Damaged files, Tag spellings), **Backups**, and **Before a gig** (Before a gig, Check drive, Tempo drift).
+The rail groups are **Library** (Crates, History, Play stats, Files), **Library health** (Library health, Missing files, Duplicates, Stems, Damaged files, Suspect quality, Tag spellings), **Backups**, and **Before a gig** (Before a gig, Check drive, Tempo drift).
 
 Double-click a track to play it. The bar under the list has pause, seek, and volume. Playback does not change the file.
 

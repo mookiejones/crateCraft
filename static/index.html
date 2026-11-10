@@ -61,6 +61,7 @@
             <button type="button" data-view="duplicates" role="tab" data-i18n="view.duplicates">Duplicates</button>
             <button type="button" data-view="stems" role="tab" data-i18n="view.stems">Stems</button>
             <button type="button" id="scan-tab" data-view="scan" role="tab" aria-controls="scan-panel" data-i18n="view.scan">Damaged files</button>
+            <button type="button" id="bitrate-tab" data-view="bitrate" role="tab" aria-controls="bitrate-panel" data-i18n="view.bitrate">Suspect quality</button>
             <button type="button" id="tags-tab" data-view="tags" role="tab" aria-controls="tags-panel" data-i18n="view.tags">Tag spellings</button>
           </div>
         </section>
@@ -324,6 +325,17 @@
         <p id="scan-hint" class="gig-note" data-i18n="scan.intro">Quick check reads the start of each file. Full decode needs a crate because it can take minutes.</p>
         <p id="scan-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="scan-report" class="gig-report" tabindex="-1"></div>
+      </section>
+      <section id="bitrate-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="bitrate-heading" aria-busy="false">
+        <h2 id="bitrate-heading" class="visually-hidden" data-i18n="bitrate.heading">Suspect quality</h2>
+        <div class="browser-bar">
+          <p id="bitrate-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="bitrate-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+          <button id="bitrate-save" type="button" data-i18n="bitrate.saveCrate">Save crate</button>
+        </div>
+        <p id="bitrate-hint" class="gig-note" data-i18n="bitrate.intro">Needs a crate because it decodes audio. Flags a file whose stated bitrate is much higher than the spectrum shows, or a lossless file made from a lossy one. This is a suspicion, not proof. Quit Serato before saving a crate.</p>
+        <p id="bitrate-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="bitrate-report" class="gig-report" tabindex="-1"></div>
       </section>
 
       <section id="tags-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="tags-heading" aria-busy="false">

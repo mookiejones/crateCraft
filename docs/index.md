@@ -15,7 +15,7 @@ The first time you open it, setup finds your library and saves a safety copy bef
 - [Browse crates and tracks](guide/crates.md), and make, rename, color, and delete crates.
 - [Play a track](guide/playback.md) in the window before you crate or tag it. Playback does not change the file. The server can build a waveform for that track. M4A, AAC, and ALAC use the Mac or Windows audio system, or ffmpeg on Linux when it is already installed. ffmpeg is not included. A 60-minute stereo 44.1 kHz WAV is analyzed in 7.9 seconds and cached beside the app settings.
 - [Edit track details](guide/tags.md) that Serato stores in the library. Cue points stay in the audio file.
-- Read [History](guide/history.md), find [missing files](guide/missing.md), run a [check before a gig](guide/gig-check.md), flag [tempo drift](guide/tempo-drift.md), and see [stems](guide/stems.md).
+- Read [History](guide/history.md), find [missing files](guide/missing.md), run a [check before a gig](guide/gig-check.md), flag [tempo drift](guide/tempo-drift.md), check [suspect quality](guide/bitrate-check.md), and see [stems](guide/stems.md).
 - [Merge duplicate copies](guide/duplicates.md) into the file you want to keep.
 - Send tracks to [Prepare](guide/prepare.md).
 - [Import and export M3U playlists](guide/playlists.md), and export rekordbox.xml for CDJs. [Moving between Serato and Rekordbox](coming-from-rekordbox.md) lists what that file keeps.

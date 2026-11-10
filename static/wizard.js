@@ -27,6 +27,51 @@ var SeratoWizard = (() => {
 
   // locales/en.json
   var en_default = {
+    "bitrate.checking": "Checking bitrate…",
+    "bitrate.confirmCrate": "Confirm crate",
+    "bitrate.detail": " · {stated} kbps on the file, about {estimated} kbps from the spectrum",
+    "bitrate.detailEstimate": " · about {estimated} kbps from the spectrum",
+    "bitrate.empty": "No fake-320 or lossy-sourced files in this crate.",
+    "bitrate.heading": "Suspect quality",
+    "bitrate.intro": "Needs a crate because it decodes audio. Flags a file whose stated bitrate is much higher than the spectrum shows, or a lossless file made from a lossy one. This is a suspicion, not proof. Quit Serato before saving a crate.",
+    "bitrate.notFound": {
+      one: "{count} missing track was skipped. See Missing files.",
+      other: "{count} missing tracks were skipped. See Missing files."
+    },
+    "bitrate.preview": {
+      one: "{count} track would go into {name}. Confirm to write. Quit Serato first.",
+      other: "{count} tracks would go into {name}. Confirm to write. Quit Serato first."
+    },
+    "bitrate.previewEmpty": "No flagged tracks to save.",
+    "bitrate.reason.lossy_source": "Lossless file looks like it came from a lossy encode",
+    "bitrate.reason.unknown": "Suspect quality",
+    "bitrate.reason.upsampled": "Stated bitrate is much higher than the spectrum",
+    "bitrate.row": "{title} ({file}) — {reason}{detail}",
+    "bitrate.saveCrate": "Save crate",
+    "bitrate.saving": "Saving crate…",
+    "bitrate.summary": {
+      one: "{checked} files checked. {count} suspect file.",
+      other: "{checked} files checked. {count} suspect files."
+    },
+    "bitrate.summaryClear": "{checked} files checked. None look like fake 320s or lossy-sourced lossless.",
+    "bitrate.tooQuiet": {
+      one: "{count} file was too quiet or too short to measure.",
+      other: "{count} files were too quiet or too short to measure."
+    },
+    "bitrate.unchecked": {
+      one: "{count} file has an extension this check does not know.",
+      other: "{count} files have an extension this check does not know."
+    },
+    "bitrate.unreadable": "The bitrate check could not be read.",
+    "bitrate.unreadableFiles": {
+      one: "{count} file could not be read.",
+      other: "{count} files could not be read."
+    },
+    "bitrate.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+    "bitrate.written": {
+      one: "Saved crate {name} with {count} track.",
+      other: "Saved crate {name} with {count} tracks."
+    },
     "color.blue": "Blue",
     "color.custom": "Custom",
     "color.green": "Green",
@@ -475,6 +520,8 @@ var SeratoWizard = (() => {
       one: "{title} ({count} copy)",
       other: "{title} ({count} copies)"
     },
+    "health.bitrate": "Suspect quality",
+    "health.bitrateNote": "Fake 320s and lossless files made from a lossy encode. Needs a crate because it decodes audio.",
     "health.duplicates": "Duplicate groups",
     "health.emptyGenre": "Empty genre",
     "health.fileRow": "{file}",
@@ -491,6 +538,7 @@ var SeratoWizard = (() => {
     "health.noBpm": "No BPM",
     "health.noCrate": "Not in a crate",
     "health.noKey": "No key",
+    "health.openBitrate": "Open Suspect quality",
     "health.openDuplicates": "Open Duplicates",
     "health.openFiles": "Open Files",
     "health.openMissing": "Open Missing files",
@@ -640,6 +688,7 @@ var SeratoWizard = (() => {
     "merge.trashFiles": "Move {files} to the Trash.",
     "merge.trashLabel": "Move the other audio files to the Trash",
     "merge.trashNote": "Off by default. Files go to the Trash, where you can restore them. They are not permanently deleted.",
+    "mode.bitrate": "Needs a crate. Saving a crate writes the library. Quit Serato first.",
     "mode.drift": "Read-only. This check does not change the library.",
     "mode.duplicates": "Same title, artist, and length. Select a copy, then merge the others into it.",
     "mode.files": "Files on disk. Cue points stay in the audio file. Crates follow the path.",
@@ -1175,6 +1224,9 @@ var SeratoWizard = (() => {
     "tooltip.allTracks": "Show every track in this space. Ctrl/Cmd+1.",
     "tooltip.backupDrives": "Copy each connected drive's Serato folder into the backup on this computer. An unplugged drive is listed and left untouched.",
     "tooltip.beatgridLock": "Lock the beatgrid so Serato does not move it.",
+    "tooltip.bitrateConfirm": "Create the Suspect quality crate. Serato has to be quit.",
+    "tooltip.bitrateRefresh": "Run the bitrate check again on the selected crate.",
+    "tooltip.bitrateSave": "Preview a Suspect quality crate of the flagged tracks. Nothing is written until you confirm. Quit Serato first.",
     "tooltip.chooseRelated": "Choose {name} as the track to link.",
     "tooltip.collapseCrate": "Hide the crates nested under {name}.",
     "tooltip.colorway": "Choose the theme. The app icon can follow this choice.",
@@ -1239,6 +1291,7 @@ var SeratoWizard = (() => {
     "tooltip.healthArtEmbed": "Write the selected cover into the audio file. Cue points stay. Quit Serato first.",
     "tooltip.healthArtPick": "Choose this Cover Art Archive image to embed.",
     "tooltip.healthFindArt": "Look up a cover on Cover Art Archive and preview it before embedding.",
+    "tooltip.healthOpenBitrate": "Open the bitrate check for this crate.",
     "tooltip.healthOpenDuplicates": "Open the Duplicates view.",
     "tooltip.healthOpenFiles": "Open the Files view.",
     "tooltip.healthOpenMissing": "Open the Missing files view.",
@@ -1406,6 +1459,7 @@ var SeratoWizard = (() => {
     "tooltip.updateSkip": "Don't tell you about this version again.",
     "tooltip.updateToggle": "Ask GitHub once a day whether a newer version is out.",
     "tooltip.useInCrates": "Put another track in every crate this one is in, at the same position.",
+    "tooltip.viewBitrate": "Flag files whose stated bitrate is much higher than the spectrum, or lossless files made from a lossy encode. Needs a crate. Saving a crate writes the library.",
     "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
     "tooltip.viewDrift": "Flag tracks whose tempo wanders, or that look like live recordings. Needs a crate. Read-only.",
     "tooltip.driftRefresh": "Run the tempo check again on the selected crate.",
@@ -1461,6 +1515,7 @@ var SeratoWizard = (() => {
     "version.copied": "Copied",
     "version.copyFailed": "Couldn't copy the version.",
     "version.unavailable": "Version unavailable",
+    "view.bitrate": "Suspect quality",
     "view.crates": "Crates",
     "view.drift": "Tempo drift",
     "view.duplicates": "Duplicates",
@@ -1532,6 +1587,51 @@ var SeratoWizard = (() => {
 
   // locales/es.json
   var es_default = {
+    "bitrate.checking": "Comprobando la tasa de bits…",
+    "bitrate.confirmCrate": "Confirmar caja",
+    "bitrate.detail": " · {stated} kbps en el archivo, unos {estimated} kbps según el espectro",
+    "bitrate.detailEstimate": " · unos {estimated} kbps según el espectro",
+    "bitrate.empty": "Ningún archivo de 320 falso ni procedente de un códec con pérdida en esta caja.",
+    "bitrate.heading": "Calidad dudosa",
+    "bitrate.intro": "Necesita una caja porque decodifica el audio. Marca un archivo cuya tasa de bits declarada es mucho más alta que la del espectro, o un archivo sin pérdida hecho a partir de uno con pérdida. Es una sospecha, no una prueba. Cierra Serato antes de guardar una caja.",
+    "bitrate.notFound": {
+      one: "Se omitió {count} pista no encontrada. Mira Archivos no encontrados.",
+      other: "Se omitieron {count} pistas no encontradas. Mira Archivos no encontrados."
+    },
+    "bitrate.preview": {
+      one: "{count} pista iría a {name}. Confirma para escribir. Cierra Serato primero.",
+      other: "{count} pistas irían a {name}. Confirma para escribir. Cierra Serato primero."
+    },
+    "bitrate.previewEmpty": "No hay pistas marcadas para guardar.",
+    "bitrate.reason.lossy_source": "El archivo sin pérdida parece venir de un códec con pérdida",
+    "bitrate.reason.unknown": "Calidad dudosa",
+    "bitrate.reason.upsampled": "La tasa de bits declarada es mucho más alta que la del espectro",
+    "bitrate.row": "{title} ({file}) — {reason}{detail}",
+    "bitrate.saveCrate": "Guardar caja",
+    "bitrate.saving": "Guardando la caja…",
+    "bitrate.summary": {
+      one: "{checked} archivos comprobados. {count} archivo sospechoso.",
+      other: "{checked} archivos comprobados. {count} archivos sospechosos."
+    },
+    "bitrate.summaryClear": "{checked} archivos comprobados. Ninguno parece un 320 falso ni un archivo sin pérdida de origen con pérdida.",
+    "bitrate.tooQuiet": {
+      one: "{count} archivo era demasiado silencioso o corto para medirlo.",
+      other: "{count} archivos eran demasiado silenciosos o cortos para medirlos."
+    },
+    "bitrate.unchecked": {
+      one: "{count} archivo tiene una extensión que esta comprobación no conoce.",
+      other: "{count} archivos tienen una extensión que esta comprobación no conoce."
+    },
+    "bitrate.unreadable": "No se pudo leer la comprobación de tasa de bits.",
+    "bitrate.unreadableFiles": {
+      one: "No se pudo leer {count} archivo.",
+      other: "No se pudieron leer {count} archivos."
+    },
+    "bitrate.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Volver a comprobar",
+    "bitrate.written": {
+      one: "Se guardó la caja {name} con {count} pista.",
+      other: "Se guardó la caja {name} con {count} pistas."
+    },
     "color.blue": "Azul",
     "color.custom": "Personalizado",
     "color.green": "Verde",
@@ -1980,6 +2080,8 @@ var SeratoWizard = (() => {
       one: "{title} ({count} copia)",
       other: "{title} ({count} copias)"
     },
+    "health.bitrate": "Calidad dudosa",
+    "health.bitrateNote": "Falsos 320 y archivos sin pérdida hechos a partir de un códec con pérdida. Necesita una caja porque decodifica el audio.",
     "health.duplicates": "Grupos duplicados",
     "health.emptyGenre": "Género vacío",
     "health.fileRow": "{file}",
@@ -1996,6 +2098,7 @@ var SeratoWizard = (() => {
     "health.noBpm": "Sin BPM",
     "health.noCrate": "En ninguna caja",
     "health.noKey": "Sin tonalidad",
+    "health.openBitrate": "Abrir Calidad dudosa",
     "health.openDuplicates": "Abrir Duplicados",
     "health.openFiles": "Abrir Archivos",
     "health.openMissing": "Abrir Archivos no encontrados",
@@ -2145,6 +2248,7 @@ var SeratoWizard = (() => {
     "merge.trashFiles": "Mover {files} a la Papelera.",
     "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
     "merge.trashNote": "Desactivado por defecto. Los archivos van a la Papelera, desde donde puedes restaurarlos. No se eliminan para siempre.",
+    "mode.bitrate": "Necesita una caja. Guardar una caja escribe en la biblioteca. Cierra Serato primero.",
     "mode.drift": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.duplicates": "Mismo título, artista y duración. Selecciona una copia y combina las demás en ella.",
     "mode.files": "Archivos en el disco. Los cues se quedan en el archivo de audio. Las cajas siguen la ruta.",
@@ -2680,6 +2784,9 @@ var SeratoWizard = (() => {
     "tooltip.allTracks": "Muestra todas las pistas de este espacio. Ctrl/Cmd+1.",
     "tooltip.backupDrives": "Copia la carpeta Serato de cada unidad conectada en la copia de este equipo. Una unidad desconectada se anota y no se toca.",
     "tooltip.beatgridLock": "Bloquea la rejilla de tiempo para que Serato no la mueva.",
+    "tooltip.bitrateConfirm": "Crea la caja Calidad dudosa. Serato tiene que estar cerrado.",
+    "tooltip.bitrateRefresh": "Vuelve a comprobar la tasa de bits de la caja seleccionada.",
+    "tooltip.bitrateSave": "Previsualiza una caja Calidad dudosa con las pistas marcadas. No se escribe nada hasta que confirmes. Cierra Serato primero.",
     "tooltip.chooseRelated": "Elige {name} como pista para enlazar.",
     "tooltip.collapseCrate": "Oculta las cajas que están dentro de {name}.",
     "tooltip.colorway": "Elige el tema. El icono de la app puede seguir esta elección.",
@@ -2744,6 +2851,7 @@ var SeratoWizard = (() => {
     "tooltip.healthArtEmbed": "Escribe la carátula elegida en el archivo de audio. Los cues se quedan. Cierra Serato primero.",
     "tooltip.healthArtPick": "Elige esta imagen de Cover Art Archive para incrustarla.",
     "tooltip.healthFindArt": "Busca una carátula en Cover Art Archive y previsualízala antes de incrustarla.",
+    "tooltip.healthOpenBitrate": "Abre la comprobación de tasa de bits de esta caja.",
     "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
     "tooltip.healthOpenFiles": "Abre la vista Archivos.",
     "tooltip.healthOpenMissing": "Abre la vista Archivos no encontrados.",
@@ -2911,6 +3019,7 @@ var SeratoWizard = (() => {
     "tooltip.updateSkip": "No volver a avisar de esta versión.",
     "tooltip.updateToggle": "Preguntar a GitHub una vez al día si hay una versión más nueva.",
     "tooltip.useInCrates": "Pon otra pista en cada caja donde está esta, en la misma posición.",
+    "tooltip.viewBitrate": "Marca archivos cuya tasa de bits declarada es mucho más alta que la del espectro, o archivos sin pérdida hechos a partir de un códec con pérdida. Necesita una caja. Guardar una caja escribe en la biblioteca.",
     "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
     "tooltip.viewDrift": "Marca pistas cuyo tempo se mueve, o que parecen grabaciones en vivo. Necesita una caja. Solo lectura.",
     "tooltip.driftRefresh": "Vuelve a comprobar el tempo de la caja seleccionada.",
@@ -2966,6 +3075,7 @@ var SeratoWizard = (() => {
     "version.copied": "Copiada",
     "version.copyFailed": "No se pudo copiar la versión.",
     "version.unavailable": "Versión no disponible",
+    "view.bitrate": "Calidad dudosa",
     "view.crates": "Cajas",
     "view.drift": "Tempo inestable",
     "view.duplicates": "Duplicados",
@@ -3462,11 +3572,13 @@ var SeratoWizard = (() => {
     driftRefresh: spec("tooltip.driftRefresh"),
     viewHealth: spec("tooltip.viewHealth"),
     viewScan: spec("tooltip.viewScan"),
+    viewBitrate: spec("tooltip.viewBitrate"),
     viewTags: spec("tooltip.viewTags"),
     healthRefresh: spec("tooltip.healthRefresh"),
     healthOpenMissing: spec("tooltip.healthOpenMissing"),
     healthOpenDuplicates: spec("tooltip.healthOpenDuplicates"),
     healthOpenFiles: spec("tooltip.healthOpenFiles"),
+    healthOpenBitrate: spec("tooltip.healthOpenBitrate"),
     healthTrack: spec("tooltip.healthTrack"),
     healthFindArt: spec("tooltip.healthFindArt"),
     healthArtCancel: spec("tooltip.healthArtCancel"),
@@ -3485,6 +3597,9 @@ var SeratoWizard = (() => {
     gigRefresh: spec("tooltip.gigRefresh"),
     scanQuick: spec("tooltip.scanQuick"),
     scanFull: spec("tooltip.scanFull"),
+    bitrateRefresh: spec("tooltip.bitrateRefresh"),
+    bitrateSave: spec("tooltip.bitrateSave"),
+    bitrateConfirm: spec("tooltip.bitrateConfirm"),
     gigBack: spec("tooltip.gigBack"),
     gigNext: spec("tooltip.gigNext"),
     gigExit: spec("tooltip.gigExit"),

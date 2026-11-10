@@ -8,6 +8,7 @@
  * origin. Snapshot UI is src/restore.ts. The gig check is src/gig.ts.
  * Tempo drift is src/drift.ts.
  * The damaged-file scan is src/scan.ts.
+ * The suspect-quality report is src/bitrate.ts.
  * The library health report is src/health.ts.
  * Play stats are src/history-stats.ts.
  * Tag spellings are src/tags.ts.
@@ -28,6 +29,7 @@ import { wireDrift } from "./drift";
 import { wireHealth } from "./health";
 import { wireHistoryStats } from "./history-stats";
 import { wireScan } from "./scan";
+import { wireBitrate } from "./bitrate";
 import { wireTags } from "./tags";
 import { wireHelp } from "./help";
 import { wirePortable } from "./portable";
@@ -122,11 +124,13 @@ wireHealth((action, id) => {
   if (action === "missing") setMode("missing");
   else if (action === "duplicates") setMode("duplicates");
   else if (action === "files") setMode("files");
+  else if (action === "bitrate") setMode("bitrate");
   else setMode("crates");
 });
 wireDrift();
 wireHistoryStats();
 wireScan();
+wireBitrate();
 wireTags();
 wirePortable();
 wireLayout();

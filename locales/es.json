@@ -1,4 +1,49 @@
 {
+  "bitrate.checking": "Comprobando la tasa de bits…",
+  "bitrate.confirmCrate": "Confirmar caja",
+  "bitrate.detail": " · {stated} kbps en el archivo, unos {estimated} kbps según el espectro",
+  "bitrate.detailEstimate": " · unos {estimated} kbps según el espectro",
+  "bitrate.empty": "Ningún archivo de 320 falso ni procedente de un códec con pérdida en esta caja.",
+  "bitrate.heading": "Calidad dudosa",
+  "bitrate.intro": "Necesita una caja porque decodifica el audio. Marca un archivo cuya tasa de bits declarada es mucho más alta que la del espectro, o un archivo sin pérdida hecho a partir de uno con pérdida. Es una sospecha, no una prueba. Cierra Serato antes de guardar una caja.",
+  "bitrate.notFound": {
+    "one": "Se omitió {count} pista no encontrada. Mira Archivos no encontrados.",
+    "other": "Se omitieron {count} pistas no encontradas. Mira Archivos no encontrados."
+  },
+  "bitrate.preview": {
+    "one": "{count} pista iría a {name}. Confirma para escribir. Cierra Serato primero.",
+    "other": "{count} pistas irían a {name}. Confirma para escribir. Cierra Serato primero."
+  },
+  "bitrate.previewEmpty": "No hay pistas marcadas para guardar.",
+  "bitrate.reason.lossy_source": "El archivo sin pérdida parece venir de un códec con pérdida",
+  "bitrate.reason.unknown": "Calidad dudosa",
+  "bitrate.reason.upsampled": "La tasa de bits declarada es mucho más alta que la del espectro",
+  "bitrate.row": "{title} ({file}) — {reason}{detail}",
+  "bitrate.saveCrate": "Guardar caja",
+  "bitrate.saving": "Guardando la caja…",
+  "bitrate.summary": {
+    "one": "{checked} archivos comprobados. {count} archivo sospechoso.",
+    "other": "{checked} archivos comprobados. {count} archivos sospechosos."
+  },
+  "bitrate.summaryClear": "{checked} archivos comprobados. Ninguno parece un 320 falso ni un archivo sin pérdida de origen con pérdida.",
+  "bitrate.tooQuiet": {
+    "one": "{count} archivo era demasiado silencioso o corto para medirlo.",
+    "other": "{count} archivos eran demasiado silenciosos o cortos para medirlos."
+  },
+  "bitrate.unchecked": {
+    "one": "{count} archivo tiene una extensión que esta comprobación no conoce.",
+    "other": "{count} archivos tienen una extensión que esta comprobación no conoce."
+  },
+  "bitrate.unreadable": "No se pudo leer la comprobación de tasa de bits.",
+  "bitrate.unreadableFiles": {
+    "one": "No se pudo leer {count} archivo.",
+    "other": "No se pudieron leer {count} archivos."
+  },
+  "bitrate.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Volver a comprobar",
+  "bitrate.written": {
+    "one": "Se guardó la caja {name} con {count} pista.",
+    "other": "Se guardó la caja {name} con {count} pistas."
+  },
   "color.blue": "Azul",
   "color.custom": "Personalizado",
   "color.green": "Verde",
@@ -447,6 +492,8 @@
     "one": "{title} ({count} copia)",
     "other": "{title} ({count} copias)"
   },
+  "health.bitrate": "Calidad dudosa",
+  "health.bitrateNote": "Falsos 320 y archivos sin pérdida hechos a partir de un códec con pérdida. Necesita una caja porque decodifica el audio.",
   "health.duplicates": "Grupos duplicados",
   "health.emptyGenre": "Género vacío",
   "health.fileRow": "{file}",
@@ -463,6 +510,7 @@
   "health.noBpm": "Sin BPM",
   "health.noCrate": "En ninguna caja",
   "health.noKey": "Sin tonalidad",
+  "health.openBitrate": "Abrir Calidad dudosa",
   "health.openDuplicates": "Abrir Duplicados",
   "health.openFiles": "Abrir Archivos",
   "health.openMissing": "Abrir Archivos no encontrados",
@@ -612,6 +660,7 @@
   "merge.trashFiles": "Mover {files} a la Papelera.",
   "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
   "merge.trashNote": "Desactivado por defecto. Los archivos van a la Papelera, desde donde puedes restaurarlos. No se eliminan para siempre.",
+  "mode.bitrate": "Necesita una caja. Guardar una caja escribe en la biblioteca. Cierra Serato primero.",
   "mode.drift": "Solo lectura. Esta comprobación no cambia la biblioteca.",
   "mode.duplicates": "Mismo título, artista y duración. Selecciona una copia y combina las demás en ella.",
   "mode.files": "Archivos en el disco. Los cues se quedan en el archivo de audio. Las cajas siguen la ruta.",
@@ -1147,6 +1196,9 @@
   "tooltip.allTracks": "Muestra todas las pistas de este espacio. Ctrl/Cmd+1.",
   "tooltip.backupDrives": "Copia la carpeta Serato de cada unidad conectada en la copia de este equipo. Una unidad desconectada se anota y no se toca.",
   "tooltip.beatgridLock": "Bloquea la rejilla de tiempo para que Serato no la mueva.",
+  "tooltip.bitrateConfirm": "Crea la caja Calidad dudosa. Serato tiene que estar cerrado.",
+  "tooltip.bitrateRefresh": "Vuelve a comprobar la tasa de bits de la caja seleccionada.",
+  "tooltip.bitrateSave": "Previsualiza una caja Calidad dudosa con las pistas marcadas. No se escribe nada hasta que confirmes. Cierra Serato primero.",
   "tooltip.chooseRelated": "Elige {name} como pista para enlazar.",
   "tooltip.collapseCrate": "Oculta las cajas que están dentro de {name}.",
   "tooltip.colorway": "Elige el tema. El icono de la app puede seguir esta elección.",
@@ -1211,6 +1263,7 @@
   "tooltip.healthArtEmbed": "Escribe la carátula elegida en el archivo de audio. Los cues se quedan. Cierra Serato primero.",
   "tooltip.healthArtPick": "Elige esta imagen de Cover Art Archive para incrustarla.",
   "tooltip.healthFindArt": "Busca una carátula en Cover Art Archive y previsualízala antes de incrustarla.",
+  "tooltip.healthOpenBitrate": "Abre la comprobación de tasa de bits de esta caja.",
   "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
   "tooltip.healthOpenFiles": "Abre la vista Archivos.",
   "tooltip.healthOpenMissing": "Abre la vista Archivos no encontrados.",
@@ -1378,6 +1431,7 @@
   "tooltip.updateSkip": "No volver a avisar de esta versión.",
   "tooltip.updateToggle": "Preguntar a GitHub una vez al día si hay una versión más nueva.",
   "tooltip.useInCrates": "Pon otra pista en cada caja donde está esta, en la misma posición.",
+  "tooltip.viewBitrate": "Marca archivos cuya tasa de bits declarada es mucho más alta que la del espectro, o archivos sin pérdida hechos a partir de un códec con pérdida. Necesita una caja. Guardar una caja escribe en la biblioteca.",
   "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
   "tooltip.viewDrift": "Marca pistas cuyo tempo se mueve, o que parecen grabaciones en vivo. Necesita una caja. Solo lectura.",
   "tooltip.driftRefresh": "Vuelve a comprobar el tempo de la caja seleccionada.",
@@ -1433,6 +1487,7 @@
   "version.copied": "Copiada",
   "version.copyFailed": "No se pudo copiar la versión.",
   "version.unavailable": "Versión no disponible",
+  "view.bitrate": "Calidad dudosa",
   "view.crates": "Cajas",
   "view.drift": "Tempo inestable",
   "view.duplicates": "Duplicados",

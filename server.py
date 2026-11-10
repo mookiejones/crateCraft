@@ -2151,6 +2151,7 @@ class Handler(BaseHTTPRequestHandler):
                     foldering = parsed.path == "/api/folder-sync"
                     clustering = parsed.path == "/api/tag-clusters"
                     covering = parsed.path == "/api/album-art"
+                    bitrate_crate = parsed.path == "/api/bitrate-check"
                     history = parsed.path == "/api/history-stats"
                     preview = (
                         (merging and payload.get("preview") is True)
@@ -2166,6 +2167,7 @@ class Handler(BaseHTTPRequestHandler):
                         )
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
+                        or (bitrate_crate and payload.get("action") == "preview")
                     )
                     if not preview:
                         invalidate()
@@ -2226,6 +2228,12 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = album_art.action(request)
+                    elif bitrate_crate:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = bitrate_check.action(request)
+                        if request.get("action") == "create" and result.get("written"):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif merging:
                         result = as_dict(_library_call("merge_duplicates", payload))
                         if not preview:
