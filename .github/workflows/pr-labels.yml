@@ -1,0 +1,44 @@
+name: PR labels
+
+# Release notes are built from PR labels (.github/release.yml). A PR with no
+# known label would silently vanish from them, so require one before merge.
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-labels-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  require-label:
+    name: require a release-notes label
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check labels
+        env:
+          PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+        shell: bash
+        run: |
+          # Shown in release notes (categories in .github/release.yml).
+          shown='enhancement feature-gap data-safety area:snapshots bug area:ui accessibility'
+          # Deliberately hidden from release notes (exclude list in .github/release.yml).
+          hidden='dependencies github_actions javascript python ci area:ci chore tests release documentation research duplicate invalid wontfix'
+          mapfile -t labels < <(jq -r '.[]' <<<"$PR_LABELS")
+          for label in "${labels[@]}"; do
+            for known in $shown $hidden; do
+              if [[ "$label" == "$known" ]]; then
+                echo "OK: '$label' decides where this PR goes in the release notes."
+                exit 0
+              fi
+            done
+          done
+          echo "::error::Add a label so this PR lands in the right place in the release notes."
+          echo "User-facing: $shown"
+          echo "Hidden from users: $hidden"
+          exit 1

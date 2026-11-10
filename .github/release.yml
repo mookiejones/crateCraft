@@ -1,0 +1,41 @@
+# Auto-generated release notes (gh release create --generate-notes) read this file.
+# Only user-facing changes are shown. PRs with no matching label are hidden;
+# the "Full Changelog" link at the bottom still lists everything.
+changelog:
+  exclude:
+    labels:
+      - dependencies
+      - github_actions
+      - javascript
+      - python
+      - ci
+      - area:ci
+      - chore
+      - tests
+      - release
+      - documentation
+      - research
+      - duplicate
+      - invalid
+      - wontfix
+    authors:
+      - dependabot
+      - dependabot[bot]
+      - github-actions
+      - github-actions[bot]
+  categories:
+    - title: "✨ New features"
+      labels:
+        - enhancement
+        - feature-gap
+    - title: "🛡️ Library safety"
+      labels:
+        - data-safety
+        - area:snapshots
+    - title: "🐛 Fixes"
+      labels:
+        - bug
+    - title: "🎨 Look and feel"
+      labels:
+        - area:ui
+        - accessibility
