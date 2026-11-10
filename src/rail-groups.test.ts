@@ -3,7 +3,7 @@
  *
  * The markup is index.html. Group labels are headings. Each tab still
  * has a tooltip. The view ids stay crates, history, files, health, missing,
- * duplicates, stems, scan, bitrate, tags, snapshots, gig, and drift.
+ * duplicates, stems, scan, bitrate, tags, snapshots, gig, portable, and drift.
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
@@ -30,7 +30,7 @@ describe("rail groups", () => {
       ["crates", "history", "files"],
       ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags"],
       ["snapshots"],
-      ["gig", "drift"],
+      ["gig", "portable", "drift"],
     ]);
     expect(document.querySelector("[data-view='health']")?.textContent).toBe("Library health");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Missing files");
@@ -39,6 +39,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Tag spellings");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Before a gig");
+    expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Check drive");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo drift");
   });
 
@@ -64,6 +65,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Grafías de etiquetas");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Copias de seguridad");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Antes del bolo");
+    expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Comprobar unidad");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo inestable");
   });
 });

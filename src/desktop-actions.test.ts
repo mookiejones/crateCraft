@@ -71,6 +71,8 @@ describe("desktop menu actions", () => {
     expect(state.mode).toBe("history");
     runDesktopAction("view-health");
     expect(state.mode).toBe("health");
+    runDesktopAction("view-portable");
+    expect(state.mode).toBe("portable");
     runDesktopAction("view-tags");
     expect(state.mode).toBe("tags");
     runDesktopAction("view-all");

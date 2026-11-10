@@ -96,6 +96,7 @@ class DesktopMenuTests(unittest.TestCase):
             "Suspect quality",
             "Tag spellings",
             "Before a gig",
+            "Check drive",
             "Tempo drift",
             "Take a backup",
             "Backups",

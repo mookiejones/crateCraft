@@ -85,6 +85,14 @@ export interface ElementIds {
   "gig-status": HTMLParagraphElement;
   "gig-report": HTMLDivElement;
   "gig-refresh": HTMLButtonElement;
+  "portable-panel": HTMLElement;
+  "portable-drive": HTMLSelectElement;
+  "portable-check": HTMLButtonElement;
+  "portable-offline": HTMLParagraphElement;
+  "portable-view-status": HTMLParagraphElement;
+  "portable-view-verdict": HTMLParagraphElement;
+  "portable-view-summary": HTMLParagraphElement;
+  "portable-view-findings": HTMLUListElement;
   "drift-panel": HTMLElement;
   "drift-scope": HTMLParagraphElement;
   "drift-status": HTMLParagraphElement;
