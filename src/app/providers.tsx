@@ -1,9 +1,9 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. Later screens add their own context file
- * and one wrapper here. This module reads the player engine; it does not
- * own playback.
+ * Player state is one domain. Waveform zoom and overview are another.
+ * Each has its own context file and one wrapper here. This module reads
+ * the player engine; it does not own playback.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -12,9 +12,15 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import { WaveformProvider } from "../context/WaveformContext";
 import {
+  SEEK_STEP_LARGE_SECONDS,
+  SEEK_STEP_SECONDS,
   canSkip,
   canTogglePlay,
+  formatPlayerTime,
+  getMediaDuration,
+  getMediaTime,
   getPlayerCues,
   getPlayerState,
   next,
@@ -45,6 +51,11 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+    mediaTime: getMediaTime,
+    mediaDuration: getMediaDuration,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
   };
 }
 
@@ -72,10 +83,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player is the first domain. A later screen adds one line here.
+ * Player is the first domain. Waveform zoom and overview wrap inside it.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
-  return <PlayerProvider>{children}</PlayerProvider>;
+  return (
+    <PlayerProvider>
+      <WaveformProvider>{children}</WaveformProvider>
+    </PlayerProvider>
+  );
 }

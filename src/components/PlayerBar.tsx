@@ -1,8 +1,8 @@
 /**
  * Player transport painted by React.
  *
- * Waveform canvases stay in `waveform-view.ts` beside this bar. Cue marks,
- * Play, Previous, Next, seek, and volume read `usePlayer`.
+ * The waveform island sits beside this bar. Cue marks, Play, Previous,
+ * Next, seek, and volume read `usePlayer`.
  */
 
 import { useState, type KeyboardEvent, type PointerEvent } from "react";
