@@ -420,6 +420,20 @@
     </div>
     <p id="merge-status" class="dialog-status" role="status" aria-live="polite"></p>
   </dialog>
+  <dialog id="album-art-dialog" aria-labelledby="album-art-title" aria-describedby="album-art-intro">
+    <h2 id="album-art-title" data-i18n="health.artTitle">Find album art</h2>
+    <p id="album-art-intro" data-i18n="health.artIntro">Looks up Cover Art Archive. Preview the cover, then embed it into the audio file. Cue points stay. Quit Serato first.</p>
+    <p id="album-art-track" class="dialog-note"></p>
+    <fieldset>
+      <legend data-i18n="health.artPick">Cover to embed</legend>
+      <div id="album-art-choices"></div>
+    </fieldset>
+    <div class="dialog-actions">
+      <button id="album-art-cancel" type="button" autofocus data-i18n="common.cancel">Cancel</button>
+      <button id="album-art-embed" type="button" data-i18n="health.artEmbed">Embed cover</button>
+    </div>
+    <p id="album-art-status" class="dialog-status" role="status" aria-live="polite"></p>
+  </dialog>
   <dialog id="crates-replace-dialog" aria-labelledby="crates-replace-title" aria-describedby="crates-replace-intro">
     <h2 id="crates-replace-title" data-i18n="cratesReplace.title">Use in crates</h2>
     <p id="crates-replace-intro" data-i18n="cratesReplace.intro">Put another track in every crate this one is in, at the same position. Both can stay. Smart crates are left alone.</p>

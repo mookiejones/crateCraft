@@ -135,6 +135,12 @@ export interface ElementIds {
   "duplicate-actions": HTMLDivElement;
   "merge-dialog": HTMLDialogElement;
   "merge-choices": HTMLDivElement;
+  "album-art-dialog": HTMLDialogElement;
+  "album-art-track": HTMLParagraphElement;
+  "album-art-choices": HTMLDivElement;
+  "album-art-cancel": HTMLButtonElement;
+  "album-art-embed": HTMLButtonElement;
+  "album-art-status": HTMLParagraphElement;
   "merge-preview": HTMLDivElement;
   "merge-status": HTMLParagraphElement;
   "crates-replace-dialog": HTMLDialogElement;

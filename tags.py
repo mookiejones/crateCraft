@@ -7,7 +7,9 @@ whose bytes use a different header. Reading never rewrites a file.
 ``copy_serato_geob`` copies existing Serato GEOB frames onto another file
 when that file has a plain ID3v2.3 tag, or when it is an MP3 with no tag
 yet. Other frames and the audio bytes stay as they are. Any other layout
-is left untouched.
+is left untouched. ``embed_front_cover`` adds an ID3 ``APIC`` frame or a
+FLAC picture block without rewriting Serato GEOB frames or Vorbis
+comments. MP4 and other layouts are refused.
 """
 
 from __future__ import annotations
@@ -1769,6 +1771,337 @@ def _write_copied_tag(source: Path, dest: Path) -> bool:
         except OSError:
             return False
         return False
+    finally:
+        if temp is not None:
+            temp.unlink(missing_ok=True)
+        backup.unlink(missing_ok=True)
+
+
+JPEG_MAGIC = b"\xff\xd8"
+PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
+ARTWORK_PRESENT = "This file already has artwork."
+ARTWORK_FORMAT = "This file format cannot take artwork yet."
+ARTWORK_NOT_IMAGE = "That image is not a JPEG or PNG cover."
+ARTWORK_WRITE_FAILED = "The artwork could not be written."
+_ARTWORK_PAD = 256
+
+
+class ArtworkWriteError(Exception):
+    """A cover that cannot be written. The file is left unchanged."""
+
+    def __init__(self, message: str) -> None:
+        """Store the sentence returned to the page.
+
+        Args:
+            message: Refusal text. It does not include a path.
+        """
+        super().__init__(message)
+        self.message = message
+
+
+def image_mime(blob: bytes) -> str | None:
+    """Return ``image/jpeg`` or ``image/png`` when ``blob`` starts as that file.
+
+    Args:
+        blob: Candidate cover bytes.
+
+    Returns:
+        The MIME type, or None when the bytes are not a JPEG or PNG.
+    """
+    if blob.startswith(JPEG_MAGIC):
+        return "image/jpeg"
+    if blob.startswith(PNG_MAGIC):
+        return "image/png"
+    return None
+
+
+def embed_front_cover(path: str | Path, image: bytes) -> None:
+    """Add a front cover to an MP3 or FLAC that has none.
+
+    Existing ID3 frames, including Serato GEOB, stay as they are. A FLAC
+    Vorbis comment is not rewritten. The destination is replaced only
+    after a sibling temp file is written. A failed check restores the
+    previous bytes. A shortcut, a file that already has art, and MP4
+    are refused.
+
+    Args:
+        path: Audio file.
+        image: JPEG or PNG bytes.
+
+    Raises:
+        ArtworkWriteError: The file was left unchanged.
+    """
+    mime = image_mime(image)
+    if mime is None:
+        raise ArtworkWriteError(ARTWORK_NOT_IMAGE)
+    dest = Path(path)
+    try:
+        if dest.is_symlink() or not dest.is_file():
+            raise ArtworkWriteError(ARTWORK_FORMAT)
+        health = read_file_health(str(dest))
+        if health["artwork"]:
+            raise ArtworkWriteError(ARTWORK_PRESENT)
+        with dest.open("rb") as handle:
+            head = handle.read(12)
+        if head.startswith(b"fLaC"):
+            _write_flac_cover(dest, image, mime.encode("ascii"))
+            return
+        if dest.suffix.lower() == ".mp3":
+            _write_id3_cover(dest, image, mime.encode("ascii"))
+            return
+    except OSError as exc:
+        raise ArtworkWriteError(ARTWORK_WRITE_FAILED) from exc
+    raise ArtworkWriteError(ARTWORK_FORMAT)
+
+
+def _write_id3_cover(dest: Path, image: bytes, mime: bytes) -> None:
+    """Insert an APIC frame into a plain ID3v2.3 or ID3v2.4 tag.
+
+    Args:
+        dest: MP3, or another file that already starts with ID3.
+        image: JPEG or PNG bytes.
+        mime: ASCII MIME type.
+
+    Raises:
+        ArtworkWriteError: The file was left unchanged.
+        OSError: A disk error during the replace. The caller maps it.
+    """
+    parsed = _read_plain_id3(dest)
+    if parsed is None:
+        if not _can_prepend_mp3(dest):
+            raise ArtworkWriteError(ARTWORK_FORMAT)
+        version = 3
+        kept: list[bytes] = []
+        audio_offset = 0
+        old_size = 0
+    else:
+        version = int(parsed["version"])
+        frames = list(parsed["frames"])
+        if any(frame[:4] == b"APIC" for frame in frames):
+            raise ArtworkWriteError(ARTWORK_PRESENT)
+        if any(_unsafe_frame(frame) for frame in frames):
+            raise ArtworkWriteError(ARTWORK_FORMAT)
+        kept = frames
+        audio_offset = int(parsed["audio_offset"])
+        old_size = int(parsed["tag_size"])
+    apic = _apic_frame_bytes(image, mime, version)
+    body = b"".join([*kept, apic])
+    if old_size >= len(body):
+        padding = old_size - len(body)
+        tag_size = old_size
+    else:
+        padding = _ARTWORK_PAD
+        tag_size = len(body) + padding
+    tag = b"ID3" + bytes((version, 0, 0)) + _encode_synchsafe(tag_size) + body + (b"\x00" * padding)
+    _replace_tagged_file(dest, tag, audio_offset)
+
+
+def _apic_frame_bytes(image: bytes, mime: bytes, version: int) -> bytes:
+    """Build one front-cover APIC frame.
+
+    Args:
+        image: JPEG or PNG bytes.
+        mime: ASCII MIME type.
+        version: 3 or 4.
+
+    Returns:
+        The encoded frame, header included.
+    """
+    body = b"\x00" + mime + b"\x00" + b"\x03" + b"\x00" + image
+    if version == 4:
+        size = _encode_synchsafe(len(body))
+    else:
+        size = len(body).to_bytes(4, "big")
+    return b"APIC" + size + b"\x00\x00" + body
+
+
+def _read_plain_id3(path: Path) -> dict[str, object] | None:
+    """Read a plain ID3v2.3 or ID3v2.4 tag from the start of a file.
+
+    Args:
+        path: Audio file.
+
+    Returns:
+        The version, the frames, the padding, and the audio offset.
+        None when the file has no plain tag this writer will rewrite.
+        Unsynchronisation, an extended header, and a tag larger than
+        16,000,000 bytes are refused.
+    """
+    with path.open("rb") as handle:
+        header = handle.read(10)
+        if len(header) < 10 or header[:3] != b"ID3":
+            return None
+        version = header[3]
+        if version not in (3, 4):
+            return None
+        if header[5] & _UNSYNC or header[5] & _EXTENDED:
+            return None
+        tag_size = _synchsafe(header[6:10])
+        if tag_size <= 0 or tag_size > _TAG_LIMIT:
+            return None
+        body = handle.read(tag_size)
+    if len(body) < tag_size:
+        return None
+    frames: list[bytes] = []
+    pos = 0
+    while pos + 10 <= tag_size:
+        frame_id = body[pos:pos + 4]
+        if frame_id == b"\x00\x00\x00\x00" or frame_id[0] == 0:
+            break
+        if version == 4:
+            frame_size = _synchsafe(body[pos + 4:pos + 8])
+        else:
+            frame_size = int.from_bytes(body[pos + 4:pos + 8], "big")
+        if frame_size < 0 or pos + 10 + frame_size > tag_size:
+            return None
+        frames.append(body[pos:pos + 10 + frame_size])
+        pos += 10 + frame_size
+    return {
+        "version": version,
+        "frames": frames,
+        "audio_offset": 10 + tag_size,
+        "tag_size": tag_size,
+    }
+
+
+def _write_flac_cover(dest: Path, image: bytes, mime: bytes) -> None:
+    """Insert a front-cover picture block after STREAMINFO.
+
+    Args:
+        dest: FLAC file.
+        image: JPEG or PNG bytes.
+        mime: ASCII MIME type.
+
+    Raises:
+        ArtworkWriteError: The file was left unchanged.
+        OSError: A disk error during the replace.
+    """
+    size = dest.stat().st_size
+    with dest.open("rb") as handle:
+        if handle.read(4) != b"fLaC":
+            raise ArtworkWriteError(ARTWORK_FORMAT)
+        blocks: list[tuple[int, bytes]] = []
+        pos = 4
+        walked = 0
+        audio_offset = size
+        while pos + 4 <= size and walked < FLAC_BLOCK_LIMIT:
+            walked += 1
+            handle.seek(pos)
+            header = handle.read(4)
+            if len(header) < 4:
+                raise ArtworkWriteError(ARTWORK_FORMAT)
+            block_type = header[0] & 0x7F
+            is_last = bool(header[0] & 0x80)
+            length = int.from_bytes(header[1:4], "big")
+            data_at = pos + 4
+            if length > size - data_at:
+                raise ArtworkWriteError(ARTWORK_FORMAT)
+            data = handle.read(length)
+            if len(data) < length:
+                raise ArtworkWriteError(ARTWORK_FORMAT)
+            if block_type == 127:
+                raise ArtworkWriteError(ARTWORK_FORMAT)
+            if block_type == 6:
+                raise ArtworkWriteError(ARTWORK_PRESENT)
+            blocks.append((block_type, data))
+            pos = data_at + length
+            if is_last:
+                audio_offset = pos
+                break
+        else:
+            raise ArtworkWriteError(ARTWORK_FORMAT)
+    if not blocks or blocks[0][0] != 0:
+        raise ArtworkWriteError(ARTWORK_FORMAT)
+    picture = _flac_picture_body(image, mime)
+    rebuilt = [blocks[0], (6, picture), *blocks[1:]]
+    payload = bytearray(b"fLaC")
+    last_index = len(rebuilt) - 1
+    for index, (block_type, data) in enumerate(rebuilt):
+        flag = 0x80 if index == last_index else 0
+        payload.append(flag | (block_type & 0x7F))
+        payload.extend(len(data).to_bytes(3, "big"))
+        payload.extend(data)
+    _replace_tagged_file(dest, bytes(payload), audio_offset)
+
+
+def _flac_picture_body(image: bytes, mime: bytes) -> bytes:
+    """Build a FLAC METADATA_BLOCK_PICTURE body for a front cover.
+
+    Args:
+        image: JPEG or PNG bytes.
+        mime: ASCII MIME type.
+
+    Returns:
+        The picture block without its 4-byte header.
+    """
+    return b"".join(
+        (
+            (3).to_bytes(4, "big"),
+            len(mime).to_bytes(4, "big"),
+            mime,
+            (0).to_bytes(4, "big"),
+            (0).to_bytes(4, "big"),
+            (0).to_bytes(4, "big"),
+            (0).to_bytes(4, "big"),
+            (0).to_bytes(4, "big"),
+            len(image).to_bytes(4, "big"),
+            image,
+        )
+    )
+
+
+def _replace_tagged_file(dest: Path, prefix: bytes, audio_offset: int) -> None:
+    """Write a new tag prefix and the old audio tail, then replace dest.
+
+    Args:
+        dest: File to replace after the audio tail is checked.
+        prefix: New bytes before the audio.
+        audio_offset: Index of the first audio byte in dest.
+
+    Raises:
+        ArtworkWriteError: dest was left or restored unchanged.
+        OSError: A disk error. The caller maps it.
+    """
+    before_tags = read_serato_tags(str(dest))
+    before_hash = _audio_hash(dest, audio_offset)
+    directory = dest.parent
+    backup_fd, backup_name = tempfile.mkstemp(prefix=".serato-artbak-", dir=directory)
+    os.close(backup_fd)
+    backup = Path(backup_name)
+    temp_fd, temp_name = tempfile.mkstemp(prefix=".serato-art-", dir=directory)
+    os.close(temp_fd)
+    temp: Path | None = Path(temp_name)
+    try:
+        shutil.copy2(dest, backup)
+        assert temp is not None
+        with temp.open("wb") as out, dest.open("rb") as src:
+            out.write(prefix)
+            src.seek(audio_offset)
+            shutil.copyfileobj(src, out)
+            out.flush()
+            os.fsync(out.fileno())
+        os.replace(temp, dest)
+        temp = None
+        after = read_file_health(str(dest))
+        after_tags = read_serato_tags(str(dest))
+        if (
+            not after["artwork"]
+            or _audio_hash(dest, len(prefix)) != before_hash
+            or after_tags["found"] != before_tags["found"]
+            or after_tags["cues"] != before_tags["cues"]
+            or after_tags["beatgrid"] != before_tags["beatgrid"]
+        ):
+            shutil.copy2(backup, dest)
+            raise ArtworkWriteError(ARTWORK_WRITE_FAILED)
+    except ArtworkWriteError:
+        raise
+    except OSError:
+        try:
+            if backup.is_file():
+                shutil.copy2(backup, dest)
+        except OSError:
+            pass
+        raise ArtworkWriteError(ARTWORK_WRITE_FAILED)
     finally:
         if temp is not None:
             temp.unlink(missing_ok=True)
