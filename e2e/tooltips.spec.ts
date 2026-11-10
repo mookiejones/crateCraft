@@ -88,3 +88,22 @@ test("reduced motion shows the tooltip as soon as the pointer arrives", async ({
   await expect(page.locator("#app-tooltip")).toBeVisible({ timeout: 150 });
   await expect(page.locator("#app-tooltip")).toHaveText("Reload the library from Serato.");
 });
+
+test("Check drive sits under Before a gig with a labelled picker", async ({ page }) => {
+  const tabs = page.locator("[aria-labelledby='view-group-gig'] [data-view]");
+  await expect(tabs).toHaveText(["Before a gig", "Check drive", "Tempo drift"]);
+  const tab = page.locator('[data-view="portable"]');
+  await tab.focus();
+  await expect(page.locator("#app-tooltip")).toContainText("Pick a connected drive");
+  await page.locator("#portable-panel").evaluate((node) => {
+    if (node instanceof HTMLElement) node.hidden = false;
+  });
+  const drive = page.locator("#portable-drive");
+  await expect(drive).toBeVisible();
+  await expect(page.locator("label").filter({ has: drive })).toContainText("Drive");
+  await drive.focus();
+  await expect(page.locator("#app-tooltip")).toContainText("unplugged drive");
+  await page.locator("#portable-check").focus();
+  await expect(page.locator("#app-tooltip")).toContainText("Nothing is written");
+  await saveShot(page, "portable_view");
+});
