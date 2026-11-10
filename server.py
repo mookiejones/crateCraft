@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import NotRequired, TypedDict, cast
 from urllib.parse import parse_qs, urlparse
 
+import album_art
 import app_config
 import app_log
 import audio_stream
@@ -1971,6 +1972,11 @@ class Handler(BaseHTTPRequestHandler):
                 crate_id = crate_query(query_text(query, "crate", "all") or "all")
                 self.send_json(library_health.report(Path(library.MASTER), space, crate_id))
                 return
+            if parsed.path == "/api/album-art":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                self.send_json(album_art.missing(Path(library.MASTER), space, crate_id))
+                return
             if parsed.path == "/api/tag-clusters":
                 space = require_space(query_text(query, "space"))
                 field = query_text(query, "field", "genre") or "genre"
@@ -2144,6 +2150,7 @@ class Handler(BaseHTTPRequestHandler):
                     tree = parsed.path == "/api/crate-tree"
                     foldering = parsed.path == "/api/folder-sync"
                     clustering = parsed.path == "/api/tag-clusters"
+                    covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     history = parsed.path == "/api/history-stats"
                     preview = (
@@ -2158,6 +2165,8 @@ class Handler(BaseHTTPRequestHandler):
                             and payload.get("action")
                             in ("preview", "clean-preview", "refresh-preview")
                         )
+                        or (covering and payload.get("action") == "preview")
+                        or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
                         or (bitrate_crate and payload.get("action") == "preview")
                     )
                     if not preview:
@@ -2215,6 +2224,10 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = tag_cleanup.action(request)
+                    elif covering:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = album_art.action(request)
                     elif bitrate_crate:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

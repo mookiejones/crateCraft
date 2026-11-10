@@ -24,7 +24,10 @@ const report: LibraryHealthReport = {
     count: 1,
     tracks: [{ id: 12, name: "NoGrid", artist: "C", file: "nogrid.mp3" }],
   },
-  no_artwork: { count: 0, tracks: [] },
+  no_artwork: {
+    count: 1,
+    tracks: [{ id: 13, name: "NoArt", artist: "D", file: "noart.mp3" }],
+  },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
   unused: {
@@ -93,6 +96,8 @@ describe("health", () => {
     expect(reportText()).toContain("A — Gone");
     expect(reportText()).toContain("No BPM (1)");
     expect(reportText()).toContain("No beatgrid (1)");
+    expect(reportText()).toContain("No artwork (1)");
+    expect(reportText()).toContain("Find art");
     expect(reportText()).toContain("Unused files (1)");
     expect(reportText()).toContain("orphan.mp3");
     expect(reportText()).toContain("Duplicate groups (1)");
@@ -178,5 +183,15 @@ describe("health", () => {
       (button) => !button.dataset.tooltipKey,
     );
     expect(untipped).toEqual([]);
+  });
+
+  it("offers Find art on a no-artwork row with a tooltip", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
+    await loadHealth();
+    const find = document.querySelector<HTMLButtonElement>("[data-health-action='artwork']");
+    expect(find).not.toBeNull();
+    expect(find!.textContent).toBe("Find art");
+    expect(find!.dataset.healthId).toBe("13");
+    expect(find!.dataset.tooltipKey).toBe("tooltip.healthFindArt");
   });
 });

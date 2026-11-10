@@ -830,6 +830,36 @@ export interface LibraryHealthDuplicateGroup {
   ids: number[];
 }
 
+export interface AlbumArtCandidate {
+  release_id: string;
+  title: string;
+  artist: string;
+  mime: string;
+  thumb: string;
+}
+
+export interface AlbumArtPlan {
+  preview: boolean;
+  written: boolean;
+  id: number;
+  name: string;
+  artist: string;
+  album: string;
+  file: string;
+  candidates: AlbumArtCandidate[];
+  error?: string;
+  code?: string;
+}
+
+export interface AlbumArtMissing {
+  space: string;
+  crate: number | null;
+  checked: number;
+  tracks: LibraryHealthTrack[];
+  error?: string;
+  code?: string;
+}
+
 export interface LibraryHealthReport {
   space: string;
   crate: number | null;

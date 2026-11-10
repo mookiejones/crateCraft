@@ -214,6 +214,15 @@
     "drift.unreadable": "The tempo check could not be read.",
     "duplicates.readFailed": "Could not read duplicates.",
     "error.action_unavailable": "That action is not available.",
+    "error.artwork_already": "This file already has artwork.",
+    "error.artwork_format": "This file format cannot take artwork yet.",
+    "error.artwork_lookup": "Cover lookup failed.",
+    "error.artwork_needs_confirm": "Confirm the cover before it is saved.",
+    "error.artwork_needs_release": "Choose a cover before it is saved.",
+    "error.artwork_no_cover": "No cover was found for this track.",
+    "error.artwork_no_search": "This track has no title or artist to search.",
+    "error.artwork_not_image": "That image is not a JPEG or PNG cover.",
+    "error.artwork_write_failed": "The artwork could not be written.",
     "error.backup_no_space": "There is not enough disk space to back up the library.",
     "error.backup_serato_running": "Quit Serato DJ Pro before backing up drive crates. Serato DJ is still running, so nothing was copied.",
     "error.bitrate_needs_crate": "Choose a crate for a bitrate check.",
@@ -475,6 +484,12 @@
     "gig.wordNotReady": "not ready",
     "gig.wordReady": "ready",
     "health.checking": "Checking the library…",
+    "health.artEmbed": "Embed cover",
+    "health.artIntro": "Looks up Cover Art Archive. Preview the cover, then embed it into the audio file. Cue points stay. Quit Serato first.",
+    "health.artLooking": "Looking up covers…",
+    "health.artNone": "No cover was found for this track.",
+    "health.artPick": "Cover to embed",
+    "health.artTitle": "Find album art",
     "health.clear": "Nothing to fix in this check.",
     "health.duplicateRow": {
       one: "{title} ({count} copy)",
@@ -485,6 +500,7 @@
     "health.duplicates": "Duplicate groups",
     "health.emptyGenre": "Empty genre",
     "health.fileRow": "{file}",
+    "health.findArt": "Find art",
     "health.heading": "Library health",
     "health.intro": "Counts from the library and from audio files on disk. Each row opens the place that can fix it.",
     "health.missing": "Missing files",
@@ -1246,6 +1262,10 @@
     "tooltip.gigNext": "Go to the next step.",
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.healthArtCancel": "Close the album art dialog without writing. Esc.",
+    "tooltip.healthArtEmbed": "Write the selected cover into the audio file. Cue points stay. Quit Serato first.",
+    "tooltip.healthArtPick": "Choose this Cover Art Archive image to embed.",
+    "tooltip.healthFindArt": "Look up a cover on Cover Art Archive and preview it before embedding.",
     "tooltip.healthOpenBitrate": "Open the bitrate check for this crate.",
     "tooltip.healthOpenDuplicates": "Open the Duplicates view.",
     "tooltip.healthOpenFiles": "Open the Files view.",
@@ -1754,6 +1774,15 @@
     "drift.unreadable": "No se pudo leer la comprobación de tempo.",
     "duplicates.readFailed": "No se pudieron leer los duplicados.",
     "error.action_unavailable": "Esa acción no está disponible.",
+    "error.artwork_already": "Este archivo ya tiene carátula.",
+    "error.artwork_format": "Este formato de archivo no puede llevar carátula todavía.",
+    "error.artwork_lookup": "No se pudo buscar la carátula.",
+    "error.artwork_needs_confirm": "Confirma la carátula antes de guardarla.",
+    "error.artwork_needs_release": "Elige una carátula antes de guardarla.",
+    "error.artwork_no_cover": "No se encontró carátula para esta pista.",
+    "error.artwork_no_search": "Esta pista no tiene título ni artista para buscar.",
+    "error.artwork_not_image": "Esa imagen no es una carátula JPEG o PNG.",
+    "error.artwork_write_failed": "No se pudo escribir la carátula.",
     "error.backup_no_space": "No hay espacio suficiente en el disco para copiar la biblioteca.",
     "error.backup_serato_running": "Cierra Serato DJ Pro antes de copiar las cajas de las unidades. Serato DJ sigue abierto, así que no se copió nada.",
     "error.bitrate_needs_crate": "Elige una caja para comprobar la tasa de bits.",
@@ -2015,6 +2044,12 @@
     "gig.wordNotReady": "no listo",
     "gig.wordReady": "listo",
     "health.checking": "Comprobando la biblioteca…",
+    "health.artEmbed": "Incrustar carátula",
+    "health.artIntro": "Consulta Cover Art Archive. Previsualiza la carátula y luego incrústala en el archivo de audio. Los cues se quedan. Cierra Serato primero.",
+    "health.artLooking": "Buscando carátulas…",
+    "health.artNone": "No se encontró carátula para esta pista.",
+    "health.artPick": "Carátula a incrustar",
+    "health.artTitle": "Buscar carátula",
     "health.clear": "Nada que corregir en esta comprobación.",
     "health.duplicateRow": {
       one: "{title} ({count} copia)",
@@ -2025,6 +2060,7 @@
     "health.duplicates": "Grupos duplicados",
     "health.emptyGenre": "Género vacío",
     "health.fileRow": "{file}",
+    "health.findArt": "Buscar carátula",
     "health.heading": "Salud de la biblioteca",
     "health.intro": "Cifras de la biblioteca y de los archivos de audio en el disco. Cada fila abre el sitio que puede corregirlo.",
     "health.missing": "Archivos no encontrados",
@@ -2786,6 +2822,10 @@
     "tooltip.gigNext": "Pasa al siguiente paso.",
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
+    "tooltip.healthArtCancel": "Cierra el diálogo de carátula sin escribir. Esc.",
+    "tooltip.healthArtEmbed": "Escribe la carátula elegida en el archivo de audio. Los cues se quedan. Cierra Serato primero.",
+    "tooltip.healthArtPick": "Elige esta imagen de Cover Art Archive para incrustarla.",
+    "tooltip.healthFindArt": "Busca una carátula en Cover Art Archive y previsualízala antes de incrustarla.",
     "tooltip.healthOpenBitrate": "Abre la comprobación de tasa de bits de esta caja.",
     "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
     "tooltip.healthOpenFiles": "Abre la vista Archivos.",
@@ -3926,6 +3966,10 @@
     healthOpenFiles: spec("tooltip.healthOpenFiles"),
     healthOpenBitrate: spec("tooltip.healthOpenBitrate"),
     healthTrack: spec("tooltip.healthTrack"),
+    healthFindArt: spec("tooltip.healthFindArt"),
+    healthArtCancel: spec("tooltip.healthArtCancel"),
+    healthArtEmbed: spec("tooltip.healthArtEmbed"),
+    healthArtPick: spec("tooltip.healthArtPick"),
     tagsGenre: spec("tooltip.tagsGenre"),
     tagsArtist: spec("tooltip.tagsArtist"),
     tagsTitles: spec("tooltip.tagsTitles"),
@@ -4074,6 +4118,8 @@
       "gig-refresh": tips.gigRefresh,
       "drift-refresh": tips.driftRefresh,
       "health-refresh": tips.healthRefresh,
+      "album-art-cancel": tips.healthArtCancel,
+      "album-art-embed": tips.healthArtEmbed,
       "stats-refresh": tips.statsRefresh,
       "stats-csv": tips.statsCsv,
       "stats-period": tips.statsPeriod,
@@ -4922,6 +4968,128 @@
     return row;
   }
 
+  // src/album-art.ts
+  var latest3 = null;
+  var trackId = null;
+  var busy = false;
+  var onWrote = null;
+  function wireAlbumArt(wrote) {
+    onWrote = wrote;
+    const dialog = el("album-art-dialog");
+    if (dialog.dataset.albumArtWired === "true") return;
+    dialog.dataset.albumArtWired = "true";
+    el("album-art-cancel").addEventListener("click", () => dialog.close());
+    el("album-art-embed").addEventListener("click", () => {
+      void embedCover();
+    });
+    el("album-art-choices").addEventListener("change", () => syncEmbedEnabled());
+  }
+  async function openAlbumArt(id) {
+    if (!Number.isInteger(id) || id <= 0) return;
+    if (typeof el("album-art-dialog").showModal !== "function") return;
+    trackId = id;
+    latest3 = null;
+    busy = true;
+    paintDialog();
+    if (!el("album-art-dialog").open) el("album-art-dialog").showModal();
+    el("album-art-cancel").focus();
+    try {
+      const plan = await postJSON("/api/album-art", {
+        action: "preview",
+        space: state.space,
+        id
+      });
+      if (trackId !== id) return;
+      latest3 = plan;
+      el("album-art-status").textContent = plan.candidates.length ? "" : t("health.artNone");
+      paintDialog();
+      const first = el("album-art-choices").querySelector("input");
+      if (first instanceof HTMLInputElement) first.focus();
+      else el("album-art-cancel").focus();
+    } catch (error2) {
+      if (trackId !== id) return;
+      failStatus3(failureOf(error2).message);
+      el("album-art-cancel").focus();
+    } finally {
+      if (trackId === id) busy = false;
+      paintDialog();
+    }
+  }
+  function repaintAlbumArt() {
+    if (el("album-art-dialog").open) paintDialog();
+  }
+  async function embedCover() {
+    const id = trackId;
+    const chosen = selectedRelease();
+    if (id === null || !chosen || !state.writable || busy) return;
+    busy = true;
+    paintDialog();
+    try {
+      const written = await postJSON("/api/album-art", {
+        action: "embed",
+        space: state.space,
+        id,
+        release_id: chosen,
+        confirm: true
+      });
+      latest3 = written;
+      busy = false;
+      el("album-art-dialog").close();
+      onWrote?.();
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus3(failed.message);
+      if (failed.status === 409) bridge.lockDown(error2);
+    } finally {
+      busy = false;
+      paintDialog();
+    }
+  }
+  function paintDialog() {
+    const plan = latest3;
+    el("album-art-track").textContent = plan ? t("health.row", { title: [plan.artist, plan.name].filter(Boolean).join(" — ") || plan.file }) : t("health.artLooking");
+    const list = el("album-art-choices");
+    const selected = selectedRelease();
+    list.replaceChildren();
+    const candidates = plan?.candidates ?? [];
+    candidates.forEach((candidate, index) => {
+      list.append(choiceRow(candidate, selected, index === 0));
+    });
+    if (busy && !plan) el("album-art-status").textContent = t("health.artLooking");
+    syncEmbedEnabled();
+  }
+  function choiceRow(candidate, selected, fallback) {
+    const row = document.createElement("label");
+    row.className = "check album-art-choice";
+    const radio = inputEl(tips.healthArtPick);
+    radio.type = "radio";
+    radio.name = "album-art-pick";
+    radio.value = candidate.release_id;
+    radio.checked = selected === candidate.release_id || selected === null && fallback;
+    const image = document.createElement("img");
+    image.src = candidate.thumb;
+    image.alt = candidate.title || t("health.artEmbed");
+    image.width = 96;
+    image.height = 96;
+    const caption = document.createElement("span");
+    caption.textContent = [candidate.artist, candidate.title].filter(Boolean).join(" — ") || candidate.release_id;
+    row.append(radio, image, caption);
+    return row;
+  }
+  function selectedRelease() {
+    const chosen = el("album-art-choices").querySelector(
+      "input[name='album-art-pick']:checked"
+    );
+    return chosen?.value || null;
+  }
+  function syncEmbedEnabled() {
+    const button2 = el("album-art-embed");
+    button2.disabled = busy || !state.writable || selectedRelease() === null;
+  }
+  function failStatus3(message) {
+    el("album-art-status").textContent = message;
+  }
+
   // src/health.ts
   var SECTIONS = [
     { key: "missing", label: "health.missing", action: "missing" },
@@ -4932,7 +5100,7 @@
     { key: "empty_genre", label: "health.emptyGenre" },
     { key: "no_crate", label: "health.noCrate" }
   ];
-  var latest3 = null;
+  var latest4 = null;
   var go = null;
   function wireHealth(navigate) {
     go = navigate;
@@ -4940,6 +5108,9 @@
     if (panel.dataset.healthWired === "true") return;
     panel.dataset.healthWired = "true";
     el("health-refresh").addEventListener("click", () => {
+      void loadHealth();
+    });
+    wireAlbumArt(() => {
       void loadHealth();
     });
     panel.addEventListener("click", (event) => {
@@ -4955,6 +5126,11 @@
       if (action === "track") {
         const id = Number(button2.dataset.healthId);
         if (Number.isInteger(id) && id > 0) go?.("track", id);
+        return;
+      }
+      if (action === "artwork") {
+        const id = Number(button2.dataset.healthId);
+        if (Number.isInteger(id) && id > 0) void openAlbumArt(id);
       }
     });
   }
@@ -4971,17 +5147,17 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.healthToken) return;
       if (!response.ok || payload === null) {
-        failStatus3(serverMessage(payload, t("health.unreadable")));
+        failStatus4(serverMessage(payload, t("health.unreadable")));
         settle = "retry";
         return;
       }
-      latest3 = payload;
+      latest4 = payload;
       el("health-status").textContent = "";
       renderHealthReport(payload);
       settle = "report";
     } catch {
       if (token3 !== state.healthToken) return;
-      failStatus3(t("health.unreachable"));
+      failStatus4(t("health.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.healthToken) return;
@@ -4992,7 +5168,7 @@
   }
   function showHealthFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
-    failStatus3(message);
+    failStatus4(message);
     endBusy3();
     el("health-refresh").focus();
   }
@@ -5005,7 +5181,13 @@
     report.replaceChildren(summary);
     let listed = 0;
     for (const spec2 of SECTIONS) {
-      listed += paintSection(report, t(spec2.label), payload[spec2.key], spec2.action);
+      listed += paintSection(
+        report,
+        t(spec2.label),
+        payload[spec2.key],
+        spec2.action,
+        spec2.key === "no_artwork"
+      );
     }
     listed += paintUnused(report, payload.unused);
     listed += paintDuplicates(report, payload.duplicates);
@@ -5014,7 +5196,8 @@
   }
   function repaintHealth() {
     el("health-scope").textContent = scopeLabel2();
-    if (latest3) renderHealthReport(latest3);
+    if (latest4) renderHealthReport(latest4);
+    repaintAlbumArt();
   }
   function beginBusy3() {
     const button2 = el("health-refresh");
@@ -5029,7 +5212,7 @@
     button2.setAttribute("aria-busy", "false");
     el("health-panel").setAttribute("aria-busy", "false");
   }
-  function failStatus3(message) {
+  function failStatus4(message) {
     el("health-status").textContent = message;
   }
   function scopeLabel2() {
@@ -5043,7 +5226,7 @@
     line.textContent = text2;
     return line;
   }
-  function paintSection(report, label, section, action) {
+  function paintSection(report, label, section, action, findArt = false) {
     const count = section?.count ?? 0;
     const tracks = section?.tracks ?? [];
     const details = document.createElement("details");
@@ -5054,7 +5237,7 @@
     details.append(heading2);
     if (action === "missing") details.append(openButton("missing", "health.openMissing", tips.healthOpenMissing));
     const list = document.createElement("ul");
-    for (const track of tracks) list.append(trackItem(track));
+    for (const track of tracks) list.append(trackItem(track, findArt));
     details.append(list);
     if (count > tracks.length) {
       details.append(noteLine3(t("health.more", { count: count - tracks.length })));
@@ -5121,13 +5304,21 @@
     button2.textContent = t(label);
     return button2;
   }
-  function trackItem(track) {
+  function trackItem(track, findArt = false) {
     const row = document.createElement("li");
+    row.className = "health-art-row";
     const button2 = buttonEl(tips.healthTrack);
     button2.dataset.healthAction = "track";
     button2.dataset.healthId = String(track.id);
     button2.textContent = trackLine(track);
     row.append(button2);
+    if (findArt) {
+      const art = buttonEl(tips.healthFindArt);
+      art.dataset.healthAction = "artwork";
+      art.dataset.healthId = String(track.id);
+      art.textContent = t("health.findArt");
+      row.append(art);
+    }
     return row;
   }
   function groupItem(group) {
@@ -5193,7 +5384,7 @@
 
   // src/history-stats.ts
   var LIST_CAP3 = 100;
-  var latest4 = null;
+  var latest5 = null;
   var crateBusy = false;
   function wireHistoryStats() {
     const panel = el("stats-panel");
@@ -5231,17 +5422,17 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.statsToken) return;
       if (!response.ok || payload === null) {
-        failStatus4(serverMessage(payload, t("stats.unreadable")));
+        failStatus5(serverMessage(payload, t("stats.unreadable")));
         settle = "retry";
         return;
       }
-      latest4 = payload;
+      latest5 = payload;
       el("stats-status").textContent = "";
       renderHistoryStats(payload);
       settle = "report";
     } catch {
       if (token3 !== state.statsToken) return;
-      failStatus4(t("stats.unreachable"));
+      failStatus5(t("stats.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.statsToken) return;
@@ -5252,7 +5443,7 @@
   }
   function showHistoryStatsFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("stats.unreadable");
-    failStatus4(message);
+    failStatus5(message);
     endBusy4();
     el("stats-refresh").focus();
   }
@@ -5274,7 +5465,7 @@
   function repaintHistoryStats() {
     el("stats-scope").textContent = t("gig.wholeSpace");
     syncPeriodFields();
-    if (latest4) renderHistoryStats(latest4);
+    if (latest5) renderHistoryStats(latest5);
   }
   function currentPeriod() {
     const value = el("stats-period").value;
@@ -5307,7 +5498,7 @@
     button2.setAttribute("aria-busy", "false");
     el("stats-panel").setAttribute("aria-busy", "false");
   }
-  function failStatus4(message) {
+  function failStatus5(message) {
     el("stats-status").textContent = message;
   }
   function trackTable(rows2) {
@@ -5445,7 +5636,7 @@
       el("stats-status").textContent = failureOf(error2).message;
     } finally {
       crateBusy = false;
-      if (latest4) renderHistoryStats(latest4);
+      if (latest5) renderHistoryStats(latest5);
     }
   }
   function headerRow(keys) {
@@ -5494,7 +5685,7 @@
     decode_error: "scan.problem.decode_error",
     short: "scan.problem.short"
   };
-  var latest5 = null;
+  var latest6 = null;
   var lastDepth = "quick";
   function wireScan() {
     const panel = el("scan-panel");
@@ -5513,7 +5704,7 @@
     beginBusy5();
     let settle = "none";
     if (chosen === "full" && state.activeCrate === "all") {
-      failStatus5(t("error.scan_full_needs_crate"));
+      failStatus6(t("error.scan_full_needs_crate"));
       endBusy5();
       el("scan-full").focus();
       return;
@@ -5528,17 +5719,17 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.scanToken) return;
       if (!response.ok || payload === null) {
-        failStatus5(serverMessage(payload, t("scan.unreadable")));
+        failStatus6(serverMessage(payload, t("scan.unreadable")));
         settle = "retry";
         return;
       }
-      latest5 = payload;
+      latest6 = payload;
       el("scan-status").textContent = "";
       renderScanReport(payload);
       settle = "report";
     } catch {
       if (token3 !== state.scanToken) return;
-      failStatus5(t("scan.unreachable"));
+      failStatus6(t("scan.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.scanToken) return;
@@ -5549,7 +5740,7 @@
   }
   function showScanFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
-    failStatus5(message);
+    failStatus6(message);
     endBusy5();
     el("scan-quick").focus();
   }
@@ -5578,7 +5769,7 @@
   }
   function repaintScan() {
     el("scan-scope").textContent = scopeLabel3();
-    if (latest5) renderScanReport(latest5);
+    if (latest6) renderScanReport(latest6);
   }
   function resolveDepth(depth) {
     if (depth === "quick" || depth === "full") return depth;
@@ -5602,7 +5793,7 @@
     full.setAttribute("aria-busy", "false");
     el("scan-panel").setAttribute("aria-busy", "false");
   }
-  function failStatus5(message) {
+  function failStatus6(message) {
     el("scan-status").textContent = message;
   }
   function scopeLabel3() {
@@ -5681,7 +5872,7 @@
     upsampled: "bitrate.reason.upsampled",
     lossy_source: "bitrate.reason.lossy_source"
   };
-  var latest6 = null;
+  var latest7 = null;
   var cratePlan = null;
   function wireBitrate() {
     const panel = el("bitrate-panel");
@@ -5705,7 +5896,7 @@
     beginBusy6();
     let settle = "none";
     if (state.activeCrate === "all") {
-      failStatus6(t("error.bitrate_needs_crate"));
+      failStatus7(t("error.bitrate_needs_crate"));
       endBusy6();
       el("bitrate-refresh").focus();
       return;
@@ -5719,17 +5910,17 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.bitrateToken) return;
       if (!response.ok || payload === null) {
-        failStatus6(serverMessage(payload, t("bitrate.unreadable")));
+        failStatus7(serverMessage(payload, t("bitrate.unreadable")));
         settle = "retry";
         return;
       }
-      latest6 = payload;
+      latest7 = payload;
       el("bitrate-status").textContent = "";
       renderBitrateReport(payload);
       settle = "report";
     } catch {
       if (token3 !== state.bitrateToken) return;
-      failStatus6(t("bitrate.unreachable"));
+      failStatus7(t("bitrate.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.bitrateToken) return;
@@ -5740,7 +5931,7 @@
   }
   function showBitrateFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("bitrate.unreadable");
-    failStatus6(message);
+    failStatus7(message);
     endBusy6();
     el("bitrate-refresh").focus();
   }
@@ -5777,11 +5968,11 @@
   }
   function repaintBitrate() {
     el("bitrate-scope").textContent = scopeLabel4();
-    if (latest6) renderBitrateReport(latest6);
+    if (latest7) renderBitrateReport(latest7);
   }
   async function previewCrate() {
     if (state.activeCrate === "all") {
-      failStatus6(t("error.bitrate_needs_crate"));
+      failStatus7(t("error.bitrate_needs_crate"));
       el("bitrate-refresh").focus();
       return;
     }
@@ -5795,14 +5986,14 @@
       });
       if (token3 !== state.bitrateToken) return;
       cratePlan = payload;
-      latest6 = payload;
+      latest7 = payload;
       el("bitrate-status").textContent = payload.added ? t("bitrate.preview", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
       renderBitrateReport(payload);
       const confirm2 = el("bitrate-report").querySelector("[data-bitrate-action='confirm']");
       (confirm2 ?? el("bitrate-save")).focus();
     } catch (error2) {
       if (token3 !== state.bitrateToken) return;
-      failStatus6(failureOf(error2).message);
+      failStatus7(failureOf(error2).message);
       el("bitrate-save").focus();
     } finally {
       if (token3 !== state.bitrateToken) return;
@@ -5823,14 +6014,14 @@
       await bridge.reloadLibrary();
       if (token3 !== state.bitrateToken) return;
       cratePlan = payload;
-      latest6 = payload;
+      latest7 = payload;
       el("bitrate-status").textContent = payload.written ? t("bitrate.written", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
       renderBitrateReport(payload);
       el("bitrate-report").focus();
     } catch (error2) {
       if (token3 !== state.bitrateToken) return;
       const failed = failureOf(error2);
-      failStatus6(failed.message);
+      failStatus7(failed.message);
       if (failed.status === 409) bridge.lockDown(error2);
       el("bitrate-save").focus();
     } finally {
@@ -5854,12 +6045,12 @@
     refresh.disabled = noCrate;
     refresh.setAttribute("aria-busy", "false");
     const save3 = el("bitrate-save");
-    const flagged = Boolean(latest6?.suspects.length);
+    const flagged = Boolean(latest7?.suspects.length);
     save3.disabled = noCrate || !flagged;
     save3.setAttribute("aria-busy", "false");
     el("bitrate-panel").setAttribute("aria-busy", "false");
   }
-  function failStatus6(message) {
+  function failStatus7(message) {
     el("bitrate-status").textContent = message;
   }
   function scopeLabel4() {
@@ -6024,7 +6215,7 @@
   var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
   var TITLE_KEY = "clean";
   var MAPPING_KEY = "saved";
-  var latest7 = null;
+  var latest8 = null;
   var titlePlan = null;
   var mappingPlan = null;
   var plans = /* @__PURE__ */ new Map();
@@ -6059,7 +6250,7 @@
       const key = input.name.slice("tags-".length);
       selectedByKey.set(key, input.value);
       plans.delete(key);
-      if (latest7) renderTagsReport(latest7);
+      if (latest8) renderTagsReport(latest8);
     });
     el("tags-report").addEventListener("click", (event) => {
       const button2 = event.target.closest("[data-tags-action]");
@@ -6093,7 +6284,7 @@
         });
         if (token3 !== state.tagsToken) return;
         titlePlan = payload;
-        latest7 = null;
+        latest8 = null;
         mappingPlan = null;
         el("tags-status").textContent = titlesPreviewSummary(payload);
         settle = "report";
@@ -6105,11 +6296,11 @@
         const payload = await readJSON(response).catch(() => null);
         if (token3 !== state.tagsToken) return;
         if (!response.ok || payload === null) {
-          failStatus7(serverMessage(payload, t("tags.unreadable")));
+          failStatus8(serverMessage(payload, t("tags.unreadable")));
           settle = "retry";
           return;
         }
-        latest7 = payload;
+        latest8 = payload;
         titlePlan = null;
         mappingPlan = await readMappingPreview(token3);
         if (token3 !== state.tagsToken) return;
@@ -6118,8 +6309,8 @@
       }
     } catch (error2) {
       if (token3 !== state.tagsToken) return;
-      if (error2 instanceof TypeError) failStatus7(t("tags.unreachable"));
-      else failStatus7(failureOf(error2).message);
+      if (error2 instanceof TypeError) failStatus8(t("tags.unreachable"));
+      else failStatus8(failureOf(error2).message);
       settle = "retry";
     } finally {
       if (token3 !== state.tagsToken) return;
@@ -6131,7 +6322,7 @@
   }
   function showTagsFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
-    failStatus7(message);
+    failStatus8(message);
     endBusy7();
     el("tags-refresh").focus();
   }
@@ -6157,7 +6348,7 @@
       if (titlePlan) renderTitleReport(titlePlan);
       return;
     }
-    if (latest7) renderTagsReport(latest7);
+    if (latest8) renderTagsReport(latest8);
   }
   function renderTitleReport(plan) {
     el("tags-scope").textContent = t("gig.wholeSpace");
@@ -6208,7 +6399,7 @@
       paintReport();
       applyButton(key)?.focus();
     } catch (error2) {
-      failStatus7(failureOf(error2).message);
+      failStatus8(failureOf(error2).message);
     } finally {
       actionKey = "";
       paintReport();
@@ -6237,7 +6428,7 @@
       el("tags-status").textContent = writtenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus7(failed.message);
+      failStatus8(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
@@ -6268,7 +6459,7 @@
       el("tags-status").textContent = mappingWrittenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus7(failed.message);
+      failStatus8(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
@@ -6299,7 +6490,7 @@
       el("tags-status").textContent = titlesWrittenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus7(failed.message);
+      failStatus8(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
@@ -6395,7 +6586,7 @@
     wrap.append(actions2);
     return wrap;
   }
-  function failStatus7(message) {
+  function failStatus8(message) {
     el("tags-status").textContent = message;
   }
   function openKeys() {
@@ -6408,7 +6599,7 @@
     return keys;
   }
   function groupByKey(key) {
-    return latest7?.groups?.find((group) => group.key === key);
+    return latest8?.groups?.find((group) => group.key === key);
   }
   function selectedValue(key) {
     const group = groupByKey(key);
@@ -6505,7 +6696,7 @@
     file_size: "portable.kindFileSize"
   };
   var token = 0;
-  var latest8 = null;
+  var latest9 = null;
   var lastRoots = [];
   var opener = null;
   var hasConnected = false;
@@ -6633,7 +6824,7 @@
     }
     el("portable-check").textContent = t("portable.check");
     if (lastRoots.length) paintDrivePicker(lastRoots);
-    if (latest8) renderPortableReport(latest8);
+    if (latest9) renderPortableReport(latest9);
   }
   function wirePortable() {
     const dialog = el("portable-dialog");
@@ -6655,7 +6846,7 @@
     });
   }
   function renderPortableReport(report) {
-    latest8 = report;
+    latest9 = report;
     const verdictText = report.missing_drive ? t("portable.missing") : report.ready ? t("portable.ready") : t("portable.notReady");
     const items = findingItems(report);
     for (const surface of surfaces()) {
@@ -6669,7 +6860,7 @@
     wirePortable();
     const drive = portableDriveRoot(path);
     const mine = ++token;
-    latest8 = null;
+    latest9 = null;
     clearReport();
     paintStatus(t("portable.checking"));
     if (!drive) {
@@ -6691,7 +6882,7 @@
         fail(t("portable.unreadable"));
         return;
       }
-      latest8 = report;
+      latest9 = report;
       paintStatus("");
       renderPortableReport(report);
     } catch {
@@ -6776,7 +6967,7 @@
     return key ? t(key) : kind2;
   }
   function fail(message) {
-    latest8 = null;
+    latest9 = null;
     clearReport();
     paintStatus(message);
   }
@@ -7294,8 +7485,8 @@
     const status = el("operations-status");
     const list = el("operations-list");
     list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest10 = state.operations[state.operations.length - 1];
-    const failed = latest10?.result === "rollback_failed";
+    const latest11 = state.operations[state.operations.length - 1];
+    const failed = latest11?.result === "rollback_failed";
     alert.hidden = !failed;
     alert.textContent = failed ? t("operations.rollbackFailed") : "";
     list.replaceChildren();
@@ -8849,7 +9040,7 @@
   var listeners = /* @__PURE__ */ new Set();
   var wired = /* @__PURE__ */ new WeakSet();
   var media = null;
-  var trackId = null;
+  var trackId2 = null;
   var title = "";
   var artist = "";
   var playing = false;
@@ -8917,11 +9108,11 @@
     const element = ensureMedia();
     ignoreMediaPause = true;
     try {
-      if (trackId !== nextId || element.src === "") {
+      if (trackId2 !== nextId || element.src === "") {
         const row = state.byId.get(nextId);
         title = row?.name || row?.title || playerStrings.untitled;
         artist = row?.artist ?? "";
-        trackId = nextId;
+        trackId2 = nextId;
         currentTime = 0;
         duration = 0;
         element.src = trackUrl(nextId);
@@ -8935,7 +9126,7 @@
       const pending = element.play();
       if (pending && typeof pending.then === "function") {
         pending.catch(() => {
-          if (trackId !== nextId) return;
+          if (trackId2 !== nextId) return;
           noteFailure(nextId);
         });
       }
@@ -8944,23 +9135,23 @@
     }
   }
   function playOrToggle(nextId) {
-    if (trackId === nextId && playing) pause();
+    if (trackId2 === nextId && playing) pause();
     else play(nextId);
   }
   function pause() {
-    if (trackId === null) return;
+    if (trackId2 === null) return;
     playing = false;
     ensureMedia().pause();
     emit();
   }
   function togglePlayPause() {
-    if (trackId === null) {
+    if (trackId2 === null) {
       const selected = selectedPlayableId();
       if (selected !== null) play(selected);
       return;
     }
     if (playing) pause();
-    else play(trackId);
+    else play(trackId2);
   }
   function next() {
     moveBy(1);
@@ -8969,7 +9160,7 @@
     moveBy(-1);
   }
   function seek(seconds) {
-    if (!Number.isFinite(seconds) || trackId === null) return;
+    if (!Number.isFinite(seconds) || trackId2 === null) return;
     const element = ensureMedia();
     let next2 = seconds < 0 ? 0 : seconds;
     const limit = element.duration;
@@ -8987,7 +9178,7 @@
     seekBy
   };
   function getPlayerState() {
-    return { trackId, title, artist, playing, currentTime, duration, volume, error };
+    return { trackId: trackId2, title, artist, playing, currentTime, duration, volume, error };
   }
   function subscribe(listener) {
     listeners.add(listener);
@@ -9021,7 +9212,7 @@
   }
   function resetPlayback() {
     cueToken += 1;
-    trackId = null;
+    trackId2 = null;
     title = "";
     artist = "";
     playing = false;
@@ -9072,8 +9263,8 @@
       emit();
     });
     element.addEventListener("error", () => {
-      if (trackId === null) return;
-      noteFailure(trackId);
+      if (trackId2 === null) return;
+      noteFailure(trackId2);
     });
   }
   function trackUrl(nextId) {
@@ -9090,7 +9281,7 @@
   }
   function playableRows() {
     let source = state.view;
-    if (trackId !== null && state.splitCrates && state.viewB.some((row) => row.id === trackId && !row.entry)) {
+    if (trackId2 !== null && state.splitCrates && state.viewB.some((row) => row.id === trackId2 && !row.entry)) {
       source = state.viewB;
     } else if (state.splitCrates && state.focusedPane === "b") {
       source = state.viewB;
@@ -9098,8 +9289,8 @@
     return source.filter((row) => !row.entry && Number.isInteger(row.id) && row.id >= 0);
   }
   function anchorIndex(rows2) {
-    if (trackId !== null) {
-      const playingIndex = rows2.findIndex((row) => row.id === trackId);
+    if (trackId2 !== null) {
+      const playingIndex = rows2.findIndex((row) => row.id === trackId2);
       if (playingIndex >= 0) return playingIndex;
     }
     if (state.selectedId === null) return -1;
@@ -9120,13 +9311,13 @@
     waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
     void readCues(id).then(
       (found) => {
-        if (token3 !== cueToken || trackId !== id) return;
+        if (token3 !== cueToken || trackId2 !== id) return;
         cues = found.cues;
         waveform?.setMarkers(id, found);
         emit();
       },
       () => {
-        if (token3 !== cueToken || trackId !== id) return;
+        if (token3 !== cueToken || trackId2 !== id) return;
         cues = [];
         waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
         emit();
@@ -9151,7 +9342,7 @@
   function noteFailure(forId) {
     playing = false;
     void classifyStatus(forId).then((message) => {
-      if (trackId !== forId) return;
+      if (trackId2 !== forId) return;
       playing = false;
       error = message;
       emit();
@@ -9299,7 +9490,7 @@
   function paintBar() {
     if (!titleNode || !artistNode || !statusNode || !toggleNode || !previousNode || !nextNode) return;
     if (!seekNode || !elapsedNode || !totalNode) return;
-    const loaded = trackId !== null;
+    const loaded = trackId2 !== null;
     const shownTitle = loaded ? title || playerStrings.untitled : playerStrings.nothingPlaying;
     titleNode.textContent = shownTitle;
     titleNode.title = shownTitle;
@@ -14216,7 +14407,7 @@
 
   // src/update.ts
   var UPDATE_CHOICE_EVENT = "serato-update-choice";
-  var latest9 = null;
+  var latest10 = null;
   var dismissed = false;
   var token2 = 0;
   var wired2 = false;
@@ -14248,15 +14439,15 @@
       const response = await fetch("/api/update");
       const body = response.ok ? await response.json() : null;
       if (mine !== token2) return;
-      latest9 = parseUpdateStatus(body);
+      latest10 = parseUpdateStatus(body);
     } catch {
       if (mine !== token2) return;
-      latest9 = null;
+      latest10 = null;
     }
     paintUpdate();
   }
   function paintUpdate() {
-    const status = latest9;
+    const status = latest10;
     const toggle = el("update-toggle");
     const pre = el("update-prereleases");
     toggle.checked = status?.enabled === true;
@@ -14323,7 +14514,7 @@
     }
   }
   async function skip() {
-    const release = latest9?.latest;
+    const release = latest10?.latest;
     if (!release) return;
     try {
       await postJSON("/api/update", { skip: release.version });

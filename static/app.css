@@ -1672,6 +1672,27 @@ dialog .settings-field select {
 
 .gig-group { margin: var(--space-2) 0; }
 
+.health-art-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.album-art-choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: calc(var(--space-6) + var(--space-3));
+}
+
+.album-art-choice img {
+  width: 6rem;
+  height: 6rem;
+  object-fit: cover;
+}
+
 .gig-show-all,
 .gig-actions button {
   min-height: calc(var(--space-6) + var(--space-3));

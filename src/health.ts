@@ -9,6 +9,7 @@
  * Page text is in the locale catalogs under health.*.
  */
 
+import { openAlbumArt, repaintAlbumArt, wireAlbumArt } from "./album-art";
 import { readJSON } from "./api";
 import type {
   LibraryHealthDuplicateGroup,
@@ -57,6 +58,9 @@ export function wireHealth(navigate: (action: HealthAction, id?: number) => void
   el("health-refresh").addEventListener("click", () => {
     void loadHealth();
   });
+  wireAlbumArt(() => {
+    void loadHealth();
+  });
   panel.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
@@ -70,6 +74,11 @@ export function wireHealth(navigate: (action: HealthAction, id?: number) => void
     if (action === "track") {
       const id = Number(button.dataset.healthId);
       if (Number.isInteger(id) && id > 0) go?.("track", id);
+      return;
+    }
+    if (action === "artwork") {
+      const id = Number(button.dataset.healthId);
+      if (Number.isInteger(id) && id > 0) void openAlbumArt(id);
     }
   });
 }
@@ -149,7 +158,13 @@ export function renderHealthReport(payload: LibraryHealthReport): void {
   report.replaceChildren(summary);
   let listed = 0;
   for (const spec of SECTIONS) {
-    listed += paintSection(report, t(spec.label), payload[spec.key], spec.action);
+    listed += paintSection(
+      report,
+      t(spec.label),
+      payload[spec.key],
+      spec.action,
+      spec.key === "no_artwork",
+    );
   }
   listed += paintUnused(report, payload.unused);
   listed += paintDuplicates(report, payload.duplicates);
@@ -167,6 +182,7 @@ export function renderHealthReport(payload: LibraryHealthReport): void {
 export function repaintHealth(): void {
   el("health-scope").textContent = scopeLabel();
   if (latest) renderHealthReport(latest);
+  repaintAlbumArt();
 }
 
 function beginBusy(): void {
@@ -206,6 +222,7 @@ function paintSection(
   label: string,
   section: LibraryHealthSection | undefined,
   action?: "missing",
+  findArt = false,
 ): number {
   const count = section?.count ?? 0;
   const tracks = section?.tracks ?? [];
@@ -217,7 +234,7 @@ function paintSection(
   details.append(heading);
   if (action === "missing") details.append(openButton("missing", "health.openMissing", tips.healthOpenMissing));
   const list = document.createElement("ul");
-  for (const track of tracks) list.append(trackItem(track));
+  for (const track of tracks) list.append(trackItem(track, findArt));
   details.append(list);
   if (count > tracks.length) {
     details.append(noteLine(t("health.more", { count: count - tracks.length })));
@@ -299,13 +316,21 @@ function openButton(
   return button;
 }
 
-function trackItem(track: LibraryHealthTrack): HTMLLIElement {
+function trackItem(track: LibraryHealthTrack, findArt = false): HTMLLIElement {
   const row = document.createElement("li");
+  row.className = "health-art-row";
   const button = buttonEl(tips.healthTrack);
   button.dataset.healthAction = "track";
   button.dataset.healthId = String(track.id);
   button.textContent = trackLine(track);
   row.append(button);
+  if (findArt) {
+    const art = buttonEl(tips.healthFindArt);
+    art.dataset.healthAction = "artwork";
+    art.dataset.healthId = String(track.id);
+    art.textContent = t("health.findArt");
+    row.append(art);
+  }
   return row;
 }
 
