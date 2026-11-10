@@ -18236,12 +18236,12 @@
     el("crate-pane-a").dataset.focused = String(!split || state.focusedPane === "a");
     el("crate-pane-b").dataset.focused = String(split && state.focusedPane === "b");
     const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-    for (const button2 of el("crate-list").querySelectorAll(".crate")) {
-      const raw = button2.dataset.id;
+    for (const button of el("crate-list").querySelectorAll(".crate")) {
+      const raw = button.dataset.id;
       const id = raw === "all" ? "all" : Number(raw);
       const mark = Number.isFinite(id) || id === "all" ? railMark(id, panes.a, panes.b) : null;
-      if (mark) button2.dataset.pane = mark;
-      else delete button2.dataset.pane;
+      if (mark) button.dataset.pane = mark;
+      else delete button.dataset.pane;
     }
   }
 
@@ -19130,9 +19130,9 @@
     panel.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement) || !latest) return;
-      const action = button2.dataset.gigAction;
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement) || !latest) return;
+      const action = button.dataset.gigAction;
       if (action === "next") stepIndex = Math.min(stepIndex + 1, STEP_COUNT);
       else if (action === "back") stepIndex = Math.max(0, stepIndex - 1);
       else if (action === "exit") {
@@ -19201,16 +19201,16 @@
     if (latest) renderGigReport(latest);
   }
   function beginBusy() {
-    const button2 = el("gig-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("gig-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("gig-panel").setAttribute("aria-busy", "true");
     el("gig-status").textContent = t("gig.checking");
   }
   function endBusy() {
-    const button2 = el("gig-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("gig-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
     el("gig-panel").setAttribute("aria-busy", "false");
   }
   function failStatus(message) {
@@ -19478,16 +19478,16 @@
     if (latest2) renderDriftReport(latest2);
   }
   function beginBusy2() {
-    const button2 = el("drift-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("drift-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("drift-panel").setAttribute("aria-busy", "true");
     el("drift-status").textContent = t("drift.checking");
   }
   function endBusy2() {
-    const button2 = el("drift-refresh");
-    button2.disabled = state.activeCrate === "all";
-    button2.setAttribute("aria-busy", "false");
+    const button = el("drift-refresh");
+    button.disabled = state.activeCrate === "all";
+    button.setAttribute("aria-busy", "false");
     el("drift-panel").setAttribute("aria-busy", "false");
   }
   function failStatus2(message) {
@@ -19663,8 +19663,8 @@
     return chosen?.value || null;
   }
   function syncEmbedEnabled() {
-    const button2 = el("album-art-embed");
-    button2.disabled = busy || !state.writable || selectedRelease() === null;
+    const button = el("album-art-embed");
+    button.disabled = busy || !state.writable || selectedRelease() === null;
   }
   function failStatus3(message) {
     el("album-art-status").textContent = message;
@@ -19696,20 +19696,20 @@
     panel.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement)) return;
-      const action = button2.dataset.healthAction;
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement)) return;
+      const action = button.dataset.healthAction;
       if (action === "missing" || action === "duplicates" || action === "files" || action === "bitrate") {
         go?.(action);
         return;
       }
       if (action === "track") {
-        const id = Number(button2.dataset.healthId);
+        const id = Number(button.dataset.healthId);
         if (Number.isInteger(id) && id > 0) go?.("track", id);
         return;
       }
       if (action === "artwork") {
-        const id = Number(button2.dataset.healthId);
+        const id = Number(button.dataset.healthId);
         if (Number.isInteger(id) && id > 0) void openAlbumArt(id);
       }
     });
@@ -19780,16 +19780,16 @@
     repaintAlbumArt();
   }
   function beginBusy3() {
-    const button2 = el("health-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("health-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("health-panel").setAttribute("aria-busy", "true");
     el("health-status").textContent = t("health.checking");
   }
   function endBusy3() {
-    const button2 = el("health-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("health-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
     el("health-panel").setAttribute("aria-busy", "false");
   }
   function failStatus4(message) {
@@ -19879,19 +19879,19 @@
     report.append(details);
   }
   function openButton(action, label, tip) {
-    const button2 = buttonEl(tip);
-    button2.dataset.healthAction = action;
-    button2.textContent = t(label);
-    return button2;
+    const button = buttonEl(tip);
+    button.dataset.healthAction = action;
+    button.textContent = t(label);
+    return button;
   }
   function trackItem(track, findArt = false) {
     const row = document.createElement("li");
     row.className = "health-art-row";
-    const button2 = buttonEl(tips.healthTrack);
-    button2.dataset.healthAction = "track";
-    button2.dataset.healthId = String(track.id);
-    button2.textContent = trackLine(track);
-    row.append(button2);
+    const button = buttonEl(tips.healthTrack);
+    button.dataset.healthAction = "track";
+    button.dataset.healthId = String(track.id);
+    button.textContent = trackLine(track);
+    row.append(button);
     if (findArt) {
       const art = buttonEl(tips.healthFindArt);
       art.dataset.healthAction = "artwork";
@@ -19986,9 +19986,9 @@
     panel.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement)) return;
-      if (button2.dataset.statsAction === "crate") void makeIdleCrate();
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement)) return;
+      if (button.dataset.statsAction === "crate") void makeIdleCrate();
     });
     syncPeriodFields();
   }
@@ -20066,16 +20066,16 @@
     el("stats-to").disabled = !custom;
   }
   function beginBusy4() {
-    const button2 = el("stats-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("stats-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("stats-panel").setAttribute("aria-busy", "true");
     el("stats-status").textContent = t("stats.checking");
   }
   function endBusy4() {
-    const button2 = el("stats-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("stats-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
     el("stats-panel").setAttribute("aria-busy", "false");
   }
   function failStatus5(message) {
@@ -20358,9 +20358,9 @@
   }
   function beginBusy5() {
     for (const id of ["scan-quick", "scan-full"]) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
     }
     el("scan-panel").setAttribute("aria-busy", "true");
     el("scan-status").textContent = t("scan.checking");
@@ -20465,9 +20465,9 @@
       void previewCrate();
     });
     el("bitrate-report").addEventListener("click", (event) => {
-      const button2 = event.target.closest("[data-bitrate-action]");
-      if (!button2 || button2.disabled) return;
-      if (button2.dataset.bitrateAction === "confirm") void createCrate();
+      const button = event.target.closest("[data-bitrate-action]");
+      if (!button || button.disabled) return;
+      if (button.dataset.bitrateAction === "confirm") void createCrate();
     });
   }
   async function loadBitrate() {
@@ -20611,9 +20611,9 @@
   }
   function beginBusy6(kind2 = "check") {
     for (const id of ["bitrate-refresh", "bitrate-save"]) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
     }
     el("bitrate-panel").setAttribute("aria-busy", "true");
     const status = kind2 === "create" ? t("bitrate.saving") : kind2 === "preview" ? t("bitrate.checking") : t("bitrate.checking");
@@ -20833,20 +20833,20 @@
       if (latest8) renderTagsReport(latest8);
     });
     el("tags-report").addEventListener("click", (event) => {
-      const button2 = event.target.closest("[data-tags-action]");
-      if (!button2 || button2.disabled) return;
-      if (button2.dataset.tagsAction === "clean-apply") {
+      const button = event.target.closest("[data-tags-action]");
+      if (!button || button.disabled) return;
+      if (button.dataset.tagsAction === "clean-apply") {
         void applyTitles();
         return;
       }
-      if (button2.dataset.tagsAction === "refresh-apply") {
+      if (button.dataset.tagsAction === "refresh-apply") {
         void applyMappings();
         return;
       }
-      const key = button2.dataset.key ?? "";
+      const key = button.dataset.key ?? "";
       if (!key) return;
-      if (button2.dataset.tagsAction === "preview") void previewGroup(key);
-      if (button2.dataset.tagsAction === "apply") void applyGroup(key);
+      if (button.dataset.tagsAction === "preview") void previewGroup(key);
+      if (button.dataset.tagsAction === "apply") void applyGroup(key);
     });
   }
   async function loadTags() {
@@ -21095,9 +21095,9 @@
   function beginBusy7() {
     panelBusy = true;
     for (const id of FIELD_BUTTONS) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
     }
     el("tags-panel").setAttribute("aria-busy", "true");
     el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
@@ -21106,9 +21106,9 @@
   function endBusy7() {
     panelBusy = false;
     for (const id of FIELD_BUTTONS) {
-      const button2 = el(id);
-      button2.disabled = false;
-      button2.setAttribute("aria-busy", "false");
+      const button = el(id);
+      button.disabled = false;
+      button.setAttribute("aria-busy", "false");
     }
     el("tags-panel").setAttribute("aria-busy", "false");
   }
@@ -21415,10 +21415,10 @@
     el("portable-check").focus();
   }
   function repaintPortable() {
-    for (const button2 of document.querySelectorAll(".files-portable")) {
-      button2.textContent = t("portable.check");
-      const name = button2.dataset.portableName ?? "";
-      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    for (const button of document.querySelectorAll(".files-portable")) {
+      button.textContent = t("portable.check");
+      const name = button.dataset.portableName ?? "";
+      if (name) button.setAttribute("aria-label", t("portable.checkLabel", { name }));
     }
     el("portable-check").textContent = t("portable.check");
     if (lastRoots.length) paintDrivePicker(lastRoots);
@@ -21578,15 +21578,15 @@
     emitFiles();
   }
   function beginBusy8() {
-    const button2 = el("portable-check");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("portable-check");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("portable-panel").setAttribute("aria-busy", "true");
   }
   function endBusy8() {
-    const button2 = el("portable-check");
-    button2.disabled = !hasConnected;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("portable-check");
+    button.disabled = !hasConnected;
+    button.setAttribute("aria-busy", "false");
     el("portable-panel").setAttribute("aria-busy", "false");
   }
   function isRecord(value) {
@@ -21605,15 +21605,15 @@
   }
 
   // src/files-mount.tsx
-  var import_react8 = __toESM(require_react(), 1);
+  var import_react11 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
-  var import_react_dom2 = __toESM(require_react_dom(), 1);
+  var import_react_dom3 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react5 = __toESM(require_react(), 1);
-  var import_react_dom = __toESM(require_react_dom(), 1);
+  var import_react8 = __toESM(require_react(), 1);
+  var import_react_dom2 = __toESM(require_react_dom(), 1);
 
   // src/context/FilesContext.tsx
   var import_react = __toESM(require_react(), 1);
@@ -21649,6 +21649,568 @@
       throw new Error("usePlayer must be used within PlayerProvider");
     }
     return value;
+  }
+
+  // src/context/WaveformContext.tsx
+  var import_react3 = __toESM(require_react(), 1);
+  var import_react_dom = __toESM(require_react_dom(), 1);
+
+  // src/waveform.ts
+  var TILE_CSS_WIDTH = 256;
+  var ZOOM_DEFAULT_PPS = 80;
+  var ZOOM_MIN_PPS = 10;
+  var ZOOM_MAX_PPS = 320;
+  var ZOOM_FACTOR = 1.25;
+  var WAVE_BG = { r: 35, g: 25, b: 16 };
+  var OUTER_ALPHA = 0.6;
+  var PLAYED_SHADE = 0.45;
+  var BEAT_HEIGHT_RATIO = 0.12;
+  var DOWNBEAT_HEIGHT_RATIO = 0.18;
+  var BEAT_ALPHA = 0.28;
+  var DOWNBEAT_ALPHA = 0.35;
+  var DEFAULT_MARKER_COLOR = { r: 226, g: 59, b: 22 };
+  var PLAYHEAD_COLOR = { r: 226, g: 59, b: 22 };
+  var BEAT_MARK = { r: 255, g: 255, b: 255 };
+  var HEADER_BYTES = 64;
+  var HEX_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+  var MAX_POINTS = 2e7;
+  var MAX_TICKS = 8192;
+  function parseSwf1(input) {
+    const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
+    if (bytes.byteLength < HEADER_BYTES) return null;
+    if (bytes[0] !== 83 || bytes[1] !== 87 || bytes[2] !== 70 || bytes[3] !== 49) return null;
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    if (view.getUint16(4, true) !== HEADER_BYTES) return null;
+    const version = view.getUint16(6, true);
+    const flags = view.getUint16(8, true);
+    const analyzerVersion = view.getUint16(10, true);
+    const sampleRate = view.getUint32(12, true);
+    const detailHzMilli = view.getUint32(16, true);
+    const durationMs = view.getUint32(20, true);
+    const detailCount = view.getUint32(24, true);
+    const overviewCount = view.getUint32(28, true);
+    const seratoColumns = view.getUint32(32, true);
+    const seratoBands = view.getUint16(36, true);
+    const lowHzMilli = view.getUint32(40, true);
+    const highHzMilli = view.getUint32(44, true);
+    if (detailCount > MAX_POINTS || overviewCount > MAX_POINTS || seratoColumns > MAX_POINTS) return null;
+    const detailBytes = detailCount * 6;
+    const overviewBytes = overviewCount * 6;
+    const seratoBytes = seratoColumns * seratoBands;
+    if (!Number.isSafeInteger(detailBytes + overviewBytes + seratoBytes)) return null;
+    const end = HEADER_BYTES + detailBytes + overviewBytes + seratoBytes;
+    if (end !== bytes.byteLength) return null;
+    let offset = HEADER_BYTES;
+    const detail = bytes.slice(offset, offset + detailBytes);
+    offset += detailBytes;
+    const overview = bytes.slice(offset, offset + overviewBytes);
+    offset += overviewBytes;
+    const serato = bytes.slice(offset, offset + seratoBytes);
+    return {
+      version,
+      flags,
+      analyzerVersion,
+      sampleRate,
+      pointsPerSecond: detailHzMilli / 1e3,
+      durationMs,
+      detail,
+      overview,
+      serato,
+      detailCount,
+      overviewCount,
+      seratoColumns,
+      seratoBands,
+      lowHz: lowHzMilli / 1e3,
+      highHz: highHzMilli / 1e3
+    };
+  }
+  function bandColor(low, mid, high) {
+    const l = clamp255(low);
+    const m = clamp255(mid);
+    const h = clamp255(high);
+    const max = Math.max(l, m, h);
+    if (max === 0) return { r: 0, g: 0, b: 0 };
+    return {
+      r: Math.round(l / max * 255),
+      g: Math.round(m / max * 255),
+      b: Math.round(h / max * 255)
+    };
+  }
+  function bandLevel(low, mid, high) {
+    return Math.max(clamp255(low), clamp255(mid), clamp255(high)) / 255;
+  }
+  function seratoColumnLevels(column) {
+    let low = 0;
+    let mid = 0;
+    let high = 0;
+    const count = Math.min(column.length, 16);
+    for (let index = 0; index < count; index += 1) {
+      const value = clamp255(column[index] ?? 0);
+      if (index <= 4) low = Math.max(low, value);
+      else if (index <= 10) mid = Math.max(mid, value);
+      else high = Math.max(high, value);
+    }
+    return { low, mid, high };
+  }
+  function beatgridTicks(markers, startSeconds, endSeconds) {
+    if (!Number.isFinite(startSeconds) || !Number.isFinite(endSeconds) || endSeconds <= startSeconds) return [];
+    const ordered = markers.filter((marker) => Number.isFinite(marker.positionSeconds)).slice();
+    ordered.sort((left, right) => left.positionSeconds - right.positionSeconds);
+    if (ordered.length === 0) return [];
+    const ticks = [];
+    let beatIndex = 0;
+    for (let index = 0; index < ordered.length; index += 1) {
+      const marker = ordered[index];
+      if (!marker) continue;
+      const next2 = ordered[index + 1];
+      if (next2) {
+        const beats = marker.beats;
+        if (beats === void 0 || !Number.isFinite(beats) || beats < 1) continue;
+        const count = Math.round(beats);
+        const spacing2 = (next2.positionSeconds - marker.positionSeconds) / beats;
+        if (!(spacing2 > 0) || count < 1) continue;
+        pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, count, startSeconds, endSeconds);
+        beatIndex += count;
+        continue;
+      }
+      const bpm = marker.bpm;
+      if (bpm === void 0 || !Number.isFinite(bpm) || bpm <= 0) continue;
+      const spacing = 60 / bpm;
+      if (!(spacing > 0)) continue;
+      const first = Math.max(0, Math.ceil((startSeconds - marker.positionSeconds) / spacing - 1e-9));
+      const lastExclusive = Math.ceil((endSeconds - marker.positionSeconds) / spacing - 1e-9);
+      if (lastExclusive <= first) continue;
+      const emit2 = Math.min(lastExclusive, first + MAX_TICKS);
+      pushRange(ticks, marker.positionSeconds, spacing, beatIndex, emit2, startSeconds, endSeconds, first);
+    }
+    return ticks;
+  }
+  function timeToX(timeSeconds, playheadSeconds, pixelsPerSecond, width) {
+    if (!(pixelsPerSecond > 0) || !Number.isFinite(timeSeconds) || !Number.isFinite(playheadSeconds) || !Number.isFinite(width)) {
+      return width / 2;
+    }
+    return width / 2 + (timeSeconds - playheadSeconds) * pixelsPerSecond;
+  }
+  function overviewXToTime(x, width, durationSeconds) {
+    if (!(width > 0) || !(durationSeconds > 0) || !Number.isFinite(x)) return 0;
+    const ratio = Math.min(1, Math.max(0, x / width));
+    return ratio * durationSeconds;
+  }
+  function zoomPixelsPerSecond(current2, direction) {
+    const base = Number.isFinite(current2) && current2 > 0 ? current2 : ZOOM_DEFAULT_PPS;
+    const next2 = base * (direction > 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR);
+    if (next2 >= ZOOM_MAX_PPS) return ZOOM_MAX_PPS;
+    if (next2 <= ZOOM_MIN_PPS) return ZOOM_MIN_PPS;
+    return next2;
+  }
+  function tileDeviceWidth(dpr) {
+    const scale = Number.isFinite(dpr) && dpr > 0 ? dpr : 1;
+    return Math.max(1, Math.round(TILE_CSS_WIDTH * scale));
+  }
+  function colorFromHex(value) {
+    if (!HEX_COLOR.test(value)) return null;
+    let hex = value.slice(1);
+    if (hex.length === 3) {
+      const r = hex[0] ?? "";
+      const g = hex[1] ?? "";
+      const b = hex[2] ?? "";
+      hex = `${r}${r}${g}${g}${b}${b}`;
+    }
+    if (hex.length === 8) hex = hex.slice(0, 6);
+    const parsed = Number.parseInt(hex, 16);
+    if (!Number.isFinite(parsed)) return null;
+    return { r: parsed >> 16 & 255, g: parsed >> 8 & 255, b: parsed & 255 };
+  }
+  function beatgridFromMarkers(rows2) {
+    if (!rows2 || rows2.length === 0) return [];
+    const found = [];
+    for (const row of rows2) {
+      const position = finiteNumber(row.position_seconds) ?? finiteNumber(row.position);
+      if (position === null) continue;
+      const marker = { positionSeconds: position };
+      const beats = finiteNumber(row.beats);
+      const bpm = finiteNumber(row.bpm);
+      if (beats !== null) marker.beats = beats;
+      if (bpm !== null) marker.bpm = bpm;
+      found.push(marker);
+    }
+    return found;
+  }
+  function loopsFromMarkers(rows2) {
+    if (!rows2 || rows2.length === 0) return [];
+    const found = [];
+    for (const row of rows2) {
+      const start = finiteNumber(row.start_ms);
+      const end = finiteNumber(row.end_ms);
+      if (start === null || end === null || end <= start || start < 0) continue;
+      found.push({
+        startSeconds: start / 1e3,
+        endSeconds: end / 1e3,
+        color: typeof row.color === "string" ? row.color : ""
+      });
+    }
+    return found;
+  }
+  var DetailTiles = class {
+    /**
+     * Remember one detail buffer.
+     *
+     * @param detail `N * 6` uint8 bytes.
+     * @param pointCount N.
+     * @param pointsPerSecond Detail rate from the header. 150 in SWF1.
+     */
+    constructor(detail, pointCount, pointsPerSecond) {
+      this.detail = detail;
+      this.pointCount = pointCount;
+      this.pointsPerSecond = pointsPerSecond;
+    }
+    detail;
+    pointCount;
+    pointsPerSecond;
+    tiles = /* @__PURE__ */ new Map();
+    blank = null;
+    /**
+     * Drop cached tiles.
+     *
+     * Called when the zoom changes so the next frame rebuilds at the new scale.
+     */
+    clear() {
+      this.tiles.clear();
+    }
+    /**
+     * Paint one zoomed frame into `frame`.
+     *
+     * The playhead is the center column. Tiles outside the view, plus one
+     * tile of margin, are not generated. Markers are cues, shaded loops, and
+     * beat ticks. Downbeats are taller.
+     *
+     * @param frame RGBA buffer of `width * height`.
+     * @param width Device pixels.
+     * @param height Device pixels.
+     * @param dpr Device pixel ratio.
+     * @param playheadSeconds Audio position.
+     * @param pixelsPerSecond CSS pixels per second.
+     * @param markers Cues, loops, and the beatgrid. Beat ticks are not drawn
+     *   when the grid is empty.
+     * @returns How many detail points this call sampled. Zero when every
+     *   visible tile was already cached.
+     */
+    paint(frame, width, height, dpr, playheadSeconds, pixelsPerSecond, markers) {
+      const scale = Number.isFinite(dpr) && dpr > 0 ? dpr : 1;
+      const pps = pixelsPerSecond > 0 ? pixelsPerSecond : ZOOM_DEFAULT_PPS;
+      this.ensureBlank(width, height);
+      const blank = this.blank;
+      if (!blank || frame.length !== blank.length) return { pointsRead: 0 };
+      frame.set(blank);
+      const cssWidth = width / scale;
+      const tileSeconds = TILE_CSS_WIDTH / pps;
+      const tileWidth = tileDeviceWidth(scale);
+      const viewStart = playheadSeconds - cssWidth / 2 / pps;
+      const viewEnd = playheadSeconds + cssWidth / 2 / pps;
+      const first = Math.floor(viewStart / tileSeconds) - 1;
+      const last = Math.floor(viewEnd / tileSeconds) + 1;
+      let pointsRead = 0;
+      const needed = /* @__PURE__ */ new Set();
+      for (let index = first; index <= last; index += 1) {
+        const key = `${Math.round(pps * 1e3)}|${scale}|${height}|${index}`;
+        needed.add(key);
+        let tile = this.tiles.get(key);
+        if (!tile) {
+          const rendered = renderTile(
+            this.detail,
+            this.pointCount,
+            this.pointsPerSecond,
+            index * tileSeconds,
+            tileSeconds,
+            tileWidth,
+            height,
+            scale
+          );
+          tile = rendered.pixels;
+          pointsRead += rendered.pointsRead;
+          this.tiles.set(key, tile);
+        }
+        const left = timeToX(index * tileSeconds, playheadSeconds, pps, cssWidth) * scale;
+        blit(frame, width, height, tile, tileWidth, Math.round(left));
+      }
+      if (this.tiles.size > 24) {
+        for (const key of this.tiles.keys()) {
+          if (!needed.has(key)) this.tiles.delete(key);
+        }
+      }
+      drawLoops(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.loops);
+      drawBeats(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.beatgrid, viewStart, viewEnd);
+      drawCues(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.cues);
+      drawPlayhead(frame, width, height);
+      return { pointsRead };
+    }
+    ensureBlank(width, height) {
+      const count = width * height * 4;
+      if (this.blank && this.blank.length === count) return;
+      const blank = new Uint8ClampedArray(count);
+      fillBackground(blank);
+      this.blank = blank;
+    }
+  };
+  function renderOverview(source, width, height) {
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    fillBackground(pixels);
+    const columns = source.kind === "computed" ? source.count : source.columns.length;
+    if (columns < 1 || width < 1 || height < 1) return pixels;
+    for (let x = 0; x < width; x += 1) {
+      const start = Math.floor(x / width * columns);
+      const end = Math.max(start + 1, Math.floor((x + 1) / width * columns));
+      let lowPeak = 0;
+      let lowRms = 0;
+      let midPeak = 0;
+      let midRms = 0;
+      let highPeak = 0;
+      let highRms = 0;
+      for (let index = start; index < end && index < columns; index += 1) {
+        if (source.kind === "computed") {
+          const offset = index * 6;
+          lowPeak = Math.max(lowPeak, source.points[offset] ?? 0);
+          lowRms = Math.max(lowRms, source.points[offset + 1] ?? 0);
+          midPeak = Math.max(midPeak, source.points[offset + 2] ?? 0);
+          midRms = Math.max(midRms, source.points[offset + 3] ?? 0);
+          highPeak = Math.max(highPeak, source.points[offset + 4] ?? 0);
+          highRms = Math.max(highRms, source.points[offset + 5] ?? 0);
+        } else {
+          const levels = seratoColumnLevels(source.columns[index] ?? []);
+          lowPeak = Math.max(lowPeak, levels.low);
+          midPeak = Math.max(midPeak, levels.mid);
+          highPeak = Math.max(highPeak, levels.high);
+          lowRms = lowPeak;
+          midRms = midPeak;
+          highRms = highPeak;
+        }
+      }
+      paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
+    }
+    return pixels;
+  }
+  function shadePlayed(pixels, width, height, playedX) {
+    const end = Math.max(0, Math.min(width, Math.round(playedX)));
+    for (let y = 0; y < height; y += 1) {
+      const row = y * width;
+      for (let x = 0; x < end; x += 1) {
+        const offset = (row + x) * 4;
+        pixels[offset] = Math.round((pixels[offset] ?? 0) * PLAYED_SHADE);
+        pixels[offset + 1] = Math.round((pixels[offset + 1] ?? 0) * PLAYED_SHADE);
+        pixels[offset + 2] = Math.round((pixels[offset + 2] ?? 0) * PLAYED_SHADE);
+      }
+    }
+  }
+  function drawOverviewMarks(pixels, width, height, durationSeconds, playheadSeconds, markers) {
+    if (!(durationSeconds > 0) || width < 1) return;
+    const xOf = (seconds) => seconds / durationSeconds * width;
+    drawLoops(pixels, width, height, 1, 0, 1, width, markers.loops, xOf);
+    drawCues(pixels, width, height, 1, 0, 1, width, markers.cues, xOf);
+    const playX = Math.round(Math.min(width - 1, Math.max(0, xOf(playheadSeconds))));
+    fillSpan(pixels, width, height, playX, playX + 1, 0, height, PLAYHEAD_COLOR, 1);
+  }
+  function renderTile(detail, pointCount, pointsPerSecond, startSeconds, tileSeconds, width, height, dpr) {
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    fillBackground(pixels);
+    let pointsRead = 0;
+    const rate = pointsPerSecond > 0 ? pointsPerSecond : 150;
+    for (let x = 0; x < width; x += 1) {
+      const t0 = startSeconds + x / width * tileSeconds;
+      const t1 = startSeconds + (x + 1) / width * tileSeconds;
+      let i0 = Math.floor(t0 * rate);
+      let i1 = Math.ceil(t1 * rate);
+      if (i1 <= i0) i1 = i0 + 1;
+      if (i0 < 0) i0 = 0;
+      if (i1 > pointCount) i1 = pointCount;
+      if (i0 >= i1) continue;
+      let lowPeak = 0;
+      let lowRms = 0;
+      let midPeak = 0;
+      let midRms = 0;
+      let highPeak = 0;
+      let highRms = 0;
+      for (let index = i0; index < i1; index += 1) {
+        pointsRead += 1;
+        const offset = index * 6;
+        lowPeak = Math.max(lowPeak, detail[offset] ?? 0);
+        lowRms = Math.max(lowRms, detail[offset + 1] ?? 0);
+        midPeak = Math.max(midPeak, detail[offset + 2] ?? 0);
+        midRms = Math.max(midRms, detail[offset + 3] ?? 0);
+        highPeak = Math.max(highPeak, detail[offset + 4] ?? 0);
+        highRms = Math.max(highRms, detail[offset + 5] ?? 0);
+      }
+      paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
+    }
+    return { pixels, pointsRead };
+  }
+  function paintColumn(pixels, x, width, height, gutter, lowPeak, lowRms, midPeak, midRms, highPeak, highRms) {
+    const peakLevel = bandLevel(lowPeak, midPeak, highPeak);
+    const rmsLevel = bandLevel(lowRms, midRms, highRms);
+    if (peakLevel <= 0 && rmsLevel <= 0) return;
+    const top = Math.min(gutter, height - 1);
+    const bandHeight = height - top;
+    const mid = top + (bandHeight - 1) / 2;
+    const peakHalf = Math.max(peakLevel > 0 ? 0.5 : 0, peakLevel * (bandHeight / 2) * 0.92);
+    const rmsHalf = rmsLevel * (bandHeight / 2) * 0.92;
+    const y0 = Math.max(top, Math.floor(mid - Math.max(peakHalf, rmsHalf)));
+    const y1 = Math.min(height - 1, Math.ceil(mid + Math.max(peakHalf, rmsHalf)));
+    const peakColor = bandColor(lowPeak, midPeak, highPeak);
+    const rmsColor = bandColor(lowRms, midRms, highRms);
+    for (let y = y0; y <= y1; y += 1) {
+      const fromMid = Math.abs(y - mid);
+      const inner = rmsLevel > 0 && fromMid <= rmsHalf;
+      const outer = peakLevel > 0 && fromMid <= peakHalf;
+      if (!inner && !outer) continue;
+      const color = inner ? rmsColor : peakColor;
+      const alpha = inner ? 1 : OUTER_ALPHA;
+      blendPixel(pixels, width, x, y, color, alpha);
+    }
+  }
+  function drawLoops(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, loops, xOf) {
+    for (const loop of loops) {
+      const color = colorFromHex(loop.color) ?? DEFAULT_MARKER_COLOR;
+      const start = xOf ? xOf(loop.startSeconds) : timeToX(loop.startSeconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
+      const end = xOf ? xOf(loop.endSeconds) : timeToX(loop.endSeconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
+      const left = Math.min(start, end);
+      const right = Math.max(start, end);
+      fillSpan(pixels, width, height, Math.floor(left), Math.ceil(right), 0, height, color, 0.35);
+      const edge = Math.max(1, Math.round(dpr));
+      fillSpan(pixels, width, height, Math.round(left), Math.round(left) + edge, 0, height, color, 1);
+      fillSpan(pixels, width, height, Math.round(right) - edge, Math.round(right), 0, height, color, 1);
+    }
+  }
+  function drawCues(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, cues2, xOf) {
+    const edge = Math.max(1, Math.round(2 * dpr));
+    for (const cue of cues2) {
+      const color = colorFromHex(cue.color) ?? DEFAULT_MARKER_COLOR;
+      const x = xOf ? xOf(cue.seconds) : timeToX(cue.seconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
+      fillSpan(pixels, width, height, Math.round(x) - Math.floor(edge / 2), Math.round(x) - Math.floor(edge / 2) + edge, 0, height, color, 1);
+    }
+  }
+  function drawBeats(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, markers, viewStart, viewEnd) {
+    const ticks = beatgridTicks(markers, viewStart, viewEnd);
+    const tickWidth = Math.max(1, Math.round(dpr));
+    const regularHeight = Math.max(1, Math.round(height * BEAT_HEIGHT_RATIO));
+    const downbeatHeight = Math.max(regularHeight + 1, Math.round(height * DOWNBEAT_HEIGHT_RATIO));
+    for (const tick of ticks) {
+      const x = Math.round(timeToX(tick.seconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr);
+      const tickHeight = Math.min(tick.downbeat ? downbeatHeight : regularHeight, Math.floor(height / 2) - 1);
+      if (tickHeight < 1) continue;
+      const alpha = tick.downbeat ? DOWNBEAT_ALPHA : BEAT_ALPHA;
+      fillSpan(pixels, width, height, x, x + tickWidth, 0, tickHeight, BEAT_MARK, alpha);
+      fillSpan(pixels, width, height, x, x + tickWidth, height - tickHeight, height, BEAT_MARK, alpha);
+    }
+  }
+  function drawPlayhead(pixels, width, height) {
+    const x = Math.floor(width / 2);
+    fillSpan(pixels, width, height, x, x + 2, 0, height, PLAYHEAD_COLOR, 1);
+  }
+  function fillSpan(pixels, width, height, x0, x1, y0, y1, color, alpha) {
+    const left = Math.max(0, x0);
+    const right = Math.min(width, x1);
+    const top = Math.max(0, y0);
+    const bottom = Math.min(height, y1);
+    for (let x = left; x < right; x += 1) {
+      for (let y = top; y < bottom; y += 1) blendPixel(pixels, width, x, y, color, alpha);
+    }
+  }
+  function blendPixel(pixels, width, x, y, color, alpha) {
+    const offset = (y * width + x) * 4;
+    const keep = 1 - alpha;
+    pixels[offset] = Math.round(color.r * alpha + (pixels[offset] ?? 0) * keep);
+    pixels[offset + 1] = Math.round(color.g * alpha + (pixels[offset + 1] ?? 0) * keep);
+    pixels[offset + 2] = Math.round(color.b * alpha + (pixels[offset + 2] ?? 0) * keep);
+    pixels[offset + 3] = 255;
+  }
+  function fillBackground(pixels) {
+    for (let index = 0; index < pixels.length; index += 4) {
+      pixels[index] = WAVE_BG.r;
+      pixels[index + 1] = WAVE_BG.g;
+      pixels[index + 2] = WAVE_BG.b;
+      pixels[index + 3] = 255;
+    }
+  }
+  function blit(dest, destWidth, destHeight, src, srcWidth, destX) {
+    let srcX = 0;
+    let copyWidth = srcWidth;
+    let dx = destX;
+    if (dx < 0) {
+      srcX = -dx;
+      copyWidth -= srcX;
+      dx = 0;
+    }
+    if (dx + copyWidth > destWidth) copyWidth = destWidth - dx;
+    if (copyWidth <= 0) return;
+    for (let y = 0; y < destHeight; y += 1) {
+      const srcStart = (y * srcWidth + srcX) * 4;
+      const destStart = (y * destWidth + dx) * 4;
+      dest.set(src.subarray(srcStart, srcStart + copyWidth * 4), destStart);
+    }
+  }
+  function pushRange(ticks, origin, spacing, beatIndex, count, startSeconds, endSeconds, first = 0) {
+    const begin = Math.max(first, Math.ceil((startSeconds - origin) / spacing - 1e-9));
+    for (let index = begin; index < count; index += 1) {
+      const seconds = origin + index * spacing;
+      if (seconds < startSeconds - 1e-6) continue;
+      if (seconds >= endSeconds - 1e-9) break;
+      if (ticks.length >= MAX_TICKS) return;
+      ticks.push({ seconds, downbeat: (beatIndex + index) % 4 === 0 });
+    }
+  }
+  function finiteNumber(value) {
+    if (typeof value === "number") return Number.isFinite(value) ? value : null;
+    if (typeof value !== "string" || value.trim() === "") return null;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : null;
+  }
+  function clamp255(value) {
+    if (!Number.isFinite(value)) return 0;
+    if (value <= 0) return 0;
+    if (value >= 255) return 255;
+    return value;
+  }
+
+  // src/context/WaveformContext.tsx
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var defaultUi = {
+    pps: ZOOM_DEFAULT_PPS,
+    phase: "idle",
+    overviewSource: ""
+  };
+  var WaveformContext = (0, import_react3.createContext)(null);
+  var WaveformClockContext = (0, import_react3.createContext)(null);
+  function WaveformProvider({ children }) {
+    const [ui, setUi] = (0, import_react3.useState)(defaultUi);
+    const value = (0, import_react3.useMemo)(() => {
+      const blocked = ui.phase === "reading" || ui.phase === "unavailable";
+      return {
+        ...ui,
+        canZoomIn: !blocked && ui.pps < ZOOM_MAX_PPS - 1e-9,
+        canZoomOut: !blocked && ui.pps > ZOOM_MIN_PPS + 1e-9,
+        publish: (next2) => {
+          (0, import_react_dom.flushSync)(() => {
+            setUi(next2);
+          });
+        }
+      };
+    }, [ui]);
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(WaveformContext, { value, children });
+  }
+  function WaveformClockProvider({
+    clock,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(WaveformClockContext, { value: clock, children });
+  }
+  function useWaveform() {
+    const value = (0, import_react3.useContext)(WaveformContext);
+    if (value === null) {
+      throw new Error("useWaveform must be used within WaveformProvider");
+    }
+    return value;
+  }
+  function useWaveformClockOverride() {
+    return (0, import_react3.useContext)(WaveformClockContext);
   }
 
   // src/files.ts
@@ -22282,10 +22844,10 @@
   }
 
   // src/player.ts
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react7 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -22352,7 +22914,7 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -22380,7 +22942,7 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
       "button",
       {
         type: "button",
@@ -22391,13 +22953,13 @@
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -22409,11 +22971,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_jsx_runtime5.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "button",
         {
           type: "button",
@@ -22433,7 +22995,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react3.useState)(null);
+    const [hold, setHold] = (0, import_react4.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -22460,14 +23022,14 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
           "button",
           {
             type: "button",
@@ -22479,8 +23041,8 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
           "button",
           {
             type: "button",
@@ -22493,13 +23055,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
             "input",
             {
               ref: tooltipRef2(tips.seek),
@@ -22518,16 +23080,16 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
           "input",
           {
             ref: tooltipRef2(tips.volume),
@@ -22543,540 +23105,195 @@
     ] });
   }
 
-  // src/waveform.ts
-  var TILE_CSS_WIDTH = 256;
-  var ZOOM_DEFAULT_PPS = 80;
-  var ZOOM_MIN_PPS = 10;
-  var ZOOM_MAX_PPS = 320;
-  var ZOOM_FACTOR = 1.25;
-  var WAVE_BG = { r: 35, g: 25, b: 16 };
-  var OUTER_ALPHA = 0.6;
-  var PLAYED_SHADE = 0.45;
-  var BEAT_HEIGHT_RATIO = 0.12;
-  var DOWNBEAT_HEIGHT_RATIO = 0.18;
-  var BEAT_ALPHA = 0.28;
-  var DOWNBEAT_ALPHA = 0.35;
-  var DEFAULT_MARKER_COLOR = { r: 226, g: 59, b: 22 };
-  var PLAYHEAD_COLOR = { r: 226, g: 59, b: 22 };
-  var BEAT_MARK = { r: 255, g: 255, b: 255 };
-  var HEADER_BYTES = 64;
-  var HEX_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
-  var MAX_POINTS = 2e7;
-  var MAX_TICKS = 8192;
-  function parseSwf1(input) {
-    const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
-    if (bytes.byteLength < HEADER_BYTES) return null;
-    if (bytes[0] !== 83 || bytes[1] !== 87 || bytes[2] !== 70 || bytes[3] !== 49) return null;
-    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-    if (view.getUint16(4, true) !== HEADER_BYTES) return null;
-    const version = view.getUint16(6, true);
-    const flags = view.getUint16(8, true);
-    const analyzerVersion = view.getUint16(10, true);
-    const sampleRate = view.getUint32(12, true);
-    const detailHzMilli = view.getUint32(16, true);
-    const durationMs = view.getUint32(20, true);
-    const detailCount = view.getUint32(24, true);
-    const overviewCount = view.getUint32(28, true);
-    const seratoColumns = view.getUint32(32, true);
-    const seratoBands = view.getUint16(36, true);
-    const lowHzMilli = view.getUint32(40, true);
-    const highHzMilli = view.getUint32(44, true);
-    if (detailCount > MAX_POINTS || overviewCount > MAX_POINTS || seratoColumns > MAX_POINTS) return null;
-    const detailBytes = detailCount * 6;
-    const overviewBytes = overviewCount * 6;
-    const seratoBytes = seratoColumns * seratoBands;
-    if (!Number.isSafeInteger(detailBytes + overviewBytes + seratoBytes)) return null;
-    const end = HEADER_BYTES + detailBytes + overviewBytes + seratoBytes;
-    if (end !== bytes.byteLength) return null;
-    let offset = HEADER_BYTES;
-    const detail = bytes.slice(offset, offset + detailBytes);
-    offset += detailBytes;
-    const overview = bytes.slice(offset, offset + overviewBytes);
-    offset += overviewBytes;
-    const serato = bytes.slice(offset, offset + seratoBytes);
-    return {
-      version,
-      flags,
-      analyzerVersion,
-      sampleRate,
-      pointsPerSecond: detailHzMilli / 1e3,
-      durationMs,
-      detail,
-      overview,
-      serato,
-      detailCount,
-      overviewCount,
-      seratoColumns,
-      seratoBands,
-      lowHz: lowHzMilli / 1e3,
-      highHz: highHzMilli / 1e3
+  // src/waveform-view.ts
+  var import_react6 = __toESM(require_react(), 1);
+
+  // src/components/WaveformPanel.tsx
+  var import_react5 = __toESM(require_react(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
     };
   }
-  function bandColor(low, mid, high) {
-    const l = clamp255(low);
-    const m = clamp255(mid);
-    const h = clamp255(high);
-    const max = Math.max(l, m, h);
-    if (max === 0) return { r: 0, g: 0, b: 0 };
+  function clockFromPlayer(player2) {
     return {
-      r: Math.round(l / max * 255),
-      g: Math.round(m / max * 255),
-      b: Math.round(h / max * 255)
+      seek: player2.seek,
+      seekBy: player2.seekBy,
+      getTime: player2.mediaTime,
+      getDuration: player2.mediaDuration,
+      getPlaying: () => player2.playing,
+      formatTime: player2.formatTime,
+      seekStep: player2.seekStep,
+      seekStepLarge: player2.seekStepLarge
     };
   }
-  function bandLevel(low, mid, high) {
-    return Math.max(clamp255(low), clamp255(mid), clamp255(high)) / 255;
-  }
-  function seratoColumnLevels(column) {
-    let low = 0;
-    let mid = 0;
-    let high = 0;
-    const count = Math.min(column.length, 16);
-    for (let index = 0; index < count; index += 1) {
-      const value = clamp255(column[index] ?? 0);
-      if (index <= 4) low = Math.max(low, value);
-      else if (index <= 10) mid = Math.max(mid, value);
-      else high = Math.max(high, value);
-    }
-    return { low, mid, high };
-  }
-  function beatgridTicks(markers, startSeconds, endSeconds) {
-    if (!Number.isFinite(startSeconds) || !Number.isFinite(endSeconds) || endSeconds <= startSeconds) return [];
-    const ordered = markers.filter((marker) => Number.isFinite(marker.positionSeconds)).slice();
-    ordered.sort((left, right) => left.positionSeconds - right.positionSeconds);
-    if (ordered.length === 0) return [];
-    const ticks = [];
-    let beatIndex = 0;
-    for (let index = 0; index < ordered.length; index += 1) {
-      const marker = ordered[index];
-      if (!marker) continue;
-      const next2 = ordered[index + 1];
-      if (next2) {
-        const beats = marker.beats;
-        if (beats === void 0 || !Number.isFinite(beats) || beats < 1) continue;
-        const count = Math.round(beats);
-        const spacing2 = (next2.positionSeconds - marker.positionSeconds) / beats;
-        if (!(spacing2 > 0) || count < 1) continue;
-        pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, count, startSeconds, endSeconds);
-        beatIndex += count;
-        continue;
-      }
-      const bpm = marker.bpm;
-      if (bpm === void 0 || !Number.isFinite(bpm) || bpm <= 0) continue;
-      const spacing = 60 / bpm;
-      if (!(spacing > 0)) continue;
-      const first = Math.max(0, Math.ceil((startSeconds - marker.positionSeconds) / spacing - 1e-9));
-      const lastExclusive = Math.ceil((endSeconds - marker.positionSeconds) / spacing - 1e-9);
-      if (lastExclusive <= first) continue;
-      const emit2 = Math.min(lastExclusive, first + MAX_TICKS);
-      pushRange(ticks, marker.positionSeconds, spacing, beatIndex, emit2, startSeconds, endSeconds, first);
-    }
-    return ticks;
-  }
-  function timeToX(timeSeconds, playheadSeconds, pixelsPerSecond, width) {
-    if (!(pixelsPerSecond > 0) || !Number.isFinite(timeSeconds) || !Number.isFinite(playheadSeconds) || !Number.isFinite(width)) {
-      return width / 2;
-    }
-    return width / 2 + (timeSeconds - playheadSeconds) * pixelsPerSecond;
-  }
-  function overviewXToTime(x, width, durationSeconds) {
-    if (!(width > 0) || !(durationSeconds > 0) || !Number.isFinite(x)) return 0;
-    const ratio = Math.min(1, Math.max(0, x / width));
-    return ratio * durationSeconds;
-  }
-  function zoomPixelsPerSecond(current2, direction) {
-    const base = Number.isFinite(current2) && current2 > 0 ? current2 : ZOOM_DEFAULT_PPS;
-    const next2 = base * (direction > 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR);
-    if (next2 >= ZOOM_MAX_PPS) return ZOOM_MAX_PPS;
-    if (next2 <= ZOOM_MIN_PPS) return ZOOM_MIN_PPS;
-    return next2;
-  }
-  function tileDeviceWidth(dpr) {
-    const scale = Number.isFinite(dpr) && dpr > 0 ? dpr : 1;
-    return Math.max(1, Math.round(TILE_CSS_WIDTH * scale));
-  }
-  function colorFromHex(value) {
-    if (!HEX_COLOR.test(value)) return null;
-    let hex = value.slice(1);
-    if (hex.length === 3) {
-      const r = hex[0] ?? "";
-      const g = hex[1] ?? "";
-      const b = hex[2] ?? "";
-      hex = `${r}${r}${g}${g}${b}${b}`;
-    }
-    if (hex.length === 8) hex = hex.slice(0, 6);
-    const parsed = Number.parseInt(hex, 16);
-    if (!Number.isFinite(parsed)) return null;
-    return { r: parsed >> 16 & 255, g: parsed >> 8 & 255, b: parsed & 255 };
-  }
-  function beatgridFromMarkers(rows2) {
-    if (!rows2 || rows2.length === 0) return [];
-    const found = [];
-    for (const row of rows2) {
-      const position = finiteNumber(row.position_seconds) ?? finiteNumber(row.position);
-      if (position === null) continue;
-      const marker = { positionSeconds: position };
-      const beats = finiteNumber(row.beats);
-      const bpm = finiteNumber(row.bpm);
-      if (beats !== null) marker.beats = beats;
-      if (bpm !== null) marker.bpm = bpm;
-      found.push(marker);
-    }
-    return found;
-  }
-  function loopsFromMarkers(rows2) {
-    if (!rows2 || rows2.length === 0) return [];
-    const found = [];
-    for (const row of rows2) {
-      const start = finiteNumber(row.start_ms);
-      const end = finiteNumber(row.end_ms);
-      if (start === null || end === null || end <= start || start < 0) continue;
-      found.push({
-        startSeconds: start / 1e3,
-        endSeconds: end / 1e3,
-        color: typeof row.color === "string" ? row.color : ""
+  function WaveformPanel({
+    engine,
+    host
+  }) {
+    const player2 = usePlayer();
+    const wave = useWaveform();
+    const override = useWaveformClockOverride();
+    const clock = override ?? clockFromPlayer(player2);
+    const detailRef = (0, import_react5.useRef)(null);
+    const overviewCanvasRef = (0, import_react5.useRef)(null);
+    const overviewHitRef = (0, import_react5.useRef)(null);
+    engine.setClock(clock);
+    engine.setPublish(wave.publish);
+    (0, import_react5.useLayoutEffect)(() => {
+      const detail = detailRef.current;
+      const overviewCanvas = overviewCanvasRef.current;
+      const overviewHit = overviewHitRef.current;
+      if (!detail || !overviewCanvas || !overviewHit) return;
+      engine.attach({
+        host,
+        detail,
+        overviewCanvas,
+        overviewHit
       });
-    }
-    return found;
-  }
-  var DetailTiles = class {
-    /**
-     * Remember one detail buffer.
-     *
-     * @param detail `N * 6` uint8 bytes.
-     * @param pointCount N.
-     * @param pointsPerSecond Detail rate from the header. 150 in SWF1.
-     */
-    constructor(detail, pointCount, pointsPerSecond) {
-      this.detail = detail;
-      this.pointCount = pointCount;
-      this.pointsPerSecond = pointsPerSecond;
-    }
-    detail;
-    pointCount;
-    pointsPerSecond;
-    tiles = /* @__PURE__ */ new Map();
-    blank = null;
-    /**
-     * Drop cached tiles.
-     *
-     * Called when the zoom changes so the next frame rebuilds at the new scale.
-     */
-    clear() {
-      this.tiles.clear();
-    }
-    /**
-     * Paint one zoomed frame into `frame`.
-     *
-     * The playhead is the center column. Tiles outside the view, plus one
-     * tile of margin, are not generated. Markers are cues, shaded loops, and
-     * beat ticks. Downbeats are taller.
-     *
-     * @param frame RGBA buffer of `width * height`.
-     * @param width Device pixels.
-     * @param height Device pixels.
-     * @param dpr Device pixel ratio.
-     * @param playheadSeconds Audio position.
-     * @param pixelsPerSecond CSS pixels per second.
-     * @param markers Cues, loops, and the beatgrid. Beat ticks are not drawn
-     *   when the grid is empty.
-     * @returns How many detail points this call sampled. Zero when every
-     *   visible tile was already cached.
-     */
-    paint(frame, width, height, dpr, playheadSeconds, pixelsPerSecond, markers) {
-      const scale = Number.isFinite(dpr) && dpr > 0 ? dpr : 1;
-      const pps = pixelsPerSecond > 0 ? pixelsPerSecond : ZOOM_DEFAULT_PPS;
-      this.ensureBlank(width, height);
-      const blank = this.blank;
-      if (!blank || frame.length !== blank.length) return { pointsRead: 0 };
-      frame.set(blank);
-      const cssWidth = width / scale;
-      const tileSeconds = TILE_CSS_WIDTH / pps;
-      const tileWidth = tileDeviceWidth(scale);
-      const viewStart = playheadSeconds - cssWidth / 2 / pps;
-      const viewEnd = playheadSeconds + cssWidth / 2 / pps;
-      const first = Math.floor(viewStart / tileSeconds) - 1;
-      const last = Math.floor(viewEnd / tileSeconds) + 1;
-      let pointsRead = 0;
-      const needed = /* @__PURE__ */ new Set();
-      for (let index = first; index <= last; index += 1) {
-        const key = `${Math.round(pps * 1e3)}|${scale}|${height}|${index}`;
-        needed.add(key);
-        let tile = this.tiles.get(key);
-        if (!tile) {
-          const rendered = renderTile(
-            this.detail,
-            this.pointCount,
-            this.pointsPerSecond,
-            index * tileSeconds,
-            tileSeconds,
-            tileWidth,
-            height,
-            scale
-          );
-          tile = rendered.pixels;
-          pointsRead += rendered.pointsRead;
-          this.tiles.set(key, tile);
+      return () => {
+        engine.detach();
+      };
+    }, [engine, host]);
+    (0, import_react5.useEffect)(() => {
+      if (override) return;
+      engine.setTrack(player2.trackId);
+    }, [engine, override, player2.trackId]);
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-wave-main", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+          WaveformOverview,
+          {
+            canvasRef: overviewCanvasRef,
+            hitRef: overviewHitRef,
+            hidden: wave.overviewSource === "",
+            source: wave.overviewSource,
+            pps: wave.pps
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        WaveformZoom,
+        {
+          canZoomIn: wave.canZoomIn,
+          canZoomOut: wave.canZoomOut,
+          pps: wave.pps,
+          onZoomIn: () => engine.zoom(1),
+          onZoomOut: () => engine.zoom(-1)
         }
-        const left = timeToX(index * tileSeconds, playheadSeconds, pps, cssWidth) * scale;
-        blit(frame, width, height, tile, tileWidth, Math.round(left));
+      )
+    ] });
+  }
+  function WaveformDetail({
+    canvasRef,
+    phase: phase2
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
+    ] });
+  }
+  function WaveformOverview({
+    canvasRef,
+    hitRef,
+    hidden,
+    source,
+    pps
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      "div",
+      {
+        ref: (element) => {
+          hitRef.current = element;
+          if (element) setTooltip(element, tips.overview);
+        },
+        className: "waveform-overview",
+        tabIndex: 0,
+        role: "slider",
+        hidden,
+        "aria-label": playerStrings.overview,
+        "aria-orientation": "horizontal",
+        "data-pps": String(pps),
+        "data-waveform-overview": source || void 0,
+        children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
       }
-      if (this.tiles.size > 24) {
-        for (const key of this.tiles.keys()) {
-          if (!needed.has(key)) this.tiles.delete(key);
+    );
+  }
+  function WaveformZoom({
+    canZoomIn,
+    canZoomOut,
+    pps,
+    onZoomIn,
+    onZoomOut
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef3(tips.zoomIn),
+          className: "waveform-zoom-button",
+          disabled: !canZoomIn,
+          "aria-label": playerStrings.zoomIn,
+          onClick: onZoomIn,
+          children: "+"
         }
-      }
-      drawLoops(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.loops);
-      drawBeats(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.beatgrid, viewStart, viewEnd);
-      drawCues(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.cues);
-      drawPlayhead(frame, width, height);
-      return { pointsRead };
-    }
-    ensureBlank(width, height) {
-      const count = width * height * 4;
-      if (this.blank && this.blank.length === count) return;
-      const blank = new Uint8ClampedArray(count);
-      fillBackground(blank);
-      this.blank = blank;
-    }
-  };
-  function renderOverview(source, width, height) {
-    const pixels = new Uint8ClampedArray(width * height * 4);
-    fillBackground(pixels);
-    const columns = source.kind === "computed" ? source.count : source.columns.length;
-    if (columns < 1 || width < 1 || height < 1) return pixels;
-    for (let x = 0; x < width; x += 1) {
-      const start = Math.floor(x / width * columns);
-      const end = Math.max(start + 1, Math.floor((x + 1) / width * columns));
-      let lowPeak = 0;
-      let lowRms = 0;
-      let midPeak = 0;
-      let midRms = 0;
-      let highPeak = 0;
-      let highRms = 0;
-      for (let index = start; index < end && index < columns; index += 1) {
-        if (source.kind === "computed") {
-          const offset = index * 6;
-          lowPeak = Math.max(lowPeak, source.points[offset] ?? 0);
-          lowRms = Math.max(lowRms, source.points[offset + 1] ?? 0);
-          midPeak = Math.max(midPeak, source.points[offset + 2] ?? 0);
-          midRms = Math.max(midRms, source.points[offset + 3] ?? 0);
-          highPeak = Math.max(highPeak, source.points[offset + 4] ?? 0);
-          highRms = Math.max(highRms, source.points[offset + 5] ?? 0);
-        } else {
-          const levels = seratoColumnLevels(source.columns[index] ?? []);
-          lowPeak = Math.max(lowPeak, levels.low);
-          midPeak = Math.max(midPeak, levels.mid);
-          highPeak = Math.max(highPeak, levels.high);
-          lowRms = lowPeak;
-          midRms = midPeak;
-          highRms = highPeak;
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef3(tips.zoomOut),
+          className: "waveform-zoom-button",
+          disabled: !canZoomOut,
+          "aria-label": playerStrings.zoomOut,
+          onClick: onZoomOut,
+          children: "−"
         }
-      }
-      paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
-    }
-    return pixels;
-  }
-  function shadePlayed(pixels, width, height, playedX) {
-    const end = Math.max(0, Math.min(width, Math.round(playedX)));
-    for (let y = 0; y < height; y += 1) {
-      const row = y * width;
-      for (let x = 0; x < end; x += 1) {
-        const offset = (row + x) * 4;
-        pixels[offset] = Math.round((pixels[offset] ?? 0) * PLAYED_SHADE);
-        pixels[offset + 1] = Math.round((pixels[offset + 1] ?? 0) * PLAYED_SHADE);
-        pixels[offset + 2] = Math.round((pixels[offset + 2] ?? 0) * PLAYED_SHADE);
-      }
-    }
-  }
-  function drawOverviewMarks(pixels, width, height, durationSeconds, playheadSeconds, markers) {
-    if (!(durationSeconds > 0) || width < 1) return;
-    const xOf = (seconds) => seconds / durationSeconds * width;
-    drawLoops(pixels, width, height, 1, 0, 1, width, markers.loops, xOf);
-    drawCues(pixels, width, height, 1, 0, 1, width, markers.cues, xOf);
-    const playX = Math.round(Math.min(width - 1, Math.max(0, xOf(playheadSeconds))));
-    fillSpan(pixels, width, height, playX, playX + 1, 0, height, PLAYHEAD_COLOR, 1);
-  }
-  function renderTile(detail, pointCount, pointsPerSecond, startSeconds, tileSeconds, width, height, dpr) {
-    const pixels = new Uint8ClampedArray(width * height * 4);
-    fillBackground(pixels);
-    let pointsRead = 0;
-    const rate = pointsPerSecond > 0 ? pointsPerSecond : 150;
-    for (let x = 0; x < width; x += 1) {
-      const t0 = startSeconds + x / width * tileSeconds;
-      const t1 = startSeconds + (x + 1) / width * tileSeconds;
-      let i0 = Math.floor(t0 * rate);
-      let i1 = Math.ceil(t1 * rate);
-      if (i1 <= i0) i1 = i0 + 1;
-      if (i0 < 0) i0 = 0;
-      if (i1 > pointCount) i1 = pointCount;
-      if (i0 >= i1) continue;
-      let lowPeak = 0;
-      let lowRms = 0;
-      let midPeak = 0;
-      let midRms = 0;
-      let highPeak = 0;
-      let highRms = 0;
-      for (let index = i0; index < i1; index += 1) {
-        pointsRead += 1;
-        const offset = index * 6;
-        lowPeak = Math.max(lowPeak, detail[offset] ?? 0);
-        lowRms = Math.max(lowRms, detail[offset + 1] ?? 0);
-        midPeak = Math.max(midPeak, detail[offset + 2] ?? 0);
-        midRms = Math.max(midRms, detail[offset + 3] ?? 0);
-        highPeak = Math.max(highPeak, detail[offset + 4] ?? 0);
-        highRms = Math.max(highRms, detail[offset + 5] ?? 0);
-      }
-      paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
-    }
-    return { pixels, pointsRead };
-  }
-  function paintColumn(pixels, x, width, height, gutter, lowPeak, lowRms, midPeak, midRms, highPeak, highRms) {
-    const peakLevel = bandLevel(lowPeak, midPeak, highPeak);
-    const rmsLevel = bandLevel(lowRms, midRms, highRms);
-    if (peakLevel <= 0 && rmsLevel <= 0) return;
-    const top = Math.min(gutter, height - 1);
-    const bandHeight = height - top;
-    const mid = top + (bandHeight - 1) / 2;
-    const peakHalf = Math.max(peakLevel > 0 ? 0.5 : 0, peakLevel * (bandHeight / 2) * 0.92);
-    const rmsHalf = rmsLevel * (bandHeight / 2) * 0.92;
-    const y0 = Math.max(top, Math.floor(mid - Math.max(peakHalf, rmsHalf)));
-    const y1 = Math.min(height - 1, Math.ceil(mid + Math.max(peakHalf, rmsHalf)));
-    const peakColor = bandColor(lowPeak, midPeak, highPeak);
-    const rmsColor = bandColor(lowRms, midRms, highRms);
-    for (let y = y0; y <= y1; y += 1) {
-      const fromMid = Math.abs(y - mid);
-      const inner = rmsLevel > 0 && fromMid <= rmsHalf;
-      const outer = peakLevel > 0 && fromMid <= peakHalf;
-      if (!inner && !outer) continue;
-      const color = inner ? rmsColor : peakColor;
-      const alpha = inner ? 1 : OUTER_ALPHA;
-      blendPixel(pixels, width, x, y, color, alpha);
-    }
-  }
-  function drawLoops(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, loops, xOf) {
-    for (const loop of loops) {
-      const color = colorFromHex(loop.color) ?? DEFAULT_MARKER_COLOR;
-      const start = xOf ? xOf(loop.startSeconds) : timeToX(loop.startSeconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
-      const end = xOf ? xOf(loop.endSeconds) : timeToX(loop.endSeconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
-      const left = Math.min(start, end);
-      const right = Math.max(start, end);
-      fillSpan(pixels, width, height, Math.floor(left), Math.ceil(right), 0, height, color, 0.35);
-      const edge = Math.max(1, Math.round(dpr));
-      fillSpan(pixels, width, height, Math.round(left), Math.round(left) + edge, 0, height, color, 1);
-      fillSpan(pixels, width, height, Math.round(right) - edge, Math.round(right), 0, height, color, 1);
-    }
-  }
-  function drawCues(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, cues2, xOf) {
-    const edge = Math.max(1, Math.round(2 * dpr));
-    for (const cue of cues2) {
-      const color = colorFromHex(cue.color) ?? DEFAULT_MARKER_COLOR;
-      const x = xOf ? xOf(cue.seconds) : timeToX(cue.seconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
-      fillSpan(pixels, width, height, Math.round(x) - Math.floor(edge / 2), Math.round(x) - Math.floor(edge / 2) + edge, 0, height, color, 1);
-    }
-  }
-  function drawBeats(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, markers, viewStart, viewEnd) {
-    const ticks = beatgridTicks(markers, viewStart, viewEnd);
-    const tickWidth = Math.max(1, Math.round(dpr));
-    const regularHeight = Math.max(1, Math.round(height * BEAT_HEIGHT_RATIO));
-    const downbeatHeight = Math.max(regularHeight + 1, Math.round(height * DOWNBEAT_HEIGHT_RATIO));
-    for (const tick of ticks) {
-      const x = Math.round(timeToX(tick.seconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr);
-      const tickHeight = Math.min(tick.downbeat ? downbeatHeight : regularHeight, Math.floor(height / 2) - 1);
-      if (tickHeight < 1) continue;
-      const alpha = tick.downbeat ? DOWNBEAT_ALPHA : BEAT_ALPHA;
-      fillSpan(pixels, width, height, x, x + tickWidth, 0, tickHeight, BEAT_MARK, alpha);
-      fillSpan(pixels, width, height, x, x + tickWidth, height - tickHeight, height, BEAT_MARK, alpha);
-    }
-  }
-  function drawPlayhead(pixels, width, height) {
-    const x = Math.floor(width / 2);
-    fillSpan(pixels, width, height, x, x + 2, 0, height, PLAYHEAD_COLOR, 1);
-  }
-  function fillSpan(pixels, width, height, x0, x1, y0, y1, color, alpha) {
-    const left = Math.max(0, x0);
-    const right = Math.min(width, x1);
-    const top = Math.max(0, y0);
-    const bottom = Math.min(height, y1);
-    for (let x = left; x < right; x += 1) {
-      for (let y = top; y < bottom; y += 1) blendPixel(pixels, width, x, y, color, alpha);
-    }
-  }
-  function blendPixel(pixels, width, x, y, color, alpha) {
-    const offset = (y * width + x) * 4;
-    const keep = 1 - alpha;
-    pixels[offset] = Math.round(color.r * alpha + (pixels[offset] ?? 0) * keep);
-    pixels[offset + 1] = Math.round(color.g * alpha + (pixels[offset + 1] ?? 0) * keep);
-    pixels[offset + 2] = Math.round(color.b * alpha + (pixels[offset + 2] ?? 0) * keep);
-    pixels[offset + 3] = 255;
-  }
-  function fillBackground(pixels) {
-    for (let index = 0; index < pixels.length; index += 4) {
-      pixels[index] = WAVE_BG.r;
-      pixels[index + 1] = WAVE_BG.g;
-      pixels[index + 2] = WAVE_BG.b;
-      pixels[index + 3] = 255;
-    }
-  }
-  function blit(dest, destWidth, destHeight, src, srcWidth, destX) {
-    let srcX = 0;
-    let copyWidth = srcWidth;
-    let dx = destX;
-    if (dx < 0) {
-      srcX = -dx;
-      copyWidth -= srcX;
-      dx = 0;
-    }
-    if (dx + copyWidth > destWidth) copyWidth = destWidth - dx;
-    if (copyWidth <= 0) return;
-    for (let y = 0; y < destHeight; y += 1) {
-      const srcStart = (y * srcWidth + srcX) * 4;
-      const destStart = (y * destWidth + dx) * 4;
-      dest.set(src.subarray(srcStart, srcStart + copyWidth * 4), destStart);
-    }
-  }
-  function pushRange(ticks, origin, spacing, beatIndex, count, startSeconds, endSeconds, first = 0) {
-    const begin = Math.max(first, Math.ceil((startSeconds - origin) / spacing - 1e-9));
-    for (let index = begin; index < count; index += 1) {
-      const seconds = origin + index * spacing;
-      if (seconds < startSeconds - 1e-6) continue;
-      if (seconds >= endSeconds - 1e-9) break;
-      if (ticks.length >= MAX_TICKS) return;
-      ticks.push({ seconds, downbeat: (beatIndex + index) % 4 === 0 });
-    }
-  }
-  function finiteNumber(value) {
-    if (typeof value === "number") return Number.isFinite(value) ? value : null;
-    if (typeof value !== "string" || value.trim() === "") return null;
-    const number = Number(value);
-    return Number.isFinite(number) ? number : null;
-  }
-  function clamp255(value) {
-    if (!Number.isFinite(value)) return 0;
-    if (value <= 0) return 0;
-    if (value >= 255) return 255;
-    return value;
+      )
+    ] });
   }
 
   // src/waveform-view.ts
   var emptyMarkers = () => ({ cues: [], loops: [], beatgrid: [] });
+  var idleClock = {
+    seek() {
+    },
+    seekBy() {
+    },
+    getTime: () => 0,
+    getDuration: () => 0,
+    getPlaying: () => false,
+    formatTime: (seconds) => String(seconds),
+    seekStep: 5,
+    seekStepLarge: 30
+  };
   function mountWaveform(host, hooks) {
-    return new WaveformView(host, hooks);
+    const engine = new WaveformEngine();
+    host.classList.add("player-wave");
+    host.hidden = true;
+    if (hooks) engine.setClock(hooks);
+    const panel = (0, import_react6.createElement)(WaveformPanel, { engine, host });
+    const tree = hooks ? (0, import_react6.createElement)(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
+    const root = mountIsland(host, tree);
+    engine.bindRoot(root);
+    return engine;
   }
-  var WaveformView = class {
-    host;
-    hooks;
-    detail;
-    overviewCanvas;
-    overviewHit;
-    reading;
-    note;
-    detailWrap;
-    zoomIn;
-    zoomOut;
+  var WaveformEngine = class {
+    host = null;
+    detail = null;
+    overviewCanvas = null;
+    overviewHit = null;
+    clock = idleClock;
+    publishUi = null;
+    root = null;
     trackId = null;
     token = 0;
     pps = ZOOM_DEFAULT_PPS;
+    phase = "idle";
     markers = emptyMarkers();
     tiles = null;
     parsed = null;
@@ -23087,65 +23304,90 @@
     raf = 0;
     dragging = false;
     disposed = false;
+    attached = false;
     detailImage = null;
     overviewImage = null;
     lastAriaKey = "";
     ariaImmediate = false;
     onWheel;
     onResize;
+    onPointerDown;
+    onPointerMove;
+    onPointerUp;
+    onOverviewKey;
     resizeObserver = null;
-    constructor(host, hooks) {
-      this.host = host;
-      this.hooks = hooks;
-      host.classList.add("player-wave");
-      host.hidden = true;
-      const main = document.createElement("div");
-      main.className = "player-wave-main";
-      this.detailWrap = document.createElement("div");
-      this.detailWrap.className = "waveform-detail-wrap";
-      this.detail = document.createElement("canvas");
-      this.detail.className = "waveform-detail";
-      this.detail.setAttribute("aria-hidden", "true");
-      this.reading = document.createElement("p");
-      this.reading.className = "waveform-reading";
-      this.reading.textContent = playerStrings.waveformReading;
-      this.detailWrap.append(this.detail, this.reading);
-      this.note = document.createElement("p");
-      this.note.className = "waveform-note";
-      this.note.hidden = true;
-      this.note.textContent = playerStrings.waveformUnavailable;
-      this.overviewHit = document.createElement("div");
-      this.overviewHit.className = "waveform-overview";
-      this.overviewHit.tabIndex = 0;
-      this.overviewHit.setAttribute("role", "slider");
-      this.overviewHit.setAttribute("aria-label", playerStrings.overview);
-      this.overviewHit.setAttribute("aria-orientation", "horizontal");
-      setTooltip(this.overviewHit, tips.overview);
-      this.overviewCanvas = document.createElement("canvas");
-      this.overviewCanvas.setAttribute("aria-hidden", "true");
-      this.overviewHit.append(this.overviewCanvas);
-      main.append(this.detailWrap, this.note, this.overviewHit);
-      const zoom = document.createElement("div");
-      zoom.className = "waveform-zoom";
-      this.zoomIn = button(playerStrings.zoomIn, "+", tips.zoomIn);
-      this.zoomOut = button(playerStrings.zoomOut, "−", tips.zoomOut);
-      this.zoomIn.addEventListener("click", () => this.setZoom(zoomPixelsPerSecond(this.pps, 1)));
-      this.zoomOut.addEventListener("click", () => this.setZoom(zoomPixelsPerSecond(this.pps, -1)));
-      zoom.append(this.zoomIn, this.zoomOut);
-      host.append(main, zoom);
+    constructor() {
       this.onWheel = (event) => this.wheel(event);
-      host.addEventListener("wheel", this.onWheel, { passive: false });
-      this.overviewHit.addEventListener("pointerdown", (event) => this.pointerDown(event));
-      this.overviewHit.addEventListener("pointermove", (event) => this.pointerMove(event));
-      this.overviewHit.addEventListener("pointerup", (event) => this.pointerUp(event));
-      this.overviewHit.addEventListener("pointercancel", (event) => this.pointerUp(event));
-      this.overviewHit.addEventListener("keydown", (event) => this.overviewKeyDown(event));
       this.onResize = () => this.paint();
+      this.onPointerDown = (event) => this.pointerDown(event);
+      this.onPointerMove = (event) => this.pointerMove(event);
+      this.onPointerUp = (event) => this.pointerUp(event);
+      this.onOverviewKey = (event) => this.overviewKeyDown(event);
+    }
+    /**
+     * Keep the React root so destroy can unmount it.
+     *
+     * @param root Island created by `mountIsland`.
+     */
+    bindRoot(root) {
+      this.root = root;
+    }
+    /**
+     * Replace the seek/time clock. Tests pass hooks; the page uses the player.
+     *
+     * @param clock Seek and time callbacks.
+     */
+    setClock(clock) {
+      this.clock = clock;
+    }
+    /**
+     * Push zoom and phase into WaveformContext.
+     *
+     * @param publish Context setter. Flushed by the provider.
+     */
+    setPublish(publish) {
+      this.publishUi = publish;
+    }
+    /**
+     * Bind canvases after React commits them.
+     *
+     * @param nodes Host, detail canvas, overview canvas, and overview hit target.
+     */
+    attach(nodes) {
+      if (this.disposed) return;
+      this.detach();
+      this.host = nodes.host;
+      this.detail = nodes.detail;
+      this.overviewCanvas = nodes.overviewCanvas;
+      this.overviewHit = nodes.overviewHit;
+      this.attached = true;
+      this.host.addEventListener("wheel", this.onWheel, { passive: false });
+      this.overviewHit.addEventListener("pointerdown", this.onPointerDown);
+      this.overviewHit.addEventListener("pointermove", this.onPointerMove);
+      this.overviewHit.addEventListener("pointerup", this.onPointerUp);
+      this.overviewHit.addEventListener("pointercancel", this.onPointerUp);
+      this.overviewHit.addEventListener("keydown", this.onOverviewKey);
       if (typeof ResizeObserver === "function") {
         this.resizeObserver = new ResizeObserver(this.onResize);
-        this.resizeObserver.observe(host);
+        this.resizeObserver.observe(this.host);
       }
-      this.syncZoomButtons();
+      this.paint();
+    }
+    /**
+     * Drop canvas listeners. Does not unmount React.
+     */
+    detach() {
+      if (!this.attached) return;
+      this.stopLoop();
+      this.host?.removeEventListener("wheel", this.onWheel);
+      this.overviewHit?.removeEventListener("pointerdown", this.onPointerDown);
+      this.overviewHit?.removeEventListener("pointermove", this.onPointerMove);
+      this.overviewHit?.removeEventListener("pointerup", this.onPointerUp);
+      this.overviewHit?.removeEventListener("pointercancel", this.onPointerUp);
+      this.overviewHit?.removeEventListener("keydown", this.onOverviewKey);
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = null;
+      this.attached = false;
     }
     /**
      * Load one track, or hide the waveform when playback is cleared.
@@ -23157,7 +23399,7 @@
      */
     setTrack(id) {
       if (this.disposed) return;
-      if (id !== null && id === this.trackId) return;
+      if (id === this.trackId) return;
       this.token += 1;
       this.trackId = id;
       this.parsed = null;
@@ -23166,14 +23408,14 @@
       this.overviewCache = null;
       this.overviewKey = "";
       this.overviewSource = "";
-      this.seratoColumns = [];
-      delete this.overviewHit.dataset.waveformOverview;
+      if (this.overviewHit) delete this.overviewHit.dataset.waveformOverview;
       if (id === null || !Number.isInteger(id) || id < 0) {
-        this.host.hidden = true;
+        if (this.host) this.host.hidden = true;
         this.stopLoop();
+        this.setPhase("idle");
         return;
       }
-      this.host.hidden = false;
+      if (this.host) this.host.hidden = false;
       this.setPhase("reading");
       const mine = this.token;
       void this.load(id, mine);
@@ -23200,19 +23442,12 @@
      */
     showComputed(parsed) {
       this.trackId = this.trackId ?? 1;
-      this.host.hidden = false;
+      if (this.host) this.host.hidden = false;
       this.applyComputed(parsed);
     }
     /** Refresh titles and notes in the active language. Playback is not touched. */
     relabel() {
-      this.reading.textContent = playerStrings.waveformReading;
-      if (!this.note.hidden) this.note.textContent = playerStrings.waveformUnavailable;
-      this.overviewHit.setAttribute("aria-label", playerStrings.overview);
-      setTooltip(this.overviewHit, tips.overview);
-      this.zoomIn.setAttribute("aria-label", playerStrings.zoomIn);
-      setTooltip(this.zoomIn, tips.zoomIn);
-      this.zoomOut.setAttribute("aria-label", playerStrings.zoomOut);
-      setTooltip(this.zoomOut, tips.zoomOut);
+      this.pushUi();
     }
     /**
      * Show the format note and hide the canvases.
@@ -23228,8 +23463,8 @@
       this.seratoColumns = [];
       this.overviewCache = null;
       this.overviewKey = "";
-      delete this.overviewHit.dataset.waveformOverview;
-      this.host.hidden = false;
+      if (this.overviewHit) delete this.overviewHit.dataset.waveformOverview;
+      if (this.host) this.host.hidden = false;
       this.setPhase("unavailable");
     }
     /**
@@ -23239,8 +23474,8 @@
      * A paused seek paints once.
      */
     sync() {
-      if (this.disposed || this.host.hidden) return;
-      if (this.hooks.getPlaying()) this.startLoop();
+      if (this.disposed || this.host?.hidden) return;
+      if (this.clock.getPlaying()) this.startLoop();
       else this.stopLoop();
       this.paint();
     }
@@ -23253,15 +23488,22 @@
       return this.pps;
     }
     /**
-     * Remove listeners and stop the animation frame.
+     * Step zoom in or out around the playhead.
+     *
+     * @param direction Positive zooms in.
+     */
+    zoom(direction) {
+      this.setZoom(zoomPixelsPerSecond(this.pps, direction));
+    }
+    /**
+     * Remove listeners, stop the animation frame, and unmount the island.
      */
     destroy() {
       this.disposed = true;
       this.token += 1;
-      this.stopLoop();
-      this.host.removeEventListener("wheel", this.onWheel);
-      this.resizeObserver?.disconnect();
-      this.resizeObserver = null;
+      this.detach();
+      this.root?.unmount();
+      this.root = null;
     }
     async load(id, mine) {
       const overview = this.fetchOverview(id);
@@ -23271,10 +23513,10 @@
         if (this.overviewSource === "computed") return;
         this.seratoColumns = serato;
         this.overviewSource = "serato";
-        this.overviewHit.dataset.waveformOverview = "serato";
+        if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "serato";
         this.overviewCache = null;
         this.overviewKey = "";
-        this.overviewHit.hidden = false;
+        this.pushUi();
         this.paint();
       });
       const waveform2 = await body;
@@ -23293,7 +23535,7 @@
       const rate = parsed.pointsPerSecond > 0 ? parsed.pointsPerSecond : 150;
       this.tiles = new DetailTiles(parsed.detail, parsed.detailCount, rate);
       this.overviewSource = "computed";
-      this.overviewHit.dataset.waveformOverview = "computed";
+      if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "computed";
       this.overviewCache = null;
       this.overviewKey = "";
       this.setPhase("ready");
@@ -23341,39 +23583,36 @@
       }
     }
     setPhase(phase2) {
-      this.host.dataset.waveformState = phase2;
-      const unavailable = phase2 === "unavailable";
-      this.note.hidden = !unavailable;
-      this.reading.hidden = phase2 !== "reading";
-      this.detailWrap.hidden = unavailable;
-      this.overviewHit.hidden = this.overviewSource === "";
-      this.syncZoomButtons();
+      this.phase = phase2;
+      if (this.host) this.host.dataset.waveformState = phase2 === "idle" ? "" : phase2;
+      this.pushUi();
     }
     setZoom(next2) {
       if (next2 === this.pps) {
-        this.syncZoomButtons();
+        this.pushUi();
         return;
       }
       this.pps = next2;
       this.tiles?.clear();
-      this.syncZoomButtons();
+      this.pushUi();
       this.paint();
     }
-    syncZoomButtons() {
-      const phase2 = this.host.dataset.waveformState;
-      const blocked = phase2 === "reading" || phase2 === "unavailable";
-      this.zoomIn.disabled = blocked || this.pps >= ZOOM_MAX_PPS - 1e-9;
-      this.zoomOut.disabled = blocked || this.pps <= ZOOM_MIN_PPS + 1e-9;
+    pushUi() {
+      this.publishUi?.({
+        pps: this.pps,
+        phase: this.phase,
+        overviewSource: this.overviewSource
+      });
     }
     wheel(event) {
       if (!event.ctrlKey && !event.metaKey) return;
-      if (this.host.dataset.waveformState !== "ready") return;
+      if (this.phase !== "ready") return;
       event.preventDefault();
       if (event.deltaY < 0) this.setZoom(zoomPixelsPerSecond(this.pps, 1));
       else if (event.deltaY > 0) this.setZoom(zoomPixelsPerSecond(this.pps, -1));
     }
     pointerDown(event) {
-      if (event.button !== 0) return;
+      if (event.button !== 0 || !this.overviewHit) return;
       this.dragging = true;
       if (typeof this.overviewHit.setPointerCapture === "function") {
         this.overviewHit.setPointerCapture(event.pointerId);
@@ -23385,18 +23624,19 @@
       this.seekOverview(event);
     }
     pointerUp(event) {
-      if (!this.dragging) return;
+      if (!this.dragging || !this.overviewHit) return;
       this.dragging = false;
       if (typeof this.overviewHit.hasPointerCapture === "function" && this.overviewHit.hasPointerCapture(event.pointerId)) {
         this.overviewHit.releasePointerCapture(event.pointerId);
       }
     }
     seekOverview(event) {
+      if (!this.overviewHit) return;
       const rect = this.overviewHit.getBoundingClientRect();
       const duration2 = this.duration();
       const x = event.clientX - rect.left;
       this.ariaImmediate = true;
-      this.hooks.seek(overviewXToTime(x, rect.width, duration2));
+      this.clock.seek(overviewXToTime(x, rect.width, duration2));
     }
     overviewKeyDown(event) {
       if (event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
@@ -23405,15 +23645,15 @@
       if (!forward && !back) return;
       event.preventDefault();
       event.stopPropagation();
-      const step = event.shiftKey ? this.hooks.seekStepLarge : this.hooks.seekStep;
+      const step = event.shiftKey ? this.clock.seekStepLarge : this.clock.seekStep;
       this.ariaImmediate = true;
-      this.hooks.seekBy((forward ? 1 : -1) * step);
+      this.clock.seekBy((forward ? 1 : -1) * step);
     }
     startLoop() {
       if (this.raf !== 0) return;
       const loop = () => {
         this.paint();
-        if (this.hooks.getPlaying() && !this.disposed) this.raf = requestAnimationFrame(loop);
+        if (this.clock.getPlaying() && !this.disposed) this.raf = requestAnimationFrame(loop);
         else this.raf = 0;
       };
       this.raf = requestAnimationFrame(loop);
@@ -23424,8 +23664,8 @@
       this.raf = 0;
     }
     paint() {
-      if (this.disposed || this.host.hidden) return;
-      const time = this.hooks.getTime();
+      if (this.disposed || !this.host || this.host.hidden) return;
+      const time = this.clock.getTime();
       const duration2 = this.duration();
       this.paintDetail(time);
       this.paintOverview(time, duration2);
@@ -23434,7 +23674,7 @@
       this.updateSlider(time, duration2, immediate);
     }
     paintDetail(time) {
-      if (!this.tiles || !this.parsed) return;
+      if (!this.tiles || !this.parsed || !this.detail) return;
       const size = sizeCanvas(this.detail, 96);
       if (!size) return;
       const context = this.detail.getContext("2d");
@@ -23444,6 +23684,7 @@
       context.putImageData(image, 0, 0);
     }
     paintOverview(time, duration2) {
+      if (!this.overviewCanvas) return;
       const size = sizeCanvas(this.overviewCanvas, 36);
       if (!size) return;
       const source = this.overviewPixels(size.width, size.height);
@@ -23487,18 +23728,19 @@
           height
         );
         this.overviewKey = key;
-        this.overviewHit.dataset.waveformOverview = "computed";
+        if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "computed";
         return this.overviewCache;
       }
       if (this.overviewSource === "serato" && this.seratoColumns.length > 0) {
         this.overviewCache = renderOverview({ kind: "serato", columns: this.seratoColumns }, width, height);
         this.overviewKey = key;
-        this.overviewHit.dataset.waveformOverview = "serato";
+        if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "serato";
         return this.overviewCache;
       }
       return null;
     }
     updateSlider(time, duration2, immediate) {
+      if (!this.overviewHit) return;
       const max = duration2 > 0 ? duration2 : 0;
       const now = Math.min(max, Math.max(0, Number.isFinite(time) ? time : 0));
       const key = `${Math.floor(now)}|${max}`;
@@ -23507,10 +23749,10 @@
       this.overviewHit.setAttribute("aria-valuemin", "0");
       this.overviewHit.setAttribute("aria-valuemax", String(max));
       this.overviewHit.setAttribute("aria-valuenow", String(now));
-      this.overviewHit.setAttribute("aria-valuetext", this.hooks.formatTime(now));
+      this.overviewHit.setAttribute("aria-valuetext", this.clock.formatTime(now));
     }
     duration() {
-      const fromAudio = this.hooks.getDuration();
+      const fromAudio = this.clock.getDuration();
       if (Number.isFinite(fromAudio) && fromAudio > 0) return fromAudio;
       return this.headerDuration();
     }
@@ -23519,13 +23761,6 @@
       return this.parsed.durationMs / 1e3;
     }
   };
-  function button(label, text2, tooltip) {
-    const element = buttonEl(tooltip);
-    element.className = "waveform-zoom-button";
-    element.textContent = text2;
-    element.setAttribute("aria-label", label);
-    return element;
-  }
   function waveformUrl(id, overview) {
     const params = new URLSearchParams({ id: String(id), space: state.space });
     const path = overview ? "/api/waveform/overview" : "/api/waveform";
@@ -23675,6 +23910,14 @@
   function getPlayerState() {
     return { trackId: trackId2, title, artist, playing, currentTime, duration, volume, error };
   }
+  function getMediaTime() {
+    if (media && Number.isFinite(media.currentTime)) return media.currentTime;
+    return currentTime;
+  }
+  function getMediaDuration() {
+    if (media && Number.isFinite(media.duration) && media.duration > 0) return media.duration;
+    return duration;
+  }
   function getPlayerCues() {
     return cues;
   }
@@ -23711,29 +23954,13 @@
     root.replaceChildren();
     if (element instanceof Node) root.append(element);
     const waveHost = document.createElement("div");
-    waveform = mountWaveform(waveHost, {
-      seek,
-      seekBy,
-      getTime: () => {
-        const value = ensureMedia().currentTime;
-        return Number.isFinite(value) ? value : currentTime;
-      },
-      getDuration: () => {
-        const value = ensureMedia().duration;
-        if (Number.isFinite(value) && value > 0) return value;
-        return duration;
-      },
-      getPlaying: () => playing,
-      formatTime: formatPlayerTime,
-      seekStep: SEEK_STEP_SECONDS,
-      seekStepLarge: SEEK_STEP_LARGE_SECONDS
-    });
+    waveform = mountWaveform(waveHost);
     const controls = document.createElement("div");
     const stack = document.createElement("div");
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react4.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react7.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -23900,7 +24127,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -23916,7 +24143,12 @@
       previous,
       seek,
       seekBy,
-      setVolume
+      setVolume,
+      mediaTime: getMediaTime,
+      mediaDuration: getMediaDuration,
+      formatTime: formatPlayerTime,
+      seekStep: SEEK_STEP_SECONDS,
+      seekStepLarge: SEEK_STEP_LARGE_SECONDS
     };
   }
   function readFilesValue() {
@@ -23988,24 +24220,24 @@
     };
   }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react5.useState)(readPlayerValue);
-    (0, import_react5.useEffect)(() => {
+    const [value, setValue] = (0, import_react8.useState)(readPlayerValue);
+    (0, import_react8.useEffect)(() => {
       return subscribe(() => {
-        (0, import_react_dom.flushSync)(() => {
+        (0, import_react_dom2.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react5.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react8.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayerProvider, { value: current2, children });
   }
   function FilesProvider2({ children }) {
-    const hostRef = (0, import_react5.useRef)(null);
-    const [value, setValue] = (0, import_react5.useState)(readFilesValue);
-    (0, import_react5.useEffect)(() => {
+    const hostRef = (0, import_react8.useRef)(null);
+    const [value, setValue] = (0, import_react8.useState)(readFilesValue);
+    (0, import_react8.useEffect)(() => {
       const refresh = () => {
         if (!hostRef.current?.isConnected) return;
-        (0, import_react_dom.flushSync)(() => {
+        (0, import_react_dom2.flushSync)(() => {
           setValue(readFilesValue());
         });
       };
@@ -24016,37 +24248,37 @@
         document.removeEventListener(LOCALE_EVENT, refresh);
       };
     }, []);
-    const current2 = (0, import_react5.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(FilesProvider, { value: current2, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { ref: hostRef, hidden: true }),
+    const current2 = (0, import_react8.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(FilesProvider, { value: current2, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { ref: hostRef, hidden: true }),
       children
     ] });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(FilesProvider2, { children }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(FilesProvider2, { children }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
-    (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime6.jsx)(AppProviders, { children: node }));
+    (0, import_react_dom3.flushSync)(() => {
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime8.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
 
   // src/components/FilesDialog.tsx
-  var import_react6 = __toESM(require_react(), 1);
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef3(spec2) {
+  var import_react9 = __toESM(require_react(), 1);
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef4(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
   }
   function FilesDialog() {
     const files = useFiles();
-    (0, import_react6.useEffect)(() => {
+    (0, import_react9.useEffect)(() => {
       const dialog = document.getElementById("files-dialog");
       if (!(dialog instanceof HTMLDialogElement)) return;
       const onCancel = (event) => {
@@ -24063,17 +24295,17 @@
     const status = !files.writable ? document.getElementById("status")?.textContent ?? files.dialogStatus : files.dialogStatus;
     const confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
     const confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("files.newName") }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: t("files.newName") }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
           "input",
           {
             id: "files-name",
-            ref: tooltipRef3(tips.filesName),
+            ref: tooltipRef4(tips.filesName),
             type: "text",
             autoComplete: "off",
             value: files.dialogName,
@@ -24081,13 +24313,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("files.newFile") }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: t("files.newFile") }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
           "input",
           {
             id: "files-replacement",
-            ref: tooltipRef3(tips.filesReplacement),
+            ref: tooltipRef4(tips.filesReplacement),
             type: "text",
             autoComplete: "off",
             spellCheck: false,
@@ -24096,34 +24328,34 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("ul", { id: "files-changes", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("ul", { id: "files-changes", children: [
         (preview?.changes || []).map((change, index) => {
           const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
           const effect = change.effect === "trash" ? t("files.trash") : change.to;
-          return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("li", { children: `${change.from} → ${effect}${crates}` }, `change-${index}`);
+          return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: `${change.from} → ${effect}${crates}` }, `change-${index}`);
         }),
-        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("li", { children: skip2 }, `skip-${index}`)),
-        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: skip2 }, `skip-${index}`)),
+        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "dialog-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
           "button",
           {
             id: "files-cancel",
             type: "button",
-            ref: tooltipRef3(tips.filesCancel),
+            ref: tooltipRef4(tips.filesCancel),
             onClick: () => files.closeDialog(),
             children: t("common.cancel")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
           "button",
           {
             id: "files-review",
             type: "button",
-            ref: tooltipRef3(tips.filesReview),
+            ref: tooltipRef4(tips.filesReview),
             hidden: reviewHidden,
             onClick: () => {
               void files.review();
@@ -24131,12 +24363,12 @@
             children: t("files.review")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
           "button",
           {
             id: "files-confirm",
             type: "button",
-            ref: tooltipRef3(confirmTip),
+            ref: tooltipRef4(confirmTip),
             className: action === "delete" ? "danger" : void 0,
             disabled: !ready,
             onClick: () => {
@@ -24150,17 +24382,17 @@
   }
 
   // src/components/FilesPanel.tsx
-  var import_react7 = __toESM(require_react(), 1);
-  var import_react_dom3 = __toESM(require_react_dom(), 1);
-  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef4(spec2) {
+  var import_react10 = __toESM(require_react(), 1);
+  var import_react_dom4 = __toESM(require_react_dom(), 1);
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef5(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
   }
   function FileIcon({ kind: kind2 }) {
     const d = kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z";
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
       "svg",
       {
         viewBox: "0 0 24 24",
@@ -24168,48 +24400,48 @@
         height: "20",
         "aria-hidden": "true",
         className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
-        children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d })
+        children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d })
       }
     );
   }
   function FilesToolbar() {
     const files = useFiles();
     const crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "browser-bar", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "browser-bar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-up",
           type: "button",
-          ref: tooltipRef4(tips.filesUp),
+          ref: tooltipRef5(tips.filesUp),
           disabled: !files.parent || files.loading,
           onClick: () => files.goUp(),
           children: t("common.up")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
         const last = index === crumbs.length - 1;
-        return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("li", { children: [
-          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("li", { children: [
+          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
             "button",
             {
               type: "button",
-              ref: tooltipRef4(openCrumb(crumb.name)),
+              ref: tooltipRef5(openCrumb(crumb.name)),
               className: "files-crumb",
               onClick: () => files.openCrumb(crumb.path),
               children: crumb.name
             }
-          ) : /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
-          !last ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" }) : null
+          ) : /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
+          !last ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" }) : null
         ] }, `${crumb.path}:${crumb.name}:${index}`);
       }) }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
           "input",
           {
             id: "files-search",
-            ref: tooltipRef4(tips.filesSearch),
+            ref: tooltipRef5(tips.filesSearch),
             type: "search",
             placeholder: t("files.searchPlaceholder"),
             autoComplete: "off",
@@ -24219,14 +24451,14 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef4(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef5(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-elsewhere",
           className: "files-elsewhere",
           type: "button",
-          ref: tooltipRef4(files.elsewhere ? tips.filesMusicFolders : tips.filesElsewhere),
+          ref: tooltipRef5(files.elsewhere ? tips.filesMusicFolders : tips.filesElsewhere),
           onClick: () => files.toggleElsewhere(),
           children: files.elsewhere ? t("files.roots") : t("files.browseElsewhere")
         }
@@ -24237,92 +24469,92 @@
     const files = useFiles();
     const selected = files.selectedEntries;
     const locked = files.locked;
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "files-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "files-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-rename",
           type: "button",
-          ref: tooltipRef4(tips.filesRename),
+          ref: tooltipRef5(tips.filesRename),
           disabled: locked || selected.length !== 1,
           onClick: (event) => files.startRename(event.currentTarget),
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-rename-from-tags",
           type: "button",
-          ref: tooltipRef4(tips.filesRenameFromTags),
+          ref: tooltipRef5(tips.filesRenameFromTags),
           "aria-haspopup": "dialog",
           disabled: locked || !selected.length,
           onClick: (event) => files.startRenameFromTags(event.currentTarget),
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-move",
           type: "button",
-          ref: tooltipRef4(tips.filesMove),
+          ref: tooltipRef5(tips.filesMove),
           disabled: locked || !selected.length || Boolean(files.pick),
           onClick: () => files.startMove(),
           children: t("files.moveToFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-move-folder",
           type: "button",
-          ref: tooltipRef4(tips.filesMoveFolder),
+          ref: tooltipRef5(tips.filesMoveFolder),
           disabled: locked || !files.path || Boolean(files.pick),
           onClick: () => files.startMoveFolder(),
           children: t("files.moveFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-replace",
           type: "button",
-          ref: tooltipRef4(tips.filesReplace),
+          ref: tooltipRef5(tips.filesReplace),
           disabled: locked || selected.length !== 1,
           onClick: (event) => files.startReplace(event.currentTarget),
           children: t("files.replaceFile")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-delete",
           type: "button",
-          ref: tooltipRef4(tips.filesDelete),
+          ref: tooltipRef5(tips.filesDelete),
           disabled: locked || !selected.length,
           onClick: (event) => files.startDelete(event.currentTarget),
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-move-here",
           type: "button",
-          ref: tooltipRef4(tips.filesMoveHere),
+          ref: tooltipRef5(tips.filesMoveHere),
           hidden: !files.pick,
           disabled: locked,
           onClick: (event) => files.confirmMoveHere(event.currentTarget),
           children: t("files.moveHere")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           id: "files-pick-cancel",
           type: "button",
-          ref: tooltipRef4(tips.filesPickCancel),
+          ref: tooltipRef5(tips.filesPickCancel),
           hidden: !files.pick,
           onClick: () => files.cancelPick(),
           children: t("common.cancel")
@@ -24341,12 +24573,12 @@
       active2 ? "is-active" : ""
     ].filter(Boolean).join(" ");
     if (openKind) {
-      return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className, role: "listitem", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className, role: "listitem", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(
           "button",
           {
             type: "button",
-            ref: tooltipRef4(entry.missing ? missingDrive(entry.name) : openFile(entry.name)),
+            ref: tooltipRef5(entry.missing ? missingDrive(entry.name) : openFile(entry.name)),
             className: "files-open",
             "data-files-index": String(index),
             id: `files-item-${index}`,
@@ -24358,23 +24590,23 @@
               else files.openRow(entry, index);
             },
             children: [
-              entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
-              entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { className: "files-root-copy", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-root-label", children: entry.name }),
-                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-root-detail", children: entry.detail })
-              ] }) : /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: entry.name }),
-                entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
+              entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
+              entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("span", { className: "files-root-copy", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "files-root-label", children: entry.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "files-root-detail", children: entry.detail })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: entry.name }),
+                entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
               ] }),
-              entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+              entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
             ]
           }
         ),
-        entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
           "button",
           {
             type: "button",
-            ref: tooltipRef4(portableCheck(entry.name)),
+            ref: tooltipRef5(portableCheck(entry.name)),
             className: "files-portable",
             "data-portable-name": entry.name,
             "aria-label": t("portable.checkLabel", { name: entry.name }),
@@ -24388,11 +24620,11 @@
       ] });
     }
     if (entry.kind !== "file") {
-      return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "button",
         {
           type: "button",
-          ref: tooltipRef4(fileShortcut(entry.name)),
+          ref: tooltipRef5(fileShortcut(entry.name)),
           className: "files-kind",
           "data-files-index": String(index),
           id: `files-item-${index}`,
@@ -24402,11 +24634,11 @@
         }
       ) });
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "files-file", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "input",
         {
-          ref: tooltipRef4(selectFile(entry.name, entry.path)),
+          ref: tooltipRef5(selectFile(entry.name, entry.path)),
           type: "checkbox",
           "data-files-index": String(index),
           id: `files-item-${index}`,
@@ -24416,9 +24648,9 @@
           onChange: (event) => files.toggleFile(entry, index, event.currentTarget.checked)
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-name", children: entry.name }),
-      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
-      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "files-name", children: entry.name }),
+      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
+      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
     ] }) });
   }
   var FILE_OVERSCAN = 8;
@@ -24432,16 +24664,16 @@
   }
   function FilesList() {
     const files = useFiles();
-    const listRef = (0, import_react7.useRef)(null);
-    const [scrollTop, setScrollTop] = (0, import_react7.useState)(0);
-    const [viewHeight, setViewHeight] = (0, import_react7.useState)(600);
-    (0, import_react7.useLayoutEffect)(() => {
+    const listRef = (0, import_react10.useRef)(null);
+    const [scrollTop, setScrollTop] = (0, import_react10.useState)(0);
+    const [viewHeight, setViewHeight] = (0, import_react10.useState)(600);
+    (0, import_react10.useLayoutEffect)(() => {
       const list = listRef.current;
       if (!list) return;
       setViewHeight(list.clientHeight || 600);
       setScrollTop(list.scrollTop);
       const onNativeScroll = () => {
-        (0, import_react_dom3.flushSync)(() => {
+        (0, import_react_dom4.flushSync)(() => {
           setScrollTop(list.scrollTop);
           setViewHeight(list.clientHeight || 600);
         });
@@ -24466,20 +24698,20 @@
     let tabIndex = 0;
     if (emptyLoading) {
       const reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "files-empty", children: reading });
+      body = /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "files-empty", children: reading });
     } else if (emptyError) {
-      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "files-empty", children: files.error });
+      body = /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "files-empty", children: files.error });
     } else if (emptyRoots) {
       tabIndex = -1;
-      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "files-empty-state", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h2", { children: t("files.noRoots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { children: t("files.noRootsBody") }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      body = /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
           "button",
           {
             id: "files-run-setup",
             type: "button",
-            ref: tooltipRef4(tips.runSetup),
+            ref: tooltipRef5(tips.runSetup),
             className: "files-primary",
             onClick: () => bridge.openSetup(),
             children: t("files.runSetup")
@@ -24488,19 +24720,19 @@
       ] });
     } else if (emptyFolder) {
       const empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
-      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "files-empty", children: empty });
+      body = /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "files-empty", children: empty });
     } else {
       tabIndex = -1;
       const windowRows = [];
       for (let index = start; index < end; index += 1) {
         const entry = rows2[index];
-        if (entry) windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
+        if (entry) windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime10.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
       }
-      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "files-spacer", style: { height: `${rows2.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "files-window", style: { transform: `translateY(${start * rowHeight}px)` }, children: windowRows }) });
+      body = /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "files-spacer", style: { height: `${rows2.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "files-window", style: { transform: `translateY(${start * rowHeight}px)` }, children: windowRows }) });
     }
     function onScroll2(event) {
       const node = event.currentTarget;
-      (0, import_react_dom3.flushSync)(() => {
+      (0, import_react_dom4.flushSync)(() => {
         setScrollTop(node.scrollTop);
         setViewHeight(node.clientHeight || 600);
       });
@@ -24508,10 +24740,10 @@
     function onKey2(event) {
       files.onListKey(event.nativeEvent);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
         "div",
         {
           id: "files-list",
@@ -24530,15 +24762,15 @@
     ] });
   }
   function FilesPanel() {
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FilesToolbar, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FilesList, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FilesActions, {})
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(FilesActions, {})
     ] });
   }
 
   // src/components/PortableDialog.tsx
-  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
     const files = useFiles();
     const report = files.portableReport;
@@ -24550,24 +24782,24 @@
     }
     const shown = report ? report.findings.slice(0, FINDING_CAP) : [];
     const hidden = report ? report.findings.length - shown.length : 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "portable-verdict", children: verdict }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("ul", { id: "portable-findings", children: [
-        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("li", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
-          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "portable-fix", children: finding.fix })
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "portable-fix", children: finding.fix })
           ] }) : null
         ] }, `finding-${index}`)),
-        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
-        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
         "button",
         {
           id: "portable-close",
@@ -24605,9 +24837,9 @@
     const panel = el("files-panel");
     const dialog = el("files-dialog");
     const portable = el("portable-dialog");
-    panelRoot = mountIsland(panel, (0, import_react8.createElement)(FilesPanel), rootFor(panel, panelRoot, panelHost));
-    dialogRoot = mountIsland(dialog, (0, import_react8.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost));
-    portableRoot = mountIsland(portable, (0, import_react8.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost));
+    panelRoot = mountIsland(panel, (0, import_react11.createElement)(FilesPanel), rootFor(panel, panelRoot, panelHost));
+    dialogRoot = mountIsland(dialog, (0, import_react11.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost));
+    portableRoot = mountIsland(portable, (0, import_react11.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost));
     panelHost = panel;
     dialogHost = dialog;
     portableHost = portable;
@@ -25059,8 +25291,8 @@
     note.textContent = driveCopyText();
   }
   async function backupDriveCrates() {
-    const button2 = el("snapshots-drives");
-    button2.disabled = true;
+    const button = el("snapshots-drives");
+    button.disabled = true;
     const note = el("snapshots-drives-note");
     note.hidden = false;
     note.textContent = t("snapshots.backupDrivesBusy");
@@ -25076,7 +25308,7 @@
       shown.hidden = false;
       shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
     } finally {
-      button2.disabled = false;
+      button.disabled = false;
     }
   }
   function paintSnapshotPlan(plan) {
@@ -25176,16 +25408,16 @@
     el("snapshot-status").textContent = message;
   }
   async function takeSnapshot() {
-    const button2 = el("snapshots-take");
-    button2.disabled = true;
-    button2.textContent = t("snapshots.saving");
+    const button = el("snapshots-take");
+    button.disabled = true;
+    button.textContent = t("snapshots.saving");
     try {
       await postJSON("/api/snapshots", { action: "create" });
       state.snapshotMessage = "snapshots.saved";
       await loadSnapshots();
     } finally {
-      button2.disabled = false;
-      button2.textContent = t("snapshots.take");
+      button.disabled = false;
+      button.textContent = t("snapshots.take");
     }
   }
   async function confirmSnapshotRestore() {
@@ -25420,10 +25652,10 @@
   }
 
   // src/views.ts
-  var import_react10 = __toESM(require_react(), 1);
+  var import_react13 = __toESM(require_react(), 1);
 
   // src/virtual-scroll.ts
-  var import_react9 = __toESM(require_react(), 1);
+  var import_react12 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -25470,12 +25702,12 @@
     }
     for (let index = start; index < end; index += 1) {
       const track = view[index];
-      const button2 = document.createElement("div");
-      button2.className = "row";
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(track.id === state.selectedId));
-      button2.dataset.id = String(track.id);
-      setTooltip(button2, selectRow(track.name || "Untitled"));
+      const button = document.createElement("div");
+      button.className = "row";
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(track.id === state.selectedId));
+      button.dataset.id = String(track.id);
+      setTooltip(button, selectRow(track.name || "Untitled"));
       const titleCell = document.createElement("span");
       titleCell.className = "cell";
       const line = document.createElement("span");
@@ -25483,7 +25715,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react9.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react12.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -25558,16 +25790,16 @@
         add(track.play_count == null ? "" : formatNumber(Number(track.play_count)), true);
         add(lengthLabel(track.length_ms), true);
       }
-      button2.append(titleCell, artist2, ...cells);
-      button2.addEventListener("click", () => {
+      button.append(titleCell, artist2, ...cells);
+      button.addEventListener("click", () => {
         if (track.entry) bridge.selectEntry(track.id);
         else bridge.selectTrack(track.id);
         list.focus({ preventScroll: true });
       });
-      button2.addEventListener("dblclick", () => {
+      button.addEventListener("dblclick", () => {
         if (!track.entry) play(track.id);
       });
-      paneRows.append(button2);
+      paneRows.append(button);
     }
   }
   function moveTrackList(delta) {
@@ -25823,17 +26055,17 @@
       gap.setAttribute("aria-hidden", "true");
       row.append(gap);
     }
-    const button2 = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
-    button2.className = "crate";
-    button2.dataset.id = String(crate.id);
-    if (crate.parent != null) button2.dataset.parent = String(crate.parent);
-    button2.setAttribute("role", "treeitem");
-    button2.setAttribute("aria-level", String(crate.depth + 1));
+    const button = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
+    button.className = "crate";
+    button.dataset.id = String(crate.id);
+    if (crate.parent != null) button.dataset.parent = String(crate.parent);
+    button.setAttribute("role", "treeitem");
+    button.setAttribute("aria-level", String(crate.depth + 1));
     const split = state.splitCrates && state.mode === "crates";
     const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-    button2.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
+    button.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
     if (crate.childCount) {
-      button2.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
+      button.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
     }
     const name = document.createElement("span");
     name.className = "name";
@@ -25845,19 +26077,19 @@
       name.append(swatch);
     }
     name.append(document.createTextNode(crate.name));
-    button2.append(name);
+    button.append(name);
     if (crate.smart) {
       const smart = document.createElement("span");
       smart.className = "smart";
       smart.textContent = t("crates.smartBadge");
-      button2.append(smart);
+      button.append(smart);
     }
     const meta = document.createElement("span");
     meta.className = "meta";
     meta.textContent = formatNumber(crate.count);
-    button2.append(meta);
-    button2.addEventListener("click", (event) => selectCrate(crate.id, event));
-    row.append(button2);
+    button.append(meta);
+    button.addEventListener("click", (event) => selectCrate(crate.id, event));
+    row.append(button);
     return row;
   }
   function placeCrateFocus(previousId) {
@@ -25974,11 +26206,11 @@
     if (!(header instanceof HTMLElement)) return;
     header.replaceChildren();
     for (const [key, label] of columns) {
-      const button2 = buttonEl(sortTip(key, t(label)));
-      button2.dataset.sort = key;
-      button2.textContent = t(label);
-      button2.dataset.active = String(key === state.sort);
-      header.append(button2);
+      const button = buttonEl(sortTip(key, t(label)));
+      button.dataset.sort = key;
+      button.textContent = t(label);
+      button.dataset.active = String(key === state.sort);
+      header.append(button);
     }
   }
   function playlistCrate() {
@@ -26066,11 +26298,11 @@
     if (snapshotsMode) {
       el("mode-note").textContent = t("mode.snapshots");
     }
-    for (const button2 of document.querySelectorAll("#views button")) {
-      button2.setAttribute("aria-selected", String(button2.dataset.view === state.mode));
+    for (const button of document.querySelectorAll("#views button")) {
+      button.setAttribute("aria-selected", String(button.dataset.view === state.mode));
     }
-    for (const button2 of document.querySelectorAll("[data-crate-sort]")) {
-      button2.setAttribute("aria-pressed", String(button2.dataset.crateSort === state.crateSort));
+    for (const button of document.querySelectorAll("[data-crate-sort]")) {
+      button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
     }
     const crateChosen = state.activeCrate !== "all";
     el("crate-new").disabled = !state.writable;
@@ -26223,7 +26455,7 @@
   }
   function focusCrateItem(item5) {
     if (!item5) return;
-    for (const button2 of el("crate-list").querySelectorAll(".crate")) button2.tabIndex = -1;
+    for (const button of el("crate-list").querySelectorAll(".crate")) button.tabIndex = -1;
     item5.tabIndex = 0;
     item5.focus();
   }
@@ -26333,7 +26565,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react10.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react13.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -26584,10 +26816,10 @@
     for (const copy of copies) {
       const row = document.createElement("div");
       row.className = "copy-row";
-      const button2 = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
-      button2.className = "text-button";
-      button2.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
-      button2.addEventListener("click", () => selectTrack(copy.id));
+      const button = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
+      button.className = "text-button";
+      button.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
+      button.addEventListener("click", () => selectTrack(copy.id));
       const rate = document.createElement("span");
       rate.textContent = copy.bitrate == null ? "" : String(copy.bitrate);
       const plays = document.createElement("span");
@@ -26601,7 +26833,7 @@
       replace.addEventListener("click", () => {
         bridge.openReplaceInCratesDialog(fromId, copy.id).catch((error2) => setNotice(failureOf(error2).message));
       });
-      row.append(button2, rate, plays, crates, replace);
+      row.append(button, rate, plays, crates, replace);
       section.append(row);
     }
     return section;
@@ -26876,8 +27108,8 @@
     }
   }
   async function refreshRelatedCrate(track, section) {
-    const button2 = section.querySelector("[data-related-crate]");
-    if (button2) button2.disabled = true;
+    const button = section.querySelector("[data-related-crate]");
+    if (button) button.disabled = true;
     try {
       const result = await postJSON("/api/related", { action: "crate", asset: track.id, space: state.space });
       setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") }));
@@ -26886,10 +27118,10 @@
     } catch (error2) {
       if (failureOf(error2).status === 409) {
         lockDown(error2);
-        if (button2) button2.disabled = true;
+        if (button) button.disabled = true;
       } else {
         setNotice(failureOf(error2).message);
-        if (button2) button2.disabled = !state.writable;
+        if (button) button.disabled = !state.writable;
       }
     }
   }
@@ -26978,22 +27210,22 @@
     });
   }
   function paintGeneration(info) {
-    const button2 = document.getElementById("library-generation");
-    if (!(button2 instanceof HTMLButtonElement)) return;
+    const button = document.getElementById("library-generation");
+    if (!(button instanceof HTMLButtonElement)) return;
     const kind2 = t(generationKind(info));
-    button2.textContent = kind2;
-    button2.setAttribute("aria-label", t("generation.named", { kind: kind2 }));
-    setTooltip(button2, tips.libraryGeneration);
+    button.textContent = kind2;
+    button.setAttribute("aria-label", t("generation.named", { kind: kind2 }));
+    setTooltip(button, tips.libraryGeneration);
     const note = document.getElementById("library-generation-note");
     if (note) {
       note.textContent = generationReason(info);
-      note.hidden = button2.getAttribute("aria-expanded") !== "true";
+      note.hidden = button.getAttribute("aria-expanded") !== "true";
     }
-    if (button2.dataset.bound === "1") return;
-    button2.dataset.bound = "1";
-    button2.addEventListener("click", () => {
-      const next2 = button2.getAttribute("aria-expanded") !== "true";
-      button2.setAttribute("aria-expanded", next2 ? "true" : "false");
+    if (button.dataset.bound === "1") return;
+    button.dataset.bound = "1";
+    button.addEventListener("click", () => {
+      const next2 = button.getAttribute("aria-expanded") !== "true";
+      button.setAttribute("aria-expanded", next2 ? "true" : "false");
       const panel = document.getElementById("library-generation-note");
       if (panel) panel.hidden = !next2;
     });
@@ -27219,19 +27451,19 @@
   function renderSessions() {
     el("session-list").replaceChildren();
     for (const session of state.historySessions) {
-      const button2 = buttonEl(sessionTip(session.name || "Session"));
-      button2.className = "crate";
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(session.id === state.historyId));
+      const button = buttonEl(sessionTip(session.name || "Session"));
+      button.className = "crate";
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(session.id === state.historyId));
       const name = document.createElement("span");
       name.className = "name";
       name.textContent = session.name || t("history.session");
       const meta = document.createElement("span");
       meta.className = "meta";
       meta.textContent = String(session.played || 0);
-      button2.append(name, meta);
-      button2.addEventListener("click", () => openSession(session.id));
-      el("session-list").append(button2);
+      button.append(name, meta);
+      button.addEventListener("click", () => openSession(session.id));
+      el("session-list").append(button);
     }
   }
   async function loadHistory() {
@@ -27346,19 +27578,19 @@
   }
   function syncMergeButton() {
     const wrap = el("duplicate-actions");
-    const button2 = el("merge-duplicates");
-    if (!wrap || !button2) return;
+    const button = el("merge-duplicates");
+    if (!wrap || !button) return;
     const show2 = state.mode === "duplicates";
     wrap.hidden = !show2;
-    button2.disabled = !show2 || !state.writable || !selectedDuplicateGroup();
+    button.disabled = !show2 || !state.writable || !selectedDuplicateGroup();
   }
   function syncRelinkButton() {
     const wrap = el("relink-actions");
-    const button2 = el("open-relink");
-    if (!wrap || !button2) return;
+    const button = el("open-relink");
+    if (!wrap || !button) return;
     const show2 = state.mode === "missing";
     wrap.hidden = !show2;
-    button2.disabled = !show2 || !state.writable;
+    button.disabled = !show2 || !state.writable;
   }
   function crateNamesFor(assetId) {
     return state.crates.filter((crate) => !crate.smart && (crate.tracks || []).includes(assetId)).map((crate) => crate.name);
@@ -27434,13 +27666,13 @@
       }).catch(showFailure);
     });
     el("views").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (button2?.dataset.view) setMode(button2.dataset.view);
+      const button = event.target.closest("button");
+      if (button?.dataset.view) setMode(button.dataset.view);
     });
     document.querySelector(".sort-crates").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (!button2?.dataset.crateSort) return;
-      state.crateSort = button2.dataset.crateSort;
+      const button = event.target.closest("button");
+      if (!button?.dataset.crateSort) return;
+      state.crateSort = button.dataset.crateSort;
       renderCrates();
       renderShell();
     });
@@ -27449,9 +27681,9 @@
     el("crate-color").addEventListener("click", () => colorCrate().catch((error2) => setNotice(failureOf(error2).message)));
     el("crate-delete").addEventListener("click", () => deleteCrate().catch((error2) => setNotice(failureOf(error2).message)));
     document.querySelector(".columns").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (!button2?.dataset.sort) return;
-      const key = button2.dataset.sort;
+      const button = event.target.closest("button");
+      if (!button?.dataset.sort) return;
+      const key = button.dataset.sort;
       if (state.sort === key) state.sortDir *= -1;
       else {
         state.sort = key;
@@ -27486,7 +27718,7 @@
         event.preventDefault();
         if (!state.crateQuery && item5.getAttribute("aria-expanded") === "true") toggleCrate(id);
         else if (item5.dataset.parent) {
-          focusCrateItem(items.find((button2) => button2.dataset.id === item5.dataset.parent));
+          focusCrateItem(items.find((button) => button.dataset.id === item5.dataset.parent));
         }
       } else if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -28571,20 +28803,20 @@
       });
     });
     el("open-logs").addEventListener("click", () => {
-      const button2 = el("open-logs");
-      button2.disabled = true;
+      const button = el("open-logs");
+      button.disabled = true;
       el("settings-status").textContent = t("wizard.opening");
       postJSON("/api/logs/open", {}).then(() => {
         el("settings-status").textContent = t("logs.opened");
       }).catch(() => {
         el("settings-status").textContent = t("logs.openFailed");
       }).finally(() => {
-        button2.disabled = false;
+        button.disabled = false;
       });
     });
     el("copy-logs").addEventListener("click", async () => {
-      const button2 = el("copy-logs");
-      button2.disabled = true;
+      const button = el("copy-logs");
+      button.disabled = true;
       el("settings-status").textContent = t("logs.copying");
       try {
         const response = await fetch("/api/logs");
@@ -28617,7 +28849,7 @@
       } catch (error2) {
         el("settings-status").textContent = t("logs.copyFailed");
       } finally {
-        button2.disabled = false;
+        button.disabled = false;
       }
     });
     mountFilesIslands();
@@ -28700,8 +28932,8 @@
     el("help-expected-label").hidden = feature;
   }
   async function submitReport() {
-    const button2 = el("help-open-github");
-    button2.disabled = true;
+    const button = el("help-open-github");
+    button.disabled = true;
     el("help-report-status").textContent = t("help.opening");
     try {
       const response = await fetch("/api/help", {
@@ -28734,7 +28966,7 @@
     } catch {
       el("help-report-status").textContent = t("help.loadFailed");
     } finally {
-      button2.disabled = false;
+      button.disabled = false;
     }
   }
   async function copyLog() {
@@ -28987,17 +29219,17 @@
     else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
     hits.forEach((hit, index) => {
       const item5 = document.createElement("li");
-      const button2 = buttonEl(quickOpenHit(
+      const button = buttonEl(quickOpenHit(
         hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
         hit.title,
         hit.detail
       ));
-      button2.className = "quick-open-option";
-      button2.id = `quick-open-option-${index}`;
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(index === active));
-      button2.tabIndex = -1;
-      if (index === active) button2.classList.add("is-active");
+      button.className = "quick-open-option";
+      button.id = `quick-open-option-${index}`;
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(index === active));
+      button.tabIndex = -1;
+      if (index === active) button.classList.add("is-active");
       const kind2 = document.createElement("span");
       kind2.className = "quick-open-kind";
       kind2.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
@@ -29007,12 +29239,12 @@
       const detail = document.createElement("span");
       detail.className = "quick-open-detail";
       detail.textContent = hit.detail;
-      button2.append(kind2, title2, detail);
-      button2.addEventListener("click", () => {
+      button.append(kind2, title2, detail);
+      button.addEventListener("click", () => {
         active = index;
         void activate(hit);
       });
-      item5.append(button2);
+      item5.append(button);
       list.append(item5);
     });
     const field = el("quick-open-query");

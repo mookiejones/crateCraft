@@ -1,13 +1,15 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. Files is another. Each screen adds its
- * own context file and one wrapper here. This module reads those stores;
- * it does not own playback or the folder load.
+ * Player state is one domain. Waveform zoom and overview are another.
+ * Files is a third. Each has its own context file and one wrapper here.
+ * This module reads those stores; it does not own playback or the folder
+ * load.
  */
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
+import { failureOf } from "../api";
 import {
   FilesProvider as FilesContextProvider,
   type FilesContextValue,
@@ -16,7 +18,7 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
-import { failureOf } from "../api";
+import { WaveformProvider } from "../context/WaveformContext";
 import {
   browserRows,
   cancelFilesPick,
@@ -49,8 +51,13 @@ import {
 } from "../files";
 import { LOCALE_EVENT } from "../i18n";
 import {
+  SEEK_STEP_LARGE_SECONDS,
+  SEEK_STEP_SECONDS,
   canSkip,
   canTogglePlay,
+  formatPlayerTime,
+  getMediaDuration,
+  getMediaTime,
   getPlayerCues,
   getPlayerState,
   next,
@@ -83,6 +90,11 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+    mediaTime: getMediaTime,
+    mediaDuration: getMediaDuration,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
   };
 }
 
@@ -213,15 +225,17 @@ export function FilesProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player is the first domain. Files is the second. A later screen adds
- * one line here.
+ * Player is the first domain. Waveform zoom and overview wrap inside it.
+ * Files is the third. A later screen adds one line here.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <FilesProvider>{children}</FilesProvider>
+      <WaveformProvider>
+        <FilesProvider>{children}</FilesProvider>
+      </WaveformProvider>
     </PlayerProvider>
   );
 }
