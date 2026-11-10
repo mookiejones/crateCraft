@@ -1,13 +1,15 @@
 /**
  * Read-only check for a portable Serato drive.
  *
- * The Files page shows Check drive on a removable Serato root. The
- * request is GET /api/drive-check for the volume that contains that
- * folder. Nothing on the drive is written. A later reply is ignored
- * when a newer check has started.
+ * Organize files shows Check drive on a removable Serato root. Before a
+ * gig shows the same check: pick a connected drive with a `_Serato_`
+ * folder. The request is GET /api/drive-check for the volume that
+ * contains that folder. Nothing on the drive is written. A later reply
+ * is ignored when a newer check has started.
  */
 
-import { readJSON } from "./api";
+import { fetchLibraryRoots, readJSON } from "./api";
+import type { LibraryRoot } from "./api-types";
 import { el } from "./dom";
 import { serverMessage, t, type MessageKey } from "./i18n";
 import { buttonEl } from "./tooltip";
@@ -51,8 +53,9 @@ const KIND_KEY: Readonly<Record<string, MessageKey>> = {
 
 let token = 0;
 let latest: DriveReport | null = null;
+let lastRoots: LibraryRoot[] = [];
 let opener: HTMLElement | null = null;
-let wired = false;
+let hasConnected = false;
 
 /**
  * Volume root for a music folder, so the check sees `_Serato_` beside Music.
@@ -81,6 +84,34 @@ export function portableDriveRoot(path: string): string {
   const win = /^[A-Za-z]:/.exec(trimmed);
   if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
   return marker >= 0 ? (trimmed.includes("\\") ? base.replace(/\//g, "\\") : base) : trimmed;
+}
+
+/**
+ * Removable Serato roots, split into connected and unplugged.
+ *
+ * An unplugged drive is named, not treated as a missing file. Two
+ * folders on the same volume become one choice. This does not look at
+ * the disk.
+ *
+ * @param roots Music roots from GET /api/library-roots.
+ * @returns Connected drives for the picker, and unplugged names.
+ */
+export function portableSeratoRoots(roots: readonly LibraryRoot[]): {
+  connected: LibraryRoot[];
+  missing: LibraryRoot[];
+} {
+  const connected: LibraryRoot[] = [];
+  const missing: LibraryRoot[] = [];
+  const seen = new Set<string>();
+  for (const root of roots) {
+    if (!root.removable || !root.serato) continue;
+    const key = portableDriveRoot(root.path).replace(/\\/g, "/").toLowerCase();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    if (root.missing) missing.push(root);
+    else connected.push(root);
+  }
+  return { connected, missing };
 }
 
 /**
@@ -143,7 +174,7 @@ export function portableDriveButton(name: string, path: string): HTMLButtonEleme
 }
 
 /**
- * Ask for the read-only report and show it.
+ * Ask for the read-only report and show it in the dialog.
  *
  * @param path Music root or drive path.
  * @param trigger Control to focus when the dialog closes.
@@ -151,41 +182,63 @@ export function portableDriveButton(name: string, path: string): HTMLButtonEleme
  */
 export async function openPortableCheck(path: string, trigger?: HTMLElement): Promise<void> {
   wirePortable();
-  const drive = portableDriveRoot(path);
-  const mine = ++token;
   opener = trigger ?? null;
   const dialog = el("portable-dialog");
-  latest = null;
-  el("portable-verdict").textContent = "";
-  el("portable-summary").textContent = "";
-  el("portable-findings").replaceChildren();
-  el("portable-status").textContent = t("portable.checking");
   if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
-  if (!drive) {
-    el("portable-status").textContent = t("portable.unreadable");
-    return;
-  }
+  await runPortableCheck(path);
+}
+
+/**
+ * Load connected Serato drives and check the one in the picker.
+ *
+ * Used by the Before a gig view. The dialog stays closed. An unplugged
+ * drive is named under the picker and is not listed as a missing file.
+ *
+ * @returns {Promise<void>}
+ */
+export async function loadPortableView(): Promise<void> {
+  wirePortable();
+  beginBusy();
+  paintStatus(t("portable.checking"));
+  let settle: "report" | "retry" | "none" = "none";
   try {
-    const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
-    if (mine !== token) return;
-    const body: unknown = await readJSON<unknown>(response).catch((): null => null);
-    if (mine !== token) return;
-    if (!response.ok) {
-      fail(serverMessage(errorBody(body), t("portable.unreadable")));
+    const payload = await fetchLibraryRoots();
+    lastRoots = payload.roots;
+    paintDrivePicker(lastRoots);
+    const path = el("portable-drive").value;
+    if (!path) {
+      clearReport();
+      el("portable-view-status").textContent = hasConnected ? "" : t("portable.noDrive");
+      el("portable-status").textContent = hasConnected ? "" : t("portable.noDrive");
       return;
     }
-    const report = parseDriveReport(body);
-    if (!report) {
-      fail(t("portable.unreadable"));
-      return;
-    }
-    latest = report;
-    el("portable-status").textContent = "";
-    renderPortableReport(report);
-  } catch {
-    if (mine !== token) return;
-    fail(t("portable.unreachable"));
+    await runPortableCheck(path);
+    settle = "report";
+  } catch (error) {
+    fail(error instanceof Error && error.message ? error.message : t("portable.unreadable"));
+    settle = "retry";
+  } finally {
+    endBusy();
+    if (settle === "retry") el("portable-check").focus();
+    if (settle === "report") el("portable-view-verdict").focus();
   }
+}
+
+/**
+ * Show a drive-check failure in the view status line.
+ *
+ * The report already on screen stays. Focus moves to Check drive.
+ *
+ * @param error Failure from loadPortableView.
+ * @returns {void}
+ */
+export function showPortableFailure(error: unknown): void {
+  const message = error instanceof Error && error.message
+    ? error.message
+    : t("portable.unreadable");
+  fail(message);
+  endBusy();
+  el("portable-check").focus();
 }
 
 /**
@@ -202,37 +255,128 @@ export function repaintPortable(): void {
     const name = button.dataset.portableName ?? "";
     if (name) button.setAttribute("aria-label", t("portable.checkLabel", { name }));
   }
+  el("portable-check").textContent = t("portable.check");
+  if (lastRoots.length) paintDrivePicker(lastRoots);
   if (latest) renderPortableReport(latest);
 }
 
 /**
- * Close control. Safe to call more than once.
+ * Close control and the Before a gig picker. Safe to call more than once.
  *
  * @returns {void}
  */
 export function wirePortable(): void {
-  if (wired) return;
-  wired = true;
-  el("portable-close").addEventListener("click", () => {
-    el("portable-dialog").close();
-    if (opener?.isConnected) opener.focus();
+  const dialog = el("portable-dialog");
+  if (dialog.dataset.portableWired !== "true") {
+    dialog.dataset.portableWired = "true";
+    el("portable-close").addEventListener("click", () => {
+      el("portable-dialog").close();
+      if (opener?.isConnected) opener.focus();
+    });
+  }
+  const panel = el("portable-panel");
+  if (panel.dataset.portableWired === "true") return;
+  panel.dataset.portableWired = "true";
+  el("portable-check").addEventListener("click", () => {
+    void runPortableCheck(el("portable-drive").value);
+  });
+  el("portable-drive").addEventListener("change", () => {
+    void runPortableCheck(el("portable-drive").value);
   });
 }
 
 /**
  * Paint the verdict, the summary, and the finding lines.
  *
+ * The Files dialog and the Before a gig panel share this painter.
+ *
  * @param report Parsed drive-check body.
  * @returns {void}
  */
 export function renderPortableReport(report: DriveReport): void {
   latest = report;
-  const verdict = el("portable-verdict");
-  if (report.missing_drive) verdict.textContent = t("portable.missing");
-  else if (report.ready) verdict.textContent = t("portable.ready");
-  else verdict.textContent = t("portable.notReady");
-  el("portable-summary").textContent = report.summary;
-  const list = el("portable-findings");
+  const verdictText = report.missing_drive
+    ? t("portable.missing")
+    : report.ready
+      ? t("portable.ready")
+      : t("portable.notReady");
+  const items = findingItems(report);
+  for (const surface of surfaces()) {
+    surface.verdict.textContent = verdictText;
+    surface.summary.textContent = report.summary;
+    surface.findings.replaceChildren(...items.map((item) => item.cloneNode(true) as HTMLLIElement));
+    surface.status.textContent = "";
+  }
+}
+
+/**
+ * Ask GET /api/drive-check for one volume. Does not write.
+ *
+ * @param path Music root or drive path.
+ * @returns {Promise<void>}
+ */
+export async function runPortableCheck(path: string): Promise<void> {
+  wirePortable();
+  const drive = portableDriveRoot(path);
+  const mine = ++token;
+  latest = null;
+  clearReport();
+  paintStatus(t("portable.checking"));
+  if (!drive) {
+    fail(t("portable.unreadable"));
+    return;
+  }
+  beginBusy();
+  try {
+    const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
+    if (mine !== token) return;
+    const body: unknown = await readJSON<unknown>(response).catch((): null => null);
+    if (mine !== token) return;
+    if (!response.ok) {
+      fail(serverMessage(errorBody(body), t("portable.unreadable")));
+      return;
+    }
+    const report = parseDriveReport(body);
+    if (!report) {
+      fail(t("portable.unreadable"));
+      return;
+    }
+    latest = report;
+    paintStatus("");
+    renderPortableReport(report);
+  } catch {
+    if (mine !== token) return;
+    fail(t("portable.unreachable"));
+  } finally {
+    if (mine === token) endBusy();
+  }
+}
+
+function paintDrivePicker(roots: readonly LibraryRoot[]): void {
+  const { connected, missing } = portableSeratoRoots(roots);
+  hasConnected = connected.length > 0;
+  const select = el("portable-drive");
+  const previous = select.value;
+  const options = connected.map((root) => {
+    const option = document.createElement("option");
+    option.value = root.path;
+    option.textContent = root.label;
+    return option;
+  });
+  select.replaceChildren(...options);
+  const keep = connected.some((root) => root.path === previous) ? previous : (connected[0]?.path ?? "");
+  select.value = keep;
+  select.disabled = !hasConnected;
+  el("portable-check").disabled = !hasConnected;
+  const note = el("portable-offline");
+  if (!missing.length) {
+    note.textContent = "";
+    return;
+  }
+  note.textContent = missing.map((root) => t("portable.offlineNamed", { name: root.label })).join(" ");
+}
+
+function findingItems(report: DriveReport): HTMLLIElement[] {
   const items: HTMLLIElement[] = [];
   const shown = report.findings.slice(0, FINDING_CAP);
   for (const finding of shown) {
@@ -261,7 +405,29 @@ export function renderPortableReport(report: DriveReport): void {
     row.textContent = t("files.andMore", { count: hidden });
     items.push(row);
   }
-  list.replaceChildren(...items);
+  return items;
+}
+
+function surfaces(): Array<{
+  verdict: HTMLParagraphElement;
+  summary: HTMLParagraphElement;
+  findings: HTMLUListElement;
+  status: HTMLParagraphElement;
+}> {
+  return [
+    {
+      verdict: el("portable-verdict"),
+      summary: el("portable-summary"),
+      findings: el("portable-findings"),
+      status: el("portable-status"),
+    },
+    {
+      verdict: el("portable-view-verdict"),
+      summary: el("portable-view-summary"),
+      findings: el("portable-view-findings"),
+      status: el("portable-view-status"),
+    },
+  ];
 }
 
 function kindLabel(kind: string): string {
@@ -271,10 +437,34 @@ function kindLabel(kind: string): string {
 
 function fail(message: string): void {
   latest = null;
-  el("portable-verdict").textContent = "";
-  el("portable-summary").textContent = "";
-  el("portable-findings").replaceChildren();
-  el("portable-status").textContent = message;
+  clearReport();
+  paintStatus(message);
+}
+
+function clearReport(): void {
+  for (const surface of surfaces()) {
+    surface.verdict.textContent = "";
+    surface.summary.textContent = "";
+    surface.findings.replaceChildren();
+  }
+}
+
+function paintStatus(message: string): void {
+  for (const surface of surfaces()) surface.status.textContent = message;
+}
+
+function beginBusy(): void {
+  const button = el("portable-check");
+  button.disabled = true;
+  button.setAttribute("aria-busy", "true");
+  el("portable-panel").setAttribute("aria-busy", "true");
+}
+
+function endBusy(): void {
+  const button = el("portable-check");
+  button.disabled = !hasConnected;
+  button.setAttribute("aria-busy", "false");
+  el("portable-panel").setAttribute("aria-busy", "false");
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

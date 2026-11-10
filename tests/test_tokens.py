@@ -207,7 +207,8 @@ class TokenSheetTests(unittest.TestCase):
         self.assertIn('"swatch swatch-lg"', text)
         self.assertIn("paneSpacer.style.height", text)
         self.assertIn("paneRows.style.transform", text)
-        self.assertIn("row.style.paddingLeft", text)
+        self.assertIn("paddingLeft", source)
+        self.assertIn("row.depth * 14", source)
 
     def test_palette_aliases_point_at_tokens(self) -> None:
         """Point the old palette names at the token roles.
@@ -556,6 +557,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".editor label", ("--color-card",), 13, 400),
     ("dialog", ("--color-card",), 15, 400),
     (".shortcut-table thead th", ("--color-card",), 11, 600),
+    (".stats-table thead th", ("--color-card",), 11, 600),
     ("#quick-open-query", ("--color-card",), 15, 400),
     (".quick-open-option", ("--color-card", "--color-selection"), 15, 400),
     (".update-banner", ("--color-selection",), 15, 400),
@@ -662,6 +664,8 @@ _DECORATIVE = {
     ".snapshot-card",
     ".shortcut-table th",
     ".shortcut-table td",
+    ".stats-table th",
+    ".stats-table td",
     ".swatch",
     ".player-bar",
     ".operations",
@@ -818,6 +822,7 @@ class ContrastTests(unittest.TestCase):
             ".player-toggle",
             ".waveform-zoom-button",
             ".waveform-overview:focus-visible",
+            "#portable-view-verdict:focus-visible",
             ".detail-play",
             ".operations-alert",
         } | {selector for selector, _, _ in _CONTROL_EDGE}

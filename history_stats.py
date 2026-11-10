@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Play history analytics: most played, and not played in a while (#33, part 1).
+"""Play history analytics: most played, and not played in a while (#33).
 
 Serato's Plays column is all-time. ``stats`` reads ``history_entry`` with
 ``gig_check.open_read_only`` and answers for a period instead: the most played
@@ -12,18 +12,21 @@ was later removed has no ``asset_id``; it is grouped by its own title and
 artist, ignoring case, and keeps the name it was played under. Artists are
 grouped the same way and shown with the spelling used most.
 
-Nothing is written. Making the not-played list into a crate, CSV export, and
-the page view are later changes.
+``csv_text`` is the same report as a spreadsheet. ``preview_idle`` lists the
+not-played tracks without writing. ``create_idle`` makes a normal crate of
+those tracks through ``library.crate_action``, so Serato must be quit.
 """
 
 from __future__ import annotations
 
 import argparse
+import csv
+import io
 import json
 import sqlite3
 import sys
 import time
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 import gig_check
@@ -35,6 +38,7 @@ TOP_MAX = 500
 IDLE_DAYS = 365
 IDLE_DAYS_MAX = 3650
 TIME_MAX = 2**62
+IDLE_SAMPLE = 25
 INVALID = "That request is not valid."
 
 
@@ -61,6 +65,59 @@ def number(raw: str | None, default: int | None, low: int, high: int) -> int | N
     if value < low or value > high:
         raise library.LibraryError(INVALID, 400)
     return value
+
+
+def json_number(raw: object, default: int | None, low: int, high: int) -> int | None:
+    """Parse a JSON whole number.
+
+    Args:
+        raw: The JSON value, or None for ``default``.
+        default: Value when ``raw`` is missing.
+        low: Smallest allowed value.
+        high: Largest allowed value.
+
+    Returns:
+        The number, or ``default``.
+
+    Raises:
+        library.LibraryError: Not an int, or out of range (400).
+    """
+    if raw is None:
+        return default
+    if isinstance(raw, bool) or not isinstance(raw, int):
+        raise library.LibraryError(INVALID, 400)
+    if raw < low or raw > high:
+        raise library.LibraryError(INVALID, 400)
+    return raw
+
+
+def idle_crate_name(idle_days: int) -> str:
+    """Return the default crate name for an idle list."""
+    return f"Not played in {idle_days} days"
+
+
+def _label(name: object, idle_days: int) -> str:
+    """Return a crate name from the request, or the default."""
+    if name is None:
+        return idle_crate_name(idle_days)
+    if not isinstance(name, str):
+        raise library.LibraryError(INVALID, 400)
+    text = name.strip()
+    return text or idle_crate_name(idle_days)
+
+
+def _cell(value: object) -> str | int:
+    """Return a CSV cell. Formula-like text is quoted so a spreadsheet does not run it."""
+    if value is None:
+        return ""
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    text = str(value)
+    if text[:1] in "=+-@\t\r":
+        return "'" + text
+    return text
 
 
 def _key(text: object) -> str:
@@ -228,6 +285,194 @@ def stats(
     }
 
 
+def csv_text(report: Mapping[str, object]) -> str:
+    """Return the summary as CSV text.
+
+    Args:
+        report: A ``stats`` result.
+
+    Returns:
+        UTF-8 CSV with a summary row, then top tracks, top artists, and
+        idle tracks. A title that looks like a formula is prefixed.
+    """
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["plays", "sessions", "from", "to", "idle_days", "not_played_count"])
+    writer.writerow(
+        [
+            _cell(report.get("plays")),
+            _cell(report.get("sessions")),
+            _cell(report.get("from")),
+            _cell(report.get("to")),
+            _cell(report.get("idle_days")),
+            _cell(report.get("not_played_count")),
+        ]
+    )
+    writer.writerow([])
+    writer.writerow(["section", "asset_id", "name", "artist", "plays", "tracks", "last_played", "id", "added", "play_count"])
+    for row in report.get("top_tracks") or []:
+        if not isinstance(row, Mapping):
+            continue
+        writer.writerow(
+            [
+                "top_track",
+                _cell(row.get("asset_id")),
+                _cell(row.get("name")),
+                _cell(row.get("artist")),
+                _cell(row.get("plays")),
+                "",
+                _cell(row.get("last_played")),
+                "",
+                "",
+                "",
+            ]
+        )
+    for row in report.get("top_artists") or []:
+        if not isinstance(row, Mapping):
+            continue
+        writer.writerow(
+            [
+                "top_artist",
+                "",
+                "",
+                _cell(row.get("artist")),
+                _cell(row.get("plays")),
+                _cell(row.get("tracks")),
+                _cell(row.get("last_played")),
+                "",
+                "",
+                "",
+            ]
+        )
+    for row in report.get("not_played") or []:
+        if not isinstance(row, Mapping):
+            continue
+        writer.writerow(
+            [
+                "not_played",
+                "",
+                _cell(row.get("name")),
+                _cell(row.get("artist")),
+                "",
+                "",
+                _cell(row.get("last_played")),
+                _cell(row.get("id")),
+                _cell(row.get("added")),
+                _cell(row.get("play_count")),
+            ]
+        )
+    return buf.getvalue()
+
+
+def preview_idle(
+    database: Path,
+    space: str,
+    *,
+    idle_days: int = IDLE_DAYS,
+    name: object = None,
+    now: float | None = None,
+) -> dict[str, object]:
+    """List idle tracks without writing.
+
+    Args:
+        database: ``master.sqlite``.
+        space: Space whose idle tracks are listed.
+        idle_days: Cutoff in days.
+        name: Crate name, or None for the default.
+        now: The current time, for tests.
+
+    Returns:
+        ``preview`` true, ``written`` false, ``name``, ``idle_days``,
+        ``count``, and a ``tracks`` sample.
+    """
+    report = stats(database, space, idle_days=idle_days, now=now)
+    idle = report["not_played"]
+    if not isinstance(idle, list):
+        idle = []
+    return {
+        "preview": True,
+        "written": False,
+        "name": _label(name, idle_days),
+        "idle_days": idle_days,
+        "count": report["not_played_count"],
+        "tracks": idle[:IDLE_SAMPLE],
+    }
+
+
+def create_idle(
+    database: Path,
+    space: str,
+    *,
+    idle_days: int = IDLE_DAYS,
+    name: object = None,
+    now: float | None = None,
+) -> dict[str, object]:
+    """Create a crate of idle tracks through ``crate_action``.
+
+    Args:
+        database: Unused; ``crate_action`` writes ``library.MASTER``.
+        space: Space whose idle tracks are added.
+        idle_days: Cutoff in days.
+        name: Crate name, or None for the default.
+        now: The current time, for tests.
+
+    Returns:
+        The crate result with ``written`` true, or ``written`` false when
+        the list is empty. An empty list does not write.
+
+    Raises:
+        library.LibraryError: Bad values.
+        library.SeratoOpen: Serato still holds the library.
+    """
+    del database
+    report = stats(Path(library.MASTER), space, idle_days=idle_days, now=now)
+    idle = report["not_played"]
+    ids = [int(str(row["id"])) for row in idle] if isinstance(idle, list) else []
+    label = _label(name, idle_days)
+    if not ids:
+        return {
+            "preview": False,
+            "written": False,
+            "name": label,
+            "idle_days": idle_days,
+            "count": 0,
+        }
+    result = library.crate_action({"action": "create", "space": space, "name": label, "assets": ids})
+    result["preview"] = False
+    result["written"] = True
+    result["count"] = len(ids)
+    result["idle_days"] = idle_days
+    if not result.get("name"):
+        result["name"] = label
+    return result
+
+
+def action(payload: Mapping[str, object]) -> dict[str, object]:
+    """Run one ``POST /api/history-stats`` request.
+
+    Args:
+        payload: ``action`` is ``preview`` or ``create``. Both take ``space``,
+            optional ``idle_days``, and optional ``name``.
+
+    Returns:
+        That action's result.
+
+    Raises:
+        library.LibraryError: If the action or its fields are invalid.
+    """
+    kind = payload.get("action")
+    space = payload.get("space") or library.LIBRARY_SPACE
+    if not isinstance(space, str):
+        raise library.LibraryError("That space is not available here.")
+    idle_days = json_number(payload.get("idle_days"), IDLE_DAYS, 1, IDLE_DAYS_MAX) or IDLE_DAYS
+    name = payload.get("name")
+    if kind == "preview":
+        return preview_idle(Path(library.MASTER), space, idle_days=idle_days, name=name)
+    if kind == "create":
+        return create_idle(Path(library.MASTER), space, idle_days=idle_days, name=name)
+    raise library.LibraryError("That action is not available.")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Print the summary as JSON.
 
@@ -244,12 +489,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--to", dest="end", type=int, default=None, help="Unix seconds")
     parser.add_argument("--top", type=int, default=TOP)
     parser.add_argument("--idle-days", type=int, default=IDLE_DAYS)
+    parser.add_argument("--csv", action="store_true", help="Print CSV instead of JSON")
     args = parser.parse_args(argv)
     try:
         result = stats(args.database, args.space, start=args.start, end=args.end, top=args.top, idle_days=args.idle_days)
     except library.LibraryError as exc:
         print(exc.message, file=sys.stderr)
         return 1
+    if args.csv:
+        sys.stdout.write(csv_text(result))
+        return 0
     json.dump(result, sys.stdout, indent=2, ensure_ascii=False)
     sys.stdout.write("\n")
     return 0

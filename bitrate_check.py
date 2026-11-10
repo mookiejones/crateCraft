@@ -11,9 +11,12 @@ per kHz is not. ``estimate_kbps`` maps the cliff to the bitrate an encoder
 would use, and ``verdict`` compares that with what the file claims.
 
 The result is a suspicion, not proof: an old recording or a lo-fi master can
-have a real cliff. Nothing is written. Files are decoded read-only through
+have a real cliff. The scan writes nothing. Files are decoded read-only through
 ``waveform.iter_pcm`` and the library is opened with
-``gig_check.open_read_only``. A "suspect quality" crate is a later change.
+``gig_check.open_read_only``. ``POST /api/bitrate-check`` with ``action``
+``preview`` lists a Suspect quality crate of the flagged tracks; ``create``
+writes that crate through ``library.crate_action`` and ``safe_write`` with
+Serato closed. A plan with no flagged tracks does not write.
 """
 
 from __future__ import annotations
@@ -22,7 +25,7 @@ import argparse
 import json
 import sqlite3
 import sys
-from collections.abc import Iterator, Sequence
+from collections.abc import Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import NamedTuple
 
@@ -33,6 +36,7 @@ import library
 import waveform
 
 NEEDS_CRATE = "Choose a crate for a bitrate check."
+CRATE_NAME = "Suspect quality"
 
 FFT_SIZE = 8192
 # Analyse one frame in STRIDE, at most MAX_FRAMES of them: about 3.7 minutes
@@ -280,6 +284,153 @@ def scan(database: Path, space: str, crate_id: int | None = None) -> dict[str, o
             }
         )
     return {"crate": crate_id, **counts, "suspects": suspects}
+
+
+def _payload_crate(value: object) -> int | None:
+    """Return a crate id from a JSON body, or None for the whole space.
+
+    Raises:
+        library.LibraryError: The value is present and is not a positive int (400).
+    """
+    if value is None or value == "" or value == "all":
+        return None
+    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+        raise library.LibraryError("That request is not valid.", 400)
+    return value
+
+
+def _suspect_ids(report: Mapping[str, object]) -> list[int]:
+    """Return flagged asset ids from a scan report, in report order."""
+    rows = report.get("suspects")
+    if not isinstance(rows, list):
+        return []
+    ids: list[int] = []
+    seen: set[int] = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        asset_id = row.get("id")
+        if isinstance(asset_id, bool) or not isinstance(asset_id, int) or asset_id in seen:
+            continue
+        seen.add(asset_id)
+        ids.append(asset_id)
+    return ids
+
+
+def _plan(
+    report: Mapping[str, object],
+    *,
+    written: bool,
+    saved: Mapping[str, object] | None = None,
+) -> dict[str, object]:
+    """Build the POST result from a scan report and an optional new crate."""
+    name = CRATE_NAME
+    saved_id: object = None
+    if saved is not None:
+        label = saved.get("name")
+        if isinstance(label, str) and label:
+            name = label
+        saved_id = saved.get("id")
+    added = len(_suspect_ids(report))
+    crate = None
+    if written and isinstance(saved_id, int) and not isinstance(saved_id, bool):
+        crate = {"id": saved_id, "name": name}
+    return {
+        **dict(report),
+        "preview": not written,
+        "written": written,
+        "name": name,
+        "added": added,
+        "saved": crate,
+    }
+
+
+def preview_crate(database: Path, space: str, crate_id: int) -> dict[str, object]:
+    """List the Suspect quality crate a scan of this crate would save.
+
+    Does not write. The scan still decodes audio.
+
+    Args:
+        database: ``master.sqlite``.
+        space: Space name.
+        crate_id: Crate to check, including subcrates.
+
+    Returns:
+        Scan counts plus ``preview`` true, ``written`` false, ``name``,
+        ``added``, and ``saved`` null.
+    """
+    require_crate(crate_id)
+    return _plan(scan(database, space, crate_id), written=False)
+
+
+def create_crate(database: Path, space: str, crate_id: int) -> dict[str, object]:
+    """Save a Suspect quality crate of the flagged tracks through ``safe_write``.
+
+    Re-runs the scan, then ``library.crate_action`` create. Serato must be
+    quit. An empty scan does not write.
+
+    Args:
+        database: ``master.sqlite``. Must be the live ``library.MASTER``.
+        space: Space name.
+        crate_id: Crate to check, including subcrates.
+
+    Returns:
+        Scan counts plus ``written`` true and ``saved`` when a crate was
+        created, or ``written`` false when nothing was flagged.
+
+    Raises:
+        library.LibraryError: Unknown space, crate not in the space, or
+            a database that cannot be opened.
+        library.SeratoOpen: Serato still has the library open.
+    """
+    require_crate(crate_id)
+    report = scan(database, space, crate_id)
+    ids = _suspect_ids(report)
+    if not ids:
+        return _plan(report, written=False)
+    made = library.crate_action(
+        {
+            "action": "create",
+            "space": space,
+            "name": CRATE_NAME,
+            "assets": ids,
+        }
+    )
+    result = _plan(report, written=True, saved=made)
+    warning = made.get("warning")
+    if isinstance(warning, str) and warning:
+        result["warning"] = warning
+    return result
+
+
+def action(payload: Mapping[str, object]) -> dict[str, object]:
+    """Run one ``POST /api/bitrate-check`` request.
+
+    Args:
+        payload: ``action`` is ``preview`` or ``create``. Both take
+            ``space`` and ``crate``.
+
+    Returns:
+        That action's result.
+
+    Raises:
+        library.LibraryError: If the action or its fields are invalid.
+        library.SeratoOpen: If ``create`` runs while Serato holds the library.
+    """
+    kind = payload.get("action")
+    space = payload.get("space") or library.LIBRARY_SPACE
+    if not isinstance(space, str):
+        raise library.LibraryError("That space is not available here.")
+    crate_id = _payload_crate(payload.get("crate"))
+    require_crate(crate_id)
+    if crate_id is None:
+        raise library.LibraryError(NEEDS_CRATE, 400)
+    database = Path(library.MASTER)
+    if kind == "preview":
+        return preview_crate(database, space, crate_id)
+    if kind == "create":
+        return create_crate(database, space, crate_id)
+    raise library.LibraryError("That action is not available.")
 
 
 def main(argv: Sequence[str] | None = None) -> int:

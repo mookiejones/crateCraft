@@ -76,6 +76,7 @@ nav:
       - Duplicates: guide/duplicates.md
       - Stems: guide/stems.md
       - Damaged files: guide/file-scan.md
+      - Suspect quality: guide/bitrate-check.md
       - Tag spellings: guide/tag-spellings.md
       - Prepare: guide/prepare.md
       - Playlists: guide/playlists.md
