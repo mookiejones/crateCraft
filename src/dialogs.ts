@@ -1,5 +1,5 @@
 /**
- * Dialogs for Rekordbox export, duplicate merge, crate replace, relink, sharing, and file changes.
+ * Dialogs for Rekordbox export, duplicate merge, crate replace, relink, and sharing.
  *
  * Importing this module does not open a dialog and does not fetch.
  * wireDialogs attaches the listeners. app.ts calls it once at startup.
@@ -10,7 +10,6 @@ import { failureOf, getRelink, postJSON, readJSONOr } from "./api";
 import type { LibraryStatusNotice, OpenOptions } from "./wizard-view";
 import type {
   CratesReplacePreview,
-  FilesBody,
   FilesPayload,
   LogsPayload,
   MergeCrate,
@@ -23,28 +22,49 @@ import type {
   Track,
 } from "./api-types";
 import { bridge } from "./bridge";
+import { bindCrateActions } from "./crate-store";
 import { el } from "./dom";
 import { scoreQuery } from "./fuzzy";
 import { applyLayout } from "./layout";
 import { state } from "./state";
 import { inputEl, selectEl, setTooltip } from "./tooltip";
 import { keepCopy, openReplaceCopy, tips } from "./tooltip-strings";
+import { openFilesDialog, startRenameFromTags } from "./files";
+import { mountFilesIslands } from "./files-mount";
 import {
   applyStatus,
   crateNamesFor,
-  failFiles,
   loadDuplicates,
-  loadFolder,
   loadLibrary,
   lockDown,
   playlistCrate,
-  renderFiles,
   selectTrack,
   selectedDuplicateGroup,
-  selectedFiles,
   setNotice,
 } from "./views";
-import { PSEUDO, getLocale, isLanguage, resolveLocale, serverMessage, setLocale, t } from "./i18n";
+import { serverMessage, t } from "./i18n";
+import {
+  applyAppearance,
+  applyLanguage,
+  applyPrivacy,
+  bindRerunSetup,
+  saveColorway,
+  saveIconFollow,
+  saveLanguage,
+  patchSettings,
+  saveSharing,
+  settingsIslandMounted,
+  telemetryNoteText,
+} from "./settings";
+
+export {
+  applyAppearance,
+  applyLanguage,
+  applyPrivacy,
+  saveColorway,
+  saveIconFollow,
+  saveLanguage,
+};
 
 let rekordboxXml = "";
 let mergePreview: MergePreview | null = null;
@@ -57,31 +77,6 @@ let replaceToken = 0;
 let replaceLoading = false;
 let consentSettled = false;
 let privacySync = false;
-let appearanceSync = false;
-
-const COLORWAYS = ["serato-like", "dark-club", "light", "classic"] as const;
-const LEGACY_COLORWAYS: Record<string, (typeof COLORWAYS)[number]> = {
-  motown: "classic",
-  "deep-house": "classic",
-  "daisy-age": "classic",
-};
-
-function isColorway(value: unknown): value is (typeof COLORWAYS)[number] {
-  return typeof value === "string" && (COLORWAYS as readonly string[]).includes(value);
-}
-
-function resolveColorway(value: unknown): (typeof COLORWAYS)[number] {
-  if (isColorway(value)) return value;
-  if (typeof value === "string") {
-    const mapped = LEGACY_COLORWAYS[value];
-    if (mapped !== undefined) return mapped;
-  }
-  return "serato-like";
-}
-let filesPreview: FilesPayload | null = null;
-let filesAction = "";
-let filesTagScope: "paths" | "crate" = "paths";
-let filesTrigger: HTMLElement | null = null;
 let relinkPlan: RelinkPlan | null = null;
 let relinkLoading = false;
 const relinkChosen = new Map<number, string>();
@@ -805,168 +800,6 @@ async function confirmReplaceInCrates(): Promise<void> {
 }
 
 /**
- * Describe the current sharing choice in one sentence.
- *
- * The note sits under the settings checkbox. It does not include the
- * install id or any library data. No request is made.
- *
- * @returns {string} Status sentence for the settings dialog.
- */
-function telemetryNoteText() {
-  if (!state.telemetryConfigured) {
-    return t("sharing.noKeys");
-  }
-  if (state.telemetryConsent === true) {
-    return t("sharing.canSend");
-  }
-  return t("sharing.nothingSent");
-}
-
-/**
- * Apply a /api/settings payload to the checkbox and the note.
- *
- * privacySync keeps the checkbox assignment from posting the choice
- * again. A null consent leaves the checkbox off. No request is made.
- *
- * @param {object} payload Settings object from the server.
- * @returns {void}
- */
-/**
- * Apply the saved language to the picker and the page.
- *
- * A payload without `language` leaves both alone. A saved code switches
- * the page to it. Null follows the OS language. The pseudo-locale from
- * the URL is kept, since it is only for layout checks. No request is made.
- *
- * @param {object} payload Settings object from the server.
- * @returns {void}
- */
-export function applyLanguage(payload: SettingsPayload): void {
-  if (!("language" in payload)) return;
-  const saved = isLanguage(payload.language) ? payload.language : null;
-  el("language-select").value = saved ?? "";
-  if (getLocale() !== PSEUDO) setLocale(resolveLocale(saved, systemLanguages()));
-}
-
-function systemLanguages(): string[] {
-  return Array.isArray(navigator.languages) && navigator.languages.length
-    ? [...navigator.languages]
-    : [navigator.language || "en"];
-}
-
-/**
- * Apply the saved theme to the picker, the page, and the icon preview.
- *
- * A payload without theme fields leaves the controls alone. The checkbox
- * defaults to on. The preview shows the colorway icon even when the
- * running icon stays the usual one. No request is made.
- *
- * @param payload Settings object from the server.
- * @returns {void}
- */
-export function applyAppearance(payload: SettingsPayload): void {
-  const hasColorway = "colorway" in payload;
-  const hasFollow = "icon_follows_theme" in payload;
-  const hasHref = "icon_href" in payload;
-  if (!hasColorway && !hasFollow && !hasHref) return;
-  const colorway = hasColorway ? resolveColorway(payload.colorway) : resolveColorway(el("colorway-select").value);
-  const follow = hasFollow ? payload.icon_follows_theme !== false : el("icon-follows-theme").checked;
-  appearanceSync = true;
-  if (hasColorway) el("colorway-select").value = colorway;
-  if (hasFollow) el("icon-follows-theme").checked = follow;
-  appearanceSync = false;
-  const shown = resolveColorway(el("colorway-select").value);
-  document.documentElement.dataset.colorway = shown;
-  const preview = el("colorway-preview");
-  preview.src = `/img/icons/placeholder-${shown}.svg`;
-  preview.alt = t("settings.colorwayPreview");
-  const href = hasHref && typeof payload.icon_href === "string"
-    ? payload.icon_href
-    : follow
-      ? `/img/icons/placeholder-${shown}.svg`
-      : "/img/icons/default.svg";
-  const icon = document.getElementById("app-icon");
-  if (icon instanceof HTMLLinkElement) icon.href = href;
-}
-
-/** Sentence under the theme controls after a save. */
-function iconStatusText(icon: SettingsPayload["icon"]): string {
-  if (!icon) return t("settings.iconSaved");
-  if (!icon.follows_theme) return t("settings.iconDefault");
-  if (icon.applied && icon.target === "dock") return t("settings.iconAppliedDock");
-  if (icon.applied && icon.target === "window") return t("settings.iconAppliedWindow");
-  if (!icon.applied && (icon.reason === "unsupported" || icon.reason === "no-window")) {
-    return t("settings.iconUnsupported");
-  }
-  return t("settings.iconSaved");
-}
-
-/**
- * Save the theme picked in Settings and paint it now.
- *
- * The page switches before the save answers. A failed save says so and
- * keeps the new theme for this session.
- *
- * @returns {Promise<void>}
- */
-export async function saveColorway(): Promise<void> {
-  if (appearanceSync) return;
-  const value = el("colorway-select").value;
-  if (!isColorway(value)) return;
-  document.documentElement.dataset.colorway = value;
-  el("colorway-preview").src = `/img/icons/placeholder-${value}.svg`;
-  el("icon-status").textContent = "";
-  try {
-    const payload = await postJSON<SettingsPayload>("/api/settings", { colorway: value });
-    applyAppearance(payload);
-    el("icon-status").textContent = iconStatusText(payload.icon);
-  } catch {
-    el("icon-status").textContent = t("settings.iconNotSaved");
-  }
-}
-
-/**
- * Save whether the running icon follows the theme.
- *
- * False is sent as false. A failed save says so and keeps the checkbox
- * where the person left it for this session.
- *
- * @returns {Promise<void>}
- */
-export async function saveIconFollow(): Promise<void> {
-  if (appearanceSync) return;
-  const follow = el("icon-follows-theme").checked;
-  el("icon-status").textContent = "";
-  try {
-    const payload = await postJSON<SettingsPayload>("/api/settings", { icon_follows_theme: follow });
-    applyAppearance(payload);
-    el("icon-status").textContent = iconStatusText(payload.icon);
-  } catch {
-    el("icon-status").textContent = t("settings.iconNotSaved");
-  }
-}
-
-/**
- * Save the language picked in Settings and switch the page now.
- *
- * The page switches before the save answers, so the choice shows at once.
- * A failed save says so and keeps the new language for this session.
- *
- * @returns {Promise<void>}
- */
-export async function saveLanguage(): Promise<void> {
-  const value = el("language-select").value;
-  const saved = isLanguage(value) ? value : null;
-  el("language-status").textContent = "";
-  setLocale(resolveLocale(saved, systemLanguages()));
-  try {
-    await postJSON("/api/settings", { language: saved });
-  } catch {
-    el("language-status").textContent = t("settings.languageNotSaved");
-  }
-}
-
-/**
  * Paint open dialogs again in the active language.
  *
  * The merge plan, the sharing note, and the file dialog's confirm label
@@ -997,43 +830,10 @@ export function repaintDialogs(): void {
     fillRelinkBanner();
     renderRelinkRows();
   }
-  if (el("files-dialog").open) {
-    el("files-confirm").textContent = filesAction === "delete" ? t("files.moveToTrash") : t("common.confirm");
-  }
 }
 
-function applyPrivacy(payload: SettingsPayload) {
-  state.telemetryConsent = payload.telemetry_consent ?? null;
-  state.telemetryConfigured = Boolean(payload.telemetry_configured);
-  state.wizardComplete = payload.wizard_complete === true;
-  privacySync = true;
-  el("telemetry-toggle").checked = state.telemetryConsent === true;
-  privacySync = false;
-  el("telemetry-note").textContent = telemetryNoteText();
-}
-
-/**
- * POST the sharing choice.
- *
- * False is sent as false. The button or checkbox stays disabled until
- * the response arrives. A failure leaves the previous choice in place
- * and shows what to do next.
- *
- * @param {boolean} value True to share, false to send nothing.
- * @param {HTMLElement} status Element that receives the result sentence.
- * @returns {Promise<boolean>} True when the server stored the choice.
- */
 async function saveConsent(value: boolean, status: HTMLElement) {
-  status.textContent = t("wizard.saving");
-  try {
-    const payload = await postJSON("/api/settings", { telemetry_consent: value });
-    applyPrivacy(payload);
-    status.textContent = value ? t("sharing.on") : t("sharing.off");
-    return true;
-  } catch (error) {
-    status.textContent = t("wizard.consentFailed");
-    return false;
-  }
+  return saveSharing(value, status);
 }
 
 /**
@@ -1105,206 +905,6 @@ export async function loadPrivacy() {
   if (token === rekordboxToken) applyRekordboxExport(payload);
   if (!state.wizardComplete && openWizard(false, el("search"))) return;
   if (payload.needs_consent_prompt) showConsent();
-}
-
-/**
- * Open the review dialog for one file action.
- *
- * Delete, a chosen move, and rename from tags load the preview immediately.
- * Rename and replace wait until Review, because those need a typed value.
- * Cancel is focused for a delete.
- *
- * @param {string} action File action.
- * @param {HTMLElement|null} trigger Control that opened the dialog.
- * @param {"paths"|"crate"} scope Files selection or one crate's members.
- * @returns {void}
- */
-function openFilesDialog(
-  action: string,
-  trigger: EventTarget | null,
-  scope: "paths" | "crate" = "paths",
-) {
-  filesAction = action;
-  filesTagScope = scope;
-  filesPreview = null;
-  filesTrigger = trigger instanceof HTMLElement ? trigger : null;
-  el("files-name-label").hidden = action !== "rename";
-  el("files-replace-label").hidden = action !== "replace";
-  el("files-summary").textContent = "";
-  el("files-warning").textContent = "";
-  el("files-dialog-status").textContent = "";
-  el("files-changes").replaceChildren();
-  const selected = selectedFiles();
-  if (action === "rename" && selected.length === 1) el("files-name").value = selected[0]!.name;
-  if (action === "replace") el("files-replacement").value = "";
-  const confirm = el("files-confirm");
-  confirm.classList.toggle("danger", action === "delete");
-  confirm.textContent = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
-  setTooltip(confirm, action === "delete" ? tips.filesMoveTrash : tips.filesConfirm);
-  syncFilesDialog();
-  el("files-dialog").showModal();
-  if (
-    action === "delete" ||
-    action === "move" ||
-    action === "move_folder" ||
-    action === "rename_from_tags"
-  ) {
-    el("files-cancel").focus();
-    reviewFiles().catch((error) => {
-      el("files-dialog-status").textContent = failureOf(error).message;
-    });
-  } else if (action === "rename") el("files-name").focus();
-  else el("files-replacement").focus();
-}
-
-/**
- * Enable confirm only after a preview that can be saved.
- *
- * @returns {void}
- */
-function syncFilesDialog() {
-  const confirm = el("files-confirm");
-  const review = el("files-review");
-  const ready = Boolean(filesPreview?.ok && state.writable && filesPreview.needs_confirm);
-  confirm.disabled = !ready;
-  review.hidden =
-    filesAction === "delete" ||
-    filesAction === "move" ||
-    filesAction === "move_folder" ||
-    filesAction === "rename_from_tags";
-  if (!state.writable) {
-    el("files-dialog-status").textContent = el("status").textContent;
-  }
-}
-
-/**
- * Ask for a preview and paint the paths that would change.
- *
- * The response is 200 even when the save would be refused. ok false
- * keeps Confirm disabled and shows the refusal.
- *
- * @returns {Promise<void>}
- */
-async function reviewFiles() {
-  const body = filesBody(false);
-  el("files-dialog-status").textContent = t("files.checking");
-  const payload = await postJSON("/api/files", body);
-  filesPreview = payload;
-  el("files-summary").textContent = payload.summary || "";
-  el("files-warning").textContent = payload.warning || "";
-  el("files-dialog-status").textContent = payload.ok ? "" : serverMessage(payload, t("files.notSaved"));
-  const list = el("files-changes");
-  list.replaceChildren();
-  for (const change of payload.changes || []) {
-    const item = document.createElement("li");
-    const crates = Array.isArray(change.crates) && change.crates.length
-      ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}`
-      : "";
-    const effect = change.effect === "trash" ? t("files.trash") : change.to;
-    item.textContent = `${change.from} → ${effect}${crates}`;
-    list.append(item);
-  }
-  for (const skip of payload.skipped || []) {
-    const item = document.createElement("li");
-    item.textContent = skip;
-    list.append(item);
-  }
-  if (payload.more) {
-    const more = document.createElement("li");
-    more.textContent = t("files.andMore", { count: Number(payload.more) });
-    list.append(more);
-  }
-  if (payload.serato) applyStatus(payload.serato);
-  syncFilesDialog();
-}
-
-/**
- * Build the JSON body for the current file action.
- *
- * @param {boolean} confirm True only after the person confirms the preview.
- * @returns {object} Request body for POST /api/files.
- */
-function filesBody(confirm: boolean): FilesBody {
-  const body: FilesBody = { action: filesAction };
-  if (confirm) body.confirm = true;
-  if (filesAction === "rename") {
-    const selected = selectedFiles();
-    body.path = (selected[0]?.path || state.filesPickPaths[0]) as string;
-    body.name = el("files-name").value;
-  } else if (filesAction === "move") {
-    body.paths = state.filesPickPaths.length ? [...state.filesPickPaths] : selectedFiles().map((entry) => entry.path);
-    body.destination = state.filesPath;
-  } else if (filesAction === "move_folder") {
-    body.path = state.filesPickSource || state.filesPath;
-    body.destination = state.filesPath;
-  } else if (filesAction === "replace") {
-    const selected = selectedFiles();
-    body.path = selected[0]?.path || "";
-    body.replacement = el("files-replacement").value.trim();
-  } else if (filesAction === "delete") {
-    body.paths = selectedFiles().map((entry) => entry.path);
-  } else if (filesAction === "rename_from_tags") {
-    if (filesTagScope === "crate") {
-      const crate = state.activeCrate;
-      if (typeof crate === "number") {
-        body.crate = crate;
-        body.space = state.space;
-      }
-    } else {
-      body.paths = selectedFiles().map((entry) => entry.path);
-    }
-  }
-  return body;
-}
-
-/**
- * Close the file dialog and return focus to the control that opened it.
- *
- * @returns {void}
- */
-function closeFilesDialog() {
-  const trigger = filesTrigger;
-  filesTrigger = null;
-  filesTagScope = "paths";
-  if (el("files-dialog").open) el("files-dialog").close();
-  if (trigger instanceof HTMLElement) trigger.focus();
-}
-
-/**
- * Save a confirmed file change and reload the folder and the library.
- *
- * @returns {Promise<void>}
- */
-async function confirmFiles() {
-  if (!filesPreview?.ok || !state.writable) return;
-  const confirm = el("files-confirm");
-  confirm.disabled = true;
-  el("files-dialog-status").textContent = t("files.saving");
-  const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
-  try {
-    const payload = await postJSON("/api/files", filesBody(true));
-    if (payload.serato) applyStatus(payload.serato);
-    closeFilesDialog();
-    state.filesPick = null;
-    state.filesPickPaths = [];
-    state.filesPickSource = "";
-    let message = payload.summary || t("files.updated");
-    if (payload.warning) message = `${message} ${payload.warning}`;
-    if (crateScope && state.mode !== "files") {
-      setNotice(message);
-      await loadLibrary();
-      return;
-    }
-    state.filesMessage = message;
-    await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
-    await loadLibrary();
-    state.filesMessage = state.filesMessage;
-    renderFiles();
-  } catch (error) {
-    if (failureOf(error).status === 409) lockDown(error);
-    el("files-dialog-status").textContent = failureOf(error).message;
-    confirm.disabled = false;
-  }
 }
 
 function relinkReason(reason: string): string {
@@ -1631,224 +1231,118 @@ export function wireDialogs(): void {
   });
 
   el("open-settings").addEventListener("click", () => {
+    patchSettings({ settingsStatus: "", logFallback: "", logFallbackHidden: true });
     el("settings-status").textContent = "";
     el("log-fallback").hidden = true;
     el("telemetry-note").textContent = telemetryNoteText();
     el("settings-dialog").showModal();
   });
 
-  el("language-select").addEventListener("change", () => {
-    void saveLanguage();
-  });
-
-  el("colorway-select").addEventListener("change", () => {
-    void saveColorway();
-  });
-
-  el("icon-follows-theme").addEventListener("change", () => {
-    void saveIconFollow();
-  });
-
-  el("settings-close").addEventListener("click", () => {
-    el("settings-dialog").close();
-  });
-
-  el("rerun-wizard").addEventListener("click", () => {
+  bindRerunSetup(() => {
     el("settings-dialog").close();
     openWizard(true, el("open-settings"));
   });
 
-  el("telemetry-toggle").addEventListener("change", () => {
-    if (privacySync) return;
-    const want = el("telemetry-toggle").checked;
-    el("telemetry-toggle").disabled = true;
-    saveConsent(want, el("settings-status")).then((ok) => {
-      el("telemetry-toggle").disabled = false;
-      if (ok) {
-        consentSettled = true;
-        return;
-      }
-      privacySync = true;
-      el("telemetry-toggle").checked = state.telemetryConsent === true;
-      privacySync = false;
+  if (!settingsIslandMounted()) {
+    el("language-select").addEventListener("change", () => {
+      void saveLanguage();
     });
-  });
 
-  el("open-logs").addEventListener("click", () => {
-    const button = el("open-logs");
-    button.disabled = true;
-    el("settings-status").textContent = t("wizard.opening");
-    postJSON("/api/logs/open", {})
-      .then(() => {
-        el("settings-status").textContent = t("logs.opened");
-      })
-      .catch(() => {
-        el("settings-status").textContent = t("logs.openFailed");
-      })
-      .finally(() => {
-        button.disabled = false;
-      });
-  });
+    el("colorway-select").addEventListener("change", () => {
+      void saveColorway();
+    });
 
-  el("copy-logs").addEventListener("click", async () => {
-    const button = el("copy-logs");
-    button.disabled = true;
-    el("settings-status").textContent = t("logs.copying");
-    try {
-      const response = await fetch("/api/logs");
-      const payload = await readJSONOr<LogsPayload>(response, {});
-      if (!response.ok) throw new Error(serverMessage(payload, t("logs.copyFailed")));
-      const text = payload.text || "";
-      if (!text) {
-        el("settings-status").textContent = t("logs.empty");
-        return;
-      }
-      let copied = false;
-      if (navigator.clipboard && window.isSecureContext) {
-        try {
-          await navigator.clipboard.writeText(text);
-          copied = true;
-        } catch (error) {
-          copied = false;
+    el("icon-follows-theme").addEventListener("change", () => {
+      void saveIconFollow();
+    });
+
+    el("settings-close").addEventListener("click", () => {
+      el("settings-dialog").close();
+    });
+
+    el("rerun-wizard").addEventListener("click", () => {
+      el("settings-dialog").close();
+      openWizard(true, el("open-settings"));
+    });
+
+    el("telemetry-toggle").addEventListener("change", () => {
+      if (privacySync) return;
+      const want = el("telemetry-toggle").checked;
+      el("telemetry-toggle").disabled = true;
+      saveConsent(want, el("settings-status")).then((ok) => {
+        el("telemetry-toggle").disabled = false;
+        if (ok) {
+          consentSettled = true;
+          return;
         }
+        privacySync = true;
+        el("telemetry-toggle").checked = state.telemetryConsent === true;
+        privacySync = false;
+      });
+    });
+
+    el("open-logs").addEventListener("click", () => {
+      const button = el("open-logs");
+      button.disabled = true;
+      el("settings-status").textContent = t("wizard.opening");
+      postJSON("/api/logs/open", {})
+        .then(() => {
+          el("settings-status").textContent = t("logs.opened");
+        })
+        .catch(() => {
+          el("settings-status").textContent = t("logs.openFailed");
+        })
+        .finally(() => {
+          button.disabled = false;
+        });
+    });
+
+    el("copy-logs").addEventListener("click", async () => {
+      const button = el("copy-logs");
+      button.disabled = true;
+      el("settings-status").textContent = t("logs.copying");
+      try {
+        const response = await fetch("/api/logs");
+        const payload = await readJSONOr<LogsPayload>(response, {});
+        if (!response.ok) throw new Error(serverMessage(payload, t("logs.copyFailed")));
+        const text = payload.text || "";
+        if (!text) {
+          el("settings-status").textContent = t("logs.empty");
+          return;
+        }
+        let copied = false;
+        if (navigator.clipboard && window.isSecureContext) {
+          try {
+            await navigator.clipboard.writeText(text);
+            copied = true;
+          } catch {
+            copied = false;
+          }
+        }
+        if (copied) {
+          el("log-fallback").hidden = true;
+          el("settings-status").textContent = payload.truncated
+            ? t("logs.copiedTruncated")
+            : t("logs.copied");
+          return;
+        }
+        el("log-fallback").hidden = false;
+        el("log-fallback").value = text;
+        el("log-fallback").focus();
+        el("log-fallback").select();
+        el("settings-status").textContent = t("logs.copyManual");
+      } catch {
+        el("settings-status").textContent = t("logs.copyFailed");
+      } finally {
+        button.disabled = false;
       }
-      if (copied) {
-        el("log-fallback").hidden = true;
-        el("settings-status").textContent = payload.truncated
-          ? t("logs.copiedTruncated")
-          : t("logs.copied");
-        return;
-      }
-      el("log-fallback").hidden = false;
-      el("log-fallback").value = text;
-      el("log-fallback").focus();
-      el("log-fallback").select();
-      el("settings-status").textContent = t("logs.copyManual");
-    } catch (error) {
-      el("settings-status").textContent = t("logs.copyFailed");
-    } finally {
-      button.disabled = false;
-    }
-  });
-  el("files-up").addEventListener("click", () => {
-    if (state.filesParent) {
-      loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error) => failFiles(error));
-    }
-  });
-
-  el("files-refresh").addEventListener("click", () => {
-    const path = state.filesAtRoots ? "" : state.filesPath;
-    loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots, refresh: true }).catch((error) => failFiles(error));
-  });
-
-  el("files-elsewhere").addEventListener("click", () => {
-    if (state.filesElsewhere) loadFolder("").catch((error) => failFiles(error));
-    else loadFolder("", { elsewhere: true }).catch((error) => failFiles(error));
-  });
-
-  el("files-rename").addEventListener("click", (event) => {
-    if (selectedFiles().length !== 1) {
-      state.filesError = t("files.chooseOneRename");
-      renderFiles();
-      return;
-    }
-    openFilesDialog("rename", event.currentTarget);
-  });
-
-  el("files-rename-from-tags").addEventListener("click", (event) => {
-    if (!selectedFiles().length) {
-      state.filesError = t("files.chooseRenameFromTags");
-      renderFiles();
-      return;
-    }
-    openFilesDialog("rename_from_tags", event.currentTarget, "paths");
-  });
-
+    });
+  }
+  mountFilesIslands();
   el("crate-rename-from-tags").addEventListener("click", (event) => {
     const crate = state.activeCrate;
     if (typeof crate !== "number") return;
-    openFilesDialog("rename_from_tags", event.currentTarget, "crate");
-  });
-
-  el("files-move").addEventListener("click", () => {
-    const selected = selectedFiles();
-    if (!selected.length) {
-      state.filesError = t("files.chooseMove");
-      renderFiles();
-      return;
-    }
-    state.filesPick = "move";
-    state.filesPickPaths = selected.map((entry) => entry.path);
-    state.filesError = "";
-    state.filesMessage = t("files.chooseDestination");
-    renderFiles();
-  });
-
-  el("files-move-folder").addEventListener("click", () => {
-    state.filesPick = "move_folder";
-    state.filesPickSource = state.filesPath;
-    state.filesError = "";
-    state.filesMessage = t("files.chooseDestination");
-    renderFiles();
-  });
-
-  el("files-move-here").addEventListener("click", (event) => {
-    openFilesDialog(state.filesPick === "move_folder" ? "move_folder" : "move", event.currentTarget);
-  });
-
-  el("files-pick-cancel").addEventListener("click", () => {
-    state.filesPick = null;
-    state.filesPickPaths = [];
-    state.filesPickSource = "";
-    state.filesMessage = "";
-    renderFiles();
-  });
-
-  el("files-replace").addEventListener("click", (event) => {
-    if (selectedFiles().length !== 1) {
-      state.filesError = t("files.chooseOneReplace");
-      renderFiles();
-      return;
-    }
-    openFilesDialog("replace", event.currentTarget);
-  });
-
-  el("files-delete").addEventListener("click", (event) => {
-    if (!selectedFiles().length) {
-      state.filesError = t("files.chooseDelete");
-      renderFiles();
-      return;
-    }
-    openFilesDialog("delete", event.currentTarget);
-  });
-
-  el("files-review").addEventListener("click", () => {
-    reviewFiles().catch((error) => {
-      el("files-dialog-status").textContent = failureOf(error).message;
-    });
-  });
-
-  el("files-confirm").addEventListener("click", () => {
-    confirmFiles().catch((error) => {
-      el("files-dialog-status").textContent = failureOf(error).message;
-    });
-  });
-
-  el("files-cancel").addEventListener("click", () => closeFilesDialog());
-
-  el("files-name").addEventListener("input", () => {
-    filesPreview = null;
-    syncFilesDialog();
-  });
-
-  el("files-replacement").addEventListener("input", () => {
-    filesPreview = null;
-    syncFilesDialog();
-  });
-
-  el("files-dialog").addEventListener("cancel", (event) => {
-    event.preventDefault();
-    closeFilesDialog();
+    startRenameFromTags(event.currentTarget, "crate");
   });
 }
 
@@ -1869,3 +1363,15 @@ function openSetup(): void {
 }
 
 bridge.openSetup = openSetup;
+
+bindCrateActions({
+  renameFromTags: (button) => {
+    const crate = state.activeCrate;
+    if (typeof crate !== "number") return;
+    openFilesDialog("rename_from_tags", button, "crate");
+  },
+  exportRekordbox: () => {
+    if (playlistCrate() == null) return;
+    requestRekordboxReport();
+  },
+});

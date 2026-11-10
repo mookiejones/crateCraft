@@ -8,6 +8,8 @@
  * and does not open a dialog.
  */
 
+import type { SeratoStatus } from "./api-types";
+
 export const bridge: {
   selectTrack: (id: number) => void | Promise<void>;
   selectEntry: (id: number) => void;
@@ -16,6 +18,9 @@ export const bridge: {
   openSetup: () => void;
   reloadLibrary: () => void | Promise<void>;
   lockDown: (error: unknown) => void;
+  applyStatus: (info: SeratoStatus | null | undefined) => void;
+  renderShell: () => void;
+  setNotice: (text: string) => void;
 } = {
   selectTrack(_id: number) {},
   selectEntry(_id: number) {},
@@ -30,4 +35,7 @@ export const bridge: {
     return Promise.resolve();
   },
   lockDown(_error: unknown) {},
+  applyStatus(_info: SeratoStatus | null | undefined) {},
+  renderShell() {},
+  setNotice(_text: string) {},
 };

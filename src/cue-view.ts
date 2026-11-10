@@ -1,7 +1,7 @@
 /**
  * Cue pad slots and restore cue diffs (#236).
  *
- * views.ts paints pads 1–8 in the detail pane. restore.ts paints
+ * The detail pane paints pads 1–8 with CuePads. The restore dialog paints
  * before → after for a changed slot. Colors are the Serato DJ Pro GUI
  * pad defaults from Mixxx's kSeratoDJProHotcueColorPalette assignment
  * `{0, 2, 12, 3, 6, 15, 9, 14}`. A stored hex color wins. Nothing here

@@ -39,6 +39,7 @@ test("every control has a tooltip, and focus shows it", async ({ page }) => {
   await page.locator("#settings-dialog").evaluate((node) => {
     if (node instanceof HTMLDialogElement) node.showModal();
   });
+  await expect(page.locator("[data-settings-react]")).toHaveCount(1);
   const shortcuts = page.locator("#shortcuts-title");
   await shortcuts.focus();
   const tip = page.locator("#app-tooltip");
@@ -75,6 +76,9 @@ test("every control has a tooltip, and focus shows it", async ({ page }) => {
   await page.locator("[aria-label='Zoom in']").focus();
   await expect(tip).toHaveText("Show a shorter stretch of the waveform around the playhead.");
   await saveShot(page, "tooltip_zoom");
+
+  await expect(page.locator("#files-list")).toContainText("Sets");
+  await expect(page.locator("#files-path")).toContainText("House");
 
   await page.locator(".player-play").focus();
   await expect(tip).toContainText("Space");

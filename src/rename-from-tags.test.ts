@@ -3,6 +3,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { bridge } from "./bridge";
 import { wireDialogs } from "./dialogs";
 import { setLocale } from "./i18n";
 import { state } from "./state";
@@ -49,6 +50,8 @@ beforeEach(() => {
   vi.spyOn(views, "loadLibrary").mockResolvedValue(undefined);
   vi.spyOn(views, "loadFolder").mockResolvedValue(undefined);
   vi.spyOn(views, "setNotice").mockImplementation(() => undefined);
+  vi.spyOn(bridge, "reloadLibrary").mockResolvedValue(undefined);
+  vi.spyOn(bridge, "setNotice").mockImplementation(() => undefined);
   wireDialogs();
 });
 
@@ -106,11 +109,12 @@ describe("rename from tags", () => {
       confirm: true,
     });
     await vi.waitFor(() => {
-      expect(views.setNotice).toHaveBeenCalledWith(
+      expect(bridge.setNotice).toHaveBeenCalledWith(
         "Rename 1 file to Artist - Title. 1 library track keeps its crates.",
       );
     });
-    expect(views.loadLibrary).toHaveBeenCalled();
+    expect(bridge.reloadLibrary).toHaveBeenCalled();
     expect(views.loadFolder).not.toHaveBeenCalled();
+    expect(state.mode).toBe("crates");
   });
 });
