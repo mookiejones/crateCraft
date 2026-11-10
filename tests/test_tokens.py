@@ -796,6 +796,7 @@ class ContrastTests(unittest.TestCase):
             ".player-toggle",
             ".waveform-zoom-button",
             ".waveform-overview:focus-visible",
+            "#portable-view-verdict:focus-visible",
             ".detail-play",
             ".operations-alert",
         } | {selector for selector, _, _ in _CONTROL_EDGE}
