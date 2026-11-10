@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners4 = [], signal = this.signal = {
+        var listeners5 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners4.push(listener);
+            listeners5.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners4.forEach(function(listener) {
+          listeners5.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners4 = currentEntangledListeners;
+          var listeners5 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners4.length; i++) (0, listeners4[i])();
+          for (var i = 0; i < listeners5.length; i++) (0, listeners5[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners4 = [], thenableWithOverride = {
+        var listeners5 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners4.push(resolve);
+            listeners5.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners4.length; i++) (0, listeners4[i])(result);
+            for (var i = 0; i < listeners5.length; i++) (0, listeners5[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners4.length; error2++)
-              (0, listeners4[error2])(void 0);
+            for (error2 = 0; error2 < listeners5.length; error2++)
+              (0, listeners5[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners4 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners5 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners4.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners5.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners4.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners5.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners4;
+          if (3 === targetFiber.tag) return listeners5;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners4 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners5 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners4.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners5.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners4.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners5.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners4.length && dispatchQueue.push({ event, listeners: listeners4 });
+        0 !== listeners5.length && dispatchQueue.push({ event, listeners: listeners5 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners4 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners4, type, listener, optionsOrUseCapture)) {
+        var listeners5 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners5, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners4.push({
+          listeners5.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners4;
+        this._eventListeners = listeners5;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners4 = this._eventListeners;
-        if (null !== listeners4 && (listener = indexOfEventListener(
-          listeners4,
+        var listeners5 = this._eventListeners;
+        if (null !== listeners5 && (listener = indexOfEventListener(
+          listeners5,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners4[listener];
+          var _listeners$index = listeners5[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners4.splice(listener, 1);
+          listeners5.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -17952,6 +17952,12 @@
       return Promise.resolve();
     },
     lockDown(_error) {
+    },
+    applyStatus(_info) {
+    },
+    renderShell() {
+    },
+    setNotice(_text) {
     }
   };
 
@@ -18338,28 +18344,46 @@
   }
 
   // src/gig.ts
-  var import_react11 = __toESM(require_react(), 1);
+  var import_react12 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom4 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react10 = __toESM(require_react(), 1);
+  var import_react11 = __toESM(require_react(), 1);
   var import_react_dom3 = __toESM(require_react_dom(), 1);
 
-  // src/context/GigContext.tsx
+  // src/context/FilesContext.tsx
   var import_react = __toESM(require_react(), 1);
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-  var GigContext = (0, import_react.createContext)(null);
+  var FilesContext = (0, import_react.createContext)(null);
+  function FilesProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FilesContext, { value, children });
+  }
+  function useFiles() {
+    const value = (0, import_react.useContext)(FilesContext);
+    if (value === null) {
+      throw new Error("useFiles must be used within FilesProvider");
+    }
+    return value;
+  }
+
+  // src/context/GigContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var GigContext = (0, import_react2.createContext)(null);
   function GigStateProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(GigContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GigContext, { value, children });
   }
   function useGig() {
-    const value = (0, import_react.useContext)(GigContext);
+    const value = (0, import_react2.useContext)(GigContext);
     if (value === null) {
       throw new Error("useGig must be used within GigStateProvider");
     }
@@ -18367,17 +18391,17 @@
   }
 
   // src/context/PlayerContext.tsx
-  var import_react2 = __toESM(require_react(), 1);
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-  var PlayerContext = (0, import_react2.createContext)(null);
+  var import_react3 = __toESM(require_react(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var PlayerContext = (0, import_react3.createContext)(null);
   function PlayerProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PlayerContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PlayerContext, { value, children });
   }
   function usePlayer() {
-    const value = (0, import_react2.useContext)(PlayerContext);
+    const value = (0, import_react3.useContext)(PlayerContext);
     if (value === null) {
       throw new Error("usePlayer must be used within PlayerProvider");
     }
@@ -18385,7 +18409,7 @@
   }
 
   // src/context/WaveformContext.tsx
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
   var import_react_dom = __toESM(require_react_dom(), 1);
 
   // src/waveform.ts
@@ -18904,17 +18928,17 @@
   }
 
   // src/context/WaveformContext.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   var defaultUi = {
     pps: ZOOM_DEFAULT_PPS,
     phase: "idle",
     overviewSource: ""
   };
-  var WaveformContext = (0, import_react3.createContext)(null);
-  var WaveformClockContext = (0, import_react3.createContext)(null);
+  var WaveformContext = (0, import_react4.createContext)(null);
+  var WaveformClockContext = (0, import_react4.createContext)(null);
   function WaveformProvider({ children }) {
-    const [ui, setUi] = (0, import_react3.useState)(defaultUi);
-    const value = (0, import_react3.useMemo)(() => {
+    const [ui, setUi] = (0, import_react4.useState)(defaultUi);
+    const value = (0, import_react4.useMemo)(() => {
       const blocked = ui.phase === "reading" || ui.phase === "unavailable";
       return {
         ...ui,
@@ -18927,27 +18951,512 @@
         }
       };
     }, [ui]);
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(WaveformContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(WaveformContext, { value, children });
   }
   function WaveformClockProvider({
     clock,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(WaveformClockContext, { value: clock, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(WaveformClockContext, { value: clock, children });
   }
   function useWaveform() {
-    const value = (0, import_react3.useContext)(WaveformContext);
+    const value = (0, import_react4.useContext)(WaveformContext);
     if (value === null) {
       throw new Error("useWaveform must be used within WaveformProvider");
     }
     return value;
   }
   function useWaveformClockOverride() {
-    return (0, import_react3.useContext)(WaveformClockContext);
+    return (0, import_react4.useContext)(WaveformClockContext);
+  }
+
+  // src/files-store.ts
+  var listeners = /* @__PURE__ */ new Set();
+  function subscribeFiles(listener) {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }
+  function emitFiles() {
+    for (const listener of listeners) listener();
+  }
+
+  // src/files.ts
+  var FILES_SEARCH_MS = 200;
+  var filesRequest = 0;
+  var filesSearchTimer = 0;
+  var mountHook = () => {
+  };
+  function bindFilesMount(fn) {
+    mountHook = fn;
+  }
+  var filesPreview = null;
+  var filesAction = "";
+  var filesTagScope = "paths";
+  var filesTrigger = null;
+  var dialogName = "";
+  var dialogReplacement = "";
+  var dialogStatus = "";
+  function renderFiles() {
+    mountHook();
+    emitFiles();
+    bridge.renderShell();
+  }
+  function mountFiles() {
+    mountHook();
+  }
+  function failFiles(error2) {
+    state.filesLoading = false;
+    state.filesError = failureOf(error2).message || t("error.folder_unreadable");
+    renderFiles();
+  }
+  async function loadFolder(path, options = {}) {
+    window.clearTimeout(filesSearchTimer);
+    state.filesQuery = "";
+    state.filesSearching = false;
+    const searchField = document.getElementById("files-search");
+    if (searchField instanceof HTMLInputElement) searchField.value = "";
+    const elsewhere = options.elsewhere === true;
+    const refresh = options.refresh === true;
+    const atRoots = path === "" && !elsewhere;
+    const token3 = ++filesRequest;
+    state.filesLoading = true;
+    state.filesError = "";
+    if (!options.keepMessage) state.filesMessage = "";
+    state.filesSelected = /* @__PURE__ */ new Set();
+    state.filesActive = 0;
+    state.filesAtRoots = atRoots;
+    state.filesElsewhere = elsewhere;
+    if (atRoots) {
+      state.filesPath = "";
+      state.filesParent = null;
+      state.filesEntries = [];
+      state.filesBreadcrumb = [];
+      state.filesRoot = null;
+    }
+    renderFiles();
+    if (refresh || atRoots) {
+      const rootsPayload = await fetchLibraryRoots(refresh);
+      if (token3 !== filesRequest) return;
+      state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
+    }
+    if (atRoots) {
+      state.filesPath = "";
+      state.filesParent = null;
+      state.filesEntries = [];
+      state.filesBreadcrumb = [];
+      state.filesRoot = null;
+      state.filesElsewhere = false;
+      state.filesAtRoots = true;
+      state.filesTruncated = false;
+      state.filesLoading = false;
+      const list2 = document.getElementById("files-list");
+      if (list2) list2.scrollTop = 0;
+      renderFiles();
+      return;
+    }
+    const params = new URLSearchParams();
+    if (path) params.set("path", path);
+    if (elsewhere) params.set("elsewhere", "1");
+    const query = params.size ? `?${params.toString()}` : "";
+    const response = await fetch(`/api/files${query}`);
+    const payload = await readJSONOr(response, {});
+    if (token3 !== filesRequest) return;
+    if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
+    state.filesPath = payload.path || "";
+    state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
+    state.filesEntries = Array.isArray(payload.entries) ? payload.entries : [];
+    state.filesRoot = isFileRoot(payload.root) ? payload.root : null;
+    state.filesBreadcrumb = Array.isArray(payload.breadcrumb) ? payload.breadcrumb.filter(isFileCrumb) : [];
+    state.filesElsewhere = Boolean(payload.elsewhere);
+    state.filesAtRoots = !state.filesPath && !state.filesElsewhere;
+    state.filesTruncated = Boolean(payload.truncated);
+    state.filesLoading = false;
+    const list = document.getElementById("files-list");
+    if (list) list.scrollTop = 0;
+    if (payload.serato) bridge.applyStatus(payload.serato);
+    renderFiles();
+  }
+  async function searchFiles(query) {
+    const token3 = ++filesRequest;
+    const scope = state.filesAtRoots ? "" : state.filesPath;
+    const elsewhere = state.filesElsewhere && !state.filesAtRoots;
+    state.filesLoading = true;
+    state.filesError = "";
+    state.filesSearching = true;
+    state.filesQuery = query;
+    renderFiles();
+    const params = new URLSearchParams();
+    params.set("q", query);
+    if (scope) params.set("path", scope);
+    if (elsewhere) params.set("elsewhere", "1");
+    const response = await fetch(`/api/files?${params.toString()}`);
+    const payload = await readJSONOr(response, {});
+    if (token3 !== filesRequest) return;
+    if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
+    const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
+    state.filesEntries = entries;
+    state.filesTruncated = Boolean(payload.truncated);
+    state.filesLoading = false;
+    state.filesSearching = true;
+    state.filesActive = 0;
+    state.filesSelected = /* @__PURE__ */ new Set();
+    const list = document.getElementById("files-list");
+    if (list) list.scrollTop = 0;
+    renderFiles();
+  }
+  function onFilesSearchInput(value) {
+    window.clearTimeout(filesSearchTimer);
+    state.filesQuery = value;
+    if (!value.trim()) {
+      if (state.filesAtRoots && !state.filesPath) {
+        state.filesSearching = false;
+        state.filesEntries = [];
+        state.filesError = "";
+        state.filesTruncated = false;
+        state.filesLoading = false;
+        renderFiles();
+        return;
+      }
+      loadFolder(state.filesPath, { elsewhere: state.filesElsewhere && Boolean(state.filesPath) }).catch((error2) => failFiles(error2));
+      return;
+    }
+    filesSearchTimer = window.setTimeout(() => {
+      searchFiles(value.trim()).catch((error2) => failFiles(error2));
+    }, FILES_SEARCH_MS);
+  }
+  function isListedFile(value) {
+    if (!value || typeof value !== "object") return false;
+    const row = value;
+    return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
+  }
+  function isFileRoot(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.name === "string" && typeof record.path === "string" && typeof record.kind === "string";
+  }
+  function isFileCrumb(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.name === "string" && typeof record.path === "string";
+  }
+  function filesRowHeight() {
+    if (state.filesSearching) return FILE_ROW;
+    return state.filesAtRoots ? ROOT_ROW : FILE_ROW;
+  }
+  function browserRows() {
+    if (state.filesSearching) return state.filesEntries;
+    if (state.filesAtRoots) {
+      return state.filesRoots.map((root) => {
+        const entry = {
+          name: root.label,
+          path: root.path,
+          detail: root.detail,
+          kind: root.kind === "serato_drive" ? "drive" : "folder",
+          missing: root.missing,
+          removable: root.removable,
+          serato: root.serato
+        };
+        return entry;
+      });
+    }
+    const rank = { dir: 0, file: 1, link: 2 };
+    return [...state.filesEntries].sort((left, right) => {
+      return (rank[left.kind] ?? 3) - (rank[right.kind] ?? 3) || left.name.localeCompare(right.name, void 0, { numeric: true, sensitivity: "base" });
+    });
+  }
+  function selectedFiles() {
+    return state.filesEntries.filter((entry) => entry.kind === "file" && state.filesSelected.has(entry.path));
+  }
+  function focusFilesIndex(index) {
+    const rows2 = browserRows();
+    if (!rows2.length) return;
+    state.filesActive = Math.max(0, Math.min(rows2.length - 1, index));
+    const list = document.getElementById("files-list");
+    if (list) {
+      const rowHeight = filesRowHeight();
+      const view = list.clientHeight || 600;
+      const top = state.filesActive * rowHeight;
+      const maxScroll = Math.max(0, rows2.length * rowHeight - view);
+      if (top < list.scrollTop) list.scrollTop = top;
+      if (top + rowHeight > list.scrollTop + view) list.scrollTop = Math.min(maxScroll, top + rowHeight - view);
+    }
+    renderFiles();
+    const control = list?.querySelector(`[data-files-index="${state.filesActive}"]`);
+    control?.focus();
+  }
+  function activateFilesIndex(index) {
+    const entry = browserRows()[index];
+    if (!entry) return;
+    if (entry.kind === "file") {
+      if (state.filesSelected.has(entry.path)) state.filesSelected.delete(entry.path);
+      else state.filesSelected.add(entry.path);
+      renderFiles();
+      focusFilesIndex(index);
+      return;
+    }
+    if (entry.kind === "link") return;
+    openBrowserRow(entry);
+  }
+  function openBrowserRow(entry) {
+    if (entry.missing) return;
+    const elsewhere = state.filesElsewhere && entry.kind === "dir";
+    loadFolder(entry.path, { elsewhere }).catch((error2) => failFiles(error2));
+  }
+  function onFilesKey(event) {
+    if (state.mode !== "files") return;
+    const list = document.getElementById("files-list");
+    if (!list || !(event.target instanceof Node) || !list.contains(event.target)) return;
+    const rows2 = browserRows();
+    if (!rows2.length) return;
+    if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      if (event.key === "ArrowDown") focusFilesIndex(state.filesActive + 1);
+      else if (event.key === "ArrowUp") focusFilesIndex(state.filesActive - 1);
+      else if (event.key === "Home") focusFilesIndex(0);
+      else focusFilesIndex(rows2.length - 1);
+      return;
+    }
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const control = event.target instanceof HTMLElement ? event.target.closest("button, input") : null;
+    if (control && list.contains(control)) return;
+    event.preventDefault();
+    activateFilesIndex(state.filesActive);
+  }
+  function moveFileList(delta) {
+    if (!browserRows().length) return;
+    focusFilesIndex(state.filesActive + delta);
+  }
+  function openFileList() {
+    if (!browserRows().length) return;
+    activateFilesIndex(state.filesActive);
+  }
+  function focusFileByPath(path) {
+    const index = browserRows().findIndex((entry) => entry.path === path);
+    if (index < 0) return;
+    focusFilesIndex(index);
+  }
+  function toggleFile(entry, index, checked) {
+    state.filesActive = index;
+    if (checked) state.filesSelected.add(entry.path);
+    else state.filesSelected.delete(entry.path);
+    renderFiles();
+  }
+  function markFilesActive(index) {
+    state.filesActive = index;
+    renderFiles();
+  }
+  function goFilesUp() {
+    if (state.filesParent) {
+      loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
+    }
+  }
+  function refreshFiles() {
+    const path = state.filesAtRoots ? "" : state.filesPath;
+    loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots, refresh: true }).catch((error2) => failFiles(error2));
+  }
+  function toggleFilesElsewhere() {
+    if (state.filesElsewhere) loadFolder("").catch((error2) => failFiles(error2));
+    else loadFolder("", { elsewhere: true }).catch((error2) => failFiles(error2));
+  }
+  function openFilesCrumb(path) {
+    loadFolder(path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
+  }
+  function startMoveFiles() {
+    const selected = selectedFiles();
+    if (!selected.length) {
+      state.filesError = t("files.chooseMove");
+      renderFiles();
+      return;
+    }
+    state.filesPick = "move";
+    state.filesPickPaths = selected.map((entry) => entry.path);
+    state.filesError = "";
+    state.filesMessage = t("files.chooseDestination");
+    renderFiles();
+  }
+  function startMoveFolder() {
+    state.filesPick = "move_folder";
+    state.filesPickSource = state.filesPath;
+    state.filesError = "";
+    state.filesMessage = t("files.chooseDestination");
+    renderFiles();
+  }
+  function cancelFilesPick() {
+    state.filesPick = null;
+    state.filesPickPaths = [];
+    state.filesPickSource = "";
+    state.filesMessage = "";
+    renderFiles();
+  }
+  function getFilesDialog() {
+    return {
+      action: filesAction,
+      name: dialogName,
+      replacement: dialogReplacement,
+      status: dialogStatus,
+      preview: filesPreview,
+      scope: filesTagScope
+    };
+  }
+  function openFilesDialog(action, trigger, scope = "paths") {
+    filesAction = action;
+    filesTagScope = scope;
+    filesPreview = null;
+    filesTrigger = trigger instanceof HTMLElement ? trigger : null;
+    dialogStatus = "";
+    const selected = selectedFiles();
+    dialogName = action === "rename" && selected.length === 1 ? selected[0].name : "";
+    dialogReplacement = "";
+    mountFiles();
+    emitFiles();
+    const dialog = el("files-dialog");
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    if (action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags") {
+      el("files-cancel").focus();
+      reviewFiles().catch((error2) => {
+        dialogStatus = failureOf(error2).message;
+        emitFiles();
+      });
+    } else if (action === "rename") {
+      document.getElementById("files-name")?.focus();
+    } else {
+      document.getElementById("files-replacement")?.focus();
+    }
+  }
+  function setDialogName(value) {
+    dialogName = value;
+    filesPreview = null;
+    emitFiles();
+  }
+  function setDialogReplacement(value) {
+    dialogReplacement = value;
+    filesPreview = null;
+    emitFiles();
+  }
+  function setDialogStatus(value) {
+    dialogStatus = value;
+    emitFiles();
+  }
+  async function reviewFiles() {
+    const body = filesBody(false);
+    dialogStatus = t("files.checking");
+    emitFiles();
+    const payload = await postJSON("/api/files", body);
+    filesPreview = payload;
+    dialogStatus = payload.ok ? "" : serverMessage(payload, t("files.notSaved"));
+    if (payload.serato) bridge.applyStatus(payload.serato);
+    emitFiles();
+  }
+  function closeFilesDialog() {
+    const trigger = filesTrigger;
+    filesTrigger = null;
+    filesTagScope = "paths";
+    const dialog = document.getElementById("files-dialog");
+    if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
+    if (trigger instanceof HTMLElement) trigger.focus();
+    emitFiles();
+  }
+  async function confirmFiles() {
+    if (!filesPreview?.ok || !state.writable) return;
+    dialogStatus = t("files.saving");
+    emitFiles();
+    const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
+    try {
+      const payload = await postJSON("/api/files", filesBody(true));
+      if (payload.serato) bridge.applyStatus(payload.serato);
+      closeFilesDialog();
+      state.filesPick = null;
+      state.filesPickPaths = [];
+      state.filesPickSource = "";
+      let message = payload.summary || t("files.updated");
+      if (payload.warning) message = `${message} ${payload.warning}`;
+      if (crateScope && state.mode !== "files") {
+        bridge.setNotice(message);
+        await bridge.reloadLibrary();
+        return;
+      }
+      state.filesMessage = message;
+      await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
+      await bridge.reloadLibrary();
+      renderFiles();
+    } catch (error2) {
+      if (failureOf(error2).status === 409) bridge.lockDown(error2);
+      dialogStatus = failureOf(error2).message;
+      emitFiles();
+    }
+  }
+  function filesBody(confirm2) {
+    const body = { action: filesAction };
+    if (confirm2) body.confirm = true;
+    if (filesAction === "rename") {
+      const selected = selectedFiles();
+      body.path = selected[0]?.path || state.filesPickPaths[0];
+      body.name = dialogName;
+    } else if (filesAction === "move") {
+      body.paths = state.filesPickPaths.length ? [...state.filesPickPaths] : selectedFiles().map((entry) => entry.path);
+      body.destination = state.filesPath;
+    } else if (filesAction === "move_folder") {
+      body.path = state.filesPickSource || state.filesPath;
+      body.destination = state.filesPath;
+    } else if (filesAction === "replace") {
+      const selected = selectedFiles();
+      body.path = selected[0]?.path || "";
+      body.replacement = dialogReplacement.trim();
+    } else if (filesAction === "delete") {
+      body.paths = selectedFiles().map((entry) => entry.path);
+    } else if (filesAction === "rename_from_tags") {
+      if (filesTagScope === "crate") {
+        const crate = state.activeCrate;
+        if (typeof crate === "number") {
+          body.crate = crate;
+          body.space = state.space;
+        }
+      } else {
+        body.paths = selectedFiles().map((entry) => entry.path);
+      }
+    }
+    return body;
+  }
+  function startRename(trigger) {
+    if (selectedFiles().length !== 1) {
+      state.filesError = t("files.chooseOneRename");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("rename", trigger);
+  }
+  function startRenameFromTags(trigger, scope = "paths") {
+    if (scope === "paths" && !selectedFiles().length) {
+      state.filesError = t("files.chooseRenameFromTags");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("rename_from_tags", trigger, scope);
+  }
+  function startReplace(trigger) {
+    if (selectedFiles().length !== 1) {
+      state.filesError = t("files.chooseOneReplace");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("replace", trigger);
+  }
+  function startDelete(trigger) {
+    if (!selectedFiles().length) {
+      state.filesError = t("files.chooseDelete");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("delete", trigger);
+  }
+  function confirmMoveHere(trigger) {
+    openFilesDialog(state.filesPick === "move_folder" ? "move_folder" : "move", trigger);
   }
 
   // src/drift.ts
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react6 = __toESM(require_react(), 1);
 
   // src/drift-view.ts
   var DRIFT_REASON_ORDER = ["drifting", "live", "pending_map"];
@@ -18978,7 +19487,7 @@
   }
 
   // src/components/GigDetailsGroup.tsx
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
   var import_react_dom2 = __toESM(require_react_dom(), 1);
 
   // src/tooltip-strings.ts
@@ -19743,15 +20252,15 @@
   }
 
   // src/components/GigDetailsGroup.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   var LIST_CAP = 100;
   function GigDetailsGroup({ label, lines }) {
-    const [expanded, setExpanded] = (0, import_react4.useState)(false);
+    const [expanded, setExpanded] = (0, import_react5.useState)(false);
     const shown = expanded || lines.length <= LIST_CAP ? lines : lines.slice(0, LIST_CAP);
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("details", { className: "gig-group", open: true, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("summary", { children: t("gig.groupCount", { label, count: lines.length }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { children: shown.map((line, index) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { children: line }, `${index}:${line}`)) }),
-      lines.length > LIST_CAP && !expanded ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { className: "gig-group", open: true, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("summary", { children: t("gig.groupCount", { label, count: lines.length }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { children: shown.map((line, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("li", { children: line }, `${index}:${line}`)) }),
+      lines.length > LIST_CAP && !expanded ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "button",
         {
           type: "button",
@@ -19769,36 +20278,36 @@
   }
 
   // src/components/DriftReport.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   function DriftReport() {
     const { drift } = useGig();
     const payload = drift.report;
     if (!payload) return null;
     const flags = payload.flags || [];
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
-      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
-      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
-      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
-      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
-      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
-      flags.length ? driftReasonKinds(flags).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
+      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
+      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
+      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
+      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
+      flags.length ? driftReasonKinds(flags).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
         GigDetailsGroup,
         {
           label: driftReasonHeading(kind2),
           lines: flags.filter((item3) => item3.reasons.includes(kind2)).map(driftFlagLine)
         },
         kind2
-      )) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: t("drift.empty") })
+      )) : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "gig-note", children: t("drift.empty") })
     ] });
   }
 
   // src/drift.ts
-  var listeners = /* @__PURE__ */ new Set();
+  var listeners2 = /* @__PURE__ */ new Set();
   var latest = null;
   function emit() {
     const snapshot = getDriftSnapshot();
-    for (const listener of listeners) listener(snapshot);
+    for (const listener of listeners2) listener(snapshot);
   }
   function beginBusy() {
     const button = el("drift-refresh");
@@ -19823,9 +20332,9 @@
     return { report: latest, scope: driftScopeLabel() };
   }
   function subscribeDrift(listener) {
-    listeners.add(listener);
+    listeners2.add(listener);
     return () => {
-      listeners.delete(listener);
+      listeners2.delete(listener);
     };
   }
   function wireDrift() {
@@ -19835,7 +20344,7 @@
     el("drift-refresh").addEventListener("click", () => {
       void loadDrift();
     });
-    mountIsland(el("drift-report"), (0, import_react5.createElement)(DriftReport));
+    mountIsland(el("drift-report"), (0, import_react6.createElement)(DriftReport));
   }
   async function loadDrift() {
     const token3 = ++state.driftToken;
@@ -20047,10 +20556,10 @@
   }
 
   // src/player.ts
-  var import_react9 = __toESM(require_react(), 1);
+  var import_react10 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react6 = __toESM(require_react(), 1);
+  var import_react7 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -20117,7 +20626,7 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -20145,7 +20654,7 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
       "button",
       {
         type: "button",
@@ -20156,13 +20665,13 @@
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -20174,11 +20683,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_jsx_runtime7.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(import_jsx_runtime8.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
         "button",
         {
           type: "button",
@@ -20198,7 +20707,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react6.useState)(null);
+    const [hold, setHold] = (0, import_react7.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -20225,14 +20734,14 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
           "button",
           {
             type: "button",
@@ -20244,8 +20753,8 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
           "button",
           {
             type: "button",
@@ -20258,13 +20767,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
             "input",
             {
               ref: tooltipRef2(tips.seek),
@@ -20283,16 +20792,16 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
           "input",
           {
             ref: tooltipRef2(tips.volume),
@@ -20309,11 +20818,11 @@
   }
 
   // src/waveform-view.ts
-  var import_react8 = __toESM(require_react(), 1);
+  var import_react9 = __toESM(require_react(), 1);
 
   // src/components/WaveformPanel.tsx
-  var import_react7 = __toESM(require_react(), 1);
-  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  var import_react8 = __toESM(require_react(), 1);
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef3(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -20339,12 +20848,12 @@
     const wave = useWaveform();
     const override = useWaveformClockOverride();
     const clock = override ?? clockFromPlayer(player2);
-    const detailRef = (0, import_react7.useRef)(null);
-    const overviewCanvasRef = (0, import_react7.useRef)(null);
-    const overviewHitRef = (0, import_react7.useRef)(null);
+    const detailRef = (0, import_react8.useRef)(null);
+    const overviewCanvasRef = (0, import_react8.useRef)(null);
+    const overviewHitRef = (0, import_react8.useRef)(null);
     engine.setClock(clock);
     engine.setPublish(wave.publish);
-    (0, import_react7.useLayoutEffect)(() => {
+    (0, import_react8.useLayoutEffect)(() => {
       const detail = detailRef.current;
       const overviewCanvas = overviewCanvasRef.current;
       const overviewHit = overviewHitRef.current;
@@ -20359,15 +20868,15 @@
         engine.detach();
       };
     }, [engine, host]);
-    (0, import_react7.useEffect)(() => {
+    (0, import_react8.useEffect)(() => {
       if (override) return;
       engine.setTrack(player2.trackId);
     }, [engine, override, player2.trackId]);
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "player-wave-main", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "player-wave-main", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
           WaveformOverview,
           {
             canvasRef: overviewCanvasRef,
@@ -20378,7 +20887,7 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
         WaveformZoom,
         {
           canZoomIn: wave.canZoomIn,
@@ -20394,9 +20903,9 @@
     canvasRef,
     phase: phase2
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
     ] });
   }
   function WaveformOverview({
@@ -20406,7 +20915,7 @@
     source,
     pps
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
       "div",
       {
         ref: (element) => {
@@ -20421,7 +20930,7 @@
         "aria-orientation": "horizontal",
         "data-pps": String(pps),
         "data-waveform-overview": source || void 0,
-        children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
       }
     );
   }
@@ -20432,8 +20941,8 @@
     onZoomIn,
     onZoomOut
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
         "button",
         {
           type: "button",
@@ -20445,7 +20954,7 @@
           children: "+"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
         "button",
         {
           type: "button",
@@ -20479,8 +20988,8 @@
     host.classList.add("player-wave");
     host.hidden = true;
     if (hooks) engine.setClock(hooks);
-    const panel = (0, import_react8.createElement)(WaveformPanel, { engine, host });
-    const tree = hooks ? (0, import_react8.createElement)(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
+    const panel = (0, import_react9.createElement)(WaveformPanel, { engine, host });
+    const tree = hooks ? (0, import_react9.createElement)(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
     const root = mountIsland(host, tree);
     engine.bindRoot(root);
     return engine;
@@ -20985,7 +21494,7 @@
   // src/player.ts
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
-  var listeners2 = /* @__PURE__ */ new Set();
+  var listeners3 = /* @__PURE__ */ new Set();
   var wired = /* @__PURE__ */ new WeakSet();
   var media = null;
   var trackId = null;
@@ -21137,9 +21646,9 @@
     emit2();
   }
   function subscribe(listener) {
-    listeners2.add(listener);
+    listeners3.add(listener);
     return () => {
-      listeners2.delete(listener);
+      listeners3.delete(listener);
     };
   }
   function mountPlayer(host) {
@@ -21163,7 +21672,7 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react9.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react10.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -21318,7 +21827,7 @@
   }
   function emit2() {
     const snapshot = getPlayerState();
-    for (const listener of [...listeners2]) listener(snapshot);
+    for (const listener of [...listeners3]) listener(snapshot);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -21329,8 +21838,335 @@
     return Boolean(rows2[index + delta]);
   }
 
+  // src/portable.ts
+  var FINDING_CAP = 100;
+  var KIND_KEY = {
+    off_drive: "portable.kindOffDrive",
+    missing: "portable.kindMissing",
+    smart_crate: "portable.kindSmartCrate",
+    unsafe_name: "portable.kindUnsafeName",
+    path_length: "portable.kindPathLength",
+    file_size: "portable.kindFileSize"
+  };
+  var token = 0;
+  var latest2 = null;
+  var lastRoots = [];
+  var opener = null;
+  var hasConnected = false;
+  var statusText = "";
+  var mountIslands = () => {
+  };
+  function bindPortableMount(fn) {
+    mountIslands = fn;
+  }
+  function portableSnapshot() {
+    return { report: latest2, status: statusText };
+  }
+  function portableKindLabel(kind2) {
+    return kindLabel(kind2);
+  }
+  function closePortable() {
+    const dialog = document.getElementById("portable-dialog");
+    if (dialog instanceof HTMLDialogElement) dialog.close();
+    if (opener?.isConnected) opener.focus();
+  }
+  function portableDriveRoot(path) {
+    const trimmed = path.trim();
+    if (!trimmed) return "";
+    const unified = trimmed.replace(/\\/g, "/");
+    const marker = unified.search(/\/_Serato_(\/|$)/i);
+    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
+    const volumes = /^\/Volumes\/[^/]+/.exec(base);
+    if (volumes) return volumes[0];
+    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
+    if (media2) return media2[0];
+    const mnt = /^\/mnt\/[^/]+/.exec(base);
+    if (mnt) return mnt[0];
+    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
+    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
+    const win = /^[A-Za-z]:/.exec(trimmed);
+    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
+    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
+  }
+  function portableSeratoRoots(roots) {
+    const connected = [];
+    const missing = [];
+    const seen = /* @__PURE__ */ new Set();
+    for (const root of roots) {
+      if (!root.removable || !root.serato) continue;
+      const key = portableDriveRoot(root.path).replace(/\\/g, "/").toLowerCase();
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      if (root.missing) missing.push(root);
+      else connected.push(root);
+    }
+    return { connected, missing };
+  }
+  function parseDriveReport(value) {
+    if (!isRecord(value)) return null;
+    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
+    if (typeof value.summary !== "string") return null;
+    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
+    const findings = [];
+    for (const item3 of value.findings) {
+      if (!isRecord(item3) || typeof item3.kind !== "string" || typeof item3.fix !== "string") return null;
+      findings.push({
+        kind: item3.kind,
+        crate: text(item3.crate),
+        track: text(item3.track),
+        path: text(item3.path),
+        found: text(item3.found),
+        fix: item3.fix
+      });
+    }
+    const errors = [];
+    for (const item3 of value.errors) {
+      if (!isRecord(item3) || typeof item3.message !== "string") return null;
+      errors.push({ crate: text(item3.crate), message: item3.message });
+    }
+    return {
+      drive: text(value.drive),
+      name: text(value.name),
+      ready: value.ready,
+      missing_drive: value.missing_drive,
+      summary: value.summary,
+      findings,
+      errors
+    };
+  }
+  async function openPortableCheck(path, trigger) {
+    wirePortable();
+    mountIslands();
+    opener = trigger ?? null;
+    const dialog = el("portable-dialog");
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    await runPortableCheck(path);
+  }
+  async function loadPortableView() {
+    wirePortable();
+    beginBusy2();
+    paintStatus(t("portable.checking"));
+    let settle = "none";
+    try {
+      const payload = await fetchLibraryRoots();
+      lastRoots = payload.roots;
+      paintDrivePicker(lastRoots);
+      const path = el("portable-drive").value;
+      if (!path) {
+        clearReport();
+        el("portable-view-status").textContent = hasConnected ? "" : t("portable.noDrive");
+        el("portable-status").textContent = hasConnected ? "" : t("portable.noDrive");
+        return;
+      }
+      await runPortableCheck(path);
+      settle = "report";
+    } catch (error2) {
+      fail(error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable"));
+      settle = "retry";
+    } finally {
+      endBusy2();
+      if (settle === "retry") el("portable-check").focus();
+      if (settle === "report") el("portable-view-verdict").focus();
+    }
+  }
+  function showPortableFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable");
+    fail(message);
+    endBusy2();
+    el("portable-check").focus();
+  }
+  function repaintPortable() {
+    for (const button of document.querySelectorAll(".files-portable")) {
+      button.textContent = t("portable.check");
+      const name = button.dataset.portableName ?? "";
+      if (name) button.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    }
+    el("portable-check").textContent = t("portable.check");
+    if (lastRoots.length) paintDrivePicker(lastRoots);
+    if (latest2) renderPortableReport(latest2);
+  }
+  function wirePortable() {
+    const dialog = el("portable-dialog");
+    if (dialog.dataset.portableWired !== "true") {
+      dialog.dataset.portableWired = "true";
+      el("portable-close").addEventListener("click", () => {
+        el("portable-dialog").close();
+        if (opener?.isConnected) opener.focus();
+      });
+    }
+    const panel = el("portable-panel");
+    if (panel.dataset.portableWired === "true") return;
+    panel.dataset.portableWired = "true";
+    el("portable-check").addEventListener("click", () => {
+      void runPortableCheck(el("portable-drive").value);
+    });
+    el("portable-drive").addEventListener("change", () => {
+      void runPortableCheck(el("portable-drive").value);
+    });
+  }
+  function renderPortableReport(report) {
+    latest2 = report;
+    const verdictText = report.missing_drive ? t("portable.missing") : report.ready ? t("portable.ready") : t("portable.notReady");
+    const items = findingItems(report);
+    for (const surface of surfaces()) {
+      surface.verdict.textContent = verdictText;
+      surface.summary.textContent = report.summary;
+      surface.findings.replaceChildren(...items.map((item3) => item3.cloneNode(true)));
+      surface.status.textContent = "";
+    }
+    statusText = "";
+    emitFiles();
+  }
+  async function runPortableCheck(path) {
+    wirePortable();
+    const drive = portableDriveRoot(path);
+    const mine = ++token;
+    latest2 = null;
+    clearReport();
+    paintStatus(t("portable.checking"));
+    if (!drive) {
+      fail(t("portable.unreadable"));
+      return;
+    }
+    beginBusy2();
+    try {
+      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
+      if (mine !== token) return;
+      const body = await readJSON(response).catch(() => null);
+      if (mine !== token) return;
+      if (!response.ok) {
+        fail(serverMessage(errorBody(body), t("portable.unreadable")));
+        return;
+      }
+      const report = parseDriveReport(body);
+      if (!report) {
+        fail(t("portable.unreadable"));
+        return;
+      }
+      latest2 = report;
+      paintStatus("");
+      renderPortableReport(report);
+    } catch {
+      if (mine !== token) return;
+      fail(t("portable.unreachable"));
+    } finally {
+      if (mine === token) endBusy2();
+    }
+  }
+  function paintDrivePicker(roots) {
+    const { connected, missing } = portableSeratoRoots(roots);
+    hasConnected = connected.length > 0;
+    const select = el("portable-drive");
+    const previous2 = select.value;
+    const options = connected.map((root) => {
+      const option = document.createElement("option");
+      option.value = root.path;
+      option.textContent = root.label;
+      return option;
+    });
+    select.replaceChildren(...options);
+    const keep = connected.some((root) => root.path === previous2) ? previous2 : connected[0]?.path ?? "";
+    select.value = keep;
+    select.disabled = !hasConnected;
+    el("portable-check").disabled = !hasConnected;
+    const note = el("portable-offline");
+    if (!missing.length) {
+      note.textContent = "";
+      return;
+    }
+    note.textContent = missing.map((root) => t("portable.offlineNamed", { name: root.label })).join(" ");
+  }
+  function findingItems(report) {
+    const items = [];
+    const shown = report.findings.slice(0, FINDING_CAP);
+    for (const finding of shown) {
+      const row = document.createElement("li");
+      const kind2 = document.createElement("span");
+      kind2.className = "portable-kind";
+      kind2.textContent = kindLabel(finding.kind);
+      row.append(kind2);
+      if (finding.fix) {
+        row.append(document.createTextNode(" "));
+        const fix = document.createElement("span");
+        fix.className = "portable-fix";
+        fix.textContent = finding.fix;
+        row.append(fix);
+      }
+      items.push(row);
+    }
+    for (const error2 of report.errors) {
+      const row = document.createElement("li");
+      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
+      items.push(row);
+    }
+    const hidden = report.findings.length - shown.length;
+    if (hidden > 0) {
+      const row = document.createElement("li");
+      row.textContent = t("files.andMore", { count: hidden });
+      items.push(row);
+    }
+    return items;
+  }
+  function surfaces() {
+    return [
+      {
+        verdict: el("portable-view-verdict"),
+        summary: el("portable-view-summary"),
+        findings: el("portable-view-findings"),
+        status: el("portable-view-status")
+      }
+    ];
+  }
+  function kindLabel(kind2) {
+    const key = KIND_KEY[kind2];
+    return key ? t(key) : kind2;
+  }
+  function fail(message) {
+    latest2 = null;
+    clearReport();
+    paintStatus(message);
+  }
+  function clearReport() {
+    for (const surface of surfaces()) {
+      surface.verdict.textContent = "";
+      surface.summary.textContent = "";
+      surface.findings.replaceChildren();
+    }
+  }
+  function paintStatus(message) {
+    statusText = message;
+    for (const surface of surfaces()) surface.status.textContent = message;
+    emitFiles();
+  }
+  function beginBusy2() {
+    const button = el("portable-check");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    el("portable-panel").setAttribute("aria-busy", "true");
+  }
+  function endBusy2() {
+    const button = el("portable-check");
+    button.disabled = !hasConnected;
+    button.setAttribute("aria-busy", "false");
+    el("portable-panel").setAttribute("aria-busy", "false");
+  }
+  function isRecord(value) {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+  }
+  function text(value) {
+    return typeof value === "string" ? value : "";
+  }
+  function errorBody(value) {
+    if (!isRecord(value)) return null;
+    const body = {};
+    if (typeof value.error === "string") body.error = value.error;
+    if (typeof value.code === "string") body.code = value.code;
+    if (body.error === void 0 && body.code === void 0) return null;
+    return body;
+  }
+
   // src/app/providers.tsx
-  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -21363,21 +22199,89 @@
       exit: exitGigCheck
     };
   }
+  function readFilesValue() {
+    const dialog = getFilesDialog();
+    const portable = portableSnapshot();
+    const selectedEntries = selectedFiles();
+    return {
+      writable: state.writable,
+      path: state.filesPath,
+      parent: state.filesParent,
+      entries: state.filesEntries,
+      selected: state.filesSelected,
+      pick: state.filesPick,
+      pickPaths: state.filesPickPaths,
+      pickSource: state.filesPickSource,
+      loading: state.filesLoading,
+      error: state.filesError,
+      message: state.filesMessage,
+      truncated: state.filesTruncated,
+      atRoots: state.filesAtRoots,
+      roots: state.filesRoots,
+      root: state.filesRoot,
+      breadcrumb: state.filesBreadcrumb,
+      elsewhere: state.filesElsewhere,
+      active: state.filesActive,
+      query: state.filesQuery,
+      searching: state.filesSearching,
+      rows: browserRows(),
+      selectedEntries,
+      locked: !state.writable || state.filesLoading || state.filesAtRoots,
+      rowHeight: filesRowHeight(),
+      dialogAction: dialog.action,
+      dialogName: dialog.name,
+      dialogReplacement: dialog.replacement,
+      dialogStatus: dialog.status,
+      dialogPreview: dialog.preview,
+      dialogScope: dialog.scope,
+      portableReport: portable.report,
+      portableStatus: portable.status,
+      goUp: goFilesUp,
+      refresh: refreshFiles,
+      toggleElsewhere: toggleFilesElsewhere,
+      openCrumb: openFilesCrumb,
+      openRow: (entry, index) => {
+        state.filesActive = index;
+        openBrowserRow(entry);
+      },
+      toggleFile,
+      markActive: markFilesActive,
+      onListKey: onFilesKey,
+      onSearchInput: onFilesSearchInput,
+      startRename,
+      startRenameFromTags: (trigger) => startRenameFromTags(trigger, "paths"),
+      startMove: startMoveFiles,
+      startMoveFolder,
+      startReplace,
+      startDelete,
+      confirmMoveHere,
+      cancelPick: cancelFilesPick,
+      setDialogName,
+      setDialogReplacement,
+      review: () => reviewFiles().catch((error2) => {
+        setDialogStatus(failureOf(error2).message);
+      }),
+      confirm: () => confirmFiles().catch((error2) => {
+        setDialogStatus(failureOf(error2).message);
+      }),
+      closeDialog: closeFilesDialog
+    };
+  }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react10.useState)(readPlayerValue);
-    (0, import_react10.useEffect)(() => {
+    const [value, setValue] = (0, import_react11.useState)(readPlayerValue);
+    (0, import_react11.useEffect)(() => {
       return subscribe(() => {
         (0, import_react_dom3.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react10.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react11.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(PlayerProvider, { value: current2, children });
   }
   function GigProvider({ children }) {
-    const [value, setValue] = (0, import_react10.useState)(readGigValue);
-    (0, import_react10.useEffect)(() => {
+    const [value, setValue] = (0, import_react11.useState)(readGigValue);
+    (0, import_react11.useEffect)(() => {
       const refresh = () => {
         (0, import_react_dom3.flushSync)(() => {
           setValue(readGigValue());
@@ -21390,19 +22294,42 @@
         stopDrift();
       };
     }, []);
-    const current2 = (0, import_react10.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(GigStateProvider, { value: current2, children });
+    const current2 = (0, import_react11.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(GigStateProvider, { value: current2, children });
+  }
+  function FilesProvider2({ children }) {
+    const hostRef = (0, import_react11.useRef)(null);
+    const [value, setValue] = (0, import_react11.useState)(readFilesValue);
+    (0, import_react11.useEffect)(() => {
+      const refresh = () => {
+        if (!hostRef.current?.isConnected) return;
+        (0, import_react_dom3.flushSync)(() => {
+          setValue(readFilesValue());
+        });
+      };
+      const unsub = subscribeFiles(refresh);
+      document.addEventListener(LOCALE_EVENT, refresh);
+      return () => {
+        unsub();
+        document.removeEventListener(LOCALE_EVENT, refresh);
+      };
+    }, []);
+    const current2 = (0, import_react11.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(FilesProvider, { value: current2, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { ref: hostRef, hidden: true }),
+      children
+    ] });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(GigProvider, { children }) }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(FilesProvider2, { children }) }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
     (0, import_react_dom4.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime10.jsx)(AppProviders, { children: node }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime11.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
@@ -21442,7 +22369,7 @@
   }
 
   // src/components/GigReport.tsx
-  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef4(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21450,8 +22377,8 @@
   }
   function GigActions({ primary, stepIndex: stepIndex2 }) {
     const gig = useGig();
-    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "gig-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "gig-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
         "button",
         {
           type: "button",
@@ -21462,7 +22389,7 @@
           children: t("common.back")
         }
       ),
-      primary ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+      primary ? /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
         "button",
         {
           type: "button",
@@ -21473,7 +22400,7 @@
           children: primary
         }
       ) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
         "button",
         {
           type: "button",
@@ -21489,11 +22416,11 @@
     const note = payload.snapshot_note?.trim() ?? "";
     const changes = payload.changes;
     const groups = GIG_CHANGE_GROUPS.map(([label, key]) => [label, changes?.[key] || []]).filter(([, lines]) => lines.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
-      note ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: note }) : null,
-      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
-      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
-      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(import_jsx_runtime12.Fragment, { children: [
+      note ? /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "gig-note", children: note }) : null,
+      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
+      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
+      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
     ] });
   }
   function GigReport() {
@@ -21507,60 +22434,60 @@
     const time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "";
     const holding = (payload.holding_it_back || []).map((item3) => item3.summary);
     const lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [];
-    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(import_jsx_runtime12.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(
         "p",
         {
           className: "gig-score",
           "aria-label": t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
           ]
         }
       ),
-      done ? /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
+      done ? /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(import_jsx_runtime12.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
           score: payload.score,
           crate,
           time
         }) }),
-        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
-        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: t(step.empty) }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
+        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(import_jsx_runtime12.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
+        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "gig-note", children: t(step.empty) }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
       ] })
     ] });
   }
 
   // src/gig.ts
-  var listeners3 = /* @__PURE__ */ new Set();
+  var listeners4 = /* @__PURE__ */ new Set();
   var stepIndex = 0;
-  var latest2 = null;
+  var latest3 = null;
   var checkedAt = null;
   var exitGig = () => {
   };
   function emit3() {
     const snapshot = getGigSnapshot();
-    for (const listener of listeners3) listener(snapshot);
+    for (const listener of listeners4) listener(snapshot);
   }
   function focusHeading() {
     const headingNode = document.getElementById("gig-step-heading");
     if (headingNode instanceof HTMLElement) headingNode.focus();
   }
-  function beginBusy2() {
+  function beginBusy3() {
     const button = el("gig-refresh");
     button.disabled = true;
     button.setAttribute("aria-busy", "true");
     el("gig-panel").setAttribute("aria-busy", "true");
     el("gig-status").textContent = t("gig.checking");
   }
-  function endBusy2() {
+  function endBusy3() {
     const button = el("gig-refresh");
     button.disabled = false;
     button.setAttribute("aria-busy", "false");
@@ -21573,22 +22500,22 @@
     el("gig-scope").textContent = gigScopeLabel(payload);
   }
   function getGigSnapshot() {
-    return { report: latest2, stepIndex, checkedAt };
+    return { report: latest3, stepIndex, checkedAt };
   }
   function subscribeGig(listener) {
-    listeners3.add(listener);
+    listeners4.add(listener);
     return () => {
-      listeners3.delete(listener);
+      listeners4.delete(listener);
     };
   }
   function nextGigStep() {
-    if (!latest2) return;
+    if (!latest3) return;
     stepIndex = Math.min(stepIndex + 1, GIG_STEP_COUNT);
     emit3();
     focusHeading();
   }
   function backGigStep() {
-    if (!latest2) return;
+    if (!latest3) return;
     stepIndex = Math.max(0, stepIndex - 1);
     emit3();
     focusHeading();
@@ -21604,12 +22531,12 @@
     el("gig-refresh").addEventListener("click", () => {
       void loadGigCheck(true);
     });
-    mountIsland(el("gig-report"), (0, import_react11.createElement)(GigReport));
+    mountIsland(el("gig-report"), (0, import_react12.createElement)(GigReport));
   }
   async function loadGigCheck(keepStep = false) {
     const token3 = ++state.gigToken;
     if (!keepStep) stepIndex = 0;
-    beginBusy2();
+    beginBusy3();
     let settle = "none";
     const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
     try {
@@ -21625,7 +22552,7 @@
         return;
       }
       checkedAt = /* @__PURE__ */ new Date();
-      latest2 = payload;
+      latest3 = payload;
       el("gig-status").textContent = "";
       updateScope2(payload);
       emit3();
@@ -21636,7 +22563,7 @@
       settle = "retry";
     } finally {
       if (token3 !== state.gigToken) return;
-      endBusy2();
+      endBusy3();
       if (settle === "retry") el("gig-refresh").focus();
       if (settle === "heading") focusHeading();
     }
@@ -21644,17 +22571,17 @@
   function showGigFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("gig.unreadable");
     failStatus2(message);
-    endBusy2();
+    endBusy3();
     el("gig-refresh").focus();
   }
   function repaintGig() {
-    if (!latest2) return;
-    updateScope2(latest2);
+    if (!latest3) return;
+    updateScope2(latest3);
     emit3();
   }
 
   // src/album-art.ts
-  var latest3 = null;
+  var latest4 = null;
   var trackId2 = null;
   var busy = false;
   var onWrote = null;
@@ -21673,7 +22600,7 @@
     if (!Number.isInteger(id) || id <= 0) return;
     if (typeof el("album-art-dialog").showModal !== "function") return;
     trackId2 = id;
-    latest3 = null;
+    latest4 = null;
     busy = true;
     paintDialog();
     if (!el("album-art-dialog").open) el("album-art-dialog").showModal();
@@ -21685,7 +22612,7 @@
         id
       });
       if (trackId2 !== id) return;
-      latest3 = plan;
+      latest4 = plan;
       el("album-art-status").textContent = plan.candidates.length ? "" : t("health.artNone");
       paintDialog();
       const first = el("album-art-choices").querySelector("input");
@@ -21717,7 +22644,7 @@
         release_id: chosen,
         confirm: true
       });
-      latest3 = written;
+      latest4 = written;
       busy = false;
       el("album-art-dialog").close();
       onWrote?.();
@@ -21731,7 +22658,7 @@
     }
   }
   function paintDialog() {
-    const plan = latest3;
+    const plan = latest4;
     el("album-art-track").textContent = plan ? t("health.row", { title: [plan.artist, plan.name].filter(Boolean).join(" — ") || plan.file }) : t("health.artLooking");
     const list = el("album-art-choices");
     const selected = selectedRelease();
@@ -21785,7 +22712,7 @@
     { key: "empty_genre", label: "health.emptyGenre" },
     { key: "no_crate", label: "health.noCrate" }
   ];
-  var latest4 = null;
+  var latest5 = null;
   var go = null;
   function wireHealth(navigate) {
     go = navigate;
@@ -21821,7 +22748,7 @@
   }
   async function loadHealth() {
     const token3 = ++state.healthToken;
-    beginBusy3();
+    beginBusy4();
     let settle = "none";
     const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
     try {
@@ -21836,7 +22763,7 @@
         settle = "retry";
         return;
       }
-      latest4 = payload;
+      latest5 = payload;
       el("health-status").textContent = "";
       renderHealthReport(payload);
       settle = "report";
@@ -21846,7 +22773,7 @@
       settle = "retry";
     } finally {
       if (token3 !== state.healthToken) return;
-      endBusy3();
+      endBusy4();
       if (settle === "retry") el("health-refresh").focus();
       if (settle === "report") el("health-report").focus();
     }
@@ -21854,7 +22781,7 @@
   function showHealthFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
     failStatus4(message);
-    endBusy3();
+    endBusy4();
     el("health-refresh").focus();
   }
   function renderHealthReport(payload) {
@@ -21881,17 +22808,17 @@
   }
   function repaintHealth() {
     el("health-scope").textContent = scopeLabel();
-    if (latest4) renderHealthReport(latest4);
+    if (latest5) renderHealthReport(latest5);
     repaintAlbumArt();
   }
-  function beginBusy3() {
+  function beginBusy4() {
     const button = el("health-refresh");
     button.disabled = true;
     button.setAttribute("aria-busy", "true");
     el("health-panel").setAttribute("aria-busy", "true");
     el("health-status").textContent = t("health.checking");
   }
-  function endBusy3() {
+  function endBusy4() {
     const button = el("health-refresh");
     button.disabled = false;
     button.setAttribute("aria-busy", "false");
@@ -22069,7 +22996,7 @@
 
   // src/history-stats.ts
   var LIST_CAP2 = 100;
-  var latest5 = null;
+  var latest6 = null;
   var crateBusy = false;
   function wireHistoryStats() {
     const panel = el("stats-panel");
@@ -22099,7 +23026,7 @@
   }
   async function loadHistoryStats() {
     const token3 = ++state.statsToken;
-    beginBusy4();
+    beginBusy5();
     let settle = "none";
     try {
       const response = await fetch(`/api/history-stats?${currentQuery()}`);
@@ -22111,7 +23038,7 @@
         settle = "retry";
         return;
       }
-      latest5 = payload;
+      latest6 = payload;
       el("stats-status").textContent = "";
       renderHistoryStats(payload);
       settle = "report";
@@ -22121,7 +23048,7 @@
       settle = "retry";
     } finally {
       if (token3 !== state.statsToken) return;
-      endBusy4();
+      endBusy5();
       if (settle === "retry") el("stats-refresh").focus();
       if (settle === "report") el("stats-report").focus();
     }
@@ -22129,7 +23056,7 @@
   function showHistoryStatsFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("stats.unreadable");
     failStatus5(message);
-    endBusy4();
+    endBusy5();
     el("stats-refresh").focus();
   }
   function renderHistoryStats(payload) {
@@ -22150,7 +23077,7 @@
   function repaintHistoryStats() {
     el("stats-scope").textContent = t("gig.wholeSpace");
     syncPeriodFields();
-    if (latest5) renderHistoryStats(latest5);
+    if (latest6) renderHistoryStats(latest6);
   }
   function currentPeriod() {
     const value = el("stats-period").value;
@@ -22170,14 +23097,14 @@
     el("stats-from").disabled = !custom;
     el("stats-to").disabled = !custom;
   }
-  function beginBusy4() {
+  function beginBusy5() {
     const button = el("stats-refresh");
     button.disabled = true;
     button.setAttribute("aria-busy", "true");
     el("stats-panel").setAttribute("aria-busy", "true");
     el("stats-status").textContent = t("stats.checking");
   }
-  function endBusy4() {
+  function endBusy5() {
     const button = el("stats-refresh");
     button.disabled = false;
     button.setAttribute("aria-busy", "false");
@@ -22321,7 +23248,7 @@
       el("stats-status").textContent = failureOf(error2).message;
     } finally {
       crateBusy = false;
-      if (latest5) renderHistoryStats(latest5);
+      if (latest6) renderHistoryStats(latest6);
     }
   }
   function headerRow(keys) {
@@ -22370,7 +23297,7 @@
     decode_error: "scan.problem.decode_error",
     short: "scan.problem.short"
   };
-  var latest6 = null;
+  var latest7 = null;
   var lastDepth = "quick";
   function wireScan() {
     const panel = el("scan-panel");
@@ -22386,11 +23313,11 @@
   async function loadScan(depth) {
     const chosen = resolveDepth(depth);
     const token3 = ++state.scanToken;
-    beginBusy5();
+    beginBusy6();
     let settle = "none";
     if (chosen === "full" && state.activeCrate === "all") {
       failStatus6(t("error.scan_full_needs_crate"));
-      endBusy5();
+      endBusy6();
       el("scan-full").focus();
       return;
     }
@@ -22408,7 +23335,7 @@
         settle = "retry";
         return;
       }
-      latest6 = payload;
+      latest7 = payload;
       el("scan-status").textContent = "";
       renderScanReport(payload);
       settle = "report";
@@ -22418,7 +23345,7 @@
       settle = "retry";
     } finally {
       if (token3 !== state.scanToken) return;
-      endBusy5();
+      endBusy6();
       if (settle === "retry") el("scan-quick").focus();
       if (settle === "report") el("scan-report").focus();
     }
@@ -22426,7 +23353,7 @@
   function showScanFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
     failStatus6(message);
-    endBusy5();
+    endBusy6();
     el("scan-quick").focus();
   }
   function renderScanReport(payload) {
@@ -22454,14 +23381,14 @@
   }
   function repaintScan() {
     el("scan-scope").textContent = scopeLabel2();
-    if (latest6) renderScanReport(latest6);
+    if (latest7) renderScanReport(latest7);
   }
   function resolveDepth(depth) {
     if (depth === "quick" || depth === "full") return depth;
     if (lastDepth === "full" && state.activeCrate === "all") return "quick";
     return lastDepth;
   }
-  function beginBusy5() {
+  function beginBusy6() {
     for (const id of ["scan-quick", "scan-full"]) {
       const button = el(id);
       button.disabled = true;
@@ -22470,7 +23397,7 @@
     el("scan-panel").setAttribute("aria-busy", "true");
     el("scan-status").textContent = t("scan.checking");
   }
-  function endBusy5() {
+  function endBusy6() {
     el("scan-quick").disabled = false;
     el("scan-quick").setAttribute("aria-busy", "false");
     const full = el("scan-full");
@@ -22557,7 +23484,7 @@
     upsampled: "bitrate.reason.upsampled",
     lossy_source: "bitrate.reason.lossy_source"
   };
-  var latest7 = null;
+  var latest8 = null;
   var cratePlan = null;
   function wireBitrate() {
     const panel = el("bitrate-panel");
@@ -22578,11 +23505,11 @@
   async function loadBitrate() {
     const token3 = ++state.bitrateToken;
     cratePlan = null;
-    beginBusy6();
+    beginBusy7();
     let settle = "none";
     if (state.activeCrate === "all") {
       failStatus7(t("error.bitrate_needs_crate"));
-      endBusy6();
+      endBusy7();
       el("bitrate-refresh").focus();
       return;
     }
@@ -22599,7 +23526,7 @@
         settle = "retry";
         return;
       }
-      latest7 = payload;
+      latest8 = payload;
       el("bitrate-status").textContent = "";
       renderBitrateReport(payload);
       settle = "report";
@@ -22609,7 +23536,7 @@
       settle = "retry";
     } finally {
       if (token3 !== state.bitrateToken) return;
-      endBusy6();
+      endBusy7();
       if (settle === "retry") el("bitrate-refresh").focus();
       if (settle === "report") el("bitrate-report").focus();
     }
@@ -22617,7 +23544,7 @@
   function showBitrateFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("bitrate.unreadable");
     failStatus7(message);
-    endBusy6();
+    endBusy7();
     el("bitrate-refresh").focus();
   }
   function renderBitrateReport(payload) {
@@ -22653,7 +23580,7 @@
   }
   function repaintBitrate() {
     el("bitrate-scope").textContent = scopeLabel3();
-    if (latest7) renderBitrateReport(latest7);
+    if (latest8) renderBitrateReport(latest8);
   }
   async function previewCrate() {
     if (state.activeCrate === "all") {
@@ -22662,7 +23589,7 @@
       return;
     }
     const token3 = ++state.bitrateToken;
-    beginBusy6("preview");
+    beginBusy7("preview");
     try {
       const payload = await postJSON("/api/bitrate-check", {
         action: "preview",
@@ -22671,7 +23598,7 @@
       });
       if (token3 !== state.bitrateToken) return;
       cratePlan = payload;
-      latest7 = payload;
+      latest8 = payload;
       el("bitrate-status").textContent = payload.added ? t("bitrate.preview", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
       renderBitrateReport(payload);
       const confirm2 = el("bitrate-report").querySelector("[data-bitrate-action='confirm']");
@@ -22682,13 +23609,13 @@
       el("bitrate-save").focus();
     } finally {
       if (token3 !== state.bitrateToken) return;
-      endBusy6();
+      endBusy7();
     }
   }
   async function createCrate() {
     if (!cratePlan || !cratePlan.added || state.activeCrate === "all") return;
     const token3 = ++state.bitrateToken;
-    beginBusy6("create");
+    beginBusy7("create");
     try {
       const payload = await postJSON("/api/bitrate-check", {
         action: "create",
@@ -22699,7 +23626,7 @@
       await bridge.reloadLibrary();
       if (token3 !== state.bitrateToken) return;
       cratePlan = payload;
-      latest7 = payload;
+      latest8 = payload;
       el("bitrate-status").textContent = payload.written ? t("bitrate.written", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
       renderBitrateReport(payload);
       el("bitrate-report").focus();
@@ -22711,10 +23638,10 @@
       el("bitrate-save").focus();
     } finally {
       if (token3 !== state.bitrateToken) return;
-      endBusy6();
+      endBusy7();
     }
   }
-  function beginBusy6(kind2 = "check") {
+  function beginBusy7(kind2 = "check") {
     for (const id of ["bitrate-refresh", "bitrate-save"]) {
       const button = el(id);
       button.disabled = true;
@@ -22724,13 +23651,13 @@
     const status = kind2 === "create" ? t("bitrate.saving") : kind2 === "preview" ? t("bitrate.checking") : t("bitrate.checking");
     el("bitrate-status").textContent = status;
   }
-  function endBusy6() {
+  function endBusy7() {
     const noCrate = state.activeCrate === "all";
     const refresh = el("bitrate-refresh");
     refresh.disabled = noCrate;
     refresh.setAttribute("aria-busy", "false");
     const save3 = el("bitrate-save");
-    const flagged = Boolean(latest7?.suspects.length);
+    const flagged = Boolean(latest8?.suspects.length);
     save3.disabled = noCrate || !flagged;
     save3.setAttribute("aria-busy", "false");
     el("bitrate-panel").setAttribute("aria-busy", "false");
@@ -22900,7 +23827,7 @@
   var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
   var TITLE_KEY = "clean";
   var MAPPING_KEY = "saved";
-  var latest8 = null;
+  var latest9 = null;
   var titlePlan = null;
   var mappingPlan = null;
   var plans = /* @__PURE__ */ new Map();
@@ -22935,7 +23862,7 @@
       const key = input.name.slice("tags-".length);
       selectedByKey.set(key, input.value);
       plans.delete(key);
-      if (latest8) renderTagsReport(latest8);
+      if (latest9) renderTagsReport(latest9);
     });
     el("tags-report").addEventListener("click", (event) => {
       const button = event.target.closest("[data-tags-action]");
@@ -22959,7 +23886,7 @@
     const field = currentField();
     plans.clear();
     selectedByKey.clear();
-    beginBusy7();
+    beginBusy8();
     let settle = "none";
     try {
       if (field === "titles") {
@@ -22969,7 +23896,7 @@
         });
         if (token3 !== state.tagsToken) return;
         titlePlan = payload;
-        latest8 = null;
+        latest9 = null;
         mappingPlan = null;
         el("tags-status").textContent = titlesPreviewSummary(payload);
         settle = "report";
@@ -22985,7 +23912,7 @@
           settle = "retry";
           return;
         }
-        latest8 = payload;
+        latest9 = payload;
         titlePlan = null;
         mappingPlan = await readMappingPreview(token3);
         if (token3 !== state.tagsToken) return;
@@ -22999,7 +23926,7 @@
       settle = "retry";
     } finally {
       if (token3 !== state.tagsToken) return;
-      endBusy7();
+      endBusy8();
       if (settle === "report") paintReport();
       if (settle === "retry") el("tags-refresh").focus();
       if (settle === "report") el("tags-report").focus();
@@ -23008,7 +23935,7 @@
   function showTagsFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
     failStatus8(message);
-    endBusy7();
+    endBusy8();
     el("tags-refresh").focus();
   }
   function renderTagsReport(payload) {
@@ -23033,7 +23960,7 @@
       if (titlePlan) renderTitleReport(titlePlan);
       return;
     }
-    if (latest8) renderTagsReport(latest8);
+    if (latest9) renderTagsReport(latest9);
   }
   function renderTitleReport(plan) {
     el("tags-scope").textContent = t("gig.wholeSpace");
@@ -23096,7 +24023,7 @@
     if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
     actionKey = key;
     panelBusy = true;
-    beginBusy7();
+    beginBusy8();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -23108,7 +24035,7 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy7();
+      endBusy8();
       await loadTags();
       el("tags-status").textContent = writtenSummary(written);
     } catch (error2) {
@@ -23120,7 +24047,7 @@
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy7();
+      endBusy8();
       paintReport();
     }
   }
@@ -23129,7 +24056,7 @@
     if (!plan || !canApplyMappings(plan)) return;
     actionKey = MAPPING_KEY;
     panelBusy = true;
-    beginBusy7();
+    beginBusy8();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -23139,7 +24066,7 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy7();
+      endBusy8();
       await loadTags();
       el("tags-status").textContent = mappingWrittenSummary(written);
     } catch (error2) {
@@ -23151,7 +24078,7 @@
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy7();
+      endBusy8();
       paintReport();
     }
   }
@@ -23160,7 +24087,7 @@
     if (!plan || !canApplyTitles(plan)) return;
     actionKey = TITLE_KEY;
     panelBusy = true;
-    beginBusy7();
+    beginBusy8();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -23170,7 +24097,7 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy7();
+      endBusy8();
       await loadTags();
       el("tags-status").textContent = titlesWrittenSummary(written);
     } catch (error2) {
@@ -23182,7 +24109,7 @@
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy7();
+      endBusy8();
       paintReport();
     }
   }
@@ -23197,7 +24124,7 @@
     el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
     el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
   }
-  function beginBusy7() {
+  function beginBusy8() {
     panelBusy = true;
     for (const id of FIELD_BUTTONS) {
       const button = el(id);
@@ -23208,7 +24135,7 @@
     el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
     paintReport();
   }
-  function endBusy7() {
+  function endBusy8() {
     panelBusy = false;
     for (const id of FIELD_BUTTONS) {
       const button = el(id);
@@ -23284,7 +24211,7 @@
     return keys;
   }
   function groupByKey(key) {
-    return latest8?.groups?.find((group) => group.key === key);
+    return latest9?.groups?.find((group) => group.key === key);
   }
   function selectedValue(key) {
     const group = groupByKey(key);
@@ -23370,328 +24297,587 @@
     return actions;
   }
 
-  // src/portable.ts
-  var FINDING_CAP = 100;
-  var KIND_KEY = {
-    off_drive: "portable.kindOffDrive",
-    missing: "portable.kindMissing",
-    smart_crate: "portable.kindSmartCrate",
-    unsafe_name: "portable.kindUnsafeName",
-    path_length: "portable.kindPathLength",
-    file_size: "portable.kindFileSize"
-  };
-  var token = 0;
-  var latest9 = null;
-  var lastRoots = [];
-  var opener = null;
-  var hasConnected = false;
-  function portableDriveRoot(path) {
-    const trimmed = path.trim();
-    if (!trimmed) return "";
-    const unified = trimmed.replace(/\\/g, "/");
-    const marker = unified.search(/\/_Serato_(\/|$)/i);
-    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
-    const volumes = /^\/Volumes\/[^/]+/.exec(base);
-    if (volumes) return volumes[0];
-    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
-    if (media2) return media2[0];
-    const mnt = /^\/mnt\/[^/]+/.exec(base);
-    if (mnt) return mnt[0];
-    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
-    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
-    const win = /^[A-Za-z]:/.exec(trimmed);
-    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
-    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
-  }
-  function portableSeratoRoots(roots) {
-    const connected = [];
-    const missing = [];
-    const seen = /* @__PURE__ */ new Set();
-    for (const root of roots) {
-      if (!root.removable || !root.serato) continue;
-      const key = portableDriveRoot(root.path).replace(/\\/g, "/").toLowerCase();
-      if (!key || seen.has(key)) continue;
-      seen.add(key);
-      if (root.missing) missing.push(root);
-      else connected.push(root);
-    }
-    return { connected, missing };
-  }
-  function parseDriveReport(value) {
-    if (!isRecord(value)) return null;
-    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
-    if (typeof value.summary !== "string") return null;
-    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
-    const findings = [];
-    for (const item3 of value.findings) {
-      if (!isRecord(item3) || typeof item3.kind !== "string" || typeof item3.fix !== "string") return null;
-      findings.push({
-        kind: item3.kind,
-        crate: text(item3.crate),
-        track: text(item3.track),
-        path: text(item3.path),
-        found: text(item3.found),
-        fix: item3.fix
-      });
-    }
-    const errors = [];
-    for (const item3 of value.errors) {
-      if (!isRecord(item3) || typeof item3.message !== "string") return null;
-      errors.push({ crate: text(item3.crate), message: item3.message });
-    }
-    return {
-      drive: text(value.drive),
-      name: text(value.name),
-      ready: value.ready,
-      missing_drive: value.missing_drive,
-      summary: value.summary,
-      findings,
-      errors
+  // src/files-mount.tsx
+  var import_react15 = __toESM(require_react(), 1);
+
+  // src/components/FilesDialog.tsx
+  var import_react13 = __toESM(require_react(), 1);
+  var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef5(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
     };
   }
-  function portableDriveButton(name, path) {
-    const button = buttonEl(portableCheck(name));
-    button.className = "files-portable";
-    button.dataset.portableName = name;
-    button.textContent = t("portable.check");
-    button.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    button.addEventListener("click", (event) => {
-      event.stopPropagation();
-      void openPortableCheck(path, button);
-    });
-    return button;
+  function FilesDialog() {
+    const files = useFiles();
+    (0, import_react13.useEffect)(() => {
+      const dialog = document.getElementById("files-dialog");
+      if (!(dialog instanceof HTMLDialogElement)) return;
+      const onCancel = (event) => {
+        event.preventDefault();
+        files.closeDialog();
+      };
+      dialog.addEventListener("cancel", onCancel);
+      return () => dialog.removeEventListener("cancel", onCancel);
+    }, [files.closeDialog]);
+    const action = files.dialogAction;
+    const preview = files.dialogPreview;
+    const ready = Boolean(preview?.ok && files.writable && preview.needs_confirm);
+    const reviewHidden = action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags";
+    const status = !files.writable ? document.getElementById("status")?.textContent ?? files.dialogStatus : files.dialogStatus;
+    const confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
+    const confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("files.newName") }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+          "input",
+          {
+            id: "files-name",
+            ref: tooltipRef5(tips.filesName),
+            type: "text",
+            autoComplete: "off",
+            value: files.dialogName,
+            onInput: (event) => files.setDialogName(event.currentTarget.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("files.newFile") }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+          "input",
+          {
+            id: "files-replacement",
+            ref: tooltipRef5(tips.filesReplacement),
+            type: "text",
+            autoComplete: "off",
+            spellCheck: false,
+            value: files.dialogReplacement,
+            onInput: (event) => files.setDialogReplacement(event.currentTarget.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("ul", { id: "files-changes", children: [
+        (preview?.changes || []).map((change, index) => {
+          const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
+          const effect = change.effect === "trash" ? t("files.trash") : change.to;
+          return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("li", { children: `${change.from} → ${effect}${crates}` }, `change-${index}`);
+        }),
+        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("li", { children: skip2 }, `skip-${index}`)),
+        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+          "button",
+          {
+            id: "files-cancel",
+            type: "button",
+            ref: tooltipRef5(tips.filesCancel),
+            onClick: () => files.closeDialog(),
+            children: t("common.cancel")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+          "button",
+          {
+            id: "files-review",
+            type: "button",
+            ref: tooltipRef5(tips.filesReview),
+            hidden: reviewHidden,
+            onClick: () => {
+              void files.review();
+            },
+            children: t("files.review")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+          "button",
+          {
+            id: "files-confirm",
+            type: "button",
+            ref: tooltipRef5(confirmTip),
+            className: action === "delete" ? "danger" : void 0,
+            disabled: !ready,
+            onClick: () => {
+              void files.confirm();
+            },
+            children: confirmLabel
+          }
+        )
+      ] })
+    ] });
   }
-  async function openPortableCheck(path, trigger) {
-    wirePortable();
-    opener = trigger ?? null;
-    const dialog = el("portable-dialog");
-    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
-    await runPortableCheck(path);
+
+  // src/components/FilesPanel.tsx
+  var import_react14 = __toESM(require_react(), 1);
+  var import_react_dom5 = __toESM(require_react_dom(), 1);
+  var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef6(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
   }
-  async function loadPortableView() {
-    wirePortable();
-    beginBusy8();
-    paintStatus(t("portable.checking"));
-    let settle = "none";
-    try {
-      const payload = await fetchLibraryRoots();
-      lastRoots = payload.roots;
-      paintDrivePicker(lastRoots);
-      const path = el("portable-drive").value;
-      if (!path) {
-        clearReport();
-        el("portable-view-status").textContent = hasConnected ? "" : t("portable.noDrive");
-        el("portable-status").textContent = hasConnected ? "" : t("portable.noDrive");
-        return;
+  function FileIcon({ kind: kind2 }) {
+    const d = kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z";
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+      "svg",
+      {
+        viewBox: "0 0 24 24",
+        width: "20",
+        height: "20",
+        "aria-hidden": "true",
+        className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
+        children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d })
       }
-      await runPortableCheck(path);
-      settle = "report";
-    } catch (error2) {
-      fail(error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable"));
-      settle = "retry";
-    } finally {
-      endBusy8();
-      if (settle === "retry") el("portable-check").focus();
-      if (settle === "report") el("portable-view-verdict").focus();
+    );
+  }
+  function FilesToolbar() {
+    const files = useFiles();
+    const crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "browser-bar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-up",
+          type: "button",
+          ref: tooltipRef6(tips.filesUp),
+          disabled: !files.parent || files.loading,
+          onClick: () => files.goUp(),
+          children: t("common.up")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
+        const last = index === crumbs.length - 1;
+        return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("li", { children: [
+          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            "button",
+            {
+              type: "button",
+              ref: tooltipRef6(openCrumb(crumb.name)),
+              className: "files-crumb",
+              onClick: () => files.openCrumb(crumb.path),
+              children: crumb.name
+            }
+          ) : /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
+          !last ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" }) : null
+        ] }, `${crumb.path}:${crumb.name}:${index}`);
+      }) }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+          "input",
+          {
+            id: "files-search",
+            ref: tooltipRef6(tips.filesSearch),
+            type: "search",
+            placeholder: t("files.searchPlaceholder"),
+            autoComplete: "off",
+            spellCheck: false,
+            defaultValue: files.query,
+            onInput: (event) => files.onSearchInput(event.currentTarget.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef6(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-elsewhere",
+          className: "files-elsewhere",
+          type: "button",
+          ref: tooltipRef6(files.elsewhere ? tips.filesMusicFolders : tips.filesElsewhere),
+          onClick: () => files.toggleElsewhere(),
+          children: files.elsewhere ? t("files.roots") : t("files.browseElsewhere")
+        }
+      )
+    ] });
+  }
+  function FilesActions() {
+    const files = useFiles();
+    const selected = files.selectedEntries;
+    const locked = files.locked;
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "files-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-rename",
+          type: "button",
+          ref: tooltipRef6(tips.filesRename),
+          disabled: locked || selected.length !== 1,
+          onClick: (event) => files.startRename(event.currentTarget),
+          children: t("crates.rename")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-rename-from-tags",
+          type: "button",
+          ref: tooltipRef6(tips.filesRenameFromTags),
+          "aria-haspopup": "dialog",
+          disabled: locked || !selected.length,
+          onClick: (event) => files.startRenameFromTags(event.currentTarget),
+          children: t("files.renameFromTags")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-move",
+          type: "button",
+          ref: tooltipRef6(tips.filesMove),
+          disabled: locked || !selected.length || Boolean(files.pick),
+          onClick: () => files.startMove(),
+          children: t("files.moveToFolder")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-move-folder",
+          type: "button",
+          ref: tooltipRef6(tips.filesMoveFolder),
+          disabled: locked || !files.path || Boolean(files.pick),
+          onClick: () => files.startMoveFolder(),
+          children: t("files.moveFolder")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-replace",
+          type: "button",
+          ref: tooltipRef6(tips.filesReplace),
+          disabled: locked || selected.length !== 1,
+          onClick: (event) => files.startReplace(event.currentTarget),
+          children: t("files.replaceFile")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-delete",
+          type: "button",
+          ref: tooltipRef6(tips.filesDelete),
+          disabled: locked || !selected.length,
+          onClick: (event) => files.startDelete(event.currentTarget),
+          children: t("common.delete")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-move-here",
+          type: "button",
+          ref: tooltipRef6(tips.filesMoveHere),
+          hidden: !files.pick,
+          disabled: locked,
+          onClick: (event) => files.confirmMoveHere(event.currentTarget),
+          children: t("files.moveHere")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          id: "files-pick-cancel",
+          type: "button",
+          ref: tooltipRef6(tips.filesPickCancel),
+          hidden: !files.pick,
+          onClick: () => files.cancelPick(),
+          children: t("common.cancel")
+        }
+      )
+    ] });
+  }
+  function FileRow({ entry, index }) {
+    const files = useFiles();
+    const active2 = index === files.active;
+    const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
+    const className = [
+      "files-row",
+      entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? "is-root" : "",
+      entry.missing ? "is-missing" : "",
+      active2 ? "is-active" : ""
+    ].filter(Boolean).join(" ");
+    if (openKind) {
+      return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className, role: "listitem", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef6(entry.missing ? missingDrive(entry.name) : openFile(entry.name)),
+            className: "files-open",
+            "data-files-index": String(index),
+            id: `files-item-${index}`,
+            tabIndex: active2 ? 0 : -1,
+            "aria-disabled": entry.missing ? "true" : void 0,
+            "aria-label": entry.missing ? t("files.driveMissingLabel", { name: entry.name }) : t("files.open", { name: entry.name }),
+            onClick: () => {
+              if (entry.missing) files.markActive(index);
+              else files.openRow(entry, index);
+            },
+            children: [
+              entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
+              entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { className: "files-root-copy", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "files-root-label", children: entry.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "files-root-detail", children: entry.detail })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(import_jsx_runtime14.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: entry.name }),
+                entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
+              ] }),
+              entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+            ]
+          }
+        ),
+        entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef6(portableCheck(entry.name)),
+            className: "files-portable",
+            "data-portable-name": entry.name,
+            "aria-label": t("portable.checkLabel", { name: entry.name }),
+            onClick: (event) => {
+              event.stopPropagation();
+              void openPortableCheck(entry.path, event.currentTarget);
+            },
+            children: t("portable.check")
+          }
+        ) : null
+      ] });
     }
-  }
-  function showPortableFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable");
-    fail(message);
-    endBusy8();
-    el("portable-check").focus();
-  }
-  function repaintPortable() {
-    for (const button of document.querySelectorAll(".files-portable")) {
-      button.textContent = t("portable.check");
-      const name = button.dataset.portableName ?? "";
-      if (name) button.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    if (entry.kind !== "file") {
+      return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef6(fileShortcut(entry.name)),
+          className: "files-kind",
+          "data-files-index": String(index),
+          id: `files-item-${index}`,
+          tabIndex: active2 ? 0 : -1,
+          "aria-label": t("files.shortcut", { name: entry.name }),
+          children: t("files.shortcut", { name: entry.name })
+        }
+      ) });
     }
-    el("portable-check").textContent = t("portable.check");
-    if (lastRoots.length) paintDrivePicker(lastRoots);
-    if (latest9) renderPortableReport(latest9);
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "input",
+        {
+          ref: tooltipRef6(selectFile(entry.name, entry.path)),
+          type: "checkbox",
+          "data-files-index": String(index),
+          id: `files-item-${index}`,
+          tabIndex: active2 ? 0 : -1,
+          checked: files.selected.has(entry.path),
+          "aria-label": entry.name,
+          onChange: (event) => files.toggleFile(entry, index, event.currentTarget.checked)
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "files-name", children: entry.name }),
+      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
+      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+    ] }) });
   }
-  function wirePortable() {
-    const dialog = el("portable-dialog");
-    if (dialog.dataset.portableWired !== "true") {
-      dialog.dataset.portableWired = "true";
-      el("portable-close").addEventListener("click", () => {
-        el("portable-dialog").close();
-        if (opener?.isConnected) opener.focus();
+  var FILE_OVERSCAN = 8;
+  function visibleWindow(rowCount, scrollTop, viewHeight, rowHeight) {
+    const view = viewHeight || 600;
+    const maxScroll = Math.max(0, rowCount * rowHeight - view);
+    const top = Math.min(Math.max(0, scrollTop), maxScroll);
+    const start = Math.max(0, Math.floor(top / rowHeight) - FILE_OVERSCAN);
+    const end = Math.min(rowCount, Math.ceil((top + view) / rowHeight) + FILE_OVERSCAN);
+    return { start, end };
+  }
+  function FilesList() {
+    const files = useFiles();
+    const listRef = (0, import_react14.useRef)(null);
+    const [scrollTop, setScrollTop] = (0, import_react14.useState)(0);
+    const [viewHeight, setViewHeight] = (0, import_react14.useState)(600);
+    (0, import_react14.useLayoutEffect)(() => {
+      const list = listRef.current;
+      if (!list) return;
+      setViewHeight(list.clientHeight || 600);
+      setScrollTop(list.scrollTop);
+      const onNativeScroll = () => {
+        (0, import_react_dom5.flushSync)(() => {
+          setScrollTop(list.scrollTop);
+          setViewHeight(list.clientHeight || 600);
+        });
+      };
+      list.addEventListener("scroll", onNativeScroll);
+      return () => list.removeEventListener("scroll", onNativeScroll);
+    }, [files.rows, files.loading, files.error, files.atRoots, files.searching, files.active]);
+    const rows2 = files.rows;
+    const { start, end } = visibleWindow(rows2.length, scrollTop, viewHeight, files.rowHeight);
+    const rowHeight = files.rowHeight;
+    const notes = [];
+    if (files.loading) notes.push(files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote"));
+    if (files.error) notes.push(files.error);
+    if (files.message) notes.push(files.message);
+    if (files.truncated) notes.push(files.searching ? t("files.searchTruncated") : t("files.truncated"));
+    const ariaLabel = files.searching ? t("files.searchResults") : files.atRoots ? t("files.roots") : t("files.contents");
+    const emptyLoading = files.loading && !rows2.length;
+    const emptyError = Boolean(files.error) && !rows2.length;
+    const emptyRoots = files.atRoots && !files.roots.length;
+    const emptyFolder = !rows2.length;
+    let body;
+    let tabIndex = 0;
+    if (emptyLoading) {
+      const reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
+      body = /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { className: "files-empty", children: reading });
+    } else if (emptyError) {
+      body = /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { className: "files-empty", children: files.error });
+    } else if (emptyRoots) {
+      tabIndex = -1;
+      body = /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+          "button",
+          {
+            id: "files-run-setup",
+            type: "button",
+            ref: tooltipRef6(tips.runSetup),
+            className: "files-primary",
+            onClick: () => bridge.openSetup(),
+            children: t("files.runSetup")
+          }
+        )
+      ] });
+    } else if (emptyFolder) {
+      const empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
+      body = /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { className: "files-empty", children: empty });
+    } else {
+      tabIndex = -1;
+      const windowRows = [];
+      for (let index = start; index < end; index += 1) {
+        const entry = rows2[index];
+        if (entry) windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime14.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
+      }
+      body = /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "files-spacer", style: { height: `${rows2.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "files-window", style: { transform: `translateY(${start * rowHeight}px)` }, children: windowRows }) });
+    }
+    function onScroll2(event) {
+      const node = event.currentTarget;
+      (0, import_react_dom5.flushSync)(() => {
+        setScrollTop(node.scrollTop);
+        setViewHeight(node.clientHeight || 600);
       });
     }
-    const panel = el("portable-panel");
-    if (panel.dataset.portableWired === "true") return;
-    panel.dataset.portableWired = "true";
-    el("portable-check").addEventListener("click", () => {
-      void runPortableCheck(el("portable-drive").value);
-    });
-    el("portable-drive").addEventListener("change", () => {
-      void runPortableCheck(el("portable-drive").value);
-    });
-  }
-  function renderPortableReport(report) {
-    latest9 = report;
-    const verdictText = report.missing_drive ? t("portable.missing") : report.ready ? t("portable.ready") : t("portable.notReady");
-    const items = findingItems(report);
-    for (const surface of surfaces()) {
-      surface.verdict.textContent = verdictText;
-      surface.summary.textContent = report.summary;
-      surface.findings.replaceChildren(...items.map((item3) => item3.cloneNode(true)));
-      surface.status.textContent = "";
+    function onKey2(event) {
+      files.onListKey(event.nativeEvent);
     }
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(import_jsx_runtime14.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "div",
+        {
+          id: "files-list",
+          ref: listRef,
+          className: "files-list",
+          role: "group",
+          "aria-label": ariaLabel,
+          "aria-busy": files.loading,
+          "aria-activedescendant": !emptyLoading && !emptyError && !emptyRoots && !emptyFolder && files.active >= start && files.active < end ? `files-item-${files.active}` : void 0,
+          tabIndex,
+          onScroll: onScroll2,
+          onKeyDown: onKey2,
+          children: body
+        }
+      )
+    ] });
   }
-  async function runPortableCheck(path) {
-    wirePortable();
-    const drive = portableDriveRoot(path);
-    const mine = ++token;
-    latest9 = null;
-    clearReport();
-    paintStatus(t("portable.checking"));
-    if (!drive) {
-      fail(t("portable.unreadable"));
-      return;
+  function FilesPanel() {
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(import_jsx_runtime14.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(FilesActions, {})
+    ] });
+  }
+
+  // src/components/PortableDialog.tsx
+  var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
+  function PortableDialog() {
+    const files = useFiles();
+    const report = files.portableReport;
+    let verdict = "";
+    if (report) {
+      if (report.missing_drive) verdict = t("portable.missing");
+      else if (report.ready) verdict = t("portable.ready");
+      else verdict = t("portable.notReady");
     }
-    beginBusy8();
+    const shown = report ? report.findings.slice(0, FINDING_CAP) : [];
+    const hidden = report ? report.findings.length - shown.length : 0;
+    return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)(import_jsx_runtime15.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)(import_jsx_runtime15.Fragment, { children: [
+            " ",
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "portable-fix", children: finding.fix })
+          ] }) : null
+        ] }, `finding-${index}`)),
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+        "button",
+        {
+          id: "portable-close",
+          type: "button",
+          ref: (element) => {
+            if (element) setTooltip(element, tips.portableClose);
+          },
+          onClick: () => closePortable(),
+          children: t("common.close")
+        }
+      ) })
+    ] });
+  }
+
+  // src/files-mount.tsx
+  var panelRoot = null;
+  var dialogRoot = null;
+  var portableRoot = null;
+  var panelHost = null;
+  var dialogHost = null;
+  var portableHost = null;
+  function safeUnmount(root) {
+    if (!root) return;
     try {
-      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
-      if (mine !== token) return;
-      const body = await readJSON(response).catch(() => null);
-      if (mine !== token) return;
-      if (!response.ok) {
-        fail(serverMessage(errorBody(body), t("portable.unreadable")));
-        return;
-      }
-      const report = parseDriveReport(body);
-      if (!report) {
-        fail(t("portable.unreadable"));
-        return;
-      }
-      latest9 = report;
-      paintStatus("");
-      renderPortableReport(report);
+      root.unmount();
     } catch {
-      if (mine !== token) return;
-      fail(t("portable.unreachable"));
-    } finally {
-      if (mine === token) endBusy8();
     }
   }
-  function paintDrivePicker(roots) {
-    const { connected, missing } = portableSeratoRoots(roots);
-    hasConnected = connected.length > 0;
-    const select = el("portable-drive");
-    const previous2 = select.value;
-    const options = connected.map((root) => {
-      const option = document.createElement("option");
-      option.value = root.path;
-      option.textContent = root.label;
-      return option;
-    });
-    select.replaceChildren(...options);
-    const keep = connected.some((root) => root.path === previous2) ? previous2 : connected[0]?.path ?? "";
-    select.value = keep;
-    select.disabled = !hasConnected;
-    el("portable-check").disabled = !hasConnected;
-    const note = el("portable-offline");
-    if (!missing.length) {
-      note.textContent = "";
-      return;
-    }
-    note.textContent = missing.map((root) => t("portable.offlineNamed", { name: root.label })).join(" ");
+  function rootFor(host, current2, lastHost) {
+    if (current2 && lastHost === host && host.isConnected) return current2;
+    safeUnmount(current2);
+    return void 0;
   }
-  function findingItems(report) {
-    const items = [];
-    const shown = report.findings.slice(0, FINDING_CAP);
-    for (const finding of shown) {
-      const row = document.createElement("li");
-      const kind2 = document.createElement("span");
-      kind2.className = "portable-kind";
-      kind2.textContent = kindLabel(finding.kind);
-      row.append(kind2);
-      if (finding.fix) {
-        row.append(document.createTextNode(" "));
-        const fix = document.createElement("span");
-        fix.className = "portable-fix";
-        fix.textContent = finding.fix;
-        row.append(fix);
-      }
-      items.push(row);
-    }
-    for (const error2 of report.errors) {
-      const row = document.createElement("li");
-      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
-      items.push(row);
-    }
-    const hidden = report.findings.length - shown.length;
-    if (hidden > 0) {
-      const row = document.createElement("li");
-      row.textContent = t("files.andMore", { count: hidden });
-      items.push(row);
-    }
-    return items;
+  function mountFilesIslands() {
+    const panel = el("files-panel");
+    const dialog = el("files-dialog");
+    const portable = el("portable-dialog");
+    panelRoot = mountIsland(panel, (0, import_react15.createElement)(FilesPanel), rootFor(panel, panelRoot, panelHost));
+    dialogRoot = mountIsland(dialog, (0, import_react15.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost));
+    portableRoot = mountIsland(portable, (0, import_react15.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost));
+    panelHost = panel;
+    dialogHost = dialog;
+    portableHost = portable;
   }
-  function surfaces() {
-    return [
-      {
-        verdict: el("portable-verdict"),
-        summary: el("portable-summary"),
-        findings: el("portable-findings"),
-        status: el("portable-status")
-      },
-      {
-        verdict: el("portable-view-verdict"),
-        summary: el("portable-view-summary"),
-        findings: el("portable-view-findings"),
-        status: el("portable-view-status")
-      }
-    ];
-  }
-  function kindLabel(kind2) {
-    const key = KIND_KEY[kind2];
-    return key ? t(key) : kind2;
-  }
-  function fail(message) {
-    latest9 = null;
-    clearReport();
-    paintStatus(message);
-  }
-  function clearReport() {
-    for (const surface of surfaces()) {
-      surface.verdict.textContent = "";
-      surface.summary.textContent = "";
-      surface.findings.replaceChildren();
-    }
-  }
-  function paintStatus(message) {
-    for (const surface of surfaces()) surface.status.textContent = message;
-  }
-  function beginBusy8() {
-    const button = el("portable-check");
-    button.disabled = true;
-    button.setAttribute("aria-busy", "true");
-    el("portable-panel").setAttribute("aria-busy", "true");
-  }
-  function endBusy8() {
-    const button = el("portable-check");
-    button.disabled = !hasConnected;
-    button.setAttribute("aria-busy", "false");
-    el("portable-panel").setAttribute("aria-busy", "false");
-  }
-  function isRecord(value) {
-    return typeof value === "object" && value !== null && !Array.isArray(value);
-  }
-  function text(value) {
-    return typeof value === "string" ? value : "";
-  }
-  function errorBody(value) {
-    if (!isRecord(value)) return null;
-    const body = {};
-    if (typeof value.error === "string") body.error = value.error;
-    if (typeof value.code === "string") body.code = value.code;
-    if (body.error === void 0 && body.code === void 0) return null;
-    return body;
-  }
+  bindFilesMount(mountFilesIslands);
+  bindPortableMount(mountFilesIslands);
 
   // src/beatgrid-view.ts
   var GRID_WARNING_KEYS = {
@@ -24498,10 +25684,10 @@
   }
 
   // src/views.ts
-  var import_react13 = __toESM(require_react(), 1);
+  var import_react17 = __toESM(require_react(), 1);
 
   // src/virtual-scroll.ts
-  var import_react12 = __toESM(require_react(), 1);
+  var import_react16 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -24561,7 +25747,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react12.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react16.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -25411,7 +26597,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react13.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react17.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -26441,526 +27627,8 @@
   function crateNamesFor(assetId) {
     return state.crates.filter((crate) => !crate.smart && (crate.tracks || []).includes(assetId)).map((crate) => crate.name);
   }
-  function failFiles(error2) {
-    state.filesLoading = false;
-    state.filesError = failureOf(error2).message || t("error.folder_unreadable");
-    renderFiles();
-  }
-  var filesRequest = 0;
-  var FILES_SEARCH_MS = 200;
-  var filesSearchTimer = 0;
-  var FILE_OVERSCAN = 8;
-  async function loadFolder(path, options = {}) {
-    window.clearTimeout(filesSearchTimer);
-    state.filesQuery = "";
-    state.filesSearching = false;
-    const searchField = document.getElementById("files-search");
-    if (searchField instanceof HTMLInputElement) searchField.value = "";
-    const elsewhere = options.elsewhere === true;
-    const refresh = options.refresh === true;
-    const atRoots = path === "" && !elsewhere;
-    const token3 = ++filesRequest;
-    state.filesLoading = true;
-    state.filesError = "";
-    if (!options.keepMessage) state.filesMessage = "";
-    state.filesSelected = /* @__PURE__ */ new Set();
-    state.filesActive = 0;
-    state.filesAtRoots = atRoots;
-    state.filesElsewhere = elsewhere;
-    if (atRoots) {
-      state.filesPath = "";
-      state.filesParent = null;
-      state.filesEntries = [];
-      state.filesBreadcrumb = [];
-      state.filesRoot = null;
-    }
-    renderFiles();
-    if (refresh || atRoots) {
-      const rootsPayload = await fetchLibraryRoots(refresh);
-      if (token3 !== filesRequest) return;
-      state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
-    }
-    if (atRoots) {
-      state.filesPath = "";
-      state.filesParent = null;
-      state.filesEntries = [];
-      state.filesBreadcrumb = [];
-      state.filesRoot = null;
-      state.filesElsewhere = false;
-      state.filesAtRoots = true;
-      state.filesTruncated = false;
-      state.filesLoading = false;
-      el("files-list").scrollTop = 0;
-      renderFiles();
-      return;
-    }
-    const params = new URLSearchParams();
-    if (path) params.set("path", path);
-    if (elsewhere) params.set("elsewhere", "1");
-    const query = params.size ? `?${params.toString()}` : "";
-    const response = await fetch(`/api/files${query}`);
-    const payload = await readJSONOr(response, {});
-    if (token3 !== filesRequest) return;
-    if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
-    state.filesPath = payload.path || "";
-    state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
-    state.filesEntries = Array.isArray(payload.entries) ? payload.entries : [];
-    state.filesRoot = isFileRoot(payload.root) ? payload.root : null;
-    state.filesBreadcrumb = Array.isArray(payload.breadcrumb) ? payload.breadcrumb.filter(isFileCrumb) : [];
-    state.filesElsewhere = Boolean(payload.elsewhere);
-    state.filesAtRoots = !state.filesPath && !state.filesElsewhere;
-    state.filesTruncated = Boolean(payload.truncated);
-    state.filesLoading = false;
-    el("files-list").scrollTop = 0;
-    if (payload.serato) applyStatus(payload.serato);
-    renderFiles();
-  }
-  async function searchFiles(query) {
-    const token3 = ++filesRequest;
-    const scope = state.filesAtRoots ? "" : state.filesPath;
-    const elsewhere = state.filesElsewhere && !state.filesAtRoots;
-    state.filesLoading = true;
-    state.filesError = "";
-    state.filesSearching = true;
-    state.filesQuery = query;
-    renderFiles();
-    const params = new URLSearchParams();
-    params.set("q", query);
-    if (scope) params.set("path", scope);
-    if (elsewhere) params.set("elsewhere", "1");
-    const response = await fetch(`/api/files?${params.toString()}`);
-    const payload = await readJSONOr(response, {});
-    if (token3 !== filesRequest) return;
-    if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
-    const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
-    state.filesEntries = entries;
-    state.filesTruncated = Boolean(payload.truncated);
-    state.filesLoading = false;
-    state.filesSearching = true;
-    state.filesActive = 0;
-    state.filesSelected = /* @__PURE__ */ new Set();
-    el("files-list").scrollTop = 0;
-    renderFiles();
-  }
-  function isListedFile(value) {
-    if (!value || typeof value !== "object") return false;
-    const row = value;
-    return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
-  }
-  function renderFiles() {
-    if (state.mode !== "files") return;
-    const pick2 = el("files-pick");
-    const moveHere = el("files-move-here");
-    const pickCancel = el("files-pick-cancel");
-    pick2.hidden = !state.filesPick;
-    moveHere.hidden = !state.filesPick;
-    pickCancel.hidden = !state.filesPick;
-    renderBreadcrumb();
-    const elsewhere = el("files-elsewhere");
-    elsewhere.textContent = state.filesElsewhere ? t("files.roots") : t("files.browseElsewhere");
-    setTooltip(elsewhere, state.filesElsewhere ? tips.filesMusicFolders : tips.filesElsewhere);
-    el("files-up").disabled = !state.filesParent || state.filesLoading;
-    const notes = [];
-    if (state.filesLoading) notes.push(state.filesAtRoots ? t("files.readingRootsNote") : t("files.readingFolderNote"));
-    if (state.filesError) notes.push(state.filesError);
-    if (state.filesMessage) notes.push(state.filesMessage);
-    if (state.filesTruncated) notes.push(state.filesSearching ? t("files.searchTruncated") : t("files.truncated"));
-    el("files-status").textContent = notes.join(" ");
-    const scroll = el("files-list").scrollTop;
-    paintFileWindow();
-    if (el("files-list").scrollTop !== scroll) el("files-list").scrollTop = scroll;
-    const selected = selectedFiles();
-    const locked = !state.writable || state.filesLoading || state.filesAtRoots;
-    el("files-rename").disabled = locked || selected.length !== 1;
-    el("files-rename-from-tags").disabled = locked || !selected.length;
-    el("files-move").disabled = locked || !selected.length || Boolean(state.filesPick);
-    el("files-move-folder").disabled = locked || !state.filesPath || Boolean(state.filesPick);
-    el("files-replace").disabled = locked || selected.length !== 1;
-    el("files-delete").disabled = locked || !selected.length;
-    moveHere.disabled = locked;
-    renderShell();
-  }
-  function renderBreadcrumb() {
-    const nav = el("files-path");
-    nav.replaceChildren();
-    const list = document.createElement("ol");
-    list.className = "files-crumbs";
-    const crumbs = visibleCrumbs();
-    crumbs.forEach((crumb, index) => {
-      const item3 = document.createElement("li");
-      const last = index === crumbs.length - 1;
-      if (!last && crumb.path) {
-        const button = buttonEl(openCrumb(crumb.name));
-        button.className = "files-crumb";
-        button.textContent = crumb.name;
-        button.addEventListener("click", () => {
-          loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
-        });
-        item3.append(button);
-      } else {
-        const current2 = document.createElement("span");
-        current2.className = "files-crumb";
-        current2.setAttribute("aria-current", "page");
-        current2.textContent = crumb.name;
-        item3.append(current2);
-      }
-      if (!last) {
-        const sep = document.createElement("span");
-        sep.className = "files-sep";
-        sep.setAttribute("aria-hidden", "true");
-        sep.textContent = "/";
-        item3.append(sep);
-      }
-      list.append(item3);
-    });
-    nav.append(list);
-  }
-  function visibleCrumbs() {
-    if (state.filesBreadcrumb.length) return state.filesBreadcrumb;
-    if (state.filesAtRoots) return [{ name: t("files.roots"), path: "" }];
-    if (state.filesPath) return [{ name: state.filesPath, path: state.filesPath }];
-    return [{ name: t("files.roots"), path: "" }];
-  }
-  function filesRowHeight() {
-    if (state.filesSearching) return FILE_ROW;
-    return state.filesAtRoots ? ROOT_ROW : FILE_ROW;
-  }
-  function browserRows() {
-    if (state.filesSearching) return state.filesEntries;
-    if (state.filesAtRoots) {
-      return state.filesRoots.map((root) => {
-        const entry = {
-          name: root.label,
-          path: root.path,
-          detail: root.detail,
-          kind: root.kind === "serato_drive" ? "drive" : "folder",
-          missing: root.missing,
-          removable: root.removable,
-          serato: root.serato
-        };
-        return entry;
-      });
-    }
-    const rank = { dir: 0, file: 1, link: 2 };
-    return [...state.filesEntries].sort((left, right) => {
-      return (rank[left.kind] ?? 3) - (rank[right.kind] ?? 3) || left.name.localeCompare(right.name, void 0, { numeric: true, sensitivity: "base" });
-    });
-  }
-  function paintFileWindow() {
-    const list = el("files-list");
-    const rows2 = browserRows();
-    list.setAttribute("aria-busy", String(state.filesLoading));
-    list.setAttribute(
-      "aria-label",
-      state.filesSearching ? t("files.searchResults") : state.filesAtRoots ? t("files.roots") : t("files.contents")
-    );
-    if (state.filesLoading && !rows2.length) {
-      const reading = state.filesSearching ? t("files.searching") : state.filesAtRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      list.replaceChildren(fileNote(reading));
-      list.tabIndex = 0;
-      return;
-    }
-    if (state.filesError && !rows2.length) {
-      list.replaceChildren(fileNote(state.filesError));
-      list.tabIndex = 0;
-      return;
-    }
-    if (state.filesAtRoots && !state.filesRoots.length) {
-      list.replaceChildren(rootsEmpty());
-      list.tabIndex = -1;
-      return;
-    }
-    if (!rows2.length) {
-      const empty = state.filesSearching ? t("files.noMatches", { query: state.filesQuery }) : t("files.empty");
-      list.replaceChildren(fileNote(empty));
-      list.tabIndex = 0;
-      return;
-    }
-    list.tabIndex = -1;
-    if (state.filesActive >= rows2.length) state.filesActive = rows2.length - 1;
-    if (state.filesActive < 0) state.filesActive = 0;
-    const rowHeight = filesRowHeight();
-    const view = list.clientHeight || 600;
-    const maxScroll = Math.max(0, rows2.length * rowHeight - view);
-    const scrollTop = Math.min(Math.max(0, list.scrollTop), maxScroll);
-    const start = Math.max(0, Math.floor(scrollTop / rowHeight) - FILE_OVERSCAN);
-    const end = Math.min(rows2.length, Math.ceil((scrollTop + view) / rowHeight) + FILE_OVERSCAN);
-    const spacer2 = fileSpacer(list);
-    const windowEl = spacer2.querySelector(".files-window");
-    if (!windowEl) return;
-    spacer2.style.height = `${rows2.length * rowHeight}px`;
-    windowEl.style.transform = `translateY(${start * rowHeight}px)`;
-    windowEl.replaceChildren();
-    for (let index = start; index < end; index += 1) {
-      const entry = rows2[index];
-      if (entry) windowEl.append(fileRow(entry, index));
-    }
-    if (state.filesActive >= start && state.filesActive < end) {
-      list.setAttribute("aria-activedescendant", `files-item-${state.filesActive}`);
-    } else list.removeAttribute("aria-activedescendant");
-  }
-  function fileSpacer(list) {
-    const first = list.firstElementChild;
-    if (first instanceof HTMLDivElement && first.classList.contains("files-spacer") && list.childElementCount === 1) {
-      return first;
-    }
-    list.replaceChildren();
-    const spacer2 = document.createElement("div");
-    spacer2.className = "files-spacer";
-    const windowEl = document.createElement("div");
-    windowEl.className = "files-window";
-    spacer2.append(windowEl);
-    list.append(spacer2);
-    return spacer2;
-  }
-  function fileNote(text2) {
-    const note = document.createElement("p");
-    note.className = "files-empty";
-    note.textContent = text2;
-    return note;
-  }
-  function rootsEmpty() {
-    const box = document.createElement("div");
-    box.className = "files-empty-state";
-    const heading = document.createElement("h2");
-    heading.textContent = t("files.noRoots");
-    const copy = document.createElement("p");
-    copy.textContent = t("files.noRootsBody");
-    const button = buttonEl(tips.runSetup);
-    button.id = "files-run-setup";
-    button.className = "files-primary";
-    button.textContent = t("files.runSetup");
-    button.addEventListener("click", () => bridge.openSetup());
-    box.append(heading, copy, button);
-    return box;
-  }
-  function focusFilesIndex(index) {
-    const rows2 = browserRows();
-    if (!rows2.length) return;
-    state.filesActive = Math.max(0, Math.min(rows2.length - 1, index));
-    const list = el("files-list");
-    const rowHeight = filesRowHeight();
-    const view = list.clientHeight || 600;
-    const top = state.filesActive * rowHeight;
-    const maxScroll = Math.max(0, rows2.length * rowHeight - view);
-    if (top < list.scrollTop) list.scrollTop = top;
-    if (top + rowHeight > list.scrollTop + view) list.scrollTop = Math.min(maxScroll, top + rowHeight - view);
-    paintFileWindow();
-    const control = list.querySelector(`[data-files-index="${state.filesActive}"]`);
-    control?.focus();
-  }
-  function activateFilesIndex(index) {
-    const entry = browserRows()[index];
-    if (!entry) return;
-    if (entry.kind === "file") {
-      if (state.filesSelected.has(entry.path)) state.filesSelected.delete(entry.path);
-      else state.filesSelected.add(entry.path);
-      renderFiles();
-      focusFilesIndex(index);
-      return;
-    }
-    if (entry.kind === "link") return;
-    openBrowserRow(entry);
-  }
-  function openBrowserRow(entry) {
-    if (entry.missing) return;
-    const elsewhere = state.filesElsewhere && entry.kind === "dir";
-    loadFolder(entry.path, { elsewhere }).catch((error2) => failFiles(error2));
-  }
-  function onFilesKey(event) {
-    if (state.mode !== "files") return;
-    const list = el("files-list");
-    if (!(event.target instanceof Node) || !list.contains(event.target)) return;
-    const rows2 = browserRows();
-    if (!rows2.length) return;
-    if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
-      event.preventDefault();
-      if (event.key === "ArrowDown") focusFilesIndex(state.filesActive + 1);
-      else if (event.key === "ArrowUp") focusFilesIndex(state.filesActive - 1);
-      else if (event.key === "Home") focusFilesIndex(0);
-      else focusFilesIndex(rows2.length - 1);
-      return;
-    }
-    if (event.key !== "Enter" && event.key !== " ") return;
-    const control = event.target instanceof HTMLElement ? event.target.closest("button, input") : null;
-    if (control && list.contains(control)) return;
-    event.preventDefault();
-    activateFilesIndex(state.filesActive);
-  }
-  function fileRow(entry, index) {
-    const row = document.createElement("div");
-    row.className = "files-row";
-    if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) row.classList.add("is-root");
-    if (entry.missing) row.classList.add("is-missing");
-    if (index === state.filesActive) row.classList.add("is-active");
-    row.setAttribute("role", "listitem");
-    const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
-    if (openKind) {
-      const button = buttonEl(entry.missing ? missingDrive(entry.name) : openFile(entry.name));
-      button.className = "files-open";
-      button.dataset.filesIndex = String(index);
-      button.id = `files-item-${index}`;
-      button.tabIndex = index === state.filesActive ? 0 : -1;
-      if (entry.kind === "drive" || entry.kind === "folder") button.append(fileIcon(entry.kind === "drive" ? "drive" : "folder"));
-      if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) {
-        const copy = document.createElement("span");
-        copy.className = "files-root-copy";
-        const label2 = document.createElement("span");
-        label2.className = "files-root-label";
-        label2.textContent = entry.name;
-        const detail = document.createElement("span");
-        detail.className = "files-root-detail";
-        detail.textContent = entry.detail;
-        copy.append(label2, detail);
-        button.append(copy);
-      } else {
-        const name2 = document.createElement("span");
-        name2.textContent = entry.name;
-        button.append(name2);
-        if (entry.detail) {
-          const detail = document.createElement("span");
-          detail.className = "files-match-detail";
-          detail.textContent = entry.detail;
-          button.append(detail);
-        }
-      }
-      if (entry.missing) {
-        button.setAttribute("aria-disabled", "true");
-        button.setAttribute("aria-label", t("files.driveMissingLabel", { name: entry.name }));
-        const badge = document.createElement("span");
-        badge.className = "files-badge";
-        badge.textContent = t("files.driveMissing");
-        button.append(badge);
-        button.addEventListener("click", () => {
-          state.filesActive = index;
-        });
-      } else {
-        button.setAttribute("aria-label", t("files.open", { name: entry.name }));
-        button.addEventListener("click", () => {
-          state.filesActive = index;
-          openBrowserRow(entry);
-        });
-      }
-      row.append(button);
-      if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
-      return row;
-    }
-    if (entry.kind !== "file") {
-      const label2 = buttonEl(fileShortcut(entry.name));
-      label2.className = "files-kind";
-      label2.dataset.filesIndex = String(index);
-      label2.id = `files-item-${index}`;
-      label2.tabIndex = index === state.filesActive ? 0 : -1;
-      label2.textContent = t("files.shortcut", { name: entry.name });
-      label2.setAttribute("aria-label", t("files.shortcut", { name: entry.name }));
-      row.append(label2);
-      return row;
-    }
-    const label = document.createElement("label");
-    label.className = "files-file";
-    const box = inputEl(selectFile(entry.name, entry.path));
-    box.type = "checkbox";
-    box.dataset.filesIndex = String(index);
-    box.id = `files-item-${index}`;
-    box.tabIndex = index === state.filesActive ? 0 : -1;
-    box.checked = state.filesSelected.has(entry.path);
-    box.setAttribute("aria-label", entry.name);
-    box.addEventListener("change", () => {
-      state.filesActive = index;
-      if (box.checked) state.filesSelected.add(entry.path);
-      else state.filesSelected.delete(entry.path);
-      renderFiles();
-    });
-    const name = document.createElement("span");
-    name.className = "files-name";
-    name.textContent = entry.name;
-    label.append(box, name);
-    if (entry.detail) {
-      const detail = document.createElement("span");
-      detail.className = "files-match-detail";
-      detail.textContent = entry.detail;
-      label.append(detail);
-    }
-    if (entry.in_library) {
-      const badge = document.createElement("span");
-      badge.className = "files-badge";
-      badge.textContent = t("files.inLibrary");
-      label.append(badge);
-    }
-    row.append(label);
-    return row;
-  }
-  function fileIcon(kind2) {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("width", "20");
-    svg.setAttribute("height", "20");
-    svg.setAttribute("aria-hidden", "true");
-    svg.classList.add("files-icon", kind2 === "drive" ? "files-icon-drive" : "files-icon-folder");
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "currentColor");
-    path.setAttribute("stroke-width", "1.5");
-    path.setAttribute("stroke-linejoin", "round");
-    path.setAttribute(
-      "d",
-      kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z"
-    );
-    svg.append(path);
-    return svg;
-  }
-  function isFileRoot(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.name === "string" && typeof record.path === "string" && typeof record.kind === "string";
-  }
-  function isFileCrumb(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.name === "string" && typeof record.path === "string";
-  }
-  function moveFileList(delta) {
-    if (!browserRows().length) return;
-    focusFilesIndex(state.filesActive + delta);
-  }
-  function openFileList() {
-    if (!browserRows().length) return;
-    activateFilesIndex(state.filesActive);
-  }
-  function focusFileByPath(path) {
-    const index = browserRows().findIndex((entry) => entry.path === path);
-    if (index < 0) return;
-    focusFilesIndex(index);
-  }
-  function selectedFiles() {
-    return state.filesEntries.filter((entry) => entry.kind === "file" && state.filesSelected.has(entry.path));
-  }
   function wireLibrary() {
-    el("files-list").addEventListener("scroll", () => {
-      if (state.mode === "files") paintFileWindow();
-    });
-    el("files-list").addEventListener("keydown", onFilesKey);
-    el("files-search").addEventListener("input", () => {
-      window.clearTimeout(filesSearchTimer);
-      const value = el("files-search").value;
-      state.filesQuery = value;
-      if (!value.trim()) {
-        if (state.filesAtRoots && !state.filesPath) {
-          state.filesSearching = false;
-          state.filesEntries = [];
-          state.filesError = "";
-          state.filesTruncated = false;
-          state.filesLoading = false;
-          renderFiles();
-          return;
-        }
-        loadFolder(state.filesPath, { elsewhere: state.filesElsewhere && Boolean(state.filesPath) }).catch((error2) => failFiles(error2));
-        return;
-      }
-      filesSearchTimer = window.setTimeout(() => {
-        searchFiles(value.trim()).catch((error2) => failFiles(error2));
-      }, FILES_SEARCH_MS);
-    });
+    mountFilesIslands();
     el("search").addEventListener("input", () => {
       state.query = el("search").value;
       el("list").scrollTop = 0;
@@ -27094,6 +27762,9 @@
   bridge.selectEntry = selectEntry;
   bridge.reloadLibrary = loadLibrary;
   bridge.lockDown = lockDown;
+  bridge.applyStatus = applyStatus;
+  bridge.renderShell = renderShell;
+  bridge.setNotice = setNotice;
 
   // src/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;
@@ -27159,10 +27830,6 @@
     }
     return "serato-like";
   }
-  var filesPreview = null;
-  var filesAction = "";
-  var filesTagScope = "paths";
-  var filesTrigger = null;
   var relinkPlan = null;
   var relinkLoading = false;
   var relinkChosen = /* @__PURE__ */ new Map();
@@ -27774,9 +28441,6 @@
       fillRelinkBanner();
       renderRelinkRows();
     }
-    if (el("files-dialog").open) {
-      el("files-confirm").textContent = filesAction === "delete" ? t("files.moveToTrash") : t("common.confirm");
-    }
   }
   function applyPrivacy(payload) {
     state.telemetryConsent = payload.telemetry_consent ?? null;
@@ -27839,144 +28503,6 @@
     if (token3 === rekordboxToken) applyRekordboxExport(payload);
     if (!state.wizardComplete && openWizard(false, el("search"))) return;
     if (payload.needs_consent_prompt) showConsent();
-  }
-  function openFilesDialog(action, trigger, scope = "paths") {
-    filesAction = action;
-    filesTagScope = scope;
-    filesPreview = null;
-    filesTrigger = trigger instanceof HTMLElement ? trigger : null;
-    el("files-name-label").hidden = action !== "rename";
-    el("files-replace-label").hidden = action !== "replace";
-    el("files-summary").textContent = "";
-    el("files-warning").textContent = "";
-    el("files-dialog-status").textContent = "";
-    el("files-changes").replaceChildren();
-    const selected = selectedFiles();
-    if (action === "rename" && selected.length === 1) el("files-name").value = selected[0].name;
-    if (action === "replace") el("files-replacement").value = "";
-    const confirm2 = el("files-confirm");
-    confirm2.classList.toggle("danger", action === "delete");
-    confirm2.textContent = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
-    setTooltip(confirm2, action === "delete" ? tips.filesMoveTrash : tips.filesConfirm);
-    syncFilesDialog();
-    el("files-dialog").showModal();
-    if (action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags") {
-      el("files-cancel").focus();
-      reviewFiles().catch((error2) => {
-        el("files-dialog-status").textContent = failureOf(error2).message;
-      });
-    } else if (action === "rename") el("files-name").focus();
-    else el("files-replacement").focus();
-  }
-  function syncFilesDialog() {
-    const confirm2 = el("files-confirm");
-    const review = el("files-review");
-    const ready = Boolean(filesPreview?.ok && state.writable && filesPreview.needs_confirm);
-    confirm2.disabled = !ready;
-    review.hidden = filesAction === "delete" || filesAction === "move" || filesAction === "move_folder" || filesAction === "rename_from_tags";
-    if (!state.writable) {
-      el("files-dialog-status").textContent = el("status").textContent;
-    }
-  }
-  async function reviewFiles() {
-    const body = filesBody(false);
-    el("files-dialog-status").textContent = t("files.checking");
-    const payload = await postJSON("/api/files", body);
-    filesPreview = payload;
-    el("files-summary").textContent = payload.summary || "";
-    el("files-warning").textContent = payload.warning || "";
-    el("files-dialog-status").textContent = payload.ok ? "" : serverMessage(payload, t("files.notSaved"));
-    const list = el("files-changes");
-    list.replaceChildren();
-    for (const change of payload.changes || []) {
-      const item3 = document.createElement("li");
-      const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
-      const effect = change.effect === "trash" ? t("files.trash") : change.to;
-      item3.textContent = `${change.from} → ${effect}${crates}`;
-      list.append(item3);
-    }
-    for (const skip2 of payload.skipped || []) {
-      const item3 = document.createElement("li");
-      item3.textContent = skip2;
-      list.append(item3);
-    }
-    if (payload.more) {
-      const more = document.createElement("li");
-      more.textContent = t("files.andMore", { count: Number(payload.more) });
-      list.append(more);
-    }
-    if (payload.serato) applyStatus(payload.serato);
-    syncFilesDialog();
-  }
-  function filesBody(confirm2) {
-    const body = { action: filesAction };
-    if (confirm2) body.confirm = true;
-    if (filesAction === "rename") {
-      const selected = selectedFiles();
-      body.path = selected[0]?.path || state.filesPickPaths[0];
-      body.name = el("files-name").value;
-    } else if (filesAction === "move") {
-      body.paths = state.filesPickPaths.length ? [...state.filesPickPaths] : selectedFiles().map((entry) => entry.path);
-      body.destination = state.filesPath;
-    } else if (filesAction === "move_folder") {
-      body.path = state.filesPickSource || state.filesPath;
-      body.destination = state.filesPath;
-    } else if (filesAction === "replace") {
-      const selected = selectedFiles();
-      body.path = selected[0]?.path || "";
-      body.replacement = el("files-replacement").value.trim();
-    } else if (filesAction === "delete") {
-      body.paths = selectedFiles().map((entry) => entry.path);
-    } else if (filesAction === "rename_from_tags") {
-      if (filesTagScope === "crate") {
-        const crate = state.activeCrate;
-        if (typeof crate === "number") {
-          body.crate = crate;
-          body.space = state.space;
-        }
-      } else {
-        body.paths = selectedFiles().map((entry) => entry.path);
-      }
-    }
-    return body;
-  }
-  function closeFilesDialog() {
-    const trigger = filesTrigger;
-    filesTrigger = null;
-    filesTagScope = "paths";
-    if (el("files-dialog").open) el("files-dialog").close();
-    if (trigger instanceof HTMLElement) trigger.focus();
-  }
-  async function confirmFiles() {
-    if (!filesPreview?.ok || !state.writable) return;
-    const confirm2 = el("files-confirm");
-    confirm2.disabled = true;
-    el("files-dialog-status").textContent = t("files.saving");
-    const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
-    try {
-      const payload = await postJSON("/api/files", filesBody(true));
-      if (payload.serato) applyStatus(payload.serato);
-      closeFilesDialog();
-      state.filesPick = null;
-      state.filesPickPaths = [];
-      state.filesPickSource = "";
-      let message = payload.summary || t("files.updated");
-      if (payload.warning) message = `${message} ${payload.warning}`;
-      if (crateScope && state.mode !== "files") {
-        setNotice(message);
-        await loadLibrary();
-        return;
-      }
-      state.filesMessage = message;
-      await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
-      await loadLibrary();
-      state.filesMessage = state.filesMessage;
-      renderFiles();
-    } catch (error2) {
-      if (failureOf(error2).status === 409) lockDown(error2);
-      el("files-dialog-status").textContent = failureOf(error2).message;
-      confirm2.disabled = false;
-    }
   }
   function relinkReason(reason) {
     if (reason === "same name and size") return t("relink.reason.nameAndSize");
@@ -28358,108 +28884,11 @@
         button.disabled = false;
       }
     });
-    el("files-up").addEventListener("click", () => {
-      if (state.filesParent) {
-        loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
-      }
-    });
-    el("files-refresh").addEventListener("click", () => {
-      const path = state.filesAtRoots ? "" : state.filesPath;
-      loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots, refresh: true }).catch((error2) => failFiles(error2));
-    });
-    el("files-elsewhere").addEventListener("click", () => {
-      if (state.filesElsewhere) loadFolder("").catch((error2) => failFiles(error2));
-      else loadFolder("", { elsewhere: true }).catch((error2) => failFiles(error2));
-    });
-    el("files-rename").addEventListener("click", (event) => {
-      if (selectedFiles().length !== 1) {
-        state.filesError = t("files.chooseOneRename");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("rename", event.currentTarget);
-    });
-    el("files-rename-from-tags").addEventListener("click", (event) => {
-      if (!selectedFiles().length) {
-        state.filesError = t("files.chooseRenameFromTags");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("rename_from_tags", event.currentTarget, "paths");
-    });
+    mountFilesIslands();
     el("crate-rename-from-tags").addEventListener("click", (event) => {
       const crate = state.activeCrate;
       if (typeof crate !== "number") return;
-      openFilesDialog("rename_from_tags", event.currentTarget, "crate");
-    });
-    el("files-move").addEventListener("click", () => {
-      const selected = selectedFiles();
-      if (!selected.length) {
-        state.filesError = t("files.chooseMove");
-        renderFiles();
-        return;
-      }
-      state.filesPick = "move";
-      state.filesPickPaths = selected.map((entry) => entry.path);
-      state.filesError = "";
-      state.filesMessage = t("files.chooseDestination");
-      renderFiles();
-    });
-    el("files-move-folder").addEventListener("click", () => {
-      state.filesPick = "move_folder";
-      state.filesPickSource = state.filesPath;
-      state.filesError = "";
-      state.filesMessage = t("files.chooseDestination");
-      renderFiles();
-    });
-    el("files-move-here").addEventListener("click", (event) => {
-      openFilesDialog(state.filesPick === "move_folder" ? "move_folder" : "move", event.currentTarget);
-    });
-    el("files-pick-cancel").addEventListener("click", () => {
-      state.filesPick = null;
-      state.filesPickPaths = [];
-      state.filesPickSource = "";
-      state.filesMessage = "";
-      renderFiles();
-    });
-    el("files-replace").addEventListener("click", (event) => {
-      if (selectedFiles().length !== 1) {
-        state.filesError = t("files.chooseOneReplace");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("replace", event.currentTarget);
-    });
-    el("files-delete").addEventListener("click", (event) => {
-      if (!selectedFiles().length) {
-        state.filesError = t("files.chooseDelete");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("delete", event.currentTarget);
-    });
-    el("files-review").addEventListener("click", () => {
-      reviewFiles().catch((error2) => {
-        el("files-dialog-status").textContent = failureOf(error2).message;
-      });
-    });
-    el("files-confirm").addEventListener("click", () => {
-      confirmFiles().catch((error2) => {
-        el("files-dialog-status").textContent = failureOf(error2).message;
-      });
-    });
-    el("files-cancel").addEventListener("click", () => closeFilesDialog());
-    el("files-name").addEventListener("input", () => {
-      filesPreview = null;
-      syncFilesDialog();
-    });
-    el("files-replacement").addEventListener("input", () => {
-      filesPreview = null;
-      syncFilesDialog();
-    });
-    el("files-dialog").addEventListener("cancel", (event) => {
-      event.preventDefault();
-      closeFilesDialog();
+      startRenameFromTags(event.currentTarget, "crate");
     });
   }
   bridge.openMergeDialog = openMergeDialog;

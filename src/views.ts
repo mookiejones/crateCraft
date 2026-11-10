@@ -1,21 +1,18 @@
 /**
- * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, files, tempo drift, and the portable drive check.
+ * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, tempo drift, and the portable drive check.
  *
- * The functions paint from state and the elements in index.html. Nothing
- * in this module runs a request when the file is imported. Listeners are
- * attached by wireLibrary, which app.ts calls once at startup.
+ * Files is React on FilesContext. This module re-exports that store so
+ * existing callers keep one import. Nothing in this module runs a
+ * request when the file is imported. Listeners are attached by
+ * wireLibrary, which app.ts calls once at startup.
  */
 
-import { failureOf, fetchLibraryRoots, isLibraryRoot, postJSON, readJSONOr } from "./api";
+import { failureOf, postJSON, readJSONOr } from "./api";
 import type {
   CopyRow,
   Crate,
   DuplicatePayload,
   ErrorBody,
-  FileCrumb,
-  FileEntry,
-  FileRoot,
-  FilesPayload,
   HistoryPayload,
   LibraryPayload,
   RelatedPayload,
@@ -34,14 +31,35 @@ import { loadHistoryStats, showHistoryStatsFailure } from "./history-stats";
 import { loadScan, showScanFailure } from "./scan";
 import { loadBitrate, showBitrateFailure } from "./bitrate";
 import { loadTags, showTagsFailure } from "./tags";
-import { loadPortableView, portableDriveButton, showPortableFailure } from "./portable";
+import { loadPortableView, showPortableFailure } from "./portable";
+import { mountFilesIslands } from "./files-mount";
+import {
+  FILES_SEARCH_MS,
+  failFiles,
+  focusFileByPath,
+  loadFolder,
+  moveFileList,
+  openFileList,
+  renderFiles,
+  selectedFiles,
+} from "./files";
+export {
+  FILES_SEARCH_MS,
+  failFiles,
+  focusFileByPath,
+  loadFolder,
+  moveFileList,
+  openFileList,
+  renderFiles,
+  selectedFiles,
+};
 import { appendBeatgrid } from "./beatgrid-view";
 import { appendCueSlots, formatCueTime } from "./cue-view";
 import { syncFolderSyncButton } from "./folder-sync-view";
 import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
 import { isTextSearchField, matchesQuery, parseQuery, type ParsedQuery } from "./search-filters";
-import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
+import { COLOR_NAMES, COLORS, state } from "./state";
 import { createElement } from "react";
 import { mountIsland, type IslandRoot } from "./app/mount";
 import { PlayButton } from "./components/PlayButton";
@@ -52,19 +70,14 @@ import {
   collapseCrate,
   editField,
   expandCrate,
-  fileShortcut,
   membershipTip,
-  missingDrive,
   openCopy,
   openReplaceCopy,
-  openCrumb,
   openCrate,
-  openFile,
   openRelated,
   removeRelatedTip,
   revealTip,
   saveSuggestion,
-  selectFile,
   selectRow,
   sessionTip,
   sortTip,
@@ -2640,714 +2653,6 @@ export function crateNamesFor(assetId: number) {
 }
 
 /**
- * Show a folder error in the Files view.
- *
- * @param {Error} error Failed folder read or save.
- * @returns {void}
- */
-export function failFiles(error: unknown) {
-  state.filesLoading = false;
-  state.filesError = failureOf(error).message || t("error.folder_unreadable");
-  renderFiles();
-}
-
-/**
- * Folder request counter.
- *
- * A slow reply must not paint a folder the user has already left.
- */
-let filesRequest = 0;
-
-/** Wait before searching the disk, so a fast typist does not search every letter. */
-export const FILES_SEARCH_MS = 200;
-
-let filesSearchTimer = 0;
-
-const FILE_OVERSCAN = 8;
-
-/**
- * Load music roots, or one folder.
- *
- * An empty path asks GET /api/library-roots. A folder asks GET /api/files.
- * ``elsewhere`` asks to browse outside those folders. ``refresh`` recomputes
- * the roots. Selection is cleared because the previous paths are no longer
- * the rows on screen. A success message can be kept when the reload follows
- * a save.
- *
- * @param {string} path Folder to open. Empty selects the music roots.
- * @param {{keepMessage?: boolean, elsewhere?: boolean, refresh?: boolean}} [options] keepMessage retains the last save note. elsewhere lists outside the roots. refresh recomputes the roots.
- * @returns {Promise<void>}
- */
-export async function loadFolder(path: string, options: { keepMessage?: boolean; elsewhere?: boolean; refresh?: boolean } = {}) {
-  window.clearTimeout(filesSearchTimer);
-  state.filesQuery = "";
-  state.filesSearching = false;
-  const searchField = document.getElementById("files-search");
-  if (searchField instanceof HTMLInputElement) searchField.value = "";
-  const elsewhere = options.elsewhere === true;
-  const refresh = options.refresh === true;
-  const atRoots = path === "" && !elsewhere;
-  const token = ++filesRequest;
-  state.filesLoading = true;
-  state.filesError = "";
-  if (!options.keepMessage) state.filesMessage = "";
-  state.filesSelected = new Set();
-  state.filesActive = 0;
-  state.filesAtRoots = atRoots;
-  state.filesElsewhere = elsewhere;
-  if (atRoots) {
-    state.filesPath = "";
-    state.filesParent = null;
-    state.filesEntries = [];
-    state.filesBreadcrumb = [];
-    state.filesRoot = null;
-  }
-  renderFiles();
-  if (refresh || atRoots) {
-    const rootsPayload = await fetchLibraryRoots(refresh);
-    if (token !== filesRequest) return;
-    state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
-  }
-  if (atRoots) {
-    state.filesPath = "";
-    state.filesParent = null;
-    state.filesEntries = [];
-    state.filesBreadcrumb = [];
-    state.filesRoot = null;
-    state.filesElsewhere = false;
-    state.filesAtRoots = true;
-    state.filesTruncated = false;
-    state.filesLoading = false;
-    el("files-list").scrollTop = 0;
-    renderFiles();
-    return;
-  }
-  const params = new URLSearchParams();
-  if (path) params.set("path", path);
-  if (elsewhere) params.set("elsewhere", "1");
-  const query = params.size ? `?${params.toString()}` : "";
-  const response = await fetch(`/api/files${query}`);
-  const payload = await readJSONOr<FilesPayload>(response, {});
-  if (token !== filesRequest) return;
-  if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
-  state.filesPath = payload.path || "";
-  state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
-  state.filesEntries = Array.isArray(payload.entries) ? payload.entries : [];
-  state.filesRoot = isFileRoot(payload.root) ? payload.root : null;
-  state.filesBreadcrumb = Array.isArray(payload.breadcrumb) ? payload.breadcrumb.filter(isFileCrumb) : [];
-  state.filesElsewhere = Boolean(payload.elsewhere);
-  state.filesAtRoots = !state.filesPath && !state.filesElsewhere;
-  state.filesTruncated = Boolean(payload.truncated);
-  state.filesLoading = false;
-  el("files-list").scrollTop = 0;
-  if (payload.serato) applyStatus(payload.serato);
-  renderFiles();
-}
-
-/**
- * Search file names under the open folder, or under every music folder.
- *
- * Uses GET /api/files?q=. The request is read-only. A newer folder open
- * or a newer search replaces a slow reply.
- *
- * @param query Name to find.
- * @returns {Promise<void>}
- */
-async function searchFiles(query: string): Promise<void> {
-  const token = ++filesRequest;
-  const scope = state.filesAtRoots ? "" : state.filesPath;
-  const elsewhere = state.filesElsewhere && !state.filesAtRoots;
-  state.filesLoading = true;
-  state.filesError = "";
-  state.filesSearching = true;
-  state.filesQuery = query;
-  renderFiles();
-  const params = new URLSearchParams();
-  params.set("q", query);
-  if (scope) params.set("path", scope);
-  if (elsewhere) params.set("elsewhere", "1");
-  const response = await fetch(`/api/files?${params.toString()}`);
-  const payload = await readJSONOr<FilesPayload>(response, {});
-  if (token !== filesRequest) return;
-  if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
-  const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
-  state.filesEntries = entries;
-  state.filesTruncated = Boolean(payload.truncated);
-  state.filesLoading = false;
-  state.filesSearching = true;
-  state.filesActive = 0;
-  state.filesSelected = new Set();
-  el("files-list").scrollTop = 0;
-  renderFiles();
-}
-
-/**
- * Return whether a JSON value is a file-list row.
- *
- * @param value Candidate.
- * @returns True when name, path, and kind are strings.
- */
-function isListedFile(value: unknown): value is FileEntry {
-  if (!value || typeof value !== "object") return false;
-  const row = value as FileEntry;
-  return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
-}
-
-/**
- * Paint the folder, the empty and loading states, and the action buttons.
- *
- * Uses text nodes. Shortcuts are labeled and cannot be selected. Writes
- * stay disabled while Serato holds the library.
- *
- * @returns {void}
- */
-export function renderFiles() {
-  if (state.mode !== "files") return;
-  const pick = el("files-pick");
-  const moveHere = el("files-move-here");
-  const pickCancel = el("files-pick-cancel");
-  pick.hidden = !state.filesPick;
-  moveHere.hidden = !state.filesPick;
-  pickCancel.hidden = !state.filesPick;
-  renderBreadcrumb();
-  const elsewhere = el("files-elsewhere");
-  elsewhere.textContent = state.filesElsewhere ? t("files.roots") : t("files.browseElsewhere");
-  setTooltip(elsewhere, state.filesElsewhere ? tips.filesMusicFolders : tips.filesElsewhere);
-  el("files-up").disabled = !state.filesParent || state.filesLoading;
-  const notes = [];
-  if (state.filesLoading) notes.push(state.filesAtRoots ? t("files.readingRootsNote") : t("files.readingFolderNote"));
-  if (state.filesError) notes.push(state.filesError);
-  if (state.filesMessage) notes.push(state.filesMessage);
-  if (state.filesTruncated) notes.push(state.filesSearching ? t("files.searchTruncated") : t("files.truncated"));
-  el("files-status").textContent = notes.join(" ");
-  const scroll = el("files-list").scrollTop;
-  paintFileWindow();
-  if (el("files-list").scrollTop !== scroll) el("files-list").scrollTop = scroll;
-  const selected = selectedFiles();
-  const locked = !state.writable || state.filesLoading || state.filesAtRoots;
-  el("files-rename").disabled = locked || selected.length !== 1;
-  el("files-rename-from-tags").disabled = locked || !selected.length;
-  el("files-move").disabled = locked || !selected.length || Boolean(state.filesPick);
-  el("files-move-folder").disabled = locked || !state.filesPath || Boolean(state.filesPick);
-  el("files-replace").disabled = locked || selected.length !== 1;
-  el("files-delete").disabled = locked || !selected.length;
-  moveHere.disabled = locked;
-  renderShell();
-}
-
-/**
- * Paint the folder path, starting at the music-root name.
- *
- * The current folder is text. Earlier crumbs are buttons. There is no
- * crumb above the root unless the browse is elsewhere.
- *
- * @returns {void}
- */
-function renderBreadcrumb(): void {
-  const nav = el("files-path");
-  nav.replaceChildren();
-  const list = document.createElement("ol");
-  list.className = "files-crumbs";
-  const crumbs = visibleCrumbs();
-  crumbs.forEach((crumb, index) => {
-    const item = document.createElement("li");
-    const last = index === crumbs.length - 1;
-    if (!last && crumb.path) {
-      const button = buttonEl(openCrumb(crumb.name));
-      button.className = "files-crumb";
-      button.textContent = crumb.name;
-      button.addEventListener("click", () => {
-        loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error) => failFiles(error));
-      });
-      item.append(button);
-    } else {
-      const current = document.createElement("span");
-      current.className = "files-crumb";
-      current.setAttribute("aria-current", "page");
-      current.textContent = crumb.name;
-      item.append(current);
-    }
-    if (!last) {
-      const sep = document.createElement("span");
-      sep.className = "files-sep";
-      sep.setAttribute("aria-hidden", "true");
-      sep.textContent = "/";
-      item.append(sep);
-    }
-    list.append(item);
-  });
-  nav.append(list);
-}
-
-/**
- * Return the crumbs for the open location.
- *
- * @returns {FileCrumb[]} Path crumbs. The root list is one crumb.
- */
-function visibleCrumbs(): FileCrumb[] {
-  if (state.filesBreadcrumb.length) return state.filesBreadcrumb;
-  if (state.filesAtRoots) return [{ name: t("files.roots"), path: "" }];
-  if (state.filesPath) return [{ name: state.filesPath, path: state.filesPath }];
-  return [{ name: t("files.roots"), path: "" }];
-}
-
-/**
- * Return the rows in the order they are shown.
- *
- * Roots keep the order from the server. A folder lists directories, then
- * files, then shortcuts.
- *
- * @returns {FileEntry[]} Rows for the virtual window.
- */
-function filesRowHeight(): number {
-  if (state.filesSearching) return FILE_ROW;
-  return state.filesAtRoots ? ROOT_ROW : FILE_ROW;
-}
-
-function browserRows(): FileEntry[] {
-  if (state.filesSearching) return state.filesEntries;
-  if (state.filesAtRoots) {
-    return state.filesRoots.map((root) => {
-      const entry: FileEntry = {
-        name: root.label,
-        path: root.path,
-        detail: root.detail,
-        kind: root.kind === "serato_drive" ? "drive" : "folder",
-        missing: root.missing,
-        removable: root.removable,
-        serato: root.serato,
-      };
-      return entry;
-    });
-  }
-  const rank: Record<string, number> = { dir: 0, file: 1, link: 2 };
-  return [...state.filesEntries].sort((left, right) => {
-    return (rank[left.kind] ?? 3) - (rank[right.kind] ?? 3)
-      || left.name.localeCompare(right.name, undefined, { numeric: true, sensitivity: "base" });
-  });
-}
-
-/**
- * Paint only the file rows inside the scroll window.
- *
- * Row height is FILE_ROW. Extra rows above and below the window keep a
- * fast scroll from flashing empty space. The spacer is the full height,
- * so the last row can be scrolled into view.
- *
- * @returns {void}
- */
-function paintFileWindow(): void {
-  const list = el("files-list");
-  const rows = browserRows();
-  list.setAttribute("aria-busy", String(state.filesLoading));
-  list.setAttribute(
-    "aria-label",
-    state.filesSearching ? t("files.searchResults") : state.filesAtRoots ? t("files.roots") : t("files.contents"),
-  );
-  if (state.filesLoading && !rows.length) {
-    const reading = state.filesSearching
-      ? t("files.searching")
-      : state.filesAtRoots
-        ? t("files.readingRootsNote")
-        : t("files.readingFolderNote");
-    list.replaceChildren(fileNote(reading));
-    list.tabIndex = 0;
-    return;
-  }
-  if (state.filesError && !rows.length) {
-    list.replaceChildren(fileNote(state.filesError));
-    list.tabIndex = 0;
-    return;
-  }
-  if (state.filesAtRoots && !state.filesRoots.length) {
-    list.replaceChildren(rootsEmpty());
-    list.tabIndex = -1;
-    return;
-  }
-  if (!rows.length) {
-    const empty = state.filesSearching
-      ? t("files.noMatches", { query: state.filesQuery })
-      : t("files.empty");
-    list.replaceChildren(fileNote(empty));
-    list.tabIndex = 0;
-    return;
-  }
-  list.tabIndex = -1;
-  if (state.filesActive >= rows.length) state.filesActive = rows.length - 1;
-  if (state.filesActive < 0) state.filesActive = 0;
-  const rowHeight = filesRowHeight();
-  const view = list.clientHeight || 600;
-  const maxScroll = Math.max(0, rows.length * rowHeight - view);
-  const scrollTop = Math.min(Math.max(0, list.scrollTop), maxScroll);
-  const start = Math.max(0, Math.floor(scrollTop / rowHeight) - FILE_OVERSCAN);
-  const end = Math.min(rows.length, Math.ceil((scrollTop + view) / rowHeight) + FILE_OVERSCAN);
-  const spacer = fileSpacer(list);
-  const windowEl = spacer.querySelector<HTMLDivElement>(".files-window");
-  if (!windowEl) return;
-  spacer.style.height = `${rows.length * rowHeight}px`;
-  windowEl.style.transform = `translateY(${start * rowHeight}px)`;
-  windowEl.replaceChildren();
-  for (let index = start; index < end; index += 1) {
-    const entry = rows[index];
-    if (entry) windowEl.append(fileRow(entry, index));
-  }
-  if (state.filesActive >= start && state.filesActive < end) {
-    list.setAttribute("aria-activedescendant", `files-item-${state.filesActive}`);
-  } else list.removeAttribute("aria-activedescendant");
-}
-
-/**
- * Return the scroll spacer, creating it when the list is showing rows.
- *
- * @param {HTMLElement} list Files list element.
- * @returns {HTMLDivElement} The spacer that holds the window.
- */
-function fileSpacer(list: HTMLElement): HTMLDivElement {
-  const first = list.firstElementChild;
-  if (first instanceof HTMLDivElement && first.classList.contains("files-spacer") && list.childElementCount === 1) {
-    return first;
-  }
-  list.replaceChildren();
-  const spacer = document.createElement("div");
-  spacer.className = "files-spacer";
-  const windowEl = document.createElement("div");
-  windowEl.className = "files-window";
-  spacer.append(windowEl);
-  list.append(spacer);
-  return spacer;
-}
-
-/**
- * Build a short status line inside the file list.
- *
- * @param {string} text Sentence to show.
- * @returns {HTMLParagraphElement} The note.
- */
-function fileNote(text: string): HTMLParagraphElement {
-  const note = document.createElement("p");
-  note.className = "files-empty";
-  note.textContent = text;
-  return note;
-}
-
-/**
- * Build the empty state for a library with no music folders.
- *
- * One primary button opens setup. Browse elsewhere stays in the bar.
- *
- * @returns {HTMLDivElement} The empty state.
- */
-function rootsEmpty(): HTMLDivElement {
-  const box = document.createElement("div");
-  box.className = "files-empty-state";
-  const heading = document.createElement("h2");
-  heading.textContent = t("files.noRoots");
-  const copy = document.createElement("p");
-  copy.textContent = t("files.noRootsBody");
-  const button = buttonEl(tips.runSetup);
-  button.id = "files-run-setup";
-  button.className = "files-primary";
-  button.textContent = t("files.runSetup");
-  button.addEventListener("click", () => bridge.openSetup());
-  box.append(heading, copy, button);
-  return box;
-}
-
-/**
- * Move the keyboard cursor to one row and keep that row on screen.
- *
- * @param {number} index Row index in browserRows.
- * @returns {void}
- */
-function focusFilesIndex(index: number): void {
-  const rows = browserRows();
-  if (!rows.length) return;
-  state.filesActive = Math.max(0, Math.min(rows.length - 1, index));
-  const list = el("files-list");
-  const rowHeight = filesRowHeight();
-  const view = list.clientHeight || 600;
-  const top = state.filesActive * rowHeight;
-  const maxScroll = Math.max(0, rows.length * rowHeight - view);
-  if (top < list.scrollTop) list.scrollTop = top;
-  if (top + rowHeight > list.scrollTop + view) list.scrollTop = Math.min(maxScroll, top + rowHeight - view);
-  paintFileWindow();
-  const control = list.querySelector<HTMLElement>(`[data-files-index="${state.filesActive}"]`);
-  control?.focus();
-}
-
-/**
- * Open the active folder or toggle the active file.
- *
- * @param {number} index Row index in browserRows.
- * @returns {void}
- */
-function activateFilesIndex(index: number): void {
-  const entry = browserRows()[index];
-  if (!entry) return;
-  if (entry.kind === "file") {
-    if (state.filesSelected.has(entry.path)) state.filesSelected.delete(entry.path);
-    else state.filesSelected.add(entry.path);
-    renderFiles();
-    focusFilesIndex(index);
-    return;
-  }
-  if (entry.kind === "link") return;
-  openBrowserRow(entry);
-}
-
-/**
- * Open a folder, a music root, or a drive.
- *
- * A folder opened while browsing elsewhere stays outside the roots.
- * A root returns to rooted browsing.
- *
- * @param {FileEntry} entry Row to open.
- * @returns {void}
- */
-function openBrowserRow(entry: FileEntry): void {
-  if (entry.missing) return;
-  const elsewhere = state.filesElsewhere && entry.kind === "dir";
-  loadFolder(entry.path, { elsewhere }).catch((error) => failFiles(error));
-}
-
-/**
- * Handle arrow keys, Home, and End for the file list.
- *
- * @param {KeyboardEvent} event Key event from the list or a row.
- * @returns {void}
- */
-function onFilesKey(event: KeyboardEvent): void {
-  if (state.mode !== "files") return;
-  const list = el("files-list");
-  if (!(event.target instanceof Node) || !list.contains(event.target)) return;
-  const rows = browserRows();
-  if (!rows.length) return;
-  if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
-    event.preventDefault();
-    if (event.key === "ArrowDown") focusFilesIndex(state.filesActive + 1);
-    else if (event.key === "ArrowUp") focusFilesIndex(state.filesActive - 1);
-    else if (event.key === "Home") focusFilesIndex(0);
-    else focusFilesIndex(rows.length - 1);
-    return;
-  }
-  if (event.key !== "Enter" && event.key !== " ") return;
-  const control = event.target instanceof HTMLElement ? event.target.closest("button, input") : null;
-  if (control && list.contains(control)) return;
-  event.preventDefault();
-  activateFilesIndex(state.filesActive);
-}
-
-/**
- * Build one folder row.
- *
- * @param {FileEntry} entry Directory entry or music root.
- * @param {number} index Index in browserRows. Used for keyboard focus.
- * @returns {HTMLDivElement} The row.
- */
-function fileRow(entry: FileEntry, index: number): HTMLDivElement {
-  const row = document.createElement("div");
-  row.className = "files-row";
-  if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) row.classList.add("is-root");
-  if (entry.missing) row.classList.add("is-missing");
-  if (index === state.filesActive) row.classList.add("is-active");
-  row.setAttribute("role", "listitem");
-  const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
-  if (openKind) {
-    const button = buttonEl(entry.missing ? missingDrive(entry.name) : openFile(entry.name));
-    button.className = "files-open";
-    button.dataset.filesIndex = String(index);
-    button.id = `files-item-${index}`;
-    button.tabIndex = index === state.filesActive ? 0 : -1;
-    if (entry.kind === "drive" || entry.kind === "folder") button.append(fileIcon(entry.kind === "drive" ? "drive" : "folder"));
-    if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) {
-      const copy = document.createElement("span");
-      copy.className = "files-root-copy";
-      const label = document.createElement("span");
-      label.className = "files-root-label";
-      label.textContent = entry.name;
-      const detail = document.createElement("span");
-      detail.className = "files-root-detail";
-      detail.textContent = entry.detail;
-      copy.append(label, detail);
-      button.append(copy);
-    } else {
-      const name = document.createElement("span");
-      name.textContent = entry.name;
-      button.append(name);
-      if (entry.detail) {
-        const detail = document.createElement("span");
-        detail.className = "files-match-detail";
-        detail.textContent = entry.detail;
-        button.append(detail);
-      }
-    }
-    if (entry.missing) {
-      button.setAttribute("aria-disabled", "true");
-      button.setAttribute("aria-label", t("files.driveMissingLabel", { name: entry.name }));
-      const badge = document.createElement("span");
-      badge.className = "files-badge";
-      badge.textContent = t("files.driveMissing");
-      button.append(badge);
-      button.addEventListener("click", () => {
-        state.filesActive = index;
-      });
-    } else {
-      button.setAttribute("aria-label", t("files.open", { name: entry.name }));
-      button.addEventListener("click", () => {
-        state.filesActive = index;
-        openBrowserRow(entry);
-      });
-    }
-    row.append(button);
-    if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
-    return row;
-  }
-  if (entry.kind !== "file") {
-    const label = buttonEl(fileShortcut(entry.name));
-    label.className = "files-kind";
-    label.dataset.filesIndex = String(index);
-    label.id = `files-item-${index}`;
-    label.tabIndex = index === state.filesActive ? 0 : -1;
-    label.textContent = t("files.shortcut", { name: entry.name });
-    label.setAttribute("aria-label", t("files.shortcut", { name: entry.name }));
-    row.append(label);
-    return row;
-  }
-  const label = document.createElement("label");
-  label.className = "files-file";
-  const box = inputEl(selectFile(entry.name, entry.path));
-  box.type = "checkbox";
-  box.dataset.filesIndex = String(index);
-  box.id = `files-item-${index}`;
-  box.tabIndex = index === state.filesActive ? 0 : -1;
-  box.checked = state.filesSelected.has(entry.path);
-  box.setAttribute("aria-label", entry.name);
-  box.addEventListener("change", () => {
-    state.filesActive = index;
-    if (box.checked) state.filesSelected.add(entry.path);
-    else state.filesSelected.delete(entry.path);
-    renderFiles();
-  });
-  const name = document.createElement("span");
-  name.className = "files-name";
-  name.textContent = entry.name;
-  label.append(box, name);
-  if (entry.detail) {
-    const detail = document.createElement("span");
-    detail.className = "files-match-detail";
-    detail.textContent = entry.detail;
-    label.append(detail);
-  }
-  if (entry.in_library) {
-    const badge = document.createElement("span");
-    badge.className = "files-badge";
-    badge.textContent = t("files.inLibrary");
-    label.append(badge);
-  }
-  row.append(label);
-  return row;
-}
-
-/**
- * Draw a folder or drive mark with the text color.
- *
- * The shapes are part of the page. They are not a separate icon font.
- *
- * @param {"folder" | "drive"} kind Which mark to draw.
- * @returns {SVGSVGElement} A decorative icon.
- */
-function fileIcon(kind: "folder" | "drive"): SVGSVGElement {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("width", "20");
-  svg.setAttribute("height", "20");
-  svg.setAttribute("aria-hidden", "true");
-  svg.classList.add("files-icon", kind === "drive" ? "files-icon-drive" : "files-icon-folder");
-  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  path.setAttribute("fill", "none");
-  path.setAttribute("stroke", "currentColor");
-  path.setAttribute("stroke-width", "1.5");
-  path.setAttribute("stroke-linejoin", "round");
-  path.setAttribute(
-    "d",
-    kind === "drive"
-      ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4"
-      : "M4 8.5h6l2 2h8v7.5H4z",
-  );
-  svg.append(path);
-  return svg;
-}
-
-/**
- * Return whether a JSON value is a music root.
- *
- * @param {unknown} value Candidate.
- * @returns {boolean} True when name, path, and kind are strings.
- */
-function isFileRoot(value: unknown): value is FileRoot {
-  if (!value || typeof value !== "object") return false;
-  const record = value as FileRoot;
-  return typeof record.name === "string" && typeof record.path === "string" && typeof record.kind === "string";
-}
-
-/**
- * Return whether a JSON value is a breadcrumb.
- *
- * @param {unknown} value Candidate.
- * @returns {boolean} True when name and path are strings.
- */
-function isFileCrumb(value: unknown): value is FileCrumb {
-  if (!value || typeof value !== "object") return false;
-  const record = value as FileCrumb;
-  return typeof record.name === "string" && typeof record.path === "string";
-}
-
-/**
- * Return the selected files that are still in this folder.
- *
- * @returns {object[]} Selected file entries.
- */
-/**
- * Move the file-list cursor by one row.
- *
- * @param delta 1 for the next row, -1 for the previous row.
- * @returns {void}
- */
-export function moveFileList(delta: number): void {
-  if (!browserRows().length) return;
-  focusFilesIndex(state.filesActive + delta);
-}
-
-/**
- * Open the active file row.
- *
- * A folder opens. A file toggles its checkbox. Does nothing when the
- * list is empty.
- *
- * @returns {void}
- */
-export function openFileList(): void {
-  if (!browserRows().length) return;
-  activateFilesIndex(state.filesActive);
-}
-
-/**
- * Move the file-list cursor to a path from quick-open.
- *
- * @param path File path returned by the search.
- * @returns {void}
- */
-export function focusFileByPath(path: string): void {
-  const index = browserRows().findIndex((entry) => entry.path === path);
-  if (index < 0) return;
-  focusFilesIndex(index);
-}
-
-export function selectedFiles() {
-  return state.filesEntries.filter((entry) => entry.kind === "file" && state.filesSelected.has(entry.path));
-}
-
-/**
  * Attach the library, crate, history, and list-header listeners.
  *
  * Called once from app.ts after the spacer is mounted. The handlers call
@@ -3356,31 +2661,7 @@ export function selectedFiles() {
  * @returns {void}
  */
 export function wireLibrary(): void {
-  el("files-list").addEventListener("scroll", () => {
-    if (state.mode === "files") paintFileWindow();
-  });
-  el("files-list").addEventListener("keydown", onFilesKey);
-  el("files-search").addEventListener("input", () => {
-    window.clearTimeout(filesSearchTimer);
-    const value = el("files-search").value;
-    state.filesQuery = value;
-    if (!value.trim()) {
-      if (state.filesAtRoots && !state.filesPath) {
-        state.filesSearching = false;
-        state.filesEntries = [];
-        state.filesError = "";
-        state.filesTruncated = false;
-        state.filesLoading = false;
-        renderFiles();
-        return;
-      }
-      loadFolder(state.filesPath, { elsewhere: state.filesElsewhere && Boolean(state.filesPath) }).catch((error) => failFiles(error));
-      return;
-    }
-    filesSearchTimer = window.setTimeout(() => {
-      searchFiles(value.trim()).catch((error) => failFiles(error));
-    }, FILES_SEARCH_MS);
-  });
+  mountFilesIslands();
 
   el("search").addEventListener("input", () => {
     state.query = el("search").value;
@@ -3529,3 +2810,6 @@ bridge.selectTrack = selectTrack;
 bridge.selectEntry = selectEntry;
 bridge.reloadLibrary = loadLibrary;
 bridge.lockDown = lockDown;
+bridge.applyStatus = applyStatus;
+bridge.renderShell = renderShell;
+bridge.setNotice = setNotice;

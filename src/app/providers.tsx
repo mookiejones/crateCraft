@@ -2,13 +2,19 @@
  * React providers for the page.
  *
  * Player is one domain. Waveform zoom and overview are another. Before
- * a gig (gig check and Tempo drift) is a third. Later screens add their
- * own context file and one wrapper here. This module reads those
- * engines; it does not own fetch or playback.
+ * a gig (gig check and Tempo drift) is a third. Files is a fourth.
+ * Later screens add their own context file and one wrapper here. This
+ * module reads those engines; it does not own fetch, playback, or the
+ * folder load.
  */
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
+import { failureOf } from "../api";
+import {
+  FilesProvider as FilesContextProvider,
+  type FilesContextValue,
+} from "../context/FilesContext";
 import {
   GigStateProvider,
   type GigContextValue,
@@ -19,6 +25,36 @@ import {
 } from "../context/PlayerContext";
 import { WaveformProvider } from "../context/WaveformContext";
 import {
+  browserRows,
+  cancelFilesPick,
+  closeFilesDialog,
+  confirmFiles,
+  confirmMoveHere,
+  filesRowHeight,
+  getFilesDialog,
+  goFilesUp,
+  markFilesActive,
+  onFilesKey,
+  onFilesSearchInput,
+  openBrowserRow,
+  openFilesCrumb,
+  refreshFiles,
+  reviewFiles,
+  selectedFiles,
+  setDialogName,
+  setDialogReplacement,
+  setDialogStatus,
+  startDelete,
+  startMoveFiles,
+  startMoveFolder,
+  startRename,
+  startRenameFromTags,
+  startReplace,
+  subscribeFiles,
+  toggleFile,
+  toggleFilesElsewhere,
+} from "../files";
+import {
   backGigStep,
   exitGigCheck,
   getGigSnapshot,
@@ -26,6 +62,7 @@ import {
   subscribeGig,
 } from "../gig";
 import { getDriftSnapshot, subscribeDrift } from "../drift";
+import { LOCALE_EVENT } from "../i18n";
 import {
   SEEK_STEP_LARGE_SECONDS,
   SEEK_STEP_SECONDS,
@@ -47,6 +84,8 @@ import {
   subscribe,
   togglePlayPause,
 } from "../player";
+import { portableSnapshot } from "../portable";
+import { state } from "../state";
 
 function readPlayerValue(): PlayerContextValue {
   return {
@@ -79,6 +118,75 @@ function readGigValue(): GigContextValue {
     nextStep: nextGigStep,
     backStep: backGigStep,
     exit: exitGigCheck,
+  };
+}
+
+function readFilesValue(): FilesContextValue {
+  const dialog = getFilesDialog();
+  const portable = portableSnapshot();
+  const selectedEntries = selectedFiles();
+  return {
+    writable: state.writable,
+    path: state.filesPath,
+    parent: state.filesParent,
+    entries: state.filesEntries,
+    selected: state.filesSelected,
+    pick: state.filesPick,
+    pickPaths: state.filesPickPaths,
+    pickSource: state.filesPickSource,
+    loading: state.filesLoading,
+    error: state.filesError,
+    message: state.filesMessage,
+    truncated: state.filesTruncated,
+    atRoots: state.filesAtRoots,
+    roots: state.filesRoots,
+    root: state.filesRoot,
+    breadcrumb: state.filesBreadcrumb,
+    elsewhere: state.filesElsewhere,
+    active: state.filesActive,
+    query: state.filesQuery,
+    searching: state.filesSearching,
+    rows: browserRows(),
+    selectedEntries,
+    locked: !state.writable || state.filesLoading || state.filesAtRoots,
+    rowHeight: filesRowHeight(),
+    dialogAction: dialog.action,
+    dialogName: dialog.name,
+    dialogReplacement: dialog.replacement,
+    dialogStatus: dialog.status,
+    dialogPreview: dialog.preview,
+    dialogScope: dialog.scope,
+    portableReport: portable.report,
+    portableStatus: portable.status,
+    goUp: goFilesUp,
+    refresh: refreshFiles,
+    toggleElsewhere: toggleFilesElsewhere,
+    openCrumb: openFilesCrumb,
+    openRow: (entry, index) => {
+      state.filesActive = index;
+      openBrowserRow(entry);
+    },
+    toggleFile,
+    markActive: markFilesActive,
+    onListKey: onFilesKey,
+    onSearchInput: onFilesSearchInput,
+    startRename,
+    startRenameFromTags: (trigger) => startRenameFromTags(trigger, "paths"),
+    startMove: startMoveFiles,
+    startMoveFolder,
+    startReplace,
+    startDelete,
+    confirmMoveHere,
+    cancelPick: cancelFilesPick,
+    setDialogName,
+    setDialogReplacement,
+    review: () => reviewFiles().catch((error: unknown) => {
+      setDialogStatus(failureOf(error).message);
+    }),
+    confirm: () => confirmFiles().catch((error: unknown) => {
+      setDialogStatus(failureOf(error).message);
+    }),
+    closeDialog: closeFilesDialog,
   };
 }
 
@@ -131,10 +239,44 @@ export function GigProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Mount the Files domain at the root of one React island.
+ *
+ * Updates are flushed so existing tests see the folder in the same turn
+ * as the store change.
+ *
+ * @param children Island that calls `useFiles`.
+ */
+export function FilesProvider({ children }: { children: ReactNode }) {
+  const hostRef = useRef<HTMLSpanElement>(null);
+  const [value, setValue] = useState(readFilesValue);
+  useEffect(() => {
+    const refresh = () => {
+      if (!hostRef.current?.isConnected) return;
+      flushSync(() => {
+        setValue(readFilesValue());
+      });
+    };
+    const unsub = subscribeFiles(refresh);
+    document.addEventListener(LOCALE_EVENT, refresh);
+    return () => {
+      unsub();
+      document.removeEventListener(LOCALE_EVENT, refresh);
+    };
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return (
+    <FilesContextProvider value={current}>
+      <span ref={hostRef} hidden />
+      {children}
+    </FilesContextProvider>
+  );
+}
+
+/**
  * Nest every domain provider.
  *
  * Player is the first domain. Waveform zoom and overview wrap inside it.
- * Before a gig wraps inside waveform.
+ * Before a gig wraps inside waveform. Files wraps inside Before a gig.
  *
  * @param children Page island.
  */
@@ -142,7 +284,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
       <WaveformProvider>
-        <GigProvider>{children}</GigProvider>
+        <GigProvider>
+          <FilesProvider>{children}</FilesProvider>
+        </GigProvider>
       </WaveformProvider>
     </PlayerProvider>
   );
