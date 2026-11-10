@@ -10,6 +10,7 @@ import json
 import sqlite3
 import tempfile
 import unittest
+import urllib.parse
 from contextlib import closing
 from pathlib import Path
 from unittest import mock
@@ -97,13 +98,60 @@ class FakeFetch:
     def __call__(self, url: str) -> tuple[int, bytes, str]:
         """Return a canned body for MB or CAA, 404 otherwise."""
         self.urls.append(url)
-        if "musicbrainz.org" in url:
+        host = album_art._https_hostname(url)
+        path = urllib.parse.urlparse(url).path
+        if host == album_art.MB_HOST:
             if self.status != 200:
                 return self.status, b"", ""
             return 200, self.mb, "application/json"
-        if url.startswith("https://coverartarchive.org/release/"):
+        if host == album_art.CAA_HOST and path.startswith("/release/"):
             return 200, self.jpeg, "image/jpeg"
         return 404, b"", ""
+
+
+class FetchUrlAllowlistTests(unittest.TestCase):
+    """fetch_url compares hostname, not a substring of the URL."""
+
+    def test_suffix_host_is_not_opened(self) -> None:
+        """A host that only starts with the allowed name is refused."""
+        with mock.patch("urllib.request.urlopen") as opener:
+            status, body, ctype = album_art.fetch_url(
+                f"https://coverartarchive.org.evil.example/release/{RELEASE}/front"
+            )
+        self.assertEqual((status, body, ctype), (0, b"", ""))
+        opener.assert_not_called()
+
+    def test_allowed_name_in_path_is_not_opened(self) -> None:
+        """A URL that only mentions MusicBrainz in the path is refused."""
+        with mock.patch("urllib.request.urlopen") as opener:
+            status, body, ctype = album_art.fetch_url(
+                "https://evil.example/musicbrainz.org/ws/2/recording/"
+            )
+        self.assertEqual((status, body, ctype), (0, b"", ""))
+        opener.assert_not_called()
+
+    def test_allowed_host_is_opened(self) -> None:
+        """https MusicBrainz search is fetched."""
+
+        class _Resp:
+            status = 200
+            headers = {"Content-Type": "application/json"}
+
+            def read(self, _n: int) -> bytes:
+                return b"{}"
+
+            def __enter__(self) -> "_Resp":
+                return self
+
+            def __exit__(self, *_a: object) -> None:
+                return None
+
+        with mock.patch("urllib.request.urlopen", return_value=_Resp()) as opener:
+            status, body, ctype = album_art.fetch_url(
+                "https://musicbrainz.org/ws/2/recording/?query=x&fmt=json"
+            )
+        self.assertEqual((status, body, ctype), (200, b"{}", "application/json"))
+        opener.assert_called_once()
 
 
 class EmbedFrontCoverTests(unittest.TestCase):
@@ -225,11 +273,14 @@ class AlbumArtPlanTests(unittest.TestCase):
         self.assertEqual(plan["candidates"][0]["release_id"], RELEASE)  # type: ignore[index]
         self.assertTrue(str(plan["candidates"][0]["thumb"]).startswith("data:image/jpeg;base64,"))  # type: ignore[index]
         self.assertEqual(len(fake.urls), 2)
-        self.assertIn("musicbrainz.org", fake.urls[0])
+        self.assertEqual(album_art._https_hostname(fake.urls[0]), album_art.MB_HOST)
         self.assertEqual(slept, [1.0])
         self.assertEqual(fake.urls[1], f"https://coverartarchive.org/release/{RELEASE}/front-250")
         self.assertTrue(all(url.startswith("https://") for url in fake.urls))
-        self.assertTrue(all("musicbrainz.org" in url or "coverartarchive.org" in url for url in fake.urls))
+        self.assertEqual(
+            {album_art._https_hostname(url) for url in fake.urls},
+            {album_art.MB_HOST, album_art.CAA_HOST},
+        )
 
     def test_preview_ignores_a_hostile_release_id(self) -> None:
         """A release id that is not a UUID is not fetched."""
@@ -255,7 +306,7 @@ class AlbumArtPlanTests(unittest.TestCase):
             )
         self.assertEqual(plan["candidates"], [])
         self.assertEqual(len(fake.urls), 1)
-        self.assertIn("musicbrainz.org", fake.urls[0])
+        self.assertEqual(album_art._https_hostname(fake.urls[0]), album_art.MB_HOST)
 
     def test_blank_title_and_artist_are_not_looked_up(self) -> None:
         """Nothing is fetched when both fields are blank."""

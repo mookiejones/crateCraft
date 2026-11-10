@@ -49,11 +49,49 @@ TIMEOUT_SECONDS = 10.0
 IMAGE_LIMIT = 2 * 1024 * 1024
 CANDIDATE_CAP = 3
 MB_RECORDING_CAP = 5
-MB_SEARCH = "https://musicbrainz.org/ws/2/recording/"
-CAA_FRONT = "https://coverartarchive.org/release/{release_id}/front"
-CAA_THUMB = "https://coverartarchive.org/release/{release_id}/front-250"
+MB_HOST = "musicbrainz.org"
+CAA_HOST = "coverartarchive.org"
+MB_SEARCH = f"https://{MB_HOST}/ws/2/recording/"
+CAA_FRONT = f"https://{CAA_HOST}/release/{{release_id}}/front"
+CAA_THUMB = f"https://{CAA_HOST}/release/{{release_id}}/front-250"
 CONTACT = "https://github.com/mookiejones/crateCraft"
 _RELEASE_ID = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I)
+
+
+def _https_hostname(url: str) -> str | None:
+    """Return the hostname when ``url`` is https.
+
+    Args:
+        url: Absolute URL.
+
+    Returns:
+        The hostname, or None when the scheme is not https or the host
+        is missing.
+    """
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme != "https" or parsed.hostname is None:
+        return None
+    return parsed.hostname.casefold()
+
+
+def _allowed_url(url: str) -> bool:
+    """True when ``url`` is https to MusicBrainz or Cover Art Archive.
+
+    Hostname is compared, not a substring of the whole URL.
+
+    Args:
+        url: Absolute URL.
+
+    Returns:
+        True when the host and path are the lookup endpoints.
+    """
+    host = _https_hostname(url)
+    path = urllib.parse.urlparse(url).path
+    if host == MB_HOST:
+        return path.rstrip("/") == "/ws/2/recording"
+    if host == CAA_HOST:
+        return path.startswith("/release/")
+    return False
 
 
 def _user_agent() -> str:
@@ -65,12 +103,15 @@ def fetch_url(url: str) -> tuple[int, bytes, str]:
     """GET one URL. Tests replace this.
 
     Args:
-        url: Absolute http(s) URL.
+        url: Absolute https URL on MusicBrainz or Cover Art Archive.
 
     Returns:
         Status, body (capped), and the Content-Type type token. Status 0
-        means the request did not complete.
+        means the request did not complete, including a URL whose host
+        is not an allowed lookup host.
     """
+    if not _allowed_url(url):
+        return 0, b"", ""
     request = urllib.request.Request(
         url,
         headers={"User-Agent": _user_agent(), "Accept": "*/*"},
@@ -394,6 +435,8 @@ def _search_recordings(query: str, fetch: Fetch, sleep: Sleep) -> list[dict[str,
     """
     params = urllib.parse.urlencode({"query": query, "fmt": "json", "limit": str(MB_RECORDING_CAP)})
     url = f"{MB_SEARCH}?{params}"
+    if not _allowed_url(url):
+        raise LookupError(LOOKUP)
     sleep(1.0)
     status, body, _ctype = fetch(url)
     if status == 0 or status >= 500:
@@ -475,7 +518,7 @@ def _cover_bytes(release_id: str, fetch: Fetch, *, thumb: bool) -> tuple[bytes, 
         return None
     template = CAA_THUMB if thumb else CAA_FRONT
     url = template.format(release_id=release_id)
-    if not url.startswith("https://coverartarchive.org/release/"):
+    if not _allowed_url(url) or _https_hostname(url) != CAA_HOST:
         return None
     status, body, _ctype = fetch(url)
     if status != 200 or not body:
