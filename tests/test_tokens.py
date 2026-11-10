@@ -22,6 +22,27 @@ HEX_COLOR = re.compile(
     r"#(?=[0-9a-fA-F]*[0-9])(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})(?![0-9a-fA-F])"
 )
 TOKEN_DECL = re.compile(r"(--[A-Za-z0-9-]+)\s*:\s*(#[0-9A-Fa-f]{6})\b")
+SRC = ROOT / "src"
+
+
+def src_page_text() -> str:
+    """Join the page TypeScript that esbuild bundles.
+
+    Test files stay out. React's production runtime still names
+    ``innerHTML`` and ``marginTop``, so XSS and color contracts are
+    checked here instead of in ``static/app.js``.
+
+    Returns:
+        Concatenated ``src/*.ts`` and ``src/*.tsx`` that are not tests.
+    """
+    chunks: list[str] = []
+    for path in sorted(SRC.rglob("*")):
+        if path.suffix not in {".ts", ".tsx"}:
+            continue
+        if ".test." in path.name:
+            continue
+        chunks.append(path.read_text(encoding="utf-8"))
+    return "\n".join(chunks)
 
 def _channel(value: float) -> float:
     """Convert one sRGB channel to linear light.
@@ -177,10 +198,11 @@ class TokenSheetTests(unittest.TestCase):
         Returns:
             None. The test fails if a hex color, marginTop, or inline BPM color remains.
         """
+        source = src_page_text()
         text = APP_JS.read_text(encoding="utf-8")
         self.assertEqual(HEX_COLOR.findall(text), [])
-        self.assertNotIn("marginTop", text)
-        self.assertNotIn("style.color", text)
+        self.assertNotIn("marginTop", source)
+        self.assertNotIn("style.color", source)
         self.assertIn('strong.className = "bpm"', text)
         self.assertIn('"swatch swatch-lg"', text)
         self.assertIn("paneSpacer.style.height", text)

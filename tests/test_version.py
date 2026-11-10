@@ -23,6 +23,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import _version  # noqa: E402
 import app_config  # noqa: E402
 import release_bundle  # noqa: E402
+from tests.test_tokens import src_page_text  # noqa: E402
 import server  # noqa: E402
 import version_info  # noqa: E402
 
@@ -798,4 +799,4 @@ class PageVersionTests(unittest.TestCase):
         self.assertIn('"/api/version"', script)
         self.assertIn("Version unavailable", script)
         self.assertIn("Copied", script)
-        self.assertNotIn("innerHTML", script)
+        self.assertNotIn("innerHTML", src_page_text())
