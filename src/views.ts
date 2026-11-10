@@ -96,6 +96,7 @@ import {
 import { paintRows } from "./virtual-scroll";
 import { codedText, formatNumber, messageParams, serverMessage, t, type MessageKey } from "./i18n";
 import { modeForGroup, paintNav, rememberMode } from "./nav";
+import { paintSheetChrome } from "./sheet-chrome";
 
 /**
  * Related-track request counter.
@@ -574,6 +575,12 @@ export function renderShell() {
     el("mode-note").textContent = t("mode.snapshots");
   }
   paintNav(state.mode);
+  paintSheetChrome({
+    mode: state.mode,
+    space: state.space,
+    activeCrate: state.activeCrate,
+    crates: state.crates,
+  });
   for (const button of document.querySelectorAll<HTMLButtonElement>("[data-crate-sort]")) {
     button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
   }
@@ -2558,6 +2565,9 @@ export function wireLibrary(): void {
   el("view-children").addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest("button");
     if (button?.dataset.view) setMode(button.dataset.view);
+  });
+  el("sheet-scope-all").addEventListener("click", () => {
+    selectCrate("all");
   });
   document.querySelector<HTMLElement>(".sort-crates")!.addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest("button");

@@ -992,6 +992,8 @@
   "settings.updates": "Check GitHub for a newer version once a day",
   "settings.updatesFailed": "The update choice could not be saved.",
   "settings.updatesPrereleases": "Include test versions (beta and release candidates)",
+  "sheet.scope": "Scope: {crate}",
+  "sheet.title": "{view} · {space}",
   "sharing.canSend": "Anonymous counts and crash reports can be sent.",
   "sharing.loadFailed": "Couldn't load sharing settings.",
   "sharing.loadFailedOff": "Couldn't load sharing settings. Nothing is sent.",

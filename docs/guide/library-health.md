@@ -8,7 +8,7 @@ The report is **Health** in the rail, then **Overview** on the tabs above the sh
 
 1. Open crateCraft.
 2. Click **Health** in the rail, then **Overview** above the sheet.
-3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The crate name is shown under the crate list.
+3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The sheet heading names the view. **Scope** under it shows All tracks or the crate. **All tracks** on that chip checks the whole space.
 4. Click **Check again** to refresh. Opening the view also runs the report.
 
 A crate change, a space change, or **Reload** runs the report again.

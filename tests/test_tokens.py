@@ -502,6 +502,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".view-group-label", ("--color-bg",), 13, 600),
     (".view-switch button", ("--color-bg",), 15, 400),
     (".view-children button", ("--color-card",), 15, 400),
+    (".sheet-title", ("--color-card",), 15, 600),
+    (".sheet-scope", ("--color-card",), 13, 400),
     (".sort-crates button", ("--color-bg",), 15, 400),
     (".crate-actions button", ("--color-bg",), 15, 400),
     ('.view-switch button[aria-selected="true"]', ("--color-bg",), 15, 400),
@@ -672,6 +674,7 @@ _DECORATIVE = {
     ".player-bar",
     ".operations",
     ".view-children",
+    ".sheet-chrome",
 }
 
 # The only visible edge of these fields. Card surfaces use the sheet.
