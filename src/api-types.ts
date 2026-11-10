@@ -704,6 +704,38 @@ export interface TempoDriftReport {
   code?: string;
 }
 
+export interface BitrateSuspect {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  reason: string;
+  stated_kbps: number | null;
+  estimated_kbps: number | null;
+  cutoff_hz: number;
+}
+
+export interface BitrateCheckReport {
+  crate: number | null;
+  checked: number;
+  not_found: number;
+  unreadable: number;
+  too_quiet: number;
+  unchecked: number;
+  suspects: BitrateSuspect[];
+  error?: string;
+  code?: string;
+}
+
+export interface BitrateCratePlan extends BitrateCheckReport {
+  preview: boolean;
+  written: boolean;
+  name: string;
+  added: number;
+  saved: { id: number; name: string } | null;
+  warning?: string | null;
+}
+
 export interface FileScanProblem {
   id: number;
   name: string;

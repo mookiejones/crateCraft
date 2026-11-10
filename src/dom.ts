@@ -101,6 +101,12 @@ export interface ElementIds {
   "scan-report": HTMLDivElement;
   "scan-quick": HTMLButtonElement;
   "scan-full": HTMLButtonElement;
+  "bitrate-panel": HTMLElement;
+  "bitrate-scope": HTMLParagraphElement;
+  "bitrate-status": HTMLParagraphElement;
+  "bitrate-report": HTMLDivElement;
+  "bitrate-refresh": HTMLButtonElement;
+  "bitrate-save": HTMLButtonElement;
   "tags-panel": HTMLElement;
   "tags-scope": HTMLParagraphElement;
   "tags-hint": HTMLParagraphElement;

@@ -2133,6 +2133,7 @@ class Handler(BaseHTTPRequestHandler):
                     tree = parsed.path == "/api/crate-tree"
                     foldering = parsed.path == "/api/folder-sync"
                     clustering = parsed.path == "/api/tag-clusters"
+                    bitrate_crate = parsed.path == "/api/bitrate-check"
                     preview = (
                         (merging and payload.get("preview") is True)
                         or (replacing and payload.get("preview") is True)
@@ -2144,6 +2145,7 @@ class Handler(BaseHTTPRequestHandler):
                             and payload.get("action")
                             in ("preview", "clean-preview", "refresh-preview")
                         )
+                        or (bitrate_crate and payload.get("action") == "preview")
                     )
                     if not preview:
                         invalidate()
@@ -2194,6 +2196,12 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = tag_cleanup.action(request)
+                    elif bitrate_crate:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = bitrate_check.action(request)
+                        if request.get("action") == "create" and result.get("written"):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif merging:
                         result = as_dict(_library_call("merge_duplicates", payload))
                         if not preview:

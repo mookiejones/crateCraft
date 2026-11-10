@@ -93,6 +93,7 @@ class DesktopMenuTests(unittest.TestCase):
             "Merge copies",
             "Stems",
             "Damaged files",
+            "Suspect quality",
             "Tag spellings",
             "Before a gig",
             "Tempo drift",
