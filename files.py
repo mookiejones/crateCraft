@@ -34,6 +34,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import quote
 
+import app_env
 import library
 import music_roots
 import telemetry
@@ -76,7 +77,7 @@ _SEARCH_SCAN = 20000
 _SEARCH_HITS = 40
 _SEARCH_SKIP_DIRS = frozenset({"_Serato_", ".git", "node_modules"})
 _JOURNAL = "file-ops-journal.json"
-_TRASH_ENV = "SERATO_LIBRARY_TRASH"
+_TRASH_ENV = app_env.name("TRASH")
 FO_DELETE = 3
 FOF_SILENT = 0x0004
 FOF_NOCONFIRMATION = 0x0010
@@ -3136,7 +3137,7 @@ def _cue_detail(status: str) -> str:
 def trash_file(path: Path) -> dict[str, object]:
     """Move one file to the operating-system Trash.
 
-    ``SERATO_LIBRARY_TRASH`` overrides the destination when it is an
+    ``CRATECRAFT_TRASH`` (or the older ``SERATO_LIBRARY_TRASH``) overrides the destination when it is an
     absolute path. A relative value is ignored. The suite sets it so a
     test does not touch the real Trash.
 
@@ -3166,7 +3167,7 @@ def _trash_override() -> Path | None:
     Returns:
         The directory, or None when the variable is missing or relative.
     """
-    raw = os.environ.get(_TRASH_ENV, "").strip()
+    raw = (app_env.get("TRASH", "") or "").strip()
     if not raw:
         return None
     path = Path(raw)

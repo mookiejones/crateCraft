@@ -6,7 +6,7 @@ The report is under **Library health** in the rail, first in that group. It is n
 
 ## Run the report
 
-1. Open Serato Library.
+1. Open crateCraft.
 2. Click **Library health** under **Library health**.
 3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The crate name is shown under the crate list.
 4. Click **Check again** to refresh. Opening the view also runs the report.

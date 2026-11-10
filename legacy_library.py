@@ -18,6 +18,8 @@ import os
 from pathlib import Path, PurePath
 from typing import Callable
 
+import app_env
+
 DATABASE_NAME = "database V2"
 SUBCRATES = "Subcrates"
 CRATE_SEPARATOR = "%%"
@@ -58,14 +60,14 @@ class LegacyLibraryError(Exception):
 def home_serato_folder() -> Path:
     """Return the usual ``_Serato_`` folder for an older library.
 
-    ``SERATO_LIBRARY_HOME_SERATO`` wins when it is absolute. A relative value is
+    ``CRATECRAFT_HOME_SERATO`` (or the older ``SERATO_LIBRARY_HOME_SERATO``) wins when it is absolute. A relative value is
     ignored. The test suite sets it so a run never reads the real folder.
 
     Returns:
         ``~/Music/_Serato_`` on macOS and ``%USERPROFILE%\\Music\\_Serato_``
         on Windows. The folder may not exist.
     """
-    override = os.environ.get("SERATO_LIBRARY_HOME_SERATO", "").strip()
+    override = (app_env.get("HOME_SERATO", "") or "").strip()
     if override and Path(override).is_absolute():
         return Path(override)
     return Path.home() / "Music" / "_Serato_"

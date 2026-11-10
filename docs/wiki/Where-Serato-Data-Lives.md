@@ -1,7 +1,7 @@
 # Where Serato data lives
 
 <figure>
-  <img alt="A diagram of the Serato library folder, the Serato Library app folder, each drive's _Serato_ folder, and the rules for those files." src="images/features/where-serato-data-lives.png">
+  <img alt="A diagram of the Serato library folder, the crateCraft app folder, each drive's _Serato_ folder, and the rules for those files." src="images/features/where-serato-data-lives.png">
   <figcaption>Example data. This is a diagram, not a screenshot. The paths in it are examples.</figcaption>
 </figure>
 
@@ -11,7 +11,7 @@ flowchart TD
   master --> backups["Library/Backups"]
   backups --> snap["snapshots, the Backups you restore"]
   backups --> session["serato-web-, database and each drive"]
-  app["Serato Library, with a space"] --> settings["settings.json"]
+  app["crateCraft app folder"] --> settings["settings.json"]
   app --> related["related.sqlite"]
   audio["Each audio file"] --> cues["Cue points, loops, beatgrid"]
   drive["Each drive's _Serato_"] --> crates["Crates for that drive"]
@@ -38,18 +38,18 @@ On a Mac, external drives need **Files and Folders > Removable Volumes**. That i
 1. Open **System Settings**.
 2. Go to **Privacy & Security**.
 3. Go to **Files and Folders**.
-4. Select **Serato Library**.
+4. Select **crateCraft**.
 5. Turn on **Removable Volumes**.
 
 The steps, including the unsigned-app warning, are on [Install on a Mac](Install-macOS).
 
-This app's own files use a different folder, **Serato Library**, with a space.
+This app's own files use a different folder, **crateCraft**. Installs from before the rename used a folder named **Serato Library**; crateCraft copies it to the new folder once and leaves the old one where it is.
 
 | System | This app |
 | --- | --- |
-| Mac | `~/Library/Application Support/Serato Library/` (`settings.json`, `library.json`, `related.sqlite`) |
-| Windows | `%APPDATA%\Serato Library\` |
+| Mac | `~/Library/Application Support/crateCraft/` (`settings.json`, `library.json`, `related.sqlite`) |
+| Windows | `%APPDATA%\crateCraft\` |
 
 Hash-checked Backups are `Library/Backups/snapshots` next to `master.sqlite`. The first save in a session also writes `Library/Backups/serato-web-` plus the date and time. That folder holds `master.sqlite`, `root.sqlite`, and each connected drive's `_Serato_` folder under `drives`. An unplugged drive is listed and skipped.
 
-Logs are `~/Library/Logs/Serato Library/` on a Mac and `%LOCALAPPDATA%\Serato Library\Logs\` on Windows. [Settings](Settings) opens that folder.
+Logs are `~/Library/Logs/crateCraft/` on a Mac and `%LOCALAPPDATA%\crateCraft\Logs\` on Windows. [Settings](Settings) opens that folder.

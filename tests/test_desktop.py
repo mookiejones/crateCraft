@@ -78,7 +78,7 @@ class SmokeTests(unittest.TestCase):
     def test_main_smoke_does_not_import_the_web_view(self) -> None:
         """Return from ``main`` after shutdown without importing pywebview.
 
-        Sets ``SERATO_LIBRARY_SMOKE``. A background request shuts the
+        Sets ``CRATECRAFT_SMOKE``. A background request shuts the
         server down. The window is not created.
 
         Returns:
@@ -478,7 +478,7 @@ class GeometryTests(unittest.TestCase):
                     desktop.open_window(url, httpd, thread, token)
             thread.join(5)
             self.assertFalse(thread.is_alive())
-            self.assertEqual(fake.created["title"], "Serato Library")  # type: ignore[attr-defined]
+            self.assertEqual(fake.created["title"], "crateCraft")  # type: ignore[attr-defined]
             self.assertEqual(fake.created["url"], url)  # type: ignore[attr-defined]
             self.assertIs(fake.created["text_select"], True)  # type: ignore[attr-defined]
             self.assertEqual(fake.created["background_color"], desktop.WINDOW_BACKGROUND)  # type: ignore[attr-defined]
@@ -536,7 +536,7 @@ class HeadlessLaunchTests(unittest.TestCase):
     def test_no_window_serves_until_shutdown_without_webview(self) -> None:
         """Bind a free port and stop when the shutdown token is posted.
 
-        ``SERATO_LIBRARY_NO_WINDOW=1`` is set. ``webview`` must stay
+        ``CRATECRAFT_NO_WINDOW=1`` is set. ``webview`` must stay
         unimported. Health answers before the shutdown request.
 
         Returns:

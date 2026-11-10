@@ -8,7 +8,7 @@ This view covers the whole space. The crate list is hidden.
 
 ## Review a group
 
-1. Open Serato Library.
+1. Open crateCraft.
 2. Click **Tag spellings** under **Library health**.
 3. Click **Genre** or **Artist**. **Genre** is the first field.
 4. Open a group. The suggested spelling is the one most tracks already use.
@@ -28,7 +28,7 @@ While Serato has the library open, Apply stays off.
 
 ## Clean titles
 
-1. Open Serato Library.
+1. Open crateCraft.
 2. Click **Tag spellings** under **Library health**.
 3. Click **Titles**. The report lists each title that would change, including a remixer move.
 4. Click **Apply**. Apply stays off when every title already matches, or while Serato has the library open.

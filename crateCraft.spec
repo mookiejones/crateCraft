@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-"""Build a windowed Serato Library app for the machine running PyInstaller.
+"""Build a windowed crateCraft app for the machine running PyInstaller.
 
 The static files are the directory server.py serves. The spec fails when
 index.html points at a local file that is not in that directory, or when
@@ -183,7 +183,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="Serato Library",
+    name="crateCraft",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -203,20 +203,22 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=False,
-    name="Serato Library",
+    name="crateCraft",
 )
 if sys.platform == "darwin":
     app = BUNDLE(
         coll,
-        name="Serato Library.app",
+        name="crateCraft.app",
         icon=str(bundle_icns),
+        # Kept from the Serato Library builds so macOS keeps the removable
+        # volume permission it already granted. See the rebrand PR follow-ups.
         bundle_identifier="local.seratolibrary.browser",
         info_plist={
             "CFBundleShortVersionString": bundle_version,
             "CFBundleVersion": bundle_version,
             "NSHighResolutionCapable": True,
             "NSRemovableVolumesUsageDescription": (
-                "Serato Library reads music files on external drives."
+                "crateCraft reads music files on external drives."
             ),
         },
     )

@@ -1,5 +1,5 @@
 name: Bug report
-description: Something went wrong in Serato Library
+description: Something went wrong in crateCraft
 labels: ["bug"]
 body:
   - type: markdown

@@ -4,10 +4,10 @@ These builds are unsigned. macOS Gatekeeper and Windows SmartScreen warn before 
 
 | Computer | File |
 | --- | --- |
-| Mac with Apple silicon | `Serato-Library-macos-arm64.dmg` |
-| Mac with an Intel processor | `Serato-Library-macos-x64.dmg` |
-| Windows installer | `Serato-Library-windows-setup.exe` |
-| Windows portable zip | `Serato-Library-windows.zip` |
+| Mac with Apple silicon | `crateCraft-macos-arm64.dmg` |
+| Mac with an Intel processor | `crateCraft-macos-x64.dmg` |
+| Windows installer | `crateCraft-windows-setup.exe` |
+| Windows portable zip | `crateCraft-windows.zip` |
 
 `SHA256SUMS` lists the SHA-256 of each file. GitHub Releases is the only download.
 
@@ -18,9 +18,9 @@ Sharing of anonymous usage stats and crash reports stays off until you turn it o
 Confirm a download was built by this repository:
 
 ```bash
-gh attestation verify Serato-Library-macos-arm64.dmg --repo OWNER/REPO
-gh attestation verify Serato-Library-macos-x64.dmg --repo OWNER/REPO
-gh attestation verify Serato-Library-windows-setup.exe --repo OWNER/REPO
-gh attestation verify Serato-Library-windows.zip --repo OWNER/REPO
+gh attestation verify crateCraft-macos-arm64.dmg --repo OWNER/REPO
+gh attestation verify crateCraft-macos-x64.dmg --repo OWNER/REPO
+gh attestation verify crateCraft-windows-setup.exe --repo OWNER/REPO
+gh attestation verify crateCraft-windows.zip --repo OWNER/REPO
 gh attestation verify SHA256SUMS --repo OWNER/REPO
 ```

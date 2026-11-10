@@ -30,7 +30,7 @@ Tick **Share anonymous usage stats and crash reports** to turn sharing on. Clear
 | **Anonymous counts and crash reports can be sent.** | Sharing is on, and a key is present. |
 | **Nothing is sent.** | Sharing is off. |
 
-What can leave, and only after you choose share and only when a key is present, is a count of an action, a track-count range, the app name, the app version, the operating system, a random install id, and a crash report with file paths removed. Titles, artists, crate names, notes, and paths stay on this computer. The full list is [PRIVACY.md](https://github.com/mookiejones/serato-library-manager/blob/main/PRIVACY.md).
+What can leave, and only after you choose share and only when a key is present, is a count of an action, a track-count range, the app name, the app version, the operating system, a random install id, and a crash report with file paths removed. Titles, artists, crate names, notes, and paths stay on this computer. The full list is [PRIVACY.md](https://github.com/mookiejones/crateCraft/blob/main/PRIVACY.md).
 
 **Theme** is Serato-like (the default), Dark Club, Light, or Classic. The whole page uses that token set. The sidebar stripe and the icon preview follow it. **App icon follows the theme** is on unless you clear it. On a Mac the Dock icon of the running app changes. On Windows the window and taskbar icon change. The Finder icon and the Windows program icon stay the baked default from launch. On another system the line says the choice is saved for Mac and Windows.
 
@@ -46,7 +46,7 @@ The same settings file remembers the window, the track-list width, the language,
 
 | System | Settings | Logs |
 | --- | --- | --- |
-| Mac | `~/Library/Application Support/Serato Library/settings.json` | `~/Library/Logs/Serato Library/` |
-| Windows | `%APPDATA%\Serato Library\settings.json` | `%LOCALAPPDATA%\Serato Library\Logs\` |
+| Mac | `~/Library/Application Support/crateCraft/settings.json` | `~/Library/Logs/crateCraft/` |
+| Windows | `%APPDATA%\crateCraft\settings.json` | `%LOCALAPPDATA%\crateCraft\Logs\` |
 
-**Serato Library** (with a space) is this app. `Serato/Library` is Serato's database. [Where Serato data lives](Where-Serato-Data-Lives).
+**crateCraft** is this app's folder. `Serato/Library` is Serato's database. An install from before the rename keeps its old **Serato Library** folder; crateCraft copies it once and leaves the original in place. [Where Serato data lives](Where-Serato-Data-Lives).

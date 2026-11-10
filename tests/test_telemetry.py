@@ -573,7 +573,7 @@ class PageContractTests(unittest.TestCase):
         architecture = (ROOT / "docs" / "architecture.md").read_text(encoding="utf-8")
         self.assertIn(telemetry.APP_NAME, privacy)
         self.assertIn(telemetry.APP_NAME, architecture)
-        self.assertIn("app=serato-library-manager", architecture)
+        self.assertIn("app=crateCraft", architecture)
 
 
 class ApiPrivacyTests(unittest.TestCase):

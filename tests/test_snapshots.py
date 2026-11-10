@@ -2,7 +2,7 @@
 
 The cases build a temporary library. They do not open a live Serato
 database, and they do not read the machine's Serato preferences unless a
-test points ``SERATO_LIBRARY_APP_INFO`` or ``SERATO_LIBRARY_PREFERENCES``
+test points ``CRATECRAFT_APP_INFO`` or ``CRATECRAFT_PREFERENCES``
 at a file it just wrote.
 """
 
@@ -429,7 +429,7 @@ class SnapshotTests(unittest.TestCase):
             pending = store.poll()
             self.assertIsNotNone(pending)
             assert pending is not None
-            text = (log_directory / "serato-library.log").read_text(encoding="utf-8")
+            text = (log_directory / "cratecraft.log").read_text(encoding="utf-8")
             self.assertIn("outside this app", text)
             self.assertIn("after the change", text)
             self.assertIn("not available", text)
@@ -571,7 +571,7 @@ class SnapshotTests(unittest.TestCase):
                 "CFBundleVersion": "5.0.0.1251",
             })
             _plist(prefs, {"library_protect": 1})
-            with _env(SERATO_LIBRARY_APP_INFO=str(info), SERATO_LIBRARY_PREFERENCES=str(prefs)):
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=str(prefs)):
                 before = temp.db.read_bytes()
                 with self.assertRaises(LibraryError) as caught:
                     library.begin_write()
@@ -617,7 +617,7 @@ class SnapshotTests(unittest.TestCase):
             info = temp.root / "Info.plist"
             _plist(info, {"CFBundleShortVersionString": "4.1.0", "CFBundleVersion": "4.1.0.1"})
             _music, _serato, store = _drive(temp.root, temp.db)
-            with _env(SERATO_LIBRARY_APP_INFO=str(info), SERATO_LIBRARY_PREFERENCES=None):
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=None):
                 self.assertIsNone(store.check_version())
                 self.assertEqual(store.list_snapshots(), [])
                 _plist(info, {"CFBundleShortVersionString": "5.0.0", "CFBundleVersion": "5.0.0.1251"})
@@ -644,7 +644,7 @@ class SnapshotTests(unittest.TestCase):
             info = temp.root / "Info.plist"
             _plist(info, {"CFBundleShortVersionString": "5.0.0", "CFBundleVersion": "5.0.0.1"})
             _music, _serato, store = _drive(temp.root, temp.db)
-            with _env(SERATO_LIBRARY_APP_INFO=str(info), SERATO_LIBRARY_PREFERENCES=None):
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=None):
                 self.assertIsNone(store.check_version())
                 self.assertEqual(store.list_snapshots(), [])
                 _plist(info, {"CFBundleShortVersionString": "5.0.0", "CFBundleVersion": "5.0.0.1251"})
@@ -724,7 +724,7 @@ class SnapshotTests(unittest.TestCase):
             pending = store.poll()
             assert pending is not None
             self.assertEqual(pending["source"], "Lexicon")
-            text = (log_directory / "serato-library.log").read_text(encoding="utf-8")
+            text = (log_directory / "cratecraft.log").read_text(encoding="utf-8")
             self.assertIn("Lexicon changed the Serato folder", text)
             self.assertIn("after Lexicon wrote", text)
             store.undo_outside()

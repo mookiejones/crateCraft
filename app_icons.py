@@ -62,7 +62,7 @@ BUNDLE_ICON_ICO = "app-icon.ico"
 BUNDLE_ICON_ICNS = "app-icon.icns"
 # The pulse bar is drawn through this pixel for every theme except Classic.
 HEARTBEAT_PIXEL = (128, 148)
-WINDOW_TITLE = "Serato Library"
+WINDOW_TITLE = "crateCraft"
 # Stable id so Windows uses this window's icon on the taskbar instead of
 # grouping the process under the host executable. This does not edit the exe.
 APP_USER_MODEL_ID = "Serato.Library"
@@ -794,7 +794,7 @@ def _set_dock_image(path: Path | None) -> bool:
 
 
 def _find_window() -> int:
-    """Return the Serato Library window handle.
+    """Return the crateCraft window handle.
 
     Returns:
         The bound window's handle, or the handle ``FindWindowW`` returns

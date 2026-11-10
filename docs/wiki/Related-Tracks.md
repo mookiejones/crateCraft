@@ -36,7 +36,7 @@ The live view while a deck is playing is a different app, [serato-listener](http
 
 | System | File |
 | --- | --- |
-| Mac | `~/Library/Application Support/Serato Library/related.sqlite` |
-| Windows | `%APPDATA%\Serato Library\related.sqlite` |
+| Mac | `~/Library/Application Support/crateCraft/related.sqlite` |
+| Windows | `%APPDATA%\crateCraft\related.sqlite` |
 
-That folder is **Serato Library**, with a space. It is not `Serato/Library`, which holds `master.sqlite`. A move in **Organize files** updates these paths. [Where Serato data lives](Where-Serato-Data-Lives).
+That folder is **crateCraft** (**Serato Library** before the rename). It is not `Serato/Library`, which holds `master.sqlite`. A move in **Organize files** updates these paths. [Where Serato data lives](Where-Serato-Data-Lives).

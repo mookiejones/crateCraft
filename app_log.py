@@ -13,7 +13,7 @@ from pathlib import Path
 
 import app_config
 
-LOG_NAME = "serato-library.log"
+LOG_NAME = "cratecraft.log"
 LOGGER_NAME = "serato"
 MAX_BYTES = 1_048_576
 BACKUP_COUNT = 3

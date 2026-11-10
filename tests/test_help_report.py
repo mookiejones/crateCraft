@@ -170,7 +170,7 @@ class LinkTests(unittest.TestCase):
         self.assertTrue(link.opened)
         self.assertEqual(link.mode, "open")
         target = opened.call_args.args[0]
-        self.assertTrue(target.startswith("https://github.com/mookiejones/serato-library-manager/issues/new?"))
+        self.assertTrue(target.startswith("https://github.com/mookiejones/crateCraft/issues/new?"))
         self.assertFalse(help_report.open_in_browser("https://evil.example/issues/new?template=bug_report.yml"))
         self.assertFalse(help_report.open_in_browser(help_report.NEW_ISSUE + "?template=other.yml"))
         self.assertFalse(help_report.open_in_browser("https://github.com/other/serato-library-manager/issues/new?template=bug_report.yml"))
@@ -270,8 +270,8 @@ class PageTests(unittest.TestCase):
         self.assertEqual(
             [call.args[0] for call in opened.call_args_list],
             [
-                "https://github.com/mookiejones/serato-library-manager",
-                "https://github.com/mookiejones/serato-library-manager/releases",
+                "https://github.com/mookiejones/crateCraft",
+                "https://github.com/mookiejones/crateCraft/releases",
             ],
         )
 
@@ -297,7 +297,7 @@ class PageTests(unittest.TestCase):
                     with self.subTest(body=bad), self.assertRaises(urllib.error.HTTPError) as caught:
                         urllib.request.urlopen(post(bad), timeout=5)
                     self.assertEqual(caught.exception.code, 400)
-            opened.assert_called_once_with("https://github.com/mookiejones/serato-library-manager/releases")
+            opened.assert_called_once_with("https://github.com/mookiejones/crateCraft/releases")
         finally:
             httpd.shutdown()
             httpd.server_close()

@@ -1,8 +1,8 @@
-site_name: Serato Library
+site_name: crateCraft
 site_description: A local window for the Serato DJ Pro library on your computer.
-site_url: https://mookiejones.github.io/serato-library-manager/
-repo_url: https://github.com/mookiejones/serato-library-manager
-repo_name: mookiejones/serato-library-manager
+site_url: https://mookiejones.github.io/crateCraft/
+repo_url: https://github.com/mookiejones/crateCraft
+repo_name: mookiejones/crateCraft
 edit_uri: edit/main/docs/
 docs_dir: .
 # Keep the build output out of docs/. `mkdocs build -f docs/mkdocs.yml`
@@ -87,14 +87,14 @@ nav:
       - Settings and privacy: guide/settings.md
       - Troubleshooting: guide/troubleshooting.md
   - For developers:
-      - Code reference: https://github.com/mookiejones/serato-library-manager/blob/main/docs/architecture.md
-      - GitHub and releases: https://github.com/mookiejones/serato-library-manager/blob/main/docs/github.md
-      - Related tracks file: https://github.com/mookiejones/serato-library-manager/blob/main/docs/related-tracks.md
-      - Research notes: https://github.com/mookiejones/serato-library-manager/blob/main/docs/serato-library-tools.md
-      - Privacy note: https://github.com/mookiejones/serato-library-manager/blob/main/PRIVACY.md
+      - Code reference: https://github.com/mookiejones/crateCraft/blob/main/docs/architecture.md
+      - GitHub and releases: https://github.com/mookiejones/crateCraft/blob/main/docs/github.md
+      - Related tracks file: https://github.com/mookiejones/crateCraft/blob/main/docs/related-tracks.md
+      - Research notes: https://github.com/mookiejones/crateCraft/blob/main/docs/serato-library-tools.md
+      - Privacy note: https://github.com/mookiejones/crateCraft/blob/main/PRIVACY.md
       - Roadmap: https://github.com/users/mookiejones/projects/3
 
 plugins:
   - search
 
-copyright: Serato DJ Pro is a product of Serato. This guide is for the separate Serato Library app.
+copyright: Serato DJ Pro is a product of Serato. This guide is for the separate crateCraft app.

@@ -6,7 +6,7 @@
   <source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="wiki/images/quickstart-banner-dark.svg">
   <source media="(prefers-color-scheme: dark)" type="image/png" srcset="wiki/images/quickstart-banner-dark.png">
   <source type="image/svg+xml" srcset="wiki/images/quickstart-banner-light.svg">
-  <img alt="Serato Library Manager Quick Start. Backups first. Cue points safe. Then go crate digging." src="wiki/images/quickstart-banner-light.png" width="100%">
+  <img alt="crateCraft Quick Start. Backups first. Cue points safe. Then go crate digging." src="wiki/images/quickstart-banner-light.png" width="100%">
 </picture>
 
 Five moves. Backups first. Cue points safe. Then go crate digging.
@@ -27,18 +27,18 @@ GitHub Releases is the only download.
   <figcaption>1 Download</figcaption>
 </figure>
 
-Grab the build for your machine from [GitHub Releases](https://github.com/mookiejones/serato-library-manager/releases). No store, no Homebrew, and no winget.
+Grab the build for your machine from [GitHub Releases](https://github.com/mookiejones/crateCraft/releases). No store, no Homebrew, and no winget.
 
 | Your deck | File |
 | --- | --- |
-| Mac, Apple silicon (arm64) | `Serato-Library-macos-arm64.dmg` |
-| Mac, Intel (x64) | `Serato-Library-macos-x64.dmg` |
-| Windows installer | `Serato-Library-windows-setup.exe` |
-| Windows, no installer | `Serato-Library-windows.zip` |
+| Mac, Apple silicon (arm64) | `crateCraft-macos-arm64.dmg` |
+| Mac, Intel (x64) | `crateCraft-macos-x64.dmg` |
+| Windows installer | `crateCraft-windows-setup.exe` |
+| Windows, no installer | `crateCraft-windows.zip` |
 
 `SHA256SUMS` sits on that same release.
 
-The release marked Latest is **v0.1.1**. It attaches `Serato-Library-macos.zip` (Apple silicon) and `Serato-Library-windows.zip`. The pre-release **v1.1.0-rc2** has the disk images, the installer, the portable zip, and `SHA256SUMS`.
+The release marked Latest is **v0.1.1**. It attaches `Serato-Library-macos.zip` (Apple silicon) and `Serato-Library-windows.zip`. The pre-release **v1.1.0-rc2** has the disk images, the installer, the portable zip, and `SHA256SUMS`, named `Serato-Library-…` from before the rename.
 
 ## 2 Install (Mac and Windows)
 
@@ -74,7 +74,7 @@ The unsigned-app warnings, including Removable Volumes, are in [First install](f
   <figcaption>3 Open</figcaption>
 </figure>
 
-A window titled **Serato Library** opens. It stays on this computer. Close the window to quit.
+A window titled **crateCraft** opens. It stays on this computer. Close the window to quit.
 
 Choose **Get started**. When the page names your library, choose **Use this library**.
 

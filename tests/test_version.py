@@ -527,7 +527,7 @@ class WindowsResourceTests(unittest.TestCase):
     def test_final_tag_reads_as_1_1_0_shape(self) -> None:
         """Show file and product version ``1.1.0`` for tag ``v1.1.0``.
 
-        Company and product names are ``Serato Library``. The generated
+        Company and product names are ``crateCraft``. The generated
         PyInstaller file parses as Python. Nothing is executed.
 
         Returns:
@@ -539,13 +539,13 @@ class WindowsResourceTests(unittest.TestCase):
         self.assertEqual(info.product_version, (1, 1, 0, 0))
         self.assertEqual(info.file_version_text, "1.1.0")
         self.assertEqual(info.product_version_text, "1.1.0")
-        self.assertEqual(info.company_name, "Serato Library")
-        self.assertEqual(info.product_name, "Serato Library")
+        self.assertEqual(info.company_name, "crateCraft")
+        self.assertEqual(info.product_name, "crateCraft")
         text = version_info.render_windows_version_file(info)
         ast.parse(text)
         self.assertIn("filevers=(1, 1, 0, 0)", text)
         self.assertIn("StringStruct('ProductVersion', '1.1.0')", text)
-        self.assertIn("StringStruct('CompanyName', 'Serato Library')", text)
+        self.assertIn("StringStruct('CompanyName', 'crateCraft')", text)
         self.assertEqual(version_info.version_numbers("v1.1.0-rc2"), (1, 1, 0, 0))
         with mock.patch("version_info.resolve", return_value=version_info.VersionIdentity("v1.1.0-rc2", None, "release")):
             self.assertEqual(version_info.bundle_version(), "1.1.0")
@@ -589,8 +589,8 @@ class WindowsResourceTests(unittest.TestCase):
         self.assertEqual(product_version, numbers)
         self.assertEqual(strings["FileVersion"], "1.2.3")
         self.assertEqual(strings["ProductVersion"], "1.2.3")
-        self.assertEqual(strings["CompanyName"], "Serato Library")
-        self.assertEqual(strings["ProductName"], "Serato Library")
+        self.assertEqual(strings["CompanyName"], "crateCraft")
+        self.assertEqual(strings["ProductName"], "crateCraft")
         with self.assertRaises(ValueError):
             version_info.assert_windows_resource(pe, "v9.9.9")
         with self.assertRaises(ValueError):
@@ -601,7 +601,7 @@ class WindowsResourceTests(unittest.TestCase):
     def test_assert_version_command_matches_the_baked_tag(self) -> None:
         """Require ``assert-version`` to compare the executable with the tag.
 
-        The executable is the synthetic PE inside a ``Serato Library``
+        The executable is the synthetic PE inside a ``crateCraft``
         folder. ``RELEASE_TAG`` must equal the baked version. A missing
         bake is refused. Nothing is launched.
 
@@ -610,7 +610,7 @@ class WindowsResourceTests(unittest.TestCase):
         """
         pe = _pe_with_version(_version_blob(_strings_for("v1.2.3-beta1"), (1, 2, 3, 0)))
         with tempfile.TemporaryDirectory() as tmp:
-            exe = Path(tmp) / "Serato Library" / "Serato Library.exe"
+            exe = Path(tmp) / "crateCraft" / "crateCraft.exe"
             exe.parent.mkdir()
             exe.write_bytes(pe)
             baked = {
@@ -737,13 +737,13 @@ class ReleaseDocTests(unittest.TestCase):
     def test_spec_passes_the_version_file(self) -> None:
         """Point the Windows executable at the generated version file.
 
-        Reads ``serato-library.spec``. It is not executed.
+        Reads ``crateCraft.spec``. It is not executed.
 
         Returns:
             None. The test fails if the spec still hardcodes the package
             version into the bundle or omits ``version=``.
         """
-        text = (ROOT / "serato-library.spec").read_text(encoding="utf-8")
+        text = (ROOT / "crateCraft.spec").read_text(encoding="utf-8")
         self.assertIn("import version_info", text)
         self.assertIn("version=windows_version_file", text)
         self.assertIn("write_windows_version_file", text)
@@ -769,7 +769,7 @@ class ReleaseDocTests(unittest.TestCase):
         self.assertIn("assert-version", github)
         self.assertIn("write_version.py", github)
         self.assertIn("0.0.0+dev", github)
-        self.assertIn("Serato Library", github)
+        self.assertIn("crateCraft", github)
 
 
 class PageVersionTests(unittest.TestCase):
@@ -793,7 +793,7 @@ class PageVersionTests(unittest.TestCase):
         self.assertIn('id="copy-version"', page)
         self.assertIn('id="version-copy-status"', page)
         self.assertIn('aria-live="polite"', page)
-        self.assertIn(">About<", page)
+        self.assertIn(">About crateCraft<", page)
         self.assertIn(">Copy version<", page)
         self.assertIn('"/api/version"', script)
         self.assertIn("Version unavailable", script)

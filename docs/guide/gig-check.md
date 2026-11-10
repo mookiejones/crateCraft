@@ -4,7 +4,7 @@
 
 ## Run the check
 
-1. Open Serato Library.
+1. Open crateCraft.
 2. Click **Before a gig**.
 3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The crate name is shown under the crate list.
 4. Walk the five steps: **Drives**, **Missing files**, **Streaming**, **Empty crates**, and **Since last gig**. Each step says **Step N of 5**. One button names the thing to do, such as **Locate missing files**. **Back** returns to the previous step. **Exit gig check** leaves the check.
