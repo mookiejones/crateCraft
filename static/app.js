@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners2 = [], signal = this.signal = {
+        var listeners3 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners2.push(listener);
+            listeners3.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners2.forEach(function(listener) {
+          listeners3.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners2 = currentEntangledListeners;
+          var listeners3 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])();
+          for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners2 = [], thenableWithOverride = {
+        var listeners3 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners2.push(resolve);
+            listeners3.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])(result);
+            for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners2.length; error2++)
-              (0, listeners2[error2])(void 0);
+            for (error2 = 0; error2 < listeners3.length; error2++)
+              (0, listeners3[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners2 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners3 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners2.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners3.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners2.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners3.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners2;
+          if (3 === targetFiber.tag) return listeners3;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners2 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners3 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners2.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners3.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners2.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners3.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners2.length && dispatchQueue.push({ event, listeners: listeners2 });
+        0 !== listeners3.length && dispatchQueue.push({ event, listeners: listeners3 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners2 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners2, type, listener, optionsOrUseCapture)) {
+        var listeners3 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners3, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners2.push({
+          listeners3.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners2;
+        this._eventListeners = listeners3;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners2 = this._eventListeners;
-        if (null !== listeners2 && (listener = indexOfEventListener(
-          listeners2,
+        var listeners3 = this._eventListeners;
+        if (null !== listeners3 && (listener = indexOfEventListener(
+          listeners3,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners2[listener];
+          var _listeners$index = listeners3[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners2.splice(listener, 1);
+          listeners3.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -21359,28 +21359,66 @@
   }
 
   // src/views.ts
-  var import_react6 = __toESM(require_react(), 1);
+  var import_react7 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom2 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
   var import_react_dom = __toESM(require_react_dom(), 1);
 
-  // src/context/PlayerContext.tsx
+  // src/context/HistoryContext.tsx
   var import_react = __toESM(require_react(), 1);
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-  var PlayerContext = (0, import_react.createContext)(null);
+  var historyActions = {
+    loadHistory: async () => {
+    },
+    openSession: async (_id) => {
+    },
+    selectEntry: (_id) => {
+    },
+    openInLibrary: async (_assetId) => {
+    }
+  };
+  var listeners = /* @__PURE__ */ new Set();
+  function subscribeHistory(listener) {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }
+  function notifyHistory() {
+    for (const listener of listeners) listener();
+  }
+  var HistoryContext = (0, import_react.createContext)(null);
+  function HistoryProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HistoryContext, { value, children });
+  }
+  function useHistory() {
+    const value = (0, import_react.useContext)(HistoryContext);
+    if (value === null) {
+      throw new Error("useHistory must be used within HistoryProvider");
+    }
+    return value;
+  }
+
+  // src/context/PlayerContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var PlayerContext = (0, import_react2.createContext)(null);
   function PlayerProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlayerContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PlayerContext, { value, children });
   }
   function usePlayer() {
-    const value = (0, import_react.useContext)(PlayerContext);
+    const value = (0, import_react2.useContext)(PlayerContext);
     if (value === null) {
       throw new Error("usePlayer must be used within PlayerProvider");
     }
@@ -21388,10 +21426,10 @@
   }
 
   // src/player.ts
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react2 = __toESM(require_react(), 1);
+  var import_react3 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -21458,7 +21496,7 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21486,7 +21524,7 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       "button",
       {
         type: "button",
@@ -21497,13 +21535,13 @@
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21515,11 +21553,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
         "button",
         {
           type: "button",
@@ -21539,7 +21577,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react2.useState)(null);
+    const [hold, setHold] = (0, import_react3.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -21566,14 +21604,14 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -21585,8 +21623,8 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -21599,13 +21637,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "input",
             {
               ref: tooltipRef2(tips.seek),
@@ -21624,16 +21662,16 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "input",
           {
             ref: tooltipRef2(tips.volume),
@@ -22653,7 +22691,7 @@
   // src/player.ts
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
-  var listeners = /* @__PURE__ */ new Set();
+  var listeners2 = /* @__PURE__ */ new Set();
   var wired2 = /* @__PURE__ */ new WeakSet();
   var media = null;
   var trackId = null;
@@ -22797,9 +22835,9 @@
     emit();
   }
   function subscribe(listener) {
-    listeners.add(listener);
+    listeners2.add(listener);
     return () => {
-      listeners.delete(listener);
+      listeners2.delete(listener);
     };
   }
   function mountPlayer(host) {
@@ -22839,7 +22877,7 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react3.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react4.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -22994,7 +23032,7 @@
   }
   function emit() {
     const snapshot = getPlayerState();
-    for (const listener of [...listeners]) listener(snapshot);
+    for (const listener of [...listeners2]) listener(snapshot);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -23006,7 +23044,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -23026,33 +23064,132 @@
     };
   }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react4.useState)(readPlayerValue);
-    (0, import_react4.useEffect)(() => {
+    const [value, setValue] = (0, import_react5.useState)(readPlayerValue);
+    (0, import_react5.useEffect)(() => {
       return subscribe(() => {
         (0, import_react_dom.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react4.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider, { value: current2, children });
+  }
+  function readHistoryValue() {
+    return {
+      sessions: state.historySessions,
+      historyId: state.historyId,
+      entries: state.entries,
+      selectedId: state.selectedId,
+      loadHistory: () => historyActions.loadHistory(),
+      openSession: (id) => historyActions.openSession(id),
+      selectEntry: (id) => historyActions.selectEntry(id),
+      openInLibrary: (assetId) => historyActions.openInLibrary(assetId)
+    };
+  }
+  function HistoryProvider2({ children }) {
+    const [value, setValue] = (0, import_react5.useState)(readHistoryValue);
+    (0, import_react5.useEffect)(() => {
+      return subscribeHistory(() => {
+        (0, import_react_dom.flushSync)(() => {
+          setValue(readHistoryValue());
+        });
+      });
+    }, []);
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(HistoryProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider2, { children });
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(HistoryProvider2, { children }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
     (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AppProviders, { children: node }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime6.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
 
+  // src/components/HistoryDetail.tsx
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function Field({ label, value }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "label", children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "value", children: value })
+    ] });
+  }
+  function HistoryDetail() {
+    const history = useHistory();
+    const entry = history.entries.find((item4) => item4.id === history.selectedId);
+    if (!entry) return null;
+    const lines = [
+      [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
+      [t("column.deck"), entry.deck || "—"],
+      [t("history.started"), clockLabel(entry.start_time) || "—"],
+      [t("history.file"), entry.file || "—"]
+    ];
+    if (entry.notes) lines.push([t("history.notes"), entry.notes]);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Field, { label, value }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef3(tips.openInLibrary),
+          className: "text-button",
+          onClick: () => {
+            void history.openInLibrary(entry.asset_id);
+          },
+          children: t("history.openInLibrary")
+        }
+      ) : null
+    ] });
+  }
+
+  // src/components/HistorySessions.tsx
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef4(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function HistorySessions() {
+    const history = useHistory();
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(import_jsx_runtime8.Fragment, { children: history.sessions.map((session) => {
+      const name = session.name || t("history.session");
+      return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef4(sessionTip(session.name || "Session")),
+          className: "crate",
+          role: "option",
+          "aria-selected": session.id === history.historyId,
+          onClick: () => {
+            void history.openSession(session.id);
+          },
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "name", children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "meta", children: String(session.played || 0) })
+          ]
+        },
+        session.id
+      );
+    }) });
+  }
+
   // src/virtual-scroll.ts
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react6 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -23112,7 +23249,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react5.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -23274,9 +23411,25 @@
   var relatedRequest = 0;
   var lastDetail = null;
   var detailPlayRoot = null;
-  function clearDetailPlay() {
+  var historyDetailRoot = null;
+  var historyDetailHost = null;
+  var sessionRoot = null;
+  var sessionHost = null;
+  function clearDetailIslands() {
     detailPlayRoot?.unmount();
     detailPlayRoot = null;
+    historyDetailRoot?.unmount();
+    historyDetailRoot = null;
+    historyDetailHost = null;
+  }
+  function remountIsland(host, node, slot) {
+    if (slot.root && slot.host !== host) {
+      slot.root.unmount();
+      slot.root = null;
+    }
+    slot.host = host;
+    slot.root = mountIsland(host, node, slot.root ?? void 0);
+    return slot.root;
   }
   function listMatches(track, query) {
     const field = isTextSearchField(state.searchField) ? state.searchField : void 0;
@@ -23779,7 +23932,7 @@
         const empty = document.createElement("p");
         empty.className = "detail-empty";
         empty.textContent = state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches");
-        clearDetailPlay();
+        clearDetailIslands();
         el("detail").replaceChildren(empty);
       } else if (state.mode === "history") selectEntry(view[0].id);
       else selectTrack(view[0].id);
@@ -23833,7 +23986,7 @@
     const pending = document.createElement("p");
     pending.className = "detail-empty";
     pending.textContent = t("detail.reading");
-    clearDetailPlay();
+    clearDetailIslands();
     el("detail").replaceChildren(pending);
     try {
       const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
@@ -23847,54 +24000,23 @@
       const failure = document.createElement("p");
       failure.className = "detail-error";
       failure.textContent = failureOf(error2).message;
-      clearDetailPlay();
+      clearDetailIslands();
       el("detail").replaceChildren(failure);
     }
   }
   function selectEntry(id) {
     state.selectedId = id;
     paintRows();
-    const entry = state.entries.find((item4) => item4.id === id);
-    if (!entry) return;
-    const body = document.createElement("div");
-    body.className = "detail-body";
-    const title2 = document.createElement("h2");
-    title2.textContent = entry.name || t("track.untitled");
-    body.append(title2);
-    if (entry.artist) {
-      const artist2 = document.createElement("p");
-      artist2.className = "artist";
-      artist2.textContent = entry.artist;
-      body.append(artist2);
-    }
-    const lines = [
-      [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
-      [t("column.deck"), entry.deck || "—"],
-      [t("history.started"), clockLabel(entry.start_time) || "—"],
-      [t("history.file"), entry.file || "—"]
-    ];
-    if (entry.notes) lines.push([t("history.notes"), entry.notes]);
-    for (const [label, value] of lines) {
-      const row = document.createElement("div");
-      row.className = "field";
-      const name = document.createElement("div");
-      name.className = "label";
-      name.textContent = label;
-      const text2 = document.createElement("div");
-      text2.className = "value";
-      text2.textContent = value;
-      row.append(name, text2);
-      body.append(row);
-    }
-    if (entry.asset_id) {
-      const open = buttonEl(tips.openInLibrary);
-      open.className = "text-button";
-      open.textContent = t("history.openInLibrary");
-      open.addEventListener("click", () => openInLibrary(entry.asset_id));
-      body.append(open);
-    }
-    clearDetailPlay();
-    el("detail").replaceChildren(body);
+    notifyHistory();
+    if (!state.entries.some((item4) => item4.id === id)) return;
+    const host = el("detail");
+    detailPlayRoot?.unmount();
+    detailPlayRoot = null;
+    historyDetailRoot = remountIsland(host, (0, import_react7.createElement)(HistoryDetail), {
+      host: historyDetailHost,
+      root: historyDetailRoot
+    });
+    historyDetailHost = host;
   }
   function fieldInput(name, label, value, wide = false) {
     const wrap = document.createElement("label");
@@ -23928,9 +24050,9 @@
       body.append(artist2);
     }
     const playTitle = track.title || track.name || playerStrings.untitled;
-    clearDetailPlay();
+    clearDetailIslands();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react7.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -24814,33 +24936,26 @@
     }
   }
   function renderSessions() {
-    el("session-list").replaceChildren();
-    for (const session of state.historySessions) {
-      const button2 = buttonEl(sessionTip(session.name || "Session"));
-      button2.className = "crate";
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(session.id === state.historyId));
-      const name = document.createElement("span");
-      name.className = "name";
-      name.textContent = session.name || t("history.session");
-      const meta = document.createElement("span");
-      meta.className = "meta";
-      meta.textContent = String(session.played || 0);
-      button2.append(name, meta);
-      button2.addEventListener("click", () => openSession(session.id));
-      el("session-list").append(button2);
-    }
+    notifyHistory();
+    const host = el("session-list");
+    sessionRoot = remountIsland(host, (0, import_react7.createElement)(HistorySessions), {
+      host: sessionHost,
+      root: sessionRoot
+    });
+    sessionHost = host;
   }
   async function loadHistory() {
     const response = await fetch("/api/history");
     const payload = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(payload, t("history.readFailed")));
     state.historySessions = payload.sessions || [];
+    notifyHistory();
     renderSessions();
   }
   async function openSession(id) {
     state.historyId = id;
     state.selectedId = null;
+    notifyHistory();
     renderSessions();
     const response = await fetch(`/api/history?session=${id}`);
     const payload = await readJSONOr(response, {});
@@ -24849,6 +24964,7 @@
       return;
     }
     state.entries = payload.entries || [];
+    notifyHistory();
     el("list").scrollTop = 0;
     renderList();
   }
@@ -24931,7 +25047,7 @@
     const failure = document.createElement("p");
     failure.className = "detail-error";
     failure.textContent = failureOf(error2).message;
-    clearDetailPlay();
+    clearDetailIslands();
     el("detail").replaceChildren(failure);
   }
   function selectedDuplicateGroup() {
@@ -25604,6 +25720,10 @@
   bridge.selectEntry = selectEntry;
   bridge.reloadLibrary = loadLibrary;
   bridge.lockDown = lockDown;
+  historyActions.loadHistory = loadHistory;
+  historyActions.openSession = openSession;
+  historyActions.selectEntry = selectEntry;
+  historyActions.openInLibrary = openInLibrary;
 
   // src/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;

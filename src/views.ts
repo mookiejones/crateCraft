@@ -26,7 +26,7 @@ import type {
 import { bridge } from "./bridge";
 import { el } from "./dom";
 import { clickPane, paintDualChrome, paneCrates } from "./dual-crate-view";
-import { clockLabel, colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "./format";
+import { colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "./format";
 import { loadGigCheck, showGigFailure } from "./gig";
 import { loadDrift, showDriftFailure } from "./drift";
 import { loadHealth, showHealthFailure } from "./health";
@@ -40,9 +40,12 @@ import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
 import { isTextSearchField, matchesQuery, parseQuery, type ParsedQuery } from "./search-filters";
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
-import { createElement } from "react";
+import { createElement, type ReactNode } from "react";
 import { mountIsland, type IslandRoot } from "./app/mount";
+import { HistoryDetail } from "./components/HistoryDetail";
+import { HistorySessions } from "./components/HistorySessions";
 import { PlayButton } from "./components/PlayButton";
+import { historyActions, notifyHistory } from "./context/HistoryContext";
 import { playerStrings } from "./player-strings";
 import { buttonEl, inputEl, selectEl, setTooltip, textareaEl } from "./tooltip";
 import {
@@ -64,7 +67,6 @@ import {
   saveSuggestion,
   selectFile,
   selectRow,
-  sessionTip,
   sortTip,
   tips,
 } from "./tooltip-strings";
@@ -81,10 +83,30 @@ let relatedRequest = 0;
 // Last track painted in the detail pane, so a language change can repaint it.
 let lastDetail: Track | null = null;
 let detailPlayRoot: IslandRoot | null = null;
+let historyDetailRoot: IslandRoot | null = null;
+let historyDetailHost: HTMLElement | null = null;
+let sessionRoot: IslandRoot | null = null;
+let sessionHost: HTMLElement | null = null;
 
-function clearDetailPlay(): void {
+function clearDetailIslands(): void {
   detailPlayRoot?.unmount();
   detailPlayRoot = null;
+  historyDetailRoot?.unmount();
+  historyDetailRoot = null;
+  historyDetailHost = null;
+}
+
+function remountIsland(host: HTMLElement, node: ReactNode, slot: {
+  host: HTMLElement | null;
+  root: IslandRoot | null;
+}): IslandRoot {
+  if (slot.root && slot.host !== host) {
+    slot.root.unmount();
+    slot.root = null;
+  }
+  slot.host = host;
+  slot.root = mountIsland(host, node, slot.root ?? undefined);
+  return slot.root;
 }
 
 /**
@@ -803,7 +825,7 @@ export function renderList() {
       const empty = document.createElement("p");
       empty.className = "detail-empty";
       empty.textContent = state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches");
-      clearDetailPlay();
+      clearDetailIslands();
       el("detail").replaceChildren(empty);
     } else if (state.mode === "history") selectEntry(view[0]!.id);
     else selectTrack(view[0]!.id);
@@ -899,7 +921,7 @@ export async function selectTrack(id: number) {
   const pending = document.createElement("p");
   pending.className = "detail-empty";
   pending.textContent = t("detail.reading");
-  clearDetailPlay();
+  clearDetailIslands();
   el("detail").replaceChildren(pending);
   try {
     const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
@@ -913,7 +935,7 @@ export async function selectTrack(id: number) {
     const failure = document.createElement("p");
     failure.className = "detail-error";
     failure.textContent = failureOf(error).message;
-    clearDetailPlay();
+    clearDetailIslands();
     el("detail").replaceChildren(failure);
   }
 }
@@ -930,47 +952,16 @@ export async function selectTrack(id: number) {
 export function selectEntry(id: number) {
   state.selectedId = id;
   paintRows();
-  const entry = state.entries.find((item) => item.id === id);
-  if (!entry) return;
-  const body = document.createElement("div");
-  body.className = "detail-body";
-  const title = document.createElement("h2");
-  title.textContent = entry.name || t("track.untitled");
-  body.append(title);
-  if (entry.artist) {
-    const artist = document.createElement("p");
-    artist.className = "artist";
-    artist.textContent = entry.artist;
-    body.append(artist);
-  }
-  const lines: Array<[string, string]> = [
-    [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
-    [t("column.deck"), entry.deck || "—"],
-    [t("history.started"), clockLabel(entry.start_time) || "—"],
-    [t("history.file"), entry.file || "—"],
-  ];
-  if (entry.notes) lines.push([t("history.notes"), entry.notes]);
-  for (const [label, value] of lines) {
-    const row = document.createElement("div");
-    row.className = "field";
-    const name = document.createElement("div");
-    name.className = "label";
-    name.textContent = label;
-    const text = document.createElement("div");
-    text.className = "value";
-    text.textContent = value;
-    row.append(name, text);
-    body.append(row);
-  }
-  if (entry.asset_id) {
-    const open = buttonEl(tips.openInLibrary);
-    open.className = "text-button";
-    open.textContent = t("history.openInLibrary");
-    open.addEventListener("click", () => openInLibrary(entry.asset_id as number));
-    body.append(open);
-  }
-  clearDetailPlay();
-  el("detail").replaceChildren(body);
+  notifyHistory();
+  if (!state.entries.some((item) => item.id === id)) return;
+  const host = el("detail");
+  detailPlayRoot?.unmount();
+  detailPlayRoot = null;
+  historyDetailRoot = remountIsland(host, createElement(HistoryDetail), {
+    host: historyDetailHost,
+    root: historyDetailRoot,
+  });
+  historyDetailHost = host;
 }
 
 /**
@@ -1034,7 +1025,7 @@ function renderDetail(track: Track) {
   }
 
   const playTitle = track.title || track.name || playerStrings.untitled;
-  clearDetailPlay();
+  clearDetailIslands();
   const playHost = document.createElement("span");
   detailPlayRoot = mountIsland(playHost, createElement(PlayButton, {
     variant: "detail",
@@ -2352,22 +2343,13 @@ export async function importPlaylist(file: File) {
  * @returns {void}
  */
 export function renderSessions() {
-  el("session-list").replaceChildren();
-  for (const session of state.historySessions) {
-    const button = buttonEl(sessionTip(session.name || "Session"));
-    button.className = "crate";
-    button.setAttribute("role", "option");
-    button.setAttribute("aria-selected", String(session.id === state.historyId));
-    const name = document.createElement("span");
-    name.className = "name";
-    name.textContent = session.name || t("history.session");
-    const meta = document.createElement("span");
-    meta.className = "meta";
-    meta.textContent = String(session.played || 0);
-    button.append(name, meta);
-    button.addEventListener("click", () => openSession(session.id));
-    el("session-list").append(button);
-  }
+  notifyHistory();
+  const host = el("session-list");
+  sessionRoot = remountIsland(host, createElement(HistorySessions), {
+    host: sessionHost,
+    root: sessionRoot,
+  });
+  sessionHost = host;
 }
 
 /**
@@ -2383,6 +2365,7 @@ export async function loadHistory() {
   const payload = await readJSONOr<HistoryPayload>(response, {});
   if (!response.ok) throw new Error(serverMessage(payload, t("history.readFailed")));
   state.historySessions = payload.sessions || [];
+  notifyHistory();
   renderSessions();
 }
 
@@ -2398,6 +2381,7 @@ export async function loadHistory() {
 export async function openSession(id: number) {
   state.historyId = id;
   state.selectedId = null;
+  notifyHistory();
   renderSessions();
   const response = await fetch(`/api/history?session=${id}`);
   const payload = await readJSONOr<HistoryPayload>(response, {});
@@ -2406,6 +2390,7 @@ export async function openSession(id: number) {
     return;
   }
   state.entries = payload.entries || [];
+  notifyHistory();
   el("list").scrollTop = 0;
   renderList();
 }
@@ -2539,7 +2524,7 @@ export function showFailure(error: unknown) {
   const failure = document.createElement("p");
   failure.className = "detail-error";
   failure.textContent = failureOf(error).message;
-  clearDetailPlay();
+  clearDetailIslands();
   el("detail").replaceChildren(failure);
 }
 
@@ -3486,3 +3471,7 @@ bridge.selectTrack = selectTrack;
 bridge.selectEntry = selectEntry;
 bridge.reloadLibrary = loadLibrary;
 bridge.lockDown = lockDown;
+historyActions.loadHistory = loadHistory;
+historyActions.openSession = openSession;
+historyActions.selectEntry = selectEntry;
+historyActions.openInLibrary = openInLibrary;

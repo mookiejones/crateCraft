@@ -242,6 +242,7 @@ export interface HistorySession {
   id: number;
   name?: string;
   start_time?: number | string | null;
+  played?: number | string | null;
   [key: string]: string | number | boolean | null | undefined;
 }
 
