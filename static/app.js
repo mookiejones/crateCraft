@@ -97,7 +97,7 @@
       assign(pureComponentPrototype, Component.prototype);
       pureComponentPrototype.isPureReactComponent = true;
       var isArrayImpl = Array.isArray;
-      function noop() {
+      function noop2() {
       }
       var ReactSharedInternals = { H: null, A: null, T: null, S: null };
       var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -134,7 +134,7 @@
           case "rejected":
             throw thenable.reason;
           default:
-            switch ("string" === typeof thenable.status ? thenable.then(noop, noop) : (thenable.status = "pending", thenable.then(
+            switch ("string" === typeof thenable.status ? thenable.then(noop2, noop2) : (thenable.status = "pending", thenable.then(
               function(fulfilledValue) {
                 "pending" === thenable.status && (thenable.status = "fulfilled", thenable.value = fulfilledValue);
               },
@@ -272,7 +272,7 @@
         try {
           var returnValue = scope(), onStartTransitionFinish = ReactSharedInternals.S;
           null !== onStartTransitionFinish && onStartTransitionFinish(currentTransition, returnValue);
-          "object" === typeof returnValue && null !== returnValue && "function" === typeof returnValue.then && returnValue.then(noop, reportGlobalError);
+          "object" === typeof returnValue && null !== returnValue && "function" === typeof returnValue.then && returnValue.then(noop2, reportGlobalError);
         } catch (error2) {
           reportGlobalError(error2);
         } finally {
@@ -508,21 +508,21 @@
         }
         return "Minified React error #" + code + "; visit " + url + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
       }
-      function noop() {
+      function noop2() {
       }
       var Internals = {
         d: {
-          f: noop,
+          f: noop2,
           r: function() {
             throw Error(formatProdErrorMessage(522));
           },
-          D: noop,
-          C: noop,
-          L: noop,
-          m: noop,
-          X: noop,
-          S: noop,
-          M: noop
+          D: noop2,
+          C: noop2,
+          L: noop2,
+          m: noop2,
+          X: noop2,
+          S: noop2,
+          M: noop2
         },
         p: 0,
         findDOMNode: null
@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners3 = [], signal = this.signal = {
+        var listeners8 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners3.push(listener);
+            listeners8.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners3.forEach(function(listener) {
+          listeners8.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners3 = currentEntangledListeners;
+          var listeners8 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])();
+          for (var i = 0; i < listeners8.length; i++) (0, listeners8[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners3 = [], thenableWithOverride = {
+        var listeners8 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners3.push(resolve);
+            listeners8.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])(result);
+            for (var i = 0; i < listeners8.length; i++) (0, listeners8[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners3.length; error2++)
-              (0, listeners3[error2])(void 0);
+            for (error2 = 0; error2 < listeners8.length; error2++)
+              (0, listeners8[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -5132,7 +5132,7 @@
           ReactDOMSharedInternals.p = previousPriority, null !== prevTransition && null !== currentTransition.types && (prevTransition.types = currentTransition.types), ReactSharedInternals.T = prevTransition;
         }
       }
-      function noop() {
+      function noop2() {
       }
       function startHostTransition(formFiber, pendingState, action, formData) {
         if (5 !== formFiber.tag) throw Error(formatProdErrorMessage(476));
@@ -5142,7 +5142,7 @@
           queue,
           pendingState,
           sharedNotPendingObject,
-          null === action ? noop : function() {
+          null === action ? noop2 : function() {
             requestFormReset$1(formFiber);
             return action(formData);
           }
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners3 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners8 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners3.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners8.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners3.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners8.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners3;
+          if (3 === targetFiber.tag) return listeners8;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners3 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners8 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners3.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners8.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners3.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners8.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners3.length && dispatchQueue.push({ event, listeners: listeners3 });
+        0 !== listeners8.length && dispatchQueue.push({ event, listeners: listeners8 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners3 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners3, type, listener, optionsOrUseCapture)) {
+        var listeners8 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners8, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners3.push({
+          listeners8.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners3;
+        this._eventListeners = listeners8;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners3 = this._eventListeners;
-        if (null !== listeners3 && (listener = indexOfEventListener(
-          listeners3,
+        var listeners8 = this._eventListeners;
+        if (null !== listeners8 && (listener = indexOfEventListener(
+          listeners8,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners3[listener];
+          var _listeners$index = listeners8[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners3.splice(listener, 1);
+          listeners8.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -12652,8 +12652,8 @@
         if (0 === eventListeners.length) return -1;
         optionsOrUseCapture = normalizeListenerOptions(optionsOrUseCapture);
         for (var i = 0; i < eventListeners.length; i++) {
-          var item5 = eventListeners[i];
-          if (item5.type === type && item5.listener === listener && normalizeListenerOptions(item5.optionsOrUseCapture) === optionsOrUseCapture)
+          var item3 = eventListeners[i];
+          if (item3.type === type && item3.listener === listener && normalizeListenerOptions(item3.optionsOrUseCapture) === optionsOrUseCapture)
             return i;
         }
         return -1;
@@ -12795,8 +12795,8 @@
           var pending = pendingIntersectionUnobserves;
           pendingIntersectionUnobserves = [];
           for (var i = 0; i < pending.length; i++) {
-            var item5 = pending[i];
-            item5.observer.unobserve(item5.instance);
+            var item3 = pending[i];
+            item3.observer.unobserve(item3.instance);
           }
         }));
       }
@@ -17807,8 +17807,8 @@
   function messageParams(value) {
     if (!value || typeof value !== "object") return void 0;
     const params = {};
-    for (const [name, item5] of Object.entries(value)) {
-      if (typeof item5 === "string" || typeof item5 === "number" && Number.isFinite(item5)) params[name] = item5;
+    for (const [name, item3] of Object.entries(value)) {
+      if (typeof item3 === "string" || typeof item3 === "number" && Number.isFinite(item3)) params[name] = item3;
     }
     return Object.keys(params).length ? params : void 0;
   }
@@ -17956,6 +17956,12 @@
       return Promise.resolve();
     },
     lockDown(_error) {
+    },
+    applyStatus(_info) {
+    },
+    renderShell() {
+    },
+    setNotice(_text) {
     }
   };
 
@@ -17964,125 +17970,6 @@
     const node = document.getElementById(id);
     if (node == null) throw new Error(`Missing #${id}`);
     return node;
-  }
-
-  // src/fuzzy.ts
-  var BOUNDARY = /[ ._/\-\\]/;
-  function fuzzyScore(needle, haystack) {
-    const query = needle.toLocaleLowerCase();
-    const text2 = haystack.toLocaleLowerCase();
-    if (!query) return null;
-    let score = 0;
-    let previous2 = -2;
-    let from = 0;
-    for (const letter of query) {
-      const found = text2.indexOf(letter, from);
-      if (found < 0) return null;
-      score += 8;
-      if (found === previous2 + 1) score += 16;
-      if (found === 0 || BOUNDARY.test(text2.charAt(found - 1))) score += 12;
-      previous2 = found;
-      from = found + 1;
-    }
-    if (text2.includes(query)) score += 40;
-    if (text2.startsWith(query)) score += 30;
-    score -= Math.floor(Math.max(0, text2.length - query.length) / 4);
-    return score;
-  }
-  function scoreQuery(query, name, parentName = "") {
-    const terms = query.trim().split(/\s+/).filter(Boolean);
-    if (!terms.length) return null;
-    let total = 0;
-    for (const term of terms) {
-      const nameScore = fuzzyScore(term, name);
-      if (nameScore != null) {
-        total += nameScore + 20;
-        continue;
-      }
-      if (!parentName) return null;
-      const parentScore = fuzzyScore(term, parentName);
-      if (parentScore == null) return null;
-      total += parentScore;
-    }
-    return total;
-  }
-
-  // src/splitter.ts
-  function clampWidth(width, available, minFirst, minSecond) {
-    const max = Math.max(minFirst, available - minSecond);
-    return Math.round(Math.min(Math.max(width, minFirst), max));
-  }
-  function mountSplitter(options) {
-    const { handle, container, first, property, minFirst, minSecond, onCommit } = options;
-    const step = options.step ?? 16;
-    let current2 = null;
-    const available = () => container.clientWidth - handle.offsetWidth;
-    const fitted = (width) => clampWidth(width, available(), minFirst, minSecond);
-    const shown = () => current2 == null ? first.getBoundingClientRect().width : fitted(current2);
-    function paint3() {
-      if (current2 == null) container.style.removeProperty(property);
-      else container.style.setProperty(property, `${fitted(current2)}px`);
-      const room = available();
-      handle.setAttribute("aria-valuemin", String(minFirst));
-      handle.setAttribute("aria-valuemax", String(Math.max(minFirst, Math.round(room - minSecond))));
-      handle.setAttribute("aria-valuenow", String(Math.round(shown())));
-    }
-    function move(width) {
-      current2 = fitted(width);
-      paint3();
-    }
-    handle.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0) return;
-      event.preventDefault();
-      const startX = event.clientX;
-      const startWidth = shown();
-      let moved = false;
-      handle.setPointerCapture?.(event.pointerId);
-      handle.dataset.dragging = "true";
-      document.body.classList.add("is-resizing");
-      const onMove = (next2) => {
-        moved = true;
-        move(startWidth + next2.clientX - startX);
-      };
-      const onEnd = () => {
-        handle.removeEventListener("pointermove", onMove);
-        handle.removeEventListener("pointerup", onEnd);
-        handle.removeEventListener("pointercancel", onEnd);
-        delete handle.dataset.dragging;
-        document.body.classList.remove("is-resizing");
-        if (moved) onCommit(current2);
-      };
-      handle.addEventListener("pointermove", onMove);
-      handle.addEventListener("pointerup", onEnd);
-      handle.addEventListener("pointercancel", onEnd);
-    });
-    handle.addEventListener("keydown", (event) => {
-      const jump = event.shiftKey ? step * 4 : step;
-      let next2;
-      if (event.key === "ArrowLeft") next2 = shown() - jump;
-      else if (event.key === "ArrowRight") next2 = shown() + jump;
-      else if (event.key === "Home") next2 = minFirst;
-      else if (event.key === "End") next2 = available() - minSecond;
-      else return;
-      event.preventDefault();
-      const before = current2;
-      move(next2);
-      if (current2 !== before) onCommit(current2);
-    });
-    handle.addEventListener("dblclick", () => {
-      current2 = null;
-      paint3();
-      onCommit(null);
-    });
-    paint3();
-    return {
-      set(width) {
-        current2 = width == null ? null : Math.round(width);
-        paint3();
-      },
-      width: () => current2,
-      refit: paint3
-    };
   }
 
   // src/state.ts
@@ -18243,6 +18130,600 @@
     }
   }
 
+  // src/search-filters.ts
+  var TEXT_SEARCH_FIELDS = [
+    "comments",
+    "grouping",
+    "composer",
+    "title",
+    "artist",
+    "album",
+    "genre",
+    "file"
+  ];
+  var KEY_VALUES = {
+    "g#m": 0,
+    abm: 0,
+    "1a": 0,
+    ebm: 1,
+    "d#m": 1,
+    "2a": 1,
+    bbm: 2,
+    "a#m": 2,
+    "3a": 2,
+    fm: 3,
+    "4a": 3,
+    cm: 4,
+    "5a": 4,
+    gm: 5,
+    "6a": 5,
+    dm: 6,
+    "7a": 6,
+    am: 7,
+    "8a": 7,
+    em: 8,
+    "9a": 8,
+    bm: 9,
+    "10a": 9,
+    "f#m": 10,
+    gbm: 10,
+    "11a": 10,
+    "c#m": 11,
+    dbm: 11,
+    "12a": 11,
+    b: 12,
+    "1b": 12,
+    "f#": 13,
+    gb: 13,
+    "2b": 13,
+    "c#": 14,
+    db: 14,
+    "3b": 14,
+    "g#": 15,
+    ab: 15,
+    "4b": 15,
+    "d#": 16,
+    eb: 16,
+    "5b": 16,
+    "a#": 17,
+    bb: 17,
+    "6b": 17,
+    f: 18,
+    "7b": 18,
+    c: 19,
+    "8b": 19,
+    g: 20,
+    "9b": 20,
+    d: 21,
+    "10b": 21,
+    a: 22,
+    "11b": 22,
+    e: 23,
+    "12b": 23
+  };
+  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
+  var EXACT = new RegExp(`^${NUMBER}$`);
+  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
+  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
+  var ABOVE = new RegExp(`^>${NUMBER}$`);
+  var BELOW = new RegExp(`^<${NUMBER}$`);
+  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
+  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
+  function isNone(value) {
+    return NONE.has(value);
+  }
+  function isYes(value) {
+    return YES.has(value);
+  }
+  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
+  function isTextSearchField(value) {
+    return TEXT_FIELD_SET.has(value);
+  }
+  function textField(track, field) {
+    if (field === "title") return String(track.name ?? "");
+    return String(track[field] ?? "");
+  }
+  function trackHaystack(track, field) {
+    if (field) return textField(track, field).toLocaleLowerCase();
+    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
+  }
+  function hasBpm(track) {
+    const bpm = Number(track.bpm);
+    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
+  }
+  function hasKey2(track) {
+    return Boolean(String(track.key ?? "").trim());
+  }
+  function cueFlag(track) {
+    if (track.has_cues === true) return true;
+    if (track.has_cues === false) return false;
+    if (track.markers_found === true) return true;
+    if (track.markers_found === false) return false;
+    if (Array.isArray(track.cues)) {
+      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
+      return track.cues.length > 0 || loops > 0;
+    }
+    return null;
+  }
+  function keyNumber(value) {
+    if (!value) return -1;
+    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
+  }
+  function mixingKeys(key) {
+    const base = key < 12 ? 0 : 12;
+    const index = key - base;
+    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
+  }
+  function bpmFilter(value) {
+    let match = RANGE.exec(value);
+    if (match) {
+      const low = Number(match[1]);
+      const high = Number(match[2]);
+      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
+    }
+    match = AROUND.exec(value);
+    if (match) {
+      const center = Number(match[1]);
+      const spread = Number(match[2]);
+      return { kind: "bpm", min: center - spread, max: center + spread };
+    }
+    match = ABOVE.exec(value);
+    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
+    match = BELOW.exec(value);
+    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
+    match = EXACT.exec(value);
+    if (match) {
+      const whole = Number(match[1]);
+      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
+    }
+    return null;
+  }
+  function parseQuery(text2) {
+    const terms = [];
+    const filters = [];
+    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
+      const colon = word.indexOf(":");
+      const name = colon > 0 ? word.slice(0, colon) : "";
+      const value = colon > 0 ? word.slice(colon + 1) : "";
+      let filter = null;
+      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
+      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
+      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
+      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
+      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
+      else if (name === "bpm") filter = bpmFilter(value);
+      else if (name === "key" || name === "mix") {
+        const key = keyNumber(value);
+        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
+      } else if (isTextSearchField(name) && value) {
+        filter = { kind: "field", field: name, value };
+      }
+      if (filter) filters.push(filter);
+      else terms.push(word);
+    }
+    return { terms, filters };
+  }
+  function matchesFilters(track, filters) {
+    for (const filter of filters) {
+      if (filter.kind === "bpm") {
+        if (!hasBpm(track)) return false;
+        const bpm = Number(track.bpm);
+        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
+      } else if (filter.kind === "missing") {
+        if (!track.missing) return false;
+      } else if (filter.kind === "nokey") {
+        if (hasKey2(track)) return false;
+      } else if (filter.kind === "nobpm") {
+        if (hasBpm(track)) return false;
+      } else if (filter.kind === "nokeybpm") {
+        if (hasKey2(track) && hasBpm(track)) return false;
+      } else if (filter.kind === "nocues") {
+        if (cueFlag(track) !== false) return false;
+      } else if (filter.kind === "field") {
+        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
+      } else if (!filter.keys.has(keyNumber(track.key))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function matchesQuery(track, query, field) {
+    if (!matchesFilters(track, query.filters)) return false;
+    if (!query.terms.length) return true;
+    const hay = trackHaystack(track, field);
+    return query.terms.every((term) => hay.includes(term));
+  }
+
+  // src/crate-tree.ts
+  function childLists() {
+    const children = /* @__PURE__ */ new Map();
+    for (const crate of state.crates) {
+      const key = crate.parent ?? 0;
+      if (!children.has(key)) children.set(key, []);
+      const bucket = children.get(key);
+      bucket.push(crate);
+    }
+    for (const list of children.values()) {
+      list.sort((a, b) => {
+        if (state.crateSort === "name") {
+          return a.name.localeCompare(b.name, void 0, { sensitivity: "base" }) || a.id - b.id;
+        }
+        if (state.crateSort === "added") return (b.added || 0) - (a.added || 0) || a.id - b.id;
+        return a.order - b.order || a.id - b.id;
+      });
+    }
+    return children;
+  }
+  function crateKeep() {
+    const terms = state.crateQuery.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    if (!terms.length) return null;
+    const byId = new Map(state.crates.map((crate) => [crate.id, crate]));
+    const keep = /* @__PURE__ */ new Set();
+    for (const crate of state.crates) {
+      if (!terms.every((term) => crate.name.toLocaleLowerCase().includes(term))) continue;
+      let current2 = crate;
+      const guard = /* @__PURE__ */ new Set();
+      while (current2 && !guard.has(current2.id)) {
+        guard.add(current2.id);
+        keep.add(current2.id);
+        current2 = byId.get(current2.parent);
+      }
+    }
+    return keep;
+  }
+  function visibleCrates() {
+    const children = childLists();
+    const keep = crateKeep();
+    const ordered = [];
+    const seen = /* @__PURE__ */ new Set();
+    function walk(parent, depth) {
+      for (const crate of children.get(parent) || []) {
+        if (seen.has(crate.id)) continue;
+        if (keep && !keep.has(crate.id)) continue;
+        seen.add(crate.id);
+        crate.depth = depth;
+        crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
+        ordered.push(crate);
+        if (keep || state.expanded.has(crate.id)) walk(crate.id, depth + 1);
+      }
+    }
+    walk(state.rootId ?? null, 0);
+    for (const crate of state.crates) {
+      if (seen.has(crate.id)) continue;
+      if (keep && !keep.has(crate.id)) continue;
+      const parentListed = state.crates.some((item3) => item3.id === crate.parent);
+      if (parentListed) continue;
+      seen.add(crate.id);
+      crate.depth = 0;
+      crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
+      ordered.push(crate);
+      if (keep || state.expanded.has(crate.id)) walk(crate.id, 1);
+    }
+    return ordered;
+  }
+  function hiddenSelectionHolder(visible) {
+    if (state.activeCrate === "all") return null;
+    if (visible.some((crate2) => crate2.id === state.activeCrate)) return null;
+    const byId = new Map(state.crates.map((crate2) => [crate2.id, crate2]));
+    const visibleIds = new Set(visible.map((crate2) => crate2.id));
+    let crate = byId.get(state.activeCrate);
+    const guard = /* @__PURE__ */ new Set();
+    while (crate && !guard.has(crate.id)) {
+      guard.add(crate.id);
+      crate = byId.get(crate.parent);
+      if (crate && visibleIds.has(crate.id)) return crate.id;
+    }
+    return null;
+  }
+  function trackMatchesSearch(track) {
+    const query = parseQuery(state.query);
+    const field = isTextSearchField(state.searchField) ? state.searchField : void 0;
+    return matchesQuery(track, query, field);
+  }
+  function railRow(crate, panes) {
+    const expanded = crate.childCount > 0 && (state.crateQuery ? true : state.expanded.has(crate.id));
+    return {
+      ...crate,
+      expanded,
+      selected: crate.id === panes.a || crate.id === panes.b,
+      pane: railMark(crate.id, panes.a, panes.b)
+    };
+  }
+  function crateRailRows() {
+    const query = parseQuery(state.query);
+    const matched = query.terms.length || query.filters.length ? new Set(state.tracks.filter(trackMatchesSearch).map((track) => track.id)) : null;
+    const crates = visibleCrates();
+    const holder = hiddenSelectionHolder(crates);
+    const split = state.splitCrates && state.mode === "crates";
+    const panes = paneCrates(state.activeCrate, state.secondCrate, split);
+    const rows2 = [
+      railRow({
+        id: "all",
+        name: t("crates.allTracks"),
+        depth: 0,
+        childCount: 0,
+        smart: false,
+        parent: null,
+        color: null,
+        count: matched ? matched.size : state.tracks.length,
+        holds: false
+      }, panes)
+    ];
+    for (const crate of crates) {
+      const members = state.crateTracks.get(crate.id) || /* @__PURE__ */ new Set();
+      let shown = members.size;
+      if (matched) {
+        shown = 0;
+        for (const id of members) if (matched.has(id)) shown += 1;
+      }
+      rows2.push(railRow({
+        id: crate.id,
+        name: crate.name,
+        depth: crate.depth || 0,
+        childCount: crate.childCount || 0,
+        smart: Boolean(crate.smart),
+        parent: crate.parent ?? null,
+        color: crate.color ?? null,
+        count: shown,
+        holds: holder === crate.id
+      }, panes));
+    }
+    return rows2;
+  }
+
+  // src/preset-view.ts
+  function presetName(preset) {
+    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
+    if (preset.kind === "bpm") {
+      return t("presets.name.bpm", {
+        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
+        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
+      });
+    }
+    return t("presets.name.unplayed", { count: preset.months });
+  }
+  function numberFrom(input) {
+    const text2 = input.value.trim();
+    if (!text2) return null;
+    const value = Number(text2);
+    return Number.isFinite(value) ? value : null;
+  }
+  function scopeCrate() {
+    if (state.activeCrate === "all") return null;
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
+    return crate && !crate.smart ? crate : null;
+  }
+  function readPresetForm() {
+    const kind2 = el("preset-kind").value;
+    const scope = scopeCrate();
+    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
+    if (kind2 === "harmonic") {
+      const key = el("preset-key").value.trim();
+      return key ? { kind: kind2, key, ...crate } : null;
+    }
+    if (kind2 === "bpm") {
+      const bpm = numberFrom(el("preset-bpm"));
+      const range = numberFrom(el("preset-range")) ?? 3;
+      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
+      return { kind: kind2, bpm, range, ...crate };
+    }
+    if (kind2 === "unplayed") {
+      const months = numberFrom(el("preset-months")) ?? 12;
+      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
+      return { kind: kind2, months, ...crate };
+    }
+    return null;
+  }
+  function syncPresetFields() {
+    const kind2 = el("preset-kind").value;
+    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
+      field.hidden = field.dataset.presetKind !== kind2;
+    }
+  }
+  function isPresetCrate(id) {
+    return id !== "all" && Object.hasOwn(state.presets, String(id));
+  }
+  function presetFoot(id) {
+    if (!isPresetCrate(id)) return "";
+    const updated = Number(state.presets[String(id)]?.updated);
+    if (!Number.isFinite(updated) || updated <= 0) return "";
+    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    return ` · ${t("presets.updated", { date })}`;
+  }
+  function syncPresetButtons() {
+    el("crate-preset").disabled = !state.writable;
+    const preset = isPresetCrate(state.activeCrate);
+    el("crate-refresh").hidden = !preset;
+    el("crate-refresh").disabled = !state.writable || !preset;
+  }
+
+  // src/crate-store.ts
+  var noop = () => void 0;
+  var actions = {
+    select: noop,
+    toggle: noop,
+    create: noop,
+    rename: noop,
+    color: noop,
+    remove: noop,
+    preset: noop,
+    folderSync: noop,
+    renameFromTags: noop,
+    refresh: noop,
+    split: noop,
+    saveView: noop,
+    exportM3u: noop,
+    exportRekordbox: noop
+  };
+  var listeners = /* @__PURE__ */ new Set();
+  function bindCrateActions(next2) {
+    Object.assign(actions, next2);
+  }
+  function subscribeCrates(listener) {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }
+  function emitCrates() {
+    for (const listener of listeners) listener();
+  }
+  function folderSyncBlocked() {
+    const id = state.activeCrate;
+    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
+    return !state.writable || id === "all" || Boolean(crate?.smart);
+  }
+  function readCrateSnapshot() {
+    const crateChosen = state.activeCrate !== "all";
+    const cratesMode = state.mode === "crates";
+    const preset = isPresetCrate(state.activeCrate);
+    const blocked = folderSyncBlocked();
+    return {
+      rows: crateRailRows(),
+      writable: state.writable,
+      crateChosen,
+      canCreate: state.writable,
+      canRename: state.writable && crateChosen,
+      canColor: state.writable && crateChosen,
+      canDelete: state.writable && crateChosen,
+      canPreset: state.writable,
+      canFolderSync: !blocked,
+      canRenameFromTags: !blocked,
+      canRefresh: state.writable && preset,
+      refreshHidden: !preset,
+      splitHidden: !cratesMode,
+      splitPressed: state.splitCrates && cratesMode,
+      canSaveView: state.writable,
+      saveViewHidden: !cratesMode,
+      exportHidden: !cratesMode
+    };
+  }
+  function readCrateValue() {
+    return {
+      ...readCrateSnapshot(),
+      ...actions
+    };
+  }
+
+  // src/fuzzy.ts
+  var BOUNDARY = /[ ._/\-\\]/;
+  function fuzzyScore(needle, haystack) {
+    const query = needle.toLocaleLowerCase();
+    const text2 = haystack.toLocaleLowerCase();
+    if (!query) return null;
+    let score = 0;
+    let previous2 = -2;
+    let from = 0;
+    for (const letter of query) {
+      const found = text2.indexOf(letter, from);
+      if (found < 0) return null;
+      score += 8;
+      if (found === previous2 + 1) score += 16;
+      if (found === 0 || BOUNDARY.test(text2.charAt(found - 1))) score += 12;
+      previous2 = found;
+      from = found + 1;
+    }
+    if (text2.includes(query)) score += 40;
+    if (text2.startsWith(query)) score += 30;
+    score -= Math.floor(Math.max(0, text2.length - query.length) / 4);
+    return score;
+  }
+  function scoreQuery(query, name, parentName = "") {
+    const terms = query.trim().split(/\s+/).filter(Boolean);
+    if (!terms.length) return null;
+    let total = 0;
+    for (const term of terms) {
+      const nameScore = fuzzyScore(term, name);
+      if (nameScore != null) {
+        total += nameScore + 20;
+        continue;
+      }
+      if (!parentName) return null;
+      const parentScore = fuzzyScore(term, parentName);
+      if (parentScore == null) return null;
+      total += parentScore;
+    }
+    return total;
+  }
+
+  // src/splitter.ts
+  function clampWidth(width, available, minFirst, minSecond) {
+    const max = Math.max(minFirst, available - minSecond);
+    return Math.round(Math.min(Math.max(width, minFirst), max));
+  }
+  function mountSplitter(options) {
+    const { handle, container, first, property, minFirst, minSecond, onCommit } = options;
+    const step = options.step ?? 16;
+    let current2 = null;
+    const available = () => container.clientWidth - handle.offsetWidth;
+    const fitted = (width) => clampWidth(width, available(), minFirst, minSecond);
+    const shown = () => current2 == null ? first.getBoundingClientRect().width : fitted(current2);
+    function paint3() {
+      if (current2 == null) container.style.removeProperty(property);
+      else container.style.setProperty(property, `${fitted(current2)}px`);
+      const room = available();
+      handle.setAttribute("aria-valuemin", String(minFirst));
+      handle.setAttribute("aria-valuemax", String(Math.max(minFirst, Math.round(room - minSecond))));
+      handle.setAttribute("aria-valuenow", String(Math.round(shown())));
+    }
+    function move(width) {
+      current2 = fitted(width);
+      paint3();
+    }
+    handle.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      const startX = event.clientX;
+      const startWidth = shown();
+      let moved = false;
+      handle.setPointerCapture?.(event.pointerId);
+      handle.dataset.dragging = "true";
+      document.body.classList.add("is-resizing");
+      const onMove = (next2) => {
+        moved = true;
+        move(startWidth + next2.clientX - startX);
+      };
+      const onEnd = () => {
+        handle.removeEventListener("pointermove", onMove);
+        handle.removeEventListener("pointerup", onEnd);
+        handle.removeEventListener("pointercancel", onEnd);
+        delete handle.dataset.dragging;
+        document.body.classList.remove("is-resizing");
+        if (moved) onCommit(current2);
+      };
+      handle.addEventListener("pointermove", onMove);
+      handle.addEventListener("pointerup", onEnd);
+      handle.addEventListener("pointercancel", onEnd);
+    });
+    handle.addEventListener("keydown", (event) => {
+      const jump = event.shiftKey ? step * 4 : step;
+      let next2;
+      if (event.key === "ArrowLeft") next2 = shown() - jump;
+      else if (event.key === "ArrowRight") next2 = shown() + jump;
+      else if (event.key === "Home") next2 = minFirst;
+      else if (event.key === "End") next2 = available() - minSecond;
+      else return;
+      event.preventDefault();
+      const before = current2;
+      move(next2);
+      if (current2 !== before) onCommit(current2);
+    });
+    handle.addEventListener("dblclick", () => {
+      current2 = null;
+      paint3();
+      onCommit(null);
+    });
+    paint3();
+    return {
+      set(width) {
+        current2 = width == null ? null : Math.round(width);
+        paint3();
+      },
+      width: () => current2,
+      refit: paint3
+    };
+  }
+
   // src/format.ts
   function lengthLabel(ms) {
     if (ms == null || ms === "") return "";
@@ -18340,6 +18821,1209 @@
     if (order !== 0) return order * dir;
     return a.id - b.id;
   }
+
+  // src/gig.ts
+  var import_react17 = __toESM(require_react(), 1);
+
+  // src/app/mount.tsx
+  var import_react_dom4 = __toESM(require_react_dom(), 1);
+  var import_client = __toESM(require_client(), 1);
+
+  // src/app/providers.tsx
+  var import_react16 = __toESM(require_react(), 1);
+  var import_react_dom3 = __toESM(require_react_dom(), 1);
+
+  // src/context/CrateContext.tsx
+  var import_react = __toESM(require_react(), 1);
+  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+  var CrateContext = (0, import_react.createContext)(null);
+  function CrateProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CrateContext, { value, children });
+  }
+  function useCrates() {
+    const value = (0, import_react.useContext)(CrateContext);
+    if (value === null) {
+      throw new Error("useCrates must be used within CrateProvider");
+    }
+    return value;
+  }
+
+  // src/context/FilesContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var FilesContext = (0, import_react2.createContext)(null);
+  function FilesProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(FilesContext, { value, children });
+  }
+  function useFiles() {
+    const value = (0, import_react2.useContext)(FilesContext);
+    if (value === null) {
+      throw new Error("useFiles must be used within FilesProvider");
+    }
+    return value;
+  }
+
+  // src/context/GigContext.tsx
+  var import_react3 = __toESM(require_react(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var GigContext = (0, import_react3.createContext)(null);
+  function GigStateProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(GigContext, { value, children });
+  }
+  function useGig() {
+    const value = (0, import_react3.useContext)(GigContext);
+    if (value === null) {
+      throw new Error("useGig must be used within GigStateProvider");
+    }
+    return value;
+  }
+
+  // src/context/HistoryContext.tsx
+  var import_react4 = __toESM(require_react(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var historyActions = {
+    loadHistory: async () => {
+    },
+    openSession: async (_id) => {
+    },
+    selectEntry: (_id) => {
+    },
+    openInLibrary: async (_assetId) => {
+    }
+  };
+  var listeners2 = /* @__PURE__ */ new Set();
+  function subscribeHistory(listener) {
+    listeners2.add(listener);
+    return () => {
+      listeners2.delete(listener);
+    };
+  }
+  function notifyHistory() {
+    for (const listener of listeners2) listener();
+  }
+  var HistoryContext = (0, import_react4.createContext)(null);
+  function HistoryProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(HistoryContext, { value, children });
+  }
+  function useHistory() {
+    const value = (0, import_react4.useContext)(HistoryContext);
+    if (value === null) {
+      throw new Error("useHistory must be used within HistoryProvider");
+    }
+    return value;
+  }
+
+  // src/context/PlayerContext.tsx
+  var import_react5 = __toESM(require_react(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var PlayerContext = (0, import_react5.createContext)(null);
+  function PlayerProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerContext, { value, children });
+  }
+  function usePlayer() {
+    const value = (0, import_react5.useContext)(PlayerContext);
+    if (value === null) {
+      throw new Error("usePlayer must be used within PlayerProvider");
+    }
+    return value;
+  }
+
+  // src/context/WaveformContext.tsx
+  var import_react6 = __toESM(require_react(), 1);
+  var import_react_dom = __toESM(require_react_dom(), 1);
+
+  // src/waveform.ts
+  var TILE_CSS_WIDTH = 256;
+  var ZOOM_DEFAULT_PPS = 80;
+  var ZOOM_MIN_PPS = 10;
+  var ZOOM_MAX_PPS = 320;
+  var ZOOM_FACTOR = 1.25;
+  var WAVE_BG = { r: 35, g: 25, b: 16 };
+  var OUTER_ALPHA = 0.6;
+  var PLAYED_SHADE = 0.45;
+  var BEAT_HEIGHT_RATIO = 0.12;
+  var DOWNBEAT_HEIGHT_RATIO = 0.18;
+  var BEAT_ALPHA = 0.28;
+  var DOWNBEAT_ALPHA = 0.35;
+  var DEFAULT_MARKER_COLOR = { r: 226, g: 59, b: 22 };
+  var PLAYHEAD_COLOR = { r: 226, g: 59, b: 22 };
+  var BEAT_MARK = { r: 255, g: 255, b: 255 };
+  var HEADER_BYTES = 64;
+  var HEX_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+  var MAX_POINTS = 2e7;
+  var MAX_TICKS = 8192;
+  function parseSwf1(input) {
+    const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
+    if (bytes.byteLength < HEADER_BYTES) return null;
+    if (bytes[0] !== 83 || bytes[1] !== 87 || bytes[2] !== 70 || bytes[3] !== 49) return null;
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    if (view.getUint16(4, true) !== HEADER_BYTES) return null;
+    const version = view.getUint16(6, true);
+    const flags = view.getUint16(8, true);
+    const analyzerVersion = view.getUint16(10, true);
+    const sampleRate = view.getUint32(12, true);
+    const detailHzMilli = view.getUint32(16, true);
+    const durationMs = view.getUint32(20, true);
+    const detailCount = view.getUint32(24, true);
+    const overviewCount = view.getUint32(28, true);
+    const seratoColumns = view.getUint32(32, true);
+    const seratoBands = view.getUint16(36, true);
+    const lowHzMilli = view.getUint32(40, true);
+    const highHzMilli = view.getUint32(44, true);
+    if (detailCount > MAX_POINTS || overviewCount > MAX_POINTS || seratoColumns > MAX_POINTS) return null;
+    const detailBytes = detailCount * 6;
+    const overviewBytes = overviewCount * 6;
+    const seratoBytes = seratoColumns * seratoBands;
+    if (!Number.isSafeInteger(detailBytes + overviewBytes + seratoBytes)) return null;
+    const end = HEADER_BYTES + detailBytes + overviewBytes + seratoBytes;
+    if (end !== bytes.byteLength) return null;
+    let offset = HEADER_BYTES;
+    const detail = bytes.slice(offset, offset + detailBytes);
+    offset += detailBytes;
+    const overview = bytes.slice(offset, offset + overviewBytes);
+    offset += overviewBytes;
+    const serato = bytes.slice(offset, offset + seratoBytes);
+    return {
+      version,
+      flags,
+      analyzerVersion,
+      sampleRate,
+      pointsPerSecond: detailHzMilli / 1e3,
+      durationMs,
+      detail,
+      overview,
+      serato,
+      detailCount,
+      overviewCount,
+      seratoColumns,
+      seratoBands,
+      lowHz: lowHzMilli / 1e3,
+      highHz: highHzMilli / 1e3
+    };
+  }
+  function bandColor(low, mid, high) {
+    const l = clamp255(low);
+    const m = clamp255(mid);
+    const h = clamp255(high);
+    const max = Math.max(l, m, h);
+    if (max === 0) return { r: 0, g: 0, b: 0 };
+    return {
+      r: Math.round(l / max * 255),
+      g: Math.round(m / max * 255),
+      b: Math.round(h / max * 255)
+    };
+  }
+  function bandLevel(low, mid, high) {
+    return Math.max(clamp255(low), clamp255(mid), clamp255(high)) / 255;
+  }
+  function seratoColumnLevels(column) {
+    let low = 0;
+    let mid = 0;
+    let high = 0;
+    const count = Math.min(column.length, 16);
+    for (let index = 0; index < count; index += 1) {
+      const value = clamp255(column[index] ?? 0);
+      if (index <= 4) low = Math.max(low, value);
+      else if (index <= 10) mid = Math.max(mid, value);
+      else high = Math.max(high, value);
+    }
+    return { low, mid, high };
+  }
+  function beatgridTicks(markers, startSeconds, endSeconds) {
+    if (!Number.isFinite(startSeconds) || !Number.isFinite(endSeconds) || endSeconds <= startSeconds) return [];
+    const ordered = markers.filter((marker) => Number.isFinite(marker.positionSeconds)).slice();
+    ordered.sort((left, right) => left.positionSeconds - right.positionSeconds);
+    if (ordered.length === 0) return [];
+    const ticks = [];
+    let beatIndex = 0;
+    for (let index = 0; index < ordered.length; index += 1) {
+      const marker = ordered[index];
+      if (!marker) continue;
+      const next2 = ordered[index + 1];
+      if (next2) {
+        const beats = marker.beats;
+        if (beats === void 0 || !Number.isFinite(beats) || beats < 1) continue;
+        const count = Math.round(beats);
+        const spacing2 = (next2.positionSeconds - marker.positionSeconds) / beats;
+        if (!(spacing2 > 0) || count < 1) continue;
+        pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, count, startSeconds, endSeconds);
+        beatIndex += count;
+        continue;
+      }
+      const bpm = marker.bpm;
+      if (bpm === void 0 || !Number.isFinite(bpm) || bpm <= 0) continue;
+      const spacing = 60 / bpm;
+      if (!(spacing > 0)) continue;
+      const first = Math.max(0, Math.ceil((startSeconds - marker.positionSeconds) / spacing - 1e-9));
+      const lastExclusive = Math.ceil((endSeconds - marker.positionSeconds) / spacing - 1e-9);
+      if (lastExclusive <= first) continue;
+      const emit4 = Math.min(lastExclusive, first + MAX_TICKS);
+      pushRange(ticks, marker.positionSeconds, spacing, beatIndex, emit4, startSeconds, endSeconds, first);
+    }
+    return ticks;
+  }
+  function timeToX(timeSeconds, playheadSeconds, pixelsPerSecond, width) {
+    if (!(pixelsPerSecond > 0) || !Number.isFinite(timeSeconds) || !Number.isFinite(playheadSeconds) || !Number.isFinite(width)) {
+      return width / 2;
+    }
+    return width / 2 + (timeSeconds - playheadSeconds) * pixelsPerSecond;
+  }
+  function overviewXToTime(x, width, durationSeconds) {
+    if (!(width > 0) || !(durationSeconds > 0) || !Number.isFinite(x)) return 0;
+    const ratio = Math.min(1, Math.max(0, x / width));
+    return ratio * durationSeconds;
+  }
+  function zoomPixelsPerSecond(current2, direction) {
+    const base = Number.isFinite(current2) && current2 > 0 ? current2 : ZOOM_DEFAULT_PPS;
+    const next2 = base * (direction > 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR);
+    if (next2 >= ZOOM_MAX_PPS) return ZOOM_MAX_PPS;
+    if (next2 <= ZOOM_MIN_PPS) return ZOOM_MIN_PPS;
+    return next2;
+  }
+  function tileDeviceWidth(dpr) {
+    const scale = Number.isFinite(dpr) && dpr > 0 ? dpr : 1;
+    return Math.max(1, Math.round(TILE_CSS_WIDTH * scale));
+  }
+  function colorFromHex(value) {
+    if (!HEX_COLOR.test(value)) return null;
+    let hex = value.slice(1);
+    if (hex.length === 3) {
+      const r = hex[0] ?? "";
+      const g = hex[1] ?? "";
+      const b = hex[2] ?? "";
+      hex = `${r}${r}${g}${g}${b}${b}`;
+    }
+    if (hex.length === 8) hex = hex.slice(0, 6);
+    const parsed = Number.parseInt(hex, 16);
+    if (!Number.isFinite(parsed)) return null;
+    return { r: parsed >> 16 & 255, g: parsed >> 8 & 255, b: parsed & 255 };
+  }
+  function beatgridFromMarkers(rows2) {
+    if (!rows2 || rows2.length === 0) return [];
+    const found = [];
+    for (const row of rows2) {
+      const position = finiteNumber(row.position_seconds) ?? finiteNumber(row.position);
+      if (position === null) continue;
+      const marker = { positionSeconds: position };
+      const beats = finiteNumber(row.beats);
+      const bpm = finiteNumber(row.bpm);
+      if (beats !== null) marker.beats = beats;
+      if (bpm !== null) marker.bpm = bpm;
+      found.push(marker);
+    }
+    return found;
+  }
+  function loopsFromMarkers(rows2) {
+    if (!rows2 || rows2.length === 0) return [];
+    const found = [];
+    for (const row of rows2) {
+      const start = finiteNumber(row.start_ms);
+      const end = finiteNumber(row.end_ms);
+      if (start === null || end === null || end <= start || start < 0) continue;
+      found.push({
+        startSeconds: start / 1e3,
+        endSeconds: end / 1e3,
+        color: typeof row.color === "string" ? row.color : ""
+      });
+    }
+    return found;
+  }
+  var DetailTiles = class {
+    /**
+     * Remember one detail buffer.
+     *
+     * @param detail `N * 6` uint8 bytes.
+     * @param pointCount N.
+     * @param pointsPerSecond Detail rate from the header. 150 in SWF1.
+     */
+    constructor(detail, pointCount, pointsPerSecond) {
+      this.detail = detail;
+      this.pointCount = pointCount;
+      this.pointsPerSecond = pointsPerSecond;
+    }
+    detail;
+    pointCount;
+    pointsPerSecond;
+    tiles = /* @__PURE__ */ new Map();
+    blank = null;
+    /**
+     * Drop cached tiles.
+     *
+     * Called when the zoom changes so the next frame rebuilds at the new scale.
+     */
+    clear() {
+      this.tiles.clear();
+    }
+    /**
+     * Paint one zoomed frame into `frame`.
+     *
+     * The playhead is the center column. Tiles outside the view, plus one
+     * tile of margin, are not generated. Markers are cues, shaded loops, and
+     * beat ticks. Downbeats are taller.
+     *
+     * @param frame RGBA buffer of `width * height`.
+     * @param width Device pixels.
+     * @param height Device pixels.
+     * @param dpr Device pixel ratio.
+     * @param playheadSeconds Audio position.
+     * @param pixelsPerSecond CSS pixels per second.
+     * @param markers Cues, loops, and the beatgrid. Beat ticks are not drawn
+     *   when the grid is empty.
+     * @returns How many detail points this call sampled. Zero when every
+     *   visible tile was already cached.
+     */
+    paint(frame, width, height, dpr, playheadSeconds, pixelsPerSecond, markers) {
+      const scale = Number.isFinite(dpr) && dpr > 0 ? dpr : 1;
+      const pps = pixelsPerSecond > 0 ? pixelsPerSecond : ZOOM_DEFAULT_PPS;
+      this.ensureBlank(width, height);
+      const blank = this.blank;
+      if (!blank || frame.length !== blank.length) return { pointsRead: 0 };
+      frame.set(blank);
+      const cssWidth = width / scale;
+      const tileSeconds = TILE_CSS_WIDTH / pps;
+      const tileWidth = tileDeviceWidth(scale);
+      const viewStart = playheadSeconds - cssWidth / 2 / pps;
+      const viewEnd = playheadSeconds + cssWidth / 2 / pps;
+      const first = Math.floor(viewStart / tileSeconds) - 1;
+      const last = Math.floor(viewEnd / tileSeconds) + 1;
+      let pointsRead = 0;
+      const needed = /* @__PURE__ */ new Set();
+      for (let index = first; index <= last; index += 1) {
+        const key = `${Math.round(pps * 1e3)}|${scale}|${height}|${index}`;
+        needed.add(key);
+        let tile = this.tiles.get(key);
+        if (!tile) {
+          const rendered = renderTile(
+            this.detail,
+            this.pointCount,
+            this.pointsPerSecond,
+            index * tileSeconds,
+            tileSeconds,
+            tileWidth,
+            height,
+            scale
+          );
+          tile = rendered.pixels;
+          pointsRead += rendered.pointsRead;
+          this.tiles.set(key, tile);
+        }
+        const left = timeToX(index * tileSeconds, playheadSeconds, pps, cssWidth) * scale;
+        blit(frame, width, height, tile, tileWidth, Math.round(left));
+      }
+      if (this.tiles.size > 24) {
+        for (const key of this.tiles.keys()) {
+          if (!needed.has(key)) this.tiles.delete(key);
+        }
+      }
+      drawLoops(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.loops);
+      drawBeats(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.beatgrid, viewStart, viewEnd);
+      drawCues(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.cues);
+      drawPlayhead(frame, width, height);
+      return { pointsRead };
+    }
+    ensureBlank(width, height) {
+      const count = width * height * 4;
+      if (this.blank && this.blank.length === count) return;
+      const blank = new Uint8ClampedArray(count);
+      fillBackground(blank);
+      this.blank = blank;
+    }
+  };
+  function renderOverview(source, width, height) {
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    fillBackground(pixels);
+    const columns = source.kind === "computed" ? source.count : source.columns.length;
+    if (columns < 1 || width < 1 || height < 1) return pixels;
+    for (let x = 0; x < width; x += 1) {
+      const start = Math.floor(x / width * columns);
+      const end = Math.max(start + 1, Math.floor((x + 1) / width * columns));
+      let lowPeak = 0;
+      let lowRms = 0;
+      let midPeak = 0;
+      let midRms = 0;
+      let highPeak = 0;
+      let highRms = 0;
+      for (let index = start; index < end && index < columns; index += 1) {
+        if (source.kind === "computed") {
+          const offset = index * 6;
+          lowPeak = Math.max(lowPeak, source.points[offset] ?? 0);
+          lowRms = Math.max(lowRms, source.points[offset + 1] ?? 0);
+          midPeak = Math.max(midPeak, source.points[offset + 2] ?? 0);
+          midRms = Math.max(midRms, source.points[offset + 3] ?? 0);
+          highPeak = Math.max(highPeak, source.points[offset + 4] ?? 0);
+          highRms = Math.max(highRms, source.points[offset + 5] ?? 0);
+        } else {
+          const levels = seratoColumnLevels(source.columns[index] ?? []);
+          lowPeak = Math.max(lowPeak, levels.low);
+          midPeak = Math.max(midPeak, levels.mid);
+          highPeak = Math.max(highPeak, levels.high);
+          lowRms = lowPeak;
+          midRms = midPeak;
+          highRms = highPeak;
+        }
+      }
+      paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
+    }
+    return pixels;
+  }
+  function shadePlayed(pixels, width, height, playedX) {
+    const end = Math.max(0, Math.min(width, Math.round(playedX)));
+    for (let y = 0; y < height; y += 1) {
+      const row = y * width;
+      for (let x = 0; x < end; x += 1) {
+        const offset = (row + x) * 4;
+        pixels[offset] = Math.round((pixels[offset] ?? 0) * PLAYED_SHADE);
+        pixels[offset + 1] = Math.round((pixels[offset + 1] ?? 0) * PLAYED_SHADE);
+        pixels[offset + 2] = Math.round((pixels[offset + 2] ?? 0) * PLAYED_SHADE);
+      }
+    }
+  }
+  function drawOverviewMarks(pixels, width, height, durationSeconds, playheadSeconds, markers) {
+    if (!(durationSeconds > 0) || width < 1) return;
+    const xOf = (seconds) => seconds / durationSeconds * width;
+    drawLoops(pixels, width, height, 1, 0, 1, width, markers.loops, xOf);
+    drawCues(pixels, width, height, 1, 0, 1, width, markers.cues, xOf);
+    const playX = Math.round(Math.min(width - 1, Math.max(0, xOf(playheadSeconds))));
+    fillSpan(pixels, width, height, playX, playX + 1, 0, height, PLAYHEAD_COLOR, 1);
+  }
+  function renderTile(detail, pointCount, pointsPerSecond, startSeconds, tileSeconds, width, height, dpr) {
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    fillBackground(pixels);
+    let pointsRead = 0;
+    const rate = pointsPerSecond > 0 ? pointsPerSecond : 150;
+    for (let x = 0; x < width; x += 1) {
+      const t0 = startSeconds + x / width * tileSeconds;
+      const t1 = startSeconds + (x + 1) / width * tileSeconds;
+      let i0 = Math.floor(t0 * rate);
+      let i1 = Math.ceil(t1 * rate);
+      if (i1 <= i0) i1 = i0 + 1;
+      if (i0 < 0) i0 = 0;
+      if (i1 > pointCount) i1 = pointCount;
+      if (i0 >= i1) continue;
+      let lowPeak = 0;
+      let lowRms = 0;
+      let midPeak = 0;
+      let midRms = 0;
+      let highPeak = 0;
+      let highRms = 0;
+      for (let index = i0; index < i1; index += 1) {
+        pointsRead += 1;
+        const offset = index * 6;
+        lowPeak = Math.max(lowPeak, detail[offset] ?? 0);
+        lowRms = Math.max(lowRms, detail[offset + 1] ?? 0);
+        midPeak = Math.max(midPeak, detail[offset + 2] ?? 0);
+        midRms = Math.max(midRms, detail[offset + 3] ?? 0);
+        highPeak = Math.max(highPeak, detail[offset + 4] ?? 0);
+        highRms = Math.max(highRms, detail[offset + 5] ?? 0);
+      }
+      paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
+    }
+    return { pixels, pointsRead };
+  }
+  function paintColumn(pixels, x, width, height, gutter, lowPeak, lowRms, midPeak, midRms, highPeak, highRms) {
+    const peakLevel = bandLevel(lowPeak, midPeak, highPeak);
+    const rmsLevel = bandLevel(lowRms, midRms, highRms);
+    if (peakLevel <= 0 && rmsLevel <= 0) return;
+    const top = Math.min(gutter, height - 1);
+    const bandHeight = height - top;
+    const mid = top + (bandHeight - 1) / 2;
+    const peakHalf = Math.max(peakLevel > 0 ? 0.5 : 0, peakLevel * (bandHeight / 2) * 0.92);
+    const rmsHalf = rmsLevel * (bandHeight / 2) * 0.92;
+    const y0 = Math.max(top, Math.floor(mid - Math.max(peakHalf, rmsHalf)));
+    const y1 = Math.min(height - 1, Math.ceil(mid + Math.max(peakHalf, rmsHalf)));
+    const peakColor = bandColor(lowPeak, midPeak, highPeak);
+    const rmsColor = bandColor(lowRms, midRms, highRms);
+    for (let y = y0; y <= y1; y += 1) {
+      const fromMid = Math.abs(y - mid);
+      const inner = rmsLevel > 0 && fromMid <= rmsHalf;
+      const outer = peakLevel > 0 && fromMid <= peakHalf;
+      if (!inner && !outer) continue;
+      const color = inner ? rmsColor : peakColor;
+      const alpha = inner ? 1 : OUTER_ALPHA;
+      blendPixel(pixels, width, x, y, color, alpha);
+    }
+  }
+  function drawLoops(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, loops, xOf) {
+    for (const loop of loops) {
+      const color = colorFromHex(loop.color) ?? DEFAULT_MARKER_COLOR;
+      const start = xOf ? xOf(loop.startSeconds) : timeToX(loop.startSeconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
+      const end = xOf ? xOf(loop.endSeconds) : timeToX(loop.endSeconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
+      const left = Math.min(start, end);
+      const right = Math.max(start, end);
+      fillSpan(pixels, width, height, Math.floor(left), Math.ceil(right), 0, height, color, 0.35);
+      const edge = Math.max(1, Math.round(dpr));
+      fillSpan(pixels, width, height, Math.round(left), Math.round(left) + edge, 0, height, color, 1);
+      fillSpan(pixels, width, height, Math.round(right) - edge, Math.round(right), 0, height, color, 1);
+    }
+  }
+  function drawCues(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, cues2, xOf) {
+    const edge = Math.max(1, Math.round(2 * dpr));
+    for (const cue of cues2) {
+      const color = colorFromHex(cue.color) ?? DEFAULT_MARKER_COLOR;
+      const x = xOf ? xOf(cue.seconds) : timeToX(cue.seconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
+      fillSpan(pixels, width, height, Math.round(x) - Math.floor(edge / 2), Math.round(x) - Math.floor(edge / 2) + edge, 0, height, color, 1);
+    }
+  }
+  function drawBeats(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, markers, viewStart, viewEnd) {
+    const ticks = beatgridTicks(markers, viewStart, viewEnd);
+    const tickWidth = Math.max(1, Math.round(dpr));
+    const regularHeight = Math.max(1, Math.round(height * BEAT_HEIGHT_RATIO));
+    const downbeatHeight = Math.max(regularHeight + 1, Math.round(height * DOWNBEAT_HEIGHT_RATIO));
+    for (const tick of ticks) {
+      const x = Math.round(timeToX(tick.seconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr);
+      const tickHeight = Math.min(tick.downbeat ? downbeatHeight : regularHeight, Math.floor(height / 2) - 1);
+      if (tickHeight < 1) continue;
+      const alpha = tick.downbeat ? DOWNBEAT_ALPHA : BEAT_ALPHA;
+      fillSpan(pixels, width, height, x, x + tickWidth, 0, tickHeight, BEAT_MARK, alpha);
+      fillSpan(pixels, width, height, x, x + tickWidth, height - tickHeight, height, BEAT_MARK, alpha);
+    }
+  }
+  function drawPlayhead(pixels, width, height) {
+    const x = Math.floor(width / 2);
+    fillSpan(pixels, width, height, x, x + 2, 0, height, PLAYHEAD_COLOR, 1);
+  }
+  function fillSpan(pixels, width, height, x0, x1, y0, y1, color, alpha) {
+    const left = Math.max(0, x0);
+    const right = Math.min(width, x1);
+    const top = Math.max(0, y0);
+    const bottom = Math.min(height, y1);
+    for (let x = left; x < right; x += 1) {
+      for (let y = top; y < bottom; y += 1) blendPixel(pixels, width, x, y, color, alpha);
+    }
+  }
+  function blendPixel(pixels, width, x, y, color, alpha) {
+    const offset = (y * width + x) * 4;
+    const keep = 1 - alpha;
+    pixels[offset] = Math.round(color.r * alpha + (pixels[offset] ?? 0) * keep);
+    pixels[offset + 1] = Math.round(color.g * alpha + (pixels[offset + 1] ?? 0) * keep);
+    pixels[offset + 2] = Math.round(color.b * alpha + (pixels[offset + 2] ?? 0) * keep);
+    pixels[offset + 3] = 255;
+  }
+  function fillBackground(pixels) {
+    for (let index = 0; index < pixels.length; index += 4) {
+      pixels[index] = WAVE_BG.r;
+      pixels[index + 1] = WAVE_BG.g;
+      pixels[index + 2] = WAVE_BG.b;
+      pixels[index + 3] = 255;
+    }
+  }
+  function blit(dest, destWidth, destHeight, src, srcWidth, destX) {
+    let srcX = 0;
+    let copyWidth = srcWidth;
+    let dx = destX;
+    if (dx < 0) {
+      srcX = -dx;
+      copyWidth -= srcX;
+      dx = 0;
+    }
+    if (dx + copyWidth > destWidth) copyWidth = destWidth - dx;
+    if (copyWidth <= 0) return;
+    for (let y = 0; y < destHeight; y += 1) {
+      const srcStart = (y * srcWidth + srcX) * 4;
+      const destStart = (y * destWidth + dx) * 4;
+      dest.set(src.subarray(srcStart, srcStart + copyWidth * 4), destStart);
+    }
+  }
+  function pushRange(ticks, origin, spacing, beatIndex, count, startSeconds, endSeconds, first = 0) {
+    const begin = Math.max(first, Math.ceil((startSeconds - origin) / spacing - 1e-9));
+    for (let index = begin; index < count; index += 1) {
+      const seconds = origin + index * spacing;
+      if (seconds < startSeconds - 1e-6) continue;
+      if (seconds >= endSeconds - 1e-9) break;
+      if (ticks.length >= MAX_TICKS) return;
+      ticks.push({ seconds, downbeat: (beatIndex + index) % 4 === 0 });
+    }
+  }
+  function finiteNumber(value) {
+    if (typeof value === "number") return Number.isFinite(value) ? value : null;
+    if (typeof value !== "string" || value.trim() === "") return null;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : null;
+  }
+  function clamp255(value) {
+    if (!Number.isFinite(value)) return 0;
+    if (value <= 0) return 0;
+    if (value >= 255) return 255;
+    return value;
+  }
+
+  // src/context/WaveformContext.tsx
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  var defaultUi = {
+    pps: ZOOM_DEFAULT_PPS,
+    phase: "idle",
+    overviewSource: ""
+  };
+  var WaveformContext = (0, import_react6.createContext)(null);
+  var WaveformClockContext = (0, import_react6.createContext)(null);
+  function WaveformProvider({ children }) {
+    const [ui, setUi] = (0, import_react6.useState)(defaultUi);
+    const value = (0, import_react6.useMemo)(() => {
+      const blocked = ui.phase === "reading" || ui.phase === "unavailable";
+      return {
+        ...ui,
+        canZoomIn: !blocked && ui.pps < ZOOM_MAX_PPS - 1e-9,
+        canZoomOut: !blocked && ui.pps > ZOOM_MIN_PPS + 1e-9,
+        publish: (next2) => {
+          (0, import_react_dom.flushSync)(() => {
+            setUi(next2);
+          });
+        }
+      };
+    }, [ui]);
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(WaveformContext, { value, children });
+  }
+  function WaveformClockProvider({
+    clock,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(WaveformClockContext, { value: clock, children });
+  }
+  function useWaveform() {
+    const value = (0, import_react6.useContext)(WaveformContext);
+    if (value === null) {
+      throw new Error("useWaveform must be used within WaveformProvider");
+    }
+    return value;
+  }
+  function useWaveformClockOverride() {
+    return (0, import_react6.useContext)(WaveformClockContext);
+  }
+
+  // src/files-store.ts
+  var listeners3 = /* @__PURE__ */ new Set();
+  function subscribeFiles(listener) {
+    listeners3.add(listener);
+    return () => {
+      listeners3.delete(listener);
+    };
+  }
+  function emitFiles() {
+    for (const listener of listeners3) listener();
+  }
+
+  // src/files.ts
+  var FILES_SEARCH_MS = 200;
+  var filesRequest = 0;
+  var filesSearchTimer = 0;
+  var mountHook = () => {
+  };
+  function bindFilesMount(fn) {
+    mountHook = fn;
+  }
+  var filesPreview = null;
+  var filesAction = "";
+  var filesTagScope = "paths";
+  var filesTrigger = null;
+  var dialogName = "";
+  var dialogReplacement = "";
+  var dialogStatus = "";
+  function renderFiles() {
+    mountHook();
+    emitFiles();
+    bridge.renderShell();
+  }
+  function mountFiles() {
+    mountHook();
+  }
+  function failFiles(error2) {
+    state.filesLoading = false;
+    state.filesError = failureOf(error2).message || t("error.folder_unreadable");
+    renderFiles();
+  }
+  async function loadFolder(path, options = {}) {
+    window.clearTimeout(filesSearchTimer);
+    state.filesQuery = "";
+    state.filesSearching = false;
+    const searchField = document.getElementById("files-search");
+    if (searchField instanceof HTMLInputElement) searchField.value = "";
+    const elsewhere = options.elsewhere === true;
+    const refresh = options.refresh === true;
+    const atRoots = path === "" && !elsewhere;
+    const token3 = ++filesRequest;
+    state.filesLoading = true;
+    state.filesError = "";
+    if (!options.keepMessage) state.filesMessage = "";
+    state.filesSelected = /* @__PURE__ */ new Set();
+    state.filesActive = 0;
+    state.filesAtRoots = atRoots;
+    state.filesElsewhere = elsewhere;
+    if (atRoots) {
+      state.filesPath = "";
+      state.filesParent = null;
+      state.filesEntries = [];
+      state.filesBreadcrumb = [];
+      state.filesRoot = null;
+    }
+    renderFiles();
+    if (refresh || atRoots) {
+      const rootsPayload = await fetchLibraryRoots(refresh);
+      if (token3 !== filesRequest) return;
+      state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
+    }
+    if (atRoots) {
+      state.filesPath = "";
+      state.filesParent = null;
+      state.filesEntries = [];
+      state.filesBreadcrumb = [];
+      state.filesRoot = null;
+      state.filesElsewhere = false;
+      state.filesAtRoots = true;
+      state.filesTruncated = false;
+      state.filesLoading = false;
+      const list2 = document.getElementById("files-list");
+      if (list2) list2.scrollTop = 0;
+      renderFiles();
+      return;
+    }
+    const params = new URLSearchParams();
+    if (path) params.set("path", path);
+    if (elsewhere) params.set("elsewhere", "1");
+    const query = params.size ? `?${params.toString()}` : "";
+    const response = await fetch(`/api/files${query}`);
+    const payload = await readJSONOr(response, {});
+    if (token3 !== filesRequest) return;
+    if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
+    state.filesPath = payload.path || "";
+    state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
+    state.filesEntries = Array.isArray(payload.entries) ? payload.entries : [];
+    state.filesRoot = isFileRoot(payload.root) ? payload.root : null;
+    state.filesBreadcrumb = Array.isArray(payload.breadcrumb) ? payload.breadcrumb.filter(isFileCrumb) : [];
+    state.filesElsewhere = Boolean(payload.elsewhere);
+    state.filesAtRoots = !state.filesPath && !state.filesElsewhere;
+    state.filesTruncated = Boolean(payload.truncated);
+    state.filesLoading = false;
+    const list = document.getElementById("files-list");
+    if (list) list.scrollTop = 0;
+    if (payload.serato) bridge.applyStatus(payload.serato);
+    renderFiles();
+  }
+  async function searchFiles(query) {
+    const token3 = ++filesRequest;
+    const scope = state.filesAtRoots ? "" : state.filesPath;
+    const elsewhere = state.filesElsewhere && !state.filesAtRoots;
+    state.filesLoading = true;
+    state.filesError = "";
+    state.filesSearching = true;
+    state.filesQuery = query;
+    renderFiles();
+    const params = new URLSearchParams();
+    params.set("q", query);
+    if (scope) params.set("path", scope);
+    if (elsewhere) params.set("elsewhere", "1");
+    const response = await fetch(`/api/files?${params.toString()}`);
+    const payload = await readJSONOr(response, {});
+    if (token3 !== filesRequest) return;
+    if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
+    const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
+    state.filesEntries = entries;
+    state.filesTruncated = Boolean(payload.truncated);
+    state.filesLoading = false;
+    state.filesSearching = true;
+    state.filesActive = 0;
+    state.filesSelected = /* @__PURE__ */ new Set();
+    const list = document.getElementById("files-list");
+    if (list) list.scrollTop = 0;
+    renderFiles();
+  }
+  function onFilesSearchInput(value) {
+    window.clearTimeout(filesSearchTimer);
+    state.filesQuery = value;
+    if (!value.trim()) {
+      if (state.filesAtRoots && !state.filesPath) {
+        state.filesSearching = false;
+        state.filesEntries = [];
+        state.filesError = "";
+        state.filesTruncated = false;
+        state.filesLoading = false;
+        renderFiles();
+        return;
+      }
+      loadFolder(state.filesPath, { elsewhere: state.filesElsewhere && Boolean(state.filesPath) }).catch((error2) => failFiles(error2));
+      return;
+    }
+    filesSearchTimer = window.setTimeout(() => {
+      searchFiles(value.trim()).catch((error2) => failFiles(error2));
+    }, FILES_SEARCH_MS);
+  }
+  function isListedFile(value) {
+    if (!value || typeof value !== "object") return false;
+    const row = value;
+    return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
+  }
+  function isFileRoot(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.name === "string" && typeof record.path === "string" && typeof record.kind === "string";
+  }
+  function isFileCrumb(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.name === "string" && typeof record.path === "string";
+  }
+  function filesRowHeight() {
+    if (state.filesSearching) return FILE_ROW;
+    return state.filesAtRoots ? ROOT_ROW : FILE_ROW;
+  }
+  function browserRows() {
+    if (state.filesSearching) return state.filesEntries;
+    if (state.filesAtRoots) {
+      return state.filesRoots.map((root) => {
+        const entry = {
+          name: root.label,
+          path: root.path,
+          detail: root.detail,
+          kind: root.kind === "serato_drive" ? "drive" : "folder",
+          missing: root.missing,
+          removable: root.removable,
+          serato: root.serato
+        };
+        return entry;
+      });
+    }
+    const rank = { dir: 0, file: 1, link: 2 };
+    return [...state.filesEntries].sort((left, right) => {
+      return (rank[left.kind] ?? 3) - (rank[right.kind] ?? 3) || left.name.localeCompare(right.name, void 0, { numeric: true, sensitivity: "base" });
+    });
+  }
+  function selectedFiles() {
+    return state.filesEntries.filter((entry) => entry.kind === "file" && state.filesSelected.has(entry.path));
+  }
+  function focusFilesIndex(index) {
+    const rows2 = browserRows();
+    if (!rows2.length) return;
+    state.filesActive = Math.max(0, Math.min(rows2.length - 1, index));
+    const list = document.getElementById("files-list");
+    if (list) {
+      const rowHeight = filesRowHeight();
+      const view = list.clientHeight || 600;
+      const top = state.filesActive * rowHeight;
+      const maxScroll = Math.max(0, rows2.length * rowHeight - view);
+      if (top < list.scrollTop) list.scrollTop = top;
+      if (top + rowHeight > list.scrollTop + view) list.scrollTop = Math.min(maxScroll, top + rowHeight - view);
+    }
+    renderFiles();
+    const control = list?.querySelector(`[data-files-index="${state.filesActive}"]`);
+    control?.focus();
+  }
+  function activateFilesIndex(index) {
+    const entry = browserRows()[index];
+    if (!entry) return;
+    if (entry.kind === "file") {
+      if (state.filesSelected.has(entry.path)) state.filesSelected.delete(entry.path);
+      else state.filesSelected.add(entry.path);
+      renderFiles();
+      focusFilesIndex(index);
+      return;
+    }
+    if (entry.kind === "link") return;
+    openBrowserRow(entry);
+  }
+  function openBrowserRow(entry) {
+    if (entry.missing) return;
+    const elsewhere = state.filesElsewhere && entry.kind === "dir";
+    loadFolder(entry.path, { elsewhere }).catch((error2) => failFiles(error2));
+  }
+  function onFilesKey(event) {
+    if (state.mode !== "files") return;
+    const list = document.getElementById("files-list");
+    if (!list || !(event.target instanceof Node) || !list.contains(event.target)) return;
+    const rows2 = browserRows();
+    if (!rows2.length) return;
+    if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      if (event.key === "ArrowDown") focusFilesIndex(state.filesActive + 1);
+      else if (event.key === "ArrowUp") focusFilesIndex(state.filesActive - 1);
+      else if (event.key === "Home") focusFilesIndex(0);
+      else focusFilesIndex(rows2.length - 1);
+      return;
+    }
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const control = event.target instanceof HTMLElement ? event.target.closest("button, input") : null;
+    if (control && list.contains(control)) return;
+    event.preventDefault();
+    activateFilesIndex(state.filesActive);
+  }
+  function moveFileList(delta) {
+    if (!browserRows().length) return;
+    focusFilesIndex(state.filesActive + delta);
+  }
+  function openFileList() {
+    if (!browserRows().length) return;
+    activateFilesIndex(state.filesActive);
+  }
+  function focusFileByPath(path) {
+    const index = browserRows().findIndex((entry) => entry.path === path);
+    if (index < 0) return;
+    focusFilesIndex(index);
+  }
+  function toggleFile(entry, index, checked) {
+    state.filesActive = index;
+    if (checked) state.filesSelected.add(entry.path);
+    else state.filesSelected.delete(entry.path);
+    renderFiles();
+  }
+  function markFilesActive(index) {
+    state.filesActive = index;
+    renderFiles();
+  }
+  function goFilesUp() {
+    if (state.filesParent) {
+      loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
+    }
+  }
+  function refreshFiles() {
+    const path = state.filesAtRoots ? "" : state.filesPath;
+    loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots, refresh: true }).catch((error2) => failFiles(error2));
+  }
+  function toggleFilesElsewhere() {
+    if (state.filesElsewhere) loadFolder("").catch((error2) => failFiles(error2));
+    else loadFolder("", { elsewhere: true }).catch((error2) => failFiles(error2));
+  }
+  function openFilesCrumb(path) {
+    loadFolder(path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
+  }
+  function startMoveFiles() {
+    const selected = selectedFiles();
+    if (!selected.length) {
+      state.filesError = t("files.chooseMove");
+      renderFiles();
+      return;
+    }
+    state.filesPick = "move";
+    state.filesPickPaths = selected.map((entry) => entry.path);
+    state.filesError = "";
+    state.filesMessage = t("files.chooseDestination");
+    renderFiles();
+  }
+  function startMoveFolder() {
+    state.filesPick = "move_folder";
+    state.filesPickSource = state.filesPath;
+    state.filesError = "";
+    state.filesMessage = t("files.chooseDestination");
+    renderFiles();
+  }
+  function cancelFilesPick() {
+    state.filesPick = null;
+    state.filesPickPaths = [];
+    state.filesPickSource = "";
+    state.filesMessage = "";
+    renderFiles();
+  }
+  function getFilesDialog() {
+    return {
+      action: filesAction,
+      name: dialogName,
+      replacement: dialogReplacement,
+      status: dialogStatus,
+      preview: filesPreview,
+      scope: filesTagScope
+    };
+  }
+  function openFilesDialog(action, trigger, scope = "paths") {
+    filesAction = action;
+    filesTagScope = scope;
+    filesPreview = null;
+    filesTrigger = trigger instanceof HTMLElement ? trigger : null;
+    dialogStatus = "";
+    const selected = selectedFiles();
+    dialogName = action === "rename" && selected.length === 1 ? selected[0].name : "";
+    dialogReplacement = "";
+    mountFiles();
+    emitFiles();
+    const dialog = el("files-dialog");
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    if (action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags") {
+      el("files-cancel").focus();
+      reviewFiles().catch((error2) => {
+        dialogStatus = failureOf(error2).message;
+        emitFiles();
+      });
+    } else if (action === "rename") {
+      document.getElementById("files-name")?.focus();
+    } else {
+      document.getElementById("files-replacement")?.focus();
+    }
+  }
+  function setDialogName(value) {
+    dialogName = value;
+    filesPreview = null;
+    emitFiles();
+  }
+  function setDialogReplacement(value) {
+    dialogReplacement = value;
+    filesPreview = null;
+    emitFiles();
+  }
+  function setDialogStatus(value) {
+    dialogStatus = value;
+    emitFiles();
+  }
+  async function reviewFiles() {
+    const body = filesBody(false);
+    dialogStatus = t("files.checking");
+    emitFiles();
+    const payload = await postJSON("/api/files", body);
+    filesPreview = payload;
+    dialogStatus = payload.ok ? "" : serverMessage(payload, t("files.notSaved"));
+    if (payload.serato) bridge.applyStatus(payload.serato);
+    emitFiles();
+  }
+  function closeFilesDialog() {
+    const trigger = filesTrigger;
+    filesTrigger = null;
+    filesTagScope = "paths";
+    const dialog = document.getElementById("files-dialog");
+    if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
+    if (trigger instanceof HTMLElement) trigger.focus();
+    emitFiles();
+  }
+  async function confirmFiles() {
+    if (!filesPreview?.ok || !state.writable) return;
+    dialogStatus = t("files.saving");
+    emitFiles();
+    const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
+    try {
+      const payload = await postJSON("/api/files", filesBody(true));
+      if (payload.serato) bridge.applyStatus(payload.serato);
+      closeFilesDialog();
+      state.filesPick = null;
+      state.filesPickPaths = [];
+      state.filesPickSource = "";
+      let message = payload.summary || t("files.updated");
+      if (payload.warning) message = `${message} ${payload.warning}`;
+      if (crateScope && state.mode !== "files") {
+        bridge.setNotice(message);
+        await bridge.reloadLibrary();
+        return;
+      }
+      state.filesMessage = message;
+      await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
+      await bridge.reloadLibrary();
+      renderFiles();
+    } catch (error2) {
+      if (failureOf(error2).status === 409) bridge.lockDown(error2);
+      dialogStatus = failureOf(error2).message;
+      emitFiles();
+    }
+  }
+  function filesBody(confirm2) {
+    const body = { action: filesAction };
+    if (confirm2) body.confirm = true;
+    if (filesAction === "rename") {
+      const selected = selectedFiles();
+      body.path = selected[0]?.path || state.filesPickPaths[0];
+      body.name = dialogName;
+    } else if (filesAction === "move") {
+      body.paths = state.filesPickPaths.length ? [...state.filesPickPaths] : selectedFiles().map((entry) => entry.path);
+      body.destination = state.filesPath;
+    } else if (filesAction === "move_folder") {
+      body.path = state.filesPickSource || state.filesPath;
+      body.destination = state.filesPath;
+    } else if (filesAction === "replace") {
+      const selected = selectedFiles();
+      body.path = selected[0]?.path || "";
+      body.replacement = dialogReplacement.trim();
+    } else if (filesAction === "delete") {
+      body.paths = selectedFiles().map((entry) => entry.path);
+    } else if (filesAction === "rename_from_tags") {
+      if (filesTagScope === "crate") {
+        const crate = state.activeCrate;
+        if (typeof crate === "number") {
+          body.crate = crate;
+          body.space = state.space;
+        }
+      } else {
+        body.paths = selectedFiles().map((entry) => entry.path);
+      }
+    }
+    return body;
+  }
+  function startRename(trigger) {
+    if (selectedFiles().length !== 1) {
+      state.filesError = t("files.chooseOneRename");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("rename", trigger);
+  }
+  function startRenameFromTags(trigger, scope = "paths") {
+    if (scope === "paths" && !selectedFiles().length) {
+      state.filesError = t("files.chooseRenameFromTags");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("rename_from_tags", trigger, scope);
+  }
+  function startReplace(trigger) {
+    if (selectedFiles().length !== 1) {
+      state.filesError = t("files.chooseOneReplace");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("replace", trigger);
+  }
+  function startDelete(trigger) {
+    if (!selectedFiles().length) {
+      state.filesError = t("files.chooseDelete");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("delete", trigger);
+  }
+  function confirmMoveHere(trigger) {
+    openFilesDialog(state.filesPick === "move_folder" ? "move_folder" : "move", trigger);
+  }
+
+  // src/drift.ts
+  var import_react8 = __toESM(require_react(), 1);
+
+  // src/drift-view.ts
+  var DRIFT_REASON_ORDER = ["drifting", "live", "pending_map"];
+  var REASON_KEYS = {
+    drifting: "drift.reason.drifting",
+    live: "drift.reason.live",
+    pending_map: "drift.reason.pending_map"
+  };
+  function driftScopeLabel() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function driftReasonKinds(flags) {
+    const seen = new Set(flags.flatMap((item3) => item3.reasons));
+    const known = DRIFT_REASON_ORDER.filter((kind2) => seen.has(kind2));
+    const extra = [...seen].filter((kind2) => !DRIFT_REASON_ORDER.includes(kind2)).sort();
+    return [...known, ...extra];
+  }
+  function driftReasonHeading(kind2) {
+    return t(REASON_KEYS[kind2] ?? "drift.reason.unknown");
+  }
+  function driftFlagLine(item3) {
+    const title2 = [item3.artist, item3.name].filter(Boolean).join(" — ") || item3.file;
+    const reasons = item3.reasons.map(driftReasonHeading).join(", ");
+    const bpm = item3.bpm_min != null && item3.bpm_max != null ? t("drift.bpmRange", { min: item3.bpm_min, max: item3.bpm_max }) : "";
+    return t("drift.row", { title: title2, file: item3.file, reasons, bpm });
+  }
+
+  // src/components/GigDetailsGroup.tsx
+  var import_react7 = __toESM(require_react(), 1);
+  var import_react_dom2 = __toESM(require_react_dom(), 1);
 
   // src/tooltip-strings.ts
   function spec(key, params) {
@@ -19102,291 +20786,92 @@
     priorDescribedBy = "";
   }
 
-  // src/gig.ts
-  var STEP_COUNT = 5;
+  // src/components/GigDetailsGroup.tsx
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
   var LIST_CAP = 100;
-  var STEPS = [
-    { title: "gig.drives", action: "gig.drivesAction", empty: "gig.drivesEmpty" },
-    { title: "gig.missing", action: "gig.missingAction", empty: "gig.missingEmpty" },
-    { title: "gig.streaming", action: "gig.streamingAction", empty: "gig.streamingEmpty" },
-    { title: "gig.emptyCrates", action: "gig.emptyCratesAction", empty: "gig.emptyCratesEmpty" },
-    { title: "gig.since", action: "gig.sinceAction", empty: "gig.sinceEmpty" }
-  ];
-  var stepIndex = 0;
-  var latest = null;
-  var checkedAt = null;
-  var exitGig = () => {
-  };
-  function wireGigCheck(exit) {
-    exitGig = exit;
-    const panel = el("gig-panel");
-    if (panel.dataset.gigWired === "true") return;
-    panel.dataset.gigWired = "true";
-    el("gig-refresh").addEventListener("click", () => {
-      void loadGigCheck(true);
-    });
-    panel.addEventListener("click", (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      const button = target.closest("button");
-      if (!(button instanceof HTMLButtonElement) || !latest) return;
-      const action = button.dataset.gigAction;
-      if (action === "next") stepIndex = Math.min(stepIndex + 1, STEP_COUNT);
-      else if (action === "back") stepIndex = Math.max(0, stepIndex - 1);
-      else if (action === "exit") {
-        exitGig();
-        return;
-      } else return;
-      renderGigReport(latest);
-      focusHeading();
-    });
+  function GigDetailsGroup({ label, lines }) {
+    const [expanded, setExpanded] = (0, import_react7.useState)(false);
+    const shown = expanded || lines.length <= LIST_CAP ? lines : lines.slice(0, LIST_CAP);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("details", { className: "gig-group", open: true, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("summary", { children: t("gig.groupCount", { label, count: lines.length }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("ul", { children: shown.map((line, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("li", { children: line }, `${index}:${line}`)) }),
+      lines.length > LIST_CAP && !expanded ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: (element) => {
+            if (element) setTooltip(element, tips.gigShowAll);
+          },
+          className: "gig-show-all",
+          onClick: () => {
+            (0, import_react_dom2.flushSync)(() => setExpanded(true));
+          },
+          children: t("gig.showAll", { count: lines.length })
+        }
+      ) : null
+    ] });
   }
-  async function loadGigCheck(keepStep = false) {
-    const token3 = ++state.gigToken;
-    if (!keepStep) stepIndex = 0;
-    beginBusy();
-    let settle = "none";
-    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      const response = await fetch(
-        `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
-      );
-      if (token3 !== state.gigToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.gigToken) return;
-      if (!response.ok || payload === null) {
-        failStatus(serverMessage(payload, t("gig.unreadable")));
-        settle = "retry";
-        return;
-      }
-      checkedAt = /* @__PURE__ */ new Date();
-      latest = payload;
-      el("gig-status").textContent = "";
-      renderGigReport(payload);
-      settle = "heading";
-    } catch {
-      if (token3 !== state.gigToken) return;
-      failStatus(t("gig.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.gigToken) return;
-      endBusy();
-      if (settle === "retry") el("gig-refresh").focus();
-      if (settle === "heading") focusHeading();
-    }
-  }
-  function showGigFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("gig.unreadable");
-    failStatus(message);
-    endBusy();
-    el("gig-refresh").focus();
-  }
-  function renderGigReport(payload) {
-    const report = el("gig-report");
-    el("gig-scope").textContent = payload.scope?.crate_name || t("gig.wholeSpace");
-    report.replaceChildren(scoreBlock(payload));
-    if (stepIndex >= STEP_COUNT) {
-      report.append(doneScreen(payload));
-      return;
-    }
-    const step = STEPS[stepIndex];
-    report.append(kicker(stepIndex), heading(t(step.title)));
-    if (stepIndex === STEP_COUNT - 1) renderSince(report, payload);
-    else renderStepList(report, step, linesFor(payload, stepIndex));
-    report.append(actions(t(step.action)));
-  }
-  function repaintGig() {
-    if (latest) renderGigReport(latest);
-  }
-  function beginBusy() {
-    const button = el("gig-refresh");
-    button.disabled = true;
-    button.setAttribute("aria-busy", "true");
-    el("gig-panel").setAttribute("aria-busy", "true");
-    el("gig-status").textContent = t("gig.checking");
-  }
-  function endBusy() {
-    const button = el("gig-refresh");
-    button.disabled = false;
-    button.setAttribute("aria-busy", "false");
-    el("gig-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus(message) {
-    el("gig-status").textContent = message;
-  }
-  function focusHeading() {
-    const headingNode = document.getElementById("gig-step-heading");
-    if (headingNode instanceof HTMLElement) headingNode.focus();
-  }
-  function formatCheckedAt(date) {
-    return date ? formatDate(date, { hour: "numeric", minute: "2-digit" }) : "";
-  }
-  function scoreBlock(payload) {
-    const score = document.createElement("p");
-    score.className = "gig-score";
-    const verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady");
-    score.setAttribute("aria-label", t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }));
-    const value = document.createElement("span");
-    value.className = "gig-score-value";
-    value.textContent = t("gig.score", { score: payload.score });
-    const verdict = document.createElement("span");
-    verdict.className = payload.ready ? "gig-verdict" : "gig-verdict not-ready";
-    verdict.textContent = t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady");
-    score.append(value, verdict);
-    return score;
-  }
-  function kicker(index) {
-    const step = document.createElement("p");
-    step.className = "gig-kicker";
-    step.textContent = t("gig.stepOf", { index: index + 1, total: STEP_COUNT });
-    return step;
-  }
-  function heading(text2) {
-    const title2 = document.createElement("h3");
-    title2.id = "gig-step-heading";
-    title2.tabIndex = -1;
-    title2.textContent = text2;
-    return title2;
-  }
-  function linesFor(payload, index) {
-    if (index === 0) {
-      return (payload.unavailable_drives || []).map(
-        (drive) => t("gig.driveUnavailable", { name: drive.name, count: drive.track_count })
-      );
-    }
-    if (index === 1) return (payload.missing_files || []).map((item5) => item5.path);
-    if (index === 2) return (payload.streaming_tracks || []).map((item5) => `${item5.service}: ${item5.title}`);
-    if (index === 3) return (payload.empty_crates || []).map((item5) => `${item5.name} — ${item5.warning}`);
-    return [];
-  }
-  function renderStepList(parent, step, lines) {
-    if (!lines.length) {
-      const empty = document.createElement("p");
-      empty.className = "gig-note";
-      empty.textContent = t(step.empty);
-      parent.append(empty);
-      return;
-    }
-    parent.append(detailsGroup(t(step.title), lines));
-  }
-  function renderSince(parent, payload) {
-    const note = payload.snapshot_note?.trim() ?? "";
-    if (note) {
-      const line = document.createElement("p");
-      line.className = "gig-note";
-      line.textContent = note;
-      parent.append(line);
-    }
-    const changes = payload.changes;
-    if (!changes) {
-      if (!note) parent.append(noteLine(t("gig.noSnapshot")));
-      return;
-    }
-    const groups = [
-      ["gig.cratesAdded", changes.crates_added || []],
-      ["gig.cratesRemoved", changes.crates_removed || []],
-      ["gig.cratesEdited", changes.crates_edited || []],
-      ["gig.tracksAdded", changes.tracks_added || []],
-      ["gig.tracksRemoved", changes.tracks_removed || []],
-      ["gig.cuesEdited", changes.cues_edited || []],
-      ["gig.gridsEdited", changes.grids_edited || []],
-      ["gig.tagsEdited", changes.tags_edited || []]
-    ];
-    let any = false;
-    for (const [label, lines] of groups) {
-      if (!lines.length) continue;
-      parent.append(detailsGroup(t(label), lines));
-      any = true;
-    }
-    if (!any) parent.append(noteLine(t(STEPS[STEP_COUNT - 1].empty)));
-  }
-  function noteLine(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function detailsGroup(label, lines) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = true;
-    const summary = document.createElement("summary");
-    summary.textContent = t("gig.groupCount", { label, count: lines.length });
-    const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP);
-    for (const line of shown) list.append(item(line));
-    details.append(summary, list);
-    if (lines.length > LIST_CAP) {
-      const show2 = buttonEl(tips.gigShowAll);
-      show2.className = "gig-show-all";
-      show2.textContent = t("gig.showAll", { count: lines.length });
-      show2.addEventListener("click", () => {
-        list.replaceChildren();
-        for (const line of lines) list.append(item(line));
-        show2.remove();
-      });
-      details.append(show2);
-    }
-    return details;
-  }
-  function item(text2) {
-    const row = document.createElement("li");
-    row.textContent = text2;
-    return row;
-  }
-  function actions(primary) {
-    const bar = document.createElement("div");
-    bar.className = "gig-actions";
-    const back = buttonEl(tips.gigBack);
-    back.dataset.gigAction = "back";
-    back.textContent = t("common.back");
-    back.disabled = stepIndex === 0;
-    bar.append(back);
-    if (primary) {
-      const next2 = buttonEl(tips.gigNext);
-      next2.className = "gig-primary";
-      next2.dataset.gigAction = "next";
-      next2.textContent = primary;
-      bar.append(next2);
-    }
-    const exit = buttonEl(tips.gigExit);
-    exit.dataset.gigAction = "exit";
-    exit.textContent = t("gig.exit");
-    bar.append(exit);
-    return bar;
-  }
-  function doneScreen(payload) {
-    const fragment = document.createDocumentFragment();
-    fragment.append(heading(t("gig.done")));
-    const art = document.createElement("div");
-    art.id = "gig-ready-art";
-    art.className = "gig-art-slot";
-    art.dataset.slot = "gig-ready";
-    art.setAttribute("aria-hidden", "true");
-    const line = document.createElement("p");
-    line.className = "gig-done";
-    const crate = payload.scope?.crate_name || t("gig.wholeSpaceInline");
-    line.textContent = t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
-      score: payload.score,
-      crate,
-      time: formatCheckedAt(checkedAt)
-    });
-    fragment.append(art, line);
-    const holding = (payload.holding_it_back || []).map((item5) => item5.summary);
-    if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
-    fragment.append(actions(null));
-    return fragment;
+
+  // src/components/DriftReport.tsx
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  function DriftReport() {
+    const { drift } = useGig();
+    const payload = drift.report;
+    if (!payload) return null;
+    const flags = payload.flags || [];
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
+      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
+      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
+      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
+      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
+      flags.length ? driftReasonKinds(flags).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        GigDetailsGroup,
+        {
+          label: driftReasonHeading(kind2),
+          lines: flags.filter((item3) => item3.reasons.includes(kind2)).map(driftFlagLine)
+        },
+        kind2
+      )) : /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "gig-note", children: t("drift.empty") })
+    ] });
   }
 
   // src/drift.ts
-  var LIST_CAP2 = 100;
-  var REASON_ORDER = ["drifting", "live", "pending_map"];
-  var REASON_KEYS = {
-    drifting: "drift.reason.drifting",
-    live: "drift.reason.live",
-    pending_map: "drift.reason.pending_map"
-  };
-  var latest2 = null;
+  var listeners4 = /* @__PURE__ */ new Set();
+  var latest = null;
+  function emit() {
+    const snapshot2 = getDriftSnapshot();
+    for (const listener of listeners4) listener(snapshot2);
+  }
+  function beginBusy() {
+    const button = el("drift-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    el("drift-panel").setAttribute("aria-busy", "true");
+    el("drift-status").textContent = t("drift.checking");
+  }
+  function endBusy() {
+    const button = el("drift-refresh");
+    button.disabled = state.activeCrate === "all";
+    button.setAttribute("aria-busy", "false");
+    el("drift-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus(message) {
+    el("drift-status").textContent = message;
+  }
+  function updateScope() {
+    el("drift-scope").textContent = driftScopeLabel();
+  }
+  function getDriftSnapshot() {
+    return { report: latest, scope: driftScopeLabel() };
+  }
+  function subscribeDrift(listener) {
+    listeners4.add(listener);
+    return () => {
+      listeners4.delete(listener);
+    };
+  }
   function wireDrift() {
     const panel = el("drift-panel");
     if (panel.dataset.driftWired === "true") return;
@@ -19394,14 +20879,17 @@
     el("drift-refresh").addEventListener("click", () => {
       void loadDrift();
     });
+    mountIsland(el("drift-report"), (0, import_react8.createElement)(DriftReport));
   }
   async function loadDrift() {
     const token3 = ++state.driftToken;
-    beginBusy2();
+    beginBusy();
     let settle = "none";
     if (state.activeCrate === "all") {
-      failStatus2(t("error.tempo_needs_crate"));
-      endBusy2();
+      failStatus(t("error.tempo_needs_crate"));
+      endBusy();
+      updateScope();
+      emit();
       el("drift-refresh").focus();
       return;
     }
@@ -19414,2248 +20902,53 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.driftToken) return;
       if (!response.ok || payload === null) {
-        failStatus2(serverMessage(payload, t("drift.unreadable")));
+        failStatus(serverMessage(payload, t("drift.unreadable")));
         settle = "retry";
         return;
       }
-      latest2 = payload;
+      latest = payload;
       el("drift-status").textContent = "";
-      renderDriftReport(payload);
+      updateScope();
+      emit();
       settle = "report";
     } catch {
       if (token3 !== state.driftToken) return;
-      failStatus2(t("drift.unreachable"));
+      failStatus(t("drift.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.driftToken) return;
-      endBusy2();
+      endBusy();
       if (settle === "retry") el("drift-refresh").focus();
       if (settle === "report") el("drift-report").focus();
     }
   }
   function showDriftFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("drift.unreadable");
-    failStatus2(message);
-    endBusy2();
+    failStatus(message);
+    endBusy();
     el("drift-refresh").focus();
   }
-  function renderDriftReport(payload) {
-    el("drift-scope").textContent = scopeLabel();
-    const report = el("drift-report");
-    const flags = payload.flags || [];
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked });
-    report.replaceChildren(summary);
-    if (payload.not_found) {
-      report.append(noteLine2(t("drift.notFound", { count: payload.not_found })));
-    }
-    if (payload.unreadable) {
-      report.append(noteLine2(t("drift.unreadableFiles", { count: payload.unreadable })));
-    }
-    if (payload.unchecked) {
-      report.append(noteLine2(t("drift.unchecked", { count: payload.unchecked })));
-    }
-    if (payload.too_quiet) {
-      report.append(noteLine2(t("drift.tooQuiet", { count: payload.too_quiet })));
-    }
-    if (payload.mapped) {
-      report.append(noteLine2(t("drift.mapped", { count: payload.mapped })));
-    }
-    if (!flags.length) {
-      report.append(noteLine2(t("drift.empty")));
-      return;
-    }
-    for (const kind2 of reasonKinds(flags)) {
-      const rows2 = flags.filter((item5) => item5.reasons.includes(kind2));
-      report.append(detailsGroup2(reasonHeading(kind2), rows2.map(flagLine)));
-    }
-  }
   function repaintDrift() {
-    el("drift-scope").textContent = scopeLabel();
-    if (latest2) renderDriftReport(latest2);
-  }
-  function beginBusy2() {
-    const button = el("drift-refresh");
-    button.disabled = true;
-    button.setAttribute("aria-busy", "true");
-    el("drift-panel").setAttribute("aria-busy", "true");
-    el("drift-status").textContent = t("drift.checking");
-  }
-  function endBusy2() {
-    const button = el("drift-refresh");
-    button.disabled = state.activeCrate === "all";
-    button.setAttribute("aria-busy", "false");
-    el("drift-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus2(message) {
-    el("drift-status").textContent = message;
-  }
-  function scopeLabel() {
-    if (state.activeCrate === "all") return t("gig.wholeSpace");
-    const crate = state.crates.find((row) => row.id === state.activeCrate);
-    return crate?.name || t("gig.wholeSpace");
-  }
-  function noteLine2(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function reasonKinds(flags) {
-    const seen = new Set(flags.flatMap((item5) => item5.reasons));
-    const known = REASON_ORDER.filter((kind2) => seen.has(kind2));
-    const extra = [...seen].filter((kind2) => !REASON_ORDER.includes(kind2)).sort();
-    return [...known, ...extra];
-  }
-  function reasonHeading(kind2) {
-    return t(REASON_KEYS[kind2] ?? "drift.reason.unknown");
-  }
-  function flagLine(item5) {
-    const title2 = [item5.artist, item5.name].filter(Boolean).join(" — ") || item5.file;
-    const reasons = item5.reasons.map(reasonHeading).join(", ");
-    const bpm = item5.bpm_min != null && item5.bpm_max != null ? t("drift.bpmRange", { min: item5.bpm_min, max: item5.bpm_max }) : "";
-    return t("drift.row", { title: title2, file: item5.file, reasons, bpm });
-  }
-  function detailsGroup2(label, lines) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = true;
-    const summary = document.createElement("summary");
-    summary.textContent = t("gig.groupCount", { label, count: lines.length });
-    const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP2);
-    for (const line of shown) list.append(item2(line));
-    details.append(summary, list);
-    if (lines.length > LIST_CAP2) {
-      const show2 = buttonEl(tips.gigShowAll);
-      show2.className = "gig-show-all";
-      show2.textContent = t("gig.showAll", { count: lines.length });
-      show2.addEventListener("click", () => {
-        list.replaceChildren();
-        for (const line of lines) list.append(item2(line));
-        show2.remove();
-      });
-      details.append(show2);
-    }
-    return details;
-  }
-  function item2(text2) {
-    const row = document.createElement("li");
-    row.textContent = text2;
-    return row;
+    updateScope();
+    emit();
   }
 
-  // src/album-art.ts
-  var latest3 = null;
-  var trackId = null;
-  var busy = false;
-  var onWrote = null;
-  function wireAlbumArt(wrote) {
-    onWrote = wrote;
-    const dialog = el("album-art-dialog");
-    if (dialog.dataset.albumArtWired === "true") return;
-    dialog.dataset.albumArtWired = "true";
-    el("album-art-cancel").addEventListener("click", () => dialog.close());
-    el("album-art-embed").addEventListener("click", () => {
-      void embedCover();
-    });
-    el("album-art-choices").addEventListener("change", () => syncEmbedEnabled());
+  // src/context/SettingsContext.tsx
+  var import_react9 = __toESM(require_react(), 1);
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  var SettingsContext = (0, import_react9.createContext)(null);
+  function SettingsProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(SettingsContext, { value, children });
   }
-  async function openAlbumArt(id) {
-    if (!Number.isInteger(id) || id <= 0) return;
-    if (typeof el("album-art-dialog").showModal !== "function") return;
-    trackId = id;
-    latest3 = null;
-    busy = true;
-    paintDialog();
-    if (!el("album-art-dialog").open) el("album-art-dialog").showModal();
-    el("album-art-cancel").focus();
-    try {
-      const plan = await postJSON("/api/album-art", {
-        action: "preview",
-        space: state.space,
-        id
-      });
-      if (trackId !== id) return;
-      latest3 = plan;
-      el("album-art-status").textContent = plan.candidates.length ? "" : t("health.artNone");
-      paintDialog();
-      const first = el("album-art-choices").querySelector("input");
-      if (first instanceof HTMLInputElement) first.focus();
-      else el("album-art-cancel").focus();
-    } catch (error2) {
-      if (trackId !== id) return;
-      failStatus3(failureOf(error2).message);
-      el("album-art-cancel").focus();
-    } finally {
-      if (trackId === id) busy = false;
-      paintDialog();
+  function useSettings() {
+    const value = (0, import_react9.useContext)(SettingsContext);
+    if (value === null) {
+      throw new Error("useSettings must be used within SettingsProvider");
     }
-  }
-  function repaintAlbumArt() {
-    if (el("album-art-dialog").open) paintDialog();
-  }
-  async function embedCover() {
-    const id = trackId;
-    const chosen = selectedRelease();
-    if (id === null || !chosen || !state.writable || busy) return;
-    busy = true;
-    paintDialog();
-    try {
-      const written = await postJSON("/api/album-art", {
-        action: "embed",
-        space: state.space,
-        id,
-        release_id: chosen,
-        confirm: true
-      });
-      latest3 = written;
-      busy = false;
-      el("album-art-dialog").close();
-      onWrote?.();
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus3(failed.message);
-      if (failed.status === 409) bridge.lockDown(error2);
-    } finally {
-      busy = false;
-      paintDialog();
-    }
-  }
-  function paintDialog() {
-    const plan = latest3;
-    el("album-art-track").textContent = plan ? t("health.row", { title: [plan.artist, plan.name].filter(Boolean).join(" — ") || plan.file }) : t("health.artLooking");
-    const list = el("album-art-choices");
-    const selected = selectedRelease();
-    list.replaceChildren();
-    const candidates = plan?.candidates ?? [];
-    candidates.forEach((candidate, index) => {
-      list.append(choiceRow(candidate, selected, index === 0));
-    });
-    if (busy && !plan) el("album-art-status").textContent = t("health.artLooking");
-    syncEmbedEnabled();
-  }
-  function choiceRow(candidate, selected, fallback) {
-    const row = document.createElement("label");
-    row.className = "check album-art-choice";
-    const radio = inputEl(tips.healthArtPick);
-    radio.type = "radio";
-    radio.name = "album-art-pick";
-    radio.value = candidate.release_id;
-    radio.checked = selected === candidate.release_id || selected === null && fallback;
-    const image = document.createElement("img");
-    image.src = candidate.thumb;
-    image.alt = candidate.title || t("health.artEmbed");
-    image.width = 96;
-    image.height = 96;
-    const caption = document.createElement("span");
-    caption.textContent = [candidate.artist, candidate.title].filter(Boolean).join(" — ") || candidate.release_id;
-    row.append(radio, image, caption);
-    return row;
-  }
-  function selectedRelease() {
-    const chosen = el("album-art-choices").querySelector(
-      "input[name='album-art-pick']:checked"
-    );
-    return chosen?.value || null;
-  }
-  function syncEmbedEnabled() {
-    const button = el("album-art-embed");
-    button.disabled = busy || !state.writable || selectedRelease() === null;
-  }
-  function failStatus3(message) {
-    el("album-art-status").textContent = message;
-  }
-
-  // src/health.ts
-  var SECTIONS = [
-    { key: "missing", label: "health.missing", action: "missing" },
-    { key: "no_bpm", label: "health.noBpm" },
-    { key: "no_key", label: "health.noKey" },
-    { key: "no_beatgrid", label: "health.noBeatgrid" },
-    { key: "no_artwork", label: "health.noArtwork" },
-    { key: "empty_genre", label: "health.emptyGenre" },
-    { key: "no_crate", label: "health.noCrate" }
-  ];
-  var latest4 = null;
-  var go = null;
-  function wireHealth(navigate) {
-    go = navigate;
-    const panel = el("health-panel");
-    if (panel.dataset.healthWired === "true") return;
-    panel.dataset.healthWired = "true";
-    el("health-refresh").addEventListener("click", () => {
-      void loadHealth();
-    });
-    wireAlbumArt(() => {
-      void loadHealth();
-    });
-    panel.addEventListener("click", (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      const button = target.closest("button");
-      if (!(button instanceof HTMLButtonElement)) return;
-      const action = button.dataset.healthAction;
-      if (action === "missing" || action === "duplicates" || action === "files" || action === "bitrate") {
-        go?.(action);
-        return;
-      }
-      if (action === "track") {
-        const id = Number(button.dataset.healthId);
-        if (Number.isInteger(id) && id > 0) go?.("track", id);
-        return;
-      }
-      if (action === "artwork") {
-        const id = Number(button.dataset.healthId);
-        if (Number.isInteger(id) && id > 0) void openAlbumArt(id);
-      }
-    });
-  }
-  async function loadHealth() {
-    const token3 = ++state.healthToken;
-    beginBusy3();
-    let settle = "none";
-    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      const response = await fetch(
-        `/api/library-health?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
-      );
-      if (token3 !== state.healthToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.healthToken) return;
-      if (!response.ok || payload === null) {
-        failStatus4(serverMessage(payload, t("health.unreadable")));
-        settle = "retry";
-        return;
-      }
-      latest4 = payload;
-      el("health-status").textContent = "";
-      renderHealthReport(payload);
-      settle = "report";
-    } catch {
-      if (token3 !== state.healthToken) return;
-      failStatus4(t("health.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.healthToken) return;
-      endBusy3();
-      if (settle === "retry") el("health-refresh").focus();
-      if (settle === "report") el("health-report").focus();
-    }
-  }
-  function showHealthFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
-    failStatus4(message);
-    endBusy3();
-    el("health-refresh").focus();
-  }
-  function renderHealthReport(payload) {
-    el("health-scope").textContent = scopeLabel2();
-    const report = el("health-report");
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = t("health.summary", { count: payload.checked });
-    report.replaceChildren(summary);
-    let listed = 0;
-    for (const spec2 of SECTIONS) {
-      listed += paintSection(
-        report,
-        t(spec2.label),
-        payload[spec2.key],
-        spec2.action,
-        spec2.key === "no_artwork"
-      );
-    }
-    listed += paintUnused(report, payload.unused);
-    listed += paintDuplicates(report, payload.duplicates);
-    if (!listed) report.append(noteLine3(t("health.clear")));
-    paintBitrateLink(report);
-  }
-  function repaintHealth() {
-    el("health-scope").textContent = scopeLabel2();
-    if (latest4) renderHealthReport(latest4);
-    repaintAlbumArt();
-  }
-  function beginBusy3() {
-    const button = el("health-refresh");
-    button.disabled = true;
-    button.setAttribute("aria-busy", "true");
-    el("health-panel").setAttribute("aria-busy", "true");
-    el("health-status").textContent = t("health.checking");
-  }
-  function endBusy3() {
-    const button = el("health-refresh");
-    button.disabled = false;
-    button.setAttribute("aria-busy", "false");
-    el("health-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus4(message) {
-    el("health-status").textContent = message;
-  }
-  function scopeLabel2() {
-    if (state.activeCrate === "all") return t("gig.wholeSpace");
-    const crate = state.crates.find((row) => row.id === state.activeCrate);
-    return crate?.name || t("gig.wholeSpace");
-  }
-  function noteLine3(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function paintSection(report, label, section, action, findArt = false) {
-    const count = section?.count ?? 0;
-    const tracks = section?.tracks ?? [];
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label, count });
-    details.append(heading2);
-    if (action === "missing") details.append(openButton("missing", "health.openMissing", tips.healthOpenMissing));
-    const list = document.createElement("ul");
-    for (const track of tracks) list.append(trackItem(track, findArt));
-    details.append(list);
-    if (count > tracks.length) {
-      details.append(noteLine3(t("health.more", { count: count - tracks.length })));
-    }
-    report.append(details);
-    return count;
-  }
-  function paintUnused(report, section) {
-    const count = section?.count ?? 0;
-    const files = section?.files ?? [];
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label: t("health.unused"), count });
-    details.append(heading2);
-    details.append(openButton("files", "health.openFiles", tips.healthOpenFiles));
-    const list = document.createElement("ul");
-    for (const row of files) {
-      const item5 = document.createElement("li");
-      item5.textContent = t("health.fileRow", { file: row.file });
-      list.append(item5);
-    }
-    details.append(list);
-    if (count > files.length) {
-      details.append(noteLine3(t("health.more", { count: count - files.length })));
-    }
-    report.append(details);
-    return count;
-  }
-  function paintDuplicates(report, section) {
-    const count = section?.count ?? 0;
-    const groups = section?.groups ?? [];
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label: t("health.duplicates"), count });
-    details.append(heading2);
-    details.append(openButton("duplicates", "health.openDuplicates", tips.healthOpenDuplicates));
-    const list = document.createElement("ul");
-    for (const group of groups) list.append(groupItem(group));
-    details.append(list);
-    if (count > groups.length) {
-      details.append(noteLine3(t("health.more", { count: count - groups.length })));
-    }
-    report.append(details);
-    return count;
-  }
-  function paintBitrateLink(report) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = true;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("health.bitrate");
-    details.append(heading2);
-    details.append(openButton("bitrate", "health.openBitrate", tips.healthOpenBitrate));
-    details.append(noteLine3(t("health.bitrateNote")));
-    report.append(details);
-  }
-  function openButton(action, label, tip) {
-    const button = buttonEl(tip);
-    button.dataset.healthAction = action;
-    button.textContent = t(label);
-    return button;
-  }
-  function trackItem(track, findArt = false) {
-    const row = document.createElement("li");
-    row.className = "health-art-row";
-    const button = buttonEl(tips.healthTrack);
-    button.dataset.healthAction = "track";
-    button.dataset.healthId = String(track.id);
-    button.textContent = trackLine(track);
-    row.append(button);
-    if (findArt) {
-      const art = buttonEl(tips.healthFindArt);
-      art.dataset.healthAction = "artwork";
-      art.dataset.healthId = String(track.id);
-      art.textContent = t("health.findArt");
-      row.append(art);
-    }
-    return row;
-  }
-  function groupItem(group) {
-    const row = document.createElement("li");
-    row.textContent = t("health.duplicateRow", {
-      title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
-      count: group.ids.length
-    });
-    return row;
-  }
-  function trackLine(track) {
-    return t("health.row", {
-      title: [track.artist, track.name].filter(Boolean).join(" — ") || track.file
-    });
-  }
-
-  // src/history-stats-view.ts
-  var IDLE_DAYS_DEFAULT = 365;
-  var IDLE_DAYS_MAX = 3650;
-  var DAY = 86400;
-  var PERIODS = /* @__PURE__ */ new Set(["all", "7", "30", "90", "365", "custom"]);
-  function isStatsPeriod(value) {
-    return PERIODS.has(value);
-  }
-  function dayStartUnix(iso) {
-    const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
-    if (!parts) return null;
-    const stamp = new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3])).getTime();
-    if (Number.isNaN(stamp)) return null;
-    return Math.floor(stamp / 1e3);
-  }
-  function dayAfterUnix(iso) {
-    const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
-    if (!parts) return null;
-    const stamp = new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]) + 1).getTime();
-    if (Number.isNaN(stamp)) return null;
-    return Math.floor(stamp / 1e3);
-  }
-  function periodRange(period, from, to, nowMs) {
-    if (period === "all") return { start: null, end: null };
-    if (period !== "custom") {
-      const end = Math.floor(nowMs / 1e3);
-      return { start: end - Number(period) * DAY, end };
-    }
-    return { start: dayStartUnix(from), end: dayAfterUnix(to) };
-  }
-  function idleDaysFromInput(raw) {
-    if (!/^\d{1,4}$/.test(raw.trim())) return IDLE_DAYS_DEFAULT;
-    const value = Number(raw.trim());
-    if (value < 1 || value > IDLE_DAYS_MAX) return IDLE_DAYS_DEFAULT;
     return value;
-  }
-  function statsQuery(space, range, idleDays) {
-    const query = new URLSearchParams({ space });
-    if (range.start != null) query.set("from", String(range.start));
-    if (range.end != null) query.set("to", String(range.end));
-    if (idleDays !== IDLE_DAYS_DEFAULT) query.set("idle_days", String(idleDays));
-    return query.toString();
-  }
-  function csvHref(query) {
-    return query ? `/api/history-stats.csv?${query}` : "/api/history-stats.csv";
-  }
-
-  // src/history-stats.ts
-  var LIST_CAP3 = 100;
-  var latest5 = null;
-  var crateBusy = false;
-  function wireHistoryStats() {
-    const panel = el("stats-panel");
-    if (panel.dataset.statsWired === "true") return;
-    panel.dataset.statsWired = "true";
-    el("stats-refresh").addEventListener("click", () => {
-      void loadHistoryStats();
-    });
-    el("stats-period").addEventListener("change", () => {
-      syncPeriodFields();
-      if (currentPeriod() !== "custom") void loadHistoryStats();
-    });
-    el("stats-csv").addEventListener("click", () => {
-      const link = document.createElement("a");
-      link.href = csvHref(currentQuery());
-      link.download = "play-stats.csv";
-      link.click();
-    });
-    panel.addEventListener("click", (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      const button = target.closest("button");
-      if (!(button instanceof HTMLButtonElement)) return;
-      if (button.dataset.statsAction === "crate") void makeIdleCrate();
-    });
-    syncPeriodFields();
-  }
-  async function loadHistoryStats() {
-    const token3 = ++state.statsToken;
-    beginBusy4();
-    let settle = "none";
-    try {
-      const response = await fetch(`/api/history-stats?${currentQuery()}`);
-      if (token3 !== state.statsToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.statsToken) return;
-      if (!response.ok || payload === null) {
-        failStatus5(serverMessage(payload, t("stats.unreadable")));
-        settle = "retry";
-        return;
-      }
-      latest5 = payload;
-      el("stats-status").textContent = "";
-      renderHistoryStats(payload);
-      settle = "report";
-    } catch {
-      if (token3 !== state.statsToken) return;
-      failStatus5(t("stats.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.statsToken) return;
-      endBusy4();
-      if (settle === "retry") el("stats-refresh").focus();
-      if (settle === "report") el("stats-report").focus();
-    }
-  }
-  function showHistoryStatsFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("stats.unreadable");
-    failStatus5(message);
-    endBusy4();
-    el("stats-refresh").focus();
-  }
-  function renderHistoryStats(payload) {
-    el("stats-scope").textContent = t("gig.wholeSpace");
-    const report = el("stats-report");
-    const plays = payload.plays ?? 0;
-    const sessions = payload.sessions ?? 0;
-    const idleDays = payload.idle_days ?? 365;
-    const idleCount = payload.not_played_count ?? 0;
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = plays ? t("stats.summary", { plays, sessions }) : t("stats.empty");
-    report.replaceChildren(summary);
-    report.append(trackTable(payload.top_tracks ?? []));
-    report.append(artistTable(payload.top_artists ?? []));
-    report.append(idleGroup(payload.not_played ?? [], idleCount, idleDays));
-  }
-  function repaintHistoryStats() {
-    el("stats-scope").textContent = t("gig.wholeSpace");
-    syncPeriodFields();
-    if (latest5) renderHistoryStats(latest5);
-  }
-  function currentPeriod() {
-    const value = el("stats-period").value;
-    return isStatsPeriod(value) ? value : "all";
-  }
-  function currentQuery() {
-    const range = periodRange(
-      currentPeriod(),
-      el("stats-from").value,
-      el("stats-to").value,
-      Date.now()
-    );
-    return statsQuery(state.space, range, idleDaysFromInput(el("stats-idle-days").value));
-  }
-  function syncPeriodFields() {
-    const custom = currentPeriod() === "custom";
-    el("stats-from").disabled = !custom;
-    el("stats-to").disabled = !custom;
-  }
-  function beginBusy4() {
-    const button = el("stats-refresh");
-    button.disabled = true;
-    button.setAttribute("aria-busy", "true");
-    el("stats-panel").setAttribute("aria-busy", "true");
-    el("stats-status").textContent = t("stats.checking");
-  }
-  function endBusy4() {
-    const button = el("stats-refresh");
-    button.disabled = false;
-    button.setAttribute("aria-busy", "false");
-    el("stats-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus5(message) {
-    el("stats-status").textContent = message;
-  }
-  function trackTable(rows2) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = rows2.length > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label: t("stats.tracks"), count: rows2.length });
-    details.append(heading2);
-    if (!rows2.length) {
-      details.append(noteLine4(t("stats.emptyTracks")));
-      return details;
-    }
-    const table = document.createElement("table");
-    table.className = "stats-table";
-    const head = document.createElement("thead");
-    head.append(headerRow(["column.title", "column.artist", "column.plays", "column.lastPlayed"]));
-    table.append(head);
-    const body = document.createElement("tbody");
-    for (const row of rows2.slice(0, LIST_CAP3)) {
-      body.append(dataRow([
-        row.name || "—",
-        row.artist || "—",
-        String(row.plays ?? 0),
-        clockLabel(row.last_played) || "—"
-      ]));
-    }
-    table.append(body);
-    details.append(table);
-    if (rows2.length > LIST_CAP3) details.append(noteLine4(t("stats.more", { count: rows2.length - LIST_CAP3 })));
-    return details;
-  }
-  function artistTable(rows2) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = rows2.length > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label: t("stats.artists"), count: rows2.length });
-    details.append(heading2);
-    if (!rows2.length) {
-      details.append(noteLine4(t("stats.emptyArtists")));
-      return details;
-    }
-    const table = document.createElement("table");
-    table.className = "stats-table";
-    const head = document.createElement("thead");
-    head.append(headerRow(["column.artist", "column.plays", "stats.artistTracks", "column.lastPlayed"]));
-    table.append(head);
-    const body = document.createElement("tbody");
-    for (const row of rows2.slice(0, LIST_CAP3)) {
-      body.append(dataRow([
-        row.artist || "—",
-        String(row.plays ?? 0),
-        String(row.tracks ?? 0),
-        clockLabel(row.last_played) || "—"
-      ]));
-    }
-    table.append(body);
-    details.append(table);
-    if (rows2.length > LIST_CAP3) details.append(noteLine4(t("stats.more", { count: rows2.length - LIST_CAP3 })));
-    return details;
-  }
-  function idleGroup(rows2, count, idleDays) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label: t("stats.idle"), count });
-    details.append(heading2);
-    details.append(noteLine4(t("stats.idleHint", { days: idleDays })));
-    const crate = buttonEl(tips.statsIdleCrate);
-    crate.dataset.statsAction = "crate";
-    crate.textContent = t("stats.idleCrate");
-    crate.disabled = crateBusy || !state.writable || count === 0;
-    details.append(crate);
-    if (!count) {
-      details.append(noteLine4(t("stats.emptyIdle")));
-      return details;
-    }
-    const list = document.createElement("ul");
-    for (const row of rows2.slice(0, LIST_CAP3)) {
-      const item5 = document.createElement("li");
-      const last = row.last_played == null ? t("stats.never") : clockLabel(row.last_played) || "—";
-      item5.textContent = t("stats.idleRow", {
-        title: [row.artist, row.name].filter(Boolean).join(" — ") || row.name || "—",
-        last
-      });
-      list.append(item5);
-    }
-    details.append(list);
-    if (count > rows2.length) details.append(noteLine4(t("stats.more", { count: count - rows2.length })));
-    else if (rows2.length > LIST_CAP3) details.append(noteLine4(t("stats.more", { count: rows2.length - LIST_CAP3 })));
-    return details;
-  }
-  async function makeIdleCrate() {
-    if (crateBusy) return;
-    const idleDays = idleDaysFromInput(el("stats-idle-days").value);
-    const name = t("stats.idleCrateName", { days: idleDays });
-    crateBusy = true;
-    try {
-      const preview = await postJSON("/api/history-stats", {
-        action: "preview",
-        space: state.space,
-        idle_days: idleDays,
-        name
-      });
-      const count = preview.count ?? 0;
-      if (!count) {
-        el("stats-status").textContent = t("stats.emptyIdle");
-        return;
-      }
-      const label = String(preview.name || name);
-      if (!confirm(t("stats.confirmCrate", { name: label, count, days: idleDays }))) return;
-      const created = await postJSON("/api/history-stats", {
-        action: "create",
-        space: state.space,
-        idle_days: idleDays,
-        name: label
-      });
-      if (!created.written) {
-        el("stats-status").textContent = t("stats.emptyIdle");
-        return;
-      }
-      await bridge.reloadLibrary();
-      await loadHistoryStats();
-      el("stats-status").textContent = created.warning || t("stats.written", {
-        name: String(created.name || label),
-        count: created.count ?? count
-      });
-    } catch (error2) {
-      if (failureOf(error2).status === 409) {
-        bridge.lockDown(error2);
-        return;
-      }
-      el("stats-status").textContent = failureOf(error2).message;
-    } finally {
-      crateBusy = false;
-      if (latest5) renderHistoryStats(latest5);
-    }
-  }
-  function headerRow(keys) {
-    const row = document.createElement("tr");
-    for (const key of keys) {
-      const cell = document.createElement("th");
-      cell.scope = "col";
-      cell.textContent = t(key);
-      row.append(cell);
-    }
-    return row;
-  }
-  function dataRow(values) {
-    const row = document.createElement("tr");
-    for (const value of values) {
-      const cell = document.createElement("td");
-      cell.textContent = value;
-      row.append(cell);
-    }
-    return row;
-  }
-  function noteLine4(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-
-  // src/scan.ts
-  var LIST_CAP4 = 100;
-  var PROBLEM_ORDER = [
-    "empty",
-    "unreadable",
-    "wrong_format",
-    "serato_flagged",
-    "undecodable",
-    "decode_error",
-    "short"
-  ];
-  var PROBLEM_KEYS = {
-    empty: "scan.problem.empty",
-    unreadable: "scan.problem.unreadable",
-    wrong_format: "scan.problem.wrong_format",
-    serato_flagged: "scan.problem.serato_flagged",
-    undecodable: "scan.problem.undecodable",
-    decode_error: "scan.problem.decode_error",
-    short: "scan.problem.short"
-  };
-  var latest6 = null;
-  var lastDepth = "quick";
-  function wireScan() {
-    const panel = el("scan-panel");
-    if (panel.dataset.scanWired === "true") return;
-    panel.dataset.scanWired = "true";
-    el("scan-quick").addEventListener("click", () => {
-      void loadScan("quick");
-    });
-    el("scan-full").addEventListener("click", () => {
-      void loadScan("full");
-    });
-  }
-  async function loadScan(depth) {
-    const chosen = resolveDepth(depth);
-    const token3 = ++state.scanToken;
-    beginBusy5();
-    let settle = "none";
-    if (chosen === "full" && state.activeCrate === "all") {
-      failStatus6(t("error.scan_full_needs_crate"));
-      endBusy5();
-      el("scan-full").focus();
-      return;
-    }
-    lastDepth = chosen;
-    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      const response = await fetch(
-        `/api/file-scan?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&depth=${encodeURIComponent(chosen)}`
-      );
-      if (token3 !== state.scanToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.scanToken) return;
-      if (!response.ok || payload === null) {
-        failStatus6(serverMessage(payload, t("scan.unreadable")));
-        settle = "retry";
-        return;
-      }
-      latest6 = payload;
-      el("scan-status").textContent = "";
-      renderScanReport(payload);
-      settle = "report";
-    } catch {
-      if (token3 !== state.scanToken) return;
-      failStatus6(t("scan.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.scanToken) return;
-      endBusy5();
-      if (settle === "retry") el("scan-quick").focus();
-      if (settle === "report") el("scan-report").focus();
-    }
-  }
-  function showScanFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
-    failStatus6(message);
-    endBusy5();
-    el("scan-quick").focus();
-  }
-  function renderScanReport(payload) {
-    el("scan-scope").textContent = scopeLabel3();
-    const report = el("scan-report");
-    const problems = payload.problems || [];
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked });
-    report.replaceChildren(summary);
-    if (payload.not_found) {
-      report.append(noteLine5(t("scan.notFound", { count: payload.not_found })));
-    }
-    if (payload.unchecked) {
-      report.append(noteLine5(t("scan.unchecked", { count: payload.unchecked })));
-    }
-    if (!problems.length) {
-      report.append(noteLine5(t("scan.empty")));
-      return;
-    }
-    for (const kind2 of problemKinds(problems)) {
-      const rows2 = problems.filter((item5) => item5.problem === kind2);
-      report.append(detailsGroup3(problemHeading(kind2), rows2.map(problemLine)));
-    }
-  }
-  function repaintScan() {
-    el("scan-scope").textContent = scopeLabel3();
-    if (latest6) renderScanReport(latest6);
-  }
-  function resolveDepth(depth) {
-    if (depth === "quick" || depth === "full") return depth;
-    if (lastDepth === "full" && state.activeCrate === "all") return "quick";
-    return lastDepth;
-  }
-  function beginBusy5() {
-    for (const id of ["scan-quick", "scan-full"]) {
-      const button = el(id);
-      button.disabled = true;
-      button.setAttribute("aria-busy", "true");
-    }
-    el("scan-panel").setAttribute("aria-busy", "true");
-    el("scan-status").textContent = t("scan.checking");
-  }
-  function endBusy5() {
-    el("scan-quick").disabled = false;
-    el("scan-quick").setAttribute("aria-busy", "false");
-    const full = el("scan-full");
-    full.disabled = state.activeCrate === "all";
-    full.setAttribute("aria-busy", "false");
-    el("scan-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus6(message) {
-    el("scan-status").textContent = message;
-  }
-  function scopeLabel3() {
-    if (state.activeCrate === "all") return t("gig.wholeSpace");
-    const crate = state.crates.find((row) => row.id === state.activeCrate);
-    return crate?.name || t("gig.wholeSpace");
-  }
-  function noteLine5(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function problemKinds(problems) {
-    const seen = new Set(problems.map((item5) => item5.problem));
-    const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
-    const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
-    return [...known, ...extra];
-  }
-  function problemHeading(kind2) {
-    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
-  }
-  function problemLine(item5) {
-    const title2 = [item5.artist, item5.name].filter(Boolean).join(" — ") || item5.file;
-    const label = problemDetail(item5);
-    return t("scan.row", { title: title2, file: item5.file, problem: label });
-  }
-  function problemDetail(item5) {
-    const heading2 = problemHeading(item5.problem);
-    if (item5.problem === "wrong_format" && item5.detail) {
-      return t("scan.wrongFormatDetail", { detail: item5.detail });
-    }
-    if ((item5.problem === "decode_error" || item5.problem === "short") && item5.detail) {
-      return t(item5.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
-        detail: item5.detail
-      });
-    }
-    if (item5.problem === "serato_flagged" && item5.detail) {
-      return `${heading2}: ${item5.detail}`;
-    }
-    return heading2;
-  }
-  function detailsGroup3(label, lines) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = true;
-    const summary = document.createElement("summary");
-    summary.textContent = t("gig.groupCount", { label, count: lines.length });
-    const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP4);
-    for (const line of shown) list.append(item3(line));
-    details.append(summary, list);
-    if (lines.length > LIST_CAP4) {
-      const show2 = buttonEl(tips.gigShowAll);
-      show2.className = "gig-show-all";
-      show2.textContent = t("gig.showAll", { count: lines.length });
-      show2.addEventListener("click", () => {
-        list.replaceChildren();
-        for (const line of lines) list.append(item3(line));
-        show2.remove();
-      });
-      details.append(show2);
-    }
-    return details;
-  }
-  function item3(text2) {
-    const row = document.createElement("li");
-    row.textContent = text2;
-    return row;
-  }
-
-  // src/bitrate.ts
-  var LIST_CAP5 = 100;
-  var REASON_ORDER2 = ["upsampled", "lossy_source"];
-  var REASON_KEYS2 = {
-    upsampled: "bitrate.reason.upsampled",
-    lossy_source: "bitrate.reason.lossy_source"
-  };
-  var latest7 = null;
-  var cratePlan = null;
-  function wireBitrate() {
-    const panel = el("bitrate-panel");
-    if (panel.dataset.bitrateWired === "true") return;
-    panel.dataset.bitrateWired = "true";
-    el("bitrate-refresh").addEventListener("click", () => {
-      void loadBitrate();
-    });
-    el("bitrate-save").addEventListener("click", () => {
-      void previewCrate();
-    });
-    el("bitrate-report").addEventListener("click", (event) => {
-      const button = event.target.closest("[data-bitrate-action]");
-      if (!button || button.disabled) return;
-      if (button.dataset.bitrateAction === "confirm") void createCrate();
-    });
-  }
-  async function loadBitrate() {
-    const token3 = ++state.bitrateToken;
-    cratePlan = null;
-    beginBusy6();
-    let settle = "none";
-    if (state.activeCrate === "all") {
-      failStatus7(t("error.bitrate_needs_crate"));
-      endBusy6();
-      el("bitrate-refresh").focus();
-      return;
-    }
-    const crate = String(state.activeCrate);
-    try {
-      const response = await fetch(
-        `/api/bitrate-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
-      );
-      if (token3 !== state.bitrateToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.bitrateToken) return;
-      if (!response.ok || payload === null) {
-        failStatus7(serverMessage(payload, t("bitrate.unreadable")));
-        settle = "retry";
-        return;
-      }
-      latest7 = payload;
-      el("bitrate-status").textContent = "";
-      renderBitrateReport(payload);
-      settle = "report";
-    } catch {
-      if (token3 !== state.bitrateToken) return;
-      failStatus7(t("bitrate.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.bitrateToken) return;
-      endBusy6();
-      if (settle === "retry") el("bitrate-refresh").focus();
-      if (settle === "report") el("bitrate-report").focus();
-    }
-  }
-  function showBitrateFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("bitrate.unreadable");
-    failStatus7(message);
-    endBusy6();
-    el("bitrate-refresh").focus();
-  }
-  function renderBitrateReport(payload) {
-    el("bitrate-scope").textContent = scopeLabel4();
-    const report = el("bitrate-report");
-    const suspects = payload.suspects || [];
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = suspects.length ? t("bitrate.summary", { checked: payload.checked, count: suspects.length }) : t("bitrate.summaryClear", { checked: payload.checked });
-    report.replaceChildren(summary);
-    if (payload.not_found) {
-      report.append(noteLine6(t("bitrate.notFound", { count: payload.not_found })));
-    }
-    if (payload.unreadable) {
-      report.append(noteLine6(t("bitrate.unreadableFiles", { count: payload.unreadable })));
-    }
-    if (payload.unchecked) {
-      report.append(noteLine6(t("bitrate.unchecked", { count: payload.unchecked })));
-    }
-    if (payload.too_quiet) {
-      report.append(noteLine6(t("bitrate.tooQuiet", { count: payload.too_quiet })));
-    }
-    if (!suspects.length) {
-      report.append(noteLine6(t("bitrate.empty")));
-      paintPlan(report);
-      return;
-    }
-    for (const kind2 of reasonKinds2(suspects)) {
-      const rows2 = suspects.filter((item5) => item5.reason === kind2);
-      report.append(detailsGroup4(reasonHeading2(kind2), rows2.map(suspectLine)));
-    }
-    paintPlan(report);
-  }
-  function repaintBitrate() {
-    el("bitrate-scope").textContent = scopeLabel4();
-    if (latest7) renderBitrateReport(latest7);
-  }
-  async function previewCrate() {
-    if (state.activeCrate === "all") {
-      failStatus7(t("error.bitrate_needs_crate"));
-      el("bitrate-refresh").focus();
-      return;
-    }
-    const token3 = ++state.bitrateToken;
-    beginBusy6("preview");
-    try {
-      const payload = await postJSON("/api/bitrate-check", {
-        action: "preview",
-        space: state.space,
-        crate: state.activeCrate
-      });
-      if (token3 !== state.bitrateToken) return;
-      cratePlan = payload;
-      latest7 = payload;
-      el("bitrate-status").textContent = payload.added ? t("bitrate.preview", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
-      renderBitrateReport(payload);
-      const confirm2 = el("bitrate-report").querySelector("[data-bitrate-action='confirm']");
-      (confirm2 ?? el("bitrate-save")).focus();
-    } catch (error2) {
-      if (token3 !== state.bitrateToken) return;
-      failStatus7(failureOf(error2).message);
-      el("bitrate-save").focus();
-    } finally {
-      if (token3 !== state.bitrateToken) return;
-      endBusy6();
-    }
-  }
-  async function createCrate() {
-    if (!cratePlan || !cratePlan.added || state.activeCrate === "all") return;
-    const token3 = ++state.bitrateToken;
-    beginBusy6("create");
-    try {
-      const payload = await postJSON("/api/bitrate-check", {
-        action: "create",
-        space: state.space,
-        crate: state.activeCrate
-      });
-      if (token3 !== state.bitrateToken) return;
-      await bridge.reloadLibrary();
-      if (token3 !== state.bitrateToken) return;
-      cratePlan = payload;
-      latest7 = payload;
-      el("bitrate-status").textContent = payload.written ? t("bitrate.written", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
-      renderBitrateReport(payload);
-      el("bitrate-report").focus();
-    } catch (error2) {
-      if (token3 !== state.bitrateToken) return;
-      const failed = failureOf(error2);
-      failStatus7(failed.message);
-      if (failed.status === 409) bridge.lockDown(error2);
-      el("bitrate-save").focus();
-    } finally {
-      if (token3 !== state.bitrateToken) return;
-      endBusy6();
-    }
-  }
-  function beginBusy6(kind2 = "check") {
-    for (const id of ["bitrate-refresh", "bitrate-save"]) {
-      const button = el(id);
-      button.disabled = true;
-      button.setAttribute("aria-busy", "true");
-    }
-    el("bitrate-panel").setAttribute("aria-busy", "true");
-    const status = kind2 === "create" ? t("bitrate.saving") : kind2 === "preview" ? t("bitrate.checking") : t("bitrate.checking");
-    el("bitrate-status").textContent = status;
-  }
-  function endBusy6() {
-    const noCrate = state.activeCrate === "all";
-    const refresh = el("bitrate-refresh");
-    refresh.disabled = noCrate;
-    refresh.setAttribute("aria-busy", "false");
-    const save3 = el("bitrate-save");
-    const flagged = Boolean(latest7?.suspects.length);
-    save3.disabled = noCrate || !flagged;
-    save3.setAttribute("aria-busy", "false");
-    el("bitrate-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus7(message) {
-    el("bitrate-status").textContent = message;
-  }
-  function scopeLabel4() {
-    if (state.activeCrate === "all") return t("gig.wholeSpace");
-    const crate = state.crates.find((row) => row.id === state.activeCrate);
-    return crate?.name || t("gig.wholeSpace");
-  }
-  function noteLine6(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function reasonKinds2(suspects) {
-    const seen = new Set(suspects.map((item5) => item5.reason));
-    const known = REASON_ORDER2.filter((kind2) => seen.has(kind2));
-    const extra = [...seen].filter((kind2) => !REASON_ORDER2.includes(kind2)).sort();
-    return [...known, ...extra];
-  }
-  function reasonHeading2(kind2) {
-    return t(REASON_KEYS2[kind2] ?? "bitrate.reason.unknown");
-  }
-  function suspectLine(item5) {
-    const title2 = [item5.artist, item5.name].filter(Boolean).join(" — ") || item5.file;
-    const reason = reasonHeading2(item5.reason);
-    const detail = item5.stated_kbps != null && item5.estimated_kbps != null ? t("bitrate.detail", { stated: item5.stated_kbps, estimated: item5.estimated_kbps }) : item5.estimated_kbps != null ? t("bitrate.detailEstimate", { estimated: item5.estimated_kbps }) : "";
-    return t("bitrate.row", { title: title2, file: item5.file, reason, detail });
-  }
-  function paintPlan(report) {
-    if (!cratePlan) return;
-    if (cratePlan.written && cratePlan.saved) {
-      report.append(noteLine6(t("bitrate.written", { count: cratePlan.added, name: cratePlan.name })));
-      return;
-    }
-    if (!cratePlan.added) {
-      report.append(noteLine6(t("bitrate.previewEmpty")));
-      return;
-    }
-    report.append(noteLine6(t("bitrate.preview", { count: cratePlan.added, name: cratePlan.name })));
-    const confirm2 = buttonEl(tips.bitrateConfirm);
-    confirm2.dataset.bitrateAction = "confirm";
-    confirm2.textContent = t("bitrate.confirmCrate");
-    confirm2.disabled = !state.writable;
-    report.append(confirm2);
-  }
-  function detailsGroup4(label, lines) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = true;
-    const summary = document.createElement("summary");
-    summary.textContent = t("gig.groupCount", { label, count: lines.length });
-    const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP5);
-    for (const line of shown) list.append(item4(line));
-    details.append(summary, list);
-    if (lines.length > LIST_CAP5) {
-      const show2 = buttonEl(tips.gigShowAll);
-      show2.className = "gig-show-all";
-      show2.textContent = t("gig.showAll", { count: lines.length });
-      show2.addEventListener("click", () => {
-        list.replaceChildren();
-        for (const line of lines) list.append(item4(line));
-        show2.remove();
-      });
-      details.append(show2);
-    }
-    return details;
-  }
-  function item4(text2) {
-    const row = document.createElement("li");
-    row.textContent = text2;
-    return row;
-  }
-
-  // src/tags-view.ts
-  function tagsSummary(field, values, groups) {
-    if (field === "titles") return titlesSummary(groups);
-    if (groups === 0) {
-      return field === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
-    }
-    return field === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
-  }
-  function titlesSummary(changes) {
-    if (!changes) return t("tags.summaryTitlesClear");
-    return t("tags.summaryTitles", { count: changes });
-  }
-  function groupHeading(group) {
-    return t("tags.group", {
-      name: group.suggested,
-      spellings: t("tags.spellingCount", { count: group.spellings.length }),
-      tracks: t("tags.trackCount", { count: group.tracks })
-    });
-  }
-  function spellingLabel(value, count, suggested) {
-    const base = t("tags.row", { value, count });
-    return suggested ? `${base} — ${t("tags.suggested")}` : base;
-  }
-  function previewSummary(plan) {
-    if (!plan.changes.length) return t("tags.noChanges");
-    return t("tags.previewSummary", { count: plan.changes.length, value: plan.value });
-  }
-  function titlesPreviewSummary(plan) {
-    if (!plan.changes.length) return t("tags.summaryTitlesClear");
-    return t("tags.titlesPreviewSummary", { count: plan.changes.length });
-  }
-  function writtenSummary(plan) {
-    return t("tags.written", { count: plan.changes.length, value: plan.value });
-  }
-  function titlesWrittenSummary(plan) {
-    return t("tags.titlesWritten", { count: plan.changes.length });
-  }
-  function mappingPreviewSummary(plan) {
-    if (!plan.changes.length) return t("tags.noChanges");
-    return t("tags.mappingSummary", { count: plan.changes.length });
-  }
-  function mappingWrittenSummary(plan) {
-    return t("tags.mappingWritten", { count: plan.changes.length });
-  }
-  function mappingFieldLabel(field) {
-    if (field === "genre") return t("tags.genre");
-    if (field === "artist") return t("tags.artist");
-    return field;
-  }
-  function groupChanges(changes) {
-    const rows2 = /* @__PURE__ */ new Map();
-    for (const change of changes) {
-      const remixer = change.remixer ?? "";
-      const field = change.field ?? "";
-      const id = `${field}\0${change.from}\0${change.to}\0${remixer}`;
-      const existing = rows2.get(id);
-      if (existing) existing.count += 1;
-      else {
-        const row = { from: change.from, to: change.to, count: 1 };
-        if (change.remixer) row.remixer = change.remixer;
-        if (change.field) row.field = change.field;
-        rows2.set(id, row);
-      }
-    }
-    return [...rows2.values()];
-  }
-  function previewLines(changes) {
-    return groupChanges(changes).map((row) => {
-      if (row.field) {
-        return t("tags.previewLineField", {
-          field: mappingFieldLabel(row.field),
-          from: row.from,
-          to: row.to,
-          count: row.count
-        });
-      }
-      return row.remixer ? t("tags.previewLineRemixer", {
-        from: row.from,
-        to: row.to,
-        remixer: row.remixer,
-        count: row.count
-      }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count });
-    });
-  }
-
-  // src/tags.ts
-  var LIST_CAP6 = 100;
-  var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
-  var TITLE_KEY = "clean";
-  var MAPPING_KEY = "saved";
-  var latest8 = null;
-  var titlePlan = null;
-  var mappingPlan = null;
-  var plans = /* @__PURE__ */ new Map();
-  var selectedByKey = /* @__PURE__ */ new Map();
-  var panelBusy = false;
-  var actionKey = "";
-  function wireTags() {
-    const panel = el("tags-panel");
-    if (panel.dataset.tagsWired === "true") return;
-    panel.dataset.tagsWired = "true";
-    el("tags-genre").addEventListener("click", () => {
-      if (currentField() === "genre") return;
-      setField("genre");
-      void loadTags();
-    });
-    el("tags-artist").addEventListener("click", () => {
-      if (currentField() === "artist") return;
-      setField("artist");
-      void loadTags();
-    });
-    el("tags-titles").addEventListener("click", () => {
-      if (currentField() === "titles") return;
-      setField("titles");
-      void loadTags();
-    });
-    el("tags-refresh").addEventListener("click", () => {
-      void loadTags();
-    });
-    el("tags-report").addEventListener("change", (event) => {
-      const input = event.target.closest("input[type='radio']");
-      if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
-      const key = input.name.slice("tags-".length);
-      selectedByKey.set(key, input.value);
-      plans.delete(key);
-      if (latest8) renderTagsReport(latest8);
-    });
-    el("tags-report").addEventListener("click", (event) => {
-      const button = event.target.closest("[data-tags-action]");
-      if (!button || button.disabled) return;
-      if (button.dataset.tagsAction === "clean-apply") {
-        void applyTitles();
-        return;
-      }
-      if (button.dataset.tagsAction === "refresh-apply") {
-        void applyMappings();
-        return;
-      }
-      const key = button.dataset.key ?? "";
-      if (!key) return;
-      if (button.dataset.tagsAction === "preview") void previewGroup(key);
-      if (button.dataset.tagsAction === "apply") void applyGroup(key);
-    });
-  }
-  async function loadTags() {
-    const token3 = ++state.tagsToken;
-    const field = currentField();
-    plans.clear();
-    selectedByKey.clear();
-    beginBusy7();
-    let settle = "none";
-    try {
-      if (field === "titles") {
-        const payload = await postJSON("/api/tag-clusters", {
-          action: "clean-preview",
-          space: state.space
-        });
-        if (token3 !== state.tagsToken) return;
-        titlePlan = payload;
-        latest8 = null;
-        mappingPlan = null;
-        el("tags-status").textContent = titlesPreviewSummary(payload);
-        settle = "report";
-      } else {
-        const response = await fetch(
-          `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
-        );
-        if (token3 !== state.tagsToken) return;
-        const payload = await readJSON(response).catch(() => null);
-        if (token3 !== state.tagsToken) return;
-        if (!response.ok || payload === null) {
-          failStatus8(serverMessage(payload, t("tags.unreadable")));
-          settle = "retry";
-          return;
-        }
-        latest8 = payload;
-        titlePlan = null;
-        mappingPlan = await readMappingPreview(token3);
-        if (token3 !== state.tagsToken) return;
-        el("tags-status").textContent = "";
-        settle = "report";
-      }
-    } catch (error2) {
-      if (token3 !== state.tagsToken) return;
-      if (error2 instanceof TypeError) failStatus8(t("tags.unreachable"));
-      else failStatus8(failureOf(error2).message);
-      settle = "retry";
-    } finally {
-      if (token3 !== state.tagsToken) return;
-      endBusy7();
-      if (settle === "report") paintReport();
-      if (settle === "retry") el("tags-refresh").focus();
-      if (settle === "report") el("tags-report").focus();
-    }
-  }
-  function showTagsFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
-    failStatus8(message);
-    endBusy7();
-    el("tags-refresh").focus();
-  }
-  function renderTagsReport(payload) {
-    el("tags-scope").textContent = t("gig.wholeSpace");
-    const field = currentField();
-    const report = el("tags-report");
-    const groups = payload.groups ?? [];
-    const open = openKeys();
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = tagsSummary(field, payload.values ?? 0, groups.length);
-    report.replaceChildren(summary);
-    const mapping = mappingCard();
-    if (mapping) report.append(mapping);
-    if (!groups.length) return;
-    groups.forEach((group, index) => {
-      report.append(groupCard(group, index === 0 || open.has(group.key)));
-    });
-  }
-  function paintReport() {
-    if (currentField() === "titles") {
-      if (titlePlan) renderTitleReport(titlePlan);
-      return;
-    }
-    if (latest8) renderTagsReport(latest8);
-  }
-  function renderTitleReport(plan) {
-    el("tags-scope").textContent = t("gig.wholeSpace");
-    const report = el("tags-report");
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = titlesSummary(plan.changes.length);
-    report.replaceChildren(summary);
-    const lines = previewLines(plan.changes);
-    if (lines.length) {
-      const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP6)) {
-        const row = document.createElement("li");
-        row.textContent = line;
-        diffs.append(row);
-      }
-      report.append(diffs);
-    }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
-    const apply = buttonEl(tips.tagsApplyTitles);
-    apply.dataset.tagsAction = "clean-apply";
-    apply.textContent = t("tags.apply");
-    apply.disabled = !canApplyTitles(plan);
-    actions2.append(apply);
-    report.append(actions2);
-  }
-  function repaintTags() {
-    setField(currentField());
-    el("tags-scope").textContent = t("gig.wholeSpace");
-    paintReport();
-  }
-  async function previewGroup(key) {
-    const group = groupByKey(key);
-    const value = selectedValue(key);
-    if (!group || !value) return;
-    actionKey = key;
-    paintReport();
-    try {
-      const plan = await postJSON("/api/tag-clusters", {
-        action: "preview",
-        space: state.space,
-        field: currentField(),
-        value
-      });
-      plans.set(key, plan);
-      el("tags-status").textContent = previewSummary(plan);
-      paintReport();
-      applyButton(key)?.focus();
-    } catch (error2) {
-      failStatus8(failureOf(error2).message);
-    } finally {
-      actionKey = "";
-      paintReport();
-    }
-  }
-  async function applyGroup(key) {
-    const plan = plans.get(key);
-    const value = selectedValue(key);
-    if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
-    actionKey = key;
-    panelBusy = true;
-    beginBusy7();
-    paintReport();
-    try {
-      const written = await postJSON("/api/tag-clusters", {
-        action: "apply",
-        space: state.space,
-        field: currentField(),
-        value
-      });
-      await bridge.reloadLibrary();
-      actionKey = "";
-      panelBusy = false;
-      endBusy7();
-      await loadTags();
-      el("tags-status").textContent = writtenSummary(written);
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus8(failed.message);
-      if (failed.status === 409) {
-        bridge.lockDown(error2);
-      }
-    } finally {
-      actionKey = "";
-      panelBusy = false;
-      endBusy7();
-      paintReport();
-    }
-  }
-  async function applyMappings() {
-    const plan = mappingPlan;
-    if (!plan || !canApplyMappings(plan)) return;
-    actionKey = MAPPING_KEY;
-    panelBusy = true;
-    beginBusy7();
-    paintReport();
-    try {
-      const written = await postJSON("/api/tag-clusters", {
-        action: "refresh-apply",
-        space: state.space
-      });
-      await bridge.reloadLibrary();
-      actionKey = "";
-      panelBusy = false;
-      endBusy7();
-      await loadTags();
-      el("tags-status").textContent = mappingWrittenSummary(written);
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus8(failed.message);
-      if (failed.status === 409) {
-        bridge.lockDown(error2);
-      }
-    } finally {
-      actionKey = "";
-      panelBusy = false;
-      endBusy7();
-      paintReport();
-    }
-  }
-  async function applyTitles() {
-    const plan = titlePlan;
-    if (!plan || !canApplyTitles(plan)) return;
-    actionKey = TITLE_KEY;
-    panelBusy = true;
-    beginBusy7();
-    paintReport();
-    try {
-      const written = await postJSON("/api/tag-clusters", {
-        action: "clean-apply",
-        space: state.space
-      });
-      await bridge.reloadLibrary();
-      actionKey = "";
-      panelBusy = false;
-      endBusy7();
-      await loadTags();
-      el("tags-status").textContent = titlesWrittenSummary(written);
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus8(failed.message);
-      if (failed.status === 409) {
-        bridge.lockDown(error2);
-      }
-    } finally {
-      actionKey = "";
-      panelBusy = false;
-      endBusy7();
-      paintReport();
-    }
-  }
-  function currentField() {
-    if (el("tags-titles").getAttribute("aria-pressed") === "true") return "titles";
-    if (el("tags-artist").getAttribute("aria-pressed") === "true") return "artist";
-    return "genre";
-  }
-  function setField(next2) {
-    el("tags-genre").setAttribute("aria-pressed", String(next2 === "genre"));
-    el("tags-artist").setAttribute("aria-pressed", String(next2 === "artist"));
-    el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
-    el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
-  }
-  function beginBusy7() {
-    panelBusy = true;
-    for (const id of FIELD_BUTTONS) {
-      const button = el(id);
-      button.disabled = true;
-      button.setAttribute("aria-busy", "true");
-    }
-    el("tags-panel").setAttribute("aria-busy", "true");
-    el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
-    paintReport();
-  }
-  function endBusy7() {
-    panelBusy = false;
-    for (const id of FIELD_BUTTONS) {
-      const button = el(id);
-      button.disabled = false;
-      button.setAttribute("aria-busy", "false");
-    }
-    el("tags-panel").setAttribute("aria-busy", "false");
-  }
-  function canApplyTitles(plan) {
-    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
-  }
-  function canApplyMappings(plan) {
-    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
-  }
-  function asMappingPlan(payload) {
-    if (payload === null || typeof payload !== "object") return null;
-    const plan = payload;
-    if (!Array.isArray(plan.changes)) return null;
-    return plan;
-  }
-  async function readMappingPreview(token3) {
-    try {
-      const payload = await postJSON("/api/tag-clusters", {
-        action: "refresh-preview",
-        space: state.space
-      });
-      if (token3 !== state.tagsToken) return null;
-      return asMappingPlan(payload);
-    } catch {
-      if (token3 !== state.tagsToken) return null;
-      return null;
-    }
-  }
-  function mappingCard() {
-    const plan = mappingPlan;
-    if (!plan?.changes.length) return null;
-    const wrap = document.createElement("div");
-    wrap.className = "tags-mappings";
-    const note = document.createElement("p");
-    note.className = "gig-note";
-    note.textContent = mappingPreviewSummary(plan);
-    wrap.append(note);
-    const lines = previewLines(plan.changes);
-    if (lines.length) {
-      const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP6)) {
-        const row = document.createElement("li");
-        row.textContent = line;
-        diffs.append(row);
-      }
-      wrap.append(diffs);
-    }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
-    const apply = buttonEl(tips.tagsApplyMappings);
-    apply.dataset.tagsAction = "refresh-apply";
-    apply.textContent = t("tags.applyMappings");
-    apply.disabled = !canApplyMappings(plan);
-    actions2.append(apply);
-    wrap.append(actions2);
-    return wrap;
-  }
-  function failStatus8(message) {
-    el("tags-status").textContent = message;
-  }
-  function openKeys() {
-    const keys = /* @__PURE__ */ new Set();
-    for (const details of el("tags-report").querySelectorAll("details[data-key]")) {
-      if (details instanceof HTMLDetailsElement && details.open && details.dataset.key) {
-        keys.add(details.dataset.key);
-      }
-    }
-    return keys;
-  }
-  function groupByKey(key) {
-    return latest8?.groups?.find((group) => group.key === key);
-  }
-  function selectedValue(key) {
-    const group = groupByKey(key);
-    return selectedByKey.get(key) ?? group?.suggested ?? "";
-  }
-  function canApply(key) {
-    const plan = plans.get(key);
-    const value = selectedValue(key);
-    return Boolean(
-      plan && plan.value === value && plan.changes.length && state.writable && !panelBusy && actionKey !== key
-    );
-  }
-  function applyButton(key) {
-    return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
-  }
-  function cssEscape(value) {
-    if (typeof CSS !== "undefined" && typeof CSS.escape === "function") return CSS.escape(value);
-    return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
-  }
-  function groupCard(group, open) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = open;
-    details.dataset.key = group.key;
-    const summary = document.createElement("summary");
-    setTooltip(summary, tips.tagsGroup);
-    summary.textContent = groupHeading(group);
-    const list = document.createElement("ul");
-    list.className = "tags-spellings";
-    const chosen = selectedValue(group.key);
-    for (const spelling of group.spellings) {
-      list.append(spellingRow(group.key, spelling.value, spelling.count, spelling.value === group.suggested, spelling.value === chosen));
-    }
-    details.append(summary, list);
-    const plan = plans.get(group.key);
-    if (plan && plan.value === chosen) {
-      const lines = previewLines(plan.changes);
-      if (lines.length) {
-        const diffs = document.createElement("ul");
-        const shown = lines.slice(0, LIST_CAP6);
-        for (const line of shown) {
-          const row = document.createElement("li");
-          row.textContent = line;
-          diffs.append(row);
-        }
-        details.append(diffs);
-      }
-    }
-    details.append(groupActions(group.key, chosen, plan));
-    return details;
-  }
-  function spellingRow(key, value, count, suggested, checked) {
-    const row = document.createElement("li");
-    const label = document.createElement("label");
-    label.className = "tags-spelling";
-    const radio = inputEl(tips.tagsSpelling);
-    radio.type = "radio";
-    radio.name = `tags-${key}`;
-    radio.value = value;
-    radio.checked = checked;
-    radio.disabled = panelBusy;
-    const text2 = document.createElement("span");
-    text2.textContent = spellingLabel(value, count, suggested);
-    label.append(radio, text2);
-    row.append(label);
-    return row;
-  }
-  function groupActions(key, value, plan) {
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
-    const preview = buttonEl(tips.tagsPreview);
-    preview.dataset.tagsAction = "preview";
-    preview.dataset.key = key;
-    preview.textContent = t("tags.preview");
-    preview.disabled = panelBusy || !value;
-    const apply = buttonEl(tips.tagsApply);
-    apply.dataset.tagsAction = "apply";
-    apply.dataset.key = key;
-    apply.textContent = t("tags.apply");
-    apply.disabled = !canApply(key);
-    if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
-    actions2.append(preview, apply);
-    return actions2;
-  }
-
-  // src/portable.ts
-  var FINDING_CAP = 100;
-  var KIND_KEY = {
-    off_drive: "portable.kindOffDrive",
-    missing: "portable.kindMissing",
-    smart_crate: "portable.kindSmartCrate",
-    unsafe_name: "portable.kindUnsafeName",
-    path_length: "portable.kindPathLength",
-    file_size: "portable.kindFileSize"
-  };
-  var token = 0;
-  var latest9 = null;
-  var lastRoots = [];
-  var opener = null;
-  var hasConnected = false;
-  function portableDriveRoot(path) {
-    const trimmed = path.trim();
-    if (!trimmed) return "";
-    const unified = trimmed.replace(/\\/g, "/");
-    const marker = unified.search(/\/_Serato_(\/|$)/i);
-    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
-    const volumes = /^\/Volumes\/[^/]+/.exec(base);
-    if (volumes) return volumes[0];
-    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
-    if (media2) return media2[0];
-    const mnt = /^\/mnt\/[^/]+/.exec(base);
-    if (mnt) return mnt[0];
-    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
-    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
-    const win = /^[A-Za-z]:/.exec(trimmed);
-    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
-    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
-  }
-  function portableSeratoRoots(roots) {
-    const connected = [];
-    const missing = [];
-    const seen = /* @__PURE__ */ new Set();
-    for (const root of roots) {
-      if (!root.removable || !root.serato) continue;
-      const key = portableDriveRoot(root.path).replace(/\\/g, "/").toLowerCase();
-      if (!key || seen.has(key)) continue;
-      seen.add(key);
-      if (root.missing) missing.push(root);
-      else connected.push(root);
-    }
-    return { connected, missing };
-  }
-  function parseDriveReport(value) {
-    if (!isRecord(value)) return null;
-    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
-    if (typeof value.summary !== "string") return null;
-    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
-    const findings = [];
-    for (const item5 of value.findings) {
-      if (!isRecord(item5) || typeof item5.kind !== "string" || typeof item5.fix !== "string") return null;
-      findings.push({
-        kind: item5.kind,
-        crate: text(item5.crate),
-        track: text(item5.track),
-        path: text(item5.path),
-        found: text(item5.found),
-        fix: item5.fix
-      });
-    }
-    const errors = [];
-    for (const item5 of value.errors) {
-      if (!isRecord(item5) || typeof item5.message !== "string") return null;
-      errors.push({ crate: text(item5.crate), message: item5.message });
-    }
-    return {
-      drive: text(value.drive),
-      name: text(value.name),
-      ready: value.ready,
-      missing_drive: value.missing_drive,
-      summary: value.summary,
-      findings,
-      errors
-    };
-  }
-  function portableDriveButton(name, path) {
-    const button = buttonEl(portableCheck(name));
-    button.className = "files-portable";
-    button.dataset.portableName = name;
-    button.textContent = t("portable.check");
-    button.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    button.addEventListener("click", (event) => {
-      event.stopPropagation();
-      void openPortableCheck(path, button);
-    });
-    return button;
-  }
-  async function openPortableCheck(path, trigger) {
-    wirePortable();
-    opener = trigger ?? null;
-    const dialog = el("portable-dialog");
-    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
-    await runPortableCheck(path);
-  }
-  async function loadPortableView() {
-    wirePortable();
-    beginBusy8();
-    paintStatus(t("portable.checking"));
-    let settle = "none";
-    try {
-      const payload = await fetchLibraryRoots();
-      lastRoots = payload.roots;
-      paintDrivePicker(lastRoots);
-      const path = el("portable-drive").value;
-      if (!path) {
-        clearReport();
-        el("portable-view-status").textContent = hasConnected ? "" : t("portable.noDrive");
-        el("portable-status").textContent = hasConnected ? "" : t("portable.noDrive");
-        return;
-      }
-      await runPortableCheck(path);
-      settle = "report";
-    } catch (error2) {
-      fail(error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable"));
-      settle = "retry";
-    } finally {
-      endBusy8();
-      if (settle === "retry") el("portable-check").focus();
-      if (settle === "report") el("portable-view-verdict").focus();
-    }
-  }
-  function showPortableFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable");
-    fail(message);
-    endBusy8();
-    el("portable-check").focus();
-  }
-  function repaintPortable() {
-    for (const button of document.querySelectorAll(".files-portable")) {
-      button.textContent = t("portable.check");
-      const name = button.dataset.portableName ?? "";
-      if (name) button.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    }
-    el("portable-check").textContent = t("portable.check");
-    if (lastRoots.length) paintDrivePicker(lastRoots);
-    if (latest9) renderPortableReport(latest9);
-  }
-  function wirePortable() {
-    const dialog = el("portable-dialog");
-    if (dialog.dataset.portableWired !== "true") {
-      dialog.dataset.portableWired = "true";
-      el("portable-close").addEventListener("click", () => {
-        el("portable-dialog").close();
-        if (opener?.isConnected) opener.focus();
-      });
-    }
-    const panel = el("portable-panel");
-    if (panel.dataset.portableWired === "true") return;
-    panel.dataset.portableWired = "true";
-    el("portable-check").addEventListener("click", () => {
-      void runPortableCheck(el("portable-drive").value);
-    });
-    el("portable-drive").addEventListener("change", () => {
-      void runPortableCheck(el("portable-drive").value);
-    });
-  }
-  function renderPortableReport(report) {
-    latest9 = report;
-    const verdictText = report.missing_drive ? t("portable.missing") : report.ready ? t("portable.ready") : t("portable.notReady");
-    const items = findingItems(report);
-    for (const surface of surfaces()) {
-      surface.verdict.textContent = verdictText;
-      surface.summary.textContent = report.summary;
-      surface.findings.replaceChildren(...items.map((item5) => item5.cloneNode(true)));
-      surface.status.textContent = "";
-    }
-  }
-  async function runPortableCheck(path) {
-    wirePortable();
-    const drive = portableDriveRoot(path);
-    const mine = ++token;
-    latest9 = null;
-    clearReport();
-    paintStatus(t("portable.checking"));
-    if (!drive) {
-      fail(t("portable.unreadable"));
-      return;
-    }
-    beginBusy8();
-    try {
-      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
-      if (mine !== token) return;
-      const body = await readJSON(response).catch(() => null);
-      if (mine !== token) return;
-      if (!response.ok) {
-        fail(serverMessage(errorBody(body), t("portable.unreadable")));
-        return;
-      }
-      const report = parseDriveReport(body);
-      if (!report) {
-        fail(t("portable.unreadable"));
-        return;
-      }
-      latest9 = report;
-      paintStatus("");
-      renderPortableReport(report);
-    } catch {
-      if (mine !== token) return;
-      fail(t("portable.unreachable"));
-    } finally {
-      if (mine === token) endBusy8();
-    }
-  }
-  function paintDrivePicker(roots) {
-    const { connected, missing } = portableSeratoRoots(roots);
-    hasConnected = connected.length > 0;
-    const select = el("portable-drive");
-    const previous2 = select.value;
-    const options = connected.map((root) => {
-      const option = document.createElement("option");
-      option.value = root.path;
-      option.textContent = root.label;
-      return option;
-    });
-    select.replaceChildren(...options);
-    const keep = connected.some((root) => root.path === previous2) ? previous2 : connected[0]?.path ?? "";
-    select.value = keep;
-    select.disabled = !hasConnected;
-    el("portable-check").disabled = !hasConnected;
-    const note = el("portable-offline");
-    if (!missing.length) {
-      note.textContent = "";
-      return;
-    }
-    note.textContent = missing.map((root) => t("portable.offlineNamed", { name: root.label })).join(" ");
-  }
-  function findingItems(report) {
-    const items = [];
-    const shown = report.findings.slice(0, FINDING_CAP);
-    for (const finding of shown) {
-      const row = document.createElement("li");
-      const kind2 = document.createElement("span");
-      kind2.className = "portable-kind";
-      kind2.textContent = kindLabel(finding.kind);
-      row.append(kind2);
-      if (finding.fix) {
-        row.append(document.createTextNode(" "));
-        const fix = document.createElement("span");
-        fix.className = "portable-fix";
-        fix.textContent = finding.fix;
-        row.append(fix);
-      }
-      items.push(row);
-    }
-    for (const error2 of report.errors) {
-      const row = document.createElement("li");
-      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
-      items.push(row);
-    }
-    const hidden = report.findings.length - shown.length;
-    if (hidden > 0) {
-      const row = document.createElement("li");
-      row.textContent = t("files.andMore", { count: hidden });
-      items.push(row);
-    }
-    return items;
-  }
-  function surfaces() {
-    return [
-      {
-        verdict: el("portable-verdict"),
-        summary: el("portable-summary"),
-        findings: el("portable-findings"),
-        status: el("portable-status")
-      },
-      {
-        verdict: el("portable-view-verdict"),
-        summary: el("portable-view-summary"),
-        findings: el("portable-view-findings"),
-        status: el("portable-view-status")
-      }
-    ];
-  }
-  function kindLabel(kind2) {
-    const key = KIND_KEY[kind2];
-    return key ? t(key) : kind2;
-  }
-  function fail(message) {
-    latest9 = null;
-    clearReport();
-    paintStatus(message);
-  }
-  function clearReport() {
-    for (const surface of surfaces()) {
-      surface.verdict.textContent = "";
-      surface.summary.textContent = "";
-      surface.findings.replaceChildren();
-    }
-  }
-  function paintStatus(message) {
-    for (const surface of surfaces()) surface.status.textContent = message;
-  }
-  function beginBusy8() {
-    const button = el("portable-check");
-    button.disabled = true;
-    button.setAttribute("aria-busy", "true");
-    el("portable-panel").setAttribute("aria-busy", "true");
-  }
-  function endBusy8() {
-    const button = el("portable-check");
-    button.disabled = !hasConnected;
-    button.setAttribute("aria-busy", "false");
-    el("portable-panel").setAttribute("aria-busy", "false");
-  }
-  function isRecord(value) {
-    return typeof value === "object" && value !== null && !Array.isArray(value);
-  }
-  function text(value) {
-    return typeof value === "string" ? value : "";
-  }
-  function errorBody(value) {
-    if (!isRecord(value)) return null;
-    const body = {};
-    if (typeof value.error === "string") body.error = value.error;
-    if (typeof value.code === "string") body.code = value.code;
-    if (body.error === void 0 && body.code === void 0) return null;
-    return body;
-  }
-
-  // src/beatgrid-view.ts
-  var GRID_WARNING_KEYS = {
-    beatgrid_too_short: "markers.gridTooShort",
-    beatgrid_version: "markers.gridVersion",
-    beatgrid_empty: "markers.gridEmpty",
-    beatgrid_too_many: "markers.gridTooMany",
-    beatgrid_truncated: "markers.gridTruncated"
-  };
-  function beatgridViewOnly(unavailable) {
-    return unavailable !== true;
-  }
-  function beatgridIsSuspect(code) {
-    return typeof code === "string" && code !== "";
-  }
-  function beatgridWarningKey(code) {
-    if (!beatgridIsSuspect(code) || code == null) return null;
-    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
-      return GRID_WARNING_KEYS[code];
-    }
-    return "markers.gridUnknown";
-  }
-  function beatSeconds(value) {
-    if (value === "" || value == null) return "";
-    const number = Number(value);
-    if (!Number.isFinite(number)) return "";
-    return `${number.toFixed(3)}s`;
-  }
-  function appendBeatgrid(section, track) {
-    if (!beatgridViewOnly(track.markers_unavailable)) return;
-    const heading2 = document.createElement("h4");
-    heading2.textContent = t("markers.gridHeading");
-    section.append(heading2);
-    const viewOnly = document.createElement("p");
-    viewOnly.className = "detail-kicker";
-    viewOnly.textContent = t("markers.gridViewOnly");
-    section.append(viewOnly);
-    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
-      const warn = document.createElement("p");
-      warn.className = "detail-kicker warn";
-      warn.setAttribute("role", "status");
-      const key = beatgridWarningKey(track.beatgrid_warning_code);
-      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
-      warn.textContent = t("markers.gridSuspect", { reason });
-      section.append(warn);
-    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
-      const empty = document.createElement("p");
-      empty.className = "detail-kicker";
-      empty.textContent = t("markers.gridNone");
-      section.append(empty);
-    }
-    for (const mark of track.beatgrid || []) {
-      section.append(paintBeatMarker(mark));
-    }
-  }
-  function paintBeatMarker(mark) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const time = document.createElement("span");
-    time.textContent = beatSeconds(mark.position);
-    const name = document.createElement("span");
-    const bpmNumber = Number(mark.bpm);
-    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
-      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
-    } else if (mark.beats != null) {
-      name.textContent = t("markers.beats", { count: Number(mark.beats) });
-    } else {
-      name.textContent = "";
-    }
-    row.append(document.createElement("span"), document.createElement("span"), time, name);
-    return row;
   }
 
   // src/cue-view.ts
@@ -21815,1352 +21108,11 @@
     return side;
   }
 
-  // src/folder-sync-view.ts
-  function syncFolderSyncButton() {
-    const id = state.activeCrate;
-    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
-    const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
-    el("crate-folder-sync").disabled = blocked;
-    el("crate-rename-from-tags").disabled = blocked;
-  }
-  function readFolderSyncForm() {
-    const folder = el("folder-sync-path").value.trim();
-    if (!folder) return null;
-    return {
-      folder,
-      subcrates: el("folder-sync-subcrates").checked,
-      full: el("folder-sync-full").checked
-    };
-  }
-  function folderSyncPreviewText(reply) {
-    const added = Number(reply.added) || 0;
-    const removed = Number(reply.removed) || 0;
-    const created = Number(reply.created) || 0;
-    const skipped = Number(reply.skipped_count) || 0;
-    if (added === 0 && removed === 0 && created === 0) {
-      return t("folderSync.summaryNone", { skipped });
-    }
-    return t("folderSync.summary", { added, removed, skipped });
-  }
-  function folderSyncDoneText(reply) {
-    const name = reply.crate?.name?.trim() || "";
-    const added = Number(reply.added) || 0;
-    const removed = Number(reply.removed) || 0;
-    if (!reply.written) return t("folderSync.unchanged", { name });
-    return t("folderSync.done", { name, added, removed });
-  }
-  function folderSyncHasWork(reply) {
-    return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
-  }
-
-  // src/preset-view.ts
-  function presetName(preset) {
-    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
-    if (preset.kind === "bpm") {
-      return t("presets.name.bpm", {
-        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
-        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
-      });
-    }
-    return t("presets.name.unplayed", { count: preset.months });
-  }
-  function numberFrom(input) {
-    const text2 = input.value.trim();
-    if (!text2) return null;
-    const value = Number(text2);
-    return Number.isFinite(value) ? value : null;
-  }
-  function scopeCrate() {
-    if (state.activeCrate === "all") return null;
-    const crate = state.crates.find((item5) => item5.id === state.activeCrate);
-    return crate && !crate.smart ? crate : null;
-  }
-  function readPresetForm() {
-    const kind2 = el("preset-kind").value;
-    const scope = scopeCrate();
-    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
-    if (kind2 === "harmonic") {
-      const key = el("preset-key").value.trim();
-      return key ? { kind: kind2, key, ...crate } : null;
-    }
-    if (kind2 === "bpm") {
-      const bpm = numberFrom(el("preset-bpm"));
-      const range = numberFrom(el("preset-range")) ?? 3;
-      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
-      return { kind: kind2, bpm, range, ...crate };
-    }
-    if (kind2 === "unplayed") {
-      const months = numberFrom(el("preset-months")) ?? 12;
-      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
-      return { kind: kind2, months, ...crate };
-    }
-    return null;
-  }
-  function syncPresetFields() {
-    const kind2 = el("preset-kind").value;
-    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
-      field.hidden = field.dataset.presetKind !== kind2;
-    }
-  }
-  function isPresetCrate(id) {
-    return id !== "all" && Object.hasOwn(state.presets, String(id));
-  }
-  function presetFoot(id) {
-    if (!isPresetCrate(id)) return "";
-    const updated = Number(state.presets[String(id)]?.updated);
-    if (!Number.isFinite(updated) || updated <= 0) return "";
-    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-    return ` · ${t("presets.updated", { date })}`;
-  }
-  function syncPresetButtons() {
-    el("crate-preset").disabled = !state.writable;
-    const preset = isPresetCrate(state.activeCrate);
-    el("crate-refresh").hidden = !preset;
-    el("crate-refresh").disabled = !state.writable || !preset;
-  }
-
-  // src/restore.ts
-  var reloadLibrary = async () => {
-  };
-  function bindLibraryReload(reload) {
-    reloadLibrary = reload;
-  }
-  async function loadSnapshots() {
-    state.snapshotLoading = true;
-    state.snapshotError = "";
-    const operationsPromise = loadOperations();
-    renderSnapshots();
-    try {
-      const response = await fetch("/api/snapshots");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
-      state.snapshots = payload.snapshots || [];
-      state.snapshotUndo = payload.pending_undo || null;
-      state.writeBlock = payload.write_block || "";
-      state.writeBlockCode = payload.write_block_code || "";
-      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
-      state.seratoRunning = Boolean(payload.serato_running);
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotLoading = false;
-      renderSnapshots();
-    } finally {
-      await operationsPromise;
-    }
-  }
-  async function loadOperations() {
-    state.operationsLoading = true;
-    state.operationsError = "";
-    renderOperations();
-    try {
-      const response = await fetch("/api/operations");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
-      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
-      state.operationsLoading = false;
-    } catch (error2) {
-      state.operationsLoading = false;
-      state.operationsError = failureOf(error2).message || t("operations.unreadable");
-    }
-    renderOperations();
-  }
-  function failSnapshots(error2) {
-    state.snapshotLoading = false;
-    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
-    renderSnapshots();
-  }
-  function renderSnapshots() {
-    renderOperations();
-    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
-    const status = el("snapshots-status");
-    const block = el("snapshots-block");
-    const undo = el("snapshots-undo");
-    const list = el("snapshots-list");
-    list.setAttribute("aria-busy", String(state.snapshotLoading));
-    paintDriveCopies();
-    if (state.writeBlock) {
-      block.hidden = false;
-      block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
-    } else {
-      block.hidden = true;
-      block.textContent = "";
-    }
-    if (state.snapshotUndo && state.snapshotUndo.restore_id) {
-      undo.hidden = false;
-      el("snapshots-undo-text").textContent = state.snapshotUndo.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange");
-    } else {
-      undo.hidden = true;
-    }
-    list.replaceChildren();
-    if (state.snapshotLoading) {
-      status.textContent = t("snapshots.reading");
-      return;
-    }
-    if (state.snapshotError) {
-      status.textContent = state.snapshotError;
-      const retry = buttonEl(tips.snapshotsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => loadSnapshots().catch((error2) => failSnapshots(error2)));
-      list.append(retry);
-      return;
-    }
-    status.textContent = state.snapshotMessage ? t(state.snapshotMessage) : "";
-    if (!state.snapshots.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("snapshots.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item5 of state.snapshots) {
-      const card = document.createElement("article");
-      card.className = "snapshot-card";
-      card.setAttribute("role", "listitem");
-      const title2 = document.createElement("p");
-      title2.textContent = `${item5.created || t("snapshots.unknownTime")} · ${item5.trigger || t("snapshots.trigger")}`;
-      const detail = document.createElement("p");
-      const version = item5.serato_version && item5.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item5.serato_version, build: String(item5.serato_build ?? "") }) : t("snapshots.seratoUnknown");
-      const drives = (item5.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item5.unavailable_drives || []) })}` : "";
-      detail.textContent = `${version}. ${item5.reason || ""}${drives}`;
-      const restore = buttonEl(tips.reviewRestore);
-      restore.textContent = t("snapshots.reviewRestore");
-      restore.addEventListener("click", () => openSnapshotPlan(item5.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
-      card.append(title2, detail, restore);
-      list.append(card);
-    }
-  }
-  var OPERATION_ACTIONS = {
-    crate_create: "operations.action.crateCreate",
-    crate_rename: "operations.action.crateRename",
-    crate_delete: "operations.action.crateDelete",
-    crate_color: "operations.action.crateColor",
-    crate_expanded: "operations.action.crateExpanded",
-    crate_rules: "operations.action.crateRules",
-    crate_add: "operations.action.crateAdd",
-    crate_remove: "operations.action.crateRemove",
-    crate_prepare: "operations.action.cratePrepare",
-    crate_remove_library: "operations.action.crateRemoveLibrary",
-    save_track: "operations.action.saveTrack",
-    import_m3u: "operations.action.importM3u",
-    merge_duplicates: "operations.action.mergeDuplicates",
-    rename: "operations.action.rename",
-    rename_from_tags: "operations.action.renameFromTags",
-    move: "operations.action.move",
-    move_folder: "operations.action.moveFolder",
-    replace: "operations.action.replace",
-    replace_in_crates: "operations.action.replaceInCrates",
-    relink: "operations.action.relink",
-    delete: "operations.action.delete",
-    restore: "operations.action.restore",
-    restore_recover: "operations.action.restoreRecover"
-  };
-  var OPERATION_OUTCOMES = {
-    verified: "operations.outcome.verified",
-    rolled_back: "operations.outcome.rolledBack",
-    refused: "operations.outcome.refused",
-    rollback_failed: "operations.outcome.rollbackFailed"
-  };
-  function renderOperations() {
-    const alert = el("operations-alert");
-    const status = el("operations-status");
-    const list = el("operations-list");
-    list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest11 = state.operations[state.operations.length - 1];
-    const failed = latest11?.result === "rollback_failed";
-    alert.hidden = !failed;
-    alert.textContent = failed ? t("operations.rollbackFailed") : "";
-    list.replaceChildren();
-    if (state.operationsLoading && state.operations.length === 0) {
-      status.textContent = t("operations.reading");
-      return;
-    }
-    if (state.operationsError) {
-      status.textContent = state.operationsError;
-      const retry = buttonEl(tips.operationsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => {
-        loadOperations().catch(() => void 0);
-      });
-      list.append(retry);
-      return;
-    }
-    status.textContent = "";
-    if (!state.operations.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("operations.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item5 of [...state.operations].reverse()) {
-      list.append(operationCard(item5));
-    }
-  }
-  function operationCard(item5) {
-    const card = document.createElement("article");
-    card.className = "operation-card snapshot-card";
-    card.setAttribute("role", "listitem");
-    const actionName = item5.action || item5.operation || "";
-    const actionKey2 = OPERATION_ACTIONS[actionName];
-    const outcomeKey = OPERATION_OUTCOMES[item5.result || ""] ?? "operations.outcome.refused";
-    const title2 = document.createElement("p");
-    title2.textContent = t("operations.entry", {
-      time: operationTime(item5.time || ""),
-      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
-      target: item5.target || t("operations.noTarget"),
-      outcome: t(outcomeKey)
-    });
-    card.append(title2);
-    if (item5.snapshot_before && item5.snapshot_after) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.snapshots", {
-        before: item5.snapshot_before,
-        after: item5.snapshot_after
-      });
-      card.append(detail);
-    } else if (item5.snapshot_before) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.beforeOnly", { before: item5.snapshot_before });
-      card.append(detail);
-    }
-    return card;
-  }
-  function operationTime(value) {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
-    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
-  }
-  async function openSnapshotPlan(snapshotId) {
-    state.snapshotPlanId = snapshotId;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    block.textContent = t("snapshots.readingPlan");
-    confirm2.disabled = true;
-    setSnapshotDialogStatus("");
-    el("snapshot-dialog").showModal();
-    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
-    paintSnapshotPlan(plan);
-  }
-  var lastPlan = null;
-  function repaintSnapshotPlan() {
-    if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
-  }
-  function isDriveCopy(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
-  }
-  function driveBackupFrom(value) {
-    if (!value || typeof value !== "object") return null;
-    const record = value;
-    if (record.verified !== true) return null;
-    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
-    return {
-      folder: typeof record.folder === "string" ? record.folder : "",
-      verified: true,
-      drives
-    };
-  }
-  function driveName(drive, status) {
-    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
-    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
-    if (status === "permission") return t("snapshots.drivePermission", { name });
-    return name;
-  }
-  function driveCopyText() {
-    const report = state.driveBackup;
-    const drives = report?.drives ?? [];
-    if (!report?.verified || !drives.length) {
-      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
-    }
-    const parts = [];
-    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
-    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
-    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
-    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
-    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
-    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
-    return parts.join(" ") || t("snapshots.drivesIntro");
-  }
-  function paintDriveCopies() {
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = driveCopyText();
-  }
-  async function backupDriveCrates() {
-    const button = el("snapshots-drives");
-    button.disabled = true;
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = t("snapshots.backupDrivesBusy");
-    try {
-      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
-      renderSnapshots();
-    } catch (error2) {
-      state.snapshotMessage = "";
-      renderSnapshots();
-      const shown = el("snapshots-drives-note");
-      shown.hidden = false;
-      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
-    } finally {
-      button.disabled = false;
-    }
-  }
-  function paintSnapshotPlan(plan) {
-    lastPlan = plan;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    const crates = plan.crates || {};
-    const tracks = plan.tracks || {};
-    appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
-    appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
-    appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
-    appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
-    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
-    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
-    if (plan.registration_warning) {
-      const warning = document.createElement("p");
-      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
-      planBox.append(warning);
-    }
-    appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
-    appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
-    appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
-    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
-    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
-    const deleted = plan.deleted || {};
-    appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
-    appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
-    appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
-    appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
-    if (plan.restore_blocked) {
-      block.textContent = codedText(
-        plan.restore_blocked,
-        plan.restore_blocked_code,
-        messageParams(plan.restore_blocked_params)
-      );
-      confirm2.disabled = true;
-    } else {
-      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
-      confirm2.disabled = false;
-    }
-  }
-  function appendPlanLine(parent, label, rows2) {
-    const line = document.createElement("p");
-    const items = rows2 || [];
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-    } else {
-      const names = items.slice(0, 8).map((item5) => item5.name || item5.path || item5.drive_label || t("plan.item"));
-      const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
-      const listed = `${names.join(", ")}${extra}`;
-      line.textContent = t("plan.listed", { label, count: items.length, names: listed });
-    }
-    parent.append(line);
-  }
-  function appendCueDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item5 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item5.path || "");
-      parent.append(row);
-      for (const diff of cueDiffRows(item5.before, item5.after)) {
-        parent.append(paintCueDiffRow(diff));
-      }
-    }
-  }
-  function appendFrameDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item5 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item5.path || "");
-      parent.append(row);
-    }
-  }
-  function fileName(path) {
-    const parts = String(path).split(/[/\\]/);
-    return parts[parts.length - 1] || path;
-  }
-  function setSnapshotDialogStatus(message) {
-    el("snapshot-status").textContent = message;
-  }
-  async function takeSnapshot() {
-    const button = el("snapshots-take");
-    button.disabled = true;
-    button.textContent = t("snapshots.saving");
-    try {
-      await postJSON("/api/snapshots", { action: "create" });
-      state.snapshotMessage = "snapshots.saved";
-      await loadSnapshots();
-    } finally {
-      button.disabled = false;
-      button.textContent = t("snapshots.take");
-    }
-  }
-  async function confirmSnapshotRestore() {
-    const confirm2 = el("snapshot-confirm");
-    confirm2.disabled = true;
-    confirm2.textContent = t("snapshots.restoring");
-    setSnapshotDialogStatus("");
-    try {
-      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
-      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
-      const result = await postJSON("/api/snapshots", body);
-      const skipped = result.crates_skipped || [];
-      el("snapshot-dialog").close();
-      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
-      await loadSnapshots();
-      await reloadLibrary();
-      if (skipped.length) {
-        const names = skipped.map((item5) => item5.name || item5.path || t("plan.item")).join(", ");
-        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
-      }
-    } catch (error2) {
-      setSnapshotDialogStatus(failureOf(error2).message);
-      confirm2.disabled = false;
-      await loadOperations();
-    } finally {
-      confirm2.textContent = t("snapshots.restore");
-    }
-  }
-
-  // src/search-filters.ts
-  var TEXT_SEARCH_FIELDS = [
-    "comments",
-    "grouping",
-    "composer",
-    "title",
-    "artist",
-    "album",
-    "genre",
-    "file"
-  ];
-  var KEY_VALUES = {
-    "g#m": 0,
-    abm: 0,
-    "1a": 0,
-    ebm: 1,
-    "d#m": 1,
-    "2a": 1,
-    bbm: 2,
-    "a#m": 2,
-    "3a": 2,
-    fm: 3,
-    "4a": 3,
-    cm: 4,
-    "5a": 4,
-    gm: 5,
-    "6a": 5,
-    dm: 6,
-    "7a": 6,
-    am: 7,
-    "8a": 7,
-    em: 8,
-    "9a": 8,
-    bm: 9,
-    "10a": 9,
-    "f#m": 10,
-    gbm: 10,
-    "11a": 10,
-    "c#m": 11,
-    dbm: 11,
-    "12a": 11,
-    b: 12,
-    "1b": 12,
-    "f#": 13,
-    gb: 13,
-    "2b": 13,
-    "c#": 14,
-    db: 14,
-    "3b": 14,
-    "g#": 15,
-    ab: 15,
-    "4b": 15,
-    "d#": 16,
-    eb: 16,
-    "5b": 16,
-    "a#": 17,
-    bb: 17,
-    "6b": 17,
-    f: 18,
-    "7b": 18,
-    c: 19,
-    "8b": 19,
-    g: 20,
-    "9b": 20,
-    d: 21,
-    "10b": 21,
-    a: 22,
-    "11b": 22,
-    e: 23,
-    "12b": 23
-  };
-  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
-  var EXACT = new RegExp(`^${NUMBER}$`);
-  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
-  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
-  var ABOVE = new RegExp(`^>${NUMBER}$`);
-  var BELOW = new RegExp(`^<${NUMBER}$`);
-  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
-  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
-  function isNone(value) {
-    return NONE.has(value);
-  }
-  function isYes(value) {
-    return YES.has(value);
-  }
-  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
-  function isTextSearchField(value) {
-    return TEXT_FIELD_SET.has(value);
-  }
-  function textField(track, field) {
-    if (field === "title") return String(track.name ?? "");
-    return String(track[field] ?? "");
-  }
-  function trackHaystack(track, field) {
-    if (field) return textField(track, field).toLocaleLowerCase();
-    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-  }
-  function hasBpm(track) {
-    const bpm = Number(track.bpm);
-    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
-  }
-  function hasKey2(track) {
-    return Boolean(String(track.key ?? "").trim());
-  }
-  function cueFlag(track) {
-    if (track.has_cues === true) return true;
-    if (track.has_cues === false) return false;
-    if (track.markers_found === true) return true;
-    if (track.markers_found === false) return false;
-    if (Array.isArray(track.cues)) {
-      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
-      return track.cues.length > 0 || loops > 0;
-    }
-    return null;
-  }
-  function keyNumber(value) {
-    if (!value) return -1;
-    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
-  }
-  function mixingKeys(key) {
-    const base = key < 12 ? 0 : 12;
-    const index = key - base;
-    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
-  }
-  function bpmFilter(value) {
-    let match = RANGE.exec(value);
-    if (match) {
-      const low = Number(match[1]);
-      const high = Number(match[2]);
-      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
-    }
-    match = AROUND.exec(value);
-    if (match) {
-      const center = Number(match[1]);
-      const spread = Number(match[2]);
-      return { kind: "bpm", min: center - spread, max: center + spread };
-    }
-    match = ABOVE.exec(value);
-    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
-    match = BELOW.exec(value);
-    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
-    match = EXACT.exec(value);
-    if (match) {
-      const whole = Number(match[1]);
-      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
-    }
-    return null;
-  }
-  function parseQuery(text2) {
-    const terms = [];
-    const filters = [];
-    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
-      const colon = word.indexOf(":");
-      const name = colon > 0 ? word.slice(0, colon) : "";
-      const value = colon > 0 ? word.slice(colon + 1) : "";
-      let filter = null;
-      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
-      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
-      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
-      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
-      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
-      else if (name === "bpm") filter = bpmFilter(value);
-      else if (name === "key" || name === "mix") {
-        const key = keyNumber(value);
-        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
-      } else if (isTextSearchField(name) && value) {
-        filter = { kind: "field", field: name, value };
-      }
-      if (filter) filters.push(filter);
-      else terms.push(word);
-    }
-    return { terms, filters };
-  }
-  function matchesFilters(track, filters) {
-    for (const filter of filters) {
-      if (filter.kind === "bpm") {
-        if (!hasBpm(track)) return false;
-        const bpm = Number(track.bpm);
-        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
-      } else if (filter.kind === "missing") {
-        if (!track.missing) return false;
-      } else if (filter.kind === "nokey") {
-        if (hasKey2(track)) return false;
-      } else if (filter.kind === "nobpm") {
-        if (hasBpm(track)) return false;
-      } else if (filter.kind === "nokeybpm") {
-        if (hasKey2(track) && hasBpm(track)) return false;
-      } else if (filter.kind === "nocues") {
-        if (cueFlag(track) !== false) return false;
-      } else if (filter.kind === "field") {
-        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
-      } else if (!filter.keys.has(keyNumber(track.key))) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function matchesQuery(track, query, field) {
-    if (!matchesFilters(track, query.filters)) return false;
-    if (!query.terms.length) return true;
-    const hay = trackHaystack(track, field);
-    return query.terms.every((term) => hay.includes(term));
-  }
-
-  // src/views.ts
-  var import_react11 = __toESM(require_react(), 1);
-
-  // src/app/mount.tsx
-  var import_react_dom3 = __toESM(require_react_dom(), 1);
-  var import_client = __toESM(require_client(), 1);
-
-  // src/app/providers.tsx
-  var import_react10 = __toESM(require_react(), 1);
-  var import_react_dom2 = __toESM(require_react_dom(), 1);
-
-  // src/context/PlayerContext.tsx
-  var import_react = __toESM(require_react(), 1);
-  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-  var PlayerContext = (0, import_react.createContext)(null);
-  function PlayerProvider({
-    value,
-    children
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlayerContext, { value, children });
-  }
-  function usePlayer() {
-    const value = (0, import_react.useContext)(PlayerContext);
-    if (value === null) {
-      throw new Error("usePlayer must be used within PlayerProvider");
-    }
-    return value;
-  }
-
-  // src/context/WaveformContext.tsx
-  var import_react2 = __toESM(require_react(), 1);
-  var import_react_dom = __toESM(require_react_dom(), 1);
-
-  // src/waveform.ts
-  var TILE_CSS_WIDTH = 256;
-  var ZOOM_DEFAULT_PPS = 80;
-  var ZOOM_MIN_PPS = 10;
-  var ZOOM_MAX_PPS = 320;
-  var ZOOM_FACTOR = 1.25;
-  var WAVE_BG = { r: 35, g: 25, b: 16 };
-  var OUTER_ALPHA = 0.6;
-  var PLAYED_SHADE = 0.45;
-  var BEAT_HEIGHT_RATIO = 0.12;
-  var DOWNBEAT_HEIGHT_RATIO = 0.18;
-  var BEAT_ALPHA = 0.28;
-  var DOWNBEAT_ALPHA = 0.35;
-  var DEFAULT_MARKER_COLOR = { r: 226, g: 59, b: 22 };
-  var PLAYHEAD_COLOR = { r: 226, g: 59, b: 22 };
-  var BEAT_MARK = { r: 255, g: 255, b: 255 };
-  var HEADER_BYTES = 64;
-  var HEX_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
-  var MAX_POINTS = 2e7;
-  var MAX_TICKS = 8192;
-  function parseSwf1(input) {
-    const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
-    if (bytes.byteLength < HEADER_BYTES) return null;
-    if (bytes[0] !== 83 || bytes[1] !== 87 || bytes[2] !== 70 || bytes[3] !== 49) return null;
-    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-    if (view.getUint16(4, true) !== HEADER_BYTES) return null;
-    const version = view.getUint16(6, true);
-    const flags = view.getUint16(8, true);
-    const analyzerVersion = view.getUint16(10, true);
-    const sampleRate = view.getUint32(12, true);
-    const detailHzMilli = view.getUint32(16, true);
-    const durationMs = view.getUint32(20, true);
-    const detailCount = view.getUint32(24, true);
-    const overviewCount = view.getUint32(28, true);
-    const seratoColumns = view.getUint32(32, true);
-    const seratoBands = view.getUint16(36, true);
-    const lowHzMilli = view.getUint32(40, true);
-    const highHzMilli = view.getUint32(44, true);
-    if (detailCount > MAX_POINTS || overviewCount > MAX_POINTS || seratoColumns > MAX_POINTS) return null;
-    const detailBytes = detailCount * 6;
-    const overviewBytes = overviewCount * 6;
-    const seratoBytes = seratoColumns * seratoBands;
-    if (!Number.isSafeInteger(detailBytes + overviewBytes + seratoBytes)) return null;
-    const end = HEADER_BYTES + detailBytes + overviewBytes + seratoBytes;
-    if (end !== bytes.byteLength) return null;
-    let offset = HEADER_BYTES;
-    const detail = bytes.slice(offset, offset + detailBytes);
-    offset += detailBytes;
-    const overview = bytes.slice(offset, offset + overviewBytes);
-    offset += overviewBytes;
-    const serato = bytes.slice(offset, offset + seratoBytes);
-    return {
-      version,
-      flags,
-      analyzerVersion,
-      sampleRate,
-      pointsPerSecond: detailHzMilli / 1e3,
-      durationMs,
-      detail,
-      overview,
-      serato,
-      detailCount,
-      overviewCount,
-      seratoColumns,
-      seratoBands,
-      lowHz: lowHzMilli / 1e3,
-      highHz: highHzMilli / 1e3
-    };
-  }
-  function bandColor(low, mid, high) {
-    const l = clamp255(low);
-    const m = clamp255(mid);
-    const h = clamp255(high);
-    const max = Math.max(l, m, h);
-    if (max === 0) return { r: 0, g: 0, b: 0 };
-    return {
-      r: Math.round(l / max * 255),
-      g: Math.round(m / max * 255),
-      b: Math.round(h / max * 255)
-    };
-  }
-  function bandLevel(low, mid, high) {
-    return Math.max(clamp255(low), clamp255(mid), clamp255(high)) / 255;
-  }
-  function seratoColumnLevels(column) {
-    let low = 0;
-    let mid = 0;
-    let high = 0;
-    const count = Math.min(column.length, 16);
-    for (let index = 0; index < count; index += 1) {
-      const value = clamp255(column[index] ?? 0);
-      if (index <= 4) low = Math.max(low, value);
-      else if (index <= 10) mid = Math.max(mid, value);
-      else high = Math.max(high, value);
-    }
-    return { low, mid, high };
-  }
-  function beatgridTicks(markers, startSeconds, endSeconds) {
-    if (!Number.isFinite(startSeconds) || !Number.isFinite(endSeconds) || endSeconds <= startSeconds) return [];
-    const ordered = markers.filter((marker) => Number.isFinite(marker.positionSeconds)).slice();
-    ordered.sort((left, right) => left.positionSeconds - right.positionSeconds);
-    if (ordered.length === 0) return [];
-    const ticks = [];
-    let beatIndex = 0;
-    for (let index = 0; index < ordered.length; index += 1) {
-      const marker = ordered[index];
-      if (!marker) continue;
-      const next2 = ordered[index + 1];
-      if (next2) {
-        const beats = marker.beats;
-        if (beats === void 0 || !Number.isFinite(beats) || beats < 1) continue;
-        const count = Math.round(beats);
-        const spacing2 = (next2.positionSeconds - marker.positionSeconds) / beats;
-        if (!(spacing2 > 0) || count < 1) continue;
-        pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, count, startSeconds, endSeconds);
-        beatIndex += count;
-        continue;
-      }
-      const bpm = marker.bpm;
-      if (bpm === void 0 || !Number.isFinite(bpm) || bpm <= 0) continue;
-      const spacing = 60 / bpm;
-      if (!(spacing > 0)) continue;
-      const first = Math.max(0, Math.ceil((startSeconds - marker.positionSeconds) / spacing - 1e-9));
-      const lastExclusive = Math.ceil((endSeconds - marker.positionSeconds) / spacing - 1e-9);
-      if (lastExclusive <= first) continue;
-      const emit2 = Math.min(lastExclusive, first + MAX_TICKS);
-      pushRange(ticks, marker.positionSeconds, spacing, beatIndex, emit2, startSeconds, endSeconds, first);
-    }
-    return ticks;
-  }
-  function timeToX(timeSeconds, playheadSeconds, pixelsPerSecond, width) {
-    if (!(pixelsPerSecond > 0) || !Number.isFinite(timeSeconds) || !Number.isFinite(playheadSeconds) || !Number.isFinite(width)) {
-      return width / 2;
-    }
-    return width / 2 + (timeSeconds - playheadSeconds) * pixelsPerSecond;
-  }
-  function overviewXToTime(x, width, durationSeconds) {
-    if (!(width > 0) || !(durationSeconds > 0) || !Number.isFinite(x)) return 0;
-    const ratio = Math.min(1, Math.max(0, x / width));
-    return ratio * durationSeconds;
-  }
-  function zoomPixelsPerSecond(current2, direction) {
-    const base = Number.isFinite(current2) && current2 > 0 ? current2 : ZOOM_DEFAULT_PPS;
-    const next2 = base * (direction > 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR);
-    if (next2 >= ZOOM_MAX_PPS) return ZOOM_MAX_PPS;
-    if (next2 <= ZOOM_MIN_PPS) return ZOOM_MIN_PPS;
-    return next2;
-  }
-  function tileDeviceWidth(dpr) {
-    const scale = Number.isFinite(dpr) && dpr > 0 ? dpr : 1;
-    return Math.max(1, Math.round(TILE_CSS_WIDTH * scale));
-  }
-  function colorFromHex(value) {
-    if (!HEX_COLOR.test(value)) return null;
-    let hex = value.slice(1);
-    if (hex.length === 3) {
-      const r = hex[0] ?? "";
-      const g = hex[1] ?? "";
-      const b = hex[2] ?? "";
-      hex = `${r}${r}${g}${g}${b}${b}`;
-    }
-    if (hex.length === 8) hex = hex.slice(0, 6);
-    const parsed = Number.parseInt(hex, 16);
-    if (!Number.isFinite(parsed)) return null;
-    return { r: parsed >> 16 & 255, g: parsed >> 8 & 255, b: parsed & 255 };
-  }
-  function beatgridFromMarkers(rows2) {
-    if (!rows2 || rows2.length === 0) return [];
-    const found = [];
-    for (const row of rows2) {
-      const position = finiteNumber(row.position_seconds) ?? finiteNumber(row.position);
-      if (position === null) continue;
-      const marker = { positionSeconds: position };
-      const beats = finiteNumber(row.beats);
-      const bpm = finiteNumber(row.bpm);
-      if (beats !== null) marker.beats = beats;
-      if (bpm !== null) marker.bpm = bpm;
-      found.push(marker);
-    }
-    return found;
-  }
-  function loopsFromMarkers(rows2) {
-    if (!rows2 || rows2.length === 0) return [];
-    const found = [];
-    for (const row of rows2) {
-      const start = finiteNumber(row.start_ms);
-      const end = finiteNumber(row.end_ms);
-      if (start === null || end === null || end <= start || start < 0) continue;
-      found.push({
-        startSeconds: start / 1e3,
-        endSeconds: end / 1e3,
-        color: typeof row.color === "string" ? row.color : ""
-      });
-    }
-    return found;
-  }
-  var DetailTiles = class {
-    /**
-     * Remember one detail buffer.
-     *
-     * @param detail `N * 6` uint8 bytes.
-     * @param pointCount N.
-     * @param pointsPerSecond Detail rate from the header. 150 in SWF1.
-     */
-    constructor(detail, pointCount, pointsPerSecond) {
-      this.detail = detail;
-      this.pointCount = pointCount;
-      this.pointsPerSecond = pointsPerSecond;
-    }
-    detail;
-    pointCount;
-    pointsPerSecond;
-    tiles = /* @__PURE__ */ new Map();
-    blank = null;
-    /**
-     * Drop cached tiles.
-     *
-     * Called when the zoom changes so the next frame rebuilds at the new scale.
-     */
-    clear() {
-      this.tiles.clear();
-    }
-    /**
-     * Paint one zoomed frame into `frame`.
-     *
-     * The playhead is the center column. Tiles outside the view, plus one
-     * tile of margin, are not generated. Markers are cues, shaded loops, and
-     * beat ticks. Downbeats are taller.
-     *
-     * @param frame RGBA buffer of `width * height`.
-     * @param width Device pixels.
-     * @param height Device pixels.
-     * @param dpr Device pixel ratio.
-     * @param playheadSeconds Audio position.
-     * @param pixelsPerSecond CSS pixels per second.
-     * @param markers Cues, loops, and the beatgrid. Beat ticks are not drawn
-     *   when the grid is empty.
-     * @returns How many detail points this call sampled. Zero when every
-     *   visible tile was already cached.
-     */
-    paint(frame, width, height, dpr, playheadSeconds, pixelsPerSecond, markers) {
-      const scale = Number.isFinite(dpr) && dpr > 0 ? dpr : 1;
-      const pps = pixelsPerSecond > 0 ? pixelsPerSecond : ZOOM_DEFAULT_PPS;
-      this.ensureBlank(width, height);
-      const blank = this.blank;
-      if (!blank || frame.length !== blank.length) return { pointsRead: 0 };
-      frame.set(blank);
-      const cssWidth = width / scale;
-      const tileSeconds = TILE_CSS_WIDTH / pps;
-      const tileWidth = tileDeviceWidth(scale);
-      const viewStart = playheadSeconds - cssWidth / 2 / pps;
-      const viewEnd = playheadSeconds + cssWidth / 2 / pps;
-      const first = Math.floor(viewStart / tileSeconds) - 1;
-      const last = Math.floor(viewEnd / tileSeconds) + 1;
-      let pointsRead = 0;
-      const needed = /* @__PURE__ */ new Set();
-      for (let index = first; index <= last; index += 1) {
-        const key = `${Math.round(pps * 1e3)}|${scale}|${height}|${index}`;
-        needed.add(key);
-        let tile = this.tiles.get(key);
-        if (!tile) {
-          const rendered = renderTile(
-            this.detail,
-            this.pointCount,
-            this.pointsPerSecond,
-            index * tileSeconds,
-            tileSeconds,
-            tileWidth,
-            height,
-            scale
-          );
-          tile = rendered.pixels;
-          pointsRead += rendered.pointsRead;
-          this.tiles.set(key, tile);
-        }
-        const left = timeToX(index * tileSeconds, playheadSeconds, pps, cssWidth) * scale;
-        blit(frame, width, height, tile, tileWidth, Math.round(left));
-      }
-      if (this.tiles.size > 24) {
-        for (const key of this.tiles.keys()) {
-          if (!needed.has(key)) this.tiles.delete(key);
-        }
-      }
-      drawLoops(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.loops);
-      drawBeats(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.beatgrid, viewStart, viewEnd);
-      drawCues(frame, width, height, scale, playheadSeconds, pps, cssWidth, markers.cues);
-      drawPlayhead(frame, width, height);
-      return { pointsRead };
-    }
-    ensureBlank(width, height) {
-      const count = width * height * 4;
-      if (this.blank && this.blank.length === count) return;
-      const blank = new Uint8ClampedArray(count);
-      fillBackground(blank);
-      this.blank = blank;
-    }
-  };
-  function renderOverview(source, width, height) {
-    const pixels = new Uint8ClampedArray(width * height * 4);
-    fillBackground(pixels);
-    const columns = source.kind === "computed" ? source.count : source.columns.length;
-    if (columns < 1 || width < 1 || height < 1) return pixels;
-    for (let x = 0; x < width; x += 1) {
-      const start = Math.floor(x / width * columns);
-      const end = Math.max(start + 1, Math.floor((x + 1) / width * columns));
-      let lowPeak = 0;
-      let lowRms = 0;
-      let midPeak = 0;
-      let midRms = 0;
-      let highPeak = 0;
-      let highRms = 0;
-      for (let index = start; index < end && index < columns; index += 1) {
-        if (source.kind === "computed") {
-          const offset = index * 6;
-          lowPeak = Math.max(lowPeak, source.points[offset] ?? 0);
-          lowRms = Math.max(lowRms, source.points[offset + 1] ?? 0);
-          midPeak = Math.max(midPeak, source.points[offset + 2] ?? 0);
-          midRms = Math.max(midRms, source.points[offset + 3] ?? 0);
-          highPeak = Math.max(highPeak, source.points[offset + 4] ?? 0);
-          highRms = Math.max(highRms, source.points[offset + 5] ?? 0);
-        } else {
-          const levels = seratoColumnLevels(source.columns[index] ?? []);
-          lowPeak = Math.max(lowPeak, levels.low);
-          midPeak = Math.max(midPeak, levels.mid);
-          highPeak = Math.max(highPeak, levels.high);
-          lowRms = lowPeak;
-          midRms = midPeak;
-          highRms = highPeak;
-        }
-      }
-      paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
-    }
-    return pixels;
-  }
-  function shadePlayed(pixels, width, height, playedX) {
-    const end = Math.max(0, Math.min(width, Math.round(playedX)));
-    for (let y = 0; y < height; y += 1) {
-      const row = y * width;
-      for (let x = 0; x < end; x += 1) {
-        const offset = (row + x) * 4;
-        pixels[offset] = Math.round((pixels[offset] ?? 0) * PLAYED_SHADE);
-        pixels[offset + 1] = Math.round((pixels[offset + 1] ?? 0) * PLAYED_SHADE);
-        pixels[offset + 2] = Math.round((pixels[offset + 2] ?? 0) * PLAYED_SHADE);
-      }
-    }
-  }
-  function drawOverviewMarks(pixels, width, height, durationSeconds, playheadSeconds, markers) {
-    if (!(durationSeconds > 0) || width < 1) return;
-    const xOf = (seconds) => seconds / durationSeconds * width;
-    drawLoops(pixels, width, height, 1, 0, 1, width, markers.loops, xOf);
-    drawCues(pixels, width, height, 1, 0, 1, width, markers.cues, xOf);
-    const playX = Math.round(Math.min(width - 1, Math.max(0, xOf(playheadSeconds))));
-    fillSpan(pixels, width, height, playX, playX + 1, 0, height, PLAYHEAD_COLOR, 1);
-  }
-  function renderTile(detail, pointCount, pointsPerSecond, startSeconds, tileSeconds, width, height, dpr) {
-    const pixels = new Uint8ClampedArray(width * height * 4);
-    fillBackground(pixels);
-    let pointsRead = 0;
-    const rate = pointsPerSecond > 0 ? pointsPerSecond : 150;
-    for (let x = 0; x < width; x += 1) {
-      const t0 = startSeconds + x / width * tileSeconds;
-      const t1 = startSeconds + (x + 1) / width * tileSeconds;
-      let i0 = Math.floor(t0 * rate);
-      let i1 = Math.ceil(t1 * rate);
-      if (i1 <= i0) i1 = i0 + 1;
-      if (i0 < 0) i0 = 0;
-      if (i1 > pointCount) i1 = pointCount;
-      if (i0 >= i1) continue;
-      let lowPeak = 0;
-      let lowRms = 0;
-      let midPeak = 0;
-      let midRms = 0;
-      let highPeak = 0;
-      let highRms = 0;
-      for (let index = i0; index < i1; index += 1) {
-        pointsRead += 1;
-        const offset = index * 6;
-        lowPeak = Math.max(lowPeak, detail[offset] ?? 0);
-        lowRms = Math.max(lowRms, detail[offset + 1] ?? 0);
-        midPeak = Math.max(midPeak, detail[offset + 2] ?? 0);
-        midRms = Math.max(midRms, detail[offset + 3] ?? 0);
-        highPeak = Math.max(highPeak, detail[offset + 4] ?? 0);
-        highRms = Math.max(highRms, detail[offset + 5] ?? 0);
-      }
-      paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
-    }
-    return { pixels, pointsRead };
-  }
-  function paintColumn(pixels, x, width, height, gutter, lowPeak, lowRms, midPeak, midRms, highPeak, highRms) {
-    const peakLevel = bandLevel(lowPeak, midPeak, highPeak);
-    const rmsLevel = bandLevel(lowRms, midRms, highRms);
-    if (peakLevel <= 0 && rmsLevel <= 0) return;
-    const top = Math.min(gutter, height - 1);
-    const bandHeight = height - top;
-    const mid = top + (bandHeight - 1) / 2;
-    const peakHalf = Math.max(peakLevel > 0 ? 0.5 : 0, peakLevel * (bandHeight / 2) * 0.92);
-    const rmsHalf = rmsLevel * (bandHeight / 2) * 0.92;
-    const y0 = Math.max(top, Math.floor(mid - Math.max(peakHalf, rmsHalf)));
-    const y1 = Math.min(height - 1, Math.ceil(mid + Math.max(peakHalf, rmsHalf)));
-    const peakColor = bandColor(lowPeak, midPeak, highPeak);
-    const rmsColor = bandColor(lowRms, midRms, highRms);
-    for (let y = y0; y <= y1; y += 1) {
-      const fromMid = Math.abs(y - mid);
-      const inner = rmsLevel > 0 && fromMid <= rmsHalf;
-      const outer = peakLevel > 0 && fromMid <= peakHalf;
-      if (!inner && !outer) continue;
-      const color = inner ? rmsColor : peakColor;
-      const alpha = inner ? 1 : OUTER_ALPHA;
-      blendPixel(pixels, width, x, y, color, alpha);
-    }
-  }
-  function drawLoops(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, loops, xOf) {
-    for (const loop of loops) {
-      const color = colorFromHex(loop.color) ?? DEFAULT_MARKER_COLOR;
-      const start = xOf ? xOf(loop.startSeconds) : timeToX(loop.startSeconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
-      const end = xOf ? xOf(loop.endSeconds) : timeToX(loop.endSeconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
-      const left = Math.min(start, end);
-      const right = Math.max(start, end);
-      fillSpan(pixels, width, height, Math.floor(left), Math.ceil(right), 0, height, color, 0.35);
-      const edge = Math.max(1, Math.round(dpr));
-      fillSpan(pixels, width, height, Math.round(left), Math.round(left) + edge, 0, height, color, 1);
-      fillSpan(pixels, width, height, Math.round(right) - edge, Math.round(right), 0, height, color, 1);
-    }
-  }
-  function drawCues(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, cues2, xOf) {
-    const edge = Math.max(1, Math.round(2 * dpr));
-    for (const cue of cues2) {
-      const color = colorFromHex(cue.color) ?? DEFAULT_MARKER_COLOR;
-      const x = xOf ? xOf(cue.seconds) : timeToX(cue.seconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr;
-      fillSpan(pixels, width, height, Math.round(x) - Math.floor(edge / 2), Math.round(x) - Math.floor(edge / 2) + edge, 0, height, color, 1);
-    }
-  }
-  function drawBeats(pixels, width, height, dpr, playheadSeconds, pixelsPerSecond, cssWidth, markers, viewStart, viewEnd) {
-    const ticks = beatgridTicks(markers, viewStart, viewEnd);
-    const tickWidth = Math.max(1, Math.round(dpr));
-    const regularHeight = Math.max(1, Math.round(height * BEAT_HEIGHT_RATIO));
-    const downbeatHeight = Math.max(regularHeight + 1, Math.round(height * DOWNBEAT_HEIGHT_RATIO));
-    for (const tick of ticks) {
-      const x = Math.round(timeToX(tick.seconds, playheadSeconds, pixelsPerSecond, cssWidth) * dpr);
-      const tickHeight = Math.min(tick.downbeat ? downbeatHeight : regularHeight, Math.floor(height / 2) - 1);
-      if (tickHeight < 1) continue;
-      const alpha = tick.downbeat ? DOWNBEAT_ALPHA : BEAT_ALPHA;
-      fillSpan(pixels, width, height, x, x + tickWidth, 0, tickHeight, BEAT_MARK, alpha);
-      fillSpan(pixels, width, height, x, x + tickWidth, height - tickHeight, height, BEAT_MARK, alpha);
-    }
-  }
-  function drawPlayhead(pixels, width, height) {
-    const x = Math.floor(width / 2);
-    fillSpan(pixels, width, height, x, x + 2, 0, height, PLAYHEAD_COLOR, 1);
-  }
-  function fillSpan(pixels, width, height, x0, x1, y0, y1, color, alpha) {
-    const left = Math.max(0, x0);
-    const right = Math.min(width, x1);
-    const top = Math.max(0, y0);
-    const bottom = Math.min(height, y1);
-    for (let x = left; x < right; x += 1) {
-      for (let y = top; y < bottom; y += 1) blendPixel(pixels, width, x, y, color, alpha);
-    }
-  }
-  function blendPixel(pixels, width, x, y, color, alpha) {
-    const offset = (y * width + x) * 4;
-    const keep = 1 - alpha;
-    pixels[offset] = Math.round(color.r * alpha + (pixels[offset] ?? 0) * keep);
-    pixels[offset + 1] = Math.round(color.g * alpha + (pixels[offset + 1] ?? 0) * keep);
-    pixels[offset + 2] = Math.round(color.b * alpha + (pixels[offset + 2] ?? 0) * keep);
-    pixels[offset + 3] = 255;
-  }
-  function fillBackground(pixels) {
-    for (let index = 0; index < pixels.length; index += 4) {
-      pixels[index] = WAVE_BG.r;
-      pixels[index + 1] = WAVE_BG.g;
-      pixels[index + 2] = WAVE_BG.b;
-      pixels[index + 3] = 255;
-    }
-  }
-  function blit(dest, destWidth, destHeight, src, srcWidth, destX) {
-    let srcX = 0;
-    let copyWidth = srcWidth;
-    let dx = destX;
-    if (dx < 0) {
-      srcX = -dx;
-      copyWidth -= srcX;
-      dx = 0;
-    }
-    if (dx + copyWidth > destWidth) copyWidth = destWidth - dx;
-    if (copyWidth <= 0) return;
-    for (let y = 0; y < destHeight; y += 1) {
-      const srcStart = (y * srcWidth + srcX) * 4;
-      const destStart = (y * destWidth + dx) * 4;
-      dest.set(src.subarray(srcStart, srcStart + copyWidth * 4), destStart);
-    }
-  }
-  function pushRange(ticks, origin, spacing, beatIndex, count, startSeconds, endSeconds, first = 0) {
-    const begin = Math.max(first, Math.ceil((startSeconds - origin) / spacing - 1e-9));
-    for (let index = begin; index < count; index += 1) {
-      const seconds = origin + index * spacing;
-      if (seconds < startSeconds - 1e-6) continue;
-      if (seconds >= endSeconds - 1e-9) break;
-      if (ticks.length >= MAX_TICKS) return;
-      ticks.push({ seconds, downbeat: (beatIndex + index) % 4 === 0 });
-    }
-  }
-  function finiteNumber(value) {
-    if (typeof value === "number") return Number.isFinite(value) ? value : null;
-    if (typeof value !== "string" || value.trim() === "") return null;
-    const number = Number(value);
-    return Number.isFinite(number) ? number : null;
-  }
-  function clamp255(value) {
-    if (!Number.isFinite(value)) return 0;
-    if (value <= 0) return 0;
-    if (value >= 255) return 255;
-    return value;
-  }
-
-  // src/context/WaveformContext.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-  var defaultUi = {
-    pps: ZOOM_DEFAULT_PPS,
-    phase: "idle",
-    overviewSource: ""
-  };
-  var WaveformContext = (0, import_react2.createContext)(null);
-  var WaveformClockContext = (0, import_react2.createContext)(null);
-  function WaveformProvider({ children }) {
-    const [ui, setUi] = (0, import_react2.useState)(defaultUi);
-    const value = (0, import_react2.useMemo)(() => {
-      const blocked = ui.phase === "reading" || ui.phase === "unavailable";
-      return {
-        ...ui,
-        canZoomIn: !blocked && ui.pps < ZOOM_MAX_PPS - 1e-9,
-        canZoomOut: !blocked && ui.pps > ZOOM_MIN_PPS + 1e-9,
-        publish: (next2) => {
-          (0, import_react_dom.flushSync)(() => {
-            setUi(next2);
-          });
-        }
-      };
-    }, [ui]);
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(WaveformContext, { value, children });
-  }
-  function WaveformClockProvider({
-    clock,
-    children
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(WaveformClockContext, { value: clock, children });
-  }
-  function useWaveform() {
-    const value = (0, import_react2.useContext)(WaveformContext);
-    if (value === null) {
-      throw new Error("useWaveform must be used within WaveformProvider");
-    }
-    return value;
-  }
-  function useWaveformClockOverride() {
-    return (0, import_react2.useContext)(WaveformClockContext);
-  }
-
-  // src/context/SettingsContext.tsx
-  var import_react3 = __toESM(require_react(), 1);
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-  var SettingsContext = (0, import_react3.createContext)(null);
-  function SettingsProvider({
-    value,
-    children
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SettingsContext, { value, children });
-  }
-  function useSettings() {
-    const value = (0, import_react3.useContext)(SettingsContext);
-    if (value === null) {
-      throw new Error("useSettings must be used within SettingsProvider");
-    }
-    return value;
-  }
-
   // src/player.ts
-  var import_react7 = __toESM(require_react(), 1);
+  var import_react13 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react10 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -23227,7 +21179,7 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -23255,7 +21207,7 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
       "button",
       {
         type: "button",
@@ -23266,13 +21218,13 @@
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -23284,11 +21236,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_jsx_runtime5.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_jsx_runtime11.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
         "button",
         {
           type: "button",
@@ -23308,7 +21260,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react4.useState)(null);
+    const [hold, setHold] = (0, import_react10.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -23335,14 +21287,14 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
           "button",
           {
             type: "button",
@@ -23354,8 +21306,8 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
           "button",
           {
             type: "button",
@@ -23368,13 +21320,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
             "input",
             {
               ref: tooltipRef2(tips.seek),
@@ -23393,16 +21345,16 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
           "input",
           {
             ref: tooltipRef2(tips.volume),
@@ -23419,11 +21371,11 @@
   }
 
   // src/waveform-view.ts
-  var import_react6 = __toESM(require_react(), 1);
+  var import_react12 = __toESM(require_react(), 1);
 
   // src/components/WaveformPanel.tsx
-  var import_react5 = __toESM(require_react(), 1);
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  var import_react11 = __toESM(require_react(), 1);
+  var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef3(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -23449,12 +21401,12 @@
     const wave = useWaveform();
     const override = useWaveformClockOverride();
     const clock = override ?? clockFromPlayer(player2);
-    const detailRef = (0, import_react5.useRef)(null);
-    const overviewCanvasRef = (0, import_react5.useRef)(null);
-    const overviewHitRef = (0, import_react5.useRef)(null);
+    const detailRef = (0, import_react11.useRef)(null);
+    const overviewCanvasRef = (0, import_react11.useRef)(null);
+    const overviewHitRef = (0, import_react11.useRef)(null);
     engine.setClock(clock);
     engine.setPublish(wave.publish);
-    (0, import_react5.useLayoutEffect)(() => {
+    (0, import_react11.useLayoutEffect)(() => {
       const detail = detailRef.current;
       const overviewCanvas = overviewCanvasRef.current;
       const overviewHit = overviewHitRef.current;
@@ -23469,15 +21421,15 @@
         engine.detach();
       };
     }, [engine, host]);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react11.useEffect)(() => {
       if (override) return;
       engine.setTrack(player2.trackId);
     }, [engine, override, player2.trackId]);
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-wave-main", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(import_jsx_runtime12.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "player-wave-main", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
           WaveformOverview,
           {
             canvasRef: overviewCanvasRef,
@@ -23488,7 +21440,7 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
         WaveformZoom,
         {
           canZoomIn: wave.canZoomIn,
@@ -23504,9 +21456,9 @@
     canvasRef,
     phase: phase2
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
     ] });
   }
   function WaveformOverview({
@@ -23516,7 +21468,7 @@
     source,
     pps
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
       "div",
       {
         ref: (element) => {
@@ -23531,7 +21483,7 @@
         "aria-orientation": "horizontal",
         "data-pps": String(pps),
         "data-waveform-overview": source || void 0,
-        children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
       }
     );
   }
@@ -23542,8 +21494,8 @@
     onZoomIn,
     onZoomOut
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
         "button",
         {
           type: "button",
@@ -23555,7 +21507,7 @@
           children: "+"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
         "button",
         {
           type: "button",
@@ -23589,8 +21541,8 @@
     host.classList.add("player-wave");
     host.hidden = true;
     if (hooks) engine.setClock(hooks);
-    const panel = (0, import_react6.createElement)(WaveformPanel, { engine, host });
-    const tree = hooks ? (0, import_react6.createElement)(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
+    const panel = (0, import_react12.createElement)(WaveformPanel, { engine, host });
+    const tree = hooks ? (0, import_react12.createElement)(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
     const root = mountIsland(host, tree);
     engine.bindRoot(root);
     return engine;
@@ -24095,10 +22047,10 @@
   // src/player.ts
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
-  var listeners = /* @__PURE__ */ new Set();
+  var listeners5 = /* @__PURE__ */ new Set();
   var wired = /* @__PURE__ */ new WeakSet();
   var media = null;
-  var trackId2 = null;
+  var trackId = null;
   var title = "";
   var artist = "";
   var playing = false;
@@ -24151,11 +22103,11 @@
     const element = ensureMedia();
     ignoreMediaPause = true;
     try {
-      if (trackId2 !== nextId || element.src === "") {
+      if (trackId !== nextId || element.src === "") {
         const row = state.byId.get(nextId);
         title = row?.name || row?.title || playerStrings.untitled;
         artist = row?.artist ?? "";
-        trackId2 = nextId;
+        trackId = nextId;
         currentTime = 0;
         duration = 0;
         element.src = trackUrl(nextId);
@@ -24165,11 +22117,11 @@
       }
       error = "";
       playing = true;
-      emit();
+      emit2();
       const pending = element.play();
       if (pending && typeof pending.then === "function") {
         pending.catch(() => {
-          if (trackId2 !== nextId) return;
+          if (trackId !== nextId) return;
           noteFailure(nextId);
         });
       }
@@ -24178,23 +22130,23 @@
     }
   }
   function playOrToggle(nextId) {
-    if (trackId2 === nextId && playing) pause();
+    if (trackId === nextId && playing) pause();
     else play(nextId);
   }
   function pause() {
-    if (trackId2 === null) return;
+    if (trackId === null) return;
     playing = false;
     ensureMedia().pause();
-    emit();
+    emit2();
   }
   function togglePlayPause() {
-    if (trackId2 === null) {
+    if (trackId === null) {
       const selected = selectedPlayableId();
       if (selected !== null) play(selected);
       return;
     }
     if (playing) pause();
-    else play(trackId2);
+    else play(trackId);
   }
   function next() {
     moveBy(1);
@@ -24203,14 +22155,14 @@
     moveBy(-1);
   }
   function seek(seconds) {
-    if (!Number.isFinite(seconds) || trackId2 === null) return;
+    if (!Number.isFinite(seconds) || trackId === null) return;
     const element = ensureMedia();
     let next2 = seconds < 0 ? 0 : seconds;
     const limit = element.duration;
     if (Number.isFinite(limit) && limit > 0 && next2 > limit) next2 = limit;
     element.currentTime = next2;
     currentTime = next2;
-    emit();
+    emit2();
   }
   function seekBy(deltaSeconds) {
     if (!Number.isFinite(deltaSeconds)) return;
@@ -24221,7 +22173,7 @@
     seekBy
   };
   function getPlayerState() {
-    return { trackId: trackId2, title, artist, playing, currentTime, duration, volume, error };
+    return { trackId, title, artist, playing, currentTime, duration, volume, error };
   }
   function getMediaTime() {
     if (media && Number.isFinite(media.currentTime)) return media.currentTime;
@@ -24235,7 +22187,7 @@
     return cues;
   }
   function canTogglePlay() {
-    return trackId2 !== null || selectedPlayableId() !== null;
+    return trackId !== null || selectedPlayableId() !== null;
   }
   function canSkip(delta) {
     return canMove(delta);
@@ -24244,12 +22196,12 @@
     if (!Number.isFinite(next2)) return;
     volume = Math.min(1, Math.max(0, next2));
     if (media) media.volume = volume;
-    emit();
+    emit2();
   }
   function subscribe(listener) {
-    listeners.add(listener);
+    listeners5.add(listener);
     return () => {
-      listeners.delete(listener);
+      listeners5.delete(listener);
     };
   }
   function mountPlayer(host) {
@@ -24273,17 +22225,17 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react7.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react13.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
     if (root) root.setAttribute("aria-label", playerStrings.region);
     waveform?.relabel();
-    emit();
+    emit2();
   }
   function resetPlayback() {
     cueToken += 1;
-    trackId2 = null;
+    trackId = null;
     title = "";
     artist = "";
     playing = false;
@@ -24308,32 +22260,32 @@
     wired.add(element);
     element.addEventListener("play", () => {
       playing = true;
-      emit();
+      emit2();
     });
     element.addEventListener("pause", () => {
       if (ignoreMediaPause) return;
       playing = false;
-      emit();
+      emit2();
     });
     element.addEventListener("ended", () => {
       currentTime = Number.isFinite(element.currentTime) ? element.currentTime : currentTime;
       if (!moveBy(1)) {
         playing = false;
-        emit();
+        emit2();
       }
     });
     element.addEventListener("timeupdate", () => {
       currentTime = element.currentTime;
       if (Number.isFinite(element.duration)) duration = element.duration;
-      emit();
+      emit2();
     });
     element.addEventListener("durationchange", () => {
       duration = Number.isFinite(element.duration) ? element.duration : 0;
-      emit();
+      emit2();
     });
     element.addEventListener("error", () => {
-      if (trackId2 === null) return;
-      noteFailure(trackId2);
+      if (trackId === null) return;
+      noteFailure(trackId);
     });
   }
   function trackUrl(nextId) {
@@ -24350,7 +22302,7 @@
   }
   function playableRows() {
     let source = state.view;
-    if (trackId2 !== null && state.splitCrates && state.viewB.some((row) => row.id === trackId2 && !row.entry)) {
+    if (trackId !== null && state.splitCrates && state.viewB.some((row) => row.id === trackId && !row.entry)) {
       source = state.viewB;
     } else if (state.splitCrates && state.focusedPane === "b") {
       source = state.viewB;
@@ -24358,8 +22310,8 @@
     return source.filter((row) => !row.entry && Number.isInteger(row.id) && row.id >= 0);
   }
   function anchorIndex(rows2) {
-    if (trackId2 !== null) {
-      const playingIndex = rows2.findIndex((row) => row.id === trackId2);
+    if (trackId !== null) {
+      const playingIndex = rows2.findIndex((row) => row.id === trackId);
       if (playingIndex >= 0) return playingIndex;
     }
     if (state.selectedId === null) return -1;
@@ -24380,16 +22332,16 @@
     waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
     void readCues(id).then(
       (found) => {
-        if (token3 !== cueToken || trackId2 !== id) return;
+        if (token3 !== cueToken || trackId !== id) return;
         cues = found.cues;
         waveform?.setMarkers(id, found);
-        emit();
+        emit2();
       },
       () => {
-        if (token3 !== cueToken || trackId2 !== id) return;
+        if (token3 !== cueToken || trackId !== id) return;
         cues = [];
         waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
-        emit();
+        emit2();
       }
     );
   }
@@ -24411,10 +22363,10 @@
   function noteFailure(forId) {
     playing = false;
     void classifyStatus(forId).then((message) => {
-      if (trackId2 !== forId) return;
+      if (trackId !== forId) return;
       playing = false;
       error = message;
-      emit();
+      emit2();
     });
   }
   async function classifyStatus(forId) {
@@ -24426,9 +22378,9 @@
       return playerStrings.cannotPlay;
     }
   }
-  function emit() {
+  function emit2() {
     const snapshot2 = getPlayerState();
-    for (const listener of [...listeners]) listener(snapshot2);
+    for (const listener of [...listeners5]) listener(snapshot2);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -24439,11 +22391,338 @@
     return Boolean(rows2[index + delta]);
   }
 
+  // src/portable.ts
+  var FINDING_CAP = 100;
+  var KIND_KEY = {
+    off_drive: "portable.kindOffDrive",
+    missing: "portable.kindMissing",
+    smart_crate: "portable.kindSmartCrate",
+    unsafe_name: "portable.kindUnsafeName",
+    path_length: "portable.kindPathLength",
+    file_size: "portable.kindFileSize"
+  };
+  var token = 0;
+  var latest2 = null;
+  var lastRoots = [];
+  var opener = null;
+  var hasConnected = false;
+  var statusText = "";
+  var mountIslands = () => {
+  };
+  function bindPortableMount(fn) {
+    mountIslands = fn;
+  }
+  function portableSnapshot() {
+    return { report: latest2, status: statusText };
+  }
+  function portableKindLabel(kind2) {
+    return kindLabel(kind2);
+  }
+  function closePortable() {
+    const dialog = document.getElementById("portable-dialog");
+    if (dialog instanceof HTMLDialogElement) dialog.close();
+    if (opener?.isConnected) opener.focus();
+  }
+  function portableDriveRoot(path) {
+    const trimmed = path.trim();
+    if (!trimmed) return "";
+    const unified = trimmed.replace(/\\/g, "/");
+    const marker = unified.search(/\/_Serato_(\/|$)/i);
+    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
+    const volumes = /^\/Volumes\/[^/]+/.exec(base);
+    if (volumes) return volumes[0];
+    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
+    if (media2) return media2[0];
+    const mnt = /^\/mnt\/[^/]+/.exec(base);
+    if (mnt) return mnt[0];
+    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
+    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
+    const win = /^[A-Za-z]:/.exec(trimmed);
+    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
+    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
+  }
+  function portableSeratoRoots(roots) {
+    const connected = [];
+    const missing = [];
+    const seen = /* @__PURE__ */ new Set();
+    for (const root of roots) {
+      if (!root.removable || !root.serato) continue;
+      const key = portableDriveRoot(root.path).replace(/\\/g, "/").toLowerCase();
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      if (root.missing) missing.push(root);
+      else connected.push(root);
+    }
+    return { connected, missing };
+  }
+  function parseDriveReport(value) {
+    if (!isRecord(value)) return null;
+    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
+    if (typeof value.summary !== "string") return null;
+    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
+    const findings = [];
+    for (const item3 of value.findings) {
+      if (!isRecord(item3) || typeof item3.kind !== "string" || typeof item3.fix !== "string") return null;
+      findings.push({
+        kind: item3.kind,
+        crate: text(item3.crate),
+        track: text(item3.track),
+        path: text(item3.path),
+        found: text(item3.found),
+        fix: item3.fix
+      });
+    }
+    const errors = [];
+    for (const item3 of value.errors) {
+      if (!isRecord(item3) || typeof item3.message !== "string") return null;
+      errors.push({ crate: text(item3.crate), message: item3.message });
+    }
+    return {
+      drive: text(value.drive),
+      name: text(value.name),
+      ready: value.ready,
+      missing_drive: value.missing_drive,
+      summary: value.summary,
+      findings,
+      errors
+    };
+  }
+  async function openPortableCheck(path, trigger) {
+    wirePortable();
+    mountIslands();
+    opener = trigger ?? null;
+    const dialog = el("portable-dialog");
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    await runPortableCheck(path);
+  }
+  async function loadPortableView() {
+    wirePortable();
+    beginBusy2();
+    paintStatus(t("portable.checking"));
+    let settle = "none";
+    try {
+      const payload = await fetchLibraryRoots();
+      lastRoots = payload.roots;
+      paintDrivePicker(lastRoots);
+      const path = el("portable-drive").value;
+      if (!path) {
+        clearReport();
+        el("portable-view-status").textContent = hasConnected ? "" : t("portable.noDrive");
+        el("portable-status").textContent = hasConnected ? "" : t("portable.noDrive");
+        return;
+      }
+      await runPortableCheck(path);
+      settle = "report";
+    } catch (error2) {
+      fail(error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable"));
+      settle = "retry";
+    } finally {
+      endBusy2();
+      if (settle === "retry") el("portable-check").focus();
+      if (settle === "report") el("portable-view-verdict").focus();
+    }
+  }
+  function showPortableFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable");
+    fail(message);
+    endBusy2();
+    el("portable-check").focus();
+  }
+  function repaintPortable() {
+    for (const button of document.querySelectorAll(".files-portable")) {
+      button.textContent = t("portable.check");
+      const name = button.dataset.portableName ?? "";
+      if (name) button.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    }
+    el("portable-check").textContent = t("portable.check");
+    if (lastRoots.length) paintDrivePicker(lastRoots);
+    if (latest2) renderPortableReport(latest2);
+  }
+  function wirePortable() {
+    const dialog = el("portable-dialog");
+    if (dialog.dataset.portableWired !== "true") {
+      dialog.dataset.portableWired = "true";
+      el("portable-close").addEventListener("click", () => {
+        el("portable-dialog").close();
+        if (opener?.isConnected) opener.focus();
+      });
+    }
+    const panel = el("portable-panel");
+    if (panel.dataset.portableWired === "true") return;
+    panel.dataset.portableWired = "true";
+    el("portable-check").addEventListener("click", () => {
+      void runPortableCheck(el("portable-drive").value);
+    });
+    el("portable-drive").addEventListener("change", () => {
+      void runPortableCheck(el("portable-drive").value);
+    });
+  }
+  function renderPortableReport(report) {
+    latest2 = report;
+    const verdictText = report.missing_drive ? t("portable.missing") : report.ready ? t("portable.ready") : t("portable.notReady");
+    const items = findingItems(report);
+    for (const surface of surfaces()) {
+      surface.verdict.textContent = verdictText;
+      surface.summary.textContent = report.summary;
+      surface.findings.replaceChildren(...items.map((item3) => item3.cloneNode(true)));
+      surface.status.textContent = "";
+    }
+    statusText = "";
+    emitFiles();
+  }
+  async function runPortableCheck(path) {
+    wirePortable();
+    const drive = portableDriveRoot(path);
+    const mine = ++token;
+    latest2 = null;
+    clearReport();
+    paintStatus(t("portable.checking"));
+    if (!drive) {
+      fail(t("portable.unreadable"));
+      return;
+    }
+    beginBusy2();
+    try {
+      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
+      if (mine !== token) return;
+      const body = await readJSON(response).catch(() => null);
+      if (mine !== token) return;
+      if (!response.ok) {
+        fail(serverMessage(errorBody(body), t("portable.unreadable")));
+        return;
+      }
+      const report = parseDriveReport(body);
+      if (!report) {
+        fail(t("portable.unreadable"));
+        return;
+      }
+      latest2 = report;
+      paintStatus("");
+      renderPortableReport(report);
+    } catch {
+      if (mine !== token) return;
+      fail(t("portable.unreachable"));
+    } finally {
+      if (mine === token) endBusy2();
+    }
+  }
+  function paintDrivePicker(roots) {
+    const { connected, missing } = portableSeratoRoots(roots);
+    hasConnected = connected.length > 0;
+    const select = el("portable-drive");
+    const previous2 = select.value;
+    const options = connected.map((root) => {
+      const option = document.createElement("option");
+      option.value = root.path;
+      option.textContent = root.label;
+      return option;
+    });
+    select.replaceChildren(...options);
+    const keep = connected.some((root) => root.path === previous2) ? previous2 : connected[0]?.path ?? "";
+    select.value = keep;
+    select.disabled = !hasConnected;
+    el("portable-check").disabled = !hasConnected;
+    const note = el("portable-offline");
+    if (!missing.length) {
+      note.textContent = "";
+      return;
+    }
+    note.textContent = missing.map((root) => t("portable.offlineNamed", { name: root.label })).join(" ");
+  }
+  function findingItems(report) {
+    const items = [];
+    const shown = report.findings.slice(0, FINDING_CAP);
+    for (const finding of shown) {
+      const row = document.createElement("li");
+      const kind2 = document.createElement("span");
+      kind2.className = "portable-kind";
+      kind2.textContent = kindLabel(finding.kind);
+      row.append(kind2);
+      if (finding.fix) {
+        row.append(document.createTextNode(" "));
+        const fix = document.createElement("span");
+        fix.className = "portable-fix";
+        fix.textContent = finding.fix;
+        row.append(fix);
+      }
+      items.push(row);
+    }
+    for (const error2 of report.errors) {
+      const row = document.createElement("li");
+      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
+      items.push(row);
+    }
+    const hidden = report.findings.length - shown.length;
+    if (hidden > 0) {
+      const row = document.createElement("li");
+      row.textContent = t("files.andMore", { count: hidden });
+      items.push(row);
+    }
+    return items;
+  }
+  function surfaces() {
+    return [
+      {
+        verdict: el("portable-view-verdict"),
+        summary: el("portable-view-summary"),
+        findings: el("portable-view-findings"),
+        status: el("portable-view-status")
+      }
+    ];
+  }
+  function kindLabel(kind2) {
+    const key = KIND_KEY[kind2];
+    return key ? t(key) : kind2;
+  }
+  function fail(message) {
+    latest2 = null;
+    clearReport();
+    paintStatus(message);
+  }
+  function clearReport() {
+    for (const surface of surfaces()) {
+      surface.verdict.textContent = "";
+      surface.summary.textContent = "";
+      surface.findings.replaceChildren();
+    }
+  }
+  function paintStatus(message) {
+    statusText = message;
+    for (const surface of surfaces()) surface.status.textContent = message;
+    emitFiles();
+  }
+  function beginBusy2() {
+    const button = el("portable-check");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    el("portable-panel").setAttribute("aria-busy", "true");
+  }
+  function endBusy2() {
+    const button = el("portable-check");
+    button.disabled = !hasConnected;
+    button.setAttribute("aria-busy", "false");
+    el("portable-panel").setAttribute("aria-busy", "false");
+  }
+  function isRecord(value) {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+  }
+  function text(value) {
+    return typeof value === "string" ? value : "";
+  }
+  function errorBody(value) {
+    if (!isRecord(value)) return null;
+    const body = {};
+    if (typeof value.error === "string") body.error = value.error;
+    if (typeof value.code === "string") body.code = value.code;
+    if (body.error === void 0 && body.code === void 0) return null;
+    return body;
+  }
+
   // src/settings.ts
-  var import_react9 = __toESM(require_react(), 1);
+  var import_react15 = __toESM(require_react(), 1);
 
   // src/virtual-scroll.ts
-  var import_react8 = __toESM(require_react(), 1);
+  var import_react14 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -24503,7 +22782,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react8.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react14.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -24627,7 +22906,7 @@
     if (!row) return void 0;
     const id = Number(row.getAttribute("data-id"));
     if (!Number.isInteger(id)) return void 0;
-    return view.find((item5) => item5.id === id);
+    return view.find((item3) => item3.id === id);
   }
   function wireListKeys(list) {
     list.addEventListener("scroll", () => paintRows());
@@ -24640,7 +22919,7 @@
         event.preventDefault();
         moveSelection(-1, view, list);
       } else if (event.key === "Enter") {
-        const chosen = focusedTrack(event.target, view) ?? view.find((item5) => item5.id === state.selectedId);
+        const chosen = focusedTrack(event.target, view) ?? view.find((item3) => item3.id === state.selectedId);
         if (!chosen || chosen.entry) return;
         event.preventDefault();
         void bridge.selectTrack(chosen.id);
@@ -24863,7 +23142,7 @@
     else if (!hits.length) status.textContent = t("quickOpen.none", { query });
     else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
     hits.forEach((hit, index) => {
-      const item5 = document.createElement("li");
+      const item3 = document.createElement("li");
       const button = buttonEl(quickOpenHit(
         hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
         hit.title,
@@ -24889,8 +23168,8 @@
         active = index;
         void activate(hit);
       });
-      item5.append(button);
-      list.append(item5);
+      item3.append(button);
+      list.append(item3);
     });
     const field = el("quick-open-query");
     const current2 = hits[active];
@@ -25361,9 +23640,9 @@
       if (!groups.includes(shortcut.group)) groups.push(shortcut.group);
     }
     for (const group of groups) {
-      const heading2 = document.createElement("h3");
-      heading2.textContent = t(GROUP_KEY[group]);
-      body.append(heading2);
+      const heading = document.createElement("h3");
+      heading.textContent = t(GROUP_KEY[group]);
+      body.append(heading);
       if (group === "Play") {
         const note = document.createElement("p");
         note.className = "dialog-note";
@@ -25413,7 +23692,7 @@
   }
 
   // src/components/SettingsPanel.tsx
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
   var COLORWAY_KEY = {
     "serato-like": "settings.colorway.seratoLike",
     "dark-club": "settings.colorway.darkClub",
@@ -25432,22 +23711,22 @@
   }
   function CheatSheet() {
     const groups = cheatSheetModel();
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { id: "shortcuts-section", className: "shortcuts-section", "aria-labelledby": "shortcuts-title", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { id: "shortcuts-title", tabIndex: -1, ref: tooltipRef4(tips.shortcuts), children: t("shortcuts.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "shortcuts-intro", children: t("shortcuts.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { id: "shortcuts-body", children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { children: t(group.headingKey) }),
-        group.playNote ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "dialog-note", children: t("shortcuts.playNote") }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("table", { className: "shortcut-table", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("tr", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("th", { scope: "col", children: t("shortcuts.action") }),
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("th", { scope: "col", children: t("shortcuts.key") })
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { id: "shortcuts-section", className: "shortcuts-section", "aria-labelledby": "shortcuts-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { id: "shortcuts-title", tabIndex: -1, ref: tooltipRef4(tips.shortcuts), children: t("shortcuts.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "shortcuts-intro", children: t("shortcuts.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { id: "shortcuts-body", children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { children: t(group.headingKey) }),
+        group.playNote ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "dialog-note", children: t("shortcuts.playNote") }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("table", { className: "shortcut-table", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("th", { scope: "col", children: t("shortcuts.action") }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("th", { scope: "col", children: t("shortcuts.key") })
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("tbody", { children: group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("tr", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("th", { scope: "row", children: t(row.actionKey) }),
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("td", { children: row.chords.map((chord, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("tbody", { children: group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("th", { scope: "row", children: t(row.actionKey) }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("td", { children: row.chords.map((chord, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
               index > 0 ? " or " : null,
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("kbd", { children: chordLabel(chord) })
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("kbd", { children: chordLabel(chord) })
             ] }, `${row.id}-${index}`)) })
           ] }, row.id)) })
         ] })
@@ -25457,10 +23736,10 @@
   function SettingsPanel() {
     const settings = useSettings();
     const preview = `/img/icons/placeholder-${settings.colorway}.svg`;
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { "data-settings-react": "true", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { id: "settings-title", children: t("settings.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { "data-settings-react": "true", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { id: "settings-title", children: t("settings.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "input",
           {
             id: "telemetry-toggle",
@@ -25473,11 +23752,11 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.share") })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.share") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "telemetry-note", className: "dialog-note", children: telemetryNote() }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "telemetry-note", className: "dialog-note", children: telemetryNote() }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "input",
           {
             id: "update-toggle",
@@ -25490,10 +23769,10 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.updates") })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.updates") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "input",
           {
             id: "update-prereleases",
@@ -25506,13 +23785,13 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.updatesPrereleases") })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.updatesPrereleases") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "update-status", className: "dialog-note", role: "status", "aria-live": "polite", children: settings.updateStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "colorway-row", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "settings-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.colorway") }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "update-status", className: "dialog-note", role: "status", "aria-live": "polite", children: settings.updateStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "colorway-row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "settings-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.colorway") }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
             "select",
             {
               id: "colorway-select",
@@ -25521,11 +23800,11 @@
               onChange: (event) => {
                 void settings.saveColorway(event.currentTarget.value);
               },
-              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
+              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "img",
           {
             id: "colorway-preview",
@@ -25537,8 +23816,8 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "input",
           {
             id: "icon-follows-theme",
@@ -25550,12 +23829,12 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.iconFollowsTheme") })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.iconFollowsTheme") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "icon-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.iconStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "settings-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("settings.language") }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "icon-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.iconStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "settings-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.language") }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
           "select",
           {
             id: "language-select",
@@ -25565,18 +23844,18 @@
               void settings.saveLanguage(event.currentTarget.value);
             },
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("option", { value: "", children: t("settings.languageSystem") }),
-              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "", children: t("settings.languageSystem") }),
+              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
             ]
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "language-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.languageStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CheatSheet, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { className: "about", "aria-labelledby": "about-title", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { id: "about-title", children: t("settings.about") }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "about-version", className: "about-version", children: settings.aboutVersion }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "language-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.languageStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CheatSheet, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "about", "aria-labelledby": "about-title", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { id: "about-title", children: t("settings.about") }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "about-version", className: "about-version", children: settings.aboutVersion }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "a",
           {
             id: "about-github",
@@ -25585,7 +23864,7 @@
             children: t("help.github")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "button",
           {
             id: "copy-version",
@@ -25597,10 +23876,10 @@
             children: t("settings.copyVersion")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "version-copy-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "version-copy-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "dialog-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "button",
           {
             id: "rerun-wizard",
@@ -25611,7 +23890,7 @@
             children: t("settings.rerunSetup")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "button",
           {
             id: "open-logs",
@@ -25624,7 +23903,7 @@
             children: t("settings.openLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "button",
           {
             id: "copy-logs",
@@ -25637,7 +23916,7 @@
             children: t("settings.copyLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "button",
           {
             id: "settings-close",
@@ -25648,8 +23927,8 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "settings-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "settings-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
         "textarea",
         {
           id: "log-fallback",
@@ -25693,7 +23972,7 @@
     updateStatus: ""
   };
   var snapshot = { ...DEFAULT_SNAPSHOT };
-  var listeners2 = /* @__PURE__ */ new Set();
+  var listeners6 = /* @__PURE__ */ new Set();
   var islandRoot = null;
   var appearanceSync = false;
   var rerunSetupHandler = null;
@@ -25715,13 +23994,13 @@
     return snapshot;
   }
   function subscribeSettings(listener) {
-    listeners2.add(listener);
+    listeners6.add(listener);
     return () => {
-      listeners2.delete(listener);
+      listeners6.delete(listener);
     };
   }
   function notifySettings() {
-    for (const listener of listeners2) listener();
+    for (const listener of listeners6) listener();
   }
   function patchSettings(patch) {
     snapshot = { ...snapshot, ...patch };
@@ -25735,7 +24014,7 @@
     islandRoot = null;
     const root = host === void 0 ? document.getElementById("settings-dialog") : host;
     if (!root) return;
-    islandRoot = mountIsland(root, (0, import_react9.createElement)(SettingsPanel));
+    islandRoot = mountIsland(root, (0, import_react15.createElement)(SettingsPanel));
   }
   function systemLanguages() {
     return Array.isArray(navigator.languages) && navigator.languages.length ? [...navigator.languages] : [navigator.language || "en"];
@@ -26001,7 +24280,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -26043,23 +24322,177 @@
       close: closeSettings
     };
   }
+  function readGigValue() {
+    return {
+      gig: getGigSnapshot(),
+      drift: getDriftSnapshot(),
+      nextStep: nextGigStep,
+      backStep: backGigStep,
+      exit: exitGigCheck
+    };
+  }
+  function readFilesValue() {
+    const dialog = getFilesDialog();
+    const portable = portableSnapshot();
+    const selectedEntries = selectedFiles();
+    return {
+      writable: state.writable,
+      path: state.filesPath,
+      parent: state.filesParent,
+      entries: state.filesEntries,
+      selected: state.filesSelected,
+      pick: state.filesPick,
+      pickPaths: state.filesPickPaths,
+      pickSource: state.filesPickSource,
+      loading: state.filesLoading,
+      error: state.filesError,
+      message: state.filesMessage,
+      truncated: state.filesTruncated,
+      atRoots: state.filesAtRoots,
+      roots: state.filesRoots,
+      root: state.filesRoot,
+      breadcrumb: state.filesBreadcrumb,
+      elsewhere: state.filesElsewhere,
+      active: state.filesActive,
+      query: state.filesQuery,
+      searching: state.filesSearching,
+      rows: browserRows(),
+      selectedEntries,
+      locked: !state.writable || state.filesLoading || state.filesAtRoots,
+      rowHeight: filesRowHeight(),
+      dialogAction: dialog.action,
+      dialogName: dialog.name,
+      dialogReplacement: dialog.replacement,
+      dialogStatus: dialog.status,
+      dialogPreview: dialog.preview,
+      dialogScope: dialog.scope,
+      portableReport: portable.report,
+      portableStatus: portable.status,
+      goUp: goFilesUp,
+      refresh: refreshFiles,
+      toggleElsewhere: toggleFilesElsewhere,
+      openCrumb: openFilesCrumb,
+      openRow: (entry, index) => {
+        state.filesActive = index;
+        openBrowserRow(entry);
+      },
+      toggleFile,
+      markActive: markFilesActive,
+      onListKey: onFilesKey,
+      onSearchInput: onFilesSearchInput,
+      startRename,
+      startRenameFromTags: (trigger) => startRenameFromTags(trigger, "paths"),
+      startMove: startMoveFiles,
+      startMoveFolder,
+      startReplace,
+      startDelete,
+      confirmMoveHere,
+      cancelPick: cancelFilesPick,
+      setDialogName,
+      setDialogReplacement,
+      review: () => reviewFiles().catch((error2) => {
+        setDialogStatus(failureOf(error2).message);
+      }),
+      confirm: () => confirmFiles().catch((error2) => {
+        setDialogStatus(failureOf(error2).message);
+      }),
+      closeDialog: closeFilesDialog
+    };
+  }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react10.useState)(readPlayerValue);
-    (0, import_react10.useEffect)(() => {
+    const [value, setValue] = (0, import_react16.useState)(readPlayerValue);
+    (0, import_react16.useEffect)(() => {
       return subscribe(() => {
-        (0, import_react_dom2.flushSync)(() => {
+        (0, import_react_dom3.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react10.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react16.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(PlayerProvider, { value: current2, children });
+  }
+  function readHistoryValue() {
+    return {
+      sessions: state.historySessions,
+      historyId: state.historyId,
+      entries: state.entries,
+      selectedId: state.selectedId,
+      loadHistory: () => historyActions.loadHistory(),
+      openSession: (id) => historyActions.openSession(id),
+      selectEntry: (id) => historyActions.selectEntry(id),
+      openInLibrary: (assetId) => historyActions.openInLibrary(assetId)
+    };
+  }
+  function HistoryProvider2({ children }) {
+    const [value, setValue] = (0, import_react16.useState)(readHistoryValue);
+    (0, import_react16.useEffect)(() => {
+      return subscribeHistory(() => {
+        (0, import_react_dom3.flushSync)(() => {
+          setValue(readHistoryValue());
+        });
+      });
+    }, []);
+    const current2 = (0, import_react16.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(HistoryProvider, { value: current2, children });
+  }
+  function GigProvider({ children }) {
+    const [value, setValue] = (0, import_react16.useState)(readGigValue);
+    (0, import_react16.useEffect)(() => {
+      const refresh = () => {
+        (0, import_react_dom3.flushSync)(() => {
+          setValue(readGigValue());
+        });
+      };
+      const stopGig = subscribeGig(refresh);
+      const stopDrift = subscribeDrift(refresh);
+      return () => {
+        stopGig();
+        stopDrift();
+      };
+    }, []);
+    const current2 = (0, import_react16.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(GigStateProvider, { value: current2, children });
+  }
+  function FilesProvider2({ children }) {
+    const hostRef = (0, import_react16.useRef)(null);
+    const [value, setValue] = (0, import_react16.useState)(readFilesValue);
+    (0, import_react16.useEffect)(() => {
+      const refresh = () => {
+        if (!hostRef.current?.isConnected) return;
+        (0, import_react_dom3.flushSync)(() => {
+          setValue(readFilesValue());
+        });
+      };
+      const unsub = subscribeFiles(refresh);
+      document.addEventListener(LOCALE_EVENT, refresh);
+      return () => {
+        unsub();
+        document.removeEventListener(LOCALE_EVENT, refresh);
+      };
+    }, []);
+    const current2 = (0, import_react16.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(FilesProvider, { value: current2, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { ref: hostRef, hidden: true }),
+      children
+    ] });
+  }
+  function CrateProvider2({ children }) {
+    const [value, setValue] = (0, import_react16.useState)(readCrateValue);
+    (0, import_react16.useEffect)(() => {
+      return subscribeCrates(() => {
+        (0, import_react_dom3.flushSync)(() => {
+          setValue(readCrateValue());
+        });
+      });
+    }, []);
+    const current2 = (0, import_react16.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(CrateProvider, { value: current2, children });
   }
   function SettingsProvider2({ children }) {
-    const [value, setValue] = (0, import_react10.useState)(readSettingsValue);
-    (0, import_react10.useEffect)(() => {
+    const [value, setValue] = (0, import_react16.useState)(readSettingsValue);
+    (0, import_react16.useEffect)(() => {
       const refresh = () => {
-        (0, import_react_dom2.flushSync)(() => {
+        (0, import_react_dom3.flushSync)(() => {
           setValue(readSettingsValue());
         });
       };
@@ -26070,30 +24503,3493 @@
         stopLocale();
       };
     }, []);
-    const current2 = (0, import_react10.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(SettingsProvider, { value: current2, children });
+    const current2 = (0, import_react16.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(SettingsProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(SettingsProvider2, { children }) }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(SettingsProvider2, { children }) }) }) }) }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
-    (0, import_react_dom3.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime9.jsx)(AppProviders, { children: node }));
+    (0, import_react_dom4.flushSync)(() => {
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime15.jsx)(AppProviders, { children: node }));
     });
     return root;
+  }
+
+  // src/gig-view.ts
+  var GIG_STEP_COUNT = 5;
+  var GIG_STEPS = [
+    { title: "gig.drives", action: "gig.drivesAction", empty: "gig.drivesEmpty" },
+    { title: "gig.missing", action: "gig.missingAction", empty: "gig.missingEmpty" },
+    { title: "gig.streaming", action: "gig.streamingAction", empty: "gig.streamingEmpty" },
+    { title: "gig.emptyCrates", action: "gig.emptyCratesAction", empty: "gig.emptyCratesEmpty" },
+    { title: "gig.since", action: "gig.sinceAction", empty: "gig.sinceEmpty" }
+  ];
+  var GIG_CHANGE_GROUPS = [
+    ["gig.cratesAdded", "crates_added"],
+    ["gig.cratesRemoved", "crates_removed"],
+    ["gig.cratesEdited", "crates_edited"],
+    ["gig.tracksAdded", "tracks_added"],
+    ["gig.tracksRemoved", "tracks_removed"],
+    ["gig.cuesEdited", "cues_edited"],
+    ["gig.gridsEdited", "grids_edited"],
+    ["gig.tagsEdited", "tags_edited"]
+  ];
+  function gigLinesFor(payload, index) {
+    if (index === 0) {
+      return (payload.unavailable_drives || []).map(
+        (drive) => t("gig.driveUnavailable", { name: drive.name, count: drive.track_count })
+      );
+    }
+    if (index === 1) return (payload.missing_files || []).map((item3) => item3.path);
+    if (index === 2) return (payload.streaming_tracks || []).map((item3) => `${item3.service}: ${item3.title}`);
+    if (index === 3) return (payload.empty_crates || []).map((item3) => `${item3.name} — ${item3.warning}`);
+    return [];
+  }
+  function gigScopeLabel(payload) {
+    return payload.scope?.crate_name || t("gig.wholeSpace");
+  }
+
+  // src/components/GigReport.tsx
+  var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef5(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function GigActions({ primary, stepIndex: stepIndex2 }) {
+    const gig = useGig();
+    return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "gig-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef5(tips.gigBack),
+          "data-gig-action": "back",
+          disabled: stepIndex2 === 0,
+          onClick: () => gig.backStep(),
+          children: t("common.back")
+        }
+      ),
+      primary ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef5(tips.gigNext),
+          className: "gig-primary",
+          "data-gig-action": "next",
+          onClick: () => gig.nextStep(),
+          children: primary
+        }
+      ) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef5(tips.gigExit),
+          "data-gig-action": "exit",
+          onClick: () => gig.exit(),
+          children: t("gig.exit")
+        }
+      )
+    ] });
+  }
+  function GigSince({ payload }) {
+    const note = payload.snapshot_note?.trim() ?? "";
+    const changes = payload.changes;
+    const groups = GIG_CHANGE_GROUPS.map(([label, key]) => [label, changes?.[key] || []]).filter(([, lines]) => lines.length > 0);
+    return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(import_jsx_runtime16.Fragment, { children: [
+      note ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-note", children: note }) : null,
+      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
+      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
+      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
+    ] });
+  }
+  function GigReport() {
+    const { gig } = useGig();
+    const payload = gig.report;
+    if (!payload) return null;
+    const done = gig.stepIndex >= GIG_STEP_COUNT;
+    const step = done ? null : GIG_STEPS[gig.stepIndex];
+    const verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady");
+    const crate = payload.scope?.crate_name || t("gig.wholeSpaceInline");
+    const time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "";
+    const holding = (payload.holding_it_back || []).map((item3) => item3.summary);
+    const lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [];
+    return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(import_jsx_runtime16.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(
+        "p",
+        {
+          className: "gig-score",
+          "aria-label": t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }),
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
+          ]
+        }
+      ),
+      done ? /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(import_jsx_runtime16.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
+          score: payload.score,
+          crate,
+          time
+        }) }),
+        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(import_jsx_runtime16.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
+        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-note", children: t(step.empty) }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
+      ] })
+    ] });
+  }
+
+  // src/gig.ts
+  var listeners7 = /* @__PURE__ */ new Set();
+  var stepIndex = 0;
+  var latest3 = null;
+  var checkedAt = null;
+  var exitGig = () => {
+  };
+  function emit3() {
+    const snapshot2 = getGigSnapshot();
+    for (const listener of listeners7) listener(snapshot2);
+  }
+  function focusHeading() {
+    const headingNode = document.getElementById("gig-step-heading");
+    if (headingNode instanceof HTMLElement) headingNode.focus();
+  }
+  function beginBusy3() {
+    const button = el("gig-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    el("gig-panel").setAttribute("aria-busy", "true");
+    el("gig-status").textContent = t("gig.checking");
+  }
+  function endBusy3() {
+    const button = el("gig-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
+    el("gig-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus2(message) {
+    el("gig-status").textContent = message;
+  }
+  function updateScope2(payload) {
+    el("gig-scope").textContent = gigScopeLabel(payload);
+  }
+  function getGigSnapshot() {
+    return { report: latest3, stepIndex, checkedAt };
+  }
+  function subscribeGig(listener) {
+    listeners7.add(listener);
+    return () => {
+      listeners7.delete(listener);
+    };
+  }
+  function nextGigStep() {
+    if (!latest3) return;
+    stepIndex = Math.min(stepIndex + 1, GIG_STEP_COUNT);
+    emit3();
+    focusHeading();
+  }
+  function backGigStep() {
+    if (!latest3) return;
+    stepIndex = Math.max(0, stepIndex - 1);
+    emit3();
+    focusHeading();
+  }
+  function exitGigCheck() {
+    exitGig();
+  }
+  function wireGigCheck(exit) {
+    exitGig = exit;
+    const panel = el("gig-panel");
+    if (panel.dataset.gigWired === "true") return;
+    panel.dataset.gigWired = "true";
+    el("gig-refresh").addEventListener("click", () => {
+      void loadGigCheck(true);
+    });
+    mountIsland(el("gig-report"), (0, import_react17.createElement)(GigReport));
+  }
+  async function loadGigCheck(keepStep = false) {
+    const token3 = ++state.gigToken;
+    if (!keepStep) stepIndex = 0;
+    beginBusy3();
+    let settle = "none";
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+      );
+      if (token3 !== state.gigToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.gigToken) return;
+      if (!response.ok || payload === null) {
+        failStatus2(serverMessage(payload, t("gig.unreadable")));
+        settle = "retry";
+        return;
+      }
+      checkedAt = /* @__PURE__ */ new Date();
+      latest3 = payload;
+      el("gig-status").textContent = "";
+      updateScope2(payload);
+      emit3();
+      settle = "heading";
+    } catch {
+      if (token3 !== state.gigToken) return;
+      failStatus2(t("gig.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.gigToken) return;
+      endBusy3();
+      if (settle === "retry") el("gig-refresh").focus();
+      if (settle === "heading") focusHeading();
+    }
+  }
+  function showGigFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("gig.unreadable");
+    failStatus2(message);
+    endBusy3();
+    el("gig-refresh").focus();
+  }
+  function repaintGig() {
+    if (!latest3) return;
+    updateScope2(latest3);
+    emit3();
+  }
+
+  // src/album-art.ts
+  var latest4 = null;
+  var trackId2 = null;
+  var busy = false;
+  var onWrote = null;
+  function wireAlbumArt(wrote) {
+    onWrote = wrote;
+    const dialog = el("album-art-dialog");
+    if (dialog.dataset.albumArtWired === "true") return;
+    dialog.dataset.albumArtWired = "true";
+    el("album-art-cancel").addEventListener("click", () => dialog.close());
+    el("album-art-embed").addEventListener("click", () => {
+      void embedCover();
+    });
+    el("album-art-choices").addEventListener("change", () => syncEmbedEnabled());
+  }
+  async function openAlbumArt(id) {
+    if (!Number.isInteger(id) || id <= 0) return;
+    if (typeof el("album-art-dialog").showModal !== "function") return;
+    trackId2 = id;
+    latest4 = null;
+    busy = true;
+    paintDialog();
+    if (!el("album-art-dialog").open) el("album-art-dialog").showModal();
+    el("album-art-cancel").focus();
+    try {
+      const plan = await postJSON("/api/album-art", {
+        action: "preview",
+        space: state.space,
+        id
+      });
+      if (trackId2 !== id) return;
+      latest4 = plan;
+      el("album-art-status").textContent = plan.candidates.length ? "" : t("health.artNone");
+      paintDialog();
+      const first = el("album-art-choices").querySelector("input");
+      if (first instanceof HTMLInputElement) first.focus();
+      else el("album-art-cancel").focus();
+    } catch (error2) {
+      if (trackId2 !== id) return;
+      failStatus3(failureOf(error2).message);
+      el("album-art-cancel").focus();
+    } finally {
+      if (trackId2 === id) busy = false;
+      paintDialog();
+    }
+  }
+  function repaintAlbumArt() {
+    if (el("album-art-dialog").open) paintDialog();
+  }
+  async function embedCover() {
+    const id = trackId2;
+    const chosen = selectedRelease();
+    if (id === null || !chosen || !state.writable || busy) return;
+    busy = true;
+    paintDialog();
+    try {
+      const written = await postJSON("/api/album-art", {
+        action: "embed",
+        space: state.space,
+        id,
+        release_id: chosen,
+        confirm: true
+      });
+      latest4 = written;
+      busy = false;
+      el("album-art-dialog").close();
+      onWrote?.();
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus3(failed.message);
+      if (failed.status === 409) bridge.lockDown(error2);
+    } finally {
+      busy = false;
+      paintDialog();
+    }
+  }
+  function paintDialog() {
+    const plan = latest4;
+    el("album-art-track").textContent = plan ? t("health.row", { title: [plan.artist, plan.name].filter(Boolean).join(" — ") || plan.file }) : t("health.artLooking");
+    const list = el("album-art-choices");
+    const selected = selectedRelease();
+    list.replaceChildren();
+    const candidates = plan?.candidates ?? [];
+    candidates.forEach((candidate, index) => {
+      list.append(choiceRow(candidate, selected, index === 0));
+    });
+    if (busy && !plan) el("album-art-status").textContent = t("health.artLooking");
+    syncEmbedEnabled();
+  }
+  function choiceRow(candidate, selected, fallback) {
+    const row = document.createElement("label");
+    row.className = "check album-art-choice";
+    const radio = inputEl(tips.healthArtPick);
+    radio.type = "radio";
+    radio.name = "album-art-pick";
+    radio.value = candidate.release_id;
+    radio.checked = selected === candidate.release_id || selected === null && fallback;
+    const image = document.createElement("img");
+    image.src = candidate.thumb;
+    image.alt = candidate.title || t("health.artEmbed");
+    image.width = 96;
+    image.height = 96;
+    const caption = document.createElement("span");
+    caption.textContent = [candidate.artist, candidate.title].filter(Boolean).join(" — ") || candidate.release_id;
+    row.append(radio, image, caption);
+    return row;
+  }
+  function selectedRelease() {
+    const chosen = el("album-art-choices").querySelector(
+      "input[name='album-art-pick']:checked"
+    );
+    return chosen?.value || null;
+  }
+  function syncEmbedEnabled() {
+    const button = el("album-art-embed");
+    button.disabled = busy || !state.writable || selectedRelease() === null;
+  }
+  function failStatus3(message) {
+    el("album-art-status").textContent = message;
+  }
+
+  // src/health.ts
+  var SECTIONS = [
+    { key: "missing", label: "health.missing", action: "missing" },
+    { key: "no_bpm", label: "health.noBpm" },
+    { key: "no_key", label: "health.noKey" },
+    { key: "no_beatgrid", label: "health.noBeatgrid" },
+    { key: "no_artwork", label: "health.noArtwork" },
+    { key: "empty_genre", label: "health.emptyGenre" },
+    { key: "no_crate", label: "health.noCrate" }
+  ];
+  var latest5 = null;
+  var go = null;
+  function wireHealth(navigate) {
+    go = navigate;
+    const panel = el("health-panel");
+    if (panel.dataset.healthWired === "true") return;
+    panel.dataset.healthWired = "true";
+    el("health-refresh").addEventListener("click", () => {
+      void loadHealth();
+    });
+    wireAlbumArt(() => {
+      void loadHealth();
+    });
+    panel.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement)) return;
+      const action = button.dataset.healthAction;
+      if (action === "missing" || action === "duplicates" || action === "files" || action === "bitrate") {
+        go?.(action);
+        return;
+      }
+      if (action === "track") {
+        const id = Number(button.dataset.healthId);
+        if (Number.isInteger(id) && id > 0) go?.("track", id);
+        return;
+      }
+      if (action === "artwork") {
+        const id = Number(button.dataset.healthId);
+        if (Number.isInteger(id) && id > 0) void openAlbumArt(id);
+      }
+    });
+  }
+  async function loadHealth() {
+    const token3 = ++state.healthToken;
+    beginBusy4();
+    let settle = "none";
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/library-health?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+      );
+      if (token3 !== state.healthToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.healthToken) return;
+      if (!response.ok || payload === null) {
+        failStatus4(serverMessage(payload, t("health.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest5 = payload;
+      el("health-status").textContent = "";
+      renderHealthReport(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.healthToken) return;
+      failStatus4(t("health.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.healthToken) return;
+      endBusy4();
+      if (settle === "retry") el("health-refresh").focus();
+      if (settle === "report") el("health-report").focus();
+    }
+  }
+  function showHealthFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
+    failStatus4(message);
+    endBusy4();
+    el("health-refresh").focus();
+  }
+  function renderHealthReport(payload) {
+    el("health-scope").textContent = scopeLabel();
+    const report = el("health-report");
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = t("health.summary", { count: payload.checked });
+    report.replaceChildren(summary);
+    let listed = 0;
+    for (const spec2 of SECTIONS) {
+      listed += paintSection(
+        report,
+        t(spec2.label),
+        payload[spec2.key],
+        spec2.action,
+        spec2.key === "no_artwork"
+      );
+    }
+    listed += paintUnused(report, payload.unused);
+    listed += paintDuplicates(report, payload.duplicates);
+    if (!listed) report.append(noteLine(t("health.clear")));
+    paintBitrateLink(report);
+  }
+  function repaintHealth() {
+    el("health-scope").textContent = scopeLabel();
+    if (latest5) renderHealthReport(latest5);
+    repaintAlbumArt();
+  }
+  function beginBusy4() {
+    const button = el("health-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    el("health-panel").setAttribute("aria-busy", "true");
+    el("health-status").textContent = t("health.checking");
+  }
+  function endBusy4() {
+    const button = el("health-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
+    el("health-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus4(message) {
+    el("health-status").textContent = message;
+  }
+  function scopeLabel() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function noteLine(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+  function paintSection(report, label, section, action, findArt = false) {
+    const count = section?.count ?? 0;
+    const tracks = section?.tracks ?? [];
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading = document.createElement("summary");
+    heading.textContent = t("gig.groupCount", { label, count });
+    details.append(heading);
+    if (action === "missing") details.append(openButton("missing", "health.openMissing", tips.healthOpenMissing));
+    const list = document.createElement("ul");
+    for (const track of tracks) list.append(trackItem(track, findArt));
+    details.append(list);
+    if (count > tracks.length) {
+      details.append(noteLine(t("health.more", { count: count - tracks.length })));
+    }
+    report.append(details);
+    return count;
+  }
+  function paintUnused(report, section) {
+    const count = section?.count ?? 0;
+    const files = section?.files ?? [];
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading = document.createElement("summary");
+    heading.textContent = t("gig.groupCount", { label: t("health.unused"), count });
+    details.append(heading);
+    details.append(openButton("files", "health.openFiles", tips.healthOpenFiles));
+    const list = document.createElement("ul");
+    for (const row of files) {
+      const item3 = document.createElement("li");
+      item3.textContent = t("health.fileRow", { file: row.file });
+      list.append(item3);
+    }
+    details.append(list);
+    if (count > files.length) {
+      details.append(noteLine(t("health.more", { count: count - files.length })));
+    }
+    report.append(details);
+    return count;
+  }
+  function paintDuplicates(report, section) {
+    const count = section?.count ?? 0;
+    const groups = section?.groups ?? [];
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading = document.createElement("summary");
+    heading.textContent = t("gig.groupCount", { label: t("health.duplicates"), count });
+    details.append(heading);
+    details.append(openButton("duplicates", "health.openDuplicates", tips.healthOpenDuplicates));
+    const list = document.createElement("ul");
+    for (const group of groups) list.append(groupItem(group));
+    details.append(list);
+    if (count > groups.length) {
+      details.append(noteLine(t("health.more", { count: count - groups.length })));
+    }
+    report.append(details);
+    return count;
+  }
+  function paintBitrateLink(report) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = true;
+    const heading = document.createElement("summary");
+    heading.textContent = t("health.bitrate");
+    details.append(heading);
+    details.append(openButton("bitrate", "health.openBitrate", tips.healthOpenBitrate));
+    details.append(noteLine(t("health.bitrateNote")));
+    report.append(details);
+  }
+  function openButton(action, label, tip) {
+    const button = buttonEl(tip);
+    button.dataset.healthAction = action;
+    button.textContent = t(label);
+    return button;
+  }
+  function trackItem(track, findArt = false) {
+    const row = document.createElement("li");
+    row.className = "health-art-row";
+    const button = buttonEl(tips.healthTrack);
+    button.dataset.healthAction = "track";
+    button.dataset.healthId = String(track.id);
+    button.textContent = trackLine(track);
+    row.append(button);
+    if (findArt) {
+      const art = buttonEl(tips.healthFindArt);
+      art.dataset.healthAction = "artwork";
+      art.dataset.healthId = String(track.id);
+      art.textContent = t("health.findArt");
+      row.append(art);
+    }
+    return row;
+  }
+  function groupItem(group) {
+    const row = document.createElement("li");
+    row.textContent = t("health.duplicateRow", {
+      title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
+      count: group.ids.length
+    });
+    return row;
+  }
+  function trackLine(track) {
+    return t("health.row", {
+      title: [track.artist, track.name].filter(Boolean).join(" — ") || track.file
+    });
+  }
+
+  // src/history-stats-view.ts
+  var IDLE_DAYS_DEFAULT = 365;
+  var IDLE_DAYS_MAX = 3650;
+  var DAY = 86400;
+  var PERIODS = /* @__PURE__ */ new Set(["all", "7", "30", "90", "365", "custom"]);
+  function isStatsPeriod(value) {
+    return PERIODS.has(value);
+  }
+  function dayStartUnix(iso) {
+    const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+    if (!parts) return null;
+    const stamp = new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3])).getTime();
+    if (Number.isNaN(stamp)) return null;
+    return Math.floor(stamp / 1e3);
+  }
+  function dayAfterUnix(iso) {
+    const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+    if (!parts) return null;
+    const stamp = new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]) + 1).getTime();
+    if (Number.isNaN(stamp)) return null;
+    return Math.floor(stamp / 1e3);
+  }
+  function periodRange(period, from, to, nowMs) {
+    if (period === "all") return { start: null, end: null };
+    if (period !== "custom") {
+      const end = Math.floor(nowMs / 1e3);
+      return { start: end - Number(period) * DAY, end };
+    }
+    return { start: dayStartUnix(from), end: dayAfterUnix(to) };
+  }
+  function idleDaysFromInput(raw) {
+    if (!/^\d{1,4}$/.test(raw.trim())) return IDLE_DAYS_DEFAULT;
+    const value = Number(raw.trim());
+    if (value < 1 || value > IDLE_DAYS_MAX) return IDLE_DAYS_DEFAULT;
+    return value;
+  }
+  function statsQuery(space, range, idleDays) {
+    const query = new URLSearchParams({ space });
+    if (range.start != null) query.set("from", String(range.start));
+    if (range.end != null) query.set("to", String(range.end));
+    if (idleDays !== IDLE_DAYS_DEFAULT) query.set("idle_days", String(idleDays));
+    return query.toString();
+  }
+  function csvHref(query) {
+    return query ? `/api/history-stats.csv?${query}` : "/api/history-stats.csv";
+  }
+
+  // src/history-stats.ts
+  var LIST_CAP2 = 100;
+  var latest6 = null;
+  var crateBusy = false;
+  function wireHistoryStats() {
+    const panel = el("stats-panel");
+    if (panel.dataset.statsWired === "true") return;
+    panel.dataset.statsWired = "true";
+    el("stats-refresh").addEventListener("click", () => {
+      void loadHistoryStats();
+    });
+    el("stats-period").addEventListener("change", () => {
+      syncPeriodFields();
+      if (currentPeriod() !== "custom") void loadHistoryStats();
+    });
+    el("stats-csv").addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.href = csvHref(currentQuery());
+      link.download = "play-stats.csv";
+      link.click();
+    });
+    panel.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement)) return;
+      if (button.dataset.statsAction === "crate") void makeIdleCrate();
+    });
+    syncPeriodFields();
+  }
+  async function loadHistoryStats() {
+    const token3 = ++state.statsToken;
+    beginBusy5();
+    let settle = "none";
+    try {
+      const response = await fetch(`/api/history-stats?${currentQuery()}`);
+      if (token3 !== state.statsToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.statsToken) return;
+      if (!response.ok || payload === null) {
+        failStatus5(serverMessage(payload, t("stats.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest6 = payload;
+      el("stats-status").textContent = "";
+      renderHistoryStats(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.statsToken) return;
+      failStatus5(t("stats.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.statsToken) return;
+      endBusy5();
+      if (settle === "retry") el("stats-refresh").focus();
+      if (settle === "report") el("stats-report").focus();
+    }
+  }
+  function showHistoryStatsFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("stats.unreadable");
+    failStatus5(message);
+    endBusy5();
+    el("stats-refresh").focus();
+  }
+  function renderHistoryStats(payload) {
+    el("stats-scope").textContent = t("gig.wholeSpace");
+    const report = el("stats-report");
+    const plays = payload.plays ?? 0;
+    const sessions = payload.sessions ?? 0;
+    const idleDays = payload.idle_days ?? 365;
+    const idleCount = payload.not_played_count ?? 0;
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = plays ? t("stats.summary", { plays, sessions }) : t("stats.empty");
+    report.replaceChildren(summary);
+    report.append(trackTable(payload.top_tracks ?? []));
+    report.append(artistTable(payload.top_artists ?? []));
+    report.append(idleGroup(payload.not_played ?? [], idleCount, idleDays));
+  }
+  function repaintHistoryStats() {
+    el("stats-scope").textContent = t("gig.wholeSpace");
+    syncPeriodFields();
+    if (latest6) renderHistoryStats(latest6);
+  }
+  function currentPeriod() {
+    const value = el("stats-period").value;
+    return isStatsPeriod(value) ? value : "all";
+  }
+  function currentQuery() {
+    const range = periodRange(
+      currentPeriod(),
+      el("stats-from").value,
+      el("stats-to").value,
+      Date.now()
+    );
+    return statsQuery(state.space, range, idleDaysFromInput(el("stats-idle-days").value));
+  }
+  function syncPeriodFields() {
+    const custom = currentPeriod() === "custom";
+    el("stats-from").disabled = !custom;
+    el("stats-to").disabled = !custom;
+  }
+  function beginBusy5() {
+    const button = el("stats-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    el("stats-panel").setAttribute("aria-busy", "true");
+    el("stats-status").textContent = t("stats.checking");
+  }
+  function endBusy5() {
+    const button = el("stats-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
+    el("stats-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus5(message) {
+    el("stats-status").textContent = message;
+  }
+  function trackTable(rows2) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = rows2.length > 0;
+    const heading = document.createElement("summary");
+    heading.textContent = t("gig.groupCount", { label: t("stats.tracks"), count: rows2.length });
+    details.append(heading);
+    if (!rows2.length) {
+      details.append(noteLine2(t("stats.emptyTracks")));
+      return details;
+    }
+    const table = document.createElement("table");
+    table.className = "stats-table";
+    const head = document.createElement("thead");
+    head.append(headerRow(["column.title", "column.artist", "column.plays", "column.lastPlayed"]));
+    table.append(head);
+    const body = document.createElement("tbody");
+    for (const row of rows2.slice(0, LIST_CAP2)) {
+      body.append(dataRow([
+        row.name || "—",
+        row.artist || "—",
+        String(row.plays ?? 0),
+        clockLabel(row.last_played) || "—"
+      ]));
+    }
+    table.append(body);
+    details.append(table);
+    if (rows2.length > LIST_CAP2) details.append(noteLine2(t("stats.more", { count: rows2.length - LIST_CAP2 })));
+    return details;
+  }
+  function artistTable(rows2) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = rows2.length > 0;
+    const heading = document.createElement("summary");
+    heading.textContent = t("gig.groupCount", { label: t("stats.artists"), count: rows2.length });
+    details.append(heading);
+    if (!rows2.length) {
+      details.append(noteLine2(t("stats.emptyArtists")));
+      return details;
+    }
+    const table = document.createElement("table");
+    table.className = "stats-table";
+    const head = document.createElement("thead");
+    head.append(headerRow(["column.artist", "column.plays", "stats.artistTracks", "column.lastPlayed"]));
+    table.append(head);
+    const body = document.createElement("tbody");
+    for (const row of rows2.slice(0, LIST_CAP2)) {
+      body.append(dataRow([
+        row.artist || "—",
+        String(row.plays ?? 0),
+        String(row.tracks ?? 0),
+        clockLabel(row.last_played) || "—"
+      ]));
+    }
+    table.append(body);
+    details.append(table);
+    if (rows2.length > LIST_CAP2) details.append(noteLine2(t("stats.more", { count: rows2.length - LIST_CAP2 })));
+    return details;
+  }
+  function idleGroup(rows2, count, idleDays) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading = document.createElement("summary");
+    heading.textContent = t("gig.groupCount", { label: t("stats.idle"), count });
+    details.append(heading);
+    details.append(noteLine2(t("stats.idleHint", { days: idleDays })));
+    const crate = buttonEl(tips.statsIdleCrate);
+    crate.dataset.statsAction = "crate";
+    crate.textContent = t("stats.idleCrate");
+    crate.disabled = crateBusy || !state.writable || count === 0;
+    details.append(crate);
+    if (!count) {
+      details.append(noteLine2(t("stats.emptyIdle")));
+      return details;
+    }
+    const list = document.createElement("ul");
+    for (const row of rows2.slice(0, LIST_CAP2)) {
+      const item3 = document.createElement("li");
+      const last = row.last_played == null ? t("stats.never") : clockLabel(row.last_played) || "—";
+      item3.textContent = t("stats.idleRow", {
+        title: [row.artist, row.name].filter(Boolean).join(" — ") || row.name || "—",
+        last
+      });
+      list.append(item3);
+    }
+    details.append(list);
+    if (count > rows2.length) details.append(noteLine2(t("stats.more", { count: count - rows2.length })));
+    else if (rows2.length > LIST_CAP2) details.append(noteLine2(t("stats.more", { count: rows2.length - LIST_CAP2 })));
+    return details;
+  }
+  async function makeIdleCrate() {
+    if (crateBusy) return;
+    const idleDays = idleDaysFromInput(el("stats-idle-days").value);
+    const name = t("stats.idleCrateName", { days: idleDays });
+    crateBusy = true;
+    try {
+      const preview = await postJSON("/api/history-stats", {
+        action: "preview",
+        space: state.space,
+        idle_days: idleDays,
+        name
+      });
+      const count = preview.count ?? 0;
+      if (!count) {
+        el("stats-status").textContent = t("stats.emptyIdle");
+        return;
+      }
+      const label = String(preview.name || name);
+      if (!confirm(t("stats.confirmCrate", { name: label, count, days: idleDays }))) return;
+      const created = await postJSON("/api/history-stats", {
+        action: "create",
+        space: state.space,
+        idle_days: idleDays,
+        name: label
+      });
+      if (!created.written) {
+        el("stats-status").textContent = t("stats.emptyIdle");
+        return;
+      }
+      await bridge.reloadLibrary();
+      await loadHistoryStats();
+      el("stats-status").textContent = created.warning || t("stats.written", {
+        name: String(created.name || label),
+        count: created.count ?? count
+      });
+    } catch (error2) {
+      if (failureOf(error2).status === 409) {
+        bridge.lockDown(error2);
+        return;
+      }
+      el("stats-status").textContent = failureOf(error2).message;
+    } finally {
+      crateBusy = false;
+      if (latest6) renderHistoryStats(latest6);
+    }
+  }
+  function headerRow(keys) {
+    const row = document.createElement("tr");
+    for (const key of keys) {
+      const cell = document.createElement("th");
+      cell.scope = "col";
+      cell.textContent = t(key);
+      row.append(cell);
+    }
+    return row;
+  }
+  function dataRow(values) {
+    const row = document.createElement("tr");
+    for (const value of values) {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.append(cell);
+    }
+    return row;
+  }
+  function noteLine2(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+
+  // src/scan.ts
+  var LIST_CAP3 = 100;
+  var PROBLEM_ORDER = [
+    "empty",
+    "unreadable",
+    "wrong_format",
+    "serato_flagged",
+    "undecodable",
+    "decode_error",
+    "short"
+  ];
+  var PROBLEM_KEYS = {
+    empty: "scan.problem.empty",
+    unreadable: "scan.problem.unreadable",
+    wrong_format: "scan.problem.wrong_format",
+    serato_flagged: "scan.problem.serato_flagged",
+    undecodable: "scan.problem.undecodable",
+    decode_error: "scan.problem.decode_error",
+    short: "scan.problem.short"
+  };
+  var latest7 = null;
+  var lastDepth = "quick";
+  function wireScan() {
+    const panel = el("scan-panel");
+    if (panel.dataset.scanWired === "true") return;
+    panel.dataset.scanWired = "true";
+    el("scan-quick").addEventListener("click", () => {
+      void loadScan("quick");
+    });
+    el("scan-full").addEventListener("click", () => {
+      void loadScan("full");
+    });
+  }
+  async function loadScan(depth) {
+    const chosen = resolveDepth(depth);
+    const token3 = ++state.scanToken;
+    beginBusy6();
+    let settle = "none";
+    if (chosen === "full" && state.activeCrate === "all") {
+      failStatus6(t("error.scan_full_needs_crate"));
+      endBusy6();
+      el("scan-full").focus();
+      return;
+    }
+    lastDepth = chosen;
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/file-scan?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&depth=${encodeURIComponent(chosen)}`
+      );
+      if (token3 !== state.scanToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.scanToken) return;
+      if (!response.ok || payload === null) {
+        failStatus6(serverMessage(payload, t("scan.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest7 = payload;
+      el("scan-status").textContent = "";
+      renderScanReport(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.scanToken) return;
+      failStatus6(t("scan.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.scanToken) return;
+      endBusy6();
+      if (settle === "retry") el("scan-quick").focus();
+      if (settle === "report") el("scan-report").focus();
+    }
+  }
+  function showScanFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
+    failStatus6(message);
+    endBusy6();
+    el("scan-quick").focus();
+  }
+  function renderScanReport(payload) {
+    el("scan-scope").textContent = scopeLabel2();
+    const report = el("scan-report");
+    const problems = payload.problems || [];
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked });
+    report.replaceChildren(summary);
+    if (payload.not_found) {
+      report.append(noteLine3(t("scan.notFound", { count: payload.not_found })));
+    }
+    if (payload.unchecked) {
+      report.append(noteLine3(t("scan.unchecked", { count: payload.unchecked })));
+    }
+    if (!problems.length) {
+      report.append(noteLine3(t("scan.empty")));
+      return;
+    }
+    for (const kind2 of problemKinds(problems)) {
+      const rows2 = problems.filter((item3) => item3.problem === kind2);
+      report.append(detailsGroup(problemHeading(kind2), rows2.map(problemLine)));
+    }
+  }
+  function repaintScan() {
+    el("scan-scope").textContent = scopeLabel2();
+    if (latest7) renderScanReport(latest7);
+  }
+  function resolveDepth(depth) {
+    if (depth === "quick" || depth === "full") return depth;
+    if (lastDepth === "full" && state.activeCrate === "all") return "quick";
+    return lastDepth;
+  }
+  function beginBusy6() {
+    for (const id of ["scan-quick", "scan-full"]) {
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+    }
+    el("scan-panel").setAttribute("aria-busy", "true");
+    el("scan-status").textContent = t("scan.checking");
+  }
+  function endBusy6() {
+    el("scan-quick").disabled = false;
+    el("scan-quick").setAttribute("aria-busy", "false");
+    const full = el("scan-full");
+    full.disabled = state.activeCrate === "all";
+    full.setAttribute("aria-busy", "false");
+    el("scan-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus6(message) {
+    el("scan-status").textContent = message;
+  }
+  function scopeLabel2() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function noteLine3(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+  function problemKinds(problems) {
+    const seen = new Set(problems.map((item3) => item3.problem));
+    const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
+    const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
+    return [...known, ...extra];
+  }
+  function problemHeading(kind2) {
+    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
+  }
+  function problemLine(item3) {
+    const title2 = [item3.artist, item3.name].filter(Boolean).join(" — ") || item3.file;
+    const label = problemDetail(item3);
+    return t("scan.row", { title: title2, file: item3.file, problem: label });
+  }
+  function problemDetail(item3) {
+    const heading = problemHeading(item3.problem);
+    if (item3.problem === "wrong_format" && item3.detail) {
+      return t("scan.wrongFormatDetail", { detail: item3.detail });
+    }
+    if ((item3.problem === "decode_error" || item3.problem === "short") && item3.detail) {
+      return t(item3.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
+        detail: item3.detail
+      });
+    }
+    if (item3.problem === "serato_flagged" && item3.detail) {
+      return `${heading}: ${item3.detail}`;
+    }
+    return heading;
+  }
+  function detailsGroup(label, lines) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = true;
+    const summary = document.createElement("summary");
+    summary.textContent = t("gig.groupCount", { label, count: lines.length });
+    const list = document.createElement("ul");
+    const shown = lines.slice(0, LIST_CAP3);
+    for (const line of shown) list.append(item(line));
+    details.append(summary, list);
+    if (lines.length > LIST_CAP3) {
+      const show2 = buttonEl(tips.gigShowAll);
+      show2.className = "gig-show-all";
+      show2.textContent = t("gig.showAll", { count: lines.length });
+      show2.addEventListener("click", () => {
+        list.replaceChildren();
+        for (const line of lines) list.append(item(line));
+        show2.remove();
+      });
+      details.append(show2);
+    }
+    return details;
+  }
+  function item(text2) {
+    const row = document.createElement("li");
+    row.textContent = text2;
+    return row;
+  }
+
+  // src/bitrate.ts
+  var LIST_CAP4 = 100;
+  var REASON_ORDER = ["upsampled", "lossy_source"];
+  var REASON_KEYS2 = {
+    upsampled: "bitrate.reason.upsampled",
+    lossy_source: "bitrate.reason.lossy_source"
+  };
+  var latest8 = null;
+  var cratePlan = null;
+  function wireBitrate() {
+    const panel = el("bitrate-panel");
+    if (panel.dataset.bitrateWired === "true") return;
+    panel.dataset.bitrateWired = "true";
+    el("bitrate-refresh").addEventListener("click", () => {
+      void loadBitrate();
+    });
+    el("bitrate-save").addEventListener("click", () => {
+      void previewCrate();
+    });
+    el("bitrate-report").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-bitrate-action]");
+      if (!button || button.disabled) return;
+      if (button.dataset.bitrateAction === "confirm") void createCrate();
+    });
+  }
+  async function loadBitrate() {
+    const token3 = ++state.bitrateToken;
+    cratePlan = null;
+    beginBusy7();
+    let settle = "none";
+    if (state.activeCrate === "all") {
+      failStatus7(t("error.bitrate_needs_crate"));
+      endBusy7();
+      el("bitrate-refresh").focus();
+      return;
+    }
+    const crate = String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/bitrate-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+      );
+      if (token3 !== state.bitrateToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.bitrateToken) return;
+      if (!response.ok || payload === null) {
+        failStatus7(serverMessage(payload, t("bitrate.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest8 = payload;
+      el("bitrate-status").textContent = "";
+      renderBitrateReport(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.bitrateToken) return;
+      failStatus7(t("bitrate.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.bitrateToken) return;
+      endBusy7();
+      if (settle === "retry") el("bitrate-refresh").focus();
+      if (settle === "report") el("bitrate-report").focus();
+    }
+  }
+  function showBitrateFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("bitrate.unreadable");
+    failStatus7(message);
+    endBusy7();
+    el("bitrate-refresh").focus();
+  }
+  function renderBitrateReport(payload) {
+    el("bitrate-scope").textContent = scopeLabel3();
+    const report = el("bitrate-report");
+    const suspects = payload.suspects || [];
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = suspects.length ? t("bitrate.summary", { checked: payload.checked, count: suspects.length }) : t("bitrate.summaryClear", { checked: payload.checked });
+    report.replaceChildren(summary);
+    if (payload.not_found) {
+      report.append(noteLine4(t("bitrate.notFound", { count: payload.not_found })));
+    }
+    if (payload.unreadable) {
+      report.append(noteLine4(t("bitrate.unreadableFiles", { count: payload.unreadable })));
+    }
+    if (payload.unchecked) {
+      report.append(noteLine4(t("bitrate.unchecked", { count: payload.unchecked })));
+    }
+    if (payload.too_quiet) {
+      report.append(noteLine4(t("bitrate.tooQuiet", { count: payload.too_quiet })));
+    }
+    if (!suspects.length) {
+      report.append(noteLine4(t("bitrate.empty")));
+      paintPlan(report);
+      return;
+    }
+    for (const kind2 of reasonKinds(suspects)) {
+      const rows2 = suspects.filter((item3) => item3.reason === kind2);
+      report.append(detailsGroup2(reasonHeading(kind2), rows2.map(suspectLine)));
+    }
+    paintPlan(report);
+  }
+  function repaintBitrate() {
+    el("bitrate-scope").textContent = scopeLabel3();
+    if (latest8) renderBitrateReport(latest8);
+  }
+  async function previewCrate() {
+    if (state.activeCrate === "all") {
+      failStatus7(t("error.bitrate_needs_crate"));
+      el("bitrate-refresh").focus();
+      return;
+    }
+    const token3 = ++state.bitrateToken;
+    beginBusy7("preview");
+    try {
+      const payload = await postJSON("/api/bitrate-check", {
+        action: "preview",
+        space: state.space,
+        crate: state.activeCrate
+      });
+      if (token3 !== state.bitrateToken) return;
+      cratePlan = payload;
+      latest8 = payload;
+      el("bitrate-status").textContent = payload.added ? t("bitrate.preview", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
+      renderBitrateReport(payload);
+      const confirm2 = el("bitrate-report").querySelector("[data-bitrate-action='confirm']");
+      (confirm2 ?? el("bitrate-save")).focus();
+    } catch (error2) {
+      if (token3 !== state.bitrateToken) return;
+      failStatus7(failureOf(error2).message);
+      el("bitrate-save").focus();
+    } finally {
+      if (token3 !== state.bitrateToken) return;
+      endBusy7();
+    }
+  }
+  async function createCrate() {
+    if (!cratePlan || !cratePlan.added || state.activeCrate === "all") return;
+    const token3 = ++state.bitrateToken;
+    beginBusy7("create");
+    try {
+      const payload = await postJSON("/api/bitrate-check", {
+        action: "create",
+        space: state.space,
+        crate: state.activeCrate
+      });
+      if (token3 !== state.bitrateToken) return;
+      await bridge.reloadLibrary();
+      if (token3 !== state.bitrateToken) return;
+      cratePlan = payload;
+      latest8 = payload;
+      el("bitrate-status").textContent = payload.written ? t("bitrate.written", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
+      renderBitrateReport(payload);
+      el("bitrate-report").focus();
+    } catch (error2) {
+      if (token3 !== state.bitrateToken) return;
+      const failed = failureOf(error2);
+      failStatus7(failed.message);
+      if (failed.status === 409) bridge.lockDown(error2);
+      el("bitrate-save").focus();
+    } finally {
+      if (token3 !== state.bitrateToken) return;
+      endBusy7();
+    }
+  }
+  function beginBusy7(kind2 = "check") {
+    for (const id of ["bitrate-refresh", "bitrate-save"]) {
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+    }
+    el("bitrate-panel").setAttribute("aria-busy", "true");
+    const status = kind2 === "create" ? t("bitrate.saving") : kind2 === "preview" ? t("bitrate.checking") : t("bitrate.checking");
+    el("bitrate-status").textContent = status;
+  }
+  function endBusy7() {
+    const noCrate = state.activeCrate === "all";
+    const refresh = el("bitrate-refresh");
+    refresh.disabled = noCrate;
+    refresh.setAttribute("aria-busy", "false");
+    const save3 = el("bitrate-save");
+    const flagged = Boolean(latest8?.suspects.length);
+    save3.disabled = noCrate || !flagged;
+    save3.setAttribute("aria-busy", "false");
+    el("bitrate-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus7(message) {
+    el("bitrate-status").textContent = message;
+  }
+  function scopeLabel3() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function noteLine4(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+  function reasonKinds(suspects) {
+    const seen = new Set(suspects.map((item3) => item3.reason));
+    const known = REASON_ORDER.filter((kind2) => seen.has(kind2));
+    const extra = [...seen].filter((kind2) => !REASON_ORDER.includes(kind2)).sort();
+    return [...known, ...extra];
+  }
+  function reasonHeading(kind2) {
+    return t(REASON_KEYS2[kind2] ?? "bitrate.reason.unknown");
+  }
+  function suspectLine(item3) {
+    const title2 = [item3.artist, item3.name].filter(Boolean).join(" — ") || item3.file;
+    const reason = reasonHeading(item3.reason);
+    const detail = item3.stated_kbps != null && item3.estimated_kbps != null ? t("bitrate.detail", { stated: item3.stated_kbps, estimated: item3.estimated_kbps }) : item3.estimated_kbps != null ? t("bitrate.detailEstimate", { estimated: item3.estimated_kbps }) : "";
+    return t("bitrate.row", { title: title2, file: item3.file, reason, detail });
+  }
+  function paintPlan(report) {
+    if (!cratePlan) return;
+    if (cratePlan.written && cratePlan.saved) {
+      report.append(noteLine4(t("bitrate.written", { count: cratePlan.added, name: cratePlan.name })));
+      return;
+    }
+    if (!cratePlan.added) {
+      report.append(noteLine4(t("bitrate.previewEmpty")));
+      return;
+    }
+    report.append(noteLine4(t("bitrate.preview", { count: cratePlan.added, name: cratePlan.name })));
+    const confirm2 = buttonEl(tips.bitrateConfirm);
+    confirm2.dataset.bitrateAction = "confirm";
+    confirm2.textContent = t("bitrate.confirmCrate");
+    confirm2.disabled = !state.writable;
+    report.append(confirm2);
+  }
+  function detailsGroup2(label, lines) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = true;
+    const summary = document.createElement("summary");
+    summary.textContent = t("gig.groupCount", { label, count: lines.length });
+    const list = document.createElement("ul");
+    const shown = lines.slice(0, LIST_CAP4);
+    for (const line of shown) list.append(item2(line));
+    details.append(summary, list);
+    if (lines.length > LIST_CAP4) {
+      const show2 = buttonEl(tips.gigShowAll);
+      show2.className = "gig-show-all";
+      show2.textContent = t("gig.showAll", { count: lines.length });
+      show2.addEventListener("click", () => {
+        list.replaceChildren();
+        for (const line of lines) list.append(item2(line));
+        show2.remove();
+      });
+      details.append(show2);
+    }
+    return details;
+  }
+  function item2(text2) {
+    const row = document.createElement("li");
+    row.textContent = text2;
+    return row;
+  }
+
+  // src/tags-view.ts
+  function tagsSummary(field, values, groups) {
+    if (field === "titles") return titlesSummary(groups);
+    if (groups === 0) {
+      return field === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
+    }
+    return field === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
+  }
+  function titlesSummary(changes) {
+    if (!changes) return t("tags.summaryTitlesClear");
+    return t("tags.summaryTitles", { count: changes });
+  }
+  function groupHeading(group) {
+    return t("tags.group", {
+      name: group.suggested,
+      spellings: t("tags.spellingCount", { count: group.spellings.length }),
+      tracks: t("tags.trackCount", { count: group.tracks })
+    });
+  }
+  function spellingLabel(value, count, suggested) {
+    const base = t("tags.row", { value, count });
+    return suggested ? `${base} — ${t("tags.suggested")}` : base;
+  }
+  function previewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.previewSummary", { count: plan.changes.length, value: plan.value });
+  }
+  function titlesPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.summaryTitlesClear");
+    return t("tags.titlesPreviewSummary", { count: plan.changes.length });
+  }
+  function writtenSummary(plan) {
+    return t("tags.written", { count: plan.changes.length, value: plan.value });
+  }
+  function titlesWrittenSummary(plan) {
+    return t("tags.titlesWritten", { count: plan.changes.length });
+  }
+  function mappingPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.mappingSummary", { count: plan.changes.length });
+  }
+  function mappingWrittenSummary(plan) {
+    return t("tags.mappingWritten", { count: plan.changes.length });
+  }
+  function mappingFieldLabel(field) {
+    if (field === "genre") return t("tags.genre");
+    if (field === "artist") return t("tags.artist");
+    return field;
+  }
+  function groupChanges(changes) {
+    const rows2 = /* @__PURE__ */ new Map();
+    for (const change of changes) {
+      const remixer = change.remixer ?? "";
+      const field = change.field ?? "";
+      const id = `${field}\0${change.from}\0${change.to}\0${remixer}`;
+      const existing = rows2.get(id);
+      if (existing) existing.count += 1;
+      else {
+        const row = { from: change.from, to: change.to, count: 1 };
+        if (change.remixer) row.remixer = change.remixer;
+        if (change.field) row.field = change.field;
+        rows2.set(id, row);
+      }
+    }
+    return [...rows2.values()];
+  }
+  function previewLines(changes) {
+    return groupChanges(changes).map((row) => {
+      if (row.field) {
+        return t("tags.previewLineField", {
+          field: mappingFieldLabel(row.field),
+          from: row.from,
+          to: row.to,
+          count: row.count
+        });
+      }
+      return row.remixer ? t("tags.previewLineRemixer", {
+        from: row.from,
+        to: row.to,
+        remixer: row.remixer,
+        count: row.count
+      }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count });
+    });
+  }
+
+  // src/tags.ts
+  var LIST_CAP5 = 100;
+  var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
+  var TITLE_KEY = "clean";
+  var MAPPING_KEY = "saved";
+  var latest9 = null;
+  var titlePlan = null;
+  var mappingPlan = null;
+  var plans = /* @__PURE__ */ new Map();
+  var selectedByKey = /* @__PURE__ */ new Map();
+  var panelBusy = false;
+  var actionKey = "";
+  function wireTags() {
+    const panel = el("tags-panel");
+    if (panel.dataset.tagsWired === "true") return;
+    panel.dataset.tagsWired = "true";
+    el("tags-genre").addEventListener("click", () => {
+      if (currentField() === "genre") return;
+      setField("genre");
+      void loadTags();
+    });
+    el("tags-artist").addEventListener("click", () => {
+      if (currentField() === "artist") return;
+      setField("artist");
+      void loadTags();
+    });
+    el("tags-titles").addEventListener("click", () => {
+      if (currentField() === "titles") return;
+      setField("titles");
+      void loadTags();
+    });
+    el("tags-refresh").addEventListener("click", () => {
+      void loadTags();
+    });
+    el("tags-report").addEventListener("change", (event) => {
+      const input = event.target.closest("input[type='radio']");
+      if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
+      const key = input.name.slice("tags-".length);
+      selectedByKey.set(key, input.value);
+      plans.delete(key);
+      if (latest9) renderTagsReport(latest9);
+    });
+    el("tags-report").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-tags-action]");
+      if (!button || button.disabled) return;
+      if (button.dataset.tagsAction === "clean-apply") {
+        void applyTitles();
+        return;
+      }
+      if (button.dataset.tagsAction === "refresh-apply") {
+        void applyMappings();
+        return;
+      }
+      const key = button.dataset.key ?? "";
+      if (!key) return;
+      if (button.dataset.tagsAction === "preview") void previewGroup(key);
+      if (button.dataset.tagsAction === "apply") void applyGroup(key);
+    });
+  }
+  async function loadTags() {
+    const token3 = ++state.tagsToken;
+    const field = currentField();
+    plans.clear();
+    selectedByKey.clear();
+    beginBusy8();
+    let settle = "none";
+    try {
+      if (field === "titles") {
+        const payload = await postJSON("/api/tag-clusters", {
+          action: "clean-preview",
+          space: state.space
+        });
+        if (token3 !== state.tagsToken) return;
+        titlePlan = payload;
+        latest9 = null;
+        mappingPlan = null;
+        el("tags-status").textContent = titlesPreviewSummary(payload);
+        settle = "report";
+      } else {
+        const response = await fetch(
+          `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
+        );
+        if (token3 !== state.tagsToken) return;
+        const payload = await readJSON(response).catch(() => null);
+        if (token3 !== state.tagsToken) return;
+        if (!response.ok || payload === null) {
+          failStatus8(serverMessage(payload, t("tags.unreadable")));
+          settle = "retry";
+          return;
+        }
+        latest9 = payload;
+        titlePlan = null;
+        mappingPlan = await readMappingPreview(token3);
+        if (token3 !== state.tagsToken) return;
+        el("tags-status").textContent = "";
+        settle = "report";
+      }
+    } catch (error2) {
+      if (token3 !== state.tagsToken) return;
+      if (error2 instanceof TypeError) failStatus8(t("tags.unreachable"));
+      else failStatus8(failureOf(error2).message);
+      settle = "retry";
+    } finally {
+      if (token3 !== state.tagsToken) return;
+      endBusy8();
+      if (settle === "report") paintReport();
+      if (settle === "retry") el("tags-refresh").focus();
+      if (settle === "report") el("tags-report").focus();
+    }
+  }
+  function showTagsFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
+    failStatus8(message);
+    endBusy8();
+    el("tags-refresh").focus();
+  }
+  function renderTagsReport(payload) {
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    const field = currentField();
+    const report = el("tags-report");
+    const groups = payload.groups ?? [];
+    const open = openKeys();
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = tagsSummary(field, payload.values ?? 0, groups.length);
+    report.replaceChildren(summary);
+    const mapping = mappingCard();
+    if (mapping) report.append(mapping);
+    if (!groups.length) return;
+    groups.forEach((group, index) => {
+      report.append(groupCard(group, index === 0 || open.has(group.key)));
+    });
+  }
+  function paintReport() {
+    if (currentField() === "titles") {
+      if (titlePlan) renderTitleReport(titlePlan);
+      return;
+    }
+    if (latest9) renderTagsReport(latest9);
+  }
+  function renderTitleReport(plan) {
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    const report = el("tags-report");
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = titlesSummary(plan.changes.length);
+    report.replaceChildren(summary);
+    const lines = previewLines(plan.changes);
+    if (lines.length) {
+      const diffs = document.createElement("ul");
+      for (const line of lines.slice(0, LIST_CAP5)) {
+        const row = document.createElement("li");
+        row.textContent = line;
+        diffs.append(row);
+      }
+      report.append(diffs);
+    }
+    const actions2 = document.createElement("div");
+    actions2.className = "tags-actions";
+    const apply = buttonEl(tips.tagsApplyTitles);
+    apply.dataset.tagsAction = "clean-apply";
+    apply.textContent = t("tags.apply");
+    apply.disabled = !canApplyTitles(plan);
+    actions2.append(apply);
+    report.append(actions2);
+  }
+  function repaintTags() {
+    setField(currentField());
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    paintReport();
+  }
+  async function previewGroup(key) {
+    const group = groupByKey(key);
+    const value = selectedValue(key);
+    if (!group || !value) return;
+    actionKey = key;
+    paintReport();
+    try {
+      const plan = await postJSON("/api/tag-clusters", {
+        action: "preview",
+        space: state.space,
+        field: currentField(),
+        value
+      });
+      plans.set(key, plan);
+      el("tags-status").textContent = previewSummary(plan);
+      paintReport();
+      applyButton(key)?.focus();
+    } catch (error2) {
+      failStatus8(failureOf(error2).message);
+    } finally {
+      actionKey = "";
+      paintReport();
+    }
+  }
+  async function applyGroup(key) {
+    const plan = plans.get(key);
+    const value = selectedValue(key);
+    if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
+    actionKey = key;
+    panelBusy = true;
+    beginBusy8();
+    paintReport();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "apply",
+        space: state.space,
+        field: currentField(),
+        value
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy8();
+      await loadTags();
+      el("tags-status").textContent = writtenSummary(written);
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus8(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy8();
+      paintReport();
+    }
+  }
+  async function applyMappings() {
+    const plan = mappingPlan;
+    if (!plan || !canApplyMappings(plan)) return;
+    actionKey = MAPPING_KEY;
+    panelBusy = true;
+    beginBusy8();
+    paintReport();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "refresh-apply",
+        space: state.space
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy8();
+      await loadTags();
+      el("tags-status").textContent = mappingWrittenSummary(written);
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus8(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy8();
+      paintReport();
+    }
+  }
+  async function applyTitles() {
+    const plan = titlePlan;
+    if (!plan || !canApplyTitles(plan)) return;
+    actionKey = TITLE_KEY;
+    panelBusy = true;
+    beginBusy8();
+    paintReport();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "clean-apply",
+        space: state.space
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy8();
+      await loadTags();
+      el("tags-status").textContent = titlesWrittenSummary(written);
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus8(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy8();
+      paintReport();
+    }
+  }
+  function currentField() {
+    if (el("tags-titles").getAttribute("aria-pressed") === "true") return "titles";
+    if (el("tags-artist").getAttribute("aria-pressed") === "true") return "artist";
+    return "genre";
+  }
+  function setField(next2) {
+    el("tags-genre").setAttribute("aria-pressed", String(next2 === "genre"));
+    el("tags-artist").setAttribute("aria-pressed", String(next2 === "artist"));
+    el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
+    el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
+  }
+  function beginBusy8() {
+    panelBusy = true;
+    for (const id of FIELD_BUTTONS) {
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+    }
+    el("tags-panel").setAttribute("aria-busy", "true");
+    el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
+    paintReport();
+  }
+  function endBusy8() {
+    panelBusy = false;
+    for (const id of FIELD_BUTTONS) {
+      const button = el(id);
+      button.disabled = false;
+      button.setAttribute("aria-busy", "false");
+    }
+    el("tags-panel").setAttribute("aria-busy", "false");
+  }
+  function canApplyTitles(plan) {
+    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
+  }
+  function canApplyMappings(plan) {
+    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
+  }
+  function asMappingPlan(payload) {
+    if (payload === null || typeof payload !== "object") return null;
+    const plan = payload;
+    if (!Array.isArray(plan.changes)) return null;
+    return plan;
+  }
+  async function readMappingPreview(token3) {
+    try {
+      const payload = await postJSON("/api/tag-clusters", {
+        action: "refresh-preview",
+        space: state.space
+      });
+      if (token3 !== state.tagsToken) return null;
+      return asMappingPlan(payload);
+    } catch {
+      if (token3 !== state.tagsToken) return null;
+      return null;
+    }
+  }
+  function mappingCard() {
+    const plan = mappingPlan;
+    if (!plan?.changes.length) return null;
+    const wrap = document.createElement("div");
+    wrap.className = "tags-mappings";
+    const note = document.createElement("p");
+    note.className = "gig-note";
+    note.textContent = mappingPreviewSummary(plan);
+    wrap.append(note);
+    const lines = previewLines(plan.changes);
+    if (lines.length) {
+      const diffs = document.createElement("ul");
+      for (const line of lines.slice(0, LIST_CAP5)) {
+        const row = document.createElement("li");
+        row.textContent = line;
+        diffs.append(row);
+      }
+      wrap.append(diffs);
+    }
+    const actions2 = document.createElement("div");
+    actions2.className = "tags-actions";
+    const apply = buttonEl(tips.tagsApplyMappings);
+    apply.dataset.tagsAction = "refresh-apply";
+    apply.textContent = t("tags.applyMappings");
+    apply.disabled = !canApplyMappings(plan);
+    actions2.append(apply);
+    wrap.append(actions2);
+    return wrap;
+  }
+  function failStatus8(message) {
+    el("tags-status").textContent = message;
+  }
+  function openKeys() {
+    const keys = /* @__PURE__ */ new Set();
+    for (const details of el("tags-report").querySelectorAll("details[data-key]")) {
+      if (details instanceof HTMLDetailsElement && details.open && details.dataset.key) {
+        keys.add(details.dataset.key);
+      }
+    }
+    return keys;
+  }
+  function groupByKey(key) {
+    return latest9?.groups?.find((group) => group.key === key);
+  }
+  function selectedValue(key) {
+    const group = groupByKey(key);
+    return selectedByKey.get(key) ?? group?.suggested ?? "";
+  }
+  function canApply(key) {
+    const plan = plans.get(key);
+    const value = selectedValue(key);
+    return Boolean(
+      plan && plan.value === value && plan.changes.length && state.writable && !panelBusy && actionKey !== key
+    );
+  }
+  function applyButton(key) {
+    return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
+  }
+  function cssEscape(value) {
+    if (typeof CSS !== "undefined" && typeof CSS.escape === "function") return CSS.escape(value);
+    return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+  }
+  function groupCard(group, open) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = open;
+    details.dataset.key = group.key;
+    const summary = document.createElement("summary");
+    setTooltip(summary, tips.tagsGroup);
+    summary.textContent = groupHeading(group);
+    const list = document.createElement("ul");
+    list.className = "tags-spellings";
+    const chosen = selectedValue(group.key);
+    for (const spelling of group.spellings) {
+      list.append(spellingRow(group.key, spelling.value, spelling.count, spelling.value === group.suggested, spelling.value === chosen));
+    }
+    details.append(summary, list);
+    const plan = plans.get(group.key);
+    if (plan && plan.value === chosen) {
+      const lines = previewLines(plan.changes);
+      if (lines.length) {
+        const diffs = document.createElement("ul");
+        const shown = lines.slice(0, LIST_CAP5);
+        for (const line of shown) {
+          const row = document.createElement("li");
+          row.textContent = line;
+          diffs.append(row);
+        }
+        details.append(diffs);
+      }
+    }
+    details.append(groupActions(group.key, chosen, plan));
+    return details;
+  }
+  function spellingRow(key, value, count, suggested, checked) {
+    const row = document.createElement("li");
+    const label = document.createElement("label");
+    label.className = "tags-spelling";
+    const radio = inputEl(tips.tagsSpelling);
+    radio.type = "radio";
+    radio.name = `tags-${key}`;
+    radio.value = value;
+    radio.checked = checked;
+    radio.disabled = panelBusy;
+    const text2 = document.createElement("span");
+    text2.textContent = spellingLabel(value, count, suggested);
+    label.append(radio, text2);
+    row.append(label);
+    return row;
+  }
+  function groupActions(key, value, plan) {
+    const actions2 = document.createElement("div");
+    actions2.className = "tags-actions";
+    const preview = buttonEl(tips.tagsPreview);
+    preview.dataset.tagsAction = "preview";
+    preview.dataset.key = key;
+    preview.textContent = t("tags.preview");
+    preview.disabled = panelBusy || !value;
+    const apply = buttonEl(tips.tagsApply);
+    apply.dataset.tagsAction = "apply";
+    apply.dataset.key = key;
+    apply.textContent = t("tags.apply");
+    apply.disabled = !canApply(key);
+    if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
+    actions2.append(preview, apply);
+    return actions2;
+  }
+
+  // src/files-mount.tsx
+  var import_react20 = __toESM(require_react(), 1);
+
+  // src/components/FilesDialog.tsx
+  var import_react18 = __toESM(require_react(), 1);
+  var import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef6(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function FilesDialog() {
+    const files = useFiles();
+    (0, import_react18.useEffect)(() => {
+      const dialog = document.getElementById("files-dialog");
+      if (!(dialog instanceof HTMLDialogElement)) return;
+      const onCancel = (event) => {
+        event.preventDefault();
+        files.closeDialog();
+      };
+      dialog.addEventListener("cancel", onCancel);
+      return () => dialog.removeEventListener("cancel", onCancel);
+    }, [files.closeDialog]);
+    const action = files.dialogAction;
+    const preview = files.dialogPreview;
+    const ready = Boolean(preview?.ok && files.writable && preview.needs_confirm);
+    const reviewHidden = action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags";
+    const status = !files.writable ? document.getElementById("status")?.textContent ?? files.dialogStatus : files.dialogStatus;
+    const confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
+    const confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)(import_jsx_runtime17.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("span", { children: t("files.newName") }),
+        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+          "input",
+          {
+            id: "files-name",
+            ref: tooltipRef6(tips.filesName),
+            type: "text",
+            autoComplete: "off",
+            value: files.dialogName,
+            onInput: (event) => files.setDialogName(event.currentTarget.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("span", { children: t("files.newFile") }),
+        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+          "input",
+          {
+            id: "files-replacement",
+            ref: tooltipRef6(tips.filesReplacement),
+            type: "text",
+            autoComplete: "off",
+            spellCheck: false,
+            value: files.dialogReplacement,
+            onInput: (event) => files.setDialogReplacement(event.currentTarget.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("ul", { id: "files-changes", children: [
+        (preview?.changes || []).map((change, index) => {
+          const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
+          const effect = change.effect === "trash" ? t("files.trash") : change.to;
+          return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("li", { children: `${change.from} → ${effect}${crates}` }, `change-${index}`);
+        }),
+        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("li", { children: skip2 }, `skip-${index}`)),
+        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status }),
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+          "button",
+          {
+            id: "files-cancel",
+            type: "button",
+            ref: tooltipRef6(tips.filesCancel),
+            onClick: () => files.closeDialog(),
+            children: t("common.cancel")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+          "button",
+          {
+            id: "files-review",
+            type: "button",
+            ref: tooltipRef6(tips.filesReview),
+            hidden: reviewHidden,
+            onClick: () => {
+              void files.review();
+            },
+            children: t("files.review")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+          "button",
+          {
+            id: "files-confirm",
+            type: "button",
+            ref: tooltipRef6(confirmTip),
+            className: action === "delete" ? "danger" : void 0,
+            disabled: !ready,
+            onClick: () => {
+              void files.confirm();
+            },
+            children: confirmLabel
+          }
+        )
+      ] })
+    ] });
+  }
+
+  // src/components/FilesPanel.tsx
+  var import_react19 = __toESM(require_react(), 1);
+  var import_react_dom5 = __toESM(require_react_dom(), 1);
+  var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef7(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function FileIcon({ kind: kind2 }) {
+    const d = kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z";
+    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      "svg",
+      {
+        viewBox: "0 0 24 24",
+        width: "20",
+        height: "20",
+        "aria-hidden": "true",
+        className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
+        children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d })
+      }
+    );
+  }
+  function FilesToolbar() {
+    const files = useFiles();
+    const crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
+    return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("div", { className: "browser-bar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-up",
+          type: "button",
+          ref: tooltipRef7(tips.filesUp),
+          disabled: !files.parent || files.loading,
+          onClick: () => files.goUp(),
+          children: t("common.up")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
+        const last = index === crumbs.length - 1;
+        return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("li", { children: [
+          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+            "button",
+            {
+              type: "button",
+              ref: tooltipRef7(openCrumb(crumb.name)),
+              className: "files-crumb",
+              onClick: () => files.openCrumb(crumb.path),
+              children: crumb.name
+            }
+          ) : /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
+          !last ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" }) : null
+        ] }, `${crumb.path}:${crumb.name}:${index}`);
+      }) }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
+        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+          "input",
+          {
+            id: "files-search",
+            ref: tooltipRef7(tips.filesSearch),
+            type: "search",
+            placeholder: t("files.searchPlaceholder"),
+            autoComplete: "off",
+            spellCheck: false,
+            defaultValue: files.query,
+            onInput: (event) => files.onSearchInput(event.currentTarget.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef7(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-elsewhere",
+          className: "files-elsewhere",
+          type: "button",
+          ref: tooltipRef7(files.elsewhere ? tips.filesMusicFolders : tips.filesElsewhere),
+          onClick: () => files.toggleElsewhere(),
+          children: files.elsewhere ? t("files.roots") : t("files.browseElsewhere")
+        }
+      )
+    ] });
+  }
+  function FilesActions() {
+    const files = useFiles();
+    const selected = files.selectedEntries;
+    const locked = files.locked;
+    return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("div", { className: "files-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-rename",
+          type: "button",
+          ref: tooltipRef7(tips.filesRename),
+          disabled: locked || selected.length !== 1,
+          onClick: (event) => files.startRename(event.currentTarget),
+          children: t("crates.rename")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-rename-from-tags",
+          type: "button",
+          ref: tooltipRef7(tips.filesRenameFromTags),
+          "aria-haspopup": "dialog",
+          disabled: locked || !selected.length,
+          onClick: (event) => files.startRenameFromTags(event.currentTarget),
+          children: t("files.renameFromTags")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-move",
+          type: "button",
+          ref: tooltipRef7(tips.filesMove),
+          disabled: locked || !selected.length || Boolean(files.pick),
+          onClick: () => files.startMove(),
+          children: t("files.moveToFolder")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-move-folder",
+          type: "button",
+          ref: tooltipRef7(tips.filesMoveFolder),
+          disabled: locked || !files.path || Boolean(files.pick),
+          onClick: () => files.startMoveFolder(),
+          children: t("files.moveFolder")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-replace",
+          type: "button",
+          ref: tooltipRef7(tips.filesReplace),
+          disabled: locked || selected.length !== 1,
+          onClick: (event) => files.startReplace(event.currentTarget),
+          children: t("files.replaceFile")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-delete",
+          type: "button",
+          ref: tooltipRef7(tips.filesDelete),
+          disabled: locked || !selected.length,
+          onClick: (event) => files.startDelete(event.currentTarget),
+          children: t("common.delete")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-move-here",
+          type: "button",
+          ref: tooltipRef7(tips.filesMoveHere),
+          hidden: !files.pick,
+          disabled: locked,
+          onClick: (event) => files.confirmMoveHere(event.currentTarget),
+          children: t("files.moveHere")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          id: "files-pick-cancel",
+          type: "button",
+          ref: tooltipRef7(tips.filesPickCancel),
+          hidden: !files.pick,
+          onClick: () => files.cancelPick(),
+          children: t("common.cancel")
+        }
+      )
+    ] });
+  }
+  function FileRow({ entry, index }) {
+    const files = useFiles();
+    const active2 = index === files.active;
+    const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
+    const className = [
+      "files-row",
+      entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? "is-root" : "",
+      entry.missing ? "is-missing" : "",
+      active2 ? "is-active" : ""
+    ].filter(Boolean).join(" ");
+    if (openKind) {
+      return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("div", { className, role: "listitem", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef7(entry.missing ? missingDrive(entry.name) : openFile(entry.name)),
+            className: "files-open",
+            "data-files-index": String(index),
+            id: `files-item-${index}`,
+            tabIndex: active2 ? 0 : -1,
+            "aria-disabled": entry.missing ? "true" : void 0,
+            "aria-label": entry.missing ? t("files.driveMissingLabel", { name: entry.name }) : t("files.open", { name: entry.name }),
+            onClick: () => {
+              if (entry.missing) files.markActive(index);
+              else files.openRow(entry, index);
+            },
+            children: [
+              entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
+              entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("span", { className: "files-root-copy", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-root-label", children: entry.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-root-detail", children: entry.detail })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(import_jsx_runtime18.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { children: entry.name }),
+                entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
+              ] }),
+              entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+            ]
+          }
+        ),
+        entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef7(portableCheck(entry.name)),
+            className: "files-portable",
+            "data-portable-name": entry.name,
+            "aria-label": t("portable.checkLabel", { name: entry.name }),
+            onClick: (event) => {
+              event.stopPropagation();
+              void openPortableCheck(entry.path, event.currentTarget);
+            },
+            children: t("portable.check")
+          }
+        ) : null
+      ] });
+    }
+    if (entry.kind !== "file") {
+      return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef7(fileShortcut(entry.name)),
+          className: "files-kind",
+          "data-files-index": String(index),
+          id: `files-item-${index}`,
+          tabIndex: active2 ? 0 : -1,
+          "aria-label": t("files.shortcut", { name: entry.name }),
+          children: t("files.shortcut", { name: entry.name })
+        }
+      ) });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "input",
+        {
+          ref: tooltipRef7(selectFile(entry.name, entry.path)),
+          type: "checkbox",
+          "data-files-index": String(index),
+          id: `files-item-${index}`,
+          tabIndex: active2 ? 0 : -1,
+          checked: files.selected.has(entry.path),
+          "aria-label": entry.name,
+          onChange: (event) => files.toggleFile(entry, index, event.currentTarget.checked)
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-name", children: entry.name }),
+      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
+      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+    ] }) });
+  }
+  var FILE_OVERSCAN = 8;
+  function visibleWindow(rowCount, scrollTop, viewHeight, rowHeight) {
+    const view = viewHeight || 600;
+    const maxScroll = Math.max(0, rowCount * rowHeight - view);
+    const top = Math.min(Math.max(0, scrollTop), maxScroll);
+    const start = Math.max(0, Math.floor(top / rowHeight) - FILE_OVERSCAN);
+    const end = Math.min(rowCount, Math.ceil((top + view) / rowHeight) + FILE_OVERSCAN);
+    return { start, end };
+  }
+  function FilesList() {
+    const files = useFiles();
+    const listRef = (0, import_react19.useRef)(null);
+    const [scrollTop, setScrollTop] = (0, import_react19.useState)(0);
+    const [viewHeight, setViewHeight] = (0, import_react19.useState)(600);
+    (0, import_react19.useLayoutEffect)(() => {
+      const list = listRef.current;
+      if (!list) return;
+      setViewHeight(list.clientHeight || 600);
+      setScrollTop(list.scrollTop);
+      const onNativeScroll = () => {
+        (0, import_react_dom5.flushSync)(() => {
+          setScrollTop(list.scrollTop);
+          setViewHeight(list.clientHeight || 600);
+        });
+      };
+      list.addEventListener("scroll", onNativeScroll);
+      return () => list.removeEventListener("scroll", onNativeScroll);
+    }, [files.rows, files.loading, files.error, files.atRoots, files.searching, files.active]);
+    const rows2 = files.rows;
+    const { start, end } = visibleWindow(rows2.length, scrollTop, viewHeight, files.rowHeight);
+    const rowHeight = files.rowHeight;
+    const notes = [];
+    if (files.loading) notes.push(files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote"));
+    if (files.error) notes.push(files.error);
+    if (files.message) notes.push(files.message);
+    if (files.truncated) notes.push(files.searching ? t("files.searchTruncated") : t("files.truncated"));
+    const ariaLabel = files.searching ? t("files.searchResults") : files.atRoots ? t("files.roots") : t("files.contents");
+    const emptyLoading = files.loading && !rows2.length;
+    const emptyError = Boolean(files.error) && !rows2.length;
+    const emptyRoots = files.atRoots && !files.roots.length;
+    const emptyFolder = !rows2.length;
+    let body;
+    let tabIndex = 0;
+    if (emptyLoading) {
+      const reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
+      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { className: "files-empty", children: reading });
+    } else if (emptyError) {
+      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { className: "files-empty", children: files.error });
+    } else if (emptyRoots) {
+      tabIndex = -1;
+      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+          "button",
+          {
+            id: "files-run-setup",
+            type: "button",
+            ref: tooltipRef7(tips.runSetup),
+            className: "files-primary",
+            onClick: () => bridge.openSetup(),
+            children: t("files.runSetup")
+          }
+        )
+      ] });
+    } else if (emptyFolder) {
+      const empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
+      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { className: "files-empty", children: empty });
+    } else {
+      tabIndex = -1;
+      const windowRows = [];
+      for (let index = start; index < end; index += 1) {
+        const entry = rows2[index];
+        if (entry) windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
+      }
+      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { className: "files-spacer", style: { height: `${rows2.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { className: "files-window", style: { transform: `translateY(${start * rowHeight}px)` }, children: windowRows }) });
+    }
+    function onScroll2(event) {
+      const node = event.currentTarget;
+      (0, import_react_dom5.flushSync)(() => {
+        setScrollTop(node.scrollTop);
+        setViewHeight(node.clientHeight || 600);
+      });
+    }
+    function onKey2(event) {
+      files.onListKey(event.nativeEvent);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(import_jsx_runtime18.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        "div",
+        {
+          id: "files-list",
+          ref: listRef,
+          className: "files-list",
+          role: "group",
+          "aria-label": ariaLabel,
+          "aria-busy": files.loading,
+          "aria-activedescendant": !emptyLoading && !emptyError && !emptyRoots && !emptyFolder && files.active >= start && files.active < end ? `files-item-${files.active}` : void 0,
+          tabIndex,
+          onScroll: onScroll2,
+          onKeyDown: onKey2,
+          children: body
+        }
+      )
+    ] });
+  }
+  function FilesPanel() {
+    return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(import_jsx_runtime18.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FilesActions, {})
+    ] });
+  }
+
+  // src/components/PortableDialog.tsx
+  var import_jsx_runtime19 = __toESM(require_jsx_runtime(), 1);
+  function PortableDialog() {
+    const files = useFiles();
+    const report = files.portableReport;
+    let verdict = "";
+    if (report) {
+      if (report.missing_drive) verdict = t("portable.missing");
+      else if (report.ready) verdict = t("portable.ready");
+      else verdict = t("portable.notReady");
+    }
+    const shown = report ? report.findings.slice(0, FINDING_CAP) : [];
+    const hidden = report ? report.findings.length - shown.length : 0;
+    return /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
+            " ",
+            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "portable-fix", children: finding.fix })
+          ] }) : null
+        ] }, `finding-${index}`)),
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
+        "button",
+        {
+          id: "portable-close",
+          type: "button",
+          ref: (element) => {
+            if (element) setTooltip(element, tips.portableClose);
+          },
+          onClick: () => closePortable(),
+          children: t("common.close")
+        }
+      ) })
+    ] });
+  }
+
+  // src/files-mount.tsx
+  var panelRoot = null;
+  var dialogRoot = null;
+  var portableRoot = null;
+  var panelHost = null;
+  var dialogHost = null;
+  var portableHost = null;
+  function safeUnmount(root) {
+    if (!root) return;
+    try {
+      root.unmount();
+    } catch {
+    }
+  }
+  function rootFor(host, current2, lastHost) {
+    if (current2 && lastHost === host && host.isConnected) return current2;
+    safeUnmount(current2);
+    return void 0;
+  }
+  function mountFilesIslands() {
+    const panel = el("files-panel");
+    const dialog = el("files-dialog");
+    const portable = el("portable-dialog");
+    panelRoot = mountIsland(panel, (0, import_react20.createElement)(FilesPanel), rootFor(panel, panelRoot, panelHost));
+    dialogRoot = mountIsland(dialog, (0, import_react20.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost));
+    portableRoot = mountIsland(portable, (0, import_react20.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost));
+    panelHost = panel;
+    dialogHost = dialog;
+    portableHost = portable;
+  }
+  bindFilesMount(mountFilesIslands);
+  bindPortableMount(mountFilesIslands);
+
+  // src/beatgrid-view.ts
+  var GRID_WARNING_KEYS = {
+    beatgrid_too_short: "markers.gridTooShort",
+    beatgrid_version: "markers.gridVersion",
+    beatgrid_empty: "markers.gridEmpty",
+    beatgrid_too_many: "markers.gridTooMany",
+    beatgrid_truncated: "markers.gridTruncated"
+  };
+  function beatgridViewOnly(unavailable) {
+    return unavailable !== true;
+  }
+  function beatgridIsSuspect(code) {
+    return typeof code === "string" && code !== "";
+  }
+  function beatgridWarningKey(code) {
+    if (!beatgridIsSuspect(code) || code == null) return null;
+    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
+      return GRID_WARNING_KEYS[code];
+    }
+    return "markers.gridUnknown";
+  }
+  function beatSeconds(value) {
+    if (value === "" || value == null) return "";
+    const number = Number(value);
+    if (!Number.isFinite(number)) return "";
+    return `${number.toFixed(3)}s`;
+  }
+  function appendBeatgrid(section, track) {
+    if (!beatgridViewOnly(track.markers_unavailable)) return;
+    const heading = document.createElement("h4");
+    heading.textContent = t("markers.gridHeading");
+    section.append(heading);
+    const viewOnly = document.createElement("p");
+    viewOnly.className = "detail-kicker";
+    viewOnly.textContent = t("markers.gridViewOnly");
+    section.append(viewOnly);
+    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
+      const warn = document.createElement("p");
+      warn.className = "detail-kicker warn";
+      warn.setAttribute("role", "status");
+      const key = beatgridWarningKey(track.beatgrid_warning_code);
+      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
+      warn.textContent = t("markers.gridSuspect", { reason });
+      section.append(warn);
+    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
+      const empty = document.createElement("p");
+      empty.className = "detail-kicker";
+      empty.textContent = t("markers.gridNone");
+      section.append(empty);
+    }
+    for (const mark of track.beatgrid || []) {
+      section.append(paintBeatMarker(mark));
+    }
+  }
+  function paintBeatMarker(mark) {
+    const row = document.createElement("div");
+    row.className = "marker";
+    const time = document.createElement("span");
+    time.textContent = beatSeconds(mark.position);
+    const name = document.createElement("span");
+    const bpmNumber = Number(mark.bpm);
+    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
+      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
+    } else if (mark.beats != null) {
+      name.textContent = t("markers.beats", { count: Number(mark.beats) });
+    } else {
+      name.textContent = "";
+    }
+    row.append(document.createElement("span"), document.createElement("span"), time, name);
+    return row;
+  }
+
+  // src/folder-sync-view.ts
+  function syncFolderSyncButton() {
+    const id = state.activeCrate;
+    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
+    const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
+    el("crate-folder-sync").disabled = blocked;
+    el("crate-rename-from-tags").disabled = blocked;
+  }
+  function readFolderSyncForm() {
+    const folder = el("folder-sync-path").value.trim();
+    if (!folder) return null;
+    return {
+      folder,
+      subcrates: el("folder-sync-subcrates").checked,
+      full: el("folder-sync-full").checked
+    };
+  }
+  function folderSyncPreviewText(reply) {
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    const created = Number(reply.created) || 0;
+    const skipped = Number(reply.skipped_count) || 0;
+    if (added === 0 && removed === 0 && created === 0) {
+      return t("folderSync.summaryNone", { skipped });
+    }
+    return t("folderSync.summary", { added, removed, skipped });
+  }
+  function folderSyncDoneText(reply) {
+    const name = reply.crate?.name?.trim() || "";
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    if (!reply.written) return t("folderSync.unchanged", { name });
+    return t("folderSync.done", { name, added, removed });
+  }
+  function folderSyncHasWork(reply) {
+    return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
+  }
+
+  // src/restore.ts
+  var reloadLibrary = async () => {
+  };
+  function bindLibraryReload(reload) {
+    reloadLibrary = reload;
+  }
+  async function loadSnapshots() {
+    state.snapshotLoading = true;
+    state.snapshotError = "";
+    const operationsPromise = loadOperations();
+    renderSnapshots();
+    try {
+      const response = await fetch("/api/snapshots");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
+      state.snapshots = payload.snapshots || [];
+      state.snapshotUndo = payload.pending_undo || null;
+      state.writeBlock = payload.write_block || "";
+      state.writeBlockCode = payload.write_block_code || "";
+      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
+      state.seratoRunning = Boolean(payload.serato_running);
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotLoading = false;
+      renderSnapshots();
+    } finally {
+      await operationsPromise;
+    }
+  }
+  async function loadOperations() {
+    state.operationsLoading = true;
+    state.operationsError = "";
+    renderOperations();
+    try {
+      const response = await fetch("/api/operations");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
+      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
+      state.operationsLoading = false;
+    } catch (error2) {
+      state.operationsLoading = false;
+      state.operationsError = failureOf(error2).message || t("operations.unreadable");
+    }
+    renderOperations();
+  }
+  function failSnapshots(error2) {
+    state.snapshotLoading = false;
+    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
+    renderSnapshots();
+  }
+  function renderSnapshots() {
+    renderOperations();
+    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
+    const status = el("snapshots-status");
+    const block = el("snapshots-block");
+    const undo = el("snapshots-undo");
+    const list = el("snapshots-list");
+    list.setAttribute("aria-busy", String(state.snapshotLoading));
+    paintDriveCopies();
+    if (state.writeBlock) {
+      block.hidden = false;
+      block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
+    } else {
+      block.hidden = true;
+      block.textContent = "";
+    }
+    if (state.snapshotUndo && state.snapshotUndo.restore_id) {
+      undo.hidden = false;
+      el("snapshots-undo-text").textContent = state.snapshotUndo.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange");
+    } else {
+      undo.hidden = true;
+    }
+    list.replaceChildren();
+    if (state.snapshotLoading) {
+      status.textContent = t("snapshots.reading");
+      return;
+    }
+    if (state.snapshotError) {
+      status.textContent = state.snapshotError;
+      const retry = buttonEl(tips.snapshotsRetry);
+      retry.textContent = t("common.tryAgain");
+      retry.addEventListener("click", () => loadSnapshots().catch((error2) => failSnapshots(error2)));
+      list.append(retry);
+      return;
+    }
+    status.textContent = state.snapshotMessage ? t(state.snapshotMessage) : "";
+    if (!state.snapshots.length) {
+      const empty = document.createElement("p");
+      empty.textContent = t("snapshots.empty");
+      list.append(empty);
+      return;
+    }
+    for (const item3 of state.snapshots) {
+      const card = document.createElement("article");
+      card.className = "snapshot-card";
+      card.setAttribute("role", "listitem");
+      const title2 = document.createElement("p");
+      title2.textContent = `${item3.created || t("snapshots.unknownTime")} · ${item3.trigger || t("snapshots.trigger")}`;
+      const detail = document.createElement("p");
+      const version = item3.serato_version && item3.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item3.serato_version, build: String(item3.serato_build ?? "") }) : t("snapshots.seratoUnknown");
+      const drives = (item3.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item3.unavailable_drives || []) })}` : "";
+      detail.textContent = `${version}. ${item3.reason || ""}${drives}`;
+      const restore = buttonEl(tips.reviewRestore);
+      restore.textContent = t("snapshots.reviewRestore");
+      restore.addEventListener("click", () => openSnapshotPlan(item3.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
+      card.append(title2, detail, restore);
+      list.append(card);
+    }
+  }
+  var OPERATION_ACTIONS = {
+    crate_create: "operations.action.crateCreate",
+    crate_rename: "operations.action.crateRename",
+    crate_delete: "operations.action.crateDelete",
+    crate_color: "operations.action.crateColor",
+    crate_expanded: "operations.action.crateExpanded",
+    crate_rules: "operations.action.crateRules",
+    crate_add: "operations.action.crateAdd",
+    crate_remove: "operations.action.crateRemove",
+    crate_prepare: "operations.action.cratePrepare",
+    crate_remove_library: "operations.action.crateRemoveLibrary",
+    save_track: "operations.action.saveTrack",
+    import_m3u: "operations.action.importM3u",
+    merge_duplicates: "operations.action.mergeDuplicates",
+    rename: "operations.action.rename",
+    rename_from_tags: "operations.action.renameFromTags",
+    move: "operations.action.move",
+    move_folder: "operations.action.moveFolder",
+    replace: "operations.action.replace",
+    replace_in_crates: "operations.action.replaceInCrates",
+    relink: "operations.action.relink",
+    delete: "operations.action.delete",
+    restore: "operations.action.restore",
+    restore_recover: "operations.action.restoreRecover"
+  };
+  var OPERATION_OUTCOMES = {
+    verified: "operations.outcome.verified",
+    rolled_back: "operations.outcome.rolledBack",
+    refused: "operations.outcome.refused",
+    rollback_failed: "operations.outcome.rollbackFailed"
+  };
+  function renderOperations() {
+    const alert = el("operations-alert");
+    const status = el("operations-status");
+    const list = el("operations-list");
+    list.setAttribute("aria-busy", String(state.operationsLoading));
+    const latest11 = state.operations[state.operations.length - 1];
+    const failed = latest11?.result === "rollback_failed";
+    alert.hidden = !failed;
+    alert.textContent = failed ? t("operations.rollbackFailed") : "";
+    list.replaceChildren();
+    if (state.operationsLoading && state.operations.length === 0) {
+      status.textContent = t("operations.reading");
+      return;
+    }
+    if (state.operationsError) {
+      status.textContent = state.operationsError;
+      const retry = buttonEl(tips.operationsRetry);
+      retry.textContent = t("common.tryAgain");
+      retry.addEventListener("click", () => {
+        loadOperations().catch(() => void 0);
+      });
+      list.append(retry);
+      return;
+    }
+    status.textContent = "";
+    if (!state.operations.length) {
+      const empty = document.createElement("p");
+      empty.textContent = t("operations.empty");
+      list.append(empty);
+      return;
+    }
+    for (const item3 of [...state.operations].reverse()) {
+      list.append(operationCard(item3));
+    }
+  }
+  function operationCard(item3) {
+    const card = document.createElement("article");
+    card.className = "operation-card snapshot-card";
+    card.setAttribute("role", "listitem");
+    const actionName = item3.action || item3.operation || "";
+    const actionKey2 = OPERATION_ACTIONS[actionName];
+    const outcomeKey = OPERATION_OUTCOMES[item3.result || ""] ?? "operations.outcome.refused";
+    const title2 = document.createElement("p");
+    title2.textContent = t("operations.entry", {
+      time: operationTime(item3.time || ""),
+      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
+      target: item3.target || t("operations.noTarget"),
+      outcome: t(outcomeKey)
+    });
+    card.append(title2);
+    if (item3.snapshot_before && item3.snapshot_after) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.snapshots", {
+        before: item3.snapshot_before,
+        after: item3.snapshot_after
+      });
+      card.append(detail);
+    } else if (item3.snapshot_before) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.beforeOnly", { before: item3.snapshot_before });
+      card.append(detail);
+    }
+    return card;
+  }
+  function operationTime(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
+    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
+  }
+  async function openSnapshotPlan(snapshotId) {
+    state.snapshotPlanId = snapshotId;
+    const planBox = el("snapshot-plan");
+    const block = el("snapshot-block");
+    const confirm2 = el("snapshot-confirm");
+    planBox.replaceChildren();
+    block.textContent = t("snapshots.readingPlan");
+    confirm2.disabled = true;
+    setSnapshotDialogStatus("");
+    el("snapshot-dialog").showModal();
+    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
+    paintSnapshotPlan(plan);
+  }
+  var lastPlan = null;
+  function repaintSnapshotPlan() {
+    if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
+  }
+  function isDriveCopy(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
+  }
+  function driveBackupFrom(value) {
+    if (!value || typeof value !== "object") return null;
+    const record = value;
+    if (record.verified !== true) return null;
+    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
+    return {
+      folder: typeof record.folder === "string" ? record.folder : "",
+      verified: true,
+      drives
+    };
+  }
+  function driveName(drive, status) {
+    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
+    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
+    if (status === "permission") return t("snapshots.drivePermission", { name });
+    return name;
+  }
+  function driveCopyText() {
+    const report = state.driveBackup;
+    const drives = report?.drives ?? [];
+    if (!report?.verified || !drives.length) {
+      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
+    }
+    const parts = [];
+    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
+    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
+    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
+    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
+    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
+    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
+    return parts.join(" ") || t("snapshots.drivesIntro");
+  }
+  function paintDriveCopies() {
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = driveCopyText();
+  }
+  async function backupDriveCrates() {
+    const button = el("snapshots-drives");
+    button.disabled = true;
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = t("snapshots.backupDrivesBusy");
+    try {
+      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
+      renderSnapshots();
+    } catch (error2) {
+      state.snapshotMessage = "";
+      renderSnapshots();
+      const shown = el("snapshots-drives-note");
+      shown.hidden = false;
+      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
+    } finally {
+      button.disabled = false;
+    }
+  }
+  function paintSnapshotPlan(plan) {
+    lastPlan = plan;
+    const planBox = el("snapshot-plan");
+    const block = el("snapshot-block");
+    const confirm2 = el("snapshot-confirm");
+    planBox.replaceChildren();
+    const crates = plan.crates || {};
+    const tracks = plan.tracks || {};
+    appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
+    appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
+    appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
+    appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
+    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
+    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
+    if (plan.registration_warning) {
+      const warning = document.createElement("p");
+      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
+      planBox.append(warning);
+    }
+    appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
+    appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
+    appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
+    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
+    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
+    const deleted = plan.deleted || {};
+    appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
+    appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
+    appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
+    appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
+    if (plan.restore_blocked) {
+      block.textContent = codedText(
+        plan.restore_blocked,
+        plan.restore_blocked_code,
+        messageParams(plan.restore_blocked_params)
+      );
+      confirm2.disabled = true;
+    } else {
+      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
+      confirm2.disabled = false;
+    }
+  }
+  function appendPlanLine(parent, label, rows2) {
+    const line = document.createElement("p");
+    const items = rows2 || [];
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+    } else {
+      const names = items.slice(0, 8).map((item3) => item3.name || item3.path || item3.drive_label || t("plan.item"));
+      const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
+      const listed = `${names.join(", ")}${extra}`;
+      line.textContent = t("plan.listed", { label, count: items.length, names: listed });
+    }
+    parent.append(line);
+  }
+  function appendCueDiffs(parent, label, rows2) {
+    const items = rows2 || [];
+    const line = document.createElement("p");
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+      parent.append(line);
+      return;
+    }
+    line.textContent = t("plan.files", { label, count: items.length });
+    parent.append(line);
+    for (const item3 of items.slice(0, 12)) {
+      const row = document.createElement("p");
+      row.textContent = fileName(item3.path || "");
+      parent.append(row);
+      for (const diff of cueDiffRows(item3.before, item3.after)) {
+        parent.append(paintCueDiffRow(diff));
+      }
+    }
+  }
+  function appendFrameDiffs(parent, label, rows2) {
+    const items = rows2 || [];
+    const line = document.createElement("p");
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+      parent.append(line);
+      return;
+    }
+    line.textContent = t("plan.files", { label, count: items.length });
+    parent.append(line);
+    for (const item3 of items.slice(0, 12)) {
+      const row = document.createElement("p");
+      row.textContent = fileName(item3.path || "");
+      parent.append(row);
+    }
+  }
+  function fileName(path) {
+    const parts = String(path).split(/[/\\]/);
+    return parts[parts.length - 1] || path;
+  }
+  function setSnapshotDialogStatus(message) {
+    el("snapshot-status").textContent = message;
+  }
+  async function takeSnapshot() {
+    const button = el("snapshots-take");
+    button.disabled = true;
+    button.textContent = t("snapshots.saving");
+    try {
+      await postJSON("/api/snapshots", { action: "create" });
+      state.snapshotMessage = "snapshots.saved";
+      await loadSnapshots();
+    } finally {
+      button.disabled = false;
+      button.textContent = t("snapshots.take");
+    }
+  }
+  async function confirmSnapshotRestore() {
+    const confirm2 = el("snapshot-confirm");
+    confirm2.disabled = true;
+    confirm2.textContent = t("snapshots.restoring");
+    setSnapshotDialogStatus("");
+    try {
+      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
+      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
+      const result = await postJSON("/api/snapshots", body);
+      const skipped = result.crates_skipped || [];
+      el("snapshot-dialog").close();
+      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
+      await loadSnapshots();
+      await reloadLibrary();
+      if (skipped.length) {
+        const names = skipped.map((item3) => item3.name || item3.path || t("plan.item")).join(", ");
+        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
+      }
+    } catch (error2) {
+      setSnapshotDialogStatus(failureOf(error2).message);
+      confirm2.disabled = false;
+      await loadOperations();
+    } finally {
+      confirm2.textContent = t("snapshots.restore");
+    }
+  }
+
+  // src/views.ts
+  var import_react21 = __toESM(require_react(), 1);
+
+  // src/components/CrateActions.tsx
+  var import_jsx_runtime20 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef8(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function CrateActions() {
+    const crates = useCrates();
+    return /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)(import_jsx_runtime20.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+        "button",
+        {
+          id: "crate-new",
+          type: "button",
+          ref: tooltipRef8(tips.crateNew),
+          disabled: !crates.canCreate,
+          onClick: () => crates.create(),
+          children: t("crates.new")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+        "button",
+        {
+          id: "crate-rename",
+          type: "button",
+          ref: tooltipRef8(tips.crateRename),
+          disabled: !crates.canRename,
+          onClick: () => crates.rename(),
+          children: t("crates.rename")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+        "button",
+        {
+          id: "crate-color",
+          type: "button",
+          ref: tooltipRef8(tips.crateColor),
+          disabled: !crates.canColor,
+          onClick: () => crates.color(),
+          children: t("field.color")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+        "button",
+        {
+          id: "crate-delete",
+          type: "button",
+          ref: tooltipRef8(tips.crateDelete),
+          disabled: !crates.canDelete,
+          onClick: () => crates.remove(),
+          children: t("common.delete")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+        "button",
+        {
+          id: "crate-preset",
+          type: "button",
+          ref: tooltipRef8(tips.cratePreset),
+          "aria-haspopup": "dialog",
+          disabled: !crates.canPreset,
+          onClick: () => crates.preset(),
+          children: t("presets.button")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+        "button",
+        {
+          id: "crate-folder-sync",
+          type: "button",
+          ref: tooltipRef8(tips.crateFolderSync),
+          "aria-haspopup": "dialog",
+          disabled: !crates.canFolderSync,
+          onClick: () => crates.folderSync(),
+          children: t("folderSync.button")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+        "button",
+        {
+          id: "crate-rename-from-tags",
+          type: "button",
+          ref: tooltipRef8(tips.crateRenameFromTags),
+          "aria-haspopup": "dialog",
+          disabled: !crates.canRenameFromTags,
+          onClick: (event) => crates.renameFromTags(event.currentTarget),
+          children: t("files.renameFromTags")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+        "button",
+        {
+          id: "crate-refresh",
+          type: "button",
+          ref: tooltipRef8(tips.crateRefresh),
+          hidden: crates.refreshHidden,
+          disabled: !crates.canRefresh,
+          onClick: () => crates.refresh(),
+          children: t("presets.refresh")
+        }
+      )
+    ] });
+  }
+
+  // src/components/CrateBrowserActions.tsx
+  var import_jsx_runtime21 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef9(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function CrateBrowserActions() {
+    const crates = useCrates();
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)(import_jsx_runtime21.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        "button",
+        {
+          id: "crate-split",
+          type: "button",
+          ref: tooltipRef9(tips.crateSplit),
+          hidden: crates.splitHidden,
+          "aria-pressed": crates.splitPressed,
+          onClick: () => crates.split(),
+          children: t("crates.split")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        "button",
+        {
+          id: "crate-save-view",
+          type: "button",
+          ref: tooltipRef9(tips.crateSaveView),
+          hidden: crates.saveViewHidden,
+          disabled: !crates.canSaveView,
+          onClick: () => crates.saveView(),
+          children: t("crates.saveView")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        "button",
+        {
+          id: "export-m3u",
+          type: "button",
+          ref: tooltipRef9(tips.exportM3u),
+          hidden: crates.exportHidden,
+          onClick: () => crates.exportM3u(),
+          children: t("export.m3u")
+        }
+      )
+    ] });
+  }
+
+  // src/components/CrateTree.tsx
+  var import_jsx_runtime22 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef10(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function focusedCrateId() {
+    const list = document.getElementById("crate-list");
+    const active2 = document.activeElement;
+    if (!(list instanceof HTMLElement) || !(active2 instanceof HTMLElement) || !list.contains(active2)) {
+      return null;
+    }
+    return active2.closest(".crate")?.getAttribute("data-id") ?? null;
+  }
+  function Twist({ row, toggle }) {
+    if (!row.childCount) {
+      return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
+    }
+    const spec2 = row.expanded ? collapseCrate(row.name) : expandCrate(row.name);
+    return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
+      "button",
+      {
+        type: "button",
+        ref: tooltipRef10(spec2),
+        className: "twist",
+        tabIndex: -1,
+        "aria-expanded": row.expanded,
+        "aria-label": t(row.expanded ? "crates.collapse" : "crates.expand", { name: row.name }),
+        onClick: () => toggle(row.id)
+      }
+    );
+  }
+  function CrateRow({
+    row,
+    tabIndex,
+    select,
+    toggle
+  }) {
+    const hex = colorHex(row.color);
+    const tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
+    return /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(
+      "div",
+      {
+        className: row.holds ? "crate-row holds-selection" : "crate-row",
+        style: { paddingLeft: `${row.depth * 14}px` },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Twist, { row, toggle }),
+          /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(
+            "button",
+            {
+              type: "button",
+              ref: tooltipRef10(tip),
+              className: "crate",
+              "data-id": String(row.id),
+              "data-parent": row.parent != null ? String(row.parent) : void 0,
+              "data-pane": row.pane ?? void 0,
+              role: "treeitem",
+              tabIndex,
+              "aria-level": row.depth + 1,
+              "aria-selected": row.selected,
+              "aria-expanded": row.childCount ? row.expanded : void 0,
+              onClick: (event) => select(row.id, event.nativeEvent),
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("span", { className: "name", children: [
+                  hex ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+                  row.name
+                ] }),
+                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "meta", children: formatNumber(row.count) })
+              ]
+            }
+          )
+        ]
+      }
+    );
+  }
+  function CrateTree() {
+    const crates = useCrates();
+    const focusId = focusedCrateId();
+    const tabbable = crates.rows.find((row) => String(row.id) === focusId) ?? crates.rows[0];
+    return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(import_jsx_runtime22.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
+      CrateRow,
+      {
+        row,
+        tabIndex: row === tabbable ? 0 : -1,
+        select: crates.select,
+        toggle: crates.toggle
+      },
+      String(row.id)
+    )) });
+  }
+
+  // src/components/HistoryDetail.tsx
+  var import_jsx_runtime23 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef11(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function Field({ label, value }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "label", children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "value", children: value })
+    ] });
+  }
+  function HistoryDetail() {
+    const history = useHistory();
+    const entry = history.entries.find((item3) => item3.id === history.selectedId);
+    if (!entry) return null;
+    const lines = [
+      [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
+      [t("column.deck"), entry.deck || "—"],
+      [t("history.started"), clockLabel(entry.start_time) || "—"],
+      [t("history.file"), entry.file || "—"]
+    ];
+    if (entry.notes) lines.push([t("history.notes"), entry.notes]);
+    return /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(Field, { label, value }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef11(tips.openInLibrary),
+          className: "text-button",
+          onClick: () => {
+            void history.openInLibrary(entry.asset_id);
+          },
+          children: t("history.openInLibrary")
+        }
+      ) : null
+    ] });
+  }
+
+  // src/components/HistorySessions.tsx
+  var import_jsx_runtime24 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef12(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function HistorySessions() {
+    const history = useHistory();
+    return /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(import_jsx_runtime24.Fragment, { children: history.sessions.map((session) => {
+      const name = session.name || t("history.session");
+      return /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef12(sessionTip(session.name || "Session")),
+          className: "crate",
+          role: "option",
+          "aria-selected": session.id === history.historyId,
+          onClick: () => {
+            void history.openSession(session.id);
+          },
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { className: "name", children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { className: "meta", children: String(session.played || 0) })
+          ]
+        },
+        session.id
+      );
+    }) });
   }
 
   // src/views.ts
   var relatedRequest = 0;
   var lastDetail = null;
   var detailPlayRoot = null;
-  function clearDetailPlay() {
+  var crateListRoot = null;
+  var crateListHost = null;
+  var crateActionsRoot = null;
+  var crateActionsHost = null;
+  var crateBrowserRoot = null;
+  var crateBrowserHost = null;
+  var historyDetailRoot = null;
+  var historyDetailHost = null;
+  var sessionRoot = null;
+  var sessionHost = null;
+  function clearDetailIslands() {
     detailPlayRoot?.unmount();
     detailPlayRoot = null;
+    historyDetailRoot?.unmount();
+    historyDetailRoot = null;
+    historyDetailHost = null;
+  }
+  function remountIsland(host, node, slot) {
+    if (slot.root && slot.host !== host) {
+      slot.root.unmount();
+      slot.root = null;
+    }
+    slot.host = host;
+    slot.root = mountIsland(host, node, slot.root ?? void 0);
+    return slot.root;
+  }
+  function mountCrateIsland(host, node, root, previous2) {
+    if (!host) return { root: null, host: null };
+    if (root && previous2 === host) {
+      return { root: mountIsland(host, node, root), host };
+    }
+    root?.unmount();
+    return { root: mountIsland(host, node), host };
+  }
+  function mountCrates() {
+    const list = document.getElementById("crate-list");
+    const listMount = mountCrateIsland(
+      list instanceof HTMLElement ? list : null,
+      (0, import_react21.createElement)(CrateTree),
+      crateListRoot,
+      crateListHost
+    );
+    crateListRoot = listMount.root;
+    crateListHost = listMount.host;
+    const actions2 = document.getElementById("crate-actions");
+    const actionsMount = mountCrateIsland(
+      actions2 instanceof HTMLElement ? actions2 : null,
+      (0, import_react21.createElement)(CrateActions),
+      crateActionsRoot,
+      crateActionsHost
+    );
+    crateActionsRoot = actionsMount.root;
+    crateActionsHost = actionsMount.host;
+    const browser = document.getElementById("crate-browser-actions");
+    const browserMount = mountCrateIsland(
+      browser instanceof HTMLElement ? browser : null,
+      (0, import_react21.createElement)(CrateBrowserActions),
+      crateBrowserRoot,
+      crateBrowserHost
+    );
+    crateBrowserRoot = browserMount.root;
+    crateBrowserHost = browserMount.host;
+    emitCrates();
   }
   function listMatches(track, query) {
     const field = isTextSearchField(state.searchField) ? state.searchField : void 0;
@@ -26101,72 +27997,6 @@
   }
   function queryTerms() {
     return parseQuery(state.query);
-  }
-  function childLists() {
-    const children = /* @__PURE__ */ new Map();
-    for (const crate of state.crates) {
-      const key = crate.parent ?? 0;
-      if (!children.has(key)) children.set(key, []);
-      const bucket = children.get(key);
-      bucket.push(crate);
-    }
-    for (const list of children.values()) {
-      list.sort((a, b) => {
-        if (state.crateSort === "name") {
-          return a.name.localeCompare(b.name, void 0, { sensitivity: "base" }) || a.id - b.id;
-        }
-        if (state.crateSort === "added") return (b.added || 0) - (a.added || 0) || a.id - b.id;
-        return a.order - b.order || a.id - b.id;
-      });
-    }
-    return children;
-  }
-  function crateKeep() {
-    const terms = state.crateQuery.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-    if (!terms.length) return null;
-    const byId = new Map(state.crates.map((crate) => [crate.id, crate]));
-    const keep = /* @__PURE__ */ new Set();
-    for (const crate of state.crates) {
-      if (!terms.every((term) => crate.name.toLocaleLowerCase().includes(term))) continue;
-      let current2 = crate;
-      const guard = /* @__PURE__ */ new Set();
-      while (current2 && !guard.has(current2.id)) {
-        guard.add(current2.id);
-        keep.add(current2.id);
-        current2 = byId.get(current2.parent);
-      }
-    }
-    return keep;
-  }
-  function visibleCrates() {
-    const children = childLists();
-    const keep = crateKeep();
-    const ordered = [];
-    const seen = /* @__PURE__ */ new Set();
-    function walk(parent, depth) {
-      for (const crate of children.get(parent) || []) {
-        if (seen.has(crate.id)) continue;
-        if (keep && !keep.has(crate.id)) continue;
-        seen.add(crate.id);
-        crate.depth = depth;
-        crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
-        ordered.push(crate);
-        if (keep || state.expanded.has(crate.id)) walk(crate.id, depth + 1);
-      }
-    }
-    walk(state.rootId ?? null, 0);
-    for (const crate of state.crates) {
-      if (seen.has(crate.id)) continue;
-      if (keep && !keep.has(crate.id)) continue;
-      const parentListed = state.crates.some((item5) => item5.id === crate.parent);
-      if (parentListed) continue;
-      seen.add(crate.id);
-      crate.depth = 0;
-      crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
-      ordered.push(crate);
-      if (keep || state.expanded.has(crate.id)) walk(crate.id, 1);
-    }
-    return ordered;
   }
   function expandAncestors(id) {
     const byId = new Map(state.crates.map((crate2) => [crate2.id, crate2]));
@@ -26179,20 +28009,6 @@
       state.expanded.add(parent.id);
       crate = parent;
     }
-  }
-  function hiddenSelectionHolder(visible) {
-    if (state.activeCrate === "all") return null;
-    if (visible.some((crate2) => crate2.id === state.activeCrate)) return null;
-    const byId = new Map(state.crates.map((crate2) => [crate2.id, crate2]));
-    const visibleIds = new Set(visible.map((crate2) => crate2.id));
-    let crate = byId.get(state.activeCrate);
-    const guard = /* @__PURE__ */ new Set();
-    while (crate && !guard.has(crate.id)) {
-      guard.add(crate.id);
-      crate = byId.get(crate.parent);
-      if (crate && visibleIds.has(crate.id)) return crate.id;
-    }
-    return null;
   }
   function tracksForCrate(crate) {
     if (crate === "all") return state.tracks;
@@ -26249,115 +28065,28 @@
     }
     return result;
   }
-  function crateRow(crate) {
-    const row = document.createElement("div");
-    row.className = "crate-row";
-    if (crate.holds) row.classList.add("holds-selection");
-    row.style.paddingLeft = `${crate.depth * 14}px`;
-    if (crate.childCount) {
-      const open = state.crateQuery ? true : state.expanded.has(crate.id);
-      const twist = buttonEl(open ? collapseCrate(crate.name) : expandCrate(crate.name));
-      twist.className = "twist";
-      twist.tabIndex = -1;
-      twist.setAttribute("aria-expanded", String(open));
-      twist.setAttribute("aria-label", t(open ? "crates.collapse" : "crates.expand", { name: crate.name }));
-      twist.addEventListener("click", () => toggleCrate(crate.id));
-      row.append(twist);
-    } else {
-      const gap = document.createElement("span");
-      gap.className = "twist-gap";
-      gap.setAttribute("aria-hidden", "true");
-      row.append(gap);
-    }
-    const button = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
-    button.className = "crate";
-    button.dataset.id = String(crate.id);
-    if (crate.parent != null) button.dataset.parent = String(crate.parent);
-    button.setAttribute("role", "treeitem");
-    button.setAttribute("aria-level", String(crate.depth + 1));
-    const split = state.splitCrates && state.mode === "crates";
-    const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-    button.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
-    if (crate.childCount) {
-      button.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
-    }
-    const name = document.createElement("span");
-    name.className = "name";
-    const hex = colorHex(crate.color);
-    if (hex) {
-      const swatch = document.createElement("span");
-      swatch.className = "swatch";
-      swatch.style.background = hex;
-      name.append(swatch);
-    }
-    name.append(document.createTextNode(crate.name));
-    button.append(name);
-    if (crate.smart) {
-      const smart = document.createElement("span");
-      smart.className = "smart";
-      smart.textContent = t("crates.smartBadge");
-      button.append(smart);
-    }
-    const meta = document.createElement("span");
-    meta.className = "meta";
-    meta.textContent = formatNumber(crate.count);
-    button.append(meta);
-    button.addEventListener("click", (event) => selectCrate(crate.id, event));
-    row.append(button);
-    return row;
-  }
   function placeCrateFocus(previousId) {
     const items = [...el("crate-list").querySelectorAll(".crate")];
     if (!items.length) return null;
-    const current2 = items.find((item5) => item5.dataset.id === previousId) || items[0];
-    for (const item5 of items) item5.tabIndex = item5 === current2 ? 0 : -1;
+    const current2 = items.find((item3) => item3.dataset.id === previousId) || items[0];
+    for (const item3 of items) item3.tabIndex = item3 === current2 ? 0 : -1;
     return current2;
   }
   function renderCrates() {
-    const scroll = el("crate-list").scrollTop;
+    const list = el("crate-list");
+    const scroll = list.scrollTop;
     const active2 = document.activeElement;
-    const restore = el("crate-list").contains(active2) ? active2.closest(".crate-row")?.querySelector(".crate")?.dataset.id ?? null : null;
-    const query = queryTerms();
-    const matched = query.terms.length || query.filters.length ? new Set(state.tracks.filter((track) => listMatches(track, query)).map((track) => track.id)) : null;
-    const crates = visibleCrates();
-    const holder = hiddenSelectionHolder(crates);
-    el("crate-list").replaceChildren();
-    el("crate-list").append(crateRow({
-      id: "all",
-      name: t("crates.allTracks"),
-      depth: 0,
-      childCount: 0,
-      smart: false,
-      count: matched ? matched.size : state.tracks.length
-    }));
-    for (const crate of crates) {
-      const members = state.crateTracks.get(crate.id) || /* @__PURE__ */ new Set();
-      let shown = members.size;
-      if (matched) {
-        shown = 0;
-        for (const id of members) if (matched.has(id)) shown += 1;
-      }
-      el("crate-list").append(crateRow({
-        id: crate.id,
-        name: crate.name,
-        depth: crate.depth || 0,
-        childCount: crate.childCount || 0,
-        smart: Boolean(crate.smart),
-        parent: crate.parent ?? null,
-        color: crate.color ?? null,
-        count: shown,
-        holds: holder === crate.id
-      }));
-    }
+    const restore = list.contains(active2) ? active2.closest(".crate-row")?.querySelector(".crate")?.dataset.id ?? null : null;
+    mountCrates();
     const focused = placeCrateFocus(restore);
     if (restore && focused) focused.focus({ preventScroll: true });
-    el("crate-list").scrollTop = scroll;
+    list.scrollTop = scroll;
     renderRules();
   }
   function renderRules() {
     document.querySelector(".rules")?.remove();
     document.querySelector(".rule-edit")?.remove();
-    const crate = state.crates.find((item5) => item5.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate || !crate.rules || state.mode !== "crates") return;
     const line = document.createElement("p");
     line.className = "rules";
@@ -26430,6 +28159,14 @@
   function playlistCrate() {
     if (state.mode !== "crates") return null;
     return state.activeCrate;
+  }
+  function exportPlaylistM3u() {
+    const crate = playlistCrate();
+    if (crate == null) return;
+    const link = document.createElement("a");
+    link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
+    link.download = "crate.m3u";
+    link.click();
   }
   function renderShell() {
     markHistoryColumns();
@@ -26518,6 +28255,7 @@
     for (const button of document.querySelectorAll("[data-crate-sort]")) {
       button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
     }
+    mountCrates();
     const crateChosen = state.activeCrate !== "all";
     el("crate-new").disabled = !state.writable;
     el("crate-rename").disabled = !state.writable || !crateChosen;
@@ -26541,7 +28279,7 @@
       return;
     }
     if (gigMode || healthMode || scanMode || bitrateMode) {
-      const crate = state.crates.find((item5) => item5.id === state.activeCrate);
+      const crate = state.crates.find((item3) => item3.id === state.activeCrate);
       el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : crate?.name ?? t("crates.selectedCrate");
       return;
     }
@@ -26627,7 +28365,7 @@
         const empty = document.createElement("p");
         empty.className = "detail-empty";
         empty.textContent = state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches");
-        clearDetailPlay();
+        clearDetailIslands();
         el("detail").replaceChildren(empty);
       } else if (state.mode === "history") selectEntry(view[0].id);
       else selectTrack(view[0].id);
@@ -26667,11 +28405,11 @@
     if (state.mode === "scan") loadScan().catch(showScanFailure);
     if (state.mode === "bitrate") loadBitrate().catch(showBitrateFailure);
   }
-  function focusCrateItem(item5) {
-    if (!item5) return;
+  function focusCrateItem(item3) {
+    if (!item3) return;
     for (const button of el("crate-list").querySelectorAll(".crate")) button.tabIndex = -1;
-    item5.tabIndex = 0;
-    item5.focus();
+    item3.tabIndex = 0;
+    item3.focus();
   }
   async function selectTrack(id) {
     state.selectedId = id;
@@ -26682,7 +28420,7 @@
     const pending = document.createElement("p");
     pending.className = "detail-empty";
     pending.textContent = t("detail.reading");
-    clearDetailPlay();
+    clearDetailIslands();
     el("detail").replaceChildren(pending);
     try {
       const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
@@ -26696,54 +28434,23 @@
       const failure = document.createElement("p");
       failure.className = "detail-error";
       failure.textContent = failureOf(error2).message;
-      clearDetailPlay();
+      clearDetailIslands();
       el("detail").replaceChildren(failure);
     }
   }
   function selectEntry(id) {
     state.selectedId = id;
     paintRows();
-    const entry = state.entries.find((item5) => item5.id === id);
-    if (!entry) return;
-    const body = document.createElement("div");
-    body.className = "detail-body";
-    const title2 = document.createElement("h2");
-    title2.textContent = entry.name || t("track.untitled");
-    body.append(title2);
-    if (entry.artist) {
-      const artist2 = document.createElement("p");
-      artist2.className = "artist";
-      artist2.textContent = entry.artist;
-      body.append(artist2);
-    }
-    const lines = [
-      [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
-      [t("column.deck"), entry.deck || "—"],
-      [t("history.started"), clockLabel(entry.start_time) || "—"],
-      [t("history.file"), entry.file || "—"]
-    ];
-    if (entry.notes) lines.push([t("history.notes"), entry.notes]);
-    for (const [label, value] of lines) {
-      const row = document.createElement("div");
-      row.className = "field";
-      const name = document.createElement("div");
-      name.className = "label";
-      name.textContent = label;
-      const text2 = document.createElement("div");
-      text2.className = "value";
-      text2.textContent = value;
-      row.append(name, text2);
-      body.append(row);
-    }
-    if (entry.asset_id) {
-      const open = buttonEl(tips.openInLibrary);
-      open.className = "text-button";
-      open.textContent = t("history.openInLibrary");
-      open.addEventListener("click", () => openInLibrary(entry.asset_id));
-      body.append(open);
-    }
-    clearDetailPlay();
-    el("detail").replaceChildren(body);
+    notifyHistory();
+    if (!state.entries.some((item3) => item3.id === id)) return;
+    const host = el("detail");
+    detailPlayRoot?.unmount();
+    detailPlayRoot = null;
+    historyDetailRoot = remountIsland(host, (0, import_react21.createElement)(HistoryDetail), {
+      host: historyDetailHost,
+      root: historyDetailRoot
+    });
+    historyDetailHost = host;
   }
   function fieldInput(name, label, value, wide = false) {
     const wrap = document.createElement("label");
@@ -26762,10 +28469,10 @@
     const body = document.createElement("div");
     body.className = "detail-body";
     if (track.album) {
-      const kicker2 = document.createElement("p");
-      kicker2.className = "detail-kicker";
-      kicker2.textContent = track.album;
-      body.append(kicker2);
+      const kicker = document.createElement("p");
+      kicker.className = "detail-kicker";
+      kicker.textContent = track.album;
+      body.append(kicker);
     }
     const title2 = document.createElement("h2");
     title2.textContent = track.title ?? "";
@@ -26777,9 +28484,9 @@
       body.append(artist2);
     }
     const playTitle = track.title || track.name || playerStrings.untitled;
-    clearDetailPlay();
+    clearDetailIslands();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react11.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react21.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -26933,9 +28640,9 @@
     for (const group of track.groups || []) {
       const section = document.createElement("section");
       section.className = "group";
-      const heading2 = document.createElement("h3");
-      heading2.textContent = group.name ?? "";
-      section.append(heading2);
+      const heading = document.createElement("h3");
+      heading.textContent = group.name ?? "";
+      section.append(heading);
       const open = group.name !== "Search copies";
       if (!open) {
         const toggle = buttonEl(tips.showSearchCopies);
@@ -26984,9 +28691,9 @@
   function markerSection(track) {
     const section = document.createElement("section");
     section.className = "group";
-    const heading2 = document.createElement("h3");
-    heading2.textContent = t("markers.heading");
-    section.append(heading2);
+    const heading = document.createElement("h3");
+    heading.textContent = t("markers.heading");
+    section.append(heading);
     const note = document.createElement("p");
     note.className = "detail-kicker";
     if (track.markers_unavailable) note.textContent = t("markers.unavailable");
@@ -27024,9 +28731,9 @@
   function copySection(fromId, copies, writable) {
     const section = document.createElement("section");
     section.className = "group";
-    const heading2 = document.createElement("h3");
-    heading2.textContent = t("copies.heading");
-    section.append(heading2);
+    const heading = document.createElement("h3");
+    heading.textContent = t("copies.heading");
+    section.append(heading);
     for (const copy of copies) {
       const row = document.createElement("div");
       row.className = "copy-row";
@@ -27056,17 +28763,17 @@
     const section = document.createElement("section");
     section.className = "group";
     section.dataset.trackId = String(track.id);
-    const heading2 = document.createElement("h3");
-    heading2.id = `related-heading-${track.id}`;
-    heading2.textContent = t("related.heading");
-    section.setAttribute("aria-labelledby", heading2.id);
+    const heading = document.createElement("h3");
+    heading.id = `related-heading-${track.id}`;
+    heading.textContent = t("related.heading");
+    section.setAttribute("aria-labelledby", heading.id);
     section.setAttribute("aria-busy", "true");
     const status = document.createElement("p");
     status.className = "detail-kicker";
     status.setAttribute("role", "status");
     const path = track.resolved_path || track.edit?.portable_id || "";
     status.textContent = path ? t("related.loading") : t("related.noPath");
-    section.append(heading2, status);
+    section.append(heading, status);
     if (path) loadRelated(track, section, writable, "");
     return section;
   }
@@ -27088,8 +28795,8 @@
     }
   }
   function renderRelated(track, section, writable, payload, query) {
-    const heading2 = section.querySelector("h3");
-    section.replaceChildren(heading2);
+    const heading = section.querySelector("h3");
+    section.replaceChildren(heading);
     section.setAttribute("aria-busy", "false");
     const saved = Array.isArray(payload.saved) ? payload.saved : [];
     const suggested = Array.isArray(payload.suggested) ? payload.suggested : [];
@@ -27121,8 +28828,8 @@
     const list = document.createElement("ul");
     list.className = "related-list";
     for (const link of saved) {
-      const item5 = document.createElement("li");
-      item5.className = "related-row";
+      const item3 = document.createElement("li");
+      item3.className = "related-row";
       const main = document.createElement("div");
       const other = link.track || {};
       const label = other.title || t("track.untitled");
@@ -27159,8 +28866,8 @@
       remove.textContent = t("common.remove");
       remove.setAttribute("aria-label", t("related.removeLink", { name: label }));
       remove.addEventListener("click", () => removeRelated(track, section, link));
-      item5.append(main, remove);
-      list.append(item5);
+      item3.append(main, remove);
+      list.append(item3);
     }
     return list;
   }
@@ -27193,7 +28900,7 @@
         results.append(hint);
         return;
       }
-      const hits2 = state.tracks.filter((item5) => item5.id !== track.id && matchesQuery(item5, query2)).slice(0, 8);
+      const hits2 = state.tracks.filter((item3) => item3.id !== track.id && matchesQuery(item3, query2)).slice(0, 8);
       if (!hits2.length) {
         const empty = document.createElement("li");
         empty.className = "related-meta";
@@ -27202,14 +28909,14 @@
         return;
       }
       for (const hit of hits2) {
-        const item5 = document.createElement("li");
+        const item3 = document.createElement("li");
         const name = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         const choose = buttonEl(chooseRelated(name));
         choose.className = "text-button";
         choose.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         choose.addEventListener("click", () => relatedLinkForm(track, section, form, hit, input.value));
-        item5.append(choose);
-        results.append(item5);
+        item3.append(choose);
+        results.append(item3);
       }
     };
     input.addEventListener("input", paint3);
@@ -27265,26 +28972,26 @@
   function relatedSuggestList(track, section, suggested) {
     const list = document.createElement("ul");
     list.className = "related-list";
-    for (const item5 of suggested) {
+    for (const item3 of suggested) {
       const row = document.createElement("li");
       row.className = "related-row";
       const main = document.createElement("div");
       const name = document.createElement("span");
-      name.textContent = item5.artist ? `${item5.title || t("track.untitled")} · ${item5.artist}` : item5.title || t("track.untitled");
+      name.textContent = item3.artist ? `${item3.title || t("track.untitled")} · ${item3.artist}` : item3.title || t("track.untitled");
       const reasons = document.createElement("p");
       reasons.className = "related-meta";
-      reasons.textContent = Array.isArray(item5.reasons) ? item5.reasons.join(" · ") : "";
+      reasons.textContent = Array.isArray(item3.reasons) ? item3.reasons.join(" · ") : "";
       main.append(name, reasons);
-      const save3 = buttonEl(saveSuggestion(item5.title || "Untitled"));
+      const save3 = buttonEl(saveSuggestion(item3.title || "Untitled"));
       save3.className = "text-button";
       save3.textContent = t("common.save");
-      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item5.title || t("track.untitled") }));
+      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item3.title || t("track.untitled") }));
       save3.addEventListener("click", () => {
         save3.disabled = true;
         saveRelated(track, section, {
           action: "add",
           asset: track.id,
-          target: item5.asset_id,
+          target: item3.asset_id,
           mutual: true,
           note: "",
           rating: null,
@@ -27342,9 +29049,9 @@
   function membershipSection(track, writable) {
     const section = document.createElement("section");
     section.className = "group";
-    const heading2 = document.createElement("h3");
-    heading2.textContent = t("crates.heading");
-    section.append(heading2);
+    const heading = document.createElement("h3");
+    heading.textContent = t("crates.heading");
+    section.append(heading);
     const holder = document.createElement("div");
     holder.className = "member-list";
     const chosen = new Set(track.crate_ids || []);
@@ -27588,7 +29295,7 @@
     }
   }
   async function renameCrate() {
-    const crate = state.crates.find((item5) => item5.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate) return;
     const name = prompt(t("crates.renamePrompt"), crate.name);
     if (!name || !name.trim() || name.trim() === crate.name) return;
@@ -27609,7 +29316,7 @@
     return COLORS.find(([, key]) => t(key).toLocaleLowerCase() === wanted)?.[0];
   }
   async function colorCrate() {
-    const crate = state.crates.find((item5) => item5.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate) return;
     const names = COLORS.map(([, key]) => t(key).toLocaleLowerCase());
     const choice = prompt(t("crates.colorPrompt", { names: names.join(", ") }));
@@ -27634,7 +29341,7 @@
     }
   }
   async function deleteCrate() {
-    const crate = state.crates.find((item5) => item5.id === state.activeCrate);
+    const crate = state.crates.find((item3) => item3.id === state.activeCrate);
     if (!crate) return;
     if (!confirm(t("crates.confirmDelete", { name: crate.name }))) return;
     try {
@@ -27663,33 +29370,26 @@
     }
   }
   function renderSessions() {
-    el("session-list").replaceChildren();
-    for (const session of state.historySessions) {
-      const button = buttonEl(sessionTip(session.name || "Session"));
-      button.className = "crate";
-      button.setAttribute("role", "option");
-      button.setAttribute("aria-selected", String(session.id === state.historyId));
-      const name = document.createElement("span");
-      name.className = "name";
-      name.textContent = session.name || t("history.session");
-      const meta = document.createElement("span");
-      meta.className = "meta";
-      meta.textContent = String(session.played || 0);
-      button.append(name, meta);
-      button.addEventListener("click", () => openSession(session.id));
-      el("session-list").append(button);
-    }
+    notifyHistory();
+    const host = el("session-list");
+    sessionRoot = remountIsland(host, (0, import_react21.createElement)(HistorySessions), {
+      host: sessionHost,
+      root: sessionRoot
+    });
+    sessionHost = host;
   }
   async function loadHistory() {
     const response = await fetch("/api/history");
     const payload = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(payload, t("history.readFailed")));
     state.historySessions = payload.sessions || [];
+    notifyHistory();
     renderSessions();
   }
   async function openSession(id) {
     state.historyId = id;
     state.selectedId = null;
+    notifyHistory();
     renderSessions();
     const response = await fetch(`/api/history?session=${id}`);
     const payload = await readJSONOr(response, {});
@@ -27698,6 +29398,7 @@
       return;
     }
     state.entries = payload.entries || [];
+    notifyHistory();
     el("list").scrollTop = 0;
     renderList();
   }
@@ -27783,7 +29484,7 @@
     const failure = document.createElement("p");
     failure.className = "detail-error";
     failure.textContent = failureOf(error2).message;
-    clearDetailPlay();
+    clearDetailIslands();
     el("detail").replaceChildren(failure);
   }
   function selectedDuplicateGroup() {
@@ -27809,526 +29510,8 @@
   function crateNamesFor(assetId) {
     return state.crates.filter((crate) => !crate.smart && (crate.tracks || []).includes(assetId)).map((crate) => crate.name);
   }
-  function failFiles(error2) {
-    state.filesLoading = false;
-    state.filesError = failureOf(error2).message || t("error.folder_unreadable");
-    renderFiles();
-  }
-  var filesRequest = 0;
-  var FILES_SEARCH_MS = 200;
-  var filesSearchTimer = 0;
-  var FILE_OVERSCAN = 8;
-  async function loadFolder(path, options = {}) {
-    window.clearTimeout(filesSearchTimer);
-    state.filesQuery = "";
-    state.filesSearching = false;
-    const searchField = document.getElementById("files-search");
-    if (searchField instanceof HTMLInputElement) searchField.value = "";
-    const elsewhere = options.elsewhere === true;
-    const refresh = options.refresh === true;
-    const atRoots = path === "" && !elsewhere;
-    const token3 = ++filesRequest;
-    state.filesLoading = true;
-    state.filesError = "";
-    if (!options.keepMessage) state.filesMessage = "";
-    state.filesSelected = /* @__PURE__ */ new Set();
-    state.filesActive = 0;
-    state.filesAtRoots = atRoots;
-    state.filesElsewhere = elsewhere;
-    if (atRoots) {
-      state.filesPath = "";
-      state.filesParent = null;
-      state.filesEntries = [];
-      state.filesBreadcrumb = [];
-      state.filesRoot = null;
-    }
-    renderFiles();
-    if (refresh || atRoots) {
-      const rootsPayload = await fetchLibraryRoots(refresh);
-      if (token3 !== filesRequest) return;
-      state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
-    }
-    if (atRoots) {
-      state.filesPath = "";
-      state.filesParent = null;
-      state.filesEntries = [];
-      state.filesBreadcrumb = [];
-      state.filesRoot = null;
-      state.filesElsewhere = false;
-      state.filesAtRoots = true;
-      state.filesTruncated = false;
-      state.filesLoading = false;
-      el("files-list").scrollTop = 0;
-      renderFiles();
-      return;
-    }
-    const params = new URLSearchParams();
-    if (path) params.set("path", path);
-    if (elsewhere) params.set("elsewhere", "1");
-    const query = params.size ? `?${params.toString()}` : "";
-    const response = await fetch(`/api/files${query}`);
-    const payload = await readJSONOr(response, {});
-    if (token3 !== filesRequest) return;
-    if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
-    state.filesPath = payload.path || "";
-    state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
-    state.filesEntries = Array.isArray(payload.entries) ? payload.entries : [];
-    state.filesRoot = isFileRoot(payload.root) ? payload.root : null;
-    state.filesBreadcrumb = Array.isArray(payload.breadcrumb) ? payload.breadcrumb.filter(isFileCrumb) : [];
-    state.filesElsewhere = Boolean(payload.elsewhere);
-    state.filesAtRoots = !state.filesPath && !state.filesElsewhere;
-    state.filesTruncated = Boolean(payload.truncated);
-    state.filesLoading = false;
-    el("files-list").scrollTop = 0;
-    if (payload.serato) applyStatus(payload.serato);
-    renderFiles();
-  }
-  async function searchFiles(query) {
-    const token3 = ++filesRequest;
-    const scope = state.filesAtRoots ? "" : state.filesPath;
-    const elsewhere = state.filesElsewhere && !state.filesAtRoots;
-    state.filesLoading = true;
-    state.filesError = "";
-    state.filesSearching = true;
-    state.filesQuery = query;
-    renderFiles();
-    const params = new URLSearchParams();
-    params.set("q", query);
-    if (scope) params.set("path", scope);
-    if (elsewhere) params.set("elsewhere", "1");
-    const response = await fetch(`/api/files?${params.toString()}`);
-    const payload = await readJSONOr(response, {});
-    if (token3 !== filesRequest) return;
-    if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
-    const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
-    state.filesEntries = entries;
-    state.filesTruncated = Boolean(payload.truncated);
-    state.filesLoading = false;
-    state.filesSearching = true;
-    state.filesActive = 0;
-    state.filesSelected = /* @__PURE__ */ new Set();
-    el("files-list").scrollTop = 0;
-    renderFiles();
-  }
-  function isListedFile(value) {
-    if (!value || typeof value !== "object") return false;
-    const row = value;
-    return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
-  }
-  function renderFiles() {
-    if (state.mode !== "files") return;
-    const pick2 = el("files-pick");
-    const moveHere = el("files-move-here");
-    const pickCancel = el("files-pick-cancel");
-    pick2.hidden = !state.filesPick;
-    moveHere.hidden = !state.filesPick;
-    pickCancel.hidden = !state.filesPick;
-    renderBreadcrumb();
-    const elsewhere = el("files-elsewhere");
-    elsewhere.textContent = state.filesElsewhere ? t("files.roots") : t("files.browseElsewhere");
-    setTooltip(elsewhere, state.filesElsewhere ? tips.filesMusicFolders : tips.filesElsewhere);
-    el("files-up").disabled = !state.filesParent || state.filesLoading;
-    const notes = [];
-    if (state.filesLoading) notes.push(state.filesAtRoots ? t("files.readingRootsNote") : t("files.readingFolderNote"));
-    if (state.filesError) notes.push(state.filesError);
-    if (state.filesMessage) notes.push(state.filesMessage);
-    if (state.filesTruncated) notes.push(state.filesSearching ? t("files.searchTruncated") : t("files.truncated"));
-    el("files-status").textContent = notes.join(" ");
-    const scroll = el("files-list").scrollTop;
-    paintFileWindow();
-    if (el("files-list").scrollTop !== scroll) el("files-list").scrollTop = scroll;
-    const selected = selectedFiles();
-    const locked = !state.writable || state.filesLoading || state.filesAtRoots;
-    el("files-rename").disabled = locked || selected.length !== 1;
-    el("files-rename-from-tags").disabled = locked || !selected.length;
-    el("files-move").disabled = locked || !selected.length || Boolean(state.filesPick);
-    el("files-move-folder").disabled = locked || !state.filesPath || Boolean(state.filesPick);
-    el("files-replace").disabled = locked || selected.length !== 1;
-    el("files-delete").disabled = locked || !selected.length;
-    moveHere.disabled = locked;
-    renderShell();
-  }
-  function renderBreadcrumb() {
-    const nav = el("files-path");
-    nav.replaceChildren();
-    const list = document.createElement("ol");
-    list.className = "files-crumbs";
-    const crumbs = visibleCrumbs();
-    crumbs.forEach((crumb, index) => {
-      const item5 = document.createElement("li");
-      const last = index === crumbs.length - 1;
-      if (!last && crumb.path) {
-        const button = buttonEl(openCrumb(crumb.name));
-        button.className = "files-crumb";
-        button.textContent = crumb.name;
-        button.addEventListener("click", () => {
-          loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
-        });
-        item5.append(button);
-      } else {
-        const current2 = document.createElement("span");
-        current2.className = "files-crumb";
-        current2.setAttribute("aria-current", "page");
-        current2.textContent = crumb.name;
-        item5.append(current2);
-      }
-      if (!last) {
-        const sep = document.createElement("span");
-        sep.className = "files-sep";
-        sep.setAttribute("aria-hidden", "true");
-        sep.textContent = "/";
-        item5.append(sep);
-      }
-      list.append(item5);
-    });
-    nav.append(list);
-  }
-  function visibleCrumbs() {
-    if (state.filesBreadcrumb.length) return state.filesBreadcrumb;
-    if (state.filesAtRoots) return [{ name: t("files.roots"), path: "" }];
-    if (state.filesPath) return [{ name: state.filesPath, path: state.filesPath }];
-    return [{ name: t("files.roots"), path: "" }];
-  }
-  function filesRowHeight() {
-    if (state.filesSearching) return FILE_ROW;
-    return state.filesAtRoots ? ROOT_ROW : FILE_ROW;
-  }
-  function browserRows() {
-    if (state.filesSearching) return state.filesEntries;
-    if (state.filesAtRoots) {
-      return state.filesRoots.map((root) => {
-        const entry = {
-          name: root.label,
-          path: root.path,
-          detail: root.detail,
-          kind: root.kind === "serato_drive" ? "drive" : "folder",
-          missing: root.missing,
-          removable: root.removable,
-          serato: root.serato
-        };
-        return entry;
-      });
-    }
-    const rank = { dir: 0, file: 1, link: 2 };
-    return [...state.filesEntries].sort((left, right) => {
-      return (rank[left.kind] ?? 3) - (rank[right.kind] ?? 3) || left.name.localeCompare(right.name, void 0, { numeric: true, sensitivity: "base" });
-    });
-  }
-  function paintFileWindow() {
-    const list = el("files-list");
-    const rows2 = browserRows();
-    list.setAttribute("aria-busy", String(state.filesLoading));
-    list.setAttribute(
-      "aria-label",
-      state.filesSearching ? t("files.searchResults") : state.filesAtRoots ? t("files.roots") : t("files.contents")
-    );
-    if (state.filesLoading && !rows2.length) {
-      const reading = state.filesSearching ? t("files.searching") : state.filesAtRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      list.replaceChildren(fileNote(reading));
-      list.tabIndex = 0;
-      return;
-    }
-    if (state.filesError && !rows2.length) {
-      list.replaceChildren(fileNote(state.filesError));
-      list.tabIndex = 0;
-      return;
-    }
-    if (state.filesAtRoots && !state.filesRoots.length) {
-      list.replaceChildren(rootsEmpty());
-      list.tabIndex = -1;
-      return;
-    }
-    if (!rows2.length) {
-      const empty = state.filesSearching ? t("files.noMatches", { query: state.filesQuery }) : t("files.empty");
-      list.replaceChildren(fileNote(empty));
-      list.tabIndex = 0;
-      return;
-    }
-    list.tabIndex = -1;
-    if (state.filesActive >= rows2.length) state.filesActive = rows2.length - 1;
-    if (state.filesActive < 0) state.filesActive = 0;
-    const rowHeight = filesRowHeight();
-    const view = list.clientHeight || 600;
-    const maxScroll = Math.max(0, rows2.length * rowHeight - view);
-    const scrollTop = Math.min(Math.max(0, list.scrollTop), maxScroll);
-    const start = Math.max(0, Math.floor(scrollTop / rowHeight) - FILE_OVERSCAN);
-    const end = Math.min(rows2.length, Math.ceil((scrollTop + view) / rowHeight) + FILE_OVERSCAN);
-    const spacer2 = fileSpacer(list);
-    const windowEl = spacer2.querySelector(".files-window");
-    if (!windowEl) return;
-    spacer2.style.height = `${rows2.length * rowHeight}px`;
-    windowEl.style.transform = `translateY(${start * rowHeight}px)`;
-    windowEl.replaceChildren();
-    for (let index = start; index < end; index += 1) {
-      const entry = rows2[index];
-      if (entry) windowEl.append(fileRow(entry, index));
-    }
-    if (state.filesActive >= start && state.filesActive < end) {
-      list.setAttribute("aria-activedescendant", `files-item-${state.filesActive}`);
-    } else list.removeAttribute("aria-activedescendant");
-  }
-  function fileSpacer(list) {
-    const first = list.firstElementChild;
-    if (first instanceof HTMLDivElement && first.classList.contains("files-spacer") && list.childElementCount === 1) {
-      return first;
-    }
-    list.replaceChildren();
-    const spacer2 = document.createElement("div");
-    spacer2.className = "files-spacer";
-    const windowEl = document.createElement("div");
-    windowEl.className = "files-window";
-    spacer2.append(windowEl);
-    list.append(spacer2);
-    return spacer2;
-  }
-  function fileNote(text2) {
-    const note = document.createElement("p");
-    note.className = "files-empty";
-    note.textContent = text2;
-    return note;
-  }
-  function rootsEmpty() {
-    const box = document.createElement("div");
-    box.className = "files-empty-state";
-    const heading2 = document.createElement("h2");
-    heading2.textContent = t("files.noRoots");
-    const copy = document.createElement("p");
-    copy.textContent = t("files.noRootsBody");
-    const button = buttonEl(tips.runSetup);
-    button.id = "files-run-setup";
-    button.className = "files-primary";
-    button.textContent = t("files.runSetup");
-    button.addEventListener("click", () => bridge.openSetup());
-    box.append(heading2, copy, button);
-    return box;
-  }
-  function focusFilesIndex(index) {
-    const rows2 = browserRows();
-    if (!rows2.length) return;
-    state.filesActive = Math.max(0, Math.min(rows2.length - 1, index));
-    const list = el("files-list");
-    const rowHeight = filesRowHeight();
-    const view = list.clientHeight || 600;
-    const top = state.filesActive * rowHeight;
-    const maxScroll = Math.max(0, rows2.length * rowHeight - view);
-    if (top < list.scrollTop) list.scrollTop = top;
-    if (top + rowHeight > list.scrollTop + view) list.scrollTop = Math.min(maxScroll, top + rowHeight - view);
-    paintFileWindow();
-    const control = list.querySelector(`[data-files-index="${state.filesActive}"]`);
-    control?.focus();
-  }
-  function activateFilesIndex(index) {
-    const entry = browserRows()[index];
-    if (!entry) return;
-    if (entry.kind === "file") {
-      if (state.filesSelected.has(entry.path)) state.filesSelected.delete(entry.path);
-      else state.filesSelected.add(entry.path);
-      renderFiles();
-      focusFilesIndex(index);
-      return;
-    }
-    if (entry.kind === "link") return;
-    openBrowserRow(entry);
-  }
-  function openBrowserRow(entry) {
-    if (entry.missing) return;
-    const elsewhere = state.filesElsewhere && entry.kind === "dir";
-    loadFolder(entry.path, { elsewhere }).catch((error2) => failFiles(error2));
-  }
-  function onFilesKey(event) {
-    if (state.mode !== "files") return;
-    const list = el("files-list");
-    if (!(event.target instanceof Node) || !list.contains(event.target)) return;
-    const rows2 = browserRows();
-    if (!rows2.length) return;
-    if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
-      event.preventDefault();
-      if (event.key === "ArrowDown") focusFilesIndex(state.filesActive + 1);
-      else if (event.key === "ArrowUp") focusFilesIndex(state.filesActive - 1);
-      else if (event.key === "Home") focusFilesIndex(0);
-      else focusFilesIndex(rows2.length - 1);
-      return;
-    }
-    if (event.key !== "Enter" && event.key !== " ") return;
-    const control = event.target instanceof HTMLElement ? event.target.closest("button, input") : null;
-    if (control && list.contains(control)) return;
-    event.preventDefault();
-    activateFilesIndex(state.filesActive);
-  }
-  function fileRow(entry, index) {
-    const row = document.createElement("div");
-    row.className = "files-row";
-    if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) row.classList.add("is-root");
-    if (entry.missing) row.classList.add("is-missing");
-    if (index === state.filesActive) row.classList.add("is-active");
-    row.setAttribute("role", "listitem");
-    const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
-    if (openKind) {
-      const button = buttonEl(entry.missing ? missingDrive(entry.name) : openFile(entry.name));
-      button.className = "files-open";
-      button.dataset.filesIndex = String(index);
-      button.id = `files-item-${index}`;
-      button.tabIndex = index === state.filesActive ? 0 : -1;
-      if (entry.kind === "drive" || entry.kind === "folder") button.append(fileIcon(entry.kind === "drive" ? "drive" : "folder"));
-      if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) {
-        const copy = document.createElement("span");
-        copy.className = "files-root-copy";
-        const label2 = document.createElement("span");
-        label2.className = "files-root-label";
-        label2.textContent = entry.name;
-        const detail = document.createElement("span");
-        detail.className = "files-root-detail";
-        detail.textContent = entry.detail;
-        copy.append(label2, detail);
-        button.append(copy);
-      } else {
-        const name2 = document.createElement("span");
-        name2.textContent = entry.name;
-        button.append(name2);
-        if (entry.detail) {
-          const detail = document.createElement("span");
-          detail.className = "files-match-detail";
-          detail.textContent = entry.detail;
-          button.append(detail);
-        }
-      }
-      if (entry.missing) {
-        button.setAttribute("aria-disabled", "true");
-        button.setAttribute("aria-label", t("files.driveMissingLabel", { name: entry.name }));
-        const badge = document.createElement("span");
-        badge.className = "files-badge";
-        badge.textContent = t("files.driveMissing");
-        button.append(badge);
-        button.addEventListener("click", () => {
-          state.filesActive = index;
-        });
-      } else {
-        button.setAttribute("aria-label", t("files.open", { name: entry.name }));
-        button.addEventListener("click", () => {
-          state.filesActive = index;
-          openBrowserRow(entry);
-        });
-      }
-      row.append(button);
-      if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
-      return row;
-    }
-    if (entry.kind !== "file") {
-      const label2 = buttonEl(fileShortcut(entry.name));
-      label2.className = "files-kind";
-      label2.dataset.filesIndex = String(index);
-      label2.id = `files-item-${index}`;
-      label2.tabIndex = index === state.filesActive ? 0 : -1;
-      label2.textContent = t("files.shortcut", { name: entry.name });
-      label2.setAttribute("aria-label", t("files.shortcut", { name: entry.name }));
-      row.append(label2);
-      return row;
-    }
-    const label = document.createElement("label");
-    label.className = "files-file";
-    const box = inputEl(selectFile(entry.name, entry.path));
-    box.type = "checkbox";
-    box.dataset.filesIndex = String(index);
-    box.id = `files-item-${index}`;
-    box.tabIndex = index === state.filesActive ? 0 : -1;
-    box.checked = state.filesSelected.has(entry.path);
-    box.setAttribute("aria-label", entry.name);
-    box.addEventListener("change", () => {
-      state.filesActive = index;
-      if (box.checked) state.filesSelected.add(entry.path);
-      else state.filesSelected.delete(entry.path);
-      renderFiles();
-    });
-    const name = document.createElement("span");
-    name.className = "files-name";
-    name.textContent = entry.name;
-    label.append(box, name);
-    if (entry.detail) {
-      const detail = document.createElement("span");
-      detail.className = "files-match-detail";
-      detail.textContent = entry.detail;
-      label.append(detail);
-    }
-    if (entry.in_library) {
-      const badge = document.createElement("span");
-      badge.className = "files-badge";
-      badge.textContent = t("files.inLibrary");
-      label.append(badge);
-    }
-    row.append(label);
-    return row;
-  }
-  function fileIcon(kind2) {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("width", "20");
-    svg.setAttribute("height", "20");
-    svg.setAttribute("aria-hidden", "true");
-    svg.classList.add("files-icon", kind2 === "drive" ? "files-icon-drive" : "files-icon-folder");
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "currentColor");
-    path.setAttribute("stroke-width", "1.5");
-    path.setAttribute("stroke-linejoin", "round");
-    path.setAttribute(
-      "d",
-      kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z"
-    );
-    svg.append(path);
-    return svg;
-  }
-  function isFileRoot(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.name === "string" && typeof record.path === "string" && typeof record.kind === "string";
-  }
-  function isFileCrumb(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.name === "string" && typeof record.path === "string";
-  }
-  function moveFileList(delta) {
-    if (!browserRows().length) return;
-    focusFilesIndex(state.filesActive + delta);
-  }
-  function openFileList() {
-    if (!browserRows().length) return;
-    activateFilesIndex(state.filesActive);
-  }
-  function focusFileByPath(path) {
-    const index = browserRows().findIndex((entry) => entry.path === path);
-    if (index < 0) return;
-    focusFilesIndex(index);
-  }
-  function selectedFiles() {
-    return state.filesEntries.filter((entry) => entry.kind === "file" && state.filesSelected.has(entry.path));
-  }
   function wireLibrary() {
-    el("files-list").addEventListener("scroll", () => {
-      if (state.mode === "files") paintFileWindow();
-    });
-    el("files-list").addEventListener("keydown", onFilesKey);
-    el("files-search").addEventListener("input", () => {
-      window.clearTimeout(filesSearchTimer);
-      const value = el("files-search").value;
-      state.filesQuery = value;
-      if (!value.trim()) {
-        if (state.filesAtRoots && !state.filesPath) {
-          state.filesSearching = false;
-          state.filesEntries = [];
-          state.filesError = "";
-          state.filesTruncated = false;
-          state.filesLoading = false;
-          renderFiles();
-          return;
-        }
-        loadFolder(state.filesPath, { elsewhere: state.filesElsewhere && Boolean(state.filesPath) }).catch((error2) => failFiles(error2));
-        return;
-      }
-      filesSearchTimer = window.setTimeout(() => {
-        searchFiles(value.trim()).catch((error2) => failFiles(error2));
-      }, FILES_SEARCH_MS);
-    });
+    mountFilesIslands();
     el("search").addEventListener("input", () => {
       state.query = el("search").value;
       el("list").scrollTop = 0;
@@ -28357,14 +29540,7 @@
       if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
       Promise.all(jobs).catch(showFailure);
     });
-    el("export-m3u").addEventListener("click", () => {
-      const crate = playlistCrate();
-      if (crate == null) return;
-      const link = document.createElement("a");
-      link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
-      link.download = "crate.m3u";
-      link.click();
-    });
+    el("export-m3u").addEventListener("click", () => exportPlaylistM3u());
     el("import-m3u").addEventListener("click", () => {
       if (playlistCrate() == null) return;
       if (!state.writable) {
@@ -28425,11 +29601,11 @@
       renderList();
     });
     el("crate-list").addEventListener("keydown", (event) => {
-      const item5 = event.target.closest(".crate");
-      if (!item5 || !el("crate-list").contains(item5)) return;
+      const item3 = event.target.closest(".crate");
+      if (!item3 || !el("crate-list").contains(item3)) return;
       const items = [...el("crate-list").querySelectorAll(".crate")];
-      const index = items.indexOf(item5);
-      const id = item5.dataset.id === "all" ? "all" : Number(item5.dataset.id);
+      const index = items.indexOf(item3);
+      const id = item3.dataset.id === "all" ? "all" : Number(item3.dataset.id);
       if (event.key === "ArrowDown") {
         event.preventDefault();
         focusCrateItem(items[Math.min(items.length - 1, index + 1)]);
@@ -28444,13 +29620,13 @@
         focusCrateItem(items[items.length - 1]);
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
-        if (!state.crateQuery && item5.getAttribute("aria-expanded") === "false") toggleCrate(id);
-        else if (item5.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
+        if (!state.crateQuery && item3.getAttribute("aria-expanded") === "false") toggleCrate(id);
+        else if (item3.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
-        if (!state.crateQuery && item5.getAttribute("aria-expanded") === "true") toggleCrate(id);
-        else if (item5.dataset.parent) {
-          focusCrateItem(items.find((button) => button.dataset.id === item5.dataset.parent));
+        if (!state.crateQuery && item3.getAttribute("aria-expanded") === "true") toggleCrate(id);
+        else if (item3.dataset.parent) {
+          focusCrateItem(items.find((button) => button.dataset.id === item3.dataset.parent));
         }
       } else if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -28462,6 +29638,30 @@
   bridge.selectEntry = selectEntry;
   bridge.reloadLibrary = loadLibrary;
   bridge.lockDown = lockDown;
+  bindCrateActions({
+    select: selectCrate,
+    toggle: toggleCrate,
+    create: () => {
+      createCrate2().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    rename: () => {
+      renameCrate().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    color: () => {
+      colorCrate().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    remove: () => {
+      deleteCrate().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    exportM3u: exportPlaylistM3u
+  });
+  historyActions.loadHistory = loadHistory;
+  historyActions.openSession = openSession;
+  historyActions.selectEntry = selectEntry;
+  historyActions.openInLibrary = openInLibrary;
+  bridge.applyStatus = applyStatus;
+  bridge.renderShell = renderShell;
+  bridge.setNotice = setNotice;
 
   // src/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;
@@ -28509,10 +29709,6 @@
   var replaceLoading = false;
   var consentSettled = false;
   var privacySync = false;
-  var filesPreview = null;
-  var filesAction = "";
-  var filesTagScope = "paths";
-  var filesTrigger = null;
   var relinkPlan = null;
   var relinkLoading = false;
   var relinkChosen = /* @__PURE__ */ new Map();
@@ -28560,9 +29756,9 @@
     const list = el("rekordbox-report");
     list.replaceChildren();
     for (const line of lines) {
-      const item5 = document.createElement("li");
-      item5.textContent = line;
-      list.append(item5);
+      const item3 = document.createElement("li");
+      item3.textContent = line;
+      list.append(item3);
     }
   }
   function requestRekordboxReport() {
@@ -28631,43 +29827,43 @@
     const list = document.createElement("ul");
     list.className = "merge-preview";
     const added = preview.crates_added || [];
-    const item5 = (text2) => {
+    const item3 = (text2) => {
       const line = document.createElement("li");
       line.textContent = text2;
       list.append(line);
     };
     if (added.length) {
       const names = added.map((crate) => crate.space && crate.space !== state.space ? `${crate.name} (${crate.space})` : crate.name);
-      item5(t("merge.addToCrates", { crates: names.join(", ") }));
+      item3(t("merge.addToCrates", { crates: names.join(", ") }));
     } else if ((preview.crates_kept || []).length) {
-      item5(t("merge.alreadyInCrates"));
+      item3(t("merge.alreadyInCrates"));
     } else {
-      item5(t("merge.noCrates"));
+      item3(t("merge.noCrates"));
     }
-    for (const space of preview.spaces_added || []) item5(t("merge.addToSpace", { space }));
+    for (const space of preview.spaces_added || []) item3(t("merge.addToSpace", { space }));
     if ((preview.fields || []).length) {
       for (const field of preview.fields || []) {
         const before = previewFieldValue(field.field || "", field.before);
         const after = previewFieldValue(field.field || "", field.after);
-        item5(t("merge.fieldChange", { label: field.label ?? "", before, after }));
+        item3(t("merge.fieldChange", { label: field.label ?? "", before, after }));
       }
     } else {
-      item5(t("merge.noFields"));
+      item3(t("merge.noFields"));
     }
     if (preview.history_repointed) {
       const count = Number(preview.history_entries) || 0;
-      item5(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
+      item3(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
     } else {
-      item5(t("merge.noHistoryId"));
+      item3(t("merge.noHistoryId"));
     }
     const removed = (preview.removed || []).length;
-    item5(t("merge.removeCopies", { count: removed }));
+    item3(t("merge.removeCopies", { count: removed }));
     for (const file of preview.files || []) {
-      if (file.reason) item5(`${file.file}: ${file.reason}`);
+      if (file.reason) item3(`${file.file}: ${file.reason}`);
     }
     const copy = preview.cue_copy;
     if (copy && (copy.markers || copy.beatgrid) && copy.status !== "failed") {
-      item5(mergeCopyLine(copy, copy.status === "copied"));
+      item3(mergeCopyLine(copy, copy.status === "copied"));
     }
     el("merge-preview").append(list);
     if (preview.cue_warning) {
@@ -28834,7 +30030,7 @@
         if (score != null) scored.push({ track, score });
       }
       scored.sort((a, b) => b.score - a.score);
-      ranked = scored.map((item5) => item5.track);
+      ranked = scored.map((item3) => item3.track);
     }
     if (toId != null) {
       const pinned = others.find((track) => track.id === toId);
@@ -28856,7 +30052,7 @@
     }
     const list = document.createElement("ul");
     list.className = "merge-preview";
-    const item5 = (text2) => {
+    const item3 = (text2) => {
       const line = document.createElement("li");
       line.textContent = text2;
       list.append(line);
@@ -28865,14 +30061,14 @@
     const kept = preview.crates_kept || [];
     const removed = preview.crates_removed || [];
     if (added.length) {
-      item5(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
+      item3(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
     } else if (kept.length) {
-      item5(t("cratesReplace.alreadyInCrates"));
+      item3(t("cratesReplace.alreadyInCrates"));
     } else {
-      item5(t("cratesReplace.noCrates"));
+      item3(t("cratesReplace.noCrates"));
     }
     if (preview.retire && removed.length) {
-      item5(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
+      item3(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
     }
     el("crates-replace-preview").append(list);
   }
@@ -29038,9 +30234,6 @@
       fillRelinkBanner();
       renderRelinkRows();
     }
-    if (el("files-dialog").open) {
-      el("files-confirm").textContent = filesAction === "delete" ? t("files.moveToTrash") : t("common.confirm");
-    }
   }
   async function saveConsent(value, status) {
     return saveSharing(value, status);
@@ -29086,144 +30279,6 @@
     if (!state.wizardComplete && openWizard(false, el("search"))) return;
     if (payload.needs_consent_prompt) showConsent();
   }
-  function openFilesDialog(action, trigger, scope = "paths") {
-    filesAction = action;
-    filesTagScope = scope;
-    filesPreview = null;
-    filesTrigger = trigger instanceof HTMLElement ? trigger : null;
-    el("files-name-label").hidden = action !== "rename";
-    el("files-replace-label").hidden = action !== "replace";
-    el("files-summary").textContent = "";
-    el("files-warning").textContent = "";
-    el("files-dialog-status").textContent = "";
-    el("files-changes").replaceChildren();
-    const selected = selectedFiles();
-    if (action === "rename" && selected.length === 1) el("files-name").value = selected[0].name;
-    if (action === "replace") el("files-replacement").value = "";
-    const confirm2 = el("files-confirm");
-    confirm2.classList.toggle("danger", action === "delete");
-    confirm2.textContent = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
-    setTooltip(confirm2, action === "delete" ? tips.filesMoveTrash : tips.filesConfirm);
-    syncFilesDialog();
-    el("files-dialog").showModal();
-    if (action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags") {
-      el("files-cancel").focus();
-      reviewFiles().catch((error2) => {
-        el("files-dialog-status").textContent = failureOf(error2).message;
-      });
-    } else if (action === "rename") el("files-name").focus();
-    else el("files-replacement").focus();
-  }
-  function syncFilesDialog() {
-    const confirm2 = el("files-confirm");
-    const review = el("files-review");
-    const ready = Boolean(filesPreview?.ok && state.writable && filesPreview.needs_confirm);
-    confirm2.disabled = !ready;
-    review.hidden = filesAction === "delete" || filesAction === "move" || filesAction === "move_folder" || filesAction === "rename_from_tags";
-    if (!state.writable) {
-      el("files-dialog-status").textContent = el("status").textContent;
-    }
-  }
-  async function reviewFiles() {
-    const body = filesBody(false);
-    el("files-dialog-status").textContent = t("files.checking");
-    const payload = await postJSON("/api/files", body);
-    filesPreview = payload;
-    el("files-summary").textContent = payload.summary || "";
-    el("files-warning").textContent = payload.warning || "";
-    el("files-dialog-status").textContent = payload.ok ? "" : serverMessage(payload, t("files.notSaved"));
-    const list = el("files-changes");
-    list.replaceChildren();
-    for (const change of payload.changes || []) {
-      const item5 = document.createElement("li");
-      const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
-      const effect = change.effect === "trash" ? t("files.trash") : change.to;
-      item5.textContent = `${change.from} → ${effect}${crates}`;
-      list.append(item5);
-    }
-    for (const skip2 of payload.skipped || []) {
-      const item5 = document.createElement("li");
-      item5.textContent = skip2;
-      list.append(item5);
-    }
-    if (payload.more) {
-      const more = document.createElement("li");
-      more.textContent = t("files.andMore", { count: Number(payload.more) });
-      list.append(more);
-    }
-    if (payload.serato) applyStatus(payload.serato);
-    syncFilesDialog();
-  }
-  function filesBody(confirm2) {
-    const body = { action: filesAction };
-    if (confirm2) body.confirm = true;
-    if (filesAction === "rename") {
-      const selected = selectedFiles();
-      body.path = selected[0]?.path || state.filesPickPaths[0];
-      body.name = el("files-name").value;
-    } else if (filesAction === "move") {
-      body.paths = state.filesPickPaths.length ? [...state.filesPickPaths] : selectedFiles().map((entry) => entry.path);
-      body.destination = state.filesPath;
-    } else if (filesAction === "move_folder") {
-      body.path = state.filesPickSource || state.filesPath;
-      body.destination = state.filesPath;
-    } else if (filesAction === "replace") {
-      const selected = selectedFiles();
-      body.path = selected[0]?.path || "";
-      body.replacement = el("files-replacement").value.trim();
-    } else if (filesAction === "delete") {
-      body.paths = selectedFiles().map((entry) => entry.path);
-    } else if (filesAction === "rename_from_tags") {
-      if (filesTagScope === "crate") {
-        const crate = state.activeCrate;
-        if (typeof crate === "number") {
-          body.crate = crate;
-          body.space = state.space;
-        }
-      } else {
-        body.paths = selectedFiles().map((entry) => entry.path);
-      }
-    }
-    return body;
-  }
-  function closeFilesDialog() {
-    const trigger = filesTrigger;
-    filesTrigger = null;
-    filesTagScope = "paths";
-    if (el("files-dialog").open) el("files-dialog").close();
-    if (trigger instanceof HTMLElement) trigger.focus();
-  }
-  async function confirmFiles() {
-    if (!filesPreview?.ok || !state.writable) return;
-    const confirm2 = el("files-confirm");
-    confirm2.disabled = true;
-    el("files-dialog-status").textContent = t("files.saving");
-    const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
-    try {
-      const payload = await postJSON("/api/files", filesBody(true));
-      if (payload.serato) applyStatus(payload.serato);
-      closeFilesDialog();
-      state.filesPick = null;
-      state.filesPickPaths = [];
-      state.filesPickSource = "";
-      let message = payload.summary || t("files.updated");
-      if (payload.warning) message = `${message} ${payload.warning}`;
-      if (crateScope && state.mode !== "files") {
-        setNotice(message);
-        await loadLibrary();
-        return;
-      }
-      state.filesMessage = message;
-      await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
-      await loadLibrary();
-      state.filesMessage = state.filesMessage;
-      renderFiles();
-    } catch (error2) {
-      if (failureOf(error2).status === 409) lockDown(error2);
-      el("files-dialog-status").textContent = failureOf(error2).message;
-      confirm2.disabled = false;
-    }
-  }
   function relinkReason(reason) {
     if (reason === "same name and size") return t("relink.reason.nameAndSize");
     if (reason === "same name") return t("relink.reason.name");
@@ -29240,7 +30295,7 @@
   function chosenCandidate(match) {
     const candidates = match.candidates || [];
     const path = relinkChosen.get(match.asset_id);
-    return candidates.find((item5) => item5.path === path) || candidates[0];
+    return candidates.find((item3) => item3.path === path) || candidates[0];
   }
   function selectedRelinkMatches() {
     const matches = [];
@@ -29286,7 +30341,7 @@
   function renderRelinkRows() {
     const body = el("relink-rows");
     body.replaceChildren();
-    const matches = (relinkPlan?.matches || []).filter((item5) => (item5.candidates || []).length > 0);
+    const matches = (relinkPlan?.matches || []).filter((item3) => (item3.candidates || []).length > 0);
     el("relink-empty").hidden = matches.length > 0;
     el("relink-empty").textContent = relinkPlan ? t("relink.empty") : t("relink.none");
     for (const match of matches) {
@@ -29611,108 +30666,11 @@
         }
       });
     }
-    el("files-up").addEventListener("click", () => {
-      if (state.filesParent) {
-        loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
-      }
-    });
-    el("files-refresh").addEventListener("click", () => {
-      const path = state.filesAtRoots ? "" : state.filesPath;
-      loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots, refresh: true }).catch((error2) => failFiles(error2));
-    });
-    el("files-elsewhere").addEventListener("click", () => {
-      if (state.filesElsewhere) loadFolder("").catch((error2) => failFiles(error2));
-      else loadFolder("", { elsewhere: true }).catch((error2) => failFiles(error2));
-    });
-    el("files-rename").addEventListener("click", (event) => {
-      if (selectedFiles().length !== 1) {
-        state.filesError = t("files.chooseOneRename");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("rename", event.currentTarget);
-    });
-    el("files-rename-from-tags").addEventListener("click", (event) => {
-      if (!selectedFiles().length) {
-        state.filesError = t("files.chooseRenameFromTags");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("rename_from_tags", event.currentTarget, "paths");
-    });
+    mountFilesIslands();
     el("crate-rename-from-tags").addEventListener("click", (event) => {
       const crate = state.activeCrate;
       if (typeof crate !== "number") return;
-      openFilesDialog("rename_from_tags", event.currentTarget, "crate");
-    });
-    el("files-move").addEventListener("click", () => {
-      const selected = selectedFiles();
-      if (!selected.length) {
-        state.filesError = t("files.chooseMove");
-        renderFiles();
-        return;
-      }
-      state.filesPick = "move";
-      state.filesPickPaths = selected.map((entry) => entry.path);
-      state.filesError = "";
-      state.filesMessage = t("files.chooseDestination");
-      renderFiles();
-    });
-    el("files-move-folder").addEventListener("click", () => {
-      state.filesPick = "move_folder";
-      state.filesPickSource = state.filesPath;
-      state.filesError = "";
-      state.filesMessage = t("files.chooseDestination");
-      renderFiles();
-    });
-    el("files-move-here").addEventListener("click", (event) => {
-      openFilesDialog(state.filesPick === "move_folder" ? "move_folder" : "move", event.currentTarget);
-    });
-    el("files-pick-cancel").addEventListener("click", () => {
-      state.filesPick = null;
-      state.filesPickPaths = [];
-      state.filesPickSource = "";
-      state.filesMessage = "";
-      renderFiles();
-    });
-    el("files-replace").addEventListener("click", (event) => {
-      if (selectedFiles().length !== 1) {
-        state.filesError = t("files.chooseOneReplace");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("replace", event.currentTarget);
-    });
-    el("files-delete").addEventListener("click", (event) => {
-      if (!selectedFiles().length) {
-        state.filesError = t("files.chooseDelete");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("delete", event.currentTarget);
-    });
-    el("files-review").addEventListener("click", () => {
-      reviewFiles().catch((error2) => {
-        el("files-dialog-status").textContent = failureOf(error2).message;
-      });
-    });
-    el("files-confirm").addEventListener("click", () => {
-      confirmFiles().catch((error2) => {
-        el("files-dialog-status").textContent = failureOf(error2).message;
-      });
-    });
-    el("files-cancel").addEventListener("click", () => closeFilesDialog());
-    el("files-name").addEventListener("input", () => {
-      filesPreview = null;
-      syncFilesDialog();
-    });
-    el("files-replacement").addEventListener("input", () => {
-      filesPreview = null;
-      syncFilesDialog();
-    });
-    el("files-dialog").addEventListener("cancel", (event) => {
-      event.preventDefault();
-      closeFilesDialog();
+      startRenameFromTags(event.currentTarget, "crate");
     });
   }
   bridge.openMergeDialog = openMergeDialog;
@@ -29722,6 +30680,17 @@
     openWizard(true, trigger instanceof HTMLElement ? trigger : el("search"));
   }
   bridge.openSetup = openSetup;
+  bindCrateActions({
+    renameFromTags: (button) => {
+      const crate = state.activeCrate;
+      if (typeof crate !== "number") return;
+      openFilesDialog("rename_from_tags", button, "crate");
+    },
+    exportRekordbox: () => {
+      if (playlistCrate() == null) return;
+      requestRekordboxReport();
+    }
+  });
 
   // src/help.ts
   var kind = "bug";
@@ -29887,9 +30856,9 @@
     let release = null;
     const raw = body.latest;
     if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
-      const item5 = raw;
-      if (typeof item5.version === "string" && typeof item5.url === "string") {
-        release = { version: item5.version, url: item5.url, prerelease: item5.prerelease === true };
+      const item3 = raw;
+      if (typeof item3.version === "string" && typeof item3.url === "string") {
+        release = { version: item3.version, url: item3.url, prerelease: item3.prerelease === true };
       }
     }
     return {
@@ -30232,6 +31201,11 @@
       runFolderSync().catch((error2) => setNotice(failureOf(error2).message));
     });
   }
+  bindCrateActions({
+    folderSync: () => {
+      openFolderSyncDialog().catch((error2) => setNotice(failureOf(error2).message));
+    }
+  });
 
   // src/presets.ts
   var PREVIEW_DELAY_MS2 = 250;
@@ -30315,7 +31289,7 @@
   async function refreshActivePreset() {
     const id = state.activeCrate;
     if (id === "all" || !state.writable) return;
-    const crate = state.crates.find((item5) => item5.id === id);
+    const crate = state.crates.find((item3) => item3.id === id);
     try {
       const reply = await postJSON("/api/smart-preset", { action: "refresh", id });
       const message = t("presets.refreshed", {
@@ -30366,6 +31340,14 @@
       createPreset().catch((error2) => setNotice(failureOf(error2).message));
     });
   }
+  bindCrateActions({
+    preset: () => {
+      openPresetDialog().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    refresh: () => {
+      refreshActivePreset().catch((error2) => setNotice(failureOf(error2).message));
+    }
+  });
 
   // src/desktop-actions.ts
   var CLICKS = {
@@ -30520,6 +31502,12 @@
       paintDualChrome();
     });
   }
+  bindCrateActions({
+    split: toggleSplit,
+    saveView: () => {
+      saveFocusedView().catch((error2) => setNotice(failureOf(error2).message));
+    }
+  });
 
   // src/app.ts
   function wireSnapshots() {
