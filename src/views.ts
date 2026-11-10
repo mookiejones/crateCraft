@@ -68,9 +68,16 @@ import { CrateTree } from "./components/CrateTree";
 import { HistoryDetail } from "./components/HistoryDetail";
 import { HistorySessions } from "./components/HistorySessions";
 import { PlayButton } from "./components/PlayButton";
+import { TrackDetailPane } from "./components/TrackDetail";
 import { bindCrateActions, emitCrates } from "./crate-store";
 import { historyActions, notifyHistory } from "./context/HistoryContext";
+import { play } from "./player";
 import { playerStrings } from "./player-strings";
+import {
+  registerTrackListActions,
+  setTrackDetail,
+  type TrackSaveFields,
+} from "./track-list-store";
 import { buttonEl, inputEl, selectEl, setTooltip, textareaEl } from "./tooltip";
 import {
   chooseRelated,
@@ -97,6 +104,7 @@ import { codedText, formatNumber, messageParams, serverMessage, t, type MessageK
 let relatedRequest = 0;
 // Last track painted in the detail pane, so a language change can repaint it.
 let lastDetail: Track | null = null;
+let detailRoot: IslandRoot | null = null;
 let detailPlayRoot: IslandRoot | null = null;
 let crateListRoot: IslandRoot | null = null;
 let crateListHost: HTMLElement | null = null;
@@ -110,11 +118,18 @@ let sessionRoot: IslandRoot | null = null;
 let sessionHost: HTMLElement | null = null;
 
 function clearDetailIslands(): void {
+  detailRoot?.unmount();
+  detailRoot = null;
   detailPlayRoot?.unmount();
   detailPlayRoot = null;
   historyDetailRoot?.unmount();
   historyDetailRoot = null;
   historyDetailHost = null;
+}
+
+function paintDetailIsland(): void {
+  clearDetailIslands();
+  detailRoot = mountIsland(el("detail"), createElement(TrackDetailPane));
 }
 
 function remountIsland(host: HTMLElement, node: ReactNode, slot: {
@@ -698,11 +713,19 @@ export function renderList() {
   if (!view.some((track) => track.id === state.selectedId)) {
     if (!view.length) {
       state.selectedId = null;
-      const empty = document.createElement("p");
-      empty.className = "detail-empty";
-      empty.textContent = state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches");
-      clearDetailIslands();
-      el("detail").replaceChildren(empty);
+      if (state.mode === "history") {
+        const empty = document.createElement("p");
+        empty.className = "detail-empty";
+        empty.textContent = !state.historyId ? t("history.chooseSession") : t("list.noMatches");
+        clearDetailIslands();
+        el("detail").replaceChildren(empty);
+      } else {
+        setTrackDetail({
+          kind: "empty",
+          message: t("list.noMatches"),
+        });
+        paintDetailIsland();
+      }
     } else if (state.mode === "history") selectEntry(view[0]!.id);
     else selectTrack(view[0]!.id);
   }
@@ -795,25 +818,20 @@ export async function selectTrack(id: number) {
   syncRelinkButton();
   paintRows();
   const token = ++state.request;
-  const pending = document.createElement("p");
-  pending.className = "detail-empty";
-  pending.textContent = t("detail.reading");
-  clearDetailIslands();
-  el("detail").replaceChildren(pending);
+  setTrackDetail({ kind: "reading" });
+  paintDetailIsland();
   try {
     const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
     const payload = await readJSONOr<Track & ErrorBody>(response, {} as Track & ErrorBody);
     if (!response.ok) throw new Error(serverMessage(payload, t("detail.readFailed", { status: String(response.status) })));
     if (token !== state.request) return;
     if (payload.serato) applyStatus(payload.serato);
-    renderDetail(payload);
+    setTrackDetail({ kind: "track", track: payload });
+    paintDetailIsland();
   } catch (error) {
     if (token !== state.request) return;
-    const failure = document.createElement("p");
-    failure.className = "detail-error";
-    failure.textContent = failureOf(error).message;
-    clearDetailIslands();
-    el("detail").replaceChildren(failure);
+    setTrackDetail({ kind: "error", message: failureOf(error).message });
+    paintDetailIsland();
   }
 }
 
@@ -832,6 +850,8 @@ export function selectEntry(id: number) {
   notifyHistory();
   if (!state.entries.some((item) => item.id === id)) return;
   const host = el("detail");
+  detailRoot?.unmount();
+  detailRoot = null;
   detailPlayRoot?.unmount();
   detailPlayRoot = null;
   historyDetailRoot = remountIsland(host, createElement(HistoryDetail), {
@@ -1019,7 +1039,7 @@ function renderDetail(track: Track) {
   for (const control of form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | HTMLButtonElement>("input, select, textarea, button")) control.disabled = !writable;
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    saveTrack(track.id, form);
+    saveTrackFromForm(track.id, form);
   });
   body.append(form);
 
@@ -1722,8 +1742,7 @@ export function repaintViews(): void {
     if (state.selectedId != null) selectEntry(state.selectedId);
     return;
   }
-  const detail = lastDetail;
-  if (detail && detail.id === state.selectedId && el("detail").querySelector(".detail-body")) renderDetail(detail);
+  if (detailRoot) paintDetailIsland();
 }
 
 /**
@@ -1874,31 +1893,11 @@ export function lockDown(error: unknown) {
  * same track is selected again. A 409 locks the page.
  *
  * @param {number} id Asset id.
- * @param {HTMLFormElement} form Editor form built by renderDetail.
+ * @param {TrackSaveFields} fields Editor values from the React detail pane.
  * @returns {Promise<void>}
  */
-async function saveTrack(id: number, form: HTMLFormElement) {
-  const data = new FormData(form);
-  const bpm = data.get("bpm");
-  const fields = {
-    name: data.get("name") ?? "",
-    artist: data.get("artist") ?? "",
-    album: data.get("album") ?? "",
-    genre: data.get("genre") ?? "",
-    year: data.get("year") ?? "",
-    composer: data.get("composer") ?? "",
-    remixer: data.get("remixer") ?? "",
-    label: data.get("label") ?? "",
-    grouping: data.get("grouping") ?? "",
-    comments: data.get("comments") ?? "",
-    key: data.get("key") ?? "",
-    emoji: data.get("emoji") ?? "",
-    bpm: bpm === "" ? null : Number(bpm),
-    color: Number(data.get("color")),
-    rating: data.get("rating") === "" ? null : Number(data.get("rating")),
-    is_beatgrid_locked: form.querySelector<HTMLInputElement>("[name=is_beatgrid_locked]")!.checked,
-  };
-  if (bpm !== "" && Number.isNaN(fields.bpm)) {
+async function saveTrack(id: number, fields: TrackSaveFields) {
+  if (fields.bpm != null && Number.isNaN(fields.bpm)) {
     setNotice(t("detail.bpmNumber"));
     return;
   }
@@ -1911,6 +1910,30 @@ async function saveTrack(id: number, form: HTMLFormElement) {
     if (failureOf(error).status === 409) lockDown(error);
     else setNotice(failureOf(error).message);
   }
+}
+
+async function saveTrackFromForm(id: number, form: HTMLFormElement) {
+  const data = new FormData(form);
+  const bpm = data.get("bpm");
+  const fields: TrackSaveFields = {
+    name: String(data.get("name") ?? ""),
+    artist: String(data.get("artist") ?? ""),
+    album: String(data.get("album") ?? ""),
+    genre: String(data.get("genre") ?? ""),
+    year: String(data.get("year") ?? ""),
+    composer: String(data.get("composer") ?? ""),
+    remixer: String(data.get("remixer") ?? ""),
+    label: String(data.get("label") ?? ""),
+    grouping: String(data.get("grouping") ?? ""),
+    comments: String(data.get("comments") ?? ""),
+    key: String(data.get("key") ?? ""),
+    emoji: String(data.get("emoji") ?? ""),
+    bpm: bpm === "" ? null : Number(bpm),
+    color: Number(data.get("color")),
+    rating: data.get("rating") === "" ? null : Number(data.get("rating")),
+    is_beatgrid_locked: Boolean(form.querySelector<HTMLInputElement>("[name=is_beatgrid_locked]")?.checked),
+  };
+  await saveTrack(id, fields);
 }
 
 /**
@@ -2013,10 +2036,10 @@ async function removeTrack(id: number) {
  * @param {number} assetId Asset id.
  * @param {number} crateId Crate id.
  * @param {boolean} add True adds the membership.
- * @param {HTMLInputElement} input Checkbox to restore on failure.
- * @returns {Promise<void>}
+ * @param {HTMLInputElement} [input] Checkbox to restore on failure.
+ * @returns {Promise<boolean>} True when the membership write succeeded.
  */
-async function setMembership(assetId: number, crateId: number, add: boolean, input: HTMLInputElement) {
+async function setMembership(assetId: number, crateId: number, add: boolean, input?: HTMLInputElement): Promise<boolean> {
   try {
     const result = await postJSON("/api/crate", {
       action: add ? "add" : "remove",
@@ -2027,10 +2050,12 @@ async function setMembership(assetId: number, crateId: number, add: boolean, inp
     if (result.warning) setNotice(result.warning);
     await loadLibrary();
     selectTrack(assetId);
+    return true;
   } catch (error) {
-    input.checked = !add;
+    if (input) input.checked = !add;
     if (failureOf(error).status === 409) lockDown(error);
     else setNotice(failureOf(error).message);
+    return false;
   }
 }
 
@@ -2401,11 +2426,8 @@ export function setMode(mode: string) {
  */
 export function showFailure(error: unknown) {
   el("count").textContent = t("library.unavailable");
-  const failure = document.createElement("p");
-  failure.className = "detail-error";
-  failure.textContent = failureOf(error).message;
-  clearDetailIslands();
-  el("detail").replaceChildren(failure);
+  setTrackDetail({ kind: "error", message: failureOf(error).message });
+  paintDetailIsland();
 }
 
 /**
@@ -2618,6 +2640,24 @@ bridge.selectTrack = selectTrack;
 bridge.selectEntry = selectEntry;
 bridge.reloadLibrary = loadLibrary;
 bridge.lockDown = lockDown;
+
+registerTrackListActions({
+  selectTrack: (id) => {
+    void selectTrack(id);
+  },
+  selectEntry,
+  play,
+  saveTrack,
+  revealTrack,
+  prepareTrack,
+  relocateTrack,
+  removeTrack,
+  setMembership,
+  openInLibrary: (id) => {
+    void openInLibrary(id);
+  },
+  setNotice,
+});
 bindCrateActions({
   select: selectCrate,
   toggle: toggleCrate,

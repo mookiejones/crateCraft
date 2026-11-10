@@ -3,10 +3,11 @@
  *
  * Player is one domain. The crate rail is the next. Waveform zoom and
  * overview are another. Before a gig is a fourth. Files is a fifth.
- * History is a sixth. Settings is a seventh. Later screens add their own
- * context file and one wrapper here. This module reads those engines; it
- * does not own fetch, playback, crate writes, history loads, the folder
- * load, or the settings file.
+ * History is a sixth. Settings is a seventh. Track list selection and
+ * detail fields are an eighth. Later screens add their own context file
+ * and one wrapper here. This module reads those engines; it does not own
+ * fetch, playback, crate writes, history loads, the folder load, or the
+ * settings file.
  */
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -77,6 +78,10 @@ import {
   type SettingsContextValue,
 } from "../context/SettingsContext";
 import {
+  TrackListProvider as TrackListContextProvider,
+  type TrackListContextValue,
+} from "../context/TrackListContext";
+import {
   SEEK_STEP_LARGE_SECONDS,
   SEEK_STEP_SECONDS,
   canSkip,
@@ -114,6 +119,11 @@ import {
   subscribeSettings,
 } from "../settings";
 import { state } from "../state";
+import {
+  getTrackListActions,
+  readTrackList,
+  subscribeTrackList,
+} from "../track-list-store";
 
 function readPlayerValue(): PlayerContextValue {
   return {
@@ -402,12 +412,40 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   return <SettingsContextProvider value={current}>{children}</SettingsContextProvider>;
 }
 
+function readTrackListValue(): TrackListContextValue {
+  return {
+    ...readTrackList(),
+    ...getTrackListActions(),
+  };
+}
+
+/**
+ * Mount the list and detail domain at the root of one React island.
+ *
+ * Updates are flushed so a selection change paints in the same turn.
+ *
+ * @param children Island that calls `useTrackList`.
+ */
+export function TrackListRoot({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readTrackListValue);
+  useEffect(() => {
+    return subscribeTrackList(() => {
+      flushSync(() => {
+        setValue(readTrackListValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <TrackListContextProvider value={current}>{children}</TrackListContextProvider>;
+}
+
 /**
  * Nest every domain provider.
  *
  * Player is the first domain. Crates wrap inside it. Waveform wraps
  * inside crates. Before a gig wraps inside waveform. Files wraps inside
  * Before a gig. History wraps inside Files. Settings wraps inside History.
+ * Track list wraps inside Settings.
  *
  * @param children Page island.
  */
@@ -419,7 +457,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
           <GigProvider>
             <FilesProvider>
               <HistoryProvider>
-                <SettingsProvider>{children}</SettingsProvider>
+                <SettingsProvider>
+                  <TrackListRoot>{children}</TrackListRoot>
+                </SettingsProvider>
               </HistoryProvider>
             </FilesProvider>
           </GigProvider>

@@ -203,7 +203,7 @@ class TokenSheetTests(unittest.TestCase):
         self.assertEqual(HEX_COLOR.findall(text), [])
         self.assertNotIn("marginTop", source)
         self.assertNotIn("style.color", source)
-        self.assertIn('strong.className = "bpm"', text)
+        self.assertIn('className: key === "column.bpm" ? "bpm"', text)
         self.assertIn('"swatch swatch-lg"', text)
         self.assertIn("paneSpacer.style.height", text)
         self.assertIn("paneRows.style.transform", text)

@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners8 = [], signal = this.signal = {
+        var listeners9 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners8.push(listener);
+            listeners9.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners8.forEach(function(listener) {
+          listeners9.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners8 = currentEntangledListeners;
+          var listeners9 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners8.length; i++) (0, listeners8[i])();
+          for (var i = 0; i < listeners9.length; i++) (0, listeners9[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners8 = [], thenableWithOverride = {
+        var listeners9 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners8.push(resolve);
+            listeners9.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners8.length; i++) (0, listeners8[i])(result);
+            for (var i = 0; i < listeners9.length; i++) (0, listeners9[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners8.length; error2++)
-              (0, listeners8[error2])(void 0);
+            for (error2 = 0; error2 < listeners9.length; error2++)
+              (0, listeners9[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners8 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners9 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners8.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners9.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners8.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners9.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners8;
+          if (3 === targetFiber.tag) return listeners9;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners8 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners9 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners8.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners9.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners8.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners9.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners8.length && dispatchQueue.push({ event, listeners: listeners8 });
+        0 !== listeners9.length && dispatchQueue.push({ event, listeners: listeners9 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners8 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners8, type, listener, optionsOrUseCapture)) {
+        var listeners9 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners9, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners8.push({
+          listeners9.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners8;
+        this._eventListeners = listeners9;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners8 = this._eventListeners;
-        if (null !== listeners8 && (listener = indexOfEventListener(
-          listeners8,
+        var listeners9 = this._eventListeners;
+        if (null !== listeners9 && (listener = indexOfEventListener(
+          listeners9,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners8[listener];
+          var _listeners$index = listeners9[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners8.splice(listener, 1);
+          listeners9.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -18823,14 +18823,14 @@
   }
 
   // src/gig.ts
-  var import_react17 = __toESM(require_react(), 1);
+  var import_react18 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom4 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react16 = __toESM(require_react(), 1);
+  var import_react17 = __toESM(require_react(), 1);
   var import_react_dom3 = __toESM(require_react_dom(), 1);
 
   // src/context/CrateContext.tsx
@@ -18993,7 +18993,7 @@
     const end = HEADER_BYTES + detailBytes + overviewBytes + seratoBytes;
     if (end !== bytes.byteLength) return null;
     let offset = HEADER_BYTES;
-    const detail = bytes.slice(offset, offset + detailBytes);
+    const detail2 = bytes.slice(offset, offset + detailBytes);
     offset += detailBytes;
     const overview = bytes.slice(offset, offset + overviewBytes);
     offset += overviewBytes;
@@ -19005,7 +19005,7 @@
       sampleRate,
       pointsPerSecond: detailHzMilli / 1e3,
       durationMs,
-      detail,
+      detail: detail2,
       overview,
       serato,
       detailCount,
@@ -19151,8 +19151,8 @@
      * @param pointCount N.
      * @param pointsPerSecond Detail rate from the header. 150 in SWF1.
      */
-    constructor(detail, pointCount, pointsPerSecond) {
-      this.detail = detail;
+    constructor(detail2, pointCount, pointsPerSecond) {
+      this.detail = detail2;
       this.pointCount = pointCount;
       this.pointsPerSecond = pointsPerSecond;
     }
@@ -19301,7 +19301,7 @@
     const playX = Math.round(Math.min(width - 1, Math.max(0, xOf(playheadSeconds))));
     fillSpan(pixels, width, height, playX, playX + 1, 0, height, PLAYHEAD_COLOR, 1);
   }
-  function renderTile(detail, pointCount, pointsPerSecond, startSeconds, tileSeconds, width, height, dpr) {
+  function renderTile(detail2, pointCount, pointsPerSecond, startSeconds, tileSeconds, width, height, dpr) {
     const pixels = new Uint8ClampedArray(width * height * 4);
     fillBackground(pixels);
     let pointsRead = 0;
@@ -19324,12 +19324,12 @@
       for (let index = i0; index < i1; index += 1) {
         pointsRead += 1;
         const offset = index * 6;
-        lowPeak = Math.max(lowPeak, detail[offset] ?? 0);
-        lowRms = Math.max(lowRms, detail[offset + 1] ?? 0);
-        midPeak = Math.max(midPeak, detail[offset + 2] ?? 0);
-        midRms = Math.max(midRms, detail[offset + 3] ?? 0);
-        highPeak = Math.max(highPeak, detail[offset + 4] ?? 0);
-        highRms = Math.max(highRms, detail[offset + 5] ?? 0);
+        lowPeak = Math.max(lowPeak, detail2[offset] ?? 0);
+        lowRms = Math.max(lowRms, detail2[offset + 1] ?? 0);
+        midPeak = Math.max(midPeak, detail2[offset + 2] ?? 0);
+        midRms = Math.max(midRms, detail2[offset + 3] ?? 0);
+        highPeak = Math.max(highPeak, detail2[offset + 4] ?? 0);
+        highRms = Math.max(highRms, detail2[offset + 5] ?? 0);
       }
       paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
     }
@@ -20542,8 +20542,8 @@
   function keepCopy(name) {
     return spec("tooltip.keepCopy", { name });
   }
-  function quickOpenHit(kind2, title2, detail) {
-    if (detail) return spec("tooltip.quickOpenHitDetail", { kind: kind2, title: title2, detail });
+  function quickOpenHit(kind2, title2, detail2) {
+    if (detail2) return spec("tooltip.quickOpenHitDetail", { kind: kind2, title: title2, detail: detail2 });
     return spec("tooltip.quickOpenHit", { kind: kind2, title: title2 });
   }
 
@@ -20595,6 +20595,11 @@
     writeTooltip(element);
     element.removeAttribute("title");
     if (current === element) syncOpenTooltip();
+  }
+  function tooltipRef(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
   }
   function buttonEl(spec2) {
     const element = document.createElement("button");
@@ -20951,6 +20956,24 @@
     return value;
   }
 
+  // src/context/TrackListContext.tsx
+  var import_react10 = __toESM(require_react(), 1);
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
+  var TrackListContext = (0, import_react10.createContext)(null);
+  function TrackListProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(TrackListContext, { value, children });
+  }
+  function useTrackList() {
+    const value = (0, import_react10.useContext)(TrackListContext);
+    if (value === null) {
+      throw new Error("useTrackList must be used within TrackListProvider");
+    }
+    return value;
+  }
+
   // src/cue-view.ts
   var CUE_SLOT_COUNT = 8;
   function cueSlotVar(index) {
@@ -21035,39 +21058,6 @@
     }
     return diffs;
   }
-  function appendCueSlots(section, cues2) {
-    const slots = cueSlots(cues2);
-    for (let slot = 0; slot < slots.length; slot += 1) {
-      section.append(paintCueSlot(slot, slots[slot] ?? null));
-    }
-    for (const extra of extraCues(cues2)) {
-      const index = Number(extra.index);
-      const slot = Number.isInteger(index) ? index : -1;
-      section.append(paintCueSlot(slot, extra));
-    }
-  }
-  function paintCueSlot(slot, cue) {
-    const row = document.createElement("div");
-    row.className = cue ? "marker" : "marker marker-empty";
-    const number = document.createElement("span");
-    number.className = "marker-slot";
-    number.textContent = slot >= 0 ? String(slot + 1) : "";
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    const color = slotColor(slot, cue?.color);
-    if (color) swatch.style.background = color;
-    const time = document.createElement("span");
-    time.textContent = cue ? formatCueTime(cue.start_ms) : "—";
-    const name = document.createElement("span");
-    const named = cue && typeof cue.name === "string" ? cue.name.trim() : "";
-    if (cue) {
-      name.textContent = named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 });
-    } else {
-      name.textContent = t("markers.cueEmpty");
-    }
-    row.append(number, swatch, time, name);
-    return row;
-  }
   function paintCueDiffRow(diff) {
     const row = document.createElement("p");
     row.className = "cue-diff";
@@ -21109,10 +21099,10 @@
   }
 
   // src/player.ts
-  var import_react13 = __toESM(require_react(), 1);
+  var import_react14 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react10 = __toESM(require_react(), 1);
+  var import_react11 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -21179,8 +21169,8 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef(spec2) {
+  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -21207,25 +21197,25 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
       "button",
       {
         type: "button",
-        ref: tooltipRef(spec2),
+        ref: tooltipRef2(spec2),
         className,
         disabled,
         "aria-label": labelled,
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef2(spec2) {
+  var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -21236,11 +21226,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_jsx_runtime11.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_jsx_runtime12.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
         "button",
         {
           type: "button",
@@ -21260,7 +21250,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react10.useState)(null);
+    const [hold, setHold] = (0, import_react11.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -21287,18 +21277,18 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
           "button",
           {
             type: "button",
-            ref: tooltipRef2(tips.previous),
+            ref: tooltipRef3(tips.previous),
             className: "player-toggle",
             disabled: !player2.canSkipPrevious,
             "aria-label": playerStrings.previous,
@@ -21306,12 +21296,12 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
           "button",
           {
             type: "button",
-            ref: tooltipRef2(tips.next),
+            ref: tooltipRef3(tips.next),
             className: "player-toggle",
             disabled: !player2.canSkipNext,
             "aria-label": playerStrings.next,
@@ -21320,16 +21310,16 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
             "input",
             {
-              ref: tooltipRef2(tips.seek),
+              ref: tooltipRef3(tips.seek),
               type: "range",
               className: "player-range",
               min: 0,
@@ -21345,19 +21335,19 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
           "input",
           {
-            ref: tooltipRef2(tips.volume),
+            ref: tooltipRef3(tips.volume),
             type: "range",
             min: 0,
             max: 1,
@@ -21371,12 +21361,12 @@
   }
 
   // src/waveform-view.ts
-  var import_react12 = __toESM(require_react(), 1);
+  var import_react13 = __toESM(require_react(), 1);
 
   // src/components/WaveformPanel.tsx
-  var import_react11 = __toESM(require_react(), 1);
-  var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef3(spec2) {
+  var import_react12 = __toESM(require_react(), 1);
+  var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef4(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -21401,19 +21391,19 @@
     const wave = useWaveform();
     const override = useWaveformClockOverride();
     const clock = override ?? clockFromPlayer(player2);
-    const detailRef = (0, import_react11.useRef)(null);
-    const overviewCanvasRef = (0, import_react11.useRef)(null);
-    const overviewHitRef = (0, import_react11.useRef)(null);
+    const detailRef = (0, import_react12.useRef)(null);
+    const overviewCanvasRef = (0, import_react12.useRef)(null);
+    const overviewHitRef = (0, import_react12.useRef)(null);
     engine.setClock(clock);
     engine.setPublish(wave.publish);
-    (0, import_react11.useLayoutEffect)(() => {
-      const detail = detailRef.current;
+    (0, import_react12.useLayoutEffect)(() => {
+      const detail2 = detailRef.current;
       const overviewCanvas = overviewCanvasRef.current;
       const overviewHit = overviewHitRef.current;
-      if (!detail || !overviewCanvas || !overviewHit) return;
+      if (!detail2 || !overviewCanvas || !overviewHit) return;
       engine.attach({
         host,
-        detail,
+        detail: detail2,
         overviewCanvas,
         overviewHit
       });
@@ -21421,15 +21411,15 @@
         engine.detach();
       };
     }, [engine, host]);
-    (0, import_react11.useEffect)(() => {
+    (0, import_react12.useEffect)(() => {
       if (override) return;
       engine.setTrack(player2.trackId);
     }, [engine, override, player2.trackId]);
-    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(import_jsx_runtime12.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "player-wave-main", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "player-wave-main", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           WaveformOverview,
           {
             canvasRef: overviewCanvasRef,
@@ -21440,7 +21430,7 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
         WaveformZoom,
         {
           canZoomIn: wave.canZoomIn,
@@ -21456,9 +21446,9 @@
     canvasRef,
     phase: phase2
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
     ] });
   }
   function WaveformOverview({
@@ -21468,7 +21458,7 @@
     source,
     pps
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
       "div",
       {
         ref: (element) => {
@@ -21483,7 +21473,7 @@
         "aria-orientation": "horizontal",
         "data-pps": String(pps),
         "data-waveform-overview": source || void 0,
-        children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
       }
     );
   }
@@ -21494,12 +21484,12 @@
     onZoomIn,
     onZoomOut
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
         "button",
         {
           type: "button",
-          ref: tooltipRef3(tips.zoomIn),
+          ref: tooltipRef4(tips.zoomIn),
           className: "waveform-zoom-button",
           disabled: !canZoomIn,
           "aria-label": playerStrings.zoomIn,
@@ -21507,11 +21497,11 @@
           children: "+"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
         "button",
         {
           type: "button",
-          ref: tooltipRef3(tips.zoomOut),
+          ref: tooltipRef4(tips.zoomOut),
           className: "waveform-zoom-button",
           disabled: !canZoomOut,
           "aria-label": playerStrings.zoomOut,
@@ -21541,8 +21531,8 @@
     host.classList.add("player-wave");
     host.hidden = true;
     if (hooks) engine.setClock(hooks);
-    const panel = (0, import_react12.createElement)(WaveformPanel, { engine, host });
-    const tree = hooks ? (0, import_react12.createElement)(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
+    const panel = (0, import_react13.createElement)(WaveformPanel, { engine, host });
+    const tree = hooks ? (0, import_react13.createElement)(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
     const root = mountIsland(host, tree);
     engine.bindRoot(root);
     return engine;
@@ -22225,7 +22215,7 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react13.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react14.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -22719,10 +22709,178 @@
   }
 
   // src/settings.ts
-  var import_react15 = __toESM(require_react(), 1);
+  var import_react16 = __toESM(require_react(), 1);
 
   // src/virtual-scroll.ts
-  var import_react14 = __toESM(require_react(), 1);
+  var import_react15 = __toESM(require_react(), 1);
+
+  // src/components/TrackRow.tsx
+  var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1);
+  function Cell({ text: text2, numeric = false }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: numeric ? "cell num" : "cell", children: text2 });
+  }
+  function TrackRow({ track, selected, onFocusList }) {
+    const list = useTrackList();
+    const labelName = track.name || playerStrings.untitled;
+    function select() {
+      if (track.entry) list.selectEntry(track.id);
+      else void list.selectTrack(track.id);
+      onFocusList();
+    }
+    function onClick() {
+      select();
+    }
+    function onDoubleClick() {
+      if (!track.entry) list.play(track.id);
+    }
+    function onPlayClick(event) {
+      event.stopPropagation();
+      void list.selectTrack(track.id);
+      onFocusList();
+    }
+    const history = Boolean(track.entry);
+    const bpmText = track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 });
+    const hex = colorHex(track.color);
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+      "div",
+      {
+        className: "row",
+        role: "option",
+        "aria-selected": selected,
+        "data-id": String(track.id),
+        ref: tooltipRef(selectRow(track.name || "Untitled")),
+        onClick,
+        onDoubleClick,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "cell", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { className: "title-line", children: [
+            !history && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              PlayButton,
+              {
+                variant: "row",
+                trackId: track.id,
+                name: labelName,
+                onClickExtra: onPlayClick
+              }
+            ) }),
+            hex ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+            track.emoji ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: track.emoji }) : null,
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "title", children: track.name || t("track.untitled") }),
+            track.offline ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
+            track.stems ? /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "missing-word", children: t("track.stemsBadge") }) : null
+          ] }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "cell", children: track.artist ?? "" }),
+          history ? /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(import_jsx_runtime14.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: track.deck || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: track.played || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: clockLabel(track.start), numeric: true })
+          ] }) : /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(import_jsx_runtime14.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: bpmText, numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: track.key ?? "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: energyLabel(track.rating), numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: track.genre ?? "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: dateLabel(track.time_added), numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: dateLabel(track.last_played), numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: track.play_count == null ? "" : formatNumber(Number(track.play_count)), numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Cell, { text: lengthLabel(track.length_ms), numeric: true })
+          ] })
+        ]
+      }
+    );
+  }
+
+  // src/components/TrackListWindow.tsx
+  var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
+  function TrackListWindow({ pane, start, end, onFocusList }) {
+    const list = useTrackList();
+    const view = pane === "b" ? list.viewB : list.view;
+    if (!view.length) {
+      const empty = list.duplicatesPending ? t("list.readingDuplicates") : t("list.noMatches");
+      return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { className: "empty-list", children: empty });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(import_jsx_runtime15.Fragment, { children: view.slice(start, end).map((track) => /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+      TrackRow,
+      {
+        track,
+        selected: track.id === list.selectedId,
+        onFocusList
+      },
+      track.id
+    )) });
+  }
+
+  // src/track-list-store.ts
+  var listeners6 = /* @__PURE__ */ new Set();
+  var detail = { kind: "none" };
+  var actions2 = {
+    selectTrack(id) {
+      void bridge.selectTrack(id);
+    },
+    selectEntry(id) {
+      bridge.selectEntry(id);
+    },
+    play,
+    async saveTrack() {
+    },
+    async revealTrack() {
+    },
+    async prepareTrack() {
+    },
+    async relocateTrack() {
+    },
+    async removeTrack() {
+    },
+    async setMembership() {
+      return false;
+    },
+    openInLibrary() {
+    },
+    setNotice() {
+    }
+  };
+  function duplicateGroupSelected() {
+    if (state.mode !== "duplicates" || state.selectedId == null) return false;
+    return (state.duplicateGroups || []).some((group) => (group.ids || []).includes(state.selectedId));
+  }
+  function readTrackList() {
+    return {
+      selectedId: state.selectedId,
+      mode: state.mode,
+      writable: state.writable,
+      splitCrates: state.splitCrates,
+      focusedPane: state.focusedPane,
+      view: state.view || [],
+      viewB: state.viewB || [],
+      crates: state.crates,
+      tracks: state.tracks,
+      space: state.space,
+      serato: state.serato,
+      duplicateGroupSelected: duplicateGroupSelected(),
+      duplicatesPending: state.mode === "duplicates" && !state.duplicateIds,
+      locale: getLocale(),
+      detail
+    };
+  }
+  function getTrackListActions() {
+    return actions2;
+  }
+  function registerTrackListActions(next2) {
+    actions2 = next2;
+  }
+  function setTrackDetail(next2) {
+    detail = next2;
+    emitTrackList();
+  }
+  function emitTrackList() {
+    for (const listener of listeners6) listener();
+  }
+  function subscribeTrackList(listener) {
+    listeners6.add(listener);
+    return () => {
+      listeners6.delete(listener);
+    };
+  }
+
+  // src/virtual-scroll.ts
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -22733,13 +22891,7 @@
   spacerB.className = "spacer";
   rowsB.className = "rows";
   spacerB.append(rowsB);
-  var playRoots = /* @__PURE__ */ new WeakMap();
-  function unmountPlayButtons(paneRows) {
-    const roots = playRoots.get(paneRows);
-    if (!roots) return;
-    for (const root of roots) root.unmount();
-    playRoots.set(paneRows, []);
-  }
+  var paneRoots = /* @__PURE__ */ new WeakMap();
   function mountTrackList() {
     el("list").append(spacer);
   }
@@ -22758,116 +22910,21 @@
     const end = Math.min(view.length, Math.ceil((list.scrollTop + height) / ROW) + 6);
     paneSpacer.style.height = `${view.length * ROW}px`;
     paneRows.style.transform = `translateY(${start * ROW}px)`;
-    unmountPlayButtons(paneRows);
-    paneRows.replaceChildren();
-    if (!view.length) {
-      const empty = document.createElement("p");
-      empty.className = "empty-list";
-      empty.textContent = state.mode === "duplicates" && !state.duplicateIds ? t("list.readingDuplicates") : t("list.noMatches");
-      paneRows.append(empty);
-      return;
-    }
-    for (let index = start; index < end; index += 1) {
-      const track = view[index];
-      const button = document.createElement("div");
-      button.className = "row";
-      button.setAttribute("role", "option");
-      button.setAttribute("aria-selected", String(track.id === state.selectedId));
-      button.dataset.id = String(track.id);
-      setTooltip(button, selectRow(track.name || "Untitled"));
-      const titleCell = document.createElement("span");
-      titleCell.className = "cell";
-      const line = document.createElement("span");
-      line.className = "title-line";
-      if (!track.entry) {
-        const labelName = track.name || playerStrings.untitled;
-        const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react14.createElement)(PlayButton, {
-          variant: "row",
-          trackId: track.id,
-          name: labelName,
-          onClickExtra: () => {
-            bridge.selectTrack(track.id);
-            list.focus({ preventScroll: true });
-          }
-        }));
-        const mounted = playRoots.get(paneRows) ?? [];
-        mounted.push(root);
-        playRoots.set(paneRows, mounted);
-        line.append(playHost);
-      }
-      const hex = colorHex(track.color);
-      if (hex) {
-        const swatch = document.createElement("span");
-        swatch.className = "swatch";
-        swatch.style.background = hex;
-        line.append(swatch);
-      }
-      if (track.emoji) {
-        const emoji = document.createElement("span");
-        emoji.textContent = track.emoji;
-        line.append(emoji);
-      }
-      const title2 = document.createElement("span");
-      title2.className = "title";
-      title2.textContent = track.name || t("track.untitled");
-      line.append(title2);
-      if (track.offline) {
-        const offline = document.createElement("span");
-        offline.className = "offline-word";
-        offline.textContent = t("track.offlineBadge");
-        line.append(offline);
-      } else if (track.missing) {
-        const missing = document.createElement("span");
-        missing.className = "missing-word";
-        missing.textContent = t("track.missingBadge");
-        line.append(missing);
-      }
-      if (track.stems) {
-        const stems = document.createElement("span");
-        stems.className = "missing-word";
-        stems.textContent = t("track.stemsBadge");
-        line.append(stems);
-      }
-      titleCell.append(line);
-      const artist2 = document.createElement("span");
-      artist2.className = "cell";
-      artist2.textContent = track.artist ?? "";
-      const cells = [];
-      const add = (text2, numeric = false) => {
-        const cell = document.createElement("span");
-        cell.className = numeric ? "cell num" : "cell";
-        cell.textContent = text2;
-        cells.push(cell);
-      };
-      if (track.entry) {
-        add(track.deck || "");
-        add(track.played || "");
-        add(clockLabel(track.start), true);
-      } else {
-        add(
-          track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 }),
-          true
-        );
-        add(track.key ?? "");
-        add(energyLabel(track.rating), true);
-        add(track.genre ?? "");
-        add(dateLabel(track.time_added), true);
-        add(dateLabel(track.last_played), true);
-        add(track.play_count == null ? "" : formatNumber(Number(track.play_count)), true);
-        add(lengthLabel(track.length_ms), true);
-      }
-      button.append(titleCell, artist2, ...cells);
-      button.addEventListener("click", () => {
-        if (track.entry) bridge.selectEntry(track.id);
-        else bridge.selectTrack(track.id);
-        list.focus({ preventScroll: true });
-      });
-      button.addEventListener("dblclick", () => {
-        if (!track.entry) play(track.id);
-      });
-      paneRows.append(button);
-    }
+    emitTrackList();
+    const pane = list.id === "list-b" ? "b" : "a";
+    const root = mountIsland(
+      paneRows,
+      (0, import_react15.createElement)(TrackListWindow, {
+        pane,
+        start,
+        end,
+        onFocusList: () => {
+          list.focus({ preventScroll: true });
+        }
+      }),
+      paneRoots.get(paneRows)
+    );
+    paneRoots.set(paneRows, root);
   }
   function moveTrackList(delta) {
     const list = focusedList();
@@ -22930,14 +22987,6 @@
   function wireVirtualScroll() {
     wireListKeys(el("list"));
     wireListKeys(el("list-b"));
-    let paintedId = null;
-    let paintedPlaying = false;
-    subscribe((next2) => {
-      if (next2.trackId === paintedId && next2.playing === paintedPlaying) return;
-      paintedId = next2.trackId;
-      paintedPlaying = next2.playing;
-      paintRows();
-    });
   }
 
   // src/quick-open.ts
@@ -23083,8 +23132,8 @@
     const file = track.file ?? "";
     const score = scoreQuery(query, `${title2} ${artist2} ${album} ${file}`);
     if (score == null) return null;
-    const detail = [artist2, album].filter((part) => part !== "").join(" · ");
-    return { kind: "track", key: `track:${track.id}`, title: title2, detail, score, trackId: track.id };
+    const detail2 = [artist2, album].filter((part) => part !== "").join(" · ");
+    return { kind: "track", key: `track:${track.id}`, title: title2, detail: detail2, score, trackId: track.id };
   }
   function fileHits(payload) {
     const rows2 = Array.isArray(payload.entries) ? payload.entries : [];
@@ -23160,10 +23209,10 @@
       const title2 = document.createElement("span");
       title2.className = "quick-open-name";
       title2.textContent = hit.title;
-      const detail = document.createElement("span");
-      detail.className = "quick-open-detail";
-      detail.textContent = hit.detail;
-      button.append(kind2, title2, detail);
+      const detail2 = document.createElement("span");
+      detail2.className = "quick-open-detail";
+      detail2.textContent = hit.detail;
+      button.append(kind2, title2, detail2);
       button.addEventListener("click", () => {
         active = index;
         void activate(hit);
@@ -23692,14 +23741,14 @@
   }
 
   // src/components/SettingsPanel.tsx
-  var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
   var COLORWAY_KEY = {
     "serato-like": "settings.colorway.seratoLike",
     "dark-club": "settings.colorway.darkClub",
     light: "settings.colorway.light",
     classic: "settings.colorway.classic"
   };
-  function tooltipRef4(spec2) {
+  function tooltipRef5(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -23711,22 +23760,22 @@
   }
   function CheatSheet() {
     const groups = cheatSheetModel();
-    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { id: "shortcuts-section", className: "shortcuts-section", "aria-labelledby": "shortcuts-title", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { id: "shortcuts-title", tabIndex: -1, ref: tooltipRef4(tips.shortcuts), children: t("shortcuts.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "shortcuts-intro", children: t("shortcuts.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { id: "shortcuts-body", children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { children: t(group.headingKey) }),
-        group.playNote ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "dialog-note", children: t("shortcuts.playNote") }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("table", { className: "shortcut-table", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("tr", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("th", { scope: "col", children: t("shortcuts.action") }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("th", { scope: "col", children: t("shortcuts.key") })
+    return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { id: "shortcuts-section", className: "shortcuts-section", "aria-labelledby": "shortcuts-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { id: "shortcuts-title", tabIndex: -1, ref: tooltipRef5(tips.shortcuts), children: t("shortcuts.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { id: "shortcuts-intro", children: t("shortcuts.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { id: "shortcuts-body", children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { children: t(group.headingKey) }),
+        group.playNote ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "dialog-note", children: t("shortcuts.playNote") }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("table", { className: "shortcut-table", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { scope: "col", children: t("shortcuts.action") }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { scope: "col", children: t("shortcuts.key") })
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("tbody", { children: group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("tr", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("th", { scope: "row", children: t(row.actionKey) }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("td", { children: row.chords.map((chord, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("tbody", { children: group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { scope: "row", children: t(row.actionKey) }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { children: row.chords.map((chord, index) => /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { children: [
               index > 0 ? " or " : null,
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("kbd", { children: chordLabel(chord) })
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("kbd", { children: chordLabel(chord) })
             ] }, `${row.id}-${index}`)) })
           ] }, row.id)) })
         ] })
@@ -23736,14 +23785,14 @@
   function SettingsPanel() {
     const settings = useSettings();
     const preview = `/img/icons/placeholder-${settings.colorway}.svg`;
-    return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { "data-settings-react": "true", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { id: "settings-title", children: t("settings.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { "data-settings-react": "true", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h2", { id: "settings-title", children: t("settings.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "input",
           {
             id: "telemetry-toggle",
-            ref: tooltipRef4(tips.telemetry),
+            ref: tooltipRef5(tips.telemetry),
             type: "checkbox",
             checked: settings.telemetryOn,
             disabled: settings.sharingBusy,
@@ -23752,15 +23801,15 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.share") })
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: t("settings.share") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "telemetry-note", className: "dialog-note", children: telemetryNote() }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { id: "telemetry-note", className: "dialog-note", children: telemetryNote() }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "input",
           {
             id: "update-toggle",
-            ref: tooltipRef4(tips.updateToggle),
+            ref: tooltipRef5(tips.updateToggle),
             type: "checkbox",
             checked: settings.updateEnabled,
             disabled: settings.updateBusy,
@@ -23769,14 +23818,14 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.updates") })
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: t("settings.updates") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "input",
           {
             id: "update-prereleases",
-            ref: tooltipRef4(tips.updatePrereleases),
+            ref: tooltipRef5(tips.updatePrereleases),
             type: "checkbox",
             checked: settings.updatePrereleases,
             disabled: settings.updatePrereleasesDisabled || settings.updateBusy,
@@ -23785,26 +23834,26 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.updatesPrereleases") })
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: t("settings.updatesPrereleases") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "update-status", className: "dialog-note", role: "status", "aria-live": "polite", children: settings.updateStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "colorway-row", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "settings-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.colorway") }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { id: "update-status", className: "dialog-note", role: "status", "aria-live": "polite", children: settings.updateStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "colorway-row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("label", { className: "settings-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: t("settings.colorway") }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
             "select",
             {
               id: "colorway-select",
-              ref: tooltipRef4(tips.colorway),
+              ref: tooltipRef5(tips.colorway),
               value: settings.colorway,
               onChange: (event) => {
                 void settings.saveColorway(event.currentTarget.value);
               },
-              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
+              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "img",
           {
             id: "colorway-preview",
@@ -23816,12 +23865,12 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "input",
           {
             id: "icon-follows-theme",
-            ref: tooltipRef4(tips.iconFollowsTheme),
+            ref: tooltipRef5(tips.iconFollowsTheme),
             type: "checkbox",
             checked: settings.iconFollowsTheme,
             onChange: (event) => {
@@ -23829,46 +23878,46 @@
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.iconFollowsTheme") })
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: t("settings.iconFollowsTheme") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "icon-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.iconStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "settings-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: t("settings.language") }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { id: "icon-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.iconStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("label", { className: "settings-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: t("settings.language") }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(
           "select",
           {
             id: "language-select",
-            ref: tooltipRef4(tips.language),
+            ref: tooltipRef5(tips.language),
             value: settings.language,
             onChange: (event) => {
               void settings.saveLanguage(event.currentTarget.value);
             },
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "", children: t("settings.languageSystem") }),
-              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("option", { value: "", children: t("settings.languageSystem") }),
+              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
             ]
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "language-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.languageStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CheatSheet, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "about", "aria-labelledby": "about-title", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { id: "about-title", children: t("settings.about") }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "about-version", className: "about-version", children: settings.aboutVersion }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { id: "language-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.languageStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(CheatSheet, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { className: "about", "aria-labelledby": "about-title", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { id: "about-title", children: t("settings.about") }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { id: "about-version", className: "about-version", children: settings.aboutVersion }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "a",
           {
             id: "about-github",
-            ref: tooltipRef4(tips.helpGithub),
+            ref: tooltipRef5(tips.helpGithub),
             href: "https://github.com/mookiejones/crateCraft",
             children: t("help.github")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "button",
           {
             id: "copy-version",
-            ref: tooltipRef4(tips.copyVersion),
+            ref: tooltipRef5(tips.copyVersion),
             type: "button",
             onClick: () => {
               void settings.copyVersion();
@@ -23876,25 +23925,25 @@
             children: t("settings.copyVersion")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "version-copy-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { id: "version-copy-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "dialog-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "button",
           {
             id: "rerun-wizard",
-            ref: tooltipRef4(tips.rerunWizard),
+            ref: tooltipRef5(tips.rerunWizard),
             className: "wizard-quiet",
             type: "button",
             onClick: () => settings.rerunSetup(),
             children: t("settings.rerunSetup")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "button",
           {
             id: "open-logs",
-            ref: tooltipRef4(tips.openLogs),
+            ref: tooltipRef5(tips.openLogs),
             type: "button",
             disabled: settings.logsBusy,
             onClick: () => {
@@ -23903,11 +23952,11 @@
             children: t("settings.openLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "button",
           {
             id: "copy-logs",
-            ref: tooltipRef4(tips.copyLogs),
+            ref: tooltipRef5(tips.copyLogs),
             type: "button",
             disabled: settings.logsBusy,
             onClick: () => {
@@ -23916,23 +23965,23 @@
             children: t("settings.copyLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
           "button",
           {
             id: "settings-close",
-            ref: tooltipRef4(tips.settingsClose),
+            ref: tooltipRef5(tips.settingsClose),
             type: "button",
             onClick: () => settings.close(),
             children: t("common.close")
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { id: "settings-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { id: "settings-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
         "textarea",
         {
           id: "log-fallback",
-          ref: tooltipRef4(tips.logFallback),
+          ref: tooltipRef5(tips.logFallback),
           className: "log-fallback",
           readOnly: true,
           hidden: settings.logFallbackHidden,
@@ -23972,7 +24021,7 @@
     updateStatus: ""
   };
   var snapshot = { ...DEFAULT_SNAPSHOT };
-  var listeners6 = /* @__PURE__ */ new Set();
+  var listeners7 = /* @__PURE__ */ new Set();
   var islandRoot = null;
   var appearanceSync = false;
   var rerunSetupHandler = null;
@@ -23994,13 +24043,13 @@
     return snapshot;
   }
   function subscribeSettings(listener) {
-    listeners6.add(listener);
+    listeners7.add(listener);
     return () => {
-      listeners6.delete(listener);
+      listeners7.delete(listener);
     };
   }
   function notifySettings() {
-    for (const listener of listeners6) listener();
+    for (const listener of listeners7) listener();
   }
   function patchSettings(patch) {
     snapshot = { ...snapshot, ...patch };
@@ -24014,7 +24063,7 @@
     islandRoot = null;
     const root = host === void 0 ? document.getElementById("settings-dialog") : host;
     if (!root) return;
-    islandRoot = mountIsland(root, (0, import_react15.createElement)(SettingsPanel));
+    islandRoot = mountIsland(root, (0, import_react16.createElement)(SettingsPanel));
   }
   function systemLanguages() {
     return Array.isArray(navigator.languages) && navigator.languages.length ? [...navigator.languages] : [navigator.language || "en"];
@@ -24280,7 +24329,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -24400,16 +24449,16 @@
     };
   }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react16.useState)(readPlayerValue);
-    (0, import_react16.useEffect)(() => {
+    const [value, setValue] = (0, import_react17.useState)(readPlayerValue);
+    (0, import_react17.useEffect)(() => {
       return subscribe(() => {
         (0, import_react_dom3.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react16.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react17.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(PlayerProvider, { value: current2, children });
   }
   function readHistoryValue() {
     return {
@@ -24424,20 +24473,20 @@
     };
   }
   function HistoryProvider2({ children }) {
-    const [value, setValue] = (0, import_react16.useState)(readHistoryValue);
-    (0, import_react16.useEffect)(() => {
+    const [value, setValue] = (0, import_react17.useState)(readHistoryValue);
+    (0, import_react17.useEffect)(() => {
       return subscribeHistory(() => {
         (0, import_react_dom3.flushSync)(() => {
           setValue(readHistoryValue());
         });
       });
     }, []);
-    const current2 = (0, import_react16.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(HistoryProvider, { value: current2, children });
+    const current2 = (0, import_react17.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(HistoryProvider, { value: current2, children });
   }
   function GigProvider({ children }) {
-    const [value, setValue] = (0, import_react16.useState)(readGigValue);
-    (0, import_react16.useEffect)(() => {
+    const [value, setValue] = (0, import_react17.useState)(readGigValue);
+    (0, import_react17.useEffect)(() => {
       const refresh = () => {
         (0, import_react_dom3.flushSync)(() => {
           setValue(readGigValue());
@@ -24450,13 +24499,13 @@
         stopDrift();
       };
     }, []);
-    const current2 = (0, import_react16.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(GigStateProvider, { value: current2, children });
+    const current2 = (0, import_react17.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(GigStateProvider, { value: current2, children });
   }
   function FilesProvider2({ children }) {
-    const hostRef = (0, import_react16.useRef)(null);
-    const [value, setValue] = (0, import_react16.useState)(readFilesValue);
-    (0, import_react16.useEffect)(() => {
+    const hostRef = (0, import_react17.useRef)(null);
+    const [value, setValue] = (0, import_react17.useState)(readFilesValue);
+    (0, import_react17.useEffect)(() => {
       const refresh = () => {
         if (!hostRef.current?.isConnected) return;
         (0, import_react_dom3.flushSync)(() => {
@@ -24470,27 +24519,27 @@
         document.removeEventListener(LOCALE_EVENT, refresh);
       };
     }, []);
-    const current2 = (0, import_react16.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(FilesProvider, { value: current2, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { ref: hostRef, hidden: true }),
+    const current2 = (0, import_react17.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)(FilesProvider, { value: current2, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("span", { ref: hostRef, hidden: true }),
       children
     ] });
   }
   function CrateProvider2({ children }) {
-    const [value, setValue] = (0, import_react16.useState)(readCrateValue);
-    (0, import_react16.useEffect)(() => {
+    const [value, setValue] = (0, import_react17.useState)(readCrateValue);
+    (0, import_react17.useEffect)(() => {
       return subscribeCrates(() => {
         (0, import_react_dom3.flushSync)(() => {
           setValue(readCrateValue());
         });
       });
     }, []);
-    const current2 = (0, import_react16.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(CrateProvider, { value: current2, children });
+    const current2 = (0, import_react17.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(CrateProvider, { value: current2, children });
   }
   function SettingsProvider2({ children }) {
-    const [value, setValue] = (0, import_react16.useState)(readSettingsValue);
-    (0, import_react16.useEffect)(() => {
+    const [value, setValue] = (0, import_react17.useState)(readSettingsValue);
+    (0, import_react17.useEffect)(() => {
       const refresh = () => {
         (0, import_react_dom3.flushSync)(() => {
           setValue(readSettingsValue());
@@ -24503,19 +24552,37 @@
         stopLocale();
       };
     }, []);
-    const current2 = (0, import_react16.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(SettingsProvider, { value: current2, children });
+    const current2 = (0, import_react17.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(SettingsProvider, { value: current2, children });
+  }
+  function readTrackListValue() {
+    return {
+      ...readTrackList(),
+      ...getTrackListActions()
+    };
+  }
+  function TrackListRoot({ children }) {
+    const [value, setValue] = (0, import_react17.useState)(readTrackListValue);
+    (0, import_react17.useEffect)(() => {
+      return subscribeTrackList(() => {
+        (0, import_react_dom3.flushSync)(() => {
+          setValue(readTrackListValue());
+        });
+      });
+    }, []);
+    const current2 = (0, import_react17.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(TrackListProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(SettingsProvider2, { children }) }) }) }) }) }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(SettingsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(TrackListRoot, { children }) }) }) }) }) }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
     (0, import_react_dom4.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime15.jsx)(AppProviders, { children: node }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime18.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
@@ -24555,42 +24622,42 @@
   }
 
   // src/components/GigReport.tsx
-  var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef5(spec2) {
+  var import_jsx_runtime19 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef6(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
   }
   function GigActions({ primary, stepIndex: stepIndex2 }) {
     const gig = useGig();
-    return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "gig-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "gig-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
         "button",
         {
           type: "button",
-          ref: tooltipRef5(tips.gigBack),
+          ref: tooltipRef6(tips.gigBack),
           "data-gig-action": "back",
           disabled: stepIndex2 === 0,
           onClick: () => gig.backStep(),
           children: t("common.back")
         }
       ),
-      primary ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      primary ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
         "button",
         {
           type: "button",
-          ref: tooltipRef5(tips.gigNext),
+          ref: tooltipRef6(tips.gigNext),
           className: "gig-primary",
           "data-gig-action": "next",
           onClick: () => gig.nextStep(),
           children: primary
         }
       ) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
         "button",
         {
           type: "button",
-          ref: tooltipRef5(tips.gigExit),
+          ref: tooltipRef6(tips.gigExit),
           "data-gig-action": "exit",
           onClick: () => gig.exit(),
           children: t("gig.exit")
@@ -24602,11 +24669,11 @@
     const note = payload.snapshot_note?.trim() ?? "";
     const changes = payload.changes;
     const groups = GIG_CHANGE_GROUPS.map(([label, key]) => [label, changes?.[key] || []]).filter(([, lines]) => lines.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(import_jsx_runtime16.Fragment, { children: [
-      note ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-note", children: note }) : null,
-      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
-      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
-      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
+    return /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
+      note ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "gig-note", children: note }) : null,
+      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
+      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
+      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
     ] });
   }
   function GigReport() {
@@ -24620,39 +24687,39 @@
     const time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "";
     const holding = (payload.holding_it_back || []).map((item3) => item3.summary);
     const lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [];
-    return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(import_jsx_runtime16.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(
         "p",
         {
           className: "gig-score",
           "aria-label": t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
+            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
           ]
         }
       ),
-      done ? /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(import_jsx_runtime16.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
+      done ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
           score: payload.score,
           crate,
           time
         }) }),
-        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(import_jsx_runtime16.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
-        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "gig-note", children: t(step.empty) }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
+        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
+        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "gig-note", children: t(step.empty) }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
       ] })
     ] });
   }
 
   // src/gig.ts
-  var listeners7 = /* @__PURE__ */ new Set();
+  var listeners8 = /* @__PURE__ */ new Set();
   var stepIndex = 0;
   var latest3 = null;
   var checkedAt = null;
@@ -24660,7 +24727,7 @@
   };
   function emit3() {
     const snapshot2 = getGigSnapshot();
-    for (const listener of listeners7) listener(snapshot2);
+    for (const listener of listeners8) listener(snapshot2);
   }
   function focusHeading() {
     const headingNode = document.getElementById("gig-step-heading");
@@ -24689,9 +24756,9 @@
     return { report: latest3, stepIndex, checkedAt };
   }
   function subscribeGig(listener) {
-    listeners7.add(listener);
+    listeners8.add(listener);
     return () => {
-      listeners7.delete(listener);
+      listeners8.delete(listener);
     };
   }
   function nextGigStep() {
@@ -24717,7 +24784,7 @@
     el("gig-refresh").addEventListener("click", () => {
       void loadGigCheck(true);
     });
-    mountIsland(el("gig-report"), (0, import_react17.createElement)(GigReport));
+    mountIsland(el("gig-report"), (0, import_react18.createElement)(GigReport));
   }
   async function loadGigCheck(keepStep = false) {
     const token3 = ++state.gigToken;
@@ -25874,8 +25941,8 @@
   function suspectLine(item3) {
     const title2 = [item3.artist, item3.name].filter(Boolean).join(" — ") || item3.file;
     const reason = reasonHeading(item3.reason);
-    const detail = item3.stated_kbps != null && item3.estimated_kbps != null ? t("bitrate.detail", { stated: item3.stated_kbps, estimated: item3.estimated_kbps }) : item3.estimated_kbps != null ? t("bitrate.detailEstimate", { estimated: item3.estimated_kbps }) : "";
-    return t("bitrate.row", { title: title2, file: item3.file, reason, detail });
+    const detail2 = item3.stated_kbps != null && item3.estimated_kbps != null ? t("bitrate.detail", { stated: item3.stated_kbps, estimated: item3.estimated_kbps }) : item3.estimated_kbps != null ? t("bitrate.detailEstimate", { estimated: item3.estimated_kbps }) : "";
+    return t("bitrate.row", { title: title2, file: item3.file, reason, detail: detail2 });
   }
   function paintPlan(report) {
     if (!cratePlan) return;
@@ -26165,14 +26232,14 @@
       }
       report.append(diffs);
     }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "tags-actions";
     const apply = buttonEl(tips.tagsApplyTitles);
     apply.dataset.tagsAction = "clean-apply";
     apply.textContent = t("tags.apply");
     apply.disabled = !canApplyTitles(plan);
-    actions2.append(apply);
-    report.append(actions2);
+    actions3.append(apply);
+    report.append(actions3);
   }
   function repaintTags() {
     setField(currentField());
@@ -26374,14 +26441,14 @@
       }
       wrap.append(diffs);
     }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "tags-actions";
     const apply = buttonEl(tips.tagsApplyMappings);
     apply.dataset.tagsAction = "refresh-apply";
     apply.textContent = t("tags.applyMappings");
     apply.disabled = !canApplyMappings(plan);
-    actions2.append(apply);
-    wrap.append(actions2);
+    actions3.append(apply);
+    wrap.append(actions3);
     return wrap;
   }
   function failStatus8(message) {
@@ -26466,8 +26533,8 @@
     return row;
   }
   function groupActions(key, value, plan) {
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "tags-actions";
     const preview = buttonEl(tips.tagsPreview);
     preview.dataset.tagsAction = "preview";
     preview.dataset.key = key;
@@ -26479,24 +26546,24 @@
     apply.textContent = t("tags.apply");
     apply.disabled = !canApply(key);
     if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
-    actions2.append(preview, apply);
-    return actions2;
+    actions3.append(preview, apply);
+    return actions3;
   }
 
   // src/files-mount.tsx
-  var import_react20 = __toESM(require_react(), 1);
+  var import_react21 = __toESM(require_react(), 1);
 
   // src/components/FilesDialog.tsx
-  var import_react18 = __toESM(require_react(), 1);
-  var import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef6(spec2) {
+  var import_react19 = __toESM(require_react(), 1);
+  var import_jsx_runtime20 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef7(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
   }
   function FilesDialog() {
     const files = useFiles();
-    (0, import_react18.useEffect)(() => {
+    (0, import_react19.useEffect)(() => {
       const dialog = document.getElementById("files-dialog");
       if (!(dialog instanceof HTMLDialogElement)) return;
       const onCancel = (event) => {
@@ -26513,17 +26580,17 @@
     const status = !files.writable ? document.getElementById("status")?.textContent ?? files.dialogStatus : files.dialogStatus;
     const confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
     const confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
-    return /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)(import_jsx_runtime17.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
-      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
-      /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("span", { children: t("files.newName") }),
-        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)(import_jsx_runtime20.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("span", { children: t("files.newName") }),
+        /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
           "input",
           {
             id: "files-name",
-            ref: tooltipRef6(tips.filesName),
+            ref: tooltipRef7(tips.filesName),
             type: "text",
             autoComplete: "off",
             value: files.dialogName,
@@ -26531,13 +26598,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("span", { children: t("files.newFile") }),
-        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("span", { children: t("files.newFile") }),
+        /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
           "input",
           {
             id: "files-replacement",
-            ref: tooltipRef6(tips.filesReplacement),
+            ref: tooltipRef7(tips.filesReplacement),
             type: "text",
             autoComplete: "off",
             spellCheck: false,
@@ -26546,34 +26613,34 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("ul", { id: "files-changes", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)("ul", { id: "files-changes", children: [
         (preview?.changes || []).map((change, index) => {
           const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
           const effect = change.effect === "trash" ? t("files.trash") : change.to;
-          return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("li", { children: `${change.from} → ${effect}${crates}` }, `change-${index}`);
+          return /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("li", { children: `${change.from} → ${effect}${crates}` }, `change-${index}`);
         }),
-        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("li", { children: skip2 }, `skip-${index}`)),
-        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("li", { children: skip2 }, `skip-${index}`)),
+        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status }),
-      /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("div", { className: "dialog-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status }),
+      /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
           "button",
           {
             id: "files-cancel",
             type: "button",
-            ref: tooltipRef6(tips.filesCancel),
+            ref: tooltipRef7(tips.filesCancel),
             onClick: () => files.closeDialog(),
             children: t("common.cancel")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
           "button",
           {
             id: "files-review",
             type: "button",
-            ref: tooltipRef6(tips.filesReview),
+            ref: tooltipRef7(tips.filesReview),
             hidden: reviewHidden,
             onClick: () => {
               void files.review();
@@ -26581,12 +26648,12 @@
             children: t("files.review")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
           "button",
           {
             id: "files-confirm",
             type: "button",
-            ref: tooltipRef6(confirmTip),
+            ref: tooltipRef7(confirmTip),
             className: action === "delete" ? "danger" : void 0,
             disabled: !ready,
             onClick: () => {
@@ -26600,17 +26667,17 @@
   }
 
   // src/components/FilesPanel.tsx
-  var import_react19 = __toESM(require_react(), 1);
+  var import_react20 = __toESM(require_react(), 1);
   var import_react_dom5 = __toESM(require_react_dom(), 1);
-  var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef7(spec2) {
+  var import_jsx_runtime21 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef8(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
   }
   function FileIcon({ kind: kind2 }) {
     const d = kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z";
-    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
       "svg",
       {
         viewBox: "0 0 24 24",
@@ -26618,48 +26685,48 @@
         height: "20",
         "aria-hidden": "true",
         className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
-        children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d })
+        children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d })
       }
     );
   }
   function FilesToolbar() {
     const files = useFiles();
     const crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
-    return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("div", { className: "browser-bar", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("div", { className: "browser-bar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-up",
           type: "button",
-          ref: tooltipRef7(tips.filesUp),
+          ref: tooltipRef8(tips.filesUp),
           disabled: !files.parent || files.loading,
           onClick: () => files.goUp(),
           children: t("common.up")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
         const last = index === crumbs.length - 1;
-        return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("li", { children: [
-          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("li", { children: [
+          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
             "button",
             {
               type: "button",
-              ref: tooltipRef7(openCrumb(crumb.name)),
+              ref: tooltipRef8(openCrumb(crumb.name)),
               className: "files-crumb",
               onClick: () => files.openCrumb(crumb.path),
               children: crumb.name
             }
-          ) : /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
-          !last ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" }) : null
+          ) : /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
+          !last ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" }) : null
         ] }, `${crumb.path}:${crumb.name}:${index}`);
       }) }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
-        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
+        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
           "input",
           {
             id: "files-search",
-            ref: tooltipRef7(tips.filesSearch),
+            ref: tooltipRef8(tips.filesSearch),
             type: "search",
             placeholder: t("files.searchPlaceholder"),
             autoComplete: "off",
@@ -26669,14 +26736,14 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef7(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef8(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-elsewhere",
           className: "files-elsewhere",
           type: "button",
-          ref: tooltipRef7(files.elsewhere ? tips.filesMusicFolders : tips.filesElsewhere),
+          ref: tooltipRef8(files.elsewhere ? tips.filesMusicFolders : tips.filesElsewhere),
           onClick: () => files.toggleElsewhere(),
           children: files.elsewhere ? t("files.roots") : t("files.browseElsewhere")
         }
@@ -26687,92 +26754,92 @@
     const files = useFiles();
     const selected = files.selectedEntries;
     const locked = files.locked;
-    return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("div", { className: "files-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("div", { className: "files-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-rename",
           type: "button",
-          ref: tooltipRef7(tips.filesRename),
+          ref: tooltipRef8(tips.filesRename),
           disabled: locked || selected.length !== 1,
           onClick: (event) => files.startRename(event.currentTarget),
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-rename-from-tags",
           type: "button",
-          ref: tooltipRef7(tips.filesRenameFromTags),
+          ref: tooltipRef8(tips.filesRenameFromTags),
           "aria-haspopup": "dialog",
           disabled: locked || !selected.length,
           onClick: (event) => files.startRenameFromTags(event.currentTarget),
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-move",
           type: "button",
-          ref: tooltipRef7(tips.filesMove),
+          ref: tooltipRef8(tips.filesMove),
           disabled: locked || !selected.length || Boolean(files.pick),
           onClick: () => files.startMove(),
           children: t("files.moveToFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-move-folder",
           type: "button",
-          ref: tooltipRef7(tips.filesMoveFolder),
+          ref: tooltipRef8(tips.filesMoveFolder),
           disabled: locked || !files.path || Boolean(files.pick),
           onClick: () => files.startMoveFolder(),
           children: t("files.moveFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-replace",
           type: "button",
-          ref: tooltipRef7(tips.filesReplace),
+          ref: tooltipRef8(tips.filesReplace),
           disabled: locked || selected.length !== 1,
           onClick: (event) => files.startReplace(event.currentTarget),
           children: t("files.replaceFile")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-delete",
           type: "button",
-          ref: tooltipRef7(tips.filesDelete),
+          ref: tooltipRef8(tips.filesDelete),
           disabled: locked || !selected.length,
           onClick: (event) => files.startDelete(event.currentTarget),
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-move-here",
           type: "button",
-          ref: tooltipRef7(tips.filesMoveHere),
+          ref: tooltipRef8(tips.filesMoveHere),
           hidden: !files.pick,
           disabled: locked,
           onClick: (event) => files.confirmMoveHere(event.currentTarget),
           children: t("files.moveHere")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           id: "files-pick-cancel",
           type: "button",
-          ref: tooltipRef7(tips.filesPickCancel),
+          ref: tooltipRef8(tips.filesPickCancel),
           hidden: !files.pick,
           onClick: () => files.cancelPick(),
           children: t("common.cancel")
@@ -26791,12 +26858,12 @@
       active2 ? "is-active" : ""
     ].filter(Boolean).join(" ");
     if (openKind) {
-      return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("div", { className, role: "listitem", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("div", { className, role: "listitem", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)(
           "button",
           {
             type: "button",
-            ref: tooltipRef7(entry.missing ? missingDrive(entry.name) : openFile(entry.name)),
+            ref: tooltipRef8(entry.missing ? missingDrive(entry.name) : openFile(entry.name)),
             className: "files-open",
             "data-files-index": String(index),
             id: `files-item-${index}`,
@@ -26808,23 +26875,23 @@
               else files.openRow(entry, index);
             },
             children: [
-              entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
-              entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("span", { className: "files-root-copy", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-root-label", children: entry.name }),
-                /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-root-detail", children: entry.detail })
-              ] }) : /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(import_jsx_runtime18.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { children: entry.name }),
-                entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
+              entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
+              entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("span", { className: "files-root-copy", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "files-root-label", children: entry.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "files-root-detail", children: entry.detail })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)(import_jsx_runtime21.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { children: entry.name }),
+                entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
               ] }),
-              entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+              entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
             ]
           }
         ),
-        entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+        entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
           "button",
           {
             type: "button",
-            ref: tooltipRef7(portableCheck(entry.name)),
+            ref: tooltipRef8(portableCheck(entry.name)),
             className: "files-portable",
             "data-portable-name": entry.name,
             "aria-label": t("portable.checkLabel", { name: entry.name }),
@@ -26838,11 +26905,11 @@
       ] });
     }
     if (entry.kind !== "file") {
-      return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "button",
         {
           type: "button",
-          ref: tooltipRef7(fileShortcut(entry.name)),
+          ref: tooltipRef8(fileShortcut(entry.name)),
           className: "files-kind",
           "data-files-index": String(index),
           id: `files-item-${index}`,
@@ -26852,11 +26919,11 @@
         }
       ) });
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("label", { className: "files-file", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "input",
         {
-          ref: tooltipRef7(selectFile(entry.name, entry.path)),
+          ref: tooltipRef8(selectFile(entry.name, entry.path)),
           type: "checkbox",
           "data-files-index": String(index),
           id: `files-item-${index}`,
@@ -26866,9 +26933,9 @@
           onChange: (event) => files.toggleFile(entry, index, event.currentTarget.checked)
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-name", children: entry.name }),
-      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
-      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "files-name", children: entry.name }),
+      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
+      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
     ] }) });
   }
   var FILE_OVERSCAN = 8;
@@ -26882,10 +26949,10 @@
   }
   function FilesList() {
     const files = useFiles();
-    const listRef = (0, import_react19.useRef)(null);
-    const [scrollTop, setScrollTop] = (0, import_react19.useState)(0);
-    const [viewHeight, setViewHeight] = (0, import_react19.useState)(600);
-    (0, import_react19.useLayoutEffect)(() => {
+    const listRef = (0, import_react20.useRef)(null);
+    const [scrollTop, setScrollTop] = (0, import_react20.useState)(0);
+    const [viewHeight, setViewHeight] = (0, import_react20.useState)(600);
+    (0, import_react20.useLayoutEffect)(() => {
       const list = listRef.current;
       if (!list) return;
       setViewHeight(list.clientHeight || 600);
@@ -26916,20 +26983,20 @@
     let tabIndex = 0;
     if (emptyLoading) {
       const reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { className: "files-empty", children: reading });
+      body = /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("p", { className: "files-empty", children: reading });
     } else if (emptyError) {
-      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { className: "files-empty", children: files.error });
+      body = /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("p", { className: "files-empty", children: files.error });
     } else if (emptyRoots) {
       tabIndex = -1;
-      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("div", { className: "files-empty-state", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("h2", { children: t("files.noRoots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { children: t("files.noRootsBody") }),
-        /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      body = /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
           "button",
           {
             id: "files-run-setup",
             type: "button",
-            ref: tooltipRef7(tips.runSetup),
+            ref: tooltipRef8(tips.runSetup),
             className: "files-primary",
             onClick: () => bridge.openSetup(),
             children: t("files.runSetup")
@@ -26938,15 +27005,15 @@
       ] });
     } else if (emptyFolder) {
       const empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
-      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { className: "files-empty", children: empty });
+      body = /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("p", { className: "files-empty", children: empty });
     } else {
       tabIndex = -1;
       const windowRows = [];
       for (let index = start; index < end; index += 1) {
         const entry = rows2[index];
-        if (entry) windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
+        if (entry) windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime21.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
       }
-      body = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { className: "files-spacer", style: { height: `${rows2.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { className: "files-window", style: { transform: `translateY(${start * rowHeight}px)` }, children: windowRows }) });
+      body = /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("div", { className: "files-spacer", style: { height: `${rows2.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("div", { className: "files-window", style: { transform: `translateY(${start * rowHeight}px)` }, children: windowRows }) });
     }
     function onScroll2(event) {
       const node = event.currentTarget;
@@ -26958,10 +27025,10 @@
     function onKey2(event) {
       files.onListKey(event.nativeEvent);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(import_jsx_runtime18.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)(import_jsx_runtime21.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
         "div",
         {
           id: "files-list",
@@ -26980,15 +27047,15 @@
     ] });
   }
   function FilesPanel() {
-    return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(import_jsx_runtime18.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FilesToolbar, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FilesList, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(FilesActions, {})
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)(import_jsx_runtime21.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(FilesActions, {})
     ] });
   }
 
   // src/components/PortableDialog.tsx
-  var import_jsx_runtime19 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime22 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
     const files = useFiles();
     const report = files.portableReport;
@@ -27000,24 +27067,24 @@
     }
     const shown = report ? report.findings.slice(0, FINDING_CAP) : [];
     const hidden = report ? report.findings.length - shown.length : 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { id: "portable-verdict", children: verdict }),
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("ul", { id: "portable-findings", children: [
-        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("li", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
-          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(import_jsx_runtime22.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(import_jsx_runtime22.Fragment, { children: [
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "portable-fix", children: finding.fix })
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "portable-fix", children: finding.fix })
           ] }) : null
         ] }, `finding-${index}`)),
-        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
-        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
         "button",
         {
           id: "portable-close",
@@ -27055,9 +27122,9 @@
     const panel = el("files-panel");
     const dialog = el("files-dialog");
     const portable = el("portable-dialog");
-    panelRoot = mountIsland(panel, (0, import_react20.createElement)(FilesPanel), rootFor(panel, panelRoot, panelHost));
-    dialogRoot = mountIsland(dialog, (0, import_react20.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost));
-    portableRoot = mountIsland(portable, (0, import_react20.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost));
+    panelRoot = mountIsland(panel, (0, import_react21.createElement)(FilesPanel), rootFor(panel, panelRoot, panelHost));
+    dialogRoot = mountIsland(dialog, (0, import_react21.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost));
+    portableRoot = mountIsland(portable, (0, import_react21.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost));
     panelHost = panel;
     dialogHost = dialog;
     portableHost = portable;
@@ -27091,50 +27158,6 @@
     const number = Number(value);
     if (!Number.isFinite(number)) return "";
     return `${number.toFixed(3)}s`;
-  }
-  function appendBeatgrid(section, track) {
-    if (!beatgridViewOnly(track.markers_unavailable)) return;
-    const heading = document.createElement("h4");
-    heading.textContent = t("markers.gridHeading");
-    section.append(heading);
-    const viewOnly = document.createElement("p");
-    viewOnly.className = "detail-kicker";
-    viewOnly.textContent = t("markers.gridViewOnly");
-    section.append(viewOnly);
-    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
-      const warn = document.createElement("p");
-      warn.className = "detail-kicker warn";
-      warn.setAttribute("role", "status");
-      const key = beatgridWarningKey(track.beatgrid_warning_code);
-      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
-      warn.textContent = t("markers.gridSuspect", { reason });
-      section.append(warn);
-    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
-      const empty = document.createElement("p");
-      empty.className = "detail-kicker";
-      empty.textContent = t("markers.gridNone");
-      section.append(empty);
-    }
-    for (const mark of track.beatgrid || []) {
-      section.append(paintBeatMarker(mark));
-    }
-  }
-  function paintBeatMarker(mark) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const time = document.createElement("span");
-    time.textContent = beatSeconds(mark.position);
-    const name = document.createElement("span");
-    const bpmNumber = Number(mark.bpm);
-    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
-      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
-    } else if (mark.beats != null) {
-      name.textContent = t("markers.beats", { count: Number(mark.beats) });
-    } else {
-      name.textContent = "";
-    }
-    row.append(document.createElement("span"), document.createElement("span"), time, name);
-    return row;
   }
 
   // src/folder-sync-view.ts
@@ -27272,14 +27295,14 @@
       card.setAttribute("role", "listitem");
       const title2 = document.createElement("p");
       title2.textContent = `${item3.created || t("snapshots.unknownTime")} · ${item3.trigger || t("snapshots.trigger")}`;
-      const detail = document.createElement("p");
+      const detail2 = document.createElement("p");
       const version = item3.serato_version && item3.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item3.serato_version, build: String(item3.serato_build ?? "") }) : t("snapshots.seratoUnknown");
       const drives = (item3.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item3.unavailable_drives || []) })}` : "";
-      detail.textContent = `${version}. ${item3.reason || ""}${drives}`;
+      detail2.textContent = `${version}. ${item3.reason || ""}${drives}`;
       const restore = buttonEl(tips.reviewRestore);
       restore.textContent = t("snapshots.reviewRestore");
       restore.addEventListener("click", () => openSnapshotPlan(item3.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
-      card.append(title2, detail, restore);
+      card.append(title2, detail2, restore);
       list.append(card);
     }
   }
@@ -27365,16 +27388,16 @@
     });
     card.append(title2);
     if (item3.snapshot_before && item3.snapshot_after) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.snapshots", {
+      const detail2 = document.createElement("p");
+      detail2.textContent = t("operations.snapshots", {
         before: item3.snapshot_before,
         after: item3.snapshot_after
       });
-      card.append(detail);
+      card.append(detail2);
     } else if (item3.snapshot_before) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.beforeOnly", { before: item3.snapshot_before });
-      card.append(detail);
+      const detail2 = document.createElement("p");
+      detail2.textContent = t("operations.beforeOnly", { before: item3.snapshot_before });
+      card.append(detail2);
     }
     return card;
   }
@@ -27600,104 +27623,104 @@
   }
 
   // src/views.ts
-  var import_react21 = __toESM(require_react(), 1);
+  var import_react24 = __toESM(require_react(), 1);
 
   // src/components/CrateActions.tsx
-  var import_jsx_runtime20 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef8(spec2) {
+  var import_jsx_runtime23 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef9(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
   }
   function CrateActions() {
     const crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)(import_jsx_runtime20.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)(import_jsx_runtime23.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
         "button",
         {
           id: "crate-new",
           type: "button",
-          ref: tooltipRef8(tips.crateNew),
+          ref: tooltipRef9(tips.crateNew),
           disabled: !crates.canCreate,
           onClick: () => crates.create(),
           children: t("crates.new")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
         "button",
         {
           id: "crate-rename",
           type: "button",
-          ref: tooltipRef8(tips.crateRename),
+          ref: tooltipRef9(tips.crateRename),
           disabled: !crates.canRename,
           onClick: () => crates.rename(),
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
         "button",
         {
           id: "crate-color",
           type: "button",
-          ref: tooltipRef8(tips.crateColor),
+          ref: tooltipRef9(tips.crateColor),
           disabled: !crates.canColor,
           onClick: () => crates.color(),
           children: t("field.color")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
         "button",
         {
           id: "crate-delete",
           type: "button",
-          ref: tooltipRef8(tips.crateDelete),
+          ref: tooltipRef9(tips.crateDelete),
           disabled: !crates.canDelete,
           onClick: () => crates.remove(),
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
         "button",
         {
           id: "crate-preset",
           type: "button",
-          ref: tooltipRef8(tips.cratePreset),
+          ref: tooltipRef9(tips.cratePreset),
           "aria-haspopup": "dialog",
           disabled: !crates.canPreset,
           onClick: () => crates.preset(),
           children: t("presets.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
         "button",
         {
           id: "crate-folder-sync",
           type: "button",
-          ref: tooltipRef8(tips.crateFolderSync),
+          ref: tooltipRef9(tips.crateFolderSync),
           "aria-haspopup": "dialog",
           disabled: !crates.canFolderSync,
           onClick: () => crates.folderSync(),
           children: t("folderSync.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
         "button",
         {
           id: "crate-rename-from-tags",
           type: "button",
-          ref: tooltipRef8(tips.crateRenameFromTags),
+          ref: tooltipRef9(tips.crateRenameFromTags),
           "aria-haspopup": "dialog",
           disabled: !crates.canRenameFromTags,
           onClick: (event) => crates.renameFromTags(event.currentTarget),
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
         "button",
         {
           id: "crate-refresh",
           type: "button",
-          ref: tooltipRef8(tips.crateRefresh),
+          ref: tooltipRef9(tips.crateRefresh),
           hidden: crates.refreshHidden,
           disabled: !crates.canRefresh,
           onClick: () => crates.refresh(),
@@ -27708,45 +27731,45 @@
   }
 
   // src/components/CrateBrowserActions.tsx
-  var import_jsx_runtime21 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef9(spec2) {
+  var import_jsx_runtime24 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef10(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
   }
   function CrateBrowserActions() {
     const crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)(import_jsx_runtime21.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)(import_jsx_runtime24.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
         "button",
         {
           id: "crate-split",
           type: "button",
-          ref: tooltipRef9(tips.crateSplit),
+          ref: tooltipRef10(tips.crateSplit),
           hidden: crates.splitHidden,
           "aria-pressed": crates.splitPressed,
           onClick: () => crates.split(),
           children: t("crates.split")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
         "button",
         {
           id: "crate-save-view",
           type: "button",
-          ref: tooltipRef9(tips.crateSaveView),
+          ref: tooltipRef10(tips.crateSaveView),
           hidden: crates.saveViewHidden,
           disabled: !crates.canSaveView,
           onClick: () => crates.saveView(),
           children: t("crates.saveView")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
         "button",
         {
           id: "export-m3u",
           type: "button",
-          ref: tooltipRef9(tips.exportM3u),
+          ref: tooltipRef10(tips.exportM3u),
           hidden: crates.exportHidden,
           onClick: () => crates.exportM3u(),
           children: t("export.m3u")
@@ -27756,8 +27779,8 @@
   }
 
   // src/components/CrateTree.tsx
-  var import_jsx_runtime22 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef10(spec2) {
+  var import_jsx_runtime25 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef11(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -27772,14 +27795,14 @@
   }
   function Twist({ row, toggle }) {
     if (!row.childCount) {
-      return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
+      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
     }
     const spec2 = row.expanded ? collapseCrate(row.name) : expandCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
       "button",
       {
         type: "button",
-        ref: tooltipRef10(spec2),
+        ref: tooltipRef11(spec2),
         className: "twist",
         tabIndex: -1,
         "aria-expanded": row.expanded,
@@ -27796,18 +27819,18 @@
   }) {
     const hex = colorHex(row.color);
     const tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
       "div",
       {
         className: row.holds ? "crate-row holds-selection" : "crate-row",
         style: { paddingLeft: `${row.depth * 14}px` },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Twist, { row, toggle }),
-          /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Twist, { row, toggle }),
+          /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
             "button",
             {
               type: "button",
-              ref: tooltipRef10(tip),
+              ref: tooltipRef11(tip),
               className: "crate",
               "data-id": String(row.id),
               "data-parent": row.parent != null ? String(row.parent) : void 0,
@@ -27819,12 +27842,12 @@
               "aria-expanded": row.childCount ? row.expanded : void 0,
               onClick: (event) => select(row.id, event.nativeEvent),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("span", { className: "name", children: [
-                  hex ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("span", { className: "name", children: [
+                  hex ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
                   row.name
                 ] }),
-                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "meta", children: formatNumber(row.count) })
+                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: "meta", children: formatNumber(row.count) })
               ]
             }
           )
@@ -27836,7 +27859,7 @@
     const crates = useCrates();
     const focusId = focusedCrateId();
     const tabbable = crates.rows.find((row) => String(row.id) === focusId) ?? crates.rows[0];
-    return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(import_jsx_runtime22.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_jsx_runtime25.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
       CrateRow,
       {
         row,
@@ -27849,16 +27872,16 @@
   }
 
   // src/components/HistoryDetail.tsx
-  var import_jsx_runtime23 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef11(spec2) {
+  var import_jsx_runtime26 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef12(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
   }
   function Field({ label, value }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "label", children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "value", children: value })
+    return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { className: "label", children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { className: "value", children: value })
     ] });
   }
   function HistoryDetail() {
@@ -27872,15 +27895,15 @@
       [t("history.file"), entry.file || "—"]
     ];
     if (entry.notes) lines.push([t("history.notes"), entry.notes]);
-    return /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(Field, { label, value }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Field, { label, value }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
         "button",
         {
           type: "button",
-          ref: tooltipRef11(tips.openInLibrary),
+          ref: tooltipRef12(tips.openInLibrary),
           className: "text-button",
           onClick: () => {
             void history.openInLibrary(entry.asset_id);
@@ -27892,21 +27915,21 @@
   }
 
   // src/components/HistorySessions.tsx
-  var import_jsx_runtime24 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef12(spec2) {
+  var import_jsx_runtime27 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef13(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
   }
   function HistorySessions() {
     const history = useHistory();
-    return /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(import_jsx_runtime24.Fragment, { children: history.sessions.map((session) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_jsx_runtime27.Fragment, { children: history.sessions.map((session) => {
       const name = session.name || t("history.session");
-      return /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
         "button",
         {
           type: "button",
-          ref: tooltipRef12(sessionTip(session.name || "Session")),
+          ref: tooltipRef13(sessionTip(session.name || "Session")),
           className: "crate",
           role: "option",
           "aria-selected": session.id === history.historyId,
@@ -27914,8 +27937,8 @@
             void history.openSession(session.id);
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { className: "name", children: name }),
-            /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { className: "meta", children: String(session.played || 0) })
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: "name", children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: "meta", children: String(session.played || 0) })
           ]
         },
         session.id
@@ -27923,9 +27946,788 @@
     }) });
   }
 
+  // src/components/TrackDetail.tsx
+  var import_react23 = __toESM(require_react(), 1);
+
+  // src/components/BeatgridBlock.tsx
+  var import_jsx_runtime28 = __toESM(require_jsx_runtime(), 1);
+  function BeatgridMarker({ mark }) {
+    const bpmNumber = Number(mark.bpm);
+    let name = "";
+    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
+      name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
+    } else if (mark.beats != null) {
+      name = t("markers.beats", { count: Number(mark.beats) });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { children: beatSeconds(mark.position) }),
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { children: name })
+    ] });
+  }
+  function BeatgridBlock({ track }) {
+    if (!beatgridViewOnly(track.markers_unavailable)) return null;
+    const suspect = beatgridIsSuspect(track.beatgrid_warning_code);
+    const key = beatgridWarningKey(track.beatgrid_warning_code);
+    const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
+    const empty = !suspect && !(track.beatgrid && track.beatgrid.length > 0);
+    return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(import_jsx_runtime28.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("h4", { children: t("markers.gridHeading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
+      suspect ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
+      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
+    ] });
+  }
+
+  // src/components/CuePads.tsx
+  var import_jsx_runtime29 = __toESM(require_jsx_runtime(), 1);
+  function CueSlot({ slot, cue }) {
+    const color = slotColor(slot, cue?.color);
+    const named = cue && typeof cue.name === "string" ? cue.name.trim() : "";
+    const swatchStyle = color ? { background: color } : void 0;
+    return /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime29.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime29.jsx)("span", { className: "swatch", style: swatchStyle }),
+      /* @__PURE__ */ (0, import_jsx_runtime29.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
+      /* @__PURE__ */ (0, import_jsx_runtime29.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+    ] });
+  }
+  function CuePads({ cues: cues2 }) {
+    const slots = cueSlots(cues2);
+    const extra = extraCues(cues2);
+    return /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)(import_jsx_runtime29.Fragment, { children: [
+      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(CueSlot, { slot, cue }, slot)),
+      extra.map((cue, index) => {
+        const cueIndex = Number(cue.index);
+        const slot = Number.isInteger(cueIndex) ? cueIndex : -1;
+        return /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
+      })
+    ] });
+  }
+
+  // src/components/RelatedTracks.tsx
+  var import_react22 = __toESM(require_react(), 1);
+  var import_jsx_runtime30 = __toESM(require_jsx_runtime(), 1);
+  function relatedPath(track) {
+    return track.resolved_path || track.edit?.portable_id || "";
+  }
+  function relatedLabel(item3) {
+    const title2 = item3.title || item3.name || t("track.untitled");
+    return item3.artist ? `${title2} · ${item3.artist}` : title2;
+  }
+  function RelatedTracks({ track, writable }) {
+    const list = useTrackList();
+    const path = relatedPath(track);
+    const [busy2, setBusy] = (0, import_react22.useState)(Boolean(path));
+    const [loadError, setLoadError] = (0, import_react22.useState)("");
+    const [payload, setPayload] = (0, import_react22.useState)(null);
+    const [query, setQuery] = (0, import_react22.useState)("");
+    const [chosen, setChosen] = (0, import_react22.useState)(null);
+    const [note, setNote] = (0, import_react22.useState)("");
+    const [rating, setRating] = (0, import_react22.useState)("");
+    const [mutual, setMutual] = (0, import_react22.useState)(true);
+    const [saving2, setSaving] = (0, import_react22.useState)(false);
+    (0, import_react22.useEffect)(() => {
+      if (!path) {
+        setBusy(false);
+        setPayload(null);
+        setLoadError("");
+        return;
+      }
+      let cancelled = false;
+      setBusy(true);
+      setLoadError("");
+      const params = new URLSearchParams({ path, space: list.space });
+      void (async () => {
+        try {
+          const response = await fetch(`/api/related?${params}`);
+          const body = await readJSONOr(response, {});
+          if (cancelled) return;
+          if (!response.ok) throw new Error(t("related.loadFailed"));
+          setPayload(body);
+          setBusy(false);
+        } catch (error2) {
+          if (cancelled) return;
+          setBusy(false);
+          setLoadError(failureOf(error2).message);
+        }
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, [path, list.space, track.id]);
+    const hits2 = (0, import_react22.useMemo)(() => {
+      const parsed = parseQuery(query);
+      if (!parsed.terms.length && !parsed.filters.length) return null;
+      return list.tracks.filter((item3) => item3.id !== track.id && matchesQuery(item3, parsed)).slice(0, 8);
+    }, [query, list.tracks, track.id]);
+    async function reload() {
+      const params = new URLSearchParams({ path, space: list.space });
+      const response = await fetch(`/api/related?${params}`);
+      const body = await readJSONOr(response, {});
+      if (!response.ok) throw new Error(t("related.loadFailed"));
+      setPayload(body);
+      setLoadError("");
+    }
+    async function saveLink(body) {
+      try {
+        await postJSON("/api/related", body);
+        list.setNotice(t("related.saved"));
+        setChosen(null);
+        await reload();
+      } catch (error2) {
+        if (failureOf(error2).status === 409) bridge.lockDown(error2);
+        else list.setNotice(failureOf(error2).message);
+        setLoadError(failureOf(error2).message);
+      }
+    }
+    async function onRemove(link) {
+      const label = link.track?.title || t("related.thisTrack");
+      if (!confirm(t("related.confirmRemove", { name: label }))) return;
+      try {
+        await postJSON("/api/related", { action: "remove", id: link.id });
+        list.setNotice(t("related.removed"));
+        await reload();
+      } catch (error2) {
+        list.setNotice(failureOf(error2).message);
+      }
+    }
+    async function onCrate() {
+      setSaving(true);
+      try {
+        const result = await postJSON("/api/related", { action: "crate", asset: track.id, space: list.space });
+        list.setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") }));
+        await bridge.reloadLibrary();
+        list.selectTrack(track.id);
+      } catch (error2) {
+        if (failureOf(error2).status === 409) {
+          bridge.lockDown(error2);
+        } else {
+          list.setNotice(failureOf(error2).message);
+          setSaving(false);
+        }
+      }
+    }
+    const saved = Array.isArray(payload?.saved) ? payload.saved : [];
+    const suggested = Array.isArray(payload?.suggested) ? payload.suggested : [];
+    const crateName = payload?.crate_name || "Related";
+    const headingId = `related-heading-${track.id}`;
+    const status = !path ? t("related.noPath") : loadError ? loadError : busy2 ? t("related.loading") : saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved");
+    function onSearch(event) {
+      setQuery(event.currentTarget.value);
+      setChosen(null);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy2, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("h3", { id: headingId, children: t("related.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("p", { className: "detail-kicker", role: "status", children: status }),
+      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("ul", { className: "related-list", children: saved.map((link) => {
+        const other = link.track || {};
+        const label = other.title || t("track.untitled");
+        const bits = [];
+        if (other.artist) bits.push(other.artist);
+        if (other.key) bits.push(other.key);
+        if (other.bpm != null && other.bpm !== "") bits.push(t("markers.bpm", { bpm: String(other.bpm) }));
+        bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay"));
+        if (link.rating != null) bits.push(t("related.ratingOutOf", { rating: String(link.rating) }));
+        if (!other.in_library) bits.push(t("related.notInLibrary"));
+        return /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("div", { children: [
+            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+              "button",
+              {
+                type: "button",
+                className: "text-button",
+                ref: tooltipRef(openRelated(label)),
+                onClick: () => list.selectTrack(other.asset_id),
+                children: label
+              }
+            ) : /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
+            link.note ? /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("p", { className: "related-note", children: link.note }) : null
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(removeRelatedTip(label)),
+              "aria-label": t("related.removeLink", { name: label }),
+              onClick: () => void onRemove(link),
+              children: t("common.remove")
+            }
+          )
+        ] }, String(link.id));
+      }) }),
+      payload && /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("div", { className: "related-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("label", { children: [
+          t("related.find"),
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+            "input",
+            {
+              ref: tooltipRef(tips.findRelated),
+              type: "search",
+              autoComplete: "off",
+              placeholder: t("related.findPlaceholder"),
+              value: query,
+              onInput: onSearch
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
+          const name = relatedLabel(hit);
+          return /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(chooseRelated(name)),
+              onClick: () => {
+                setChosen(hit);
+                setNote("");
+                setRating("");
+                setMutual(true);
+              },
+              children: name
+            }
+          ) }, hit.id);
+        }) }),
+        chosen && /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("div", { className: "related-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("label", { children: [
+            t("related.note"),
+            /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+              "input",
+              {
+                ref: tooltipRef(tips.linkNote),
+                type: "text",
+                maxLength: 500,
+                placeholder: t("related.notePlaceholder"),
+                value: note,
+                onChange: (event) => setNote(event.currentTarget.value)
+              }
+            )
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("label", { children: [
+            t("related.linkRating"),
+            /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)(
+              "select",
+              {
+                ref: tooltipRef(tips.linkRating),
+                value: rating,
+                onChange: (event) => setRating(event.currentTarget.value),
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("option", { value: "", children: t("rating.none") }),
+                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("option", { value, children: value }, value))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("label", { className: "check", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+              "input",
+              {
+                ref: tooltipRef(tips.linkMutual),
+                type: "checkbox",
+                checked: mutual,
+                onChange: (event) => setMutual(event.currentTarget.checked)
+              }
+            ),
+            t("related.twoWayLink")
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(tips.saveLink),
+              onClick: () => void saveLink({
+                action: "add",
+                asset: track.id,
+                target: chosen.id,
+                mutual,
+                note,
+                rating: rating === "" ? null : Number(rating),
+                space: list.space
+              }),
+              children: t("related.saveLink")
+            }
+          )
+        ] })
+      ] }),
+      payload && /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)(import_jsx_runtime30.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
+        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("ul", { className: "related-list", children: suggested.map((item3, index) => /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("span", { children: relatedLabel(item3) }),
+            /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("p", { className: "related-meta", children: Array.isArray(item3.reasons) ? item3.reasons.join(" · ") : "" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(saveSuggestion(item3.title || "Untitled")),
+              "aria-label": t("related.saveLinkTo", { name: item3.title || t("track.untitled") }),
+              onClick: () => void saveLink({
+                action: "add",
+                asset: track.id,
+                target: item3.asset_id,
+                mutual: true,
+                note: "",
+                rating: null,
+                space: list.space
+              }),
+              children: t("common.save")
+            }
+          )
+        ] }, `${item3.asset_id ?? index}`)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "text-button",
+            "data-related-crate": "true",
+            ref: tooltipRef(tips.updateRelated),
+            disabled: !writable || saving2,
+            onClick: () => void onCrate(),
+            children: t("related.updateCrate")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
+      ] })
+    ] });
+  }
+
+  // src/components/TrackDetail.tsx
+  var import_jsx_runtime31 = __toESM(require_jsx_runtime(), 1);
+  var EDITOR_FIELDS = [
+    ["name", "column.title", true],
+    ["artist", "column.artist", false],
+    ["album", "field.album", false],
+    ["genre", "field.genre", false],
+    ["year", "field.year", false],
+    ["composer", "field.composer", false],
+    ["remixer", "field.remixer", false],
+    ["label", "field.label", false],
+    ["grouping", "field.grouping", false],
+    ["key", "column.key", false],
+    ["bpm", "column.bpm", false],
+    ["emoji", "field.emoji", false],
+    ["comments", "field.comments", true]
+  ];
+  function fieldsFromForm(form) {
+    const data = new FormData(form);
+    const bpm = data.get("bpm");
+    const fields = {
+      name: String(data.get("name") ?? ""),
+      artist: String(data.get("artist") ?? ""),
+      album: String(data.get("album") ?? ""),
+      genre: String(data.get("genre") ?? ""),
+      year: String(data.get("year") ?? ""),
+      composer: String(data.get("composer") ?? ""),
+      remixer: String(data.get("remixer") ?? ""),
+      label: String(data.get("label") ?? ""),
+      grouping: String(data.get("grouping") ?? ""),
+      comments: String(data.get("comments") ?? ""),
+      key: String(data.get("key") ?? ""),
+      emoji: String(data.get("emoji") ?? ""),
+      bpm: bpm === "" ? null : Number(bpm),
+      color: Number(data.get("color")),
+      rating: data.get("rating") === "" ? null : Number(data.get("rating")),
+      is_beatgrid_locked: Boolean(form.querySelector("[name=is_beatgrid_locked]")?.checked)
+    };
+    if (bpm !== "" && Number.isNaN(fields.bpm)) return { error: t("detail.bpmNumber") };
+    return fields;
+  }
+  function MarkerSection({ track }) {
+    let note = t("markers.readOnly");
+    if (track.markers_unavailable) note = t("markers.unavailable");
+    else if (!track.markers_found) note = t("markers.none");
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("h3", { children: t("markers.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "detail-kicker", children: note }),
+      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(CuePads, { cues: track.cues || [] }),
+      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(LoopRow, { loop }, `loop-${index}`)),
+      (track.flips || []).map((flip, index) => /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "marker", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: flip.enabled ? t("common.on") : t("common.off") }),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: flip.name || t("markers.flip", { number: flip.index + 1 }) })
+      ] }, `flip-${index}`)),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(BeatgridBlock, { track })
+    ] });
+  }
+  function LoopRow({ loop }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
+    ] });
+  }
+  function CopySection({ fromId, copies, writable }) {
+    const list = useTrackList();
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("h3", { children: t("copies.heading") }),
+      copies.map((copy) => {
+        const name = copy.file || t("track.numbered", { id: String(copy.id) });
+        const file = copy.file || `Track ${copy.id}`;
+        return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "copy-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(openCopy(file)),
+              onClick: () => copy.id != null && list.selectTrack(copy.id),
+              children: name
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: copy.bitrate == null ? "" : String(copy.bitrate) }),
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: copy.play_count == null ? "" : String(copy.play_count) }),
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: copy.missing ? "missing" : copy.crates || "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(openReplaceCopy(file)),
+              disabled: !writable,
+              onClick: () => {
+                void bridge.openReplaceInCratesDialog(fromId, copy.id).catch((error2) => {
+                  list.setNotice(String(error2));
+                });
+              },
+              children: t("copies.useInCrates")
+            }
+          )
+        ] }, copy.id);
+      })
+    ] });
+  }
+  function MembershipSection({ track, writable }) {
+    const list = useTrackList();
+    const chosen = new Set(track.crate_ids || []);
+    const crates = [...list.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name));
+    const smart = list.crates.filter((crate) => crate.smart && chosen.has(crate.id));
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("h3", { children: t("crates.heading") }),
+      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("label", { className: "member", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "input",
+          {
+            ref: tooltipRef(membershipTip(crate.name)),
+            type: "checkbox",
+            defaultChecked: chosen.has(crate.id),
+            disabled: !writable,
+            onChange: (event) => {
+              const add = event.currentTarget.checked;
+              void list.setMembership(track.id, crate.id, add).then((ok) => {
+                if (!ok) event.currentTarget.checked = !add;
+              });
+            }
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: crate.name })
+      ] }, crate.id)) })
+    ] });
+  }
+  function FieldGroups({ track }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(import_jsx_runtime31.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
+  }
+  function FieldGroupBlock({ group }) {
+    const open = group.name !== "Search copies";
+    const [shown, setShown] = (0, import_react23.useState)(open);
+    const rows2 = group.fields.map((field, index) => /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "label", children: [
+        field.label ?? "",
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { className: "column", children: field.column ?? "" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("div", { className: "value", children: field.column === "color" && field.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("span", { className: "color-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { className: "swatch", style: { background: field.display } }),
+        field.display
+      ] }) : field.display })
+    ] }, `${field.column ?? field.label ?? index}`));
+    if (!open) {
+      return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)(import_jsx_runtime31.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "text-button",
+            ref: tooltipRef(shown ? tips.hideSearchCopies : tips.showSearchCopies),
+            onClick: () => setShown((value) => !value),
+            children: shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length })
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("section", { className: "group", hidden: !shown, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("h3", { children: group.name ?? "" }),
+          rows2
+        ] })
+      ] });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("h3", { children: group.name ?? "" }),
+      rows2
+    ] });
+  }
+  function TrackEditor({ track, writable }) {
+    const list = useTrackList();
+    const edit = track.edit || {};
+    const currentColor = Number(edit.color ?? 16777215);
+    const palette = COLORS.map(([value, key]) => [value, t(key)]);
+    if (!COLORS.some(([value]) => value === currentColor)) {
+      palette.push([currentColor, colorHex(currentColor) || t("color.custom")]);
+    }
+    const ratings = [
+      ["", t("rating.none")],
+      ...[["0.2", 1], ["0.4", 2], ["0.6", 3], ["0.8", 4], ["1", 5]].map(
+        ([value, stars]) => [value, t("rating.stars", { count: stars })]
+      )
+    ];
+    if (edit.rating != null && !ratings.some(([value]) => Number(value) === Number(edit.rating))) {
+      ratings.push([String(edit.rating), `${edit.rating}`]);
+    }
+    const ratingValue = edit.rating == null ? "" : String(edit.rating);
+    function onSubmit(event) {
+      event.preventDefault();
+      const fields = fieldsFromForm(event.currentTarget);
+      if ("error" in fields) {
+        list.setNotice(fields.error);
+        return;
+      }
+      void list.saveTrack(track.id, fields);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("form", { className: "editor", onSubmit, children: [
+      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("label", { className: wide ? "wide" : void 0, children: [
+        t(label),
+        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "textarea",
+          {
+            ref: tooltipRef(editField(t(label))),
+            name,
+            defaultValue: String(edit[name] ?? ""),
+            disabled: !writable
+          }
+        ) : /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "input",
+          {
+            ref: tooltipRef(editField(t(label))),
+            name,
+            defaultValue: String(edit[name] ?? ""),
+            inputMode: name === "bpm" ? "decimal" : void 0,
+            disabled: !writable
+          }
+        )
+      ] }, name)),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("label", { children: [
+        t("field.color"),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "select",
+          {
+            ref: tooltipRef(tips.trackColor),
+            name: "color",
+            defaultValue: String(currentColor),
+            disabled: !writable,
+            children: palette.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("option", { value: String(value), children: label }, value))
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("label", { children: [
+        t("field.rating"),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "select",
+          {
+            ref: tooltipRef(tips.trackRating),
+            name: "rating",
+            defaultValue: ratingValue,
+            disabled: !writable,
+            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("option", { value, children: label }, value || "none"))
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "input",
+          {
+            ref: tooltipRef(tips.beatgridLock),
+            type: "checkbox",
+            name: "is_beatgrid_locked",
+            defaultChecked: Boolean(edit.is_beatgrid_locked),
+            disabled: !writable
+          }
+        ),
+        t("field.beatgridLocked")
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+        "button",
+        {
+          type: "submit",
+          className: "text-button wide",
+          ref: tooltipRef(tips.saveTrack),
+          disabled: !writable,
+          children: t("detail.saveTrack")
+        }
+      )
+    ] });
+  }
+  function TrackBody({ track }) {
+    const list = useTrackList();
+    const writable = Boolean(track.serato?.writable && list.writable);
+    const playTitle = track.title || track.name || playerStrings.untitled;
+    const manager = track.serato?.file_manager || list.serato?.file_manager || "Finder";
+    const facts = [
+      ["column.bpm", track.bpm],
+      ["column.key", track.key || "—"],
+      ["column.time", track.length]
+    ];
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "detail-body", children: [
+      track.album ? /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("h2", { children: track.title ?? "" }),
+      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "artist", children: track.artist }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "deck", children: [
+        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: t(key) })
+        ] }, key)),
+        track.color ? /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
+          /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { children: t("field.color") })
+        ] }) : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(TrackEditor, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(revealTip(manager)),
+            disabled: !track.file_on_disk,
+            onClick: () => void list.revealTrack(track.id),
+            children: t("detail.reveal", { manager })
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(track.in_prepare ? tips.prepareRemove : tips.prepareAdd),
+            disabled: !writable,
+            onClick: () => void list.prepareTrack(track.id, !track.in_prepare),
+            children: track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.relocate),
+            disabled: !writable,
+            onClick: () => void list.relocateTrack(track),
+            children: t("detail.relocate")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.removeTrack),
+            disabled: !writable,
+            onClick: () => void list.removeTrack(track.id),
+            children: t("detail.removeFromLibrary")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.useInCrates),
+            disabled: !writable,
+            onClick: () => {
+              void bridge.openReplaceInCratesDialog(track.id).catch((error2) => {
+                list.setNotice(String(error2));
+              });
+            },
+            children: t("detail.useInCrates")
+          }
+        ),
+        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.mergeDuplicates),
+            disabled: !writable,
+            onClick: () => {
+              void bridge.openMergeDialog().catch((error2) => {
+                list.setNotice(String(error2));
+              });
+            },
+            children: t("merge.title")
+          }
+        ) : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(RelatedTracks, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(MarkerSection, { track }),
+      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(MembershipSection, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(FieldGroups, { track })
+    ] });
+  }
+  function HistoryBody({ entry }) {
+    const list = useTrackList();
+    const lines = [
+      [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
+      [t("column.deck"), entry.deck || "—"],
+      [t("history.started"), clockLabel(entry.start_time) || "—"],
+      [t("history.file"), entry.file || "—"]
+    ];
+    if (entry.notes) lines.push([t("history.notes"), entry.notes]);
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("div", { className: "field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("div", { className: "label", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("div", { className: "value", children: value })
+      ] }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+        "button",
+        {
+          type: "button",
+          className: "text-button",
+          ref: tooltipRef(tips.openInLibrary),
+          onClick: () => list.openInLibrary(entry.asset_id),
+          children: t("history.openInLibrary")
+        }
+      ) : null
+    ] });
+  }
+  function TrackDetailPane() {
+    const list = useTrackList();
+    const { detail: detail2 } = list;
+    if (detail2.kind === "none") {
+      return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "detail-empty", children: t("detail.empty") });
+    }
+    if (detail2.kind === "empty") {
+      return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "detail-empty", children: detail2.message });
+    }
+    if (detail2.kind === "reading") {
+      return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "detail-empty", children: t("detail.reading") });
+    }
+    if (detail2.kind === "error") {
+      return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("p", { className: "detail-error", children: detail2.message });
+    }
+    if (detail2.kind === "entry") {
+      return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(HistoryBody, { entry: detail2.entry });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(TrackBody, { track: detail2.track });
+  }
+
   // src/views.ts
-  var relatedRequest = 0;
-  var lastDetail = null;
+  var detailRoot = null;
   var detailPlayRoot = null;
   var crateListRoot = null;
   var crateListHost = null;
@@ -27938,11 +28740,17 @@
   var sessionRoot = null;
   var sessionHost = null;
   function clearDetailIslands() {
+    detailRoot?.unmount();
+    detailRoot = null;
     detailPlayRoot?.unmount();
     detailPlayRoot = null;
     historyDetailRoot?.unmount();
     historyDetailRoot = null;
     historyDetailHost = null;
+  }
+  function paintDetailIsland() {
+    clearDetailIslands();
+    detailRoot = mountIsland(el("detail"), (0, import_react24.createElement)(TrackDetailPane));
   }
   function remountIsland(host, node, slot) {
     if (slot.root && slot.host !== host) {
@@ -27965,16 +28773,16 @@
     const list = document.getElementById("crate-list");
     const listMount = mountCrateIsland(
       list instanceof HTMLElement ? list : null,
-      (0, import_react21.createElement)(CrateTree),
+      (0, import_react24.createElement)(CrateTree),
       crateListRoot,
       crateListHost
     );
     crateListRoot = listMount.root;
     crateListHost = listMount.host;
-    const actions2 = document.getElementById("crate-actions");
+    const actions3 = document.getElementById("crate-actions");
     const actionsMount = mountCrateIsland(
-      actions2 instanceof HTMLElement ? actions2 : null,
-      (0, import_react21.createElement)(CrateActions),
+      actions3 instanceof HTMLElement ? actions3 : null,
+      (0, import_react24.createElement)(CrateActions),
       crateActionsRoot,
       crateActionsHost
     );
@@ -27983,7 +28791,7 @@
     const browser = document.getElementById("crate-browser-actions");
     const browserMount = mountCrateIsland(
       browser instanceof HTMLElement ? browser : null,
-      (0, import_react21.createElement)(CrateBrowserActions),
+      (0, import_react24.createElement)(CrateBrowserActions),
       crateBrowserRoot,
       crateBrowserHost
     );
@@ -28362,11 +29170,19 @@
     if (!view.some((track) => track.id === state.selectedId)) {
       if (!view.length) {
         state.selectedId = null;
-        const empty = document.createElement("p");
-        empty.className = "detail-empty";
-        empty.textContent = state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches");
-        clearDetailIslands();
-        el("detail").replaceChildren(empty);
+        if (state.mode === "history") {
+          const empty = document.createElement("p");
+          empty.className = "detail-empty";
+          empty.textContent = !state.historyId ? t("history.chooseSession") : t("list.noMatches");
+          clearDetailIslands();
+          el("detail").replaceChildren(empty);
+        } else {
+          setTrackDetail({
+            kind: "empty",
+            message: t("list.noMatches")
+          });
+          paintDetailIsland();
+        }
       } else if (state.mode === "history") selectEntry(view[0].id);
       else selectTrack(view[0].id);
     }
@@ -28417,25 +29233,20 @@
     syncRelinkButton();
     paintRows();
     const token3 = ++state.request;
-    const pending = document.createElement("p");
-    pending.className = "detail-empty";
-    pending.textContent = t("detail.reading");
-    clearDetailIslands();
-    el("detail").replaceChildren(pending);
+    setTrackDetail({ kind: "reading" });
+    paintDetailIsland();
     try {
       const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
       const payload = await readJSONOr(response, {});
       if (!response.ok) throw new Error(serverMessage(payload, t("detail.readFailed", { status: String(response.status) })));
       if (token3 !== state.request) return;
       if (payload.serato) applyStatus(payload.serato);
-      renderDetail(payload);
+      setTrackDetail({ kind: "track", track: payload });
+      paintDetailIsland();
     } catch (error2) {
       if (token3 !== state.request) return;
-      const failure = document.createElement("p");
-      failure.className = "detail-error";
-      failure.textContent = failureOf(error2).message;
-      clearDetailIslands();
-      el("detail").replaceChildren(failure);
+      setTrackDetail({ kind: "error", message: failureOf(error2).message });
+      paintDetailIsland();
     }
   }
   function selectEntry(id) {
@@ -28444,640 +29255,15 @@
     notifyHistory();
     if (!state.entries.some((item3) => item3.id === id)) return;
     const host = el("detail");
+    detailRoot?.unmount();
+    detailRoot = null;
     detailPlayRoot?.unmount();
     detailPlayRoot = null;
-    historyDetailRoot = remountIsland(host, (0, import_react21.createElement)(HistoryDetail), {
+    historyDetailRoot = remountIsland(host, (0, import_react24.createElement)(HistoryDetail), {
       host: historyDetailHost,
       root: historyDetailRoot
     });
     historyDetailHost = host;
-  }
-  function fieldInput(name, label, value, wide = false) {
-    const wrap = document.createElement("label");
-    if (wide) wrap.className = "wide";
-    wrap.append(document.createTextNode(label));
-    const input = name === "comments" ? textareaEl(editField(label)) : inputEl(editField(label));
-    input.name = name;
-    input.value = String(value ?? "");
-    if (name === "bpm") input.inputMode = "decimal";
-    wrap.append(input);
-    return wrap;
-  }
-  function renderDetail(track) {
-    lastDetail = track;
-    const writable = Boolean(track.serato?.writable && state.writable);
-    const body = document.createElement("div");
-    body.className = "detail-body";
-    if (track.album) {
-      const kicker = document.createElement("p");
-      kicker.className = "detail-kicker";
-      kicker.textContent = track.album;
-      body.append(kicker);
-    }
-    const title2 = document.createElement("h2");
-    title2.textContent = track.title ?? "";
-    body.append(title2);
-    if (track.artist) {
-      const artist2 = document.createElement("p");
-      artist2.className = "artist";
-      artist2.textContent = track.artist ?? "";
-      body.append(artist2);
-    }
-    const playTitle = track.title || track.name || playerStrings.untitled;
-    clearDetailIslands();
-    const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react21.createElement)(PlayButton, {
-      variant: "detail",
-      trackId: track.id,
-      name: playTitle
-    }));
-    body.append(playHost);
-    const deck = document.createElement("div");
-    deck.className = "deck";
-    const facts = [["column.bpm", track.bpm], ["column.key", track.key || "—"], ["column.time", track.length]];
-    for (const [key, value] of facts) {
-      const label = t(key);
-      const cell = document.createElement("div");
-      const strong = document.createElement("strong");
-      strong.textContent = String(value || "—");
-      if (key === "column.bpm") strong.className = "bpm";
-      const span = document.createElement("span");
-      span.textContent = label;
-      cell.append(strong, span);
-      deck.append(cell);
-    }
-    if (track.color) {
-      const cell = document.createElement("div");
-      const swatch = document.createElement("span");
-      swatch.className = "swatch swatch-lg";
-      swatch.style.background = String(track.color ?? "");
-      const span = document.createElement("span");
-      span.textContent = t("field.color");
-      cell.append(swatch, span);
-      deck.append(cell);
-    }
-    body.append(deck);
-    const note = document.createElement("p");
-    note.className = "lock-note";
-    note.textContent = track.serato?.message || el("status").textContent;
-    body.append(note);
-    const form = document.createElement("form");
-    form.className = "editor";
-    const edit = track.edit || {};
-    const editorFields = [
-      ["name", "column.title", true],
-      ["artist", "column.artist", false],
-      ["album", "field.album", false],
-      ["genre", "field.genre", false],
-      ["year", "field.year", false],
-      ["composer", "field.composer", false],
-      ["remixer", "field.remixer", false],
-      ["label", "field.label", false],
-      ["grouping", "field.grouping", false],
-      ["key", "column.key", false],
-      ["bpm", "column.bpm", false],
-      ["emoji", "field.emoji", false],
-      ["comments", "field.comments", true]
-    ];
-    for (const [name, label, wide] of editorFields) {
-      form.append(fieldInput(name, t(label), String(edit[name] ?? ""), wide));
-    }
-    const colorLabel = document.createElement("label");
-    colorLabel.append(document.createTextNode(t("field.color")));
-    const colorSelect = selectEl(tips.trackColor);
-    colorSelect.name = "color";
-    const currentColor = Number(edit.color ?? 16777215);
-    const palette = COLORS.map(([value, key]) => [value, t(key)]);
-    if (!COLORS.some(([value]) => value === currentColor)) palette.push([currentColor, colorHex(currentColor) || t("color.custom")]);
-    for (const [value, label] of palette) {
-      const option = document.createElement("option");
-      option.value = String(value);
-      option.textContent = label;
-      option.selected = value === currentColor;
-      colorSelect.append(option);
-    }
-    colorLabel.append(colorSelect);
-    form.append(colorLabel);
-    const ratingLabel = document.createElement("label");
-    ratingLabel.append(document.createTextNode(t("field.rating")));
-    const ratingSelect = selectEl(tips.trackRating);
-    ratingSelect.name = "rating";
-    const ratings = [
-      ["", t("rating.none")],
-      ...[["0.2", 1], ["0.4", 2], ["0.6", 3], ["0.8", 4], ["1", 5]].map(([value, stars]) => [value, t("rating.stars", { count: stars })])
-    ];
-    if (edit.rating != null && !ratings.some(([value]) => Number(value) === Number(edit.rating))) {
-      ratings.push([String(edit.rating), `${edit.rating}`]);
-    }
-    for (const [value, label] of ratings) {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = label ?? "";
-      option.selected = value === (edit.rating == null ? "" : String(edit.rating));
-      ratingSelect.append(option);
-    }
-    ratingLabel.append(ratingSelect);
-    form.append(ratingLabel);
-    const lock = document.createElement("label");
-    lock.className = "check";
-    const lockInput = inputEl(tips.beatgridLock);
-    lockInput.type = "checkbox";
-    lockInput.name = "is_beatgrid_locked";
-    lockInput.checked = Boolean(edit.is_beatgrid_locked);
-    lock.append(lockInput, document.createTextNode(t("field.beatgridLocked")));
-    form.append(lock);
-    const save3 = buttonEl(tips.saveTrack);
-    save3.type = "submit";
-    save3.className = "text-button wide";
-    save3.textContent = t("detail.saveTrack");
-    form.append(save3);
-    for (const control of form.querySelectorAll("input, select, textarea, button")) control.disabled = !writable;
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      saveTrack(track.id, form);
-    });
-    body.append(form);
-    const actions2 = document.createElement("div");
-    actions2.className = "actions";
-    const reveal = buttonEl(revealTip(track.serato?.file_manager || state.serato?.file_manager || "Finder"));
-    const manager = track.serato?.file_manager || state.serato?.file_manager || "Finder";
-    reveal.textContent = t("detail.reveal", { manager });
-    reveal.disabled = !track.file_on_disk;
-    reveal.addEventListener("click", () => revealTrack(track.id));
-    const prepare = buttonEl(track.in_prepare ? tips.prepareRemove : tips.prepareAdd);
-    prepare.textContent = track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare");
-    prepare.disabled = !writable;
-    prepare.addEventListener("click", () => prepareTrack(track.id, !track.in_prepare));
-    const relocate = buttonEl(tips.relocate);
-    relocate.textContent = t("detail.relocate");
-    relocate.disabled = !writable;
-    relocate.addEventListener("click", () => relocateTrack(track));
-    const remove = buttonEl(tips.removeTrack);
-    remove.textContent = t("detail.removeFromLibrary");
-    remove.disabled = !writable;
-    remove.addEventListener("click", () => removeTrack(track.id));
-    const useInCrates = buttonEl(tips.useInCrates);
-    useInCrates.textContent = t("detail.useInCrates");
-    useInCrates.disabled = !writable;
-    useInCrates.addEventListener("click", () => {
-      bridge.openReplaceInCratesDialog(track.id).catch((error2) => setNotice(failureOf(error2).message));
-    });
-    actions2.append(reveal, prepare, relocate, remove, useInCrates);
-    if (state.mode === "duplicates" && selectedDuplicateGroup()) {
-      const merge = buttonEl(tips.mergeDuplicates);
-      merge.textContent = t("merge.title");
-      merge.disabled = !writable;
-      merge.addEventListener("click", () => {
-        bridge.openMergeDialog().catch((error2) => setNotice(failureOf(error2).message));
-      });
-      actions2.append(merge);
-    }
-    body.append(actions2);
-    body.append(relatedSection(track, writable));
-    body.append(markerSection(track));
-    if (track.copies?.length) body.append(copySection(track.id, track.copies, writable));
-    body.append(membershipSection(track, writable));
-    for (const group of track.groups || []) {
-      const section = document.createElement("section");
-      section.className = "group";
-      const heading = document.createElement("h3");
-      heading.textContent = group.name ?? "";
-      section.append(heading);
-      const open = group.name !== "Search copies";
-      if (!open) {
-        const toggle = buttonEl(tips.showSearchCopies);
-        toggle.className = "text-button";
-        toggle.textContent = t("detail.searchCopies", { count: group.fields.length });
-        let shown = false;
-        section.hidden = true;
-        toggle.addEventListener("click", () => {
-          shown = !shown;
-          section.hidden = !shown;
-          toggle.textContent = shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length });
-          setTooltip(toggle, shown ? tips.hideSearchCopies : tips.showSearchCopies);
-        });
-        body.append(toggle);
-      }
-      for (const field of group.fields) {
-        const row = document.createElement("div");
-        row.className = "field";
-        const label = document.createElement("div");
-        label.className = "label";
-        label.textContent = field.label ?? "";
-        const column = document.createElement("span");
-        column.className = "column";
-        column.textContent = field.column ?? "";
-        label.append(column);
-        const value = document.createElement("div");
-        value.className = "value";
-        if (field.column === "color" && field.display.startsWith("#")) {
-          const wrap = document.createElement("span");
-          wrap.className = "color-value";
-          const swatch = document.createElement("span");
-          swatch.className = "swatch";
-          swatch.style.background = field.display;
-          wrap.append(swatch, document.createTextNode(field.display));
-          value.append(wrap);
-        } else {
-          value.textContent = field.display;
-        }
-        row.append(label, value);
-        section.append(row);
-      }
-      body.append(section);
-    }
-    el("detail").replaceChildren(body);
-  }
-  function markerSection(track) {
-    const section = document.createElement("section");
-    section.className = "group";
-    const heading = document.createElement("h3");
-    heading.textContent = t("markers.heading");
-    section.append(heading);
-    const note = document.createElement("p");
-    note.className = "detail-kicker";
-    if (track.markers_unavailable) note.textContent = t("markers.unavailable");
-    else if (!track.markers_found) note.textContent = t("markers.none");
-    else note.textContent = t("markers.readOnly");
-    section.append(note);
-    const ms = (value) => formatCueTime(value);
-    if (!track.markers_unavailable) appendCueSlots(section, track.cues || []);
-    for (const loop of track.loops || []) {
-      const row = document.createElement("div");
-      row.className = "marker";
-      const swatch = document.createElement("span");
-      swatch.className = "swatch";
-      if (loop.color) swatch.style.background = loop.color;
-      const time = document.createElement("span");
-      time.textContent = `${ms(loop.start_ms)}–${ms(loop.end_ms)}`;
-      const name = document.createElement("span");
-      name.textContent = loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 });
-      row.append(document.createElement("span"), swatch, time, name);
-      section.append(row);
-    }
-    for (const flip of track.flips || []) {
-      const row = document.createElement("div");
-      row.className = "marker";
-      const time = document.createElement("span");
-      time.textContent = flip.enabled ? t("common.on") : t("common.off");
-      const name = document.createElement("span");
-      name.textContent = flip.name || t("markers.flip", { number: flip.index + 1 });
-      row.append(document.createElement("span"), document.createElement("span"), time, name);
-      section.append(row);
-    }
-    appendBeatgrid(section, track);
-    return section;
-  }
-  function copySection(fromId, copies, writable) {
-    const section = document.createElement("section");
-    section.className = "group";
-    const heading = document.createElement("h3");
-    heading.textContent = t("copies.heading");
-    section.append(heading);
-    for (const copy of copies) {
-      const row = document.createElement("div");
-      row.className = "copy-row";
-      const button = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
-      button.className = "text-button";
-      button.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
-      button.addEventListener("click", () => selectTrack(copy.id));
-      const rate = document.createElement("span");
-      rate.textContent = copy.bitrate == null ? "" : String(copy.bitrate);
-      const plays = document.createElement("span");
-      plays.textContent = copy.play_count == null ? "" : String(copy.play_count);
-      const crates = document.createElement("span");
-      crates.textContent = copy.missing ? "missing" : copy.crates || "";
-      const replace = buttonEl(openReplaceCopy(copy.file || `Track ${copy.id}`));
-      replace.className = "text-button";
-      replace.textContent = t("copies.useInCrates");
-      replace.disabled = !writable;
-      replace.addEventListener("click", () => {
-        bridge.openReplaceInCratesDialog(fromId, copy.id).catch((error2) => setNotice(failureOf(error2).message));
-      });
-      row.append(button, rate, plays, crates, replace);
-      section.append(row);
-    }
-    return section;
-  }
-  function relatedSection(track, writable) {
-    const section = document.createElement("section");
-    section.className = "group";
-    section.dataset.trackId = String(track.id);
-    const heading = document.createElement("h3");
-    heading.id = `related-heading-${track.id}`;
-    heading.textContent = t("related.heading");
-    section.setAttribute("aria-labelledby", heading.id);
-    section.setAttribute("aria-busy", "true");
-    const status = document.createElement("p");
-    status.className = "detail-kicker";
-    status.setAttribute("role", "status");
-    const path = track.resolved_path || track.edit?.portable_id || "";
-    status.textContent = path ? t("related.loading") : t("related.noPath");
-    section.append(heading, status);
-    if (path) loadRelated(track, section, writable, "");
-    return section;
-  }
-  async function loadRelated(track, section, writable, query) {
-    const token3 = ++relatedRequest;
-    const path = track.resolved_path || track.edit?.portable_id || "";
-    const params = new URLSearchParams({ path, space: state.space });
-    try {
-      const response = await fetch(`/api/related?${params}`);
-      const payload = await readJSONOr(response, {});
-      if (token3 !== relatedRequest || !section.isConnected) return;
-      if (!response.ok) throw new Error(serverMessage(payload, t("related.loadFailed")));
-      renderRelated(track, section, writable, payload, query);
-    } catch (error2) {
-      if (token3 !== relatedRequest || !section.isConnected) return;
-      section.setAttribute("aria-busy", "false");
-      const status = section.querySelector("[role=status]");
-      if (status) status.textContent = failureOf(error2).message;
-    }
-  }
-  function renderRelated(track, section, writable, payload, query) {
-    const heading = section.querySelector("h3");
-    section.replaceChildren(heading);
-    section.setAttribute("aria-busy", "false");
-    const saved = Array.isArray(payload.saved) ? payload.saved : [];
-    const suggested = Array.isArray(payload.suggested) ? payload.suggested : [];
-    const status = document.createElement("p");
-    status.className = "detail-kicker";
-    status.setAttribute("role", "status");
-    status.textContent = saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved");
-    section.append(status);
-    if (saved.length) section.append(relatedSavedList(track, section, saved));
-    section.append(relatedSearch(track, section, query));
-    const suggestHeading = document.createElement("p");
-    suggestHeading.className = "detail-kicker";
-    suggestHeading.textContent = suggested.length ? t("related.suggested") : t("related.noSuggestions");
-    section.append(suggestHeading);
-    if (suggested.length) section.append(relatedSuggestList(track, section, suggested));
-    const crate = buttonEl(tips.updateRelated);
-    crate.className = "text-button";
-    crate.dataset.relatedCrate = "true";
-    const crateName = payload.crate_name || "Related";
-    crate.textContent = t("related.updateCrate");
-    crate.disabled = !writable;
-    crate.addEventListener("click", () => refreshRelatedCrate(track, section));
-    const crateNote = document.createElement("p");
-    crateNote.className = "detail-kicker";
-    crateNote.textContent = writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato");
-    section.append(crate, crateNote);
-  }
-  function relatedSavedList(track, section, saved) {
-    const list = document.createElement("ul");
-    list.className = "related-list";
-    for (const link of saved) {
-      const item3 = document.createElement("li");
-      item3.className = "related-row";
-      const main = document.createElement("div");
-      const other = link.track || {};
-      const label = other.title || t("track.untitled");
-      if (other.asset_id != null && other.in_library) {
-        const open = buttonEl(openRelated(label));
-        open.className = "text-button";
-        open.textContent = label;
-        open.addEventListener("click", () => selectTrack(other.asset_id));
-        main.append(open);
-      } else {
-        const name = document.createElement("span");
-        name.textContent = label;
-        main.append(name);
-      }
-      const meta = document.createElement("p");
-      meta.className = "related-meta";
-      const bits = [];
-      if (other.artist) bits.push(other.artist);
-      if (other.key) bits.push(other.key);
-      if (other.bpm != null && other.bpm !== "") bits.push(t("markers.bpm", { bpm: String(other.bpm) }));
-      bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay"));
-      if (link.rating != null) bits.push(t("related.ratingOutOf", { rating: String(link.rating) }));
-      if (!other.in_library) bits.push(t("related.notInLibrary"));
-      meta.textContent = bits.join(" · ");
-      main.append(meta);
-      if (link.note) {
-        const note = document.createElement("p");
-        note.className = "related-note";
-        note.textContent = link.note;
-        main.append(note);
-      }
-      const remove = buttonEl(removeRelatedTip(label));
-      remove.className = "text-button";
-      remove.textContent = t("common.remove");
-      remove.setAttribute("aria-label", t("related.removeLink", { name: label }));
-      remove.addEventListener("click", () => removeRelated(track, section, link));
-      item3.append(main, remove);
-      list.append(item3);
-    }
-    return list;
-  }
-  function relatedSearch(track, section, query) {
-    const block = document.createElement("div");
-    block.className = "related-search";
-    const label = document.createElement("label");
-    label.append(document.createTextNode(t("related.find")));
-    const input = inputEl(tips.findRelated);
-    input.type = "search";
-    input.autocomplete = "off";
-    input.placeholder = t("related.findPlaceholder");
-    input.value = query || "";
-    label.append(input);
-    const results = document.createElement("ul");
-    results.className = "related-results";
-    const form = document.createElement("div");
-    form.className = "related-form";
-    form.hidden = true;
-    block.append(label, results, form);
-    const paint3 = () => {
-      results.replaceChildren();
-      form.hidden = true;
-      form.replaceChildren();
-      const query2 = parseQuery(input.value);
-      if (!query2.terms.length && !query2.filters.length) {
-        const hint = document.createElement("li");
-        hint.className = "related-meta";
-        hint.textContent = t("related.typeHint");
-        results.append(hint);
-        return;
-      }
-      const hits2 = state.tracks.filter((item3) => item3.id !== track.id && matchesQuery(item3, query2)).slice(0, 8);
-      if (!hits2.length) {
-        const empty = document.createElement("li");
-        empty.className = "related-meta";
-        empty.textContent = t("list.noMatches");
-        results.append(empty);
-        return;
-      }
-      for (const hit of hits2) {
-        const item3 = document.createElement("li");
-        const name = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
-        const choose = buttonEl(chooseRelated(name));
-        choose.className = "text-button";
-        choose.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
-        choose.addEventListener("click", () => relatedLinkForm(track, section, form, hit, input.value));
-        item3.append(choose);
-        results.append(item3);
-      }
-    };
-    input.addEventListener("input", paint3);
-    paint3();
-    return block;
-  }
-  function relatedLinkForm(track, section, form, hit, query) {
-    form.hidden = false;
-    form.replaceChildren();
-    const chosen = document.createElement("p");
-    chosen.className = "related-meta";
-    chosen.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
-    const noteLabel = document.createElement("label");
-    noteLabel.append(document.createTextNode(t("related.note")));
-    const note = inputEl(tips.linkNote);
-    note.type = "text";
-    note.maxLength = 500;
-    note.placeholder = t("related.notePlaceholder");
-    noteLabel.append(note);
-    const ratingLabel = document.createElement("label");
-    ratingLabel.append(document.createTextNode(t("related.linkRating")));
-    const rating = selectEl(tips.linkRating);
-    for (const [value, text2] of [["", t("rating.none")], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]) {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = text2;
-      rating.append(option);
-    }
-    ratingLabel.append(rating);
-    const mutualLabel = document.createElement("label");
-    mutualLabel.className = "check";
-    const mutual = inputEl(tips.linkMutual);
-    mutual.type = "checkbox";
-    mutual.checked = true;
-    mutualLabel.append(mutual, document.createTextNode(t("related.twoWayLink")));
-    const save3 = buttonEl(tips.saveLink);
-    save3.className = "text-button";
-    save3.textContent = t("related.saveLink");
-    save3.addEventListener("click", () => {
-      save3.disabled = true;
-      saveRelated(track, section, {
-        action: "add",
-        asset: track.id,
-        target: hit.id,
-        mutual: mutual.checked,
-        note: note.value,
-        rating: rating.value === "" ? null : Number(rating.value),
-        space: state.space
-      }, query);
-    });
-    form.append(chosen, noteLabel, ratingLabel, mutualLabel, save3);
-  }
-  function relatedSuggestList(track, section, suggested) {
-    const list = document.createElement("ul");
-    list.className = "related-list";
-    for (const item3 of suggested) {
-      const row = document.createElement("li");
-      row.className = "related-row";
-      const main = document.createElement("div");
-      const name = document.createElement("span");
-      name.textContent = item3.artist ? `${item3.title || t("track.untitled")} · ${item3.artist}` : item3.title || t("track.untitled");
-      const reasons = document.createElement("p");
-      reasons.className = "related-meta";
-      reasons.textContent = Array.isArray(item3.reasons) ? item3.reasons.join(" · ") : "";
-      main.append(name, reasons);
-      const save3 = buttonEl(saveSuggestion(item3.title || "Untitled"));
-      save3.className = "text-button";
-      save3.textContent = t("common.save");
-      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item3.title || t("track.untitled") }));
-      save3.addEventListener("click", () => {
-        save3.disabled = true;
-        saveRelated(track, section, {
-          action: "add",
-          asset: track.id,
-          target: item3.asset_id,
-          mutual: true,
-          note: "",
-          rating: null,
-          space: state.space
-        }, "");
-      });
-      row.append(main, save3);
-      list.append(row);
-    }
-    return list;
-  }
-  async function saveRelated(track, section, body, query) {
-    try {
-      await postJSON("/api/related", body);
-      setNotice(t("related.saved"));
-      const kept = section.querySelector(".related-search input");
-      await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : query);
-    } catch (error2) {
-      if (failureOf(error2).status === 409) lockDown(error2);
-      else setNotice(failureOf(error2).message);
-      const status = section.querySelector("[role=status]");
-      if (status) status.textContent = failureOf(error2).message;
-    }
-  }
-  async function removeRelated(track, section, link) {
-    const label = link.track?.title || t("related.thisTrack");
-    if (!confirm(t("related.confirmRemove", { name: label }))) return;
-    try {
-      await postJSON("/api/related", { action: "remove", id: link.id });
-      setNotice(t("related.removed"));
-      const kept = section.querySelector(".related-search input");
-      await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : "");
-    } catch (error2) {
-      setNotice(failureOf(error2).message);
-    }
-  }
-  async function refreshRelatedCrate(track, section) {
-    const button = section.querySelector("[data-related-crate]");
-    if (button) button.disabled = true;
-    try {
-      const result = await postJSON("/api/related", { action: "crate", asset: track.id, space: state.space });
-      setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") }));
-      await loadLibrary();
-      selectTrack(track.id);
-    } catch (error2) {
-      if (failureOf(error2).status === 409) {
-        lockDown(error2);
-        if (button) button.disabled = true;
-      } else {
-        setNotice(failureOf(error2).message);
-        if (button) button.disabled = !state.writable;
-      }
-    }
-  }
-  function membershipSection(track, writable) {
-    const section = document.createElement("section");
-    section.className = "group";
-    const heading = document.createElement("h3");
-    heading.textContent = t("crates.heading");
-    section.append(heading);
-    const holder = document.createElement("div");
-    holder.className = "member-list";
-    const chosen = new Set(track.crate_ids || []);
-    const crates = [...state.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name));
-    for (const crate of crates) {
-      const label = document.createElement("label");
-      label.className = "member";
-      const input = inputEl(membershipTip(crate.name));
-      input.type = "checkbox";
-      input.checked = chosen.has(crate.id);
-      input.disabled = !writable;
-      input.addEventListener("change", () => setMembership(track.id, crate.id, input.checked, input));
-      const name = document.createElement("span");
-      name.textContent = crate.name;
-      label.append(input, name);
-      holder.append(label);
-    }
-    const smart = state.crates.filter((crate) => crate.smart && chosen.has(crate.id));
-    if (smart.length) {
-      const line = document.createElement("p");
-      line.className = "detail-kicker";
-      line.textContent = t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") });
-      section.append(line);
-    }
-    section.append(holder);
-    return section;
   }
   function repaintViews() {
     if (state.serato) el("status").textContent = statusLine(state.serato);
@@ -29088,8 +29274,7 @@
       if (state.selectedId != null) selectEntry(state.selectedId);
       return;
     }
-    const detail = lastDetail;
-    if (detail && detail.id === state.selectedId && el("detail").querySelector(".detail-body")) renderDetail(detail);
+    if (detailRoot) paintDetailIsland();
   }
   function setNotice(text2) {
     el("notice").textContent = text2 || "";
@@ -29163,28 +29348,8 @@
     applyStatus(failed.payload?.serato || { writable: false, message: failed.message });
     setNotice(failed.message);
   }
-  async function saveTrack(id, form) {
-    const data = new FormData(form);
-    const bpm = data.get("bpm");
-    const fields = {
-      name: data.get("name") ?? "",
-      artist: data.get("artist") ?? "",
-      album: data.get("album") ?? "",
-      genre: data.get("genre") ?? "",
-      year: data.get("year") ?? "",
-      composer: data.get("composer") ?? "",
-      remixer: data.get("remixer") ?? "",
-      label: data.get("label") ?? "",
-      grouping: data.get("grouping") ?? "",
-      comments: data.get("comments") ?? "",
-      key: data.get("key") ?? "",
-      emoji: data.get("emoji") ?? "",
-      bpm: bpm === "" ? null : Number(bpm),
-      color: Number(data.get("color")),
-      rating: data.get("rating") === "" ? null : Number(data.get("rating")),
-      is_beatgrid_locked: form.querySelector("[name=is_beatgrid_locked]").checked
-    };
-    if (bpm !== "" && Number.isNaN(fields.bpm)) {
+  async function saveTrack(id, fields) {
+    if (fields.bpm != null && Number.isNaN(fields.bpm)) {
       setNotice(t("detail.bpmNumber"));
       return;
     }
@@ -29256,10 +29421,12 @@
       if (result.warning) setNotice(result.warning);
       await loadLibrary();
       selectTrack(assetId);
+      return true;
     } catch (error2) {
-      input.checked = !add;
+      if (input) input.checked = !add;
       if (failureOf(error2).status === 409) lockDown(error2);
       else setNotice(failureOf(error2).message);
+      return false;
     }
   }
   async function saveRules(id, text2) {
@@ -29372,7 +29539,7 @@
   function renderSessions() {
     notifyHistory();
     const host = el("session-list");
-    sessionRoot = remountIsland(host, (0, import_react21.createElement)(HistorySessions), {
+    sessionRoot = remountIsland(host, (0, import_react24.createElement)(HistorySessions), {
       host: sessionHost,
       root: sessionRoot
     });
@@ -29481,11 +29648,8 @@
   }
   function showFailure(error2) {
     el("count").textContent = t("library.unavailable");
-    const failure = document.createElement("p");
-    failure.className = "detail-error";
-    failure.textContent = failureOf(error2).message;
-    clearDetailIslands();
-    el("detail").replaceChildren(failure);
+    setTrackDetail({ kind: "error", message: failureOf(error2).message });
+    paintDetailIsland();
   }
   function selectedDuplicateGroup() {
     if (state.mode !== "duplicates" || state.selectedId == null) return null;
@@ -29638,6 +29802,23 @@
   bridge.selectEntry = selectEntry;
   bridge.reloadLibrary = loadLibrary;
   bridge.lockDown = lockDown;
+  registerTrackListActions({
+    selectTrack: (id) => {
+      void selectTrack(id);
+    },
+    selectEntry,
+    play,
+    saveTrack,
+    revealTrack,
+    prepareTrack,
+    relocateTrack,
+    removeTrack,
+    setMembership,
+    openInLibrary: (id) => {
+      void openInLibrary(id);
+    },
+    setNotice
+  });
   bindCrateActions({
     select: selectCrate,
     toggle: toggleCrate,
