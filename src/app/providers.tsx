@@ -3,9 +3,10 @@
  *
  * Player is one domain. The crate rail is the next. Waveform zoom and
  * overview are another. Before a gig is a fourth. Files is a fifth.
- * History is a sixth. Later screens add their own context file and one
- * wrapper here. This module reads those engines; it does not own fetch,
- * playback, crate writes, history loads, or the folder load.
+ * History is a sixth. Settings is a seventh. Later screens add their own
+ * context file and one wrapper here. This module reads those engines; it
+ * does not own fetch, playback, crate writes, history loads, the folder
+ * load, or the settings file.
  */
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -70,7 +71,11 @@ import {
   subscribeGig,
 } from "../gig";
 import { getDriftSnapshot, subscribeDrift } from "../drift";
-import { LOCALE_EVENT } from "../i18n";
+import { LOCALE_EVENT, onLocaleChange } from "../i18n";
+import {
+  SettingsProvider as SettingsContextProvider,
+  type SettingsContextValue,
+} from "../context/SettingsContext";
 import {
   SEEK_STEP_LARGE_SECONDS,
   SEEK_STEP_SECONDS,
@@ -93,6 +98,21 @@ import {
   togglePlayPause,
 } from "../player";
 import { portableSnapshot } from "../portable";
+import {
+  closeSettings,
+  copyLogs,
+  copySettingsVersion,
+  getSettingsState,
+  openLogs,
+  rerunSetup,
+  saveColorway,
+  saveIconFollow,
+  saveLanguage,
+  saveSharing,
+  saveUpdateEnabled,
+  saveUpdatePrereleases,
+  subscribeSettings,
+} from "../settings";
 import { state } from "../state";
 
 function readPlayerValue(): PlayerContextValue {
@@ -116,6 +136,25 @@ function readPlayerValue(): PlayerContextValue {
     formatTime: formatPlayerTime,
     seekStep: SEEK_STEP_SECONDS,
     seekStepLarge: SEEK_STEP_LARGE_SECONDS,
+  };
+}
+
+function readSettingsValue(): SettingsContextValue {
+  return {
+    ...getSettingsState(),
+    saveLanguage,
+    saveColorway,
+    saveIconFollow,
+    saveSharing: async (on) => {
+      await saveSharing(on);
+    },
+    saveUpdateEnabled,
+    saveUpdatePrereleases,
+    openLogs,
+    copyLogs,
+    copyVersion: copySettingsVersion,
+    rerunSetup,
+    close: closeSettings,
   };
 }
 
@@ -336,11 +375,39 @@ export function CrateProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Mount the Settings domain at the root of one React island.
+ *
+ * Updates are flushed so tests see the picker and About in the same
+ * turn as a save. A language change also repaints, because labels live
+ * in the catalogs.
+ *
+ * @param children Island that calls `useSettings`.
+ */
+export function SettingsProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readSettingsValue);
+  useEffect(() => {
+    const refresh = (): void => {
+      flushSync(() => {
+        setValue(readSettingsValue());
+      });
+    };
+    const stopStore = subscribeSettings(refresh);
+    const stopLocale = onLocaleChange(refresh);
+    return () => {
+      stopStore();
+      stopLocale();
+    };
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <SettingsContextProvider value={current}>{children}</SettingsContextProvider>;
+}
+
+/**
  * Nest every domain provider.
  *
  * Player is the first domain. Crates wrap inside it. Waveform wraps
  * inside crates. Before a gig wraps inside waveform. Files wraps inside
- * Before a gig. History wraps inside Files.
+ * Before a gig. History wraps inside Files. Settings wraps inside History.
  *
  * @param children Page island.
  */
@@ -351,7 +418,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
         <WaveformProvider>
           <GigProvider>
             <FilesProvider>
-              <HistoryProvider>{children}</HistoryProvider>
+              <HistoryProvider>
+                <SettingsProvider>{children}</SettingsProvider>
+              </HistoryProvider>
             </FilesProvider>
           </GigProvider>
         </WaveformProvider>
