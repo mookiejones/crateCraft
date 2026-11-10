@@ -5,8 +5,8 @@
  * inside the scroll window, plus six extra rows each side.
  */
 
-import { t } from "../i18n";
-import { useTrackList } from "../context/TrackListContext";
+import { t } from "../lib/i18n";
+import { useTrackList } from "../containers/TrackListContext";
 import { TrackRow } from "./TrackRow";
 
 export type TrackListWindowProps = {

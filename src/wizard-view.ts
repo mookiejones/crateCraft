@@ -9,14 +9,14 @@
 import { createElement } from "react";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
-import { WizardScreen } from "./components/WizardScreen";
+import { WizardScreen } from "./pages/WizardScreen";
 import {
   idleWizardValue,
   WizardProvider,
   type FolderRow,
   type WizardContextValue,
-} from "./context/WizardContext";
-import { onLocaleChange, serverMessage, t, type MessageKey } from "./i18n";
+} from "./containers/WizardContext";
+import { onLocaleChange, serverMessage, t, type MessageKey } from "./lib/i18n";
 import {
   canGoBack,
   createWizard,
@@ -26,7 +26,7 @@ import {
   snapshotBlocked,
   type LibraryStatus,
   type WizardModel,
-} from "./wizard";
+} from "./lib/wizard/wizard";
 
 export interface SettingsPayload {
   telemetry_consent: boolean | null;

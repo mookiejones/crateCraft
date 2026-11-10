@@ -7,18 +7,18 @@
  */
 
 import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
-import { usePlayer } from "../context/PlayerContext";
+import { usePlayer } from "../containers/PlayerContext";
 import {
   useWaveform,
   useWaveformClockOverride,
   type WaveformClock,
   type WaveformPhase,
-} from "../context/WaveformContext";
-import { t } from "../i18n";
-import { playerStrings } from "../player-strings";
-import { setTooltip } from "../tooltip";
-import { tips, type TipSpec } from "../tooltip-strings";
-import type { WaveformEngine } from "../waveform-view";
+} from "../containers/WaveformContext";
+import { t } from "../lib/i18n";
+import { playerStrings } from "../lib/player/player-strings";
+import { setTooltip } from "../lib/ui/tooltip";
+import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
+import type { WaveformEngine } from "../lib/player/waveform-view";
 
 function tooltipRef(spec: TipSpec) {
   return (element: HTMLElement | null) => {

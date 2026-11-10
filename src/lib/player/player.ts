@@ -1,0 +1,682 @@
+/**
+ * Playback for one library track.
+ *
+ * One `<audio>` element plays `GET /api/audio`. The bar, list Play, and
+ * detail Play are React components on `PlayerContext`. The engine in this
+ * file is the single store those islands subscribe to. The bar shows the
+ * title, the artist, previous, play/pause, next, a seek bar with cue
+ * markers, elapsed and total time, volume, and the waveform. Strings live
+ * in `player-strings.ts`. Cue points, loops, and the beatgrid come from
+ * `GET /api/track` and are not written back. The waveform is React on
+ * `WaveformContext`. Space and the seek keys stay in the shortcut table.
+ *
+ * Hotkeys import this module and call:
+ *
+ * - `play(trackId: number): void`
+ * - `playOrToggle(trackId: number): void`
+ * - `pause(): void`
+ * - `togglePlayPause(): void`
+ * - `next(): void`
+ * - `previous(): void`
+ * - `seek(seconds: number): void`
+ * - `seekBy(deltaSeconds: number): void`
+ * - `isPlaying(): boolean`
+ * - `getPlayerState(): PlayerSnapshot`
+ * - `getPlayerCues(): readonly CueMarker[]`
+ * - `setVolume(volume: number): void`
+ * - `subscribe(listener: (state: PlayerSnapshot) => void): () => void`
+ *
+ * `playerControls` is what `app.ts` passes to `registerPlayerControls` right
+ * after `mountPlayer()`. The shortcut table is the only Space listener.
+ * `togglePlayPause` plays the selected library track when nothing is loaded.
+ * The table's Left and Right call `seekBy` with 5 seconds. On the seek bar,
+ * Left and Right move `SEEK_STEP_SECONDS` (5) and Shift moves
+ * `SEEK_STEP_LARGE_SECONDS` (30). That handler marks the event handled so
+ * the table does not seek a second time.
+ */
+
+import type { Marker, Track } from "../api-types";
+import { slotColor } from "../ui/cue-view";
+import { createElement } from "react";
+import { mountIsland, type IslandRoot } from "../../app/mount";
+import { PlayerBar } from "../../components/PlayerBar";
+import { playerStrings } from "./player-strings";
+import { state } from "../state";
+import { beatgridFromMarkers, loopsFromMarkers } from "./waveform";
+import { mountWaveform, type WaveformController } from "./waveform-view";
+
+export interface PlayerSnapshot {
+  trackId: number | null;
+  title: string;
+  artist: string;
+  playing: boolean;
+  currentTime: number;
+  duration: number;
+  volume: number;
+  error: string;
+}
+
+export type PlayerListener = (state: PlayerSnapshot) => void;
+
+/**
+ * Hooks the shortcut table registers.
+ *
+ * Space and the global seek keys stay in that table. This module does not
+ * add a document listener for them.
+ */
+export interface PlayerControls {
+  togglePlayPause(): void;
+  seekBy(deltaSeconds: number): void;
+}
+
+/** Seconds for one press of Left or Right on the seek bar. */
+export const SEEK_STEP_SECONDS = 5;
+
+/** Seconds for Shift with Left or Right on the seek bar. */
+export const SEEK_STEP_LARGE_SECONDS = 30;
+
+/**
+ * One cue drawn on the seek bar.
+ *
+ * `seconds` is the position from the file. `color` is a `#` hex string from
+ * the file, or the Serato pad color for that index. `label` is the cue name.
+ */
+export interface CueMarker {
+  seconds: number;
+  color: string;
+  label: string;
+}
+
+/**
+ * The small surface the player needs from an audio element.
+ *
+ * A test can pass a fake. The page uses a real `<audio>` element.
+ */
+export interface PlayableMedia {
+  src: string;
+  currentTime: number;
+  readonly duration: number;
+  volume: number;
+  readonly paused: boolean;
+  play(): Promise<void> | void;
+  pause(): void;
+  addEventListener(type: string, listener: () => void): void;
+  removeEventListener(type: string, listener: () => void): void;
+}
+
+const listeners = new Set<PlayerListener>();
+const wired = new WeakSet<object>();
+
+let media: PlayableMedia | null = null;
+let trackId: number | null = null;
+let title = "";
+let artist = "";
+let playing = false;
+let currentTime = 0;
+let duration = 0;
+let volume = 1;
+let error = "";
+let ignoreMediaPause = false;
+let cueToken = 0;
+let cues: CueMarker[] = [];
+let barRoot: IslandRoot | null = null;
+let waveform: WaveformController | null = null;
+
+/**
+ * Format a playback position as m:ss, or h:mm:ss past an hour.
+ *
+ * A value that is not a finite number is shown as 0:00. No request is made.
+ *
+ * @param seconds Position or duration in seconds.
+ * @returns The clock label.
+ */
+export function formatPlayerTime(seconds: number): string {
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+  const total = Math.floor(seconds);
+  const secs = total % 60;
+  const minutes = Math.floor(total / 60);
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  }
+  return `${minutes}:${String(secs).padStart(2, "0")}`;
+}
+
+/**
+ * Turn Serato cue rows into seek-bar markers.
+ *
+ * A row without a finite start time is dropped. The name falls back to
+ * `Cue` plus the stored index. A color that is not a `#` hex value uses
+ * the Serato pad color for that index. Nothing is written.
+ *
+ * @param rows Cue rows from `GET /api/track`, or undefined when there are none.
+ * @returns Markers in the order they were given. Empty when there are no cues.
+ */
+export function markersFromCues(rows: readonly Marker[] | undefined): CueMarker[] {
+  if (!rows || rows.length === 0) return [];
+  const found: CueMarker[] = [];
+  for (const cue of rows) {
+    const start = Number(cue.start_ms);
+    if (!Number.isFinite(start) || start < 0) continue;
+    const index = Number(cue.index);
+    const named = typeof cue.name === "string" ? cue.name.trim() : "";
+    const fallback = Number.isInteger(index) ? index + 1 : found.length + 1;
+    const stored = typeof cue.color === "string" ? cue.color : "";
+    const color = slotColor(Number.isInteger(index) ? index : -1, stored);
+    found.push({
+      seconds: start / 1000,
+      color,
+      label: named || `${playerStrings.cue} ${fallback}`,
+    });
+  }
+  return found;
+}
+
+/**
+ * Choose the status line for a failed audio response.
+ *
+ * 403 and 404 mean the id is not a library file that can be opened. Any
+ * other status, including a decode failure with no status, keeps the
+ * window message.
+ *
+ * @param status HTTP status from `HEAD /api/audio`. Zero when the probe failed.
+ * @returns The sentence shown in the player bar.
+ */
+export function playbackErrorText(status: number): string {
+  if (status === 403 || status === 404) return playerStrings.notInLibrary;
+  return playerStrings.cannotPlay;
+}
+
+/**
+ * Start a library track.
+ *
+ * The element loads `/api/audio?id=&space=`. The same track, already
+ * loaded and paused, resumes. A different track starts at the beginning.
+ * Cue markers are read from `GET /api/track`. Nothing is written to the library.
+ *
+ * @param trackId Asset id from the track list.
+ */
+export function play(nextId: number): void {
+  if (!Number.isInteger(nextId) || nextId < 0) return;
+  const element = ensureMedia();
+  ignoreMediaPause = true;
+  try {
+    if (trackId !== nextId || element.src === "") {
+      const row = state.byId.get(nextId);
+      title = row?.name || row?.title || playerStrings.untitled;
+      artist = row?.artist ?? "";
+      trackId = nextId;
+      currentTime = 0;
+      duration = 0;
+      element.src = trackUrl(nextId);
+      element.currentTime = 0;
+      waveform?.setTrack(nextId);
+      loadCues(nextId);
+    }
+    error = "";
+    playing = true;
+    emit();
+    const pending = element.play();
+    if (pending && typeof pending.then === "function") {
+      pending.catch(() => {
+        if (trackId !== nextId) return;
+        noteFailure(nextId);
+      });
+    }
+  } finally {
+    ignoreMediaPause = false;
+  }
+}
+
+/**
+ * Play a library track, or pause it when that track is already playing.
+ *
+ * A different track starts. The same track, paused, resumes. The list
+ * Play button and the detail Play button call this so they share one
+ * player. The library is not written.
+ *
+ * @param nextId Asset id from the track list.
+ */
+export function playOrToggle(nextId: number): void {
+  if (trackId === nextId && playing) pause();
+  else play(nextId);
+}
+
+/**
+ * Pause the current track.
+ *
+ * Does nothing when no track has been loaded. The library is not written.
+ */
+export function pause(): void {
+  if (trackId === null) return;
+  playing = false;
+  ensureMedia().pause();
+  emit();
+}
+
+/**
+ * Pause when audio is playing, and play when it is paused.
+ *
+ * When nothing is loaded, this plays the selected library track. A history
+ * row and an empty selection do nothing. The shortcut table calls this for Space.
+ */
+export function togglePlayPause(): void {
+  if (trackId === null) {
+    const selected = selectedPlayableId();
+    if (selected !== null) play(selected);
+    return;
+  }
+  if (playing) pause();
+  else play(trackId);
+}
+
+/**
+ * Play the next row in the current visible list.
+ *
+ * Order is `state.view`, which is the filtered and sorted list. History
+ * rows are skipped. When nothing is loaded, the selection is the starting
+ * row, and a press with no selection starts at the first playable row.
+ * The last row does not wrap.
+ */
+export function next(): void {
+  moveBy(1);
+}
+
+/**
+ * Play the previous row in the current visible list.
+ *
+ * The same order as `next`. The first row does not wrap. When nothing is
+ * loaded and nothing is selected, this starts at the last playable row.
+ */
+export function previous(): void {
+  moveBy(-1);
+}
+
+/**
+ * Move the playhead to a position in seconds.
+ *
+ * Values before zero are clamped to the start. Values past a known
+ * duration are clamped to the end. A non-finite number is ignored.
+ * Does nothing when no track has been loaded.
+ *
+ * @param seconds Position in seconds.
+ */
+export function seek(seconds: number): void {
+  if (!Number.isFinite(seconds) || trackId === null) return;
+  const element = ensureMedia();
+  let next = seconds < 0 ? 0 : seconds;
+  const limit = element.duration;
+  if (Number.isFinite(limit) && limit > 0 && next > limit) next = limit;
+  element.currentTime = next;
+  currentTime = next;
+  emit();
+}
+
+/**
+ * Move the playhead by a number of seconds.
+ *
+ * A positive delta moves forward. A negative delta moves back. Clamping
+ * is the same as `seek`. A non-finite delta is ignored.
+ *
+ * @param deltaSeconds Seconds to add to the current position.
+ */
+export function seekBy(deltaSeconds: number): void {
+  if (!Number.isFinite(deltaSeconds)) return;
+  seek(currentTime + deltaSeconds);
+}
+
+/**
+ * The player hooks the shortcut table registers once.
+ *
+ * Pass this object to `registerPlayerControls`. Do not also listen for Space.
+ */
+export const playerControls: PlayerControls = {
+  togglePlayPause,
+  seekBy,
+};
+
+/**
+ * Return whether the current track is playing.
+ *
+ * False when nothing is loaded and after pause or the end of the file
+ * when no later row starts.
+ *
+ * @returns True while playback is running.
+ */
+export function isPlaying(): boolean {
+  return playing;
+}
+
+/**
+ * Return a copy of the player state.
+ *
+ * The caller cannot change playback by editing the object. `subscribe`
+ * receives the same shape after each change.
+ *
+ * @returns The current snapshot.
+ */
+export function getPlayerState(): PlayerSnapshot {
+  return { trackId, title, artist, playing, currentTime, duration, volume, error };
+}
+
+/**
+ * Audio clock used by the waveform while a frame paints.
+ *
+ * Prefers the media element's `currentTime` so requestAnimationFrame is
+ * not stuck on the last `timeupdate`. Falls back to the snapshot.
+ *
+ * @returns Seconds from the start of the file.
+ */
+export function getMediaTime(): number {
+  if (media && Number.isFinite(media.currentTime)) return media.currentTime;
+  return currentTime;
+}
+
+/**
+ * Known duration used by the waveform overview.
+ *
+ * Prefers the media element's duration when it is a positive finite
+ * number. Falls back to the snapshot.
+ *
+ * @returns Seconds, or 0 when unknown.
+ */
+export function getMediaDuration(): number {
+  if (media && Number.isFinite(media.duration) && media.duration > 0) return media.duration;
+  return duration;
+}
+
+/**
+ * Cue marks currently drawn on the seek bar.
+ *
+ * Empty when nothing is loaded or the track has no cues. The array is
+ * the live list; do not mutate it.
+ *
+ * @returns Cue markers for the loaded track.
+ */
+export function getPlayerCues(): readonly CueMarker[] {
+  return cues;
+}
+
+/**
+ * Whether Play can start or pause something.
+ *
+ * True when a track is loaded, or when a library row is selected.
+ *
+ * @returns True when the bar Play button should be enabled.
+ */
+export function canTogglePlay(): boolean {
+  return trackId !== null || selectedPlayableId() !== null;
+}
+
+/**
+ * Whether Previous or Next has a row to move to.
+ *
+ * @param delta `-1` for Previous, `1` for Next.
+ * @returns True when that control should be enabled.
+ */
+export function canSkip(delta: 1 | -1): boolean {
+  return canMove(delta);
+}
+
+/**
+ * Set playback volume from 0 to 1.
+ *
+ * A non-finite number is ignored. Zero is silence, not missing.
+ *
+ * @param next Volume from the slider.
+ */
+export function setVolume(next: number): void {
+  if (!Number.isFinite(next)) return;
+  volume = Math.min(1, Math.max(0, next));
+  if (media) media.volume = volume;
+  emit();
+}
+
+/**
+ * Run a callback after each playback change.
+ *
+ * The callback is not run immediately. Call `getPlayerState` for the
+ * current snapshot. The returned function removes the callback.
+ *
+ * @param listener Called with a snapshot. Do not mutate it.
+ * @returns Unsubscribes the listener.
+ */
+export function subscribe(listener: PlayerListener): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+/**
+ * Give a test a media element that does not fetch.
+ *
+ * The page does not call this. `mountPlayer` uses a real `<audio>` element
+ * when nothing has been attached.
+ *
+ * @param next Media stand-in. Events update the snapshot.
+ */
+export function attachMedia(next: PlayableMedia): void {
+  media = next;
+  next.volume = volume;
+  wire(next);
+}
+
+/**
+ * Paint the player bar into `#player-bar`.
+ *
+ * Called once from app.ts. A missing host does nothing, so a test page
+ * that has not installed the markup can still call `play`.
+ *
+ * @param host Element to fill. Defaults to `#player-bar`.
+ */
+export function mountPlayer(host?: HTMLElement | null): void {
+  barRoot?.unmount();
+  barRoot = null;
+  waveform?.destroy();
+  waveform = null;
+  resetPlayback();
+  const root = host === undefined ? document.getElementById("player-bar") : host;
+  if (!root) return;
+  root.classList.add("player-bar");
+  root.setAttribute("role", "region");
+  root.setAttribute("aria-label", playerStrings.region);
+  const element = ensureMedia();
+  root.replaceChildren();
+  if (element instanceof Node) root.append(element);
+  const waveHost = document.createElement("div");
+  waveform = mountWaveform(waveHost);
+  const controls = document.createElement("div");
+  const stack = document.createElement("div");
+  stack.className = "player-stack";
+  stack.append(waveHost, controls);
+  root.append(stack);
+  barRoot = mountIsland(controls, createElement(PlayerBar));
+}
+
+/**
+ * Refresh the player labels in the active language.
+ *
+ * Called when the language changes. Playback is left as it is.
+ *
+ * @returns {void}
+ */
+export function repaintPlayer(): void {
+  const root = document.getElementById("player-bar");
+  if (root) root.setAttribute("aria-label", playerStrings.region);
+  waveform?.relabel();
+  emit();
+}
+
+function resetPlayback(): void {
+  cueToken += 1;
+  trackId = null;
+  title = "";
+  artist = "";
+  playing = false;
+  currentTime = 0;
+  duration = 0;
+  error = "";
+  cues = [];
+}
+
+function ensureMedia(): PlayableMedia {
+  if (media) return media;
+  const audio = document.createElement("audio");
+  audio.id = "player-audio";
+  audio.preload = "none";
+  audio.className = "player-audio";
+  audio.volume = volume;
+  media = audio;
+  wire(audio);
+  return audio;
+}
+
+function wire(element: PlayableMedia): void {
+  if (wired.has(element)) return;
+  wired.add(element);
+  element.addEventListener("play", () => {
+    playing = true;
+    emit();
+  });
+  element.addEventListener("pause", () => {
+    if (ignoreMediaPause) return;
+    playing = false;
+    emit();
+  });
+  element.addEventListener("ended", () => {
+    currentTime = Number.isFinite(element.currentTime) ? element.currentTime : currentTime;
+    if (!moveBy(1)) {
+      playing = false;
+      emit();
+    }
+  });
+  element.addEventListener("timeupdate", () => {
+    currentTime = element.currentTime;
+    if (Number.isFinite(element.duration)) duration = element.duration;
+    emit();
+  });
+  element.addEventListener("durationchange", () => {
+    duration = Number.isFinite(element.duration) ? element.duration : 0;
+    emit();
+  });
+  element.addEventListener("error", () => {
+    if (trackId === null) return;
+    noteFailure(trackId);
+  });
+}
+
+function trackUrl(nextId: number): string {
+  // Id only. A path parameter is refused by the route.
+  const params = new URLSearchParams({ id: String(nextId), space: state.space });
+  return `/api/audio?${params.toString()}`;
+}
+
+function selectedPlayableId(): number | null {
+  if (state.mode === "history") return null;
+  const selected = state.selectedId;
+  if (selected === null) return null;
+  const row = state.byId.get(selected);
+  if (!row || row.entry) return null;
+  return row.id;
+}
+
+function playableRows(): Track[] {
+  let source = state.view;
+  if (trackId !== null && state.splitCrates && state.viewB.some((row) => row.id === trackId && !row.entry)) {
+    source = state.viewB;
+  } else if (state.splitCrates && state.focusedPane === "b") {
+    source = state.viewB;
+  }
+  return source.filter((row) => !row.entry && Number.isInteger(row.id) && row.id >= 0);
+}
+
+function anchorIndex(rows: readonly Track[]): number {
+  if (trackId !== null) {
+    const playingIndex = rows.findIndex((row) => row.id === trackId);
+    if (playingIndex >= 0) return playingIndex;
+  }
+  if (state.selectedId === null) return -1;
+  return rows.findIndex((row) => row.id === state.selectedId);
+}
+
+function moveBy(delta: 1 | -1): boolean {
+  const rows = playableRows();
+  if (rows.length === 0) return false;
+  const index = anchorIndex(rows);
+  const target = index < 0 ? rows[delta > 0 ? 0 : rows.length - 1] : rows[index + delta];
+  if (!target) return false;
+  play(target.id);
+  return true;
+}
+
+function loadCues(id: number): void {
+  const token = ++cueToken;
+  cues = [];
+  waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
+  void readCues(id).then(
+    (found) => {
+      if (token !== cueToken || trackId !== id) return;
+      cues = found.cues;
+      waveform?.setMarkers(id, found);
+      emit();
+    },
+    () => {
+      if (token !== cueToken || trackId !== id) return;
+      cues = [];
+      waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
+      emit();
+    },
+  );
+}
+
+async function readCues(id: number): Promise<{ cues: CueMarker[]; loops: ReturnType<typeof loopsFromMarkers>; beatgrid: ReturnType<typeof beatgridFromMarkers> }> {
+  const empty = { cues: [], loops: [], beatgrid: [] };
+  if (typeof fetch !== "function") return empty;
+  const params = new URLSearchParams({ id: String(id), space: state.space });
+  const response = await fetch(`/api/track?${params.toString()}`);
+  if (!response.ok) return empty;
+  const payload: unknown = await response.json();
+  if (!payload || typeof payload !== "object") return empty;
+  const record = payload as { cues?: Marker[]; loops?: Marker[]; beatgrid?: Marker[] };
+  return {
+    cues: markersFromCues(record.cues),
+    loops: loopsFromMarkers(record.loops),
+    beatgrid: beatgridFromMarkers(record.beatgrid),
+  };
+}
+
+function noteFailure(forId: number): void {
+  playing = false;
+  void classifyStatus(forId).then((message) => {
+    if (trackId !== forId) return;
+    playing = false;
+    error = message;
+    emit();
+  });
+}
+
+async function classifyStatus(forId: number): Promise<string> {
+  try {
+    if (typeof fetch !== "function") return playerStrings.cannotPlay;
+    const response = await fetch(trackUrl(forId), { method: "HEAD" });
+    return playbackErrorText(response.status);
+  } catch {
+    return playerStrings.cannotPlay;
+  }
+}
+
+function emit(): void {
+  const snapshot = getPlayerState();
+  for (const listener of [...listeners]) listener(snapshot);
+  waveform?.sync();
+}
+
+function canMove(delta: 1 | -1): boolean {
+  const rows = playableRows();
+  if (rows.length === 0) return false;
+  const index = anchorIndex(rows);
+  if (index < 0) return true;
+  return Boolean(rows[index + delta]);
+}

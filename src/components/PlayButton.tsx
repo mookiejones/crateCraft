@@ -6,10 +6,10 @@
  */
 
 import { type MouseEvent } from "react";
-import { usePlayer } from "../context/PlayerContext";
-import { playerStrings } from "../player-strings";
-import { setTooltip } from "../tooltip";
-import { playRow, playTip, type TipSpec } from "../tooltip-strings";
+import { usePlayer } from "../containers/PlayerContext";
+import { playerStrings } from "../lib/player/player-strings";
+import { setTooltip } from "../lib/ui/tooltip";
+import { playRow, playTip, type TipSpec } from "../lib/ui/tooltip-strings";
 
 export type PlayButtonVariant = "bar" | "row" | "detail";
 

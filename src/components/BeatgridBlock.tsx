@@ -4,14 +4,14 @@
  * Helpers stay in `beatgrid-view.ts`. This parser never writes the grid.
  */
 
-import type { Marker, Track } from "../api-types";
+import type { Marker, Track } from "../lib/api-types";
 import {
   beatSeconds,
   beatgridIsSuspect,
   beatgridViewOnly,
   beatgridWarningKey,
-} from "../beatgrid-view";
-import { formatNumber, t } from "../i18n";
+} from "../lib/ui/beatgrid-view";
+import { formatNumber, t } from "../lib/i18n";
 
 /**
  * One beatgrid row: time and BPM or beat count.
