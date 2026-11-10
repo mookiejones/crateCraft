@@ -76,6 +76,9 @@ test("every control has a tooltip, and focus shows it", async ({ page }) => {
   await expect(tip).toHaveText("Show a shorter stretch of the waveform around the playhead.");
   await saveShot(page, "tooltip_zoom");
 
+  await expect(page.locator("#files-list")).toContainText("Sets");
+  await expect(page.locator("#files-path")).toContainText("House");
+
   await page.locator(".player-play").focus();
   await expect(tip).toContainText("Space");
   await saveShot(page, "tooltip_play");

@@ -3,8 +3,9 @@
  *
  * The page is still mostly hand-written DOM. Each island wraps
  * `AppProviders` so list Play, detail Play, the player bar, the
- * History view, and the waveform share those domain contexts.
- * `flushSync` keeps the paint in the same turn as the engine update.
+ * waveform, the gig check, Tempo drift, the Files view, and History
+ * share their domain contexts. `flushSync` keeps the paint in the same
+ * turn as the engine update.
  */
 
 import { type ReactNode } from "react";
