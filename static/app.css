@@ -56,7 +56,8 @@ textarea:focus-visible,
 .crate:focus-visible,
 .twist:focus-visible,
 .splitter:focus-visible,
-.waveform-overview:focus-visible {
+.waveform-overview:focus-visible,
+#portable-view-verdict:focus-visible {
   outline: 2px solid var(--cadmium);
   outline-offset: 2px;
 }
@@ -1904,16 +1905,28 @@ dialog .settings-field select {
   font-weight: 400;
 }
 
-#portable-findings {
+#portable-findings,
+#portable-view-findings {
   margin: var(--space-3) 0 0;
   padding-left: 1.2em;
   max-height: 40vh;
   overflow: auto;
 }
 
-#portable-verdict {
+#portable-verdict,
+#portable-view-verdict {
   margin-top: var(--space-3);
   font-weight: 600;
+}
+
+#portable-offline {
+  margin: var(--space-2) 0;
+}
+
+#portable-drive {
+  min-height: 44px;
+  min-width: 12rem;
+  max-width: 100%;
 }
 
 .portable-kind {

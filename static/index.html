@@ -8,7 +8,8 @@
   Rekordbox writes rekordbox.xml. The Files view browses folders
   and previews a rename, move, replace, or delete before it is saved.
   Backups lists hash-checked library snapshots and previews a
-  restore before it is confirmed. Before a gig is a read-only ready score.
+  restore before it is confirmed. Before a gig is a read-only ready score,
+  Check drive, and Tempo drift.
   tokens.css, app.css, and app.js are local files. The page talks only to
   the library server on 127.0.0.1. It does not open master.sqlite itself.
 -->
@@ -69,6 +70,7 @@
           <h2 id="view-group-gig" class="view-group-label" data-i18n="view.group.gig">Before a gig</h2>
           <div class="view-group-tabs" role="tablist" aria-labelledby="view-group-gig">
             <button type="button" id="gig-tab" data-view="gig" role="tab" aria-controls="gig-panel" data-i18n="view.gig">Before a gig</button>
+            <button type="button" id="portable-tab" data-view="portable" role="tab" aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
             <button type="button" id="drift-tab" data-view="drift" role="tab" aria-controls="drift-panel" data-i18n="view.drift">Tempo drift</button>
           </div>
         </section>
@@ -237,6 +239,23 @@
         </div>
         <p id="gig-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="gig-report" class="gig-report"></div>
+      </section>
+
+      <section id="portable-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="portable-heading" aria-busy="false">
+        <h2 id="portable-heading" class="visually-hidden" data-i18n="portable.title">Portable drive</h2>
+        <div class="browser-bar">
+          <label class="rail-field">
+            <span class="visually-hidden" data-i18n="portable.driveLabel">Drive</span>
+            <select id="portable-drive"></select>
+          </label>
+          <button id="portable-check" type="button" data-i18n="portable.check">Check drive</button>
+        </div>
+        <p id="portable-hint" class="gig-note" data-i18n="portable.readOnly">This only reads the drive. Nothing is copied or deleted.</p>
+        <p id="portable-offline"></p>
+        <p id="portable-view-status" class="gig-status" role="status" aria-live="polite"></p>
+        <p id="portable-view-verdict" tabindex="-1"></p>
+        <p id="portable-view-summary"></p>
+        <ul id="portable-view-findings"></ul>
       </section>
 
       <section id="drift-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="drift-heading" aria-busy="false">

@@ -625,6 +625,7 @@
       one: "Tracks whose files are missing on a connected drive. {count} track on an unplugged drive is marked offline in crates.",
       other: "Tracks whose files are missing on a connected drive. {count} tracks on unplugged drives are marked offline in crates."
     },
+    "mode.portable": "Read-only. This check does not change the library.",
     "mode.scan": "Read-only. This check does not change the library.",
     "mode.snapshots": "Hash-checked copies of the library, crates, and Serato frames inside audio files. Audio itself is not copied.",
     "mode.stems": "Tracks with a stems analysis state.",
@@ -713,6 +714,7 @@
     "portable.check": "Check drive",
     "portable.checkLabel": "Check {name}",
     "portable.checking": "Checking this drive.",
+    "portable.driveLabel": "Drive",
     "portable.kindFileSize": "File too large",
     "portable.kindMissing": "Missing",
     "portable.kindOffDrive": "Not on this drive",
@@ -720,7 +722,9 @@
     "portable.kindSmartCrate": "Smart Crate",
     "portable.kindUnsafeName": "Unsafe name",
     "portable.missing": "This drive is not connected. Nothing was deleted.",
+    "portable.noDrive": "No connected drive with a _Serato_ folder.",
     "portable.notReady": "Not ready. Fix these on the laptop first.",
+    "portable.offlineNamed": "{name} is not connected. Nothing was deleted.",
     "portable.readOnly": "This only reads the drive. Nothing is copied or deleted.",
     "portable.ready": "Ready to leave the laptop.",
     "portable.title": "Portable drive",
@@ -1228,6 +1232,8 @@
     "tooltip.playRow": "Start {name}. Space plays or pauses.",
     "tooltip.portableCheck": "Check {name}. Read its crates and list what to fix before the gig. Nothing is written.",
     "tooltip.portableClose": "Close the portable drive report.",
+    "tooltip.portableDrive": "Choose a connected drive that has a _Serato_ folder. An unplugged drive is named below and is not treated as a missing file.",
+    "tooltip.portableRun": "Check the selected drive. Read its crates and list what to fix before the gig. Nothing is written.",
     "tooltip.prepareAdd": "Send this track to Prepare.",
     "tooltip.prepareRemove": "Take this track out of Prepare.",
     "tooltip.presetBpm": "The tempo in the middle of the range.",
@@ -1333,6 +1339,7 @@
     "tooltip.viewHealth": "One-page counts of missing files, missing BPM or key, empty genre, tracks in no crate, and duplicates. Read-only.",
     "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
     "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as offline.",
+    "tooltip.viewPortable": "Check a portable Serato drive before a gig. Pick a connected drive. Read-only.",
     "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
     "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Show tracks Serato has analyzed for stems. This does not separate the audio.",
@@ -1389,6 +1396,7 @@
     "view.history": "History",
     "view.label": "Views",
     "view.missing": "Missing files",
+    "view.portable": "Check drive",
     "view.scan": "Damaged files",
     "view.snapshots": "Backups",
     "view.stems": "Stems",
@@ -2069,6 +2077,7 @@
       one: "Pistas cuyo archivo falta en una unidad conectada. {count} pista en una unidad desconectada se marca como desconectada en las cajas.",
       other: "Pistas cuyo archivo falta en una unidad conectada. {count} pistas en unidades desconectadas se marcan como desconectadas en las cajas."
     },
+    "mode.portable": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.scan": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.snapshots": "Copias verificadas por hash de la biblioteca, las cajas y los datos de Serato dentro de los archivos de audio. El audio en sí no se copia.",
     "mode.stems": "Pistas con un estado de análisis de stems.",
@@ -2157,6 +2166,7 @@
     "portable.check": "Comprobar unidad",
     "portable.checkLabel": "Comprobar {name}",
     "portable.checking": "Comprobando esta unidad.",
+    "portable.driveLabel": "Unidad",
     "portable.kindFileSize": "Archivo demasiado grande",
     "portable.kindMissing": "No está",
     "portable.kindOffDrive": "Fuera de esta unidad",
@@ -2164,7 +2174,9 @@
     "portable.kindSmartCrate": "Caja inteligente",
     "portable.kindUnsafeName": "Nombre no válido",
     "portable.missing": "Esta unidad no está conectada. No se ha borrado nada.",
+    "portable.noDrive": "No hay ninguna unidad conectada con una carpeta _Serato_.",
     "portable.notReady": "No está lista. Corrígelo en el portátil primero.",
+    "portable.offlineNamed": "{name} no está conectada. No se ha borrado nada.",
     "portable.readOnly": "Esto solo lee la unidad. No se copia ni se borra nada.",
     "portable.ready": "Lista para salir del portátil.",
     "portable.title": "Unidad portátil",
@@ -2672,6 +2684,8 @@
     "tooltip.playRow": "Empieza {name}. Espacio reproduce o pausa.",
     "tooltip.portableCheck": "Comprueba {name}. Lee sus cajas y lista lo que hay que corregir antes del bolo. No se escribe nada.",
     "tooltip.portableClose": "Cierra el informe de la unidad portátil.",
+    "tooltip.portableDrive": "Elige una unidad conectada que tenga una carpeta _Serato_. Una unidad desconectada se nombra debajo y no se trata como un archivo no encontrado.",
+    "tooltip.portableRun": "Comprueba la unidad elegida. Lee sus cajas y lista lo que hay que corregir antes del bolo. No se escribe nada.",
     "tooltip.prepareAdd": "Envía esta pista a Preparar.",
     "tooltip.prepareRemove": "Quita esta pista de Preparar.",
     "tooltip.presetBpm": "El tempo en el centro del rango.",
@@ -2777,6 +2791,7 @@
     "tooltip.viewHealth": "Cifras en una página de archivos no encontrados, BPM o tonalidad faltantes, género vacío, pistas en ninguna caja y duplicados. Solo lectura.",
     "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
     "tooltip.viewMissing": "Muestra las pistas cuyo archivo falta en una unidad conectada. Las pistas en una unidad desconectada se quedan en las cajas como desconectadas.",
+    "tooltip.viewPortable": "Comprueba una unidad Serato portátil antes del bolo. Elige una unidad conectada. Solo lectura.",
     "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
     "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
     "tooltip.viewStems": "Muestra las pistas que Serato ya analizó para stems. No separa el audio.",
@@ -2833,6 +2848,7 @@
     "view.history": "Historial",
     "view.label": "Vistas",
     "view.missing": "Archivos no encontrados",
+    "view.portable": "Comprobar unidad",
     "view.scan": "Archivos dañados",
     "view.snapshots": "Copias de seguridad",
     "view.stems": "Stems",
@@ -3709,7 +3725,10 @@
     viewFiles: spec("tooltip.viewFiles"),
     viewSnapshots: spec("tooltip.viewSnapshots"),
     viewGig: spec("tooltip.viewGig"),
+    viewPortable: spec("tooltip.viewPortable"),
     viewDrift: spec("tooltip.viewDrift"),
+    portableDrive: spec("tooltip.portableDrive"),
+    portableRun: spec("tooltip.portableRun"),
     driftRefresh: spec("tooltip.driftRefresh"),
     viewHealth: spec("tooltip.viewHealth"),
     viewScan: spec("tooltip.viewScan"),
@@ -3786,6 +3805,7 @@
       files: tips.viewFiles,
       snapshots: tips.viewSnapshots,
       gig: tips.viewGig,
+      portable: tips.viewPortable,
       drift: tips.viewDrift,
       health: tips.viewHealth,
       scan: tips.viewScan,
@@ -3918,6 +3938,8 @@
       "files-review": tips.filesReview,
       "files-confirm": tips.filesConfirm,
       "portable-close": tips.portableClose,
+      "portable-drive": tips.portableDrive,
+      "portable-check": tips.portableRun,
       "quick-open-query": tips.quickOpen,
       "quick-open-retry": tips.quickOpenRetry,
       "quick-open-close": tips.quickOpenClose,
@@ -5832,8 +5854,9 @@
   };
   var token = 0;
   var latest7 = null;
+  var lastRoots = [];
   var opener = null;
-  var wired = false;
+  var hasConnected = false;
   function portableDriveRoot(path) {
     const trimmed = path.trim();
     if (!trimmed) return "";
@@ -5851,6 +5874,20 @@
     const win = /^[A-Za-z]:/.exec(trimmed);
     if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
     return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
+  }
+  function portableSeratoRoots(roots) {
+    const connected = [];
+    const missing = [];
+    const seen = /* @__PURE__ */ new Set();
+    for (const root of roots) {
+      if (!root.removable || !root.serato) continue;
+      const key = portableDriveRoot(root.path).replace(/\\/g, "/").toLowerCase();
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      if (root.missing) missing.push(root);
+      else connected.push(root);
+    }
+    return { connected, missing };
   }
   function parseDriveReport(value) {
     if (!isRecord(value)) return null;
@@ -5898,20 +5935,96 @@
   }
   async function openPortableCheck(path, trigger) {
     wirePortable();
-    const drive = portableDriveRoot(path);
-    const mine = ++token;
     opener = trigger ?? null;
     const dialog = el("portable-dialog");
-    latest7 = null;
-    el("portable-verdict").textContent = "";
-    el("portable-summary").textContent = "";
-    el("portable-findings").replaceChildren();
-    el("portable-status").textContent = t("portable.checking");
     if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    await runPortableCheck(path);
+  }
+  async function loadPortableView() {
+    wirePortable();
+    beginBusy6();
+    paintStatus(t("portable.checking"));
+    let settle = "none";
+    try {
+      const payload = await fetchLibraryRoots();
+      lastRoots = payload.roots;
+      paintDrivePicker(lastRoots);
+      const path = el("portable-drive").value;
+      if (!path) {
+        clearReport();
+        el("portable-view-status").textContent = hasConnected ? "" : t("portable.noDrive");
+        el("portable-status").textContent = hasConnected ? "" : t("portable.noDrive");
+        return;
+      }
+      await runPortableCheck(path);
+      settle = "report";
+    } catch (error2) {
+      fail(error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable"));
+      settle = "retry";
+    } finally {
+      endBusy6();
+      if (settle === "retry") el("portable-check").focus();
+      if (settle === "report") el("portable-view-verdict").focus();
+    }
+  }
+  function showPortableFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable");
+    fail(message);
+    endBusy6();
+    el("portable-check").focus();
+  }
+  function repaintPortable() {
+    for (const button2 of document.querySelectorAll(".files-portable")) {
+      button2.textContent = t("portable.check");
+      const name = button2.dataset.portableName ?? "";
+      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    }
+    el("portable-check").textContent = t("portable.check");
+    if (lastRoots.length) paintDrivePicker(lastRoots);
+    if (latest7) renderPortableReport(latest7);
+  }
+  function wirePortable() {
+    const dialog = el("portable-dialog");
+    if (dialog.dataset.portableWired !== "true") {
+      dialog.dataset.portableWired = "true";
+      el("portable-close").addEventListener("click", () => {
+        el("portable-dialog").close();
+        if (opener?.isConnected) opener.focus();
+      });
+    }
+    const panel = el("portable-panel");
+    if (panel.dataset.portableWired === "true") return;
+    panel.dataset.portableWired = "true";
+    el("portable-check").addEventListener("click", () => {
+      void runPortableCheck(el("portable-drive").value);
+    });
+    el("portable-drive").addEventListener("change", () => {
+      void runPortableCheck(el("portable-drive").value);
+    });
+  }
+  function renderPortableReport(report) {
+    latest7 = report;
+    const verdictText = report.missing_drive ? t("portable.missing") : report.ready ? t("portable.ready") : t("portable.notReady");
+    const items = findingItems(report);
+    for (const surface of surfaces()) {
+      surface.verdict.textContent = verdictText;
+      surface.summary.textContent = report.summary;
+      surface.findings.replaceChildren(...items.map((item4) => item4.cloneNode(true)));
+      surface.status.textContent = "";
+    }
+  }
+  async function runPortableCheck(path) {
+    wirePortable();
+    const drive = portableDriveRoot(path);
+    const mine = ++token;
+    latest7 = null;
+    clearReport();
+    paintStatus(t("portable.checking"));
     if (!drive) {
-      el("portable-status").textContent = t("portable.unreadable");
+      fail(t("portable.unreadable"));
       return;
     }
+    beginBusy6();
     try {
       const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
       if (mine !== token) return;
@@ -5927,37 +6040,39 @@
         return;
       }
       latest7 = report;
-      el("portable-status").textContent = "";
+      paintStatus("");
       renderPortableReport(report);
     } catch {
       if (mine !== token) return;
       fail(t("portable.unreachable"));
+    } finally {
+      if (mine === token) endBusy6();
     }
   }
-  function repaintPortable() {
-    for (const button2 of document.querySelectorAll(".files-portable")) {
-      button2.textContent = t("portable.check");
-      const name = button2.dataset.portableName ?? "";
-      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    }
-    if (latest7) renderPortableReport(latest7);
-  }
-  function wirePortable() {
-    if (wired) return;
-    wired = true;
-    el("portable-close").addEventListener("click", () => {
-      el("portable-dialog").close();
-      if (opener?.isConnected) opener.focus();
+  function paintDrivePicker(roots) {
+    const { connected, missing } = portableSeratoRoots(roots);
+    hasConnected = connected.length > 0;
+    const select = el("portable-drive");
+    const previous2 = select.value;
+    const options = connected.map((root) => {
+      const option = document.createElement("option");
+      option.value = root.path;
+      option.textContent = root.label;
+      return option;
     });
+    select.replaceChildren(...options);
+    const keep = connected.some((root) => root.path === previous2) ? previous2 : connected[0]?.path ?? "";
+    select.value = keep;
+    select.disabled = !hasConnected;
+    el("portable-check").disabled = !hasConnected;
+    const note = el("portable-offline");
+    if (!missing.length) {
+      note.textContent = "";
+      return;
+    }
+    note.textContent = missing.map((root) => t("portable.offlineNamed", { name: root.label })).join(" ");
   }
-  function renderPortableReport(report) {
-    latest7 = report;
-    const verdict = el("portable-verdict");
-    if (report.missing_drive) verdict.textContent = t("portable.missing");
-    else if (report.ready) verdict.textContent = t("portable.ready");
-    else verdict.textContent = t("portable.notReady");
-    el("portable-summary").textContent = report.summary;
-    const list = el("portable-findings");
+  function findingItems(report) {
     const items = [];
     const shown = report.findings.slice(0, FINDING_CAP);
     for (const finding of shown) {
@@ -5986,7 +6101,23 @@
       row.textContent = t("files.andMore", { count: hidden });
       items.push(row);
     }
-    list.replaceChildren(...items);
+    return items;
+  }
+  function surfaces() {
+    return [
+      {
+        verdict: el("portable-verdict"),
+        summary: el("portable-summary"),
+        findings: el("portable-findings"),
+        status: el("portable-status")
+      },
+      {
+        verdict: el("portable-view-verdict"),
+        summary: el("portable-view-summary"),
+        findings: el("portable-view-findings"),
+        status: el("portable-view-status")
+      }
+    ];
   }
   function kindLabel(kind2) {
     const key = KIND_KEY[kind2];
@@ -5994,10 +6125,30 @@
   }
   function fail(message) {
     latest7 = null;
-    el("portable-verdict").textContent = "";
-    el("portable-summary").textContent = "";
-    el("portable-findings").replaceChildren();
-    el("portable-status").textContent = message;
+    clearReport();
+    paintStatus(message);
+  }
+  function clearReport() {
+    for (const surface of surfaces()) {
+      surface.verdict.textContent = "";
+      surface.summary.textContent = "";
+      surface.findings.replaceChildren();
+    }
+  }
+  function paintStatus(message) {
+    for (const surface of surfaces()) surface.status.textContent = message;
+  }
+  function beginBusy6() {
+    const button2 = el("portable-check");
+    button2.disabled = true;
+    button2.setAttribute("aria-busy", "true");
+    el("portable-panel").setAttribute("aria-busy", "true");
+  }
+  function endBusy6() {
+    const button2 = el("portable-check");
+    button2.disabled = !hasConnected;
+    button2.setAttribute("aria-busy", "false");
+    el("portable-panel").setAttribute("aria-busy", "false");
   }
   function isRecord(value) {
     return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -8044,7 +8195,7 @@
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
   var listeners = /* @__PURE__ */ new Set();
-  var wired2 = /* @__PURE__ */ new WeakSet();
+  var wired = /* @__PURE__ */ new WeakSet();
   var media = null;
   var trackId2 = null;
   var title = "";
@@ -8241,8 +8392,8 @@
     return audio;
   }
   function wire(element) {
-    if (wired2.has(element)) return;
-    wired2.add(element);
+    if (wired.has(element)) return;
+    wired.add(element);
     element.addEventListener("play", () => {
       playing = true;
       emit();
@@ -9120,6 +9271,7 @@
     markHistoryColumns();
     const cratesMode = state.mode === "crates";
     const gigMode = state.mode === "gig";
+    const portableMode = state.mode === "portable";
     const driftMode = state.mode === "drift";
     const healthMode = state.mode === "health";
     const scanMode = state.mode === "scan";
@@ -9136,13 +9288,14 @@
     el("mode-note").hidden = cratesMode || historyMode;
     const filesMode = state.mode === "files";
     const snapshotsMode = state.mode === "snapshots";
-    const panelMode = filesMode || snapshotsMode || gigMode || driftMode || healthMode || scanMode || tagsMode;
+    const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || scanMode || tagsMode;
     el("browser").hidden = panelMode;
     el("track-splitter").hidden = panelMode;
     el("detail").hidden = panelMode;
     el("files-panel").hidden = !filesMode;
     el("snapshots-panel").hidden = !snapshotsMode;
     el("gig-panel").hidden = !gigMode;
+    el("portable-panel").hidden = !portableMode;
     el("drift-panel").hidden = !driftMode;
     el("health-panel").hidden = !healthMode;
     el("scan-panel").hidden = !scanMode;
@@ -9158,6 +9311,10 @@
     if (filesMode) el("mode-note").textContent = t("mode.files");
     if (gigMode) {
       el("mode-note").textContent = t("mode.gig");
+      document.querySelector(".rules")?.remove();
+    }
+    if (portableMode) {
+      el("mode-note").textContent = t("mode.portable");
       document.querySelector(".rules")?.remove();
     }
     if (driftMode) {
@@ -9194,6 +9351,10 @@
     syncFolderSyncButton();
     syncMergeButton();
     syncRelinkButton();
+    if (portableMode) {
+      el("crate-foot").textContent = "";
+      return;
+    }
     if (filesMode) {
       if (state.filesAtRoots) {
         el("crate-foot").textContent = state.filesLoading ? t("files.readingRoots") : t("files.rootCount", { count: state.filesRoots.length });
@@ -9244,6 +9405,10 @@
     }
     if (state.mode === "gig") {
       renderCrates();
+      paintDualChrome();
+      return;
+    }
+    if (state.mode === "portable") {
       paintDualChrome();
       return;
     }
@@ -10436,6 +10601,7 @@
       loadSnapshots().catch((error2) => failSnapshots(error2));
     }
     if (mode === "gig") loadGigCheck().catch(showGigFailure);
+    if (mode === "portable") loadPortableView().catch(showPortableFailure);
     if (mode === "drift") loadDrift().catch(showDriftFailure);
     if (mode === "health") loadHealth().catch(showHealthFailure);
     if (mode === "scan") loadScan("quick").catch(showScanFailure);
@@ -11011,6 +11177,7 @@
       if (state.mode === "history") jobs.push(loadHistory());
       if (state.mode === "duplicates") jobs.push(loadDuplicates());
       if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
+      if (state.mode === "portable") jobs.push(loadPortableView().catch(showPortableFailure));
       if (state.mode === "drift") jobs.push(loadDrift().catch(showDriftFailure));
       if (state.mode === "health") jobs.push(loadHealth().catch(showHealthFailure));
       if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
@@ -11047,6 +11214,7 @@
       loadLibrary().then(() => {
         if (state.mode === "duplicates") return loadDuplicates();
         if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
+        if (state.mode === "portable") return loadPortableView().catch(showPortableFailure);
         if (state.mode === "drift") return loadDrift().catch(showDriftFailure);
         if (state.mode === "health") return loadHealth().catch(showHealthFailure);
         if (state.mode === "scan") return loadScan().catch(showScanFailure);
@@ -13375,7 +13543,7 @@
   var latest8 = null;
   var dismissed = false;
   var token2 = 0;
-  var wired3 = false;
+  var wired2 = false;
   function parseUpdateStatus(value) {
     if (typeof value !== "object" || value === null || Array.isArray(value)) return null;
     const body = value;
@@ -13432,8 +13600,8 @@
     paintUpdate();
   }
   function wireUpdate() {
-    if (wired3) return;
-    wired3 = true;
+    if (wired2) return;
+    wired2 = true;
     el("update-download").addEventListener("click", () => {
       void download();
     });
@@ -13863,6 +14031,7 @@
     "view-tags": "tags",
     "view-snapshots": "snapshots",
     "view-gig": "gig",
+    "view-portable": "portable",
     "view-drift": "drift"
   };
   function runDesktopAction(action) {
