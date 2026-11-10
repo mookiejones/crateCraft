@@ -31,6 +31,7 @@ import error_codes
 import library
 import server
 from tests.fixture import TempLibrary
+from tests.test_server import ApiTests as ServerApiTests
 
 RATE = 44100
 
@@ -318,6 +319,109 @@ class ApiTests(unittest.TestCase):
         for locale in ("en", "es"):
             catalog = json.loads((root / "locales" / f"{locale}.json").read_text(encoding="utf-8"))
             self.assertTrue(catalog.get("error.bitrate_needs_crate"))
+
+
+def _report(*ids: int, crate: int = 5) -> dict[str, object]:
+    """A scan payload with those asset ids as suspects."""
+    return {
+        "crate": crate,
+        "checked": len(ids),
+        "not_found": 0,
+        "unreadable": 0,
+        "too_quiet": 0,
+        "unchecked": 0,
+        "suspects": [
+            {
+                "id": asset_id,
+                "name": f"track-{asset_id}",
+                "artist": "DJ",
+                "file": f"track-{asset_id}.wav",
+                "reason": "lossy_source",
+                "stated_kbps": 1411,
+                "estimated_kbps": 128,
+                "cutoff_hz": 16_000,
+            }
+            for asset_id in ids
+        ],
+    }
+
+
+class CrateTests(unittest.TestCase):
+    """Preview lists flagged ids. Create writes a crate. Empty does not write."""
+
+    def test_preview_does_not_write(self) -> None:
+        with TempLibrary() as fixture:
+            before = _digest(fixture.db)
+            with mock.patch("bitrate_check.scan", return_value=_report(1)) as scan:
+                plan = bitrate_check.preview_crate(fixture.db, library.LIBRARY_SPACE, 5)
+            scan.assert_called_once_with(fixture.db, library.LIBRARY_SPACE, 5)
+            self.assertEqual(_digest(fixture.db), before)
+            self.assertEqual(
+                (plan["preview"], plan["written"], plan["name"], plan["added"], plan["saved"]),
+                (True, False, bitrate_check.CRATE_NAME, 1, None),
+            )
+            self.assertEqual([row["id"] for row in plan["suspects"]], [1])  # type: ignore[index, union-attr]
+
+    def test_create_writes_the_flagged_tracks(self) -> None:
+        with TempLibrary() as fixture:
+            with mock.patch("bitrate_check.scan", return_value=_report(1)):
+                plan = bitrate_check.create_crate(fixture.db, library.LIBRARY_SPACE, 5)
+            self.assertEqual((plan["preview"], plan["written"], plan["added"]), (False, True, 1))
+            saved = plan["saved"]
+            self.assertIsInstance(saved, dict)
+            self.assertEqual(saved["name"], bitrate_check.CRATE_NAME)  # type: ignore[index]
+            crate_id = saved["id"]  # type: ignore[index]
+            self.assertIsInstance(crate_id, int)
+            with closing(sqlite3.connect(fixture.db)) as conn:
+                members = bitrate_check._crate_assets(conn, [int(crate_id)])
+            self.assertEqual(members, {1})
+
+    def test_create_with_no_suspects_does_not_write(self) -> None:
+        with TempLibrary() as fixture:
+            before = _digest(fixture.db)
+            with mock.patch("bitrate_check.scan", return_value=_report()):
+                with mock.patch("library.crate_action") as create:
+                    plan = bitrate_check.create_crate(fixture.db, library.LIBRARY_SPACE, 5)
+            create.assert_not_called()
+            self.assertEqual(_digest(fixture.db), before)
+            self.assertEqual((plan["written"], plan["added"], plan["saved"]), (False, 0, None))
+
+    def test_action_needs_a_crate_and_a_known_verb(self) -> None:
+        with self.assertRaises(library.LibraryError) as missing:
+            bitrate_check.action({"action": "preview", "space": library.LIBRARY_SPACE})
+        self.assertEqual((missing.exception.status, missing.exception.message), (400, bitrate_check.NEEDS_CRATE))
+        with self.assertRaises(library.LibraryError) as bad:
+            bitrate_check.action({"action": "wipe", "space": library.LIBRARY_SPACE, "crate": 5})
+        self.assertEqual(bad.exception.message, "That action is not available.")
+        with self.assertRaises(library.LibraryError) as crate:
+            bitrate_check.action({"action": "preview", "space": library.LIBRARY_SPACE, "crate": "5"})
+        self.assertEqual(crate.exception.status, 400)
+
+
+class CrateApiTests(unittest.TestCase):
+    """``POST /api/bitrate-check`` preview does not write. Create does."""
+
+    setUp = ServerApiTests.setUp
+    tearDown = ServerApiTests.tearDown
+    request = ServerApiTests.request
+
+    def test_preview_and_create(self) -> None:
+        fake = _report(1)
+        before = _digest(self.library.db)
+        with mock.patch("bitrate_check.scan", return_value=fake):
+            status, preview = self.request("/api/bitrate-check", {"action": "preview", "crate": 5})
+        self.assertEqual(status, 200)
+        self.assertEqual((preview["written"], preview["preview"], preview["added"]), (False, True, 1))  # type: ignore[index]
+        self.assertEqual(_digest(self.library.db), before)
+        with mock.patch("bitrate_check.scan", return_value=fake):
+            status, made = self.request("/api/bitrate-check", {"action": "create", "crate": 5})
+        self.assertEqual(status, 200)
+        self.assertEqual((made["written"], made["added"]), (True, 1))  # type: ignore[index]
+        self.assertEqual(made["saved"]["name"], bitrate_check.CRATE_NAME)  # type: ignore[index]
+        status, missing = self.request("/api/bitrate-check", {"action": "preview"})
+        self.assertEqual((status, missing["code"]), (400, "bitrate_needs_crate"))  # type: ignore[index]
+        status, verb = self.request("/api/bitrate-check", {"action": "wipe", "crate": 5})
+        self.assertEqual((status, verb["code"]), (400, "action_unavailable"))  # type: ignore[index]
 
 
 class CliTests(unittest.TestCase):

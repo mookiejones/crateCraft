@@ -4,7 +4,8 @@
  * Player and wizard are separate domains. The wizard bundle mounts its
  * own live `WizardProvider` value; this file supplies an idle wizard so
  * the domain is present on every island without pulling the setup fetch
- * into `app.js`.
+ * into `app.js`. This module reads the player engine; it does not own
+ * playback.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
