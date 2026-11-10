@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners2 = [], signal = this.signal = {
+        var listeners4 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners2.push(listener);
+            listeners4.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners2.forEach(function(listener) {
+          listeners4.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners2 = currentEntangledListeners;
+          var listeners4 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])();
+          for (var i = 0; i < listeners4.length; i++) (0, listeners4[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners2 = [], thenableWithOverride = {
+        var listeners4 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners2.push(resolve);
+            listeners4.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])(result);
+            for (var i = 0; i < listeners4.length; i++) (0, listeners4[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners2.length; error2++)
-              (0, listeners2[error2])(void 0);
+            for (error2 = 0; error2 < listeners4.length; error2++)
+              (0, listeners4[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners2 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners4 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners2.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners4.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners2.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners4.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners2;
+          if (3 === targetFiber.tag) return listeners4;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners2 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners4 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners2.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners4.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners2.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners4.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners2.length && dispatchQueue.push({ event, listeners: listeners2 });
+        0 !== listeners4.length && dispatchQueue.push({ event, listeners: listeners4 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners2 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners2, type, listener, optionsOrUseCapture)) {
+        var listeners4 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners4, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners2.push({
+          listeners4.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners2;
+        this._eventListeners = listeners4;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners2 = this._eventListeners;
-        if (null !== listeners2 && (listener = indexOfEventListener(
-          listeners2,
+        var listeners4 = this._eventListeners;
+        if (null !== listeners4 && (listener = indexOfEventListener(
+          listeners4,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners2[listener];
+          var _listeners$index = listeners4[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners2.splice(listener, 1);
+          listeners4.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -12652,8 +12652,8 @@
         if (0 === eventListeners.length) return -1;
         optionsOrUseCapture = normalizeListenerOptions(optionsOrUseCapture);
         for (var i = 0; i < eventListeners.length; i++) {
-          var item4 = eventListeners[i];
-          if (item4.type === type && item4.listener === listener && normalizeListenerOptions(item4.optionsOrUseCapture) === optionsOrUseCapture)
+          var item2 = eventListeners[i];
+          if (item2.type === type && item2.listener === listener && normalizeListenerOptions(item2.optionsOrUseCapture) === optionsOrUseCapture)
             return i;
         }
         return -1;
@@ -12795,8 +12795,8 @@
           var pending = pendingIntersectionUnobserves;
           pendingIntersectionUnobserves = [];
           for (var i = 0; i < pending.length; i++) {
-            var item4 = pending[i];
-            item4.observer.unobserve(item4.instance);
+            var item2 = pending[i];
+            item2.observer.unobserve(item2.instance);
           }
         }));
       }
@@ -17531,8 +17531,8 @@
   function messageParams(value) {
     if (!value || typeof value !== "object") return void 0;
     const params = {};
-    for (const [name, item4] of Object.entries(value)) {
-      if (typeof item4 === "string" || typeof item4 === "number" && Number.isFinite(item4)) params[name] = item4;
+    for (const [name, item2] of Object.entries(value)) {
+      if (typeof item2 === "string" || typeof item2 === "number" && Number.isFinite(item2)) params[name] = item2;
     }
     return Object.keys(params).length ? params : void 0;
   }
@@ -18062,6 +18062,88 @@
     if (order !== 0) return order * dir;
     return a.id - b.id;
   }
+
+  // src/gig.ts
+  var import_react8 = __toESM(require_react(), 1);
+
+  // src/app/mount.tsx
+  var import_react_dom3 = __toESM(require_react_dom(), 1);
+  var import_client = __toESM(require_client(), 1);
+
+  // src/app/providers.tsx
+  var import_react7 = __toESM(require_react(), 1);
+  var import_react_dom2 = __toESM(require_react_dom(), 1);
+
+  // src/context/GigContext.tsx
+  var import_react = __toESM(require_react(), 1);
+  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+  var GigContext = (0, import_react.createContext)(null);
+  function GigStateProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(GigContext, { value, children });
+  }
+  function useGig() {
+    const value = (0, import_react.useContext)(GigContext);
+    if (value === null) {
+      throw new Error("useGig must be used within GigStateProvider");
+    }
+    return value;
+  }
+
+  // src/context/PlayerContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var PlayerContext = (0, import_react2.createContext)(null);
+  function PlayerProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PlayerContext, { value, children });
+  }
+  function usePlayer() {
+    const value = (0, import_react2.useContext)(PlayerContext);
+    if (value === null) {
+      throw new Error("usePlayer must be used within PlayerProvider");
+    }
+    return value;
+  }
+
+  // src/drift.ts
+  var import_react4 = __toESM(require_react(), 1);
+
+  // src/drift-view.ts
+  var DRIFT_REASON_ORDER = ["drifting", "live", "pending_map"];
+  var REASON_KEYS = {
+    drifting: "drift.reason.drifting",
+    live: "drift.reason.live",
+    pending_map: "drift.reason.pending_map"
+  };
+  function driftScopeLabel() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function driftReasonKinds(flags) {
+    const seen = new Set(flags.flatMap((item2) => item2.reasons));
+    const known = DRIFT_REASON_ORDER.filter((kind2) => seen.has(kind2));
+    const extra = [...seen].filter((kind2) => !DRIFT_REASON_ORDER.includes(kind2)).sort();
+    return [...known, ...extra];
+  }
+  function driftReasonHeading(kind2) {
+    return t(REASON_KEYS[kind2] ?? "drift.reason.unknown");
+  }
+  function driftFlagLine(item2) {
+    const title2 = [item2.artist, item2.name].filter(Boolean).join(" — ") || item2.file;
+    const reasons = item2.reasons.map(driftReasonHeading).join(", ");
+    const bpm = item2.bpm_min != null && item2.bpm_max != null ? t("drift.bpmRange", { min: item2.bpm_min, max: item2.bpm_max }) : "";
+    return t("drift.row", { title: title2, file: item2.file, reasons, bpm });
+  }
+
+  // src/components/GigDetailsGroup.tsx
+  var import_react3 = __toESM(require_react(), 1);
+  var import_react_dom = __toESM(require_react_dom(), 1);
 
   // src/tooltip-strings.ts
   function spec(key, params) {
@@ -18789,291 +18871,92 @@
     priorDescribedBy = "";
   }
 
-  // src/gig.ts
-  var STEP_COUNT = 5;
+  // src/components/GigDetailsGroup.tsx
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var LIST_CAP = 100;
-  var STEPS = [
-    { title: "gig.drives", action: "gig.drivesAction", empty: "gig.drivesEmpty" },
-    { title: "gig.missing", action: "gig.missingAction", empty: "gig.missingEmpty" },
-    { title: "gig.streaming", action: "gig.streamingAction", empty: "gig.streamingEmpty" },
-    { title: "gig.emptyCrates", action: "gig.emptyCratesAction", empty: "gig.emptyCratesEmpty" },
-    { title: "gig.since", action: "gig.sinceAction", empty: "gig.sinceEmpty" }
-  ];
-  var stepIndex = 0;
-  var latest = null;
-  var checkedAt = null;
-  var exitGig = () => {
-  };
-  function wireGigCheck(exit) {
-    exitGig = exit;
-    const panel = el("gig-panel");
-    if (panel.dataset.gigWired === "true") return;
-    panel.dataset.gigWired = "true";
-    el("gig-refresh").addEventListener("click", () => {
-      void loadGigCheck(true);
-    });
-    panel.addEventListener("click", (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement) || !latest) return;
-      const action = button2.dataset.gigAction;
-      if (action === "next") stepIndex = Math.min(stepIndex + 1, STEP_COUNT);
-      else if (action === "back") stepIndex = Math.max(0, stepIndex - 1);
-      else if (action === "exit") {
-        exitGig();
-        return;
-      } else return;
-      renderGigReport(latest);
-      focusHeading();
-    });
+  function GigDetailsGroup({ label, lines }) {
+    const [expanded, setExpanded] = (0, import_react3.useState)(false);
+    const shown = expanded || lines.length <= LIST_CAP ? lines : lines.slice(0, LIST_CAP);
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("details", { className: "gig-group", open: true, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("summary", { children: t("gig.groupCount", { label, count: lines.length }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { children: shown.map((line, index) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: line }, `${index}:${line}`)) }),
+      lines.length > LIST_CAP && !expanded ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: (element) => {
+            if (element) setTooltip(element, tips.gigShowAll);
+          },
+          className: "gig-show-all",
+          onClick: () => {
+            (0, import_react_dom.flushSync)(() => setExpanded(true));
+          },
+          children: t("gig.showAll", { count: lines.length })
+        }
+      ) : null
+    ] });
   }
-  async function loadGigCheck(keepStep = false) {
-    const token3 = ++state.gigToken;
-    if (!keepStep) stepIndex = 0;
-    beginBusy();
-    let settle = "none";
-    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      const response = await fetch(
-        `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
-      );
-      if (token3 !== state.gigToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.gigToken) return;
-      if (!response.ok || payload === null) {
-        failStatus(serverMessage(payload, t("gig.unreadable")));
-        settle = "retry";
-        return;
-      }
-      checkedAt = /* @__PURE__ */ new Date();
-      latest = payload;
-      el("gig-status").textContent = "";
-      renderGigReport(payload);
-      settle = "heading";
-    } catch {
-      if (token3 !== state.gigToken) return;
-      failStatus(t("gig.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.gigToken) return;
-      endBusy();
-      if (settle === "retry") el("gig-refresh").focus();
-      if (settle === "heading") focusHeading();
-    }
-  }
-  function showGigFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("gig.unreadable");
-    failStatus(message);
-    endBusy();
-    el("gig-refresh").focus();
-  }
-  function renderGigReport(payload) {
-    const report = el("gig-report");
-    el("gig-scope").textContent = payload.scope?.crate_name || t("gig.wholeSpace");
-    report.replaceChildren(scoreBlock(payload));
-    if (stepIndex >= STEP_COUNT) {
-      report.append(doneScreen(payload));
-      return;
-    }
-    const step = STEPS[stepIndex];
-    report.append(kicker(stepIndex), heading(t(step.title)));
-    if (stepIndex === STEP_COUNT - 1) renderSince(report, payload);
-    else renderStepList(report, step, linesFor(payload, stepIndex));
-    report.append(actions(t(step.action)));
-  }
-  function repaintGig() {
-    if (latest) renderGigReport(latest);
-  }
-  function beginBusy() {
-    const button2 = el("gig-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
-    el("gig-panel").setAttribute("aria-busy", "true");
-    el("gig-status").textContent = t("gig.checking");
-  }
-  function endBusy() {
-    const button2 = el("gig-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
-    el("gig-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus(message) {
-    el("gig-status").textContent = message;
-  }
-  function focusHeading() {
-    const headingNode = document.getElementById("gig-step-heading");
-    if (headingNode instanceof HTMLElement) headingNode.focus();
-  }
-  function formatCheckedAt(date) {
-    return date ? formatDate(date, { hour: "numeric", minute: "2-digit" }) : "";
-  }
-  function scoreBlock(payload) {
-    const score = document.createElement("p");
-    score.className = "gig-score";
-    const verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady");
-    score.setAttribute("aria-label", t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }));
-    const value = document.createElement("span");
-    value.className = "gig-score-value";
-    value.textContent = t("gig.score", { score: payload.score });
-    const verdict = document.createElement("span");
-    verdict.className = payload.ready ? "gig-verdict" : "gig-verdict not-ready";
-    verdict.textContent = t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady");
-    score.append(value, verdict);
-    return score;
-  }
-  function kicker(index) {
-    const step = document.createElement("p");
-    step.className = "gig-kicker";
-    step.textContent = t("gig.stepOf", { index: index + 1, total: STEP_COUNT });
-    return step;
-  }
-  function heading(text2) {
-    const title2 = document.createElement("h3");
-    title2.id = "gig-step-heading";
-    title2.tabIndex = -1;
-    title2.textContent = text2;
-    return title2;
-  }
-  function linesFor(payload, index) {
-    if (index === 0) {
-      return (payload.unavailable_drives || []).map(
-        (drive) => t("gig.driveUnavailable", { name: drive.name, count: drive.track_count })
-      );
-    }
-    if (index === 1) return (payload.missing_files || []).map((item4) => item4.path);
-    if (index === 2) return (payload.streaming_tracks || []).map((item4) => `${item4.service}: ${item4.title}`);
-    if (index === 3) return (payload.empty_crates || []).map((item4) => `${item4.name} — ${item4.warning}`);
-    return [];
-  }
-  function renderStepList(parent, step, lines) {
-    if (!lines.length) {
-      const empty = document.createElement("p");
-      empty.className = "gig-note";
-      empty.textContent = t(step.empty);
-      parent.append(empty);
-      return;
-    }
-    parent.append(detailsGroup(t(step.title), lines));
-  }
-  function renderSince(parent, payload) {
-    const note = payload.snapshot_note?.trim() ?? "";
-    if (note) {
-      const line = document.createElement("p");
-      line.className = "gig-note";
-      line.textContent = note;
-      parent.append(line);
-    }
-    const changes = payload.changes;
-    if (!changes) {
-      if (!note) parent.append(noteLine(t("gig.noSnapshot")));
-      return;
-    }
-    const groups = [
-      ["gig.cratesAdded", changes.crates_added || []],
-      ["gig.cratesRemoved", changes.crates_removed || []],
-      ["gig.cratesEdited", changes.crates_edited || []],
-      ["gig.tracksAdded", changes.tracks_added || []],
-      ["gig.tracksRemoved", changes.tracks_removed || []],
-      ["gig.cuesEdited", changes.cues_edited || []],
-      ["gig.gridsEdited", changes.grids_edited || []],
-      ["gig.tagsEdited", changes.tags_edited || []]
-    ];
-    let any = false;
-    for (const [label, lines] of groups) {
-      if (!lines.length) continue;
-      parent.append(detailsGroup(t(label), lines));
-      any = true;
-    }
-    if (!any) parent.append(noteLine(t(STEPS[STEP_COUNT - 1].empty)));
-  }
-  function noteLine(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function detailsGroup(label, lines) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = true;
-    const summary = document.createElement("summary");
-    summary.textContent = t("gig.groupCount", { label, count: lines.length });
-    const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP);
-    for (const line of shown) list.append(item(line));
-    details.append(summary, list);
-    if (lines.length > LIST_CAP) {
-      const show2 = buttonEl(tips.gigShowAll);
-      show2.className = "gig-show-all";
-      show2.textContent = t("gig.showAll", { count: lines.length });
-      show2.addEventListener("click", () => {
-        list.replaceChildren();
-        for (const line of lines) list.append(item(line));
-        show2.remove();
-      });
-      details.append(show2);
-    }
-    return details;
-  }
-  function item(text2) {
-    const row = document.createElement("li");
-    row.textContent = text2;
-    return row;
-  }
-  function actions(primary) {
-    const bar = document.createElement("div");
-    bar.className = "gig-actions";
-    const back = buttonEl(tips.gigBack);
-    back.dataset.gigAction = "back";
-    back.textContent = t("common.back");
-    back.disabled = stepIndex === 0;
-    bar.append(back);
-    if (primary) {
-      const next2 = buttonEl(tips.gigNext);
-      next2.className = "gig-primary";
-      next2.dataset.gigAction = "next";
-      next2.textContent = primary;
-      bar.append(next2);
-    }
-    const exit = buttonEl(tips.gigExit);
-    exit.dataset.gigAction = "exit";
-    exit.textContent = t("gig.exit");
-    bar.append(exit);
-    return bar;
-  }
-  function doneScreen(payload) {
-    const fragment = document.createDocumentFragment();
-    fragment.append(heading(t("gig.done")));
-    const art = document.createElement("div");
-    art.id = "gig-ready-art";
-    art.className = "gig-art-slot";
-    art.dataset.slot = "gig-ready";
-    art.setAttribute("aria-hidden", "true");
-    const line = document.createElement("p");
-    line.className = "gig-done";
-    const crate = payload.scope?.crate_name || t("gig.wholeSpaceInline");
-    line.textContent = t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
-      score: payload.score,
-      crate,
-      time: formatCheckedAt(checkedAt)
-    });
-    fragment.append(art, line);
-    const holding = (payload.holding_it_back || []).map((item4) => item4.summary);
-    if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
-    fragment.append(actions(null));
-    return fragment;
+
+  // src/components/DriftReport.tsx
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  function DriftReport() {
+    const { drift } = useGig();
+    const payload = drift.report;
+    if (!payload) return null;
+    const flags = payload.flags || [];
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
+      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
+      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
+      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
+      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
+      flags.length ? driftReasonKinds(flags).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        GigDetailsGroup,
+        {
+          label: driftReasonHeading(kind2),
+          lines: flags.filter((item2) => item2.reasons.includes(kind2)).map(driftFlagLine)
+        },
+        kind2
+      )) : /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: t("drift.empty") })
+    ] });
   }
 
   // src/drift.ts
-  var LIST_CAP2 = 100;
-  var REASON_ORDER = ["drifting", "live", "pending_map"];
-  var REASON_KEYS = {
-    drifting: "drift.reason.drifting",
-    live: "drift.reason.live",
-    pending_map: "drift.reason.pending_map"
-  };
-  var latest2 = null;
+  var listeners = /* @__PURE__ */ new Set();
+  var latest = null;
+  function emit() {
+    const snapshot = getDriftSnapshot();
+    for (const listener of listeners) listener(snapshot);
+  }
+  function beginBusy() {
+    const button2 = el("drift-refresh");
+    button2.disabled = true;
+    button2.setAttribute("aria-busy", "true");
+    el("drift-panel").setAttribute("aria-busy", "true");
+    el("drift-status").textContent = t("drift.checking");
+  }
+  function endBusy() {
+    const button2 = el("drift-refresh");
+    button2.disabled = state.activeCrate === "all";
+    button2.setAttribute("aria-busy", "false");
+    el("drift-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus(message) {
+    el("drift-status").textContent = message;
+  }
+  function updateScope() {
+    el("drift-scope").textContent = driftScopeLabel();
+  }
+  function getDriftSnapshot() {
+    return { report: latest, scope: driftScopeLabel() };
+  }
+  function subscribeDrift(listener) {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }
   function wireDrift() {
     const panel = el("drift-panel");
     if (panel.dataset.driftWired === "true") return;
@@ -19081,14 +18964,17 @@
     el("drift-refresh").addEventListener("click", () => {
       void loadDrift();
     });
+    mountIsland(el("drift-report"), (0, import_react4.createElement)(DriftReport));
   }
   async function loadDrift() {
     const token3 = ++state.driftToken;
-    beginBusy2();
+    beginBusy();
     let settle = "none";
     if (state.activeCrate === "all") {
-      failStatus2(t("error.tempo_needs_crate"));
-      endBusy2();
+      failStatus(t("error.tempo_needs_crate"));
+      endBusy();
+      updateScope();
+      emit();
       el("drift-refresh").focus();
       return;
     }
@@ -19101,1372 +18987,35 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.driftToken) return;
       if (!response.ok || payload === null) {
-        failStatus2(serverMessage(payload, t("drift.unreadable")));
+        failStatus(serverMessage(payload, t("drift.unreadable")));
         settle = "retry";
         return;
       }
-      latest2 = payload;
+      latest = payload;
       el("drift-status").textContent = "";
-      renderDriftReport(payload);
+      updateScope();
+      emit();
       settle = "report";
     } catch {
       if (token3 !== state.driftToken) return;
-      failStatus2(t("drift.unreachable"));
+      failStatus(t("drift.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.driftToken) return;
-      endBusy2();
+      endBusy();
       if (settle === "retry") el("drift-refresh").focus();
       if (settle === "report") el("drift-report").focus();
     }
   }
   function showDriftFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("drift.unreadable");
-    failStatus2(message);
-    endBusy2();
+    failStatus(message);
+    endBusy();
     el("drift-refresh").focus();
   }
-  function renderDriftReport(payload) {
-    el("drift-scope").textContent = scopeLabel();
-    const report = el("drift-report");
-    const flags = payload.flags || [];
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked });
-    report.replaceChildren(summary);
-    if (payload.not_found) {
-      report.append(noteLine2(t("drift.notFound", { count: payload.not_found })));
-    }
-    if (payload.unreadable) {
-      report.append(noteLine2(t("drift.unreadableFiles", { count: payload.unreadable })));
-    }
-    if (payload.unchecked) {
-      report.append(noteLine2(t("drift.unchecked", { count: payload.unchecked })));
-    }
-    if (payload.too_quiet) {
-      report.append(noteLine2(t("drift.tooQuiet", { count: payload.too_quiet })));
-    }
-    if (payload.mapped) {
-      report.append(noteLine2(t("drift.mapped", { count: payload.mapped })));
-    }
-    if (!flags.length) {
-      report.append(noteLine2(t("drift.empty")));
-      return;
-    }
-    for (const kind2 of reasonKinds(flags)) {
-      const rows2 = flags.filter((item4) => item4.reasons.includes(kind2));
-      report.append(detailsGroup2(reasonHeading(kind2), rows2.map(flagLine)));
-    }
-  }
   function repaintDrift() {
-    el("drift-scope").textContent = scopeLabel();
-    if (latest2) renderDriftReport(latest2);
-  }
-  function beginBusy2() {
-    const button2 = el("drift-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
-    el("drift-panel").setAttribute("aria-busy", "true");
-    el("drift-status").textContent = t("drift.checking");
-  }
-  function endBusy2() {
-    const button2 = el("drift-refresh");
-    button2.disabled = state.activeCrate === "all";
-    button2.setAttribute("aria-busy", "false");
-    el("drift-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus2(message) {
-    el("drift-status").textContent = message;
-  }
-  function scopeLabel() {
-    if (state.activeCrate === "all") return t("gig.wholeSpace");
-    const crate = state.crates.find((row) => row.id === state.activeCrate);
-    return crate?.name || t("gig.wholeSpace");
-  }
-  function noteLine2(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function reasonKinds(flags) {
-    const seen = new Set(flags.flatMap((item4) => item4.reasons));
-    const known = REASON_ORDER.filter((kind2) => seen.has(kind2));
-    const extra = [...seen].filter((kind2) => !REASON_ORDER.includes(kind2)).sort();
-    return [...known, ...extra];
-  }
-  function reasonHeading(kind2) {
-    return t(REASON_KEYS[kind2] ?? "drift.reason.unknown");
-  }
-  function flagLine(item4) {
-    const title2 = [item4.artist, item4.name].filter(Boolean).join(" — ") || item4.file;
-    const reasons = item4.reasons.map(reasonHeading).join(", ");
-    const bpm = item4.bpm_min != null && item4.bpm_max != null ? t("drift.bpmRange", { min: item4.bpm_min, max: item4.bpm_max }) : "";
-    return t("drift.row", { title: title2, file: item4.file, reasons, bpm });
-  }
-  function detailsGroup2(label, lines) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = true;
-    const summary = document.createElement("summary");
-    summary.textContent = t("gig.groupCount", { label, count: lines.length });
-    const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP2);
-    for (const line of shown) list.append(item2(line));
-    details.append(summary, list);
-    if (lines.length > LIST_CAP2) {
-      const show2 = buttonEl(tips.gigShowAll);
-      show2.className = "gig-show-all";
-      show2.textContent = t("gig.showAll", { count: lines.length });
-      show2.addEventListener("click", () => {
-        list.replaceChildren();
-        for (const line of lines) list.append(item2(line));
-        show2.remove();
-      });
-      details.append(show2);
-    }
-    return details;
-  }
-  function item2(text2) {
-    const row = document.createElement("li");
-    row.textContent = text2;
-    return row;
-  }
-
-  // src/health.ts
-  var SECTIONS = [
-    { key: "missing", label: "health.missing", action: "missing" },
-    { key: "no_bpm", label: "health.noBpm" },
-    { key: "no_key", label: "health.noKey" },
-    { key: "no_beatgrid", label: "health.noBeatgrid" },
-    { key: "no_artwork", label: "health.noArtwork" },
-    { key: "empty_genre", label: "health.emptyGenre" },
-    { key: "no_crate", label: "health.noCrate" }
-  ];
-  var latest3 = null;
-  var go = null;
-  function wireHealth(navigate) {
-    go = navigate;
-    const panel = el("health-panel");
-    if (panel.dataset.healthWired === "true") return;
-    panel.dataset.healthWired = "true";
-    el("health-refresh").addEventListener("click", () => {
-      void loadHealth();
-    });
-    panel.addEventListener("click", (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement)) return;
-      const action = button2.dataset.healthAction;
-      if (action === "missing" || action === "duplicates" || action === "files") {
-        go?.(action);
-        return;
-      }
-      if (action === "track") {
-        const id = Number(button2.dataset.healthId);
-        if (Number.isInteger(id) && id > 0) go?.("track", id);
-      }
-    });
-  }
-  async function loadHealth() {
-    const token3 = ++state.healthToken;
-    beginBusy3();
-    let settle = "none";
-    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      const response = await fetch(
-        `/api/library-health?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
-      );
-      if (token3 !== state.healthToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.healthToken) return;
-      if (!response.ok || payload === null) {
-        failStatus3(serverMessage(payload, t("health.unreadable")));
-        settle = "retry";
-        return;
-      }
-      latest3 = payload;
-      el("health-status").textContent = "";
-      renderHealthReport(payload);
-      settle = "report";
-    } catch {
-      if (token3 !== state.healthToken) return;
-      failStatus3(t("health.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.healthToken) return;
-      endBusy3();
-      if (settle === "retry") el("health-refresh").focus();
-      if (settle === "report") el("health-report").focus();
-    }
-  }
-  function showHealthFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
-    failStatus3(message);
-    endBusy3();
-    el("health-refresh").focus();
-  }
-  function renderHealthReport(payload) {
-    el("health-scope").textContent = scopeLabel2();
-    const report = el("health-report");
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = t("health.summary", { count: payload.checked });
-    report.replaceChildren(summary);
-    let listed = 0;
-    for (const spec2 of SECTIONS) {
-      listed += paintSection(report, t(spec2.label), payload[spec2.key], spec2.action);
-    }
-    listed += paintUnused(report, payload.unused);
-    listed += paintDuplicates(report, payload.duplicates);
-    if (!listed) report.append(noteLine3(t("health.clear")));
-  }
-  function repaintHealth() {
-    el("health-scope").textContent = scopeLabel2();
-    if (latest3) renderHealthReport(latest3);
-  }
-  function beginBusy3() {
-    const button2 = el("health-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
-    el("health-panel").setAttribute("aria-busy", "true");
-    el("health-status").textContent = t("health.checking");
-  }
-  function endBusy3() {
-    const button2 = el("health-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
-    el("health-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus3(message) {
-    el("health-status").textContent = message;
-  }
-  function scopeLabel2() {
-    if (state.activeCrate === "all") return t("gig.wholeSpace");
-    const crate = state.crates.find((row) => row.id === state.activeCrate);
-    return crate?.name || t("gig.wholeSpace");
-  }
-  function noteLine3(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function paintSection(report, label, section, action) {
-    const count = section?.count ?? 0;
-    const tracks = section?.tracks ?? [];
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label, count });
-    details.append(heading2);
-    if (action === "missing") details.append(openButton("missing", "health.openMissing", tips.healthOpenMissing));
-    const list = document.createElement("ul");
-    for (const track of tracks) list.append(trackItem(track));
-    details.append(list);
-    if (count > tracks.length) {
-      details.append(noteLine3(t("health.more", { count: count - tracks.length })));
-    }
-    report.append(details);
-    return count;
-  }
-  function paintUnused(report, section) {
-    const count = section?.count ?? 0;
-    const files = section?.files ?? [];
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label: t("health.unused"), count });
-    details.append(heading2);
-    details.append(openButton("files", "health.openFiles", tips.healthOpenFiles));
-    const list = document.createElement("ul");
-    for (const row of files) {
-      const item4 = document.createElement("li");
-      item4.textContent = t("health.fileRow", { file: row.file });
-      list.append(item4);
-    }
-    details.append(list);
-    if (count > files.length) {
-      details.append(noteLine3(t("health.more", { count: count - files.length })));
-    }
-    report.append(details);
-    return count;
-  }
-  function paintDuplicates(report, section) {
-    const count = section?.count ?? 0;
-    const groups = section?.groups ?? [];
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = count > 0;
-    const heading2 = document.createElement("summary");
-    heading2.textContent = t("gig.groupCount", { label: t("health.duplicates"), count });
-    details.append(heading2);
-    details.append(openButton("duplicates", "health.openDuplicates", tips.healthOpenDuplicates));
-    const list = document.createElement("ul");
-    for (const group of groups) list.append(groupItem(group));
-    details.append(list);
-    if (count > groups.length) {
-      details.append(noteLine3(t("health.more", { count: count - groups.length })));
-    }
-    report.append(details);
-    return count;
-  }
-  function openButton(action, label, tip) {
-    const button2 = buttonEl(tip);
-    button2.dataset.healthAction = action;
-    button2.textContent = t(label);
-    return button2;
-  }
-  function trackItem(track) {
-    const row = document.createElement("li");
-    const button2 = buttonEl(tips.healthTrack);
-    button2.dataset.healthAction = "track";
-    button2.dataset.healthId = String(track.id);
-    button2.textContent = trackLine(track);
-    row.append(button2);
-    return row;
-  }
-  function groupItem(group) {
-    const row = document.createElement("li");
-    row.textContent = t("health.duplicateRow", {
-      title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
-      count: group.ids.length
-    });
-    return row;
-  }
-  function trackLine(track) {
-    return t("health.row", {
-      title: [track.artist, track.name].filter(Boolean).join(" — ") || track.file
-    });
-  }
-
-  // src/scan.ts
-  var LIST_CAP3 = 100;
-  var PROBLEM_ORDER = [
-    "empty",
-    "unreadable",
-    "wrong_format",
-    "serato_flagged",
-    "undecodable",
-    "decode_error",
-    "short"
-  ];
-  var PROBLEM_KEYS = {
-    empty: "scan.problem.empty",
-    unreadable: "scan.problem.unreadable",
-    wrong_format: "scan.problem.wrong_format",
-    serato_flagged: "scan.problem.serato_flagged",
-    undecodable: "scan.problem.undecodable",
-    decode_error: "scan.problem.decode_error",
-    short: "scan.problem.short"
-  };
-  var latest4 = null;
-  var lastDepth = "quick";
-  function wireScan() {
-    const panel = el("scan-panel");
-    if (panel.dataset.scanWired === "true") return;
-    panel.dataset.scanWired = "true";
-    el("scan-quick").addEventListener("click", () => {
-      void loadScan("quick");
-    });
-    el("scan-full").addEventListener("click", () => {
-      void loadScan("full");
-    });
-  }
-  async function loadScan(depth) {
-    const chosen = resolveDepth(depth);
-    const token3 = ++state.scanToken;
-    beginBusy4();
-    let settle = "none";
-    if (chosen === "full" && state.activeCrate === "all") {
-      failStatus4(t("error.scan_full_needs_crate"));
-      endBusy4();
-      el("scan-full").focus();
-      return;
-    }
-    lastDepth = chosen;
-    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      const response = await fetch(
-        `/api/file-scan?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&depth=${encodeURIComponent(chosen)}`
-      );
-      if (token3 !== state.scanToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.scanToken) return;
-      if (!response.ok || payload === null) {
-        failStatus4(serverMessage(payload, t("scan.unreadable")));
-        settle = "retry";
-        return;
-      }
-      latest4 = payload;
-      el("scan-status").textContent = "";
-      renderScanReport(payload);
-      settle = "report";
-    } catch {
-      if (token3 !== state.scanToken) return;
-      failStatus4(t("scan.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.scanToken) return;
-      endBusy4();
-      if (settle === "retry") el("scan-quick").focus();
-      if (settle === "report") el("scan-report").focus();
-    }
-  }
-  function showScanFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
-    failStatus4(message);
-    endBusy4();
-    el("scan-quick").focus();
-  }
-  function renderScanReport(payload) {
-    el("scan-scope").textContent = scopeLabel3();
-    const report = el("scan-report");
-    const problems = payload.problems || [];
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked });
-    report.replaceChildren(summary);
-    if (payload.not_found) {
-      report.append(noteLine4(t("scan.notFound", { count: payload.not_found })));
-    }
-    if (payload.unchecked) {
-      report.append(noteLine4(t("scan.unchecked", { count: payload.unchecked })));
-    }
-    if (!problems.length) {
-      report.append(noteLine4(t("scan.empty")));
-      return;
-    }
-    for (const kind2 of problemKinds(problems)) {
-      const rows2 = problems.filter((item4) => item4.problem === kind2);
-      report.append(detailsGroup3(problemHeading(kind2), rows2.map(problemLine)));
-    }
-  }
-  function repaintScan() {
-    el("scan-scope").textContent = scopeLabel3();
-    if (latest4) renderScanReport(latest4);
-  }
-  function resolveDepth(depth) {
-    if (depth === "quick" || depth === "full") return depth;
-    if (lastDepth === "full" && state.activeCrate === "all") return "quick";
-    return lastDepth;
-  }
-  function beginBusy4() {
-    for (const id of ["scan-quick", "scan-full"]) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
-    }
-    el("scan-panel").setAttribute("aria-busy", "true");
-    el("scan-status").textContent = t("scan.checking");
-  }
-  function endBusy4() {
-    el("scan-quick").disabled = false;
-    el("scan-quick").setAttribute("aria-busy", "false");
-    const full = el("scan-full");
-    full.disabled = state.activeCrate === "all";
-    full.setAttribute("aria-busy", "false");
-    el("scan-panel").setAttribute("aria-busy", "false");
-  }
-  function failStatus4(message) {
-    el("scan-status").textContent = message;
-  }
-  function scopeLabel3() {
-    if (state.activeCrate === "all") return t("gig.wholeSpace");
-    const crate = state.crates.find((row) => row.id === state.activeCrate);
-    return crate?.name || t("gig.wholeSpace");
-  }
-  function noteLine4(text2) {
-    const line = document.createElement("p");
-    line.className = "gig-note";
-    line.textContent = text2;
-    return line;
-  }
-  function problemKinds(problems) {
-    const seen = new Set(problems.map((item4) => item4.problem));
-    const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
-    const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
-    return [...known, ...extra];
-  }
-  function problemHeading(kind2) {
-    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
-  }
-  function problemLine(item4) {
-    const title2 = [item4.artist, item4.name].filter(Boolean).join(" — ") || item4.file;
-    const label = problemDetail(item4);
-    return t("scan.row", { title: title2, file: item4.file, problem: label });
-  }
-  function problemDetail(item4) {
-    const heading2 = problemHeading(item4.problem);
-    if (item4.problem === "wrong_format" && item4.detail) {
-      return t("scan.wrongFormatDetail", { detail: item4.detail });
-    }
-    if ((item4.problem === "decode_error" || item4.problem === "short") && item4.detail) {
-      return t(item4.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
-        detail: item4.detail
-      });
-    }
-    if (item4.problem === "serato_flagged" && item4.detail) {
-      return `${heading2}: ${item4.detail}`;
-    }
-    return heading2;
-  }
-  function detailsGroup3(label, lines) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = true;
-    const summary = document.createElement("summary");
-    summary.textContent = t("gig.groupCount", { label, count: lines.length });
-    const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP3);
-    for (const line of shown) list.append(item3(line));
-    details.append(summary, list);
-    if (lines.length > LIST_CAP3) {
-      const show2 = buttonEl(tips.gigShowAll);
-      show2.className = "gig-show-all";
-      show2.textContent = t("gig.showAll", { count: lines.length });
-      show2.addEventListener("click", () => {
-        list.replaceChildren();
-        for (const line of lines) list.append(item3(line));
-        show2.remove();
-      });
-      details.append(show2);
-    }
-    return details;
-  }
-  function item3(text2) {
-    const row = document.createElement("li");
-    row.textContent = text2;
-    return row;
-  }
-
-  // src/tags-view.ts
-  function tagsSummary(field, values, groups) {
-    if (field === "titles") return titlesSummary(groups);
-    if (groups === 0) {
-      return field === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
-    }
-    return field === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
-  }
-  function titlesSummary(changes) {
-    if (!changes) return t("tags.summaryTitlesClear");
-    return t("tags.summaryTitles", { count: changes });
-  }
-  function groupHeading(group) {
-    return t("tags.group", {
-      name: group.suggested,
-      spellings: t("tags.spellingCount", { count: group.spellings.length }),
-      tracks: t("tags.trackCount", { count: group.tracks })
-    });
-  }
-  function spellingLabel(value, count, suggested) {
-    const base = t("tags.row", { value, count });
-    return suggested ? `${base} — ${t("tags.suggested")}` : base;
-  }
-  function previewSummary(plan) {
-    if (!plan.changes.length) return t("tags.noChanges");
-    return t("tags.previewSummary", { count: plan.changes.length, value: plan.value });
-  }
-  function titlesPreviewSummary(plan) {
-    if (!plan.changes.length) return t("tags.summaryTitlesClear");
-    return t("tags.titlesPreviewSummary", { count: plan.changes.length });
-  }
-  function writtenSummary(plan) {
-    return t("tags.written", { count: plan.changes.length, value: plan.value });
-  }
-  function titlesWrittenSummary(plan) {
-    return t("tags.titlesWritten", { count: plan.changes.length });
-  }
-  function mappingPreviewSummary(plan) {
-    if (!plan.changes.length) return t("tags.noChanges");
-    return t("tags.mappingSummary", { count: plan.changes.length });
-  }
-  function mappingWrittenSummary(plan) {
-    return t("tags.mappingWritten", { count: plan.changes.length });
-  }
-  function mappingFieldLabel(field) {
-    if (field === "genre") return t("tags.genre");
-    if (field === "artist") return t("tags.artist");
-    return field;
-  }
-  function groupChanges(changes) {
-    const rows2 = /* @__PURE__ */ new Map();
-    for (const change of changes) {
-      const remixer = change.remixer ?? "";
-      const field = change.field ?? "";
-      const id = `${field}\0${change.from}\0${change.to}\0${remixer}`;
-      const existing = rows2.get(id);
-      if (existing) existing.count += 1;
-      else {
-        const row = { from: change.from, to: change.to, count: 1 };
-        if (change.remixer) row.remixer = change.remixer;
-        if (change.field) row.field = change.field;
-        rows2.set(id, row);
-      }
-    }
-    return [...rows2.values()];
-  }
-  function previewLines(changes) {
-    return groupChanges(changes).map((row) => {
-      if (row.field) {
-        return t("tags.previewLineField", {
-          field: mappingFieldLabel(row.field),
-          from: row.from,
-          to: row.to,
-          count: row.count
-        });
-      }
-      return row.remixer ? t("tags.previewLineRemixer", {
-        from: row.from,
-        to: row.to,
-        remixer: row.remixer,
-        count: row.count
-      }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count });
-    });
-  }
-
-  // src/tags.ts
-  var LIST_CAP4 = 100;
-  var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
-  var TITLE_KEY = "clean";
-  var MAPPING_KEY = "saved";
-  var latest5 = null;
-  var titlePlan = null;
-  var mappingPlan = null;
-  var plans = /* @__PURE__ */ new Map();
-  var selectedByKey = /* @__PURE__ */ new Map();
-  var panelBusy = false;
-  var actionKey = "";
-  function wireTags() {
-    const panel = el("tags-panel");
-    if (panel.dataset.tagsWired === "true") return;
-    panel.dataset.tagsWired = "true";
-    el("tags-genre").addEventListener("click", () => {
-      if (currentField() === "genre") return;
-      setField("genre");
-      void loadTags();
-    });
-    el("tags-artist").addEventListener("click", () => {
-      if (currentField() === "artist") return;
-      setField("artist");
-      void loadTags();
-    });
-    el("tags-titles").addEventListener("click", () => {
-      if (currentField() === "titles") return;
-      setField("titles");
-      void loadTags();
-    });
-    el("tags-refresh").addEventListener("click", () => {
-      void loadTags();
-    });
-    el("tags-report").addEventListener("change", (event) => {
-      const input = event.target.closest("input[type='radio']");
-      if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
-      const key = input.name.slice("tags-".length);
-      selectedByKey.set(key, input.value);
-      plans.delete(key);
-      if (latest5) renderTagsReport(latest5);
-    });
-    el("tags-report").addEventListener("click", (event) => {
-      const button2 = event.target.closest("[data-tags-action]");
-      if (!button2 || button2.disabled) return;
-      if (button2.dataset.tagsAction === "clean-apply") {
-        void applyTitles();
-        return;
-      }
-      if (button2.dataset.tagsAction === "refresh-apply") {
-        void applyMappings();
-        return;
-      }
-      const key = button2.dataset.key ?? "";
-      if (!key) return;
-      if (button2.dataset.tagsAction === "preview") void previewGroup(key);
-      if (button2.dataset.tagsAction === "apply") void applyGroup(key);
-    });
-  }
-  async function loadTags() {
-    const token3 = ++state.tagsToken;
-    const field = currentField();
-    plans.clear();
-    selectedByKey.clear();
-    beginBusy5();
-    let settle = "none";
-    try {
-      if (field === "titles") {
-        const payload = await postJSON("/api/tag-clusters", {
-          action: "clean-preview",
-          space: state.space
-        });
-        if (token3 !== state.tagsToken) return;
-        titlePlan = payload;
-        latest5 = null;
-        mappingPlan = null;
-        el("tags-status").textContent = titlesPreviewSummary(payload);
-        settle = "report";
-      } else {
-        const response = await fetch(
-          `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
-        );
-        if (token3 !== state.tagsToken) return;
-        const payload = await readJSON(response).catch(() => null);
-        if (token3 !== state.tagsToken) return;
-        if (!response.ok || payload === null) {
-          failStatus5(serverMessage(payload, t("tags.unreadable")));
-          settle = "retry";
-          return;
-        }
-        latest5 = payload;
-        titlePlan = null;
-        mappingPlan = await readMappingPreview(token3);
-        if (token3 !== state.tagsToken) return;
-        el("tags-status").textContent = "";
-        settle = "report";
-      }
-    } catch (error2) {
-      if (token3 !== state.tagsToken) return;
-      if (error2 instanceof TypeError) failStatus5(t("tags.unreachable"));
-      else failStatus5(failureOf(error2).message);
-      settle = "retry";
-    } finally {
-      if (token3 !== state.tagsToken) return;
-      endBusy5();
-      if (settle === "report") paintReport();
-      if (settle === "retry") el("tags-refresh").focus();
-      if (settle === "report") el("tags-report").focus();
-    }
-  }
-  function showTagsFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
-    failStatus5(message);
-    endBusy5();
-    el("tags-refresh").focus();
-  }
-  function renderTagsReport(payload) {
-    el("tags-scope").textContent = t("gig.wholeSpace");
-    const field = currentField();
-    const report = el("tags-report");
-    const groups = payload.groups ?? [];
-    const open = openKeys();
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = tagsSummary(field, payload.values ?? 0, groups.length);
-    report.replaceChildren(summary);
-    const mapping = mappingCard();
-    if (mapping) report.append(mapping);
-    if (!groups.length) return;
-    groups.forEach((group, index) => {
-      report.append(groupCard(group, index === 0 || open.has(group.key)));
-    });
-  }
-  function paintReport() {
-    if (currentField() === "titles") {
-      if (titlePlan) renderTitleReport(titlePlan);
-      return;
-    }
-    if (latest5) renderTagsReport(latest5);
-  }
-  function renderTitleReport(plan) {
-    el("tags-scope").textContent = t("gig.wholeSpace");
-    const report = el("tags-report");
-    const summary = document.createElement("p");
-    summary.className = "gig-note";
-    summary.textContent = titlesSummary(plan.changes.length);
-    report.replaceChildren(summary);
-    const lines = previewLines(plan.changes);
-    if (lines.length) {
-      const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP4)) {
-        const row = document.createElement("li");
-        row.textContent = line;
-        diffs.append(row);
-      }
-      report.append(diffs);
-    }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
-    const apply = buttonEl(tips.tagsApplyTitles);
-    apply.dataset.tagsAction = "clean-apply";
-    apply.textContent = t("tags.apply");
-    apply.disabled = !canApplyTitles(plan);
-    actions2.append(apply);
-    report.append(actions2);
-  }
-  function repaintTags() {
-    setField(currentField());
-    el("tags-scope").textContent = t("gig.wholeSpace");
-    paintReport();
-  }
-  async function previewGroup(key) {
-    const group = groupByKey(key);
-    const value = selectedValue(key);
-    if (!group || !value) return;
-    actionKey = key;
-    paintReport();
-    try {
-      const plan = await postJSON("/api/tag-clusters", {
-        action: "preview",
-        space: state.space,
-        field: currentField(),
-        value
-      });
-      plans.set(key, plan);
-      el("tags-status").textContent = previewSummary(plan);
-      paintReport();
-      applyButton(key)?.focus();
-    } catch (error2) {
-      failStatus5(failureOf(error2).message);
-    } finally {
-      actionKey = "";
-      paintReport();
-    }
-  }
-  async function applyGroup(key) {
-    const plan = plans.get(key);
-    const value = selectedValue(key);
-    if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
-    actionKey = key;
-    panelBusy = true;
-    beginBusy5();
-    paintReport();
-    try {
-      const written = await postJSON("/api/tag-clusters", {
-        action: "apply",
-        space: state.space,
-        field: currentField(),
-        value
-      });
-      await bridge.reloadLibrary();
-      actionKey = "";
-      panelBusy = false;
-      endBusy5();
-      await loadTags();
-      el("tags-status").textContent = writtenSummary(written);
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus5(failed.message);
-      if (failed.status === 409) {
-        bridge.lockDown(error2);
-      }
-    } finally {
-      actionKey = "";
-      panelBusy = false;
-      endBusy5();
-      paintReport();
-    }
-  }
-  async function applyMappings() {
-    const plan = mappingPlan;
-    if (!plan || !canApplyMappings(plan)) return;
-    actionKey = MAPPING_KEY;
-    panelBusy = true;
-    beginBusy5();
-    paintReport();
-    try {
-      const written = await postJSON("/api/tag-clusters", {
-        action: "refresh-apply",
-        space: state.space
-      });
-      await bridge.reloadLibrary();
-      actionKey = "";
-      panelBusy = false;
-      endBusy5();
-      await loadTags();
-      el("tags-status").textContent = mappingWrittenSummary(written);
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus5(failed.message);
-      if (failed.status === 409) {
-        bridge.lockDown(error2);
-      }
-    } finally {
-      actionKey = "";
-      panelBusy = false;
-      endBusy5();
-      paintReport();
-    }
-  }
-  async function applyTitles() {
-    const plan = titlePlan;
-    if (!plan || !canApplyTitles(plan)) return;
-    actionKey = TITLE_KEY;
-    panelBusy = true;
-    beginBusy5();
-    paintReport();
-    try {
-      const written = await postJSON("/api/tag-clusters", {
-        action: "clean-apply",
-        space: state.space
-      });
-      await bridge.reloadLibrary();
-      actionKey = "";
-      panelBusy = false;
-      endBusy5();
-      await loadTags();
-      el("tags-status").textContent = titlesWrittenSummary(written);
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus5(failed.message);
-      if (failed.status === 409) {
-        bridge.lockDown(error2);
-      }
-    } finally {
-      actionKey = "";
-      panelBusy = false;
-      endBusy5();
-      paintReport();
-    }
-  }
-  function currentField() {
-    if (el("tags-titles").getAttribute("aria-pressed") === "true") return "titles";
-    if (el("tags-artist").getAttribute("aria-pressed") === "true") return "artist";
-    return "genre";
-  }
-  function setField(next2) {
-    el("tags-genre").setAttribute("aria-pressed", String(next2 === "genre"));
-    el("tags-artist").setAttribute("aria-pressed", String(next2 === "artist"));
-    el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
-    el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
-  }
-  function beginBusy5() {
-    panelBusy = true;
-    for (const id of FIELD_BUTTONS) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
-    }
-    el("tags-panel").setAttribute("aria-busy", "true");
-    el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
-    paintReport();
-  }
-  function endBusy5() {
-    panelBusy = false;
-    for (const id of FIELD_BUTTONS) {
-      const button2 = el(id);
-      button2.disabled = false;
-      button2.setAttribute("aria-busy", "false");
-    }
-    el("tags-panel").setAttribute("aria-busy", "false");
-  }
-  function canApplyTitles(plan) {
-    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
-  }
-  function canApplyMappings(plan) {
-    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
-  }
-  function asMappingPlan(payload) {
-    if (payload === null || typeof payload !== "object") return null;
-    const plan = payload;
-    if (!Array.isArray(plan.changes)) return null;
-    return plan;
-  }
-  async function readMappingPreview(token3) {
-    try {
-      const payload = await postJSON("/api/tag-clusters", {
-        action: "refresh-preview",
-        space: state.space
-      });
-      if (token3 !== state.tagsToken) return null;
-      return asMappingPlan(payload);
-    } catch {
-      if (token3 !== state.tagsToken) return null;
-      return null;
-    }
-  }
-  function mappingCard() {
-    const plan = mappingPlan;
-    if (!plan?.changes.length) return null;
-    const wrap = document.createElement("div");
-    wrap.className = "tags-mappings";
-    const note = document.createElement("p");
-    note.className = "gig-note";
-    note.textContent = mappingPreviewSummary(plan);
-    wrap.append(note);
-    const lines = previewLines(plan.changes);
-    if (lines.length) {
-      const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP4)) {
-        const row = document.createElement("li");
-        row.textContent = line;
-        diffs.append(row);
-      }
-      wrap.append(diffs);
-    }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
-    const apply = buttonEl(tips.tagsApplyMappings);
-    apply.dataset.tagsAction = "refresh-apply";
-    apply.textContent = t("tags.applyMappings");
-    apply.disabled = !canApplyMappings(plan);
-    actions2.append(apply);
-    wrap.append(actions2);
-    return wrap;
-  }
-  function failStatus5(message) {
-    el("tags-status").textContent = message;
-  }
-  function openKeys() {
-    const keys = /* @__PURE__ */ new Set();
-    for (const details of el("tags-report").querySelectorAll("details[data-key]")) {
-      if (details instanceof HTMLDetailsElement && details.open && details.dataset.key) {
-        keys.add(details.dataset.key);
-      }
-    }
-    return keys;
-  }
-  function groupByKey(key) {
-    return latest5?.groups?.find((group) => group.key === key);
-  }
-  function selectedValue(key) {
-    const group = groupByKey(key);
-    return selectedByKey.get(key) ?? group?.suggested ?? "";
-  }
-  function canApply(key) {
-    const plan = plans.get(key);
-    const value = selectedValue(key);
-    return Boolean(
-      plan && plan.value === value && plan.changes.length && state.writable && !panelBusy && actionKey !== key
-    );
-  }
-  function applyButton(key) {
-    return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
-  }
-  function cssEscape(value) {
-    if (typeof CSS !== "undefined" && typeof CSS.escape === "function") return CSS.escape(value);
-    return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
-  }
-  function groupCard(group, open) {
-    const details = document.createElement("details");
-    details.className = "gig-group";
-    details.open = open;
-    details.dataset.key = group.key;
-    const summary = document.createElement("summary");
-    setTooltip(summary, tips.tagsGroup);
-    summary.textContent = groupHeading(group);
-    const list = document.createElement("ul");
-    list.className = "tags-spellings";
-    const chosen = selectedValue(group.key);
-    for (const spelling of group.spellings) {
-      list.append(spellingRow(group.key, spelling.value, spelling.count, spelling.value === group.suggested, spelling.value === chosen));
-    }
-    details.append(summary, list);
-    const plan = plans.get(group.key);
-    if (plan && plan.value === chosen) {
-      const lines = previewLines(plan.changes);
-      if (lines.length) {
-        const diffs = document.createElement("ul");
-        const shown = lines.slice(0, LIST_CAP4);
-        for (const line of shown) {
-          const row = document.createElement("li");
-          row.textContent = line;
-          diffs.append(row);
-        }
-        details.append(diffs);
-      }
-    }
-    details.append(groupActions(group.key, chosen, plan));
-    return details;
-  }
-  function spellingRow(key, value, count, suggested, checked) {
-    const row = document.createElement("li");
-    const label = document.createElement("label");
-    label.className = "tags-spelling";
-    const radio = inputEl(tips.tagsSpelling);
-    radio.type = "radio";
-    radio.name = `tags-${key}`;
-    radio.value = value;
-    radio.checked = checked;
-    radio.disabled = panelBusy;
-    const text2 = document.createElement("span");
-    text2.textContent = spellingLabel(value, count, suggested);
-    label.append(radio, text2);
-    row.append(label);
-    return row;
-  }
-  function groupActions(key, value, plan) {
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
-    const preview = buttonEl(tips.tagsPreview);
-    preview.dataset.tagsAction = "preview";
-    preview.dataset.key = key;
-    preview.textContent = t("tags.preview");
-    preview.disabled = panelBusy || !value;
-    const apply = buttonEl(tips.tagsApply);
-    apply.dataset.tagsAction = "apply";
-    apply.dataset.key = key;
-    apply.textContent = t("tags.apply");
-    apply.disabled = !canApply(key);
-    if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
-    actions2.append(preview, apply);
-    return actions2;
-  }
-
-  // src/portable.ts
-  var FINDING_CAP = 100;
-  var KIND_KEY = {
-    off_drive: "portable.kindOffDrive",
-    missing: "portable.kindMissing",
-    smart_crate: "portable.kindSmartCrate",
-    unsafe_name: "portable.kindUnsafeName",
-    path_length: "portable.kindPathLength",
-    file_size: "portable.kindFileSize"
-  };
-  var token = 0;
-  var latest6 = null;
-  var opener = null;
-  var wired = false;
-  function portableDriveRoot(path) {
-    const trimmed = path.trim();
-    if (!trimmed) return "";
-    const unified = trimmed.replace(/\\/g, "/");
-    const marker = unified.search(/\/_Serato_(\/|$)/i);
-    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
-    const volumes = /^\/Volumes\/[^/]+/.exec(base);
-    if (volumes) return volumes[0];
-    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
-    if (media2) return media2[0];
-    const mnt = /^\/mnt\/[^/]+/.exec(base);
-    if (mnt) return mnt[0];
-    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
-    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
-    const win = /^[A-Za-z]:/.exec(trimmed);
-    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
-    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
-  }
-  function parseDriveReport(value) {
-    if (!isRecord(value)) return null;
-    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
-    if (typeof value.summary !== "string") return null;
-    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
-    const findings = [];
-    for (const item4 of value.findings) {
-      if (!isRecord(item4) || typeof item4.kind !== "string" || typeof item4.fix !== "string") return null;
-      findings.push({
-        kind: item4.kind,
-        crate: text(item4.crate),
-        track: text(item4.track),
-        path: text(item4.path),
-        found: text(item4.found),
-        fix: item4.fix
-      });
-    }
-    const errors = [];
-    for (const item4 of value.errors) {
-      if (!isRecord(item4) || typeof item4.message !== "string") return null;
-      errors.push({ crate: text(item4.crate), message: item4.message });
-    }
-    return {
-      drive: text(value.drive),
-      name: text(value.name),
-      ready: value.ready,
-      missing_drive: value.missing_drive,
-      summary: value.summary,
-      findings,
-      errors
-    };
-  }
-  function portableDriveButton(name, path) {
-    const button2 = buttonEl(portableCheck(name));
-    button2.className = "files-portable";
-    button2.dataset.portableName = name;
-    button2.textContent = t("portable.check");
-    button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    button2.addEventListener("click", (event) => {
-      event.stopPropagation();
-      void openPortableCheck(path, button2);
-    });
-    return button2;
-  }
-  async function openPortableCheck(path, trigger) {
-    wirePortable();
-    const drive = portableDriveRoot(path);
-    const mine = ++token;
-    opener = trigger ?? null;
-    const dialog = el("portable-dialog");
-    latest6 = null;
-    el("portable-verdict").textContent = "";
-    el("portable-summary").textContent = "";
-    el("portable-findings").replaceChildren();
-    el("portable-status").textContent = t("portable.checking");
-    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
-    if (!drive) {
-      el("portable-status").textContent = t("portable.unreadable");
-      return;
-    }
-    try {
-      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
-      if (mine !== token) return;
-      const body = await readJSON(response).catch(() => null);
-      if (mine !== token) return;
-      if (!response.ok) {
-        fail(serverMessage(errorBody(body), t("portable.unreadable")));
-        return;
-      }
-      const report = parseDriveReport(body);
-      if (!report) {
-        fail(t("portable.unreadable"));
-        return;
-      }
-      latest6 = report;
-      el("portable-status").textContent = "";
-      renderPortableReport(report);
-    } catch {
-      if (mine !== token) return;
-      fail(t("portable.unreachable"));
-    }
-  }
-  function repaintPortable() {
-    for (const button2 of document.querySelectorAll(".files-portable")) {
-      button2.textContent = t("portable.check");
-      const name = button2.dataset.portableName ?? "";
-      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    }
-    if (latest6) renderPortableReport(latest6);
-  }
-  function wirePortable() {
-    if (wired) return;
-    wired = true;
-    el("portable-close").addEventListener("click", () => {
-      el("portable-dialog").close();
-      if (opener?.isConnected) opener.focus();
-    });
-  }
-  function renderPortableReport(report) {
-    latest6 = report;
-    const verdict = el("portable-verdict");
-    if (report.missing_drive) verdict.textContent = t("portable.missing");
-    else if (report.ready) verdict.textContent = t("portable.ready");
-    else verdict.textContent = t("portable.notReady");
-    el("portable-summary").textContent = report.summary;
-    const list = el("portable-findings");
-    const items = [];
-    const shown = report.findings.slice(0, FINDING_CAP);
-    for (const finding of shown) {
-      const row = document.createElement("li");
-      const kind2 = document.createElement("span");
-      kind2.className = "portable-kind";
-      kind2.textContent = kindLabel(finding.kind);
-      row.append(kind2);
-      if (finding.fix) {
-        row.append(document.createTextNode(" "));
-        const fix = document.createElement("span");
-        fix.className = "portable-fix";
-        fix.textContent = finding.fix;
-        row.append(fix);
-      }
-      items.push(row);
-    }
-    for (const error2 of report.errors) {
-      const row = document.createElement("li");
-      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
-      items.push(row);
-    }
-    const hidden = report.findings.length - shown.length;
-    if (hidden > 0) {
-      const row = document.createElement("li");
-      row.textContent = t("files.andMore", { count: hidden });
-      items.push(row);
-    }
-    list.replaceChildren(...items);
-  }
-  function kindLabel(kind2) {
-    const key = KIND_KEY[kind2];
-    return key ? t(key) : kind2;
-  }
-  function fail(message) {
-    latest6 = null;
-    el("portable-verdict").textContent = "";
-    el("portable-summary").textContent = "";
-    el("portable-findings").replaceChildren();
-    el("portable-status").textContent = message;
-  }
-  function isRecord(value) {
-    return typeof value === "object" && value !== null && !Array.isArray(value);
-  }
-  function text(value) {
-    return typeof value === "string" ? value : "";
-  }
-  function errorBody(value) {
-    if (!isRecord(value)) return null;
-    const body = {};
-    if (typeof value.error === "string") body.error = value.error;
-    if (typeof value.code === "string") body.code = value.code;
-    if (body.error === void 0 && body.code === void 0) return null;
-    return body;
-  }
-
-  // src/beatgrid-view.ts
-  var GRID_WARNING_KEYS = {
-    beatgrid_too_short: "markers.gridTooShort",
-    beatgrid_version: "markers.gridVersion",
-    beatgrid_empty: "markers.gridEmpty",
-    beatgrid_too_many: "markers.gridTooMany",
-    beatgrid_truncated: "markers.gridTruncated"
-  };
-  function beatgridViewOnly(unavailable) {
-    return unavailable !== true;
-  }
-  function beatgridIsSuspect(code) {
-    return typeof code === "string" && code !== "";
-  }
-  function beatgridWarningKey(code) {
-    if (!beatgridIsSuspect(code) || code == null) return null;
-    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
-      return GRID_WARNING_KEYS[code];
-    }
-    return "markers.gridUnknown";
-  }
-  function beatSeconds(value) {
-    if (value === "" || value == null) return "";
-    const number = Number(value);
-    if (!Number.isFinite(number)) return "";
-    return `${number.toFixed(3)}s`;
-  }
-  function appendBeatgrid(section, track) {
-    if (!beatgridViewOnly(track.markers_unavailable)) return;
-    const heading2 = document.createElement("h4");
-    heading2.textContent = t("markers.gridHeading");
-    section.append(heading2);
-    const viewOnly = document.createElement("p");
-    viewOnly.className = "detail-kicker";
-    viewOnly.textContent = t("markers.gridViewOnly");
-    section.append(viewOnly);
-    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
-      const warn = document.createElement("p");
-      warn.className = "detail-kicker warn";
-      warn.setAttribute("role", "status");
-      const key = beatgridWarningKey(track.beatgrid_warning_code);
-      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
-      warn.textContent = t("markers.gridSuspect", { reason });
-      section.append(warn);
-    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
-      const empty = document.createElement("p");
-      empty.className = "detail-kicker";
-      empty.textContent = t("markers.gridNone");
-      section.append(empty);
-    }
-    for (const mark of track.beatgrid || []) {
-      section.append(paintBeatMarker(mark));
-    }
-  }
-  function paintBeatMarker(mark) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const time = document.createElement("span");
-    time.textContent = beatSeconds(mark.position);
-    const name = document.createElement("span");
-    const bpmNumber = Number(mark.bpm);
-    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
-      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
-    } else if (mark.beats != null) {
-      name.textContent = t("markers.beats", { count: Number(mark.beats) });
-    } else {
-      name.textContent = "";
-    }
-    row.append(document.createElement("span"), document.createElement("span"), time, name);
-    return row;
+    updateScope();
+    emit();
   }
 
   // src/cue-view.ts
@@ -20626,772 +19175,11 @@
     return side;
   }
 
-  // src/folder-sync-view.ts
-  function syncFolderSyncButton() {
-    const id = state.activeCrate;
-    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
-    const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
-    el("crate-folder-sync").disabled = blocked;
-    el("crate-rename-from-tags").disabled = blocked;
-  }
-  function readFolderSyncForm() {
-    const folder = el("folder-sync-path").value.trim();
-    if (!folder) return null;
-    return {
-      folder,
-      subcrates: el("folder-sync-subcrates").checked,
-      full: el("folder-sync-full").checked
-    };
-  }
-  function folderSyncPreviewText(reply) {
-    const added = Number(reply.added) || 0;
-    const removed = Number(reply.removed) || 0;
-    const created = Number(reply.created) || 0;
-    const skipped = Number(reply.skipped_count) || 0;
-    if (added === 0 && removed === 0 && created === 0) {
-      return t("folderSync.summaryNone", { skipped });
-    }
-    return t("folderSync.summary", { added, removed, skipped });
-  }
-  function folderSyncDoneText(reply) {
-    const name = reply.crate?.name?.trim() || "";
-    const added = Number(reply.added) || 0;
-    const removed = Number(reply.removed) || 0;
-    if (!reply.written) return t("folderSync.unchanged", { name });
-    return t("folderSync.done", { name, added, removed });
-  }
-  function folderSyncHasWork(reply) {
-    return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
-  }
-
-  // src/preset-view.ts
-  function presetName(preset) {
-    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
-    if (preset.kind === "bpm") {
-      return t("presets.name.bpm", {
-        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
-        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
-      });
-    }
-    return t("presets.name.unplayed", { count: preset.months });
-  }
-  function numberFrom(input) {
-    const text2 = input.value.trim();
-    if (!text2) return null;
-    const value = Number(text2);
-    return Number.isFinite(value) ? value : null;
-  }
-  function scopeCrate() {
-    if (state.activeCrate === "all") return null;
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
-    return crate && !crate.smart ? crate : null;
-  }
-  function readPresetForm() {
-    const kind2 = el("preset-kind").value;
-    const scope = scopeCrate();
-    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
-    if (kind2 === "harmonic") {
-      const key = el("preset-key").value.trim();
-      return key ? { kind: kind2, key, ...crate } : null;
-    }
-    if (kind2 === "bpm") {
-      const bpm = numberFrom(el("preset-bpm"));
-      const range = numberFrom(el("preset-range")) ?? 3;
-      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
-      return { kind: kind2, bpm, range, ...crate };
-    }
-    if (kind2 === "unplayed") {
-      const months = numberFrom(el("preset-months")) ?? 12;
-      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
-      return { kind: kind2, months, ...crate };
-    }
-    return null;
-  }
-  function syncPresetFields() {
-    const kind2 = el("preset-kind").value;
-    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
-      field.hidden = field.dataset.presetKind !== kind2;
-    }
-  }
-  function isPresetCrate(id) {
-    return id !== "all" && Object.hasOwn(state.presets, String(id));
-  }
-  function presetFoot(id) {
-    if (!isPresetCrate(id)) return "";
-    const updated = Number(state.presets[String(id)]?.updated);
-    if (!Number.isFinite(updated) || updated <= 0) return "";
-    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-    return ` · ${t("presets.updated", { date })}`;
-  }
-  function syncPresetButtons() {
-    el("crate-preset").disabled = !state.writable;
-    const preset = isPresetCrate(state.activeCrate);
-    el("crate-refresh").hidden = !preset;
-    el("crate-refresh").disabled = !state.writable || !preset;
-  }
-
-  // src/restore.ts
-  var reloadLibrary = async () => {
-  };
-  function bindLibraryReload(reload) {
-    reloadLibrary = reload;
-  }
-  async function loadSnapshots() {
-    state.snapshotLoading = true;
-    state.snapshotError = "";
-    const operationsPromise = loadOperations();
-    renderSnapshots();
-    try {
-      const response = await fetch("/api/snapshots");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
-      state.snapshots = payload.snapshots || [];
-      state.snapshotUndo = payload.pending_undo || null;
-      state.writeBlock = payload.write_block || "";
-      state.writeBlockCode = payload.write_block_code || "";
-      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
-      state.seratoRunning = Boolean(payload.serato_running);
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotLoading = false;
-      renderSnapshots();
-    } finally {
-      await operationsPromise;
-    }
-  }
-  async function loadOperations() {
-    state.operationsLoading = true;
-    state.operationsError = "";
-    renderOperations();
-    try {
-      const response = await fetch("/api/operations");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
-      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
-      state.operationsLoading = false;
-    } catch (error2) {
-      state.operationsLoading = false;
-      state.operationsError = failureOf(error2).message || t("operations.unreadable");
-    }
-    renderOperations();
-  }
-  function failSnapshots(error2) {
-    state.snapshotLoading = false;
-    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
-    renderSnapshots();
-  }
-  function renderSnapshots() {
-    renderOperations();
-    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
-    const status = el("snapshots-status");
-    const block = el("snapshots-block");
-    const undo = el("snapshots-undo");
-    const list = el("snapshots-list");
-    list.setAttribute("aria-busy", String(state.snapshotLoading));
-    paintDriveCopies();
-    if (state.writeBlock) {
-      block.hidden = false;
-      block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
-    } else {
-      block.hidden = true;
-      block.textContent = "";
-    }
-    if (state.snapshotUndo && state.snapshotUndo.restore_id) {
-      undo.hidden = false;
-      el("snapshots-undo-text").textContent = state.snapshotUndo.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange");
-    } else {
-      undo.hidden = true;
-    }
-    list.replaceChildren();
-    if (state.snapshotLoading) {
-      status.textContent = t("snapshots.reading");
-      return;
-    }
-    if (state.snapshotError) {
-      status.textContent = state.snapshotError;
-      const retry = buttonEl(tips.snapshotsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => loadSnapshots().catch((error2) => failSnapshots(error2)));
-      list.append(retry);
-      return;
-    }
-    status.textContent = state.snapshotMessage ? t(state.snapshotMessage) : "";
-    if (!state.snapshots.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("snapshots.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item4 of state.snapshots) {
-      const card = document.createElement("article");
-      card.className = "snapshot-card";
-      card.setAttribute("role", "listitem");
-      const title2 = document.createElement("p");
-      title2.textContent = `${item4.created || t("snapshots.unknownTime")} · ${item4.trigger || t("snapshots.trigger")}`;
-      const detail = document.createElement("p");
-      const version = item4.serato_version && item4.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item4.serato_version, build: String(item4.serato_build ?? "") }) : t("snapshots.seratoUnknown");
-      const drives = (item4.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item4.unavailable_drives || []) })}` : "";
-      detail.textContent = `${version}. ${item4.reason || ""}${drives}`;
-      const restore = buttonEl(tips.reviewRestore);
-      restore.textContent = t("snapshots.reviewRestore");
-      restore.addEventListener("click", () => openSnapshotPlan(item4.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
-      card.append(title2, detail, restore);
-      list.append(card);
-    }
-  }
-  var OPERATION_ACTIONS = {
-    crate_create: "operations.action.crateCreate",
-    crate_rename: "operations.action.crateRename",
-    crate_delete: "operations.action.crateDelete",
-    crate_color: "operations.action.crateColor",
-    crate_expanded: "operations.action.crateExpanded",
-    crate_rules: "operations.action.crateRules",
-    crate_add: "operations.action.crateAdd",
-    crate_remove: "operations.action.crateRemove",
-    crate_prepare: "operations.action.cratePrepare",
-    crate_remove_library: "operations.action.crateRemoveLibrary",
-    save_track: "operations.action.saveTrack",
-    import_m3u: "operations.action.importM3u",
-    merge_duplicates: "operations.action.mergeDuplicates",
-    rename: "operations.action.rename",
-    rename_from_tags: "operations.action.renameFromTags",
-    move: "operations.action.move",
-    move_folder: "operations.action.moveFolder",
-    replace: "operations.action.replace",
-    replace_in_crates: "operations.action.replaceInCrates",
-    relink: "operations.action.relink",
-    delete: "operations.action.delete",
-    restore: "operations.action.restore",
-    restore_recover: "operations.action.restoreRecover"
-  };
-  var OPERATION_OUTCOMES = {
-    verified: "operations.outcome.verified",
-    rolled_back: "operations.outcome.rolledBack",
-    refused: "operations.outcome.refused",
-    rollback_failed: "operations.outcome.rollbackFailed"
-  };
-  function renderOperations() {
-    const alert = el("operations-alert");
-    const status = el("operations-status");
-    const list = el("operations-list");
-    list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest8 = state.operations[state.operations.length - 1];
-    const failed = latest8?.result === "rollback_failed";
-    alert.hidden = !failed;
-    alert.textContent = failed ? t("operations.rollbackFailed") : "";
-    list.replaceChildren();
-    if (state.operationsLoading && state.operations.length === 0) {
-      status.textContent = t("operations.reading");
-      return;
-    }
-    if (state.operationsError) {
-      status.textContent = state.operationsError;
-      const retry = buttonEl(tips.operationsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => {
-        loadOperations().catch(() => void 0);
-      });
-      list.append(retry);
-      return;
-    }
-    status.textContent = "";
-    if (!state.operations.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("operations.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item4 of [...state.operations].reverse()) {
-      list.append(operationCard(item4));
-    }
-  }
-  function operationCard(item4) {
-    const card = document.createElement("article");
-    card.className = "operation-card snapshot-card";
-    card.setAttribute("role", "listitem");
-    const actionName = item4.action || item4.operation || "";
-    const actionKey2 = OPERATION_ACTIONS[actionName];
-    const outcomeKey = OPERATION_OUTCOMES[item4.result || ""] ?? "operations.outcome.refused";
-    const title2 = document.createElement("p");
-    title2.textContent = t("operations.entry", {
-      time: operationTime(item4.time || ""),
-      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
-      target: item4.target || t("operations.noTarget"),
-      outcome: t(outcomeKey)
-    });
-    card.append(title2);
-    if (item4.snapshot_before && item4.snapshot_after) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.snapshots", {
-        before: item4.snapshot_before,
-        after: item4.snapshot_after
-      });
-      card.append(detail);
-    } else if (item4.snapshot_before) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.beforeOnly", { before: item4.snapshot_before });
-      card.append(detail);
-    }
-    return card;
-  }
-  function operationTime(value) {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
-    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
-  }
-  async function openSnapshotPlan(snapshotId) {
-    state.snapshotPlanId = snapshotId;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    block.textContent = t("snapshots.readingPlan");
-    confirm2.disabled = true;
-    setSnapshotDialogStatus("");
-    el("snapshot-dialog").showModal();
-    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
-    paintSnapshotPlan(plan);
-  }
-  var lastPlan = null;
-  function repaintSnapshotPlan() {
-    if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
-  }
-  function isDriveCopy(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
-  }
-  function driveBackupFrom(value) {
-    if (!value || typeof value !== "object") return null;
-    const record = value;
-    if (record.verified !== true) return null;
-    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
-    return {
-      folder: typeof record.folder === "string" ? record.folder : "",
-      verified: true,
-      drives
-    };
-  }
-  function driveName(drive, status) {
-    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
-    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
-    if (status === "permission") return t("snapshots.drivePermission", { name });
-    return name;
-  }
-  function driveCopyText() {
-    const report = state.driveBackup;
-    const drives = report?.drives ?? [];
-    if (!report?.verified || !drives.length) {
-      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
-    }
-    const parts = [];
-    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
-    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
-    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
-    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
-    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
-    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
-    return parts.join(" ") || t("snapshots.drivesIntro");
-  }
-  function paintDriveCopies() {
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = driveCopyText();
-  }
-  async function backupDriveCrates() {
-    const button2 = el("snapshots-drives");
-    button2.disabled = true;
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = t("snapshots.backupDrivesBusy");
-    try {
-      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
-      renderSnapshots();
-    } catch (error2) {
-      state.snapshotMessage = "";
-      renderSnapshots();
-      const shown = el("snapshots-drives-note");
-      shown.hidden = false;
-      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
-    } finally {
-      button2.disabled = false;
-    }
-  }
-  function paintSnapshotPlan(plan) {
-    lastPlan = plan;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    const crates = plan.crates || {};
-    const tracks = plan.tracks || {};
-    appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
-    appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
-    appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
-    appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
-    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
-    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
-    if (plan.registration_warning) {
-      const warning = document.createElement("p");
-      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
-      planBox.append(warning);
-    }
-    appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
-    appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
-    appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
-    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
-    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
-    const deleted = plan.deleted || {};
-    appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
-    appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
-    appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
-    appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
-    if (plan.restore_blocked) {
-      block.textContent = codedText(
-        plan.restore_blocked,
-        plan.restore_blocked_code,
-        messageParams(plan.restore_blocked_params)
-      );
-      confirm2.disabled = true;
-    } else {
-      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
-      confirm2.disabled = false;
-    }
-  }
-  function appendPlanLine(parent, label, rows2) {
-    const line = document.createElement("p");
-    const items = rows2 || [];
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-    } else {
-      const names = items.slice(0, 8).map((item4) => item4.name || item4.path || item4.drive_label || t("plan.item"));
-      const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
-      const listed = `${names.join(", ")}${extra}`;
-      line.textContent = t("plan.listed", { label, count: items.length, names: listed });
-    }
-    parent.append(line);
-  }
-  function appendCueDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item4 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item4.path || "");
-      parent.append(row);
-      for (const diff of cueDiffRows(item4.before, item4.after)) {
-        parent.append(paintCueDiffRow(diff));
-      }
-    }
-  }
-  function appendFrameDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item4 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item4.path || "");
-      parent.append(row);
-    }
-  }
-  function fileName(path) {
-    const parts = String(path).split(/[/\\]/);
-    return parts[parts.length - 1] || path;
-  }
-  function setSnapshotDialogStatus(message) {
-    el("snapshot-status").textContent = message;
-  }
-  async function takeSnapshot() {
-    const button2 = el("snapshots-take");
-    button2.disabled = true;
-    button2.textContent = t("snapshots.saving");
-    try {
-      await postJSON("/api/snapshots", { action: "create" });
-      state.snapshotMessage = "snapshots.saved";
-      await loadSnapshots();
-    } finally {
-      button2.disabled = false;
-      button2.textContent = t("snapshots.take");
-    }
-  }
-  async function confirmSnapshotRestore() {
-    const confirm2 = el("snapshot-confirm");
-    confirm2.disabled = true;
-    confirm2.textContent = t("snapshots.restoring");
-    setSnapshotDialogStatus("");
-    try {
-      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
-      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
-      const result = await postJSON("/api/snapshots", body);
-      const skipped = result.crates_skipped || [];
-      el("snapshot-dialog").close();
-      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
-      await loadSnapshots();
-      await reloadLibrary();
-      if (skipped.length) {
-        const names = skipped.map((item4) => item4.name || item4.path || t("plan.item")).join(", ");
-        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
-      }
-    } catch (error2) {
-      setSnapshotDialogStatus(failureOf(error2).message);
-      confirm2.disabled = false;
-      await loadOperations();
-    } finally {
-      confirm2.textContent = t("snapshots.restore");
-    }
-  }
-
-  // src/search-filters.ts
-  var TEXT_SEARCH_FIELDS = [
-    "comments",
-    "grouping",
-    "composer",
-    "title",
-    "artist",
-    "album",
-    "genre",
-    "file"
-  ];
-  var KEY_VALUES = {
-    "g#m": 0,
-    abm: 0,
-    "1a": 0,
-    ebm: 1,
-    "d#m": 1,
-    "2a": 1,
-    bbm: 2,
-    "a#m": 2,
-    "3a": 2,
-    fm: 3,
-    "4a": 3,
-    cm: 4,
-    "5a": 4,
-    gm: 5,
-    "6a": 5,
-    dm: 6,
-    "7a": 6,
-    am: 7,
-    "8a": 7,
-    em: 8,
-    "9a": 8,
-    bm: 9,
-    "10a": 9,
-    "f#m": 10,
-    gbm: 10,
-    "11a": 10,
-    "c#m": 11,
-    dbm: 11,
-    "12a": 11,
-    b: 12,
-    "1b": 12,
-    "f#": 13,
-    gb: 13,
-    "2b": 13,
-    "c#": 14,
-    db: 14,
-    "3b": 14,
-    "g#": 15,
-    ab: 15,
-    "4b": 15,
-    "d#": 16,
-    eb: 16,
-    "5b": 16,
-    "a#": 17,
-    bb: 17,
-    "6b": 17,
-    f: 18,
-    "7b": 18,
-    c: 19,
-    "8b": 19,
-    g: 20,
-    "9b": 20,
-    d: 21,
-    "10b": 21,
-    a: 22,
-    "11b": 22,
-    e: 23,
-    "12b": 23
-  };
-  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
-  var EXACT = new RegExp(`^${NUMBER}$`);
-  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
-  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
-  var ABOVE = new RegExp(`^>${NUMBER}$`);
-  var BELOW = new RegExp(`^<${NUMBER}$`);
-  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
-  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
-  function isNone(value) {
-    return NONE.has(value);
-  }
-  function isYes(value) {
-    return YES.has(value);
-  }
-  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
-  function isTextSearchField(value) {
-    return TEXT_FIELD_SET.has(value);
-  }
-  function textField(track, field) {
-    if (field === "title") return String(track.name ?? "");
-    return String(track[field] ?? "");
-  }
-  function trackHaystack(track, field) {
-    if (field) return textField(track, field).toLocaleLowerCase();
-    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-  }
-  function hasBpm(track) {
-    const bpm = Number(track.bpm);
-    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
-  }
-  function hasKey2(track) {
-    return Boolean(String(track.key ?? "").trim());
-  }
-  function cueFlag(track) {
-    if (track.has_cues === true) return true;
-    if (track.has_cues === false) return false;
-    if (track.markers_found === true) return true;
-    if (track.markers_found === false) return false;
-    if (Array.isArray(track.cues)) {
-      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
-      return track.cues.length > 0 || loops > 0;
-    }
-    return null;
-  }
-  function keyNumber(value) {
-    if (!value) return -1;
-    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
-  }
-  function mixingKeys(key) {
-    const base = key < 12 ? 0 : 12;
-    const index = key - base;
-    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
-  }
-  function bpmFilter(value) {
-    let match = RANGE.exec(value);
-    if (match) {
-      const low = Number(match[1]);
-      const high = Number(match[2]);
-      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
-    }
-    match = AROUND.exec(value);
-    if (match) {
-      const center = Number(match[1]);
-      const spread = Number(match[2]);
-      return { kind: "bpm", min: center - spread, max: center + spread };
-    }
-    match = ABOVE.exec(value);
-    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
-    match = BELOW.exec(value);
-    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
-    match = EXACT.exec(value);
-    if (match) {
-      const whole = Number(match[1]);
-      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
-    }
-    return null;
-  }
-  function parseQuery(text2) {
-    const terms = [];
-    const filters = [];
-    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
-      const colon = word.indexOf(":");
-      const name = colon > 0 ? word.slice(0, colon) : "";
-      const value = colon > 0 ? word.slice(colon + 1) : "";
-      let filter = null;
-      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
-      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
-      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
-      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
-      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
-      else if (name === "bpm") filter = bpmFilter(value);
-      else if (name === "key" || name === "mix") {
-        const key = keyNumber(value);
-        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
-      } else if (isTextSearchField(name) && value) {
-        filter = { kind: "field", field: name, value };
-      }
-      if (filter) filters.push(filter);
-      else terms.push(word);
-    }
-    return { terms, filters };
-  }
-  function matchesFilters(track, filters) {
-    for (const filter of filters) {
-      if (filter.kind === "bpm") {
-        if (!hasBpm(track)) return false;
-        const bpm = Number(track.bpm);
-        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
-      } else if (filter.kind === "missing") {
-        if (!track.missing) return false;
-      } else if (filter.kind === "nokey") {
-        if (hasKey2(track)) return false;
-      } else if (filter.kind === "nobpm") {
-        if (hasBpm(track)) return false;
-      } else if (filter.kind === "nokeybpm") {
-        if (hasKey2(track) && hasBpm(track)) return false;
-      } else if (filter.kind === "nocues") {
-        if (cueFlag(track) !== false) return false;
-      } else if (filter.kind === "field") {
-        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
-      } else if (!filter.keys.has(keyNumber(track.key))) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function matchesQuery(track, query, field) {
-    if (!matchesFilters(track, query.filters)) return false;
-    if (!query.terms.length) return true;
-    const hay = trackHaystack(track, field);
-    return query.terms.every((term) => hay.includes(term));
-  }
-
-  // src/views.ts
+  // src/player.ts
   var import_react6 = __toESM(require_react(), 1);
 
-  // src/app/mount.tsx
-  var import_react_dom2 = __toESM(require_react_dom(), 1);
-  var import_client = __toESM(require_client(), 1);
-
-  // src/app/providers.tsx
-  var import_react4 = __toESM(require_react(), 1);
-  var import_react_dom = __toESM(require_react_dom(), 1);
-
-  // src/context/PlayerContext.tsx
-  var import_react = __toESM(require_react(), 1);
-  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-  var PlayerContext = (0, import_react.createContext)(null);
-  function PlayerProvider({
-    value,
-    children
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlayerContext, { value, children });
-  }
-  function usePlayer() {
-    const value = (0, import_react.useContext)(PlayerContext);
-    if (value === null) {
-      throw new Error("usePlayer must be used within PlayerProvider");
-    }
-    return value;
-  }
-
-  // src/player.ts
-  var import_react3 = __toESM(require_react(), 1);
-
   // src/components/PlayerBar.tsx
-  var import_react2 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -21458,7 +19246,7 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21486,7 +19274,7 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
       "button",
       {
         type: "button",
@@ -21497,13 +19285,13 @@
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21515,11 +19303,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_jsx_runtime6.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
         "button",
         {
           type: "button",
@@ -21539,7 +19327,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react2.useState)(null);
+    const [hold, setHold] = (0, import_react5.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -21566,14 +19354,14 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           "button",
           {
             type: "button",
@@ -21585,8 +19373,8 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           "button",
           {
             type: "button",
@@ -21599,13 +19387,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
             "input",
             {
               ref: tooltipRef2(tips.seek),
@@ -21624,16 +19412,16 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           "input",
           {
             ref: tooltipRef2(tips.volume),
@@ -21774,8 +19562,8 @@
       const first = Math.max(0, Math.ceil((startSeconds - marker.positionSeconds) / spacing - 1e-9));
       const lastExclusive = Math.ceil((endSeconds - marker.positionSeconds) / spacing - 1e-9);
       if (lastExclusive <= first) continue;
-      const emit2 = Math.min(lastExclusive, first + MAX_TICKS);
-      pushRange(ticks, marker.positionSeconds, spacing, beatIndex, emit2, startSeconds, endSeconds, first);
+      const emit4 = Math.min(lastExclusive, first + MAX_TICKS);
+      pushRange(ticks, marker.positionSeconds, spacing, beatIndex, emit4, startSeconds, endSeconds, first);
     }
     return ticks;
   }
@@ -22653,8 +20441,8 @@
   // src/player.ts
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
-  var listeners = /* @__PURE__ */ new Set();
-  var wired2 = /* @__PURE__ */ new WeakSet();
+  var listeners2 = /* @__PURE__ */ new Set();
+  var wired = /* @__PURE__ */ new WeakSet();
   var media = null;
   var trackId = null;
   var title = "";
@@ -22723,7 +20511,7 @@
       }
       error = "";
       playing = true;
-      emit();
+      emit2();
       const pending = element.play();
       if (pending && typeof pending.then === "function") {
         pending.catch(() => {
@@ -22743,7 +20531,7 @@
     if (trackId === null) return;
     playing = false;
     ensureMedia().pause();
-    emit();
+    emit2();
   }
   function togglePlayPause() {
     if (trackId === null) {
@@ -22768,7 +20556,7 @@
     if (Number.isFinite(limit) && limit > 0 && next2 > limit) next2 = limit;
     element.currentTime = next2;
     currentTime = next2;
-    emit();
+    emit2();
   }
   function seekBy(deltaSeconds) {
     if (!Number.isFinite(deltaSeconds)) return;
@@ -22794,12 +20582,12 @@
     if (!Number.isFinite(next2)) return;
     volume = Math.min(1, Math.max(0, next2));
     if (media) media.volume = volume;
-    emit();
+    emit2();
   }
   function subscribe(listener) {
-    listeners.add(listener);
+    listeners2.add(listener);
     return () => {
-      listeners.delete(listener);
+      listeners2.delete(listener);
     };
   }
   function mountPlayer(host) {
@@ -22839,13 +20627,13 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react3.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react6.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
     if (root) root.setAttribute("aria-label", playerStrings.region);
     waveform?.relabel();
-    emit();
+    emit2();
   }
   function resetPlayback() {
     cueToken += 1;
@@ -22870,32 +20658,32 @@
     return audio;
   }
   function wire(element) {
-    if (wired2.has(element)) return;
-    wired2.add(element);
+    if (wired.has(element)) return;
+    wired.add(element);
     element.addEventListener("play", () => {
       playing = true;
-      emit();
+      emit2();
     });
     element.addEventListener("pause", () => {
       if (ignoreMediaPause) return;
       playing = false;
-      emit();
+      emit2();
     });
     element.addEventListener("ended", () => {
       currentTime = Number.isFinite(element.currentTime) ? element.currentTime : currentTime;
       if (!moveBy(1)) {
         playing = false;
-        emit();
+        emit2();
       }
     });
     element.addEventListener("timeupdate", () => {
       currentTime = element.currentTime;
       if (Number.isFinite(element.duration)) duration = element.duration;
-      emit();
+      emit2();
     });
     element.addEventListener("durationchange", () => {
       duration = Number.isFinite(element.duration) ? element.duration : 0;
-      emit();
+      emit2();
     });
     element.addEventListener("error", () => {
       if (trackId === null) return;
@@ -22949,13 +20737,13 @@
         if (token3 !== cueToken || trackId !== id) return;
         cues = found.cues;
         waveform?.setMarkers(id, found);
-        emit();
+        emit2();
       },
       () => {
         if (token3 !== cueToken || trackId !== id) return;
         cues = [];
         waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
-        emit();
+        emit2();
       }
     );
   }
@@ -22980,7 +20768,7 @@
       if (trackId !== forId) return;
       playing = false;
       error = message;
-      emit();
+      emit2();
     });
   }
   async function classifyStatus(forId) {
@@ -22992,9 +20780,9 @@
       return playerStrings.cannotPlay;
     }
   }
-  function emit() {
+  function emit2() {
     const snapshot = getPlayerState();
-    for (const listener of [...listeners]) listener(snapshot);
+    for (const listener of [...listeners2]) listener(snapshot);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -23006,7 +20794,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -23025,34 +20813,2278 @@
       setVolume
     };
   }
+  function readGigValue() {
+    return {
+      gig: getGigSnapshot(),
+      drift: getDriftSnapshot(),
+      nextStep: nextGigStep,
+      backStep: backGigStep,
+      exit: exitGigCheck
+    };
+  }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react4.useState)(readPlayerValue);
-    (0, import_react4.useEffect)(() => {
+    const [value, setValue] = (0, import_react7.useState)(readPlayerValue);
+    (0, import_react7.useEffect)(() => {
       return subscribe(() => {
-        (0, import_react_dom.flushSync)(() => {
+        (0, import_react_dom2.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react4.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react7.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayerProvider, { value: current2, children });
+  }
+  function GigProvider({ children }) {
+    const [value, setValue] = (0, import_react7.useState)(readGigValue);
+    (0, import_react7.useEffect)(() => {
+      const refresh = () => {
+        (0, import_react_dom2.flushSync)(() => {
+          setValue(readGigValue());
+        });
+      };
+      const stopGig = subscribeGig(refresh);
+      const stopDrift = subscribeDrift(refresh);
+      return () => {
+        stopGig();
+        stopDrift();
+      };
+    }, []);
+    const current2 = (0, import_react7.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(GigStateProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider2, { children });
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(GigProvider, { children }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
-    (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AppProviders, { children: node }));
+    (0, import_react_dom3.flushSync)(() => {
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime8.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
 
+  // src/gig-view.ts
+  var GIG_STEP_COUNT = 5;
+  var GIG_STEPS = [
+    { title: "gig.drives", action: "gig.drivesAction", empty: "gig.drivesEmpty" },
+    { title: "gig.missing", action: "gig.missingAction", empty: "gig.missingEmpty" },
+    { title: "gig.streaming", action: "gig.streamingAction", empty: "gig.streamingEmpty" },
+    { title: "gig.emptyCrates", action: "gig.emptyCratesAction", empty: "gig.emptyCratesEmpty" },
+    { title: "gig.since", action: "gig.sinceAction", empty: "gig.sinceEmpty" }
+  ];
+  var GIG_CHANGE_GROUPS = [
+    ["gig.cratesAdded", "crates_added"],
+    ["gig.cratesRemoved", "crates_removed"],
+    ["gig.cratesEdited", "crates_edited"],
+    ["gig.tracksAdded", "tracks_added"],
+    ["gig.tracksRemoved", "tracks_removed"],
+    ["gig.cuesEdited", "cues_edited"],
+    ["gig.gridsEdited", "grids_edited"],
+    ["gig.tagsEdited", "tags_edited"]
+  ];
+  function gigLinesFor(payload, index) {
+    if (index === 0) {
+      return (payload.unavailable_drives || []).map(
+        (drive) => t("gig.driveUnavailable", { name: drive.name, count: drive.track_count })
+      );
+    }
+    if (index === 1) return (payload.missing_files || []).map((item2) => item2.path);
+    if (index === 2) return (payload.streaming_tracks || []).map((item2) => `${item2.service}: ${item2.title}`);
+    if (index === 3) return (payload.empty_crates || []).map((item2) => `${item2.name} — ${item2.warning}`);
+    return [];
+  }
+  function gigScopeLabel(payload) {
+    return payload.scope?.crate_name || t("gig.wholeSpace");
+  }
+
+  // src/components/GigReport.tsx
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function GigActions({ primary, stepIndex: stepIndex2 }) {
+    const gig = useGig();
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "gig-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef3(tips.gigBack),
+          "data-gig-action": "back",
+          disabled: stepIndex2 === 0,
+          onClick: () => gig.backStep(),
+          children: t("common.back")
+        }
+      ),
+      primary ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef3(tips.gigNext),
+          className: "gig-primary",
+          "data-gig-action": "next",
+          onClick: () => gig.nextStep(),
+          children: primary
+        }
+      ) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef3(tips.gigExit),
+          "data-gig-action": "exit",
+          onClick: () => gig.exit(),
+          children: t("gig.exit")
+        }
+      )
+    ] });
+  }
+  function GigSince({ payload }) {
+    const note = payload.snapshot_note?.trim() ?? "";
+    const changes = payload.changes;
+    const groups = GIG_CHANGE_GROUPS.map(([label, key]) => [label, changes?.[key] || []]).filter(([, lines]) => lines.length > 0);
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+      note ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: note }) : null,
+      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
+      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
+      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
+    ] });
+  }
+  function GigReport() {
+    const { gig } = useGig();
+    const payload = gig.report;
+    if (!payload) return null;
+    const done = gig.stepIndex >= GIG_STEP_COUNT;
+    const step = done ? null : GIG_STEPS[gig.stepIndex];
+    const verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady");
+    const crate = payload.scope?.crate_name || t("gig.wholeSpaceInline");
+    const time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "";
+    const holding = (payload.holding_it_back || []).map((item2) => item2.summary);
+    const lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [];
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
+        "p",
+        {
+          className: "gig-score",
+          "aria-label": t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }),
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
+          ]
+        }
+      ),
+      done ? /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
+          score: payload.score,
+          crate,
+          time
+        }) }),
+        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
+        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t(step.empty) }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
+      ] })
+    ] });
+  }
+
+  // src/gig.ts
+  var listeners3 = /* @__PURE__ */ new Set();
+  var stepIndex = 0;
+  var latest2 = null;
+  var checkedAt = null;
+  var exitGig = () => {
+  };
+  function emit3() {
+    const snapshot = getGigSnapshot();
+    for (const listener of listeners3) listener(snapshot);
+  }
+  function focusHeading() {
+    const headingNode = document.getElementById("gig-step-heading");
+    if (headingNode instanceof HTMLElement) headingNode.focus();
+  }
+  function beginBusy2() {
+    const button2 = el("gig-refresh");
+    button2.disabled = true;
+    button2.setAttribute("aria-busy", "true");
+    el("gig-panel").setAttribute("aria-busy", "true");
+    el("gig-status").textContent = t("gig.checking");
+  }
+  function endBusy2() {
+    const button2 = el("gig-refresh");
+    button2.disabled = false;
+    button2.setAttribute("aria-busy", "false");
+    el("gig-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus2(message) {
+    el("gig-status").textContent = message;
+  }
+  function updateScope2(payload) {
+    el("gig-scope").textContent = gigScopeLabel(payload);
+  }
+  function getGigSnapshot() {
+    return { report: latest2, stepIndex, checkedAt };
+  }
+  function subscribeGig(listener) {
+    listeners3.add(listener);
+    return () => {
+      listeners3.delete(listener);
+    };
+  }
+  function nextGigStep() {
+    if (!latest2) return;
+    stepIndex = Math.min(stepIndex + 1, GIG_STEP_COUNT);
+    emit3();
+    focusHeading();
+  }
+  function backGigStep() {
+    if (!latest2) return;
+    stepIndex = Math.max(0, stepIndex - 1);
+    emit3();
+    focusHeading();
+  }
+  function exitGigCheck() {
+    exitGig();
+  }
+  function wireGigCheck(exit) {
+    exitGig = exit;
+    const panel = el("gig-panel");
+    if (panel.dataset.gigWired === "true") return;
+    panel.dataset.gigWired = "true";
+    el("gig-refresh").addEventListener("click", () => {
+      void loadGigCheck(true);
+    });
+    mountIsland(el("gig-report"), (0, import_react8.createElement)(GigReport));
+  }
+  async function loadGigCheck(keepStep = false) {
+    const token3 = ++state.gigToken;
+    if (!keepStep) stepIndex = 0;
+    beginBusy2();
+    let settle = "none";
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+      );
+      if (token3 !== state.gigToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.gigToken) return;
+      if (!response.ok || payload === null) {
+        failStatus2(serverMessage(payload, t("gig.unreadable")));
+        settle = "retry";
+        return;
+      }
+      checkedAt = /* @__PURE__ */ new Date();
+      latest2 = payload;
+      el("gig-status").textContent = "";
+      updateScope2(payload);
+      emit3();
+      settle = "heading";
+    } catch {
+      if (token3 !== state.gigToken) return;
+      failStatus2(t("gig.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.gigToken) return;
+      endBusy2();
+      if (settle === "retry") el("gig-refresh").focus();
+      if (settle === "heading") focusHeading();
+    }
+  }
+  function showGigFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("gig.unreadable");
+    failStatus2(message);
+    endBusy2();
+    el("gig-refresh").focus();
+  }
+  function repaintGig() {
+    if (!latest2) return;
+    updateScope2(latest2);
+    emit3();
+  }
+
+  // src/health.ts
+  var SECTIONS = [
+    { key: "missing", label: "health.missing", action: "missing" },
+    { key: "no_bpm", label: "health.noBpm" },
+    { key: "no_key", label: "health.noKey" },
+    { key: "no_beatgrid", label: "health.noBeatgrid" },
+    { key: "no_artwork", label: "health.noArtwork" },
+    { key: "empty_genre", label: "health.emptyGenre" },
+    { key: "no_crate", label: "health.noCrate" }
+  ];
+  var latest3 = null;
+  var go = null;
+  function wireHealth(navigate) {
+    go = navigate;
+    const panel = el("health-panel");
+    if (panel.dataset.healthWired === "true") return;
+    panel.dataset.healthWired = "true";
+    el("health-refresh").addEventListener("click", () => {
+      void loadHealth();
+    });
+    panel.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const button2 = target.closest("button");
+      if (!(button2 instanceof HTMLButtonElement)) return;
+      const action = button2.dataset.healthAction;
+      if (action === "missing" || action === "duplicates" || action === "files") {
+        go?.(action);
+        return;
+      }
+      if (action === "track") {
+        const id = Number(button2.dataset.healthId);
+        if (Number.isInteger(id) && id > 0) go?.("track", id);
+      }
+    });
+  }
+  async function loadHealth() {
+    const token3 = ++state.healthToken;
+    beginBusy3();
+    let settle = "none";
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/library-health?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+      );
+      if (token3 !== state.healthToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.healthToken) return;
+      if (!response.ok || payload === null) {
+        failStatus3(serverMessage(payload, t("health.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest3 = payload;
+      el("health-status").textContent = "";
+      renderHealthReport(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.healthToken) return;
+      failStatus3(t("health.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.healthToken) return;
+      endBusy3();
+      if (settle === "retry") el("health-refresh").focus();
+      if (settle === "report") el("health-report").focus();
+    }
+  }
+  function showHealthFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
+    failStatus3(message);
+    endBusy3();
+    el("health-refresh").focus();
+  }
+  function renderHealthReport(payload) {
+    el("health-scope").textContent = scopeLabel();
+    const report = el("health-report");
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = t("health.summary", { count: payload.checked });
+    report.replaceChildren(summary);
+    let listed = 0;
+    for (const spec2 of SECTIONS) {
+      listed += paintSection(report, t(spec2.label), payload[spec2.key], spec2.action);
+    }
+    listed += paintUnused(report, payload.unused);
+    listed += paintDuplicates(report, payload.duplicates);
+    if (!listed) report.append(noteLine(t("health.clear")));
+  }
+  function repaintHealth() {
+    el("health-scope").textContent = scopeLabel();
+    if (latest3) renderHealthReport(latest3);
+  }
+  function beginBusy3() {
+    const button2 = el("health-refresh");
+    button2.disabled = true;
+    button2.setAttribute("aria-busy", "true");
+    el("health-panel").setAttribute("aria-busy", "true");
+    el("health-status").textContent = t("health.checking");
+  }
+  function endBusy3() {
+    const button2 = el("health-refresh");
+    button2.disabled = false;
+    button2.setAttribute("aria-busy", "false");
+    el("health-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus3(message) {
+    el("health-status").textContent = message;
+  }
+  function scopeLabel() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function noteLine(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+  function paintSection(report, label, section, action) {
+    const count = section?.count ?? 0;
+    const tracks = section?.tracks ?? [];
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading = document.createElement("summary");
+    heading.textContent = t("gig.groupCount", { label, count });
+    details.append(heading);
+    if (action === "missing") details.append(openButton("missing", "health.openMissing", tips.healthOpenMissing));
+    const list = document.createElement("ul");
+    for (const track of tracks) list.append(trackItem(track));
+    details.append(list);
+    if (count > tracks.length) {
+      details.append(noteLine(t("health.more", { count: count - tracks.length })));
+    }
+    report.append(details);
+    return count;
+  }
+  function paintUnused(report, section) {
+    const count = section?.count ?? 0;
+    const files = section?.files ?? [];
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading = document.createElement("summary");
+    heading.textContent = t("gig.groupCount", { label: t("health.unused"), count });
+    details.append(heading);
+    details.append(openButton("files", "health.openFiles", tips.healthOpenFiles));
+    const list = document.createElement("ul");
+    for (const row of files) {
+      const item2 = document.createElement("li");
+      item2.textContent = t("health.fileRow", { file: row.file });
+      list.append(item2);
+    }
+    details.append(list);
+    if (count > files.length) {
+      details.append(noteLine(t("health.more", { count: count - files.length })));
+    }
+    report.append(details);
+    return count;
+  }
+  function paintDuplicates(report, section) {
+    const count = section?.count ?? 0;
+    const groups = section?.groups ?? [];
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading = document.createElement("summary");
+    heading.textContent = t("gig.groupCount", { label: t("health.duplicates"), count });
+    details.append(heading);
+    details.append(openButton("duplicates", "health.openDuplicates", tips.healthOpenDuplicates));
+    const list = document.createElement("ul");
+    for (const group of groups) list.append(groupItem(group));
+    details.append(list);
+    if (count > groups.length) {
+      details.append(noteLine(t("health.more", { count: count - groups.length })));
+    }
+    report.append(details);
+    return count;
+  }
+  function openButton(action, label, tip) {
+    const button2 = buttonEl(tip);
+    button2.dataset.healthAction = action;
+    button2.textContent = t(label);
+    return button2;
+  }
+  function trackItem(track) {
+    const row = document.createElement("li");
+    const button2 = buttonEl(tips.healthTrack);
+    button2.dataset.healthAction = "track";
+    button2.dataset.healthId = String(track.id);
+    button2.textContent = trackLine(track);
+    row.append(button2);
+    return row;
+  }
+  function groupItem(group) {
+    const row = document.createElement("li");
+    row.textContent = t("health.duplicateRow", {
+      title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
+      count: group.ids.length
+    });
+    return row;
+  }
+  function trackLine(track) {
+    return t("health.row", {
+      title: [track.artist, track.name].filter(Boolean).join(" — ") || track.file
+    });
+  }
+
+  // src/scan.ts
+  var LIST_CAP2 = 100;
+  var PROBLEM_ORDER = [
+    "empty",
+    "unreadable",
+    "wrong_format",
+    "serato_flagged",
+    "undecodable",
+    "decode_error",
+    "short"
+  ];
+  var PROBLEM_KEYS = {
+    empty: "scan.problem.empty",
+    unreadable: "scan.problem.unreadable",
+    wrong_format: "scan.problem.wrong_format",
+    serato_flagged: "scan.problem.serato_flagged",
+    undecodable: "scan.problem.undecodable",
+    decode_error: "scan.problem.decode_error",
+    short: "scan.problem.short"
+  };
+  var latest4 = null;
+  var lastDepth = "quick";
+  function wireScan() {
+    const panel = el("scan-panel");
+    if (panel.dataset.scanWired === "true") return;
+    panel.dataset.scanWired = "true";
+    el("scan-quick").addEventListener("click", () => {
+      void loadScan("quick");
+    });
+    el("scan-full").addEventListener("click", () => {
+      void loadScan("full");
+    });
+  }
+  async function loadScan(depth) {
+    const chosen = resolveDepth(depth);
+    const token3 = ++state.scanToken;
+    beginBusy4();
+    let settle = "none";
+    if (chosen === "full" && state.activeCrate === "all") {
+      failStatus4(t("error.scan_full_needs_crate"));
+      endBusy4();
+      el("scan-full").focus();
+      return;
+    }
+    lastDepth = chosen;
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/file-scan?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&depth=${encodeURIComponent(chosen)}`
+      );
+      if (token3 !== state.scanToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.scanToken) return;
+      if (!response.ok || payload === null) {
+        failStatus4(serverMessage(payload, t("scan.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest4 = payload;
+      el("scan-status").textContent = "";
+      renderScanReport(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.scanToken) return;
+      failStatus4(t("scan.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.scanToken) return;
+      endBusy4();
+      if (settle === "retry") el("scan-quick").focus();
+      if (settle === "report") el("scan-report").focus();
+    }
+  }
+  function showScanFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
+    failStatus4(message);
+    endBusy4();
+    el("scan-quick").focus();
+  }
+  function renderScanReport(payload) {
+    el("scan-scope").textContent = scopeLabel2();
+    const report = el("scan-report");
+    const problems = payload.problems || [];
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked });
+    report.replaceChildren(summary);
+    if (payload.not_found) {
+      report.append(noteLine2(t("scan.notFound", { count: payload.not_found })));
+    }
+    if (payload.unchecked) {
+      report.append(noteLine2(t("scan.unchecked", { count: payload.unchecked })));
+    }
+    if (!problems.length) {
+      report.append(noteLine2(t("scan.empty")));
+      return;
+    }
+    for (const kind2 of problemKinds(problems)) {
+      const rows2 = problems.filter((item2) => item2.problem === kind2);
+      report.append(detailsGroup(problemHeading(kind2), rows2.map(problemLine)));
+    }
+  }
+  function repaintScan() {
+    el("scan-scope").textContent = scopeLabel2();
+    if (latest4) renderScanReport(latest4);
+  }
+  function resolveDepth(depth) {
+    if (depth === "quick" || depth === "full") return depth;
+    if (lastDepth === "full" && state.activeCrate === "all") return "quick";
+    return lastDepth;
+  }
+  function beginBusy4() {
+    for (const id of ["scan-quick", "scan-full"]) {
+      const button2 = el(id);
+      button2.disabled = true;
+      button2.setAttribute("aria-busy", "true");
+    }
+    el("scan-panel").setAttribute("aria-busy", "true");
+    el("scan-status").textContent = t("scan.checking");
+  }
+  function endBusy4() {
+    el("scan-quick").disabled = false;
+    el("scan-quick").setAttribute("aria-busy", "false");
+    const full = el("scan-full");
+    full.disabled = state.activeCrate === "all";
+    full.setAttribute("aria-busy", "false");
+    el("scan-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus4(message) {
+    el("scan-status").textContent = message;
+  }
+  function scopeLabel2() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function noteLine2(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+  function problemKinds(problems) {
+    const seen = new Set(problems.map((item2) => item2.problem));
+    const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
+    const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
+    return [...known, ...extra];
+  }
+  function problemHeading(kind2) {
+    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
+  }
+  function problemLine(item2) {
+    const title2 = [item2.artist, item2.name].filter(Boolean).join(" — ") || item2.file;
+    const label = problemDetail(item2);
+    return t("scan.row", { title: title2, file: item2.file, problem: label });
+  }
+  function problemDetail(item2) {
+    const heading = problemHeading(item2.problem);
+    if (item2.problem === "wrong_format" && item2.detail) {
+      return t("scan.wrongFormatDetail", { detail: item2.detail });
+    }
+    if ((item2.problem === "decode_error" || item2.problem === "short") && item2.detail) {
+      return t(item2.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
+        detail: item2.detail
+      });
+    }
+    if (item2.problem === "serato_flagged" && item2.detail) {
+      return `${heading}: ${item2.detail}`;
+    }
+    return heading;
+  }
+  function detailsGroup(label, lines) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = true;
+    const summary = document.createElement("summary");
+    summary.textContent = t("gig.groupCount", { label, count: lines.length });
+    const list = document.createElement("ul");
+    const shown = lines.slice(0, LIST_CAP2);
+    for (const line of shown) list.append(item(line));
+    details.append(summary, list);
+    if (lines.length > LIST_CAP2) {
+      const show2 = buttonEl(tips.gigShowAll);
+      show2.className = "gig-show-all";
+      show2.textContent = t("gig.showAll", { count: lines.length });
+      show2.addEventListener("click", () => {
+        list.replaceChildren();
+        for (const line of lines) list.append(item(line));
+        show2.remove();
+      });
+      details.append(show2);
+    }
+    return details;
+  }
+  function item(text2) {
+    const row = document.createElement("li");
+    row.textContent = text2;
+    return row;
+  }
+
+  // src/tags-view.ts
+  function tagsSummary(field, values, groups) {
+    if (field === "titles") return titlesSummary(groups);
+    if (groups === 0) {
+      return field === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
+    }
+    return field === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
+  }
+  function titlesSummary(changes) {
+    if (!changes) return t("tags.summaryTitlesClear");
+    return t("tags.summaryTitles", { count: changes });
+  }
+  function groupHeading(group) {
+    return t("tags.group", {
+      name: group.suggested,
+      spellings: t("tags.spellingCount", { count: group.spellings.length }),
+      tracks: t("tags.trackCount", { count: group.tracks })
+    });
+  }
+  function spellingLabel(value, count, suggested) {
+    const base = t("tags.row", { value, count });
+    return suggested ? `${base} — ${t("tags.suggested")}` : base;
+  }
+  function previewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.previewSummary", { count: plan.changes.length, value: plan.value });
+  }
+  function titlesPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.summaryTitlesClear");
+    return t("tags.titlesPreviewSummary", { count: plan.changes.length });
+  }
+  function writtenSummary(plan) {
+    return t("tags.written", { count: plan.changes.length, value: plan.value });
+  }
+  function titlesWrittenSummary(plan) {
+    return t("tags.titlesWritten", { count: plan.changes.length });
+  }
+  function mappingPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.mappingSummary", { count: plan.changes.length });
+  }
+  function mappingWrittenSummary(plan) {
+    return t("tags.mappingWritten", { count: plan.changes.length });
+  }
+  function mappingFieldLabel(field) {
+    if (field === "genre") return t("tags.genre");
+    if (field === "artist") return t("tags.artist");
+    return field;
+  }
+  function groupChanges(changes) {
+    const rows2 = /* @__PURE__ */ new Map();
+    for (const change of changes) {
+      const remixer = change.remixer ?? "";
+      const field = change.field ?? "";
+      const id = `${field}\0${change.from}\0${change.to}\0${remixer}`;
+      const existing = rows2.get(id);
+      if (existing) existing.count += 1;
+      else {
+        const row = { from: change.from, to: change.to, count: 1 };
+        if (change.remixer) row.remixer = change.remixer;
+        if (change.field) row.field = change.field;
+        rows2.set(id, row);
+      }
+    }
+    return [...rows2.values()];
+  }
+  function previewLines(changes) {
+    return groupChanges(changes).map((row) => {
+      if (row.field) {
+        return t("tags.previewLineField", {
+          field: mappingFieldLabel(row.field),
+          from: row.from,
+          to: row.to,
+          count: row.count
+        });
+      }
+      return row.remixer ? t("tags.previewLineRemixer", {
+        from: row.from,
+        to: row.to,
+        remixer: row.remixer,
+        count: row.count
+      }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count });
+    });
+  }
+
+  // src/tags.ts
+  var LIST_CAP3 = 100;
+  var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
+  var TITLE_KEY = "clean";
+  var MAPPING_KEY = "saved";
+  var latest5 = null;
+  var titlePlan = null;
+  var mappingPlan = null;
+  var plans = /* @__PURE__ */ new Map();
+  var selectedByKey = /* @__PURE__ */ new Map();
+  var panelBusy = false;
+  var actionKey = "";
+  function wireTags() {
+    const panel = el("tags-panel");
+    if (panel.dataset.tagsWired === "true") return;
+    panel.dataset.tagsWired = "true";
+    el("tags-genre").addEventListener("click", () => {
+      if (currentField() === "genre") return;
+      setField("genre");
+      void loadTags();
+    });
+    el("tags-artist").addEventListener("click", () => {
+      if (currentField() === "artist") return;
+      setField("artist");
+      void loadTags();
+    });
+    el("tags-titles").addEventListener("click", () => {
+      if (currentField() === "titles") return;
+      setField("titles");
+      void loadTags();
+    });
+    el("tags-refresh").addEventListener("click", () => {
+      void loadTags();
+    });
+    el("tags-report").addEventListener("change", (event) => {
+      const input = event.target.closest("input[type='radio']");
+      if (!(input instanceof HTMLInputElement) || !input.name.startsWith("tags-")) return;
+      const key = input.name.slice("tags-".length);
+      selectedByKey.set(key, input.value);
+      plans.delete(key);
+      if (latest5) renderTagsReport(latest5);
+    });
+    el("tags-report").addEventListener("click", (event) => {
+      const button2 = event.target.closest("[data-tags-action]");
+      if (!button2 || button2.disabled) return;
+      if (button2.dataset.tagsAction === "clean-apply") {
+        void applyTitles();
+        return;
+      }
+      if (button2.dataset.tagsAction === "refresh-apply") {
+        void applyMappings();
+        return;
+      }
+      const key = button2.dataset.key ?? "";
+      if (!key) return;
+      if (button2.dataset.tagsAction === "preview") void previewGroup(key);
+      if (button2.dataset.tagsAction === "apply") void applyGroup(key);
+    });
+  }
+  async function loadTags() {
+    const token3 = ++state.tagsToken;
+    const field = currentField();
+    plans.clear();
+    selectedByKey.clear();
+    beginBusy5();
+    let settle = "none";
+    try {
+      if (field === "titles") {
+        const payload = await postJSON("/api/tag-clusters", {
+          action: "clean-preview",
+          space: state.space
+        });
+        if (token3 !== state.tagsToken) return;
+        titlePlan = payload;
+        latest5 = null;
+        mappingPlan = null;
+        el("tags-status").textContent = titlesPreviewSummary(payload);
+        settle = "report";
+      } else {
+        const response = await fetch(
+          `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
+        );
+        if (token3 !== state.tagsToken) return;
+        const payload = await readJSON(response).catch(() => null);
+        if (token3 !== state.tagsToken) return;
+        if (!response.ok || payload === null) {
+          failStatus5(serverMessage(payload, t("tags.unreadable")));
+          settle = "retry";
+          return;
+        }
+        latest5 = payload;
+        titlePlan = null;
+        mappingPlan = await readMappingPreview(token3);
+        if (token3 !== state.tagsToken) return;
+        el("tags-status").textContent = "";
+        settle = "report";
+      }
+    } catch (error2) {
+      if (token3 !== state.tagsToken) return;
+      if (error2 instanceof TypeError) failStatus5(t("tags.unreachable"));
+      else failStatus5(failureOf(error2).message);
+      settle = "retry";
+    } finally {
+      if (token3 !== state.tagsToken) return;
+      endBusy5();
+      if (settle === "report") paintReport();
+      if (settle === "retry") el("tags-refresh").focus();
+      if (settle === "report") el("tags-report").focus();
+    }
+  }
+  function showTagsFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
+    failStatus5(message);
+    endBusy5();
+    el("tags-refresh").focus();
+  }
+  function renderTagsReport(payload) {
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    const field = currentField();
+    const report = el("tags-report");
+    const groups = payload.groups ?? [];
+    const open = openKeys();
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = tagsSummary(field, payload.values ?? 0, groups.length);
+    report.replaceChildren(summary);
+    const mapping = mappingCard();
+    if (mapping) report.append(mapping);
+    if (!groups.length) return;
+    groups.forEach((group, index) => {
+      report.append(groupCard(group, index === 0 || open.has(group.key)));
+    });
+  }
+  function paintReport() {
+    if (currentField() === "titles") {
+      if (titlePlan) renderTitleReport(titlePlan);
+      return;
+    }
+    if (latest5) renderTagsReport(latest5);
+  }
+  function renderTitleReport(plan) {
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    const report = el("tags-report");
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = titlesSummary(plan.changes.length);
+    report.replaceChildren(summary);
+    const lines = previewLines(plan.changes);
+    if (lines.length) {
+      const diffs = document.createElement("ul");
+      for (const line of lines.slice(0, LIST_CAP3)) {
+        const row = document.createElement("li");
+        row.textContent = line;
+        diffs.append(row);
+      }
+      report.append(diffs);
+    }
+    const actions = document.createElement("div");
+    actions.className = "tags-actions";
+    const apply = buttonEl(tips.tagsApplyTitles);
+    apply.dataset.tagsAction = "clean-apply";
+    apply.textContent = t("tags.apply");
+    apply.disabled = !canApplyTitles(plan);
+    actions.append(apply);
+    report.append(actions);
+  }
+  function repaintTags() {
+    setField(currentField());
+    el("tags-scope").textContent = t("gig.wholeSpace");
+    paintReport();
+  }
+  async function previewGroup(key) {
+    const group = groupByKey(key);
+    const value = selectedValue(key);
+    if (!group || !value) return;
+    actionKey = key;
+    paintReport();
+    try {
+      const plan = await postJSON("/api/tag-clusters", {
+        action: "preview",
+        space: state.space,
+        field: currentField(),
+        value
+      });
+      plans.set(key, plan);
+      el("tags-status").textContent = previewSummary(plan);
+      paintReport();
+      applyButton(key)?.focus();
+    } catch (error2) {
+      failStatus5(failureOf(error2).message);
+    } finally {
+      actionKey = "";
+      paintReport();
+    }
+  }
+  async function applyGroup(key) {
+    const plan = plans.get(key);
+    const value = selectedValue(key);
+    if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
+    actionKey = key;
+    panelBusy = true;
+    beginBusy5();
+    paintReport();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "apply",
+        space: state.space,
+        field: currentField(),
+        value
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy5();
+      await loadTags();
+      el("tags-status").textContent = writtenSummary(written);
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus5(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy5();
+      paintReport();
+    }
+  }
+  async function applyMappings() {
+    const plan = mappingPlan;
+    if (!plan || !canApplyMappings(plan)) return;
+    actionKey = MAPPING_KEY;
+    panelBusy = true;
+    beginBusy5();
+    paintReport();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "refresh-apply",
+        space: state.space
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy5();
+      await loadTags();
+      el("tags-status").textContent = mappingWrittenSummary(written);
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus5(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy5();
+      paintReport();
+    }
+  }
+  async function applyTitles() {
+    const plan = titlePlan;
+    if (!plan || !canApplyTitles(plan)) return;
+    actionKey = TITLE_KEY;
+    panelBusy = true;
+    beginBusy5();
+    paintReport();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "clean-apply",
+        space: state.space
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy5();
+      await loadTags();
+      el("tags-status").textContent = titlesWrittenSummary(written);
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus5(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy5();
+      paintReport();
+    }
+  }
+  function currentField() {
+    if (el("tags-titles").getAttribute("aria-pressed") === "true") return "titles";
+    if (el("tags-artist").getAttribute("aria-pressed") === "true") return "artist";
+    return "genre";
+  }
+  function setField(next2) {
+    el("tags-genre").setAttribute("aria-pressed", String(next2 === "genre"));
+    el("tags-artist").setAttribute("aria-pressed", String(next2 === "artist"));
+    el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
+    el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
+  }
+  function beginBusy5() {
+    panelBusy = true;
+    for (const id of FIELD_BUTTONS) {
+      const button2 = el(id);
+      button2.disabled = true;
+      button2.setAttribute("aria-busy", "true");
+    }
+    el("tags-panel").setAttribute("aria-busy", "true");
+    el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
+    paintReport();
+  }
+  function endBusy5() {
+    panelBusy = false;
+    for (const id of FIELD_BUTTONS) {
+      const button2 = el(id);
+      button2.disabled = false;
+      button2.setAttribute("aria-busy", "false");
+    }
+    el("tags-panel").setAttribute("aria-busy", "false");
+  }
+  function canApplyTitles(plan) {
+    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
+  }
+  function canApplyMappings(plan) {
+    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
+  }
+  function asMappingPlan(payload) {
+    if (payload === null || typeof payload !== "object") return null;
+    const plan = payload;
+    if (!Array.isArray(plan.changes)) return null;
+    return plan;
+  }
+  async function readMappingPreview(token3) {
+    try {
+      const payload = await postJSON("/api/tag-clusters", {
+        action: "refresh-preview",
+        space: state.space
+      });
+      if (token3 !== state.tagsToken) return null;
+      return asMappingPlan(payload);
+    } catch {
+      if (token3 !== state.tagsToken) return null;
+      return null;
+    }
+  }
+  function mappingCard() {
+    const plan = mappingPlan;
+    if (!plan?.changes.length) return null;
+    const wrap = document.createElement("div");
+    wrap.className = "tags-mappings";
+    const note = document.createElement("p");
+    note.className = "gig-note";
+    note.textContent = mappingPreviewSummary(plan);
+    wrap.append(note);
+    const lines = previewLines(plan.changes);
+    if (lines.length) {
+      const diffs = document.createElement("ul");
+      for (const line of lines.slice(0, LIST_CAP3)) {
+        const row = document.createElement("li");
+        row.textContent = line;
+        diffs.append(row);
+      }
+      wrap.append(diffs);
+    }
+    const actions = document.createElement("div");
+    actions.className = "tags-actions";
+    const apply = buttonEl(tips.tagsApplyMappings);
+    apply.dataset.tagsAction = "refresh-apply";
+    apply.textContent = t("tags.applyMappings");
+    apply.disabled = !canApplyMappings(plan);
+    actions.append(apply);
+    wrap.append(actions);
+    return wrap;
+  }
+  function failStatus5(message) {
+    el("tags-status").textContent = message;
+  }
+  function openKeys() {
+    const keys = /* @__PURE__ */ new Set();
+    for (const details of el("tags-report").querySelectorAll("details[data-key]")) {
+      if (details instanceof HTMLDetailsElement && details.open && details.dataset.key) {
+        keys.add(details.dataset.key);
+      }
+    }
+    return keys;
+  }
+  function groupByKey(key) {
+    return latest5?.groups?.find((group) => group.key === key);
+  }
+  function selectedValue(key) {
+    const group = groupByKey(key);
+    return selectedByKey.get(key) ?? group?.suggested ?? "";
+  }
+  function canApply(key) {
+    const plan = plans.get(key);
+    const value = selectedValue(key);
+    return Boolean(
+      plan && plan.value === value && plan.changes.length && state.writable && !panelBusy && actionKey !== key
+    );
+  }
+  function applyButton(key) {
+    return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
+  }
+  function cssEscape(value) {
+    if (typeof CSS !== "undefined" && typeof CSS.escape === "function") return CSS.escape(value);
+    return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+  }
+  function groupCard(group, open) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = open;
+    details.dataset.key = group.key;
+    const summary = document.createElement("summary");
+    setTooltip(summary, tips.tagsGroup);
+    summary.textContent = groupHeading(group);
+    const list = document.createElement("ul");
+    list.className = "tags-spellings";
+    const chosen = selectedValue(group.key);
+    for (const spelling of group.spellings) {
+      list.append(spellingRow(group.key, spelling.value, spelling.count, spelling.value === group.suggested, spelling.value === chosen));
+    }
+    details.append(summary, list);
+    const plan = plans.get(group.key);
+    if (plan && plan.value === chosen) {
+      const lines = previewLines(plan.changes);
+      if (lines.length) {
+        const diffs = document.createElement("ul");
+        const shown = lines.slice(0, LIST_CAP3);
+        for (const line of shown) {
+          const row = document.createElement("li");
+          row.textContent = line;
+          diffs.append(row);
+        }
+        details.append(diffs);
+      }
+    }
+    details.append(groupActions(group.key, chosen, plan));
+    return details;
+  }
+  function spellingRow(key, value, count, suggested, checked) {
+    const row = document.createElement("li");
+    const label = document.createElement("label");
+    label.className = "tags-spelling";
+    const radio = inputEl(tips.tagsSpelling);
+    radio.type = "radio";
+    radio.name = `tags-${key}`;
+    radio.value = value;
+    radio.checked = checked;
+    radio.disabled = panelBusy;
+    const text2 = document.createElement("span");
+    text2.textContent = spellingLabel(value, count, suggested);
+    label.append(radio, text2);
+    row.append(label);
+    return row;
+  }
+  function groupActions(key, value, plan) {
+    const actions = document.createElement("div");
+    actions.className = "tags-actions";
+    const preview = buttonEl(tips.tagsPreview);
+    preview.dataset.tagsAction = "preview";
+    preview.dataset.key = key;
+    preview.textContent = t("tags.preview");
+    preview.disabled = panelBusy || !value;
+    const apply = buttonEl(tips.tagsApply);
+    apply.dataset.tagsAction = "apply";
+    apply.dataset.key = key;
+    apply.textContent = t("tags.apply");
+    apply.disabled = !canApply(key);
+    if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
+    actions.append(preview, apply);
+    return actions;
+  }
+
+  // src/portable.ts
+  var FINDING_CAP = 100;
+  var KIND_KEY = {
+    off_drive: "portable.kindOffDrive",
+    missing: "portable.kindMissing",
+    smart_crate: "portable.kindSmartCrate",
+    unsafe_name: "portable.kindUnsafeName",
+    path_length: "portable.kindPathLength",
+    file_size: "portable.kindFileSize"
+  };
+  var token = 0;
+  var latest6 = null;
+  var opener = null;
+  var wired2 = false;
+  function portableDriveRoot(path) {
+    const trimmed = path.trim();
+    if (!trimmed) return "";
+    const unified = trimmed.replace(/\\/g, "/");
+    const marker = unified.search(/\/_Serato_(\/|$)/i);
+    const base = marker >= 0 ? unified.slice(0, marker) : unified.replace(/\/+$/, "");
+    const volumes = /^\/Volumes\/[^/]+/.exec(base);
+    if (volumes) return volumes[0];
+    const media2 = /^\/(?:run\/)?media\/[^/]+\/[^/]+/.exec(base);
+    if (media2) return media2[0];
+    const mnt = /^\/mnt\/[^/]+/.exec(base);
+    if (mnt) return mnt[0];
+    const unc = /^(?:\/\/)[^/]+\/[^/]+/.exec(base);
+    if (unc) return trimmed.includes("\\") ? unc[0].replace(/\//g, "\\") : unc[0];
+    const win = /^[A-Za-z]:/.exec(trimmed);
+    if (win) return `${win[0]}${trimmed.includes("\\") ? "\\" : "/"}`;
+    return marker >= 0 ? trimmed.includes("\\") ? base.replace(/\//g, "\\") : base : trimmed;
+  }
+  function parseDriveReport(value) {
+    if (!isRecord(value)) return null;
+    if (typeof value.ready !== "boolean" || typeof value.missing_drive !== "boolean") return null;
+    if (typeof value.summary !== "string") return null;
+    if (!Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
+    const findings = [];
+    for (const item2 of value.findings) {
+      if (!isRecord(item2) || typeof item2.kind !== "string" || typeof item2.fix !== "string") return null;
+      findings.push({
+        kind: item2.kind,
+        crate: text(item2.crate),
+        track: text(item2.track),
+        path: text(item2.path),
+        found: text(item2.found),
+        fix: item2.fix
+      });
+    }
+    const errors = [];
+    for (const item2 of value.errors) {
+      if (!isRecord(item2) || typeof item2.message !== "string") return null;
+      errors.push({ crate: text(item2.crate), message: item2.message });
+    }
+    return {
+      drive: text(value.drive),
+      name: text(value.name),
+      ready: value.ready,
+      missing_drive: value.missing_drive,
+      summary: value.summary,
+      findings,
+      errors
+    };
+  }
+  function portableDriveButton(name, path) {
+    const button2 = buttonEl(portableCheck(name));
+    button2.className = "files-portable";
+    button2.dataset.portableName = name;
+    button2.textContent = t("portable.check");
+    button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    button2.addEventListener("click", (event) => {
+      event.stopPropagation();
+      void openPortableCheck(path, button2);
+    });
+    return button2;
+  }
+  async function openPortableCheck(path, trigger) {
+    wirePortable();
+    const drive = portableDriveRoot(path);
+    const mine = ++token;
+    opener = trigger ?? null;
+    const dialog = el("portable-dialog");
+    latest6 = null;
+    el("portable-verdict").textContent = "";
+    el("portable-summary").textContent = "";
+    el("portable-findings").replaceChildren();
+    el("portable-status").textContent = t("portable.checking");
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    if (!drive) {
+      el("portable-status").textContent = t("portable.unreadable");
+      return;
+    }
+    try {
+      const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
+      if (mine !== token) return;
+      const body = await readJSON(response).catch(() => null);
+      if (mine !== token) return;
+      if (!response.ok) {
+        fail(serverMessage(errorBody(body), t("portable.unreadable")));
+        return;
+      }
+      const report = parseDriveReport(body);
+      if (!report) {
+        fail(t("portable.unreadable"));
+        return;
+      }
+      latest6 = report;
+      el("portable-status").textContent = "";
+      renderPortableReport(report);
+    } catch {
+      if (mine !== token) return;
+      fail(t("portable.unreachable"));
+    }
+  }
+  function repaintPortable() {
+    for (const button2 of document.querySelectorAll(".files-portable")) {
+      button2.textContent = t("portable.check");
+      const name = button2.dataset.portableName ?? "";
+      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    }
+    if (latest6) renderPortableReport(latest6);
+  }
+  function wirePortable() {
+    if (wired2) return;
+    wired2 = true;
+    el("portable-close").addEventListener("click", () => {
+      el("portable-dialog").close();
+      if (opener?.isConnected) opener.focus();
+    });
+  }
+  function renderPortableReport(report) {
+    latest6 = report;
+    const verdict = el("portable-verdict");
+    if (report.missing_drive) verdict.textContent = t("portable.missing");
+    else if (report.ready) verdict.textContent = t("portable.ready");
+    else verdict.textContent = t("portable.notReady");
+    el("portable-summary").textContent = report.summary;
+    const list = el("portable-findings");
+    const items = [];
+    const shown = report.findings.slice(0, FINDING_CAP);
+    for (const finding of shown) {
+      const row = document.createElement("li");
+      const kind2 = document.createElement("span");
+      kind2.className = "portable-kind";
+      kind2.textContent = kindLabel(finding.kind);
+      row.append(kind2);
+      if (finding.fix) {
+        row.append(document.createTextNode(" "));
+        const fix = document.createElement("span");
+        fix.className = "portable-fix";
+        fix.textContent = finding.fix;
+        row.append(fix);
+      }
+      items.push(row);
+    }
+    for (const error2 of report.errors) {
+      const row = document.createElement("li");
+      row.textContent = error2.crate ? `${error2.crate}: ${error2.message}` : error2.message;
+      items.push(row);
+    }
+    const hidden = report.findings.length - shown.length;
+    if (hidden > 0) {
+      const row = document.createElement("li");
+      row.textContent = t("files.andMore", { count: hidden });
+      items.push(row);
+    }
+    list.replaceChildren(...items);
+  }
+  function kindLabel(kind2) {
+    const key = KIND_KEY[kind2];
+    return key ? t(key) : kind2;
+  }
+  function fail(message) {
+    latest6 = null;
+    el("portable-verdict").textContent = "";
+    el("portable-summary").textContent = "";
+    el("portable-findings").replaceChildren();
+    el("portable-status").textContent = message;
+  }
+  function isRecord(value) {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+  }
+  function text(value) {
+    return typeof value === "string" ? value : "";
+  }
+  function errorBody(value) {
+    if (!isRecord(value)) return null;
+    const body = {};
+    if (typeof value.error === "string") body.error = value.error;
+    if (typeof value.code === "string") body.code = value.code;
+    if (body.error === void 0 && body.code === void 0) return null;
+    return body;
+  }
+
+  // src/beatgrid-view.ts
+  var GRID_WARNING_KEYS = {
+    beatgrid_too_short: "markers.gridTooShort",
+    beatgrid_version: "markers.gridVersion",
+    beatgrid_empty: "markers.gridEmpty",
+    beatgrid_too_many: "markers.gridTooMany",
+    beatgrid_truncated: "markers.gridTruncated"
+  };
+  function beatgridViewOnly(unavailable) {
+    return unavailable !== true;
+  }
+  function beatgridIsSuspect(code) {
+    return typeof code === "string" && code !== "";
+  }
+  function beatgridWarningKey(code) {
+    if (!beatgridIsSuspect(code) || code == null) return null;
+    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
+      return GRID_WARNING_KEYS[code];
+    }
+    return "markers.gridUnknown";
+  }
+  function beatSeconds(value) {
+    if (value === "" || value == null) return "";
+    const number = Number(value);
+    if (!Number.isFinite(number)) return "";
+    return `${number.toFixed(3)}s`;
+  }
+  function appendBeatgrid(section, track) {
+    if (!beatgridViewOnly(track.markers_unavailable)) return;
+    const heading = document.createElement("h4");
+    heading.textContent = t("markers.gridHeading");
+    section.append(heading);
+    const viewOnly = document.createElement("p");
+    viewOnly.className = "detail-kicker";
+    viewOnly.textContent = t("markers.gridViewOnly");
+    section.append(viewOnly);
+    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
+      const warn = document.createElement("p");
+      warn.className = "detail-kicker warn";
+      warn.setAttribute("role", "status");
+      const key = beatgridWarningKey(track.beatgrid_warning_code);
+      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
+      warn.textContent = t("markers.gridSuspect", { reason });
+      section.append(warn);
+    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
+      const empty = document.createElement("p");
+      empty.className = "detail-kicker";
+      empty.textContent = t("markers.gridNone");
+      section.append(empty);
+    }
+    for (const mark of track.beatgrid || []) {
+      section.append(paintBeatMarker(mark));
+    }
+  }
+  function paintBeatMarker(mark) {
+    const row = document.createElement("div");
+    row.className = "marker";
+    const time = document.createElement("span");
+    time.textContent = beatSeconds(mark.position);
+    const name = document.createElement("span");
+    const bpmNumber = Number(mark.bpm);
+    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
+      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
+    } else if (mark.beats != null) {
+      name.textContent = t("markers.beats", { count: Number(mark.beats) });
+    } else {
+      name.textContent = "";
+    }
+    row.append(document.createElement("span"), document.createElement("span"), time, name);
+    return row;
+  }
+
+  // src/folder-sync-view.ts
+  function syncFolderSyncButton() {
+    const id = state.activeCrate;
+    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
+    const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
+    el("crate-folder-sync").disabled = blocked;
+    el("crate-rename-from-tags").disabled = blocked;
+  }
+  function readFolderSyncForm() {
+    const folder = el("folder-sync-path").value.trim();
+    if (!folder) return null;
+    return {
+      folder,
+      subcrates: el("folder-sync-subcrates").checked,
+      full: el("folder-sync-full").checked
+    };
+  }
+  function folderSyncPreviewText(reply) {
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    const created = Number(reply.created) || 0;
+    const skipped = Number(reply.skipped_count) || 0;
+    if (added === 0 && removed === 0 && created === 0) {
+      return t("folderSync.summaryNone", { skipped });
+    }
+    return t("folderSync.summary", { added, removed, skipped });
+  }
+  function folderSyncDoneText(reply) {
+    const name = reply.crate?.name?.trim() || "";
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    if (!reply.written) return t("folderSync.unchanged", { name });
+    return t("folderSync.done", { name, added, removed });
+  }
+  function folderSyncHasWork(reply) {
+    return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
+  }
+
+  // src/preset-view.ts
+  function presetName(preset) {
+    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
+    if (preset.kind === "bpm") {
+      return t("presets.name.bpm", {
+        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
+        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
+      });
+    }
+    return t("presets.name.unplayed", { count: preset.months });
+  }
+  function numberFrom(input) {
+    const text2 = input.value.trim();
+    if (!text2) return null;
+    const value = Number(text2);
+    return Number.isFinite(value) ? value : null;
+  }
+  function scopeCrate() {
+    if (state.activeCrate === "all") return null;
+    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
+    return crate && !crate.smart ? crate : null;
+  }
+  function readPresetForm() {
+    const kind2 = el("preset-kind").value;
+    const scope = scopeCrate();
+    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
+    if (kind2 === "harmonic") {
+      const key = el("preset-key").value.trim();
+      return key ? { kind: kind2, key, ...crate } : null;
+    }
+    if (kind2 === "bpm") {
+      const bpm = numberFrom(el("preset-bpm"));
+      const range = numberFrom(el("preset-range")) ?? 3;
+      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
+      return { kind: kind2, bpm, range, ...crate };
+    }
+    if (kind2 === "unplayed") {
+      const months = numberFrom(el("preset-months")) ?? 12;
+      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
+      return { kind: kind2, months, ...crate };
+    }
+    return null;
+  }
+  function syncPresetFields() {
+    const kind2 = el("preset-kind").value;
+    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
+      field.hidden = field.dataset.presetKind !== kind2;
+    }
+  }
+  function isPresetCrate(id) {
+    return id !== "all" && Object.hasOwn(state.presets, String(id));
+  }
+  function presetFoot(id) {
+    if (!isPresetCrate(id)) return "";
+    const updated = Number(state.presets[String(id)]?.updated);
+    if (!Number.isFinite(updated) || updated <= 0) return "";
+    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    return ` · ${t("presets.updated", { date })}`;
+  }
+  function syncPresetButtons() {
+    el("crate-preset").disabled = !state.writable;
+    const preset = isPresetCrate(state.activeCrate);
+    el("crate-refresh").hidden = !preset;
+    el("crate-refresh").disabled = !state.writable || !preset;
+  }
+
+  // src/restore.ts
+  var reloadLibrary = async () => {
+  };
+  function bindLibraryReload(reload) {
+    reloadLibrary = reload;
+  }
+  async function loadSnapshots() {
+    state.snapshotLoading = true;
+    state.snapshotError = "";
+    const operationsPromise = loadOperations();
+    renderSnapshots();
+    try {
+      const response = await fetch("/api/snapshots");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
+      state.snapshots = payload.snapshots || [];
+      state.snapshotUndo = payload.pending_undo || null;
+      state.writeBlock = payload.write_block || "";
+      state.writeBlockCode = payload.write_block_code || "";
+      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
+      state.seratoRunning = Boolean(payload.serato_running);
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotLoading = false;
+      renderSnapshots();
+    } finally {
+      await operationsPromise;
+    }
+  }
+  async function loadOperations() {
+    state.operationsLoading = true;
+    state.operationsError = "";
+    renderOperations();
+    try {
+      const response = await fetch("/api/operations");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
+      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
+      state.operationsLoading = false;
+    } catch (error2) {
+      state.operationsLoading = false;
+      state.operationsError = failureOf(error2).message || t("operations.unreadable");
+    }
+    renderOperations();
+  }
+  function failSnapshots(error2) {
+    state.snapshotLoading = false;
+    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
+    renderSnapshots();
+  }
+  function renderSnapshots() {
+    renderOperations();
+    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
+    const status = el("snapshots-status");
+    const block = el("snapshots-block");
+    const undo = el("snapshots-undo");
+    const list = el("snapshots-list");
+    list.setAttribute("aria-busy", String(state.snapshotLoading));
+    paintDriveCopies();
+    if (state.writeBlock) {
+      block.hidden = false;
+      block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
+    } else {
+      block.hidden = true;
+      block.textContent = "";
+    }
+    if (state.snapshotUndo && state.snapshotUndo.restore_id) {
+      undo.hidden = false;
+      el("snapshots-undo-text").textContent = state.snapshotUndo.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange");
+    } else {
+      undo.hidden = true;
+    }
+    list.replaceChildren();
+    if (state.snapshotLoading) {
+      status.textContent = t("snapshots.reading");
+      return;
+    }
+    if (state.snapshotError) {
+      status.textContent = state.snapshotError;
+      const retry = buttonEl(tips.snapshotsRetry);
+      retry.textContent = t("common.tryAgain");
+      retry.addEventListener("click", () => loadSnapshots().catch((error2) => failSnapshots(error2)));
+      list.append(retry);
+      return;
+    }
+    status.textContent = state.snapshotMessage ? t(state.snapshotMessage) : "";
+    if (!state.snapshots.length) {
+      const empty = document.createElement("p");
+      empty.textContent = t("snapshots.empty");
+      list.append(empty);
+      return;
+    }
+    for (const item2 of state.snapshots) {
+      const card = document.createElement("article");
+      card.className = "snapshot-card";
+      card.setAttribute("role", "listitem");
+      const title2 = document.createElement("p");
+      title2.textContent = `${item2.created || t("snapshots.unknownTime")} · ${item2.trigger || t("snapshots.trigger")}`;
+      const detail = document.createElement("p");
+      const version = item2.serato_version && item2.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item2.serato_version, build: String(item2.serato_build ?? "") }) : t("snapshots.seratoUnknown");
+      const drives = (item2.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item2.unavailable_drives || []) })}` : "";
+      detail.textContent = `${version}. ${item2.reason || ""}${drives}`;
+      const restore = buttonEl(tips.reviewRestore);
+      restore.textContent = t("snapshots.reviewRestore");
+      restore.addEventListener("click", () => openSnapshotPlan(item2.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
+      card.append(title2, detail, restore);
+      list.append(card);
+    }
+  }
+  var OPERATION_ACTIONS = {
+    crate_create: "operations.action.crateCreate",
+    crate_rename: "operations.action.crateRename",
+    crate_delete: "operations.action.crateDelete",
+    crate_color: "operations.action.crateColor",
+    crate_expanded: "operations.action.crateExpanded",
+    crate_rules: "operations.action.crateRules",
+    crate_add: "operations.action.crateAdd",
+    crate_remove: "operations.action.crateRemove",
+    crate_prepare: "operations.action.cratePrepare",
+    crate_remove_library: "operations.action.crateRemoveLibrary",
+    save_track: "operations.action.saveTrack",
+    import_m3u: "operations.action.importM3u",
+    merge_duplicates: "operations.action.mergeDuplicates",
+    rename: "operations.action.rename",
+    rename_from_tags: "operations.action.renameFromTags",
+    move: "operations.action.move",
+    move_folder: "operations.action.moveFolder",
+    replace: "operations.action.replace",
+    replace_in_crates: "operations.action.replaceInCrates",
+    relink: "operations.action.relink",
+    delete: "operations.action.delete",
+    restore: "operations.action.restore",
+    restore_recover: "operations.action.restoreRecover"
+  };
+  var OPERATION_OUTCOMES = {
+    verified: "operations.outcome.verified",
+    rolled_back: "operations.outcome.rolledBack",
+    refused: "operations.outcome.refused",
+    rollback_failed: "operations.outcome.rollbackFailed"
+  };
+  function renderOperations() {
+    const alert = el("operations-alert");
+    const status = el("operations-status");
+    const list = el("operations-list");
+    list.setAttribute("aria-busy", String(state.operationsLoading));
+    const latest8 = state.operations[state.operations.length - 1];
+    const failed = latest8?.result === "rollback_failed";
+    alert.hidden = !failed;
+    alert.textContent = failed ? t("operations.rollbackFailed") : "";
+    list.replaceChildren();
+    if (state.operationsLoading && state.operations.length === 0) {
+      status.textContent = t("operations.reading");
+      return;
+    }
+    if (state.operationsError) {
+      status.textContent = state.operationsError;
+      const retry = buttonEl(tips.operationsRetry);
+      retry.textContent = t("common.tryAgain");
+      retry.addEventListener("click", () => {
+        loadOperations().catch(() => void 0);
+      });
+      list.append(retry);
+      return;
+    }
+    status.textContent = "";
+    if (!state.operations.length) {
+      const empty = document.createElement("p");
+      empty.textContent = t("operations.empty");
+      list.append(empty);
+      return;
+    }
+    for (const item2 of [...state.operations].reverse()) {
+      list.append(operationCard(item2));
+    }
+  }
+  function operationCard(item2) {
+    const card = document.createElement("article");
+    card.className = "operation-card snapshot-card";
+    card.setAttribute("role", "listitem");
+    const actionName = item2.action || item2.operation || "";
+    const actionKey2 = OPERATION_ACTIONS[actionName];
+    const outcomeKey = OPERATION_OUTCOMES[item2.result || ""] ?? "operations.outcome.refused";
+    const title2 = document.createElement("p");
+    title2.textContent = t("operations.entry", {
+      time: operationTime(item2.time || ""),
+      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
+      target: item2.target || t("operations.noTarget"),
+      outcome: t(outcomeKey)
+    });
+    card.append(title2);
+    if (item2.snapshot_before && item2.snapshot_after) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.snapshots", {
+        before: item2.snapshot_before,
+        after: item2.snapshot_after
+      });
+      card.append(detail);
+    } else if (item2.snapshot_before) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.beforeOnly", { before: item2.snapshot_before });
+      card.append(detail);
+    }
+    return card;
+  }
+  function operationTime(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
+    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
+  }
+  async function openSnapshotPlan(snapshotId) {
+    state.snapshotPlanId = snapshotId;
+    const planBox = el("snapshot-plan");
+    const block = el("snapshot-block");
+    const confirm2 = el("snapshot-confirm");
+    planBox.replaceChildren();
+    block.textContent = t("snapshots.readingPlan");
+    confirm2.disabled = true;
+    setSnapshotDialogStatus("");
+    el("snapshot-dialog").showModal();
+    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
+    paintSnapshotPlan(plan);
+  }
+  var lastPlan = null;
+  function repaintSnapshotPlan() {
+    if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
+  }
+  function isDriveCopy(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
+  }
+  function driveBackupFrom(value) {
+    if (!value || typeof value !== "object") return null;
+    const record = value;
+    if (record.verified !== true) return null;
+    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
+    return {
+      folder: typeof record.folder === "string" ? record.folder : "",
+      verified: true,
+      drives
+    };
+  }
+  function driveName(drive, status) {
+    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
+    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
+    if (status === "permission") return t("snapshots.drivePermission", { name });
+    return name;
+  }
+  function driveCopyText() {
+    const report = state.driveBackup;
+    const drives = report?.drives ?? [];
+    if (!report?.verified || !drives.length) {
+      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
+    }
+    const parts = [];
+    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
+    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
+    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
+    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
+    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
+    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
+    return parts.join(" ") || t("snapshots.drivesIntro");
+  }
+  function paintDriveCopies() {
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = driveCopyText();
+  }
+  async function backupDriveCrates() {
+    const button2 = el("snapshots-drives");
+    button2.disabled = true;
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = t("snapshots.backupDrivesBusy");
+    try {
+      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
+      renderSnapshots();
+    } catch (error2) {
+      state.snapshotMessage = "";
+      renderSnapshots();
+      const shown = el("snapshots-drives-note");
+      shown.hidden = false;
+      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
+    } finally {
+      button2.disabled = false;
+    }
+  }
+  function paintSnapshotPlan(plan) {
+    lastPlan = plan;
+    const planBox = el("snapshot-plan");
+    const block = el("snapshot-block");
+    const confirm2 = el("snapshot-confirm");
+    planBox.replaceChildren();
+    const crates = plan.crates || {};
+    const tracks = plan.tracks || {};
+    appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
+    appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
+    appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
+    appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
+    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
+    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
+    if (plan.registration_warning) {
+      const warning = document.createElement("p");
+      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
+      planBox.append(warning);
+    }
+    appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
+    appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
+    appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
+    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
+    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
+    const deleted = plan.deleted || {};
+    appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
+    appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
+    appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
+    appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
+    if (plan.restore_blocked) {
+      block.textContent = codedText(
+        plan.restore_blocked,
+        plan.restore_blocked_code,
+        messageParams(plan.restore_blocked_params)
+      );
+      confirm2.disabled = true;
+    } else {
+      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
+      confirm2.disabled = false;
+    }
+  }
+  function appendPlanLine(parent, label, rows2) {
+    const line = document.createElement("p");
+    const items = rows2 || [];
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+    } else {
+      const names = items.slice(0, 8).map((item2) => item2.name || item2.path || item2.drive_label || t("plan.item"));
+      const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
+      const listed = `${names.join(", ")}${extra}`;
+      line.textContent = t("plan.listed", { label, count: items.length, names: listed });
+    }
+    parent.append(line);
+  }
+  function appendCueDiffs(parent, label, rows2) {
+    const items = rows2 || [];
+    const line = document.createElement("p");
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+      parent.append(line);
+      return;
+    }
+    line.textContent = t("plan.files", { label, count: items.length });
+    parent.append(line);
+    for (const item2 of items.slice(0, 12)) {
+      const row = document.createElement("p");
+      row.textContent = fileName(item2.path || "");
+      parent.append(row);
+      for (const diff of cueDiffRows(item2.before, item2.after)) {
+        parent.append(paintCueDiffRow(diff));
+      }
+    }
+  }
+  function appendFrameDiffs(parent, label, rows2) {
+    const items = rows2 || [];
+    const line = document.createElement("p");
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+      parent.append(line);
+      return;
+    }
+    line.textContent = t("plan.files", { label, count: items.length });
+    parent.append(line);
+    for (const item2 of items.slice(0, 12)) {
+      const row = document.createElement("p");
+      row.textContent = fileName(item2.path || "");
+      parent.append(row);
+    }
+  }
+  function fileName(path) {
+    const parts = String(path).split(/[/\\]/);
+    return parts[parts.length - 1] || path;
+  }
+  function setSnapshotDialogStatus(message) {
+    el("snapshot-status").textContent = message;
+  }
+  async function takeSnapshot() {
+    const button2 = el("snapshots-take");
+    button2.disabled = true;
+    button2.textContent = t("snapshots.saving");
+    try {
+      await postJSON("/api/snapshots", { action: "create" });
+      state.snapshotMessage = "snapshots.saved";
+      await loadSnapshots();
+    } finally {
+      button2.disabled = false;
+      button2.textContent = t("snapshots.take");
+    }
+  }
+  async function confirmSnapshotRestore() {
+    const confirm2 = el("snapshot-confirm");
+    confirm2.disabled = true;
+    confirm2.textContent = t("snapshots.restoring");
+    setSnapshotDialogStatus("");
+    try {
+      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
+      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
+      const result = await postJSON("/api/snapshots", body);
+      const skipped = result.crates_skipped || [];
+      el("snapshot-dialog").close();
+      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
+      await loadSnapshots();
+      await reloadLibrary();
+      if (skipped.length) {
+        const names = skipped.map((item2) => item2.name || item2.path || t("plan.item")).join(", ");
+        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
+      }
+    } catch (error2) {
+      setSnapshotDialogStatus(failureOf(error2).message);
+      confirm2.disabled = false;
+      await loadOperations();
+    } finally {
+      confirm2.textContent = t("snapshots.restore");
+    }
+  }
+
+  // src/search-filters.ts
+  var TEXT_SEARCH_FIELDS = [
+    "comments",
+    "grouping",
+    "composer",
+    "title",
+    "artist",
+    "album",
+    "genre",
+    "file"
+  ];
+  var KEY_VALUES = {
+    "g#m": 0,
+    abm: 0,
+    "1a": 0,
+    ebm: 1,
+    "d#m": 1,
+    "2a": 1,
+    bbm: 2,
+    "a#m": 2,
+    "3a": 2,
+    fm: 3,
+    "4a": 3,
+    cm: 4,
+    "5a": 4,
+    gm: 5,
+    "6a": 5,
+    dm: 6,
+    "7a": 6,
+    am: 7,
+    "8a": 7,
+    em: 8,
+    "9a": 8,
+    bm: 9,
+    "10a": 9,
+    "f#m": 10,
+    gbm: 10,
+    "11a": 10,
+    "c#m": 11,
+    dbm: 11,
+    "12a": 11,
+    b: 12,
+    "1b": 12,
+    "f#": 13,
+    gb: 13,
+    "2b": 13,
+    "c#": 14,
+    db: 14,
+    "3b": 14,
+    "g#": 15,
+    ab: 15,
+    "4b": 15,
+    "d#": 16,
+    eb: 16,
+    "5b": 16,
+    "a#": 17,
+    bb: 17,
+    "6b": 17,
+    f: 18,
+    "7b": 18,
+    c: 19,
+    "8b": 19,
+    g: 20,
+    "9b": 20,
+    d: 21,
+    "10b": 21,
+    a: 22,
+    "11b": 22,
+    e: 23,
+    "12b": 23
+  };
+  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
+  var EXACT = new RegExp(`^${NUMBER}$`);
+  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
+  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
+  var ABOVE = new RegExp(`^>${NUMBER}$`);
+  var BELOW = new RegExp(`^<${NUMBER}$`);
+  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
+  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
+  function isNone(value) {
+    return NONE.has(value);
+  }
+  function isYes(value) {
+    return YES.has(value);
+  }
+  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
+  function isTextSearchField(value) {
+    return TEXT_FIELD_SET.has(value);
+  }
+  function textField(track, field) {
+    if (field === "title") return String(track.name ?? "");
+    return String(track[field] ?? "");
+  }
+  function trackHaystack(track, field) {
+    if (field) return textField(track, field).toLocaleLowerCase();
+    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
+  }
+  function hasBpm(track) {
+    const bpm = Number(track.bpm);
+    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
+  }
+  function hasKey2(track) {
+    return Boolean(String(track.key ?? "").trim());
+  }
+  function cueFlag(track) {
+    if (track.has_cues === true) return true;
+    if (track.has_cues === false) return false;
+    if (track.markers_found === true) return true;
+    if (track.markers_found === false) return false;
+    if (Array.isArray(track.cues)) {
+      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
+      return track.cues.length > 0 || loops > 0;
+    }
+    return null;
+  }
+  function keyNumber(value) {
+    if (!value) return -1;
+    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
+  }
+  function mixingKeys(key) {
+    const base = key < 12 ? 0 : 12;
+    const index = key - base;
+    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
+  }
+  function bpmFilter(value) {
+    let match = RANGE.exec(value);
+    if (match) {
+      const low = Number(match[1]);
+      const high = Number(match[2]);
+      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
+    }
+    match = AROUND.exec(value);
+    if (match) {
+      const center = Number(match[1]);
+      const spread = Number(match[2]);
+      return { kind: "bpm", min: center - spread, max: center + spread };
+    }
+    match = ABOVE.exec(value);
+    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
+    match = BELOW.exec(value);
+    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
+    match = EXACT.exec(value);
+    if (match) {
+      const whole = Number(match[1]);
+      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
+    }
+    return null;
+  }
+  function parseQuery(text2) {
+    const terms = [];
+    const filters = [];
+    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
+      const colon = word.indexOf(":");
+      const name = colon > 0 ? word.slice(0, colon) : "";
+      const value = colon > 0 ? word.slice(colon + 1) : "";
+      let filter = null;
+      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
+      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
+      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
+      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
+      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
+      else if (name === "bpm") filter = bpmFilter(value);
+      else if (name === "key" || name === "mix") {
+        const key = keyNumber(value);
+        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
+      } else if (isTextSearchField(name) && value) {
+        filter = { kind: "field", field: name, value };
+      }
+      if (filter) filters.push(filter);
+      else terms.push(word);
+    }
+    return { terms, filters };
+  }
+  function matchesFilters(track, filters) {
+    for (const filter of filters) {
+      if (filter.kind === "bpm") {
+        if (!hasBpm(track)) return false;
+        const bpm = Number(track.bpm);
+        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
+      } else if (filter.kind === "missing") {
+        if (!track.missing) return false;
+      } else if (filter.kind === "nokey") {
+        if (hasKey2(track)) return false;
+      } else if (filter.kind === "nobpm") {
+        if (hasBpm(track)) return false;
+      } else if (filter.kind === "nokeybpm") {
+        if (hasKey2(track) && hasBpm(track)) return false;
+      } else if (filter.kind === "nocues") {
+        if (cueFlag(track) !== false) return false;
+      } else if (filter.kind === "field") {
+        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
+      } else if (!filter.keys.has(keyNumber(track.key))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function matchesQuery(track, query, field) {
+    if (!matchesFilters(track, query.filters)) return false;
+    if (!query.terms.length) return true;
+    const hay = trackHaystack(track, field);
+    return query.terms.every((term) => hay.includes(term));
+  }
+
+  // src/views.ts
+  var import_react10 = __toESM(require_react(), 1);
+
   // src/virtual-scroll.ts
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react9 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -23112,7 +23144,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react5.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react9.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -23236,7 +23268,7 @@
     if (!row) return void 0;
     const id = Number(row.getAttribute("data-id"));
     if (!Number.isInteger(id)) return void 0;
-    return view.find((item4) => item4.id === id);
+    return view.find((item2) => item2.id === id);
   }
   function wireListKeys(list) {
     list.addEventListener("scroll", () => paintRows());
@@ -23249,7 +23281,7 @@
         event.preventDefault();
         moveSelection(-1, view, list);
       } else if (event.key === "Enter") {
-        const chosen = focusedTrack(event.target, view) ?? view.find((item4) => item4.id === state.selectedId);
+        const chosen = focusedTrack(event.target, view) ?? view.find((item2) => item2.id === state.selectedId);
         if (!chosen || chosen.entry) return;
         event.preventDefault();
         void bridge.selectTrack(chosen.id);
@@ -23341,7 +23373,7 @@
     for (const crate of state.crates) {
       if (seen.has(crate.id)) continue;
       if (keep && !keep.has(crate.id)) continue;
-      const parentListed = state.crates.some((item4) => item4.id === crate.parent);
+      const parentListed = state.crates.some((item2) => item2.id === crate.parent);
       if (parentListed) continue;
       seen.add(crate.id);
       crate.depth = 0;
@@ -23492,8 +23524,8 @@
   function placeCrateFocus(previousId) {
     const items = [...el("crate-list").querySelectorAll(".crate")];
     if (!items.length) return null;
-    const current2 = items.find((item4) => item4.dataset.id === previousId) || items[0];
-    for (const item4 of items) item4.tabIndex = item4 === current2 ? 0 : -1;
+    const current2 = items.find((item2) => item2.dataset.id === previousId) || items[0];
+    for (const item2 of items) item2.tabIndex = item2 === current2 ? 0 : -1;
     return current2;
   }
   function renderCrates() {
@@ -23540,7 +23572,7 @@
   function renderRules() {
     document.querySelector(".rules")?.remove();
     document.querySelector(".rule-edit")?.remove();
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
     if (!crate || !crate.rules || state.mode !== "crates") return;
     const line = document.createElement("p");
     line.className = "rules";
@@ -23702,7 +23734,7 @@
       return;
     }
     if (gigMode || healthMode || scanMode) {
-      const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+      const crate = state.crates.find((item2) => item2.id === state.activeCrate);
       el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : crate?.name ?? t("crates.selectedCrate");
       return;
     }
@@ -23818,11 +23850,11 @@
     if (state.mode === "health") loadHealth().catch(showHealthFailure);
     if (state.mode === "scan") loadScan().catch(showScanFailure);
   }
-  function focusCrateItem(item4) {
-    if (!item4) return;
+  function focusCrateItem(item2) {
+    if (!item2) return;
     for (const button2 of el("crate-list").querySelectorAll(".crate")) button2.tabIndex = -1;
-    item4.tabIndex = 0;
-    item4.focus();
+    item2.tabIndex = 0;
+    item2.focus();
   }
   async function selectTrack(id) {
     state.selectedId = id;
@@ -23854,7 +23886,7 @@
   function selectEntry(id) {
     state.selectedId = id;
     paintRows();
-    const entry = state.entries.find((item4) => item4.id === id);
+    const entry = state.entries.find((item2) => item2.id === id);
     if (!entry) return;
     const body = document.createElement("div");
     body.className = "detail-body";
@@ -23913,10 +23945,10 @@
     const body = document.createElement("div");
     body.className = "detail-body";
     if (track.album) {
-      const kicker2 = document.createElement("p");
-      kicker2.className = "detail-kicker";
-      kicker2.textContent = track.album;
-      body.append(kicker2);
+      const kicker = document.createElement("p");
+      kicker.className = "detail-kicker";
+      kicker.textContent = track.album;
+      body.append(kicker);
     }
     const title2 = document.createElement("h2");
     title2.textContent = track.title ?? "";
@@ -23930,7 +23962,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react10.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -24041,8 +24073,8 @@
       saveTrack(track.id, form);
     });
     body.append(form);
-    const actions2 = document.createElement("div");
-    actions2.className = "actions";
+    const actions = document.createElement("div");
+    actions.className = "actions";
     const reveal = buttonEl(revealTip(track.serato?.file_manager || state.serato?.file_manager || "Finder"));
     const manager = track.serato?.file_manager || state.serato?.file_manager || "Finder";
     reveal.textContent = t("detail.reveal", { manager });
@@ -24066,7 +24098,7 @@
     useInCrates.addEventListener("click", () => {
       bridge.openReplaceInCratesDialog(track.id).catch((error2) => setNotice(failureOf(error2).message));
     });
-    actions2.append(reveal, prepare, relocate, remove, useInCrates);
+    actions.append(reveal, prepare, relocate, remove, useInCrates);
     if (state.mode === "duplicates" && selectedDuplicateGroup()) {
       const merge = buttonEl(tips.mergeDuplicates);
       merge.textContent = t("merge.title");
@@ -24074,9 +24106,9 @@
       merge.addEventListener("click", () => {
         bridge.openMergeDialog().catch((error2) => setNotice(failureOf(error2).message));
       });
-      actions2.append(merge);
+      actions.append(merge);
     }
-    body.append(actions2);
+    body.append(actions);
     body.append(relatedSection(track, writable));
     body.append(markerSection(track));
     if (track.copies?.length) body.append(copySection(track.id, track.copies, writable));
@@ -24084,9 +24116,9 @@
     for (const group of track.groups || []) {
       const section = document.createElement("section");
       section.className = "group";
-      const heading2 = document.createElement("h3");
-      heading2.textContent = group.name ?? "";
-      section.append(heading2);
+      const heading = document.createElement("h3");
+      heading.textContent = group.name ?? "";
+      section.append(heading);
       const open = group.name !== "Search copies";
       if (!open) {
         const toggle = buttonEl(tips.showSearchCopies);
@@ -24135,9 +24167,9 @@
   function markerSection(track) {
     const section = document.createElement("section");
     section.className = "group";
-    const heading2 = document.createElement("h3");
-    heading2.textContent = t("markers.heading");
-    section.append(heading2);
+    const heading = document.createElement("h3");
+    heading.textContent = t("markers.heading");
+    section.append(heading);
     const note = document.createElement("p");
     note.className = "detail-kicker";
     if (track.markers_unavailable) note.textContent = t("markers.unavailable");
@@ -24175,9 +24207,9 @@
   function copySection(fromId, copies, writable) {
     const section = document.createElement("section");
     section.className = "group";
-    const heading2 = document.createElement("h3");
-    heading2.textContent = t("copies.heading");
-    section.append(heading2);
+    const heading = document.createElement("h3");
+    heading.textContent = t("copies.heading");
+    section.append(heading);
     for (const copy of copies) {
       const row = document.createElement("div");
       row.className = "copy-row";
@@ -24207,17 +24239,17 @@
     const section = document.createElement("section");
     section.className = "group";
     section.dataset.trackId = String(track.id);
-    const heading2 = document.createElement("h3");
-    heading2.id = `related-heading-${track.id}`;
-    heading2.textContent = t("related.heading");
-    section.setAttribute("aria-labelledby", heading2.id);
+    const heading = document.createElement("h3");
+    heading.id = `related-heading-${track.id}`;
+    heading.textContent = t("related.heading");
+    section.setAttribute("aria-labelledby", heading.id);
     section.setAttribute("aria-busy", "true");
     const status = document.createElement("p");
     status.className = "detail-kicker";
     status.setAttribute("role", "status");
     const path = track.resolved_path || track.edit?.portable_id || "";
     status.textContent = path ? t("related.loading") : t("related.noPath");
-    section.append(heading2, status);
+    section.append(heading, status);
     if (path) loadRelated(track, section, writable, "");
     return section;
   }
@@ -24239,8 +24271,8 @@
     }
   }
   function renderRelated(track, section, writable, payload, query) {
-    const heading2 = section.querySelector("h3");
-    section.replaceChildren(heading2);
+    const heading = section.querySelector("h3");
+    section.replaceChildren(heading);
     section.setAttribute("aria-busy", "false");
     const saved = Array.isArray(payload.saved) ? payload.saved : [];
     const suggested = Array.isArray(payload.suggested) ? payload.suggested : [];
@@ -24272,8 +24304,8 @@
     const list = document.createElement("ul");
     list.className = "related-list";
     for (const link of saved) {
-      const item4 = document.createElement("li");
-      item4.className = "related-row";
+      const item2 = document.createElement("li");
+      item2.className = "related-row";
       const main = document.createElement("div");
       const other = link.track || {};
       const label = other.title || t("track.untitled");
@@ -24310,8 +24342,8 @@
       remove.textContent = t("common.remove");
       remove.setAttribute("aria-label", t("related.removeLink", { name: label }));
       remove.addEventListener("click", () => removeRelated(track, section, link));
-      item4.append(main, remove);
-      list.append(item4);
+      item2.append(main, remove);
+      list.append(item2);
     }
     return list;
   }
@@ -24344,7 +24376,7 @@
         results.append(hint);
         return;
       }
-      const hits2 = state.tracks.filter((item4) => item4.id !== track.id && matchesQuery(item4, query2)).slice(0, 8);
+      const hits2 = state.tracks.filter((item2) => item2.id !== track.id && matchesQuery(item2, query2)).slice(0, 8);
       if (!hits2.length) {
         const empty = document.createElement("li");
         empty.className = "related-meta";
@@ -24353,14 +24385,14 @@
         return;
       }
       for (const hit of hits2) {
-        const item4 = document.createElement("li");
+        const item2 = document.createElement("li");
         const name = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         const choose = buttonEl(chooseRelated(name));
         choose.className = "text-button";
         choose.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
         choose.addEventListener("click", () => relatedLinkForm(track, section, form, hit, input.value));
-        item4.append(choose);
-        results.append(item4);
+        item2.append(choose);
+        results.append(item2);
       }
     };
     input.addEventListener("input", paint3);
@@ -24416,26 +24448,26 @@
   function relatedSuggestList(track, section, suggested) {
     const list = document.createElement("ul");
     list.className = "related-list";
-    for (const item4 of suggested) {
+    for (const item2 of suggested) {
       const row = document.createElement("li");
       row.className = "related-row";
       const main = document.createElement("div");
       const name = document.createElement("span");
-      name.textContent = item4.artist ? `${item4.title || t("track.untitled")} · ${item4.artist}` : item4.title || t("track.untitled");
+      name.textContent = item2.artist ? `${item2.title || t("track.untitled")} · ${item2.artist}` : item2.title || t("track.untitled");
       const reasons = document.createElement("p");
       reasons.className = "related-meta";
-      reasons.textContent = Array.isArray(item4.reasons) ? item4.reasons.join(" · ") : "";
+      reasons.textContent = Array.isArray(item2.reasons) ? item2.reasons.join(" · ") : "";
       main.append(name, reasons);
-      const save3 = buttonEl(saveSuggestion(item4.title || "Untitled"));
+      const save3 = buttonEl(saveSuggestion(item2.title || "Untitled"));
       save3.className = "text-button";
       save3.textContent = t("common.save");
-      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item4.title || t("track.untitled") }));
+      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item2.title || t("track.untitled") }));
       save3.addEventListener("click", () => {
         save3.disabled = true;
         saveRelated(track, section, {
           action: "add",
           asset: track.id,
-          target: item4.asset_id,
+          target: item2.asset_id,
           mutual: true,
           note: "",
           rating: null,
@@ -24493,9 +24525,9 @@
   function membershipSection(track, writable) {
     const section = document.createElement("section");
     section.className = "group";
-    const heading2 = document.createElement("h3");
-    heading2.textContent = t("crates.heading");
-    section.append(heading2);
+    const heading = document.createElement("h3");
+    heading.textContent = t("crates.heading");
+    section.append(heading);
     const holder = document.createElement("div");
     holder.className = "member-list";
     const chosen = new Set(track.crate_ids || []);
@@ -24739,7 +24771,7 @@
     }
   }
   async function renameCrate() {
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
     if (!crate) return;
     const name = prompt(t("crates.renamePrompt"), crate.name);
     if (!name || !name.trim() || name.trim() === crate.name) return;
@@ -24760,7 +24792,7 @@
     return COLORS.find(([, key]) => t(key).toLocaleLowerCase() === wanted)?.[0];
   }
   async function colorCrate() {
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
     if (!crate) return;
     const names = COLORS.map(([, key]) => t(key).toLocaleLowerCase());
     const choice = prompt(t("crates.colorPrompt", { names: names.join(", ") }));
@@ -24785,7 +24817,7 @@
     }
   }
   async function deleteCrate() {
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+    const crate = state.crates.find((item2) => item2.id === state.activeCrate);
     if (!crate) return;
     if (!confirm(t("crates.confirmDelete", { name: crate.name }))) return;
     try {
@@ -25103,7 +25135,7 @@
     list.className = "files-crumbs";
     const crumbs = visibleCrumbs();
     crumbs.forEach((crumb, index) => {
-      const item4 = document.createElement("li");
+      const item2 = document.createElement("li");
       const last = index === crumbs.length - 1;
       if (!last && crumb.path) {
         const button2 = buttonEl(openCrumb(crumb.name));
@@ -25112,22 +25144,22 @@
         button2.addEventListener("click", () => {
           loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
         });
-        item4.append(button2);
+        item2.append(button2);
       } else {
         const current2 = document.createElement("span");
         current2.className = "files-crumb";
         current2.setAttribute("aria-current", "page");
         current2.textContent = crumb.name;
-        item4.append(current2);
+        item2.append(current2);
       }
       if (!last) {
         const sep = document.createElement("span");
         sep.className = "files-sep";
         sep.setAttribute("aria-hidden", "true");
         sep.textContent = "/";
-        item4.append(sep);
+        item2.append(sep);
       }
-      list.append(item4);
+      list.append(item2);
     });
     nav.append(list);
   }
@@ -25238,8 +25270,8 @@
   function rootsEmpty() {
     const box = document.createElement("div");
     box.className = "files-empty-state";
-    const heading2 = document.createElement("h2");
-    heading2.textContent = t("files.noRoots");
+    const heading = document.createElement("h2");
+    heading.textContent = t("files.noRoots");
     const copy = document.createElement("p");
     copy.textContent = t("files.noRootsBody");
     const button2 = buttonEl(tips.runSetup);
@@ -25247,7 +25279,7 @@
     button2.className = "files-primary";
     button2.textContent = t("files.runSetup");
     button2.addEventListener("click", () => bridge.openSetup());
-    box.append(heading2, copy, button2);
+    box.append(heading, copy, button2);
     return box;
   }
   function focusFilesIndex(index) {
@@ -25567,11 +25599,11 @@
       renderList();
     });
     el("crate-list").addEventListener("keydown", (event) => {
-      const item4 = event.target.closest(".crate");
-      if (!item4 || !el("crate-list").contains(item4)) return;
+      const item2 = event.target.closest(".crate");
+      if (!item2 || !el("crate-list").contains(item2)) return;
       const items = [...el("crate-list").querySelectorAll(".crate")];
-      const index = items.indexOf(item4);
-      const id = item4.dataset.id === "all" ? "all" : Number(item4.dataset.id);
+      const index = items.indexOf(item2);
+      const id = item2.dataset.id === "all" ? "all" : Number(item2.dataset.id);
       if (event.key === "ArrowDown") {
         event.preventDefault();
         focusCrateItem(items[Math.min(items.length - 1, index + 1)]);
@@ -25586,13 +25618,13 @@
         focusCrateItem(items[items.length - 1]);
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
-        if (!state.crateQuery && item4.getAttribute("aria-expanded") === "false") toggleCrate(id);
-        else if (item4.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
+        if (!state.crateQuery && item2.getAttribute("aria-expanded") === "false") toggleCrate(id);
+        else if (item2.getAttribute("aria-expanded") === "true") focusCrateItem(items[index + 1]);
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
-        if (!state.crateQuery && item4.getAttribute("aria-expanded") === "true") toggleCrate(id);
-        else if (item4.dataset.parent) {
-          focusCrateItem(items.find((button2) => button2.dataset.id === item4.dataset.parent));
+        if (!state.crateQuery && item2.getAttribute("aria-expanded") === "true") toggleCrate(id);
+        else if (item2.dataset.parent) {
+          focusCrateItem(items.find((button2) => button2.dataset.id === item2.dataset.parent));
         }
       } else if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -25720,9 +25752,9 @@
     const list = el("rekordbox-report");
     list.replaceChildren();
     for (const line of lines) {
-      const item4 = document.createElement("li");
-      item4.textContent = line;
-      list.append(item4);
+      const item2 = document.createElement("li");
+      item2.textContent = line;
+      list.append(item2);
     }
   }
   function requestRekordboxReport() {
@@ -25791,43 +25823,43 @@
     const list = document.createElement("ul");
     list.className = "merge-preview";
     const added = preview.crates_added || [];
-    const item4 = (text2) => {
+    const item2 = (text2) => {
       const line = document.createElement("li");
       line.textContent = text2;
       list.append(line);
     };
     if (added.length) {
       const names = added.map((crate) => crate.space && crate.space !== state.space ? `${crate.name} (${crate.space})` : crate.name);
-      item4(t("merge.addToCrates", { crates: names.join(", ") }));
+      item2(t("merge.addToCrates", { crates: names.join(", ") }));
     } else if ((preview.crates_kept || []).length) {
-      item4(t("merge.alreadyInCrates"));
+      item2(t("merge.alreadyInCrates"));
     } else {
-      item4(t("merge.noCrates"));
+      item2(t("merge.noCrates"));
     }
-    for (const space of preview.spaces_added || []) item4(t("merge.addToSpace", { space }));
+    for (const space of preview.spaces_added || []) item2(t("merge.addToSpace", { space }));
     if ((preview.fields || []).length) {
       for (const field of preview.fields || []) {
         const before = previewFieldValue(field.field || "", field.before);
         const after = previewFieldValue(field.field || "", field.after);
-        item4(t("merge.fieldChange", { label: field.label ?? "", before, after }));
+        item2(t("merge.fieldChange", { label: field.label ?? "", before, after }));
       }
     } else {
-      item4(t("merge.noFields"));
+      item2(t("merge.noFields"));
     }
     if (preview.history_repointed) {
       const count = Number(preview.history_entries) || 0;
-      item4(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
+      item2(count ? t("merge.repointHistory", { count }) : t("merge.noHistory"));
     } else {
-      item4(t("merge.noHistoryId"));
+      item2(t("merge.noHistoryId"));
     }
     const removed = (preview.removed || []).length;
-    item4(t("merge.removeCopies", { count: removed }));
+    item2(t("merge.removeCopies", { count: removed }));
     for (const file of preview.files || []) {
-      if (file.reason) item4(`${file.file}: ${file.reason}`);
+      if (file.reason) item2(`${file.file}: ${file.reason}`);
     }
     const copy = preview.cue_copy;
     if (copy && (copy.markers || copy.beatgrid) && copy.status !== "failed") {
-      item4(mergeCopyLine(copy, copy.status === "copied"));
+      item2(mergeCopyLine(copy, copy.status === "copied"));
     }
     el("merge-preview").append(list);
     if (preview.cue_warning) {
@@ -25994,7 +26026,7 @@
         if (score != null) scored.push({ track, score });
       }
       scored.sort((a, b) => b.score - a.score);
-      ranked = scored.map((item4) => item4.track);
+      ranked = scored.map((item2) => item2.track);
     }
     if (toId != null) {
       const pinned = others.find((track) => track.id === toId);
@@ -26016,7 +26048,7 @@
     }
     const list = document.createElement("ul");
     list.className = "merge-preview";
-    const item4 = (text2) => {
+    const item2 = (text2) => {
       const line = document.createElement("li");
       line.textContent = text2;
       list.append(line);
@@ -26025,14 +26057,14 @@
     const kept = preview.crates_kept || [];
     const removed = preview.crates_removed || [];
     if (added.length) {
-      item4(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
+      item2(t("cratesReplace.addToCrates", { crates: added.map(replaceCrateLabel).join(", ") }));
     } else if (kept.length) {
-      item4(t("cratesReplace.alreadyInCrates"));
+      item2(t("cratesReplace.alreadyInCrates"));
     } else {
-      item4(t("cratesReplace.noCrates"));
+      item2(t("cratesReplace.noCrates"));
     }
     if (preview.retire && removed.length) {
-      item4(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
+      item2(t("cratesReplace.removeFromCrates", { crates: removed.map(replaceCrateLabel).join(", ") }));
     }
     el("crates-replace-preview").append(list);
   }
@@ -26399,16 +26431,16 @@
     const list = el("files-changes");
     list.replaceChildren();
     for (const change of payload.changes || []) {
-      const item4 = document.createElement("li");
+      const item2 = document.createElement("li");
       const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
       const effect = change.effect === "trash" ? t("files.trash") : change.to;
-      item4.textContent = `${change.from} → ${effect}${crates}`;
-      list.append(item4);
+      item2.textContent = `${change.from} → ${effect}${crates}`;
+      list.append(item2);
     }
     for (const skip2 of payload.skipped || []) {
-      const item4 = document.createElement("li");
-      item4.textContent = skip2;
-      list.append(item4);
+      const item2 = document.createElement("li");
+      item2.textContent = skip2;
+      list.append(item2);
     }
     if (payload.more) {
       const more = document.createElement("li");
@@ -26504,7 +26536,7 @@
   function chosenCandidate(match) {
     const candidates = match.candidates || [];
     const path = relinkChosen.get(match.asset_id);
-    return candidates.find((item4) => item4.path === path) || candidates[0];
+    return candidates.find((item2) => item2.path === path) || candidates[0];
   }
   function selectedRelinkMatches() {
     const matches = [];
@@ -26550,7 +26582,7 @@
   function renderRelinkRows() {
     const body = el("relink-rows");
     body.replaceChildren();
-    const matches = (relinkPlan?.matches || []).filter((item4) => (item4.candidates || []).length > 0);
+    const matches = (relinkPlan?.matches || []).filter((item2) => (item2.candidates || []).length > 0);
     el("relink-empty").hidden = matches.length > 0;
     el("relink-empty").textContent = relinkPlan ? t("relink.empty") : t("relink.none");
     for (const match of matches) {
@@ -27331,7 +27363,7 @@
     else if (!hits.length) status.textContent = t("quickOpen.none", { query });
     else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
     hits.forEach((hit, index) => {
-      const item4 = document.createElement("li");
+      const item2 = document.createElement("li");
       const button2 = buttonEl(quickOpenHit(
         hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
         hit.title,
@@ -27357,8 +27389,8 @@
         active = index;
         void activate(hit);
       });
-      item4.append(button2);
-      list.append(item4);
+      item2.append(button2);
+      list.append(item2);
     });
     const field = el("quick-open-query");
     const current2 = hits[active];
@@ -27804,9 +27836,9 @@
       if (!groups.includes(shortcut.group)) groups.push(shortcut.group);
     }
     for (const group of groups) {
-      const heading2 = document.createElement("h3");
-      heading2.textContent = t(GROUP_KEY[group]);
-      body.append(heading2);
+      const heading = document.createElement("h3");
+      heading.textContent = t(GROUP_KEY[group]);
+      body.append(heading);
       if (group === "Play") {
         const note = document.createElement("p");
         note.className = "dialog-note";
@@ -27870,9 +27902,9 @@
     let release = null;
     const raw = body.latest;
     if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
-      const item4 = raw;
-      if (typeof item4.version === "string" && typeof item4.url === "string") {
-        release = { version: item4.version, url: item4.url, prerelease: item4.prerelease === true };
+      const item2 = raw;
+      if (typeof item2.version === "string" && typeof item2.url === "string") {
+        release = { version: item2.version, url: item2.url, prerelease: item2.prerelease === true };
       }
     }
     return {
@@ -28262,7 +28294,7 @@
   async function refreshActivePreset() {
     const id = state.activeCrate;
     if (id === "all" || !state.writable) return;
-    const crate = state.crates.find((item4) => item4.id === id);
+    const crate = state.crates.find((item2) => item2.id === id);
     try {
       const reply = await postJSON("/api/smart-preset", { action: "refresh", id });
       const message = t("presets.refreshed", {
