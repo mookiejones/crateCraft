@@ -1,5 +1,5 @@
 /**
- * Dialogs for Rekordbox export, duplicate merge, crate replace, relink, sharing, and file changes.
+ * Dialogs for Rekordbox export, duplicate merge, crate replace, relink, and sharing.
  *
  * Importing this module does not open a dialog and does not fetch.
  * wireDialogs attaches the listeners. app.ts calls it once at startup.
@@ -10,7 +10,6 @@ import { failureOf, getRelink, postJSON, readJSONOr } from "./api";
 import type { LibraryStatusNotice, OpenOptions } from "./wizard-view";
 import type {
   CratesReplacePreview,
-  FilesBody,
   FilesPayload,
   LogsPayload,
   MergeCrate,
@@ -30,19 +29,17 @@ import { applyLayout } from "./layout";
 import { state } from "./state";
 import { inputEl, selectEl, setTooltip } from "./tooltip";
 import { keepCopy, openReplaceCopy, tips } from "./tooltip-strings";
+import { openFilesDialog, startRenameFromTags } from "./files";
+import { mountFilesIslands } from "./files-mount";
 import {
   applyStatus,
   crateNamesFor,
-  failFiles,
   loadDuplicates,
-  loadFolder,
   loadLibrary,
   lockDown,
   playlistCrate,
-  renderFiles,
   selectTrack,
   selectedDuplicateGroup,
-  selectedFiles,
   setNotice,
 } from "./views";
 import { PSEUDO, getLocale, isLanguage, resolveLocale, serverMessage, setLocale, t } from "./i18n";
@@ -79,10 +76,6 @@ function resolveColorway(value: unknown): (typeof COLORWAYS)[number] {
   }
   return "serato-like";
 }
-let filesPreview: FilesPayload | null = null;
-let filesAction = "";
-let filesTagScope: "paths" | "crate" = "paths";
-let filesTrigger: HTMLElement | null = null;
 let relinkPlan: RelinkPlan | null = null;
 let relinkLoading = false;
 const relinkChosen = new Map<number, string>();
@@ -998,9 +991,6 @@ export function repaintDialogs(): void {
     fillRelinkBanner();
     renderRelinkRows();
   }
-  if (el("files-dialog").open) {
-    el("files-confirm").textContent = filesAction === "delete" ? t("files.moveToTrash") : t("common.confirm");
-  }
 }
 
 function applyPrivacy(payload: SettingsPayload) {
@@ -1106,206 +1096,6 @@ export async function loadPrivacy() {
   if (token === rekordboxToken) applyRekordboxExport(payload);
   if (!state.wizardComplete && openWizard(false, el("search"))) return;
   if (payload.needs_consent_prompt) showConsent();
-}
-
-/**
- * Open the review dialog for one file action.
- *
- * Delete, a chosen move, and rename from tags load the preview immediately.
- * Rename and replace wait until Review, because those need a typed value.
- * Cancel is focused for a delete.
- *
- * @param {string} action File action.
- * @param {HTMLElement|null} trigger Control that opened the dialog.
- * @param {"paths"|"crate"} scope Files selection or one crate's members.
- * @returns {void}
- */
-function openFilesDialog(
-  action: string,
-  trigger: EventTarget | null,
-  scope: "paths" | "crate" = "paths",
-) {
-  filesAction = action;
-  filesTagScope = scope;
-  filesPreview = null;
-  filesTrigger = trigger instanceof HTMLElement ? trigger : null;
-  el("files-name-label").hidden = action !== "rename";
-  el("files-replace-label").hidden = action !== "replace";
-  el("files-summary").textContent = "";
-  el("files-warning").textContent = "";
-  el("files-dialog-status").textContent = "";
-  el("files-changes").replaceChildren();
-  const selected = selectedFiles();
-  if (action === "rename" && selected.length === 1) el("files-name").value = selected[0]!.name;
-  if (action === "replace") el("files-replacement").value = "";
-  const confirm = el("files-confirm");
-  confirm.classList.toggle("danger", action === "delete");
-  confirm.textContent = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
-  setTooltip(confirm, action === "delete" ? tips.filesMoveTrash : tips.filesConfirm);
-  syncFilesDialog();
-  el("files-dialog").showModal();
-  if (
-    action === "delete" ||
-    action === "move" ||
-    action === "move_folder" ||
-    action === "rename_from_tags"
-  ) {
-    el("files-cancel").focus();
-    reviewFiles().catch((error) => {
-      el("files-dialog-status").textContent = failureOf(error).message;
-    });
-  } else if (action === "rename") el("files-name").focus();
-  else el("files-replacement").focus();
-}
-
-/**
- * Enable confirm only after a preview that can be saved.
- *
- * @returns {void}
- */
-function syncFilesDialog() {
-  const confirm = el("files-confirm");
-  const review = el("files-review");
-  const ready = Boolean(filesPreview?.ok && state.writable && filesPreview.needs_confirm);
-  confirm.disabled = !ready;
-  review.hidden =
-    filesAction === "delete" ||
-    filesAction === "move" ||
-    filesAction === "move_folder" ||
-    filesAction === "rename_from_tags";
-  if (!state.writable) {
-    el("files-dialog-status").textContent = el("status").textContent;
-  }
-}
-
-/**
- * Ask for a preview and paint the paths that would change.
- *
- * The response is 200 even when the save would be refused. ok false
- * keeps Confirm disabled and shows the refusal.
- *
- * @returns {Promise<void>}
- */
-async function reviewFiles() {
-  const body = filesBody(false);
-  el("files-dialog-status").textContent = t("files.checking");
-  const payload = await postJSON("/api/files", body);
-  filesPreview = payload;
-  el("files-summary").textContent = payload.summary || "";
-  el("files-warning").textContent = payload.warning || "";
-  el("files-dialog-status").textContent = payload.ok ? "" : serverMessage(payload, t("files.notSaved"));
-  const list = el("files-changes");
-  list.replaceChildren();
-  for (const change of payload.changes || []) {
-    const item = document.createElement("li");
-    const crates = Array.isArray(change.crates) && change.crates.length
-      ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}`
-      : "";
-    const effect = change.effect === "trash" ? t("files.trash") : change.to;
-    item.textContent = `${change.from} → ${effect}${crates}`;
-    list.append(item);
-  }
-  for (const skip of payload.skipped || []) {
-    const item = document.createElement("li");
-    item.textContent = skip;
-    list.append(item);
-  }
-  if (payload.more) {
-    const more = document.createElement("li");
-    more.textContent = t("files.andMore", { count: Number(payload.more) });
-    list.append(more);
-  }
-  if (payload.serato) applyStatus(payload.serato);
-  syncFilesDialog();
-}
-
-/**
- * Build the JSON body for the current file action.
- *
- * @param {boolean} confirm True only after the person confirms the preview.
- * @returns {object} Request body for POST /api/files.
- */
-function filesBody(confirm: boolean): FilesBody {
-  const body: FilesBody = { action: filesAction };
-  if (confirm) body.confirm = true;
-  if (filesAction === "rename") {
-    const selected = selectedFiles();
-    body.path = (selected[0]?.path || state.filesPickPaths[0]) as string;
-    body.name = el("files-name").value;
-  } else if (filesAction === "move") {
-    body.paths = state.filesPickPaths.length ? [...state.filesPickPaths] : selectedFiles().map((entry) => entry.path);
-    body.destination = state.filesPath;
-  } else if (filesAction === "move_folder") {
-    body.path = state.filesPickSource || state.filesPath;
-    body.destination = state.filesPath;
-  } else if (filesAction === "replace") {
-    const selected = selectedFiles();
-    body.path = selected[0]?.path || "";
-    body.replacement = el("files-replacement").value.trim();
-  } else if (filesAction === "delete") {
-    body.paths = selectedFiles().map((entry) => entry.path);
-  } else if (filesAction === "rename_from_tags") {
-    if (filesTagScope === "crate") {
-      const crate = state.activeCrate;
-      if (typeof crate === "number") {
-        body.crate = crate;
-        body.space = state.space;
-      }
-    } else {
-      body.paths = selectedFiles().map((entry) => entry.path);
-    }
-  }
-  return body;
-}
-
-/**
- * Close the file dialog and return focus to the control that opened it.
- *
- * @returns {void}
- */
-function closeFilesDialog() {
-  const trigger = filesTrigger;
-  filesTrigger = null;
-  filesTagScope = "paths";
-  if (el("files-dialog").open) el("files-dialog").close();
-  if (trigger instanceof HTMLElement) trigger.focus();
-}
-
-/**
- * Save a confirmed file change and reload the folder and the library.
- *
- * @returns {Promise<void>}
- */
-async function confirmFiles() {
-  if (!filesPreview?.ok || !state.writable) return;
-  const confirm = el("files-confirm");
-  confirm.disabled = true;
-  el("files-dialog-status").textContent = t("files.saving");
-  const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
-  try {
-    const payload = await postJSON("/api/files", filesBody(true));
-    if (payload.serato) applyStatus(payload.serato);
-    closeFilesDialog();
-    state.filesPick = null;
-    state.filesPickPaths = [];
-    state.filesPickSource = "";
-    let message = payload.summary || t("files.updated");
-    if (payload.warning) message = `${message} ${payload.warning}`;
-    if (crateScope && state.mode !== "files") {
-      setNotice(message);
-      await loadLibrary();
-      return;
-    }
-    state.filesMessage = message;
-    await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
-    await loadLibrary();
-    state.filesMessage = state.filesMessage;
-    renderFiles();
-  } catch (error) {
-    if (failureOf(error).status === 409) lockDown(error);
-    el("files-dialog-status").textContent = failureOf(error).message;
-    confirm.disabled = false;
-  }
 }
 
 function relinkReason(reason: string): string {
@@ -1731,125 +1521,11 @@ export function wireDialogs(): void {
       button.disabled = false;
     }
   });
-  el("files-up").addEventListener("click", () => {
-    if (state.filesParent) {
-      loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error) => failFiles(error));
-    }
-  });
-
-  el("files-refresh").addEventListener("click", () => {
-    const path = state.filesAtRoots ? "" : state.filesPath;
-    loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots, refresh: true }).catch((error) => failFiles(error));
-  });
-
-  el("files-elsewhere").addEventListener("click", () => {
-    if (state.filesElsewhere) loadFolder("").catch((error) => failFiles(error));
-    else loadFolder("", { elsewhere: true }).catch((error) => failFiles(error));
-  });
-
-  el("files-rename").addEventListener("click", (event) => {
-    if (selectedFiles().length !== 1) {
-      state.filesError = t("files.chooseOneRename");
-      renderFiles();
-      return;
-    }
-    openFilesDialog("rename", event.currentTarget);
-  });
-
-  el("files-rename-from-tags").addEventListener("click", (event) => {
-    if (!selectedFiles().length) {
-      state.filesError = t("files.chooseRenameFromTags");
-      renderFiles();
-      return;
-    }
-    openFilesDialog("rename_from_tags", event.currentTarget, "paths");
-  });
-
+  mountFilesIslands();
   el("crate-rename-from-tags").addEventListener("click", (event) => {
     const crate = state.activeCrate;
     if (typeof crate !== "number") return;
-    openFilesDialog("rename_from_tags", event.currentTarget, "crate");
-  });
-
-  el("files-move").addEventListener("click", () => {
-    const selected = selectedFiles();
-    if (!selected.length) {
-      state.filesError = t("files.chooseMove");
-      renderFiles();
-      return;
-    }
-    state.filesPick = "move";
-    state.filesPickPaths = selected.map((entry) => entry.path);
-    state.filesError = "";
-    state.filesMessage = t("files.chooseDestination");
-    renderFiles();
-  });
-
-  el("files-move-folder").addEventListener("click", () => {
-    state.filesPick = "move_folder";
-    state.filesPickSource = state.filesPath;
-    state.filesError = "";
-    state.filesMessage = t("files.chooseDestination");
-    renderFiles();
-  });
-
-  el("files-move-here").addEventListener("click", (event) => {
-    openFilesDialog(state.filesPick === "move_folder" ? "move_folder" : "move", event.currentTarget);
-  });
-
-  el("files-pick-cancel").addEventListener("click", () => {
-    state.filesPick = null;
-    state.filesPickPaths = [];
-    state.filesPickSource = "";
-    state.filesMessage = "";
-    renderFiles();
-  });
-
-  el("files-replace").addEventListener("click", (event) => {
-    if (selectedFiles().length !== 1) {
-      state.filesError = t("files.chooseOneReplace");
-      renderFiles();
-      return;
-    }
-    openFilesDialog("replace", event.currentTarget);
-  });
-
-  el("files-delete").addEventListener("click", (event) => {
-    if (!selectedFiles().length) {
-      state.filesError = t("files.chooseDelete");
-      renderFiles();
-      return;
-    }
-    openFilesDialog("delete", event.currentTarget);
-  });
-
-  el("files-review").addEventListener("click", () => {
-    reviewFiles().catch((error) => {
-      el("files-dialog-status").textContent = failureOf(error).message;
-    });
-  });
-
-  el("files-confirm").addEventListener("click", () => {
-    confirmFiles().catch((error) => {
-      el("files-dialog-status").textContent = failureOf(error).message;
-    });
-  });
-
-  el("files-cancel").addEventListener("click", () => closeFilesDialog());
-
-  el("files-name").addEventListener("input", () => {
-    filesPreview = null;
-    syncFilesDialog();
-  });
-
-  el("files-replacement").addEventListener("input", () => {
-    filesPreview = null;
-    syncFilesDialog();
-  });
-
-  el("files-dialog").addEventListener("cancel", (event) => {
-    event.preventDefault();
-    closeFilesDialog();
+    startRenameFromTags(event.currentTarget, "crate");
   });
 }
 
