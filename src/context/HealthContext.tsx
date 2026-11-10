@@ -15,7 +15,7 @@ import type {
 } from "../api-types";
 import type { TagField } from "../tags-view";
 
-export type HealthAction = "missing" | "duplicates" | "files" | "track";
+export type HealthAction = "missing" | "duplicates" | "files" | "track" | "bitrate";
 
 export type ScanDepth = "quick" | "full";
 

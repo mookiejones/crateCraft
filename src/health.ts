@@ -3,13 +3,15 @@
  *
  * Typed against GET /api/library-health. The request does not write. A
  * newer selection ignores a late response. HealthPanel paints from
- * HealthContext. Missing, duplicate, and unused sections open those
- * views. A track row opens Crates on that id.
+ * HealthContext. Missing, duplicate, unused, and bitrate sections open
+ * those views. A track row opens Crates on that id. Find art opens the
+ * album-art dialog.
  *
  * Page text is in the locale catalogs under health.*.
  */
 
 import { createElement } from "react";
+import { openAlbumArt, repaintAlbumArt, wireAlbumArt } from "./album-art";
 import { readJSON } from "./api";
 import type { LibraryHealthReport } from "./api-types";
 import { mountIsland, type IslandRoot } from "./app/mount";
@@ -30,6 +32,7 @@ let panelRoot: IslandRoot | undefined;
 let panelHost: HTMLElement | null = null;
 let listRoot: IslandRoot | undefined;
 let listHost: HTMLElement | null = null;
+let albumArtWired = false;
 
 /**
  * Snapshot HealthProvider reads.
@@ -51,7 +54,7 @@ export function getHealthSnapshot(): {
 }
 
 /**
- * Open Missing files, Duplicates, Files, or a track in Crates.
+ * Open Missing files, Duplicates, Files, Suspect quality, or a track in Crates.
  *
  * @param action View to open.
  * @param id Track id when action is track.
@@ -80,6 +83,12 @@ export function wireHealth(navigate: (action: HealthAction, id?: number) => void
   panelHost = panel;
   panelRoot = mountIsland(panel, createElement(HealthPanel), panelRoot);
   mountHealthListChrome();
+  if (!albumArtWired) {
+    albumArtWired = true;
+    wireAlbumArt(() => {
+      void loadHealth();
+    });
+  }
 }
 
 /**
@@ -168,6 +177,7 @@ export function showHealthFailure(error: unknown): void {
  */
 export function repaintHealth(): void {
   emitHealth();
+  repaintAlbumArt();
 }
 
 /**

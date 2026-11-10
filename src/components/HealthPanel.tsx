@@ -8,6 +8,7 @@ import type {
   LibraryHealthSection,
   LibraryHealthTrack,
 } from "../api-types";
+import { openAlbumArt } from "../album-art";
 import { useHealth, type HealthAction } from "../context/HealthContext";
 import { t, type MessageKey } from "../i18n";
 import { tips } from "../tooltip-strings";
@@ -37,11 +38,13 @@ function Section({
   label,
   section,
   action,
+  findArt,
   onNavigate,
 }: {
   label: string;
   section: LibraryHealthSection | undefined;
   action?: "missing";
+  findArt?: boolean;
   onNavigate: (action: HealthAction, id?: number) => void;
 }) {
   const count = section?.count ?? 0;
@@ -61,7 +64,7 @@ function Section({
       ) : null}
       <ul>
         {tracks.map((track) => (
-          <li key={track.id}>
+          <li key={track.id} className={findArt ? "health-art-row" : ""}>
             <button
               type="button"
               ref={tooltipRef(tips.healthTrack)}
@@ -71,10 +74,40 @@ function Section({
             >
               {trackLine(track)}
             </button>
+            {findArt ? (
+              <button
+                type="button"
+                ref={tooltipRef(tips.healthFindArt)}
+                data-health-action="artwork"
+                data-health-id={String(track.id)}
+                onClick={() => {
+                  void openAlbumArt(track.id);
+                }}
+              >
+                {t("health.findArt")}
+              </button>
+            ) : null}
           </li>
         ))}
       </ul>
       {count > tracks.length ? <p className="gig-note">{t("health.more", { count: count - tracks.length })}</p> : null}
+    </details>
+  );
+}
+
+function Bitrate({ onNavigate }: { onNavigate: (action: HealthAction) => void }) {
+  return (
+    <details className="gig-group" open>
+      <summary>{t("health.bitrate")}</summary>
+      <button
+        type="button"
+        ref={tooltipRef(tips.healthOpenBitrate)}
+        data-health-action="bitrate"
+        onClick={() => onNavigate("bitrate")}
+      >
+        {t("health.openBitrate")}
+      </button>
+      <p className="gig-note">{t("health.bitrateNote")}</p>
     </details>
   );
 }
@@ -193,11 +226,13 @@ export function HealthPanel() {
                 label={t(spec.label)}
                 section={payload[spec.key]}
                 {...(spec.action ? { action: spec.action } : {})}
+                {...(spec.key === "no_artwork" ? { findArt: true } : {})}
                 onNavigate={health.navigate}
               />
             ))}
             <Unused section={payload.unused} onNavigate={health.navigate} />
             <Duplicates section={payload.duplicates} onNavigate={health.navigate} />
+            <Bitrate onNavigate={health.navigate} />
             {listed ? null : <p className="gig-note">{t("health.clear")}</p>}
           </>
         ) : null}

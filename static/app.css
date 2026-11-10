@@ -56,7 +56,8 @@ textarea:focus-visible,
 .crate:focus-visible,
 .twist:focus-visible,
 .splitter:focus-visible,
-.waveform-overview:focus-visible {
+.waveform-overview:focus-visible,
+#portable-view-verdict:focus-visible {
   outline: 2px solid var(--cadmium);
   outline-offset: 2px;
 }
@@ -1671,6 +1672,27 @@ dialog .settings-field select {
 
 .gig-group { margin: var(--space-2) 0; }
 
+.health-art-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.album-art-choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: calc(var(--space-6) + var(--space-3));
+}
+
+.album-art-choice img {
+  width: 6rem;
+  height: 6rem;
+  object-fit: cover;
+}
+
 .gig-show-all,
 .gig-actions button {
   min-height: calc(var(--space-6) + var(--space-3));
@@ -1883,16 +1905,28 @@ dialog .settings-field select {
   font-weight: 400;
 }
 
-#portable-findings {
+#portable-findings,
+#portable-view-findings {
   margin: var(--space-3) 0 0;
   padding-left: 1.2em;
   max-height: 40vh;
   overflow: auto;
 }
 
-#portable-verdict {
+#portable-verdict,
+#portable-view-verdict {
   margin-top: var(--space-3);
   font-weight: 600;
+}
+
+#portable-offline {
+  margin: var(--space-2) 0;
+}
+
+#portable-drive {
+  min-height: 44px;
+  min-width: 12rem;
+  max-width: 100%;
 }
 
 .portable-kind {
@@ -2055,6 +2089,41 @@ dialog .settings-field select {
 #shortcuts-dialog h3 {
   margin: var(--space-4) 0 0;
   font-size: var(--font-heading);
+  font-weight: 600;
+}
+
+.stats-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 44px;
+  font: inherit;
+}
+
+.stats-field input,
+.stats-field select {
+  min-height: 44px;
+  font: inherit;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-2);
+}
+
+.stats-table th,
+.stats-table td {
+  padding: var(--space-2);
+  border-top: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.stats-table thead th {
+  border-top: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-caption);
   font-weight: 600;
 }
 
