@@ -252,6 +252,50 @@ export interface HistoryPayload {
   error?: string;
 }
 
+export interface HistoryStatsTrack {
+  asset_id?: number | null;
+  id?: number;
+  name?: string;
+  artist?: string;
+  plays?: number;
+  last_played?: number | null;
+  added?: number | null;
+  play_count?: number;
+}
+
+export interface HistoryStatsArtist {
+  artist?: string;
+  plays?: number;
+  tracks?: number;
+  last_played?: number | null;
+}
+
+export interface HistoryStatsReport {
+  from?: number | null;
+  to?: number | null;
+  plays?: number;
+  sessions?: number;
+  top_tracks?: HistoryStatsTrack[];
+  top_artists?: HistoryStatsArtist[];
+  idle_days?: number;
+  not_played?: HistoryStatsTrack[];
+  not_played_count?: number;
+  error?: string;
+  code?: string;
+}
+
+export interface HistoryIdleCrate {
+  preview?: boolean;
+  written?: boolean;
+  name?: string;
+  idle_days?: number;
+  count?: number;
+  id?: number;
+  tracks?: HistoryStatsTrack[];
+  warning?: string;
+  error?: string;
+}
+
 export interface FileEntry {
   name: string;
   kind: string;
@@ -705,6 +749,38 @@ export interface TempoDriftReport {
   code?: string;
 }
 
+export interface BitrateSuspect {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  reason: string;
+  stated_kbps: number | null;
+  estimated_kbps: number | null;
+  cutoff_hz: number;
+}
+
+export interface BitrateCheckReport {
+  crate: number | null;
+  checked: number;
+  not_found: number;
+  unreadable: number;
+  too_quiet: number;
+  unchecked: number;
+  suspects: BitrateSuspect[];
+  error?: string;
+  code?: string;
+}
+
+export interface BitrateCratePlan extends BitrateCheckReport {
+  preview: boolean;
+  written: boolean;
+  name: string;
+  added: number;
+  saved: { id: number; name: string } | null;
+  warning?: string | null;
+}
+
 export interface FileScanProblem {
   id: number;
   name: string;
@@ -753,6 +829,36 @@ export interface LibraryHealthDuplicateGroup {
   artist: string;
   seconds: number;
   ids: number[];
+}
+
+export interface AlbumArtCandidate {
+  release_id: string;
+  title: string;
+  artist: string;
+  mime: string;
+  thumb: string;
+}
+
+export interface AlbumArtPlan {
+  preview: boolean;
+  written: boolean;
+  id: number;
+  name: string;
+  artist: string;
+  album: string;
+  file: string;
+  candidates: AlbumArtCandidate[];
+  error?: string;
+  code?: string;
+}
+
+export interface AlbumArtMissing {
+  space: string;
+  crate: number | null;
+  checked: number;
+  tracks: LibraryHealthTrack[];
+  error?: string;
+  code?: string;
 }
 
 export interface LibraryHealthReport {
