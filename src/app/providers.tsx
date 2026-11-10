@@ -4,10 +4,10 @@
  * Player is one domain. The crate rail is the next. Waveform zoom and
  * overview are another. Before a gig is a fourth. Files is a fifth.
  * History is a sixth. Settings is a seventh. Track list selection and
- * detail fields are an eighth. Later screens add their own context file
- * and one wrapper here. This module reads those engines; it does not own
- * fetch, playback, crate writes, history loads, the folder load, or the
- * settings file.
+ * detail fields are an eighth. Snapshots is a ninth. Later screens add
+ * their own context file and one wrapper here. This module reads those
+ * engines; it does not own fetch, playback, crate writes, history loads,
+ * the folder load, the settings file, or restore writes.
  */
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -78,6 +78,10 @@ import {
   type SettingsContextValue,
 } from "../context/SettingsContext";
 import {
+  SnapshotsProvider as SnapshotsContextProvider,
+  type SnapshotsContextValue,
+} from "../context/SnapshotsContext";
+import {
   TrackListProvider as TrackListContextProvider,
   type TrackListContextValue,
 } from "../context/TrackListContext";
@@ -103,6 +107,19 @@ import {
   togglePlayPause,
 } from "../player";
 import { portableSnapshot } from "../portable";
+import {
+  backupDriveCrates,
+  closePlan,
+  confirmSnapshotRestore,
+  failSnapshots,
+  getSnapshotsState,
+  loadOperations,
+  loadSnapshots,
+  openSnapshotPlan,
+  setSnapshotDialogStatus,
+  subscribe as subscribeSnapshots,
+  takeSnapshot,
+} from "../restore";
 import {
   closeSettings,
   copyLogs,
@@ -439,13 +456,49 @@ export function TrackListRoot({ children }: { children: ReactNode }) {
   return <TrackListContextProvider value={current}>{children}</TrackListContextProvider>;
 }
 
+function readSnapshotsValue(): SnapshotsContextValue {
+  return {
+    ...getSnapshotsState(),
+    loadSnapshots,
+    loadOperations,
+    takeSnapshot,
+    backupDriveCrates,
+    openSnapshotPlan,
+    confirmSnapshotRestore,
+    closePlan,
+    failSnapshots,
+    setSnapshotDialogStatus,
+  };
+}
+
+/**
+ * Mount the snapshots domain at the root of one React island.
+ *
+ * Updates are flushed so existing tests see the list and restore plan
+ * in the same turn as the engine change.
+ *
+ * @param children Island that calls `useSnapshots`.
+ */
+export function SnapshotsProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readSnapshotsValue);
+  useEffect(() => {
+    return subscribeSnapshots(() => {
+      flushSync(() => {
+        setValue(readSnapshotsValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <SnapshotsContextProvider value={current}>{children}</SnapshotsContextProvider>;
+}
+
 /**
  * Nest every domain provider.
  *
  * Player is the first domain. Crates wrap inside it. Waveform wraps
  * inside crates. Before a gig wraps inside waveform. Files wraps inside
  * Before a gig. History wraps inside Files. Settings wraps inside History.
- * Track list wraps inside Settings.
+ * Track list wraps inside Settings. Snapshots wraps inside Track list.
  *
  * @param children Page island.
  */
@@ -458,7 +511,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
             <FilesProvider>
               <HistoryProvider>
                 <SettingsProvider>
-                  <TrackListRoot>{children}</TrackListRoot>
+                  <TrackListRoot>
+                    <SnapshotsProvider>{children}</SnapshotsProvider>
+                  </TrackListRoot>
                 </SettingsProvider>
               </HistoryProvider>
             </FilesProvider>

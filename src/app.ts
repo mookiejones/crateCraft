@@ -5,7 +5,7 @@
  * fetch when they are imported. This file attaches listeners, then calls
  * loadLibrary. Settings load when the dialogs wire. server.py uses port
  * 8765. The desktop app uses a free port, and this page calls the same
- * origin. Snapshot UI is src/restore.ts. The gig check is src/gig.ts.
+ * origin. Snapshot UI is src/restore.ts on SnapshotsContext. The gig check is src/gig.ts.
  * Tempo drift is src/drift.ts.
  * The damaged-file scan is src/scan.ts.
  * The suspect-quality report is src/bitrate.ts.
@@ -21,9 +21,7 @@
  * src/i18n.ts.
  */
 
-import { failureOf } from "./api";
 import { wireDialogs } from "./dialogs";
-import { el } from "./dom";
 import { wireGigCheck } from "./gig";
 import { wireDrift } from "./drift";
 import { wireHealth } from "./health";
@@ -35,17 +33,7 @@ import { wireHelp } from "./help";
 import { wirePortable } from "./portable";
 import { wireLayout } from "./layout";
 import { wireLocale } from "./locale-wiring";
-import {
-  bindLibraryReload,
-  backupDriveCrates,
-  confirmSnapshotRestore,
-  failSnapshots,
-  loadOperations,
-  loadSnapshots,
-  openSnapshotPlan,
-  setSnapshotDialogStatus,
-  takeSnapshot,
-} from "./restore";
+import { bindLibraryReload, mountSnapshots } from "./restore";
 import { registerPlayerControls, wireShortcuts } from "./shortcuts";
 import { state } from "./state";
 import { loadUpdate, wireUpdate } from "./update";
@@ -60,46 +48,6 @@ import { applyStaticTooltips, installTooltips } from "./tooltip";
 import { wireDualCrates } from "./dual-crate";
 import { mountTrackList, mountTrackListB, wireVirtualScroll } from "./virtual-scroll";
 
-/**
- * Attach the snapshot-list listeners.
- *
- * Refresh, take, undo, and the restore dialog call src/restore.ts.
- * Called once at startup. Does not restore anything by itself.
- *
- * @returns {void}
- */
-function wireSnapshots(): void {
-  el("snapshots-refresh").addEventListener("click", () => {
-    loadSnapshots().catch((error) => failSnapshots(error));
-  });
-
-  el("operations-refresh").addEventListener("click", () => {
-    loadOperations().catch(() => undefined);
-  });
-
-  el("snapshots-take").addEventListener("click", () => {
-    takeSnapshot().catch((error) => failSnapshots(error));
-  });
-
-  el("snapshots-drives").addEventListener("click", () => {
-    backupDriveCrates().catch((error) => failSnapshots(error));
-  });
-
-  el("snapshots-undo-button").addEventListener("click", () => {
-    const pending = state.snapshotUndo;
-    if (!pending || !pending.restore_id) return;
-    openSnapshotPlan(pending.restore_id).catch((error) => failSnapshots(error));
-  });
-
-  el("snapshot-cancel").addEventListener("click", () => {
-    el("snapshot-dialog").close();
-  });
-
-  el("snapshot-confirm").addEventListener("click", () => {
-    confirmSnapshotRestore().catch((error) => setSnapshotDialogStatus(failureOf(error).message));
-  });
-}
-
 wireLocale();
 installTooltips();
 applyStaticTooltips();
@@ -108,6 +56,7 @@ mountTrackListB();
 wireDualCrates();
 mountPlayer();
 mountSettings();
+mountSnapshots();
 registerPlayerControls(playerControls);
 wireLibrary();
 wireVirtualScroll();
@@ -117,7 +66,6 @@ wireDialogs();
 wirePresets();
 wireFolderSync();
 wireHelp();
-wireSnapshots();
 wireGigCheck(() => {
   setMode("crates");
 });
