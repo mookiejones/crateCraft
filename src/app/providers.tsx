@@ -1,10 +1,11 @@
 /**
  * React providers for the page.
  *
- * Player is one domain. List selection and detail fields are another.
- * Each domain has its own context file and one wrapper here. This module
- * reads the player engine and the track-list store; it does not own
- * playback or the library.
+ * Player is one domain. Waveform zoom and overview are another.
+ * List selection and detail fields are a third. Each domain has its
+ * own context file and one wrapper here. This module reads the player
+ * engine and the track-list store; it does not own playback or the
+ * library.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -13,13 +14,19 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import { WaveformProvider } from "../context/WaveformContext";
 import {
   TrackListProvider as TrackListContextProvider,
   type TrackListContextValue,
 } from "../context/TrackListContext";
 import {
+  SEEK_STEP_LARGE_SECONDS,
+  SEEK_STEP_SECONDS,
   canSkip,
   canTogglePlay,
+  formatPlayerTime,
+  getMediaDuration,
+  getMediaTime,
   getPlayerCues,
   getPlayerState,
   next,
@@ -55,6 +62,11 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+    mediaTime: getMediaTime,
+    mediaDuration: getMediaDuration,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
   };
 }
 
@@ -109,14 +121,17 @@ export function TrackListRoot({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player is first. List selection and detail fields are second.
+ * Player is first. Waveform zoom and overview wrap inside it. List
+ * selection and detail fields wrap inside that.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <TrackListRoot>{children}</TrackListRoot>
+      <WaveformProvider>
+        <TrackListRoot>{children}</TrackListRoot>
+      </WaveformProvider>
     </PlayerProvider>
   );
 }

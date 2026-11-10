@@ -2,10 +2,10 @@
  * Mount a React island into an existing DOM host.
  *
  * The page is still mostly hand-written DOM. Each island wraps
- * `AppProviders` so list Play, detail Play, and the player bar share
- * one player context, and so track rows and the detail pane share
- * TrackListContext. `flushSync` keeps the paint in the same turn as
- * the engine update.
+ * `AppProviders` so list Play, detail Play, the player bar, and the
+ * waveform share one player context, and so track rows and the detail
+ * pane share TrackListContext. `flushSync` keeps the paint in the same
+ * turn as the engine update.
  */
 
 import { type ReactNode } from "react";
