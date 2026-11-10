@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners2 = [], signal = this.signal = {
+        var listeners3 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners2.push(listener);
+            listeners3.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners2.forEach(function(listener) {
+          listeners3.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners2 = currentEntangledListeners;
+          var listeners3 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])();
+          for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners2 = [], thenableWithOverride = {
+        var listeners3 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners2.push(resolve);
+            listeners3.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])(result);
+            for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners2.length; error2++)
-              (0, listeners2[error2])(void 0);
+            for (error2 = 0; error2 < listeners3.length; error2++)
+              (0, listeners3[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners2 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners3 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners2.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners3.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners2.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners3.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners2;
+          if (3 === targetFiber.tag) return listeners3;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners2 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners3 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners2.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners3.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners2.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners3.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners2.length && dispatchQueue.push({ event, listeners: listeners2 });
+        0 !== listeners3.length && dispatchQueue.push({ event, listeners: listeners3 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners2 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners2, type, listener, optionsOrUseCapture)) {
+        var listeners3 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners3, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners2.push({
+          listeners3.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners2;
+        this._eventListeners = listeners3;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners2 = this._eventListeners;
-        if (null !== listeners2 && (listener = indexOfEventListener(
-          listeners2,
+        var listeners3 = this._eventListeners;
+        if (null !== listeners3 && (listener = indexOfEventListener(
+          listeners3,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners2[listener];
+          var _listeners$index = listeners3[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners2.splice(listener, 1);
+          listeners3.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -17952,6 +17952,12 @@
       return Promise.resolve();
     },
     lockDown(_error) {
+    },
+    applyStatus(_info) {
+    },
+    renderShell() {
+    },
+    setNotice(_text) {
     }
   };
 
@@ -21259,6 +21265,18 @@
     return actions2;
   }
 
+  // src/files-store.ts
+  var listeners = /* @__PURE__ */ new Set();
+  function subscribeFiles(listener) {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }
+  function emitFiles() {
+    for (const listener of listeners) listener();
+  }
+
   // src/portable.ts
   var FINDING_CAP = 100;
   var KIND_KEY = {
@@ -21274,6 +21292,23 @@
   var lastRoots = [];
   var opener = null;
   var hasConnected = false;
+  var statusText = "";
+  var mountIslands = () => {
+  };
+  function bindPortableMount(fn) {
+    mountIslands = fn;
+  }
+  function portableSnapshot() {
+    return { report: latest9, status: statusText };
+  }
+  function portableKindLabel(kind2) {
+    return kindLabel(kind2);
+  }
+  function closePortable() {
+    const dialog = document.getElementById("portable-dialog");
+    if (dialog instanceof HTMLDialogElement) dialog.close();
+    if (opener?.isConnected) opener.focus();
+  }
   function portableDriveRoot(path) {
     const trimmed = path.trim();
     if (!trimmed) return "";
@@ -21338,20 +21373,9 @@
       errors
     };
   }
-  function portableDriveButton(name, path) {
-    const button2 = buttonEl(portableCheck(name));
-    button2.className = "files-portable";
-    button2.dataset.portableName = name;
-    button2.textContent = t("portable.check");
-    button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    button2.addEventListener("click", (event) => {
-      event.stopPropagation();
-      void openPortableCheck(path, button2);
-    });
-    return button2;
-  }
   async function openPortableCheck(path, trigger) {
     wirePortable();
+    mountIslands();
     opener = trigger ?? null;
     const dialog = el("portable-dialog");
     if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
@@ -21429,6 +21453,8 @@
       surface.findings.replaceChildren(...items.map((item5) => item5.cloneNode(true)));
       surface.status.textContent = "";
     }
+    statusText = "";
+    emitFiles();
   }
   async function runPortableCheck(path) {
     wirePortable();
@@ -21523,12 +21549,6 @@
   function surfaces() {
     return [
       {
-        verdict: el("portable-verdict"),
-        summary: el("portable-summary"),
-        findings: el("portable-findings"),
-        status: el("portable-status")
-      },
-      {
         verdict: el("portable-view-verdict"),
         summary: el("portable-view-summary"),
         findings: el("portable-view-findings"),
@@ -21553,7 +21573,9 @@
     }
   }
   function paintStatus(message) {
+    statusText = message;
     for (const surface of surfaces()) surface.status.textContent = message;
+    emitFiles();
   }
   function beginBusy8() {
     const button2 = el("portable-check");
@@ -21582,76 +21604,524 @@
     return body;
   }
 
-  // src/beatgrid-view.ts
-  var GRID_WARNING_KEYS = {
-    beatgrid_too_short: "markers.gridTooShort",
-    beatgrid_version: "markers.gridVersion",
-    beatgrid_empty: "markers.gridEmpty",
-    beatgrid_too_many: "markers.gridTooMany",
-    beatgrid_truncated: "markers.gridTruncated"
+  // src/files-mount.tsx
+  var import_react8 = __toESM(require_react(), 1);
+
+  // src/app/mount.tsx
+  var import_react_dom2 = __toESM(require_react_dom(), 1);
+  var import_client = __toESM(require_client(), 1);
+
+  // src/app/providers.tsx
+  var import_react5 = __toESM(require_react(), 1);
+  var import_react_dom = __toESM(require_react_dom(), 1);
+
+  // src/context/FilesContext.tsx
+  var import_react = __toESM(require_react(), 1);
+  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+  var FilesContext = (0, import_react.createContext)(null);
+  function FilesProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FilesContext, { value, children });
+  }
+  function useFiles() {
+    const value = (0, import_react.useContext)(FilesContext);
+    if (value === null) {
+      throw new Error("useFiles must be used within FilesProvider");
+    }
+    return value;
+  }
+
+  // src/context/PlayerContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var PlayerContext = (0, import_react2.createContext)(null);
+  function PlayerProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PlayerContext, { value, children });
+  }
+  function usePlayer() {
+    const value = (0, import_react2.useContext)(PlayerContext);
+    if (value === null) {
+      throw new Error("usePlayer must be used within PlayerProvider");
+    }
+    return value;
+  }
+
+  // src/files.ts
+  var FILES_SEARCH_MS = 200;
+  var filesRequest = 0;
+  var filesSearchTimer = 0;
+  var mountHook = () => {
   };
-  function beatgridViewOnly(unavailable) {
-    return unavailable !== true;
+  function bindFilesMount(fn) {
+    mountHook = fn;
   }
-  function beatgridIsSuspect(code) {
-    return typeof code === "string" && code !== "";
+  var filesPreview = null;
+  var filesAction = "";
+  var filesTagScope = "paths";
+  var filesTrigger = null;
+  var dialogName = "";
+  var dialogReplacement = "";
+  var dialogStatus = "";
+  function renderFiles() {
+    mountHook();
+    emitFiles();
+    bridge.renderShell();
   }
-  function beatgridWarningKey(code) {
-    if (!beatgridIsSuspect(code) || code == null) return null;
-    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
-      return GRID_WARNING_KEYS[code];
+  function mountFiles() {
+    mountHook();
+  }
+  function failFiles(error2) {
+    state.filesLoading = false;
+    state.filesError = failureOf(error2).message || t("error.folder_unreadable");
+    renderFiles();
+  }
+  async function loadFolder(path, options = {}) {
+    window.clearTimeout(filesSearchTimer);
+    state.filesQuery = "";
+    state.filesSearching = false;
+    const searchField = document.getElementById("files-search");
+    if (searchField instanceof HTMLInputElement) searchField.value = "";
+    const elsewhere = options.elsewhere === true;
+    const refresh = options.refresh === true;
+    const atRoots = path === "" && !elsewhere;
+    const token3 = ++filesRequest;
+    state.filesLoading = true;
+    state.filesError = "";
+    if (!options.keepMessage) state.filesMessage = "";
+    state.filesSelected = /* @__PURE__ */ new Set();
+    state.filesActive = 0;
+    state.filesAtRoots = atRoots;
+    state.filesElsewhere = elsewhere;
+    if (atRoots) {
+      state.filesPath = "";
+      state.filesParent = null;
+      state.filesEntries = [];
+      state.filesBreadcrumb = [];
+      state.filesRoot = null;
     }
-    return "markers.gridUnknown";
-  }
-  function beatSeconds(value) {
-    if (value === "" || value == null) return "";
-    const number = Number(value);
-    if (!Number.isFinite(number)) return "";
-    return `${number.toFixed(3)}s`;
-  }
-  function appendBeatgrid(section, track) {
-    if (!beatgridViewOnly(track.markers_unavailable)) return;
-    const heading2 = document.createElement("h4");
-    heading2.textContent = t("markers.gridHeading");
-    section.append(heading2);
-    const viewOnly = document.createElement("p");
-    viewOnly.className = "detail-kicker";
-    viewOnly.textContent = t("markers.gridViewOnly");
-    section.append(viewOnly);
-    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
-      const warn = document.createElement("p");
-      warn.className = "detail-kicker warn";
-      warn.setAttribute("role", "status");
-      const key = beatgridWarningKey(track.beatgrid_warning_code);
-      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
-      warn.textContent = t("markers.gridSuspect", { reason });
-      section.append(warn);
-    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
-      const empty = document.createElement("p");
-      empty.className = "detail-kicker";
-      empty.textContent = t("markers.gridNone");
-      section.append(empty);
+    renderFiles();
+    if (refresh || atRoots) {
+      const rootsPayload = await fetchLibraryRoots(refresh);
+      if (token3 !== filesRequest) return;
+      state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
     }
-    for (const mark of track.beatgrid || []) {
-      section.append(paintBeatMarker(mark));
+    if (atRoots) {
+      state.filesPath = "";
+      state.filesParent = null;
+      state.filesEntries = [];
+      state.filesBreadcrumb = [];
+      state.filesRoot = null;
+      state.filesElsewhere = false;
+      state.filesAtRoots = true;
+      state.filesTruncated = false;
+      state.filesLoading = false;
+      const list2 = document.getElementById("files-list");
+      if (list2) list2.scrollTop = 0;
+      renderFiles();
+      return;
+    }
+    const params = new URLSearchParams();
+    if (path) params.set("path", path);
+    if (elsewhere) params.set("elsewhere", "1");
+    const query = params.size ? `?${params.toString()}` : "";
+    const response = await fetch(`/api/files${query}`);
+    const payload = await readJSONOr(response, {});
+    if (token3 !== filesRequest) return;
+    if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
+    state.filesPath = payload.path || "";
+    state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
+    state.filesEntries = Array.isArray(payload.entries) ? payload.entries : [];
+    state.filesRoot = isFileRoot(payload.root) ? payload.root : null;
+    state.filesBreadcrumb = Array.isArray(payload.breadcrumb) ? payload.breadcrumb.filter(isFileCrumb) : [];
+    state.filesElsewhere = Boolean(payload.elsewhere);
+    state.filesAtRoots = !state.filesPath && !state.filesElsewhere;
+    state.filesTruncated = Boolean(payload.truncated);
+    state.filesLoading = false;
+    const list = document.getElementById("files-list");
+    if (list) list.scrollTop = 0;
+    if (payload.serato) bridge.applyStatus(payload.serato);
+    renderFiles();
+  }
+  async function searchFiles(query) {
+    const token3 = ++filesRequest;
+    const scope = state.filesAtRoots ? "" : state.filesPath;
+    const elsewhere = state.filesElsewhere && !state.filesAtRoots;
+    state.filesLoading = true;
+    state.filesError = "";
+    state.filesSearching = true;
+    state.filesQuery = query;
+    renderFiles();
+    const params = new URLSearchParams();
+    params.set("q", query);
+    if (scope) params.set("path", scope);
+    if (elsewhere) params.set("elsewhere", "1");
+    const response = await fetch(`/api/files?${params.toString()}`);
+    const payload = await readJSONOr(response, {});
+    if (token3 !== filesRequest) return;
+    if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
+    const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
+    state.filesEntries = entries;
+    state.filesTruncated = Boolean(payload.truncated);
+    state.filesLoading = false;
+    state.filesSearching = true;
+    state.filesActive = 0;
+    state.filesSelected = /* @__PURE__ */ new Set();
+    const list = document.getElementById("files-list");
+    if (list) list.scrollTop = 0;
+    renderFiles();
+  }
+  function onFilesSearchInput(value) {
+    window.clearTimeout(filesSearchTimer);
+    state.filesQuery = value;
+    if (!value.trim()) {
+      if (state.filesAtRoots && !state.filesPath) {
+        state.filesSearching = false;
+        state.filesEntries = [];
+        state.filesError = "";
+        state.filesTruncated = false;
+        state.filesLoading = false;
+        renderFiles();
+        return;
+      }
+      loadFolder(state.filesPath, { elsewhere: state.filesElsewhere && Boolean(state.filesPath) }).catch((error2) => failFiles(error2));
+      return;
+    }
+    filesSearchTimer = window.setTimeout(() => {
+      searchFiles(value.trim()).catch((error2) => failFiles(error2));
+    }, FILES_SEARCH_MS);
+  }
+  function isListedFile(value) {
+    if (!value || typeof value !== "object") return false;
+    const row = value;
+    return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
+  }
+  function isFileRoot(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.name === "string" && typeof record.path === "string" && typeof record.kind === "string";
+  }
+  function isFileCrumb(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.name === "string" && typeof record.path === "string";
+  }
+  function filesRowHeight() {
+    if (state.filesSearching) return FILE_ROW;
+    return state.filesAtRoots ? ROOT_ROW : FILE_ROW;
+  }
+  function browserRows() {
+    if (state.filesSearching) return state.filesEntries;
+    if (state.filesAtRoots) {
+      return state.filesRoots.map((root) => {
+        const entry = {
+          name: root.label,
+          path: root.path,
+          detail: root.detail,
+          kind: root.kind === "serato_drive" ? "drive" : "folder",
+          missing: root.missing,
+          removable: root.removable,
+          serato: root.serato
+        };
+        return entry;
+      });
+    }
+    const rank = { dir: 0, file: 1, link: 2 };
+    return [...state.filesEntries].sort((left, right) => {
+      return (rank[left.kind] ?? 3) - (rank[right.kind] ?? 3) || left.name.localeCompare(right.name, void 0, { numeric: true, sensitivity: "base" });
+    });
+  }
+  function selectedFiles() {
+    return state.filesEntries.filter((entry) => entry.kind === "file" && state.filesSelected.has(entry.path));
+  }
+  function focusFilesIndex(index) {
+    const rows2 = browserRows();
+    if (!rows2.length) return;
+    state.filesActive = Math.max(0, Math.min(rows2.length - 1, index));
+    const list = document.getElementById("files-list");
+    if (list) {
+      const rowHeight = filesRowHeight();
+      const view = list.clientHeight || 600;
+      const top = state.filesActive * rowHeight;
+      const maxScroll = Math.max(0, rows2.length * rowHeight - view);
+      if (top < list.scrollTop) list.scrollTop = top;
+      if (top + rowHeight > list.scrollTop + view) list.scrollTop = Math.min(maxScroll, top + rowHeight - view);
+    }
+    renderFiles();
+    const control = list?.querySelector(`[data-files-index="${state.filesActive}"]`);
+    control?.focus();
+  }
+  function activateFilesIndex(index) {
+    const entry = browserRows()[index];
+    if (!entry) return;
+    if (entry.kind === "file") {
+      if (state.filesSelected.has(entry.path)) state.filesSelected.delete(entry.path);
+      else state.filesSelected.add(entry.path);
+      renderFiles();
+      focusFilesIndex(index);
+      return;
+    }
+    if (entry.kind === "link") return;
+    openBrowserRow(entry);
+  }
+  function openBrowserRow(entry) {
+    if (entry.missing) return;
+    const elsewhere = state.filesElsewhere && entry.kind === "dir";
+    loadFolder(entry.path, { elsewhere }).catch((error2) => failFiles(error2));
+  }
+  function onFilesKey(event) {
+    if (state.mode !== "files") return;
+    const list = document.getElementById("files-list");
+    if (!list || !(event.target instanceof Node) || !list.contains(event.target)) return;
+    const rows2 = browserRows();
+    if (!rows2.length) return;
+    if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      if (event.key === "ArrowDown") focusFilesIndex(state.filesActive + 1);
+      else if (event.key === "ArrowUp") focusFilesIndex(state.filesActive - 1);
+      else if (event.key === "Home") focusFilesIndex(0);
+      else focusFilesIndex(rows2.length - 1);
+      return;
+    }
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const control = event.target instanceof HTMLElement ? event.target.closest("button, input") : null;
+    if (control && list.contains(control)) return;
+    event.preventDefault();
+    activateFilesIndex(state.filesActive);
+  }
+  function moveFileList(delta) {
+    if (!browserRows().length) return;
+    focusFilesIndex(state.filesActive + delta);
+  }
+  function openFileList() {
+    if (!browserRows().length) return;
+    activateFilesIndex(state.filesActive);
+  }
+  function focusFileByPath(path) {
+    const index = browserRows().findIndex((entry) => entry.path === path);
+    if (index < 0) return;
+    focusFilesIndex(index);
+  }
+  function toggleFile(entry, index, checked) {
+    state.filesActive = index;
+    if (checked) state.filesSelected.add(entry.path);
+    else state.filesSelected.delete(entry.path);
+    renderFiles();
+  }
+  function markFilesActive(index) {
+    state.filesActive = index;
+    renderFiles();
+  }
+  function goFilesUp() {
+    if (state.filesParent) {
+      loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
     }
   }
-  function paintBeatMarker(mark) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const time = document.createElement("span");
-    time.textContent = beatSeconds(mark.position);
-    const name = document.createElement("span");
-    const bpmNumber = Number(mark.bpm);
-    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
-      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
-    } else if (mark.beats != null) {
-      name.textContent = t("markers.beats", { count: Number(mark.beats) });
+  function refreshFiles() {
+    const path = state.filesAtRoots ? "" : state.filesPath;
+    loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots, refresh: true }).catch((error2) => failFiles(error2));
+  }
+  function toggleFilesElsewhere() {
+    if (state.filesElsewhere) loadFolder("").catch((error2) => failFiles(error2));
+    else loadFolder("", { elsewhere: true }).catch((error2) => failFiles(error2));
+  }
+  function openFilesCrumb(path) {
+    loadFolder(path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
+  }
+  function startMoveFiles() {
+    const selected = selectedFiles();
+    if (!selected.length) {
+      state.filesError = t("files.chooseMove");
+      renderFiles();
+      return;
+    }
+    state.filesPick = "move";
+    state.filesPickPaths = selected.map((entry) => entry.path);
+    state.filesError = "";
+    state.filesMessage = t("files.chooseDestination");
+    renderFiles();
+  }
+  function startMoveFolder() {
+    state.filesPick = "move_folder";
+    state.filesPickSource = state.filesPath;
+    state.filesError = "";
+    state.filesMessage = t("files.chooseDestination");
+    renderFiles();
+  }
+  function cancelFilesPick() {
+    state.filesPick = null;
+    state.filesPickPaths = [];
+    state.filesPickSource = "";
+    state.filesMessage = "";
+    renderFiles();
+  }
+  function getFilesDialog() {
+    return {
+      action: filesAction,
+      name: dialogName,
+      replacement: dialogReplacement,
+      status: dialogStatus,
+      preview: filesPreview,
+      scope: filesTagScope
+    };
+  }
+  function openFilesDialog(action, trigger, scope = "paths") {
+    filesAction = action;
+    filesTagScope = scope;
+    filesPreview = null;
+    filesTrigger = trigger instanceof HTMLElement ? trigger : null;
+    dialogStatus = "";
+    const selected = selectedFiles();
+    dialogName = action === "rename" && selected.length === 1 ? selected[0].name : "";
+    dialogReplacement = "";
+    mountFiles();
+    emitFiles();
+    const dialog = el("files-dialog");
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    if (action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags") {
+      el("files-cancel").focus();
+      reviewFiles().catch((error2) => {
+        dialogStatus = failureOf(error2).message;
+        emitFiles();
+      });
+    } else if (action === "rename") {
+      document.getElementById("files-name")?.focus();
     } else {
-      name.textContent = "";
+      document.getElementById("files-replacement")?.focus();
     }
-    row.append(document.createElement("span"), document.createElement("span"), time, name);
-    return row;
+  }
+  function setDialogName(value) {
+    dialogName = value;
+    filesPreview = null;
+    emitFiles();
+  }
+  function setDialogReplacement(value) {
+    dialogReplacement = value;
+    filesPreview = null;
+    emitFiles();
+  }
+  function setDialogStatus(value) {
+    dialogStatus = value;
+    emitFiles();
+  }
+  async function reviewFiles() {
+    const body = filesBody(false);
+    dialogStatus = t("files.checking");
+    emitFiles();
+    const payload = await postJSON("/api/files", body);
+    filesPreview = payload;
+    dialogStatus = payload.ok ? "" : serverMessage(payload, t("files.notSaved"));
+    if (payload.serato) bridge.applyStatus(payload.serato);
+    emitFiles();
+  }
+  function closeFilesDialog() {
+    const trigger = filesTrigger;
+    filesTrigger = null;
+    filesTagScope = "paths";
+    const dialog = document.getElementById("files-dialog");
+    if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
+    if (trigger instanceof HTMLElement) trigger.focus();
+    emitFiles();
+  }
+  async function confirmFiles() {
+    if (!filesPreview?.ok || !state.writable) return;
+    dialogStatus = t("files.saving");
+    emitFiles();
+    const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
+    try {
+      const payload = await postJSON("/api/files", filesBody(true));
+      if (payload.serato) bridge.applyStatus(payload.serato);
+      closeFilesDialog();
+      state.filesPick = null;
+      state.filesPickPaths = [];
+      state.filesPickSource = "";
+      let message = payload.summary || t("files.updated");
+      if (payload.warning) message = `${message} ${payload.warning}`;
+      if (crateScope && state.mode !== "files") {
+        bridge.setNotice(message);
+        await bridge.reloadLibrary();
+        return;
+      }
+      state.filesMessage = message;
+      await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
+      await bridge.reloadLibrary();
+      renderFiles();
+    } catch (error2) {
+      if (failureOf(error2).status === 409) bridge.lockDown(error2);
+      dialogStatus = failureOf(error2).message;
+      emitFiles();
+    }
+  }
+  function filesBody(confirm2) {
+    const body = { action: filesAction };
+    if (confirm2) body.confirm = true;
+    if (filesAction === "rename") {
+      const selected = selectedFiles();
+      body.path = selected[0]?.path || state.filesPickPaths[0];
+      body.name = dialogName;
+    } else if (filesAction === "move") {
+      body.paths = state.filesPickPaths.length ? [...state.filesPickPaths] : selectedFiles().map((entry) => entry.path);
+      body.destination = state.filesPath;
+    } else if (filesAction === "move_folder") {
+      body.path = state.filesPickSource || state.filesPath;
+      body.destination = state.filesPath;
+    } else if (filesAction === "replace") {
+      const selected = selectedFiles();
+      body.path = selected[0]?.path || "";
+      body.replacement = dialogReplacement.trim();
+    } else if (filesAction === "delete") {
+      body.paths = selectedFiles().map((entry) => entry.path);
+    } else if (filesAction === "rename_from_tags") {
+      if (filesTagScope === "crate") {
+        const crate = state.activeCrate;
+        if (typeof crate === "number") {
+          body.crate = crate;
+          body.space = state.space;
+        }
+      } else {
+        body.paths = selectedFiles().map((entry) => entry.path);
+      }
+    }
+    return body;
+  }
+  function startRename(trigger) {
+    if (selectedFiles().length !== 1) {
+      state.filesError = t("files.chooseOneRename");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("rename", trigger);
+  }
+  function startRenameFromTags(trigger, scope = "paths") {
+    if (scope === "paths" && !selectedFiles().length) {
+      state.filesError = t("files.chooseRenameFromTags");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("rename_from_tags", trigger, scope);
+  }
+  function startReplace(trigger) {
+    if (selectedFiles().length !== 1) {
+      state.filesError = t("files.chooseOneReplace");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("replace", trigger);
+  }
+  function startDelete(trigger) {
+    if (!selectedFiles().length) {
+      state.filesError = t("files.chooseDelete");
+      renderFiles();
+      return;
+    }
+    openFilesDialog("delete", trigger);
+  }
+  function confirmMoveHere(trigger) {
+    openFilesDialog(state.filesPick === "move_folder" ? "move_folder" : "move", trigger);
   }
 
   // src/cue-view.ts
@@ -21811,772 +22281,11 @@
     return side;
   }
 
-  // src/folder-sync-view.ts
-  function syncFolderSyncButton() {
-    const id = state.activeCrate;
-    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
-    const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
-    el("crate-folder-sync").disabled = blocked;
-    el("crate-rename-from-tags").disabled = blocked;
-  }
-  function readFolderSyncForm() {
-    const folder = el("folder-sync-path").value.trim();
-    if (!folder) return null;
-    return {
-      folder,
-      subcrates: el("folder-sync-subcrates").checked,
-      full: el("folder-sync-full").checked
-    };
-  }
-  function folderSyncPreviewText(reply) {
-    const added = Number(reply.added) || 0;
-    const removed = Number(reply.removed) || 0;
-    const created = Number(reply.created) || 0;
-    const skipped = Number(reply.skipped_count) || 0;
-    if (added === 0 && removed === 0 && created === 0) {
-      return t("folderSync.summaryNone", { skipped });
-    }
-    return t("folderSync.summary", { added, removed, skipped });
-  }
-  function folderSyncDoneText(reply) {
-    const name = reply.crate?.name?.trim() || "";
-    const added = Number(reply.added) || 0;
-    const removed = Number(reply.removed) || 0;
-    if (!reply.written) return t("folderSync.unchanged", { name });
-    return t("folderSync.done", { name, added, removed });
-  }
-  function folderSyncHasWork(reply) {
-    return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
-  }
-
-  // src/preset-view.ts
-  function presetName(preset) {
-    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
-    if (preset.kind === "bpm") {
-      return t("presets.name.bpm", {
-        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
-        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
-      });
-    }
-    return t("presets.name.unplayed", { count: preset.months });
-  }
-  function numberFrom(input) {
-    const text2 = input.value.trim();
-    if (!text2) return null;
-    const value = Number(text2);
-    return Number.isFinite(value) ? value : null;
-  }
-  function scopeCrate() {
-    if (state.activeCrate === "all") return null;
-    const crate = state.crates.find((item5) => item5.id === state.activeCrate);
-    return crate && !crate.smart ? crate : null;
-  }
-  function readPresetForm() {
-    const kind2 = el("preset-kind").value;
-    const scope = scopeCrate();
-    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
-    if (kind2 === "harmonic") {
-      const key = el("preset-key").value.trim();
-      return key ? { kind: kind2, key, ...crate } : null;
-    }
-    if (kind2 === "bpm") {
-      const bpm = numberFrom(el("preset-bpm"));
-      const range = numberFrom(el("preset-range")) ?? 3;
-      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
-      return { kind: kind2, bpm, range, ...crate };
-    }
-    if (kind2 === "unplayed") {
-      const months = numberFrom(el("preset-months")) ?? 12;
-      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
-      return { kind: kind2, months, ...crate };
-    }
-    return null;
-  }
-  function syncPresetFields() {
-    const kind2 = el("preset-kind").value;
-    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
-      field.hidden = field.dataset.presetKind !== kind2;
-    }
-  }
-  function isPresetCrate(id) {
-    return id !== "all" && Object.hasOwn(state.presets, String(id));
-  }
-  function presetFoot(id) {
-    if (!isPresetCrate(id)) return "";
-    const updated = Number(state.presets[String(id)]?.updated);
-    if (!Number.isFinite(updated) || updated <= 0) return "";
-    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-    return ` · ${t("presets.updated", { date })}`;
-  }
-  function syncPresetButtons() {
-    el("crate-preset").disabled = !state.writable;
-    const preset = isPresetCrate(state.activeCrate);
-    el("crate-refresh").hidden = !preset;
-    el("crate-refresh").disabled = !state.writable || !preset;
-  }
-
-  // src/restore.ts
-  var reloadLibrary = async () => {
-  };
-  function bindLibraryReload(reload) {
-    reloadLibrary = reload;
-  }
-  async function loadSnapshots() {
-    state.snapshotLoading = true;
-    state.snapshotError = "";
-    const operationsPromise = loadOperations();
-    renderSnapshots();
-    try {
-      const response = await fetch("/api/snapshots");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
-      state.snapshots = payload.snapshots || [];
-      state.snapshotUndo = payload.pending_undo || null;
-      state.writeBlock = payload.write_block || "";
-      state.writeBlockCode = payload.write_block_code || "";
-      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
-      state.seratoRunning = Boolean(payload.serato_running);
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotLoading = false;
-      renderSnapshots();
-    } finally {
-      await operationsPromise;
-    }
-  }
-  async function loadOperations() {
-    state.operationsLoading = true;
-    state.operationsError = "";
-    renderOperations();
-    try {
-      const response = await fetch("/api/operations");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
-      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
-      state.operationsLoading = false;
-    } catch (error2) {
-      state.operationsLoading = false;
-      state.operationsError = failureOf(error2).message || t("operations.unreadable");
-    }
-    renderOperations();
-  }
-  function failSnapshots(error2) {
-    state.snapshotLoading = false;
-    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
-    renderSnapshots();
-  }
-  function renderSnapshots() {
-    renderOperations();
-    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
-    const status = el("snapshots-status");
-    const block = el("snapshots-block");
-    const undo = el("snapshots-undo");
-    const list = el("snapshots-list");
-    list.setAttribute("aria-busy", String(state.snapshotLoading));
-    paintDriveCopies();
-    if (state.writeBlock) {
-      block.hidden = false;
-      block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
-    } else {
-      block.hidden = true;
-      block.textContent = "";
-    }
-    if (state.snapshotUndo && state.snapshotUndo.restore_id) {
-      undo.hidden = false;
-      el("snapshots-undo-text").textContent = state.snapshotUndo.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange");
-    } else {
-      undo.hidden = true;
-    }
-    list.replaceChildren();
-    if (state.snapshotLoading) {
-      status.textContent = t("snapshots.reading");
-      return;
-    }
-    if (state.snapshotError) {
-      status.textContent = state.snapshotError;
-      const retry = buttonEl(tips.snapshotsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => loadSnapshots().catch((error2) => failSnapshots(error2)));
-      list.append(retry);
-      return;
-    }
-    status.textContent = state.snapshotMessage ? t(state.snapshotMessage) : "";
-    if (!state.snapshots.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("snapshots.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item5 of state.snapshots) {
-      const card = document.createElement("article");
-      card.className = "snapshot-card";
-      card.setAttribute("role", "listitem");
-      const title2 = document.createElement("p");
-      title2.textContent = `${item5.created || t("snapshots.unknownTime")} · ${item5.trigger || t("snapshots.trigger")}`;
-      const detail = document.createElement("p");
-      const version = item5.serato_version && item5.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item5.serato_version, build: String(item5.serato_build ?? "") }) : t("snapshots.seratoUnknown");
-      const drives = (item5.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item5.unavailable_drives || []) })}` : "";
-      detail.textContent = `${version}. ${item5.reason || ""}${drives}`;
-      const restore = buttonEl(tips.reviewRestore);
-      restore.textContent = t("snapshots.reviewRestore");
-      restore.addEventListener("click", () => openSnapshotPlan(item5.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
-      card.append(title2, detail, restore);
-      list.append(card);
-    }
-  }
-  var OPERATION_ACTIONS = {
-    crate_create: "operations.action.crateCreate",
-    crate_rename: "operations.action.crateRename",
-    crate_delete: "operations.action.crateDelete",
-    crate_color: "operations.action.crateColor",
-    crate_expanded: "operations.action.crateExpanded",
-    crate_rules: "operations.action.crateRules",
-    crate_add: "operations.action.crateAdd",
-    crate_remove: "operations.action.crateRemove",
-    crate_prepare: "operations.action.cratePrepare",
-    crate_remove_library: "operations.action.crateRemoveLibrary",
-    save_track: "operations.action.saveTrack",
-    import_m3u: "operations.action.importM3u",
-    merge_duplicates: "operations.action.mergeDuplicates",
-    rename: "operations.action.rename",
-    rename_from_tags: "operations.action.renameFromTags",
-    move: "operations.action.move",
-    move_folder: "operations.action.moveFolder",
-    replace: "operations.action.replace",
-    replace_in_crates: "operations.action.replaceInCrates",
-    relink: "operations.action.relink",
-    delete: "operations.action.delete",
-    restore: "operations.action.restore",
-    restore_recover: "operations.action.restoreRecover"
-  };
-  var OPERATION_OUTCOMES = {
-    verified: "operations.outcome.verified",
-    rolled_back: "operations.outcome.rolledBack",
-    refused: "operations.outcome.refused",
-    rollback_failed: "operations.outcome.rollbackFailed"
-  };
-  function renderOperations() {
-    const alert = el("operations-alert");
-    const status = el("operations-status");
-    const list = el("operations-list");
-    list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest11 = state.operations[state.operations.length - 1];
-    const failed = latest11?.result === "rollback_failed";
-    alert.hidden = !failed;
-    alert.textContent = failed ? t("operations.rollbackFailed") : "";
-    list.replaceChildren();
-    if (state.operationsLoading && state.operations.length === 0) {
-      status.textContent = t("operations.reading");
-      return;
-    }
-    if (state.operationsError) {
-      status.textContent = state.operationsError;
-      const retry = buttonEl(tips.operationsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => {
-        loadOperations().catch(() => void 0);
-      });
-      list.append(retry);
-      return;
-    }
-    status.textContent = "";
-    if (!state.operations.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("operations.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item5 of [...state.operations].reverse()) {
-      list.append(operationCard(item5));
-    }
-  }
-  function operationCard(item5) {
-    const card = document.createElement("article");
-    card.className = "operation-card snapshot-card";
-    card.setAttribute("role", "listitem");
-    const actionName = item5.action || item5.operation || "";
-    const actionKey2 = OPERATION_ACTIONS[actionName];
-    const outcomeKey = OPERATION_OUTCOMES[item5.result || ""] ?? "operations.outcome.refused";
-    const title2 = document.createElement("p");
-    title2.textContent = t("operations.entry", {
-      time: operationTime(item5.time || ""),
-      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
-      target: item5.target || t("operations.noTarget"),
-      outcome: t(outcomeKey)
-    });
-    card.append(title2);
-    if (item5.snapshot_before && item5.snapshot_after) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.snapshots", {
-        before: item5.snapshot_before,
-        after: item5.snapshot_after
-      });
-      card.append(detail);
-    } else if (item5.snapshot_before) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.beforeOnly", { before: item5.snapshot_before });
-      card.append(detail);
-    }
-    return card;
-  }
-  function operationTime(value) {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
-    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
-  }
-  async function openSnapshotPlan(snapshotId) {
-    state.snapshotPlanId = snapshotId;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    block.textContent = t("snapshots.readingPlan");
-    confirm2.disabled = true;
-    setSnapshotDialogStatus("");
-    el("snapshot-dialog").showModal();
-    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
-    paintSnapshotPlan(plan);
-  }
-  var lastPlan = null;
-  function repaintSnapshotPlan() {
-    if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
-  }
-  function isDriveCopy(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
-  }
-  function driveBackupFrom(value) {
-    if (!value || typeof value !== "object") return null;
-    const record = value;
-    if (record.verified !== true) return null;
-    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
-    return {
-      folder: typeof record.folder === "string" ? record.folder : "",
-      verified: true,
-      drives
-    };
-  }
-  function driveName(drive, status) {
-    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
-    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
-    if (status === "permission") return t("snapshots.drivePermission", { name });
-    return name;
-  }
-  function driveCopyText() {
-    const report = state.driveBackup;
-    const drives = report?.drives ?? [];
-    if (!report?.verified || !drives.length) {
-      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
-    }
-    const parts = [];
-    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
-    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
-    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
-    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
-    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
-    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
-    return parts.join(" ") || t("snapshots.drivesIntro");
-  }
-  function paintDriveCopies() {
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = driveCopyText();
-  }
-  async function backupDriveCrates() {
-    const button2 = el("snapshots-drives");
-    button2.disabled = true;
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = t("snapshots.backupDrivesBusy");
-    try {
-      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
-      renderSnapshots();
-    } catch (error2) {
-      state.snapshotMessage = "";
-      renderSnapshots();
-      const shown = el("snapshots-drives-note");
-      shown.hidden = false;
-      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
-    } finally {
-      button2.disabled = false;
-    }
-  }
-  function paintSnapshotPlan(plan) {
-    lastPlan = plan;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    const crates = plan.crates || {};
-    const tracks = plan.tracks || {};
-    appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
-    appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
-    appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
-    appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
-    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
-    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
-    if (plan.registration_warning) {
-      const warning = document.createElement("p");
-      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
-      planBox.append(warning);
-    }
-    appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
-    appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
-    appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
-    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
-    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
-    const deleted = plan.deleted || {};
-    appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
-    appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
-    appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
-    appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
-    if (plan.restore_blocked) {
-      block.textContent = codedText(
-        plan.restore_blocked,
-        plan.restore_blocked_code,
-        messageParams(plan.restore_blocked_params)
-      );
-      confirm2.disabled = true;
-    } else {
-      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
-      confirm2.disabled = false;
-    }
-  }
-  function appendPlanLine(parent, label, rows2) {
-    const line = document.createElement("p");
-    const items = rows2 || [];
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-    } else {
-      const names = items.slice(0, 8).map((item5) => item5.name || item5.path || item5.drive_label || t("plan.item"));
-      const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
-      const listed = `${names.join(", ")}${extra}`;
-      line.textContent = t("plan.listed", { label, count: items.length, names: listed });
-    }
-    parent.append(line);
-  }
-  function appendCueDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item5 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item5.path || "");
-      parent.append(row);
-      for (const diff of cueDiffRows(item5.before, item5.after)) {
-        parent.append(paintCueDiffRow(diff));
-      }
-    }
-  }
-  function appendFrameDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item5 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item5.path || "");
-      parent.append(row);
-    }
-  }
-  function fileName(path) {
-    const parts = String(path).split(/[/\\]/);
-    return parts[parts.length - 1] || path;
-  }
-  function setSnapshotDialogStatus(message) {
-    el("snapshot-status").textContent = message;
-  }
-  async function takeSnapshot() {
-    const button2 = el("snapshots-take");
-    button2.disabled = true;
-    button2.textContent = t("snapshots.saving");
-    try {
-      await postJSON("/api/snapshots", { action: "create" });
-      state.snapshotMessage = "snapshots.saved";
-      await loadSnapshots();
-    } finally {
-      button2.disabled = false;
-      button2.textContent = t("snapshots.take");
-    }
-  }
-  async function confirmSnapshotRestore() {
-    const confirm2 = el("snapshot-confirm");
-    confirm2.disabled = true;
-    confirm2.textContent = t("snapshots.restoring");
-    setSnapshotDialogStatus("");
-    try {
-      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
-      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
-      const result = await postJSON("/api/snapshots", body);
-      const skipped = result.crates_skipped || [];
-      el("snapshot-dialog").close();
-      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
-      await loadSnapshots();
-      await reloadLibrary();
-      if (skipped.length) {
-        const names = skipped.map((item5) => item5.name || item5.path || t("plan.item")).join(", ");
-        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
-      }
-    } catch (error2) {
-      setSnapshotDialogStatus(failureOf(error2).message);
-      confirm2.disabled = false;
-      await loadOperations();
-    } finally {
-      confirm2.textContent = t("snapshots.restore");
-    }
-  }
-
-  // src/search-filters.ts
-  var TEXT_SEARCH_FIELDS = [
-    "comments",
-    "grouping",
-    "composer",
-    "title",
-    "artist",
-    "album",
-    "genre",
-    "file"
-  ];
-  var KEY_VALUES = {
-    "g#m": 0,
-    abm: 0,
-    "1a": 0,
-    ebm: 1,
-    "d#m": 1,
-    "2a": 1,
-    bbm: 2,
-    "a#m": 2,
-    "3a": 2,
-    fm: 3,
-    "4a": 3,
-    cm: 4,
-    "5a": 4,
-    gm: 5,
-    "6a": 5,
-    dm: 6,
-    "7a": 6,
-    am: 7,
-    "8a": 7,
-    em: 8,
-    "9a": 8,
-    bm: 9,
-    "10a": 9,
-    "f#m": 10,
-    gbm: 10,
-    "11a": 10,
-    "c#m": 11,
-    dbm: 11,
-    "12a": 11,
-    b: 12,
-    "1b": 12,
-    "f#": 13,
-    gb: 13,
-    "2b": 13,
-    "c#": 14,
-    db: 14,
-    "3b": 14,
-    "g#": 15,
-    ab: 15,
-    "4b": 15,
-    "d#": 16,
-    eb: 16,
-    "5b": 16,
-    "a#": 17,
-    bb: 17,
-    "6b": 17,
-    f: 18,
-    "7b": 18,
-    c: 19,
-    "8b": 19,
-    g: 20,
-    "9b": 20,
-    d: 21,
-    "10b": 21,
-    a: 22,
-    "11b": 22,
-    e: 23,
-    "12b": 23
-  };
-  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
-  var EXACT = new RegExp(`^${NUMBER}$`);
-  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
-  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
-  var ABOVE = new RegExp(`^>${NUMBER}$`);
-  var BELOW = new RegExp(`^<${NUMBER}$`);
-  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
-  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
-  function isNone(value) {
-    return NONE.has(value);
-  }
-  function isYes(value) {
-    return YES.has(value);
-  }
-  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
-  function isTextSearchField(value) {
-    return TEXT_FIELD_SET.has(value);
-  }
-  function textField(track, field) {
-    if (field === "title") return String(track.name ?? "");
-    return String(track[field] ?? "");
-  }
-  function trackHaystack(track, field) {
-    if (field) return textField(track, field).toLocaleLowerCase();
-    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-  }
-  function hasBpm(track) {
-    const bpm = Number(track.bpm);
-    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
-  }
-  function hasKey2(track) {
-    return Boolean(String(track.key ?? "").trim());
-  }
-  function cueFlag(track) {
-    if (track.has_cues === true) return true;
-    if (track.has_cues === false) return false;
-    if (track.markers_found === true) return true;
-    if (track.markers_found === false) return false;
-    if (Array.isArray(track.cues)) {
-      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
-      return track.cues.length > 0 || loops > 0;
-    }
-    return null;
-  }
-  function keyNumber(value) {
-    if (!value) return -1;
-    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
-  }
-  function mixingKeys(key) {
-    const base = key < 12 ? 0 : 12;
-    const index = key - base;
-    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
-  }
-  function bpmFilter(value) {
-    let match = RANGE.exec(value);
-    if (match) {
-      const low = Number(match[1]);
-      const high = Number(match[2]);
-      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
-    }
-    match = AROUND.exec(value);
-    if (match) {
-      const center = Number(match[1]);
-      const spread = Number(match[2]);
-      return { kind: "bpm", min: center - spread, max: center + spread };
-    }
-    match = ABOVE.exec(value);
-    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
-    match = BELOW.exec(value);
-    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
-    match = EXACT.exec(value);
-    if (match) {
-      const whole = Number(match[1]);
-      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
-    }
-    return null;
-  }
-  function parseQuery(text2) {
-    const terms = [];
-    const filters = [];
-    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
-      const colon = word.indexOf(":");
-      const name = colon > 0 ? word.slice(0, colon) : "";
-      const value = colon > 0 ? word.slice(colon + 1) : "";
-      let filter = null;
-      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
-      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
-      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
-      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
-      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
-      else if (name === "bpm") filter = bpmFilter(value);
-      else if (name === "key" || name === "mix") {
-        const key = keyNumber(value);
-        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
-      } else if (isTextSearchField(name) && value) {
-        filter = { kind: "field", field: name, value };
-      }
-      if (filter) filters.push(filter);
-      else terms.push(word);
-    }
-    return { terms, filters };
-  }
-  function matchesFilters(track, filters) {
-    for (const filter of filters) {
-      if (filter.kind === "bpm") {
-        if (!hasBpm(track)) return false;
-        const bpm = Number(track.bpm);
-        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
-      } else if (filter.kind === "missing") {
-        if (!track.missing) return false;
-      } else if (filter.kind === "nokey") {
-        if (hasKey2(track)) return false;
-      } else if (filter.kind === "nobpm") {
-        if (hasBpm(track)) return false;
-      } else if (filter.kind === "nokeybpm") {
-        if (hasKey2(track) && hasBpm(track)) return false;
-      } else if (filter.kind === "nocues") {
-        if (cueFlag(track) !== false) return false;
-      } else if (filter.kind === "field") {
-        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
-      } else if (!filter.keys.has(keyNumber(track.key))) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function matchesQuery(track, query, field) {
-    if (!matchesFilters(track, query.filters)) return false;
-    if (!query.terms.length) return true;
-    const hay = trackHaystack(track, field);
-    return query.terms.every((term) => hay.includes(term));
-  }
-
-  // src/views.ts
-  var import_react6 = __toESM(require_react(), 1);
-
-  // src/app/mount.tsx
-  var import_react_dom2 = __toESM(require_react_dom(), 1);
-  var import_client = __toESM(require_client(), 1);
-
-  // src/app/providers.tsx
-  var import_react4 = __toESM(require_react(), 1);
-  var import_react_dom = __toESM(require_react_dom(), 1);
-
-  // src/context/PlayerContext.tsx
-  var import_react = __toESM(require_react(), 1);
-  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-  var PlayerContext = (0, import_react.createContext)(null);
-  function PlayerProvider({
-    value,
-    children
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlayerContext, { value, children });
-  }
-  function usePlayer() {
-    const value = (0, import_react.useContext)(PlayerContext);
-    if (value === null) {
-      throw new Error("usePlayer must be used within PlayerProvider");
-    }
-    return value;
-  }
-
   // src/player.ts
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react2 = __toESM(require_react(), 1);
+  var import_react3 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -22643,7 +22352,7 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -22671,7 +22380,7 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       "button",
       {
         type: "button",
@@ -22682,13 +22391,13 @@
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -22700,11 +22409,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
         "button",
         {
           type: "button",
@@ -22724,7 +22433,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react2.useState)(null);
+    const [hold, setHold] = (0, import_react3.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -22751,14 +22460,14 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -22770,8 +22479,8 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -22784,13 +22493,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "input",
             {
               ref: tooltipRef2(tips.seek),
@@ -22809,16 +22518,16 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "input",
           {
             ref: tooltipRef2(tips.volume),
@@ -23838,7 +23547,7 @@
   // src/player.ts
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
-  var listeners = /* @__PURE__ */ new Set();
+  var listeners2 = /* @__PURE__ */ new Set();
   var wired = /* @__PURE__ */ new WeakSet();
   var media = null;
   var trackId2 = null;
@@ -23982,9 +23691,9 @@
     emit();
   }
   function subscribe(listener) {
-    listeners.add(listener);
+    listeners2.add(listener);
     return () => {
-      listeners.delete(listener);
+      listeners2.delete(listener);
     };
   }
   function mountPlayer(host) {
@@ -24024,7 +23733,7 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react3.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react4.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -24179,7 +23888,7 @@
   }
   function emit() {
     const snapshot = getPlayerState();
-    for (const listener of [...listeners]) listener(snapshot);
+    for (const listener of [...listeners2]) listener(snapshot);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -24191,7 +23900,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -24210,34 +23919,1511 @@
       setVolume
     };
   }
+  function readFilesValue() {
+    const dialog = getFilesDialog();
+    const portable = portableSnapshot();
+    const selectedEntries = selectedFiles();
+    return {
+      writable: state.writable,
+      path: state.filesPath,
+      parent: state.filesParent,
+      entries: state.filesEntries,
+      selected: state.filesSelected,
+      pick: state.filesPick,
+      pickPaths: state.filesPickPaths,
+      pickSource: state.filesPickSource,
+      loading: state.filesLoading,
+      error: state.filesError,
+      message: state.filesMessage,
+      truncated: state.filesTruncated,
+      atRoots: state.filesAtRoots,
+      roots: state.filesRoots,
+      root: state.filesRoot,
+      breadcrumb: state.filesBreadcrumb,
+      elsewhere: state.filesElsewhere,
+      active: state.filesActive,
+      query: state.filesQuery,
+      searching: state.filesSearching,
+      rows: browserRows(),
+      selectedEntries,
+      locked: !state.writable || state.filesLoading || state.filesAtRoots,
+      rowHeight: filesRowHeight(),
+      dialogAction: dialog.action,
+      dialogName: dialog.name,
+      dialogReplacement: dialog.replacement,
+      dialogStatus: dialog.status,
+      dialogPreview: dialog.preview,
+      dialogScope: dialog.scope,
+      portableReport: portable.report,
+      portableStatus: portable.status,
+      goUp: goFilesUp,
+      refresh: refreshFiles,
+      toggleElsewhere: toggleFilesElsewhere,
+      openCrumb: openFilesCrumb,
+      openRow: (entry, index) => {
+        state.filesActive = index;
+        openBrowserRow(entry);
+      },
+      toggleFile,
+      markActive: markFilesActive,
+      onListKey: onFilesKey,
+      onSearchInput: onFilesSearchInput,
+      startRename,
+      startRenameFromTags: (trigger) => startRenameFromTags(trigger, "paths"),
+      startMove: startMoveFiles,
+      startMoveFolder,
+      startReplace,
+      startDelete,
+      confirmMoveHere,
+      cancelPick: cancelFilesPick,
+      setDialogName,
+      setDialogReplacement,
+      review: () => reviewFiles().catch((error2) => {
+        setDialogStatus(failureOf(error2).message);
+      }),
+      confirm: () => confirmFiles().catch((error2) => {
+        setDialogStatus(failureOf(error2).message);
+      }),
+      closeDialog: closeFilesDialog
+    };
+  }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react4.useState)(readPlayerValue);
-    (0, import_react4.useEffect)(() => {
+    const [value, setValue] = (0, import_react5.useState)(readPlayerValue);
+    (0, import_react5.useEffect)(() => {
       return subscribe(() => {
         (0, import_react_dom.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react4.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider, { value: current2, children });
+  }
+  function FilesProvider2({ children }) {
+    const hostRef = (0, import_react5.useRef)(null);
+    const [value, setValue] = (0, import_react5.useState)(readFilesValue);
+    (0, import_react5.useEffect)(() => {
+      const refresh = () => {
+        if (!hostRef.current?.isConnected) return;
+        (0, import_react_dom.flushSync)(() => {
+          setValue(readFilesValue());
+        });
+      };
+      const unsub = subscribeFiles(refresh);
+      document.addEventListener(LOCALE_EVENT, refresh);
+      return () => {
+        unsub();
+        document.removeEventListener(LOCALE_EVENT, refresh);
+      };
+    }, []);
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(FilesProvider, { value: current2, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { ref: hostRef, hidden: true }),
+      children
+    ] });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider2, { children });
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(FilesProvider2, { children }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
     (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AppProviders, { children: node }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime6.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
 
+  // src/components/FilesDialog.tsx
+  var import_react6 = __toESM(require_react(), 1);
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function FilesDialog() {
+    const files = useFiles();
+    (0, import_react6.useEffect)(() => {
+      const dialog = document.getElementById("files-dialog");
+      if (!(dialog instanceof HTMLDialogElement)) return;
+      const onCancel = (event) => {
+        event.preventDefault();
+        files.closeDialog();
+      };
+      dialog.addEventListener("cancel", onCancel);
+      return () => dialog.removeEventListener("cancel", onCancel);
+    }, [files.closeDialog]);
+    const action = files.dialogAction;
+    const preview = files.dialogPreview;
+    const ready = Boolean(preview?.ok && files.writable && preview.needs_confirm);
+    const reviewHidden = action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags";
+    const status = !files.writable ? document.getElementById("status")?.textContent ?? files.dialogStatus : files.dialogStatus;
+    const confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
+    const confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("files.newName") }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "input",
+          {
+            id: "files-name",
+            ref: tooltipRef3(tips.filesName),
+            type: "text",
+            autoComplete: "off",
+            value: files.dialogName,
+            onInput: (event) => files.setDialogName(event.currentTarget.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: t("files.newFile") }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "input",
+          {
+            id: "files-replacement",
+            ref: tooltipRef3(tips.filesReplacement),
+            type: "text",
+            autoComplete: "off",
+            spellCheck: false,
+            value: files.dialogReplacement,
+            onInput: (event) => files.setDialogReplacement(event.currentTarget.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("ul", { id: "files-changes", children: [
+        (preview?.changes || []).map((change, index) => {
+          const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
+          const effect = change.effect === "trash" ? t("files.trash") : change.to;
+          return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("li", { children: `${change.from} → ${effect}${crates}` }, `change-${index}`);
+        }),
+        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("li", { children: skip2 }, `skip-${index}`)),
+        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "button",
+          {
+            id: "files-cancel",
+            type: "button",
+            ref: tooltipRef3(tips.filesCancel),
+            onClick: () => files.closeDialog(),
+            children: t("common.cancel")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "button",
+          {
+            id: "files-review",
+            type: "button",
+            ref: tooltipRef3(tips.filesReview),
+            hidden: reviewHidden,
+            onClick: () => {
+              void files.review();
+            },
+            children: t("files.review")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "button",
+          {
+            id: "files-confirm",
+            type: "button",
+            ref: tooltipRef3(confirmTip),
+            className: action === "delete" ? "danger" : void 0,
+            disabled: !ready,
+            onClick: () => {
+              void files.confirm();
+            },
+            children: confirmLabel
+          }
+        )
+      ] })
+    ] });
+  }
+
+  // src/components/FilesPanel.tsx
+  var import_react7 = __toESM(require_react(), 1);
+  var import_react_dom3 = __toESM(require_react_dom(), 1);
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef4(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function FileIcon({ kind: kind2 }) {
+    const d = kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z";
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      "svg",
+      {
+        viewBox: "0 0 24 24",
+        width: "20",
+        height: "20",
+        "aria-hidden": "true",
+        className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
+        children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d })
+      }
+    );
+  }
+  function FilesToolbar() {
+    const files = useFiles();
+    const crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "browser-bar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-up",
+          type: "button",
+          ref: tooltipRef4(tips.filesUp),
+          disabled: !files.parent || files.loading,
+          onClick: () => files.goUp(),
+          children: t("common.up")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
+        const last = index === crumbs.length - 1;
+        return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("li", { children: [
+          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+            "button",
+            {
+              type: "button",
+              ref: tooltipRef4(openCrumb(crumb.name)),
+              className: "files-crumb",
+              onClick: () => files.openCrumb(crumb.path),
+              children: crumb.name
+            }
+          ) : /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
+          !last ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" }) : null
+        ] }, `${crumb.path}:${crumb.name}:${index}`);
+      }) }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "input",
+          {
+            id: "files-search",
+            ref: tooltipRef4(tips.filesSearch),
+            type: "search",
+            placeholder: t("files.searchPlaceholder"),
+            autoComplete: "off",
+            spellCheck: false,
+            defaultValue: files.query,
+            onInput: (event) => files.onSearchInput(event.currentTarget.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef4(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-elsewhere",
+          className: "files-elsewhere",
+          type: "button",
+          ref: tooltipRef4(files.elsewhere ? tips.filesMusicFolders : tips.filesElsewhere),
+          onClick: () => files.toggleElsewhere(),
+          children: files.elsewhere ? t("files.roots") : t("files.browseElsewhere")
+        }
+      )
+    ] });
+  }
+  function FilesActions() {
+    const files = useFiles();
+    const selected = files.selectedEntries;
+    const locked = files.locked;
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "files-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-rename",
+          type: "button",
+          ref: tooltipRef4(tips.filesRename),
+          disabled: locked || selected.length !== 1,
+          onClick: (event) => files.startRename(event.currentTarget),
+          children: t("crates.rename")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-rename-from-tags",
+          type: "button",
+          ref: tooltipRef4(tips.filesRenameFromTags),
+          "aria-haspopup": "dialog",
+          disabled: locked || !selected.length,
+          onClick: (event) => files.startRenameFromTags(event.currentTarget),
+          children: t("files.renameFromTags")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-move",
+          type: "button",
+          ref: tooltipRef4(tips.filesMove),
+          disabled: locked || !selected.length || Boolean(files.pick),
+          onClick: () => files.startMove(),
+          children: t("files.moveToFolder")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-move-folder",
+          type: "button",
+          ref: tooltipRef4(tips.filesMoveFolder),
+          disabled: locked || !files.path || Boolean(files.pick),
+          onClick: () => files.startMoveFolder(),
+          children: t("files.moveFolder")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-replace",
+          type: "button",
+          ref: tooltipRef4(tips.filesReplace),
+          disabled: locked || selected.length !== 1,
+          onClick: (event) => files.startReplace(event.currentTarget),
+          children: t("files.replaceFile")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-delete",
+          type: "button",
+          ref: tooltipRef4(tips.filesDelete),
+          disabled: locked || !selected.length,
+          onClick: (event) => files.startDelete(event.currentTarget),
+          children: t("common.delete")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-move-here",
+          type: "button",
+          ref: tooltipRef4(tips.filesMoveHere),
+          hidden: !files.pick,
+          disabled: locked,
+          onClick: (event) => files.confirmMoveHere(event.currentTarget),
+          children: t("files.moveHere")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "files-pick-cancel",
+          type: "button",
+          ref: tooltipRef4(tips.filesPickCancel),
+          hidden: !files.pick,
+          onClick: () => files.cancelPick(),
+          children: t("common.cancel")
+        }
+      )
+    ] });
+  }
+  function FileRow({ entry, index }) {
+    const files = useFiles();
+    const active2 = index === files.active;
+    const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
+    const className = [
+      "files-row",
+      entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? "is-root" : "",
+      entry.missing ? "is-missing" : "",
+      active2 ? "is-active" : ""
+    ].filter(Boolean).join(" ");
+    if (openKind) {
+      return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className, role: "listitem", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef4(entry.missing ? missingDrive(entry.name) : openFile(entry.name)),
+            className: "files-open",
+            "data-files-index": String(index),
+            id: `files-item-${index}`,
+            tabIndex: active2 ? 0 : -1,
+            "aria-disabled": entry.missing ? "true" : void 0,
+            "aria-label": entry.missing ? t("files.driveMissingLabel", { name: entry.name }) : t("files.open", { name: entry.name }),
+            onClick: () => {
+              if (entry.missing) files.markActive(index);
+              else files.openRow(entry, index);
+            },
+            children: [
+              entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
+              entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { className: "files-root-copy", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-root-label", children: entry.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-root-detail", children: entry.detail })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: entry.name }),
+                entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
+              ] }),
+              entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+            ]
+          }
+        ),
+        entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef4(portableCheck(entry.name)),
+            className: "files-portable",
+            "data-portable-name": entry.name,
+            "aria-label": t("portable.checkLabel", { name: entry.name }),
+            onClick: (event) => {
+              event.stopPropagation();
+              void openPortableCheck(entry.path, event.currentTarget);
+            },
+            children: t("portable.check")
+          }
+        ) : null
+      ] });
+    }
+    if (entry.kind !== "file") {
+      return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef4(fileShortcut(entry.name)),
+          className: "files-kind",
+          "data-files-index": String(index),
+          id: `files-item-${index}`,
+          tabIndex: active2 ? 0 : -1,
+          "aria-label": t("files.shortcut", { name: entry.name }),
+          children: t("files.shortcut", { name: entry.name })
+        }
+      ) });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "input",
+        {
+          ref: tooltipRef4(selectFile(entry.name, entry.path)),
+          type: "checkbox",
+          "data-files-index": String(index),
+          id: `files-item-${index}`,
+          tabIndex: active2 ? 0 : -1,
+          checked: files.selected.has(entry.path),
+          "aria-label": entry.name,
+          onChange: (event) => files.toggleFile(entry, index, event.currentTarget.checked)
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-name", children: entry.name }),
+      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
+      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+    ] }) });
+  }
+  var FILE_OVERSCAN = 8;
+  function visibleWindow(rowCount, scrollTop, viewHeight, rowHeight) {
+    const view = viewHeight || 600;
+    const maxScroll = Math.max(0, rowCount * rowHeight - view);
+    const top = Math.min(Math.max(0, scrollTop), maxScroll);
+    const start = Math.max(0, Math.floor(top / rowHeight) - FILE_OVERSCAN);
+    const end = Math.min(rowCount, Math.ceil((top + view) / rowHeight) + FILE_OVERSCAN);
+    return { start, end };
+  }
+  function FilesList() {
+    const files = useFiles();
+    const listRef = (0, import_react7.useRef)(null);
+    const [scrollTop, setScrollTop] = (0, import_react7.useState)(0);
+    const [viewHeight, setViewHeight] = (0, import_react7.useState)(600);
+    (0, import_react7.useLayoutEffect)(() => {
+      const list = listRef.current;
+      if (!list) return;
+      setViewHeight(list.clientHeight || 600);
+      setScrollTop(list.scrollTop);
+      const onNativeScroll = () => {
+        (0, import_react_dom3.flushSync)(() => {
+          setScrollTop(list.scrollTop);
+          setViewHeight(list.clientHeight || 600);
+        });
+      };
+      list.addEventListener("scroll", onNativeScroll);
+      return () => list.removeEventListener("scroll", onNativeScroll);
+    }, [files.rows, files.loading, files.error, files.atRoots, files.searching, files.active]);
+    const rows2 = files.rows;
+    const { start, end } = visibleWindow(rows2.length, scrollTop, viewHeight, files.rowHeight);
+    const rowHeight = files.rowHeight;
+    const notes = [];
+    if (files.loading) notes.push(files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote"));
+    if (files.error) notes.push(files.error);
+    if (files.message) notes.push(files.message);
+    if (files.truncated) notes.push(files.searching ? t("files.searchTruncated") : t("files.truncated"));
+    const ariaLabel = files.searching ? t("files.searchResults") : files.atRoots ? t("files.roots") : t("files.contents");
+    const emptyLoading = files.loading && !rows2.length;
+    const emptyError = Boolean(files.error) && !rows2.length;
+    const emptyRoots = files.atRoots && !files.roots.length;
+    const emptyFolder = !rows2.length;
+    let body;
+    let tabIndex = 0;
+    if (emptyLoading) {
+      const reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
+      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "files-empty", children: reading });
+    } else if (emptyError) {
+      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "files-empty", children: files.error });
+    } else if (emptyRoots) {
+      tabIndex = -1;
+      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "button",
+          {
+            id: "files-run-setup",
+            type: "button",
+            ref: tooltipRef4(tips.runSetup),
+            className: "files-primary",
+            onClick: () => bridge.openSetup(),
+            children: t("files.runSetup")
+          }
+        )
+      ] });
+    } else if (emptyFolder) {
+      const empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
+      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "files-empty", children: empty });
+    } else {
+      tabIndex = -1;
+      const windowRows = [];
+      for (let index = start; index < end; index += 1) {
+        const entry = rows2[index];
+        if (entry) windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
+      }
+      body = /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "files-spacer", style: { height: `${rows2.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "files-window", style: { transform: `translateY(${start * rowHeight}px)` }, children: windowRows }) });
+    }
+    function onScroll2(event) {
+      const node = event.currentTarget;
+      (0, import_react_dom3.flushSync)(() => {
+        setScrollTop(node.scrollTop);
+        setViewHeight(node.clientHeight || 600);
+      });
+    }
+    function onKey2(event) {
+      files.onListKey(event.nativeEvent);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "div",
+        {
+          id: "files-list",
+          ref: listRef,
+          className: "files-list",
+          role: "group",
+          "aria-label": ariaLabel,
+          "aria-busy": files.loading,
+          "aria-activedescendant": !emptyLoading && !emptyError && !emptyRoots && !emptyFolder && files.active >= start && files.active < end ? `files-item-${files.active}` : void 0,
+          tabIndex,
+          onScroll: onScroll2,
+          onKeyDown: onKey2,
+          children: body
+        }
+      )
+    ] });
+  }
+  function FilesPanel() {
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FilesActions, {})
+    ] });
+  }
+
+  // src/components/PortableDialog.tsx
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  function PortableDialog() {
+    const files = useFiles();
+    const report = files.portableReport;
+    let verdict = "";
+    if (report) {
+      if (report.missing_drive) verdict = t("portable.missing");
+      else if (report.ready) verdict = t("portable.ready");
+      else verdict = t("portable.notReady");
+    }
+    const shown = report ? report.findings.slice(0, FINDING_CAP) : [];
+    const hidden = report ? report.findings.length - shown.length : 0;
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+            " ",
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "portable-fix", children: finding.fix })
+          ] }) : null
+        ] }, `finding-${index}`)),
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        "button",
+        {
+          id: "portable-close",
+          type: "button",
+          ref: (element) => {
+            if (element) setTooltip(element, tips.portableClose);
+          },
+          onClick: () => closePortable(),
+          children: t("common.close")
+        }
+      ) })
+    ] });
+  }
+
+  // src/files-mount.tsx
+  var panelRoot = null;
+  var dialogRoot = null;
+  var portableRoot = null;
+  var panelHost = null;
+  var dialogHost = null;
+  var portableHost = null;
+  function safeUnmount(root) {
+    if (!root) return;
+    try {
+      root.unmount();
+    } catch {
+    }
+  }
+  function rootFor(host, current2, lastHost) {
+    if (current2 && lastHost === host && host.isConnected) return current2;
+    safeUnmount(current2);
+    return void 0;
+  }
+  function mountFilesIslands() {
+    const panel = el("files-panel");
+    const dialog = el("files-dialog");
+    const portable = el("portable-dialog");
+    panelRoot = mountIsland(panel, (0, import_react8.createElement)(FilesPanel), rootFor(panel, panelRoot, panelHost));
+    dialogRoot = mountIsland(dialog, (0, import_react8.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost));
+    portableRoot = mountIsland(portable, (0, import_react8.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost));
+    panelHost = panel;
+    dialogHost = dialog;
+    portableHost = portable;
+  }
+  bindFilesMount(mountFilesIslands);
+  bindPortableMount(mountFilesIslands);
+
+  // src/beatgrid-view.ts
+  var GRID_WARNING_KEYS = {
+    beatgrid_too_short: "markers.gridTooShort",
+    beatgrid_version: "markers.gridVersion",
+    beatgrid_empty: "markers.gridEmpty",
+    beatgrid_too_many: "markers.gridTooMany",
+    beatgrid_truncated: "markers.gridTruncated"
+  };
+  function beatgridViewOnly(unavailable) {
+    return unavailable !== true;
+  }
+  function beatgridIsSuspect(code) {
+    return typeof code === "string" && code !== "";
+  }
+  function beatgridWarningKey(code) {
+    if (!beatgridIsSuspect(code) || code == null) return null;
+    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
+      return GRID_WARNING_KEYS[code];
+    }
+    return "markers.gridUnknown";
+  }
+  function beatSeconds(value) {
+    if (value === "" || value == null) return "";
+    const number = Number(value);
+    if (!Number.isFinite(number)) return "";
+    return `${number.toFixed(3)}s`;
+  }
+  function appendBeatgrid(section, track) {
+    if (!beatgridViewOnly(track.markers_unavailable)) return;
+    const heading2 = document.createElement("h4");
+    heading2.textContent = t("markers.gridHeading");
+    section.append(heading2);
+    const viewOnly = document.createElement("p");
+    viewOnly.className = "detail-kicker";
+    viewOnly.textContent = t("markers.gridViewOnly");
+    section.append(viewOnly);
+    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
+      const warn = document.createElement("p");
+      warn.className = "detail-kicker warn";
+      warn.setAttribute("role", "status");
+      const key = beatgridWarningKey(track.beatgrid_warning_code);
+      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
+      warn.textContent = t("markers.gridSuspect", { reason });
+      section.append(warn);
+    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
+      const empty = document.createElement("p");
+      empty.className = "detail-kicker";
+      empty.textContent = t("markers.gridNone");
+      section.append(empty);
+    }
+    for (const mark of track.beatgrid || []) {
+      section.append(paintBeatMarker(mark));
+    }
+  }
+  function paintBeatMarker(mark) {
+    const row = document.createElement("div");
+    row.className = "marker";
+    const time = document.createElement("span");
+    time.textContent = beatSeconds(mark.position);
+    const name = document.createElement("span");
+    const bpmNumber = Number(mark.bpm);
+    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
+      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
+    } else if (mark.beats != null) {
+      name.textContent = t("markers.beats", { count: Number(mark.beats) });
+    } else {
+      name.textContent = "";
+    }
+    row.append(document.createElement("span"), document.createElement("span"), time, name);
+    return row;
+  }
+
+  // src/folder-sync-view.ts
+  function syncFolderSyncButton() {
+    const id = state.activeCrate;
+    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
+    const blocked = !state.writable || id === "all" || Boolean(crate?.smart);
+    el("crate-folder-sync").disabled = blocked;
+    el("crate-rename-from-tags").disabled = blocked;
+  }
+  function readFolderSyncForm() {
+    const folder = el("folder-sync-path").value.trim();
+    if (!folder) return null;
+    return {
+      folder,
+      subcrates: el("folder-sync-subcrates").checked,
+      full: el("folder-sync-full").checked
+    };
+  }
+  function folderSyncPreviewText(reply) {
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    const created = Number(reply.created) || 0;
+    const skipped = Number(reply.skipped_count) || 0;
+    if (added === 0 && removed === 0 && created === 0) {
+      return t("folderSync.summaryNone", { skipped });
+    }
+    return t("folderSync.summary", { added, removed, skipped });
+  }
+  function folderSyncDoneText(reply) {
+    const name = reply.crate?.name?.trim() || "";
+    const added = Number(reply.added) || 0;
+    const removed = Number(reply.removed) || 0;
+    if (!reply.written) return t("folderSync.unchanged", { name });
+    return t("folderSync.done", { name, added, removed });
+  }
+  function folderSyncHasWork(reply) {
+    return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
+  }
+
+  // src/preset-view.ts
+  function presetName(preset) {
+    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
+    if (preset.kind === "bpm") {
+      return t("presets.name.bpm", {
+        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
+        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
+      });
+    }
+    return t("presets.name.unplayed", { count: preset.months });
+  }
+  function numberFrom(input) {
+    const text2 = input.value.trim();
+    if (!text2) return null;
+    const value = Number(text2);
+    return Number.isFinite(value) ? value : null;
+  }
+  function scopeCrate() {
+    if (state.activeCrate === "all") return null;
+    const crate = state.crates.find((item5) => item5.id === state.activeCrate);
+    return crate && !crate.smart ? crate : null;
+  }
+  function readPresetForm() {
+    const kind2 = el("preset-kind").value;
+    const scope = scopeCrate();
+    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
+    if (kind2 === "harmonic") {
+      const key = el("preset-key").value.trim();
+      return key ? { kind: kind2, key, ...crate } : null;
+    }
+    if (kind2 === "bpm") {
+      const bpm = numberFrom(el("preset-bpm"));
+      const range = numberFrom(el("preset-range")) ?? 3;
+      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
+      return { kind: kind2, bpm, range, ...crate };
+    }
+    if (kind2 === "unplayed") {
+      const months = numberFrom(el("preset-months")) ?? 12;
+      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
+      return { kind: kind2, months, ...crate };
+    }
+    return null;
+  }
+  function syncPresetFields() {
+    const kind2 = el("preset-kind").value;
+    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
+      field.hidden = field.dataset.presetKind !== kind2;
+    }
+  }
+  function isPresetCrate(id) {
+    return id !== "all" && Object.hasOwn(state.presets, String(id));
+  }
+  function presetFoot(id) {
+    if (!isPresetCrate(id)) return "";
+    const updated = Number(state.presets[String(id)]?.updated);
+    if (!Number.isFinite(updated) || updated <= 0) return "";
+    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    return ` · ${t("presets.updated", { date })}`;
+  }
+  function syncPresetButtons() {
+    el("crate-preset").disabled = !state.writable;
+    const preset = isPresetCrate(state.activeCrate);
+    el("crate-refresh").hidden = !preset;
+    el("crate-refresh").disabled = !state.writable || !preset;
+  }
+
+  // src/restore.ts
+  var reloadLibrary = async () => {
+  };
+  function bindLibraryReload(reload) {
+    reloadLibrary = reload;
+  }
+  async function loadSnapshots() {
+    state.snapshotLoading = true;
+    state.snapshotError = "";
+    const operationsPromise = loadOperations();
+    renderSnapshots();
+    try {
+      const response = await fetch("/api/snapshots");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
+      state.snapshots = payload.snapshots || [];
+      state.snapshotUndo = payload.pending_undo || null;
+      state.writeBlock = payload.write_block || "";
+      state.writeBlockCode = payload.write_block_code || "";
+      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
+      state.seratoRunning = Boolean(payload.serato_running);
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotLoading = false;
+      renderSnapshots();
+    } finally {
+      await operationsPromise;
+    }
+  }
+  async function loadOperations() {
+    state.operationsLoading = true;
+    state.operationsError = "";
+    renderOperations();
+    try {
+      const response = await fetch("/api/operations");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
+      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
+      state.operationsLoading = false;
+    } catch (error2) {
+      state.operationsLoading = false;
+      state.operationsError = failureOf(error2).message || t("operations.unreadable");
+    }
+    renderOperations();
+  }
+  function failSnapshots(error2) {
+    state.snapshotLoading = false;
+    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
+    renderSnapshots();
+  }
+  function renderSnapshots() {
+    renderOperations();
+    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
+    const status = el("snapshots-status");
+    const block = el("snapshots-block");
+    const undo = el("snapshots-undo");
+    const list = el("snapshots-list");
+    list.setAttribute("aria-busy", String(state.snapshotLoading));
+    paintDriveCopies();
+    if (state.writeBlock) {
+      block.hidden = false;
+      block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
+    } else {
+      block.hidden = true;
+      block.textContent = "";
+    }
+    if (state.snapshotUndo && state.snapshotUndo.restore_id) {
+      undo.hidden = false;
+      el("snapshots-undo-text").textContent = state.snapshotUndo.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange");
+    } else {
+      undo.hidden = true;
+    }
+    list.replaceChildren();
+    if (state.snapshotLoading) {
+      status.textContent = t("snapshots.reading");
+      return;
+    }
+    if (state.snapshotError) {
+      status.textContent = state.snapshotError;
+      const retry = buttonEl(tips.snapshotsRetry);
+      retry.textContent = t("common.tryAgain");
+      retry.addEventListener("click", () => loadSnapshots().catch((error2) => failSnapshots(error2)));
+      list.append(retry);
+      return;
+    }
+    status.textContent = state.snapshotMessage ? t(state.snapshotMessage) : "";
+    if (!state.snapshots.length) {
+      const empty = document.createElement("p");
+      empty.textContent = t("snapshots.empty");
+      list.append(empty);
+      return;
+    }
+    for (const item5 of state.snapshots) {
+      const card = document.createElement("article");
+      card.className = "snapshot-card";
+      card.setAttribute("role", "listitem");
+      const title2 = document.createElement("p");
+      title2.textContent = `${item5.created || t("snapshots.unknownTime")} · ${item5.trigger || t("snapshots.trigger")}`;
+      const detail = document.createElement("p");
+      const version = item5.serato_version && item5.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item5.serato_version, build: String(item5.serato_build ?? "") }) : t("snapshots.seratoUnknown");
+      const drives = (item5.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item5.unavailable_drives || []) })}` : "";
+      detail.textContent = `${version}. ${item5.reason || ""}${drives}`;
+      const restore = buttonEl(tips.reviewRestore);
+      restore.textContent = t("snapshots.reviewRestore");
+      restore.addEventListener("click", () => openSnapshotPlan(item5.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
+      card.append(title2, detail, restore);
+      list.append(card);
+    }
+  }
+  var OPERATION_ACTIONS = {
+    crate_create: "operations.action.crateCreate",
+    crate_rename: "operations.action.crateRename",
+    crate_delete: "operations.action.crateDelete",
+    crate_color: "operations.action.crateColor",
+    crate_expanded: "operations.action.crateExpanded",
+    crate_rules: "operations.action.crateRules",
+    crate_add: "operations.action.crateAdd",
+    crate_remove: "operations.action.crateRemove",
+    crate_prepare: "operations.action.cratePrepare",
+    crate_remove_library: "operations.action.crateRemoveLibrary",
+    save_track: "operations.action.saveTrack",
+    import_m3u: "operations.action.importM3u",
+    merge_duplicates: "operations.action.mergeDuplicates",
+    rename: "operations.action.rename",
+    rename_from_tags: "operations.action.renameFromTags",
+    move: "operations.action.move",
+    move_folder: "operations.action.moveFolder",
+    replace: "operations.action.replace",
+    replace_in_crates: "operations.action.replaceInCrates",
+    relink: "operations.action.relink",
+    delete: "operations.action.delete",
+    restore: "operations.action.restore",
+    restore_recover: "operations.action.restoreRecover"
+  };
+  var OPERATION_OUTCOMES = {
+    verified: "operations.outcome.verified",
+    rolled_back: "operations.outcome.rolledBack",
+    refused: "operations.outcome.refused",
+    rollback_failed: "operations.outcome.rollbackFailed"
+  };
+  function renderOperations() {
+    const alert = el("operations-alert");
+    const status = el("operations-status");
+    const list = el("operations-list");
+    list.setAttribute("aria-busy", String(state.operationsLoading));
+    const latest11 = state.operations[state.operations.length - 1];
+    const failed = latest11?.result === "rollback_failed";
+    alert.hidden = !failed;
+    alert.textContent = failed ? t("operations.rollbackFailed") : "";
+    list.replaceChildren();
+    if (state.operationsLoading && state.operations.length === 0) {
+      status.textContent = t("operations.reading");
+      return;
+    }
+    if (state.operationsError) {
+      status.textContent = state.operationsError;
+      const retry = buttonEl(tips.operationsRetry);
+      retry.textContent = t("common.tryAgain");
+      retry.addEventListener("click", () => {
+        loadOperations().catch(() => void 0);
+      });
+      list.append(retry);
+      return;
+    }
+    status.textContent = "";
+    if (!state.operations.length) {
+      const empty = document.createElement("p");
+      empty.textContent = t("operations.empty");
+      list.append(empty);
+      return;
+    }
+    for (const item5 of [...state.operations].reverse()) {
+      list.append(operationCard(item5));
+    }
+  }
+  function operationCard(item5) {
+    const card = document.createElement("article");
+    card.className = "operation-card snapshot-card";
+    card.setAttribute("role", "listitem");
+    const actionName = item5.action || item5.operation || "";
+    const actionKey2 = OPERATION_ACTIONS[actionName];
+    const outcomeKey = OPERATION_OUTCOMES[item5.result || ""] ?? "operations.outcome.refused";
+    const title2 = document.createElement("p");
+    title2.textContent = t("operations.entry", {
+      time: operationTime(item5.time || ""),
+      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
+      target: item5.target || t("operations.noTarget"),
+      outcome: t(outcomeKey)
+    });
+    card.append(title2);
+    if (item5.snapshot_before && item5.snapshot_after) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.snapshots", {
+        before: item5.snapshot_before,
+        after: item5.snapshot_after
+      });
+      card.append(detail);
+    } else if (item5.snapshot_before) {
+      const detail = document.createElement("p");
+      detail.textContent = t("operations.beforeOnly", { before: item5.snapshot_before });
+      card.append(detail);
+    }
+    return card;
+  }
+  function operationTime(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
+    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
+  }
+  async function openSnapshotPlan(snapshotId) {
+    state.snapshotPlanId = snapshotId;
+    const planBox = el("snapshot-plan");
+    const block = el("snapshot-block");
+    const confirm2 = el("snapshot-confirm");
+    planBox.replaceChildren();
+    block.textContent = t("snapshots.readingPlan");
+    confirm2.disabled = true;
+    setSnapshotDialogStatus("");
+    el("snapshot-dialog").showModal();
+    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
+    paintSnapshotPlan(plan);
+  }
+  var lastPlan = null;
+  function repaintSnapshotPlan() {
+    if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
+  }
+  function isDriveCopy(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
+  }
+  function driveBackupFrom(value) {
+    if (!value || typeof value !== "object") return null;
+    const record = value;
+    if (record.verified !== true) return null;
+    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
+    return {
+      folder: typeof record.folder === "string" ? record.folder : "",
+      verified: true,
+      drives
+    };
+  }
+  function driveName(drive, status) {
+    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
+    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
+    if (status === "permission") return t("snapshots.drivePermission", { name });
+    return name;
+  }
+  function driveCopyText() {
+    const report = state.driveBackup;
+    const drives = report?.drives ?? [];
+    if (!report?.verified || !drives.length) {
+      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
+    }
+    const parts = [];
+    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
+    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
+    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
+    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
+    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
+    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
+    return parts.join(" ") || t("snapshots.drivesIntro");
+  }
+  function paintDriveCopies() {
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = driveCopyText();
+  }
+  async function backupDriveCrates() {
+    const button2 = el("snapshots-drives");
+    button2.disabled = true;
+    const note = el("snapshots-drives-note");
+    note.hidden = false;
+    note.textContent = t("snapshots.backupDrivesBusy");
+    try {
+      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
+      renderSnapshots();
+    } catch (error2) {
+      state.snapshotMessage = "";
+      renderSnapshots();
+      const shown = el("snapshots-drives-note");
+      shown.hidden = false;
+      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
+    } finally {
+      button2.disabled = false;
+    }
+  }
+  function paintSnapshotPlan(plan) {
+    lastPlan = plan;
+    const planBox = el("snapshot-plan");
+    const block = el("snapshot-block");
+    const confirm2 = el("snapshot-confirm");
+    planBox.replaceChildren();
+    const crates = plan.crates || {};
+    const tracks = plan.tracks || {};
+    appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
+    appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
+    appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
+    appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
+    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
+    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
+    if (plan.registration_warning) {
+      const warning = document.createElement("p");
+      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
+      planBox.append(warning);
+    }
+    appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
+    appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
+    appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
+    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
+    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
+    const deleted = plan.deleted || {};
+    appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
+    appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
+    appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
+    appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
+    if (plan.restore_blocked) {
+      block.textContent = codedText(
+        plan.restore_blocked,
+        plan.restore_blocked_code,
+        messageParams(plan.restore_blocked_params)
+      );
+      confirm2.disabled = true;
+    } else {
+      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
+      confirm2.disabled = false;
+    }
+  }
+  function appendPlanLine(parent, label, rows2) {
+    const line = document.createElement("p");
+    const items = rows2 || [];
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+    } else {
+      const names = items.slice(0, 8).map((item5) => item5.name || item5.path || item5.drive_label || t("plan.item"));
+      const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
+      const listed = `${names.join(", ")}${extra}`;
+      line.textContent = t("plan.listed", { label, count: items.length, names: listed });
+    }
+    parent.append(line);
+  }
+  function appendCueDiffs(parent, label, rows2) {
+    const items = rows2 || [];
+    const line = document.createElement("p");
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+      parent.append(line);
+      return;
+    }
+    line.textContent = t("plan.files", { label, count: items.length });
+    parent.append(line);
+    for (const item5 of items.slice(0, 12)) {
+      const row = document.createElement("p");
+      row.textContent = fileName(item5.path || "");
+      parent.append(row);
+      for (const diff of cueDiffRows(item5.before, item5.after)) {
+        parent.append(paintCueDiffRow(diff));
+      }
+    }
+  }
+  function appendFrameDiffs(parent, label, rows2) {
+    const items = rows2 || [];
+    const line = document.createElement("p");
+    if (!items.length) {
+      line.textContent = t("plan.none", { label });
+      parent.append(line);
+      return;
+    }
+    line.textContent = t("plan.files", { label, count: items.length });
+    parent.append(line);
+    for (const item5 of items.slice(0, 12)) {
+      const row = document.createElement("p");
+      row.textContent = fileName(item5.path || "");
+      parent.append(row);
+    }
+  }
+  function fileName(path) {
+    const parts = String(path).split(/[/\\]/);
+    return parts[parts.length - 1] || path;
+  }
+  function setSnapshotDialogStatus(message) {
+    el("snapshot-status").textContent = message;
+  }
+  async function takeSnapshot() {
+    const button2 = el("snapshots-take");
+    button2.disabled = true;
+    button2.textContent = t("snapshots.saving");
+    try {
+      await postJSON("/api/snapshots", { action: "create" });
+      state.snapshotMessage = "snapshots.saved";
+      await loadSnapshots();
+    } finally {
+      button2.disabled = false;
+      button2.textContent = t("snapshots.take");
+    }
+  }
+  async function confirmSnapshotRestore() {
+    const confirm2 = el("snapshot-confirm");
+    confirm2.disabled = true;
+    confirm2.textContent = t("snapshots.restoring");
+    setSnapshotDialogStatus("");
+    try {
+      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
+      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
+      const result = await postJSON("/api/snapshots", body);
+      const skipped = result.crates_skipped || [];
+      el("snapshot-dialog").close();
+      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
+      await loadSnapshots();
+      await reloadLibrary();
+      if (skipped.length) {
+        const names = skipped.map((item5) => item5.name || item5.path || t("plan.item")).join(", ");
+        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
+      }
+    } catch (error2) {
+      setSnapshotDialogStatus(failureOf(error2).message);
+      confirm2.disabled = false;
+      await loadOperations();
+    } finally {
+      confirm2.textContent = t("snapshots.restore");
+    }
+  }
+
+  // src/search-filters.ts
+  var TEXT_SEARCH_FIELDS = [
+    "comments",
+    "grouping",
+    "composer",
+    "title",
+    "artist",
+    "album",
+    "genre",
+    "file"
+  ];
+  var KEY_VALUES = {
+    "g#m": 0,
+    abm: 0,
+    "1a": 0,
+    ebm: 1,
+    "d#m": 1,
+    "2a": 1,
+    bbm: 2,
+    "a#m": 2,
+    "3a": 2,
+    fm: 3,
+    "4a": 3,
+    cm: 4,
+    "5a": 4,
+    gm: 5,
+    "6a": 5,
+    dm: 6,
+    "7a": 6,
+    am: 7,
+    "8a": 7,
+    em: 8,
+    "9a": 8,
+    bm: 9,
+    "10a": 9,
+    "f#m": 10,
+    gbm: 10,
+    "11a": 10,
+    "c#m": 11,
+    dbm: 11,
+    "12a": 11,
+    b: 12,
+    "1b": 12,
+    "f#": 13,
+    gb: 13,
+    "2b": 13,
+    "c#": 14,
+    db: 14,
+    "3b": 14,
+    "g#": 15,
+    ab: 15,
+    "4b": 15,
+    "d#": 16,
+    eb: 16,
+    "5b": 16,
+    "a#": 17,
+    bb: 17,
+    "6b": 17,
+    f: 18,
+    "7b": 18,
+    c: 19,
+    "8b": 19,
+    g: 20,
+    "9b": 20,
+    d: 21,
+    "10b": 21,
+    a: 22,
+    "11b": 22,
+    e: 23,
+    "12b": 23
+  };
+  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
+  var EXACT = new RegExp(`^${NUMBER}$`);
+  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
+  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
+  var ABOVE = new RegExp(`^>${NUMBER}$`);
+  var BELOW = new RegExp(`^<${NUMBER}$`);
+  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
+  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
+  function isNone(value) {
+    return NONE.has(value);
+  }
+  function isYes(value) {
+    return YES.has(value);
+  }
+  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
+  function isTextSearchField(value) {
+    return TEXT_FIELD_SET.has(value);
+  }
+  function textField(track, field) {
+    if (field === "title") return String(track.name ?? "");
+    return String(track[field] ?? "");
+  }
+  function trackHaystack(track, field) {
+    if (field) return textField(track, field).toLocaleLowerCase();
+    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
+  }
+  function hasBpm(track) {
+    const bpm = Number(track.bpm);
+    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
+  }
+  function hasKey2(track) {
+    return Boolean(String(track.key ?? "").trim());
+  }
+  function cueFlag(track) {
+    if (track.has_cues === true) return true;
+    if (track.has_cues === false) return false;
+    if (track.markers_found === true) return true;
+    if (track.markers_found === false) return false;
+    if (Array.isArray(track.cues)) {
+      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
+      return track.cues.length > 0 || loops > 0;
+    }
+    return null;
+  }
+  function keyNumber(value) {
+    if (!value) return -1;
+    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
+  }
+  function mixingKeys(key) {
+    const base = key < 12 ? 0 : 12;
+    const index = key - base;
+    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
+  }
+  function bpmFilter(value) {
+    let match = RANGE.exec(value);
+    if (match) {
+      const low = Number(match[1]);
+      const high = Number(match[2]);
+      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
+    }
+    match = AROUND.exec(value);
+    if (match) {
+      const center = Number(match[1]);
+      const spread = Number(match[2]);
+      return { kind: "bpm", min: center - spread, max: center + spread };
+    }
+    match = ABOVE.exec(value);
+    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
+    match = BELOW.exec(value);
+    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
+    match = EXACT.exec(value);
+    if (match) {
+      const whole = Number(match[1]);
+      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
+    }
+    return null;
+  }
+  function parseQuery(text2) {
+    const terms = [];
+    const filters = [];
+    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
+      const colon = word.indexOf(":");
+      const name = colon > 0 ? word.slice(0, colon) : "";
+      const value = colon > 0 ? word.slice(colon + 1) : "";
+      let filter = null;
+      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
+      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
+      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
+      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
+      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
+      else if (name === "bpm") filter = bpmFilter(value);
+      else if (name === "key" || name === "mix") {
+        const key = keyNumber(value);
+        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
+      } else if (isTextSearchField(name) && value) {
+        filter = { kind: "field", field: name, value };
+      }
+      if (filter) filters.push(filter);
+      else terms.push(word);
+    }
+    return { terms, filters };
+  }
+  function matchesFilters(track, filters) {
+    for (const filter of filters) {
+      if (filter.kind === "bpm") {
+        if (!hasBpm(track)) return false;
+        const bpm = Number(track.bpm);
+        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
+      } else if (filter.kind === "missing") {
+        if (!track.missing) return false;
+      } else if (filter.kind === "nokey") {
+        if (hasKey2(track)) return false;
+      } else if (filter.kind === "nobpm") {
+        if (hasBpm(track)) return false;
+      } else if (filter.kind === "nokeybpm") {
+        if (hasKey2(track) && hasBpm(track)) return false;
+      } else if (filter.kind === "nocues") {
+        if (cueFlag(track) !== false) return false;
+      } else if (filter.kind === "field") {
+        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
+      } else if (!filter.keys.has(keyNumber(track.key))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function matchesQuery(track, query, field) {
+    if (!matchesFilters(track, query.filters)) return false;
+    if (!query.terms.length) return true;
+    const hay = trackHaystack(track, field);
+    return query.terms.every((term) => hay.includes(term));
+  }
+
+  // src/views.ts
+  var import_react10 = __toESM(require_react(), 1);
+
   // src/virtual-scroll.ts
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react9 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -24297,7 +25483,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react5.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react9.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -25147,7 +26333,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react10.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -26177,526 +27363,8 @@
   function crateNamesFor(assetId) {
     return state.crates.filter((crate) => !crate.smart && (crate.tracks || []).includes(assetId)).map((crate) => crate.name);
   }
-  function failFiles(error2) {
-    state.filesLoading = false;
-    state.filesError = failureOf(error2).message || t("error.folder_unreadable");
-    renderFiles();
-  }
-  var filesRequest = 0;
-  var FILES_SEARCH_MS = 200;
-  var filesSearchTimer = 0;
-  var FILE_OVERSCAN = 8;
-  async function loadFolder(path, options = {}) {
-    window.clearTimeout(filesSearchTimer);
-    state.filesQuery = "";
-    state.filesSearching = false;
-    const searchField = document.getElementById("files-search");
-    if (searchField instanceof HTMLInputElement) searchField.value = "";
-    const elsewhere = options.elsewhere === true;
-    const refresh = options.refresh === true;
-    const atRoots = path === "" && !elsewhere;
-    const token3 = ++filesRequest;
-    state.filesLoading = true;
-    state.filesError = "";
-    if (!options.keepMessage) state.filesMessage = "";
-    state.filesSelected = /* @__PURE__ */ new Set();
-    state.filesActive = 0;
-    state.filesAtRoots = atRoots;
-    state.filesElsewhere = elsewhere;
-    if (atRoots) {
-      state.filesPath = "";
-      state.filesParent = null;
-      state.filesEntries = [];
-      state.filesBreadcrumb = [];
-      state.filesRoot = null;
-    }
-    renderFiles();
-    if (refresh || atRoots) {
-      const rootsPayload = await fetchLibraryRoots(refresh);
-      if (token3 !== filesRequest) return;
-      state.filesRoots = rootsPayload.roots.filter(isLibraryRoot);
-    }
-    if (atRoots) {
-      state.filesPath = "";
-      state.filesParent = null;
-      state.filesEntries = [];
-      state.filesBreadcrumb = [];
-      state.filesRoot = null;
-      state.filesElsewhere = false;
-      state.filesAtRoots = true;
-      state.filesTruncated = false;
-      state.filesLoading = false;
-      el("files-list").scrollTop = 0;
-      renderFiles();
-      return;
-    }
-    const params = new URLSearchParams();
-    if (path) params.set("path", path);
-    if (elsewhere) params.set("elsewhere", "1");
-    const query = params.size ? `?${params.toString()}` : "";
-    const response = await fetch(`/api/files${query}`);
-    const payload = await readJSONOr(response, {});
-    if (token3 !== filesRequest) return;
-    if (!response.ok) throw new Error(serverMessage(payload, t("error.folder_unreadable")));
-    state.filesPath = payload.path || "";
-    state.filesParent = typeof payload.parent === "string" && payload.parent ? payload.parent : null;
-    state.filesEntries = Array.isArray(payload.entries) ? payload.entries : [];
-    state.filesRoot = isFileRoot(payload.root) ? payload.root : null;
-    state.filesBreadcrumb = Array.isArray(payload.breadcrumb) ? payload.breadcrumb.filter(isFileCrumb) : [];
-    state.filesElsewhere = Boolean(payload.elsewhere);
-    state.filesAtRoots = !state.filesPath && !state.filesElsewhere;
-    state.filesTruncated = Boolean(payload.truncated);
-    state.filesLoading = false;
-    el("files-list").scrollTop = 0;
-    if (payload.serato) applyStatus(payload.serato);
-    renderFiles();
-  }
-  async function searchFiles(query) {
-    const token3 = ++filesRequest;
-    const scope = state.filesAtRoots ? "" : state.filesPath;
-    const elsewhere = state.filesElsewhere && !state.filesAtRoots;
-    state.filesLoading = true;
-    state.filesError = "";
-    state.filesSearching = true;
-    state.filesQuery = query;
-    renderFiles();
-    const params = new URLSearchParams();
-    params.set("q", query);
-    if (scope) params.set("path", scope);
-    if (elsewhere) params.set("elsewhere", "1");
-    const response = await fetch(`/api/files?${params.toString()}`);
-    const payload = await readJSONOr(response, {});
-    if (token3 !== filesRequest) return;
-    if (!response.ok) throw new Error(payload.error || "Files could not be searched.");
-    const entries = Array.isArray(payload.entries) ? payload.entries.filter(isListedFile) : [];
-    state.filesEntries = entries;
-    state.filesTruncated = Boolean(payload.truncated);
-    state.filesLoading = false;
-    state.filesSearching = true;
-    state.filesActive = 0;
-    state.filesSelected = /* @__PURE__ */ new Set();
-    el("files-list").scrollTop = 0;
-    renderFiles();
-  }
-  function isListedFile(value) {
-    if (!value || typeof value !== "object") return false;
-    const row = value;
-    return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
-  }
-  function renderFiles() {
-    if (state.mode !== "files") return;
-    const pick2 = el("files-pick");
-    const moveHere = el("files-move-here");
-    const pickCancel = el("files-pick-cancel");
-    pick2.hidden = !state.filesPick;
-    moveHere.hidden = !state.filesPick;
-    pickCancel.hidden = !state.filesPick;
-    renderBreadcrumb();
-    const elsewhere = el("files-elsewhere");
-    elsewhere.textContent = state.filesElsewhere ? t("files.roots") : t("files.browseElsewhere");
-    setTooltip(elsewhere, state.filesElsewhere ? tips.filesMusicFolders : tips.filesElsewhere);
-    el("files-up").disabled = !state.filesParent || state.filesLoading;
-    const notes = [];
-    if (state.filesLoading) notes.push(state.filesAtRoots ? t("files.readingRootsNote") : t("files.readingFolderNote"));
-    if (state.filesError) notes.push(state.filesError);
-    if (state.filesMessage) notes.push(state.filesMessage);
-    if (state.filesTruncated) notes.push(state.filesSearching ? t("files.searchTruncated") : t("files.truncated"));
-    el("files-status").textContent = notes.join(" ");
-    const scroll = el("files-list").scrollTop;
-    paintFileWindow();
-    if (el("files-list").scrollTop !== scroll) el("files-list").scrollTop = scroll;
-    const selected = selectedFiles();
-    const locked = !state.writable || state.filesLoading || state.filesAtRoots;
-    el("files-rename").disabled = locked || selected.length !== 1;
-    el("files-rename-from-tags").disabled = locked || !selected.length;
-    el("files-move").disabled = locked || !selected.length || Boolean(state.filesPick);
-    el("files-move-folder").disabled = locked || !state.filesPath || Boolean(state.filesPick);
-    el("files-replace").disabled = locked || selected.length !== 1;
-    el("files-delete").disabled = locked || !selected.length;
-    moveHere.disabled = locked;
-    renderShell();
-  }
-  function renderBreadcrumb() {
-    const nav = el("files-path");
-    nav.replaceChildren();
-    const list = document.createElement("ol");
-    list.className = "files-crumbs";
-    const crumbs = visibleCrumbs();
-    crumbs.forEach((crumb, index) => {
-      const item5 = document.createElement("li");
-      const last = index === crumbs.length - 1;
-      if (!last && crumb.path) {
-        const button2 = buttonEl(openCrumb(crumb.name));
-        button2.className = "files-crumb";
-        button2.textContent = crumb.name;
-        button2.addEventListener("click", () => {
-          loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
-        });
-        item5.append(button2);
-      } else {
-        const current2 = document.createElement("span");
-        current2.className = "files-crumb";
-        current2.setAttribute("aria-current", "page");
-        current2.textContent = crumb.name;
-        item5.append(current2);
-      }
-      if (!last) {
-        const sep = document.createElement("span");
-        sep.className = "files-sep";
-        sep.setAttribute("aria-hidden", "true");
-        sep.textContent = "/";
-        item5.append(sep);
-      }
-      list.append(item5);
-    });
-    nav.append(list);
-  }
-  function visibleCrumbs() {
-    if (state.filesBreadcrumb.length) return state.filesBreadcrumb;
-    if (state.filesAtRoots) return [{ name: t("files.roots"), path: "" }];
-    if (state.filesPath) return [{ name: state.filesPath, path: state.filesPath }];
-    return [{ name: t("files.roots"), path: "" }];
-  }
-  function filesRowHeight() {
-    if (state.filesSearching) return FILE_ROW;
-    return state.filesAtRoots ? ROOT_ROW : FILE_ROW;
-  }
-  function browserRows() {
-    if (state.filesSearching) return state.filesEntries;
-    if (state.filesAtRoots) {
-      return state.filesRoots.map((root) => {
-        const entry = {
-          name: root.label,
-          path: root.path,
-          detail: root.detail,
-          kind: root.kind === "serato_drive" ? "drive" : "folder",
-          missing: root.missing,
-          removable: root.removable,
-          serato: root.serato
-        };
-        return entry;
-      });
-    }
-    const rank = { dir: 0, file: 1, link: 2 };
-    return [...state.filesEntries].sort((left, right) => {
-      return (rank[left.kind] ?? 3) - (rank[right.kind] ?? 3) || left.name.localeCompare(right.name, void 0, { numeric: true, sensitivity: "base" });
-    });
-  }
-  function paintFileWindow() {
-    const list = el("files-list");
-    const rows2 = browserRows();
-    list.setAttribute("aria-busy", String(state.filesLoading));
-    list.setAttribute(
-      "aria-label",
-      state.filesSearching ? t("files.searchResults") : state.filesAtRoots ? t("files.roots") : t("files.contents")
-    );
-    if (state.filesLoading && !rows2.length) {
-      const reading = state.filesSearching ? t("files.searching") : state.filesAtRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      list.replaceChildren(fileNote(reading));
-      list.tabIndex = 0;
-      return;
-    }
-    if (state.filesError && !rows2.length) {
-      list.replaceChildren(fileNote(state.filesError));
-      list.tabIndex = 0;
-      return;
-    }
-    if (state.filesAtRoots && !state.filesRoots.length) {
-      list.replaceChildren(rootsEmpty());
-      list.tabIndex = -1;
-      return;
-    }
-    if (!rows2.length) {
-      const empty = state.filesSearching ? t("files.noMatches", { query: state.filesQuery }) : t("files.empty");
-      list.replaceChildren(fileNote(empty));
-      list.tabIndex = 0;
-      return;
-    }
-    list.tabIndex = -1;
-    if (state.filesActive >= rows2.length) state.filesActive = rows2.length - 1;
-    if (state.filesActive < 0) state.filesActive = 0;
-    const rowHeight = filesRowHeight();
-    const view = list.clientHeight || 600;
-    const maxScroll = Math.max(0, rows2.length * rowHeight - view);
-    const scrollTop = Math.min(Math.max(0, list.scrollTop), maxScroll);
-    const start = Math.max(0, Math.floor(scrollTop / rowHeight) - FILE_OVERSCAN);
-    const end = Math.min(rows2.length, Math.ceil((scrollTop + view) / rowHeight) + FILE_OVERSCAN);
-    const spacer2 = fileSpacer(list);
-    const windowEl = spacer2.querySelector(".files-window");
-    if (!windowEl) return;
-    spacer2.style.height = `${rows2.length * rowHeight}px`;
-    windowEl.style.transform = `translateY(${start * rowHeight}px)`;
-    windowEl.replaceChildren();
-    for (let index = start; index < end; index += 1) {
-      const entry = rows2[index];
-      if (entry) windowEl.append(fileRow(entry, index));
-    }
-    if (state.filesActive >= start && state.filesActive < end) {
-      list.setAttribute("aria-activedescendant", `files-item-${state.filesActive}`);
-    } else list.removeAttribute("aria-activedescendant");
-  }
-  function fileSpacer(list) {
-    const first = list.firstElementChild;
-    if (first instanceof HTMLDivElement && first.classList.contains("files-spacer") && list.childElementCount === 1) {
-      return first;
-    }
-    list.replaceChildren();
-    const spacer2 = document.createElement("div");
-    spacer2.className = "files-spacer";
-    const windowEl = document.createElement("div");
-    windowEl.className = "files-window";
-    spacer2.append(windowEl);
-    list.append(spacer2);
-    return spacer2;
-  }
-  function fileNote(text2) {
-    const note = document.createElement("p");
-    note.className = "files-empty";
-    note.textContent = text2;
-    return note;
-  }
-  function rootsEmpty() {
-    const box = document.createElement("div");
-    box.className = "files-empty-state";
-    const heading2 = document.createElement("h2");
-    heading2.textContent = t("files.noRoots");
-    const copy = document.createElement("p");
-    copy.textContent = t("files.noRootsBody");
-    const button2 = buttonEl(tips.runSetup);
-    button2.id = "files-run-setup";
-    button2.className = "files-primary";
-    button2.textContent = t("files.runSetup");
-    button2.addEventListener("click", () => bridge.openSetup());
-    box.append(heading2, copy, button2);
-    return box;
-  }
-  function focusFilesIndex(index) {
-    const rows2 = browserRows();
-    if (!rows2.length) return;
-    state.filesActive = Math.max(0, Math.min(rows2.length - 1, index));
-    const list = el("files-list");
-    const rowHeight = filesRowHeight();
-    const view = list.clientHeight || 600;
-    const top = state.filesActive * rowHeight;
-    const maxScroll = Math.max(0, rows2.length * rowHeight - view);
-    if (top < list.scrollTop) list.scrollTop = top;
-    if (top + rowHeight > list.scrollTop + view) list.scrollTop = Math.min(maxScroll, top + rowHeight - view);
-    paintFileWindow();
-    const control = list.querySelector(`[data-files-index="${state.filesActive}"]`);
-    control?.focus();
-  }
-  function activateFilesIndex(index) {
-    const entry = browserRows()[index];
-    if (!entry) return;
-    if (entry.kind === "file") {
-      if (state.filesSelected.has(entry.path)) state.filesSelected.delete(entry.path);
-      else state.filesSelected.add(entry.path);
-      renderFiles();
-      focusFilesIndex(index);
-      return;
-    }
-    if (entry.kind === "link") return;
-    openBrowserRow(entry);
-  }
-  function openBrowserRow(entry) {
-    if (entry.missing) return;
-    const elsewhere = state.filesElsewhere && entry.kind === "dir";
-    loadFolder(entry.path, { elsewhere }).catch((error2) => failFiles(error2));
-  }
-  function onFilesKey(event) {
-    if (state.mode !== "files") return;
-    const list = el("files-list");
-    if (!(event.target instanceof Node) || !list.contains(event.target)) return;
-    const rows2 = browserRows();
-    if (!rows2.length) return;
-    if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
-      event.preventDefault();
-      if (event.key === "ArrowDown") focusFilesIndex(state.filesActive + 1);
-      else if (event.key === "ArrowUp") focusFilesIndex(state.filesActive - 1);
-      else if (event.key === "Home") focusFilesIndex(0);
-      else focusFilesIndex(rows2.length - 1);
-      return;
-    }
-    if (event.key !== "Enter" && event.key !== " ") return;
-    const control = event.target instanceof HTMLElement ? event.target.closest("button, input") : null;
-    if (control && list.contains(control)) return;
-    event.preventDefault();
-    activateFilesIndex(state.filesActive);
-  }
-  function fileRow(entry, index) {
-    const row = document.createElement("div");
-    row.className = "files-row";
-    if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) row.classList.add("is-root");
-    if (entry.missing) row.classList.add("is-missing");
-    if (index === state.filesActive) row.classList.add("is-active");
-    row.setAttribute("role", "listitem");
-    const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
-    if (openKind) {
-      const button2 = buttonEl(entry.missing ? missingDrive(entry.name) : openFile(entry.name));
-      button2.className = "files-open";
-      button2.dataset.filesIndex = String(index);
-      button2.id = `files-item-${index}`;
-      button2.tabIndex = index === state.filesActive ? 0 : -1;
-      if (entry.kind === "drive" || entry.kind === "folder") button2.append(fileIcon(entry.kind === "drive" ? "drive" : "folder"));
-      if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) {
-        const copy = document.createElement("span");
-        copy.className = "files-root-copy";
-        const label2 = document.createElement("span");
-        label2.className = "files-root-label";
-        label2.textContent = entry.name;
-        const detail = document.createElement("span");
-        detail.className = "files-root-detail";
-        detail.textContent = entry.detail;
-        copy.append(label2, detail);
-        button2.append(copy);
-      } else {
-        const name2 = document.createElement("span");
-        name2.textContent = entry.name;
-        button2.append(name2);
-        if (entry.detail) {
-          const detail = document.createElement("span");
-          detail.className = "files-match-detail";
-          detail.textContent = entry.detail;
-          button2.append(detail);
-        }
-      }
-      if (entry.missing) {
-        button2.setAttribute("aria-disabled", "true");
-        button2.setAttribute("aria-label", t("files.driveMissingLabel", { name: entry.name }));
-        const badge = document.createElement("span");
-        badge.className = "files-badge";
-        badge.textContent = t("files.driveMissing");
-        button2.append(badge);
-        button2.addEventListener("click", () => {
-          state.filesActive = index;
-        });
-      } else {
-        button2.setAttribute("aria-label", t("files.open", { name: entry.name }));
-        button2.addEventListener("click", () => {
-          state.filesActive = index;
-          openBrowserRow(entry);
-        });
-      }
-      row.append(button2);
-      if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
-      return row;
-    }
-    if (entry.kind !== "file") {
-      const label2 = buttonEl(fileShortcut(entry.name));
-      label2.className = "files-kind";
-      label2.dataset.filesIndex = String(index);
-      label2.id = `files-item-${index}`;
-      label2.tabIndex = index === state.filesActive ? 0 : -1;
-      label2.textContent = t("files.shortcut", { name: entry.name });
-      label2.setAttribute("aria-label", t("files.shortcut", { name: entry.name }));
-      row.append(label2);
-      return row;
-    }
-    const label = document.createElement("label");
-    label.className = "files-file";
-    const box = inputEl(selectFile(entry.name, entry.path));
-    box.type = "checkbox";
-    box.dataset.filesIndex = String(index);
-    box.id = `files-item-${index}`;
-    box.tabIndex = index === state.filesActive ? 0 : -1;
-    box.checked = state.filesSelected.has(entry.path);
-    box.setAttribute("aria-label", entry.name);
-    box.addEventListener("change", () => {
-      state.filesActive = index;
-      if (box.checked) state.filesSelected.add(entry.path);
-      else state.filesSelected.delete(entry.path);
-      renderFiles();
-    });
-    const name = document.createElement("span");
-    name.className = "files-name";
-    name.textContent = entry.name;
-    label.append(box, name);
-    if (entry.detail) {
-      const detail = document.createElement("span");
-      detail.className = "files-match-detail";
-      detail.textContent = entry.detail;
-      label.append(detail);
-    }
-    if (entry.in_library) {
-      const badge = document.createElement("span");
-      badge.className = "files-badge";
-      badge.textContent = t("files.inLibrary");
-      label.append(badge);
-    }
-    row.append(label);
-    return row;
-  }
-  function fileIcon(kind2) {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("width", "20");
-    svg.setAttribute("height", "20");
-    svg.setAttribute("aria-hidden", "true");
-    svg.classList.add("files-icon", kind2 === "drive" ? "files-icon-drive" : "files-icon-folder");
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "currentColor");
-    path.setAttribute("stroke-width", "1.5");
-    path.setAttribute("stroke-linejoin", "round");
-    path.setAttribute(
-      "d",
-      kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z"
-    );
-    svg.append(path);
-    return svg;
-  }
-  function isFileRoot(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.name === "string" && typeof record.path === "string" && typeof record.kind === "string";
-  }
-  function isFileCrumb(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.name === "string" && typeof record.path === "string";
-  }
-  function moveFileList(delta) {
-    if (!browserRows().length) return;
-    focusFilesIndex(state.filesActive + delta);
-  }
-  function openFileList() {
-    if (!browserRows().length) return;
-    activateFilesIndex(state.filesActive);
-  }
-  function focusFileByPath(path) {
-    const index = browserRows().findIndex((entry) => entry.path === path);
-    if (index < 0) return;
-    focusFilesIndex(index);
-  }
-  function selectedFiles() {
-    return state.filesEntries.filter((entry) => entry.kind === "file" && state.filesSelected.has(entry.path));
-  }
   function wireLibrary() {
-    el("files-list").addEventListener("scroll", () => {
-      if (state.mode === "files") paintFileWindow();
-    });
-    el("files-list").addEventListener("keydown", onFilesKey);
-    el("files-search").addEventListener("input", () => {
-      window.clearTimeout(filesSearchTimer);
-      const value = el("files-search").value;
-      state.filesQuery = value;
-      if (!value.trim()) {
-        if (state.filesAtRoots && !state.filesPath) {
-          state.filesSearching = false;
-          state.filesEntries = [];
-          state.filesError = "";
-          state.filesTruncated = false;
-          state.filesLoading = false;
-          renderFiles();
-          return;
-        }
-        loadFolder(state.filesPath, { elsewhere: state.filesElsewhere && Boolean(state.filesPath) }).catch((error2) => failFiles(error2));
-        return;
-      }
-      filesSearchTimer = window.setTimeout(() => {
-        searchFiles(value.trim()).catch((error2) => failFiles(error2));
-      }, FILES_SEARCH_MS);
-    });
+    mountFilesIslands();
     el("search").addEventListener("input", () => {
       state.query = el("search").value;
       el("list").scrollTop = 0;
@@ -26830,6 +27498,9 @@
   bridge.selectEntry = selectEntry;
   bridge.reloadLibrary = loadLibrary;
   bridge.lockDown = lockDown;
+  bridge.applyStatus = applyStatus;
+  bridge.renderShell = renderShell;
+  bridge.setNotice = setNotice;
 
   // src/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;
@@ -26895,10 +27566,6 @@
     }
     return "serato-like";
   }
-  var filesPreview = null;
-  var filesAction = "";
-  var filesTagScope = "paths";
-  var filesTrigger = null;
   var relinkPlan = null;
   var relinkLoading = false;
   var relinkChosen = /* @__PURE__ */ new Map();
@@ -27510,9 +28177,6 @@
       fillRelinkBanner();
       renderRelinkRows();
     }
-    if (el("files-dialog").open) {
-      el("files-confirm").textContent = filesAction === "delete" ? t("files.moveToTrash") : t("common.confirm");
-    }
   }
   function applyPrivacy(payload) {
     state.telemetryConsent = payload.telemetry_consent ?? null;
@@ -27575,144 +28239,6 @@
     if (token3 === rekordboxToken) applyRekordboxExport(payload);
     if (!state.wizardComplete && openWizard(false, el("search"))) return;
     if (payload.needs_consent_prompt) showConsent();
-  }
-  function openFilesDialog(action, trigger, scope = "paths") {
-    filesAction = action;
-    filesTagScope = scope;
-    filesPreview = null;
-    filesTrigger = trigger instanceof HTMLElement ? trigger : null;
-    el("files-name-label").hidden = action !== "rename";
-    el("files-replace-label").hidden = action !== "replace";
-    el("files-summary").textContent = "";
-    el("files-warning").textContent = "";
-    el("files-dialog-status").textContent = "";
-    el("files-changes").replaceChildren();
-    const selected = selectedFiles();
-    if (action === "rename" && selected.length === 1) el("files-name").value = selected[0].name;
-    if (action === "replace") el("files-replacement").value = "";
-    const confirm2 = el("files-confirm");
-    confirm2.classList.toggle("danger", action === "delete");
-    confirm2.textContent = action === "delete" ? t("files.moveToTrash") : t("common.confirm");
-    setTooltip(confirm2, action === "delete" ? tips.filesMoveTrash : tips.filesConfirm);
-    syncFilesDialog();
-    el("files-dialog").showModal();
-    if (action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags") {
-      el("files-cancel").focus();
-      reviewFiles().catch((error2) => {
-        el("files-dialog-status").textContent = failureOf(error2).message;
-      });
-    } else if (action === "rename") el("files-name").focus();
-    else el("files-replacement").focus();
-  }
-  function syncFilesDialog() {
-    const confirm2 = el("files-confirm");
-    const review = el("files-review");
-    const ready = Boolean(filesPreview?.ok && state.writable && filesPreview.needs_confirm);
-    confirm2.disabled = !ready;
-    review.hidden = filesAction === "delete" || filesAction === "move" || filesAction === "move_folder" || filesAction === "rename_from_tags";
-    if (!state.writable) {
-      el("files-dialog-status").textContent = el("status").textContent;
-    }
-  }
-  async function reviewFiles() {
-    const body = filesBody(false);
-    el("files-dialog-status").textContent = t("files.checking");
-    const payload = await postJSON("/api/files", body);
-    filesPreview = payload;
-    el("files-summary").textContent = payload.summary || "";
-    el("files-warning").textContent = payload.warning || "";
-    el("files-dialog-status").textContent = payload.ok ? "" : serverMessage(payload, t("files.notSaved"));
-    const list = el("files-changes");
-    list.replaceChildren();
-    for (const change of payload.changes || []) {
-      const item5 = document.createElement("li");
-      const crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "";
-      const effect = change.effect === "trash" ? t("files.trash") : change.to;
-      item5.textContent = `${change.from} → ${effect}${crates}`;
-      list.append(item5);
-    }
-    for (const skip2 of payload.skipped || []) {
-      const item5 = document.createElement("li");
-      item5.textContent = skip2;
-      list.append(item5);
-    }
-    if (payload.more) {
-      const more = document.createElement("li");
-      more.textContent = t("files.andMore", { count: Number(payload.more) });
-      list.append(more);
-    }
-    if (payload.serato) applyStatus(payload.serato);
-    syncFilesDialog();
-  }
-  function filesBody(confirm2) {
-    const body = { action: filesAction };
-    if (confirm2) body.confirm = true;
-    if (filesAction === "rename") {
-      const selected = selectedFiles();
-      body.path = selected[0]?.path || state.filesPickPaths[0];
-      body.name = el("files-name").value;
-    } else if (filesAction === "move") {
-      body.paths = state.filesPickPaths.length ? [...state.filesPickPaths] : selectedFiles().map((entry) => entry.path);
-      body.destination = state.filesPath;
-    } else if (filesAction === "move_folder") {
-      body.path = state.filesPickSource || state.filesPath;
-      body.destination = state.filesPath;
-    } else if (filesAction === "replace") {
-      const selected = selectedFiles();
-      body.path = selected[0]?.path || "";
-      body.replacement = el("files-replacement").value.trim();
-    } else if (filesAction === "delete") {
-      body.paths = selectedFiles().map((entry) => entry.path);
-    } else if (filesAction === "rename_from_tags") {
-      if (filesTagScope === "crate") {
-        const crate = state.activeCrate;
-        if (typeof crate === "number") {
-          body.crate = crate;
-          body.space = state.space;
-        }
-      } else {
-        body.paths = selectedFiles().map((entry) => entry.path);
-      }
-    }
-    return body;
-  }
-  function closeFilesDialog() {
-    const trigger = filesTrigger;
-    filesTrigger = null;
-    filesTagScope = "paths";
-    if (el("files-dialog").open) el("files-dialog").close();
-    if (trigger instanceof HTMLElement) trigger.focus();
-  }
-  async function confirmFiles() {
-    if (!filesPreview?.ok || !state.writable) return;
-    const confirm2 = el("files-confirm");
-    confirm2.disabled = true;
-    el("files-dialog-status").textContent = t("files.saving");
-    const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
-    try {
-      const payload = await postJSON("/api/files", filesBody(true));
-      if (payload.serato) applyStatus(payload.serato);
-      closeFilesDialog();
-      state.filesPick = null;
-      state.filesPickPaths = [];
-      state.filesPickSource = "";
-      let message = payload.summary || t("files.updated");
-      if (payload.warning) message = `${message} ${payload.warning}`;
-      if (crateScope && state.mode !== "files") {
-        setNotice(message);
-        await loadLibrary();
-        return;
-      }
-      state.filesMessage = message;
-      await loadFolder(payload.browse || state.filesPath || "", { keepMessage: true });
-      await loadLibrary();
-      state.filesMessage = state.filesMessage;
-      renderFiles();
-    } catch (error2) {
-      if (failureOf(error2).status === 409) lockDown(error2);
-      el("files-dialog-status").textContent = failureOf(error2).message;
-      confirm2.disabled = false;
-    }
   }
   function relinkReason(reason) {
     if (reason === "same name and size") return t("relink.reason.nameAndSize");
@@ -28094,108 +28620,11 @@
         button2.disabled = false;
       }
     });
-    el("files-up").addEventListener("click", () => {
-      if (state.filesParent) {
-        loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
-      }
-    });
-    el("files-refresh").addEventListener("click", () => {
-      const path = state.filesAtRoots ? "" : state.filesPath;
-      loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots, refresh: true }).catch((error2) => failFiles(error2));
-    });
-    el("files-elsewhere").addEventListener("click", () => {
-      if (state.filesElsewhere) loadFolder("").catch((error2) => failFiles(error2));
-      else loadFolder("", { elsewhere: true }).catch((error2) => failFiles(error2));
-    });
-    el("files-rename").addEventListener("click", (event) => {
-      if (selectedFiles().length !== 1) {
-        state.filesError = t("files.chooseOneRename");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("rename", event.currentTarget);
-    });
-    el("files-rename-from-tags").addEventListener("click", (event) => {
-      if (!selectedFiles().length) {
-        state.filesError = t("files.chooseRenameFromTags");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("rename_from_tags", event.currentTarget, "paths");
-    });
+    mountFilesIslands();
     el("crate-rename-from-tags").addEventListener("click", (event) => {
       const crate = state.activeCrate;
       if (typeof crate !== "number") return;
-      openFilesDialog("rename_from_tags", event.currentTarget, "crate");
-    });
-    el("files-move").addEventListener("click", () => {
-      const selected = selectedFiles();
-      if (!selected.length) {
-        state.filesError = t("files.chooseMove");
-        renderFiles();
-        return;
-      }
-      state.filesPick = "move";
-      state.filesPickPaths = selected.map((entry) => entry.path);
-      state.filesError = "";
-      state.filesMessage = t("files.chooseDestination");
-      renderFiles();
-    });
-    el("files-move-folder").addEventListener("click", () => {
-      state.filesPick = "move_folder";
-      state.filesPickSource = state.filesPath;
-      state.filesError = "";
-      state.filesMessage = t("files.chooseDestination");
-      renderFiles();
-    });
-    el("files-move-here").addEventListener("click", (event) => {
-      openFilesDialog(state.filesPick === "move_folder" ? "move_folder" : "move", event.currentTarget);
-    });
-    el("files-pick-cancel").addEventListener("click", () => {
-      state.filesPick = null;
-      state.filesPickPaths = [];
-      state.filesPickSource = "";
-      state.filesMessage = "";
-      renderFiles();
-    });
-    el("files-replace").addEventListener("click", (event) => {
-      if (selectedFiles().length !== 1) {
-        state.filesError = t("files.chooseOneReplace");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("replace", event.currentTarget);
-    });
-    el("files-delete").addEventListener("click", (event) => {
-      if (!selectedFiles().length) {
-        state.filesError = t("files.chooseDelete");
-        renderFiles();
-        return;
-      }
-      openFilesDialog("delete", event.currentTarget);
-    });
-    el("files-review").addEventListener("click", () => {
-      reviewFiles().catch((error2) => {
-        el("files-dialog-status").textContent = failureOf(error2).message;
-      });
-    });
-    el("files-confirm").addEventListener("click", () => {
-      confirmFiles().catch((error2) => {
-        el("files-dialog-status").textContent = failureOf(error2).message;
-      });
-    });
-    el("files-cancel").addEventListener("click", () => closeFilesDialog());
-    el("files-name").addEventListener("input", () => {
-      filesPreview = null;
-      syncFilesDialog();
-    });
-    el("files-replacement").addEventListener("input", () => {
-      filesPreview = null;
-      syncFilesDialog();
-    });
-    el("files-dialog").addEventListener("cancel", (event) => {
-      event.preventDefault();
-      closeFilesDialog();
+      startRenameFromTags(event.currentTarget, "crate");
     });
   }
   bridge.openMergeDialog = openMergeDialog;

@@ -21,6 +21,7 @@ import {
   type DriveReport,
 } from "./portable";
 import { applyStaticTooltips } from "./tooltip";
+import { mountFilesIslands } from "./files-mount";
 import { state } from "./state";
 import { installPage } from "./test-page";
 import { renderFiles } from "./views";
@@ -143,6 +144,7 @@ describe("portable drive check", () => {
     state.filesActive = 0;
     state.filesLoading = false;
     state.filesError = "";
+    mountFilesIslands();
   });
 
   it("offers the check only on a removable Serato drive and does not write", async () => {
