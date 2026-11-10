@@ -4,10 +4,13 @@
  * Player is one domain. The crate rail is the next. Waveform zoom and
  * overview are another. Before a gig is a fourth. Files is a fifth.
  * History is a sixth. Settings is a seventh. Track list selection and
- * detail fields are an eighth. Snapshots is a ninth. Later screens add
- * their own context file and one wrapper here. This module reads those
- * engines; it does not own fetch, playback, crate writes, history loads,
- * the folder load, the settings file, or restore writes.
+ * detail fields are an eighth. Snapshots is a ninth. The first-run
+ * wizard is a tenth; this file mounts an idle value so the domain is
+ * present on every island. The wizard bundle supplies the live value.
+ * Later screens add their own context file and one wrapper here. This
+ * module reads those engines; it does not own fetch, playback, crate
+ * writes, history loads, the folder load, the settings file, restore
+ * writes, or setup fetch.
  */
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -85,6 +88,10 @@ import {
   TrackListProvider as TrackListContextProvider,
   type TrackListContextValue,
 } from "../context/TrackListContext";
+import {
+  idleWizardValue,
+  WizardProvider as WizardContextProvider,
+} from "../context/WizardContext";
 import {
   SEEK_STEP_LARGE_SECONDS,
   SEEK_STEP_SECONDS,
@@ -493,12 +500,26 @@ export function SnapshotsProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Mount an idle wizard domain at the root of one React island.
+ *
+ * Live setup state is supplied by the wizard bundle. This wrapper keeps
+ * `useWizard` defined on the main page.
+ *
+ * @param children Island that may call `useWizard`.
+ */
+export function WizardProvider({ children }: { children: ReactNode }) {
+  const value = useMemo(() => idleWizardValue(), []);
+  return <WizardContextProvider value={value}>{children}</WizardContextProvider>;
+}
+
+/**
  * Nest every domain provider.
  *
  * Player is the first domain. Crates wrap inside it. Waveform wraps
  * inside crates. Before a gig wraps inside waveform. Files wraps inside
  * Before a gig. History wraps inside Files. Settings wraps inside History.
  * Track list wraps inside Settings. Snapshots wraps inside Track list.
+ * An idle wizard wraps the island so `useWizard` is defined.
  *
  * @param children Page island.
  */
@@ -512,7 +533,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
               <HistoryProvider>
                 <SettingsProvider>
                   <TrackListRoot>
-                    <SnapshotsProvider>{children}</SnapshotsProvider>
+                    <SnapshotsProvider>
+                      <WizardProvider>{children}</WizardProvider>
+                    </SnapshotsProvider>
                   </TrackListRoot>
                 </SettingsProvider>
               </HistoryProvider>
