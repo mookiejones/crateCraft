@@ -90,6 +90,16 @@ export interface ElementIds {
   "drift-status": HTMLParagraphElement;
   "drift-report": HTMLDivElement;
   "drift-refresh": HTMLButtonElement;
+  "stats-panel": HTMLElement;
+  "stats-scope": HTMLParagraphElement;
+  "stats-period": HTMLSelectElement;
+  "stats-from": HTMLInputElement;
+  "stats-to": HTMLInputElement;
+  "stats-idle-days": HTMLInputElement;
+  "stats-status": HTMLParagraphElement;
+  "stats-report": HTMLDivElement;
+  "stats-refresh": HTMLButtonElement;
+  "stats-csv": HTMLButtonElement;
   "health-panel": HTMLElement;
   "health-scope": HTMLParagraphElement;
   "health-status": HTMLParagraphElement;

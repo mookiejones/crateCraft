@@ -124,6 +124,7 @@ export interface PageState {
   gigToken: number;
   driftToken: number;
   healthToken: number;
+  statsToken: number;
   scanToken: number;
   tagsToken: number;
   view: Track[];
@@ -199,6 +200,7 @@ export const state: PageState = {
   gigToken: 0,
   driftToken: 0,
   healthToken: 0,
+  statsToken: 0,
   scanToken: 0,
   tagsToken: 0,
   view: [],

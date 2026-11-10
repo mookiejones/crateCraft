@@ -9,6 +9,7 @@
  * Tempo drift is src/drift.ts.
  * The damaged-file scan is src/scan.ts.
  * The library health report is src/health.ts.
+ * Play stats are src/history-stats.ts.
  * Tag spellings are src/tags.ts.
  * Crate presets are src/presets.ts.
  * Folder sync is src/folder-sync.ts.
@@ -25,6 +26,7 @@ import { el } from "./dom";
 import { wireGigCheck } from "./gig";
 import { wireDrift } from "./drift";
 import { wireHealth } from "./health";
+import { wireHistoryStats } from "./history-stats";
 import { wireScan } from "./scan";
 import { wireTags } from "./tags";
 import { wireHelp } from "./help";
@@ -123,6 +125,7 @@ wireHealth((action, id) => {
   else setMode("crates");
 });
 wireDrift();
+wireHistoryStats();
 wireScan();
 wireTags();
 wirePortable();

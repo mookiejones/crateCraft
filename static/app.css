@@ -2058,6 +2058,41 @@ dialog .settings-field select {
   font-weight: 600;
 }
 
+.stats-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 44px;
+  font: inherit;
+}
+
+.stats-field input,
+.stats-field select {
+  min-height: 44px;
+  font: inherit;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-2);
+}
+
+.stats-table th,
+.stats-table td {
+  padding: var(--space-2);
+  border-top: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.stats-table thead th {
+  border-top: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-caption);
+  font-weight: 600;
+}
+
 .shortcut-table {
   width: 100%;
   border-collapse: collapse;

@@ -37,6 +37,7 @@ const CLICKS: Record<string, string> = {
 const VIEWS: Record<string, string> = {
   "view-crates": "crates",
   "view-history": "history",
+  "view-stats": "stats",
   "view-files": "files",
   "view-missing": "missing",
   "view-duplicates": "duplicates",
