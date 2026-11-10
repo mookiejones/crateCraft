@@ -13,6 +13,7 @@ import { el } from "./dom";
 import { t } from "./i18n";
 import { presetName, readPresetForm, scopeCrate, syncPresetFields } from "./preset-view";
 import { state } from "./state";
+import { bindCrateActions } from "./crate-store";
 import { loadLibrary, lockDown, selectCrate, setNotice } from "./views";
 
 const PREVIEW_DELAY_MS = 250;
@@ -228,3 +229,12 @@ export function wirePresets(): void {
     createPreset().catch((error) => setNotice(failureOf(error).message));
   });
 }
+
+bindCrateActions({
+  preset: () => {
+    openPresetDialog().catch((error) => setNotice(failureOf(error).message));
+  },
+  refresh: () => {
+    refreshActivePreset().catch((error) => setNotice(failureOf(error).message));
+  },
+});

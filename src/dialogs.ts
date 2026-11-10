@@ -23,6 +23,7 @@ import type {
   Track,
 } from "./api-types";
 import { bridge } from "./bridge";
+import { bindCrateActions } from "./crate-store";
 import { el } from "./dom";
 import { scoreQuery } from "./fuzzy";
 import { applyLayout } from "./layout";
@@ -1869,3 +1870,15 @@ function openSetup(): void {
 }
 
 bridge.openSetup = openSetup;
+
+bindCrateActions({
+  renameFromTags: (button) => {
+    const crate = state.activeCrate;
+    if (typeof crate !== "number") return;
+    openFilesDialog("rename_from_tags", button, "crate");
+  },
+  exportRekordbox: () => {
+    if (playlistCrate() == null) return;
+    requestRekordboxReport();
+  },
+});

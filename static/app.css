@@ -409,6 +409,10 @@ body.is-resizing {
   gap: var(--space-3);
 }
 
+.crate-browser-actions {
+  display: contents;
+}
+
 .search input {
   width: 100%;
   min-width: 0;

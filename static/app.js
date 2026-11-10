@@ -97,7 +97,7 @@
       assign(pureComponentPrototype, Component.prototype);
       pureComponentPrototype.isPureReactComponent = true;
       var isArrayImpl = Array.isArray;
-      function noop() {
+      function noop2() {
       }
       var ReactSharedInternals = { H: null, A: null, T: null, S: null };
       var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -134,7 +134,7 @@
           case "rejected":
             throw thenable.reason;
           default:
-            switch ("string" === typeof thenable.status ? thenable.then(noop, noop) : (thenable.status = "pending", thenable.then(
+            switch ("string" === typeof thenable.status ? thenable.then(noop2, noop2) : (thenable.status = "pending", thenable.then(
               function(fulfilledValue) {
                 "pending" === thenable.status && (thenable.status = "fulfilled", thenable.value = fulfilledValue);
               },
@@ -272,7 +272,7 @@
         try {
           var returnValue = scope(), onStartTransitionFinish = ReactSharedInternals.S;
           null !== onStartTransitionFinish && onStartTransitionFinish(currentTransition, returnValue);
-          "object" === typeof returnValue && null !== returnValue && "function" === typeof returnValue.then && returnValue.then(noop, reportGlobalError);
+          "object" === typeof returnValue && null !== returnValue && "function" === typeof returnValue.then && returnValue.then(noop2, reportGlobalError);
         } catch (error2) {
           reportGlobalError(error2);
         } finally {
@@ -508,21 +508,21 @@
         }
         return "Minified React error #" + code + "; visit " + url + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
       }
-      function noop() {
+      function noop2() {
       }
       var Internals = {
         d: {
-          f: noop,
+          f: noop2,
           r: function() {
             throw Error(formatProdErrorMessage(522));
           },
-          D: noop,
-          C: noop,
-          L: noop,
-          m: noop,
-          X: noop,
-          S: noop,
-          M: noop
+          D: noop2,
+          C: noop2,
+          L: noop2,
+          m: noop2,
+          X: noop2,
+          S: noop2,
+          M: noop2
         },
         p: 0,
         findDOMNode: null
@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners2 = [], signal = this.signal = {
+        var listeners3 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners2.push(listener);
+            listeners3.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners2.forEach(function(listener) {
+          listeners3.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners2 = currentEntangledListeners;
+          var listeners3 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])();
+          for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners2 = [], thenableWithOverride = {
+        var listeners3 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners2.push(resolve);
+            listeners3.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])(result);
+            for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners2.length; error2++)
-              (0, listeners2[error2])(void 0);
+            for (error2 = 0; error2 < listeners3.length; error2++)
+              (0, listeners3[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -5132,7 +5132,7 @@
           ReactDOMSharedInternals.p = previousPriority, null !== prevTransition && null !== currentTransition.types && (prevTransition.types = currentTransition.types), ReactSharedInternals.T = prevTransition;
         }
       }
-      function noop() {
+      function noop2() {
       }
       function startHostTransition(formFiber, pendingState, action, formData) {
         if (5 !== formFiber.tag) throw Error(formatProdErrorMessage(476));
@@ -5142,7 +5142,7 @@
           queue,
           pendingState,
           sharedNotPendingObject,
-          null === action ? noop : function() {
+          null === action ? noop2 : function() {
             requestFormReset$1(formFiber);
             return action(formData);
           }
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners2 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners3 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners2.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners3.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners2.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners3.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners2;
+          if (3 === targetFiber.tag) return listeners3;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners2 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners3 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners2.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners3.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners2.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners3.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners2.length && dispatchQueue.push({ event, listeners: listeners2 });
+        0 !== listeners3.length && dispatchQueue.push({ event, listeners: listeners3 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners2 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners2, type, listener, optionsOrUseCapture)) {
+        var listeners3 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners3, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners2.push({
+          listeners3.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners2;
+        this._eventListeners = listeners3;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners2 = this._eventListeners;
-        if (null !== listeners2 && (listener = indexOfEventListener(
-          listeners2,
+        var listeners3 = this._eventListeners;
+        if (null !== listeners3 && (listener = indexOfEventListener(
+          listeners3,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners2[listener];
+          var _listeners$index = listeners3[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners2.splice(listener, 1);
+          listeners3.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -17690,125 +17690,6 @@
     return node;
   }
 
-  // src/fuzzy.ts
-  var BOUNDARY = /[ ._/\-\\]/;
-  function fuzzyScore(needle, haystack) {
-    const query = needle.toLocaleLowerCase();
-    const text2 = haystack.toLocaleLowerCase();
-    if (!query) return null;
-    let score = 0;
-    let previous2 = -2;
-    let from = 0;
-    for (const letter of query) {
-      const found = text2.indexOf(letter, from);
-      if (found < 0) return null;
-      score += 8;
-      if (found === previous2 + 1) score += 16;
-      if (found === 0 || BOUNDARY.test(text2.charAt(found - 1))) score += 12;
-      previous2 = found;
-      from = found + 1;
-    }
-    if (text2.includes(query)) score += 40;
-    if (text2.startsWith(query)) score += 30;
-    score -= Math.floor(Math.max(0, text2.length - query.length) / 4);
-    return score;
-  }
-  function scoreQuery(query, name, parentName = "") {
-    const terms = query.trim().split(/\s+/).filter(Boolean);
-    if (!terms.length) return null;
-    let total = 0;
-    for (const term of terms) {
-      const nameScore = fuzzyScore(term, name);
-      if (nameScore != null) {
-        total += nameScore + 20;
-        continue;
-      }
-      if (!parentName) return null;
-      const parentScore = fuzzyScore(term, parentName);
-      if (parentScore == null) return null;
-      total += parentScore;
-    }
-    return total;
-  }
-
-  // src/splitter.ts
-  function clampWidth(width, available, minFirst, minSecond) {
-    const max = Math.max(minFirst, available - minSecond);
-    return Math.round(Math.min(Math.max(width, minFirst), max));
-  }
-  function mountSplitter(options) {
-    const { handle, container, first, property, minFirst, minSecond, onCommit } = options;
-    const step = options.step ?? 16;
-    let current2 = null;
-    const available = () => container.clientWidth - handle.offsetWidth;
-    const fitted = (width) => clampWidth(width, available(), minFirst, minSecond);
-    const shown = () => current2 == null ? first.getBoundingClientRect().width : fitted(current2);
-    function paint3() {
-      if (current2 == null) container.style.removeProperty(property);
-      else container.style.setProperty(property, `${fitted(current2)}px`);
-      const room = available();
-      handle.setAttribute("aria-valuemin", String(minFirst));
-      handle.setAttribute("aria-valuemax", String(Math.max(minFirst, Math.round(room - minSecond))));
-      handle.setAttribute("aria-valuenow", String(Math.round(shown())));
-    }
-    function move(width) {
-      current2 = fitted(width);
-      paint3();
-    }
-    handle.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0) return;
-      event.preventDefault();
-      const startX = event.clientX;
-      const startWidth = shown();
-      let moved = false;
-      handle.setPointerCapture?.(event.pointerId);
-      handle.dataset.dragging = "true";
-      document.body.classList.add("is-resizing");
-      const onMove = (next2) => {
-        moved = true;
-        move(startWidth + next2.clientX - startX);
-      };
-      const onEnd = () => {
-        handle.removeEventListener("pointermove", onMove);
-        handle.removeEventListener("pointerup", onEnd);
-        handle.removeEventListener("pointercancel", onEnd);
-        delete handle.dataset.dragging;
-        document.body.classList.remove("is-resizing");
-        if (moved) onCommit(current2);
-      };
-      handle.addEventListener("pointermove", onMove);
-      handle.addEventListener("pointerup", onEnd);
-      handle.addEventListener("pointercancel", onEnd);
-    });
-    handle.addEventListener("keydown", (event) => {
-      const jump = event.shiftKey ? step * 4 : step;
-      let next2;
-      if (event.key === "ArrowLeft") next2 = shown() - jump;
-      else if (event.key === "ArrowRight") next2 = shown() + jump;
-      else if (event.key === "Home") next2 = minFirst;
-      else if (event.key === "End") next2 = available() - minSecond;
-      else return;
-      event.preventDefault();
-      const before = current2;
-      move(next2);
-      if (current2 !== before) onCommit(current2);
-    });
-    handle.addEventListener("dblclick", () => {
-      current2 = null;
-      paint3();
-      onCommit(null);
-    });
-    paint3();
-    return {
-      set(width) {
-        current2 = width == null ? null : Math.round(width);
-        paint3();
-      },
-      width: () => current2,
-      refit: paint3
-    };
-  }
-
   // src/state.ts
   var ROW = 36;
   var FILE_ROW = 44;
@@ -17963,6 +17844,600 @@
       if (mark) button2.dataset.pane = mark;
       else delete button2.dataset.pane;
     }
+  }
+
+  // src/search-filters.ts
+  var TEXT_SEARCH_FIELDS = [
+    "comments",
+    "grouping",
+    "composer",
+    "title",
+    "artist",
+    "album",
+    "genre",
+    "file"
+  ];
+  var KEY_VALUES = {
+    "g#m": 0,
+    abm: 0,
+    "1a": 0,
+    ebm: 1,
+    "d#m": 1,
+    "2a": 1,
+    bbm: 2,
+    "a#m": 2,
+    "3a": 2,
+    fm: 3,
+    "4a": 3,
+    cm: 4,
+    "5a": 4,
+    gm: 5,
+    "6a": 5,
+    dm: 6,
+    "7a": 6,
+    am: 7,
+    "8a": 7,
+    em: 8,
+    "9a": 8,
+    bm: 9,
+    "10a": 9,
+    "f#m": 10,
+    gbm: 10,
+    "11a": 10,
+    "c#m": 11,
+    dbm: 11,
+    "12a": 11,
+    b: 12,
+    "1b": 12,
+    "f#": 13,
+    gb: 13,
+    "2b": 13,
+    "c#": 14,
+    db: 14,
+    "3b": 14,
+    "g#": 15,
+    ab: 15,
+    "4b": 15,
+    "d#": 16,
+    eb: 16,
+    "5b": 16,
+    "a#": 17,
+    bb: 17,
+    "6b": 17,
+    f: 18,
+    "7b": 18,
+    c: 19,
+    "8b": 19,
+    g: 20,
+    "9b": 20,
+    d: 21,
+    "10b": 21,
+    a: 22,
+    "11b": 22,
+    e: 23,
+    "12b": 23
+  };
+  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
+  var EXACT = new RegExp(`^${NUMBER}$`);
+  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
+  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
+  var ABOVE = new RegExp(`^>${NUMBER}$`);
+  var BELOW = new RegExp(`^<${NUMBER}$`);
+  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
+  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
+  function isNone(value) {
+    return NONE.has(value);
+  }
+  function isYes(value) {
+    return YES.has(value);
+  }
+  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
+  function isTextSearchField(value) {
+    return TEXT_FIELD_SET.has(value);
+  }
+  function textField(track, field) {
+    if (field === "title") return String(track.name ?? "");
+    return String(track[field] ?? "");
+  }
+  function trackHaystack(track, field) {
+    if (field) return textField(track, field).toLocaleLowerCase();
+    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
+  }
+  function hasBpm(track) {
+    const bpm = Number(track.bpm);
+    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
+  }
+  function hasKey2(track) {
+    return Boolean(String(track.key ?? "").trim());
+  }
+  function cueFlag(track) {
+    if (track.has_cues === true) return true;
+    if (track.has_cues === false) return false;
+    if (track.markers_found === true) return true;
+    if (track.markers_found === false) return false;
+    if (Array.isArray(track.cues)) {
+      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
+      return track.cues.length > 0 || loops > 0;
+    }
+    return null;
+  }
+  function keyNumber(value) {
+    if (!value) return -1;
+    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
+  }
+  function mixingKeys(key) {
+    const base = key < 12 ? 0 : 12;
+    const index = key - base;
+    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
+  }
+  function bpmFilter(value) {
+    let match = RANGE.exec(value);
+    if (match) {
+      const low = Number(match[1]);
+      const high = Number(match[2]);
+      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
+    }
+    match = AROUND.exec(value);
+    if (match) {
+      const center = Number(match[1]);
+      const spread = Number(match[2]);
+      return { kind: "bpm", min: center - spread, max: center + spread };
+    }
+    match = ABOVE.exec(value);
+    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
+    match = BELOW.exec(value);
+    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
+    match = EXACT.exec(value);
+    if (match) {
+      const whole = Number(match[1]);
+      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
+    }
+    return null;
+  }
+  function parseQuery(text2) {
+    const terms = [];
+    const filters = [];
+    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
+      const colon = word.indexOf(":");
+      const name = colon > 0 ? word.slice(0, colon) : "";
+      const value = colon > 0 ? word.slice(colon + 1) : "";
+      let filter = null;
+      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
+      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
+      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
+      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
+      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
+      else if (name === "bpm") filter = bpmFilter(value);
+      else if (name === "key" || name === "mix") {
+        const key = keyNumber(value);
+        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
+      } else if (isTextSearchField(name) && value) {
+        filter = { kind: "field", field: name, value };
+      }
+      if (filter) filters.push(filter);
+      else terms.push(word);
+    }
+    return { terms, filters };
+  }
+  function matchesFilters(track, filters) {
+    for (const filter of filters) {
+      if (filter.kind === "bpm") {
+        if (!hasBpm(track)) return false;
+        const bpm = Number(track.bpm);
+        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
+      } else if (filter.kind === "missing") {
+        if (!track.missing) return false;
+      } else if (filter.kind === "nokey") {
+        if (hasKey2(track)) return false;
+      } else if (filter.kind === "nobpm") {
+        if (hasBpm(track)) return false;
+      } else if (filter.kind === "nokeybpm") {
+        if (hasKey2(track) && hasBpm(track)) return false;
+      } else if (filter.kind === "nocues") {
+        if (cueFlag(track) !== false) return false;
+      } else if (filter.kind === "field") {
+        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
+      } else if (!filter.keys.has(keyNumber(track.key))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function matchesQuery(track, query, field) {
+    if (!matchesFilters(track, query.filters)) return false;
+    if (!query.terms.length) return true;
+    const hay = trackHaystack(track, field);
+    return query.terms.every((term) => hay.includes(term));
+  }
+
+  // src/crate-tree.ts
+  function childLists() {
+    const children = /* @__PURE__ */ new Map();
+    for (const crate of state.crates) {
+      const key = crate.parent ?? 0;
+      if (!children.has(key)) children.set(key, []);
+      const bucket = children.get(key);
+      bucket.push(crate);
+    }
+    for (const list of children.values()) {
+      list.sort((a, b) => {
+        if (state.crateSort === "name") {
+          return a.name.localeCompare(b.name, void 0, { sensitivity: "base" }) || a.id - b.id;
+        }
+        if (state.crateSort === "added") return (b.added || 0) - (a.added || 0) || a.id - b.id;
+        return a.order - b.order || a.id - b.id;
+      });
+    }
+    return children;
+  }
+  function crateKeep() {
+    const terms = state.crateQuery.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    if (!terms.length) return null;
+    const byId = new Map(state.crates.map((crate) => [crate.id, crate]));
+    const keep = /* @__PURE__ */ new Set();
+    for (const crate of state.crates) {
+      if (!terms.every((term) => crate.name.toLocaleLowerCase().includes(term))) continue;
+      let current2 = crate;
+      const guard = /* @__PURE__ */ new Set();
+      while (current2 && !guard.has(current2.id)) {
+        guard.add(current2.id);
+        keep.add(current2.id);
+        current2 = byId.get(current2.parent);
+      }
+    }
+    return keep;
+  }
+  function visibleCrates() {
+    const children = childLists();
+    const keep = crateKeep();
+    const ordered = [];
+    const seen = /* @__PURE__ */ new Set();
+    function walk(parent, depth) {
+      for (const crate of children.get(parent) || []) {
+        if (seen.has(crate.id)) continue;
+        if (keep && !keep.has(crate.id)) continue;
+        seen.add(crate.id);
+        crate.depth = depth;
+        crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
+        ordered.push(crate);
+        if (keep || state.expanded.has(crate.id)) walk(crate.id, depth + 1);
+      }
+    }
+    walk(state.rootId ?? null, 0);
+    for (const crate of state.crates) {
+      if (seen.has(crate.id)) continue;
+      if (keep && !keep.has(crate.id)) continue;
+      const parentListed = state.crates.some((item4) => item4.id === crate.parent);
+      if (parentListed) continue;
+      seen.add(crate.id);
+      crate.depth = 0;
+      crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
+      ordered.push(crate);
+      if (keep || state.expanded.has(crate.id)) walk(crate.id, 1);
+    }
+    return ordered;
+  }
+  function hiddenSelectionHolder(visible) {
+    if (state.activeCrate === "all") return null;
+    if (visible.some((crate2) => crate2.id === state.activeCrate)) return null;
+    const byId = new Map(state.crates.map((crate2) => [crate2.id, crate2]));
+    const visibleIds = new Set(visible.map((crate2) => crate2.id));
+    let crate = byId.get(state.activeCrate);
+    const guard = /* @__PURE__ */ new Set();
+    while (crate && !guard.has(crate.id)) {
+      guard.add(crate.id);
+      crate = byId.get(crate.parent);
+      if (crate && visibleIds.has(crate.id)) return crate.id;
+    }
+    return null;
+  }
+  function trackMatchesSearch(track) {
+    const query = parseQuery(state.query);
+    const field = isTextSearchField(state.searchField) ? state.searchField : void 0;
+    return matchesQuery(track, query, field);
+  }
+  function railRow(crate, panes) {
+    const expanded = crate.childCount > 0 && (state.crateQuery ? true : state.expanded.has(crate.id));
+    return {
+      ...crate,
+      expanded,
+      selected: crate.id === panes.a || crate.id === panes.b,
+      pane: railMark(crate.id, panes.a, panes.b)
+    };
+  }
+  function crateRailRows() {
+    const query = parseQuery(state.query);
+    const matched = query.terms.length || query.filters.length ? new Set(state.tracks.filter(trackMatchesSearch).map((track) => track.id)) : null;
+    const crates = visibleCrates();
+    const holder = hiddenSelectionHolder(crates);
+    const split = state.splitCrates && state.mode === "crates";
+    const panes = paneCrates(state.activeCrate, state.secondCrate, split);
+    const rows2 = [
+      railRow({
+        id: "all",
+        name: t("crates.allTracks"),
+        depth: 0,
+        childCount: 0,
+        smart: false,
+        parent: null,
+        color: null,
+        count: matched ? matched.size : state.tracks.length,
+        holds: false
+      }, panes)
+    ];
+    for (const crate of crates) {
+      const members = state.crateTracks.get(crate.id) || /* @__PURE__ */ new Set();
+      let shown = members.size;
+      if (matched) {
+        shown = 0;
+        for (const id of members) if (matched.has(id)) shown += 1;
+      }
+      rows2.push(railRow({
+        id: crate.id,
+        name: crate.name,
+        depth: crate.depth || 0,
+        childCount: crate.childCount || 0,
+        smart: Boolean(crate.smart),
+        parent: crate.parent ?? null,
+        color: crate.color ?? null,
+        count: shown,
+        holds: holder === crate.id
+      }, panes));
+    }
+    return rows2;
+  }
+
+  // src/preset-view.ts
+  function presetName(preset) {
+    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
+    if (preset.kind === "bpm") {
+      return t("presets.name.bpm", {
+        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
+        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
+      });
+    }
+    return t("presets.name.unplayed", { count: preset.months });
+  }
+  function numberFrom(input) {
+    const text2 = input.value.trim();
+    if (!text2) return null;
+    const value = Number(text2);
+    return Number.isFinite(value) ? value : null;
+  }
+  function scopeCrate() {
+    if (state.activeCrate === "all") return null;
+    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
+    return crate && !crate.smart ? crate : null;
+  }
+  function readPresetForm() {
+    const kind2 = el("preset-kind").value;
+    const scope = scopeCrate();
+    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
+    if (kind2 === "harmonic") {
+      const key = el("preset-key").value.trim();
+      return key ? { kind: kind2, key, ...crate } : null;
+    }
+    if (kind2 === "bpm") {
+      const bpm = numberFrom(el("preset-bpm"));
+      const range = numberFrom(el("preset-range")) ?? 3;
+      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
+      return { kind: kind2, bpm, range, ...crate };
+    }
+    if (kind2 === "unplayed") {
+      const months = numberFrom(el("preset-months")) ?? 12;
+      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
+      return { kind: kind2, months, ...crate };
+    }
+    return null;
+  }
+  function syncPresetFields() {
+    const kind2 = el("preset-kind").value;
+    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
+      field.hidden = field.dataset.presetKind !== kind2;
+    }
+  }
+  function isPresetCrate(id) {
+    return id !== "all" && Object.hasOwn(state.presets, String(id));
+  }
+  function presetFoot(id) {
+    if (!isPresetCrate(id)) return "";
+    const updated = Number(state.presets[String(id)]?.updated);
+    if (!Number.isFinite(updated) || updated <= 0) return "";
+    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    return ` · ${t("presets.updated", { date })}`;
+  }
+  function syncPresetButtons() {
+    el("crate-preset").disabled = !state.writable;
+    const preset = isPresetCrate(state.activeCrate);
+    el("crate-refresh").hidden = !preset;
+    el("crate-refresh").disabled = !state.writable || !preset;
+  }
+
+  // src/crate-store.ts
+  var noop = () => void 0;
+  var actions = {
+    select: noop,
+    toggle: noop,
+    create: noop,
+    rename: noop,
+    color: noop,
+    remove: noop,
+    preset: noop,
+    folderSync: noop,
+    renameFromTags: noop,
+    refresh: noop,
+    split: noop,
+    saveView: noop,
+    exportM3u: noop,
+    exportRekordbox: noop
+  };
+  var listeners = /* @__PURE__ */ new Set();
+  function bindCrateActions(next2) {
+    Object.assign(actions, next2);
+  }
+  function subscribeCrates(listener) {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }
+  function emitCrates() {
+    for (const listener of listeners) listener();
+  }
+  function folderSyncBlocked() {
+    const id = state.activeCrate;
+    const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
+    return !state.writable || id === "all" || Boolean(crate?.smart);
+  }
+  function readCrateSnapshot() {
+    const crateChosen = state.activeCrate !== "all";
+    const cratesMode = state.mode === "crates";
+    const preset = isPresetCrate(state.activeCrate);
+    const blocked = folderSyncBlocked();
+    return {
+      rows: crateRailRows(),
+      writable: state.writable,
+      crateChosen,
+      canCreate: state.writable,
+      canRename: state.writable && crateChosen,
+      canColor: state.writable && crateChosen,
+      canDelete: state.writable && crateChosen,
+      canPreset: state.writable,
+      canFolderSync: !blocked,
+      canRenameFromTags: !blocked,
+      canRefresh: state.writable && preset,
+      refreshHidden: !preset,
+      splitHidden: !cratesMode,
+      splitPressed: state.splitCrates && cratesMode,
+      canSaveView: state.writable,
+      saveViewHidden: !cratesMode,
+      exportHidden: !cratesMode
+    };
+  }
+  function readCrateValue() {
+    return {
+      ...readCrateSnapshot(),
+      ...actions
+    };
+  }
+
+  // src/fuzzy.ts
+  var BOUNDARY = /[ ._/\-\\]/;
+  function fuzzyScore(needle, haystack) {
+    const query = needle.toLocaleLowerCase();
+    const text2 = haystack.toLocaleLowerCase();
+    if (!query) return null;
+    let score = 0;
+    let previous2 = -2;
+    let from = 0;
+    for (const letter of query) {
+      const found = text2.indexOf(letter, from);
+      if (found < 0) return null;
+      score += 8;
+      if (found === previous2 + 1) score += 16;
+      if (found === 0 || BOUNDARY.test(text2.charAt(found - 1))) score += 12;
+      previous2 = found;
+      from = found + 1;
+    }
+    if (text2.includes(query)) score += 40;
+    if (text2.startsWith(query)) score += 30;
+    score -= Math.floor(Math.max(0, text2.length - query.length) / 4);
+    return score;
+  }
+  function scoreQuery(query, name, parentName = "") {
+    const terms = query.trim().split(/\s+/).filter(Boolean);
+    if (!terms.length) return null;
+    let total = 0;
+    for (const term of terms) {
+      const nameScore = fuzzyScore(term, name);
+      if (nameScore != null) {
+        total += nameScore + 20;
+        continue;
+      }
+      if (!parentName) return null;
+      const parentScore = fuzzyScore(term, parentName);
+      if (parentScore == null) return null;
+      total += parentScore;
+    }
+    return total;
+  }
+
+  // src/splitter.ts
+  function clampWidth(width, available, minFirst, minSecond) {
+    const max = Math.max(minFirst, available - minSecond);
+    return Math.round(Math.min(Math.max(width, minFirst), max));
+  }
+  function mountSplitter(options) {
+    const { handle, container, first, property, minFirst, minSecond, onCommit } = options;
+    const step = options.step ?? 16;
+    let current2 = null;
+    const available = () => container.clientWidth - handle.offsetWidth;
+    const fitted = (width) => clampWidth(width, available(), minFirst, minSecond);
+    const shown = () => current2 == null ? first.getBoundingClientRect().width : fitted(current2);
+    function paint3() {
+      if (current2 == null) container.style.removeProperty(property);
+      else container.style.setProperty(property, `${fitted(current2)}px`);
+      const room = available();
+      handle.setAttribute("aria-valuemin", String(minFirst));
+      handle.setAttribute("aria-valuemax", String(Math.max(minFirst, Math.round(room - minSecond))));
+      handle.setAttribute("aria-valuenow", String(Math.round(shown())));
+    }
+    function move(width) {
+      current2 = fitted(width);
+      paint3();
+    }
+    handle.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      const startX = event.clientX;
+      const startWidth = shown();
+      let moved = false;
+      handle.setPointerCapture?.(event.pointerId);
+      handle.dataset.dragging = "true";
+      document.body.classList.add("is-resizing");
+      const onMove = (next2) => {
+        moved = true;
+        move(startWidth + next2.clientX - startX);
+      };
+      const onEnd = () => {
+        handle.removeEventListener("pointermove", onMove);
+        handle.removeEventListener("pointerup", onEnd);
+        handle.removeEventListener("pointercancel", onEnd);
+        delete handle.dataset.dragging;
+        document.body.classList.remove("is-resizing");
+        if (moved) onCommit(current2);
+      };
+      handle.addEventListener("pointermove", onMove);
+      handle.addEventListener("pointerup", onEnd);
+      handle.addEventListener("pointercancel", onEnd);
+    });
+    handle.addEventListener("keydown", (event) => {
+      const jump = event.shiftKey ? step * 4 : step;
+      let next2;
+      if (event.key === "ArrowLeft") next2 = shown() - jump;
+      else if (event.key === "ArrowRight") next2 = shown() + jump;
+      else if (event.key === "Home") next2 = minFirst;
+      else if (event.key === "End") next2 = available() - minSecond;
+      else return;
+      event.preventDefault();
+      const before = current2;
+      move(next2);
+      if (current2 !== before) onCommit(current2);
+    });
+    handle.addEventListener("dblclick", () => {
+      current2 = null;
+      paint3();
+      onCommit(null);
+    });
+    paint3();
+    return {
+      set(width) {
+        current2 = width == null ? null : Math.round(width);
+        paint3();
+      },
+      width: () => current2,
+      refit: paint3
+    };
   }
 
   // src/format.ts
@@ -18880,7 +19355,7 @@
     report.append(kicker(stepIndex), heading(t(step.title)));
     if (stepIndex === STEP_COUNT - 1) renderSince(report, payload);
     else renderStepList(report, step, linesFor(payload, stepIndex));
-    report.append(actions(t(step.action)));
+    report.append(actions2(t(step.action)));
   }
   function repaintGig() {
     if (latest) renderGigReport(latest);
@@ -19021,7 +19496,7 @@
     row.textContent = text2;
     return row;
   }
-  function actions(primary) {
+  function actions2(primary) {
     const bar = document.createElement("div");
     bar.className = "gig-actions";
     const back = buttonEl(tips.gigBack);
@@ -19061,7 +19536,7 @@
     fragment.append(art, line);
     const holding = (payload.holding_it_back || []).map((item4) => item4.summary);
     if (holding.length) fragment.append(detailsGroup(t("gig.holding"), holding));
-    fragment.append(actions(null));
+    fragment.append(actions2(null));
     return fragment;
   }
 
@@ -19885,14 +20360,14 @@
       }
       report.append(diffs);
     }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "tags-actions";
     const apply = buttonEl(tips.tagsApplyTitles);
     apply.dataset.tagsAction = "clean-apply";
     apply.textContent = t("tags.apply");
     apply.disabled = !canApplyTitles(plan);
-    actions2.append(apply);
-    report.append(actions2);
+    actions3.append(apply);
+    report.append(actions3);
   }
   function repaintTags() {
     setField(currentField());
@@ -20094,14 +20569,14 @@
       }
       wrap.append(diffs);
     }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "tags-actions";
     const apply = buttonEl(tips.tagsApplyMappings);
     apply.dataset.tagsAction = "refresh-apply";
     apply.textContent = t("tags.applyMappings");
     apply.disabled = !canApplyMappings(plan);
-    actions2.append(apply);
-    wrap.append(actions2);
+    actions3.append(apply);
+    wrap.append(actions3);
     return wrap;
   }
   function failStatus5(message) {
@@ -20186,8 +20661,8 @@
     return row;
   }
   function groupActions(key, value, plan) {
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "tags-actions";
     const preview = buttonEl(tips.tagsPreview);
     preview.dataset.tagsAction = "preview";
     preview.dataset.key = key;
@@ -20199,8 +20674,8 @@
     apply.textContent = t("tags.apply");
     apply.disabled = !canApply(key);
     if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
-    actions2.append(preview, apply);
-    return actions2;
+    actions3.append(preview, apply);
+    return actions3;
   }
 
   // src/portable.ts
@@ -20664,72 +21139,6 @@
     return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
   }
 
-  // src/preset-view.ts
-  function presetName(preset) {
-    if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
-    if (preset.kind === "bpm") {
-      return t("presets.name.bpm", {
-        bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
-        range: formatNumber(preset.range, { maximumFractionDigits: 1 })
-      });
-    }
-    return t("presets.name.unplayed", { count: preset.months });
-  }
-  function numberFrom(input) {
-    const text2 = input.value.trim();
-    if (!text2) return null;
-    const value = Number(text2);
-    return Number.isFinite(value) ? value : null;
-  }
-  function scopeCrate() {
-    if (state.activeCrate === "all") return null;
-    const crate = state.crates.find((item4) => item4.id === state.activeCrate);
-    return crate && !crate.smart ? crate : null;
-  }
-  function readPresetForm() {
-    const kind2 = el("preset-kind").value;
-    const scope = scopeCrate();
-    const crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
-    if (kind2 === "harmonic") {
-      const key = el("preset-key").value.trim();
-      return key ? { kind: kind2, key, ...crate } : null;
-    }
-    if (kind2 === "bpm") {
-      const bpm = numberFrom(el("preset-bpm"));
-      const range = numberFrom(el("preset-range")) ?? 3;
-      if (bpm == null || bpm <= 0 || range < 0 || range > 50) return null;
-      return { kind: kind2, bpm, range, ...crate };
-    }
-    if (kind2 === "unplayed") {
-      const months = numberFrom(el("preset-months")) ?? 12;
-      if (!Number.isInteger(months) || months < 1 || months > 240) return null;
-      return { kind: kind2, months, ...crate };
-    }
-    return null;
-  }
-  function syncPresetFields() {
-    const kind2 = el("preset-kind").value;
-    for (const field of document.querySelectorAll("#preset-dialog [data-preset-kind]")) {
-      field.hidden = field.dataset.presetKind !== kind2;
-    }
-  }
-  function isPresetCrate(id) {
-    return id !== "all" && Object.hasOwn(state.presets, String(id));
-  }
-  function presetFoot(id) {
-    if (!isPresetCrate(id)) return "";
-    const updated = Number(state.presets[String(id)]?.updated);
-    if (!Number.isFinite(updated) || updated <= 0) return "";
-    const date = formatDate(new Date(updated * 1e3), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-    return ` · ${t("presets.updated", { date })}`;
-  }
-  function syncPresetButtons() {
-    el("crate-preset").disabled = !state.writable;
-    const preset = isPresetCrate(state.activeCrate);
-    el("crate-refresh").hidden = !preset;
-    el("crate-refresh").disabled = !state.writable || !preset;
-  }
-
   // src/restore.ts
   var reloadLibrary = async () => {
   };
@@ -21154,233 +21563,47 @@
     }
   }
 
-  // src/search-filters.ts
-  var TEXT_SEARCH_FIELDS = [
-    "comments",
-    "grouping",
-    "composer",
-    "title",
-    "artist",
-    "album",
-    "genre",
-    "file"
-  ];
-  var KEY_VALUES = {
-    "g#m": 0,
-    abm: 0,
-    "1a": 0,
-    ebm: 1,
-    "d#m": 1,
-    "2a": 1,
-    bbm: 2,
-    "a#m": 2,
-    "3a": 2,
-    fm: 3,
-    "4a": 3,
-    cm: 4,
-    "5a": 4,
-    gm: 5,
-    "6a": 5,
-    dm: 6,
-    "7a": 6,
-    am: 7,
-    "8a": 7,
-    em: 8,
-    "9a": 8,
-    bm: 9,
-    "10a": 9,
-    "f#m": 10,
-    gbm: 10,
-    "11a": 10,
-    "c#m": 11,
-    dbm: 11,
-    "12a": 11,
-    b: 12,
-    "1b": 12,
-    "f#": 13,
-    gb: 13,
-    "2b": 13,
-    "c#": 14,
-    db: 14,
-    "3b": 14,
-    "g#": 15,
-    ab: 15,
-    "4b": 15,
-    "d#": 16,
-    eb: 16,
-    "5b": 16,
-    "a#": 17,
-    bb: 17,
-    "6b": 17,
-    f: 18,
-    "7b": 18,
-    c: 19,
-    "8b": 19,
-    g: 20,
-    "9b": 20,
-    d: 21,
-    "10b": 21,
-    a: 22,
-    "11b": 22,
-    e: 23,
-    "12b": 23
-  };
-  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
-  var EXACT = new RegExp(`^${NUMBER}$`);
-  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
-  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
-  var ABOVE = new RegExp(`^>${NUMBER}$`);
-  var BELOW = new RegExp(`^<${NUMBER}$`);
-  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
-  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
-  function isNone(value) {
-    return NONE.has(value);
-  }
-  function isYes(value) {
-    return YES.has(value);
-  }
-  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
-  function isTextSearchField(value) {
-    return TEXT_FIELD_SET.has(value);
-  }
-  function textField(track, field) {
-    if (field === "title") return String(track.name ?? "");
-    return String(track[field] ?? "");
-  }
-  function trackHaystack(track, field) {
-    if (field) return textField(track, field).toLocaleLowerCase();
-    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-  }
-  function hasBpm(track) {
-    const bpm = Number(track.bpm);
-    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
-  }
-  function hasKey2(track) {
-    return Boolean(String(track.key ?? "").trim());
-  }
-  function cueFlag(track) {
-    if (track.has_cues === true) return true;
-    if (track.has_cues === false) return false;
-    if (track.markers_found === true) return true;
-    if (track.markers_found === false) return false;
-    if (Array.isArray(track.cues)) {
-      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
-      return track.cues.length > 0 || loops > 0;
-    }
-    return null;
-  }
-  function keyNumber(value) {
-    if (!value) return -1;
-    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
-  }
-  function mixingKeys(key) {
-    const base = key < 12 ? 0 : 12;
-    const index = key - base;
-    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
-  }
-  function bpmFilter(value) {
-    let match = RANGE.exec(value);
-    if (match) {
-      const low = Number(match[1]);
-      const high = Number(match[2]);
-      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
-    }
-    match = AROUND.exec(value);
-    if (match) {
-      const center = Number(match[1]);
-      const spread = Number(match[2]);
-      return { kind: "bpm", min: center - spread, max: center + spread };
-    }
-    match = ABOVE.exec(value);
-    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
-    match = BELOW.exec(value);
-    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
-    match = EXACT.exec(value);
-    if (match) {
-      const whole = Number(match[1]);
-      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
-    }
-    return null;
-  }
-  function parseQuery(text2) {
-    const terms = [];
-    const filters = [];
-    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
-      const colon = word.indexOf(":");
-      const name = colon > 0 ? word.slice(0, colon) : "";
-      const value = colon > 0 ? word.slice(colon + 1) : "";
-      let filter = null;
-      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
-      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
-      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
-      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
-      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
-      else if (name === "bpm") filter = bpmFilter(value);
-      else if (name === "key" || name === "mix") {
-        const key = keyNumber(value);
-        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
-      } else if (isTextSearchField(name) && value) {
-        filter = { kind: "field", field: name, value };
-      }
-      if (filter) filters.push(filter);
-      else terms.push(word);
-    }
-    return { terms, filters };
-  }
-  function matchesFilters(track, filters) {
-    for (const filter of filters) {
-      if (filter.kind === "bpm") {
-        if (!hasBpm(track)) return false;
-        const bpm = Number(track.bpm);
-        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
-      } else if (filter.kind === "missing") {
-        if (!track.missing) return false;
-      } else if (filter.kind === "nokey") {
-        if (hasKey2(track)) return false;
-      } else if (filter.kind === "nobpm") {
-        if (hasBpm(track)) return false;
-      } else if (filter.kind === "nokeybpm") {
-        if (hasKey2(track) && hasBpm(track)) return false;
-      } else if (filter.kind === "nocues") {
-        if (cueFlag(track) !== false) return false;
-      } else if (filter.kind === "field") {
-        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
-      } else if (!filter.keys.has(keyNumber(track.key))) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function matchesQuery(track, query, field) {
-    if (!matchesFilters(track, query.filters)) return false;
-    if (!query.terms.length) return true;
-    const hay = trackHaystack(track, field);
-    return query.terms.every((term) => hay.includes(term));
-  }
-
   // src/views.ts
-  var import_react6 = __toESM(require_react(), 1);
+  var import_react7 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom2 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
   var import_react_dom = __toESM(require_react_dom(), 1);
 
-  // src/context/PlayerContext.tsx
+  // src/context/CrateContext.tsx
   var import_react = __toESM(require_react(), 1);
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-  var PlayerContext = (0, import_react.createContext)(null);
+  var CrateContext = (0, import_react.createContext)(null);
+  function CrateProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CrateContext, { value, children });
+  }
+  function useCrates() {
+    const value = (0, import_react.useContext)(CrateContext);
+    if (value === null) {
+      throw new Error("useCrates must be used within CrateProvider");
+    }
+    return value;
+  }
+
+  // src/context/PlayerContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var PlayerContext = (0, import_react2.createContext)(null);
   function PlayerProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlayerContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PlayerContext, { value, children });
   }
   function usePlayer() {
-    const value = (0, import_react.useContext)(PlayerContext);
+    const value = (0, import_react2.useContext)(PlayerContext);
     if (value === null) {
       throw new Error("usePlayer must be used within PlayerProvider");
     }
@@ -21388,10 +21611,10 @@
   }
 
   // src/player.ts
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react2 = __toESM(require_react(), 1);
+  var import_react3 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -21458,7 +21681,7 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21486,7 +21709,7 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       "button",
       {
         type: "button",
@@ -21497,13 +21720,13 @@
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21515,11 +21738,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
         "button",
         {
           type: "button",
@@ -21539,7 +21762,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react2.useState)(null);
+    const [hold, setHold] = (0, import_react3.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -21566,14 +21789,14 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -21585,8 +21808,8 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -21599,13 +21822,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "input",
             {
               ref: tooltipRef2(tips.seek),
@@ -21624,16 +21847,16 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "input",
           {
             ref: tooltipRef2(tips.volume),
@@ -22653,7 +22876,7 @@
   // src/player.ts
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
-  var listeners = /* @__PURE__ */ new Set();
+  var listeners2 = /* @__PURE__ */ new Set();
   var wired2 = /* @__PURE__ */ new WeakSet();
   var media = null;
   var trackId = null;
@@ -22797,9 +23020,9 @@
     emit();
   }
   function subscribe(listener) {
-    listeners.add(listener);
+    listeners2.add(listener);
     return () => {
-      listeners.delete(listener);
+      listeners2.delete(listener);
     };
   }
   function mountPlayer(host) {
@@ -22839,7 +23062,7 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react3.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react4.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -22994,7 +23217,7 @@
   }
   function emit() {
     const snapshot = getPlayerState();
-    for (const listener of [...listeners]) listener(snapshot);
+    for (const listener of [...listeners2]) listener(snapshot);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -23006,7 +23229,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -23026,33 +23249,291 @@
     };
   }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react4.useState)(readPlayerValue);
-    (0, import_react4.useEffect)(() => {
+    const [value, setValue] = (0, import_react5.useState)(readPlayerValue);
+    (0, import_react5.useEffect)(() => {
       return subscribe(() => {
         (0, import_react_dom.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react4.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider, { value: current2, children });
+  }
+  function CrateProvider2({ children }) {
+    const [value, setValue] = (0, import_react5.useState)(readCrateValue);
+    (0, import_react5.useEffect)(() => {
+      return subscribeCrates(() => {
+        (0, import_react_dom.flushSync)(() => {
+          setValue(readCrateValue());
+        });
+      });
+    }, []);
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CrateProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider2, { children });
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CrateProvider2, { children }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
     (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AppProviders, { children: node }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime6.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
 
+  // src/components/CrateActions.tsx
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function CrateActions() {
+    const crates = useCrates();
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          id: "crate-new",
+          type: "button",
+          ref: tooltipRef3(tips.crateNew),
+          disabled: !crates.canCreate,
+          onClick: () => crates.create(),
+          children: t("crates.new")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          id: "crate-rename",
+          type: "button",
+          ref: tooltipRef3(tips.crateRename),
+          disabled: !crates.canRename,
+          onClick: () => crates.rename(),
+          children: t("crates.rename")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          id: "crate-color",
+          type: "button",
+          ref: tooltipRef3(tips.crateColor),
+          disabled: !crates.canColor,
+          onClick: () => crates.color(),
+          children: t("field.color")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          id: "crate-delete",
+          type: "button",
+          ref: tooltipRef3(tips.crateDelete),
+          disabled: !crates.canDelete,
+          onClick: () => crates.remove(),
+          children: t("common.delete")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          id: "crate-preset",
+          type: "button",
+          ref: tooltipRef3(tips.cratePreset),
+          "aria-haspopup": "dialog",
+          disabled: !crates.canPreset,
+          onClick: () => crates.preset(),
+          children: t("presets.button")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          id: "crate-folder-sync",
+          type: "button",
+          ref: tooltipRef3(tips.crateFolderSync),
+          "aria-haspopup": "dialog",
+          disabled: !crates.canFolderSync,
+          onClick: () => crates.folderSync(),
+          children: t("folderSync.button")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          id: "crate-rename-from-tags",
+          type: "button",
+          ref: tooltipRef3(tips.crateRenameFromTags),
+          "aria-haspopup": "dialog",
+          disabled: !crates.canRenameFromTags,
+          onClick: (event) => crates.renameFromTags(event.currentTarget),
+          children: t("files.renameFromTags")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          id: "crate-refresh",
+          type: "button",
+          ref: tooltipRef3(tips.crateRefresh),
+          hidden: crates.refreshHidden,
+          disabled: !crates.canRefresh,
+          onClick: () => crates.refresh(),
+          children: t("presets.refresh")
+        }
+      )
+    ] });
+  }
+
+  // src/components/CrateBrowserActions.tsx
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef4(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function CrateBrowserActions() {
+    const crates = useCrates();
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "crate-split",
+          type: "button",
+          ref: tooltipRef4(tips.crateSplit),
+          hidden: crates.splitHidden,
+          "aria-pressed": crates.splitPressed,
+          onClick: () => crates.split(),
+          children: t("crates.split")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "crate-save-view",
+          type: "button",
+          ref: tooltipRef4(tips.crateSaveView),
+          hidden: crates.saveViewHidden,
+          disabled: !crates.canSaveView,
+          onClick: () => crates.saveView(),
+          children: t("crates.saveView")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          id: "export-m3u",
+          type: "button",
+          ref: tooltipRef4(tips.exportM3u),
+          hidden: crates.exportHidden,
+          onClick: () => crates.exportM3u(),
+          children: t("export.m3u")
+        }
+      )
+    ] });
+  }
+
+  // src/components/CrateTree.tsx
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef5(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function focusedCrateId() {
+    const list = document.getElementById("crate-list");
+    const active2 = document.activeElement;
+    if (!(list instanceof HTMLElement) || !(active2 instanceof HTMLElement) || !list.contains(active2)) {
+      return null;
+    }
+    return active2.closest(".crate")?.getAttribute("data-id") ?? null;
+  }
+  function Twist({ row, toggle }) {
+    if (!row.childCount) {
+      return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
+    }
+    const spec2 = row.expanded ? collapseCrate(row.name) : expandCrate(row.name);
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+      "button",
+      {
+        type: "button",
+        ref: tooltipRef5(spec2),
+        className: "twist",
+        tabIndex: -1,
+        "aria-expanded": row.expanded,
+        "aria-label": t(row.expanded ? "crates.collapse" : "crates.expand", { name: row.name }),
+        onClick: () => toggle(row.id)
+      }
+    );
+  }
+  function CrateRow({
+    row,
+    tabIndex,
+    select,
+    toggle
+  }) {
+    const hex = colorHex(row.color);
+    const tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
+      "div",
+      {
+        className: row.holds ? "crate-row holds-selection" : "crate-row",
+        style: { paddingLeft: `${row.depth * 14}px` },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Twist, { row, toggle }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
+            "button",
+            {
+              type: "button",
+              ref: tooltipRef5(tip),
+              className: "crate",
+              "data-id": String(row.id),
+              "data-parent": row.parent != null ? String(row.parent) : void 0,
+              "data-pane": row.pane ?? void 0,
+              role: "treeitem",
+              tabIndex,
+              "aria-level": row.depth + 1,
+              "aria-selected": row.selected,
+              "aria-expanded": row.childCount ? row.expanded : void 0,
+              onClick: (event) => select(row.id, event.nativeEvent),
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("span", { className: "name", children: [
+                  hex ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+                  row.name
+                ] }),
+                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "meta", children: formatNumber(row.count) })
+              ]
+            }
+          )
+        ]
+      }
+    );
+  }
+  function CrateTree() {
+    const crates = useCrates();
+    const focusId = focusedCrateId();
+    const tabbable = crates.rows.find((row) => String(row.id) === focusId) ?? crates.rows[0];
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_jsx_runtime9.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+      CrateRow,
+      {
+        row,
+        tabIndex: row === tabbable ? 0 : -1,
+        select: crates.select,
+        toggle: crates.toggle
+      },
+      String(row.id)
+    )) });
+  }
+
   // src/virtual-scroll.ts
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react6 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -23112,7 +23593,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react5.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -23274,9 +23755,53 @@
   var relatedRequest = 0;
   var lastDetail = null;
   var detailPlayRoot = null;
+  var crateListRoot = null;
+  var crateListHost = null;
+  var crateActionsRoot = null;
+  var crateActionsHost = null;
+  var crateBrowserRoot = null;
+  var crateBrowserHost = null;
   function clearDetailPlay() {
     detailPlayRoot?.unmount();
     detailPlayRoot = null;
+  }
+  function mountCrateIsland(host, node, root, previous2) {
+    if (!host) return { root: null, host: null };
+    if (root && previous2 === host) {
+      return { root: mountIsland(host, node, root), host };
+    }
+    root?.unmount();
+    return { root: mountIsland(host, node), host };
+  }
+  function mountCrates() {
+    const list = document.getElementById("crate-list");
+    const listMount = mountCrateIsland(
+      list instanceof HTMLElement ? list : null,
+      (0, import_react7.createElement)(CrateTree),
+      crateListRoot,
+      crateListHost
+    );
+    crateListRoot = listMount.root;
+    crateListHost = listMount.host;
+    const actions3 = document.getElementById("crate-actions");
+    const actionsMount = mountCrateIsland(
+      actions3 instanceof HTMLElement ? actions3 : null,
+      (0, import_react7.createElement)(CrateActions),
+      crateActionsRoot,
+      crateActionsHost
+    );
+    crateActionsRoot = actionsMount.root;
+    crateActionsHost = actionsMount.host;
+    const browser = document.getElementById("crate-browser-actions");
+    const browserMount = mountCrateIsland(
+      browser instanceof HTMLElement ? browser : null,
+      (0, import_react7.createElement)(CrateBrowserActions),
+      crateBrowserRoot,
+      crateBrowserHost
+    );
+    crateBrowserRoot = browserMount.root;
+    crateBrowserHost = browserMount.host;
+    emitCrates();
   }
   function listMatches(track, query) {
     const field = isTextSearchField(state.searchField) ? state.searchField : void 0;
@@ -23284,72 +23809,6 @@
   }
   function queryTerms() {
     return parseQuery(state.query);
-  }
-  function childLists() {
-    const children = /* @__PURE__ */ new Map();
-    for (const crate of state.crates) {
-      const key = crate.parent ?? 0;
-      if (!children.has(key)) children.set(key, []);
-      const bucket = children.get(key);
-      bucket.push(crate);
-    }
-    for (const list of children.values()) {
-      list.sort((a, b) => {
-        if (state.crateSort === "name") {
-          return a.name.localeCompare(b.name, void 0, { sensitivity: "base" }) || a.id - b.id;
-        }
-        if (state.crateSort === "added") return (b.added || 0) - (a.added || 0) || a.id - b.id;
-        return a.order - b.order || a.id - b.id;
-      });
-    }
-    return children;
-  }
-  function crateKeep() {
-    const terms = state.crateQuery.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-    if (!terms.length) return null;
-    const byId = new Map(state.crates.map((crate) => [crate.id, crate]));
-    const keep = /* @__PURE__ */ new Set();
-    for (const crate of state.crates) {
-      if (!terms.every((term) => crate.name.toLocaleLowerCase().includes(term))) continue;
-      let current2 = crate;
-      const guard = /* @__PURE__ */ new Set();
-      while (current2 && !guard.has(current2.id)) {
-        guard.add(current2.id);
-        keep.add(current2.id);
-        current2 = byId.get(current2.parent);
-      }
-    }
-    return keep;
-  }
-  function visibleCrates() {
-    const children = childLists();
-    const keep = crateKeep();
-    const ordered = [];
-    const seen = /* @__PURE__ */ new Set();
-    function walk(parent, depth) {
-      for (const crate of children.get(parent) || []) {
-        if (seen.has(crate.id)) continue;
-        if (keep && !keep.has(crate.id)) continue;
-        seen.add(crate.id);
-        crate.depth = depth;
-        crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
-        ordered.push(crate);
-        if (keep || state.expanded.has(crate.id)) walk(crate.id, depth + 1);
-      }
-    }
-    walk(state.rootId ?? null, 0);
-    for (const crate of state.crates) {
-      if (seen.has(crate.id)) continue;
-      if (keep && !keep.has(crate.id)) continue;
-      const parentListed = state.crates.some((item4) => item4.id === crate.parent);
-      if (parentListed) continue;
-      seen.add(crate.id);
-      crate.depth = 0;
-      crate.childCount = (children.get(crate.id) || []).filter((child) => !keep || keep.has(child.id)).length;
-      ordered.push(crate);
-      if (keep || state.expanded.has(crate.id)) walk(crate.id, 1);
-    }
-    return ordered;
   }
   function expandAncestors(id) {
     const byId = new Map(state.crates.map((crate2) => [crate2.id, crate2]));
@@ -23362,20 +23821,6 @@
       state.expanded.add(parent.id);
       crate = parent;
     }
-  }
-  function hiddenSelectionHolder(visible) {
-    if (state.activeCrate === "all") return null;
-    if (visible.some((crate2) => crate2.id === state.activeCrate)) return null;
-    const byId = new Map(state.crates.map((crate2) => [crate2.id, crate2]));
-    const visibleIds = new Set(visible.map((crate2) => crate2.id));
-    let crate = byId.get(state.activeCrate);
-    const guard = /* @__PURE__ */ new Set();
-    while (crate && !guard.has(crate.id)) {
-      guard.add(crate.id);
-      crate = byId.get(crate.parent);
-      if (crate && visibleIds.has(crate.id)) return crate.id;
-    }
-    return null;
   }
   function tracksForCrate(crate) {
     if (crate === "all") return state.tracks;
@@ -23432,63 +23877,6 @@
     }
     return result;
   }
-  function crateRow(crate) {
-    const row = document.createElement("div");
-    row.className = "crate-row";
-    if (crate.holds) row.classList.add("holds-selection");
-    row.style.paddingLeft = `${crate.depth * 14}px`;
-    if (crate.childCount) {
-      const open = state.crateQuery ? true : state.expanded.has(crate.id);
-      const twist = buttonEl(open ? collapseCrate(crate.name) : expandCrate(crate.name));
-      twist.className = "twist";
-      twist.tabIndex = -1;
-      twist.setAttribute("aria-expanded", String(open));
-      twist.setAttribute("aria-label", t(open ? "crates.collapse" : "crates.expand", { name: crate.name }));
-      twist.addEventListener("click", () => toggleCrate(crate.id));
-      row.append(twist);
-    } else {
-      const gap = document.createElement("span");
-      gap.className = "twist-gap";
-      gap.setAttribute("aria-hidden", "true");
-      row.append(gap);
-    }
-    const button2 = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
-    button2.className = "crate";
-    button2.dataset.id = String(crate.id);
-    if (crate.parent != null) button2.dataset.parent = String(crate.parent);
-    button2.setAttribute("role", "treeitem");
-    button2.setAttribute("aria-level", String(crate.depth + 1));
-    const split = state.splitCrates && state.mode === "crates";
-    const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-    button2.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
-    if (crate.childCount) {
-      button2.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
-    }
-    const name = document.createElement("span");
-    name.className = "name";
-    const hex = colorHex(crate.color);
-    if (hex) {
-      const swatch = document.createElement("span");
-      swatch.className = "swatch";
-      swatch.style.background = hex;
-      name.append(swatch);
-    }
-    name.append(document.createTextNode(crate.name));
-    button2.append(name);
-    if (crate.smart) {
-      const smart = document.createElement("span");
-      smart.className = "smart";
-      smart.textContent = t("crates.smartBadge");
-      button2.append(smart);
-    }
-    const meta = document.createElement("span");
-    meta.className = "meta";
-    meta.textContent = formatNumber(crate.count);
-    button2.append(meta);
-    button2.addEventListener("click", (event) => selectCrate(crate.id, event));
-    row.append(button2);
-    return row;
-  }
   function placeCrateFocus(previousId) {
     const items = [...el("crate-list").querySelectorAll(".crate")];
     if (!items.length) return null;
@@ -23497,44 +23885,14 @@
     return current2;
   }
   function renderCrates() {
-    const scroll = el("crate-list").scrollTop;
+    const list = el("crate-list");
+    const scroll = list.scrollTop;
     const active2 = document.activeElement;
-    const restore = el("crate-list").contains(active2) ? active2.closest(".crate-row")?.querySelector(".crate")?.dataset.id ?? null : null;
-    const query = queryTerms();
-    const matched = query.terms.length || query.filters.length ? new Set(state.tracks.filter((track) => listMatches(track, query)).map((track) => track.id)) : null;
-    const crates = visibleCrates();
-    const holder = hiddenSelectionHolder(crates);
-    el("crate-list").replaceChildren();
-    el("crate-list").append(crateRow({
-      id: "all",
-      name: t("crates.allTracks"),
-      depth: 0,
-      childCount: 0,
-      smart: false,
-      count: matched ? matched.size : state.tracks.length
-    }));
-    for (const crate of crates) {
-      const members = state.crateTracks.get(crate.id) || /* @__PURE__ */ new Set();
-      let shown = members.size;
-      if (matched) {
-        shown = 0;
-        for (const id of members) if (matched.has(id)) shown += 1;
-      }
-      el("crate-list").append(crateRow({
-        id: crate.id,
-        name: crate.name,
-        depth: crate.depth || 0,
-        childCount: crate.childCount || 0,
-        smart: Boolean(crate.smart),
-        parent: crate.parent ?? null,
-        color: crate.color ?? null,
-        count: shown,
-        holds: holder === crate.id
-      }));
-    }
+    const restore = list.contains(active2) ? active2.closest(".crate-row")?.querySelector(".crate")?.dataset.id ?? null : null;
+    mountCrates();
     const focused = placeCrateFocus(restore);
     if (restore && focused) focused.focus({ preventScroll: true });
-    el("crate-list").scrollTop = scroll;
+    list.scrollTop = scroll;
     renderRules();
   }
   function renderRules() {
@@ -23614,6 +23972,14 @@
     if (state.mode !== "crates") return null;
     return state.activeCrate;
   }
+  function exportPlaylistM3u() {
+    const crate = playlistCrate();
+    if (crate == null) return;
+    const link = document.createElement("a");
+    link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
+    link.download = "crate.m3u";
+    link.click();
+  }
   function renderShell() {
     markHistoryColumns();
     const cratesMode = state.mode === "crates";
@@ -23683,6 +24049,7 @@
     for (const button2 of document.querySelectorAll("[data-crate-sort]")) {
       button2.setAttribute("aria-pressed", String(button2.dataset.crateSort === state.crateSort));
     }
+    mountCrates();
     const crateChosen = state.activeCrate !== "all";
     el("crate-new").disabled = !state.writable;
     el("crate-rename").disabled = !state.writable || !crateChosen;
@@ -23930,7 +24297,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react7.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -24041,8 +24408,8 @@
       saveTrack(track.id, form);
     });
     body.append(form);
-    const actions2 = document.createElement("div");
-    actions2.className = "actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "actions";
     const reveal = buttonEl(revealTip(track.serato?.file_manager || state.serato?.file_manager || "Finder"));
     const manager = track.serato?.file_manager || state.serato?.file_manager || "Finder";
     reveal.textContent = t("detail.reveal", { manager });
@@ -24066,7 +24433,7 @@
     useInCrates.addEventListener("click", () => {
       bridge.openReplaceInCratesDialog(track.id).catch((error2) => setNotice(failureOf(error2).message));
     });
-    actions2.append(reveal, prepare, relocate, remove, useInCrates);
+    actions3.append(reveal, prepare, relocate, remove, useInCrates);
     if (state.mode === "duplicates" && selectedDuplicateGroup()) {
       const merge = buttonEl(tips.mergeDuplicates);
       merge.textContent = t("merge.title");
@@ -24074,9 +24441,9 @@
       merge.addEventListener("click", () => {
         bridge.openMergeDialog().catch((error2) => setNotice(failureOf(error2).message));
       });
-      actions2.append(merge);
+      actions3.append(merge);
     }
-    body.append(actions2);
+    body.append(actions3);
     body.append(relatedSection(track, writable));
     body.append(markerSection(track));
     if (track.copies?.length) body.append(copySection(track.id, track.copies, writable));
@@ -25502,14 +25869,7 @@
       if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
       Promise.all(jobs).catch(showFailure);
     });
-    el("export-m3u").addEventListener("click", () => {
-      const crate = playlistCrate();
-      if (crate == null) return;
-      const link = document.createElement("a");
-      link.href = `/api/export.m3u?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`;
-      link.download = "crate.m3u";
-      link.click();
-    });
+    el("export-m3u").addEventListener("click", () => exportPlaylistM3u());
     el("import-m3u").addEventListener("click", () => {
       if (playlistCrate() == null) return;
       if (!state.writable) {
@@ -25604,6 +25964,23 @@
   bridge.selectEntry = selectEntry;
   bridge.reloadLibrary = loadLibrary;
   bridge.lockDown = lockDown;
+  bindCrateActions({
+    select: selectCrate,
+    toggle: toggleCrate,
+    create: () => {
+      createCrate().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    rename: () => {
+      renameCrate().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    color: () => {
+      colorCrate().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    remove: () => {
+      deleteCrate().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    exportM3u: exportPlaylistM3u
+  });
 
   // src/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;
@@ -26979,6 +27356,17 @@
     openWizard(true, trigger instanceof HTMLElement ? trigger : el("search"));
   }
   bridge.openSetup = openSetup;
+  bindCrateActions({
+    renameFromTags: (button2) => {
+      const crate = state.activeCrate;
+      if (typeof crate !== "number") return;
+      openFilesDialog("rename_from_tags", button2, "crate");
+    },
+    exportRekordbox: () => {
+      if (playlistCrate() == null) return;
+      requestRekordboxReport();
+    }
+  });
 
   // src/help.ts
   var kind = "bug";
@@ -28179,6 +28567,11 @@
       runFolderSync().catch((error2) => setNotice(failureOf(error2).message));
     });
   }
+  bindCrateActions({
+    folderSync: () => {
+      openFolderSyncDialog().catch((error2) => setNotice(failureOf(error2).message));
+    }
+  });
 
   // src/presets.ts
   var PREVIEW_DELAY_MS2 = 250;
@@ -28313,6 +28706,14 @@
       createPreset().catch((error2) => setNotice(failureOf(error2).message));
     });
   }
+  bindCrateActions({
+    preset: () => {
+      openPresetDialog().catch((error2) => setNotice(failureOf(error2).message));
+    },
+    refresh: () => {
+      refreshActivePreset().catch((error2) => setNotice(failureOf(error2).message));
+    }
+  });
 
   // src/desktop-actions.ts
   var CLICKS = {
@@ -28464,6 +28865,12 @@
       paintDualChrome();
     });
   }
+  bindCrateActions({
+    split: toggleSplit,
+    saveView: () => {
+      saveFocusedView().catch((error2) => setNotice(failureOf(error2).message));
+    }
+  });
 
   // src/app.ts
   function wireSnapshots() {

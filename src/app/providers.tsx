@@ -1,17 +1,20 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. Later screens add their own context file
- * and one wrapper here. This module reads the player engine; it does not
- * own playback.
+ * Player state is one domain. The crate rail is the next. Each screen
+ * adds its own context file and one wrapper here. This module reads the
+ * player engine and the crate snapshot; it does not own playback or
+ * crate writes.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
+import { CrateProvider as CrateContextProvider } from "../context/CrateContext";
 import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import { readCrateValue, subscribeCrates } from "../crate-store";
 import {
   canSkip,
   canTogglePlay,
@@ -70,12 +73,37 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Mount the crate domain at the root of one React island.
+ *
+ * Updates are flushed so the rail and action buttons match `state` in
+ * the same turn as emitCrates.
+ *
+ * @param children Island that calls `useCrates`.
+ */
+export function CrateProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readCrateValue);
+  useEffect(() => {
+    return subscribeCrates(() => {
+      flushSync(() => {
+        setValue(readCrateValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <CrateContextProvider value={current}>{children}</CrateContextProvider>;
+}
+
+/**
  * Nest every domain provider.
  *
- * Player is the first domain. A later screen adds one line here.
+ * Player is the first domain. Crates add one wrapper here.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
-  return <PlayerProvider>{children}</PlayerProvider>;
+  return (
+    <PlayerProvider>
+      <CrateProvider>{children}</CrateProvider>
+    </PlayerProvider>
+  );
 }
