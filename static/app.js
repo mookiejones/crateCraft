@@ -468,9 +468,9 @@
       exports.useState = function(initialState) {
         return ReactSharedInternals.H.useState(initialState);
       };
-      exports.useSyncExternalStore = function(subscribe2, getSnapshot, getServerSnapshot) {
+      exports.useSyncExternalStore = function(subscribe3, getSnapshot, getServerSnapshot) {
         return ReactSharedInternals.H.useSyncExternalStore(
-          subscribe2,
+          subscribe3,
           getSnapshot,
           getServerSnapshot
         );
@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners2 = [], signal = this.signal = {
+        var listeners3 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners2.push(listener);
+            listeners3.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners2.forEach(function(listener) {
+          listeners3.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners2 = currentEntangledListeners;
+          var listeners3 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])();
+          for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners2 = [], thenableWithOverride = {
+        var listeners3 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners2.push(resolve);
+            listeners3.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])(result);
+            for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners2.length; error2++)
-              (0, listeners2[error2])(void 0);
+            for (error2 = 0; error2 < listeners3.length; error2++)
+              (0, listeners3[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -4666,7 +4666,7 @@
         }
         return [newState, dispatch];
       }
-      function updateSyncExternalStore(subscribe2, getSnapshot, getServerSnapshot) {
+      function updateSyncExternalStore(subscribe3, getSnapshot, getServerSnapshot) {
         var fiber = currentlyRenderingFiber, hook = updateWorkInProgressHook(), isHydrating$jscomp$0 = isHydrating;
         if (isHydrating$jscomp$0) {
           if (void 0 === getServerSnapshot) throw Error(formatProdErrorMessage(407));
@@ -4678,17 +4678,17 @@
         );
         snapshotChanged && (hook.memoizedState = getServerSnapshot, didReceiveUpdate = true);
         hook = hook.queue;
-        updateEffect(subscribeToStore.bind(null, fiber, hook, subscribe2), [
-          subscribe2
+        updateEffect(subscribeToStore.bind(null, fiber, hook, subscribe3), [
+          subscribe3
         ]);
-        subscribe2 = hook.getSnapshot !== getSnapshot || snapshotChanged || null !== workInProgressHook && 0 !== (workInProgressHook.memoizedState.tag & 1);
+        subscribe3 = hook.getSnapshot !== getSnapshot || snapshotChanged || null !== workInProgressHook && 0 !== (workInProgressHook.memoizedState.tag & 1);
         pushSimpleEffect(
-          subscribe2 ? 9 : 8,
+          subscribe3 ? 9 : 8,
           { destroy: void 0 },
           updateStoreInstance.bind(null, fiber, hook, getServerSnapshot, getSnapshot),
           null
         );
-        if (subscribe2) {
+        if (subscribe3) {
           fiber.flags |= 2048;
           if (null === workInProgressRoot) throw Error(formatProdErrorMessage(349));
           isHydrating$jscomp$0 || 0 !== (renderLanes & 127) || pushStoreConsistencyCheck(fiber, getSnapshot, getServerSnapshot);
@@ -4706,8 +4706,8 @@
         inst.getSnapshot = getSnapshot;
         checkIfSnapshotChanged(inst) && forceStoreRerender(fiber);
       }
-      function subscribeToStore(fiber, inst, subscribe2) {
-        return subscribe2(function() {
+      function subscribeToStore(fiber, inst, subscribe3) {
+        return subscribe3(function() {
           checkIfSnapshotChanged(inst) && forceStoreRerender(fiber);
         });
       }
@@ -5428,7 +5428,7 @@
           mountWorkInProgressHook().memoizedState = stateHook;
           return [false, stateHook];
         },
-        useSyncExternalStore: function(subscribe2, getSnapshot, getServerSnapshot) {
+        useSyncExternalStore: function(subscribe3, getSnapshot, getServerSnapshot) {
           var fiber = currentlyRenderingFiber, hook = mountWorkInProgressHook();
           if (isHydrating) {
             if (void 0 === getServerSnapshot)
@@ -5443,8 +5443,8 @@
           hook.memoizedState = getServerSnapshot;
           var inst = { value: getServerSnapshot, getSnapshot };
           hook.queue = inst;
-          mountEffect(subscribeToStore.bind(null, fiber, inst, subscribe2), [
-            subscribe2
+          mountEffect(subscribeToStore.bind(null, fiber, inst, subscribe3), [
+            subscribe3
           ]);
           fiber.flags |= 2048;
           pushSimpleEffect(
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners2 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners3 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners2.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners3.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners2.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners3.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners2;
+          if (3 === targetFiber.tag) return listeners3;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners2 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners3 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners2.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners3.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners2.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners3.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners2.length && dispatchQueue.push({ event, listeners: listeners2 });
+        0 !== listeners3.length && dispatchQueue.push({ event, listeners: listeners3 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners2 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners2, type, listener, optionsOrUseCapture)) {
+        var listeners3 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners3, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners2.push({
+          listeners3.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners2;
+        this._eventListeners = listeners3;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners2 = this._eventListeners;
-        if (null !== listeners2 && (listener = indexOfEventListener(
-          listeners2,
+        var listeners3 = this._eventListeners;
+        if (null !== listeners3 && (listener = indexOfEventListener(
+          listeners3,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners2[listener];
+          var _listeners$index = listeners3[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners2.splice(listener, 1);
+          listeners3.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -17743,7 +17743,7 @@
     const available = () => container.clientWidth - handle.offsetWidth;
     const fitted = (width) => clampWidth(width, available(), minFirst, minSecond);
     const shown = () => current2 == null ? first.getBoundingClientRect().width : fitted(current2);
-    function paint3() {
+    function paint4() {
       if (current2 == null) container.style.removeProperty(property);
       else container.style.setProperty(property, `${fitted(current2)}px`);
       const room = available();
@@ -17753,7 +17753,7 @@
     }
     function move(width) {
       current2 = fitted(width);
-      paint3();
+      paint4();
     }
     handle.addEventListener("pointerdown", (event) => {
       if (event.button !== 0) return;
@@ -17795,17 +17795,17 @@
     });
     handle.addEventListener("dblclick", () => {
       current2 = null;
-      paint3();
+      paint4();
       onCommit(null);
     });
-    paint3();
+    paint4();
     return {
       set(width) {
         current2 = width == null ? null : Math.round(width);
-        paint3();
+        paint4();
       },
       width: () => current2,
-      refit: paint3
+      refit: paint4
     };
   }
 
@@ -20586,44 +20586,12 @@
     row.append(number, swatch, time, name);
     return row;
   }
-  function paintCueDiffRow(diff) {
-    const row = document.createElement("p");
-    row.className = "cue-diff";
-    const empty = t("markers.cueEmpty");
-    const beforeText = cueSummary(diff.before, empty);
-    const afterText = cueSummary(diff.after, empty);
-    row.setAttribute(
-      "aria-label",
-      `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`
-    );
-    const number = document.createElement("span");
-    number.className = "marker-slot";
-    number.textContent = String(diff.slot + 1);
-    const arrow = document.createElement("span");
-    arrow.className = "cue-diff-arrow";
-    arrow.setAttribute("aria-hidden", "true");
-    arrow.textContent = "→";
-    row.append(number, paintCueSide(diff.before, diff.slot), arrow, paintCueSide(diff.after, diff.slot));
-    return row;
-  }
   function cueSignature(cue) {
     if (!cue) return "";
     const start = Number(cue.start_ms);
     const color = typeof cue.color === "string" ? cue.color : "";
     const name = typeof cue.name === "string" ? cue.name : "";
     return `${start}\0${color}\0${name}`;
-  }
-  function paintCueSide(cue, slot) {
-    const side = document.createElement("span");
-    side.className = cue ? "cue-diff-side" : "cue-diff-side marker-empty";
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    const color = slotColor(slot, cue?.color);
-    if (color) swatch.style.background = color;
-    const text2 = document.createElement("span");
-    text2.textContent = cueSummary(cue, t("markers.cueEmpty"));
-    side.append(swatch, text2);
-    return side;
   }
 
   // src/folder-sync-view.ts
@@ -20731,642 +20699,14 @@
   }
 
   // src/restore.ts
-  var reloadLibrary = async () => {
-  };
-  function bindLibraryReload(reload) {
-    reloadLibrary = reload;
-  }
-  async function loadSnapshots() {
-    state.snapshotLoading = true;
-    state.snapshotError = "";
-    const operationsPromise = loadOperations();
-    renderSnapshots();
-    try {
-      const response = await fetch("/api/snapshots");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
-      state.snapshots = payload.snapshots || [];
-      state.snapshotUndo = payload.pending_undo || null;
-      state.writeBlock = payload.write_block || "";
-      state.writeBlockCode = payload.write_block_code || "";
-      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
-      state.seratoRunning = Boolean(payload.serato_running);
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotLoading = false;
-      renderSnapshots();
-    } finally {
-      await operationsPromise;
-    }
-  }
-  async function loadOperations() {
-    state.operationsLoading = true;
-    state.operationsError = "";
-    renderOperations();
-    try {
-      const response = await fetch("/api/operations");
-      const payload = await readJSON(response);
-      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
-      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
-      state.operationsLoading = false;
-    } catch (error2) {
-      state.operationsLoading = false;
-      state.operationsError = failureOf(error2).message || t("operations.unreadable");
-    }
-    renderOperations();
-  }
-  function failSnapshots(error2) {
-    state.snapshotLoading = false;
-    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
-    renderSnapshots();
-  }
-  function renderSnapshots() {
-    renderOperations();
-    el("crate-foot").textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
-    const status = el("snapshots-status");
-    const block = el("snapshots-block");
-    const undo = el("snapshots-undo");
-    const list = el("snapshots-list");
-    list.setAttribute("aria-busy", String(state.snapshotLoading));
-    paintDriveCopies();
-    if (state.writeBlock) {
-      block.hidden = false;
-      block.textContent = codedText(state.writeBlock, state.writeBlockCode, state.writeBlockParams);
-    } else {
-      block.hidden = true;
-      block.textContent = "";
-    }
-    if (state.snapshotUndo && state.snapshotUndo.restore_id) {
-      undo.hidden = false;
-      el("snapshots-undo-text").textContent = state.snapshotUndo.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange");
-    } else {
-      undo.hidden = true;
-    }
-    list.replaceChildren();
-    if (state.snapshotLoading) {
-      status.textContent = t("snapshots.reading");
-      return;
-    }
-    if (state.snapshotError) {
-      status.textContent = state.snapshotError;
-      const retry = buttonEl(tips.snapshotsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => loadSnapshots().catch((error2) => failSnapshots(error2)));
-      list.append(retry);
-      return;
-    }
-    status.textContent = state.snapshotMessage ? t(state.snapshotMessage) : "";
-    if (!state.snapshots.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("snapshots.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item4 of state.snapshots) {
-      const card = document.createElement("article");
-      card.className = "snapshot-card";
-      card.setAttribute("role", "listitem");
-      const title2 = document.createElement("p");
-      title2.textContent = `${item4.created || t("snapshots.unknownTime")} · ${item4.trigger || t("snapshots.trigger")}`;
-      const detail = document.createElement("p");
-      const version = item4.serato_version && item4.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item4.serato_version, build: String(item4.serato_build ?? "") }) : t("snapshots.seratoUnknown");
-      const drives = (item4.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item4.unavailable_drives || []) })}` : "";
-      detail.textContent = `${version}. ${item4.reason || ""}${drives}`;
-      const restore = buttonEl(tips.reviewRestore);
-      restore.textContent = t("snapshots.reviewRestore");
-      restore.addEventListener("click", () => openSnapshotPlan(item4.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
-      card.append(title2, detail, restore);
-      list.append(card);
-    }
-  }
-  var OPERATION_ACTIONS = {
-    crate_create: "operations.action.crateCreate",
-    crate_rename: "operations.action.crateRename",
-    crate_delete: "operations.action.crateDelete",
-    crate_color: "operations.action.crateColor",
-    crate_expanded: "operations.action.crateExpanded",
-    crate_rules: "operations.action.crateRules",
-    crate_add: "operations.action.crateAdd",
-    crate_remove: "operations.action.crateRemove",
-    crate_prepare: "operations.action.cratePrepare",
-    crate_remove_library: "operations.action.crateRemoveLibrary",
-    save_track: "operations.action.saveTrack",
-    import_m3u: "operations.action.importM3u",
-    merge_duplicates: "operations.action.mergeDuplicates",
-    rename: "operations.action.rename",
-    rename_from_tags: "operations.action.renameFromTags",
-    move: "operations.action.move",
-    move_folder: "operations.action.moveFolder",
-    replace: "operations.action.replace",
-    replace_in_crates: "operations.action.replaceInCrates",
-    relink: "operations.action.relink",
-    delete: "operations.action.delete",
-    restore: "operations.action.restore",
-    restore_recover: "operations.action.restoreRecover"
-  };
-  var OPERATION_OUTCOMES = {
-    verified: "operations.outcome.verified",
-    rolled_back: "operations.outcome.rolledBack",
-    refused: "operations.outcome.refused",
-    rollback_failed: "operations.outcome.rollbackFailed"
-  };
-  function renderOperations() {
-    const alert = el("operations-alert");
-    const status = el("operations-status");
-    const list = el("operations-list");
-    list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest8 = state.operations[state.operations.length - 1];
-    const failed = latest8?.result === "rollback_failed";
-    alert.hidden = !failed;
-    alert.textContent = failed ? t("operations.rollbackFailed") : "";
-    list.replaceChildren();
-    if (state.operationsLoading && state.operations.length === 0) {
-      status.textContent = t("operations.reading");
-      return;
-    }
-    if (state.operationsError) {
-      status.textContent = state.operationsError;
-      const retry = buttonEl(tips.operationsRetry);
-      retry.textContent = t("common.tryAgain");
-      retry.addEventListener("click", () => {
-        loadOperations().catch(() => void 0);
-      });
-      list.append(retry);
-      return;
-    }
-    status.textContent = "";
-    if (!state.operations.length) {
-      const empty = document.createElement("p");
-      empty.textContent = t("operations.empty");
-      list.append(empty);
-      return;
-    }
-    for (const item4 of [...state.operations].reverse()) {
-      list.append(operationCard(item4));
-    }
-  }
-  function operationCard(item4) {
-    const card = document.createElement("article");
-    card.className = "operation-card snapshot-card";
-    card.setAttribute("role", "listitem");
-    const actionName = item4.action || item4.operation || "";
-    const actionKey2 = OPERATION_ACTIONS[actionName];
-    const outcomeKey = OPERATION_OUTCOMES[item4.result || ""] ?? "operations.outcome.refused";
-    const title2 = document.createElement("p");
-    title2.textContent = t("operations.entry", {
-      time: operationTime(item4.time || ""),
-      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
-      target: item4.target || t("operations.noTarget"),
-      outcome: t(outcomeKey)
-    });
-    card.append(title2);
-    if (item4.snapshot_before && item4.snapshot_after) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.snapshots", {
-        before: item4.snapshot_before,
-        after: item4.snapshot_after
-      });
-      card.append(detail);
-    } else if (item4.snapshot_before) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.beforeOnly", { before: item4.snapshot_before });
-      card.append(detail);
-    }
-    return card;
-  }
-  function operationTime(value) {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
-    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
-  }
-  async function openSnapshotPlan(snapshotId) {
-    state.snapshotPlanId = snapshotId;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    block.textContent = t("snapshots.readingPlan");
-    confirm2.disabled = true;
-    setSnapshotDialogStatus("");
-    el("snapshot-dialog").showModal();
-    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
-    paintSnapshotPlan(plan);
-  }
-  var lastPlan = null;
-  function repaintSnapshotPlan() {
-    if (lastPlan && el("snapshot-dialog").open) paintSnapshotPlan(lastPlan);
-  }
-  function isDriveCopy(value) {
-    if (!value || typeof value !== "object") return false;
-    const record = value;
-    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
-  }
-  function driveBackupFrom(value) {
-    if (!value || typeof value !== "object") return null;
-    const record = value;
-    if (record.verified !== true) return null;
-    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
-    return {
-      folder: typeof record.folder === "string" ? record.folder : "",
-      verified: true,
-      drives
-    };
-  }
-  function driveName(drive, status) {
-    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
-    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
-    if (status === "permission") return t("snapshots.drivePermission", { name });
-    return name;
-  }
-  function driveCopyText() {
-    const report = state.driveBackup;
-    const drives = report?.drives ?? [];
-    if (!report?.verified || !drives.length) {
-      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
-    }
-    const parts = [];
-    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
-    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
-    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
-    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
-    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
-    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
-    return parts.join(" ") || t("snapshots.drivesIntro");
-  }
-  function paintDriveCopies() {
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = driveCopyText();
-  }
-  async function backupDriveCrates() {
-    const button2 = el("snapshots-drives");
-    button2.disabled = true;
-    const note = el("snapshots-drives-note");
-    note.hidden = false;
-    note.textContent = t("snapshots.backupDrivesBusy");
-    try {
-      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
-      state.driveBackup = driveBackupFrom(payload.drive_backup);
-      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
-      renderSnapshots();
-    } catch (error2) {
-      state.snapshotMessage = "";
-      renderSnapshots();
-      const shown = el("snapshots-drives-note");
-      shown.hidden = false;
-      shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
-    } finally {
-      button2.disabled = false;
-    }
-  }
-  function paintSnapshotPlan(plan) {
-    lastPlan = plan;
-    const planBox = el("snapshot-plan");
-    const block = el("snapshot-block");
-    const confirm2 = el("snapshot-confirm");
-    planBox.replaceChildren();
-    const crates = plan.crates || {};
-    const tracks = plan.tracks || {};
-    appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
-    appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
-    appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
-    appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
-    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
-    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
-    if (plan.registration_warning) {
-      const warning = document.createElement("p");
-      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
-      planBox.append(warning);
-    }
-    appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
-    appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
-    appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
-    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
-    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
-    const deleted = plan.deleted || {};
-    appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
-    appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
-    appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
-    appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
-    if (plan.restore_blocked) {
-      block.textContent = codedText(
-        plan.restore_blocked,
-        plan.restore_blocked_code,
-        messageParams(plan.restore_blocked_params)
-      );
-      confirm2.disabled = true;
-    } else {
-      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
-      confirm2.disabled = false;
-    }
-  }
-  function appendPlanLine(parent, label, rows2) {
-    const line = document.createElement("p");
-    const items = rows2 || [];
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-    } else {
-      const names = items.slice(0, 8).map((item4) => item4.name || item4.path || item4.drive_label || t("plan.item"));
-      const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
-      const listed = `${names.join(", ")}${extra}`;
-      line.textContent = t("plan.listed", { label, count: items.length, names: listed });
-    }
-    parent.append(line);
-  }
-  function appendCueDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item4 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item4.path || "");
-      parent.append(row);
-      for (const diff of cueDiffRows(item4.before, item4.after)) {
-        parent.append(paintCueDiffRow(diff));
-      }
-    }
-  }
-  function appendFrameDiffs(parent, label, rows2) {
-    const items = rows2 || [];
-    const line = document.createElement("p");
-    if (!items.length) {
-      line.textContent = t("plan.none", { label });
-      parent.append(line);
-      return;
-    }
-    line.textContent = t("plan.files", { label, count: items.length });
-    parent.append(line);
-    for (const item4 of items.slice(0, 12)) {
-      const row = document.createElement("p");
-      row.textContent = fileName(item4.path || "");
-      parent.append(row);
-    }
-  }
-  function fileName(path) {
-    const parts = String(path).split(/[/\\]/);
-    return parts[parts.length - 1] || path;
-  }
-  function setSnapshotDialogStatus(message) {
-    el("snapshot-status").textContent = message;
-  }
-  async function takeSnapshot() {
-    const button2 = el("snapshots-take");
-    button2.disabled = true;
-    button2.textContent = t("snapshots.saving");
-    try {
-      await postJSON("/api/snapshots", { action: "create" });
-      state.snapshotMessage = "snapshots.saved";
-      await loadSnapshots();
-    } finally {
-      button2.disabled = false;
-      button2.textContent = t("snapshots.take");
-    }
-  }
-  async function confirmSnapshotRestore() {
-    const confirm2 = el("snapshot-confirm");
-    confirm2.disabled = true;
-    confirm2.textContent = t("snapshots.restoring");
-    setSnapshotDialogStatus("");
-    try {
-      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
-      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
-      const result = await postJSON("/api/snapshots", body);
-      const skipped = result.crates_skipped || [];
-      el("snapshot-dialog").close();
-      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
-      await loadSnapshots();
-      await reloadLibrary();
-      if (skipped.length) {
-        const names = skipped.map((item4) => item4.name || item4.path || t("plan.item")).join(", ");
-        el("snapshots-status").textContent = t("snapshots.skippedCrates", { count: skipped.length, names });
-      }
-    } catch (error2) {
-      setSnapshotDialogStatus(failureOf(error2).message);
-      confirm2.disabled = false;
-      await loadOperations();
-    } finally {
-      confirm2.textContent = t("snapshots.restore");
-    }
-  }
-
-  // src/search-filters.ts
-  var TEXT_SEARCH_FIELDS = [
-    "comments",
-    "grouping",
-    "composer",
-    "title",
-    "artist",
-    "album",
-    "genre",
-    "file"
-  ];
-  var KEY_VALUES = {
-    "g#m": 0,
-    abm: 0,
-    "1a": 0,
-    ebm: 1,
-    "d#m": 1,
-    "2a": 1,
-    bbm: 2,
-    "a#m": 2,
-    "3a": 2,
-    fm: 3,
-    "4a": 3,
-    cm: 4,
-    "5a": 4,
-    gm: 5,
-    "6a": 5,
-    dm: 6,
-    "7a": 6,
-    am: 7,
-    "8a": 7,
-    em: 8,
-    "9a": 8,
-    bm: 9,
-    "10a": 9,
-    "f#m": 10,
-    gbm: 10,
-    "11a": 10,
-    "c#m": 11,
-    dbm: 11,
-    "12a": 11,
-    b: 12,
-    "1b": 12,
-    "f#": 13,
-    gb: 13,
-    "2b": 13,
-    "c#": 14,
-    db: 14,
-    "3b": 14,
-    "g#": 15,
-    ab: 15,
-    "4b": 15,
-    "d#": 16,
-    eb: 16,
-    "5b": 16,
-    "a#": 17,
-    bb: 17,
-    "6b": 17,
-    f: 18,
-    "7b": 18,
-    c: 19,
-    "8b": 19,
-    g: 20,
-    "9b": 20,
-    d: 21,
-    "10b": 21,
-    a: 22,
-    "11b": 22,
-    e: 23,
-    "12b": 23
-  };
-  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
-  var EXACT = new RegExp(`^${NUMBER}$`);
-  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
-  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
-  var ABOVE = new RegExp(`^>${NUMBER}$`);
-  var BELOW = new RegExp(`^<${NUMBER}$`);
-  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
-  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
-  function isNone(value) {
-    return NONE.has(value);
-  }
-  function isYes(value) {
-    return YES.has(value);
-  }
-  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
-  function isTextSearchField(value) {
-    return TEXT_FIELD_SET.has(value);
-  }
-  function textField(track, field) {
-    if (field === "title") return String(track.name ?? "");
-    return String(track[field] ?? "");
-  }
-  function trackHaystack(track, field) {
-    if (field) return textField(track, field).toLocaleLowerCase();
-    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
-  }
-  function hasBpm(track) {
-    const bpm = Number(track.bpm);
-    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
-  }
-  function hasKey2(track) {
-    return Boolean(String(track.key ?? "").trim());
-  }
-  function cueFlag(track) {
-    if (track.has_cues === true) return true;
-    if (track.has_cues === false) return false;
-    if (track.markers_found === true) return true;
-    if (track.markers_found === false) return false;
-    if (Array.isArray(track.cues)) {
-      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
-      return track.cues.length > 0 || loops > 0;
-    }
-    return null;
-  }
-  function keyNumber(value) {
-    if (!value) return -1;
-    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
-  }
-  function mixingKeys(key) {
-    const base = key < 12 ? 0 : 12;
-    const index = key - base;
-    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
-  }
-  function bpmFilter(value) {
-    let match = RANGE.exec(value);
-    if (match) {
-      const low = Number(match[1]);
-      const high = Number(match[2]);
-      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
-    }
-    match = AROUND.exec(value);
-    if (match) {
-      const center = Number(match[1]);
-      const spread = Number(match[2]);
-      return { kind: "bpm", min: center - spread, max: center + spread };
-    }
-    match = ABOVE.exec(value);
-    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
-    match = BELOW.exec(value);
-    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
-    match = EXACT.exec(value);
-    if (match) {
-      const whole = Number(match[1]);
-      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
-    }
-    return null;
-  }
-  function parseQuery(text2) {
-    const terms = [];
-    const filters = [];
-    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
-      const colon = word.indexOf(":");
-      const name = colon > 0 ? word.slice(0, colon) : "";
-      const value = colon > 0 ? word.slice(colon + 1) : "";
-      let filter = null;
-      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
-      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
-      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
-      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
-      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
-      else if (name === "bpm") filter = bpmFilter(value);
-      else if (name === "key" || name === "mix") {
-        const key = keyNumber(value);
-        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
-      } else if (isTextSearchField(name) && value) {
-        filter = { kind: "field", field: name, value };
-      }
-      if (filter) filters.push(filter);
-      else terms.push(word);
-    }
-    return { terms, filters };
-  }
-  function matchesFilters(track, filters) {
-    for (const filter of filters) {
-      if (filter.kind === "bpm") {
-        if (!hasBpm(track)) return false;
-        const bpm = Number(track.bpm);
-        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
-      } else if (filter.kind === "missing") {
-        if (!track.missing) return false;
-      } else if (filter.kind === "nokey") {
-        if (hasKey2(track)) return false;
-      } else if (filter.kind === "nobpm") {
-        if (hasBpm(track)) return false;
-      } else if (filter.kind === "nokeybpm") {
-        if (hasKey2(track) && hasBpm(track)) return false;
-      } else if (filter.kind === "nocues") {
-        if (cueFlag(track) !== false) return false;
-      } else if (filter.kind === "field") {
-        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
-      } else if (!filter.keys.has(keyNumber(track.key))) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function matchesQuery(track, query, field) {
-    if (!matchesFilters(track, query.filters)) return false;
-    if (!query.terms.length) return true;
-    const hay = trackHaystack(track, field);
-    return query.terms.every((term) => hay.includes(term));
-  }
-
-  // src/views.ts
-  var import_react6 = __toESM(require_react(), 1);
+  var import_react7 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom2 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
   var import_react_dom = __toESM(require_react_dom(), 1);
 
   // src/context/PlayerContext.tsx
@@ -21387,11 +20727,29 @@
     return value;
   }
 
+  // src/context/SnapshotsContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var SnapshotsContext = (0, import_react2.createContext)(null);
+  function SnapshotsProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SnapshotsContext, { value, children });
+  }
+  function useSnapshots() {
+    const value = (0, import_react2.useContext)(SnapshotsContext);
+    if (value === null) {
+      throw new Error("useSnapshots must be used within SnapshotsProvider");
+    }
+    return value;
+  }
+
   // src/player.ts
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react2 = __toESM(require_react(), 1);
+  var import_react3 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -21458,7 +20816,7 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21486,7 +20844,7 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       "button",
       {
         type: "button",
@@ -21497,13 +20855,13 @@
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21515,11 +20873,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
         "button",
         {
           type: "button",
@@ -21539,7 +20897,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react2.useState)(null);
+    const [hold, setHold] = (0, import_react3.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -21566,14 +20924,14 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -21585,8 +20943,8 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -21599,13 +20957,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "input",
             {
               ref: tooltipRef2(tips.seek),
@@ -21624,16 +20982,16 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "input",
           {
             ref: tooltipRef2(tips.volume),
@@ -21774,8 +21132,8 @@
       const first = Math.max(0, Math.ceil((startSeconds - marker.positionSeconds) / spacing - 1e-9));
       const lastExclusive = Math.ceil((endSeconds - marker.positionSeconds) / spacing - 1e-9);
       if (lastExclusive <= first) continue;
-      const emit2 = Math.min(lastExclusive, first + MAX_TICKS);
-      pushRange(ticks, marker.positionSeconds, spacing, beatIndex, emit2, startSeconds, endSeconds, first);
+      const emit3 = Math.min(lastExclusive, first + MAX_TICKS);
+      pushRange(ticks, marker.positionSeconds, spacing, beatIndex, emit3, startSeconds, endSeconds, first);
     }
     return ticks;
   }
@@ -22839,7 +22197,7 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react3.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react4.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -23006,7 +22364,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -23026,33 +22384,900 @@
     };
   }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react4.useState)(readPlayerValue);
-    (0, import_react4.useEffect)(() => {
+    const [value, setValue] = (0, import_react5.useState)(readPlayerValue);
+    (0, import_react5.useEffect)(() => {
       return subscribe(() => {
         (0, import_react_dom.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react4.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider, { value: current2, children });
+  }
+  function readSnapshotsValue() {
+    return {
+      ...getSnapshotsState(),
+      loadSnapshots,
+      loadOperations,
+      takeSnapshot,
+      backupDriveCrates,
+      openSnapshotPlan,
+      confirmSnapshotRestore,
+      closePlan,
+      failSnapshots,
+      setSnapshotDialogStatus
+    };
+  }
+  function SnapshotsProvider2({ children }) {
+    const [value, setValue] = (0, import_react5.useState)(readSnapshotsValue);
+    (0, import_react5.useEffect)(() => {
+      return subscribe2(() => {
+        (0, import_react_dom.flushSync)(() => {
+          setValue(readSnapshotsValue());
+        });
+      });
+    }, []);
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(SnapshotsProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider2, { children });
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(SnapshotsProvider2, { children }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
     (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AppProviders, { children: node }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime6.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
 
+  // src/components/RestoreDialog.tsx
+  var import_react6 = __toESM(require_react(), 1);
+
+  // src/restore-view.ts
+  var OPERATION_ACTIONS = {
+    crate_create: "operations.action.crateCreate",
+    crate_rename: "operations.action.crateRename",
+    crate_delete: "operations.action.crateDelete",
+    crate_color: "operations.action.crateColor",
+    crate_expanded: "operations.action.crateExpanded",
+    crate_rules: "operations.action.crateRules",
+    crate_add: "operations.action.crateAdd",
+    crate_remove: "operations.action.crateRemove",
+    crate_prepare: "operations.action.cratePrepare",
+    crate_remove_library: "operations.action.crateRemoveLibrary",
+    save_track: "operations.action.saveTrack",
+    import_m3u: "operations.action.importM3u",
+    merge_duplicates: "operations.action.mergeDuplicates",
+    rename: "operations.action.rename",
+    rename_from_tags: "operations.action.renameFromTags",
+    move: "operations.action.move",
+    move_folder: "operations.action.moveFolder",
+    replace: "operations.action.replace",
+    replace_in_crates: "operations.action.replaceInCrates",
+    relink: "operations.action.relink",
+    delete: "operations.action.delete",
+    restore: "operations.action.restore",
+    restore_recover: "operations.action.restoreRecover"
+  };
+  var OPERATION_OUTCOMES = {
+    verified: "operations.outcome.verified",
+    rolled_back: "operations.outcome.rolledBack",
+    refused: "operations.outcome.refused",
+    rollback_failed: "operations.outcome.rollbackFailed"
+  };
+  function snapshotCardText(item4) {
+    const title2 = `${item4.created || t("snapshots.unknownTime")} · ${item4.trigger || t("snapshots.trigger")}`;
+    const version = item4.serato_version && item4.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item4.serato_version, build: String(item4.serato_build ?? "") }) : t("snapshots.seratoUnknown");
+    const drives = (item4.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item4.unavailable_drives || []) })}` : "";
+    return { title: title2, detail: `${version}. ${item4.reason || ""}${drives}` };
+  }
+  function driveName(drive, status) {
+    const name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
+    if (status === "read-only") return t("snapshots.driveReadOnly", { name });
+    if (status === "permission") return t("snapshots.drivePermission", { name });
+    return name;
+  }
+  function driveCopyText(report) {
+    const drives = report?.drives ?? [];
+    if (!report?.verified || !drives.length) {
+      return report?.verified ? t("snapshots.drivesNone") : t("snapshots.drivesIntro");
+    }
+    const parts = [];
+    const copied = drives.filter((drive) => drive.status === "copied").map((drive) => driveName(drive, "copied"));
+    const absent = drives.filter((drive) => drive.status === "absent").map((drive) => driveName(drive, "absent"));
+    const skipped = drives.filter((drive) => drive.status === "read-only" || drive.status === "permission").map((drive) => driveName(drive, drive.status ?? ""));
+    if (copied.length) parts.push(t("snapshots.drivesCopied", { drives: formatList(copied) }));
+    if (absent.length) parts.push(t("snapshots.drivesAbsent", { drives: formatList(absent) }));
+    if (skipped.length) parts.push(t("snapshots.drivesSkipped", { drives: formatList(skipped) }));
+    return parts.join(" ") || t("snapshots.drivesIntro");
+  }
+  function fileName(path) {
+    const parts = String(path).split(/[/\\]/);
+    return parts[parts.length - 1] || path;
+  }
+  function planLineText(label, rows2) {
+    const items = rows2 || [];
+    if (!items.length) return t("plan.none", { label });
+    const names = items.slice(0, 8).map((item4) => item4.name || item4.path || item4.drive_label || t("plan.item"));
+    const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
+    const listed = `${names.join(", ")}${extra}`;
+    return t("plan.listed", { label, count: items.length, names: listed });
+  }
+  function operationTime(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value || t("snapshots.unknownTime");
+    return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
+  }
+  function operationCardText(item4) {
+    const actionName = item4.action || item4.operation || "";
+    const actionKey2 = OPERATION_ACTIONS[actionName];
+    const outcomeKey = OPERATION_OUTCOMES[item4.result || ""] ?? "operations.outcome.refused";
+    const title2 = t("operations.entry", {
+      time: operationTime(item4.time || ""),
+      action: actionKey2 ? t(actionKey2) : t("operations.actionOther"),
+      target: item4.target || t("operations.noTarget"),
+      outcome: t(outcomeKey)
+    });
+    if (item4.snapshot_before && item4.snapshot_after) {
+      return {
+        title: title2,
+        detail: t("operations.snapshots", {
+          before: item4.snapshot_before,
+          after: item4.snapshot_after
+        })
+      };
+    }
+    if (item4.snapshot_before) {
+      return { title: title2, detail: t("operations.beforeOnly", { before: item4.snapshot_before }) };
+    }
+    return { title: title2, detail: "" };
+  }
+
+  // src/components/RestoreDialog.tsx
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function CueSide({ cue, slot }) {
+    const color = slotColor(slot, cue?.color);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { className: cue ? "cue-diff-side" : "cue-diff-side marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "swatch", style: color ? { background: color } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: cueSummary(cue, t("markers.cueEmpty")) })
+    ] });
+  }
+  function CueDiffRow({ diff }) {
+    const empty = t("markers.cueEmpty");
+    const beforeText = cueSummary(diff.before, empty);
+    const afterText = cueSummary(diff.after, empty);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+      "p",
+      {
+        className: "cue-diff",
+        "aria-label": `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "marker-slot", children: String(diff.slot + 1) }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CueSide, { cue: diff.before, slot: diff.slot }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "cue-diff-arrow", "aria-hidden": "true", children: "→" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CueSide, { cue: diff.after, slot: diff.slot })
+        ]
+      }
+    );
+  }
+  function PlanLine({ label, rows: rows2 }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: planLineText(label, rows2) });
+  }
+  function CueDiffs({ label, rows: rows2 }) {
+    const items = rows2 || [];
+    if (!items.length) return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: t("plan.none", { label }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item4, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: fileName(item4.path || "") }),
+        cueDiffRows(item4.before, item4.after).map((diff) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CueDiffRow, { diff }, `${diff.slot}:${diff.before?.start_ms ?? ""}:${diff.after?.start_ms ?? ""}`))
+      ] }, `${item4.path ?? ""}:${index}`))
+    ] });
+  }
+  function FrameDiffs({ label, rows: rows2 }) {
+    const items = rows2 || [];
+    if (!items.length) return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: t("plan.none", { label }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item4, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: fileName(item4.path || "") }, `${item4.path ?? ""}:${index}`))
+    ] });
+  }
+  function RestoreDialog() {
+    const snapshots = useSnapshots();
+    const closePlan2 = snapshots.closePlan;
+    (0, import_react6.useEffect)(() => {
+      const dialog = document.getElementById("snapshot-dialog");
+      if (!(dialog instanceof HTMLDialogElement)) return void 0;
+      const onClose = () => closePlan2();
+      dialog.addEventListener("close", onClose);
+      return () => dialog.removeEventListener("close", onClose);
+    }, [closePlan2]);
+    const plan = snapshots.plan;
+    const blocked = plan?.restore_blocked ? codedText(
+      plan.restore_blocked,
+      plan.restore_blocked_code,
+      messageParams(plan.restore_blocked_params)
+    ) : "";
+    const reading = snapshots.planOpen && !plan;
+    const confirmDisabled = snapshots.confirming || reading || Boolean(plan?.restore_blocked);
+    const blockText = reading ? t("snapshots.readingPlan") : blocked || (plan != null && plan.dry_run ? t("plan.nothingChanged") : "");
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { id: "snapshot-title", children: t("snapshots.restoreTitle") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.cratesChanged"), rows: plan.crates?.changed }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),
+        plan.registration_warning ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: codedText(plan.registration_warning, plan.registration_warning_code) }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.tracksAdded"), rows: plan.tracks?.added }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.tracksRemoved"), rows: plan.tracks?.removed }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.tracksUnavailable"), rows: plan.tracks?.unavailable }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CueDiffs, { label: t("plan.cueChanges"), rows: plan.cues }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(FrameDiffs, { label: t("plan.gridChanges"), rows: plan.grids }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.deletedCrates"), rows: plan.deleted?.crates }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.deletedTracks"), rows: plan.deleted?.tracks }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.deletedCues"), rows: plan.deleted?.cues }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlanLine, { label: t("plan.deletedGrids"), rows: plan.deleted?.grids })
+      ] }) : null }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "snapshot-block", className: "dialog-note", role: "status", children: blockText }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "button",
+          {
+            id: "snapshot-cancel",
+            type: "button",
+            ref: tooltipRef3(tips.snapshotCancel),
+            onClick: () => snapshots.closePlan(),
+            children: t("common.cancel")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "button",
+          {
+            id: "snapshot-confirm",
+            type: "button",
+            ref: tooltipRef3(tips.snapshotConfirm),
+            disabled: confirmDisabled,
+            onClick: () => {
+              snapshots.confirmSnapshotRestore().catch((error2) => snapshots.setSnapshotDialogStatus(failureOf(error2).message));
+            },
+            children: snapshots.confirming ? t("snapshots.restoring") : t("snapshots.restore")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { id: "snapshot-status", className: "dialog-status", role: "status", "aria-live": "polite", children: snapshots.planStatus })
+    ] });
+  }
+
+  // src/components/SnapshotsPanel.tsx
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef4(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function driveNote(backing, error2, report) {
+    if (backing) return t("snapshots.backupDrivesBusy");
+    if (error2) return error2;
+    return driveCopyText(report);
+  }
+  function listStatus(snapshots) {
+    if (snapshots.snapshotLoading) return t("snapshots.reading");
+    if (snapshots.snapshotError) return snapshots.snapshotError;
+    if (snapshots.statusOverride) return snapshots.statusOverride;
+    return snapshots.snapshotMessage ? t(snapshots.snapshotMessage) : "";
+  }
+  function SnapshotsPanel() {
+    const snapshots = useSnapshots();
+    const writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "";
+    const undoId = snapshots.snapshotUndo?.restore_id;
+    const latest8 = snapshots.operations[snapshots.operations.length - 1];
+    const failed = latest8?.result === "rollback_failed";
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "snapshots-heading", className: "files-path", children: t("view.snapshots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "button",
+          {
+            id: "snapshots-refresh",
+            type: "button",
+            ref: tooltipRef4(tips.snapshotsRefresh),
+            onClick: () => {
+              snapshots.loadSnapshots().catch((error2) => snapshots.failSnapshots(error2));
+            },
+            children: t("common.refresh")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "button",
+          {
+            id: "snapshots-take",
+            type: "button",
+            ref: tooltipRef4(tips.snapshotsTake),
+            disabled: snapshots.taking,
+            onClick: () => {
+              snapshots.takeSnapshot().catch((error2) => snapshots.failSnapshots(error2));
+            },
+            children: snapshots.taking ? t("snapshots.saving") : t("snapshots.take")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "button",
+          {
+            id: "snapshots-drives",
+            type: "button",
+            ref: tooltipRef4(tips.backupDrives),
+            disabled: snapshots.backingDrives,
+            "aria-label": t("snapshots.backupDrives"),
+            onClick: () => {
+              snapshots.backupDriveCrates().catch((error2) => snapshots.failSnapshots(error2));
+            },
+            children: t("snapshots.backupDrives")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "snapshots-drives-note", className: "notice", role: "status", children: driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup) }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "snapshots-block", className: "notice", role: "status", hidden: !writeBlock, children: writeBlock }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { id: "snapshots-undo", className: "snapshot-undo", hidden: !undoId, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "snapshots-undo-text", children: snapshots.snapshotUndo?.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange") }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "button",
+          {
+            id: "snapshots-undo-button",
+            type: "button",
+            ref: tooltipRef4(tips.snapshotsUndo),
+            onClick: () => {
+              if (!undoId) return;
+              snapshots.openSnapshotPlan(undoId).catch((error2) => snapshots.failSnapshots(error2));
+            },
+            children: t("snapshots.reviewUndo")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "snapshots-status", className: "notice", role: "status", "aria-live": "polite", children: listStatus(snapshots) }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "div",
+        {
+          id: "snapshots-list",
+          className: "files-list",
+          role: "list",
+          "aria-label": t("view.snapshots"),
+          "aria-busy": snapshots.snapshotLoading,
+          tabIndex: 0,
+          ref: tooltipRef4(tips.snapshotsList),
+          children: snapshots.snapshotLoading ? null : snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+            "button",
+            {
+              type: "button",
+              ref: tooltipRef4(tips.snapshotsRetry),
+              onClick: () => {
+                snapshots.loadSnapshots().catch((error2) => snapshots.failSnapshots(error2));
+              },
+              children: t("common.tryAgain")
+            }
+          ) : snapshots.snapshots.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { children: t("snapshots.empty") }) : snapshots.snapshots.map((item4) => {
+            const copy = snapshotCardText(item4);
+            return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("article", { className: "snapshot-card", role: "listitem", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { children: copy.title }),
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { children: copy.detail }),
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+                "button",
+                {
+                  type: "button",
+                  ref: tooltipRef4(tips.reviewRestore),
+                  onClick: () => {
+                    snapshots.openSnapshotPlan(item4.id).catch((error2) => snapshots.setSnapshotDialogStatus(failureOf(error2).message));
+                  },
+                  children: t("snapshots.reviewRestore")
+                }
+              )
+            ] }, item4.id);
+          })
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("section", { id: "operations", className: "operations", "aria-labelledby": "operations-heading", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "browser-bar", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h2", { id: "operations-heading", className: "operations-heading", children: t("operations.heading") }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+            "button",
+            {
+              id: "operations-refresh",
+              type: "button",
+              ref: tooltipRef4(tips.operationsRefresh),
+              onClick: () => {
+                snapshots.loadOperations().catch(() => void 0);
+              },
+              children: t("common.refresh")
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "operations-alert", className: "operations-alert", role: "alert", hidden: !failed, children: failed ? t("operations.rollbackFailed") : "" }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { id: "operations-status", className: "notice", role: "status", "aria-live": "polite", children: snapshots.operationsLoading && snapshots.operations.length === 0 ? t("operations.reading") : snapshots.operationsError }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "div",
+          {
+            id: "operations-list",
+            className: "files-list",
+            role: "list",
+            "aria-label": t("operations.heading"),
+            "aria-busy": snapshots.operationsLoading,
+            tabIndex: 0,
+            ref: tooltipRef4(tips.operationsList),
+            children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+              "button",
+              {
+                type: "button",
+                ref: tooltipRef4(tips.operationsRetry),
+                onClick: () => {
+                  snapshots.loadOperations().catch(() => void 0);
+                },
+                children: t("common.tryAgain")
+              }
+            ) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { children: t("operations.empty") }) : [...snapshots.operations].reverse().map((item4, index) => {
+              const copy = operationCardText(item4);
+              return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+                "article",
+                {
+                  className: "operation-card snapshot-card",
+                  role: "listitem",
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { children: copy.title }),
+                    copy.detail ? /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { children: copy.detail }) : null
+                  ]
+                },
+                `${item4.time ?? ""}:${item4.action ?? ""}:${item4.target ?? ""}:${index}`
+              );
+            })
+          }
+        )
+      ] })
+    ] });
+  }
+
+  // src/restore.ts
+  var reloadLibrary = async () => {
+  };
+  function bindLibraryReload(reload) {
+    reloadLibrary = reload;
+  }
+  var hosts = /* @__PURE__ */ new WeakMap();
+  var listeners2 = /* @__PURE__ */ new Set();
+  var lastPlan = null;
+  var planOpen = false;
+  var planStatus = "";
+  var taking = false;
+  var backingDrives = false;
+  var confirming = false;
+  var driveNoteError = "";
+  var statusOverride = "";
+  function isDriveCopy(value) {
+    if (!value || typeof value !== "object") return false;
+    const record = value;
+    return typeof record.status === "string" && (record.label === void 0 || typeof record.label === "string");
+  }
+  function driveBackupFrom(value) {
+    if (!value || typeof value !== "object") return null;
+    const record = value;
+    if (record.verified !== true) return null;
+    const drives = Array.isArray(record.drives) ? record.drives.filter(isDriveCopy) : [];
+    return {
+      folder: typeof record.folder === "string" ? record.folder : "",
+      verified: true,
+      drives
+    };
+  }
+  function getSnapshotsState() {
+    return {
+      snapshots: state.snapshots,
+      driveBackup: state.driveBackup,
+      operations: state.operations,
+      operationsLoading: state.operationsLoading,
+      operationsError: state.operationsError,
+      snapshotLoading: state.snapshotLoading,
+      snapshotError: state.snapshotError,
+      snapshotMessage: state.snapshotMessage,
+      snapshotUndo: state.snapshotUndo,
+      writeBlock: state.writeBlock,
+      writeBlockCode: state.writeBlockCode,
+      writeBlockParams: state.writeBlockParams,
+      seratoRunning: state.seratoRunning,
+      snapshotPlanId: state.snapshotPlanId,
+      plan: lastPlan,
+      planOpen,
+      planStatus,
+      taking,
+      backingDrives,
+      confirming,
+      driveNoteError,
+      statusOverride
+    };
+  }
+  function subscribe2(listener) {
+    listeners2.add(listener);
+    return () => {
+      listeners2.delete(listener);
+    };
+  }
+  function emit2() {
+    for (const listener of [...listeners2]) listener();
+  }
+  function bindHost(host, node) {
+    if (!host) return;
+    const existing = hosts.get(host);
+    hosts.set(host, mountIsland(host, node, existing));
+  }
+  function mountSnapshots() {
+    bindHost(document.getElementById("snapshots-panel"), (0, import_react7.createElement)(SnapshotsPanel));
+    bindHost(document.getElementById("snapshot-dialog"), (0, import_react7.createElement)(RestoreDialog));
+  }
+  function ensureMounted() {
+    mountSnapshots();
+  }
+  function updateCrateFoot() {
+    const foot = document.getElementById("crate-foot");
+    if (!foot) return;
+    foot.textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length });
+  }
+  function paint() {
+    ensureMounted();
+    updateCrateFoot();
+    emit2();
+  }
+  async function loadSnapshots() {
+    state.snapshotLoading = true;
+    state.snapshotError = "";
+    statusOverride = "";
+    const operationsPromise = loadOperations();
+    paint();
+    try {
+      const response = await fetch("/api/snapshots");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
+      state.snapshots = payload.snapshots || [];
+      state.snapshotUndo = payload.pending_undo || null;
+      state.writeBlock = payload.write_block || "";
+      state.writeBlockCode = payload.write_block_code || "";
+      state.writeBlockParams = messageParams(payload.write_block_params) ?? null;
+      state.seratoRunning = Boolean(payload.serato_running);
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotLoading = false;
+      paint();
+    } finally {
+      await operationsPromise;
+    }
+  }
+  async function loadOperations() {
+    state.operationsLoading = true;
+    state.operationsError = "";
+    paint();
+    try {
+      const response = await fetch("/api/operations");
+      const payload = await readJSON(response);
+      if (!response.ok) throw new Error(serverMessage(payload, t("operations.unreadable")));
+      state.operations = Array.isArray(payload.operations) ? payload.operations : [];
+      state.operationsLoading = false;
+    } catch (error2) {
+      state.operationsLoading = false;
+      state.operationsError = failureOf(error2).message || t("operations.unreadable");
+    }
+    paint();
+  }
+  function failSnapshots(error2) {
+    state.snapshotLoading = false;
+    state.snapshotError = failureOf(error2).message || t("snapshots.unreadable");
+    paint();
+  }
+  function renderSnapshots() {
+    paint();
+  }
+  async function openSnapshotPlan(snapshotId) {
+    state.snapshotPlanId = snapshotId;
+    lastPlan = null;
+    planOpen = true;
+    planStatus = "";
+    paint();
+    const dialog = el("snapshot-dialog");
+    if (!dialog.open) dialog.showModal();
+    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
+    lastPlan = plan;
+    paint();
+  }
+  function repaintSnapshotPlan() {
+    const dialog = document.getElementById("snapshot-dialog");
+    if (lastPlan && dialog instanceof HTMLDialogElement && dialog.open) paint();
+  }
+  async function backupDriveCrates() {
+    backingDrives = true;
+    driveNoteError = "";
+    paint();
+    try {
+      const payload = await postJSON("/api/snapshots", { action: "backup-drives" });
+      state.driveBackup = driveBackupFrom(payload.drive_backup);
+      state.snapshotMessage = payload.created ? "snapshots.drivesSaved" : "snapshots.drivesAlready";
+      driveNoteError = "";
+      paint();
+    } catch (error2) {
+      state.snapshotMessage = "";
+      driveNoteError = failureOf(error2).message || t("snapshots.unreadable");
+      paint();
+    } finally {
+      backingDrives = false;
+      paint();
+    }
+  }
+  function setSnapshotDialogStatus(message) {
+    planStatus = message;
+    paint();
+  }
+  function closePlan() {
+    planOpen = false;
+    const dialog = document.getElementById("snapshot-dialog");
+    if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
+    paint();
+  }
+  async function takeSnapshot() {
+    taking = true;
+    paint();
+    try {
+      await postJSON("/api/snapshots", { action: "create" });
+      state.snapshotMessage = "snapshots.saved";
+      await loadSnapshots();
+    } finally {
+      taking = false;
+      paint();
+    }
+  }
+  async function confirmSnapshotRestore() {
+    confirming = true;
+    planStatus = "";
+    paint();
+    try {
+      const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
+      const body = undoing ? { action: "undo", confirm: true } : { action: "restore", id: state.snapshotPlanId, confirm: true };
+      const result = await postJSON("/api/snapshots", body);
+      const skipped = result.crates_skipped || [];
+      closePlan();
+      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
+      await loadSnapshots();
+      await reloadLibrary();
+      if (skipped.length) {
+        const names = skipped.map((item4) => item4.name || item4.path || t("plan.item")).join(", ");
+        statusOverride = t("snapshots.skippedCrates", { count: skipped.length, names });
+        paint();
+      }
+    } catch (error2) {
+      planStatus = failureOf(error2).message;
+      confirming = false;
+      await loadOperations();
+      paint();
+    } finally {
+      confirming = false;
+      paint();
+    }
+  }
+
+  // src/search-filters.ts
+  var TEXT_SEARCH_FIELDS = [
+    "comments",
+    "grouping",
+    "composer",
+    "title",
+    "artist",
+    "album",
+    "genre",
+    "file"
+  ];
+  var KEY_VALUES = {
+    "g#m": 0,
+    abm: 0,
+    "1a": 0,
+    ebm: 1,
+    "d#m": 1,
+    "2a": 1,
+    bbm: 2,
+    "a#m": 2,
+    "3a": 2,
+    fm: 3,
+    "4a": 3,
+    cm: 4,
+    "5a": 4,
+    gm: 5,
+    "6a": 5,
+    dm: 6,
+    "7a": 6,
+    am: 7,
+    "8a": 7,
+    em: 8,
+    "9a": 8,
+    bm: 9,
+    "10a": 9,
+    "f#m": 10,
+    gbm: 10,
+    "11a": 10,
+    "c#m": 11,
+    dbm: 11,
+    "12a": 11,
+    b: 12,
+    "1b": 12,
+    "f#": 13,
+    gb: 13,
+    "2b": 13,
+    "c#": 14,
+    db: 14,
+    "3b": 14,
+    "g#": 15,
+    ab: 15,
+    "4b": 15,
+    "d#": 16,
+    eb: 16,
+    "5b": 16,
+    "a#": 17,
+    bb: 17,
+    "6b": 17,
+    f: 18,
+    "7b": 18,
+    c: 19,
+    "8b": 19,
+    g: 20,
+    "9b": 20,
+    d: 21,
+    "10b": 21,
+    a: 22,
+    "11b": 22,
+    e: 23,
+    "12b": 23
+  };
+  var NUMBER = String.raw`(\d+(?:\.\d+)?)`;
+  var EXACT = new RegExp(`^${NUMBER}$`);
+  var RANGE = new RegExp(`^${NUMBER}-${NUMBER}$`);
+  var AROUND = new RegExp(`^${NUMBER}~${NUMBER}$`);
+  var ABOVE = new RegExp(`^>${NUMBER}$`);
+  var BELOW = new RegExp(`^<${NUMBER}$`);
+  var NONE = /* @__PURE__ */ new Set(["none", "no", "off"]);
+  var YES = /* @__PURE__ */ new Set(["yes", "true", "1"]);
+  function isNone(value) {
+    return NONE.has(value);
+  }
+  function isYes(value) {
+    return YES.has(value);
+  }
+  var TEXT_FIELD_SET = new Set(TEXT_SEARCH_FIELDS);
+  function isTextSearchField(value) {
+    return TEXT_FIELD_SET.has(value);
+  }
+  function textField(track, field) {
+    if (field === "title") return String(track.name ?? "");
+    return String(track[field] ?? "");
+  }
+  function trackHaystack(track, field) {
+    if (field) return textField(track, field).toLocaleLowerCase();
+    return `${track.name} ${track.artist} ${track.album} ${track.genre} ${track.key} ${track.file}`.toLocaleLowerCase();
+  }
+  function hasBpm(track) {
+    const bpm = Number(track.bpm);
+    return track.bpm != null && track.bpm !== "" && Number.isFinite(bpm) && bpm > 0;
+  }
+  function hasKey2(track) {
+    return Boolean(String(track.key ?? "").trim());
+  }
+  function cueFlag(track) {
+    if (track.has_cues === true) return true;
+    if (track.has_cues === false) return false;
+    if (track.markers_found === true) return true;
+    if (track.markers_found === false) return false;
+    if (Array.isArray(track.cues)) {
+      const loops = Array.isArray(track.loops) ? track.loops.length : 0;
+      return track.cues.length > 0 || loops > 0;
+    }
+    return null;
+  }
+  function keyNumber(value) {
+    if (!value) return -1;
+    return KEY_VALUES[value.trim().toLowerCase()] ?? -1;
+  }
+  function mixingKeys(key) {
+    const base = key < 12 ? 0 : 12;
+    const index = key - base;
+    return /* @__PURE__ */ new Set([key, base + (index + 1) % 12, base + (index + 11) % 12, (key + 12) % 24]);
+  }
+  function bpmFilter(value) {
+    let match = RANGE.exec(value);
+    if (match) {
+      const low = Number(match[1]);
+      const high = Number(match[2]);
+      return low <= high ? { kind: "bpm", min: low, max: high } : { kind: "bpm", min: high, max: low };
+    }
+    match = AROUND.exec(value);
+    if (match) {
+      const center = Number(match[1]);
+      const spread = Number(match[2]);
+      return { kind: "bpm", min: center - spread, max: center + spread };
+    }
+    match = ABOVE.exec(value);
+    if (match) return { kind: "bpm", min: Number(match[1]), max: Number.POSITIVE_INFINITY };
+    match = BELOW.exec(value);
+    if (match) return { kind: "bpm", min: 0, max: Number(match[1]) };
+    match = EXACT.exec(value);
+    if (match) {
+      const whole = Number(match[1]);
+      return Number.isInteger(whole) ? { kind: "bpm", min: whole - 0.5, max: whole + 0.5 - 1e-6 } : { kind: "bpm", min: whole, max: whole };
+    }
+    return null;
+  }
+  function parseQuery(text2) {
+    const terms = [];
+    const filters = [];
+    for (const word of text2.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)) {
+      const colon = word.indexOf(":");
+      const name = colon > 0 ? word.slice(0, colon) : "";
+      const value = colon > 0 ? word.slice(colon + 1) : "";
+      let filter = null;
+      if (name === "missing" && isYes(value)) filter = { kind: "missing" };
+      else if (name === "cues" && isNone(value)) filter = { kind: "nocues" };
+      else if (name === "nokeybpm" && isYes(value)) filter = { kind: "nokeybpm" };
+      else if (name === "bpm" && isNone(value)) filter = { kind: "nobpm" };
+      else if (name === "key" && isNone(value)) filter = { kind: "nokey" };
+      else if (name === "bpm") filter = bpmFilter(value);
+      else if (name === "key" || name === "mix") {
+        const key = keyNumber(value);
+        if (key >= 0) filter = { kind: "key", keys: name === "mix" ? mixingKeys(key) : /* @__PURE__ */ new Set([key]) };
+      } else if (isTextSearchField(name) && value) {
+        filter = { kind: "field", field: name, value };
+      }
+      if (filter) filters.push(filter);
+      else terms.push(word);
+    }
+    return { terms, filters };
+  }
+  function matchesFilters(track, filters) {
+    for (const filter of filters) {
+      if (filter.kind === "bpm") {
+        if (!hasBpm(track)) return false;
+        const bpm = Number(track.bpm);
+        if (bpm < filter.min - 1e-9 || bpm > filter.max + 1e-9) return false;
+      } else if (filter.kind === "missing") {
+        if (!track.missing) return false;
+      } else if (filter.kind === "nokey") {
+        if (hasKey2(track)) return false;
+      } else if (filter.kind === "nobpm") {
+        if (hasBpm(track)) return false;
+      } else if (filter.kind === "nokeybpm") {
+        if (hasKey2(track) && hasBpm(track)) return false;
+      } else if (filter.kind === "nocues") {
+        if (cueFlag(track) !== false) return false;
+      } else if (filter.kind === "field") {
+        if (!textField(track, filter.field).toLocaleLowerCase().includes(filter.value)) return false;
+      } else if (!filter.keys.has(keyNumber(track.key))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function matchesQuery(track, query, field) {
+    if (!matchesFilters(track, query.filters)) return false;
+    if (!query.terms.length) return true;
+    const hay = trackHaystack(track, field);
+    return query.terms.every((term) => hay.includes(term));
+  }
+
+  // src/views.ts
+  var import_react9 = __toESM(require_react(), 1);
+
   // src/virtual-scroll.ts
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react8 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -23112,7 +23337,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react5.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react8.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -23930,7 +24155,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react9.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -24332,7 +24557,7 @@
     form.className = "related-form";
     form.hidden = true;
     block.append(label, results, form);
-    const paint3 = () => {
+    const paint4 = () => {
       results.replaceChildren();
       form.hidden = true;
       form.replaceChildren();
@@ -24363,8 +24588,8 @@
         results.append(item4);
       }
     };
-    input.addEventListener("input", paint3);
-    paint3();
+    input.addEventListener("input", paint4);
+    paint4();
     return block;
   }
   function relatedLinkForm(track, section, form, hit, query) {
@@ -27163,7 +27388,7 @@
     const dialog = document.getElementById("quick-open");
     if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
     labelQuickOpen();
-    paint();
+    paint2();
   }
   function openQuickOpen() {
     const dialog = el("quick-open");
@@ -27177,7 +27402,7 @@
     window.clearTimeout(timer2);
     el("quick-open-query").value = "";
     labelQuickOpen();
-    paint();
+    paint2();
     dialog.showModal();
     el("quick-open-query").focus();
   }
@@ -27211,7 +27436,7 @@
       const chosen = hits[active];
       if (chosen) void activate(chosen);
     }
-    if (event.key !== "Enter") paint();
+    if (event.key !== "Enter") paint2();
   }
   function schedule2() {
     window.clearTimeout(timer2);
@@ -27224,11 +27449,11 @@
     if (!query.trim()) {
       phase = "idle";
       requestToken += 1;
-      paint();
+      paint2();
       return;
     }
     phase = "loading";
-    paint();
+    paint2();
     timer2 = window.setTimeout(() => {
       void loadFiles(query.trim(), tracks);
     }, QUICK_OPEN_MS);
@@ -27246,12 +27471,12 @@
       truncated = Boolean(payload.truncated);
       phase = "ready";
       if (active >= hits.length) active = Math.max(0, hits.length - 1);
-      paint();
+      paint2();
     } catch {
       if (token3 !== requestToken) return;
       hits = tracks;
       phase = "error";
-      paint();
+      paint2();
     }
   }
   function trackHits(query) {
@@ -27318,7 +27543,7 @@
     await loadFolder(parentDirectory(hit.path));
     focusFileByPath(hit.path);
   }
-  function paint() {
+  function paint2() {
     const status = el("quick-open-status");
     const list = el("quick-open-list");
     const retry = el("quick-open-retry");
@@ -27996,7 +28221,7 @@
     if (!/^[0-9a-f]{7,40}$/.test(trimmed)) return null;
     return trimmed.slice(0, 7);
   }
-  function paint2(label) {
+  function paint3(label) {
     painted = label;
     const footer = el("app-version");
     const about = el("about-version");
@@ -28023,13 +28248,13 @@
   }
   function repaintVersion() {
     if (painted === void 0) return;
-    paint2(painted);
+    paint3(painted);
   }
   async function loadVersion() {
     try {
-      paint2(versionLabel(await getVersion()));
+      paint3(versionLabel(await getVersion()));
     } catch {
-      paint2(null);
+      paint3(null);
     }
   }
   async function copyVersion() {
@@ -28466,31 +28691,6 @@
   }
 
   // src/app.ts
-  function wireSnapshots() {
-    el("snapshots-refresh").addEventListener("click", () => {
-      loadSnapshots().catch((error2) => failSnapshots(error2));
-    });
-    el("operations-refresh").addEventListener("click", () => {
-      loadOperations().catch(() => void 0);
-    });
-    el("snapshots-take").addEventListener("click", () => {
-      takeSnapshot().catch((error2) => failSnapshots(error2));
-    });
-    el("snapshots-drives").addEventListener("click", () => {
-      backupDriveCrates().catch((error2) => failSnapshots(error2));
-    });
-    el("snapshots-undo-button").addEventListener("click", () => {
-      const pending = state.snapshotUndo;
-      if (!pending || !pending.restore_id) return;
-      openSnapshotPlan(pending.restore_id).catch((error2) => failSnapshots(error2));
-    });
-    el("snapshot-cancel").addEventListener("click", () => {
-      el("snapshot-dialog").close();
-    });
-    el("snapshot-confirm").addEventListener("click", () => {
-      confirmSnapshotRestore().catch((error2) => setSnapshotDialogStatus(failureOf(error2).message));
-    });
-  }
   wireLocale();
   installTooltips();
   applyStaticTooltips();
@@ -28498,6 +28698,7 @@
   mountTrackListB();
   wireDualCrates();
   mountPlayer();
+  mountSnapshots();
   registerPlayerControls(playerControls);
   wireLibrary();
   wireVirtualScroll();
@@ -28507,7 +28708,6 @@
   wirePresets();
   wireFolderSync();
   wireHelp();
-  wireSnapshots();
   wireGigCheck(() => {
     setMode("crates");
   });
