@@ -1,10 +1,10 @@
 /**
  * React providers for the page.
  *
- * Player is one domain. Before a gig (gig check and Tempo drift) is
- * another. Later screens add their own context file and one wrapper
- * here. This module reads those engines; it does not own fetch or
- * playback.
+ * Player is one domain. Waveform zoom and overview are another. Before
+ * a gig (gig check and Tempo drift) is a third. Later screens add their
+ * own context file and one wrapper here. This module reads those
+ * engines; it does not own fetch or playback.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -17,6 +17,7 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import { WaveformProvider } from "../context/WaveformContext";
 import {
   backGigStep,
   exitGigCheck,
@@ -26,8 +27,13 @@ import {
 } from "../gig";
 import { getDriftSnapshot, subscribeDrift } from "../drift";
 import {
+  SEEK_STEP_LARGE_SECONDS,
+  SEEK_STEP_SECONDS,
   canSkip,
   canTogglePlay,
+  formatPlayerTime,
+  getMediaDuration,
+  getMediaTime,
   getPlayerCues,
   getPlayerState,
   next,
@@ -58,6 +64,11 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+    mediaTime: getMediaTime,
+    mediaDuration: getMediaDuration,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
   };
 }
 
@@ -122,14 +133,17 @@ export function GigProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player is the first domain. Before a gig is the second.
+ * Player is the first domain. Waveform zoom and overview wrap inside it.
+ * Before a gig wraps inside waveform.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <GigProvider>{children}</GigProvider>
+      <WaveformProvider>
+        <GigProvider>{children}</GigProvider>
+      </WaveformProvider>
     </PlayerProvider>
   );
 }
