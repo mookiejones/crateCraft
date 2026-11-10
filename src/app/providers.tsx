@@ -1,9 +1,10 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. Library health is another. Later screens
- * add their own context file and one wrapper here. This module reads
- * those stores; it does not own playback or health fetches.
+ * Player state is one domain. Library health is another. Waveform zoom
+ * and overview are another. Each has its own context file and one
+ * wrapper here. This module reads those stores; it does not own
+ * playback or health fetches.
  */
 
 import { useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
@@ -16,6 +17,7 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import { WaveformProvider } from "../context/WaveformContext";
 import { subscribeHealth } from "../health-events";
 import { getHealthListSnapshot } from "../health-list";
 import {
@@ -39,8 +41,13 @@ import {
   setTagsField,
 } from "../tags";
 import {
+  SEEK_STEP_LARGE_SECONDS,
+  SEEK_STEP_SECONDS,
   canSkip,
   canTogglePlay,
+  formatPlayerTime,
+  getMediaDuration,
+  getMediaTime,
   getPlayerCues,
   getPlayerState,
   next,
@@ -71,6 +78,11 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+    mediaTime: getMediaTime,
+    mediaDuration: getMediaDuration,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
   };
 }
 
@@ -136,14 +148,17 @@ export function HealthProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player is first. Health is the Library health group.
+ * Player is first. Waveform zoom wraps inside it. Health is the
+ * Library health group.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <HealthProvider>{children}</HealthProvider>
+      <WaveformProvider>
+        <HealthProvider>{children}</HealthProvider>
+      </WaveformProvider>
     </PlayerProvider>
   );
 }

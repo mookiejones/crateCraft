@@ -18230,12 +18230,12 @@
     el("crate-pane-a").dataset.focused = String(!split || state.focusedPane === "a");
     el("crate-pane-b").dataset.focused = String(split && state.focusedPane === "b");
     const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-    for (const button2 of el("crate-list").querySelectorAll(".crate")) {
-      const raw = button2.dataset.id;
+    for (const button of el("crate-list").querySelectorAll(".crate")) {
+      const raw = button.dataset.id;
       const id = raw === "all" ? "all" : Number(raw);
       const mark = Number.isFinite(id) || id === "all" ? railMark(id, panes.a, panes.b) : null;
-      if (mark) button2.dataset.pane = mark;
-      else delete button2.dataset.pane;
+      if (mark) button.dataset.pane = mark;
+      else delete button.dataset.pane;
     }
   }
 
@@ -19124,9 +19124,9 @@
     panel.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement) || !latest) return;
-      const action = button2.dataset.gigAction;
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement) || !latest) return;
+      const action = button.dataset.gigAction;
       if (action === "next") stepIndex = Math.min(stepIndex + 1, STEP_COUNT);
       else if (action === "back") stepIndex = Math.max(0, stepIndex - 1);
       else if (action === "exit") {
@@ -19195,16 +19195,16 @@
     if (latest) renderGigReport(latest);
   }
   function beginBusy() {
-    const button2 = el("gig-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("gig-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("gig-panel").setAttribute("aria-busy", "true");
     el("gig-status").textContent = t("gig.checking");
   }
   function endBusy() {
-    const button2 = el("gig-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("gig-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
     el("gig-panel").setAttribute("aria-busy", "false");
   }
   function failStatus(message) {
@@ -19472,16 +19472,16 @@
     if (latest2) renderDriftReport(latest2);
   }
   function beginBusy2() {
-    const button2 = el("drift-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("drift-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("drift-panel").setAttribute("aria-busy", "true");
     el("drift-status").textContent = t("drift.checking");
   }
   function endBusy2() {
-    const button2 = el("drift-refresh");
-    button2.disabled = state.activeCrate === "all";
-    button2.setAttribute("aria-busy", "false");
+    const button = el("drift-refresh");
+    button.disabled = state.activeCrate === "all";
+    button.setAttribute("aria-busy", "false");
     el("drift-panel").setAttribute("aria-busy", "false");
   }
   function failStatus2(message) {
@@ -19543,7 +19543,7 @@
   }
 
   // src/health.ts
-  var import_react8 = __toESM(require_react(), 1);
+  var import_react11 = __toESM(require_react(), 1);
 
   // src/album-art.ts
   var latest3 = null;
@@ -19660,20 +19660,20 @@
     return chosen?.value || null;
   }
   function syncEmbedEnabled() {
-    const button2 = el("album-art-embed");
-    button2.disabled = busy || !state.writable || selectedRelease() === null;
+    const button = el("album-art-embed");
+    button.disabled = busy || !state.writable || selectedRelease() === null;
   }
   function failStatus3(message) {
     el("album-art-status").textContent = message;
   }
 
   // src/app/mount.tsx
-  var import_react_dom2 = __toESM(require_react_dom(), 1);
+  var import_react_dom3 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react7 = __toESM(require_react(), 1);
-  var import_react_dom = __toESM(require_react_dom(), 1);
+  var import_react10 = __toESM(require_react(), 1);
+  var import_react_dom2 = __toESM(require_react_dom(), 1);
 
   // src/context/HealthContext.tsx
   var import_react = __toESM(require_react(), 1);
@@ -19711,1300 +19711,9 @@
     return value;
   }
 
-  // src/health-events.ts
-  var listeners = /* @__PURE__ */ new Set();
-  function subscribeHealth(listener) {
-    listeners.add(listener);
-    return () => {
-      listeners.delete(listener);
-    };
-  }
-  function emitHealth() {
-    for (const listener of [...listeners]) listener();
-  }
-
-  // src/health-list.ts
-  function crateScopeLabel() {
-    if (state.activeCrate === "all") return t("gig.wholeSpace");
-    const crate = state.crates.find((row) => row.id === state.activeCrate);
-    return crate?.name || t("gig.wholeSpace");
-  }
-  function healthListNote() {
-    if (state.mode === "missing") {
-      const offlineCount = state.tracks.filter((track) => track.offline).length;
-      return offlineCount ? t("mode.missingOffline", { count: offlineCount }) : t("mode.missing");
-    }
-    if (state.mode === "duplicates") return t("mode.duplicates");
-    if (state.mode === "stems") return t("mode.stems");
-    return "";
-  }
-  function selectedDuplicateGroupOpen() {
-    if (state.mode !== "duplicates" || state.selectedId == null) return false;
-    return (state.duplicateGroups || []).some((group) => (group.ids || []).includes(state.selectedId));
-  }
-  function getHealthListSnapshot() {
-    const mergeVisible = state.mode === "duplicates";
-    const relinkVisible = state.mode === "missing";
-    return {
-      mode: state.mode,
-      modeNote: healthListNote(),
-      mergeVisible,
-      mergeDisabled: !mergeVisible || !state.writable || !selectedDuplicateGroupOpen(),
-      relinkVisible,
-      relinkDisabled: !relinkVisible || !state.writable
-    };
-  }
-
-  // src/scan.ts
+  // src/context/WaveformContext.tsx
   var import_react3 = __toESM(require_react(), 1);
-
-  // src/components/tooltip-ref.ts
-  function tooltipRef(spec2) {
-    return (element) => {
-      if (element) setTooltip(element, spec2);
-    };
-  }
-
-  // src/components/ScanPanel.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-  var LIST_CAP3 = 100;
-  var PROBLEM_ORDER = [
-    "empty",
-    "unreadable",
-    "wrong_format",
-    "serato_flagged",
-    "undecodable",
-    "decode_error",
-    "short"
-  ];
-  var PROBLEM_KEYS = {
-    empty: "scan.problem.empty",
-    unreadable: "scan.problem.unreadable",
-    wrong_format: "scan.problem.wrong_format",
-    serato_flagged: "scan.problem.serato_flagged",
-    undecodable: "scan.problem.undecodable",
-    decode_error: "scan.problem.decode_error",
-    short: "scan.problem.short"
-  };
-  function problemHeading(kind2) {
-    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
-  }
-  function problemDetail(item4) {
-    const heading2 = problemHeading(item4.problem);
-    if (item4.problem === "wrong_format" && item4.detail) {
-      return t("scan.wrongFormatDetail", { detail: item4.detail });
-    }
-    if ((item4.problem === "decode_error" || item4.problem === "short") && item4.detail) {
-      return t(item4.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
-        detail: item4.detail
-      });
-    }
-    if (item4.problem === "serato_flagged" && item4.detail) {
-      return `${heading2}: ${item4.detail}`;
-    }
-    return heading2;
-  }
-  function problemLine(item4) {
-    const title2 = [item4.artist, item4.name].filter(Boolean).join(" — ") || item4.file;
-    return t("scan.row", { title: title2, file: item4.file, problem: problemDetail(item4) });
-  }
-  function problemKinds(problems) {
-    const seen = new Set(problems.map((item4) => item4.problem));
-    const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
-    const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
-    return [...known, ...extra];
-  }
-  function ProblemGroup({
-    kind: kind2,
-    rows: rows2,
-    expanded: expanded2,
-    onExpand
-  }) {
-    const lines = rows2.map(problemLine);
-    const shown = expanded2 ? lines : lines.slice(0, LIST_CAP3);
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("details", { className: "gig-group", open: true, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("summary", { children: t("gig.groupCount", { label: problemHeading(kind2), count: lines.length }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { children: shown.map((line) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: line }, line)) }),
-      lines.length > LIST_CAP3 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", ref: tooltipRef(tips.gigShowAll), className: "gig-show-all", onClick: onExpand, children: t("gig.showAll", { count: lines.length }) }) : null
-    ] });
-  }
-  function ScanPanel() {
-    const health = useHealth();
-    const payload = health.scanReport;
-    const problems = payload?.problems ?? [];
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-          "button",
-          {
-            id: "scan-quick",
-            type: "button",
-            ref: tooltipRef(tips.scanQuick),
-            disabled: health.scanBusy,
-            "aria-busy": health.scanBusy ? "true" : "false",
-            onClick: () => {
-              void health.loadScan("quick");
-            },
-            children: t("scan.checkQuick")
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-          "button",
-          {
-            id: "scan-full",
-            type: "button",
-            ref: tooltipRef(tips.scanFull),
-            disabled: health.scanBusy || health.scanFullDisabled,
-            "aria-busy": health.scanBusy ? "true" : "false",
-            onClick: () => {
-              void health.loadScan("full");
-            },
-            children: t("scan.checkFull")
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
-        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
-        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
-        problems.length ? problemKinds(problems).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-          ProblemGroup,
-          {
-            kind: kind2,
-            rows: problems.filter((item4) => item4.problem === kind2),
-            expanded: health.scanExpanded.has(kind2),
-            onExpand: () => health.expandScan(kind2)
-          },
-          kind2
-        )) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gig-note", children: t("scan.empty") })
-      ] }) : null })
-    ] });
-  }
-
-  // src/scan.ts
-  var latest4 = null;
-  var status = "";
-  var busy2 = false;
-  var lastDepth = "quick";
-  var expanded = /* @__PURE__ */ new Set();
-  var panelRoot;
-  var panelHost = null;
-  function getScanSnapshot() {
-    return {
-      scanReport: latest4,
-      scanStatus: status,
-      scanBusy: busy2,
-      scanScope: crateScopeLabel(),
-      scanFullDisabled: state.activeCrate === "all",
-      scanExpanded: expanded
-    };
-  }
-  function expandScan(kind2) {
-    expanded.add(kind2);
-    emitHealth();
-  }
-  function wireScan() {
-    const panel = el("scan-panel");
-    if (panelRoot && panelHost !== panel) {
-      panelRoot.unmount();
-      panelRoot = void 0;
-    }
-    panelHost = panel;
-    panelRoot = mountIsland(panel, (0, import_react3.createElement)(ScanPanel), panelRoot);
-  }
-  async function loadScan(depth) {
-    const chosen = resolveDepth(depth);
-    const token3 = ++state.scanToken;
-    beginBusy3();
-    let settle = "none";
-    if (chosen === "full" && state.activeCrate === "all") {
-      failStatus4(t("error.scan_full_needs_crate"));
-      endBusy3();
-      el("scan-full").focus();
-      return;
-    }
-    lastDepth = chosen;
-    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      const response = await fetch(
-        `/api/file-scan?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&depth=${encodeURIComponent(chosen)}`
-      );
-      if (token3 !== state.scanToken) return;
-      const payload = await readJSON(response).catch(() => null);
-      if (token3 !== state.scanToken) return;
-      if (!response.ok || payload === null) {
-        failStatus4(serverMessage(payload, t("scan.unreadable")));
-        settle = "retry";
-        return;
-      }
-      latest4 = payload;
-      expanded.clear();
-      status = "";
-      emitHealth();
-      settle = "report";
-    } catch {
-      if (token3 !== state.scanToken) return;
-      failStatus4(t("scan.unreachable"));
-      settle = "retry";
-    } finally {
-      if (token3 !== state.scanToken) return;
-      endBusy3();
-      if (settle === "retry") el("scan-quick").focus();
-      if (settle === "report") el("scan-report").focus();
-    }
-  }
-  function showScanFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
-    failStatus4(message);
-    endBusy3();
-    el("scan-quick").focus();
-  }
-  function repaintScan() {
-    emitHealth();
-  }
-  function resolveDepth(depth) {
-    if (depth === "quick" || depth === "full") return depth;
-    if (lastDepth === "full" && state.activeCrate === "all") return "quick";
-    return lastDepth;
-  }
-  function beginBusy3() {
-    busy2 = true;
-    status = t("scan.checking");
-    el("scan-panel").setAttribute("aria-busy", "true");
-    emitHealth();
-  }
-  function endBusy3() {
-    busy2 = false;
-    el("scan-panel").setAttribute("aria-busy", "false");
-    emitHealth();
-  }
-  function failStatus4(message) {
-    status = message;
-    emitHealth();
-  }
-
-  // src/tags.ts
-  var import_react4 = __toESM(require_react(), 1);
-
-  // src/tags-view.ts
-  function tagsSummary(field2, values, groups) {
-    if (field2 === "titles") return titlesSummary(groups);
-    if (groups === 0) {
-      return field2 === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
-    }
-    return field2 === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
-  }
-  function titlesSummary(changes) {
-    if (!changes) return t("tags.summaryTitlesClear");
-    return t("tags.summaryTitles", { count: changes });
-  }
-  function groupHeading(group) {
-    return t("tags.group", {
-      name: group.suggested,
-      spellings: t("tags.spellingCount", { count: group.spellings.length }),
-      tracks: t("tags.trackCount", { count: group.tracks })
-    });
-  }
-  function spellingLabel(value, count, suggested) {
-    const base = t("tags.row", { value, count });
-    return suggested ? `${base} — ${t("tags.suggested")}` : base;
-  }
-  function previewSummary(plan) {
-    if (!plan.changes.length) return t("tags.noChanges");
-    return t("tags.previewSummary", { count: plan.changes.length, value: plan.value });
-  }
-  function titlesPreviewSummary(plan) {
-    if (!plan.changes.length) return t("tags.summaryTitlesClear");
-    return t("tags.titlesPreviewSummary", { count: plan.changes.length });
-  }
-  function writtenSummary(plan) {
-    return t("tags.written", { count: plan.changes.length, value: plan.value });
-  }
-  function titlesWrittenSummary(plan) {
-    return t("tags.titlesWritten", { count: plan.changes.length });
-  }
-  function mappingPreviewSummary(plan) {
-    if (!plan.changes.length) return t("tags.noChanges");
-    return t("tags.mappingSummary", { count: plan.changes.length });
-  }
-  function mappingWrittenSummary(plan) {
-    return t("tags.mappingWritten", { count: plan.changes.length });
-  }
-  function mappingFieldLabel(field2) {
-    if (field2 === "genre") return t("tags.genre");
-    if (field2 === "artist") return t("tags.artist");
-    return field2;
-  }
-  function groupChanges(changes) {
-    const rows2 = /* @__PURE__ */ new Map();
-    for (const change of changes) {
-      const remixer = change.remixer ?? "";
-      const field2 = change.field ?? "";
-      const id = `${field2}\0${change.from}\0${change.to}\0${remixer}`;
-      const existing = rows2.get(id);
-      if (existing) existing.count += 1;
-      else {
-        const row = { from: change.from, to: change.to, count: 1 };
-        if (change.remixer) row.remixer = change.remixer;
-        if (change.field) row.field = change.field;
-        rows2.set(id, row);
-      }
-    }
-    return [...rows2.values()];
-  }
-  function previewLines(changes) {
-    return groupChanges(changes).map((row) => {
-      if (row.field) {
-        return t("tags.previewLineField", {
-          field: mappingFieldLabel(row.field),
-          from: row.from,
-          to: row.to,
-          count: row.count
-        });
-      }
-      return row.remixer ? t("tags.previewLineRemixer", {
-        from: row.from,
-        to: row.to,
-        remixer: row.remixer,
-        count: row.count
-      }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count });
-    });
-  }
-
-  // src/components/TagsPanel.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
-  var LIST_CAP4 = 100;
-  var TITLE_KEY = "clean";
-  var MAPPING_KEY = "saved";
-  function DiffLines({ plan }) {
-    const lines = previewLines(plan.changes).slice(0, LIST_CAP4);
-    if (!lines.length) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { children: lines.map((line) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { children: line }, line)) });
-  }
-  function MappingCard({
-    plan,
-    canApply,
-    onApply
-  }) {
-    if (!plan.changes.length) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "tags-mappings", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-        "button",
-        {
-          type: "button",
-          ref: tooltipRef(tips.tagsApplyMappings),
-          "data-tags-action": "refresh-apply",
-          disabled: !canApply,
-          onClick: onApply,
-          children: t("tags.applyMappings")
-        }
-      ) })
-    ] });
-  }
-  function GroupCard({
-    group,
-    open,
-    chosen,
-    plan,
-    busy: busy4,
-    canApply,
-    onPreview,
-    onApply,
-    onSelect
-  }) {
-    const showPlan = plan && plan.value === chosen;
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("details", { className: "gig-group", open, "data-key": group.key, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("summary", { ref: tooltipRef(tips.tagsGroup), children: groupHeading(group) }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "tags-spelling", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          "input",
-          {
-            ref: tooltipRef(tips.tagsSpelling),
-            type: "radio",
-            name: `tags-${group.key}`,
-            value: spelling.value,
-            checked: spelling.value === chosen,
-            disabled: busy4,
-            onChange: (event) => onSelect(event.currentTarget.value)
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
-      ] }) }, spelling.value)) }),
-      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(DiffLines, { plan }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "tags-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          "button",
-          {
-            type: "button",
-            ref: tooltipRef(tips.tagsPreview),
-            "data-tags-action": "preview",
-            "data-key": group.key,
-            disabled: busy4 || !chosen,
-            onClick: onPreview,
-            children: t("tags.preview")
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          "button",
-          {
-            type: "button",
-            ref: tooltipRef(tips.tagsApply),
-            "data-tags-action": "apply",
-            "data-key": group.key,
-            disabled: !canApply || Boolean(plan && plan.value === chosen && !plan.changes.length),
-            onClick: onApply,
-            children: t("tags.apply")
-          }
-        )
-      ] })
-    ] });
-  }
-  function TitlesReport({
-    plan,
-    canApply,
-    onApply
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-        "button",
-        {
-          type: "button",
-          ref: tooltipRef(tips.tagsApplyTitles),
-          "data-tags-action": "clean-apply",
-          disabled: !canApply,
-          onClick: onApply,
-          children: t("tags.apply")
-        }
-      ) })
-    ] });
-  }
-  function TagsPanel() {
-    const health = useHealth();
-    const field2 = health.tagsField;
-    const groups = health.tagsClusters?.groups ?? [];
-    function onField(next2) {
-      if (health.tagsField === next2) return;
-      health.setTagsField(next2);
-      void health.loadTags();
-    }
-    function canApply(key) {
-      const plan = health.tagsPlans.get(key);
-      const group = groups.find((row) => row.key === key);
-      const value = health.tagsSelected.get(key) ?? group?.suggested ?? "";
-      return Boolean(
-        plan && plan.value === value && plan.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== key
-      );
-    }
-    const canApplyTitles = Boolean(
-      health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY
-    );
-    const canApplyMappings = Boolean(
-      health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY
-    );
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-            "button",
-            {
-              id: "tags-genre",
-              type: "button",
-              ref: tooltipRef(tips.tagsGenre),
-              "aria-pressed": field2 === "genre",
-              disabled: health.tagsBusy,
-              "aria-busy": health.tagsBusy ? "true" : "false",
-              onClick: () => onField("genre"),
-              children: t("tags.genre")
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-            "button",
-            {
-              id: "tags-artist",
-              type: "button",
-              ref: tooltipRef(tips.tagsArtist),
-              "aria-pressed": field2 === "artist",
-              disabled: health.tagsBusy,
-              "aria-busy": health.tagsBusy ? "true" : "false",
-              onClick: () => onField("artist"),
-              children: t("tags.artist")
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-            "button",
-            {
-              id: "tags-titles",
-              type: "button",
-              ref: tooltipRef(tips.tagsTitles),
-              "aria-pressed": field2 === "titles",
-              disabled: health.tagsBusy,
-              "aria-busy": health.tagsBusy ? "true" : "false",
-              onClick: () => onField("titles"),
-              children: t("tags.titles")
-            }
-          )
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          "button",
-          {
-            id: "tags-refresh",
-            type: "button",
-            ref: tooltipRef(tips.tagsRefresh),
-            disabled: health.tagsBusy,
-            "aria-busy": health.tagsBusy ? "true" : "false",
-            onClick: () => {
-              void health.loadTags();
-            },
-            children: t("gig.checkAgain")
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
-        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => void health.applyTitles() }) : null,
-        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
-          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-            MappingCard,
-            {
-              plan: health.mappingPlan,
-              canApply: canApplyMappings,
-              onApply: () => void health.applyMappings()
-            }
-          ) : null,
-          groups.map((group, index) => {
-            const chosen = health.tagsSelected.get(group.key) ?? group.suggested ?? "";
-            return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-              GroupCard,
-              {
-                group,
-                open: index === 0 || health.tagsOpen.has(group.key),
-                chosen,
-                plan: health.tagsPlans.get(group.key),
-                busy: health.tagsBusy,
-                canApply: canApply(group.key),
-                onPreview: () => void health.previewGroup(group.key),
-                onApply: () => void health.applyGroup(group.key),
-                onSelect: (value) => health.selectSpelling(group.key, value)
-              },
-              group.key
-            );
-          })
-        ] }) : null
-      ] })
-    ] });
-  }
-
-  // src/tags.ts
-  var TITLE_KEY2 = "clean";
-  var MAPPING_KEY2 = "saved";
-  var latest5 = null;
-  var titlePlan = null;
-  var mappingPlan = null;
-  var plans = /* @__PURE__ */ new Map();
-  var selectedByKey = /* @__PURE__ */ new Map();
-  var openKeys = /* @__PURE__ */ new Set();
-  var field = "genre";
-  var status2 = "";
-  var panelBusy = false;
-  var actionKey = "";
-  var panelRoot2;
-  var panelHost2 = null;
-  function getTagsSnapshot() {
-    return {
-      tagsField: field,
-      tagsClusters: latest5,
-      titlePlan,
-      mappingPlan,
-      tagsPlans: plans,
-      tagsSelected: selectedByKey,
-      tagsOpen: openKeys,
-      tagsStatus: status2,
-      tagsBusy: panelBusy,
-      tagsActionKey: actionKey,
-      tagsWritable: state.writable
-    };
-  }
-  function setTagsField(next2) {
-    field = next2;
-    emitHealth();
-  }
-  function selectSpelling(key, value) {
-    selectedByKey.set(key, value);
-    plans.delete(key);
-    emitHealth();
-  }
-  function wireTags() {
-    field = "genre";
-    const panel = el("tags-panel");
-    if (panelRoot2 && panelHost2 !== panel) {
-      panelRoot2.unmount();
-      panelRoot2 = void 0;
-    }
-    panelHost2 = panel;
-    panelRoot2 = mountIsland(panel, (0, import_react4.createElement)(TagsPanel), panelRoot2);
-  }
-  async function loadTags() {
-    const token3 = ++state.tagsToken;
-    plans.clear();
-    selectedByKey.clear();
-    openKeys.clear();
-    beginBusy4();
-    let settle = "none";
-    try {
-      if (field === "titles") {
-        const payload = await postJSON("/api/tag-clusters", {
-          action: "clean-preview",
-          space: state.space
-        });
-        if (token3 !== state.tagsToken) return;
-        titlePlan = payload;
-        latest5 = null;
-        mappingPlan = null;
-        status2 = titlesPreviewSummary(payload);
-        settle = "report";
-      } else {
-        const response = await fetch(
-          `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
-        );
-        if (token3 !== state.tagsToken) return;
-        const payload = await readJSON(response).catch(() => null);
-        if (token3 !== state.tagsToken) return;
-        if (!response.ok || payload === null) {
-          failStatus5(serverMessage(payload, t("tags.unreadable")));
-          settle = "retry";
-          return;
-        }
-        latest5 = payload;
-        titlePlan = null;
-        mappingPlan = await readMappingPreview(token3);
-        if (token3 !== state.tagsToken) return;
-        status2 = "";
-        settle = "report";
-      }
-    } catch (error2) {
-      if (token3 !== state.tagsToken) return;
-      if (error2 instanceof TypeError) failStatus5(t("tags.unreachable"));
-      else failStatus5(failureOf(error2).message);
-      settle = "retry";
-    } finally {
-      if (token3 !== state.tagsToken) return;
-      endBusy4();
-      emitHealth();
-      if (settle === "retry") el("tags-refresh").focus();
-      if (settle === "report") el("tags-report").focus();
-    }
-  }
-  function showTagsFailure(error2) {
-    const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
-    failStatus5(message);
-    endBusy4();
-    el("tags-refresh").focus();
-  }
-  function repaintTags() {
-    emitHealth();
-  }
-  async function previewGroup(key) {
-    const group = groupByKey(key);
-    const value = selectedValue(key);
-    if (!group || !value) return;
-    actionKey = key;
-    emitHealth();
-    try {
-      const plan = await postJSON("/api/tag-clusters", {
-        action: "preview",
-        space: state.space,
-        field: field === "titles" ? "genre" : field,
-        value
-      });
-      plans.set(key, plan);
-      status2 = previewSummary(plan);
-      emitHealth();
-      applyButton(key)?.focus();
-    } catch (error2) {
-      failStatus5(failureOf(error2).message);
-    } finally {
-      actionKey = "";
-      emitHealth();
-    }
-  }
-  async function applyGroup(key) {
-    const plan = plans.get(key);
-    const value = selectedValue(key);
-    if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
-    actionKey = key;
-    panelBusy = true;
-    beginBusy4();
-    emitHealth();
-    try {
-      const written = await postJSON("/api/tag-clusters", {
-        action: "apply",
-        space: state.space,
-        field: field === "titles" ? "genre" : field,
-        value
-      });
-      await bridge.reloadLibrary();
-      actionKey = "";
-      panelBusy = false;
-      endBusy4();
-      await loadTags();
-      status2 = writtenSummary(written);
-      emitHealth();
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus5(failed.message);
-      if (failed.status === 409) {
-        bridge.lockDown(error2);
-      }
-    } finally {
-      actionKey = "";
-      panelBusy = false;
-      endBusy4();
-      emitHealth();
-    }
-  }
-  async function applyMappings() {
-    const plan = mappingPlan;
-    if (!plan || !plan.changes.length || !state.writable) return;
-    actionKey = MAPPING_KEY2;
-    panelBusy = true;
-    beginBusy4();
-    emitHealth();
-    try {
-      const written = await postJSON("/api/tag-clusters", {
-        action: "refresh-apply",
-        space: state.space
-      });
-      await bridge.reloadLibrary();
-      actionKey = "";
-      panelBusy = false;
-      endBusy4();
-      await loadTags();
-      status2 = mappingWrittenSummary(written);
-      emitHealth();
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus5(failed.message);
-      if (failed.status === 409) {
-        bridge.lockDown(error2);
-      }
-    } finally {
-      actionKey = "";
-      panelBusy = false;
-      endBusy4();
-      emitHealth();
-    }
-  }
-  async function applyTitles() {
-    const plan = titlePlan;
-    if (!plan || !plan.changes.length || !state.writable) return;
-    actionKey = TITLE_KEY2;
-    panelBusy = true;
-    beginBusy4();
-    emitHealth();
-    try {
-      const written = await postJSON("/api/tag-clusters", {
-        action: "clean-apply",
-        space: state.space
-      });
-      await bridge.reloadLibrary();
-      actionKey = "";
-      panelBusy = false;
-      endBusy4();
-      await loadTags();
-      status2 = titlesWrittenSummary(written);
-      emitHealth();
-    } catch (error2) {
-      const failed = failureOf(error2);
-      failStatus5(failed.message);
-      if (failed.status === 409) {
-        bridge.lockDown(error2);
-      }
-    } finally {
-      actionKey = "";
-      panelBusy = false;
-      endBusy4();
-      emitHealth();
-    }
-  }
-  function beginBusy4() {
-    panelBusy = true;
-    el("tags-panel").setAttribute("aria-busy", "true");
-    status2 = field === "titles" ? t("tags.checkingTitles") : t("tags.checking");
-    emitHealth();
-  }
-  function endBusy4() {
-    panelBusy = false;
-    el("tags-panel").setAttribute("aria-busy", "false");
-    emitHealth();
-  }
-  function asMappingPlan(payload) {
-    if (payload === null || typeof payload !== "object") return null;
-    const plan = payload;
-    if (!Array.isArray(plan.changes)) return null;
-    return plan;
-  }
-  async function readMappingPreview(token3) {
-    try {
-      const payload = await postJSON("/api/tag-clusters", {
-        action: "refresh-preview",
-        space: state.space
-      });
-      if (token3 !== state.tagsToken) return null;
-      return asMappingPlan(payload);
-    } catch {
-      if (token3 !== state.tagsToken) return null;
-      return null;
-    }
-  }
-  function failStatus5(message) {
-    status2 = message;
-    emitHealth();
-  }
-  function groupByKey(key) {
-    return latest5?.groups?.find((group) => group.key === key);
-  }
-  function selectedValue(key) {
-    const group = groupByKey(key);
-    return selectedByKey.get(key) ?? group?.suggested ?? "";
-  }
-  function applyButton(key) {
-    return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
-  }
-  function cssEscape(value) {
-    if (typeof CSS !== "undefined" && typeof CSS.escape === "function") return CSS.escape(value);
-    return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
-  }
-
-  // src/cue-view.ts
-  var CUE_SLOT_COUNT = 8;
-  function cueSlotVar(index) {
-    return `var(--cue-slot-${index + 1})`;
-  }
-  var CUE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
-  function isCueColor(value) {
-    return CUE_COLOR.test(value);
-  }
-  function slotColor(index, stored) {
-    if (typeof stored === "string" && isCueColor(stored)) return stored;
-    if (Number.isInteger(index) && index >= 0 && index < CUE_SLOT_COUNT) {
-      return cueSlotVar(index);
-    }
-    return "";
-  }
-  function cueSlots(cues2) {
-    const slots = Array.from({ length: CUE_SLOT_COUNT }, () => null);
-    if (!cues2) return slots;
-    for (const cue of cues2) {
-      const index = Number(cue.index);
-      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) continue;
-      if (slots[index] == null) slots[index] = cue;
-    }
-    return slots;
-  }
-  function extraCues(cues2) {
-    if (!cues2) return [];
-    const seen = /* @__PURE__ */ new Set();
-    const extra = [];
-    for (const cue of cues2) {
-      const index = Number(cue.index);
-      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) {
-        extra.push(cue);
-        continue;
-      }
-      if (seen.has(index)) extra.push(cue);
-      else seen.add(index);
-    }
-    return extra;
-  }
-  function formatCueTime(value) {
-    const total = Number(value) / 1e3;
-    const minutes = Math.floor(total / 60);
-    return `${minutes}:${(total - minutes * 60).toFixed(3).padStart(6, "0")}`;
-  }
-  function cuesFromFrame(value) {
-    if (value == null || Array.isArray(value)) return [];
-    return Array.isArray(value.cues) ? value.cues : [];
-  }
-  function cueSummary(cue, empty) {
-    if (!cue) return empty;
-    const named = typeof cue.name === "string" ? cue.name.trim() : "";
-    const time = formatCueTime(cue.start_ms);
-    return named ? `${time} ${named}` : time;
-  }
-  function cueDiffRows(before, after) {
-    const beforeCues = cuesFromFrame(before);
-    const afterCues = cuesFromFrame(after);
-    const beforeSlots = cueSlots(beforeCues);
-    const afterSlots = cueSlots(afterCues);
-    const diffs = [];
-    for (let slot = 0; slot < CUE_SLOT_COUNT; slot += 1) {
-      const left = beforeSlots[slot] ?? null;
-      const right = afterSlots[slot] ?? null;
-      if (cueSignature(left) === cueSignature(right)) continue;
-      diffs.push({ slot, before: left, after: right });
-    }
-    const beforeExtra = extraCues(beforeCues);
-    const afterExtra = extraCues(afterCues);
-    const indexes = /* @__PURE__ */ new Set();
-    for (const cue of [...beforeExtra, ...afterExtra]) {
-      const index = Number(cue.index);
-      if (Number.isInteger(index)) indexes.add(index);
-    }
-    const sorted = [...indexes].sort((left, right) => left - right);
-    for (const index of sorted) {
-      const left = beforeExtra.find((cue) => Number(cue.index) === index) ?? null;
-      const right = afterExtra.find((cue) => Number(cue.index) === index) ?? null;
-      if (cueSignature(left) === cueSignature(right)) continue;
-      diffs.push({ slot: index, before: left, after: right });
-    }
-    return diffs;
-  }
-  function appendCueSlots(section, cues2) {
-    const slots = cueSlots(cues2);
-    for (let slot = 0; slot < slots.length; slot += 1) {
-      section.append(paintCueSlot(slot, slots[slot] ?? null));
-    }
-    for (const extra of extraCues(cues2)) {
-      const index = Number(extra.index);
-      const slot = Number.isInteger(index) ? index : -1;
-      section.append(paintCueSlot(slot, extra));
-    }
-  }
-  function paintCueSlot(slot, cue) {
-    const row = document.createElement("div");
-    row.className = cue ? "marker" : "marker marker-empty";
-    const number = document.createElement("span");
-    number.className = "marker-slot";
-    number.textContent = slot >= 0 ? String(slot + 1) : "";
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    const color = slotColor(slot, cue?.color);
-    if (color) swatch.style.background = color;
-    const time = document.createElement("span");
-    time.textContent = cue ? formatCueTime(cue.start_ms) : "—";
-    const name = document.createElement("span");
-    const named = cue && typeof cue.name === "string" ? cue.name.trim() : "";
-    if (cue) {
-      name.textContent = named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 });
-    } else {
-      name.textContent = t("markers.cueEmpty");
-    }
-    row.append(number, swatch, time, name);
-    return row;
-  }
-  function paintCueDiffRow(diff) {
-    const row = document.createElement("p");
-    row.className = "cue-diff";
-    const empty = t("markers.cueEmpty");
-    const beforeText = cueSummary(diff.before, empty);
-    const afterText = cueSummary(diff.after, empty);
-    row.setAttribute(
-      "aria-label",
-      `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`
-    );
-    const number = document.createElement("span");
-    number.className = "marker-slot";
-    number.textContent = String(diff.slot + 1);
-    const arrow = document.createElement("span");
-    arrow.className = "cue-diff-arrow";
-    arrow.setAttribute("aria-hidden", "true");
-    arrow.textContent = "→";
-    row.append(number, paintCueSide(diff.before, diff.slot), arrow, paintCueSide(diff.after, diff.slot));
-    return row;
-  }
-  function cueSignature(cue) {
-    if (!cue) return "";
-    const start = Number(cue.start_ms);
-    const color = typeof cue.color === "string" ? cue.color : "";
-    const name = typeof cue.name === "string" ? cue.name : "";
-    return `${start}\0${color}\0${name}`;
-  }
-  function paintCueSide(cue, slot) {
-    const side = document.createElement("span");
-    side.className = cue ? "cue-diff-side" : "cue-diff-side marker-empty";
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    const color = slotColor(slot, cue?.color);
-    if (color) swatch.style.background = color;
-    const text2 = document.createElement("span");
-    text2.textContent = cueSummary(cue, t("markers.cueEmpty"));
-    side.append(swatch, text2);
-    return side;
-  }
-
-  // src/player.ts
-  var import_react6 = __toESM(require_react(), 1);
-
-  // src/components/PlayerBar.tsx
-  var import_react5 = __toESM(require_react(), 1);
-
-  // src/player-strings.ts
-  var playerStrings = {
-    get region() {
-      return t("player.region");
-    },
-    get play() {
-      return t("player.play");
-    },
-    get pause() {
-      return t("player.pause");
-    },
-    get seek() {
-      return t("player.seek");
-    },
-    get volume() {
-      return t("player.volume");
-    },
-    get elapsed() {
-      return t("player.elapsed");
-    },
-    get duration() {
-      return t("player.duration");
-    },
-    get nothingPlaying() {
-      return t("player.nothingPlaying");
-    },
-    get untitled() {
-      return t("track.untitled");
-    },
-    get previous() {
-      return t("player.previous");
-    },
-    get next() {
-      return t("player.next");
-    },
-    get cue() {
-      return t("player.cue");
-    },
-    get cannotPlay() {
-      return t("player.cannotPlay");
-    },
-    get notInLibrary() {
-      return t("player.notInLibrary");
-    },
-    get zoomIn() {
-      return t("player.zoomIn");
-    },
-    get zoomOut() {
-      return t("player.zoomOut");
-    },
-    get overview() {
-      return t("player.overview");
-    },
-    get overviewSeek() {
-      return t("player.overviewSeek");
-    },
-    get waveformReading() {
-      return t("player.waveformReading");
-    },
-    get waveformUnavailable() {
-      return t("player.waveformUnavailable");
-    }
-  };
-
-  // src/components/PlayButton.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef2(spec2) {
-    return (element) => {
-      if (element) setTooltip(element, spec2);
-    };
-  }
-  function PlayButton({ variant, trackId: trackId3, name, onClickExtra }) {
-    const player2 = usePlayer();
-    const playingThis = variant === "bar" ? player2.playing : player2.trackId === trackId3 && player2.playing;
-    const action = playingThis ? playerStrings.pause : playerStrings.play;
-    const labelled = name ? `${action} ${name}` : action;
-    const spec2 = variant === "bar" ? playTip(action, name) : playRow(name);
-    const className = variant === "row" ? "row-play" : variant === "detail" ? "detail-play" : "player-toggle player-play";
-    const disabled = variant === "bar" && !player2.canTogglePlay;
-    function onClick(event) {
-      if (variant === "row") {
-        event.stopPropagation();
-      }
-      onClickExtra?.(event);
-      if (variant === "bar") {
-        player2.togglePlayPause();
-        return;
-      }
-      if (trackId3 !== void 0) player2.playOrToggle(trackId3);
-    }
-    function onDoubleClick(event) {
-      if (variant === "row") event.stopPropagation();
-    }
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-      "button",
-      {
-        type: "button",
-        ref: tooltipRef2(spec2),
-        className,
-        disabled,
-        "aria-label": labelled,
-        "aria-pressed": playingThis,
-        onClick,
-        onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
-      }
-    );
-  }
-
-  // src/components/PlayerBar.tsx
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef3(spec2) {
-    return (element) => {
-      if (element) setTooltip(element, spec2);
-    };
-  }
-  function CueMarks({
-    cues: cues2,
-    limit,
-    seek: seek2
-  }) {
-    if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_jsx_runtime6.Fragment, { children: cues2.map((cue) => {
-      const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
-      const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
-      const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-        "button",
-        {
-          type: "button",
-          ref: (element) => {
-            if (!element) return;
-            setTooltip(element, cueTip(label));
-            if (cue.color) element.style.setProperty("--cue", cue.color);
-          },
-          className: "player-cue",
-          style: { left: `${percent}%` },
-          "aria-label": label,
-          onClick: () => seek2(cue.seconds)
-        },
-        `${cue.seconds}:${cue.label}:${cue.color}`
-      );
-    }) });
-  }
-  function PlayerBar() {
-    const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react5.useState)(null);
-    const loaded = player2.trackId !== null;
-    const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
-    const named = loaded ? player2.title || playerStrings.untitled : "";
-    const limit = Number.isFinite(player2.duration) && player2.duration > 0 ? player2.duration : 0;
-    const shownTime = hold ?? Math.min(player2.currentTime, limit || player2.currentTime);
-    function onSeekKey(event) {
-      if (event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
-      const forward = event.key === "ArrowRight" || event.key === "ArrowUp";
-      const back = event.key === "ArrowLeft" || event.key === "ArrowDown";
-      if (!forward && !back) return;
-      event.preventDefault();
-      event.stopPropagation();
-      const step = event.shiftKey ? SEEK_STEP_LARGE_SECONDS : SEEK_STEP_SECONDS;
-      player2.seekBy((forward ? 1 : -1) * step);
-    }
-    function onSeekInput(event) {
-      const next2 = Number(event.currentTarget.value);
-      setHold(next2);
-      player2.seek(next2);
-    }
-    function onSeekPointerDown() {
-      setHold(player2.currentTime);
-    }
-    function onSeekPointerUp(_event) {
-      setHold(null);
-    }
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-          "button",
-          {
-            type: "button",
-            ref: tooltipRef3(tips.previous),
-            className: "player-toggle",
-            disabled: !player2.canSkipPrevious,
-            "aria-label": playerStrings.previous,
-            onClick: () => player2.previous(),
-            children: playerStrings.previous
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-          "button",
-          {
-            type: "button",
-            ref: tooltipRef3(tips.next),
-            className: "player-toggle",
-            disabled: !player2.canSkipNext,
-            "aria-label": playerStrings.next,
-            onClick: () => player2.next(),
-            children: playerStrings.next
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-            "input",
-            {
-              ref: tooltipRef3(tips.seek),
-              type: "range",
-              className: "player-range",
-              min: 0,
-              max: limit,
-              step: 0.1,
-              value: shownTime,
-              disabled: !loaded || limit === 0,
-              "aria-label": playerStrings.seek,
-              onPointerDown: onSeekPointerDown,
-              onPointerUp: onSeekPointerUp,
-              onPointerCancel: onSeekPointerUp,
-              onInput: onSeekInput,
-              onKeyDown: onSeekKey
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: formatPlayerTime(player2.duration) })
-        ] })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-          "input",
-          {
-            ref: tooltipRef3(tips.volume),
-            type: "range",
-            min: 0,
-            max: 1,
-            step: 0.01,
-            value: player2.volume,
-            onInput: (event) => player2.setVolume(Number(event.currentTarget.value))
-          }
-        )
-      ] })
-    ] });
-  }
+  var import_react_dom = __toESM(require_react_dom(), 1);
 
   // src/waveform.ts
   var TILE_CSS_WIDTH = 256;
@@ -21521,25 +20230,1533 @@
     return value;
   }
 
+  // src/context/WaveformContext.tsx
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var defaultUi = {
+    pps: ZOOM_DEFAULT_PPS,
+    phase: "idle",
+    overviewSource: ""
+  };
+  var WaveformContext = (0, import_react3.createContext)(null);
+  var WaveformClockContext = (0, import_react3.createContext)(null);
+  function WaveformProvider({ children }) {
+    const [ui, setUi] = (0, import_react3.useState)(defaultUi);
+    const value = (0, import_react3.useMemo)(() => {
+      const blocked = ui.phase === "reading" || ui.phase === "unavailable";
+      return {
+        ...ui,
+        canZoomIn: !blocked && ui.pps < ZOOM_MAX_PPS - 1e-9,
+        canZoomOut: !blocked && ui.pps > ZOOM_MIN_PPS + 1e-9,
+        publish: (next2) => {
+          (0, import_react_dom.flushSync)(() => {
+            setUi(next2);
+          });
+        }
+      };
+    }, [ui]);
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(WaveformContext, { value, children });
+  }
+  function WaveformClockProvider({
+    clock,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(WaveformClockContext, { value: clock, children });
+  }
+  function useWaveform() {
+    const value = (0, import_react3.useContext)(WaveformContext);
+    if (value === null) {
+      throw new Error("useWaveform must be used within WaveformProvider");
+    }
+    return value;
+  }
+  function useWaveformClockOverride() {
+    return (0, import_react3.useContext)(WaveformClockContext);
+  }
+
+  // src/health-events.ts
+  var listeners = /* @__PURE__ */ new Set();
+  function subscribeHealth(listener) {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }
+  function emitHealth() {
+    for (const listener of [...listeners]) listener();
+  }
+
+  // src/health-list.ts
+  function crateScopeLabel() {
+    if (state.activeCrate === "all") return t("gig.wholeSpace");
+    const crate = state.crates.find((row) => row.id === state.activeCrate);
+    return crate?.name || t("gig.wholeSpace");
+  }
+  function healthListNote() {
+    if (state.mode === "missing") {
+      const offlineCount = state.tracks.filter((track) => track.offline).length;
+      return offlineCount ? t("mode.missingOffline", { count: offlineCount }) : t("mode.missing");
+    }
+    if (state.mode === "duplicates") return t("mode.duplicates");
+    if (state.mode === "stems") return t("mode.stems");
+    return "";
+  }
+  function selectedDuplicateGroupOpen() {
+    if (state.mode !== "duplicates" || state.selectedId == null) return false;
+    return (state.duplicateGroups || []).some((group) => (group.ids || []).includes(state.selectedId));
+  }
+  function getHealthListSnapshot() {
+    const mergeVisible = state.mode === "duplicates";
+    const relinkVisible = state.mode === "missing";
+    return {
+      mode: state.mode,
+      modeNote: healthListNote(),
+      mergeVisible,
+      mergeDisabled: !mergeVisible || !state.writable || !selectedDuplicateGroupOpen(),
+      relinkVisible,
+      relinkDisabled: !relinkVisible || !state.writable
+    };
+  }
+
+  // src/scan.ts
+  var import_react4 = __toESM(require_react(), 1);
+
+  // src/components/tooltip-ref.ts
+  function tooltipRef(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+
+  // src/components/ScanPanel.tsx
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var LIST_CAP3 = 100;
+  var PROBLEM_ORDER = [
+    "empty",
+    "unreadable",
+    "wrong_format",
+    "serato_flagged",
+    "undecodable",
+    "decode_error",
+    "short"
+  ];
+  var PROBLEM_KEYS = {
+    empty: "scan.problem.empty",
+    unreadable: "scan.problem.unreadable",
+    wrong_format: "scan.problem.wrong_format",
+    serato_flagged: "scan.problem.serato_flagged",
+    undecodable: "scan.problem.undecodable",
+    decode_error: "scan.problem.decode_error",
+    short: "scan.problem.short"
+  };
+  function problemHeading(kind2) {
+    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
+  }
+  function problemDetail(item4) {
+    const heading2 = problemHeading(item4.problem);
+    if (item4.problem === "wrong_format" && item4.detail) {
+      return t("scan.wrongFormatDetail", { detail: item4.detail });
+    }
+    if ((item4.problem === "decode_error" || item4.problem === "short") && item4.detail) {
+      return t(item4.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
+        detail: item4.detail
+      });
+    }
+    if (item4.problem === "serato_flagged" && item4.detail) {
+      return `${heading2}: ${item4.detail}`;
+    }
+    return heading2;
+  }
+  function problemLine(item4) {
+    const title2 = [item4.artist, item4.name].filter(Boolean).join(" — ") || item4.file;
+    return t("scan.row", { title: title2, file: item4.file, problem: problemDetail(item4) });
+  }
+  function problemKinds(problems) {
+    const seen = new Set(problems.map((item4) => item4.problem));
+    const known = PROBLEM_ORDER.filter((kind2) => seen.has(kind2));
+    const extra = [...seen].filter((kind2) => !PROBLEM_ORDER.includes(kind2)).sort();
+    return [...known, ...extra];
+  }
+  function ProblemGroup({
+    kind: kind2,
+    rows: rows2,
+    expanded: expanded2,
+    onExpand
+  }) {
+    const lines = rows2.map(problemLine);
+    const shown = expanded2 ? lines : lines.slice(0, LIST_CAP3);
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("details", { className: "gig-group", open: true, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("summary", { children: t("gig.groupCount", { label: problemHeading(kind2), count: lines.length }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { children: shown.map((line) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { children: line }, line)) }),
+      lines.length > LIST_CAP3 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { type: "button", ref: tooltipRef(tips.gigShowAll), className: "gig-show-all", onClick: onExpand, children: t("gig.showAll", { count: lines.length }) }) : null
+    ] });
+  }
+  function ScanPanel() {
+    const health = useHealth();
+    const payload = health.scanReport;
+    const problems = payload?.problems ?? [];
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          "button",
+          {
+            id: "scan-quick",
+            type: "button",
+            ref: tooltipRef(tips.scanQuick),
+            disabled: health.scanBusy,
+            "aria-busy": health.scanBusy ? "true" : "false",
+            onClick: () => {
+              void health.loadScan("quick");
+            },
+            children: t("scan.checkQuick")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          "button",
+          {
+            id: "scan-full",
+            type: "button",
+            ref: tooltipRef(tips.scanFull),
+            disabled: health.scanBusy || health.scanFullDisabled,
+            "aria-busy": health.scanBusy ? "true" : "false",
+            onClick: () => {
+              void health.loadScan("full");
+            },
+            children: t("scan.checkFull")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
+        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
+        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
+        problems.length ? problemKinds(problems).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          ProblemGroup,
+          {
+            kind: kind2,
+            rows: problems.filter((item4) => item4.problem === kind2),
+            expanded: health.scanExpanded.has(kind2),
+            onExpand: () => health.expandScan(kind2)
+          },
+          kind2
+        )) : /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "gig-note", children: t("scan.empty") })
+      ] }) : null })
+    ] });
+  }
+
+  // src/scan.ts
+  var latest4 = null;
+  var status = "";
+  var busy2 = false;
+  var lastDepth = "quick";
+  var expanded = /* @__PURE__ */ new Set();
+  var panelRoot;
+  var panelHost = null;
+  function getScanSnapshot() {
+    return {
+      scanReport: latest4,
+      scanStatus: status,
+      scanBusy: busy2,
+      scanScope: crateScopeLabel(),
+      scanFullDisabled: state.activeCrate === "all",
+      scanExpanded: expanded
+    };
+  }
+  function expandScan(kind2) {
+    expanded.add(kind2);
+    emitHealth();
+  }
+  function wireScan() {
+    const panel = el("scan-panel");
+    if (panelRoot && panelHost !== panel) {
+      panelRoot.unmount();
+      panelRoot = void 0;
+    }
+    panelHost = panel;
+    panelRoot = mountIsland(panel, (0, import_react4.createElement)(ScanPanel), panelRoot);
+  }
+  async function loadScan(depth) {
+    const chosen = resolveDepth(depth);
+    const token3 = ++state.scanToken;
+    beginBusy3();
+    let settle = "none";
+    if (chosen === "full" && state.activeCrate === "all") {
+      failStatus4(t("error.scan_full_needs_crate"));
+      endBusy3();
+      el("scan-full").focus();
+      return;
+    }
+    lastDepth = chosen;
+    const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      const response = await fetch(
+        `/api/file-scan?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&depth=${encodeURIComponent(chosen)}`
+      );
+      if (token3 !== state.scanToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.scanToken) return;
+      if (!response.ok || payload === null) {
+        failStatus4(serverMessage(payload, t("scan.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest4 = payload;
+      expanded.clear();
+      status = "";
+      emitHealth();
+      settle = "report";
+    } catch {
+      if (token3 !== state.scanToken) return;
+      failStatus4(t("scan.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.scanToken) return;
+      endBusy3();
+      if (settle === "retry") el("scan-quick").focus();
+      if (settle === "report") el("scan-report").focus();
+    }
+  }
+  function showScanFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
+    failStatus4(message);
+    endBusy3();
+    el("scan-quick").focus();
+  }
+  function repaintScan() {
+    emitHealth();
+  }
+  function resolveDepth(depth) {
+    if (depth === "quick" || depth === "full") return depth;
+    if (lastDepth === "full" && state.activeCrate === "all") return "quick";
+    return lastDepth;
+  }
+  function beginBusy3() {
+    busy2 = true;
+    status = t("scan.checking");
+    el("scan-panel").setAttribute("aria-busy", "true");
+    emitHealth();
+  }
+  function endBusy3() {
+    busy2 = false;
+    el("scan-panel").setAttribute("aria-busy", "false");
+    emitHealth();
+  }
+  function failStatus4(message) {
+    status = message;
+    emitHealth();
+  }
+
+  // src/tags.ts
+  var import_react5 = __toESM(require_react(), 1);
+
+  // src/tags-view.ts
+  function tagsSummary(field2, values, groups) {
+    if (field2 === "titles") return titlesSummary(groups);
+    if (groups === 0) {
+      return field2 === "genre" ? t("tags.summaryGenreClear", { count: values }) : t("tags.summaryArtistClear", { count: values });
+    }
+    return field2 === "genre" ? t("tags.summaryGenre", { values, count: groups }) : t("tags.summaryArtist", { values, count: groups });
+  }
+  function titlesSummary(changes) {
+    if (!changes) return t("tags.summaryTitlesClear");
+    return t("tags.summaryTitles", { count: changes });
+  }
+  function groupHeading(group) {
+    return t("tags.group", {
+      name: group.suggested,
+      spellings: t("tags.spellingCount", { count: group.spellings.length }),
+      tracks: t("tags.trackCount", { count: group.tracks })
+    });
+  }
+  function spellingLabel(value, count, suggested) {
+    const base = t("tags.row", { value, count });
+    return suggested ? `${base} — ${t("tags.suggested")}` : base;
+  }
+  function previewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.previewSummary", { count: plan.changes.length, value: plan.value });
+  }
+  function titlesPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.summaryTitlesClear");
+    return t("tags.titlesPreviewSummary", { count: plan.changes.length });
+  }
+  function writtenSummary(plan) {
+    return t("tags.written", { count: plan.changes.length, value: plan.value });
+  }
+  function titlesWrittenSummary(plan) {
+    return t("tags.titlesWritten", { count: plan.changes.length });
+  }
+  function mappingPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.mappingSummary", { count: plan.changes.length });
+  }
+  function mappingWrittenSummary(plan) {
+    return t("tags.mappingWritten", { count: plan.changes.length });
+  }
+  function mappingFieldLabel(field2) {
+    if (field2 === "genre") return t("tags.genre");
+    if (field2 === "artist") return t("tags.artist");
+    return field2;
+  }
+  function groupChanges(changes) {
+    const rows2 = /* @__PURE__ */ new Map();
+    for (const change of changes) {
+      const remixer = change.remixer ?? "";
+      const field2 = change.field ?? "";
+      const id = `${field2}\0${change.from}\0${change.to}\0${remixer}`;
+      const existing = rows2.get(id);
+      if (existing) existing.count += 1;
+      else {
+        const row = { from: change.from, to: change.to, count: 1 };
+        if (change.remixer) row.remixer = change.remixer;
+        if (change.field) row.field = change.field;
+        rows2.set(id, row);
+      }
+    }
+    return [...rows2.values()];
+  }
+  function previewLines(changes) {
+    return groupChanges(changes).map((row) => {
+      if (row.field) {
+        return t("tags.previewLineField", {
+          field: mappingFieldLabel(row.field),
+          from: row.from,
+          to: row.to,
+          count: row.count
+        });
+      }
+      return row.remixer ? t("tags.previewLineRemixer", {
+        from: row.from,
+        to: row.to,
+        remixer: row.remixer,
+        count: row.count
+      }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count });
+    });
+  }
+
+  // src/components/TagsPanel.tsx
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var LIST_CAP4 = 100;
+  var TITLE_KEY = "clean";
+  var MAPPING_KEY = "saved";
+  function DiffLines({ plan }) {
+    const lines = previewLines(plan.changes).slice(0, LIST_CAP4);
+    if (!lines.length) return null;
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { children: lines.map((line) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("li", { children: line }, line)) });
+  }
+  function MappingCard({
+    plan,
+    canApply,
+    onApply
+  }) {
+    if (!plan.changes.length) return null;
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "tags-mappings", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef(tips.tagsApplyMappings),
+          "data-tags-action": "refresh-apply",
+          disabled: !canApply,
+          onClick: onApply,
+          children: t("tags.applyMappings")
+        }
+      ) })
+    ] });
+  }
+  function GroupCard({
+    group,
+    open,
+    chosen,
+    plan,
+    busy: busy4,
+    canApply,
+    onPreview,
+    onApply,
+    onSelect
+  }) {
+    const showPlan = plan && plan.value === chosen;
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { className: "gig-group", open, "data-key": group.key, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("summary", { ref: tooltipRef(tips.tagsGroup), children: groupHeading(group) }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "tags-spelling", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "input",
+          {
+            ref: tooltipRef(tips.tagsSpelling),
+            type: "radio",
+            name: `tags-${group.key}`,
+            value: spelling.value,
+            checked: spelling.value === chosen,
+            disabled: busy4,
+            onChange: (event) => onSelect(event.currentTarget.value)
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
+      ] }) }, spelling.value)) }),
+      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(DiffLines, { plan }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "tags-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.tagsPreview),
+            "data-tags-action": "preview",
+            "data-key": group.key,
+            disabled: busy4 || !chosen,
+            onClick: onPreview,
+            children: t("tags.preview")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.tagsApply),
+            "data-tags-action": "apply",
+            "data-key": group.key,
+            disabled: !canApply || Boolean(plan && plan.value === chosen && !plan.changes.length),
+            onClick: onApply,
+            children: t("tags.apply")
+          }
+        )
+      ] })
+    ] });
+  }
+  function TitlesReport({
+    plan,
+    canApply,
+    onApply
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef(tips.tagsApplyTitles),
+          "data-tags-action": "clean-apply",
+          disabled: !canApply,
+          onClick: onApply,
+          children: t("tags.apply")
+        }
+      ) })
+    ] });
+  }
+  function TagsPanel() {
+    const health = useHealth();
+    const field2 = health.tagsField;
+    const groups = health.tagsClusters?.groups ?? [];
+    function onField(next2) {
+      if (health.tagsField === next2) return;
+      health.setTagsField(next2);
+      void health.loadTags();
+    }
+    function canApply(key) {
+      const plan = health.tagsPlans.get(key);
+      const group = groups.find((row) => row.key === key);
+      const value = health.tagsSelected.get(key) ?? group?.suggested ?? "";
+      return Boolean(
+        plan && plan.value === value && plan.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== key
+      );
+    }
+    const canApplyTitles = Boolean(
+      health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY
+    );
+    const canApplyMappings = Boolean(
+      health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY
+    );
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "button",
+            {
+              id: "tags-genre",
+              type: "button",
+              ref: tooltipRef(tips.tagsGenre),
+              "aria-pressed": field2 === "genre",
+              disabled: health.tagsBusy,
+              "aria-busy": health.tagsBusy ? "true" : "false",
+              onClick: () => onField("genre"),
+              children: t("tags.genre")
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "button",
+            {
+              id: "tags-artist",
+              type: "button",
+              ref: tooltipRef(tips.tagsArtist),
+              "aria-pressed": field2 === "artist",
+              disabled: health.tagsBusy,
+              "aria-busy": health.tagsBusy ? "true" : "false",
+              onClick: () => onField("artist"),
+              children: t("tags.artist")
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "button",
+            {
+              id: "tags-titles",
+              type: "button",
+              ref: tooltipRef(tips.tagsTitles),
+              "aria-pressed": field2 === "titles",
+              disabled: health.tagsBusy,
+              "aria-busy": health.tagsBusy ? "true" : "false",
+              onClick: () => onField("titles"),
+              children: t("tags.titles")
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            id: "tags-refresh",
+            type: "button",
+            ref: tooltipRef(tips.tagsRefresh),
+            disabled: health.tagsBusy,
+            "aria-busy": health.tagsBusy ? "true" : "false",
+            onClick: () => {
+              void health.loadTags();
+            },
+            children: t("gig.checkAgain")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
+        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => void health.applyTitles() }) : null,
+        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
+          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            MappingCard,
+            {
+              plan: health.mappingPlan,
+              canApply: canApplyMappings,
+              onApply: () => void health.applyMappings()
+            }
+          ) : null,
+          groups.map((group, index) => {
+            const chosen = health.tagsSelected.get(group.key) ?? group.suggested ?? "";
+            return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+              GroupCard,
+              {
+                group,
+                open: index === 0 || health.tagsOpen.has(group.key),
+                chosen,
+                plan: health.tagsPlans.get(group.key),
+                busy: health.tagsBusy,
+                canApply: canApply(group.key),
+                onPreview: () => void health.previewGroup(group.key),
+                onApply: () => void health.applyGroup(group.key),
+                onSelect: (value) => health.selectSpelling(group.key, value)
+              },
+              group.key
+            );
+          })
+        ] }) : null
+      ] })
+    ] });
+  }
+
+  // src/tags.ts
+  var TITLE_KEY2 = "clean";
+  var MAPPING_KEY2 = "saved";
+  var latest5 = null;
+  var titlePlan = null;
+  var mappingPlan = null;
+  var plans = /* @__PURE__ */ new Map();
+  var selectedByKey = /* @__PURE__ */ new Map();
+  var openKeys = /* @__PURE__ */ new Set();
+  var field = "genre";
+  var status2 = "";
+  var panelBusy = false;
+  var actionKey = "";
+  var panelRoot2;
+  var panelHost2 = null;
+  function getTagsSnapshot() {
+    return {
+      tagsField: field,
+      tagsClusters: latest5,
+      titlePlan,
+      mappingPlan,
+      tagsPlans: plans,
+      tagsSelected: selectedByKey,
+      tagsOpen: openKeys,
+      tagsStatus: status2,
+      tagsBusy: panelBusy,
+      tagsActionKey: actionKey,
+      tagsWritable: state.writable
+    };
+  }
+  function setTagsField(next2) {
+    field = next2;
+    emitHealth();
+  }
+  function selectSpelling(key, value) {
+    selectedByKey.set(key, value);
+    plans.delete(key);
+    emitHealth();
+  }
+  function wireTags() {
+    field = "genre";
+    const panel = el("tags-panel");
+    if (panelRoot2 && panelHost2 !== panel) {
+      panelRoot2.unmount();
+      panelRoot2 = void 0;
+    }
+    panelHost2 = panel;
+    panelRoot2 = mountIsland(panel, (0, import_react5.createElement)(TagsPanel), panelRoot2);
+  }
+  async function loadTags() {
+    const token3 = ++state.tagsToken;
+    plans.clear();
+    selectedByKey.clear();
+    openKeys.clear();
+    beginBusy4();
+    let settle = "none";
+    try {
+      if (field === "titles") {
+        const payload = await postJSON("/api/tag-clusters", {
+          action: "clean-preview",
+          space: state.space
+        });
+        if (token3 !== state.tagsToken) return;
+        titlePlan = payload;
+        latest5 = null;
+        mappingPlan = null;
+        status2 = titlesPreviewSummary(payload);
+        settle = "report";
+      } else {
+        const response = await fetch(
+          `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
+        );
+        if (token3 !== state.tagsToken) return;
+        const payload = await readJSON(response).catch(() => null);
+        if (token3 !== state.tagsToken) return;
+        if (!response.ok || payload === null) {
+          failStatus5(serverMessage(payload, t("tags.unreadable")));
+          settle = "retry";
+          return;
+        }
+        latest5 = payload;
+        titlePlan = null;
+        mappingPlan = await readMappingPreview(token3);
+        if (token3 !== state.tagsToken) return;
+        status2 = "";
+        settle = "report";
+      }
+    } catch (error2) {
+      if (token3 !== state.tagsToken) return;
+      if (error2 instanceof TypeError) failStatus5(t("tags.unreachable"));
+      else failStatus5(failureOf(error2).message);
+      settle = "retry";
+    } finally {
+      if (token3 !== state.tagsToken) return;
+      endBusy4();
+      emitHealth();
+      if (settle === "retry") el("tags-refresh").focus();
+      if (settle === "report") el("tags-report").focus();
+    }
+  }
+  function showTagsFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
+    failStatus5(message);
+    endBusy4();
+    el("tags-refresh").focus();
+  }
+  function repaintTags() {
+    emitHealth();
+  }
+  async function previewGroup(key) {
+    const group = groupByKey(key);
+    const value = selectedValue(key);
+    if (!group || !value) return;
+    actionKey = key;
+    emitHealth();
+    try {
+      const plan = await postJSON("/api/tag-clusters", {
+        action: "preview",
+        space: state.space,
+        field: field === "titles" ? "genre" : field,
+        value
+      });
+      plans.set(key, plan);
+      status2 = previewSummary(plan);
+      emitHealth();
+      applyButton(key)?.focus();
+    } catch (error2) {
+      failStatus5(failureOf(error2).message);
+    } finally {
+      actionKey = "";
+      emitHealth();
+    }
+  }
+  async function applyGroup(key) {
+    const plan = plans.get(key);
+    const value = selectedValue(key);
+    if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
+    actionKey = key;
+    panelBusy = true;
+    beginBusy4();
+    emitHealth();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "apply",
+        space: state.space,
+        field: field === "titles" ? "genre" : field,
+        value
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy4();
+      await loadTags();
+      status2 = writtenSummary(written);
+      emitHealth();
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus5(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy4();
+      emitHealth();
+    }
+  }
+  async function applyMappings() {
+    const plan = mappingPlan;
+    if (!plan || !plan.changes.length || !state.writable) return;
+    actionKey = MAPPING_KEY2;
+    panelBusy = true;
+    beginBusy4();
+    emitHealth();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "refresh-apply",
+        space: state.space
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy4();
+      await loadTags();
+      status2 = mappingWrittenSummary(written);
+      emitHealth();
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus5(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy4();
+      emitHealth();
+    }
+  }
+  async function applyTitles() {
+    const plan = titlePlan;
+    if (!plan || !plan.changes.length || !state.writable) return;
+    actionKey = TITLE_KEY2;
+    panelBusy = true;
+    beginBusy4();
+    emitHealth();
+    try {
+      const written = await postJSON("/api/tag-clusters", {
+        action: "clean-apply",
+        space: state.space
+      });
+      await bridge.reloadLibrary();
+      actionKey = "";
+      panelBusy = false;
+      endBusy4();
+      await loadTags();
+      status2 = titlesWrittenSummary(written);
+      emitHealth();
+    } catch (error2) {
+      const failed = failureOf(error2);
+      failStatus5(failed.message);
+      if (failed.status === 409) {
+        bridge.lockDown(error2);
+      }
+    } finally {
+      actionKey = "";
+      panelBusy = false;
+      endBusy4();
+      emitHealth();
+    }
+  }
+  function beginBusy4() {
+    panelBusy = true;
+    el("tags-panel").setAttribute("aria-busy", "true");
+    status2 = field === "titles" ? t("tags.checkingTitles") : t("tags.checking");
+    emitHealth();
+  }
+  function endBusy4() {
+    panelBusy = false;
+    el("tags-panel").setAttribute("aria-busy", "false");
+    emitHealth();
+  }
+  function asMappingPlan(payload) {
+    if (payload === null || typeof payload !== "object") return null;
+    const plan = payload;
+    if (!Array.isArray(plan.changes)) return null;
+    return plan;
+  }
+  async function readMappingPreview(token3) {
+    try {
+      const payload = await postJSON("/api/tag-clusters", {
+        action: "refresh-preview",
+        space: state.space
+      });
+      if (token3 !== state.tagsToken) return null;
+      return asMappingPlan(payload);
+    } catch {
+      if (token3 !== state.tagsToken) return null;
+      return null;
+    }
+  }
+  function failStatus5(message) {
+    status2 = message;
+    emitHealth();
+  }
+  function groupByKey(key) {
+    return latest5?.groups?.find((group) => group.key === key);
+  }
+  function selectedValue(key) {
+    const group = groupByKey(key);
+    return selectedByKey.get(key) ?? group?.suggested ?? "";
+  }
+  function applyButton(key) {
+    return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
+  }
+  function cssEscape(value) {
+    if (typeof CSS !== "undefined" && typeof CSS.escape === "function") return CSS.escape(value);
+    return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+  }
+
+  // src/cue-view.ts
+  var CUE_SLOT_COUNT = 8;
+  function cueSlotVar(index) {
+    return `var(--cue-slot-${index + 1})`;
+  }
+  var CUE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+  function isCueColor(value) {
+    return CUE_COLOR.test(value);
+  }
+  function slotColor(index, stored) {
+    if (typeof stored === "string" && isCueColor(stored)) return stored;
+    if (Number.isInteger(index) && index >= 0 && index < CUE_SLOT_COUNT) {
+      return cueSlotVar(index);
+    }
+    return "";
+  }
+  function cueSlots(cues2) {
+    const slots = Array.from({ length: CUE_SLOT_COUNT }, () => null);
+    if (!cues2) return slots;
+    for (const cue of cues2) {
+      const index = Number(cue.index);
+      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) continue;
+      if (slots[index] == null) slots[index] = cue;
+    }
+    return slots;
+  }
+  function extraCues(cues2) {
+    if (!cues2) return [];
+    const seen = /* @__PURE__ */ new Set();
+    const extra = [];
+    for (const cue of cues2) {
+      const index = Number(cue.index);
+      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) {
+        extra.push(cue);
+        continue;
+      }
+      if (seen.has(index)) extra.push(cue);
+      else seen.add(index);
+    }
+    return extra;
+  }
+  function formatCueTime(value) {
+    const total = Number(value) / 1e3;
+    const minutes = Math.floor(total / 60);
+    return `${minutes}:${(total - minutes * 60).toFixed(3).padStart(6, "0")}`;
+  }
+  function cuesFromFrame(value) {
+    if (value == null || Array.isArray(value)) return [];
+    return Array.isArray(value.cues) ? value.cues : [];
+  }
+  function cueSummary(cue, empty) {
+    if (!cue) return empty;
+    const named = typeof cue.name === "string" ? cue.name.trim() : "";
+    const time = formatCueTime(cue.start_ms);
+    return named ? `${time} ${named}` : time;
+  }
+  function cueDiffRows(before, after) {
+    const beforeCues = cuesFromFrame(before);
+    const afterCues = cuesFromFrame(after);
+    const beforeSlots = cueSlots(beforeCues);
+    const afterSlots = cueSlots(afterCues);
+    const diffs = [];
+    for (let slot = 0; slot < CUE_SLOT_COUNT; slot += 1) {
+      const left = beforeSlots[slot] ?? null;
+      const right = afterSlots[slot] ?? null;
+      if (cueSignature(left) === cueSignature(right)) continue;
+      diffs.push({ slot, before: left, after: right });
+    }
+    const beforeExtra = extraCues(beforeCues);
+    const afterExtra = extraCues(afterCues);
+    const indexes = /* @__PURE__ */ new Set();
+    for (const cue of [...beforeExtra, ...afterExtra]) {
+      const index = Number(cue.index);
+      if (Number.isInteger(index)) indexes.add(index);
+    }
+    const sorted = [...indexes].sort((left, right) => left - right);
+    for (const index of sorted) {
+      const left = beforeExtra.find((cue) => Number(cue.index) === index) ?? null;
+      const right = afterExtra.find((cue) => Number(cue.index) === index) ?? null;
+      if (cueSignature(left) === cueSignature(right)) continue;
+      diffs.push({ slot: index, before: left, after: right });
+    }
+    return diffs;
+  }
+  function appendCueSlots(section, cues2) {
+    const slots = cueSlots(cues2);
+    for (let slot = 0; slot < slots.length; slot += 1) {
+      section.append(paintCueSlot(slot, slots[slot] ?? null));
+    }
+    for (const extra of extraCues(cues2)) {
+      const index = Number(extra.index);
+      const slot = Number.isInteger(index) ? index : -1;
+      section.append(paintCueSlot(slot, extra));
+    }
+  }
+  function paintCueSlot(slot, cue) {
+    const row = document.createElement("div");
+    row.className = cue ? "marker" : "marker marker-empty";
+    const number = document.createElement("span");
+    number.className = "marker-slot";
+    number.textContent = slot >= 0 ? String(slot + 1) : "";
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    const color = slotColor(slot, cue?.color);
+    if (color) swatch.style.background = color;
+    const time = document.createElement("span");
+    time.textContent = cue ? formatCueTime(cue.start_ms) : "—";
+    const name = document.createElement("span");
+    const named = cue && typeof cue.name === "string" ? cue.name.trim() : "";
+    if (cue) {
+      name.textContent = named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 });
+    } else {
+      name.textContent = t("markers.cueEmpty");
+    }
+    row.append(number, swatch, time, name);
+    return row;
+  }
+  function paintCueDiffRow(diff) {
+    const row = document.createElement("p");
+    row.className = "cue-diff";
+    const empty = t("markers.cueEmpty");
+    const beforeText = cueSummary(diff.before, empty);
+    const afterText = cueSummary(diff.after, empty);
+    row.setAttribute(
+      "aria-label",
+      `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`
+    );
+    const number = document.createElement("span");
+    number.className = "marker-slot";
+    number.textContent = String(diff.slot + 1);
+    const arrow = document.createElement("span");
+    arrow.className = "cue-diff-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+    row.append(number, paintCueSide(diff.before, diff.slot), arrow, paintCueSide(diff.after, diff.slot));
+    return row;
+  }
+  function cueSignature(cue) {
+    if (!cue) return "";
+    const start = Number(cue.start_ms);
+    const color = typeof cue.color === "string" ? cue.color : "";
+    const name = typeof cue.name === "string" ? cue.name : "";
+    return `${start}\0${color}\0${name}`;
+  }
+  function paintCueSide(cue, slot) {
+    const side = document.createElement("span");
+    side.className = cue ? "cue-diff-side" : "cue-diff-side marker-empty";
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    const color = slotColor(slot, cue?.color);
+    if (color) swatch.style.background = color;
+    const text2 = document.createElement("span");
+    text2.textContent = cueSummary(cue, t("markers.cueEmpty"));
+    side.append(swatch, text2);
+    return side;
+  }
+
+  // src/player.ts
+  var import_react9 = __toESM(require_react(), 1);
+
+  // src/components/PlayerBar.tsx
+  var import_react6 = __toESM(require_react(), 1);
+
+  // src/player-strings.ts
+  var playerStrings = {
+    get region() {
+      return t("player.region");
+    },
+    get play() {
+      return t("player.play");
+    },
+    get pause() {
+      return t("player.pause");
+    },
+    get seek() {
+      return t("player.seek");
+    },
+    get volume() {
+      return t("player.volume");
+    },
+    get elapsed() {
+      return t("player.elapsed");
+    },
+    get duration() {
+      return t("player.duration");
+    },
+    get nothingPlaying() {
+      return t("player.nothingPlaying");
+    },
+    get untitled() {
+      return t("track.untitled");
+    },
+    get previous() {
+      return t("player.previous");
+    },
+    get next() {
+      return t("player.next");
+    },
+    get cue() {
+      return t("player.cue");
+    },
+    get cannotPlay() {
+      return t("player.cannotPlay");
+    },
+    get notInLibrary() {
+      return t("player.notInLibrary");
+    },
+    get zoomIn() {
+      return t("player.zoomIn");
+    },
+    get zoomOut() {
+      return t("player.zoomOut");
+    },
+    get overview() {
+      return t("player.overview");
+    },
+    get overviewSeek() {
+      return t("player.overviewSeek");
+    },
+    get waveformReading() {
+      return t("player.waveformReading");
+    },
+    get waveformUnavailable() {
+      return t("player.waveformUnavailable");
+    }
+  };
+
+  // src/components/PlayButton.tsx
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef2(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function PlayButton({ variant, trackId: trackId3, name, onClickExtra }) {
+    const player2 = usePlayer();
+    const playingThis = variant === "bar" ? player2.playing : player2.trackId === trackId3 && player2.playing;
+    const action = playingThis ? playerStrings.pause : playerStrings.play;
+    const labelled = name ? `${action} ${name}` : action;
+    const spec2 = variant === "bar" ? playTip(action, name) : playRow(name);
+    const className = variant === "row" ? "row-play" : variant === "detail" ? "detail-play" : "player-toggle player-play";
+    const disabled = variant === "bar" && !player2.canTogglePlay;
+    function onClick(event) {
+      if (variant === "row") {
+        event.stopPropagation();
+      }
+      onClickExtra?.(event);
+      if (variant === "bar") {
+        player2.togglePlayPause();
+        return;
+      }
+      if (trackId3 !== void 0) player2.playOrToggle(trackId3);
+    }
+    function onDoubleClick(event) {
+      if (variant === "row") event.stopPropagation();
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      "button",
+      {
+        type: "button",
+        ref: tooltipRef2(spec2),
+        className,
+        disabled,
+        "aria-label": labelled,
+        "aria-pressed": playingThis,
+        onClick,
+        onDoubleClick,
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+      }
+    );
+  }
+
+  // src/components/PlayerBar.tsx
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function CueMarks({
+    cues: cues2,
+    limit,
+    seek: seek2
+  }) {
+    if (!(limit > 0) || cues2.length === 0) return null;
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_jsx_runtime7.Fragment, { children: cues2.map((cue) => {
+      const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
+      const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
+      const percent = Math.round(ratio * 1e3) / 10;
+      return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: (element) => {
+            if (!element) return;
+            setTooltip(element, cueTip(label));
+            if (cue.color) element.style.setProperty("--cue", cue.color);
+          },
+          className: "player-cue",
+          style: { left: `${percent}%` },
+          "aria-label": label,
+          onClick: () => seek2(cue.seconds)
+        },
+        `${cue.seconds}:${cue.label}:${cue.color}`
+      );
+    }) });
+  }
+  function PlayerBar() {
+    const player2 = usePlayer();
+    const [hold, setHold] = (0, import_react6.useState)(null);
+    const loaded = player2.trackId !== null;
+    const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
+    const named = loaded ? player2.title || playerStrings.untitled : "";
+    const limit = Number.isFinite(player2.duration) && player2.duration > 0 ? player2.duration : 0;
+    const shownTime = hold ?? Math.min(player2.currentTime, limit || player2.currentTime);
+    function onSeekKey(event) {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
+      const forward = event.key === "ArrowRight" || event.key === "ArrowUp";
+      const back = event.key === "ArrowLeft" || event.key === "ArrowDown";
+      if (!forward && !back) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const step = event.shiftKey ? SEEK_STEP_LARGE_SECONDS : SEEK_STEP_SECONDS;
+      player2.seekBy((forward ? 1 : -1) * step);
+    }
+    function onSeekInput(event) {
+      const next2 = Number(event.currentTarget.value);
+      setHold(next2);
+      player2.seek(next2);
+    }
+    function onSeekPointerDown() {
+      setHold(player2.currentTime);
+    }
+    function onSeekPointerUp(_event) {
+      setHold(null);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef3(tips.previous),
+            className: "player-toggle",
+            disabled: !player2.canSkipPrevious,
+            "aria-label": playerStrings.previous,
+            onClick: () => player2.previous(),
+            children: playerStrings.previous
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef3(tips.next),
+            className: "player-toggle",
+            disabled: !player2.canSkipNext,
+            "aria-label": playerStrings.next,
+            onClick: () => player2.next(),
+            children: playerStrings.next
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+            "input",
+            {
+              ref: tooltipRef3(tips.seek),
+              type: "range",
+              className: "player-range",
+              min: 0,
+              max: limit,
+              step: 0.1,
+              value: shownTime,
+              disabled: !loaded || limit === 0,
+              "aria-label": playerStrings.seek,
+              onPointerDown: onSeekPointerDown,
+              onPointerUp: onSeekPointerUp,
+              onPointerCancel: onSeekPointerUp,
+              onInput: onSeekInput,
+              onKeyDown: onSeekKey
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "input",
+          {
+            ref: tooltipRef3(tips.volume),
+            type: "range",
+            min: 0,
+            max: 1,
+            step: 0.01,
+            value: player2.volume,
+            onInput: (event) => player2.setVolume(Number(event.currentTarget.value))
+          }
+        )
+      ] })
+    ] });
+  }
+
+  // src/waveform-view.ts
+  var import_react8 = __toESM(require_react(), 1);
+
+  // src/components/WaveformPanel.tsx
+  var import_react7 = __toESM(require_react(), 1);
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef4(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function clockFromPlayer(player2) {
+    return {
+      seek: player2.seek,
+      seekBy: player2.seekBy,
+      getTime: player2.mediaTime,
+      getDuration: player2.mediaDuration,
+      getPlaying: () => player2.playing,
+      formatTime: player2.formatTime,
+      seekStep: player2.seekStep,
+      seekStepLarge: player2.seekStepLarge
+    };
+  }
+  function WaveformPanel({
+    engine,
+    host
+  }) {
+    const player2 = usePlayer();
+    const wave = useWaveform();
+    const override = useWaveformClockOverride();
+    const clock = override ?? clockFromPlayer(player2);
+    const detailRef = (0, import_react7.useRef)(null);
+    const overviewCanvasRef = (0, import_react7.useRef)(null);
+    const overviewHitRef = (0, import_react7.useRef)(null);
+    engine.setClock(clock);
+    engine.setPublish(wave.publish);
+    (0, import_react7.useLayoutEffect)(() => {
+      const detail = detailRef.current;
+      const overviewCanvas = overviewCanvasRef.current;
+      const overviewHit = overviewHitRef.current;
+      if (!detail || !overviewCanvas || !overviewHit) return;
+      engine.attach({
+        host,
+        detail,
+        overviewCanvas,
+        overviewHit
+      });
+      return () => {
+        engine.detach();
+      };
+    }, [engine, host]);
+    (0, import_react7.useEffect)(() => {
+      if (override) return;
+      engine.setTrack(player2.trackId);
+    }, [engine, override, player2.trackId]);
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "player-wave-main", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          WaveformOverview,
+          {
+            canvasRef: overviewCanvasRef,
+            hitRef: overviewHitRef,
+            hidden: wave.overviewSource === "",
+            source: wave.overviewSource,
+            pps: wave.pps
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        WaveformZoom,
+        {
+          canZoomIn: wave.canZoomIn,
+          canZoomOut: wave.canZoomOut,
+          pps: wave.pps,
+          onZoomIn: () => engine.zoom(1),
+          onZoomOut: () => engine.zoom(-1)
+        }
+      )
+    ] });
+  }
+  function WaveformDetail({
+    canvasRef,
+    phase: phase2
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
+    ] });
+  }
+  function WaveformOverview({
+    canvasRef,
+    hitRef,
+    hidden,
+    source,
+    pps
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      "div",
+      {
+        ref: (element) => {
+          hitRef.current = element;
+          if (element) setTooltip(element, tips.overview);
+        },
+        className: "waveform-overview",
+        tabIndex: 0,
+        role: "slider",
+        hidden,
+        "aria-label": playerStrings.overview,
+        "aria-orientation": "horizontal",
+        "data-pps": String(pps),
+        "data-waveform-overview": source || void 0,
+        children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
+      }
+    );
+  }
+  function WaveformZoom({
+    canZoomIn,
+    canZoomOut,
+    pps,
+    onZoomIn,
+    onZoomOut
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef4(tips.zoomIn),
+          className: "waveform-zoom-button",
+          disabled: !canZoomIn,
+          "aria-label": playerStrings.zoomIn,
+          onClick: onZoomIn,
+          children: "+"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef4(tips.zoomOut),
+          className: "waveform-zoom-button",
+          disabled: !canZoomOut,
+          "aria-label": playerStrings.zoomOut,
+          onClick: onZoomOut,
+          children: "−"
+        }
+      )
+    ] });
+  }
+
   // src/waveform-view.ts
   var emptyMarkers = () => ({ cues: [], loops: [], beatgrid: [] });
+  var idleClock = {
+    seek() {
+    },
+    seekBy() {
+    },
+    getTime: () => 0,
+    getDuration: () => 0,
+    getPlaying: () => false,
+    formatTime: (seconds) => String(seconds),
+    seekStep: 5,
+    seekStepLarge: 30
+  };
   function mountWaveform(host, hooks) {
-    return new WaveformView(host, hooks);
+    const engine = new WaveformEngine();
+    host.classList.add("player-wave");
+    host.hidden = true;
+    if (hooks) engine.setClock(hooks);
+    const panel = (0, import_react8.createElement)(WaveformPanel, { engine, host });
+    const tree = hooks ? (0, import_react8.createElement)(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
+    const root = mountIsland(host, tree);
+    engine.bindRoot(root);
+    return engine;
   }
-  var WaveformView = class {
-    host;
-    hooks;
-    detail;
-    overviewCanvas;
-    overviewHit;
-    reading;
-    note;
-    detailWrap;
-    zoomIn;
-    zoomOut;
+  var WaveformEngine = class {
+    host = null;
+    detail = null;
+    overviewCanvas = null;
+    overviewHit = null;
+    clock = idleClock;
+    publishUi = null;
+    root = null;
     trackId = null;
     token = 0;
     pps = ZOOM_DEFAULT_PPS;
+    phase = "idle";
     markers = emptyMarkers();
     tiles = null;
     parsed = null;
@@ -21550,65 +21767,90 @@
     raf = 0;
     dragging = false;
     disposed = false;
+    attached = false;
     detailImage = null;
     overviewImage = null;
     lastAriaKey = "";
     ariaImmediate = false;
     onWheel;
     onResize;
+    onPointerDown;
+    onPointerMove;
+    onPointerUp;
+    onOverviewKey;
     resizeObserver = null;
-    constructor(host, hooks) {
-      this.host = host;
-      this.hooks = hooks;
-      host.classList.add("player-wave");
-      host.hidden = true;
-      const main = document.createElement("div");
-      main.className = "player-wave-main";
-      this.detailWrap = document.createElement("div");
-      this.detailWrap.className = "waveform-detail-wrap";
-      this.detail = document.createElement("canvas");
-      this.detail.className = "waveform-detail";
-      this.detail.setAttribute("aria-hidden", "true");
-      this.reading = document.createElement("p");
-      this.reading.className = "waveform-reading";
-      this.reading.textContent = playerStrings.waveformReading;
-      this.detailWrap.append(this.detail, this.reading);
-      this.note = document.createElement("p");
-      this.note.className = "waveform-note";
-      this.note.hidden = true;
-      this.note.textContent = playerStrings.waveformUnavailable;
-      this.overviewHit = document.createElement("div");
-      this.overviewHit.className = "waveform-overview";
-      this.overviewHit.tabIndex = 0;
-      this.overviewHit.setAttribute("role", "slider");
-      this.overviewHit.setAttribute("aria-label", playerStrings.overview);
-      this.overviewHit.setAttribute("aria-orientation", "horizontal");
-      setTooltip(this.overviewHit, tips.overview);
-      this.overviewCanvas = document.createElement("canvas");
-      this.overviewCanvas.setAttribute("aria-hidden", "true");
-      this.overviewHit.append(this.overviewCanvas);
-      main.append(this.detailWrap, this.note, this.overviewHit);
-      const zoom = document.createElement("div");
-      zoom.className = "waveform-zoom";
-      this.zoomIn = button(playerStrings.zoomIn, "+", tips.zoomIn);
-      this.zoomOut = button(playerStrings.zoomOut, "−", tips.zoomOut);
-      this.zoomIn.addEventListener("click", () => this.setZoom(zoomPixelsPerSecond(this.pps, 1)));
-      this.zoomOut.addEventListener("click", () => this.setZoom(zoomPixelsPerSecond(this.pps, -1)));
-      zoom.append(this.zoomIn, this.zoomOut);
-      host.append(main, zoom);
+    constructor() {
       this.onWheel = (event) => this.wheel(event);
-      host.addEventListener("wheel", this.onWheel, { passive: false });
-      this.overviewHit.addEventListener("pointerdown", (event) => this.pointerDown(event));
-      this.overviewHit.addEventListener("pointermove", (event) => this.pointerMove(event));
-      this.overviewHit.addEventListener("pointerup", (event) => this.pointerUp(event));
-      this.overviewHit.addEventListener("pointercancel", (event) => this.pointerUp(event));
-      this.overviewHit.addEventListener("keydown", (event) => this.overviewKeyDown(event));
       this.onResize = () => this.paint();
+      this.onPointerDown = (event) => this.pointerDown(event);
+      this.onPointerMove = (event) => this.pointerMove(event);
+      this.onPointerUp = (event) => this.pointerUp(event);
+      this.onOverviewKey = (event) => this.overviewKeyDown(event);
+    }
+    /**
+     * Keep the React root so destroy can unmount it.
+     *
+     * @param root Island created by `mountIsland`.
+     */
+    bindRoot(root) {
+      this.root = root;
+    }
+    /**
+     * Replace the seek/time clock. Tests pass hooks; the page uses the player.
+     *
+     * @param clock Seek and time callbacks.
+     */
+    setClock(clock) {
+      this.clock = clock;
+    }
+    /**
+     * Push zoom and phase into WaveformContext.
+     *
+     * @param publish Context setter. Flushed by the provider.
+     */
+    setPublish(publish) {
+      this.publishUi = publish;
+    }
+    /**
+     * Bind canvases after React commits them.
+     *
+     * @param nodes Host, detail canvas, overview canvas, and overview hit target.
+     */
+    attach(nodes) {
+      if (this.disposed) return;
+      this.detach();
+      this.host = nodes.host;
+      this.detail = nodes.detail;
+      this.overviewCanvas = nodes.overviewCanvas;
+      this.overviewHit = nodes.overviewHit;
+      this.attached = true;
+      this.host.addEventListener("wheel", this.onWheel, { passive: false });
+      this.overviewHit.addEventListener("pointerdown", this.onPointerDown);
+      this.overviewHit.addEventListener("pointermove", this.onPointerMove);
+      this.overviewHit.addEventListener("pointerup", this.onPointerUp);
+      this.overviewHit.addEventListener("pointercancel", this.onPointerUp);
+      this.overviewHit.addEventListener("keydown", this.onOverviewKey);
       if (typeof ResizeObserver === "function") {
         this.resizeObserver = new ResizeObserver(this.onResize);
-        this.resizeObserver.observe(host);
+        this.resizeObserver.observe(this.host);
       }
-      this.syncZoomButtons();
+      this.paint();
+    }
+    /**
+     * Drop canvas listeners. Does not unmount React.
+     */
+    detach() {
+      if (!this.attached) return;
+      this.stopLoop();
+      this.host?.removeEventListener("wheel", this.onWheel);
+      this.overviewHit?.removeEventListener("pointerdown", this.onPointerDown);
+      this.overviewHit?.removeEventListener("pointermove", this.onPointerMove);
+      this.overviewHit?.removeEventListener("pointerup", this.onPointerUp);
+      this.overviewHit?.removeEventListener("pointercancel", this.onPointerUp);
+      this.overviewHit?.removeEventListener("keydown", this.onOverviewKey);
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = null;
+      this.attached = false;
     }
     /**
      * Load one track, or hide the waveform when playback is cleared.
@@ -21620,7 +21862,7 @@
      */
     setTrack(id) {
       if (this.disposed) return;
-      if (id !== null && id === this.trackId) return;
+      if (id === this.trackId) return;
       this.token += 1;
       this.trackId = id;
       this.parsed = null;
@@ -21629,14 +21871,14 @@
       this.overviewCache = null;
       this.overviewKey = "";
       this.overviewSource = "";
-      this.seratoColumns = [];
-      delete this.overviewHit.dataset.waveformOverview;
+      if (this.overviewHit) delete this.overviewHit.dataset.waveformOverview;
       if (id === null || !Number.isInteger(id) || id < 0) {
-        this.host.hidden = true;
+        if (this.host) this.host.hidden = true;
         this.stopLoop();
+        this.setPhase("idle");
         return;
       }
-      this.host.hidden = false;
+      if (this.host) this.host.hidden = false;
       this.setPhase("reading");
       const mine = this.token;
       void this.load(id, mine);
@@ -21663,19 +21905,12 @@
      */
     showComputed(parsed) {
       this.trackId = this.trackId ?? 1;
-      this.host.hidden = false;
+      if (this.host) this.host.hidden = false;
       this.applyComputed(parsed);
     }
     /** Refresh titles and notes in the active language. Playback is not touched. */
     relabel() {
-      this.reading.textContent = playerStrings.waveformReading;
-      if (!this.note.hidden) this.note.textContent = playerStrings.waveformUnavailable;
-      this.overviewHit.setAttribute("aria-label", playerStrings.overview);
-      setTooltip(this.overviewHit, tips.overview);
-      this.zoomIn.setAttribute("aria-label", playerStrings.zoomIn);
-      setTooltip(this.zoomIn, tips.zoomIn);
-      this.zoomOut.setAttribute("aria-label", playerStrings.zoomOut);
-      setTooltip(this.zoomOut, tips.zoomOut);
+      this.pushUi();
     }
     /**
      * Show the format note and hide the canvases.
@@ -21691,8 +21926,8 @@
       this.seratoColumns = [];
       this.overviewCache = null;
       this.overviewKey = "";
-      delete this.overviewHit.dataset.waveformOverview;
-      this.host.hidden = false;
+      if (this.overviewHit) delete this.overviewHit.dataset.waveformOverview;
+      if (this.host) this.host.hidden = false;
       this.setPhase("unavailable");
     }
     /**
@@ -21702,8 +21937,8 @@
      * A paused seek paints once.
      */
     sync() {
-      if (this.disposed || this.host.hidden) return;
-      if (this.hooks.getPlaying()) this.startLoop();
+      if (this.disposed || this.host?.hidden) return;
+      if (this.clock.getPlaying()) this.startLoop();
       else this.stopLoop();
       this.paint();
     }
@@ -21716,15 +21951,22 @@
       return this.pps;
     }
     /**
-     * Remove listeners and stop the animation frame.
+     * Step zoom in or out around the playhead.
+     *
+     * @param direction Positive zooms in.
+     */
+    zoom(direction) {
+      this.setZoom(zoomPixelsPerSecond(this.pps, direction));
+    }
+    /**
+     * Remove listeners, stop the animation frame, and unmount the island.
      */
     destroy() {
       this.disposed = true;
       this.token += 1;
-      this.stopLoop();
-      this.host.removeEventListener("wheel", this.onWheel);
-      this.resizeObserver?.disconnect();
-      this.resizeObserver = null;
+      this.detach();
+      this.root?.unmount();
+      this.root = null;
     }
     async load(id, mine) {
       const overview = this.fetchOverview(id);
@@ -21734,10 +21976,10 @@
         if (this.overviewSource === "computed") return;
         this.seratoColumns = serato;
         this.overviewSource = "serato";
-        this.overviewHit.dataset.waveformOverview = "serato";
+        if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "serato";
         this.overviewCache = null;
         this.overviewKey = "";
-        this.overviewHit.hidden = false;
+        this.pushUi();
         this.paint();
       });
       const waveform2 = await body;
@@ -21756,7 +21998,7 @@
       const rate = parsed.pointsPerSecond > 0 ? parsed.pointsPerSecond : 150;
       this.tiles = new DetailTiles(parsed.detail, parsed.detailCount, rate);
       this.overviewSource = "computed";
-      this.overviewHit.dataset.waveformOverview = "computed";
+      if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "computed";
       this.overviewCache = null;
       this.overviewKey = "";
       this.setPhase("ready");
@@ -21804,39 +22046,36 @@
       }
     }
     setPhase(phase2) {
-      this.host.dataset.waveformState = phase2;
-      const unavailable = phase2 === "unavailable";
-      this.note.hidden = !unavailable;
-      this.reading.hidden = phase2 !== "reading";
-      this.detailWrap.hidden = unavailable;
-      this.overviewHit.hidden = this.overviewSource === "";
-      this.syncZoomButtons();
+      this.phase = phase2;
+      if (this.host) this.host.dataset.waveformState = phase2 === "idle" ? "" : phase2;
+      this.pushUi();
     }
     setZoom(next2) {
       if (next2 === this.pps) {
-        this.syncZoomButtons();
+        this.pushUi();
         return;
       }
       this.pps = next2;
       this.tiles?.clear();
-      this.syncZoomButtons();
+      this.pushUi();
       this.paint();
     }
-    syncZoomButtons() {
-      const phase2 = this.host.dataset.waveformState;
-      const blocked = phase2 === "reading" || phase2 === "unavailable";
-      this.zoomIn.disabled = blocked || this.pps >= ZOOM_MAX_PPS - 1e-9;
-      this.zoomOut.disabled = blocked || this.pps <= ZOOM_MIN_PPS + 1e-9;
+    pushUi() {
+      this.publishUi?.({
+        pps: this.pps,
+        phase: this.phase,
+        overviewSource: this.overviewSource
+      });
     }
     wheel(event) {
       if (!event.ctrlKey && !event.metaKey) return;
-      if (this.host.dataset.waveformState !== "ready") return;
+      if (this.phase !== "ready") return;
       event.preventDefault();
       if (event.deltaY < 0) this.setZoom(zoomPixelsPerSecond(this.pps, 1));
       else if (event.deltaY > 0) this.setZoom(zoomPixelsPerSecond(this.pps, -1));
     }
     pointerDown(event) {
-      if (event.button !== 0) return;
+      if (event.button !== 0 || !this.overviewHit) return;
       this.dragging = true;
       if (typeof this.overviewHit.setPointerCapture === "function") {
         this.overviewHit.setPointerCapture(event.pointerId);
@@ -21848,18 +22087,19 @@
       this.seekOverview(event);
     }
     pointerUp(event) {
-      if (!this.dragging) return;
+      if (!this.dragging || !this.overviewHit) return;
       this.dragging = false;
       if (typeof this.overviewHit.hasPointerCapture === "function" && this.overviewHit.hasPointerCapture(event.pointerId)) {
         this.overviewHit.releasePointerCapture(event.pointerId);
       }
     }
     seekOverview(event) {
+      if (!this.overviewHit) return;
       const rect = this.overviewHit.getBoundingClientRect();
       const duration2 = this.duration();
       const x = event.clientX - rect.left;
       this.ariaImmediate = true;
-      this.hooks.seek(overviewXToTime(x, rect.width, duration2));
+      this.clock.seek(overviewXToTime(x, rect.width, duration2));
     }
     overviewKeyDown(event) {
       if (event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
@@ -21868,15 +22108,15 @@
       if (!forward && !back) return;
       event.preventDefault();
       event.stopPropagation();
-      const step = event.shiftKey ? this.hooks.seekStepLarge : this.hooks.seekStep;
+      const step = event.shiftKey ? this.clock.seekStepLarge : this.clock.seekStep;
       this.ariaImmediate = true;
-      this.hooks.seekBy((forward ? 1 : -1) * step);
+      this.clock.seekBy((forward ? 1 : -1) * step);
     }
     startLoop() {
       if (this.raf !== 0) return;
       const loop = () => {
         this.paint();
-        if (this.hooks.getPlaying() && !this.disposed) this.raf = requestAnimationFrame(loop);
+        if (this.clock.getPlaying() && !this.disposed) this.raf = requestAnimationFrame(loop);
         else this.raf = 0;
       };
       this.raf = requestAnimationFrame(loop);
@@ -21887,8 +22127,8 @@
       this.raf = 0;
     }
     paint() {
-      if (this.disposed || this.host.hidden) return;
-      const time = this.hooks.getTime();
+      if (this.disposed || !this.host || this.host.hidden) return;
+      const time = this.clock.getTime();
       const duration2 = this.duration();
       this.paintDetail(time);
       this.paintOverview(time, duration2);
@@ -21897,7 +22137,7 @@
       this.updateSlider(time, duration2, immediate);
     }
     paintDetail(time) {
-      if (!this.tiles || !this.parsed) return;
+      if (!this.tiles || !this.parsed || !this.detail) return;
       const size = sizeCanvas(this.detail, 96);
       if (!size) return;
       const context = this.detail.getContext("2d");
@@ -21907,6 +22147,7 @@
       context.putImageData(image, 0, 0);
     }
     paintOverview(time, duration2) {
+      if (!this.overviewCanvas) return;
       const size = sizeCanvas(this.overviewCanvas, 36);
       if (!size) return;
       const source = this.overviewPixels(size.width, size.height);
@@ -21950,18 +22191,19 @@
           height
         );
         this.overviewKey = key;
-        this.overviewHit.dataset.waveformOverview = "computed";
+        if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "computed";
         return this.overviewCache;
       }
       if (this.overviewSource === "serato" && this.seratoColumns.length > 0) {
         this.overviewCache = renderOverview({ kind: "serato", columns: this.seratoColumns }, width, height);
         this.overviewKey = key;
-        this.overviewHit.dataset.waveformOverview = "serato";
+        if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "serato";
         return this.overviewCache;
       }
       return null;
     }
     updateSlider(time, duration2, immediate) {
+      if (!this.overviewHit) return;
       const max = duration2 > 0 ? duration2 : 0;
       const now = Math.min(max, Math.max(0, Number.isFinite(time) ? time : 0));
       const key = `${Math.floor(now)}|${max}`;
@@ -21970,10 +22212,10 @@
       this.overviewHit.setAttribute("aria-valuemin", "0");
       this.overviewHit.setAttribute("aria-valuemax", String(max));
       this.overviewHit.setAttribute("aria-valuenow", String(now));
-      this.overviewHit.setAttribute("aria-valuetext", this.hooks.formatTime(now));
+      this.overviewHit.setAttribute("aria-valuetext", this.clock.formatTime(now));
     }
     duration() {
-      const fromAudio = this.hooks.getDuration();
+      const fromAudio = this.clock.getDuration();
       if (Number.isFinite(fromAudio) && fromAudio > 0) return fromAudio;
       return this.headerDuration();
     }
@@ -21982,13 +22224,6 @@
       return this.parsed.durationMs / 1e3;
     }
   };
-  function button(label, text2, tooltip) {
-    const element = buttonEl(tooltip);
-    element.className = "waveform-zoom-button";
-    element.textContent = text2;
-    element.setAttribute("aria-label", label);
-    return element;
-  }
   function waveformUrl(id, overview) {
     const params = new URLSearchParams({ id: String(id), space: state.space });
     const path = overview ? "/api/waveform/overview" : "/api/waveform";
@@ -22138,6 +22373,14 @@
   function getPlayerState() {
     return { trackId: trackId2, title, artist, playing, currentTime, duration, volume, error };
   }
+  function getMediaTime() {
+    if (media && Number.isFinite(media.currentTime)) return media.currentTime;
+    return currentTime;
+  }
+  function getMediaDuration() {
+    if (media && Number.isFinite(media.duration) && media.duration > 0) return media.duration;
+    return duration;
+  }
   function getPlayerCues() {
     return cues;
   }
@@ -22174,29 +22417,13 @@
     root.replaceChildren();
     if (element instanceof Node) root.append(element);
     const waveHost = document.createElement("div");
-    waveform = mountWaveform(waveHost, {
-      seek,
-      seekBy,
-      getTime: () => {
-        const value = ensureMedia().currentTime;
-        return Number.isFinite(value) ? value : currentTime;
-      },
-      getDuration: () => {
-        const value = ensureMedia().duration;
-        if (Number.isFinite(value) && value > 0) return value;
-        return duration;
-      },
-      getPlaying: () => playing,
-      formatTime: formatPlayerTime,
-      seekStep: SEEK_STEP_SECONDS,
-      seekStepLarge: SEEK_STEP_LARGE_SECONDS
-    });
+    waveform = mountWaveform(waveHost);
     const controls = document.createElement("div");
     const stack = document.createElement("div");
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react6.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react9.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -22363,7 +22590,7 @@
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -22379,7 +22606,12 @@
       previous,
       seek,
       seekBy,
-      setVolume
+      setVolume,
+      mediaTime: getMediaTime,
+      mediaDuration: getMediaDuration,
+      formatTime: formatPlayerTime,
+      seekStep: SEEK_STEP_SECONDS,
+      seekStepLarge: SEEK_STEP_LARGE_SECONDS
     };
   }
   function readHealthValue() {
@@ -22402,45 +22634,45 @@
     };
   }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react7.useState)(readPlayerValue);
-    (0, import_react7.useEffect)(() => {
+    const [value, setValue] = (0, import_react10.useState)(readPlayerValue);
+    (0, import_react10.useEffect)(() => {
       return subscribe(() => {
-        (0, import_react_dom.flushSync)(() => {
+        (0, import_react_dom2.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react7.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react10.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(PlayerProvider, { value: current2, children });
   }
   function HealthProvider2({ children }) {
-    const [value, setValue] = (0, import_react7.useState)(readHealthValue);
-    (0, import_react7.useLayoutEffect)(() => {
+    const [value, setValue] = (0, import_react10.useState)(readHealthValue);
+    (0, import_react10.useLayoutEffect)(() => {
       return subscribeHealth(() => {
-        (0, import_react_dom.flushSync)(() => {
+        (0, import_react_dom2.flushSync)(() => {
           setValue(readHealthValue());
         });
       });
     }, []);
-    const current2 = (0, import_react7.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(HealthProvider, { value: current2, children });
+    const current2 = (0, import_react10.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(HealthProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(HealthProvider2, { children }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(HealthProvider2, { children }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
-    (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime8.jsx)(AppProviders, { children: node }));
+    (0, import_react_dom3.flushSync)(() => {
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime10.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
 
   // src/components/HealthPanel.tsx
-  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
   var SECTIONS = [
     { key: "missing", label: "health.missing", action: "missing" },
     { key: "no_bpm", label: "health.noBpm" },
@@ -22464,9 +22696,9 @@
   }) {
     const count = section?.count ?? 0;
     const tracks = section?.tracks ?? [];
-    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("details", { className: "gig-group", open: count > 0, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("summary", { children: t("gig.groupCount", { label, count }) }),
-      action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("details", { className: "gig-group", open: count > 0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("summary", { children: t("gig.groupCount", { label, count }) }),
+      action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
         "button",
         {
           type: "button",
@@ -22476,8 +22708,8 @@
           children: t("health.openMissing")
         }
       ) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
           "button",
           {
             type: "button",
@@ -22488,7 +22720,7 @@
             children: trackLine(track)
           }
         ),
-        findArt ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        findArt ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
           "button",
           {
             type: "button",
@@ -22502,13 +22734,13 @@
           }
         ) : null
       ] }, track.id)) }),
-      count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
+      count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
     ] });
   }
   function Bitrate({ onNavigate }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("details", { className: "gig-group", open: true, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("summary", { children: t("health.bitrate") }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("details", { className: "gig-group", open: true, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("summary", { children: t("health.bitrate") }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
         "button",
         {
           type: "button",
@@ -22518,7 +22750,7 @@
           children: t("health.openBitrate")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
     ] });
   }
   function Unused({
@@ -22527,9 +22759,9 @@
   }) {
     const count = section?.count ?? 0;
     const files = section?.files ?? [];
-    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("details", { className: "gig-group", open: count > 0, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("summary", { children: t("gig.groupCount", { label: t("health.unused"), count }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("details", { className: "gig-group", open: count > 0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("summary", { children: t("gig.groupCount", { label: t("health.unused"), count }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
         "button",
         {
           type: "button",
@@ -22539,8 +22771,8 @@
           children: t("health.openFiles")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
-      count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
+      count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
     ] });
   }
   function Duplicates({
@@ -22549,9 +22781,9 @@
   }) {
     const count = section?.count ?? 0;
     const groups = section?.groups ?? [];
-    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("details", { className: "gig-group", open: count > 0, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("summary", { children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("details", { className: "gig-group", open: count > 0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("summary", { children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
         "button",
         {
           type: "button",
@@ -22561,11 +22793,11 @@
           children: t("health.openDuplicates")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: t("health.duplicateRow", {
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("li", { children: t("health.duplicateRow", {
         title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
         count: group.ids.length
       }) }, group.ids.join(","))) }),
-      count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
+      count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
     ] });
   }
   function HealthPanel() {
@@ -22583,11 +22815,11 @@
       listed += payload.unused.count;
       listed += payload.duplicates.count;
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
           "button",
           {
             id: "health-refresh",
@@ -22602,11 +22834,11 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
-        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
+        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
           Section,
           {
             label: t(spec2.label),
@@ -22617,20 +22849,20 @@
           },
           spec2.key
         )),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Bitrate, { onNavigate: health.navigate }),
-        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "gig-note", children: t("health.clear") })
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Bitrate, { onNavigate: health.navigate }),
+        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "gig-note", children: t("health.clear") })
       ] }) : null })
     ] });
   }
 
   // src/components/HealthListChrome.tsx
-  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
   function HealthListChrome() {
     const health = useHealth();
-    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(import_jsx_runtime12.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
         "button",
         {
           id: "merge-duplicates",
@@ -22640,7 +22872,7 @@
           children: t("merge.title")
         }
       ) }),
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
         "button",
         {
           id: "open-relink",
@@ -22683,7 +22915,7 @@
       panelRoot3 = void 0;
     }
     panelHost3 = panel;
-    panelRoot3 = mountIsland(panel, (0, import_react8.createElement)(HealthPanel), panelRoot3);
+    panelRoot3 = mountIsland(panel, (0, import_react11.createElement)(HealthPanel), panelRoot3);
     mountHealthListChrome();
     if (!albumArtWired) {
       albumArtWired = true;
@@ -22700,7 +22932,7 @@
       listRoot = void 0;
     }
     listHost = host;
-    listRoot = mountIsland(host, (0, import_react8.createElement)(HealthListChrome), listRoot);
+    listRoot = mountIsland(host, (0, import_react11.createElement)(HealthListChrome), listRoot);
     emitHealth();
   }
   async function loadHealth() {
@@ -22832,9 +23064,9 @@
     panel.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const button2 = target.closest("button");
-      if (!(button2 instanceof HTMLButtonElement)) return;
-      if (button2.dataset.statsAction === "crate") void makeIdleCrate();
+      const button = target.closest("button");
+      if (!(button instanceof HTMLButtonElement)) return;
+      if (button.dataset.statsAction === "crate") void makeIdleCrate();
     });
     syncPeriodFields();
   }
@@ -22912,16 +23144,16 @@
     el("stats-to").disabled = !custom;
   }
   function beginBusy6() {
-    const button2 = el("stats-refresh");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("stats-refresh");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("stats-panel").setAttribute("aria-busy", "true");
     el("stats-status").textContent = t("stats.checking");
   }
   function endBusy6() {
-    const button2 = el("stats-refresh");
-    button2.disabled = false;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("stats-refresh");
+    button.disabled = false;
+    button.setAttribute("aria-busy", "false");
     el("stats-panel").setAttribute("aria-busy", "false");
   }
   function failStatus7(message) {
@@ -23111,9 +23343,9 @@
       void previewCrate();
     });
     el("bitrate-report").addEventListener("click", (event) => {
-      const button2 = event.target.closest("[data-bitrate-action]");
-      if (!button2 || button2.disabled) return;
-      if (button2.dataset.bitrateAction === "confirm") void createCrate();
+      const button = event.target.closest("[data-bitrate-action]");
+      if (!button || button.disabled) return;
+      if (button.dataset.bitrateAction === "confirm") void createCrate();
     });
   }
   async function loadBitrate() {
@@ -23257,9 +23489,9 @@
   }
   function beginBusy7(kind2 = "check") {
     for (const id of ["bitrate-refresh", "bitrate-save"]) {
-      const button2 = el(id);
-      button2.disabled = true;
-      button2.setAttribute("aria-busy", "true");
+      const button = el(id);
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
     }
     el("bitrate-panel").setAttribute("aria-busy", "true");
     const status4 = kind2 === "create" ? t("bitrate.saving") : kind2 === "preview" ? t("bitrate.checking") : t("bitrate.checking");
@@ -23431,16 +23663,16 @@
     };
   }
   function portableDriveButton(name, path) {
-    const button2 = buttonEl(portableCheck(name));
-    button2.className = "files-portable";
-    button2.dataset.portableName = name;
-    button2.textContent = t("portable.check");
-    button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
-    button2.addEventListener("click", (event) => {
+    const button = buttonEl(portableCheck(name));
+    button.className = "files-portable";
+    button.dataset.portableName = name;
+    button.textContent = t("portable.check");
+    button.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    button.addEventListener("click", (event) => {
       event.stopPropagation();
-      void openPortableCheck(path, button2);
+      void openPortableCheck(path, button);
     });
-    return button2;
+    return button;
   }
   async function openPortableCheck(path, trigger) {
     wirePortable();
@@ -23483,10 +23715,10 @@
     el("portable-check").focus();
   }
   function repaintPortable() {
-    for (const button2 of document.querySelectorAll(".files-portable")) {
-      button2.textContent = t("portable.check");
-      const name = button2.dataset.portableName ?? "";
-      if (name) button2.setAttribute("aria-label", t("portable.checkLabel", { name }));
+    for (const button of document.querySelectorAll(".files-portable")) {
+      button.textContent = t("portable.check");
+      const name = button.dataset.portableName ?? "";
+      if (name) button.setAttribute("aria-label", t("portable.checkLabel", { name }));
     }
     el("portable-check").textContent = t("portable.check");
     if (lastRoots.length) paintDrivePicker(lastRoots);
@@ -23648,15 +23880,15 @@
     for (const surface of surfaces()) surface.status.textContent = message;
   }
   function beginBusy8() {
-    const button2 = el("portable-check");
-    button2.disabled = true;
-    button2.setAttribute("aria-busy", "true");
+    const button = el("portable-check");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     el("portable-panel").setAttribute("aria-busy", "true");
   }
   function endBusy8() {
-    const button2 = el("portable-check");
-    button2.disabled = !hasConnected;
-    button2.setAttribute("aria-busy", "false");
+    const button = el("portable-check");
+    button.disabled = !hasConnected;
+    button.setAttribute("aria-busy", "false");
     el("portable-panel").setAttribute("aria-busy", "false");
   }
   function isRecord(value) {
@@ -24118,8 +24350,8 @@
     note.textContent = driveCopyText();
   }
   async function backupDriveCrates() {
-    const button2 = el("snapshots-drives");
-    button2.disabled = true;
+    const button = el("snapshots-drives");
+    button.disabled = true;
     const note = el("snapshots-drives-note");
     note.hidden = false;
     note.textContent = t("snapshots.backupDrivesBusy");
@@ -24135,7 +24367,7 @@
       shown.hidden = false;
       shown.textContent = failureOf(error2).message || t("snapshots.unreadable");
     } finally {
-      button2.disabled = false;
+      button.disabled = false;
     }
   }
   function paintSnapshotPlan(plan) {
@@ -24235,16 +24467,16 @@
     el("snapshot-status").textContent = message;
   }
   async function takeSnapshot() {
-    const button2 = el("snapshots-take");
-    button2.disabled = true;
-    button2.textContent = t("snapshots.saving");
+    const button = el("snapshots-take");
+    button.disabled = true;
+    button.textContent = t("snapshots.saving");
     try {
       await postJSON("/api/snapshots", { action: "create" });
       state.snapshotMessage = "snapshots.saved";
       await loadSnapshots();
     } finally {
-      button2.disabled = false;
-      button2.textContent = t("snapshots.take");
+      button.disabled = false;
+      button.textContent = t("snapshots.take");
     }
   }
   async function confirmSnapshotRestore() {
@@ -24479,10 +24711,10 @@
   }
 
   // src/views.ts
-  var import_react10 = __toESM(require_react(), 1);
+  var import_react13 = __toESM(require_react(), 1);
 
   // src/virtual-scroll.ts
-  var import_react9 = __toESM(require_react(), 1);
+  var import_react12 = __toESM(require_react(), 1);
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -24529,12 +24761,12 @@
     }
     for (let index = start; index < end; index += 1) {
       const track = view[index];
-      const button2 = document.createElement("div");
-      button2.className = "row";
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(track.id === state.selectedId));
-      button2.dataset.id = String(track.id);
-      setTooltip(button2, selectRow(track.name || "Untitled"));
+      const button = document.createElement("div");
+      button.className = "row";
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(track.id === state.selectedId));
+      button.dataset.id = String(track.id);
+      setTooltip(button, selectRow(track.name || "Untitled"));
       const titleCell = document.createElement("span");
       titleCell.className = "cell";
       const line = document.createElement("span");
@@ -24542,7 +24774,7 @@
       if (!track.entry) {
         const labelName = track.name || playerStrings.untitled;
         const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react9.createElement)(PlayButton, {
+        const root = mountIsland(playHost, (0, import_react12.createElement)(PlayButton, {
           variant: "row",
           trackId: track.id,
           name: labelName,
@@ -24617,16 +24849,16 @@
         add(track.play_count == null ? "" : formatNumber(Number(track.play_count)), true);
         add(lengthLabel(track.length_ms), true);
       }
-      button2.append(titleCell, artist2, ...cells);
-      button2.addEventListener("click", () => {
+      button.append(titleCell, artist2, ...cells);
+      button.addEventListener("click", () => {
         if (track.entry) bridge.selectEntry(track.id);
         else bridge.selectTrack(track.id);
         list.focus({ preventScroll: true });
       });
-      button2.addEventListener("dblclick", () => {
+      button.addEventListener("dblclick", () => {
         if (!track.entry) play(track.id);
       });
-      paneRows.append(button2);
+      paneRows.append(button);
     }
   }
   function moveTrackList(delta) {
@@ -24882,17 +25114,17 @@
       gap.setAttribute("aria-hidden", "true");
       row.append(gap);
     }
-    const button2 = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
-    button2.className = "crate";
-    button2.dataset.id = String(crate.id);
-    if (crate.parent != null) button2.dataset.parent = String(crate.parent);
-    button2.setAttribute("role", "treeitem");
-    button2.setAttribute("aria-level", String(crate.depth + 1));
+    const button = buttonEl(crate.id === "all" ? tips.allTracks : openCrate(crate.name));
+    button.className = "crate";
+    button.dataset.id = String(crate.id);
+    if (crate.parent != null) button.dataset.parent = String(crate.parent);
+    button.setAttribute("role", "treeitem");
+    button.setAttribute("aria-level", String(crate.depth + 1));
     const split = state.splitCrates && state.mode === "crates";
     const panes = paneCrates(state.activeCrate, state.secondCrate, split);
-    button2.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
+    button.setAttribute("aria-selected", String(crate.id === panes.a || crate.id === panes.b));
     if (crate.childCount) {
-      button2.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
+      button.setAttribute("aria-expanded", String(state.crateQuery ? true : state.expanded.has(crate.id)));
     }
     const name = document.createElement("span");
     name.className = "name";
@@ -24904,19 +25136,19 @@
       name.append(swatch);
     }
     name.append(document.createTextNode(crate.name));
-    button2.append(name);
+    button.append(name);
     if (crate.smart) {
       const smart = document.createElement("span");
       smart.className = "smart";
       smart.textContent = t("crates.smartBadge");
-      button2.append(smart);
+      button.append(smart);
     }
     const meta = document.createElement("span");
     meta.className = "meta";
     meta.textContent = formatNumber(crate.count);
-    button2.append(meta);
-    button2.addEventListener("click", (event) => selectCrate(crate.id, event));
-    row.append(button2);
+    button.append(meta);
+    button.addEventListener("click", (event) => selectCrate(crate.id, event));
+    row.append(button);
     return row;
   }
   function placeCrateFocus(previousId) {
@@ -25033,11 +25265,11 @@
     if (!(header instanceof HTMLElement)) return;
     header.replaceChildren();
     for (const [key, label] of columns) {
-      const button2 = buttonEl(sortTip(key, t(label)));
-      button2.dataset.sort = key;
-      button2.textContent = t(label);
-      button2.dataset.active = String(key === state.sort);
-      header.append(button2);
+      const button = buttonEl(sortTip(key, t(label)));
+      button.dataset.sort = key;
+      button.textContent = t(label);
+      button.dataset.active = String(key === state.sort);
+      header.append(button);
     }
   }
   function playlistCrate() {
@@ -25119,11 +25351,11 @@
     if (snapshotsMode) {
       el("mode-note").textContent = t("mode.snapshots");
     }
-    for (const button2 of document.querySelectorAll("#views button")) {
-      button2.setAttribute("aria-selected", String(button2.dataset.view === state.mode));
+    for (const button of document.querySelectorAll("#views button")) {
+      button.setAttribute("aria-selected", String(button.dataset.view === state.mode));
     }
-    for (const button2 of document.querySelectorAll("[data-crate-sort]")) {
-      button2.setAttribute("aria-pressed", String(button2.dataset.crateSort === state.crateSort));
+    for (const button of document.querySelectorAll("[data-crate-sort]")) {
+      button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
     }
     const crateChosen = state.activeCrate !== "all";
     el("crate-new").disabled = !state.writable;
@@ -25276,7 +25508,7 @@
   }
   function focusCrateItem(item4) {
     if (!item4) return;
-    for (const button2 of el("crate-list").querySelectorAll(".crate")) button2.tabIndex = -1;
+    for (const button of el("crate-list").querySelectorAll(".crate")) button.tabIndex = -1;
     item4.tabIndex = 0;
     item4.focus();
   }
@@ -25386,7 +25618,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react10.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react13.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -25637,10 +25869,10 @@
     for (const copy of copies) {
       const row = document.createElement("div");
       row.className = "copy-row";
-      const button2 = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
-      button2.className = "text-button";
-      button2.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
-      button2.addEventListener("click", () => selectTrack(copy.id));
+      const button = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
+      button.className = "text-button";
+      button.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
+      button.addEventListener("click", () => selectTrack(copy.id));
       const rate = document.createElement("span");
       rate.textContent = copy.bitrate == null ? "" : String(copy.bitrate);
       const plays = document.createElement("span");
@@ -25654,7 +25886,7 @@
       replace.addEventListener("click", () => {
         bridge.openReplaceInCratesDialog(fromId, copy.id).catch((error2) => setNotice(failureOf(error2).message));
       });
-      row.append(button2, rate, plays, crates, replace);
+      row.append(button, rate, plays, crates, replace);
       section.append(row);
     }
     return section;
@@ -25929,8 +26161,8 @@
     }
   }
   async function refreshRelatedCrate(track, section) {
-    const button2 = section.querySelector("[data-related-crate]");
-    if (button2) button2.disabled = true;
+    const button = section.querySelector("[data-related-crate]");
+    if (button) button.disabled = true;
     try {
       const result = await postJSON("/api/related", { action: "crate", asset: track.id, space: state.space });
       setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") }));
@@ -25939,10 +26171,10 @@
     } catch (error2) {
       if (failureOf(error2).status === 409) {
         lockDown(error2);
-        if (button2) button2.disabled = true;
+        if (button) button.disabled = true;
       } else {
         setNotice(failureOf(error2).message);
-        if (button2) button2.disabled = !state.writable;
+        if (button) button.disabled = !state.writable;
       }
     }
   }
@@ -26031,22 +26263,22 @@
     });
   }
   function paintGeneration(info) {
-    const button2 = document.getElementById("library-generation");
-    if (!(button2 instanceof HTMLButtonElement)) return;
+    const button = document.getElementById("library-generation");
+    if (!(button instanceof HTMLButtonElement)) return;
     const kind2 = t(generationKind(info));
-    button2.textContent = kind2;
-    button2.setAttribute("aria-label", t("generation.named", { kind: kind2 }));
-    setTooltip(button2, tips.libraryGeneration);
+    button.textContent = kind2;
+    button.setAttribute("aria-label", t("generation.named", { kind: kind2 }));
+    setTooltip(button, tips.libraryGeneration);
     const note = document.getElementById("library-generation-note");
     if (note) {
       note.textContent = generationReason(info);
-      note.hidden = button2.getAttribute("aria-expanded") !== "true";
+      note.hidden = button.getAttribute("aria-expanded") !== "true";
     }
-    if (button2.dataset.bound === "1") return;
-    button2.dataset.bound = "1";
-    button2.addEventListener("click", () => {
-      const next2 = button2.getAttribute("aria-expanded") !== "true";
-      button2.setAttribute("aria-expanded", next2 ? "true" : "false");
+    if (button.dataset.bound === "1") return;
+    button.dataset.bound = "1";
+    button.addEventListener("click", () => {
+      const next2 = button.getAttribute("aria-expanded") !== "true";
+      button.setAttribute("aria-expanded", next2 ? "true" : "false");
       const panel = document.getElementById("library-generation-note");
       if (panel) panel.hidden = !next2;
     });
@@ -26272,19 +26504,19 @@
   function renderSessions() {
     el("session-list").replaceChildren();
     for (const session of state.historySessions) {
-      const button2 = buttonEl(sessionTip(session.name || "Session"));
-      button2.className = "crate";
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(session.id === state.historyId));
+      const button = buttonEl(sessionTip(session.name || "Session"));
+      button.className = "crate";
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(session.id === state.historyId));
       const name = document.createElement("span");
       name.className = "name";
       name.textContent = session.name || t("history.session");
       const meta = document.createElement("span");
       meta.className = "meta";
       meta.textContent = String(session.played || 0);
-      button2.append(name, meta);
-      button2.addEventListener("click", () => openSession(session.id));
-      el("session-list").append(button2);
+      button.append(name, meta);
+      button.addEventListener("click", () => openSession(session.id));
+      el("session-list").append(button);
     }
   }
   async function loadHistory() {
@@ -26555,13 +26787,13 @@
       const item4 = document.createElement("li");
       const last = index === crumbs.length - 1;
       if (!last && crumb.path) {
-        const button2 = buttonEl(openCrumb(crumb.name));
-        button2.className = "files-crumb";
-        button2.textContent = crumb.name;
-        button2.addEventListener("click", () => {
+        const button = buttonEl(openCrumb(crumb.name));
+        button.className = "files-crumb";
+        button.textContent = crumb.name;
+        button.addEventListener("click", () => {
           loadFolder(crumb.path, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
         });
-        item4.append(button2);
+        item4.append(button);
       } else {
         const current2 = document.createElement("span");
         current2.className = "files-crumb";
@@ -26691,12 +26923,12 @@
     heading2.textContent = t("files.noRoots");
     const copy = document.createElement("p");
     copy.textContent = t("files.noRootsBody");
-    const button2 = buttonEl(tips.runSetup);
-    button2.id = "files-run-setup";
-    button2.className = "files-primary";
-    button2.textContent = t("files.runSetup");
-    button2.addEventListener("click", () => bridge.openSetup());
-    box.append(heading2, copy, button2);
+    const button = buttonEl(tips.runSetup);
+    button.id = "files-run-setup";
+    button.className = "files-primary";
+    button.textContent = t("files.runSetup");
+    button.addEventListener("click", () => bridge.openSetup());
+    box.append(heading2, copy, button);
     return box;
   }
   function focusFilesIndex(index) {
@@ -26761,12 +26993,12 @@
     row.setAttribute("role", "listitem");
     const openKind = entry.kind === "dir" || entry.kind === "folder" || entry.kind === "drive";
     if (openKind) {
-      const button2 = buttonEl(entry.missing ? missingDrive(entry.name) : openFile(entry.name));
-      button2.className = "files-open";
-      button2.dataset.filesIndex = String(index);
-      button2.id = `files-item-${index}`;
-      button2.tabIndex = index === state.filesActive ? 0 : -1;
-      if (entry.kind === "drive" || entry.kind === "folder") button2.append(fileIcon(entry.kind === "drive" ? "drive" : "folder"));
+      const button = buttonEl(entry.missing ? missingDrive(entry.name) : openFile(entry.name));
+      button.className = "files-open";
+      button.dataset.filesIndex = String(index);
+      button.id = `files-item-${index}`;
+      button.tabIndex = index === state.filesActive ? 0 : -1;
+      if (entry.kind === "drive" || entry.kind === "folder") button.append(fileIcon(entry.kind === "drive" ? "drive" : "folder"));
       if (entry.detail && (entry.kind === "folder" || entry.kind === "drive")) {
         const copy = document.createElement("span");
         copy.className = "files-root-copy";
@@ -26777,36 +27009,36 @@
         detail.className = "files-root-detail";
         detail.textContent = entry.detail;
         copy.append(label2, detail);
-        button2.append(copy);
+        button.append(copy);
       } else {
         const name2 = document.createElement("span");
         name2.textContent = entry.name;
-        button2.append(name2);
+        button.append(name2);
         if (entry.detail) {
           const detail = document.createElement("span");
           detail.className = "files-match-detail";
           detail.textContent = entry.detail;
-          button2.append(detail);
+          button.append(detail);
         }
       }
       if (entry.missing) {
-        button2.setAttribute("aria-disabled", "true");
-        button2.setAttribute("aria-label", t("files.driveMissingLabel", { name: entry.name }));
+        button.setAttribute("aria-disabled", "true");
+        button.setAttribute("aria-label", t("files.driveMissingLabel", { name: entry.name }));
         const badge = document.createElement("span");
         badge.className = "files-badge";
         badge.textContent = t("files.driveMissing");
-        button2.append(badge);
-        button2.addEventListener("click", () => {
+        button.append(badge);
+        button.addEventListener("click", () => {
           state.filesActive = index;
         });
       } else {
-        button2.setAttribute("aria-label", t("files.open", { name: entry.name }));
-        button2.addEventListener("click", () => {
+        button.setAttribute("aria-label", t("files.open", { name: entry.name }));
+        button.addEventListener("click", () => {
           state.filesActive = index;
           openBrowserRow(entry);
         });
       }
-      row.append(button2);
+      row.append(button);
       if (entry.removable && entry.serato) row.append(portableDriveButton(entry.name, entry.path));
       return row;
     }
@@ -26995,13 +27227,13 @@
       }).catch(showFailure);
     });
     el("views").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (button2?.dataset.view) setMode(button2.dataset.view);
+      const button = event.target.closest("button");
+      if (button?.dataset.view) setMode(button.dataset.view);
     });
     document.querySelector(".sort-crates").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (!button2?.dataset.crateSort) return;
-      state.crateSort = button2.dataset.crateSort;
+      const button = event.target.closest("button");
+      if (!button?.dataset.crateSort) return;
+      state.crateSort = button.dataset.crateSort;
       renderCrates();
       renderShell();
     });
@@ -27010,9 +27242,9 @@
     el("crate-color").addEventListener("click", () => colorCrate().catch((error2) => setNotice(failureOf(error2).message)));
     el("crate-delete").addEventListener("click", () => deleteCrate().catch((error2) => setNotice(failureOf(error2).message)));
     document.querySelector(".columns").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (!button2?.dataset.sort) return;
-      const key = button2.dataset.sort;
+      const button = event.target.closest("button");
+      if (!button?.dataset.sort) return;
+      const key = button.dataset.sort;
       if (state.sort === key) state.sortDir *= -1;
       else {
         state.sort = key;
@@ -27047,7 +27279,7 @@
         event.preventDefault();
         if (!state.crateQuery && item4.getAttribute("aria-expanded") === "true") toggleCrate(id);
         else if (item4.dataset.parent) {
-          focusCrateItem(items.find((button2) => button2.dataset.id === item4.dataset.parent));
+          focusCrateItem(items.find((button) => button.dataset.id === item4.dataset.parent));
         }
       } else if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -28175,12 +28407,12 @@
       el("rekordbox-dialog").close();
     });
     el("health-list-chrome").addEventListener("click", (event) => {
-      const button2 = event.target.closest("button");
-      if (button2?.id === "merge-duplicates") {
+      const button = event.target.closest("button");
+      if (button?.id === "merge-duplicates") {
         openMergeDialog().catch((error2) => setNotice(failureOf(error2).message));
         return;
       }
-      if (button2?.id === "open-relink") {
+      if (button?.id === "open-relink") {
         openRelinkDialog().catch((error2) => setNotice(failureOf(error2).message));
       }
     });
@@ -28278,20 +28510,20 @@
       });
     });
     el("open-logs").addEventListener("click", () => {
-      const button2 = el("open-logs");
-      button2.disabled = true;
+      const button = el("open-logs");
+      button.disabled = true;
       el("settings-status").textContent = t("wizard.opening");
       postJSON("/api/logs/open", {}).then(() => {
         el("settings-status").textContent = t("logs.opened");
       }).catch(() => {
         el("settings-status").textContent = t("logs.openFailed");
       }).finally(() => {
-        button2.disabled = false;
+        button.disabled = false;
       });
     });
     el("copy-logs").addEventListener("click", async () => {
-      const button2 = el("copy-logs");
-      button2.disabled = true;
+      const button = el("copy-logs");
+      button.disabled = true;
       el("settings-status").textContent = t("logs.copying");
       try {
         const response = await fetch("/api/logs");
@@ -28324,7 +28556,7 @@
       } catch (error2) {
         el("settings-status").textContent = t("logs.copyFailed");
       } finally {
-        button2.disabled = false;
+        button.disabled = false;
       }
     });
     el("files-up").addEventListener("click", () => {
@@ -28504,8 +28736,8 @@
     el("help-expected-label").hidden = feature;
   }
   async function submitReport() {
-    const button2 = el("help-open-github");
-    button2.disabled = true;
+    const button = el("help-open-github");
+    button.disabled = true;
     el("help-report-status").textContent = t("help.opening");
     try {
       const response = await fetch("/api/help", {
@@ -28538,7 +28770,7 @@
     } catch {
       el("help-report-status").textContent = t("help.loadFailed");
     } finally {
-      button2.disabled = false;
+      button.disabled = false;
     }
   }
   async function copyLog() {
@@ -28791,17 +29023,17 @@
     else status4.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
     hits.forEach((hit, index) => {
       const item4 = document.createElement("li");
-      const button2 = buttonEl(quickOpenHit(
+      const button = buttonEl(quickOpenHit(
         hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
         hit.title,
         hit.detail
       ));
-      button2.className = "quick-open-option";
-      button2.id = `quick-open-option-${index}`;
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(index === active));
-      button2.tabIndex = -1;
-      if (index === active) button2.classList.add("is-active");
+      button.className = "quick-open-option";
+      button.id = `quick-open-option-${index}`;
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(index === active));
+      button.tabIndex = -1;
+      if (index === active) button.classList.add("is-active");
       const kind2 = document.createElement("span");
       kind2.className = "quick-open-kind";
       kind2.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
@@ -28811,12 +29043,12 @@
       const detail = document.createElement("span");
       detail.className = "quick-open-detail";
       detail.textContent = hit.detail;
-      button2.append(kind2, title2, detail);
-      button2.addEventListener("click", () => {
+      button.append(kind2, title2, detail);
+      button.addEventListener("click", () => {
         active = index;
         void activate(hit);
       });
-      item4.append(button2);
+      item4.append(button);
       list.append(item4);
     });
     const field2 = el("quick-open-query");
