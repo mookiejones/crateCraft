@@ -661,6 +661,7 @@
     "mode.portable": "Read-only. This check does not change the library.",
     "mode.scan": "Read-only. This check does not change the library.",
     "mode.snapshots": "Hash-checked copies of the library, crates, and Serato frames inside audio files. Audio itself is not copied.",
+    "mode.stats": "Most played tracks and artists in a period. Making a crate from the idle list writes the library. Quit Serato first.",
     "mode.stems": "Tracks with a stems analysis state.",
     "mode.tags": "Writes the library, not the audio files. Quit Serato first.",
     "operations.action.crateAdd": "Add to crate",
@@ -1059,6 +1060,49 @@
     "space.video": "Video",
     "status.checking": "Checking Serato",
     "status.library": "Library",
+    "stats.artistTracks": "Tracks",
+    "stats.artists": "Most played artists",
+    "stats.checking": "Reading play stats…",
+    "stats.confirmCrate": {
+      one: "Create crate “{name}” with {count} track not played in {days} days? Serato must be quit.",
+      other: "Create crate “{name}” with {count} tracks not played in {days} days? Serato must be quit."
+    },
+    "stats.csv": "Download CSV",
+    "stats.empty": "No plays in this period.",
+    "stats.emptyArtists": "No played artists in this period.",
+    "stats.emptyIdle": "No idle tracks for this cutoff.",
+    "stats.emptyTracks": "No played tracks in this period.",
+    "stats.from": "From",
+    "stats.heading": "Play stats",
+    "stats.idle": "Not played",
+    "stats.idleCrate": "Make crate",
+    "stats.idleCrateName": "Not played in {days} days",
+    "stats.idleDays": "Idle days",
+    "stats.idleHint": "Tracks in this space not played in {days} days.",
+    "stats.idleRow": "{title} — last played {last}",
+    "stats.intro": "Most played tracks and artists in a period. The idle list can become a crate. Serato must be quit. This report does not change the library until you confirm the crate.",
+    "stats.more": {
+      one: "{count} more not shown.",
+      other: "{count} more not shown."
+    },
+    "stats.never": "never",
+    "stats.period": "Period",
+    "stats.period.365": "Last 365 days",
+    "stats.period.30": "Last 30 days",
+    "stats.period.7": "Last 7 days",
+    "stats.period.90": "Last 90 days",
+    "stats.period.all": "All time",
+    "stats.period.custom": "Custom dates",
+    "stats.show": "Show",
+    "stats.summary": "{plays} plays across {sessions} sessions.",
+    "stats.to": "To",
+    "stats.tracks": "Most played tracks",
+    "stats.unreadable": "Could not read play stats.",
+    "stats.unreachable": "Couldn't reach the library server to read play stats.",
+    "stats.written": {
+      one: "Created crate {name} with {count} track.",
+      other: "Created crate {name} with {count} tracks."
+    },
     "tags.apply": "Apply",
     "tags.applyMappings": "Apply saved mappings",
     "tags.artist": "Artist",
@@ -1340,6 +1384,13 @@
     "tooltip.sortTitle": "Sort tracks by title.",
     "tooltip.space": "Choose Library, Video, Apple Music, or Prepare.",
     "tooltip.splitter": "Drag to resize the track list. Double-click to put it back. Arrow keys resize it.",
+    "tooltip.statsCsv": "Download this report as a spreadsheet. Read-only.",
+    "tooltip.statsFrom": "First day of a custom period.",
+    "tooltip.statsIdleCrate": "Preview a crate of tracks not played in this many days, then confirm. Serato must be quit.",
+    "tooltip.statsIdleDays": "A track not played for this many days is listed. Default 365.",
+    "tooltip.statsPeriod": "Limit most-played counts to this period. Idle tracks use Idle days, not this period.",
+    "tooltip.statsRefresh": "Load play stats for this period.",
+    "tooltip.statsTo": "Last day of a custom period.",
     "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
     "tooltip.tagsApplyMappings": "Write saved genre and artist spellings on tracks that still use another form. Quit Serato first. Audio files stay as they are.",
     "tooltip.tagsApplyTitles": "Write the cleaned titles. Quit Serato first. Audio files stay as they are.",
@@ -1376,6 +1427,7 @@
     "tooltip.viewPortable": "Check a portable Serato drive before a gig. Pick a connected drive. Read-only.",
     "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
     "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
+    "tooltip.viewStats": "Most played tracks and artists in a period, idle tracks, and a CSV of the report.",
     "tooltip.viewStems": "Show tracks Serato has analyzed for stems. This does not separate the audio.",
     "tooltip.viewTags": "Group genre and artist spellings that mean the same thing. Writes the library, not the audio files.",
     "tooltip.volume": "Change how loud playback is.",
@@ -1434,6 +1486,7 @@
     "view.portable": "Check drive",
     "view.scan": "Damaged files",
     "view.snapshots": "Backups",
+    "view.stats": "Play stats",
     "view.stems": "Stems",
     "view.tags": "Tag spellings",
     "wizard.action.checkAgain": "Check again",
@@ -2148,6 +2201,7 @@
     "mode.portable": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.scan": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.snapshots": "Copias verificadas por hash de la biblioteca, las cajas y los datos de Serato dentro de los archivos de audio. El audio en sí no se copia.",
+    "mode.stats": "Las pistas y artistas más reproducidos en un periodo. Crear una caja con las pistas inactivas escribe en la biblioteca. Cierra Serato primero.",
     "mode.stems": "Pistas con un estado de análisis de stems.",
     "mode.tags": "Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
     "operations.action.crateAdd": "Añadir a la caja",
@@ -2546,6 +2600,49 @@
     "space.video": "Vídeo",
     "status.checking": "Comprobando Serato",
     "status.library": "Biblioteca",
+    "stats.artistTracks": "Pistas",
+    "stats.artists": "Artistas más reproducidos",
+    "stats.checking": "Leyendo estadísticas de reproducción…",
+    "stats.confirmCrate": {
+      one: "¿Crear la caja “{name}” con {count} pista no reproducida en {days} días? Hay que cerrar Serato.",
+      other: "¿Crear la caja “{name}” con {count} pistas no reproducidas en {days} días? Hay que cerrar Serato."
+    },
+    "stats.csv": "Descargar CSV",
+    "stats.empty": "No hay reproducciones en este periodo.",
+    "stats.emptyArtists": "No hay artistas reproducidos en este periodo.",
+    "stats.emptyIdle": "No hay pistas inactivas para este corte.",
+    "stats.emptyTracks": "No hay pistas reproducidas en este periodo.",
+    "stats.from": "Desde",
+    "stats.heading": "Estadísticas",
+    "stats.idle": "Sin reproducir",
+    "stats.idleCrate": "Crear caja",
+    "stats.idleCrateName": "Sin reproducir en {days} días",
+    "stats.idleDays": "Días inactivos",
+    "stats.idleHint": "Pistas de este espacio no reproducidas en {days} días.",
+    "stats.idleRow": "{title} — última vez {last}",
+    "stats.intro": "Las pistas y artistas más reproducidos en un periodo. La lista inactiva puede convertirse en una caja. Hay que cerrar Serato. Este informe no cambia la biblioteca hasta que confirmes la caja.",
+    "stats.more": {
+      one: "{count} más no se muestra.",
+      other: "{count} más no se muestran."
+    },
+    "stats.never": "nunca",
+    "stats.period": "Periodo",
+    "stats.period.365": "Últimos 365 días",
+    "stats.period.30": "Últimos 30 días",
+    "stats.period.7": "Últimos 7 días",
+    "stats.period.90": "Últimos 90 días",
+    "stats.period.all": "Todo",
+    "stats.period.custom": "Fechas",
+    "stats.show": "Mostrar",
+    "stats.summary": "{plays} reproducciones en {sessions} sesiones.",
+    "stats.to": "Hasta",
+    "stats.tracks": "Pistas más reproducidas",
+    "stats.unreadable": "No se pudieron leer las estadísticas de reproducción.",
+    "stats.unreachable": "No se pudo alcanzar el servidor de la biblioteca para leer las estadísticas de reproducción.",
+    "stats.written": {
+      one: "Se creó la caja {name} con {count} pista.",
+      other: "Se creó la caja {name} con {count} pistas."
+    },
     "tags.apply": "Aplicar",
     "tags.applyMappings": "Aplicar grafías guardadas",
     "tags.artist": "Artista",
@@ -2827,6 +2924,13 @@
     "tooltip.sortTitle": "Ordena las pistas por título.",
     "tooltip.space": "Elige Biblioteca, Vídeo, Apple Music o Preparar.",
     "tooltip.splitter": "Arrastra para cambiar el ancho de la lista. Doble clic lo devuelve. Las flechas lo redimensionan.",
+    "tooltip.statsCsv": "Descarga este informe como hoja de cálculo. Solo lectura.",
+    "tooltip.statsFrom": "Primer día de un periodo personalizado.",
+    "tooltip.statsIdleCrate": "Previsualiza una caja con las pistas no reproducidas en estos días y confirma. Hay que cerrar Serato.",
+    "tooltip.statsIdleDays": "Una pista no reproducida en estos días aparece en la lista. 365 por defecto.",
+    "tooltip.statsPeriod": "Limita los más reproducidos a este periodo. Las pistas inactivas usan Días inactivos, no este periodo.",
+    "tooltip.statsRefresh": "Carga las estadísticas de este periodo.",
+    "tooltip.statsTo": "Último día de un periodo personalizado.",
     "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Los archivos de audio no cambian.",
     "tooltip.tagsApplyMappings": "Escribe las grafías de género y artista guardadas en las pistas que aún usan otra forma. Cierra Serato primero. Los archivos de audio no cambian.",
     "tooltip.tagsApplyTitles": "Escribe los títulos limpios. Cierra Serato primero. Los archivos de audio no cambian.",
@@ -2863,6 +2967,7 @@
     "tooltip.viewPortable": "Comprueba una unidad Serato portátil antes del bolo. Elige una unidad conectada. Solo lectura.",
     "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
     "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
+    "tooltip.viewStats": "Las pistas y artistas más reproducidos en un periodo, pistas inactivas y un CSV del informe.",
     "tooltip.viewStems": "Muestra las pistas que Serato ya analizó para stems. No separa el audio.",
     "tooltip.viewTags": "Agrupa grafías de género y artista que significan lo mismo. Escribe en la biblioteca, no en los archivos de audio.",
     "tooltip.volume": "Cambia el volumen de la reproducción.",
@@ -2921,6 +3026,7 @@
     "view.portable": "Comprobar unidad",
     "view.scan": "Archivos dañados",
     "view.snapshots": "Copias de seguridad",
+    "view.stats": "Estadísticas",
     "view.stems": "Stems",
     "view.tags": "Grafías de etiquetas",
     "wizard.action.checkAgain": "Volver a buscar",
@@ -3454,6 +3560,7 @@
     gigToken: 0,
     driftToken: 0,
     healthToken: 0,
+    statsToken: 0,
     scanToken: 0,
     bitrateToken: 0,
     tagsToken: 0,
@@ -3790,6 +3897,14 @@
     allTracks: spec("tooltip.allTracks"),
     viewCrates: spec("tooltip.viewCrates"),
     viewHistory: spec("tooltip.viewHistory"),
+    viewStats: spec("tooltip.viewStats"),
+    statsRefresh: spec("tooltip.statsRefresh"),
+    statsCsv: spec("tooltip.statsCsv"),
+    statsPeriod: spec("tooltip.statsPeriod"),
+    statsFrom: spec("tooltip.statsFrom"),
+    statsTo: spec("tooltip.statsTo"),
+    statsIdleDays: spec("tooltip.statsIdleDays"),
+    statsIdleCrate: spec("tooltip.statsIdleCrate"),
     viewMissing: spec("tooltip.viewMissing"),
     viewDuplicates: spec("tooltip.viewDuplicates"),
     viewStems: spec("tooltip.viewStems"),
@@ -3871,6 +3986,7 @@
     const known = {
       crates: tips.viewCrates,
       history: tips.viewHistory,
+      stats: tips.viewStats,
       missing: tips.viewMissing,
       duplicates: tips.viewDuplicates,
       stems: tips.viewStems,
@@ -3958,6 +4074,12 @@
       "gig-refresh": tips.gigRefresh,
       "drift-refresh": tips.driftRefresh,
       "health-refresh": tips.healthRefresh,
+      "stats-refresh": tips.statsRefresh,
+      "stats-csv": tips.statsCsv,
+      "stats-period": tips.statsPeriod,
+      "stats-from": tips.statsFrom,
+      "stats-to": tips.statsTo,
+      "stats-idle-days": tips.statsIdleDays,
       "scan-quick": tips.scanQuick,
       "scan-full": tips.scanFull,
       "bitrate-refresh": tips.bitrateRefresh,
@@ -5022,8 +5144,338 @@
     });
   }
 
-  // src/scan.ts
+  // src/history-stats-view.ts
+  var IDLE_DAYS_DEFAULT = 365;
+  var IDLE_DAYS_MAX = 3650;
+  var DAY = 86400;
+  var PERIODS = /* @__PURE__ */ new Set(["all", "7", "30", "90", "365", "custom"]);
+  function isStatsPeriod(value) {
+    return PERIODS.has(value);
+  }
+  function dayStartUnix(iso) {
+    const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+    if (!parts) return null;
+    const stamp = new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3])).getTime();
+    if (Number.isNaN(stamp)) return null;
+    return Math.floor(stamp / 1e3);
+  }
+  function dayAfterUnix(iso) {
+    const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+    if (!parts) return null;
+    const stamp = new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]) + 1).getTime();
+    if (Number.isNaN(stamp)) return null;
+    return Math.floor(stamp / 1e3);
+  }
+  function periodRange(period, from, to, nowMs) {
+    if (period === "all") return { start: null, end: null };
+    if (period !== "custom") {
+      const end = Math.floor(nowMs / 1e3);
+      return { start: end - Number(period) * DAY, end };
+    }
+    return { start: dayStartUnix(from), end: dayAfterUnix(to) };
+  }
+  function idleDaysFromInput(raw) {
+    if (!/^\d{1,4}$/.test(raw.trim())) return IDLE_DAYS_DEFAULT;
+    const value = Number(raw.trim());
+    if (value < 1 || value > IDLE_DAYS_MAX) return IDLE_DAYS_DEFAULT;
+    return value;
+  }
+  function statsQuery(space, range, idleDays) {
+    const query = new URLSearchParams({ space });
+    if (range.start != null) query.set("from", String(range.start));
+    if (range.end != null) query.set("to", String(range.end));
+    if (idleDays !== IDLE_DAYS_DEFAULT) query.set("idle_days", String(idleDays));
+    return query.toString();
+  }
+  function csvHref(query) {
+    return query ? `/api/history-stats.csv?${query}` : "/api/history-stats.csv";
+  }
+
+  // src/history-stats.ts
   var LIST_CAP3 = 100;
+  var latest4 = null;
+  var crateBusy = false;
+  function wireHistoryStats() {
+    const panel = el("stats-panel");
+    if (panel.dataset.statsWired === "true") return;
+    panel.dataset.statsWired = "true";
+    el("stats-refresh").addEventListener("click", () => {
+      void loadHistoryStats();
+    });
+    el("stats-period").addEventListener("change", () => {
+      syncPeriodFields();
+      if (currentPeriod() !== "custom") void loadHistoryStats();
+    });
+    el("stats-csv").addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.href = csvHref(currentQuery());
+      link.download = "play-stats.csv";
+      link.click();
+    });
+    panel.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const button2 = target.closest("button");
+      if (!(button2 instanceof HTMLButtonElement)) return;
+      if (button2.dataset.statsAction === "crate") void makeIdleCrate();
+    });
+    syncPeriodFields();
+  }
+  async function loadHistoryStats() {
+    const token3 = ++state.statsToken;
+    beginBusy4();
+    let settle = "none";
+    try {
+      const response = await fetch(`/api/history-stats?${currentQuery()}`);
+      if (token3 !== state.statsToken) return;
+      const payload = await readJSON(response).catch(() => null);
+      if (token3 !== state.statsToken) return;
+      if (!response.ok || payload === null) {
+        failStatus4(serverMessage(payload, t("stats.unreadable")));
+        settle = "retry";
+        return;
+      }
+      latest4 = payload;
+      el("stats-status").textContent = "";
+      renderHistoryStats(payload);
+      settle = "report";
+    } catch {
+      if (token3 !== state.statsToken) return;
+      failStatus4(t("stats.unreachable"));
+      settle = "retry";
+    } finally {
+      if (token3 !== state.statsToken) return;
+      endBusy4();
+      if (settle === "retry") el("stats-refresh").focus();
+      if (settle === "report") el("stats-report").focus();
+    }
+  }
+  function showHistoryStatsFailure(error2) {
+    const message = error2 instanceof Error && error2.message ? error2.message : t("stats.unreadable");
+    failStatus4(message);
+    endBusy4();
+    el("stats-refresh").focus();
+  }
+  function renderHistoryStats(payload) {
+    el("stats-scope").textContent = t("gig.wholeSpace");
+    const report = el("stats-report");
+    const plays = payload.plays ?? 0;
+    const sessions = payload.sessions ?? 0;
+    const idleDays = payload.idle_days ?? 365;
+    const idleCount = payload.not_played_count ?? 0;
+    const summary = document.createElement("p");
+    summary.className = "gig-note";
+    summary.textContent = plays ? t("stats.summary", { plays, sessions }) : t("stats.empty");
+    report.replaceChildren(summary);
+    report.append(trackTable(payload.top_tracks ?? []));
+    report.append(artistTable(payload.top_artists ?? []));
+    report.append(idleGroup(payload.not_played ?? [], idleCount, idleDays));
+  }
+  function repaintHistoryStats() {
+    el("stats-scope").textContent = t("gig.wholeSpace");
+    syncPeriodFields();
+    if (latest4) renderHistoryStats(latest4);
+  }
+  function currentPeriod() {
+    const value = el("stats-period").value;
+    return isStatsPeriod(value) ? value : "all";
+  }
+  function currentQuery() {
+    const range = periodRange(
+      currentPeriod(),
+      el("stats-from").value,
+      el("stats-to").value,
+      Date.now()
+    );
+    return statsQuery(state.space, range, idleDaysFromInput(el("stats-idle-days").value));
+  }
+  function syncPeriodFields() {
+    const custom = currentPeriod() === "custom";
+    el("stats-from").disabled = !custom;
+    el("stats-to").disabled = !custom;
+  }
+  function beginBusy4() {
+    const button2 = el("stats-refresh");
+    button2.disabled = true;
+    button2.setAttribute("aria-busy", "true");
+    el("stats-panel").setAttribute("aria-busy", "true");
+    el("stats-status").textContent = t("stats.checking");
+  }
+  function endBusy4() {
+    const button2 = el("stats-refresh");
+    button2.disabled = false;
+    button2.setAttribute("aria-busy", "false");
+    el("stats-panel").setAttribute("aria-busy", "false");
+  }
+  function failStatus4(message) {
+    el("stats-status").textContent = message;
+  }
+  function trackTable(rows2) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = rows2.length > 0;
+    const heading2 = document.createElement("summary");
+    heading2.textContent = t("gig.groupCount", { label: t("stats.tracks"), count: rows2.length });
+    details.append(heading2);
+    if (!rows2.length) {
+      details.append(noteLine4(t("stats.emptyTracks")));
+      return details;
+    }
+    const table = document.createElement("table");
+    table.className = "stats-table";
+    const head = document.createElement("thead");
+    head.append(headerRow(["column.title", "column.artist", "column.plays", "column.lastPlayed"]));
+    table.append(head);
+    const body = document.createElement("tbody");
+    for (const row of rows2.slice(0, LIST_CAP3)) {
+      body.append(dataRow([
+        row.name || "—",
+        row.artist || "—",
+        String(row.plays ?? 0),
+        clockLabel(row.last_played) || "—"
+      ]));
+    }
+    table.append(body);
+    details.append(table);
+    if (rows2.length > LIST_CAP3) details.append(noteLine4(t("stats.more", { count: rows2.length - LIST_CAP3 })));
+    return details;
+  }
+  function artistTable(rows2) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = rows2.length > 0;
+    const heading2 = document.createElement("summary");
+    heading2.textContent = t("gig.groupCount", { label: t("stats.artists"), count: rows2.length });
+    details.append(heading2);
+    if (!rows2.length) {
+      details.append(noteLine4(t("stats.emptyArtists")));
+      return details;
+    }
+    const table = document.createElement("table");
+    table.className = "stats-table";
+    const head = document.createElement("thead");
+    head.append(headerRow(["column.artist", "column.plays", "stats.artistTracks", "column.lastPlayed"]));
+    table.append(head);
+    const body = document.createElement("tbody");
+    for (const row of rows2.slice(0, LIST_CAP3)) {
+      body.append(dataRow([
+        row.artist || "—",
+        String(row.plays ?? 0),
+        String(row.tracks ?? 0),
+        clockLabel(row.last_played) || "—"
+      ]));
+    }
+    table.append(body);
+    details.append(table);
+    if (rows2.length > LIST_CAP3) details.append(noteLine4(t("stats.more", { count: rows2.length - LIST_CAP3 })));
+    return details;
+  }
+  function idleGroup(rows2, count, idleDays) {
+    const details = document.createElement("details");
+    details.className = "gig-group";
+    details.open = count > 0;
+    const heading2 = document.createElement("summary");
+    heading2.textContent = t("gig.groupCount", { label: t("stats.idle"), count });
+    details.append(heading2);
+    details.append(noteLine4(t("stats.idleHint", { days: idleDays })));
+    const crate = buttonEl(tips.statsIdleCrate);
+    crate.dataset.statsAction = "crate";
+    crate.textContent = t("stats.idleCrate");
+    crate.disabled = crateBusy || !state.writable || count === 0;
+    details.append(crate);
+    if (!count) {
+      details.append(noteLine4(t("stats.emptyIdle")));
+      return details;
+    }
+    const list = document.createElement("ul");
+    for (const row of rows2.slice(0, LIST_CAP3)) {
+      const item5 = document.createElement("li");
+      const last = row.last_played == null ? t("stats.never") : clockLabel(row.last_played) || "—";
+      item5.textContent = t("stats.idleRow", {
+        title: [row.artist, row.name].filter(Boolean).join(" — ") || row.name || "—",
+        last
+      });
+      list.append(item5);
+    }
+    details.append(list);
+    if (count > rows2.length) details.append(noteLine4(t("stats.more", { count: count - rows2.length })));
+    else if (rows2.length > LIST_CAP3) details.append(noteLine4(t("stats.more", { count: rows2.length - LIST_CAP3 })));
+    return details;
+  }
+  async function makeIdleCrate() {
+    if (crateBusy) return;
+    const idleDays = idleDaysFromInput(el("stats-idle-days").value);
+    const name = t("stats.idleCrateName", { days: idleDays });
+    crateBusy = true;
+    try {
+      const preview = await postJSON("/api/history-stats", {
+        action: "preview",
+        space: state.space,
+        idle_days: idleDays,
+        name
+      });
+      const count = preview.count ?? 0;
+      if (!count) {
+        el("stats-status").textContent = t("stats.emptyIdle");
+        return;
+      }
+      const label = String(preview.name || name);
+      if (!confirm(t("stats.confirmCrate", { name: label, count, days: idleDays }))) return;
+      const created = await postJSON("/api/history-stats", {
+        action: "create",
+        space: state.space,
+        idle_days: idleDays,
+        name: label
+      });
+      if (!created.written) {
+        el("stats-status").textContent = t("stats.emptyIdle");
+        return;
+      }
+      await bridge.reloadLibrary();
+      await loadHistoryStats();
+      el("stats-status").textContent = created.warning || t("stats.written", {
+        name: String(created.name || label),
+        count: created.count ?? count
+      });
+    } catch (error2) {
+      if (failureOf(error2).status === 409) {
+        bridge.lockDown(error2);
+        return;
+      }
+      el("stats-status").textContent = failureOf(error2).message;
+    } finally {
+      crateBusy = false;
+      if (latest4) renderHistoryStats(latest4);
+    }
+  }
+  function headerRow(keys) {
+    const row = document.createElement("tr");
+    for (const key of keys) {
+      const cell = document.createElement("th");
+      cell.scope = "col";
+      cell.textContent = t(key);
+      row.append(cell);
+    }
+    return row;
+  }
+  function dataRow(values) {
+    const row = document.createElement("tr");
+    for (const value of values) {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.append(cell);
+    }
+    return row;
+  }
+  function noteLine4(text2) {
+    const line = document.createElement("p");
+    line.className = "gig-note";
+    line.textContent = text2;
+    return line;
+  }
+
+  // src/scan.ts
+  var LIST_CAP4 = 100;
   var PROBLEM_ORDER = [
     "empty",
     "unreadable",
@@ -5042,7 +5494,7 @@
     decode_error: "scan.problem.decode_error",
     short: "scan.problem.short"
   };
-  var latest4 = null;
+  var latest5 = null;
   var lastDepth = "quick";
   function wireScan() {
     const panel = el("scan-panel");
@@ -5058,11 +5510,11 @@
   async function loadScan(depth) {
     const chosen = resolveDepth(depth);
     const token3 = ++state.scanToken;
-    beginBusy4();
+    beginBusy5();
     let settle = "none";
     if (chosen === "full" && state.activeCrate === "all") {
-      failStatus4(t("error.scan_full_needs_crate"));
-      endBusy4();
+      failStatus5(t("error.scan_full_needs_crate"));
+      endBusy5();
       el("scan-full").focus();
       return;
     }
@@ -5076,29 +5528,29 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.scanToken) return;
       if (!response.ok || payload === null) {
-        failStatus4(serverMessage(payload, t("scan.unreadable")));
+        failStatus5(serverMessage(payload, t("scan.unreadable")));
         settle = "retry";
         return;
       }
-      latest4 = payload;
+      latest5 = payload;
       el("scan-status").textContent = "";
       renderScanReport(payload);
       settle = "report";
     } catch {
       if (token3 !== state.scanToken) return;
-      failStatus4(t("scan.unreachable"));
+      failStatus5(t("scan.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.scanToken) return;
-      endBusy4();
+      endBusy5();
       if (settle === "retry") el("scan-quick").focus();
       if (settle === "report") el("scan-report").focus();
     }
   }
   function showScanFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
-    failStatus4(message);
-    endBusy4();
+    failStatus5(message);
+    endBusy5();
     el("scan-quick").focus();
   }
   function renderScanReport(payload) {
@@ -5110,13 +5562,13 @@
     summary.textContent = problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked });
     report.replaceChildren(summary);
     if (payload.not_found) {
-      report.append(noteLine4(t("scan.notFound", { count: payload.not_found })));
+      report.append(noteLine5(t("scan.notFound", { count: payload.not_found })));
     }
     if (payload.unchecked) {
-      report.append(noteLine4(t("scan.unchecked", { count: payload.unchecked })));
+      report.append(noteLine5(t("scan.unchecked", { count: payload.unchecked })));
     }
     if (!problems.length) {
-      report.append(noteLine4(t("scan.empty")));
+      report.append(noteLine5(t("scan.empty")));
       return;
     }
     for (const kind2 of problemKinds(problems)) {
@@ -5126,14 +5578,14 @@
   }
   function repaintScan() {
     el("scan-scope").textContent = scopeLabel3();
-    if (latest4) renderScanReport(latest4);
+    if (latest5) renderScanReport(latest5);
   }
   function resolveDepth(depth) {
     if (depth === "quick" || depth === "full") return depth;
     if (lastDepth === "full" && state.activeCrate === "all") return "quick";
     return lastDepth;
   }
-  function beginBusy4() {
+  function beginBusy5() {
     for (const id of ["scan-quick", "scan-full"]) {
       const button2 = el(id);
       button2.disabled = true;
@@ -5142,7 +5594,7 @@
     el("scan-panel").setAttribute("aria-busy", "true");
     el("scan-status").textContent = t("scan.checking");
   }
-  function endBusy4() {
+  function endBusy5() {
     el("scan-quick").disabled = false;
     el("scan-quick").setAttribute("aria-busy", "false");
     const full = el("scan-full");
@@ -5150,7 +5602,7 @@
     full.setAttribute("aria-busy", "false");
     el("scan-panel").setAttribute("aria-busy", "false");
   }
-  function failStatus4(message) {
+  function failStatus5(message) {
     el("scan-status").textContent = message;
   }
   function scopeLabel3() {
@@ -5158,7 +5610,7 @@
     const crate = state.crates.find((row) => row.id === state.activeCrate);
     return crate?.name || t("gig.wholeSpace");
   }
-  function noteLine4(text2) {
+  function noteLine5(text2) {
     const line = document.createElement("p");
     line.className = "gig-note";
     line.textContent = text2;
@@ -5200,10 +5652,10 @@
     const summary = document.createElement("summary");
     summary.textContent = t("gig.groupCount", { label, count: lines.length });
     const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP3);
+    const shown = lines.slice(0, LIST_CAP4);
     for (const line of shown) list.append(item3(line));
     details.append(summary, list);
-    if (lines.length > LIST_CAP3) {
+    if (lines.length > LIST_CAP4) {
       const show2 = buttonEl(tips.gigShowAll);
       show2.className = "gig-show-all";
       show2.textContent = t("gig.showAll", { count: lines.length });
@@ -5223,13 +5675,13 @@
   }
 
   // src/bitrate.ts
-  var LIST_CAP4 = 100;
+  var LIST_CAP5 = 100;
   var REASON_ORDER2 = ["upsampled", "lossy_source"];
   var REASON_KEYS2 = {
     upsampled: "bitrate.reason.upsampled",
     lossy_source: "bitrate.reason.lossy_source"
   };
-  var latest5 = null;
+  var latest6 = null;
   var cratePlan = null;
   function wireBitrate() {
     const panel = el("bitrate-panel");
@@ -5250,11 +5702,11 @@
   async function loadBitrate() {
     const token3 = ++state.bitrateToken;
     cratePlan = null;
-    beginBusy5();
+    beginBusy6();
     let settle = "none";
     if (state.activeCrate === "all") {
-      failStatus5(t("error.bitrate_needs_crate"));
-      endBusy5();
+      failStatus6(t("error.bitrate_needs_crate"));
+      endBusy6();
       el("bitrate-refresh").focus();
       return;
     }
@@ -5267,29 +5719,29 @@
       const payload = await readJSON(response).catch(() => null);
       if (token3 !== state.bitrateToken) return;
       if (!response.ok || payload === null) {
-        failStatus5(serverMessage(payload, t("bitrate.unreadable")));
+        failStatus6(serverMessage(payload, t("bitrate.unreadable")));
         settle = "retry";
         return;
       }
-      latest5 = payload;
+      latest6 = payload;
       el("bitrate-status").textContent = "";
       renderBitrateReport(payload);
       settle = "report";
     } catch {
       if (token3 !== state.bitrateToken) return;
-      failStatus5(t("bitrate.unreachable"));
+      failStatus6(t("bitrate.unreachable"));
       settle = "retry";
     } finally {
       if (token3 !== state.bitrateToken) return;
-      endBusy5();
+      endBusy6();
       if (settle === "retry") el("bitrate-refresh").focus();
       if (settle === "report") el("bitrate-report").focus();
     }
   }
   function showBitrateFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("bitrate.unreadable");
-    failStatus5(message);
-    endBusy5();
+    failStatus6(message);
+    endBusy6();
     el("bitrate-refresh").focus();
   }
   function renderBitrateReport(payload) {
@@ -5301,19 +5753,19 @@
     summary.textContent = suspects.length ? t("bitrate.summary", { checked: payload.checked, count: suspects.length }) : t("bitrate.summaryClear", { checked: payload.checked });
     report.replaceChildren(summary);
     if (payload.not_found) {
-      report.append(noteLine5(t("bitrate.notFound", { count: payload.not_found })));
+      report.append(noteLine6(t("bitrate.notFound", { count: payload.not_found })));
     }
     if (payload.unreadable) {
-      report.append(noteLine5(t("bitrate.unreadableFiles", { count: payload.unreadable })));
+      report.append(noteLine6(t("bitrate.unreadableFiles", { count: payload.unreadable })));
     }
     if (payload.unchecked) {
-      report.append(noteLine5(t("bitrate.unchecked", { count: payload.unchecked })));
+      report.append(noteLine6(t("bitrate.unchecked", { count: payload.unchecked })));
     }
     if (payload.too_quiet) {
-      report.append(noteLine5(t("bitrate.tooQuiet", { count: payload.too_quiet })));
+      report.append(noteLine6(t("bitrate.tooQuiet", { count: payload.too_quiet })));
     }
     if (!suspects.length) {
-      report.append(noteLine5(t("bitrate.empty")));
+      report.append(noteLine6(t("bitrate.empty")));
       paintPlan(report);
       return;
     }
@@ -5325,16 +5777,16 @@
   }
   function repaintBitrate() {
     el("bitrate-scope").textContent = scopeLabel4();
-    if (latest5) renderBitrateReport(latest5);
+    if (latest6) renderBitrateReport(latest6);
   }
   async function previewCrate() {
     if (state.activeCrate === "all") {
-      failStatus5(t("error.bitrate_needs_crate"));
+      failStatus6(t("error.bitrate_needs_crate"));
       el("bitrate-refresh").focus();
       return;
     }
     const token3 = ++state.bitrateToken;
-    beginBusy5("preview");
+    beginBusy6("preview");
     try {
       const payload = await postJSON("/api/bitrate-check", {
         action: "preview",
@@ -5343,24 +5795,24 @@
       });
       if (token3 !== state.bitrateToken) return;
       cratePlan = payload;
-      latest5 = payload;
+      latest6 = payload;
       el("bitrate-status").textContent = payload.added ? t("bitrate.preview", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
       renderBitrateReport(payload);
       const confirm2 = el("bitrate-report").querySelector("[data-bitrate-action='confirm']");
       (confirm2 ?? el("bitrate-save")).focus();
     } catch (error2) {
       if (token3 !== state.bitrateToken) return;
-      failStatus5(failureOf(error2).message);
+      failStatus6(failureOf(error2).message);
       el("bitrate-save").focus();
     } finally {
       if (token3 !== state.bitrateToken) return;
-      endBusy5();
+      endBusy6();
     }
   }
   async function createCrate() {
     if (!cratePlan || !cratePlan.added || state.activeCrate === "all") return;
     const token3 = ++state.bitrateToken;
-    beginBusy5("create");
+    beginBusy6("create");
     try {
       const payload = await postJSON("/api/bitrate-check", {
         action: "create",
@@ -5371,22 +5823,22 @@
       await bridge.reloadLibrary();
       if (token3 !== state.bitrateToken) return;
       cratePlan = payload;
-      latest5 = payload;
+      latest6 = payload;
       el("bitrate-status").textContent = payload.written ? t("bitrate.written", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
       renderBitrateReport(payload);
       el("bitrate-report").focus();
     } catch (error2) {
       if (token3 !== state.bitrateToken) return;
       const failed = failureOf(error2);
-      failStatus5(failed.message);
+      failStatus6(failed.message);
       if (failed.status === 409) bridge.lockDown(error2);
       el("bitrate-save").focus();
     } finally {
       if (token3 !== state.bitrateToken) return;
-      endBusy5();
+      endBusy6();
     }
   }
-  function beginBusy5(kind2 = "check") {
+  function beginBusy6(kind2 = "check") {
     for (const id of ["bitrate-refresh", "bitrate-save"]) {
       const button2 = el(id);
       button2.disabled = true;
@@ -5396,18 +5848,18 @@
     const status = kind2 === "create" ? t("bitrate.saving") : kind2 === "preview" ? t("bitrate.checking") : t("bitrate.checking");
     el("bitrate-status").textContent = status;
   }
-  function endBusy5() {
+  function endBusy6() {
     const noCrate = state.activeCrate === "all";
     const refresh = el("bitrate-refresh");
     refresh.disabled = noCrate;
     refresh.setAttribute("aria-busy", "false");
     const save3 = el("bitrate-save");
-    const flagged = Boolean(latest5?.suspects.length);
+    const flagged = Boolean(latest6?.suspects.length);
     save3.disabled = noCrate || !flagged;
     save3.setAttribute("aria-busy", "false");
     el("bitrate-panel").setAttribute("aria-busy", "false");
   }
-  function failStatus5(message) {
+  function failStatus6(message) {
     el("bitrate-status").textContent = message;
   }
   function scopeLabel4() {
@@ -5415,7 +5867,7 @@
     const crate = state.crates.find((row) => row.id === state.activeCrate);
     return crate?.name || t("gig.wholeSpace");
   }
-  function noteLine5(text2) {
+  function noteLine6(text2) {
     const line = document.createElement("p");
     line.className = "gig-note";
     line.textContent = text2;
@@ -5439,14 +5891,14 @@
   function paintPlan(report) {
     if (!cratePlan) return;
     if (cratePlan.written && cratePlan.saved) {
-      report.append(noteLine5(t("bitrate.written", { count: cratePlan.added, name: cratePlan.name })));
+      report.append(noteLine6(t("bitrate.written", { count: cratePlan.added, name: cratePlan.name })));
       return;
     }
     if (!cratePlan.added) {
-      report.append(noteLine5(t("bitrate.previewEmpty")));
+      report.append(noteLine6(t("bitrate.previewEmpty")));
       return;
     }
-    report.append(noteLine5(t("bitrate.preview", { count: cratePlan.added, name: cratePlan.name })));
+    report.append(noteLine6(t("bitrate.preview", { count: cratePlan.added, name: cratePlan.name })));
     const confirm2 = buttonEl(tips.bitrateConfirm);
     confirm2.dataset.bitrateAction = "confirm";
     confirm2.textContent = t("bitrate.confirmCrate");
@@ -5460,10 +5912,10 @@
     const summary = document.createElement("summary");
     summary.textContent = t("gig.groupCount", { label, count: lines.length });
     const list = document.createElement("ul");
-    const shown = lines.slice(0, LIST_CAP4);
+    const shown = lines.slice(0, LIST_CAP5);
     for (const line of shown) list.append(item4(line));
     details.append(summary, list);
-    if (lines.length > LIST_CAP4) {
+    if (lines.length > LIST_CAP5) {
       const show2 = buttonEl(tips.gigShowAll);
       show2.className = "gig-show-all";
       show2.textContent = t("gig.showAll", { count: lines.length });
@@ -5568,11 +6020,11 @@
   }
 
   // src/tags.ts
-  var LIST_CAP5 = 100;
+  var LIST_CAP6 = 100;
   var FIELD_BUTTONS = ["tags-genre", "tags-artist", "tags-titles", "tags-refresh"];
   var TITLE_KEY = "clean";
   var MAPPING_KEY = "saved";
-  var latest6 = null;
+  var latest7 = null;
   var titlePlan = null;
   var mappingPlan = null;
   var plans = /* @__PURE__ */ new Map();
@@ -5607,7 +6059,7 @@
       const key = input.name.slice("tags-".length);
       selectedByKey.set(key, input.value);
       plans.delete(key);
-      if (latest6) renderTagsReport(latest6);
+      if (latest7) renderTagsReport(latest7);
     });
     el("tags-report").addEventListener("click", (event) => {
       const button2 = event.target.closest("[data-tags-action]");
@@ -5631,7 +6083,7 @@
     const field = currentField();
     plans.clear();
     selectedByKey.clear();
-    beginBusy6();
+    beginBusy7();
     let settle = "none";
     try {
       if (field === "titles") {
@@ -5641,7 +6093,7 @@
         });
         if (token3 !== state.tagsToken) return;
         titlePlan = payload;
-        latest6 = null;
+        latest7 = null;
         mappingPlan = null;
         el("tags-status").textContent = titlesPreviewSummary(payload);
         settle = "report";
@@ -5653,11 +6105,11 @@
         const payload = await readJSON(response).catch(() => null);
         if (token3 !== state.tagsToken) return;
         if (!response.ok || payload === null) {
-          failStatus6(serverMessage(payload, t("tags.unreadable")));
+          failStatus7(serverMessage(payload, t("tags.unreadable")));
           settle = "retry";
           return;
         }
-        latest6 = payload;
+        latest7 = payload;
         titlePlan = null;
         mappingPlan = await readMappingPreview(token3);
         if (token3 !== state.tagsToken) return;
@@ -5666,12 +6118,12 @@
       }
     } catch (error2) {
       if (token3 !== state.tagsToken) return;
-      if (error2 instanceof TypeError) failStatus6(t("tags.unreachable"));
-      else failStatus6(failureOf(error2).message);
+      if (error2 instanceof TypeError) failStatus7(t("tags.unreachable"));
+      else failStatus7(failureOf(error2).message);
       settle = "retry";
     } finally {
       if (token3 !== state.tagsToken) return;
-      endBusy6();
+      endBusy7();
       if (settle === "report") paintReport();
       if (settle === "retry") el("tags-refresh").focus();
       if (settle === "report") el("tags-report").focus();
@@ -5679,8 +6131,8 @@
   }
   function showTagsFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
-    failStatus6(message);
-    endBusy6();
+    failStatus7(message);
+    endBusy7();
     el("tags-refresh").focus();
   }
   function renderTagsReport(payload) {
@@ -5705,7 +6157,7 @@
       if (titlePlan) renderTitleReport(titlePlan);
       return;
     }
-    if (latest6) renderTagsReport(latest6);
+    if (latest7) renderTagsReport(latest7);
   }
   function renderTitleReport(plan) {
     el("tags-scope").textContent = t("gig.wholeSpace");
@@ -5717,7 +6169,7 @@
     const lines = previewLines(plan.changes);
     if (lines.length) {
       const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP5)) {
+      for (const line of lines.slice(0, LIST_CAP6)) {
         const row = document.createElement("li");
         row.textContent = line;
         diffs.append(row);
@@ -5756,7 +6208,7 @@
       paintReport();
       applyButton(key)?.focus();
     } catch (error2) {
-      failStatus6(failureOf(error2).message);
+      failStatus7(failureOf(error2).message);
     } finally {
       actionKey = "";
       paintReport();
@@ -5768,7 +6220,7 @@
     if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
     actionKey = key;
     panelBusy = true;
-    beginBusy6();
+    beginBusy7();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -5780,19 +6232,19 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy6();
+      endBusy7();
       await loadTags();
       el("tags-status").textContent = writtenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus6(failed.message);
+      failStatus7(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy6();
+      endBusy7();
       paintReport();
     }
   }
@@ -5801,7 +6253,7 @@
     if (!plan || !canApplyMappings(plan)) return;
     actionKey = MAPPING_KEY;
     panelBusy = true;
-    beginBusy6();
+    beginBusy7();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -5811,19 +6263,19 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy6();
+      endBusy7();
       await loadTags();
       el("tags-status").textContent = mappingWrittenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus6(failed.message);
+      failStatus7(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy6();
+      endBusy7();
       paintReport();
     }
   }
@@ -5832,7 +6284,7 @@
     if (!plan || !canApplyTitles(plan)) return;
     actionKey = TITLE_KEY;
     panelBusy = true;
-    beginBusy6();
+    beginBusy7();
     paintReport();
     try {
       const written = await postJSON("/api/tag-clusters", {
@@ -5842,19 +6294,19 @@
       await bridge.reloadLibrary();
       actionKey = "";
       panelBusy = false;
-      endBusy6();
+      endBusy7();
       await loadTags();
       el("tags-status").textContent = titlesWrittenSummary(written);
     } catch (error2) {
       const failed = failureOf(error2);
-      failStatus6(failed.message);
+      failStatus7(failed.message);
       if (failed.status === 409) {
         bridge.lockDown(error2);
       }
     } finally {
       actionKey = "";
       panelBusy = false;
-      endBusy6();
+      endBusy7();
       paintReport();
     }
   }
@@ -5869,7 +6321,7 @@
     el("tags-titles").setAttribute("aria-pressed", String(next2 === "titles"));
     el("tags-hint").textContent = next2 === "titles" ? t("tags.introTitles") : t("tags.intro");
   }
-  function beginBusy6() {
+  function beginBusy7() {
     panelBusy = true;
     for (const id of FIELD_BUTTONS) {
       const button2 = el(id);
@@ -5880,7 +6332,7 @@
     el("tags-status").textContent = currentField() === "titles" ? t("tags.checkingTitles") : t("tags.checking");
     paintReport();
   }
-  function endBusy6() {
+  function endBusy7() {
     panelBusy = false;
     for (const id of FIELD_BUTTONS) {
       const button2 = el(id);
@@ -5926,7 +6378,7 @@
     const lines = previewLines(plan.changes);
     if (lines.length) {
       const diffs = document.createElement("ul");
-      for (const line of lines.slice(0, LIST_CAP5)) {
+      for (const line of lines.slice(0, LIST_CAP6)) {
         const row = document.createElement("li");
         row.textContent = line;
         diffs.append(row);
@@ -5943,7 +6395,7 @@
     wrap.append(actions2);
     return wrap;
   }
-  function failStatus6(message) {
+  function failStatus7(message) {
     el("tags-status").textContent = message;
   }
   function openKeys() {
@@ -5956,7 +6408,7 @@
     return keys;
   }
   function groupByKey(key) {
-    return latest6?.groups?.find((group) => group.key === key);
+    return latest7?.groups?.find((group) => group.key === key);
   }
   function selectedValue(key) {
     const group = groupByKey(key);
@@ -5996,7 +6448,7 @@
       const lines = previewLines(plan.changes);
       if (lines.length) {
         const diffs = document.createElement("ul");
-        const shown = lines.slice(0, LIST_CAP5);
+        const shown = lines.slice(0, LIST_CAP6);
         for (const line of shown) {
           const row = document.createElement("li");
           row.textContent = line;
@@ -6053,7 +6505,7 @@
     file_size: "portable.kindFileSize"
   };
   var token = 0;
-  var latest7 = null;
+  var latest8 = null;
   var lastRoots = [];
   var opener = null;
   var hasConnected = false;
@@ -6142,7 +6594,7 @@
   }
   async function loadPortableView() {
     wirePortable();
-    beginBusy7();
+    beginBusy8();
     paintStatus(t("portable.checking"));
     let settle = "none";
     try {
@@ -6162,7 +6614,7 @@
       fail(error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable"));
       settle = "retry";
     } finally {
-      endBusy7();
+      endBusy8();
       if (settle === "retry") el("portable-check").focus();
       if (settle === "report") el("portable-view-verdict").focus();
     }
@@ -6170,7 +6622,7 @@
   function showPortableFailure(error2) {
     const message = error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable");
     fail(message);
-    endBusy7();
+    endBusy8();
     el("portable-check").focus();
   }
   function repaintPortable() {
@@ -6181,7 +6633,7 @@
     }
     el("portable-check").textContent = t("portable.check");
     if (lastRoots.length) paintDrivePicker(lastRoots);
-    if (latest7) renderPortableReport(latest7);
+    if (latest8) renderPortableReport(latest8);
   }
   function wirePortable() {
     const dialog = el("portable-dialog");
@@ -6203,7 +6655,7 @@
     });
   }
   function renderPortableReport(report) {
-    latest7 = report;
+    latest8 = report;
     const verdictText = report.missing_drive ? t("portable.missing") : report.ready ? t("portable.ready") : t("portable.notReady");
     const items = findingItems(report);
     for (const surface of surfaces()) {
@@ -6217,14 +6669,14 @@
     wirePortable();
     const drive = portableDriveRoot(path);
     const mine = ++token;
-    latest7 = null;
+    latest8 = null;
     clearReport();
     paintStatus(t("portable.checking"));
     if (!drive) {
       fail(t("portable.unreadable"));
       return;
     }
-    beginBusy7();
+    beginBusy8();
     try {
       const response = await fetch(`/api/drive-check?drive=${encodeURIComponent(drive)}`);
       if (mine !== token) return;
@@ -6239,14 +6691,14 @@
         fail(t("portable.unreadable"));
         return;
       }
-      latest7 = report;
+      latest8 = report;
       paintStatus("");
       renderPortableReport(report);
     } catch {
       if (mine !== token) return;
       fail(t("portable.unreachable"));
     } finally {
-      if (mine === token) endBusy7();
+      if (mine === token) endBusy8();
     }
   }
   function paintDrivePicker(roots) {
@@ -6324,7 +6776,7 @@
     return key ? t(key) : kind2;
   }
   function fail(message) {
-    latest7 = null;
+    latest8 = null;
     clearReport();
     paintStatus(message);
   }
@@ -6338,13 +6790,13 @@
   function paintStatus(message) {
     for (const surface of surfaces()) surface.status.textContent = message;
   }
-  function beginBusy7() {
+  function beginBusy8() {
     const button2 = el("portable-check");
     button2.disabled = true;
     button2.setAttribute("aria-busy", "true");
     el("portable-panel").setAttribute("aria-busy", "true");
   }
-  function endBusy7() {
+  function endBusy8() {
     const button2 = el("portable-check");
     button2.disabled = !hasConnected;
     button2.setAttribute("aria-busy", "false");
@@ -6842,8 +7294,8 @@
     const status = el("operations-status");
     const list = el("operations-list");
     list.setAttribute("aria-busy", String(state.operationsLoading));
-    const latest9 = state.operations[state.operations.length - 1];
-    const failed = latest9?.result === "rollback_failed";
+    const latest10 = state.operations[state.operations.length - 1];
+    const failed = latest10?.result === "rollback_failed";
     alert.hidden = !failed;
     alert.textContent = failed ? t("operations.rollbackFailed") : "";
     list.replaceChildren();
@@ -9474,6 +9926,7 @@
     const portableMode = state.mode === "portable";
     const driftMode = state.mode === "drift";
     const healthMode = state.mode === "health";
+    const statsMode = state.mode === "stats";
     const scanMode = state.mode === "scan";
     const bitrateMode = state.mode === "bitrate";
     const tagsMode = state.mode === "tags";
@@ -9489,7 +9942,7 @@
     el("mode-note").hidden = cratesMode || historyMode;
     const filesMode = state.mode === "files";
     const snapshotsMode = state.mode === "snapshots";
-    const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || scanMode || bitrateMode || tagsMode;
+    const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || statsMode || scanMode || bitrateMode || tagsMode;
     el("browser").hidden = panelMode;
     el("track-splitter").hidden = panelMode;
     el("detail").hidden = panelMode;
@@ -9499,6 +9952,7 @@
     el("portable-panel").hidden = !portableMode;
     el("drift-panel").hidden = !driftMode;
     el("health-panel").hidden = !healthMode;
+    el("stats-panel").hidden = !statsMode;
     el("scan-panel").hidden = !scanMode;
     el("bitrate-panel").hidden = !bitrateMode;
     el("tags-panel").hidden = !tagsMode;
@@ -9525,6 +9979,10 @@
     }
     if (healthMode) {
       el("mode-note").textContent = t("mode.health");
+      document.querySelector(".rules")?.remove();
+    }
+    if (statsMode) {
+      el("mode-note").textContent = t("mode.stats");
       document.querySelector(".rules")?.remove();
     }
     if (scanMode) {
@@ -9575,7 +10033,7 @@
       el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : crate?.name ?? t("crates.selectedCrate");
       return;
     }
-    if (tagsMode) {
+    if (tagsMode || statsMode) {
       el("crate-foot").textContent = t("gig.wholeSpace");
       return;
     }
@@ -10816,6 +11274,7 @@
     if (mode === "portable") loadPortableView().catch(showPortableFailure);
     if (mode === "drift") loadDrift().catch(showDriftFailure);
     if (mode === "health") loadHealth().catch(showHealthFailure);
+    if (mode === "stats") loadHistoryStats().catch(showHistoryStatsFailure);
     if (mode === "scan") loadScan("quick").catch(showScanFailure);
     if (mode === "bitrate") loadBitrate().catch(showBitrateFailure);
     if (mode === "tags") loadTags().catch(showTagsFailure);
@@ -11393,6 +11852,7 @@
       if (state.mode === "portable") jobs.push(loadPortableView().catch(showPortableFailure));
       if (state.mode === "drift") jobs.push(loadDrift().catch(showDriftFailure));
       if (state.mode === "health") jobs.push(loadHealth().catch(showHealthFailure));
+      if (state.mode === "stats") jobs.push(loadHistoryStats().catch(showHistoryStatsFailure));
       if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
       if (state.mode === "bitrate") jobs.push(loadBitrate().catch(showBitrateFailure));
       if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
@@ -11431,6 +11891,7 @@
         if (state.mode === "portable") return loadPortableView().catch(showPortableFailure);
         if (state.mode === "drift") return loadDrift().catch(showDriftFailure);
         if (state.mode === "health") return loadHealth().catch(showHealthFailure);
+        if (state.mode === "stats") return loadHistoryStats().catch(showHistoryStatsFailure);
         if (state.mode === "scan") return loadScan().catch(showScanFailure);
         if (state.mode === "bitrate") return loadBitrate().catch(showBitrateFailure);
         if (state.mode === "tags") return loadTags().catch(showTagsFailure);
@@ -13755,7 +14216,7 @@
 
   // src/update.ts
   var UPDATE_CHOICE_EVENT = "serato-update-choice";
-  var latest8 = null;
+  var latest9 = null;
   var dismissed = false;
   var token2 = 0;
   var wired2 = false;
@@ -13787,15 +14248,15 @@
       const response = await fetch("/api/update");
       const body = response.ok ? await response.json() : null;
       if (mine !== token2) return;
-      latest8 = parseUpdateStatus(body);
+      latest9 = parseUpdateStatus(body);
     } catch {
       if (mine !== token2) return;
-      latest8 = null;
+      latest9 = null;
     }
     paintUpdate();
   }
   function paintUpdate() {
-    const status = latest8;
+    const status = latest9;
     const toggle = el("update-toggle");
     const pre = el("update-prereleases");
     toggle.checked = status?.enabled === true;
@@ -13862,7 +14323,7 @@
     }
   }
   async function skip() {
-    const release = latest8?.latest;
+    const release = latest9?.latest;
     if (!release) return;
     try {
       await postJSON("/api/update", { skip: release.version });
@@ -13962,6 +14423,7 @@
     if (state.mode === "gig") repaintGig();
     if (state.mode === "drift") repaintDrift();
     if (state.mode === "health") repaintHealth();
+    if (state.mode === "stats") repaintHistoryStats();
     if (state.mode === "scan") repaintScan();
     if (state.mode === "bitrate") repaintBitrate();
     if (state.mode === "tags") repaintTags();
@@ -14238,6 +14700,7 @@
   var VIEWS = {
     "view-crates": "crates",
     "view-history": "history",
+    "view-stats": "stats",
     "view-files": "files",
     "view-missing": "missing",
     "view-duplicates": "duplicates",
@@ -14421,6 +14884,7 @@
     else setMode("crates");
   });
   wireDrift();
+  wireHistoryStats();
   wireScan();
   wireBitrate();
   wireTags();

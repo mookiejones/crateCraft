@@ -1921,20 +1921,31 @@ class Handler(BaseHTTPRequestHandler):
                     crate_compare.compare(Path(library.MASTER), space, crate_a, crate_b, subcrates=_flag(query, "subcrates"))
                 )
                 return
-            if parsed.path == "/api/history-stats":
+            if parsed.path in {"/api/history-stats", "/api/history-stats.csv"}:
                 space = require_space(query_text(query, "space"))
                 number = history_stats.number
-                self.send_json(
-                    history_stats.stats(
-                        Path(library.MASTER),
-                        space,
-                        start=number(query_text(query, "from"), None, 0, history_stats.TIME_MAX),
-                        end=number(query_text(query, "to"), None, 0, history_stats.TIME_MAX),
-                        top=number(query_text(query, "top"), history_stats.TOP, 1, history_stats.TOP_MAX) or history_stats.TOP,
-                        idle_days=number(query_text(query, "idle_days"), history_stats.IDLE_DAYS, 1, history_stats.IDLE_DAYS_MAX)
-                        or history_stats.IDLE_DAYS,
-                    )
+                report = history_stats.stats(
+                    Path(library.MASTER),
+                    space,
+                    start=number(query_text(query, "from"), None, 0, history_stats.TIME_MAX),
+                    end=number(query_text(query, "to"), None, 0, history_stats.TIME_MAX),
+                    top=number(query_text(query, "top"), history_stats.TOP, 1, history_stats.TOP_MAX) or history_stats.TOP,
+                    idle_days=number(query_text(query, "idle_days"), history_stats.IDLE_DAYS, 1, history_stats.IDLE_DAYS_MAX)
+                    or history_stats.IDLE_DAYS,
                 )
+                if parsed.path == "/api/history-stats.csv":
+                    body = history_stats.csv_text(report).encode("utf-8-sig")
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/csv; charset=utf-8")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.send_header(
+                        "Content-Disposition", "attachment; filename=play-stats.csv"
+                    )
+                    self.send_header("Cache-Control", "no-store")
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+                self.send_json(report)
                 return
             if parsed.path == "/api/bitrate-check":
                 space = require_space(query_text(query, "space"))
@@ -2134,12 +2145,14 @@ class Handler(BaseHTTPRequestHandler):
                     foldering = parsed.path == "/api/folder-sync"
                     clustering = parsed.path == "/api/tag-clusters"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
+                    history = parsed.path == "/api/history-stats"
                     preview = (
                         (merging and payload.get("preview") is True)
                         or (replacing and payload.get("preview") is True)
                         or (preset and payload.get("action") in ("preview", "list"))
                         or (tree and payload.get("action") == "preview")
                         or (foldering and payload.get("action") == "preview")
+                        or (history and payload.get("action") == "preview")
                         or (
                             clustering
                             and payload.get("action")
@@ -2192,6 +2205,12 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = folder_sync.action(request)
+                    elif history:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = history_stats.action(request)
+                        if request.get("action") == "create" and result.get("written"):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif clustering:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

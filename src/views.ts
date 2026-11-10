@@ -1,5 +1,5 @@
 /**
- * Crates, history, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, files, tempo drift, and the portable drive check.
+ * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, files, tempo drift, and the portable drive check.
  *
  * The functions paint from state and the elements in index.html. Nothing
  * in this module runs a request when the file is imported. Listeners are
@@ -30,6 +30,7 @@ import { clockLabel, colorHex, compare, durationLabel, isNumericSort, sizeLabel 
 import { loadGigCheck, showGigFailure } from "./gig";
 import { loadDrift, showDriftFailure } from "./drift";
 import { loadHealth, showHealthFailure } from "./health";
+import { loadHistoryStats, showHistoryStatsFailure } from "./history-stats";
 import { loadScan, showScanFailure } from "./scan";
 import { loadBitrate, showBitrateFailure } from "./bitrate";
 import { loadTags, showTagsFailure } from "./tags";
@@ -617,6 +618,7 @@ export function renderShell() {
   const portableMode = state.mode === "portable";
   const driftMode = state.mode === "drift";
   const healthMode = state.mode === "health";
+  const statsMode = state.mode === "stats";
   const scanMode = state.mode === "scan";
   const bitrateMode = state.mode === "bitrate";
   const tagsMode = state.mode === "tags";
@@ -632,7 +634,7 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || scanMode || bitrateMode || tagsMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || statsMode || scanMode || bitrateMode || tagsMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
@@ -642,6 +644,7 @@ export function renderShell() {
   el("portable-panel").hidden = !portableMode;
   el("drift-panel").hidden = !driftMode;
   el("health-panel").hidden = !healthMode;
+  el("stats-panel").hidden = !statsMode;
   el("scan-panel").hidden = !scanMode;
   el("bitrate-panel").hidden = !bitrateMode;
   el("tags-panel").hidden = !tagsMode;
@@ -670,6 +673,10 @@ export function renderShell() {
   }
   if (healthMode) {
     el("mode-note").textContent = t("mode.health");
+    document.querySelector(".rules")?.remove();
+  }
+  if (statsMode) {
+    el("mode-note").textContent = t("mode.stats");
     document.querySelector(".rules")?.remove();
   }
   if (scanMode) {
@@ -722,7 +729,7 @@ export function renderShell() {
     el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : (crate?.name ?? t("crates.selectedCrate"));
     return;
   }
-  if (tagsMode) {
+  if (tagsMode || statsMode) {
     el("crate-foot").textContent = t("gig.wholeSpace");
     return;
   }
@@ -2537,7 +2544,7 @@ export async function loadLibrary() {
 }
 
 /**
- * Switch among crates, history, missing, duplicates, stems, library
+ * Switch among crates, history, play stats, missing, duplicates, stems, library
  * health, damaged files, suspect quality, tag spellings, files, snapshots, gig, Check drive, and tempo drift.
  *
  * History sorts by start time descending and loads sessions once.
@@ -2573,6 +2580,7 @@ export function setMode(mode: string) {
   if (mode === "portable") loadPortableView().catch(showPortableFailure);
   if (mode === "drift") loadDrift().catch(showDriftFailure);
   if (mode === "health") loadHealth().catch(showHealthFailure);
+  if (mode === "stats") loadHistoryStats().catch(showHistoryStatsFailure);
   if (mode === "scan") loadScan("quick").catch(showScanFailure);
   if (mode === "bitrate") loadBitrate().catch(showBitrateFailure);
   if (mode === "tags") loadTags().catch(showTagsFailure);
@@ -3423,6 +3431,7 @@ export function wireLibrary(): void {
     if (state.mode === "portable") jobs.push(loadPortableView().catch(showPortableFailure));
     if (state.mode === "drift") jobs.push(loadDrift().catch(showDriftFailure));
     if (state.mode === "health") jobs.push(loadHealth().catch(showHealthFailure));
+    if (state.mode === "stats") jobs.push(loadHistoryStats().catch(showHistoryStatsFailure));
     if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
     if (state.mode === "bitrate") jobs.push(loadBitrate().catch(showBitrateFailure));
     if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
@@ -3464,6 +3473,7 @@ export function wireLibrary(): void {
       if (state.mode === "portable") return loadPortableView().catch(showPortableFailure);
       if (state.mode === "drift") return loadDrift().catch(showDriftFailure);
       if (state.mode === "health") return loadHealth().catch(showHealthFailure);
+      if (state.mode === "stats") return loadHistoryStats().catch(showHistoryStatsFailure);
       if (state.mode === "scan") return loadScan().catch(showScanFailure);
       if (state.mode === "bitrate") return loadBitrate().catch(showBitrateFailure);
       if (state.mode === "tags") return loadTags().catch(showTagsFailure);

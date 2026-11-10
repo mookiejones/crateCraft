@@ -251,6 +251,50 @@ export interface HistoryPayload {
   error?: string;
 }
 
+export interface HistoryStatsTrack {
+  asset_id?: number | null;
+  id?: number;
+  name?: string;
+  artist?: string;
+  plays?: number;
+  last_played?: number | null;
+  added?: number | null;
+  play_count?: number;
+}
+
+export interface HistoryStatsArtist {
+  artist?: string;
+  plays?: number;
+  tracks?: number;
+  last_played?: number | null;
+}
+
+export interface HistoryStatsReport {
+  from?: number | null;
+  to?: number | null;
+  plays?: number;
+  sessions?: number;
+  top_tracks?: HistoryStatsTrack[];
+  top_artists?: HistoryStatsArtist[];
+  idle_days?: number;
+  not_played?: HistoryStatsTrack[];
+  not_played_count?: number;
+  error?: string;
+  code?: string;
+}
+
+export interface HistoryIdleCrate {
+  preview?: boolean;
+  written?: boolean;
+  name?: string;
+  idle_days?: number;
+  count?: number;
+  id?: number;
+  tracks?: HistoryStatsTrack[];
+  warning?: string;
+  error?: string;
+}
+
 export interface FileEntry {
   name: string;
   kind: string;

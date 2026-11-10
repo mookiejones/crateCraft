@@ -11,6 +11,7 @@ import { repaintDialogs } from "./dialogs";
 import { repaintGig } from "./gig";
 import { repaintDrift } from "./drift";
 import { repaintHealth } from "./health";
+import { repaintHistoryStats } from "./history-stats";
 import { repaintScan } from "./scan";
 import { repaintBitrate } from "./bitrate";
 import { repaintTags } from "./tags";
@@ -42,6 +43,7 @@ export function repaintAll(): void {
   if (state.mode === "gig") repaintGig();
   if (state.mode === "drift") repaintDrift();
   if (state.mode === "health") repaintHealth();
+  if (state.mode === "stats") repaintHistoryStats();
   if (state.mode === "scan") repaintScan();
   if (state.mode === "bitrate") repaintBitrate();
   if (state.mode === "tags") repaintTags();

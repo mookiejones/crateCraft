@@ -2,7 +2,7 @@
 <!--
   crateCraft page.
 
-  One screen: the space menu, grouped views, the crate or history rail,
+  One screen: the space menu, grouped views, the crate, history, or play-stats rail,
   a virtualized track list, the detail pane, and a player bar. The Duplicates view can
   merge a group into the copy you keep. Export writes an M3U playlist.
   Rekordbox writes rekordbox.xml. The Files view browses folders
@@ -49,6 +49,7 @@
           <div class="view-group-tabs" role="tablist" aria-labelledby="view-group-library">
             <button type="button" data-view="crates" role="tab" data-i18n="view.crates">Crates</button>
             <button type="button" data-view="history" role="tab" data-i18n="view.history">History</button>
+            <button type="button" id="stats-tab" data-view="stats" role="tab" aria-controls="stats-panel" data-i18n="view.stats">Play stats</button>
             <button type="button" data-view="files" role="tab" data-i18n="view.files">Organize files</button>
           </div>
         </section>
@@ -270,6 +271,40 @@
         <div id="drift-report" class="gig-report" tabindex="-1"></div>
       </section>
 
+      <section id="stats-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="stats-heading" aria-busy="false">
+        <h2 id="stats-heading" class="visually-hidden" data-i18n="stats.heading">Play stats</h2>
+        <div class="browser-bar">
+          <p id="stats-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <label class="stats-field">
+            <span data-i18n="stats.period">Period</span>
+            <select id="stats-period">
+              <option value="all" data-i18n="stats.period.all">All time</option>
+              <option value="7" data-i18n="stats.period.7">Last 7 days</option>
+              <option value="30" data-i18n="stats.period.30">Last 30 days</option>
+              <option value="90" data-i18n="stats.period.90">Last 90 days</option>
+              <option value="365" data-i18n="stats.period.365">Last 365 days</option>
+              <option value="custom" data-i18n="stats.period.custom">Custom dates</option>
+            </select>
+          </label>
+          <label class="stats-field">
+            <span data-i18n="stats.from">From</span>
+            <input id="stats-from" type="date">
+          </label>
+          <label class="stats-field">
+            <span data-i18n="stats.to">To</span>
+            <input id="stats-to" type="date">
+          </label>
+          <label class="stats-field">
+            <span data-i18n="stats.idleDays">Idle days</span>
+            <input id="stats-idle-days" type="number" min="1" max="3650" value="365" inputmode="numeric">
+          </label>
+          <button id="stats-refresh" type="button" data-i18n="stats.show">Show</button>
+          <button id="stats-csv" type="button" data-i18n="stats.csv">Download CSV</button>
+        </div>
+        <p id="stats-hint" class="gig-note" data-i18n="stats.intro">Most played tracks and artists in a period. The idle list can become a crate. Serato must be quit. This report does not change the library until you confirm the crate.</p>
+        <p id="stats-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="stats-report" class="gig-report" tabindex="-1"></div>
+      </section>
       <section id="health-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="health-heading" aria-busy="false">
         <h2 id="health-heading" class="visually-hidden" data-i18n="health.heading">Library health</h2>
         <div class="browser-bar">
