@@ -1,10 +1,11 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. Waveform zoom and overview are another.
- * Files is a third. Each has its own context file and one wrapper here.
- * This module reads those stores; it does not own playback or the folder
- * load.
+ * Player is one domain. Waveform zoom and overview are another. Before
+ * a gig (gig check and Tempo drift) is a third. Files is a fourth.
+ * Later screens add their own context file and one wrapper here. This
+ * module reads those engines; it does not own fetch, playback, or the
+ * folder load.
  */
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -14,6 +15,10 @@ import {
   FilesProvider as FilesContextProvider,
   type FilesContextValue,
 } from "../context/FilesContext";
+import {
+  GigStateProvider,
+  type GigContextValue,
+} from "../context/GigContext";
 import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
@@ -49,6 +54,14 @@ import {
   toggleFile,
   toggleFilesElsewhere,
 } from "../files";
+import {
+  backGigStep,
+  exitGigCheck,
+  getGigSnapshot,
+  nextGigStep,
+  subscribeGig,
+} from "../gig";
+import { getDriftSnapshot, subscribeDrift } from "../drift";
 import { LOCALE_EVENT } from "../i18n";
 import {
   SEEK_STEP_LARGE_SECONDS,
@@ -95,6 +108,16 @@ function readPlayerValue(): PlayerContextValue {
     formatTime: formatPlayerTime,
     seekStep: SEEK_STEP_SECONDS,
     seekStepLarge: SEEK_STEP_LARGE_SECONDS,
+  };
+}
+
+function readGigValue(): GigContextValue {
+  return {
+    gig: getGigSnapshot(),
+    drift: getDriftSnapshot(),
+    nextStep: nextGigStep,
+    backStep: backGigStep,
+    exit: exitGigCheck,
   };
 }
 
@@ -189,6 +212,33 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Mount the Before a gig domain at the root of one React island.
+ *
+ * Updates are flushed so existing tests see the report in the same turn
+ * as the engine change.
+ *
+ * @param children Island that calls `useGig`.
+ */
+export function GigProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readGigValue);
+  useEffect(() => {
+    const refresh = () => {
+      flushSync(() => {
+        setValue(readGigValue());
+      });
+    };
+    const stopGig = subscribeGig(refresh);
+    const stopDrift = subscribeDrift(refresh);
+    return () => {
+      stopGig();
+      stopDrift();
+    };
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <GigStateProvider value={current}>{children}</GigStateProvider>;
+}
+
+/**
  * Mount the Files domain at the root of one React island.
  *
  * Updates are flushed so existing tests see the folder in the same turn
@@ -226,7 +276,7 @@ export function FilesProvider({ children }: { children: ReactNode }) {
  * Nest every domain provider.
  *
  * Player is the first domain. Waveform zoom and overview wrap inside it.
- * Files is the third. A later screen adds one line here.
+ * Before a gig wraps inside waveform. Files wraps inside Before a gig.
  *
  * @param children Page island.
  */
@@ -234,7 +284,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
       <WaveformProvider>
-        <FilesProvider>{children}</FilesProvider>
+        <GigProvider>
+          <FilesProvider>{children}</FilesProvider>
+        </GigProvider>
       </WaveformProvider>
     </PlayerProvider>
   );
