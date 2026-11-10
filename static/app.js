@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners2 = [], signal = this.signal = {
+        var listeners3 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners2.push(listener);
+            listeners3.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners2.forEach(function(listener) {
+          listeners3.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners2 = currentEntangledListeners;
+          var listeners3 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])();
+          for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners2 = [], thenableWithOverride = {
+        var listeners3 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners2.push(resolve);
+            listeners3.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])(result);
+            for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners2.length; error2++)
-              (0, listeners2[error2])(void 0);
+            for (error2 = 0; error2 < listeners3.length; error2++)
+              (0, listeners3[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners2 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners3 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners2.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners3.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners2.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners3.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners2;
+          if (3 === targetFiber.tag) return listeners3;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners2 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners3 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners2.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners3.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners2.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners3.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners2.length && dispatchQueue.push({ event, listeners: listeners2 });
+        0 !== listeners3.length && dispatchQueue.push({ event, listeners: listeners3 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners2 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners2, type, listener, optionsOrUseCapture)) {
+        var listeners3 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners3, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners2.push({
+          listeners3.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners2;
+        this._eventListeners = listeners3;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners2 = this._eventListeners;
-        if (null !== listeners2 && (listener = indexOfEventListener(
-          listeners2,
+        var listeners3 = this._eventListeners;
+        if (null !== listeners3 && (listener = indexOfEventListener(
+          listeners3,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners2[listener];
+          var _listeners$index = listeners3[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners2.splice(listener, 1);
+          listeners3.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -18545,8 +18545,8 @@
   function keepCopy(name) {
     return spec("tooltip.keepCopy", { name });
   }
-  function quickOpenHit(kind2, title2, detail) {
-    if (detail) return spec("tooltip.quickOpenHitDetail", { kind: kind2, title: title2, detail });
+  function quickOpenHit(kind2, title2, detail2) {
+    if (detail2) return spec("tooltip.quickOpenHitDetail", { kind: kind2, title: title2, detail: detail2 });
     return spec("tooltip.quickOpenHit", { kind: kind2, title: title2 });
   }
 
@@ -18598,6 +18598,11 @@
     writeTooltip(element);
     element.removeAttribute("title");
     if (current === element) syncOpenTooltip();
+  }
+  function tooltipRef(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
   }
   function buttonEl(spec2) {
     const element = document.createElement("button");
@@ -19885,14 +19890,14 @@
       }
       report.append(diffs);
     }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "tags-actions";
     const apply = buttonEl(tips.tagsApplyTitles);
     apply.dataset.tagsAction = "clean-apply";
     apply.textContent = t("tags.apply");
     apply.disabled = !canApplyTitles(plan);
-    actions2.append(apply);
-    report.append(actions2);
+    actions3.append(apply);
+    report.append(actions3);
   }
   function repaintTags() {
     setField(currentField());
@@ -20094,14 +20099,14 @@
       }
       wrap.append(diffs);
     }
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "tags-actions";
     const apply = buttonEl(tips.tagsApplyMappings);
     apply.dataset.tagsAction = "refresh-apply";
     apply.textContent = t("tags.applyMappings");
     apply.disabled = !canApplyMappings(plan);
-    actions2.append(apply);
-    wrap.append(actions2);
+    actions3.append(apply);
+    wrap.append(actions3);
     return wrap;
   }
   function failStatus5(message) {
@@ -20186,8 +20191,8 @@
     return row;
   }
   function groupActions(key, value, plan) {
-    const actions2 = document.createElement("div");
-    actions2.className = "tags-actions";
+    const actions3 = document.createElement("div");
+    actions3.className = "tags-actions";
     const preview = buttonEl(tips.tagsPreview);
     preview.dataset.tagsAction = "preview";
     preview.dataset.key = key;
@@ -20199,8 +20204,8 @@
     apply.textContent = t("tags.apply");
     apply.disabled = !canApply(key);
     if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
-    actions2.append(preview, apply);
-    return actions2;
+    actions3.append(preview, apply);
+    return actions3;
   }
 
   // src/portable.ts
@@ -20397,235 +20402,6 @@
     return body;
   }
 
-  // src/beatgrid-view.ts
-  var GRID_WARNING_KEYS = {
-    beatgrid_too_short: "markers.gridTooShort",
-    beatgrid_version: "markers.gridVersion",
-    beatgrid_empty: "markers.gridEmpty",
-    beatgrid_too_many: "markers.gridTooMany",
-    beatgrid_truncated: "markers.gridTruncated"
-  };
-  function beatgridViewOnly(unavailable) {
-    return unavailable !== true;
-  }
-  function beatgridIsSuspect(code) {
-    return typeof code === "string" && code !== "";
-  }
-  function beatgridWarningKey(code) {
-    if (!beatgridIsSuspect(code) || code == null) return null;
-    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
-      return GRID_WARNING_KEYS[code];
-    }
-    return "markers.gridUnknown";
-  }
-  function beatSeconds(value) {
-    if (value === "" || value == null) return "";
-    const number = Number(value);
-    if (!Number.isFinite(number)) return "";
-    return `${number.toFixed(3)}s`;
-  }
-  function appendBeatgrid(section, track) {
-    if (!beatgridViewOnly(track.markers_unavailable)) return;
-    const heading2 = document.createElement("h4");
-    heading2.textContent = t("markers.gridHeading");
-    section.append(heading2);
-    const viewOnly = document.createElement("p");
-    viewOnly.className = "detail-kicker";
-    viewOnly.textContent = t("markers.gridViewOnly");
-    section.append(viewOnly);
-    if (beatgridIsSuspect(track.beatgrid_warning_code)) {
-      const warn = document.createElement("p");
-      warn.className = "detail-kicker warn";
-      warn.setAttribute("role", "status");
-      const key = beatgridWarningKey(track.beatgrid_warning_code);
-      const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
-      warn.textContent = t("markers.gridSuspect", { reason });
-      section.append(warn);
-    } else if (!(track.beatgrid && track.beatgrid.length > 0)) {
-      const empty = document.createElement("p");
-      empty.className = "detail-kicker";
-      empty.textContent = t("markers.gridNone");
-      section.append(empty);
-    }
-    for (const mark of track.beatgrid || []) {
-      section.append(paintBeatMarker(mark));
-    }
-  }
-  function paintBeatMarker(mark) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const time = document.createElement("span");
-    time.textContent = beatSeconds(mark.position);
-    const name = document.createElement("span");
-    const bpmNumber = Number(mark.bpm);
-    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
-      name.textContent = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
-    } else if (mark.beats != null) {
-      name.textContent = t("markers.beats", { count: Number(mark.beats) });
-    } else {
-      name.textContent = "";
-    }
-    row.append(document.createElement("span"), document.createElement("span"), time, name);
-    return row;
-  }
-
-  // src/cue-view.ts
-  var CUE_SLOT_COUNT = 8;
-  function cueSlotVar(index) {
-    return `var(--cue-slot-${index + 1})`;
-  }
-  var CUE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
-  function isCueColor(value) {
-    return CUE_COLOR.test(value);
-  }
-  function slotColor(index, stored) {
-    if (typeof stored === "string" && isCueColor(stored)) return stored;
-    if (Number.isInteger(index) && index >= 0 && index < CUE_SLOT_COUNT) {
-      return cueSlotVar(index);
-    }
-    return "";
-  }
-  function cueSlots(cues2) {
-    const slots = Array.from({ length: CUE_SLOT_COUNT }, () => null);
-    if (!cues2) return slots;
-    for (const cue of cues2) {
-      const index = Number(cue.index);
-      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) continue;
-      if (slots[index] == null) slots[index] = cue;
-    }
-    return slots;
-  }
-  function extraCues(cues2) {
-    if (!cues2) return [];
-    const seen = /* @__PURE__ */ new Set();
-    const extra = [];
-    for (const cue of cues2) {
-      const index = Number(cue.index);
-      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) {
-        extra.push(cue);
-        continue;
-      }
-      if (seen.has(index)) extra.push(cue);
-      else seen.add(index);
-    }
-    return extra;
-  }
-  function formatCueTime(value) {
-    const total = Number(value) / 1e3;
-    const minutes = Math.floor(total / 60);
-    return `${minutes}:${(total - minutes * 60).toFixed(3).padStart(6, "0")}`;
-  }
-  function cuesFromFrame(value) {
-    if (value == null || Array.isArray(value)) return [];
-    return Array.isArray(value.cues) ? value.cues : [];
-  }
-  function cueSummary(cue, empty) {
-    if (!cue) return empty;
-    const named = typeof cue.name === "string" ? cue.name.trim() : "";
-    const time = formatCueTime(cue.start_ms);
-    return named ? `${time} ${named}` : time;
-  }
-  function cueDiffRows(before, after) {
-    const beforeCues = cuesFromFrame(before);
-    const afterCues = cuesFromFrame(after);
-    const beforeSlots = cueSlots(beforeCues);
-    const afterSlots = cueSlots(afterCues);
-    const diffs = [];
-    for (let slot = 0; slot < CUE_SLOT_COUNT; slot += 1) {
-      const left = beforeSlots[slot] ?? null;
-      const right = afterSlots[slot] ?? null;
-      if (cueSignature(left) === cueSignature(right)) continue;
-      diffs.push({ slot, before: left, after: right });
-    }
-    const beforeExtra = extraCues(beforeCues);
-    const afterExtra = extraCues(afterCues);
-    const indexes = /* @__PURE__ */ new Set();
-    for (const cue of [...beforeExtra, ...afterExtra]) {
-      const index = Number(cue.index);
-      if (Number.isInteger(index)) indexes.add(index);
-    }
-    const sorted = [...indexes].sort((left, right) => left - right);
-    for (const index of sorted) {
-      const left = beforeExtra.find((cue) => Number(cue.index) === index) ?? null;
-      const right = afterExtra.find((cue) => Number(cue.index) === index) ?? null;
-      if (cueSignature(left) === cueSignature(right)) continue;
-      diffs.push({ slot: index, before: left, after: right });
-    }
-    return diffs;
-  }
-  function appendCueSlots(section, cues2) {
-    const slots = cueSlots(cues2);
-    for (let slot = 0; slot < slots.length; slot += 1) {
-      section.append(paintCueSlot(slot, slots[slot] ?? null));
-    }
-    for (const extra of extraCues(cues2)) {
-      const index = Number(extra.index);
-      const slot = Number.isInteger(index) ? index : -1;
-      section.append(paintCueSlot(slot, extra));
-    }
-  }
-  function paintCueSlot(slot, cue) {
-    const row = document.createElement("div");
-    row.className = cue ? "marker" : "marker marker-empty";
-    const number = document.createElement("span");
-    number.className = "marker-slot";
-    number.textContent = slot >= 0 ? String(slot + 1) : "";
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    const color = slotColor(slot, cue?.color);
-    if (color) swatch.style.background = color;
-    const time = document.createElement("span");
-    time.textContent = cue ? formatCueTime(cue.start_ms) : "—";
-    const name = document.createElement("span");
-    const named = cue && typeof cue.name === "string" ? cue.name.trim() : "";
-    if (cue) {
-      name.textContent = named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 });
-    } else {
-      name.textContent = t("markers.cueEmpty");
-    }
-    row.append(number, swatch, time, name);
-    return row;
-  }
-  function paintCueDiffRow(diff) {
-    const row = document.createElement("p");
-    row.className = "cue-diff";
-    const empty = t("markers.cueEmpty");
-    const beforeText = cueSummary(diff.before, empty);
-    const afterText = cueSummary(diff.after, empty);
-    row.setAttribute(
-      "aria-label",
-      `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`
-    );
-    const number = document.createElement("span");
-    number.className = "marker-slot";
-    number.textContent = String(diff.slot + 1);
-    const arrow = document.createElement("span");
-    arrow.className = "cue-diff-arrow";
-    arrow.setAttribute("aria-hidden", "true");
-    arrow.textContent = "→";
-    row.append(number, paintCueSide(diff.before, diff.slot), arrow, paintCueSide(diff.after, diff.slot));
-    return row;
-  }
-  function cueSignature(cue) {
-    if (!cue) return "";
-    const start = Number(cue.start_ms);
-    const color = typeof cue.color === "string" ? cue.color : "";
-    const name = typeof cue.name === "string" ? cue.name : "";
-    return `${start}\0${color}\0${name}`;
-  }
-  function paintCueSide(cue, slot) {
-    const side = document.createElement("span");
-    side.className = cue ? "cue-diff-side" : "cue-diff-side marker-empty";
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    const color = slotColor(slot, cue?.color);
-    if (color) swatch.style.background = color;
-    const text2 = document.createElement("span");
-    text2.textContent = cueSummary(cue, t("markers.cueEmpty"));
-    side.append(swatch, text2);
-    return side;
-  }
-
   // src/folder-sync-view.ts
   function syncFolderSyncButton() {
     const id = state.activeCrate;
@@ -20730,6 +20506,130 @@
     el("crate-refresh").disabled = !state.writable || !preset;
   }
 
+  // src/cue-view.ts
+  var CUE_SLOT_COUNT = 8;
+  function cueSlotVar(index) {
+    return `var(--cue-slot-${index + 1})`;
+  }
+  var CUE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+  function isCueColor(value) {
+    return CUE_COLOR.test(value);
+  }
+  function slotColor(index, stored) {
+    if (typeof stored === "string" && isCueColor(stored)) return stored;
+    if (Number.isInteger(index) && index >= 0 && index < CUE_SLOT_COUNT) {
+      return cueSlotVar(index);
+    }
+    return "";
+  }
+  function cueSlots(cues2) {
+    const slots = Array.from({ length: CUE_SLOT_COUNT }, () => null);
+    if (!cues2) return slots;
+    for (const cue of cues2) {
+      const index = Number(cue.index);
+      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) continue;
+      if (slots[index] == null) slots[index] = cue;
+    }
+    return slots;
+  }
+  function extraCues(cues2) {
+    if (!cues2) return [];
+    const seen = /* @__PURE__ */ new Set();
+    const extra = [];
+    for (const cue of cues2) {
+      const index = Number(cue.index);
+      if (!Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT) {
+        extra.push(cue);
+        continue;
+      }
+      if (seen.has(index)) extra.push(cue);
+      else seen.add(index);
+    }
+    return extra;
+  }
+  function formatCueTime(value) {
+    const total = Number(value) / 1e3;
+    const minutes = Math.floor(total / 60);
+    return `${minutes}:${(total - minutes * 60).toFixed(3).padStart(6, "0")}`;
+  }
+  function cuesFromFrame(value) {
+    if (value == null || Array.isArray(value)) return [];
+    return Array.isArray(value.cues) ? value.cues : [];
+  }
+  function cueSummary(cue, empty) {
+    if (!cue) return empty;
+    const named = typeof cue.name === "string" ? cue.name.trim() : "";
+    const time = formatCueTime(cue.start_ms);
+    return named ? `${time} ${named}` : time;
+  }
+  function cueDiffRows(before, after) {
+    const beforeCues = cuesFromFrame(before);
+    const afterCues = cuesFromFrame(after);
+    const beforeSlots = cueSlots(beforeCues);
+    const afterSlots = cueSlots(afterCues);
+    const diffs = [];
+    for (let slot = 0; slot < CUE_SLOT_COUNT; slot += 1) {
+      const left = beforeSlots[slot] ?? null;
+      const right = afterSlots[slot] ?? null;
+      if (cueSignature(left) === cueSignature(right)) continue;
+      diffs.push({ slot, before: left, after: right });
+    }
+    const beforeExtra = extraCues(beforeCues);
+    const afterExtra = extraCues(afterCues);
+    const indexes = /* @__PURE__ */ new Set();
+    for (const cue of [...beforeExtra, ...afterExtra]) {
+      const index = Number(cue.index);
+      if (Number.isInteger(index)) indexes.add(index);
+    }
+    const sorted = [...indexes].sort((left, right) => left - right);
+    for (const index of sorted) {
+      const left = beforeExtra.find((cue) => Number(cue.index) === index) ?? null;
+      const right = afterExtra.find((cue) => Number(cue.index) === index) ?? null;
+      if (cueSignature(left) === cueSignature(right)) continue;
+      diffs.push({ slot: index, before: left, after: right });
+    }
+    return diffs;
+  }
+  function paintCueDiffRow(diff) {
+    const row = document.createElement("p");
+    row.className = "cue-diff";
+    const empty = t("markers.cueEmpty");
+    const beforeText = cueSummary(diff.before, empty);
+    const afterText = cueSummary(diff.after, empty);
+    row.setAttribute(
+      "aria-label",
+      `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`
+    );
+    const number = document.createElement("span");
+    number.className = "marker-slot";
+    number.textContent = String(diff.slot + 1);
+    const arrow = document.createElement("span");
+    arrow.className = "cue-diff-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+    row.append(number, paintCueSide(diff.before, diff.slot), arrow, paintCueSide(diff.after, diff.slot));
+    return row;
+  }
+  function cueSignature(cue) {
+    if (!cue) return "";
+    const start = Number(cue.start_ms);
+    const color = typeof cue.color === "string" ? cue.color : "";
+    const name = typeof cue.name === "string" ? cue.name : "";
+    return `${start}\0${color}\0${name}`;
+  }
+  function paintCueSide(cue, slot) {
+    const side = document.createElement("span");
+    side.className = cue ? "cue-diff-side" : "cue-diff-side marker-empty";
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    const color = slotColor(slot, cue?.color);
+    if (color) swatch.style.background = color;
+    const text2 = document.createElement("span");
+    text2.textContent = cueSummary(cue, t("markers.cueEmpty"));
+    side.append(swatch, text2);
+    return side;
+  }
+
   // src/restore.ts
   var reloadLibrary = async () => {
   };
@@ -20827,14 +20727,14 @@
       card.setAttribute("role", "listitem");
       const title2 = document.createElement("p");
       title2.textContent = `${item4.created || t("snapshots.unknownTime")} · ${item4.trigger || t("snapshots.trigger")}`;
-      const detail = document.createElement("p");
+      const detail2 = document.createElement("p");
       const version = item4.serato_version && item4.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item4.serato_version, build: String(item4.serato_build ?? "") }) : t("snapshots.seratoUnknown");
       const drives = (item4.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item4.unavailable_drives || []) })}` : "";
-      detail.textContent = `${version}. ${item4.reason || ""}${drives}`;
+      detail2.textContent = `${version}. ${item4.reason || ""}${drives}`;
       const restore = buttonEl(tips.reviewRestore);
       restore.textContent = t("snapshots.reviewRestore");
       restore.addEventListener("click", () => openSnapshotPlan(item4.id).catch((error2) => setSnapshotDialogStatus(failureOf(error2).message)));
-      card.append(title2, detail, restore);
+      card.append(title2, detail2, restore);
       list.append(card);
     }
   }
@@ -20920,16 +20820,16 @@
     });
     card.append(title2);
     if (item4.snapshot_before && item4.snapshot_after) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.snapshots", {
+      const detail2 = document.createElement("p");
+      detail2.textContent = t("operations.snapshots", {
         before: item4.snapshot_before,
         after: item4.snapshot_after
       });
-      card.append(detail);
+      card.append(detail2);
     } else if (item4.snapshot_before) {
-      const detail = document.createElement("p");
-      detail.textContent = t("operations.beforeOnly", { before: item4.snapshot_before });
-      card.append(detail);
+      const detail2 = document.createElement("p");
+      detail2.textContent = t("operations.beforeOnly", { before: item4.snapshot_before });
+      card.append(detail2);
     }
     return card;
   }
@@ -21359,14 +21259,14 @@
   }
 
   // src/views.ts
-  var import_react6 = __toESM(require_react(), 1);
+  var import_react9 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom2 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
   var import_react_dom = __toESM(require_react_dom(), 1);
 
   // src/context/PlayerContext.tsx
@@ -21387,11 +21287,29 @@
     return value;
   }
 
+  // src/context/TrackListContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var TrackListContext = (0, import_react2.createContext)(null);
+  function TrackListProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(TrackListContext, { value, children });
+  }
+  function useTrackList() {
+    const value = (0, import_react2.useContext)(TrackListContext);
+    if (value === null) {
+      throw new Error("useTrackList must be used within TrackListProvider");
+    }
+    return value;
+  }
+
   // src/player.ts
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react2 = __toESM(require_react(), 1);
+  var import_react3 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -21458,8 +21376,8 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef(spec2) {
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -21486,25 +21404,25 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       "button",
       {
         type: "button",
-        ref: tooltipRef(spec2),
+        ref: tooltipRef2(spec2),
         className,
         disabled,
         "aria-label": labelled,
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef2(spec2) {
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  function tooltipRef3(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
     };
@@ -21515,11 +21433,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
         "button",
         {
           type: "button",
@@ -21539,7 +21457,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react2.useState)(null);
+    const [hold, setHold] = (0, import_react3.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -21566,18 +21484,18 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
-            ref: tooltipRef2(tips.previous),
+            ref: tooltipRef3(tips.previous),
             className: "player-toggle",
             disabled: !player2.canSkipPrevious,
             "aria-label": playerStrings.previous,
@@ -21585,12 +21503,12 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
-            ref: tooltipRef2(tips.next),
+            ref: tooltipRef3(tips.next),
             className: "player-toggle",
             disabled: !player2.canSkipNext,
             "aria-label": playerStrings.next,
@@ -21599,16 +21517,16 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "input",
             {
-              ref: tooltipRef2(tips.seek),
+              ref: tooltipRef3(tips.seek),
               type: "range",
               className: "player-range",
               min: 0,
@@ -21624,19 +21542,19 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "input",
           {
-            ref: tooltipRef2(tips.volume),
+            ref: tooltipRef3(tips.volume),
             type: "range",
             min: 0,
             max: 1,
@@ -21695,7 +21613,7 @@
     const end = HEADER_BYTES + detailBytes + overviewBytes + seratoBytes;
     if (end !== bytes.byteLength) return null;
     let offset = HEADER_BYTES;
-    const detail = bytes.slice(offset, offset + detailBytes);
+    const detail2 = bytes.slice(offset, offset + detailBytes);
     offset += detailBytes;
     const overview = bytes.slice(offset, offset + overviewBytes);
     offset += overviewBytes;
@@ -21707,7 +21625,7 @@
       sampleRate,
       pointsPerSecond: detailHzMilli / 1e3,
       durationMs,
-      detail,
+      detail: detail2,
       overview,
       serato,
       detailCount,
@@ -21853,8 +21771,8 @@
      * @param pointCount N.
      * @param pointsPerSecond Detail rate from the header. 150 in SWF1.
      */
-    constructor(detail, pointCount, pointsPerSecond) {
-      this.detail = detail;
+    constructor(detail2, pointCount, pointsPerSecond) {
+      this.detail = detail2;
       this.pointCount = pointCount;
       this.pointsPerSecond = pointsPerSecond;
     }
@@ -22003,7 +21921,7 @@
     const playX = Math.round(Math.min(width - 1, Math.max(0, xOf(playheadSeconds))));
     fillSpan(pixels, width, height, playX, playX + 1, 0, height, PLAYHEAD_COLOR, 1);
   }
-  function renderTile(detail, pointCount, pointsPerSecond, startSeconds, tileSeconds, width, height, dpr) {
+  function renderTile(detail2, pointCount, pointsPerSecond, startSeconds, tileSeconds, width, height, dpr) {
     const pixels = new Uint8ClampedArray(width * height * 4);
     fillBackground(pixels);
     let pointsRead = 0;
@@ -22026,12 +21944,12 @@
       for (let index = i0; index < i1; index += 1) {
         pointsRead += 1;
         const offset = index * 6;
-        lowPeak = Math.max(lowPeak, detail[offset] ?? 0);
-        lowRms = Math.max(lowRms, detail[offset + 1] ?? 0);
-        midPeak = Math.max(midPeak, detail[offset + 2] ?? 0);
-        midRms = Math.max(midRms, detail[offset + 3] ?? 0);
-        highPeak = Math.max(highPeak, detail[offset + 4] ?? 0);
-        highRms = Math.max(highRms, detail[offset + 5] ?? 0);
+        lowPeak = Math.max(lowPeak, detail2[offset] ?? 0);
+        lowRms = Math.max(lowRms, detail2[offset + 1] ?? 0);
+        midPeak = Math.max(midPeak, detail2[offset + 2] ?? 0);
+        midRms = Math.max(midRms, detail2[offset + 3] ?? 0);
+        highPeak = Math.max(highPeak, detail2[offset + 4] ?? 0);
+        highRms = Math.max(highRms, detail2[offset + 5] ?? 0);
       }
       paintColumn(pixels, x, width, height, 0, lowPeak, lowRms, midPeak, midRms, highPeak, highRms);
     }
@@ -22839,7 +22757,7 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react3.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react4.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -23005,8 +22923,80 @@
     return Boolean(rows2[index + delta]);
   }
 
+  // src/track-list-store.ts
+  var listeners2 = /* @__PURE__ */ new Set();
+  var detail = { kind: "none" };
+  var actions2 = {
+    selectTrack(id) {
+      void bridge.selectTrack(id);
+    },
+    selectEntry(id) {
+      bridge.selectEntry(id);
+    },
+    play,
+    async saveTrack() {
+    },
+    async revealTrack() {
+    },
+    async prepareTrack() {
+    },
+    async relocateTrack() {
+    },
+    async removeTrack() {
+    },
+    async setMembership() {
+      return false;
+    },
+    openInLibrary() {
+    },
+    setNotice() {
+    }
+  };
+  function duplicateGroupSelected() {
+    if (state.mode !== "duplicates" || state.selectedId == null) return false;
+    return (state.duplicateGroups || []).some((group) => (group.ids || []).includes(state.selectedId));
+  }
+  function readTrackList() {
+    return {
+      selectedId: state.selectedId,
+      mode: state.mode,
+      writable: state.writable,
+      splitCrates: state.splitCrates,
+      focusedPane: state.focusedPane,
+      view: state.view || [],
+      viewB: state.viewB || [],
+      crates: state.crates,
+      tracks: state.tracks,
+      space: state.space,
+      serato: state.serato,
+      duplicateGroupSelected: duplicateGroupSelected(),
+      duplicatesPending: state.mode === "duplicates" && !state.duplicateIds,
+      locale: getLocale(),
+      detail
+    };
+  }
+  function getTrackListActions() {
+    return actions2;
+  }
+  function registerTrackListActions(next2) {
+    actions2 = next2;
+  }
+  function setTrackDetail(next2) {
+    detail = next2;
+    emitTrackList();
+  }
+  function emitTrackList() {
+    for (const listener of listeners2) listener();
+  }
+  function subscribeTrackList(listener) {
+    listeners2.add(listener);
+    return () => {
+      listeners2.delete(listener);
+    };
+  }
+
   // src/app/providers.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -23026,33 +23016,955 @@
     };
   }
   function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react4.useState)(readPlayerValue);
-    (0, import_react4.useEffect)(() => {
+    const [value, setValue] = (0, import_react5.useState)(readPlayerValue);
+    (0, import_react5.useEffect)(() => {
       return subscribe(() => {
         (0, import_react_dom.flushSync)(() => {
           setValue(readPlayerValue());
         });
       });
     }, []);
-    const current2 = (0, import_react4.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider, { value: current2, children });
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider, { value: current2, children });
+  }
+  function readTrackListValue() {
+    return {
+      ...readTrackList(),
+      ...getTrackListActions()
+    };
+  }
+  function TrackListRoot({ children }) {
+    const [value, setValue] = (0, import_react5.useState)(readTrackListValue);
+    (0, import_react5.useEffect)(() => {
+      return subscribeTrackList(() => {
+        (0, import_react_dom.flushSync)(() => {
+          setValue(readTrackListValue());
+        });
+      });
+    }, []);
+    const current2 = (0, import_react5.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(TrackListProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider2, { children });
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(TrackListRoot, { children }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node, existing) {
     const root = existing ?? (0, import_client.createRoot)(host);
     (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AppProviders, { children: node }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime6.jsx)(AppProviders, { children: node }));
     });
     return root;
   }
 
+  // src/components/TrackDetail.tsx
+  var import_react7 = __toESM(require_react(), 1);
+
+  // src/beatgrid-view.ts
+  var GRID_WARNING_KEYS = {
+    beatgrid_too_short: "markers.gridTooShort",
+    beatgrid_version: "markers.gridVersion",
+    beatgrid_empty: "markers.gridEmpty",
+    beatgrid_too_many: "markers.gridTooMany",
+    beatgrid_truncated: "markers.gridTruncated"
+  };
+  function beatgridViewOnly(unavailable) {
+    return unavailable !== true;
+  }
+  function beatgridIsSuspect(code) {
+    return typeof code === "string" && code !== "";
+  }
+  function beatgridWarningKey(code) {
+    if (!beatgridIsSuspect(code) || code == null) return null;
+    if (Object.hasOwn(GRID_WARNING_KEYS, code)) {
+      return GRID_WARNING_KEYS[code];
+    }
+    return "markers.gridUnknown";
+  }
+  function beatSeconds(value) {
+    if (value === "" || value == null) return "";
+    const number = Number(value);
+    if (!Number.isFinite(number)) return "";
+    return `${number.toFixed(3)}s`;
+  }
+
+  // src/components/BeatgridBlock.tsx
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  function BeatgridMarker({ mark }) {
+    const bpmNumber = Number(mark.bpm);
+    let name = "";
+    if (mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber)) {
+      name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) });
+    } else if (mark.beats != null) {
+      name = t("markers.beats", { count: Number(mark.beats) });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: beatSeconds(mark.position) }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: name })
+    ] });
+  }
+  function BeatgridBlock({ track }) {
+    if (!beatgridViewOnly(track.markers_unavailable)) return null;
+    const suspect = beatgridIsSuspect(track.beatgrid_warning_code);
+    const key = beatgridWarningKey(track.beatgrid_warning_code);
+    const reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning === "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown");
+    const empty = !suspect && !(track.beatgrid && track.beatgrid.length > 0);
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: t("markers.gridHeading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
+      suspect ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
+      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
+    ] });
+  }
+
+  // src/components/CuePads.tsx
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  function CueSlot({ slot, cue }) {
+    const color = slotColor(slot, cue?.color);
+    const named = cue && typeof cue.name === "string" ? cue.name.trim() : "";
+    const swatchStyle = color ? { background: color } : void 0;
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "swatch", style: swatchStyle }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+    ] });
+  }
+  function CuePads({ cues: cues2 }) {
+    const slots = cueSlots(cues2);
+    const extra = extraCues(cues2);
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(CueSlot, { slot, cue }, slot)),
+      extra.map((cue, index) => {
+        const cueIndex = Number(cue.index);
+        const slot = Number.isInteger(cueIndex) ? cueIndex : -1;
+        return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
+      })
+    ] });
+  }
+
+  // src/components/RelatedTracks.tsx
+  var import_react6 = __toESM(require_react(), 1);
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  function relatedPath(track) {
+    return track.resolved_path || track.edit?.portable_id || "";
+  }
+  function relatedLabel(item4) {
+    const title2 = item4.title || item4.name || t("track.untitled");
+    return item4.artist ? `${title2} · ${item4.artist}` : title2;
+  }
+  function RelatedTracks({ track, writable }) {
+    const list = useTrackList();
+    const path = relatedPath(track);
+    const [busy, setBusy] = (0, import_react6.useState)(Boolean(path));
+    const [loadError, setLoadError] = (0, import_react6.useState)("");
+    const [payload, setPayload] = (0, import_react6.useState)(null);
+    const [query, setQuery] = (0, import_react6.useState)("");
+    const [chosen, setChosen] = (0, import_react6.useState)(null);
+    const [note, setNote] = (0, import_react6.useState)("");
+    const [rating, setRating] = (0, import_react6.useState)("");
+    const [mutual, setMutual] = (0, import_react6.useState)(true);
+    const [saving2, setSaving] = (0, import_react6.useState)(false);
+    (0, import_react6.useEffect)(() => {
+      if (!path) {
+        setBusy(false);
+        setPayload(null);
+        setLoadError("");
+        return;
+      }
+      let cancelled = false;
+      setBusy(true);
+      setLoadError("");
+      const params = new URLSearchParams({ path, space: list.space });
+      void (async () => {
+        try {
+          const response = await fetch(`/api/related?${params}`);
+          const body = await readJSONOr(response, {});
+          if (cancelled) return;
+          if (!response.ok) throw new Error(t("related.loadFailed"));
+          setPayload(body);
+          setBusy(false);
+        } catch (error2) {
+          if (cancelled) return;
+          setBusy(false);
+          setLoadError(failureOf(error2).message);
+        }
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, [path, list.space, track.id]);
+    const hits2 = (0, import_react6.useMemo)(() => {
+      const parsed = parseQuery(query);
+      if (!parsed.terms.length && !parsed.filters.length) return null;
+      return list.tracks.filter((item4) => item4.id !== track.id && matchesQuery(item4, parsed)).slice(0, 8);
+    }, [query, list.tracks, track.id]);
+    async function reload() {
+      const params = new URLSearchParams({ path, space: list.space });
+      const response = await fetch(`/api/related?${params}`);
+      const body = await readJSONOr(response, {});
+      if (!response.ok) throw new Error(t("related.loadFailed"));
+      setPayload(body);
+      setLoadError("");
+    }
+    async function saveLink(body) {
+      try {
+        await postJSON("/api/related", body);
+        list.setNotice(t("related.saved"));
+        setChosen(null);
+        await reload();
+      } catch (error2) {
+        if (failureOf(error2).status === 409) bridge.lockDown(error2);
+        else list.setNotice(failureOf(error2).message);
+        setLoadError(failureOf(error2).message);
+      }
+    }
+    async function onRemove(link) {
+      const label = link.track?.title || t("related.thisTrack");
+      if (!confirm(t("related.confirmRemove", { name: label }))) return;
+      try {
+        await postJSON("/api/related", { action: "remove", id: link.id });
+        list.setNotice(t("related.removed"));
+        await reload();
+      } catch (error2) {
+        list.setNotice(failureOf(error2).message);
+      }
+    }
+    async function onCrate() {
+      setSaving(true);
+      try {
+        const result = await postJSON("/api/related", { action: "crate", asset: track.id, space: list.space });
+        list.setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") }));
+        await bridge.reloadLibrary();
+        list.selectTrack(track.id);
+      } catch (error2) {
+        if (failureOf(error2).status === 409) {
+          bridge.lockDown(error2);
+        } else {
+          list.setNotice(failureOf(error2).message);
+          setSaving(false);
+        }
+      }
+    }
+    const saved = Array.isArray(payload?.saved) ? payload.saved : [];
+    const suggested = Array.isArray(payload?.suggested) ? payload.suggested : [];
+    const crateName = payload?.crate_name || "Related";
+    const headingId = `related-heading-${track.id}`;
+    const status = !path ? t("related.noPath") : loadError ? loadError : busy ? t("related.loading") : saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved");
+    function onSearch(event) {
+      setQuery(event.currentTarget.value);
+      setChosen(null);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h3", { id: headingId, children: t("related.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "detail-kicker", role: "status", children: status }),
+      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { className: "related-list", children: saved.map((link) => {
+        const other = link.track || {};
+        const label = other.title || t("track.untitled");
+        const bits = [];
+        if (other.artist) bits.push(other.artist);
+        if (other.key) bits.push(other.key);
+        if (other.bpm != null && other.bpm !== "") bits.push(t("markers.bpm", { bpm: String(other.bpm) }));
+        bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay"));
+        if (link.rating != null) bits.push(t("related.ratingOutOf", { rating: String(link.rating) }));
+        if (!other.in_library) bits.push(t("related.notInLibrary"));
+        return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { children: [
+            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+              "button",
+              {
+                type: "button",
+                className: "text-button",
+                ref: tooltipRef(openRelated(label)),
+                onClick: () => list.selectTrack(other.asset_id),
+                children: label
+              }
+            ) : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
+            link.note ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "related-note", children: link.note }) : null
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(removeRelatedTip(label)),
+              "aria-label": t("related.removeLink", { name: label }),
+              onClick: () => void onRemove(link),
+              children: t("common.remove")
+            }
+          )
+        ] }, String(link.id));
+      }) }),
+      payload && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "related-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("label", { children: [
+          t("related.find"),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+            "input",
+            {
+              ref: tooltipRef(tips.findRelated),
+              type: "search",
+              autoComplete: "off",
+              placeholder: t("related.findPlaceholder"),
+              value: query,
+              onInput: onSearch
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
+          const name = relatedLabel(hit);
+          return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(chooseRelated(name)),
+              onClick: () => {
+                setChosen(hit);
+                setNote("");
+                setRating("");
+                setMutual(true);
+              },
+              children: name
+            }
+          ) }, hit.id);
+        }) }),
+        chosen && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "related-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("label", { children: [
+            t("related.note"),
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+              "input",
+              {
+                ref: tooltipRef(tips.linkNote),
+                type: "text",
+                maxLength: 500,
+                placeholder: t("related.notePlaceholder"),
+                value: note,
+                onChange: (event) => setNote(event.currentTarget.value)
+              }
+            )
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("label", { children: [
+            t("related.linkRating"),
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
+              "select",
+              {
+                ref: tooltipRef(tips.linkRating),
+                value: rating,
+                onChange: (event) => setRating(event.currentTarget.value),
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("option", { value: "", children: t("rating.none") }),
+                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("option", { value, children: value }, value))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("label", { className: "check", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+              "input",
+              {
+                ref: tooltipRef(tips.linkMutual),
+                type: "checkbox",
+                checked: mutual,
+                onChange: (event) => setMutual(event.currentTarget.checked)
+              }
+            ),
+            t("related.twoWayLink")
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(tips.saveLink),
+              onClick: () => void saveLink({
+                action: "add",
+                asset: track.id,
+                target: chosen.id,
+                mutual,
+                note,
+                rating: rating === "" ? null : Number(rating),
+                space: list.space
+              }),
+              children: t("related.saveLink")
+            }
+          )
+        ] })
+      ] }),
+      payload && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
+        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { className: "related-list", children: suggested.map((item4, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: relatedLabel(item4) }),
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "related-meta", children: Array.isArray(item4.reasons) ? item4.reasons.join(" · ") : "" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(saveSuggestion(item4.title || "Untitled")),
+              "aria-label": t("related.saveLinkTo", { name: item4.title || t("track.untitled") }),
+              onClick: () => void saveLink({
+                action: "add",
+                asset: track.id,
+                target: item4.asset_id,
+                mutual: true,
+                note: "",
+                rating: null,
+                space: list.space
+              }),
+              children: t("common.save")
+            }
+          )
+        ] }, `${item4.asset_id ?? index}`)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "text-button",
+            "data-related-crate": "true",
+            ref: tooltipRef(tips.updateRelated),
+            disabled: !writable || saving2,
+            onClick: () => void onCrate(),
+            children: t("related.updateCrate")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
+      ] })
+    ] });
+  }
+
+  // src/components/TrackDetail.tsx
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
+  var EDITOR_FIELDS = [
+    ["name", "column.title", true],
+    ["artist", "column.artist", false],
+    ["album", "field.album", false],
+    ["genre", "field.genre", false],
+    ["year", "field.year", false],
+    ["composer", "field.composer", false],
+    ["remixer", "field.remixer", false],
+    ["label", "field.label", false],
+    ["grouping", "field.grouping", false],
+    ["key", "column.key", false],
+    ["bpm", "column.bpm", false],
+    ["emoji", "field.emoji", false],
+    ["comments", "field.comments", true]
+  ];
+  function fieldsFromForm(form) {
+    const data = new FormData(form);
+    const bpm = data.get("bpm");
+    const fields = {
+      name: String(data.get("name") ?? ""),
+      artist: String(data.get("artist") ?? ""),
+      album: String(data.get("album") ?? ""),
+      genre: String(data.get("genre") ?? ""),
+      year: String(data.get("year") ?? ""),
+      composer: String(data.get("composer") ?? ""),
+      remixer: String(data.get("remixer") ?? ""),
+      label: String(data.get("label") ?? ""),
+      grouping: String(data.get("grouping") ?? ""),
+      comments: String(data.get("comments") ?? ""),
+      key: String(data.get("key") ?? ""),
+      emoji: String(data.get("emoji") ?? ""),
+      bpm: bpm === "" ? null : Number(bpm),
+      color: Number(data.get("color")),
+      rating: data.get("rating") === "" ? null : Number(data.get("rating")),
+      is_beatgrid_locked: Boolean(form.querySelector("[name=is_beatgrid_locked]")?.checked)
+    };
+    if (bpm !== "" && Number.isNaN(fields.bpm)) return { error: t("detail.bpmNumber") };
+    return fields;
+  }
+  function MarkerSection({ track }) {
+    let note = t("markers.readOnly");
+    if (track.markers_unavailable) note = t("markers.unavailable");
+    else if (!track.markers_found) note = t("markers.none");
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h3", { children: t("markers.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "detail-kicker", children: note }),
+      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(CuePads, { cues: track.cues || [] }),
+      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(LoopRow, { loop }, `loop-${index}`)),
+      (track.flips || []).map((flip, index) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "marker", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: flip.enabled ? t("common.on") : t("common.off") }),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: flip.name || t("markers.flip", { number: flip.index + 1 }) })
+      ] }, `flip-${index}`)),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(BeatgridBlock, { track })
+    ] });
+  }
+  function LoopRow({ loop }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
+    ] });
+  }
+  function CopySection({ fromId, copies, writable }) {
+    const list = useTrackList();
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h3", { children: t("copies.heading") }),
+      copies.map((copy) => {
+        const name = copy.file || t("track.numbered", { id: String(copy.id) });
+        const file = copy.file || `Track ${copy.id}`;
+        return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "copy-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(openCopy(file)),
+              onClick: () => copy.id != null && list.selectTrack(copy.id),
+              children: name
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: copy.bitrate == null ? "" : String(copy.bitrate) }),
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: copy.play_count == null ? "" : String(copy.play_count) }),
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: copy.missing ? "missing" : copy.crates || "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              ref: tooltipRef(openReplaceCopy(file)),
+              disabled: !writable,
+              onClick: () => {
+                void bridge.openReplaceInCratesDialog(fromId, copy.id).catch((error2) => {
+                  list.setNotice(String(error2));
+                });
+              },
+              children: t("copies.useInCrates")
+            }
+          )
+        ] }, copy.id);
+      })
+    ] });
+  }
+  function MembershipSection({ track, writable }) {
+    const list = useTrackList();
+    const chosen = new Set(track.crate_ids || []);
+    const crates = [...list.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name));
+    const smart = list.crates.filter((crate) => crate.smart && chosen.has(crate.id));
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h3", { children: t("crates.heading") }),
+      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "member", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "input",
+          {
+            ref: tooltipRef(membershipTip(crate.name)),
+            type: "checkbox",
+            defaultChecked: chosen.has(crate.id),
+            disabled: !writable,
+            onChange: (event) => {
+              const add = event.currentTarget.checked;
+              void list.setMembership(track.id, crate.id, add).then((ok) => {
+                if (!ok) event.currentTarget.checked = !add;
+              });
+            }
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: crate.name })
+      ] }, crate.id)) })
+    ] });
+  }
+  function FieldGroups({ track }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_jsx_runtime10.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
+  }
+  function FieldGroupBlock({ group }) {
+    const open = group.name !== "Search copies";
+    const [shown, setShown] = (0, import_react7.useState)(open);
+    const rows2 = group.fields.map((field, index) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "label", children: [
+        field.label ?? "",
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "column", children: field.column ?? "" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "value", children: field.column === "color" && field.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("span", { className: "color-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "swatch", style: { background: field.display } }),
+        field.display
+      ] }) : field.display })
+    ] }, `${field.column ?? field.label ?? index}`));
+    if (!open) {
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(import_jsx_runtime10.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "text-button",
+            ref: tooltipRef(shown ? tips.hideSearchCopies : tips.showSearchCopies),
+            onClick: () => setShown((value) => !value),
+            children: shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length })
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "group", hidden: !shown, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h3", { children: group.name ?? "" }),
+          rows2
+        ] })
+      ] });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h3", { children: group.name ?? "" }),
+      rows2
+    ] });
+  }
+  function TrackEditor({ track, writable }) {
+    const list = useTrackList();
+    const edit = track.edit || {};
+    const currentColor = Number(edit.color ?? 16777215);
+    const palette = COLORS.map(([value, key]) => [value, t(key)]);
+    if (!COLORS.some(([value]) => value === currentColor)) {
+      palette.push([currentColor, colorHex(currentColor) || t("color.custom")]);
+    }
+    const ratings = [
+      ["", t("rating.none")],
+      ...[["0.2", 1], ["0.4", 2], ["0.6", 3], ["0.8", 4], ["1", 5]].map(
+        ([value, stars]) => [value, t("rating.stars", { count: stars })]
+      )
+    ];
+    if (edit.rating != null && !ratings.some(([value]) => Number(value) === Number(edit.rating))) {
+      ratings.push([String(edit.rating), `${edit.rating}`]);
+    }
+    const ratingValue = edit.rating == null ? "" : String(edit.rating);
+    function onSubmit(event) {
+      event.preventDefault();
+      const fields = fieldsFromForm(event.currentTarget);
+      if ("error" in fields) {
+        list.setNotice(fields.error);
+        return;
+      }
+      void list.saveTrack(track.id, fields);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("form", { className: "editor", onSubmit, children: [
+      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: wide ? "wide" : void 0, children: [
+        t(label),
+        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "textarea",
+          {
+            ref: tooltipRef(editField(t(label))),
+            name,
+            defaultValue: String(edit[name] ?? ""),
+            disabled: !writable
+          }
+        ) : /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "input",
+          {
+            ref: tooltipRef(editField(t(label))),
+            name,
+            defaultValue: String(edit[name] ?? ""),
+            inputMode: name === "bpm" ? "decimal" : void 0,
+            disabled: !writable
+          }
+        )
+      ] }, name)),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
+        t("field.color"),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "select",
+          {
+            ref: tooltipRef(tips.trackColor),
+            name: "color",
+            defaultValue: String(currentColor),
+            disabled: !writable,
+            children: palette.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value: String(value), children: label }, value))
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
+        t("field.rating"),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "select",
+          {
+            ref: tooltipRef(tips.trackRating),
+            name: "rating",
+            defaultValue: ratingValue,
+            disabled: !writable,
+            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value, children: label }, value || "none"))
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "input",
+          {
+            ref: tooltipRef(tips.beatgridLock),
+            type: "checkbox",
+            name: "is_beatgrid_locked",
+            defaultChecked: Boolean(edit.is_beatgrid_locked),
+            disabled: !writable
+          }
+        ),
+        t("field.beatgridLocked")
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+        "button",
+        {
+          type: "submit",
+          className: "text-button wide",
+          ref: tooltipRef(tips.saveTrack),
+          disabled: !writable,
+          children: t("detail.saveTrack")
+        }
+      )
+    ] });
+  }
+  function TrackBody({ track }) {
+    const list = useTrackList();
+    const writable = Boolean(track.serato?.writable && list.writable);
+    const playTitle = track.title || track.name || playerStrings.untitled;
+    const manager = track.serato?.file_manager || list.serato?.file_manager || "Finder";
+    const facts = [
+      ["column.bpm", track.bpm],
+      ["column.key", track.key || "—"],
+      ["column.time", track.length]
+    ];
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "detail-body", children: [
+      track.album ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h2", { children: track.title ?? "" }),
+      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "artist", children: track.artist }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "deck", children: [
+        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t(key) })
+        ] }, key)),
+        track.color ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: t("field.color") })
+        ] }) : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(TrackEditor, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(revealTip(manager)),
+            disabled: !track.file_on_disk,
+            onClick: () => void list.revealTrack(track.id),
+            children: t("detail.reveal", { manager })
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(track.in_prepare ? tips.prepareRemove : tips.prepareAdd),
+            disabled: !writable,
+            onClick: () => void list.prepareTrack(track.id, !track.in_prepare),
+            children: track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.relocate),
+            disabled: !writable,
+            onClick: () => void list.relocateTrack(track),
+            children: t("detail.relocate")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.removeTrack),
+            disabled: !writable,
+            onClick: () => void list.removeTrack(track.id),
+            children: t("detail.removeFromLibrary")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.useInCrates),
+            disabled: !writable,
+            onClick: () => {
+              void bridge.openReplaceInCratesDialog(track.id).catch((error2) => {
+                list.setNotice(String(error2));
+              });
+            },
+            children: t("detail.useInCrates")
+          }
+        ),
+        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+          "button",
+          {
+            type: "button",
+            ref: tooltipRef(tips.mergeDuplicates),
+            disabled: !writable,
+            onClick: () => {
+              void bridge.openMergeDialog().catch((error2) => {
+                list.setNotice(String(error2));
+              });
+            },
+            children: t("merge.title")
+          }
+        ) : null
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(RelatedTracks, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(MarkerSection, { track }),
+      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(MembershipSection, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(FieldGroups, { track })
+    ] });
+  }
+  function HistoryBody({ entry }) {
+    const list = useTrackList();
+    const lines = [
+      [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
+      [t("column.deck"), entry.deck || "—"],
+      [t("history.started"), clockLabel(entry.start_time) || "—"],
+      [t("history.file"), entry.file || "—"]
+    ];
+    if (entry.notes) lines.push([t("history.notes"), entry.notes]);
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "label", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "value", children: value })
+      ] }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+        "button",
+        {
+          type: "button",
+          className: "text-button",
+          ref: tooltipRef(tips.openInLibrary),
+          onClick: () => list.openInLibrary(entry.asset_id),
+          children: t("history.openInLibrary")
+        }
+      ) : null
+    ] });
+  }
+  function TrackDetailPane() {
+    const list = useTrackList();
+    const { detail: detail2 } = list;
+    if (detail2.kind === "none") {
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "detail-empty", children: t("detail.empty") });
+    }
+    if (detail2.kind === "empty") {
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "detail-empty", children: detail2.message });
+    }
+    if (detail2.kind === "reading") {
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "detail-empty", children: t("detail.reading") });
+    }
+    if (detail2.kind === "error") {
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "detail-error", children: detail2.message });
+    }
+    if (detail2.kind === "entry") {
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(HistoryBody, { entry: detail2.entry });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(TrackBody, { track: detail2.track });
+  }
+
   // src/virtual-scroll.ts
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react8 = __toESM(require_react(), 1);
+
+  // src/components/TrackRow.tsx
+  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
+  function Cell({ text: text2, numeric = false }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: numeric ? "cell num" : "cell", children: text2 });
+  }
+  function TrackRow({ track, selected, onFocusList }) {
+    const list = useTrackList();
+    const labelName = track.name || playerStrings.untitled;
+    function select() {
+      if (track.entry) list.selectEntry(track.id);
+      else void list.selectTrack(track.id);
+      onFocusList();
+    }
+    function onClick() {
+      select();
+    }
+    function onDoubleClick() {
+      if (!track.entry) list.play(track.id);
+    }
+    function onPlayClick(event) {
+      event.stopPropagation();
+      void list.selectTrack(track.id);
+      onFocusList();
+    }
+    const history = Boolean(track.entry);
+    const bpmText = track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 });
+    const hex = colorHex(track.color);
+    return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(
+      "div",
+      {
+        className: "row",
+        role: "option",
+        "aria-selected": selected,
+        "data-id": String(track.id),
+        ref: tooltipRef(selectRow(track.name || "Untitled")),
+        onClick,
+        onDoubleClick,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "cell", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "title-line", children: [
+            !history && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              PlayButton,
+              {
+                variant: "row",
+                trackId: track.id,
+                name: labelName,
+                onClickExtra: onPlayClick
+              }
+            ) }),
+            hex ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+            track.emoji ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: track.emoji }) : null,
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "title", children: track.name || t("track.untitled") }),
+            track.offline ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
+            track.stems ? /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "missing-word", children: t("track.stemsBadge") }) : null
+          ] }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "cell", children: track.artist ?? "" }),
+          history ? /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: track.deck || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: track.played || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: clockLabel(track.start), numeric: true })
+          ] }) : /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(import_jsx_runtime11.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: bpmText, numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: track.key ?? "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: energyLabel(track.rating), numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: track.genre ?? "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: dateLabel(track.time_added), numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: dateLabel(track.last_played), numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: track.play_count == null ? "" : formatNumber(Number(track.play_count)), numeric: true }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Cell, { text: lengthLabel(track.length_ms), numeric: true })
+          ] })
+        ]
+      }
+    );
+  }
+
+  // src/components/TrackListWindow.tsx
+  var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
+  function TrackListWindow({ pane, start, end, onFocusList }) {
+    const list = useTrackList();
+    const view = pane === "b" ? list.viewB : list.view;
+    if (!view.length) {
+      const empty = list.duplicatesPending ? t("list.readingDuplicates") : t("list.noMatches");
+      return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "empty-list", children: empty });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(import_jsx_runtime12.Fragment, { children: view.slice(start, end).map((track) => /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+      TrackRow,
+      {
+        track,
+        selected: track.id === list.selectedId,
+        onFocusList
+      },
+      track.id
+    )) });
+  }
+
+  // src/virtual-scroll.ts
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -23063,13 +23975,7 @@
   spacerB.className = "spacer";
   rowsB.className = "rows";
   spacerB.append(rowsB);
-  var playRoots = /* @__PURE__ */ new WeakMap();
-  function unmountPlayButtons(paneRows) {
-    const roots = playRoots.get(paneRows);
-    if (!roots) return;
-    for (const root of roots) root.unmount();
-    playRoots.set(paneRows, []);
-  }
+  var paneRoots = /* @__PURE__ */ new WeakMap();
   function mountTrackList() {
     el("list").append(spacer);
   }
@@ -23088,116 +23994,21 @@
     const end = Math.min(view.length, Math.ceil((list.scrollTop + height) / ROW) + 6);
     paneSpacer.style.height = `${view.length * ROW}px`;
     paneRows.style.transform = `translateY(${start * ROW}px)`;
-    unmountPlayButtons(paneRows);
-    paneRows.replaceChildren();
-    if (!view.length) {
-      const empty = document.createElement("p");
-      empty.className = "empty-list";
-      empty.textContent = state.mode === "duplicates" && !state.duplicateIds ? t("list.readingDuplicates") : t("list.noMatches");
-      paneRows.append(empty);
-      return;
-    }
-    for (let index = start; index < end; index += 1) {
-      const track = view[index];
-      const button2 = document.createElement("div");
-      button2.className = "row";
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(track.id === state.selectedId));
-      button2.dataset.id = String(track.id);
-      setTooltip(button2, selectRow(track.name || "Untitled"));
-      const titleCell = document.createElement("span");
-      titleCell.className = "cell";
-      const line = document.createElement("span");
-      line.className = "title-line";
-      if (!track.entry) {
-        const labelName = track.name || playerStrings.untitled;
-        const playHost = document.createElement("span");
-        const root = mountIsland(playHost, (0, import_react5.createElement)(PlayButton, {
-          variant: "row",
-          trackId: track.id,
-          name: labelName,
-          onClickExtra: () => {
-            bridge.selectTrack(track.id);
-            list.focus({ preventScroll: true });
-          }
-        }));
-        const mounted = playRoots.get(paneRows) ?? [];
-        mounted.push(root);
-        playRoots.set(paneRows, mounted);
-        line.append(playHost);
-      }
-      const hex = colorHex(track.color);
-      if (hex) {
-        const swatch = document.createElement("span");
-        swatch.className = "swatch";
-        swatch.style.background = hex;
-        line.append(swatch);
-      }
-      if (track.emoji) {
-        const emoji = document.createElement("span");
-        emoji.textContent = track.emoji;
-        line.append(emoji);
-      }
-      const title2 = document.createElement("span");
-      title2.className = "title";
-      title2.textContent = track.name || t("track.untitled");
-      line.append(title2);
-      if (track.offline) {
-        const offline = document.createElement("span");
-        offline.className = "offline-word";
-        offline.textContent = t("track.offlineBadge");
-        line.append(offline);
-      } else if (track.missing) {
-        const missing = document.createElement("span");
-        missing.className = "missing-word";
-        missing.textContent = t("track.missingBadge");
-        line.append(missing);
-      }
-      if (track.stems) {
-        const stems = document.createElement("span");
-        stems.className = "missing-word";
-        stems.textContent = t("track.stemsBadge");
-        line.append(stems);
-      }
-      titleCell.append(line);
-      const artist2 = document.createElement("span");
-      artist2.className = "cell";
-      artist2.textContent = track.artist ?? "";
-      const cells = [];
-      const add = (text2, numeric = false) => {
-        const cell = document.createElement("span");
-        cell.className = numeric ? "cell num" : "cell";
-        cell.textContent = text2;
-        cells.push(cell);
-      };
-      if (track.entry) {
-        add(track.deck || "");
-        add(track.played || "");
-        add(clockLabel(track.start), true);
-      } else {
-        add(
-          track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 }),
-          true
-        );
-        add(track.key ?? "");
-        add(energyLabel(track.rating), true);
-        add(track.genre ?? "");
-        add(dateLabel(track.time_added), true);
-        add(dateLabel(track.last_played), true);
-        add(track.play_count == null ? "" : formatNumber(Number(track.play_count)), true);
-        add(lengthLabel(track.length_ms), true);
-      }
-      button2.append(titleCell, artist2, ...cells);
-      button2.addEventListener("click", () => {
-        if (track.entry) bridge.selectEntry(track.id);
-        else bridge.selectTrack(track.id);
-        list.focus({ preventScroll: true });
-      });
-      button2.addEventListener("dblclick", () => {
-        if (!track.entry) play(track.id);
-      });
-      paneRows.append(button2);
-    }
+    emitTrackList();
+    const pane = list.id === "list-b" ? "b" : "a";
+    const root = mountIsland(
+      paneRows,
+      (0, import_react8.createElement)(TrackListWindow, {
+        pane,
+        start,
+        end,
+        onFocusList: () => {
+          list.focus({ preventScroll: true });
+        }
+      }),
+      paneRoots.get(paneRows)
+    );
+    paneRoots.set(paneRows, root);
   }
   function moveTrackList(delta) {
     const list = focusedList();
@@ -23260,23 +24071,13 @@
   function wireVirtualScroll() {
     wireListKeys(el("list"));
     wireListKeys(el("list-b"));
-    let paintedId = null;
-    let paintedPlaying = false;
-    subscribe((next2) => {
-      if (next2.trackId === paintedId && next2.playing === paintedPlaying) return;
-      paintedId = next2.trackId;
-      paintedPlaying = next2.playing;
-      paintRows();
-    });
   }
 
   // src/views.ts
-  var relatedRequest = 0;
-  var lastDetail = null;
-  var detailPlayRoot = null;
-  function clearDetailPlay() {
-    detailPlayRoot?.unmount();
-    detailPlayRoot = null;
+  var detailRoot = null;
+  function paintDetailIsland() {
+    detailRoot?.unmount();
+    detailRoot = mountIsland(el("detail"), (0, import_react9.createElement)(TrackDetailPane));
   }
   function listMatches(track, query) {
     const field = isTextSearchField(state.searchField) ? state.searchField : void 0;
@@ -23776,11 +24577,11 @@
     if (!view.some((track) => track.id === state.selectedId)) {
       if (!view.length) {
         state.selectedId = null;
-        const empty = document.createElement("p");
-        empty.className = "detail-empty";
-        empty.textContent = state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches");
-        clearDetailPlay();
-        el("detail").replaceChildren(empty);
+        setTrackDetail({
+          kind: "empty",
+          message: state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches")
+        });
+        paintDetailIsland();
       } else if (state.mode === "history") selectEntry(view[0].id);
       else selectTrack(view[0].id);
     }
@@ -23830,25 +24631,20 @@
     syncRelinkButton();
     paintRows();
     const token3 = ++state.request;
-    const pending = document.createElement("p");
-    pending.className = "detail-empty";
-    pending.textContent = t("detail.reading");
-    clearDetailPlay();
-    el("detail").replaceChildren(pending);
+    setTrackDetail({ kind: "reading" });
+    paintDetailIsland();
     try {
       const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
       const payload = await readJSONOr(response, {});
       if (!response.ok) throw new Error(serverMessage(payload, t("detail.readFailed", { status: String(response.status) })));
       if (token3 !== state.request) return;
       if (payload.serato) applyStatus(payload.serato);
-      renderDetail(payload);
+      setTrackDetail({ kind: "track", track: payload });
+      paintDetailIsland();
     } catch (error2) {
       if (token3 !== state.request) return;
-      const failure = document.createElement("p");
-      failure.className = "detail-error";
-      failure.textContent = failureOf(error2).message;
-      clearDetailPlay();
-      el("detail").replaceChildren(failure);
+      setTrackDetail({ kind: "error", message: failureOf(error2).message });
+      paintDetailIsland();
     }
   }
   function selectEntry(id) {
@@ -23856,672 +24652,8 @@
     paintRows();
     const entry = state.entries.find((item4) => item4.id === id);
     if (!entry) return;
-    const body = document.createElement("div");
-    body.className = "detail-body";
-    const title2 = document.createElement("h2");
-    title2.textContent = entry.name || t("track.untitled");
-    body.append(title2);
-    if (entry.artist) {
-      const artist2 = document.createElement("p");
-      artist2.className = "artist";
-      artist2.textContent = entry.artist;
-      body.append(artist2);
-    }
-    const lines = [
-      [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
-      [t("column.deck"), entry.deck || "—"],
-      [t("history.started"), clockLabel(entry.start_time) || "—"],
-      [t("history.file"), entry.file || "—"]
-    ];
-    if (entry.notes) lines.push([t("history.notes"), entry.notes]);
-    for (const [label, value] of lines) {
-      const row = document.createElement("div");
-      row.className = "field";
-      const name = document.createElement("div");
-      name.className = "label";
-      name.textContent = label;
-      const text2 = document.createElement("div");
-      text2.className = "value";
-      text2.textContent = value;
-      row.append(name, text2);
-      body.append(row);
-    }
-    if (entry.asset_id) {
-      const open = buttonEl(tips.openInLibrary);
-      open.className = "text-button";
-      open.textContent = t("history.openInLibrary");
-      open.addEventListener("click", () => openInLibrary(entry.asset_id));
-      body.append(open);
-    }
-    clearDetailPlay();
-    el("detail").replaceChildren(body);
-  }
-  function fieldInput(name, label, value, wide = false) {
-    const wrap = document.createElement("label");
-    if (wide) wrap.className = "wide";
-    wrap.append(document.createTextNode(label));
-    const input = name === "comments" ? textareaEl(editField(label)) : inputEl(editField(label));
-    input.name = name;
-    input.value = String(value ?? "");
-    if (name === "bpm") input.inputMode = "decimal";
-    wrap.append(input);
-    return wrap;
-  }
-  function renderDetail(track) {
-    lastDetail = track;
-    const writable = Boolean(track.serato?.writable && state.writable);
-    const body = document.createElement("div");
-    body.className = "detail-body";
-    if (track.album) {
-      const kicker2 = document.createElement("p");
-      kicker2.className = "detail-kicker";
-      kicker2.textContent = track.album;
-      body.append(kicker2);
-    }
-    const title2 = document.createElement("h2");
-    title2.textContent = track.title ?? "";
-    body.append(title2);
-    if (track.artist) {
-      const artist2 = document.createElement("p");
-      artist2.className = "artist";
-      artist2.textContent = track.artist ?? "";
-      body.append(artist2);
-    }
-    const playTitle = track.title || track.name || playerStrings.untitled;
-    clearDetailPlay();
-    const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
-      variant: "detail",
-      trackId: track.id,
-      name: playTitle
-    }));
-    body.append(playHost);
-    const deck = document.createElement("div");
-    deck.className = "deck";
-    const facts = [["column.bpm", track.bpm], ["column.key", track.key || "—"], ["column.time", track.length]];
-    for (const [key, value] of facts) {
-      const label = t(key);
-      const cell = document.createElement("div");
-      const strong = document.createElement("strong");
-      strong.textContent = String(value || "—");
-      if (key === "column.bpm") strong.className = "bpm";
-      const span = document.createElement("span");
-      span.textContent = label;
-      cell.append(strong, span);
-      deck.append(cell);
-    }
-    if (track.color) {
-      const cell = document.createElement("div");
-      const swatch = document.createElement("span");
-      swatch.className = "swatch swatch-lg";
-      swatch.style.background = String(track.color ?? "");
-      const span = document.createElement("span");
-      span.textContent = t("field.color");
-      cell.append(swatch, span);
-      deck.append(cell);
-    }
-    body.append(deck);
-    const note = document.createElement("p");
-    note.className = "lock-note";
-    note.textContent = track.serato?.message || el("status").textContent;
-    body.append(note);
-    const form = document.createElement("form");
-    form.className = "editor";
-    const edit = track.edit || {};
-    const editorFields = [
-      ["name", "column.title", true],
-      ["artist", "column.artist", false],
-      ["album", "field.album", false],
-      ["genre", "field.genre", false],
-      ["year", "field.year", false],
-      ["composer", "field.composer", false],
-      ["remixer", "field.remixer", false],
-      ["label", "field.label", false],
-      ["grouping", "field.grouping", false],
-      ["key", "column.key", false],
-      ["bpm", "column.bpm", false],
-      ["emoji", "field.emoji", false],
-      ["comments", "field.comments", true]
-    ];
-    for (const [name, label, wide] of editorFields) {
-      form.append(fieldInput(name, t(label), String(edit[name] ?? ""), wide));
-    }
-    const colorLabel = document.createElement("label");
-    colorLabel.append(document.createTextNode(t("field.color")));
-    const colorSelect = selectEl(tips.trackColor);
-    colorSelect.name = "color";
-    const currentColor = Number(edit.color ?? 16777215);
-    const palette = COLORS.map(([value, key]) => [value, t(key)]);
-    if (!COLORS.some(([value]) => value === currentColor)) palette.push([currentColor, colorHex(currentColor) || t("color.custom")]);
-    for (const [value, label] of palette) {
-      const option = document.createElement("option");
-      option.value = String(value);
-      option.textContent = label;
-      option.selected = value === currentColor;
-      colorSelect.append(option);
-    }
-    colorLabel.append(colorSelect);
-    form.append(colorLabel);
-    const ratingLabel = document.createElement("label");
-    ratingLabel.append(document.createTextNode(t("field.rating")));
-    const ratingSelect = selectEl(tips.trackRating);
-    ratingSelect.name = "rating";
-    const ratings = [
-      ["", t("rating.none")],
-      ...[["0.2", 1], ["0.4", 2], ["0.6", 3], ["0.8", 4], ["1", 5]].map(([value, stars]) => [value, t("rating.stars", { count: stars })])
-    ];
-    if (edit.rating != null && !ratings.some(([value]) => Number(value) === Number(edit.rating))) {
-      ratings.push([String(edit.rating), `${edit.rating}`]);
-    }
-    for (const [value, label] of ratings) {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = label ?? "";
-      option.selected = value === (edit.rating == null ? "" : String(edit.rating));
-      ratingSelect.append(option);
-    }
-    ratingLabel.append(ratingSelect);
-    form.append(ratingLabel);
-    const lock = document.createElement("label");
-    lock.className = "check";
-    const lockInput = inputEl(tips.beatgridLock);
-    lockInput.type = "checkbox";
-    lockInput.name = "is_beatgrid_locked";
-    lockInput.checked = Boolean(edit.is_beatgrid_locked);
-    lock.append(lockInput, document.createTextNode(t("field.beatgridLocked")));
-    form.append(lock);
-    const save3 = buttonEl(tips.saveTrack);
-    save3.type = "submit";
-    save3.className = "text-button wide";
-    save3.textContent = t("detail.saveTrack");
-    form.append(save3);
-    for (const control of form.querySelectorAll("input, select, textarea, button")) control.disabled = !writable;
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      saveTrack(track.id, form);
-    });
-    body.append(form);
-    const actions2 = document.createElement("div");
-    actions2.className = "actions";
-    const reveal = buttonEl(revealTip(track.serato?.file_manager || state.serato?.file_manager || "Finder"));
-    const manager = track.serato?.file_manager || state.serato?.file_manager || "Finder";
-    reveal.textContent = t("detail.reveal", { manager });
-    reveal.disabled = !track.file_on_disk;
-    reveal.addEventListener("click", () => revealTrack(track.id));
-    const prepare = buttonEl(track.in_prepare ? tips.prepareRemove : tips.prepareAdd);
-    prepare.textContent = track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare");
-    prepare.disabled = !writable;
-    prepare.addEventListener("click", () => prepareTrack(track.id, !track.in_prepare));
-    const relocate = buttonEl(tips.relocate);
-    relocate.textContent = t("detail.relocate");
-    relocate.disabled = !writable;
-    relocate.addEventListener("click", () => relocateTrack(track));
-    const remove = buttonEl(tips.removeTrack);
-    remove.textContent = t("detail.removeFromLibrary");
-    remove.disabled = !writable;
-    remove.addEventListener("click", () => removeTrack(track.id));
-    const useInCrates = buttonEl(tips.useInCrates);
-    useInCrates.textContent = t("detail.useInCrates");
-    useInCrates.disabled = !writable;
-    useInCrates.addEventListener("click", () => {
-      bridge.openReplaceInCratesDialog(track.id).catch((error2) => setNotice(failureOf(error2).message));
-    });
-    actions2.append(reveal, prepare, relocate, remove, useInCrates);
-    if (state.mode === "duplicates" && selectedDuplicateGroup()) {
-      const merge = buttonEl(tips.mergeDuplicates);
-      merge.textContent = t("merge.title");
-      merge.disabled = !writable;
-      merge.addEventListener("click", () => {
-        bridge.openMergeDialog().catch((error2) => setNotice(failureOf(error2).message));
-      });
-      actions2.append(merge);
-    }
-    body.append(actions2);
-    body.append(relatedSection(track, writable));
-    body.append(markerSection(track));
-    if (track.copies?.length) body.append(copySection(track.id, track.copies, writable));
-    body.append(membershipSection(track, writable));
-    for (const group of track.groups || []) {
-      const section = document.createElement("section");
-      section.className = "group";
-      const heading2 = document.createElement("h3");
-      heading2.textContent = group.name ?? "";
-      section.append(heading2);
-      const open = group.name !== "Search copies";
-      if (!open) {
-        const toggle = buttonEl(tips.showSearchCopies);
-        toggle.className = "text-button";
-        toggle.textContent = t("detail.searchCopies", { count: group.fields.length });
-        let shown = false;
-        section.hidden = true;
-        toggle.addEventListener("click", () => {
-          shown = !shown;
-          section.hidden = !shown;
-          toggle.textContent = shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length });
-          setTooltip(toggle, shown ? tips.hideSearchCopies : tips.showSearchCopies);
-        });
-        body.append(toggle);
-      }
-      for (const field of group.fields) {
-        const row = document.createElement("div");
-        row.className = "field";
-        const label = document.createElement("div");
-        label.className = "label";
-        label.textContent = field.label ?? "";
-        const column = document.createElement("span");
-        column.className = "column";
-        column.textContent = field.column ?? "";
-        label.append(column);
-        const value = document.createElement("div");
-        value.className = "value";
-        if (field.column === "color" && field.display.startsWith("#")) {
-          const wrap = document.createElement("span");
-          wrap.className = "color-value";
-          const swatch = document.createElement("span");
-          swatch.className = "swatch";
-          swatch.style.background = field.display;
-          wrap.append(swatch, document.createTextNode(field.display));
-          value.append(wrap);
-        } else {
-          value.textContent = field.display;
-        }
-        row.append(label, value);
-        section.append(row);
-      }
-      body.append(section);
-    }
-    el("detail").replaceChildren(body);
-  }
-  function markerSection(track) {
-    const section = document.createElement("section");
-    section.className = "group";
-    const heading2 = document.createElement("h3");
-    heading2.textContent = t("markers.heading");
-    section.append(heading2);
-    const note = document.createElement("p");
-    note.className = "detail-kicker";
-    if (track.markers_unavailable) note.textContent = t("markers.unavailable");
-    else if (!track.markers_found) note.textContent = t("markers.none");
-    else note.textContent = t("markers.readOnly");
-    section.append(note);
-    const ms = (value) => formatCueTime(value);
-    if (!track.markers_unavailable) appendCueSlots(section, track.cues || []);
-    for (const loop of track.loops || []) {
-      const row = document.createElement("div");
-      row.className = "marker";
-      const swatch = document.createElement("span");
-      swatch.className = "swatch";
-      if (loop.color) swatch.style.background = loop.color;
-      const time = document.createElement("span");
-      time.textContent = `${ms(loop.start_ms)}–${ms(loop.end_ms)}`;
-      const name = document.createElement("span");
-      name.textContent = loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 });
-      row.append(document.createElement("span"), swatch, time, name);
-      section.append(row);
-    }
-    for (const flip of track.flips || []) {
-      const row = document.createElement("div");
-      row.className = "marker";
-      const time = document.createElement("span");
-      time.textContent = flip.enabled ? t("common.on") : t("common.off");
-      const name = document.createElement("span");
-      name.textContent = flip.name || t("markers.flip", { number: flip.index + 1 });
-      row.append(document.createElement("span"), document.createElement("span"), time, name);
-      section.append(row);
-    }
-    appendBeatgrid(section, track);
-    return section;
-  }
-  function copySection(fromId, copies, writable) {
-    const section = document.createElement("section");
-    section.className = "group";
-    const heading2 = document.createElement("h3");
-    heading2.textContent = t("copies.heading");
-    section.append(heading2);
-    for (const copy of copies) {
-      const row = document.createElement("div");
-      row.className = "copy-row";
-      const button2 = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
-      button2.className = "text-button";
-      button2.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
-      button2.addEventListener("click", () => selectTrack(copy.id));
-      const rate = document.createElement("span");
-      rate.textContent = copy.bitrate == null ? "" : String(copy.bitrate);
-      const plays = document.createElement("span");
-      plays.textContent = copy.play_count == null ? "" : String(copy.play_count);
-      const crates = document.createElement("span");
-      crates.textContent = copy.missing ? "missing" : copy.crates || "";
-      const replace = buttonEl(openReplaceCopy(copy.file || `Track ${copy.id}`));
-      replace.className = "text-button";
-      replace.textContent = t("copies.useInCrates");
-      replace.disabled = !writable;
-      replace.addEventListener("click", () => {
-        bridge.openReplaceInCratesDialog(fromId, copy.id).catch((error2) => setNotice(failureOf(error2).message));
-      });
-      row.append(button2, rate, plays, crates, replace);
-      section.append(row);
-    }
-    return section;
-  }
-  function relatedSection(track, writable) {
-    const section = document.createElement("section");
-    section.className = "group";
-    section.dataset.trackId = String(track.id);
-    const heading2 = document.createElement("h3");
-    heading2.id = `related-heading-${track.id}`;
-    heading2.textContent = t("related.heading");
-    section.setAttribute("aria-labelledby", heading2.id);
-    section.setAttribute("aria-busy", "true");
-    const status = document.createElement("p");
-    status.className = "detail-kicker";
-    status.setAttribute("role", "status");
-    const path = track.resolved_path || track.edit?.portable_id || "";
-    status.textContent = path ? t("related.loading") : t("related.noPath");
-    section.append(heading2, status);
-    if (path) loadRelated(track, section, writable, "");
-    return section;
-  }
-  async function loadRelated(track, section, writable, query) {
-    const token3 = ++relatedRequest;
-    const path = track.resolved_path || track.edit?.portable_id || "";
-    const params = new URLSearchParams({ path, space: state.space });
-    try {
-      const response = await fetch(`/api/related?${params}`);
-      const payload = await readJSONOr(response, {});
-      if (token3 !== relatedRequest || !section.isConnected) return;
-      if (!response.ok) throw new Error(serverMessage(payload, t("related.loadFailed")));
-      renderRelated(track, section, writable, payload, query);
-    } catch (error2) {
-      if (token3 !== relatedRequest || !section.isConnected) return;
-      section.setAttribute("aria-busy", "false");
-      const status = section.querySelector("[role=status]");
-      if (status) status.textContent = failureOf(error2).message;
-    }
-  }
-  function renderRelated(track, section, writable, payload, query) {
-    const heading2 = section.querySelector("h3");
-    section.replaceChildren(heading2);
-    section.setAttribute("aria-busy", "false");
-    const saved = Array.isArray(payload.saved) ? payload.saved : [];
-    const suggested = Array.isArray(payload.suggested) ? payload.suggested : [];
-    const status = document.createElement("p");
-    status.className = "detail-kicker";
-    status.setAttribute("role", "status");
-    status.textContent = saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved");
-    section.append(status);
-    if (saved.length) section.append(relatedSavedList(track, section, saved));
-    section.append(relatedSearch(track, section, query));
-    const suggestHeading = document.createElement("p");
-    suggestHeading.className = "detail-kicker";
-    suggestHeading.textContent = suggested.length ? t("related.suggested") : t("related.noSuggestions");
-    section.append(suggestHeading);
-    if (suggested.length) section.append(relatedSuggestList(track, section, suggested));
-    const crate = buttonEl(tips.updateRelated);
-    crate.className = "text-button";
-    crate.dataset.relatedCrate = "true";
-    const crateName = payload.crate_name || "Related";
-    crate.textContent = t("related.updateCrate");
-    crate.disabled = !writable;
-    crate.addEventListener("click", () => refreshRelatedCrate(track, section));
-    const crateNote = document.createElement("p");
-    crateNote.className = "detail-kicker";
-    crateNote.textContent = writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato");
-    section.append(crate, crateNote);
-  }
-  function relatedSavedList(track, section, saved) {
-    const list = document.createElement("ul");
-    list.className = "related-list";
-    for (const link of saved) {
-      const item4 = document.createElement("li");
-      item4.className = "related-row";
-      const main = document.createElement("div");
-      const other = link.track || {};
-      const label = other.title || t("track.untitled");
-      if (other.asset_id != null && other.in_library) {
-        const open = buttonEl(openRelated(label));
-        open.className = "text-button";
-        open.textContent = label;
-        open.addEventListener("click", () => selectTrack(other.asset_id));
-        main.append(open);
-      } else {
-        const name = document.createElement("span");
-        name.textContent = label;
-        main.append(name);
-      }
-      const meta = document.createElement("p");
-      meta.className = "related-meta";
-      const bits = [];
-      if (other.artist) bits.push(other.artist);
-      if (other.key) bits.push(other.key);
-      if (other.bpm != null && other.bpm !== "") bits.push(t("markers.bpm", { bpm: String(other.bpm) }));
-      bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay"));
-      if (link.rating != null) bits.push(t("related.ratingOutOf", { rating: String(link.rating) }));
-      if (!other.in_library) bits.push(t("related.notInLibrary"));
-      meta.textContent = bits.join(" · ");
-      main.append(meta);
-      if (link.note) {
-        const note = document.createElement("p");
-        note.className = "related-note";
-        note.textContent = link.note;
-        main.append(note);
-      }
-      const remove = buttonEl(removeRelatedTip(label));
-      remove.className = "text-button";
-      remove.textContent = t("common.remove");
-      remove.setAttribute("aria-label", t("related.removeLink", { name: label }));
-      remove.addEventListener("click", () => removeRelated(track, section, link));
-      item4.append(main, remove);
-      list.append(item4);
-    }
-    return list;
-  }
-  function relatedSearch(track, section, query) {
-    const block = document.createElement("div");
-    block.className = "related-search";
-    const label = document.createElement("label");
-    label.append(document.createTextNode(t("related.find")));
-    const input = inputEl(tips.findRelated);
-    input.type = "search";
-    input.autocomplete = "off";
-    input.placeholder = t("related.findPlaceholder");
-    input.value = query || "";
-    label.append(input);
-    const results = document.createElement("ul");
-    results.className = "related-results";
-    const form = document.createElement("div");
-    form.className = "related-form";
-    form.hidden = true;
-    block.append(label, results, form);
-    const paint3 = () => {
-      results.replaceChildren();
-      form.hidden = true;
-      form.replaceChildren();
-      const query2 = parseQuery(input.value);
-      if (!query2.terms.length && !query2.filters.length) {
-        const hint = document.createElement("li");
-        hint.className = "related-meta";
-        hint.textContent = t("related.typeHint");
-        results.append(hint);
-        return;
-      }
-      const hits2 = state.tracks.filter((item4) => item4.id !== track.id && matchesQuery(item4, query2)).slice(0, 8);
-      if (!hits2.length) {
-        const empty = document.createElement("li");
-        empty.className = "related-meta";
-        empty.textContent = t("list.noMatches");
-        results.append(empty);
-        return;
-      }
-      for (const hit of hits2) {
-        const item4 = document.createElement("li");
-        const name = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
-        const choose = buttonEl(chooseRelated(name));
-        choose.className = "text-button";
-        choose.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
-        choose.addEventListener("click", () => relatedLinkForm(track, section, form, hit, input.value));
-        item4.append(choose);
-        results.append(item4);
-      }
-    };
-    input.addEventListener("input", paint3);
-    paint3();
-    return block;
-  }
-  function relatedLinkForm(track, section, form, hit, query) {
-    form.hidden = false;
-    form.replaceChildren();
-    const chosen = document.createElement("p");
-    chosen.className = "related-meta";
-    chosen.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : hit.name || t("track.untitled");
-    const noteLabel = document.createElement("label");
-    noteLabel.append(document.createTextNode(t("related.note")));
-    const note = inputEl(tips.linkNote);
-    note.type = "text";
-    note.maxLength = 500;
-    note.placeholder = t("related.notePlaceholder");
-    noteLabel.append(note);
-    const ratingLabel = document.createElement("label");
-    ratingLabel.append(document.createTextNode(t("related.linkRating")));
-    const rating = selectEl(tips.linkRating);
-    for (const [value, text2] of [["", t("rating.none")], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]) {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = text2;
-      rating.append(option);
-    }
-    ratingLabel.append(rating);
-    const mutualLabel = document.createElement("label");
-    mutualLabel.className = "check";
-    const mutual = inputEl(tips.linkMutual);
-    mutual.type = "checkbox";
-    mutual.checked = true;
-    mutualLabel.append(mutual, document.createTextNode(t("related.twoWayLink")));
-    const save3 = buttonEl(tips.saveLink);
-    save3.className = "text-button";
-    save3.textContent = t("related.saveLink");
-    save3.addEventListener("click", () => {
-      save3.disabled = true;
-      saveRelated(track, section, {
-        action: "add",
-        asset: track.id,
-        target: hit.id,
-        mutual: mutual.checked,
-        note: note.value,
-        rating: rating.value === "" ? null : Number(rating.value),
-        space: state.space
-      }, query);
-    });
-    form.append(chosen, noteLabel, ratingLabel, mutualLabel, save3);
-  }
-  function relatedSuggestList(track, section, suggested) {
-    const list = document.createElement("ul");
-    list.className = "related-list";
-    for (const item4 of suggested) {
-      const row = document.createElement("li");
-      row.className = "related-row";
-      const main = document.createElement("div");
-      const name = document.createElement("span");
-      name.textContent = item4.artist ? `${item4.title || t("track.untitled")} · ${item4.artist}` : item4.title || t("track.untitled");
-      const reasons = document.createElement("p");
-      reasons.className = "related-meta";
-      reasons.textContent = Array.isArray(item4.reasons) ? item4.reasons.join(" · ") : "";
-      main.append(name, reasons);
-      const save3 = buttonEl(saveSuggestion(item4.title || "Untitled"));
-      save3.className = "text-button";
-      save3.textContent = t("common.save");
-      save3.setAttribute("aria-label", t("related.saveLinkTo", { name: item4.title || t("track.untitled") }));
-      save3.addEventListener("click", () => {
-        save3.disabled = true;
-        saveRelated(track, section, {
-          action: "add",
-          asset: track.id,
-          target: item4.asset_id,
-          mutual: true,
-          note: "",
-          rating: null,
-          space: state.space
-        }, "");
-      });
-      row.append(main, save3);
-      list.append(row);
-    }
-    return list;
-  }
-  async function saveRelated(track, section, body, query) {
-    try {
-      await postJSON("/api/related", body);
-      setNotice(t("related.saved"));
-      const kept = section.querySelector(".related-search input");
-      await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : query);
-    } catch (error2) {
-      if (failureOf(error2).status === 409) lockDown(error2);
-      else setNotice(failureOf(error2).message);
-      const status = section.querySelector("[role=status]");
-      if (status) status.textContent = failureOf(error2).message;
-    }
-  }
-  async function removeRelated(track, section, link) {
-    const label = link.track?.title || t("related.thisTrack");
-    if (!confirm(t("related.confirmRemove", { name: label }))) return;
-    try {
-      await postJSON("/api/related", { action: "remove", id: link.id });
-      setNotice(t("related.removed"));
-      const kept = section.querySelector(".related-search input");
-      await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : "");
-    } catch (error2) {
-      setNotice(failureOf(error2).message);
-    }
-  }
-  async function refreshRelatedCrate(track, section) {
-    const button2 = section.querySelector("[data-related-crate]");
-    if (button2) button2.disabled = true;
-    try {
-      const result = await postJSON("/api/related", { action: "crate", asset: track.id, space: state.space });
-      setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") }));
-      await loadLibrary();
-      selectTrack(track.id);
-    } catch (error2) {
-      if (failureOf(error2).status === 409) {
-        lockDown(error2);
-        if (button2) button2.disabled = true;
-      } else {
-        setNotice(failureOf(error2).message);
-        if (button2) button2.disabled = !state.writable;
-      }
-    }
-  }
-  function membershipSection(track, writable) {
-    const section = document.createElement("section");
-    section.className = "group";
-    const heading2 = document.createElement("h3");
-    heading2.textContent = t("crates.heading");
-    section.append(heading2);
-    const holder = document.createElement("div");
-    holder.className = "member-list";
-    const chosen = new Set(track.crate_ids || []);
-    const crates = [...state.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name));
-    for (const crate of crates) {
-      const label = document.createElement("label");
-      label.className = "member";
-      const input = inputEl(membershipTip(crate.name));
-      input.type = "checkbox";
-      input.checked = chosen.has(crate.id);
-      input.disabled = !writable;
-      input.addEventListener("change", () => setMembership(track.id, crate.id, input.checked, input));
-      const name = document.createElement("span");
-      name.textContent = crate.name;
-      label.append(input, name);
-      holder.append(label);
-    }
-    const smart = state.crates.filter((crate) => crate.smart && chosen.has(crate.id));
-    if (smart.length) {
-      const line = document.createElement("p");
-      line.className = "detail-kicker";
-      line.textContent = t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") });
-      section.append(line);
-    }
-    section.append(holder);
-    return section;
+    setTrackDetail({ kind: "entry", entry });
+    paintDetailIsland();
   }
   function repaintViews() {
     if (state.serato) el("status").textContent = statusLine(state.serato);
@@ -24532,8 +24664,7 @@
       if (state.selectedId != null) selectEntry(state.selectedId);
       return;
     }
-    const detail = lastDetail;
-    if (detail && detail.id === state.selectedId && el("detail").querySelector(".detail-body")) renderDetail(detail);
+    if (detailRoot) paintDetailIsland();
   }
   function setNotice(text2) {
     el("notice").textContent = text2 || "";
@@ -24607,28 +24738,8 @@
     applyStatus(failed.payload?.serato || { writable: false, message: failed.message });
     setNotice(failed.message);
   }
-  async function saveTrack(id, form) {
-    const data = new FormData(form);
-    const bpm = data.get("bpm");
-    const fields = {
-      name: data.get("name") ?? "",
-      artist: data.get("artist") ?? "",
-      album: data.get("album") ?? "",
-      genre: data.get("genre") ?? "",
-      year: data.get("year") ?? "",
-      composer: data.get("composer") ?? "",
-      remixer: data.get("remixer") ?? "",
-      label: data.get("label") ?? "",
-      grouping: data.get("grouping") ?? "",
-      comments: data.get("comments") ?? "",
-      key: data.get("key") ?? "",
-      emoji: data.get("emoji") ?? "",
-      bpm: bpm === "" ? null : Number(bpm),
-      color: Number(data.get("color")),
-      rating: data.get("rating") === "" ? null : Number(data.get("rating")),
-      is_beatgrid_locked: form.querySelector("[name=is_beatgrid_locked]").checked
-    };
-    if (bpm !== "" && Number.isNaN(fields.bpm)) {
+  async function saveTrack(id, fields) {
+    if (fields.bpm != null && Number.isNaN(fields.bpm)) {
       setNotice(t("detail.bpmNumber"));
       return;
     }
@@ -24689,7 +24800,7 @@
       else setNotice(failureOf(error2).message);
     }
   }
-  async function setMembership(assetId, crateId, add, input) {
+  async function setMembership(assetId, crateId, add) {
     try {
       const result = await postJSON("/api/crate", {
         action: add ? "add" : "remove",
@@ -24700,10 +24811,11 @@
       if (result.warning) setNotice(result.warning);
       await loadLibrary();
       selectTrack(assetId);
+      return true;
     } catch (error2) {
-      input.checked = !add;
       if (failureOf(error2).status === 409) lockDown(error2);
       else setNotice(failureOf(error2).message);
+      return false;
     }
   }
   async function saveRules(id, text2) {
@@ -24928,11 +25040,8 @@
   }
   function showFailure(error2) {
     el("count").textContent = t("library.unavailable");
-    const failure = document.createElement("p");
-    failure.className = "detail-error";
-    failure.textContent = failureOf(error2).message;
-    clearDetailPlay();
-    el("detail").replaceChildren(failure);
+    setTrackDetail({ kind: "error", message: failureOf(error2).message });
+    paintDetailIsland();
   }
   function selectedDuplicateGroup() {
     if (state.mode !== "duplicates" || state.selectedId == null) return null;
@@ -25324,20 +25433,20 @@
         const label2 = document.createElement("span");
         label2.className = "files-root-label";
         label2.textContent = entry.name;
-        const detail = document.createElement("span");
-        detail.className = "files-root-detail";
-        detail.textContent = entry.detail;
-        copy.append(label2, detail);
+        const detail2 = document.createElement("span");
+        detail2.className = "files-root-detail";
+        detail2.textContent = entry.detail;
+        copy.append(label2, detail2);
         button2.append(copy);
       } else {
         const name2 = document.createElement("span");
         name2.textContent = entry.name;
         button2.append(name2);
         if (entry.detail) {
-          const detail = document.createElement("span");
-          detail.className = "files-match-detail";
-          detail.textContent = entry.detail;
-          button2.append(detail);
+          const detail2 = document.createElement("span");
+          detail2.className = "files-match-detail";
+          detail2.textContent = entry.detail;
+          button2.append(detail2);
         }
       }
       if (entry.missing) {
@@ -25392,10 +25501,10 @@
     name.textContent = entry.name;
     label.append(box, name);
     if (entry.detail) {
-      const detail = document.createElement("span");
-      detail.className = "files-match-detail";
-      detail.textContent = entry.detail;
-      label.append(detail);
+      const detail2 = document.createElement("span");
+      detail2.className = "files-match-detail";
+      detail2.textContent = entry.detail;
+      label.append(detail2);
     }
     if (entry.in_library) {
       const badge = document.createElement("span");
@@ -25604,6 +25713,23 @@
   bridge.selectEntry = selectEntry;
   bridge.reloadLibrary = loadLibrary;
   bridge.lockDown = lockDown;
+  registerTrackListActions({
+    selectTrack: (id) => {
+      void selectTrack(id);
+    },
+    selectEntry,
+    play,
+    saveTrack,
+    revealTrack,
+    prepareTrack,
+    relocateTrack,
+    removeTrack,
+    setMembership,
+    openInLibrary: (id) => {
+      void openInLibrary(id);
+    },
+    setNotice
+  });
 
   // src/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;
@@ -27272,8 +27398,8 @@
     const file = track.file ?? "";
     const score = scoreQuery(query, `${title2} ${artist2} ${album} ${file}`);
     if (score == null) return null;
-    const detail = [artist2, album].filter((part) => part !== "").join(" · ");
-    return { kind: "track", key: `track:${track.id}`, title: title2, detail, score, trackId: track.id };
+    const detail2 = [artist2, album].filter((part) => part !== "").join(" · ");
+    return { kind: "track", key: `track:${track.id}`, title: title2, detail: detail2, score, trackId: track.id };
   }
   function fileHits(payload) {
     const rows2 = Array.isArray(payload.entries) ? payload.entries : [];
@@ -27349,10 +27475,10 @@
       const title2 = document.createElement("span");
       title2.className = "quick-open-name";
       title2.textContent = hit.title;
-      const detail = document.createElement("span");
-      detail.className = "quick-open-detail";
-      detail.textContent = hit.detail;
-      button2.append(kind2, title2, detail);
+      const detail2 = document.createElement("span");
+      detail2.className = "quick-open-detail";
+      detail2.textContent = hit.detail;
+      button2.append(kind2, title2, detail2);
       button2.addEventListener("click", () => {
         active = index;
         void activate(hit);

@@ -33,8 +33,6 @@ import { loadHealth, showHealthFailure } from "./health";
 import { loadScan, showScanFailure } from "./scan";
 import { loadTags, showTagsFailure } from "./tags";
 import { portableDriveButton } from "./portable";
-import { appendBeatgrid } from "./beatgrid-view";
-import { appendCueSlots, formatCueTime } from "./cue-view";
 import { syncFolderSyncButton } from "./folder-sync-view";
 import { presetFoot, syncPresetButtons } from "./preset-view";
 import { failSnapshots, loadSnapshots } from "./restore";
@@ -42,9 +40,14 @@ import { isTextSearchField, matchesQuery, parseQuery, type ParsedQuery } from ".
 import { COLOR_NAMES, COLORS, FILE_ROW, ROOT_ROW, state } from "./state";
 import { createElement } from "react";
 import { mountIsland, type IslandRoot } from "./app/mount";
-import { PlayButton } from "./components/PlayButton";
-import { playerStrings } from "./player-strings";
+import { TrackDetailPane } from "./components/TrackDetail";
+import { play } from "./player";
 import { buttonEl, inputEl, selectEl, setTooltip, textareaEl } from "./tooltip";
+import {
+  registerTrackListActions,
+  setTrackDetail,
+  type TrackSaveFields,
+} from "./track-list-store";
 import {
   chooseRelated,
   collapseCrate,
@@ -71,20 +74,11 @@ import {
 import { paintRows } from "./virtual-scroll";
 import { codedText, formatNumber, messageParams, serverMessage, t, type MessageKey } from "./i18n";
 
-/**
- * Related-track request counter.
- *
- * A slow reply must not paint into a track the user has already left.
- * Incremented by loadRelated. Not sent anywhere.
- */
-let relatedRequest = 0;
-// Last track painted in the detail pane, so a language change can repaint it.
-let lastDetail: Track | null = null;
-let detailPlayRoot: IslandRoot | null = null;
+let detailRoot: IslandRoot | null = null;
 
-function clearDetailPlay(): void {
-  detailPlayRoot?.unmount();
-  detailPlayRoot = null;
+function paintDetailIsland(): void {
+  detailRoot?.unmount();
+  detailRoot = mountIsland(el("detail"), createElement(TrackDetailPane));
 }
 
 /**
@@ -800,11 +794,11 @@ export function renderList() {
   if (!view.some((track) => track.id === state.selectedId)) {
     if (!view.length) {
       state.selectedId = null;
-      const empty = document.createElement("p");
-      empty.className = "detail-empty";
-      empty.textContent = state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches");
-      clearDetailPlay();
-      el("detail").replaceChildren(empty);
+      setTrackDetail({
+        kind: "empty",
+        message: state.mode === "history" && !state.historyId ? t("history.chooseSession") : t("list.noMatches"),
+      });
+      paintDetailIsland();
     } else if (state.mode === "history") selectEntry(view[0]!.id);
     else selectTrack(view[0]!.id);
   }
@@ -896,25 +890,20 @@ export async function selectTrack(id: number) {
   syncRelinkButton();
   paintRows();
   const token = ++state.request;
-  const pending = document.createElement("p");
-  pending.className = "detail-empty";
-  pending.textContent = t("detail.reading");
-  clearDetailPlay();
-  el("detail").replaceChildren(pending);
+  setTrackDetail({ kind: "reading" });
+  paintDetailIsland();
   try {
     const response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`);
     const payload = await readJSONOr<Track & ErrorBody>(response, {} as Track & ErrorBody);
     if (!response.ok) throw new Error(serverMessage(payload, t("detail.readFailed", { status: String(response.status) })));
     if (token !== state.request) return;
     if (payload.serato) applyStatus(payload.serato);
-    renderDetail(payload);
+    setTrackDetail({ kind: "track", track: payload });
+    paintDetailIsland();
   } catch (error) {
     if (token !== state.request) return;
-    const failure = document.createElement("p");
-    failure.className = "detail-error";
-    failure.textContent = failureOf(error).message;
-    clearDetailPlay();
-    el("detail").replaceChildren(failure);
+    setTrackDetail({ kind: "error", message: failureOf(error).message });
+    paintDetailIsland();
   }
 }
 
@@ -932,915 +921,18 @@ export function selectEntry(id: number) {
   paintRows();
   const entry = state.entries.find((item) => item.id === id);
   if (!entry) return;
-  const body = document.createElement("div");
-  body.className = "detail-body";
-  const title = document.createElement("h2");
-  title.textContent = entry.name || t("track.untitled");
-  body.append(title);
-  if (entry.artist) {
-    const artist = document.createElement("p");
-    artist.className = "artist";
-    artist.textContent = entry.artist;
-    body.append(artist);
-  }
-  const lines: Array<[string, string]> = [
-    [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
-    [t("column.deck"), entry.deck || "—"],
-    [t("history.started"), clockLabel(entry.start_time) || "—"],
-    [t("history.file"), entry.file || "—"],
-  ];
-  if (entry.notes) lines.push([t("history.notes"), entry.notes]);
-  for (const [label, value] of lines) {
-    const row = document.createElement("div");
-    row.className = "field";
-    const name = document.createElement("div");
-    name.className = "label";
-    name.textContent = label;
-    const text = document.createElement("div");
-    text.className = "value";
-    text.textContent = value;
-    row.append(name, text);
-    body.append(row);
-  }
-  if (entry.asset_id) {
-    const open = buttonEl(tips.openInLibrary);
-    open.className = "text-button";
-    open.textContent = t("history.openInLibrary");
-    open.addEventListener("click", () => openInLibrary(entry.asset_id as number));
-    body.append(open);
-  }
-  clearDetailPlay();
-  el("detail").replaceChildren(body);
+  setTrackDetail({ kind: "entry", entry });
+  paintDetailIsland();
 }
 
-/**
- * Build one labeled editor control for a track field.
- *
- * Comments use a textarea. BPM asks for a decimal keyboard. The control
- * name matches the field save_track accepts. Nothing is saved until the
- * form is submitted.
- *
- * @param {string} name Field name.
- * @param {string} label Visible label.
- * @param {string|number|null|undefined} value Current value.
- * @param {boolean} [wide=false] True when the control spans the pane.
- * @returns {HTMLLabelElement} The labeled control.
- */
-function fieldInput(name: string, label: string, value: string | number | null | undefined, wide: boolean = false) {
-  const wrap = document.createElement("label");
-  if (wide) wrap.className = "wide";
-  wrap.append(document.createTextNode(label));
-  const input = name === "comments"
-    ? textareaEl(editField(label))
-    : inputEl(editField(label));
-  input.name = name;
-  input.value = String(value ?? "");
-  if (name === "bpm") input.inputMode = "decimal";
-  wrap.append(input);
-  return wrap;
-}
-
-/**
- * Fill the detail pane from a /api/track payload.
- *
- * The form edits the fields save_track accepts. Controls stay disabled
- * while the library is locked. Reveal, Prepare, relocate, and remove call
- * the matching POST routes. Related tracks load from /api/related. Cue
- * data is shown and is not written back.
- *
- * @param {object} track Payload from GET /api/track.
- * @returns {void}
- */
-function renderDetail(track: Track) {
-  lastDetail = track;
-  const writable = Boolean(track.serato?.writable && state.writable);
-  const body = document.createElement("div");
-  body.className = "detail-body";
-
-  if (track.album) {
-    const kicker = document.createElement("p");
-    kicker.className = "detail-kicker";
-    kicker.textContent = track.album;
-    body.append(kicker);
-  }
-  const title = document.createElement("h2");
-  title.textContent = track.title ?? "";
-  body.append(title);
-  if (track.artist) {
-    const artist = document.createElement("p");
-    artist.className = "artist";
-    artist.textContent = track.artist ?? "";
-    body.append(artist);
-  }
-
-  const playTitle = track.title || track.name || playerStrings.untitled;
-  clearDetailPlay();
-  const playHost = document.createElement("span");
-  detailPlayRoot = mountIsland(playHost, createElement(PlayButton, {
-    variant: "detail",
-    trackId: track.id,
-    name: playTitle,
-  }));
-  body.append(playHost);
-
-  const deck = document.createElement("div");
-  deck.className = "deck";
-  const facts: Array<[MessageKey, string | number | null | undefined]> = [["column.bpm", track.bpm], ["column.key", track.key || "—"], ["column.time", track.length]];
-  for (const [key, value] of facts) {
-    const label = t(key);
-    const cell = document.createElement("div");
-    const strong = document.createElement("strong");
-    strong.textContent = String(value || "—");
-    if (key === "column.bpm") strong.className = "bpm";
-    const span = document.createElement("span");
-    span.textContent = label;
-    cell.append(strong, span);
-    deck.append(cell);
-  }
-  if (track.color) {
-    const cell = document.createElement("div");
-    const swatch = document.createElement("span");
-    swatch.className = "swatch swatch-lg";
-    swatch.style.background = String(track.color ?? "");
-    const span = document.createElement("span");
-    span.textContent = t("field.color");
-    cell.append(swatch, span);
-    deck.append(cell);
-  }
-  body.append(deck);
-
-  const note = document.createElement("p");
-  note.className = "lock-note";
-  note.textContent = track.serato?.message || el("status").textContent;
-  body.append(note);
-
-  const form = document.createElement("form");
-  form.className = "editor";
-  const edit = track.edit || {};
-  const editorFields: Array<[string, MessageKey, boolean]> = [
-    ["name", "column.title", true],
-    ["artist", "column.artist", false],
-    ["album", "field.album", false],
-    ["genre", "field.genre", false],
-    ["year", "field.year", false],
-    ["composer", "field.composer", false],
-    ["remixer", "field.remixer", false],
-    ["label", "field.label", false],
-    ["grouping", "field.grouping", false],
-    ["key", "column.key", false],
-    ["bpm", "column.bpm", false],
-    ["emoji", "field.emoji", false],
-    ["comments", "field.comments", true],
-  ];
-  for (const [name, label, wide] of editorFields) {
-    form.append(fieldInput(name, t(label), String(edit[name] ?? ""), wide));
-  }
-
-  const colorLabel = document.createElement("label");
-  colorLabel.append(document.createTextNode(t("field.color")));
-  const colorSelect = selectEl(tips.trackColor);
-  colorSelect.name = "color";
-  const currentColor = Number(edit.color ?? 0xffffff);
-  const palette: Array<[number, string]> = COLORS.map(([value, key]) => [value, t(key)]);
-  if (!COLORS.some(([value]) => value === currentColor)) palette.push([currentColor, colorHex(currentColor) || t("color.custom")]);
-  for (const [value, label] of palette) {
-    const option = document.createElement("option");
-    option.value = String(value);
-    option.textContent = label;
-    option.selected = value === currentColor;
-    colorSelect.append(option);
-  }
-  colorLabel.append(colorSelect);
-  form.append(colorLabel);
-
-  const ratingLabel = document.createElement("label");
-  ratingLabel.append(document.createTextNode(t("field.rating")));
-  const ratingSelect = selectEl(tips.trackRating);
-  ratingSelect.name = "rating";
-  const ratings: Array<[string, string]> = [
-    ["", t("rating.none")],
-    ...([["0.2", 1], ["0.4", 2], ["0.6", 3], ["0.8", 4], ["1", 5]] as const).map(([value, stars]): [string, string] => [value, t("rating.stars", { count: stars })]),
-  ];
-  if (edit.rating != null && !ratings.some(([value]) => Number(value) === Number(edit.rating))) {
-    ratings.push([String(edit.rating), `${edit.rating}`]);
-  }
-  for (const [value, label] of ratings) {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = label ?? "";
-    option.selected = value === (edit.rating == null ? "" : String(edit.rating));
-    ratingSelect.append(option);
-  }
-  ratingLabel.append(ratingSelect);
-  form.append(ratingLabel);
-
-  const lock = document.createElement("label");
-  lock.className = "check";
-  const lockInput = inputEl(tips.beatgridLock);
-  lockInput.type = "checkbox";
-  lockInput.name = "is_beatgrid_locked";
-  lockInput.checked = Boolean(edit.is_beatgrid_locked);
-  lock.append(lockInput, document.createTextNode(t("field.beatgridLocked")));
-  form.append(lock);
-
-  const save = buttonEl(tips.saveTrack);
-  save.type = "submit";
-  save.className = "text-button wide";
-  save.textContent = t("detail.saveTrack");
-  form.append(save);
-  for (const control of form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | HTMLButtonElement>("input, select, textarea, button")) control.disabled = !writable;
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    saveTrack(track.id, form);
-  });
-  body.append(form);
-
-  const actions = document.createElement("div");
-  actions.className = "actions";
-  const reveal = buttonEl(revealTip(track.serato?.file_manager || state.serato?.file_manager || "Finder"));
-  const manager = track.serato?.file_manager || state.serato?.file_manager || "Finder";
-  reveal.textContent = t("detail.reveal", { manager });
-  reveal.disabled = !track.file_on_disk;
-  reveal.addEventListener("click", () => revealTrack(track.id));
-  const prepare = buttonEl(track.in_prepare ? tips.prepareRemove : tips.prepareAdd);
-  prepare.textContent = track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare");
-  prepare.disabled = !writable;
-  prepare.addEventListener("click", () => prepareTrack(track.id, !track.in_prepare));
-  const relocate = buttonEl(tips.relocate);
-  relocate.textContent = t("detail.relocate");
-  relocate.disabled = !writable;
-  relocate.addEventListener("click", () => relocateTrack(track));
-  const remove = buttonEl(tips.removeTrack);
-  remove.textContent = t("detail.removeFromLibrary");
-  remove.disabled = !writable;
-  remove.addEventListener("click", () => removeTrack(track.id));
-  const useInCrates = buttonEl(tips.useInCrates);
-  useInCrates.textContent = t("detail.useInCrates");
-  useInCrates.disabled = !writable;
-  useInCrates.addEventListener("click", () => {
-    bridge.openReplaceInCratesDialog(track.id).catch((error) => setNotice(failureOf(error).message));
-  });
-  actions.append(reveal, prepare, relocate, remove, useInCrates);
-  if (state.mode === "duplicates" && selectedDuplicateGroup()) {
-    const merge = buttonEl(tips.mergeDuplicates);
-    merge.textContent = t("merge.title");
-    merge.disabled = !writable;
-    merge.addEventListener("click", () => {
-      bridge.openMergeDialog().catch((error) => setNotice(failureOf(error).message));
-    });
-    actions.append(merge);
-  }
-  body.append(actions);
-
-  body.append(relatedSection(track, writable));
-  body.append(markerSection(track));
-  if (track.copies?.length) body.append(copySection(track.id, track.copies, writable));
-  body.append(membershipSection(track, writable));
-
-  for (const group of track.groups || []) {
-    const section = document.createElement("section");
-    section.className = "group";
-    const heading = document.createElement("h3");
-    heading.textContent = group.name ?? "";
-    section.append(heading);
-    const open = group.name !== "Search copies";
-    if (!open) {
-      const toggle = buttonEl(tips.showSearchCopies);
-      toggle.className = "text-button";
-      toggle.textContent = t("detail.searchCopies", { count: group.fields.length });
-      let shown = false;
-      section.hidden = true;
-      toggle.addEventListener("click", () => {
-        shown = !shown;
-        section.hidden = !shown;
-        toggle.textContent = shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length });
-        setTooltip(toggle, shown ? tips.hideSearchCopies : tips.showSearchCopies);
-      });
-      body.append(toggle);
-    }
-    for (const field of group.fields) {
-      const row = document.createElement("div");
-      row.className = "field";
-      const label = document.createElement("div");
-      label.className = "label";
-      label.textContent = field.label ?? "";
-      const column = document.createElement("span");
-      column.className = "column";
-      column.textContent = field.column ?? "";
-      label.append(column);
-      const value = document.createElement("div");
-      value.className = "value";
-      if (field.column === "color" && field.display.startsWith("#")) {
-        const wrap = document.createElement("span");
-        wrap.className = "color-value";
-        const swatch = document.createElement("span");
-        swatch.className = "swatch";
-        swatch.style.background = field.display;
-        wrap.append(swatch, document.createTextNode(field.display));
-        value.append(wrap);
-      } else {
-        value.textContent = field.display;
-      }
-      row.append(label, value);
-      section.append(row);
-    }
-    body.append(section);
-  }
-  el("detail").replaceChildren(body);
-}
-
-/**
- * Build the cue, loop, flip, and beatgrid section.
- *
- * The copy says the markers were read from the audio file and are not
- * written back. Pads 1–8 always show, in Serato colours, when the file
- * could be read. A missing file is explained instead of showing empty
- * pads. The beatgrid block says it is view-only and flags a grid this
- * parser cannot read. Does not fetch.
- *
- * @param {object} track Track payload including cues, loops, flips, and beatgrid.
- * @returns {HTMLElement} The section, not yet inserted.
- */
-function markerSection(track: Track) {
-  const section = document.createElement("section");
-  section.className = "group";
-  const heading = document.createElement("h3");
-  heading.textContent = t("markers.heading");
-  section.append(heading);
-  const note = document.createElement("p");
-  note.className = "detail-kicker";
-  if (track.markers_unavailable) note.textContent = t("markers.unavailable");
-  else if (!track.markers_found) note.textContent = t("markers.none");
-  else note.textContent = t("markers.readOnly");
-  section.append(note);
-  /**
-   * Format a loop time as m:ss.sss.
-   *
-   * Nested in markerSection. Three decimal places keep a loop distinguishable
-   * inside one second. Cue rows use `formatCueTime` in cue-view.ts.
-   *
-   * @param {number|string} value Time in milliseconds.
-   * @returns {string} Minutes, seconds, and milliseconds.
-   */
-  const ms = (value: number | string | null | undefined) => formatCueTime(value);
-  if (!track.markers_unavailable) appendCueSlots(section, track.cues || []);
-  for (const loop of track.loops || []) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const swatch = document.createElement("span");
-    swatch.className = "swatch";
-    if (loop.color) swatch.style.background = loop.color;
-    const time = document.createElement("span");
-    time.textContent = `${ms(loop.start_ms)}–${ms(loop.end_ms)}`;
-    const name = document.createElement("span");
-    name.textContent = loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: (loop.index as number) + 1 });
-    row.append(document.createElement("span"), swatch, time, name);
-    section.append(row);
-  }
-  for (const flip of track.flips || []) {
-    const row = document.createElement("div");
-    row.className = "marker";
-    const time = document.createElement("span");
-    time.textContent = flip.enabled ? t("common.on") : t("common.off");
-    const name = document.createElement("span");
-    name.textContent = flip.name || t("markers.flip", { number: (flip.index as number) + 1 });
-    row.append(document.createElement("span"), document.createElement("span"), time, name);
-    section.append(row);
-  }
-  appendBeatgrid(section, track);
-  return section;
-}
-
-/**
- * List other copies of this track and let a click select one.
- *
- * Copies share title, artist, and whole-second length. Selecting one
- * calls selectTrack, which fetches that asset. This builder only creates
- * the nodes.
- *
- * @param {number} fromId Open track whose crates the replacement should join.
- * @param {object[]} copies Copy summaries from the track payload.
- * @param {boolean} writable False disables Use in crates.
- * @returns {HTMLElement} The section.
- */
-function copySection(fromId: number, copies: CopyRow[], writable: boolean) {
-  const section = document.createElement("section");
-  section.className = "group";
-  const heading = document.createElement("h3");
-  heading.textContent = t("copies.heading");
-  section.append(heading);
-  for (const copy of copies) {
-    const row = document.createElement("div");
-    row.className = "copy-row";
-    const button = buttonEl(openCopy(copy.file || `Track ${copy.id}`));
-    button.className = "text-button";
-    button.textContent = copy.file || t("track.numbered", { id: String(copy.id) });
-    button.addEventListener("click", () => selectTrack(copy.id as number));
-    const rate = document.createElement("span");
-    rate.textContent = copy.bitrate == null ? "" : String(copy.bitrate);
-    const plays = document.createElement("span");
-    plays.textContent = copy.play_count == null ? "" : String(copy.play_count);
-    const crates = document.createElement("span");
-    crates.textContent = copy.missing ? "missing" : (copy.crates || "");
-    const replace = buttonEl(openReplaceCopy(copy.file || `Track ${copy.id}`));
-    replace.className = "text-button";
-    replace.textContent = t("copies.useInCrates");
-    replace.disabled = !writable;
-    replace.addEventListener("click", () => {
-      bridge.openReplaceInCratesDialog(fromId, copy.id as number).catch((error) => setNotice(failureOf(error).message));
-    });
-    row.append(button, rate, plays, crates, replace);
-    section.append(row);
-  }
-  return section;
-}
-
-/**
- * Build the related-tracks section and start its request.
- *
- * The section lists saved links, a search box that links another track,
- * and suggestions. Saving a link writes the sidecar file and does not
- * require Serato to be quit. The Serato crate button does. Text from the
- * server is assigned with textContent.
- *
- * @param {object} track Track payload from GET /api/track.
- * @param {boolean} writable False disables the Serato crate button.
- * @returns {HTMLElement} The section, with a loading line until the reply arrives.
- */
-function relatedSection(track: Track, writable: boolean) {
-  const section = document.createElement("section");
-  section.className = "group";
-  section.dataset.trackId = String(track.id);
-  const heading = document.createElement("h3");
-  heading.id = `related-heading-${track.id}`;
-  heading.textContent = t("related.heading");
-  section.setAttribute("aria-labelledby", heading.id);
-  section.setAttribute("aria-busy", "true");
-  const status = document.createElement("p");
-  status.className = "detail-kicker";
-  status.setAttribute("role", "status");
-  const path = track.resolved_path || track.edit?.portable_id || "";
-  status.textContent = path ? t("related.loading") : t("related.noPath");
-  section.append(heading, status);
-  if (path) loadRelated(track, section, writable, "");
-  return section;
-}
-
-/**
- * Fetch related tracks for the open track.
- *
- * GET /api/related uses the resolved path. A reply for an older selection
- * is ignored. Does not write the Serato library.
- *
- * @param {object} track Track payload.
- * @param {HTMLElement} section Section built by relatedSection.
- * @param {boolean} writable False disables the Serato crate button.
- * @param {string} query Search text to keep after a refresh.
- * @returns {Promise<void>}
- */
-async function loadRelated(track: Track, section: HTMLElement, writable: boolean, query: string) {
-  const token = ++relatedRequest;
-  const path = track.resolved_path || track.edit?.portable_id || "";
-  const params = new URLSearchParams({ path, space: state.space });
-  try {
-    const response = await fetch(`/api/related?${params}`);
-    const payload = await readJSONOr<RelatedPayload>(response, {});
-    if (token !== relatedRequest || !section.isConnected) return;
-    if (!response.ok) throw new Error(serverMessage(payload, t("related.loadFailed")));
-    renderRelated(track, section, writable, payload, query);
-  } catch (error) {
-    if (token !== relatedRequest || !section.isConnected) return;
-    section.setAttribute("aria-busy", "false");
-    const status = section.querySelector("[role=status]");
-    if (status) status.textContent = failureOf(error).message;
-  }
-}
-
-/**
- * Paint saved links, the link form, and suggestions.
- *
- * Replaces the section body except the heading. Notes and titles are
- * text, not HTML. Does not fetch.
- *
- * @param {object} track Open track.
- * @param {HTMLElement} section Related section.
- * @param {boolean} writable False disables the Serato crate button.
- * @param {object} payload GET /api/related body.
- * @param {string} query Search text to restore.
- * @returns {void}
- */
-function renderRelated(track: Track, section: HTMLElement, writable: boolean, payload: RelatedPayload, query: string) {
-  const heading = section.querySelector("h3");
-  section.replaceChildren(heading!);
-  section.setAttribute("aria-busy", "false");
-  const saved = Array.isArray(payload.saved) ? payload.saved : [];
-  const suggested = Array.isArray(payload.suggested) ? payload.suggested : [];
-  const status = document.createElement("p");
-  status.className = "detail-kicker";
-  status.setAttribute("role", "status");
-  status.textContent = saved.length
-    ? t("related.savedCount", { count: saved.length })
-    : t("related.noneSaved");
-  section.append(status);
-  if (saved.length) section.append(relatedSavedList(track, section, saved));
-
-  section.append(relatedSearch(track, section, query));
-
-  const suggestHeading = document.createElement("p");
-  suggestHeading.className = "detail-kicker";
-  suggestHeading.textContent = suggested.length
-    ? t("related.suggested")
-    : t("related.noSuggestions");
-  section.append(suggestHeading);
-  if (suggested.length) section.append(relatedSuggestList(track, section, suggested));
-
-  const crate = buttonEl(tips.updateRelated);
-  crate.className = "text-button";
-  crate.dataset.relatedCrate = "true";
-  const crateName = payload.crate_name || "Related";
-  crate.textContent = t("related.updateCrate");
-  crate.disabled = !writable;
-  crate.addEventListener("click", () => refreshRelatedCrate(track, section));
-  const crateNote = document.createElement("p");
-  crateNote.className = "detail-kicker";
-  crateNote.textContent = writable
-    ? t("related.crateNote", { name: crateName })
-    : t("related.quitSerato");
-  section.append(crate, crateNote);
-}
-
-/**
- * List saved links with a remove button.
- *
- * A track that is still in the library opens when its name is clicked.
- * Does not fetch until the user removes a link.
- *
- * @param {object} track Open track.
- * @param {HTMLElement} section Related section.
- * @param {object[]} saved Saved link objects.
- * @returns {HTMLElement} The list.
- */
-function relatedSavedList(track: Track, section: HTMLElement, saved: RelatedTrack[]) {
-  const list = document.createElement("ul");
-  list.className = "related-list";
-  for (const link of saved) {
-    const item = document.createElement("li");
-    item.className = "related-row";
-    const main = document.createElement("div");
-    const other = link.track || {};
-    const label = other.title || t("track.untitled");
-    if (other.asset_id != null && other.in_library) {
-      const open = buttonEl(openRelated(label));
-      open.className = "text-button";
-      open.textContent = label;
-      open.addEventListener("click", () => selectTrack(other.asset_id as number));
-      main.append(open);
-    } else {
-      const name = document.createElement("span");
-      name.textContent = label;
-      main.append(name);
-    }
-    const meta = document.createElement("p");
-    meta.className = "related-meta";
-    const bits = [];
-    if (other.artist) bits.push(other.artist);
-    if (other.key) bits.push(other.key);
-    if (other.bpm != null && other.bpm !== "") bits.push(t("markers.bpm", { bpm: String(other.bpm) }));
-    bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay"));
-    if (link.rating != null) bits.push(t("related.ratingOutOf", { rating: String(link.rating) }));
-    if (!other.in_library) bits.push(t("related.notInLibrary"));
-    meta.textContent = bits.join(" · ");
-    main.append(meta);
-    if (link.note) {
-      const note = document.createElement("p");
-      note.className = "related-note";
-      note.textContent = link.note;
-      main.append(note);
-    }
-    const remove = buttonEl(removeRelatedTip(label));
-    remove.className = "text-button";
-    remove.textContent = t("common.remove");
-    remove.setAttribute("aria-label", t("related.removeLink", { name: label }));
-    remove.addEventListener("click", () => removeRelated(track, section, link));
-    item.append(main, remove);
-    list.append(item);
-  }
-  return list;
-}
-
-/**
- * Build the search box used to link another track.
- *
- * Matches the tracks already loaded in this space. Choosing one reveals
- * the note, rating, and two-way controls. Does not fetch.
- *
- * @param {object} track Open track.
- * @param {HTMLElement} section Related section.
- * @param {string} query Current search text.
- * @returns {HTMLElement} The search block.
- */
-function relatedSearch(track: Track, section: HTMLElement, query: string) {
-  const block = document.createElement("div");
-  block.className = "related-search";
-  const label = document.createElement("label");
-  label.append(document.createTextNode(t("related.find")));
-  const input = inputEl(tips.findRelated);
-  input.type = "search";
-  input.autocomplete = "off";
-  input.placeholder = t("related.findPlaceholder");
-  input.value = query || "";
-  label.append(input);
-  const results = document.createElement("ul");
-  results.className = "related-results";
-  const form = document.createElement("div");
-  form.className = "related-form";
-  form.hidden = true;
-  block.append(label, results, form);
-
-  /**
-   * Show matches for the current search text.
-   *
-   * Nested in relatedSearch. An empty box explains what to type. Does
-   * not fetch.
-   *
-   * @returns {void}
-   */
-  const paint = () => {
-    results.replaceChildren();
-    form.hidden = true;
-    form.replaceChildren();
-    const query = parseQuery(input.value);
-    if (!query.terms.length && !query.filters.length) {
-      const hint = document.createElement("li");
-      hint.className = "related-meta";
-      hint.textContent = t("related.typeHint");
-      results.append(hint);
-      return;
-    }
-    const hits = state.tracks
-      .filter((item) => item.id !== track.id && matchesQuery(item, query))
-      .slice(0, 8);
-    if (!hits.length) {
-      const empty = document.createElement("li");
-      empty.className = "related-meta";
-      empty.textContent = t("list.noMatches");
-      results.append(empty);
-      return;
-    }
-    for (const hit of hits) {
-      const item = document.createElement("li");
-      const name = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : (hit.name || t("track.untitled"));
-      const choose = buttonEl(chooseRelated(name));
-      choose.className = "text-button";
-      choose.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : (hit.name || t("track.untitled"));
-      choose.addEventListener("click", () => relatedLinkForm(track, section, form, hit, input.value));
-      item.append(choose);
-      results.append(item);
-    }
-  };
-  input.addEventListener("input", paint);
-  paint();
-  return block;
-}
-
-/**
- * Show the note, rating, and direction controls for one chosen track.
- *
- * Save posts /api/related. The default direction is two-way. Does not
- * fetch until Save is clicked.
- *
- * @param {object} track Open track.
- * @param {HTMLElement} section Related section.
- * @param {HTMLElement} form Form container inside the search block.
- * @param {object} hit Track from the library list.
- * @param {string} query Search text to restore after a save.
- * @returns {void}
- */
-function relatedLinkForm(track: Track, section: HTMLElement, form: HTMLElement, hit: RelatedTrack, query: string) {
-  form.hidden = false;
-  form.replaceChildren();
-  const chosen = document.createElement("p");
-  chosen.className = "related-meta";
-  chosen.textContent = hit.artist ? `${hit.name || t("track.untitled")} · ${hit.artist}` : (hit.name || t("track.untitled"));
-  const noteLabel = document.createElement("label");
-  noteLabel.append(document.createTextNode(t("related.note")));
-  const note = inputEl(tips.linkNote);
-  note.type = "text";
-  note.maxLength = 500;
-  note.placeholder = t("related.notePlaceholder");
-  noteLabel.append(note);
-  const ratingLabel = document.createElement("label");
-  ratingLabel.append(document.createTextNode(t("related.linkRating")));
-  const rating = selectEl(tips.linkRating);
-  for (const [value, text] of [["", t("rating.none")], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]] as Array<[string, string]>) {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = text;
-    rating.append(option);
-  }
-  ratingLabel.append(rating);
-  const mutualLabel = document.createElement("label");
-  mutualLabel.className = "check";
-  const mutual = inputEl(tips.linkMutual);
-  mutual.type = "checkbox";
-  mutual.checked = true;
-  mutualLabel.append(mutual, document.createTextNode(t("related.twoWayLink")));
-  const save = buttonEl(tips.saveLink);
-  save.className = "text-button";
-  save.textContent = t("related.saveLink");
-  save.addEventListener("click", () => {
-    save.disabled = true;
-    saveRelated(track, section, {
-      action: "add",
-      asset: track.id,
-      target: hit.id,
-      mutual: mutual.checked,
-      note: note.value,
-      rating: rating.value === "" ? null : Number(rating.value),
-      space: state.space,
-    }, query);
-  });
-  form.append(chosen, noteLabel, ratingLabel, mutualLabel, save);
-}
-
-/**
- * List suggestions with a one-click save.
- *
- * Each Save posts a two-way link with no note and no rating. Does not
- * fetch until Save is clicked.
- *
- * @param {object} track Open track.
- * @param {HTMLElement} section Related section.
- * @param {object[]} suggested Suggestion objects.
- * @returns {HTMLElement} The list.
- */
-function relatedSuggestList(track: Track, section: HTMLElement, suggested: RelatedTrack[]) {
-  const list = document.createElement("ul");
-  list.className = "related-list";
-  for (const item of suggested) {
-    const row = document.createElement("li");
-    row.className = "related-row";
-    const main = document.createElement("div");
-    const name = document.createElement("span");
-    name.textContent = item.artist ? `${item.title || t("track.untitled")} · ${item.artist}` : (item.title || t("track.untitled"));
-    const reasons = document.createElement("p");
-    reasons.className = "related-meta";
-    reasons.textContent = Array.isArray(item.reasons) ? item.reasons.join(" · ") : "";
-    main.append(name, reasons);
-    const save = buttonEl(saveSuggestion(item.title || "Untitled"));
-    save.className = "text-button";
-    save.textContent = t("common.save");
-    save.setAttribute("aria-label", t("related.saveLinkTo", { name: item.title || t("track.untitled") }));
-    save.addEventListener("click", () => {
-      save.disabled = true;
-      saveRelated(track, section, {
-        action: "add",
-        asset: track.id,
-        target: item.asset_id,
-        mutual: true,
-        note: "",
-        rating: null,
-        space: state.space,
-      }, "");
-    });
-    row.append(main, save);
-    list.append(row);
-  }
-  return list;
-}
-
-/**
- * POST a new related-track link and reload the section.
- *
- * The body is the add action. A failure stays in the section status and
- * the notice. Titles and paths are not added to the request beyond the
- * asset ids the server already knows.
- *
- * @param {object} track Open track.
- * @param {HTMLElement} section Related section.
- * @param {object} body POST /api/related body.
- * @param {string} query Search text to restore.
- * @returns {Promise<void>}
- */
-async function saveRelated(track: Track, section: HTMLElement, body: Record<string, unknown>, query: string) {
-  try {
-    await postJSON("/api/related", body);
-    setNotice(t("related.saved"));
-    const kept = section.querySelector<HTMLInputElement>(".related-search input");
-    await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : query);
-  } catch (error) {
-    if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
-    const status = section.querySelector("[role=status]");
-    if (status) status.textContent = failureOf(error).message;
-  }
-}
-
-/**
- * Remove one saved link after a confirmation.
- *
- * POST /api/related with action remove. The audio file and the Serato
- * library are not changed.
- *
- * @param {object} track Open track.
- * @param {HTMLElement} section Related section.
- * @param {object} link Saved link, including its id and track title.
- * @returns {Promise<void>}
- */
-async function removeRelated(track: Track, section: HTMLElement, link: RelatedTrack) {
-  const label = link.track?.title || t("related.thisTrack");
-  if (!confirm(t("related.confirmRemove", { name: label }))) return;
-  try {
-    await postJSON("/api/related", { action: "remove", id: link.id });
-    setNotice(t("related.removed"));
-    const kept = section.querySelector<HTMLInputElement>(".related-search input");
-    await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : "");
-  } catch (error) {
-    setNotice(failureOf(error).message);
-  }
-}
-
-/**
- * Create or refresh the Serato crate for this track's saved links.
- *
- * POST /api/related with action crate. Serato must be quit. A 409 locks
- * the page the same way other library writes do.
- *
- * @param {object} track Open track.
- * @param {HTMLElement} section Related section.
- * @returns {Promise<void>}
- */
-async function refreshRelatedCrate(track: Track, section: HTMLElement) {
-  const button = section.querySelector<HTMLButtonElement>("[data-related-crate]");
-  if (button) button.disabled = true;
-  try {
-    const result = await postJSON("/api/related", { action: "crate", asset: track.id, space: state.space });
-    setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") }));
-    await loadLibrary();
-    selectTrack(track.id);
-  } catch (error) {
-    if (failureOf(error).status === 409) {
-      lockDown(error);
-      if (button) button.disabled = true;
-    } else {
-      setNotice(failureOf(error).message);
-      if (button) button.disabled = !state.writable;
-    }
-  }
-}
-
-/**
- * List normal crates as checkboxes and name the smart crates.
- *
- * Checking a box posts an add or remove. Smart crates are shown but not
- * edited here because their membership comes from rules. The list is
- * built from state.crates, not from a new request.
- *
- * @param {object} track Track payload with crate_ids.
- * @param {boolean} writable False disables every checkbox.
- * @returns {HTMLElement} The section.
- */
-function membershipSection(track: Track, writable: boolean) {
-  const section = document.createElement("section");
-  section.className = "group";
-  const heading = document.createElement("h3");
-  heading.textContent = t("crates.heading");
-  section.append(heading);
-  const holder = document.createElement("div");
-  holder.className = "member-list";
-  const chosen = new Set(track.crate_ids || []);
-  const crates = [...state.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name));
-  for (const crate of crates) {
-    const label = document.createElement("label");
-    label.className = "member";
-    const input = inputEl(membershipTip(crate.name));
-    input.type = "checkbox";
-    input.checked = chosen.has(crate.id);
-    input.disabled = !writable;
-    input.addEventListener("change", () => setMembership(track.id, crate.id, input.checked, input));
-    const name = document.createElement("span");
-    name.textContent = crate.name;
-    label.append(input, name);
-    holder.append(label);
-  }
-  const smart = state.crates.filter((crate) => crate.smart && chosen.has(crate.id));
-  if (smart.length) {
-    const line = document.createElement("p");
-    line.className = "detail-kicker";
-    line.textContent = t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") });
-    section.append(line);
-  }
-  section.append(holder);
-  return section;
-}
 
 /**
  * Paint the library screen again in the active language.
  *
  * Repaints the shell, list headers, crates, rows, files, history
  * sessions, and the open detail pane from what the page already has.
- * The library is not fetched again. The related-tracks list in the
- * detail pane is read again from GET /api/related.
+ * The library is not fetched again. Related tracks already on screen
+ * re-translate without a second GET.
  *
  * @returns {void}
  */
@@ -1854,8 +946,7 @@ export function repaintViews(): void {
     if (state.selectedId != null) selectEntry(state.selectedId);
     return;
   }
-  const detail = lastDetail;
-  if (detail && detail.id === state.selectedId && el("detail").querySelector(".detail-body")) renderDetail(detail);
+  if (detailRoot) paintDetailIsland();
 }
 
 /**
@@ -2006,31 +1097,11 @@ export function lockDown(error: unknown) {
  * same track is selected again. A 409 locks the page.
  *
  * @param {number} id Asset id.
- * @param {HTMLFormElement} form Editor form built by renderDetail.
+ * @param {object} fields Editor values `save_track` accepts.
  * @returns {Promise<void>}
  */
-async function saveTrack(id: number, form: HTMLFormElement) {
-  const data = new FormData(form);
-  const bpm = data.get("bpm");
-  const fields = {
-    name: data.get("name") ?? "",
-    artist: data.get("artist") ?? "",
-    album: data.get("album") ?? "",
-    genre: data.get("genre") ?? "",
-    year: data.get("year") ?? "",
-    composer: data.get("composer") ?? "",
-    remixer: data.get("remixer") ?? "",
-    label: data.get("label") ?? "",
-    grouping: data.get("grouping") ?? "",
-    comments: data.get("comments") ?? "",
-    key: data.get("key") ?? "",
-    emoji: data.get("emoji") ?? "",
-    bpm: bpm === "" ? null : Number(bpm),
-    color: Number(data.get("color")),
-    rating: data.get("rating") === "" ? null : Number(data.get("rating")),
-    is_beatgrid_locked: form.querySelector<HTMLInputElement>("[name=is_beatgrid_locked]")!.checked,
-  };
-  if (bpm !== "" && Number.isNaN(fields.bpm)) {
+async function saveTrack(id: number, fields: TrackSaveFields) {
+  if (fields.bpm != null && Number.isNaN(fields.bpm)) {
     setNotice(t("detail.bpmNumber"));
     return;
   }
@@ -2145,10 +1216,9 @@ async function removeTrack(id: number) {
  * @param {number} assetId Asset id.
  * @param {number} crateId Crate id.
  * @param {boolean} add True adds the membership.
- * @param {HTMLInputElement} input Checkbox to restore on failure.
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>} False when the write failed.
  */
-async function setMembership(assetId: number, crateId: number, add: boolean, input: HTMLInputElement) {
+async function setMembership(assetId: number, crateId: number, add: boolean): Promise<boolean> {
   try {
     const result = await postJSON("/api/crate", {
       action: add ? "add" : "remove",
@@ -2159,10 +1229,11 @@ async function setMembership(assetId: number, crateId: number, add: boolean, inp
     if (result.warning) setNotice(result.warning);
     await loadLibrary();
     selectTrack(assetId);
+    return true;
   } catch (error) {
-    input.checked = !add;
     if (failureOf(error).status === 409) lockDown(error);
     else setNotice(failureOf(error).message);
+    return false;
   }
 }
 
@@ -2536,11 +1607,8 @@ export function setMode(mode: string) {
  */
 export function showFailure(error: unknown) {
   el("count").textContent = t("library.unavailable");
-  const failure = document.createElement("p");
-  failure.className = "detail-error";
-  failure.textContent = failureOf(error).message;
-  clearDetailPlay();
-  el("detail").replaceChildren(failure);
+  setTrackDetail({ kind: "error", message: failureOf(error).message });
+  paintDetailIsland();
 }
 
 /**
@@ -3486,3 +2554,21 @@ bridge.selectTrack = selectTrack;
 bridge.selectEntry = selectEntry;
 bridge.reloadLibrary = loadLibrary;
 bridge.lockDown = lockDown;
+
+registerTrackListActions({
+  selectTrack: (id) => {
+    void selectTrack(id);
+  },
+  selectEntry,
+  play,
+  saveTrack,
+  revealTrack,
+  prepareTrack,
+  relocateTrack,
+  removeTrack,
+  setMembership,
+  openInLibrary: (id) => {
+    void openInLibrary(id);
+  },
+  setNotice,
+});

@@ -1,9 +1,10 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. Later screens add their own context file
- * and one wrapper here. This module reads the player engine; it does not
- * own playback.
+ * Player is one domain. List selection and detail fields are another.
+ * Each domain has its own context file and one wrapper here. This module
+ * reads the player engine and the track-list store; it does not own
+ * playback or the library.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -12,6 +13,10 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import {
+  TrackListProvider as TrackListContextProvider,
+  type TrackListContextValue,
+} from "../context/TrackListContext";
 import {
   canSkip,
   canTogglePlay,
@@ -28,6 +33,11 @@ import {
   subscribe,
   togglePlayPause,
 } from "../player";
+import {
+  getTrackListActions,
+  readTrackList,
+  subscribeTrackList,
+} from "../track-list-store";
 
 function readPlayerValue(): PlayerContextValue {
   return {
@@ -69,13 +79,44 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   return <PlayerContextProvider value={current}>{children}</PlayerContextProvider>;
 }
 
+function readTrackListValue(): TrackListContextValue {
+  return {
+    ...readTrackList(),
+    ...getTrackListActions(),
+  };
+}
+
+/**
+ * Mount the list and detail domain at the root of one React island.
+ *
+ * Updates are flushed so a selection change paints in the same turn.
+ *
+ * @param children Island that calls `useTrackList`.
+ */
+export function TrackListRoot({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readTrackListValue);
+  useEffect(() => {
+    return subscribeTrackList(() => {
+      flushSync(() => {
+        setValue(readTrackListValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <TrackListContextProvider value={current}>{children}</TrackListContextProvider>;
+}
+
 /**
  * Nest every domain provider.
  *
- * Player is the first domain. A later screen adds one line here.
+ * Player is first. List selection and detail fields are second.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
-  return <PlayerProvider>{children}</PlayerProvider>;
+  return (
+    <PlayerProvider>
+      <TrackListRoot>{children}</TrackListRoot>
+    </PlayerProvider>
+  );
 }
