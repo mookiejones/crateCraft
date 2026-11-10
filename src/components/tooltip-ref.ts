@@ -2,8 +2,8 @@
  * Attach a locale tooltip to a React control.
  */
 
-import { setTooltip } from "../tooltip";
-import type { TipSpec } from "../tooltip-strings";
+import { setTooltip } from "../lib/ui/tooltip";
+import type { TipSpec } from "../lib/ui/tooltip-strings";
 
 /**
  * Ref callback that writes `spec` onto the node.

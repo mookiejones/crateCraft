@@ -5,9 +5,9 @@
  * and does not read a Serato library.
  */
 
-import { mountSnapshots, renderSnapshots } from "../src/restore";
-import { state } from "../src/state";
-import { applyStaticTooltips, installTooltips } from "../src/tooltip";
+import { mountSnapshots, renderSnapshots } from "../src/lib/snapshots/restore";
+import { state } from "../src/lib/state";
+import { applyStaticTooltips, installTooltips } from "../src/lib/ui/tooltip";
 
 state.snapshotLoading = false;
 state.snapshotError = "";

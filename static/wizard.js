@@ -14589,10 +14589,10 @@ var SeratoWizard = (() => {
   var import_react_dom = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
-  // src/components/WizardScreen.tsx
+  // src/pages/WizardScreen.tsx
   var import_react2 = __toESM(require_react(), 1);
 
-  // src/context/WizardContext.tsx
+  // src/containers/WizardContext.tsx
   var import_react = __toESM(require_react(), 1);
 
   // locales/en.json
@@ -17715,7 +17715,7 @@ var SeratoWizard = (() => {
     "wizard.yes": "Sí, compartir"
   };
 
-  // src/i18n.ts
+  // src/lib/i18n.ts
   var LANGUAGES = ["en", "es"];
   var PSEUDO = "qps-ploc";
   var CATALOGS = {
@@ -17802,7 +17802,7 @@ var SeratoWizard = (() => {
     return body?.error || fallback;
   }
 
-  // src/wizard.ts
+  // src/lib/wizard/wizard.ts
   var STEP_NAME = {
     welcome: "wizard.step.welcome",
     library: "wizard.step.library",
@@ -17947,7 +17947,7 @@ var SeratoWizard = (() => {
     return { ...model2, step: next };
   }
 
-  // src/context/WizardContext.tsx
+  // src/containers/WizardContext.tsx
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
   function noop() {
   }
@@ -17998,7 +17998,7 @@ var SeratoWizard = (() => {
     return value;
   }
 
-  // src/tooltip-strings.ts
+  // src/lib/ui/tooltip-strings.ts
   function spec(key, params) {
     return params ? { key, params } : { key };
   }
@@ -18256,7 +18256,7 @@ var SeratoWizard = (() => {
     return spec("tooltip.wizardFolder", { name });
   }
 
-  // src/tooltip.ts
+  // src/lib/ui/tooltip.ts
   var TOOLTIP_ID = "app-tooltip";
   var INTERACTIVE_SELECTOR = [
     "button",
@@ -18302,7 +18302,7 @@ var SeratoWizard = (() => {
     if (current === element) syncOpenTooltip();
   }
 
-  // src/components/WizardScreen.tsx
+  // src/pages/WizardScreen.tsx
   var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
   var LABELS = {
     "get-started": "wizard.action.getStarted",

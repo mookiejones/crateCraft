@@ -1,4 +1,4 @@
-"""Check live ``server.py`` JSON against required fields in ``src/api-types.ts``.
+"""Check live ``server.py`` JSON against required fields in ``src/lib/api-types.ts``.
 
 The page types are the contract. A 200 from a route is not enough: a
 required field missing from the body, or the wrong JSON type, fails.
@@ -21,7 +21,7 @@ import server
 from tests.fixture import TempLibrary
 
 ROOT = Path(__file__).resolve().parents[1]
-API_TYPES = ROOT / "src" / "api-types.ts"
+API_TYPES = ROOT / "src" / "lib" / "api-types.ts"
 
 
 @dataclass(frozen=True)
@@ -463,7 +463,7 @@ class LiveApiShapeTests(unittest.TestCase):
         """Hit the JSON GET routes the page types, not only that they exist.
 
         Each body is checked against required fields parsed from
-        ``src/api-types.ts``. Extra server keys are allowed. Audio, M3U,
+        ``src/lib/api-types.ts``. Extra server keys are allowed. Audio, M3U,
         Rekordbox XML, and waveform bytes are not JSON and stay out.
 
         Returns:

@@ -7,16 +7,16 @@
  */
 
 import { useState, type FormEvent } from "react";
-import type { CopyRow, Marker, Track } from "../api-types";
-import { bridge } from "../bridge";
-import { useTrackList } from "../context/TrackListContext";
-import { formatCueTime } from "../cue-view";
-import { clockLabel, colorHex } from "../format";
-import { t, type MessageKey } from "../i18n";
-import { playerStrings } from "../player-strings";
-import { COLORS } from "../state";
-import type { TrackSaveFields } from "../track-list-store";
-import { tooltipRef } from "../tooltip";
+import type { CopyRow, Marker, Track } from "../lib/api-types";
+import { bridge } from "../lib/bridge";
+import { useTrackList } from "../containers/TrackListContext";
+import { formatCueTime } from "../lib/ui/cue-view";
+import { clockLabel, colorHex } from "../lib/format";
+import { t, type MessageKey } from "../lib/i18n";
+import { playerStrings } from "../lib/player/player-strings";
+import { COLORS } from "../lib/state";
+import type { TrackSaveFields } from "../lib/ui/track-list-store";
+import { tooltipRef } from "../lib/ui/tooltip";
 import {
   editField,
   membershipTip,
@@ -24,7 +24,7 @@ import {
   openReplaceCopy,
   revealTip,
   tips,
-} from "../tooltip-strings";
+} from "../lib/ui/tooltip-strings";
 import { BeatgridBlock } from "./BeatgridBlock";
 import { CuePads } from "./CuePads";
 import { PlayButton } from "./PlayButton";
