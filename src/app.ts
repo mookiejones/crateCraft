@@ -8,12 +8,14 @@
  * origin. Snapshot UI is src/restore.ts on SnapshotsContext. The gig check is src/gig.ts.
  * Tempo drift is src/drift.ts.
  * The damaged-file scan is src/scan.ts.
+ * The suspect-quality report is src/bitrate.ts.
  * The library health report is src/health.ts.
+ * Play stats are src/history-stats.ts.
  * Tag spellings are src/tags.ts.
  * Crate presets are src/presets.ts.
  * Folder sync is src/folder-sync.ts.
  * Help is src/help.ts. It does not post to GitHub.
- * The portable drive check is src/portable.ts. It does not write.
+ * The portable drive check is src/portable.ts, on Files and under Before a gig. It does not write.
  * This file does not open master.sqlite itself. The page language is set
  * before the first paint and every view repaints when it changes; see
  * src/i18n.ts.
@@ -23,7 +25,9 @@ import { wireDialogs } from "./dialogs";
 import { wireGigCheck } from "./gig";
 import { wireDrift } from "./drift";
 import { wireHealth } from "./health";
+import { wireHistoryStats } from "./history-stats";
 import { wireScan } from "./scan";
+import { wireBitrate } from "./bitrate";
 import { wireTags } from "./tags";
 import { wireHelp } from "./help";
 import { wirePortable } from "./portable";
@@ -68,10 +72,13 @@ wireHealth((action, id) => {
   if (action === "missing") setMode("missing");
   else if (action === "duplicates") setMode("duplicates");
   else if (action === "files") setMode("files");
+  else if (action === "bitrate") setMode("bitrate");
   else setMode("crates");
 });
 wireDrift();
+wireHistoryStats();
 wireScan();
+wireBitrate();
 wireTags();
 wirePortable();
 wireLayout();

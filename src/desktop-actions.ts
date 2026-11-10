@@ -37,15 +37,18 @@ const CLICKS: Record<string, string> = {
 const VIEWS: Record<string, string> = {
   "view-crates": "crates",
   "view-history": "history",
+  "view-stats": "stats",
   "view-files": "files",
   "view-missing": "missing",
   "view-duplicates": "duplicates",
   "view-stems": "stems",
   "view-health": "health",
   "view-scan": "scan",
+  "view-bitrate": "bitrate",
   "view-tags": "tags",
   "view-snapshots": "snapshots",
   "view-gig": "gig",
+  "view-portable": "portable",
   "view-drift": "drift",
 };
 

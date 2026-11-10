@@ -15,12 +15,12 @@ The first time you open it, setup finds your library and saves a safety copy bef
 - [Browse crates and tracks](guide/crates.md), and make, rename, color, and delete crates.
 - [Play a track](guide/playback.md) in the window before you crate or tag it. Playback does not change the file. The server can build a waveform for that track. M4A, AAC, and ALAC use the Mac or Windows audio system, or ffmpeg on Linux when it is already installed. ffmpeg is not included. A 60-minute stereo 44.1 kHz WAV is analyzed in 7.9 seconds and cached beside the app settings.
 - [Edit track details](guide/tags.md) that Serato stores in the library. Cue points stay in the audio file.
-- Read [History](guide/history.md), find [missing files](guide/missing.md), run a [check before a gig](guide/gig-check.md), flag [tempo drift](guide/tempo-drift.md), and see [stems](guide/stems.md).
+- Read [History](guide/history.md), find [missing files](guide/missing.md), run a [check before a gig](guide/gig-check.md), flag [tempo drift](guide/tempo-drift.md), check [suspect quality](guide/bitrate-check.md), and see [stems](guide/stems.md).
 - [Merge duplicate copies](guide/duplicates.md) into the file you want to keep.
 - Send tracks to [Prepare](guide/prepare.md).
 - [Import and export M3U playlists](guide/playlists.md), and export rekordbox.xml for CDJs. [Moving between Serato and Rekordbox](coming-from-rekordbox.md) lists what that file keeps.
 - [Save related tracks](guide/related.md), and open the live view in the separate listener app while you play.
-- [Rename, move, replace, and trash files](guide/files.md) so crates and history follow the file. [Check drive](guide/files.md#check-a-portable-drive) reads a removable Serato drive. Nothing is copied or deleted.
+- [Rename, move, replace, and trash files](guide/files.md) so crates and history follow the file. [Check drive](guide/files.md#check-a-portable-drive) reads a removable Serato drive, from Organize files or under Before a gig. Nothing is copied or deleted.
 - [Keep hash-checked snapshots and restore one](guide/safety.md#snapshots), including crates on each drive and the cue data stored in audio files. A restored crate file is also written into the library database, so Serato 4 and 5 do not delete it on the next launch. The music itself is not copied into the snapshot. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 - Change [sharing, and open the log](guide/settings.md). [Help](guide/settings.md#help) is beside **Settings**. It shows what a report will include and does not post the issue.
 - Use [keyboard shortcuts](guide/shortcuts.md) to search, switch views, and move through a list. The full list is in **Settings**. **?** opens it.

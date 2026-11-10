@@ -1,8 +1,9 @@
-"""Play history analytics (#33), read-only.
+"""Play history analytics (#33).
 
 Each test builds a temporary library with history sessions and entries,
 then checks ``history_stats.stats``. Times are Unix seconds, like Serato's
-``history_entry.start_time``. The library file must be unchanged.
+``history_entry.start_time``. Stats and CSV reads leave the library file
+unchanged. Creating an idle crate writes through ``crate_action``.
 """
 
 from __future__ import annotations
@@ -23,7 +24,9 @@ from unittest import mock
 import history_stats
 import library
 import server
-from tests.fixture import TempLibrary
+from library import SeratoOpen
+from tests.fixture import TempLibrary, open_database
+from tests.test_smart_presets import _members
 
 DAY = 86_400
 NOW = 1_800_000_000  # 2027-01-15
@@ -50,7 +53,7 @@ class _History:
 
     def asset(self, asset_id: int, name: str, artist: str, *, added: int | None, plays: int = 0, space: int = 1) -> None:
         self.conn.execute(
-            "INSERT INTO asset (id, name, artist, time_added, dj_play_count) VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO asset (id, name, artist, time_added, dj_play_count, location_id) VALUES (?, ?, ?, ?, ?, 1)",
             (asset_id, name, artist, added, plays),
         )
         self.conn.execute("INSERT INTO space_asset (asset_id, space_id) VALUES (?, ?)", (asset_id, space))
@@ -187,6 +190,19 @@ class StatsTests(unittest.TestCase):
         # Every track but Fresh (added 10 days ago) and Video (another space).
         self.assertEqual(report["not_played_count"], 7)
 
+    def test_empty_library(self) -> None:
+        with closing(sqlite3.connect(self.fixture.db)) as conn:
+            conn.execute("PRAGMA foreign_keys = OFF")
+            conn.execute("DELETE FROM history_entry")
+            conn.execute("DELETE FROM history_session")
+            conn.execute("DELETE FROM space_asset")
+            conn.execute("DELETE FROM asset")
+            conn.commit()
+        report = self._stats()
+        self.assertEqual((report["plays"], report["sessions"], report["not_played_count"]), (0, 0, 0))
+        self.assertEqual(_rows(report, "top_tracks"), [])
+        self.assertNotIn("top_track", history_stats.csv_text(report))
+
     def test_bad_values(self) -> None:
         for kwargs in ({"top": 0}, {"top": 501}, {"idle_days": 0}, {"idle_days": 3651}, {"start": 10, "end": 10}, {"start": 20, "end": 10}):
             with self.subTest(kwargs=kwargs), self.assertRaises(library.LibraryError) as caught:
@@ -213,6 +229,12 @@ class NumberTests(unittest.TestCase):
             with self.subTest(raw=raw), self.assertRaises(library.LibraryError) as caught:
                 history_stats.number(raw, 25, 1, 500)
             self.assertEqual((caught.exception.status, caught.exception.message), (400, "That request is not valid."))
+        self.assertEqual(history_stats.json_number(None, 365, 1, 3650), 365)
+        self.assertEqual(history_stats.json_number(40, 365, 1, 3650), 40)
+        for raw in (True, 0, 3651, 1.5, "7"):
+            with self.subTest(raw=raw), self.assertRaises(library.LibraryError) as caught:
+                history_stats.json_number(raw, 365, 1, 3650)
+            self.assertEqual(caught.exception.status, 400)
 
 
 class ApiTests(unittest.TestCase):
@@ -252,6 +274,171 @@ class ApiTests(unittest.TestCase):
             self.assertNotEqual(status, 200)
             self.assertEqual(_digest(fixture.db), before)
 
+    def _csv(self, query: str) -> tuple[int, str, str]:
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        host, port = httpd.server_address[:2]
+        try:
+            try:
+                with urllib.request.urlopen(f"http://{host!s}:{port}/api/history-stats.csv{query}") as response:
+                    return (
+                        response.status,
+                        response.headers.get("Content-Type", ""),
+                        response.read().decode("utf-8-sig"),
+                    )
+            except urllib.error.HTTPError as error:
+                with error:
+                    return error.code, error.headers.get("Content-Type", ""), error.read().decode("utf-8")
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            thread.join(timeout=3)
+
+    def _post(self, payload: dict[str, object]) -> tuple[int, dict[str, object]]:
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        host, port = httpd.server_address[:2]
+        try:
+            request = urllib.request.Request(
+                f"http://{host!s}:{port}/api/history-stats",
+                data=json.dumps(payload).encode("utf-8"),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(request) as response:
+                    return response.status, json.loads(response.read().decode("utf-8"))
+            except urllib.error.HTTPError as error:
+                with error:
+                    return error.code, json.loads(error.read().decode("utf-8"))
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            thread.join(timeout=3)
+
+    def test_csv_download_is_read_only(self) -> None:
+        with TempLibrary() as fixture:
+            before = _digest(fixture.db)
+            status, content_type, body = self._csv("")
+            self.assertEqual(status, 200)
+            self.assertIn("text/csv", content_type)
+            self.assertIn("top_track", body)
+            self.assertIn("not_played", body)
+            self.assertEqual(_digest(fixture.db), before)
+
+    def test_unknown_post_action_is_400(self) -> None:
+        with TempLibrary() as fixture:
+            before = _digest(fixture.db)
+            status, body = self._post({"action": "export"})
+            self.assertEqual((status, body["code"]), (400, "action_unavailable"))
+            self.assertEqual(_digest(fixture.db), before)
+
+    def test_preview_does_not_write(self) -> None:
+        with TempLibrary() as fixture:
+            before = _digest(fixture.db)
+            status, body = self._post({"action": "preview", "idle_days": 30})
+            self.assertEqual(status, 200)
+            self.assertEqual((body["preview"], body["written"]), (True, False))
+            self.assertGreater(int(str(body["count"])), 0)
+            self.assertEqual(_digest(fixture.db), before)
+
+    def test_create_writes_idle_tracks(self) -> None:
+        with TempLibrary() as fixture:
+            before = _digest(fixture.db)
+            preview_status, preview = self._post({"action": "preview", "name": "Idle crate"})
+            self.assertEqual(preview_status, 200)
+            self.assertEqual(_digest(fixture.db), before)
+            status, body = self._post({"action": "create", "name": "Idle crate"})
+            self.assertEqual(status, 200)
+            self.assertTrue(body["written"])
+            self.assertEqual(body["count"], preview["count"])
+            crate_id = int(str(body["id"]))
+            self.assertEqual(len(_members(crate_id)), int(str(body["count"])))
+            self.assertNotEqual(_digest(fixture.db), before)
+
+
+class CrateTests(unittest.TestCase):
+    """Idle list to crate, preview then write."""
+
+    def setUp(self) -> None:
+        self.fixture = TempLibrary().__enter__()
+        with closing(sqlite3.connect(self.fixture.db)) as conn:
+            h = _History(conn)
+            h.asset(10, "Opener", "Alpha", added=NOW - 800 * DAY)
+            h.asset(13, "Dusty", "Gamma", added=NOW - 800 * DAY, plays=4)
+            h.asset(14, "Fresh", "Delta", added=NOW - 10 * DAY)
+            old = NOW - 400 * DAY
+            h.session(1, old, "Old gig")
+            h.play(1, 13, old + 60, name="Dusty", artist="Gamma")
+            h.session(2, NOW - 20 * DAY, "Club")
+            h.play(2, 10, NOW - 20 * DAY + 60, name="Opener", artist="Alpha")
+            h.conn.commit()
+
+    def tearDown(self) -> None:
+        self.fixture.__exit__(None, None, None)
+
+    def test_csv_quotes_a_formula_title(self) -> None:
+        with closing(sqlite3.connect(self.fixture.db)) as conn:
+            conn.execute("UPDATE asset SET name = ? WHERE id = 1", ("=HYPERLINK()",))
+            conn.commit()
+        report = history_stats.stats(self.fixture.db, library.LIBRARY_SPACE, now=NOW)
+        text = history_stats.csv_text(report)
+        self.assertIn("'=HYPERLINK()", text)
+        self.assertNotRegex(text, r"(?m)^=HYPERLINK")
+
+    def test_preview_lists_idle_without_writing(self) -> None:
+        before = _digest(self.fixture.db)
+        preview = history_stats.preview_idle(self.fixture.db, library.LIBRARY_SPACE, now=NOW)
+        self.assertEqual(_digest(self.fixture.db), before)
+        self.assertEqual((preview["preview"], preview["written"]), (True, False))
+        ids = [row["id"] for row in _rows(preview, "tracks")]
+        self.assertEqual(ids, [1, 2, 13])
+        self.assertEqual(preview["name"], "Not played in 365 days")
+
+    def test_create_adds_the_idle_tracks(self) -> None:
+        created = history_stats.create_idle(
+            self.fixture.db, library.LIBRARY_SPACE, name="Dusty crate", now=NOW
+        )
+        self.assertTrue(created["written"])
+        self.assertEqual(set(_members(int(str(created["id"])))), {1, 2, 13})
+        self.assertEqual(created["count"], 3)
+
+    def test_empty_idle_list_does_not_write(self) -> None:
+        with closing(sqlite3.connect(self.fixture.db)) as conn:
+            conn.execute(
+                "INSERT INTO history_session (id, name, start_time, end_time) VALUES (9, 'Recent', ?, ?)",
+                (NOW - DAY, NOW),
+            )
+            for offset, asset_id in enumerate((1, 2, 13)):
+                conn.execute(
+                    "INSERT INTO history_entry (id, session_id, asset_id, name, artist, start_time, played) VALUES (?, 9, ?, '', '', ?, 1)",
+                    (500 + offset, asset_id, NOW - DAY + 60),
+                )
+            conn.commit()
+        before = _digest(self.fixture.db)
+        created = history_stats.create_idle(self.fixture.db, library.LIBRARY_SPACE, now=NOW)
+        self.assertEqual((created["written"], created["count"]), (False, 0))
+        self.assertEqual(_digest(self.fixture.db), before)
+
+    def test_serato_running_blocks_create(self) -> None:
+        with open_database(self.fixture.db) as conn:
+            conn.execute("INSERT INTO lock (owner_process_id, owner_process_name) VALUES (99, 'Serato DJ Pro')")
+        before = _digest(self.fixture.db)
+        with mock.patch("library._process_is_serato", return_value=True), self.assertRaises(SeratoOpen):
+            history_stats.create_idle(self.fixture.db, library.LIBRARY_SPACE, now=NOW)
+        self.assertEqual(_digest(self.fixture.db), before)
+
+    def test_missing_history_still_lists_idle_tracks(self) -> None:
+        with closing(sqlite3.connect(self.fixture.db)) as conn:
+            conn.execute("DELETE FROM history_entry")
+            conn.execute("DELETE FROM history_session")
+            conn.commit()
+        report = history_stats.stats(self.fixture.db, library.LIBRARY_SPACE, now=NOW)
+        self.assertEqual((report["plays"], report["sessions"]), (0, 0))
+        self.assertGreater(int(str(report["not_played_count"])), 0)
+
 
 class CliTests(unittest.TestCase):
     def test_main(self) -> None:
@@ -262,6 +449,11 @@ class CliTests(unittest.TestCase):
             self.assertEqual(json.loads(printed)["plays"], 1)
             with mock.patch("sys.stderr"):
                 self.assertEqual(history_stats.main(["--database", str(fixture.root / "none.sqlite")]), 1)
+            with mock.patch("sys.stdout") as csv_out:
+                self.assertEqual(history_stats.main(["--database", str(fixture.db), "--csv"]), 0)
+            printed = "".join(call.args[0] for call in csv_out.write.call_args_list)
+            self.assertIn("top_track", printed)
+            self.assertIn("not_played", printed)
 
 
 if __name__ == "__main__":
