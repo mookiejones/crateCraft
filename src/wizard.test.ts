@@ -1,5 +1,10 @@
+import { createElement } from "react";
+import { flushSync } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { describe, expect, it } from "vitest";
 
+import { WizardScreen } from "./components/WizardScreen";
+import { idleWizardValue, WizardProvider } from "./context/WizardContext";
 import {
   BLOCKED_MESSAGE,
   canAdvance,
@@ -241,6 +246,58 @@ describe("update-check step (#97)", () => {
     let current = atSnapshot(model({ needsConsent: false }), "saved");
     current = reduceWizard(current, { type: "next" });
     expect(current.step).toBe("done");
+  });
+});
+
+describe("WizardScreen from context", () => {
+  it("renders the welcome step from WizardContext", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    let clicked = 0;
+    const value = {
+      ...idleWizardValue(),
+      model: model(),
+      onPrimary: () => {
+        clicked += 1;
+      },
+    };
+    flushSync(() => {
+      root.render(
+        createElement(WizardProvider, {
+          value,
+          children: createElement(WizardScreen),
+        }),
+      );
+    });
+    expect(host.querySelector("#wizard-title")?.textContent).toBe("See your Serato library");
+    expect(host.querySelector("#wizard-step-label")?.textContent).toBe("Step 1 of 5");
+    expect(host.querySelector("#wizard-primary")?.textContent).toBe("Get started");
+    expect(host.querySelector("#wizard-body")?.textContent).toContain("This app shows the library");
+    host.querySelector<HTMLButtonElement>("#wizard-primary")?.click();
+    expect(clicked).toBe(1);
+    root.unmount();
+    host.remove();
+  });
+
+  it("renders a blocked safety snapshot from that context", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const blocked = atSnapshot(model({ seratoRunning: true }));
+    flushSync(() => {
+      root.render(
+        createElement(WizardProvider, {
+          value: { ...idleWizardValue(), model: blocked },
+          children: createElement(WizardScreen),
+        }),
+      );
+    });
+    expect(host.querySelector("#wizard-title")?.textContent).toBe("Safety snapshot");
+    expect(host.querySelector("#wizard-status")?.textContent).toBe("Close Serato DJ to continue.");
+    expect(host.querySelector<HTMLButtonElement>("#wizard-primary")?.disabled).toBe(true);
+    root.unmount();
+    host.remove();
   });
 });
 

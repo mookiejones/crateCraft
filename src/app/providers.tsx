@@ -1,9 +1,10 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. Later screens add their own context file
- * and one wrapper here. This module reads the player engine; it does not
- * own playback.
+ * Player and wizard are separate domains. The wizard bundle mounts its
+ * own live `WizardProvider` value; this file supplies an idle wizard so
+ * the domain is present on every island without pulling the setup fetch
+ * into `app.js`.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -12,6 +13,10 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import {
+  idleWizardValue,
+  WizardProvider as WizardContextProvider,
+} from "../context/WizardContext";
 import {
   canSkip,
   canTogglePlay,
@@ -70,12 +75,30 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Mount an idle wizard domain at the root of one React island.
+ *
+ * Live setup state is supplied by the wizard bundle. This wrapper keeps
+ * `useWizard` defined on the main page.
+ *
+ * @param children Island that may call `useWizard`.
+ */
+export function WizardProvider({ children }: { children: ReactNode }) {
+  const value = useMemo(() => idleWizardValue(), []);
+  return <WizardContextProvider value={value}>{children}</WizardContextProvider>;
+}
+
+/**
  * Nest every domain provider.
  *
- * Player is the first domain. A later screen adds one line here.
+ * Player and wizard each have a context file. A later screen adds one
+ * line here.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
-  return <PlayerProvider>{children}</PlayerProvider>;
+  return (
+    <PlayerProvider>
+      <WizardProvider>{children}</WizardProvider>
+    </PlayerProvider>
+  );
 }

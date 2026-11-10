@@ -1,11 +1,21 @@
 /**
  * First-run wizard screen.
  *
- * The state machine in wizard.ts decides the step. This file paints the
- * dialog, talks to the local server, and moves focus when the step
- * changes. Text from the server is assigned with textContent.
+ * The state machine in wizard.ts decides the step. This file talks to
+ * the local server, owns the session, and mounts the React dialog.
+ * Text from the server is assigned with textContent in that tree.
  */
 
+import { createElement } from "react";
+import { flushSync } from "react-dom";
+import { createRoot, type Root } from "react-dom/client";
+import { WizardScreen } from "./components/WizardScreen";
+import {
+  idleWizardValue,
+  WizardProvider,
+  type FolderRow,
+  type WizardContextValue,
+} from "./context/WizardContext";
 import { onLocaleChange, serverMessage, t, type MessageKey } from "./i18n";
 import {
   canGoBack,
@@ -14,14 +24,9 @@ import {
   primaryEnabled,
   reduceWizard,
   snapshotBlocked,
-  stepAnnouncement,
-  stepPosition,
   type LibraryStatus,
-  type PrimaryAction,
   type WizardModel,
 } from "./wizard";
-import { buttonEl, setTooltip } from "./tooltip";
-import { wizardFolder, wizardPrimaryTip } from "./tooltip-strings";
 
 export interface SettingsPayload {
   telemetry_consent: boolean | null;
@@ -55,36 +60,6 @@ interface SetupInfo {
   statusWritable: boolean;
 }
 
-interface FolderRow {
-  name: string;
-  path: string;
-}
-
-const LABELS: Record<Exclude<PrimaryAction, "none">, MessageKey> = {
-  "get-started": "wizard.action.getStarted",
-  looking: "wizard.action.looking",
-  "use-library": "wizard.action.useLibrary",
-  "check-again": "wizard.action.checkAgain",
-  "take-snapshot": "wizard.action.takeSnapshot",
-  "try-again": "wizard.action.tryAgain",
-  continue: "wizard.action.continue",
-  "open-library": "wizard.action.openLibrary",
-};
-
-const HEADINGS: Record<WizardModel["step"], MessageKey> = {
-  welcome: "wizard.heading.welcome",
-  library: "wizard.heading.library",
-  snapshot: "wizard.heading.snapshot",
-  consent: "wizard.heading.consent",
-  updates: "wizard.heading.updates",
-  done: "wizard.done",
-};
-
-// Notes are stored as functions so a language change repaints them.
-type Note = () => string;
-const noteKey = (key: MessageKey): Note => () => t(key);
-const noteText = (value: string): Note => () => value;
-
 let wired = false;
 let starting = false;
 let generation = 0;
@@ -101,8 +76,17 @@ let statusNote: Note | null = null;
 let folderOpen = false;
 let folderPath = "";
 let folderParent: string | null = null;
+let folderName = "";
+let folders: FolderRow[] = [];
 let pollTimer = 0;
 let polling = false;
+let focusToken = 0;
+let reactHost: HTMLElement | null = null;
+let reactRoot: Root | null = null;
+
+type Note = () => string;
+const noteKey = (key: MessageKey): Note => () => t(key);
+const noteText = (value: string): Note => () => value;
 
 /** Open setup. A finished setup stays closed unless force is set. */
 export function open(next: OpenOptions = {}): void {
@@ -123,39 +107,6 @@ function wire(): void {
   onLocaleChange(() => {
     if (wizardDialog().open) paint(false);
   });
-  button("wizard-primary").addEventListener("click", () => {
-    void onPrimary();
-  });
-  button("wizard-back").addEventListener("click", () => {
-    onBack();
-  });
-  button("wizard-cancel").addEventListener("click", () => {
-    cancel();
-  });
-  button("wizard-secondary").addEventListener("click", () => {
-    void showFolders();
-  });
-  button("wizard-no").addEventListener("click", () => {
-    void chooseConsent(false);
-  });
-  button("wizard-yes").addEventListener("click", () => {
-    void chooseConsent(true);
-  });
-  button("wizard-updates-no").addEventListener("click", () => {
-    void chooseUpdates(false);
-  });
-  button("wizard-updates-yes").addEventListener("click", () => {
-    void chooseUpdates(true);
-  });
-  button("wizard-folder-up").addEventListener("click", () => {
-    if (folderParent) void browse(folderParent);
-  });
-  button("wizard-folder-use").addEventListener("click", () => {
-    void useFolder();
-  });
-  button("wizard-folder-close").addEventListener("click", () => {
-    closeFolders();
-  });
   wizardDialog().addEventListener("cancel", (event) => {
     event.preventDefault();
     if (folderOpen) {
@@ -171,6 +122,10 @@ async function begin(next: OpenOptions): Promise<void> {
   const token = generation;
   stopPoll();
   folderOpen = false;
+  folderPath = "";
+  folderParent = null;
+  folderName = "";
+  folders = [];
   statusNote = null;
   busy = false;
   const settings = await loadSettings();
@@ -190,11 +145,9 @@ async function begin(next: OpenOptions): Promise<void> {
     seratoRunning: setup?.seratoRunning ?? false,
     needsUpdates,
   });
-  paint(false);
+  paint(true);
   const dialog = wizardDialog();
   if (!dialog.open) dialog.showModal();
-  text("wizard-announce").textContent = stepAnnouncement(model);
-  text("wizard-title").focus();
   ensurePoll();
 }
 
@@ -378,7 +331,8 @@ async function showFolders(): Promise<void> {
 function closeFolders(): void {
   folderOpen = false;
   paint(false);
-  button("wizard-secondary").focus();
+  const secondary = document.getElementById("wizard-secondary");
+  if (secondary instanceof HTMLButtonElement) secondary.focus();
 }
 
 async function browse(path: string): Promise<void> {
@@ -395,9 +349,8 @@ async function browse(path: string): Promise<void> {
     }
     folderPath = listing.path;
     folderParent = listing.parent;
-    text("wizard-folder-name").textContent = listing.name;
-    fillFolders(listing.folders);
-    button("wizard-folder-up").disabled = listing.parent === null;
+    folderName = listing.name;
+    folders = listing.folders.slice();
     paint(false);
   } catch {
     if (token !== generation) return;
@@ -433,134 +386,73 @@ async function useFolder(): Promise<void> {
     if (token === generation) {
       busy = false;
       paint(false);
-      if (model.context.library === "found") button("wizard-primary").focus();
+      if (model.context.library === "found") {
+        const primary = document.getElementById("wizard-primary");
+        if (primary instanceof HTMLButtonElement) primary.focus();
+      }
     }
   }
 }
 
-function fillFolders(folders: readonly FolderRow[]): void {
-  const list = element("wizard-folder-list");
-  list.replaceChildren();
-  if (folders.length === 0) {
-    const empty = document.createElement("p");
-    empty.className = "wizard-folder-empty";
-    empty.textContent = t("wizard.noSubfolders");
-    list.append(empty);
-    return;
-  }
-  for (const folder of folders) {
-    const control = buttonEl(wizardFolder(folder.name));
-    control.className = "wizard-folder";
-    control.textContent = folder.name;
-    const nextPath = folder.path;
-    control.addEventListener("click", () => {
-      void browse(nextPath);
-    });
-    list.append(control);
-  }
+function readValue(): WizardContextValue {
+  return {
+    ...idleWizardValue(),
+    model,
+    busy,
+    folderOpen,
+    folderName,
+    folderParent,
+    folders,
+    summary: summary ? summary() : "",
+    nextHint: nextText ? nextText() : "",
+    statusNote: statusNote ? statusNote() : "",
+    focusToken,
+    onPrimary: () => {
+      void onPrimary();
+    },
+    onBack,
+    onCancel: cancel,
+    onChooseFolder: () => {
+      void showFolders();
+    },
+    onConsent: (value) => {
+      void chooseConsent(value);
+    },
+    onUpdates: (value) => {
+      void chooseUpdates(value);
+    },
+    onFolderUp: () => {
+      if (folderParent) void browse(folderParent);
+    },
+    onFolderUse: () => {
+      void useFolder();
+    },
+    onFolderClose: closeFolders,
+    onBrowse: (path) => {
+      void browse(path);
+    },
+  };
 }
 
 function paint(moveFocus: boolean): void {
-  const position = stepPosition(model);
-  text("wizard-step-label").textContent = t("wizard.stepOf", { index: position.index, count: position.count });
-  paintSegments(position.index, position.count);
-  paintArt();
-  text("wizard-title").textContent = t(HEADINGS[model.step]);
-  const body = bodyText();
-  const bodyNode = text("wizard-body");
-  bodyNode.textContent = body;
-  bodyNode.hidden = body.length === 0;
-  const hint = text("wizard-next");
-  const hintText = nextText ? nextText() : "";
-  const showHint = model.step === "library" && model.context.library !== "found" && hintText.length > 0;
-  hint.hidden = !showHint;
-  hint.textContent = showHint ? hintText : "";
-  const status = statusFor();
-  const statusNode = text("wizard-status");
-  statusNode.textContent = status.text;
-  statusNode.hidden = status.text.length === 0;
-  statusNode.className = status.kind ? `wizard-status is-${status.kind}` : "wizard-status";
-  paintProgress();
-  element("wizard-consent").hidden = model.step !== "consent";
-  element("wizard-updates").hidden = model.step !== "updates";
-  element("wizard-folders").hidden = !(folderOpen && model.step === "library");
-  const back = button("wizard-back");
-  back.hidden = !canGoBack(model);
-  back.disabled = busy;
-  const secondary = button("wizard-secondary");
-  secondary.hidden = model.step !== "library";
-  secondary.disabled = busy;
-  const primary = button("wizard-primary");
-  const action = primaryAction(model);
-  primary.hidden = action === "none";
-  primary.textContent = model.context.snapshot === "saving"
-    ? t("wizard.savingCopy")
-    : action === "none" ? "" : t(LABELS[action]);
-  setTooltip(primary, wizardPrimaryTip(action, model.context.snapshot === "saving"));
-  primary.disabled = busy || !primaryEnabled(model);
-  button("wizard-no").disabled = busy;
-  button("wizard-yes").disabled = busy;
-  button("wizard-updates-no").disabled = busy;
-  button("wizard-updates-yes").disabled = busy;
-  button("wizard-cancel").disabled = false;
-  if (moveFocus) {
-    text("wizard-announce").textContent = stepAnnouncement(model);
-    text("wizard-title").focus();
-  }
-}
-
-function bodyText(): string {
-  switch (model.step) {
-    case "welcome":
-      return t("wizard.welcomeBody");
-    case "library":
-      if (model.context.library === "pending") return t("wizard.looking");
-      return (summary ? summary() : "") || t("wizard.looking");
-    case "snapshot":
-      return t("wizard.snapshotBody");
-    case "consent":
-      return t("consent.body");
-    case "updates":
-      return t("wizard.updatesBody");
-    case "done":
-      return "";
-    default:
-      return "";
-  }
-}
-
-function statusFor(): { text: string; kind: "" | "blocked" | "saved" } {
-  if (snapshotBlocked(model)) return { text: t("wizard.blocked"), kind: "blocked" };
-  if (model.step === "snapshot" && model.context.snapshot === "saved") {
-    return { text: t("wizard.copySaved"), kind: "saved" };
-  }
-  if (model.step === "snapshot" && model.context.snapshot === "saving") {
-    return { text: t("wizard.savingLibraryCopy"), kind: "" };
-  }
-  if (statusNote) return { text: statusNote(), kind: "" };
-  return { text: "", kind: "" };
-}
-
-function paintSegments(current: number, count: number): void {
-  const host = element("wizard-segments");
-  host.replaceChildren();
-  for (let index = 1; index <= count; index += 1) {
-    const segment = document.createElement("span");
-    segment.className = "wizard-segment";
-    if (index < current) segment.dataset.state = "done";
-    else if (index === current) segment.dataset.state = "current";
-    else segment.dataset.state = "upcoming";
-    host.append(segment);
-  }
-}
-
-function paintArt(): void {
-  const slots = document.querySelectorAll<HTMLElement>(".wizard-art");
-  slots.forEach((slot) => {
-    const current = slot.dataset.artSlot === model.step;
-    const hasArt = slot.querySelector("svg, img") !== null;
-    slot.hidden = !(current && hasArt);
+  if (moveFocus) focusToken += 1;
+  flushSync(() => {
+    wizardRoot().render(
+      createElement(WizardProvider, {
+        value: readValue(),
+        children: createElement(WizardScreen),
+      }),
+    );
   });
+}
+
+function wizardRoot(): Root {
+  const dialog = wizardDialog();
+  if (reactRoot && reactHost === dialog) return reactRoot;
+  reactRoot?.unmount();
+  reactHost = dialog;
+  reactRoot = createRoot(dialog);
+  return reactRoot;
 }
 
 function publishStatus(setup: SetupInfo): void {
@@ -572,16 +464,6 @@ function publishStatus(setup: SetupInfo): void {
     serato_running: setup.seratoRunning,
     process: setup.seratoRunning ? "Serato DJ" : null,
   });
-}
-
-function paintProgress(): void {
-  const node = element("wizard-progress");
-  if (!(node instanceof HTMLProgressElement)) return;
-  const saving = model.step === "snapshot" && model.context.snapshot === "saving";
-  const saved = model.step === "snapshot" && model.context.snapshot === "saved";
-  node.hidden = !saving && !saved;
-  if (saving) node.removeAttribute("value");
-  if (saved) node.value = 1;
 }
 
 function ensurePoll(): void {
@@ -723,23 +605,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function wizardDialog(): HTMLDialogElement {
-  const node = element("wizard");
+  const node = document.getElementById("wizard");
   if (!(node instanceof HTMLDialogElement)) throw new Error("Missing wizard");
-  return node;
-}
-
-function element(id: string): HTMLElement {
-  const node = document.getElementById(id);
-  if (!node) throw new Error(`Missing ${id}`);
-  return node;
-}
-
-function text(id: string): HTMLElement {
-  return element(id);
-}
-
-function button(id: string): HTMLButtonElement {
-  const node = element(id);
-  if (!(node instanceof HTMLButtonElement)) throw new Error(`Missing ${id}`);
   return node;
 }
