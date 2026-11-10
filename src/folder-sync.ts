@@ -17,6 +17,7 @@ import {
   type FolderSyncReply,
 } from "./folder-sync-view";
 import { state } from "./state";
+import { bindCrateActions } from "./crate-store";
 import { loadLibrary, lockDown, setNotice } from "./views";
 
 const PREVIEW_DELAY_MS = 250;
@@ -146,3 +147,9 @@ export function wireFolderSync(): void {
     runFolderSync().catch((error) => setNotice(failureOf(error).message));
   });
 }
+
+bindCrateActions({
+  folderSync: () => {
+    openFolderSyncDialog().catch((error) => setNotice(failureOf(error).message));
+  },
+});

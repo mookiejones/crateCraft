@@ -12,6 +12,7 @@
 import { postJSON } from "./api";
 import { el } from "./dom";
 import { t } from "./i18n";
+import { bindUpdateSaves, patchSettings, settingsIslandMounted } from "./settings";
 
 /** The setup wizard fires this after it saves the choice. */
 export const UPDATE_CHOICE_EVENT = "serato-update-choice";
@@ -93,11 +94,21 @@ export async function loadUpdate(): Promise<void> {
  */
 export function paintUpdate(): void {
   const status = latest;
-  const toggle = el("update-toggle");
-  const pre = el("update-prereleases");
-  toggle.checked = status?.enabled === true;
-  pre.checked = status?.include_prereleases === true;
-  pre.disabled = status?.enabled !== true;
+  const toggle = document.getElementById("update-toggle");
+  const pre = document.getElementById("update-prereleases");
+  if (toggle instanceof HTMLInputElement && !settingsIslandMounted()) {
+    toggle.checked = status?.enabled === true;
+  }
+  if (pre instanceof HTMLInputElement && !settingsIslandMounted()) {
+    pre.checked = status?.include_prereleases === true;
+    pre.disabled = status?.enabled !== true;
+  }
+  patchSettings({
+    updateEnabled: status?.enabled === true,
+    updatePrereleases: status?.include_prereleases === true,
+    updatePrereleasesDisabled: status?.enabled !== true,
+    updateBusy: false,
+  });
   const banner = el("update-banner");
   const release = status?.latest ?? null;
   if (!status || status.enabled !== true || !status.update || !release || dismissed) {
@@ -124,6 +135,10 @@ export function repaintUpdate(): void {
 export function wireUpdate(): void {
   if (wired) return;
   wired = true;
+  bindUpdateSaves(
+    (on) => save({ enabled: on }),
+    (on) => save({ include_prereleases: on }),
+  );
   el("update-download").addEventListener("click", () => {
     void download();
   });
@@ -134,30 +149,36 @@ export function wireUpdate(): void {
     dismissed = true;
     paintUpdate();
   });
-  el("update-toggle").addEventListener("change", () => {
-    void save({ enabled: el("update-toggle").checked });
-  });
-  el("update-prereleases").addEventListener("change", () => {
-    void save({ include_prereleases: el("update-prereleases").checked });
-  });
+  if (!settingsIslandMounted()) {
+    el("update-toggle").addEventListener("change", () => {
+      void save({ enabled: el("update-toggle").checked });
+    });
+    el("update-prereleases").addEventListener("change", () => {
+      void save({ include_prereleases: el("update-prereleases").checked });
+    });
+  }
   window.addEventListener(UPDATE_CHOICE_EVENT, () => {
     void loadUpdate();
   });
 }
 
 async function save(choice: { enabled: boolean } | { include_prereleases: boolean }): Promise<void> {
-  const toggle = el("update-toggle");
-  const pre = el("update-prereleases");
-  toggle.disabled = true;
-  pre.disabled = true;
-  el("update-status").textContent = "";
+  const toggle = document.getElementById("update-toggle");
+  const pre = document.getElementById("update-prereleases");
+  const note = document.getElementById("update-status");
+  if (toggle instanceof HTMLInputElement) toggle.disabled = true;
+  if (pre instanceof HTMLInputElement) pre.disabled = true;
+  if (note) note.textContent = "";
+  patchSettings({ updateBusy: true, updateStatus: "" });
   try {
     await postJSON("/api/update", choice);
-    toggle.disabled = false;
+    if (toggle instanceof HTMLInputElement) toggle.disabled = false;
     await loadUpdate();
   } catch {
-    toggle.disabled = false;
-    el("update-status").textContent = t("settings.updatesFailed");
+    if (toggle instanceof HTMLInputElement) toggle.disabled = false;
+    const message = t("settings.updatesFailed");
+    if (note) note.textContent = message;
+    patchSettings({ updateBusy: false, updateStatus: message });
     paintUpdate();
   }
 }

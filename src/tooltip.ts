@@ -87,6 +87,18 @@ export function setTooltip(element: HTMLElement, spec: TipSpec): void {
 }
 
 /**
+ * Bind a tooltip to a React host when the node mounts.
+ *
+ * @param spec Locale key and placeholders.
+ * @returns A callback ref.
+ */
+export function tooltipRef(spec: TipSpec) {
+  return (element: HTMLElement | null) => {
+    if (element) setTooltip(element, spec);
+  };
+}
+
+/**
  * Create a button that already has its tooltip.
  *
  * The type is button. A submit button sets type after this returns.

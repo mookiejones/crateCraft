@@ -203,11 +203,12 @@ class TokenSheetTests(unittest.TestCase):
         self.assertEqual(HEX_COLOR.findall(text), [])
         self.assertNotIn("marginTop", source)
         self.assertNotIn("style.color", source)
-        self.assertIn('strong.className = "bpm"', text)
+        self.assertIn('className: key === "column.bpm" ? "bpm"', text)
         self.assertIn('"swatch swatch-lg"', text)
         self.assertIn("paneSpacer.style.height", text)
         self.assertIn("paneRows.style.transform", text)
-        self.assertIn("row.style.paddingLeft", text)
+        self.assertIn("paddingLeft", source)
+        self.assertIn("row.depth * 14", source)
 
     def test_palette_aliases_point_at_tokens(self) -> None:
         """Point the old palette names at the token roles.

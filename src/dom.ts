@@ -17,6 +17,7 @@ export interface ElementIds {
   "crate-pane-b-label": HTMLParagraphElement;
   "crate-split": HTMLButtonElement;
   "crate-save-view": HTMLButtonElement;
+  "crate-browser-actions": HTMLDivElement;
   count: HTMLParagraphElement;
   search: HTMLInputElement;
   "search-field": HTMLSelectElement;
@@ -192,6 +193,7 @@ export interface ElementIds {
   "merge-file-note": HTMLParagraphElement;
   "consent-dialog": HTMLDialogElement;
   "settings-dialog": HTMLDialogElement;
+  "settings-title": HTMLHeadingElement;
   "telemetry-toggle": HTMLInputElement;
   "update-toggle": HTMLInputElement;
   "update-prereleases": HTMLInputElement;

@@ -11,6 +11,7 @@
 import { fetchLibraryRoots, readJSON } from "./api";
 import type { LibraryRoot } from "./api-types";
 import { el } from "./dom";
+import { emitFiles } from "./files-store";
 import { serverMessage, t, type MessageKey } from "./i18n";
 import { buttonEl } from "./tooltip";
 import { portableCheck } from "./tooltip-strings";
@@ -56,6 +57,53 @@ let latest: DriveReport | null = null;
 let lastRoots: LibraryRoot[] = [];
 let opener: HTMLElement | null = null;
 let hasConnected = false;
+let statusText = "";
+let mountIslands: () => void = () => {};
+
+/**
+ * Point portable paint at the Files React islands.
+ *
+ * @param fn Mounts the Files panel and dialogs.
+ * @returns {void}
+ */
+export function bindPortableMount(fn: () => void): void {
+  mountIslands = fn;
+}
+
+export type PortableSnapshot = {
+  report: DriveReport | null;
+  status: string;
+};
+
+/**
+ * Latest drive-check report for the Files dialog.
+ *
+ * @returns Report and status line.
+ */
+export function portableSnapshot(): PortableSnapshot {
+  return { report: latest, status: statusText };
+}
+
+/**
+ * Kind label in the active language.
+ *
+ * @param kind Finding kind from the report.
+ * @returns Translated label, or the raw kind.
+ */
+export function portableKindLabel(kind: string): string {
+  return kindLabel(kind);
+}
+
+/**
+ * Close the portable dialog and restore focus.
+ *
+ * @returns {void}
+ */
+export function closePortable(): void {
+  const dialog = document.getElementById("portable-dialog");
+  if (dialog instanceof HTMLDialogElement) dialog.close();
+  if (opener?.isConnected) opener.focus();
+}
 
 /**
  * Volume root for a music folder, so the check sees `_Serato_` beside Music.
@@ -182,6 +230,7 @@ export function portableDriveButton(name: string, path: string): HTMLButtonEleme
  */
 export async function openPortableCheck(path: string, trigger?: HTMLElement): Promise<void> {
   wirePortable();
+  mountIslands();
   opener = trigger ?? null;
   const dialog = el("portable-dialog");
   if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
@@ -286,9 +335,10 @@ export function wirePortable(): void {
 }
 
 /**
- * Paint the verdict, the summary, and the finding lines.
+ * Paint the Before a gig panel and notify the Files dialog.
  *
- * The Files dialog and the Before a gig panel share this painter.
+ * The dialog reads `portableSnapshot` through FilesContext. This painter
+ * only writes the gig panel nodes.
  *
  * @param report Parsed drive-check body.
  * @returns {void}
@@ -307,6 +357,8 @@ export function renderPortableReport(report: DriveReport): void {
     surface.findings.replaceChildren(...items.map((item) => item.cloneNode(true) as HTMLLIElement));
     surface.status.textContent = "";
   }
+  statusText = "";
+  emitFiles();
 }
 
 /**
@@ -416,12 +468,6 @@ function surfaces(): Array<{
 }> {
   return [
     {
-      verdict: el("portable-verdict"),
-      summary: el("portable-summary"),
-      findings: el("portable-findings"),
-      status: el("portable-status"),
-    },
-    {
       verdict: el("portable-view-verdict"),
       summary: el("portable-view-summary"),
       findings: el("portable-view-findings"),
@@ -450,7 +496,9 @@ function clearReport(): void {
 }
 
 function paintStatus(message: string): void {
+  statusText = message;
   for (const surface of surfaces()) surface.status.textContent = message;
+  emitFiles();
 }
 
 function beginBusy(): void {

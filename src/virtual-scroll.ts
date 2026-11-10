@@ -2,23 +2,20 @@
  * Virtual track list.
  *
  * Row height is ROW from state.ts, which matches --row in app.css. Only
- * the rows inside the scroll window are in the DOM. mountTrackList appends
+ * the rows inside the scroll window are in the DOM. Each pane is one
+ * React island. Play still reads PlayerContext. mountTrackList appends
  * the spacer once, before the first paint.
  */
 
 import type { Track } from "./api-types";
 import { bridge } from "./bridge";
 import { el } from "./dom";
-import { clockLabel, colorHex, dateLabel, energyLabel, lengthLabel } from "./format";
 import { createElement } from "react";
 import { mountIsland, type IslandRoot } from "./app/mount";
-import { PlayButton } from "./components/PlayButton";
-import { play, subscribe } from "./player";
-import { playerStrings } from "./player-strings";
+import { TrackListWindow } from "./components/TrackListWindow";
+import { play } from "./player";
 import { ROW, state } from "./state";
-import { formatNumber, t } from "./i18n";
-import { setTooltip } from "./tooltip";
-import { selectRow } from "./tooltip-strings";
+import { emitTrackList } from "./track-list-store";
 
 const spacer = document.createElement("div");
 const rows = document.createElement("div");
@@ -32,14 +29,7 @@ spacerB.className = "spacer";
 rowsB.className = "rows";
 spacerB.append(rowsB);
 
-const playRoots = new WeakMap<HTMLElement, IslandRoot[]>();
-
-function unmountPlayButtons(paneRows: HTMLElement): void {
-  const roots = playRoots.get(paneRows);
-  if (!roots) return;
-  for (const root of roots) root.unmount();
-  playRoots.set(paneRows, []);
-}
+const paneRoots = new WeakMap<HTMLElement, IslandRoot>();
 
 /**
  * Append the scroll spacer to the track list.
@@ -89,120 +79,21 @@ function paintPane(list: HTMLDivElement, paneSpacer: HTMLDivElement, paneRows: H
   const end = Math.min(view.length, Math.ceil((list.scrollTop + height) / ROW) + 6);
   paneSpacer.style.height = `${view.length * ROW}px`;
   paneRows.style.transform = `translateY(${start * ROW}px)`;
-  unmountPlayButtons(paneRows);
-  paneRows.replaceChildren();
-  if (!view.length) {
-    const empty = document.createElement("p");
-    empty.className = "empty-list";
-    empty.textContent = state.mode === "duplicates" && !state.duplicateIds ? t("list.readingDuplicates") : t("list.noMatches");
-    paneRows.append(empty);
-    return;
-  }
-  for (let index = start; index < end; index += 1) {
-    const track = view[index]!;
-    const button = document.createElement("div");
-    button.className = "row";
-    button.setAttribute("role", "option");
-    button.setAttribute("aria-selected", String(track.id === state.selectedId));
-    button.dataset.id = String(track.id);
-    setTooltip(button, selectRow(track.name || "Untitled"));
-
-    const titleCell = document.createElement("span");
-    titleCell.className = "cell";
-    const line = document.createElement("span");
-    line.className = "title-line";
-    if (!track.entry) {
-      const labelName = track.name || playerStrings.untitled;
-      const playHost = document.createElement("span");
-      const root = mountIsland(playHost, createElement(PlayButton, {
-        variant: "row",
-        trackId: track.id,
-        name: labelName,
-        onClickExtra: () => {
-          bridge.selectTrack(track.id);
-          list.focus({ preventScroll: true });
-        },
-      }));
-      const mounted = playRoots.get(paneRows) ?? [];
-      mounted.push(root);
-      playRoots.set(paneRows, mounted);
-      line.append(playHost);
-    }
-    const hex = colorHex(track.color);
-    if (hex) {
-      const swatch = document.createElement("span");
-      swatch.className = "swatch";
-      swatch.style.background = hex;
-      line.append(swatch);
-    }
-    if (track.emoji) {
-      const emoji = document.createElement("span");
-      emoji.textContent = track.emoji;
-      line.append(emoji);
-    }
-    const title = document.createElement("span");
-    title.className = "title";
-    title.textContent = track.name || t("track.untitled");
-    line.append(title);
-    if (track.offline) {
-      const offline = document.createElement("span");
-      offline.className = "offline-word";
-      offline.textContent = t("track.offlineBadge");
-      line.append(offline);
-    } else if (track.missing) {
-      const missing = document.createElement("span");
-      missing.className = "missing-word";
-      missing.textContent = t("track.missingBadge");
-      line.append(missing);
-    }
-    if (track.stems) {
-      const stems = document.createElement("span");
-      stems.className = "missing-word";
-      stems.textContent = t("track.stemsBadge");
-      line.append(stems);
-    }
-    titleCell.append(line);
-
-    const artist = document.createElement("span");
-    artist.className = "cell";
-    artist.textContent = track.artist ?? "";
-
-    const cells: HTMLSpanElement[] = [];
-    const add = (text: string, numeric = false) => {
-      const cell = document.createElement("span");
-      cell.className = numeric ? "cell num" : "cell";
-      cell.textContent = text;
-      cells.push(cell);
-    };
-    if (track.entry) {
-      add(track.deck || "");
-      add(track.played || "");
-      add(clockLabel(track.start), true);
-    } else {
-      add(
-        track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 }),
-        true,
-      );
-      add(track.key ?? "");
-      add(energyLabel(track.rating), true);
-      add(track.genre ?? "");
-      add(dateLabel(track.time_added), true);
-      add(dateLabel(track.last_played), true);
-      add(track.play_count == null ? "" : formatNumber(Number(track.play_count)), true);
-      add(lengthLabel(track.length_ms), true);
-    }
-
-    button.append(titleCell, artist, ...cells);
-    button.addEventListener("click", () => {
-      if (track.entry) bridge.selectEntry(track.id);
-      else bridge.selectTrack(track.id);
-      list.focus({ preventScroll: true });
-    });
-    button.addEventListener("dblclick", () => {
-      if (!track.entry) play(track.id);
-    });
-    paneRows.append(button);
-  }
+  emitTrackList();
+  const pane = list.id === "list-b" ? "b" : "a";
+  const root = mountIsland(
+    paneRows,
+    createElement(TrackListWindow, {
+      pane,
+      start,
+      end,
+      onFocusList: () => {
+        list.focus({ preventScroll: true });
+      },
+    }),
+    paneRoots.get(paneRows),
+  );
+  paneRoots.set(paneRows, root);
 }
 
 /**
@@ -317,12 +208,4 @@ function wireListKeys(list: HTMLDivElement): void {
 export function wireVirtualScroll(): void {
   wireListKeys(el("list"));
   wireListKeys(el("list-b"));
-  let paintedId: number | null = null;
-  let paintedPlaying = false;
-  subscribe((next) => {
-    if (next.trackId === paintedId && next.playing === paintedPlaying) return;
-    paintedId = next.trackId;
-    paintedPlaying = next.playing;
-    paintRows();
-  });
 }

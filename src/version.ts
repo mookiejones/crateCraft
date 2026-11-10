@@ -10,6 +10,7 @@ import { getVersion } from "./api";
 import type { VersionPayload } from "./api-types";
 import { el } from "./dom";
 import { t } from "./i18n";
+import { bindCopyVersion, patchSettings, settingsIslandMounted } from "./settings";
 
 /** English text for the unavailable state. The page shows t("version.unavailable"). */
 export const VERSION_UNAVAILABLE = "Version unavailable";
@@ -52,14 +53,17 @@ function shortCommit(commit: string | null): string | null {
 function paint(label: string | null): void {
   painted = label;
   const footer = el("app-version");
-  const about = el("about-version");
-  el("version-copy-status").textContent = "";
+  const about = document.getElementById("about-version");
+  const copyStatus = document.getElementById("version-copy-status");
+  if (copyStatus) copyStatus.textContent = "";
   if (!label) {
     copyText = "";
     footer.hidden = true;
     footer.replaceChildren();
-    about.textContent = t("version.unavailable");
-    el("help-version").textContent = t("version.unavailable");
+    const unavailable = t("version.unavailable");
+    if (about) about.textContent = unavailable;
+    el("help-version").textContent = unavailable;
+    patchSettings({ aboutVersion: unavailable, versionCopyStatus: "" });
     return;
   }
   copyText = label;
@@ -71,8 +75,9 @@ function paint(label: string | null): void {
   const value = document.createElement("span");
   value.textContent = label;
   footer.append(name, value);
-  about.textContent = label;
+  if (about) about.textContent = label;
   el("help-version").textContent = label;
+  patchSettings({ aboutVersion: label, versionCopyStatus: "" });
 }
 
 /**
@@ -114,21 +119,29 @@ export async function loadVersion(): Promise<void> {
  * @returns Nothing.
  */
 export async function copyVersion(): Promise<void> {
-  const status = el("version-copy-status");
+  const status = document.getElementById("version-copy-status");
   if (!copyText) {
-    status.textContent = t("version.unavailable");
+    const message = t("version.unavailable");
+    if (status) status.textContent = message;
+    patchSettings({ versionCopyStatus: message });
     return;
   }
   const writeText = navigator.clipboard?.writeText;
   if (!writeText || !window.isSecureContext) {
-    status.textContent = t("version.copyFailed");
+    const message = t("version.copyFailed");
+    if (status) status.textContent = message;
+    patchSettings({ versionCopyStatus: message });
     return;
   }
   try {
     await writeText.call(navigator.clipboard, copyText);
-    status.textContent = t("version.copied");
+    const message = t("version.copied");
+    if (status) status.textContent = message;
+    patchSettings({ versionCopyStatus: message });
   } catch {
-    status.textContent = t("version.copyFailed");
+    const message = t("version.copyFailed");
+    if (status) status.textContent = message;
+    patchSettings({ versionCopyStatus: message });
   }
 }
 
@@ -138,6 +151,8 @@ export async function copyVersion(): Promise<void> {
  * @returns Nothing.
  */
 export function wireVersion(): void {
+  bindCopyVersion(copyVersion);
+  if (settingsIslandMounted()) return;
   el("copy-version").addEventListener("click", () => {
     void copyVersion();
   });

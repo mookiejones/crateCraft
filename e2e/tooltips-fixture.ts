@@ -7,6 +7,7 @@
  */
 
 import { mountPlayer } from "../src/player";
+import { mountSettings } from "../src/settings";
 import { state } from "../src/state";
 import { applyStaticTooltips, installTooltips, missingTooltipLabels } from "../src/tooltip";
 import { mountTrackList, paintRows } from "../src/virtual-scroll";
@@ -93,6 +94,8 @@ state.filesEntries = [
 applyStaticTooltips();
 installTooltips();
 mountPlayer();
+mountSettings();
+applyStaticTooltips();
 mountTrackList();
 state.mode = "files";
 renderFiles();

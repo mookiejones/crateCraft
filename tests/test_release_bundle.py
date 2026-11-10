@@ -1158,15 +1158,17 @@ class PackageTests(unittest.TestCase):
                 (locales / name).write_bytes((ROOT / "locales" / name).read_bytes())
             exe = root / "crateCraft.exe"
             exe.write_bytes(_pe(0x14C))
+            # Real static/ plus maps after the React wizard bundle is ~6 MB.
+            zip_cap = 8_000_000
             narrow = base / "narrow.zip"
             _zip_tree(root, narrow)
             with self.assertRaises(SystemExit) as caught:
-                release_bundle.assert_zip(narrow, static, min_bytes=20, max_bytes=5_000_000)
+                release_bundle.assert_zip(narrow, static, min_bytes=20, max_bytes=zip_cap)
             self.assertIn("is not x64", str(caught.exception))
             exe.write_bytes(_pe(0x8664))
             wide = base / "wide.zip"
             _zip_tree(root, wide)
-            kind = release_bundle.assert_zip(wide, static, min_bytes=20, max_bytes=5_000_000)
+            kind = release_bundle.assert_zip(wide, static, min_bytes=20, max_bytes=zip_cap)
         self.assertEqual(kind, "windows")
 
     def test_windows_zip_requires_the_app_executable(self) -> None:
