@@ -1,5 +1,5 @@
 /**
- * Canvas waveform for the player bar.
+ * Canvas waveform engine for the React player island.
  *
  * The zoomed view keeps the playhead at the center and scrolls the track
  * past it from the audio element's current time, on requestAnimationFrame
@@ -8,19 +8,24 @@
  * replaces them when `GET /api/waveform` finishes. Zoom is the plus and
  * minus buttons, and Ctrl or Command with the wheel. No shortcut is added.
  *
- * Strings come from `player-strings.ts`. Zoom and the overview use the
- * shared tooltip, including the seek keys that already exist.
+ * React paints the canvases and zoom controls. This module fetches, tiles,
+ * and blits. Strings come from `player-strings.ts` and `t()`.
  */
 
-import { playerStrings } from "./player-strings";
+import { createElement } from "react";
+import { mountIsland, type IslandRoot } from "./app/mount";
+import { WaveformPanel } from "./components/WaveformPanel";
+import {
+  WaveformClockProvider,
+  type OverviewSource,
+  type WaveformClock,
+  type WaveformPhase,
+  type WaveformUi,
+} from "./context/WaveformContext";
 import { state } from "./state";
-import { buttonEl, setTooltip } from "./tooltip";
-import { tips, type TipSpec } from "./tooltip-strings";
 import {
   DetailTiles,
   ZOOM_DEFAULT_PPS,
-  ZOOM_MAX_PPS,
-  ZOOM_MIN_PPS,
   drawOverviewMarks,
   overviewXToTime,
   parseSwf1,
@@ -33,16 +38,7 @@ import {
 } from "./waveform";
 
 /** What the player supplies. This module does not import the player. */
-export interface WaveformHooks {
-  seek(seconds: number): void;
-  seekBy(deltaSeconds: number): void;
-  getTime(): number;
-  getDuration(): number;
-  getPlaying(): boolean;
-  formatTime(seconds: number): string;
-  seekStep: number;
-  seekStepLarge: number;
-}
+export type WaveformHooks = WaveformClock;
 
 export interface WaveformController {
   setTrack(id: number | null): void;
@@ -56,10 +52,28 @@ export interface WaveformController {
   pixelsPerSecond(): number;
 }
 
+export type WaveformAttach = {
+  host: HTMLElement;
+  detail: HTMLCanvasElement;
+  overviewCanvas: HTMLCanvasElement;
+  overviewHit: HTMLElement;
+};
+
 const emptyMarkers = (): WaveMarkers => ({ cues: [], loops: [], beatgrid: [] });
 
+const idleClock: WaveformClock = {
+  seek() {},
+  seekBy() {},
+  getTime: () => 0,
+  getDuration: () => 0,
+  getPlaying: () => false,
+  formatTime: (seconds) => String(seconds),
+  seekStep: 5,
+  seekStepLarge: 30,
+};
+
 /**
- * Build the waveform controls and return the hooks the player calls.
+ * Build the waveform island and return the hooks the player calls.
  *
  * The host is hidden until a track is loaded. A missing host does nothing
  * useful; the caller still gets a controller whose methods are safe.
@@ -68,8 +82,16 @@ const emptyMarkers = (): WaveMarkers => ({ cues: [], loops: [], beatgrid: [] });
  * @param hooks Seek, time, and the existing seek steps. No new keys.
  * @returns The controller.
  */
-export function mountWaveform(host: HTMLElement, hooks: WaveformHooks): WaveformController {
-  return new WaveformView(host, hooks);
+export function mountWaveform(host: HTMLElement, hooks?: WaveformHooks): WaveformController {
+  const engine = new WaveformEngine();
+  host.classList.add("player-wave");
+  host.hidden = true;
+  if (hooks) engine.setClock(hooks);
+  const panel = createElement(WaveformPanel, { engine, host });
+  const tree = hooks ? createElement(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
+  const root = mountIsland(host, tree);
+  engine.bindRoot(root);
+  return engine;
 }
 
 /**
@@ -111,90 +133,121 @@ export function mountWaveformFixture(host: HTMLElement): WaveformController {
   return view;
 }
 
-class WaveformView implements WaveformController {
-  private readonly host: HTMLElement;
-  private readonly hooks: WaveformHooks;
-  private readonly detail: HTMLCanvasElement;
-  private readonly overviewCanvas: HTMLCanvasElement;
-  private readonly overviewHit: HTMLElement;
-  private readonly reading: HTMLElement;
-  private readonly note: HTMLElement;
-  private readonly detailWrap: HTMLElement;
-  private readonly zoomIn: HTMLButtonElement;
-  private readonly zoomOut: HTMLButtonElement;
+/**
+ * Fetch, tile, and blit the waveform. React owns the DOM nodes.
+ */
+export class WaveformEngine implements WaveformController {
+  private host: HTMLElement | null = null;
+  private detail: HTMLCanvasElement | null = null;
+  private overviewCanvas: HTMLCanvasElement | null = null;
+  private overviewHit: HTMLElement | null = null;
+  private clock: WaveformClock = idleClock;
+  private publishUi: ((next: WaveformUi) => void) | null = null;
+  private root: IslandRoot | null = null;
   private trackId: number | null = null;
   private token = 0;
   private pps = ZOOM_DEFAULT_PPS;
+  private phase: WaveformPhase = "idle";
   private markers: WaveMarkers = emptyMarkers();
   private tiles: DetailTiles | null = null;
   private parsed: ParsedWaveform | null = null;
-  private overviewSource: "serato" | "computed" | "" = "";
+  private overviewSource: OverviewSource = "";
   private seratoColumns: number[][] = [];
   private overviewCache: Uint8ClampedArray | null = null;
   private overviewKey = "";
   private raf = 0;
   private dragging = false;
   private disposed = false;
+  private attached = false;
   private detailImage: ImageData | null = null;
   private overviewImage: ImageData | null = null;
   private lastAriaKey = "";
   private ariaImmediate = false;
   private readonly onWheel: (event: WheelEvent) => void;
   private readonly onResize: () => void;
+  private readonly onPointerDown: (event: PointerEvent) => void;
+  private readonly onPointerMove: (event: PointerEvent) => void;
+  private readonly onPointerUp: (event: PointerEvent) => void;
+  private readonly onOverviewKey: (event: KeyboardEvent) => void;
   private resizeObserver: ResizeObserver | null = null;
 
-  constructor(host: HTMLElement, hooks: WaveformHooks) {
-    this.host = host;
-    this.hooks = hooks;
-    host.classList.add("player-wave");
-    host.hidden = true;
-    const main = document.createElement("div");
-    main.className = "player-wave-main";
-    this.detailWrap = document.createElement("div");
-    this.detailWrap.className = "waveform-detail-wrap";
-    this.detail = document.createElement("canvas");
-    this.detail.className = "waveform-detail";
-    this.detail.setAttribute("aria-hidden", "true");
-    this.reading = document.createElement("p");
-    this.reading.className = "waveform-reading";
-    this.reading.textContent = playerStrings.waveformReading;
-    this.detailWrap.append(this.detail, this.reading);
-    this.note = document.createElement("p");
-    this.note.className = "waveform-note";
-    this.note.hidden = true;
-    this.note.textContent = playerStrings.waveformUnavailable;
-    this.overviewHit = document.createElement("div");
-    this.overviewHit.className = "waveform-overview";
-    this.overviewHit.tabIndex = 0;
-    this.overviewHit.setAttribute("role", "slider");
-    this.overviewHit.setAttribute("aria-label", playerStrings.overview);
-    this.overviewHit.setAttribute("aria-orientation", "horizontal");
-    setTooltip(this.overviewHit, tips.overview);
-    this.overviewCanvas = document.createElement("canvas");
-    this.overviewCanvas.setAttribute("aria-hidden", "true");
-    this.overviewHit.append(this.overviewCanvas);
-    main.append(this.detailWrap, this.note, this.overviewHit);
-    const zoom = document.createElement("div");
-    zoom.className = "waveform-zoom";
-    this.zoomIn = button(playerStrings.zoomIn, "+", tips.zoomIn);
-    this.zoomOut = button(playerStrings.zoomOut, "\u2212", tips.zoomOut);
-    this.zoomIn.addEventListener("click", () => this.setZoom(zoomPixelsPerSecond(this.pps, 1)));
-    this.zoomOut.addEventListener("click", () => this.setZoom(zoomPixelsPerSecond(this.pps, -1)));
-    zoom.append(this.zoomIn, this.zoomOut);
-    host.append(main, zoom);
+  constructor() {
     this.onWheel = (event) => this.wheel(event);
-    host.addEventListener("wheel", this.onWheel, { passive: false });
-    this.overviewHit.addEventListener("pointerdown", (event) => this.pointerDown(event));
-    this.overviewHit.addEventListener("pointermove", (event) => this.pointerMove(event));
-    this.overviewHit.addEventListener("pointerup", (event) => this.pointerUp(event));
-    this.overviewHit.addEventListener("pointercancel", (event) => this.pointerUp(event));
-    this.overviewHit.addEventListener("keydown", (event) => this.overviewKeyDown(event));
     this.onResize = () => this.paint();
+    this.onPointerDown = (event) => this.pointerDown(event);
+    this.onPointerMove = (event) => this.pointerMove(event);
+    this.onPointerUp = (event) => this.pointerUp(event);
+    this.onOverviewKey = (event) => this.overviewKeyDown(event);
+  }
+
+  /**
+   * Keep the React root so destroy can unmount it.
+   *
+   * @param root Island created by `mountIsland`.
+   */
+  bindRoot(root: IslandRoot): void {
+    this.root = root;
+  }
+
+  /**
+   * Replace the seek/time clock. Tests pass hooks; the page uses the player.
+   *
+   * @param clock Seek and time callbacks.
+   */
+  setClock(clock: WaveformClock): void {
+    this.clock = clock;
+  }
+
+  /**
+   * Push zoom and phase into WaveformContext.
+   *
+   * @param publish Context setter. Flushed by the provider.
+   */
+  setPublish(publish: (next: WaveformUi) => void): void {
+    this.publishUi = publish;
+  }
+
+  /**
+   * Bind canvases after React commits them.
+   *
+   * @param nodes Host, detail canvas, overview canvas, and overview hit target.
+   */
+  attach(nodes: WaveformAttach): void {
+    if (this.disposed) return;
+    this.detach();
+    this.host = nodes.host;
+    this.detail = nodes.detail;
+    this.overviewCanvas = nodes.overviewCanvas;
+    this.overviewHit = nodes.overviewHit;
+    this.attached = true;
+    this.host.addEventListener("wheel", this.onWheel, { passive: false });
+    this.overviewHit.addEventListener("pointerdown", this.onPointerDown);
+    this.overviewHit.addEventListener("pointermove", this.onPointerMove);
+    this.overviewHit.addEventListener("pointerup", this.onPointerUp);
+    this.overviewHit.addEventListener("pointercancel", this.onPointerUp);
+    this.overviewHit.addEventListener("keydown", this.onOverviewKey);
     if (typeof ResizeObserver === "function") {
       this.resizeObserver = new ResizeObserver(this.onResize);
-      this.resizeObserver.observe(host);
+      this.resizeObserver.observe(this.host);
     }
-    this.syncZoomButtons();
+    this.paint();
+  }
+
+  /**
+   * Drop canvas listeners. Does not unmount React.
+   */
+  detach(): void {
+    if (!this.attached) return;
+    this.stopLoop();
+    this.host?.removeEventListener("wheel", this.onWheel);
+    this.overviewHit?.removeEventListener("pointerdown", this.onPointerDown);
+    this.overviewHit?.removeEventListener("pointermove", this.onPointerMove);
+    this.overviewHit?.removeEventListener("pointerup", this.onPointerUp);
+    this.overviewHit?.removeEventListener("pointercancel", this.onPointerUp);
+    this.overviewHit?.removeEventListener("keydown", this.onOverviewKey);
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+    this.attached = false;
   }
 
   /**
@@ -207,7 +260,7 @@ class WaveformView implements WaveformController {
    */
   setTrack(id: number | null): void {
     if (this.disposed) return;
-    if (id !== null && id === this.trackId) return;
+    if (id === this.trackId) return;
     this.token += 1;
     this.trackId = id;
     this.parsed = null;
@@ -216,14 +269,14 @@ class WaveformView implements WaveformController {
     this.overviewCache = null;
     this.overviewKey = "";
     this.overviewSource = "";
-    this.seratoColumns = [];
-    delete this.overviewHit.dataset.waveformOverview;
+    if (this.overviewHit) delete this.overviewHit.dataset.waveformOverview;
     if (id === null || !Number.isInteger(id) || id < 0) {
-      this.host.hidden = true;
+      if (this.host) this.host.hidden = true;
       this.stopLoop();
+      this.setPhase("idle");
       return;
     }
-    this.host.hidden = false;
+    if (this.host) this.host.hidden = false;
     this.setPhase("reading");
     const mine = this.token;
     void this.load(id, mine);
@@ -252,20 +305,13 @@ class WaveformView implements WaveformController {
    */
   showComputed(parsed: ParsedWaveform): void {
     this.trackId = this.trackId ?? 1;
-    this.host.hidden = false;
+    if (this.host) this.host.hidden = false;
     this.applyComputed(parsed);
   }
 
   /** Refresh titles and notes in the active language. Playback is not touched. */
   relabel(): void {
-    this.reading.textContent = playerStrings.waveformReading;
-    if (!this.note.hidden) this.note.textContent = playerStrings.waveformUnavailable;
-    this.overviewHit.setAttribute("aria-label", playerStrings.overview);
-    setTooltip(this.overviewHit, tips.overview);
-    this.zoomIn.setAttribute("aria-label", playerStrings.zoomIn);
-    setTooltip(this.zoomIn, tips.zoomIn);
-    this.zoomOut.setAttribute("aria-label", playerStrings.zoomOut);
-    setTooltip(this.zoomOut, tips.zoomOut);
+    this.pushUi();
   }
 
   /**
@@ -282,8 +328,8 @@ class WaveformView implements WaveformController {
     this.seratoColumns = [];
     this.overviewCache = null;
     this.overviewKey = "";
-    delete this.overviewHit.dataset.waveformOverview;
-    this.host.hidden = false;
+    if (this.overviewHit) delete this.overviewHit.dataset.waveformOverview;
+    if (this.host) this.host.hidden = false;
     this.setPhase("unavailable");
   }
 
@@ -294,8 +340,8 @@ class WaveformView implements WaveformController {
    * A paused seek paints once.
    */
   sync(): void {
-    if (this.disposed || this.host.hidden) return;
-    if (this.hooks.getPlaying()) this.startLoop();
+    if (this.disposed || this.host?.hidden) return;
+    if (this.clock.getPlaying()) this.startLoop();
     else this.stopLoop();
     this.paint();
   }
@@ -310,15 +356,23 @@ class WaveformView implements WaveformController {
   }
 
   /**
-   * Remove listeners and stop the animation frame.
+   * Step zoom in or out around the playhead.
+   *
+   * @param direction Positive zooms in.
+   */
+  zoom(direction: 1 | -1): void {
+    this.setZoom(zoomPixelsPerSecond(this.pps, direction));
+  }
+
+  /**
+   * Remove listeners, stop the animation frame, and unmount the island.
    */
   destroy(): void {
     this.disposed = true;
     this.token += 1;
-    this.stopLoop();
-    this.host.removeEventListener("wheel", this.onWheel);
-    this.resizeObserver?.disconnect();
-    this.resizeObserver = null;
+    this.detach();
+    this.root?.unmount();
+    this.root = null;
   }
 
   private async load(id: number, mine: number): Promise<void> {
@@ -329,10 +383,10 @@ class WaveformView implements WaveformController {
       if (this.overviewSource === "computed") return;
       this.seratoColumns = serato;
       this.overviewSource = "serato";
-      this.overviewHit.dataset.waveformOverview = "serato";
+      if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "serato";
       this.overviewCache = null;
       this.overviewKey = "";
-      this.overviewHit.hidden = false;
+      this.pushUi();
       this.paint();
     });
     const waveform = await body;
@@ -352,7 +406,7 @@ class WaveformView implements WaveformController {
     const rate = parsed.pointsPerSecond > 0 ? parsed.pointsPerSecond : 150;
     this.tiles = new DetailTiles(parsed.detail, parsed.detailCount, rate);
     this.overviewSource = "computed";
-    this.overviewHit.dataset.waveformOverview = "computed";
+    if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "computed";
     this.overviewCache = null;
     this.overviewKey = "";
     this.setPhase("ready");
@@ -402,44 +456,41 @@ class WaveformView implements WaveformController {
     }
   }
 
-  private setPhase(phase: "reading" | "ready" | "unavailable"): void {
-    this.host.dataset.waveformState = phase;
-    const unavailable = phase === "unavailable";
-    this.note.hidden = !unavailable;
-    this.reading.hidden = phase !== "reading";
-    this.detailWrap.hidden = unavailable;
-    this.overviewHit.hidden = this.overviewSource === "";
-    this.syncZoomButtons();
+  private setPhase(phase: WaveformPhase): void {
+    this.phase = phase;
+    if (this.host) this.host.dataset.waveformState = phase === "idle" ? "" : phase;
+    this.pushUi();
   }
 
   private setZoom(next: number): void {
     if (next === this.pps) {
-      this.syncZoomButtons();
+      this.pushUi();
       return;
     }
     this.pps = next;
     this.tiles?.clear();
-    this.syncZoomButtons();
+    this.pushUi();
     this.paint();
   }
 
-  private syncZoomButtons(): void {
-    const phase = this.host.dataset.waveformState;
-    const blocked = phase === "reading" || phase === "unavailable";
-    this.zoomIn.disabled = blocked || this.pps >= ZOOM_MAX_PPS - 1e-9;
-    this.zoomOut.disabled = blocked || this.pps <= ZOOM_MIN_PPS + 1e-9;
+  private pushUi(): void {
+    this.publishUi?.({
+      pps: this.pps,
+      phase: this.phase,
+      overviewSource: this.overviewSource,
+    });
   }
 
   private wheel(event: WheelEvent): void {
     if (!event.ctrlKey && !event.metaKey) return;
-    if (this.host.dataset.waveformState !== "ready") return;
+    if (this.phase !== "ready") return;
     event.preventDefault();
     if (event.deltaY < 0) this.setZoom(zoomPixelsPerSecond(this.pps, 1));
     else if (event.deltaY > 0) this.setZoom(zoomPixelsPerSecond(this.pps, -1));
   }
 
   private pointerDown(event: PointerEvent): void {
-    if (event.button !== 0) return;
+    if (event.button !== 0 || !this.overviewHit) return;
     this.dragging = true;
     if (typeof this.overviewHit.setPointerCapture === "function") {
       this.overviewHit.setPointerCapture(event.pointerId);
@@ -453,7 +504,7 @@ class WaveformView implements WaveformController {
   }
 
   private pointerUp(event: PointerEvent): void {
-    if (!this.dragging) return;
+    if (!this.dragging || !this.overviewHit) return;
     this.dragging = false;
     if (typeof this.overviewHit.hasPointerCapture === "function" && this.overviewHit.hasPointerCapture(event.pointerId)) {
       this.overviewHit.releasePointerCapture(event.pointerId);
@@ -461,11 +512,12 @@ class WaveformView implements WaveformController {
   }
 
   private seekOverview(event: PointerEvent): void {
+    if (!this.overviewHit) return;
     const rect = this.overviewHit.getBoundingClientRect();
     const duration = this.duration();
     const x = event.clientX - rect.left;
     this.ariaImmediate = true;
-    this.hooks.seek(overviewXToTime(x, rect.width, duration));
+    this.clock.seek(overviewXToTime(x, rect.width, duration));
   }
 
   private overviewKeyDown(event: KeyboardEvent): void {
@@ -475,16 +527,16 @@ class WaveformView implements WaveformController {
     if (!forward && !back) return;
     event.preventDefault();
     event.stopPropagation();
-    const step = event.shiftKey ? this.hooks.seekStepLarge : this.hooks.seekStep;
+    const step = event.shiftKey ? this.clock.seekStepLarge : this.clock.seekStep;
     this.ariaImmediate = true;
-    this.hooks.seekBy((forward ? 1 : -1) * step);
+    this.clock.seekBy((forward ? 1 : -1) * step);
   }
 
   private startLoop(): void {
     if (this.raf !== 0) return;
     const loop = (): void => {
       this.paint();
-      if (this.hooks.getPlaying() && !this.disposed) this.raf = requestAnimationFrame(loop);
+      if (this.clock.getPlaying() && !this.disposed) this.raf = requestAnimationFrame(loop);
       else this.raf = 0;
     };
     this.raf = requestAnimationFrame(loop);
@@ -497,8 +549,8 @@ class WaveformView implements WaveformController {
   }
 
   private paint(): void {
-    if (this.disposed || this.host.hidden) return;
-    const time = this.hooks.getTime();
+    if (this.disposed || !this.host || this.host.hidden) return;
+    const time = this.clock.getTime();
     const duration = this.duration();
     this.paintDetail(time);
     this.paintOverview(time, duration);
@@ -508,7 +560,7 @@ class WaveformView implements WaveformController {
   }
 
   private paintDetail(time: number): void {
-    if (!this.tiles || !this.parsed) return;
+    if (!this.tiles || !this.parsed || !this.detail) return;
     const size = sizeCanvas(this.detail, 96);
     if (!size) return;
     const context = this.detail.getContext("2d");
@@ -519,6 +571,7 @@ class WaveformView implements WaveformController {
   }
 
   private paintOverview(time: number, duration: number): void {
+    if (!this.overviewCanvas) return;
     const size = sizeCanvas(this.overviewCanvas, 36);
     if (!size) return;
     const source = this.overviewPixels(size.width, size.height);
@@ -569,19 +622,20 @@ class WaveformView implements WaveformController {
         height,
       );
       this.overviewKey = key;
-      this.overviewHit.dataset.waveformOverview = "computed";
+      if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "computed";
       return this.overviewCache;
     }
     if (this.overviewSource === "serato" && this.seratoColumns.length > 0) {
       this.overviewCache = renderOverview({ kind: "serato", columns: this.seratoColumns }, width, height);
       this.overviewKey = key;
-      this.overviewHit.dataset.waveformOverview = "serato";
+      if (this.overviewHit) this.overviewHit.dataset.waveformOverview = "serato";
       return this.overviewCache;
     }
     return null;
   }
 
   private updateSlider(time: number, duration: number, immediate: boolean): void {
+    if (!this.overviewHit) return;
     const max = duration > 0 ? duration : 0;
     const now = Math.min(max, Math.max(0, Number.isFinite(time) ? time : 0));
     const key = `${Math.floor(now)}|${max}`;
@@ -590,11 +644,11 @@ class WaveformView implements WaveformController {
     this.overviewHit.setAttribute("aria-valuemin", "0");
     this.overviewHit.setAttribute("aria-valuemax", String(max));
     this.overviewHit.setAttribute("aria-valuenow", String(now));
-    this.overviewHit.setAttribute("aria-valuetext", this.hooks.formatTime(now));
+    this.overviewHit.setAttribute("aria-valuetext", this.clock.formatTime(now));
   }
 
   private duration(): number {
-    const fromAudio = this.hooks.getDuration();
+    const fromAudio = this.clock.getDuration();
     if (Number.isFinite(fromAudio) && fromAudio > 0) return fromAudio;
     return this.headerDuration();
   }
@@ -603,14 +657,6 @@ class WaveformView implements WaveformController {
     if (!this.parsed || !(this.parsed.durationMs > 0)) return 0;
     return this.parsed.durationMs / 1000;
   }
-}
-
-function button(label: string, text: string, tooltip: TipSpec): HTMLButtonElement {
-  const element = buttonEl(tooltip);
-  element.className = "waveform-zoom-button";
-  element.textContent = text;
-  element.setAttribute("aria-label", label);
-  return element;
 }
 
 function waveformUrl(id: number, overview: boolean): string {
