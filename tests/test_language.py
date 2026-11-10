@@ -287,7 +287,7 @@ class LanguageApiTests(unittest.TestCase):
         self.assertTrue(plain["writable"])
         bad = self.config / "not-a-plist"
         bad.write_bytes(b"nope")
-        with mock.patch.dict(os.environ, {"SERATO_LIBRARY_APP_INFO": str(bad)}):
+        with mock.patch.dict(os.environ, {"CRATECRAFT_APP_INFO": str(bad)}):
             status, body = _request(self.base, "/api/status")
             self.assertEqual(status, 200)
             assert isinstance(body, dict)

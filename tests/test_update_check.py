@@ -24,7 +24,7 @@ import server
 import update_check
 from update_check import parse_version
 
-REPO_PAGE = "https://github.com/mookiejones/serato-library-manager/releases"
+REPO_PAGE = "https://github.com/mookiejones/crateCraft/releases"
 DAY = update_check.CACHE_SECONDS
 
 
@@ -272,7 +272,7 @@ class FetchTests(_ConfigTest):
         self.assertEqual(found, [_release("v1.3.0")])
         request = opener.call_args.args[0]
         self.assertEqual(request.full_url, update_check.API_URL)
-        self.assertEqual(request.get_header("User-agent"), "serato-library-manager/v1.2.0")
+        self.assertEqual(request.get_header("User-agent"), "crateCraft/v1.2.0")
         self.assertEqual(opener.call_args.kwargs["timeout"], update_check.TIMEOUT_SECONDS)
 
     def test_a_wrong_or_huge_answer_is_rejected(self) -> None:

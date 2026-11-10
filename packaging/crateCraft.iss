@@ -1,4 +1,4 @@
-; Serato Library Windows installer.
+; crateCraft Windows installer (formerly Serato Library).
 ;
 ; SIGNING HOOK (dormant): this script does not call SignTool.
 ; scripts/release_sign.py signs the packaged executables and this installer
@@ -15,21 +15,23 @@
 #endif
 
 [Setup]
+; AppId is unchanged from Serato Library so an existing install upgrades in
+; place (Inno reuses its folder) instead of installing a second copy.
 AppId={{7F3C1A2E-9B84-4D6F-8C15-2E6A0B9D4F71}
-AppName=Serato Library
+AppName=crateCraft
 AppVersion={#AppVersion}
-AppPublisher=Serato Library
-DefaultDirName={localappdata}\Programs\Serato Library
+AppPublisher=crateCraft
+DefaultDirName={localappdata}\Programs\crateCraft
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
-OutputBaseFilename=Serato-Library-windows-setup
+OutputBaseFilename=crateCraft-windows-setup
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
 SetupIconFile=app-icon.ico
-UninstallDisplayIcon={app}\Serato Library.exe
+UninstallDisplayIcon={app}\crateCraft.exe
 CloseApplications=yes
 RestartApplications=no
 
@@ -40,9 +42,17 @@ Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs 
 [Tasks]
 Name: desktopicon; Description: "Add a desktop shortcut"; GroupDescription: "Shortcuts:"; Flags: unchecked
 
+[InstallDelete]
+; Shortcuts and the launcher left by a Serato Library install. Only these
+; app files are removed. Settings in %APPDATA% and the Serato library are
+; not touched.
+Type: files; Name: "{autoprograms}\Serato Library.lnk"
+Type: files; Name: "{autodesktop}\Serato Library.lnk"
+Type: files; Name: "{app}\Serato Library.exe"
+
 [Icons]
-Name: "{autoprograms}\Serato Library"; Filename: "{app}\Serato Library.exe"
-Name: "{autodesktop}\Serato Library"; Filename: "{app}\Serato Library.exe"; Tasks: desktopicon
+Name: "{autoprograms}\crateCraft"; Filename: "{app}\crateCraft.exe"
+Name: "{autodesktop}\crateCraft"; Filename: "{app}\crateCraft.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\Serato Library.exe"; Description: "Open Serato Library"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\crateCraft.exe"; Description: "Open crateCraft"; Flags: nowait postinstall skipifsilent

@@ -49,7 +49,7 @@ What the workflow does:
 - A tag matching `v*.*.*` runs the release jobs. The tag filter is a glob; `check-tag` is the real check. The Windows CI job runs `check-tag` with `RELEASE_TAG=v0.0.0` under bash so that path stays covered. `v0.0.0` is not a published release.
 - `workflow_dispatch` builds and attests the files and uploads artifacts. It does not publish, even if the selected ref is a tag.
 - A pull request that changes packaging files builds the artifacts and does not publish.
-- The publish job runs only on `push` of `refs/tags/v…`. It refuses if the release already exists. It does not launch the apps. It attaches `Serato-Library-macos-arm64.dmg`, `Serato-Library-macos-x64.dmg`, `Serato-Library-windows-setup.exe`, `Serato-Library-windows.zip`, and `SHA256SUMS`.
+- The publish job runs only on `push` of `refs/tags/v…`. It refuses if the release already exists. It does not launch the apps. It attaches `crateCraft-macos-arm64.dmg`, `crateCraft-macos-x64.dmg`, `crateCraft-windows-setup.exe`, `crateCraft-windows.zip`, and `SHA256SUMS`.
 
 The publish job's permissions are `contents: write` plus the attestation scopes. The pull-request build job stays `contents: read`.
 

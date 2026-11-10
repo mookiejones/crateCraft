@@ -242,8 +242,8 @@ class SidecarTests(unittest.TestCase):
         doc = (ROOT / "docs" / "related-tracks.md").read_text(encoding="utf-8")
         for column in related.TRACK_COLUMNS + related.LINK_COLUMNS:
             self.assertIn(f"`{column}`", doc)
-        self.assertIn("~/Library/Application Support/Serato Library/related.sqlite", doc)
-        self.assertIn("%APPDATA%\\Serato Library\\related.sqlite", doc)
+        self.assertIn("~/Library/Application Support/crateCraft/related.sqlite", doc)
+        self.assertIn("%APPDATA%\\crateCraft\\related.sqlite", doc)
         self.assertIn("6 percent", doc)
         self.assertIn("third shared crate", doc)
         self.assertIn("related.update_path", doc)

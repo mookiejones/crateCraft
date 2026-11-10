@@ -392,9 +392,9 @@ def export_rekordbox(
     document.append(
         ElementTree.Element(
             "PRODUCT",
-            Name="Serato Library",
+            Name="crateCraft",
             Version=app_config.APP_VERSION,
-            Company="Serato Library",
+            Company="crateCraft",
         )
     )
     document.append(collection)

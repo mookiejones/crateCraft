@@ -232,8 +232,8 @@ class ApiTests(unittest.TestCase):
         """
         status, page = self.request("/")
         self.assertEqual(status, 200)
-        self.assertIn("<title>Serato Library</title>", page)
-        self.assertIn("Serato library", page)
+        self.assertIn("<title>crateCraft</title>", page)
+        self.assertIn("crateCraft page", page)
         status, payload = self.request("/api/library")
         self.assertEqual(status, 200)
         self.assertEqual(payload["track_count"], 2)

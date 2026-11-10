@@ -8,7 +8,7 @@ Anonymous usage counts and crash reports are off until the person opts in from t
 
 ## Reporting a vulnerability
 
-Use a GitHub private security advisory: [Open a security advisory](https://github.com/mookiejones/serato-library-manager/security/advisories/new).
+Use a GitHub private security advisory: [Open a security advisory](https://github.com/mookiejones/crateCraft/security/advisories/new).
 
 Private vulnerability reporting is enabled on this repository. Do not open a public issue for a vulnerability.
 
@@ -22,17 +22,17 @@ The published release today is v0.1.1. Check those two files:
 
 ```bash
 gh attestation verify Serato-Library-macos.zip --repo mookiejones/serato-library-manager
-gh attestation verify Serato-Library-windows.zip --repo mookiejones/serato-library-manager
+gh attestation verify crateCraft-windows.zip --repo mookiejones/crateCraft
 ```
 
-A release built by [`.github/workflows/release.yml`](.github/workflows/release.yml) uses the names below. Those files are not attached to v0.1.1. Check them on a release that includes them:
+A release built by [`.github/workflows/release.yml`](.github/workflows/release.yml) after the crateCraft rename uses the names below. Those files are not attached to v0.1.1. Check them on a release that includes them. A release from before the rename uses `Serato-Library-` in place of `crateCraft-` and was built as `mookiejones/serato-library-manager`; pass that name to `--repo` for it:
 
 ```bash
-gh attestation verify Serato-Library-macos-arm64.dmg --repo mookiejones/serato-library-manager
-gh attestation verify Serato-Library-macos-x64.dmg --repo mookiejones/serato-library-manager
-gh attestation verify Serato-Library-windows-setup.exe --repo mookiejones/serato-library-manager
-gh attestation verify Serato-Library-windows.zip --repo mookiejones/serato-library-manager
-gh attestation verify SHA256SUMS --repo mookiejones/serato-library-manager
+gh attestation verify crateCraft-macos-arm64.dmg --repo mookiejones/crateCraft
+gh attestation verify crateCraft-macos-x64.dmg --repo mookiejones/crateCraft
+gh attestation verify crateCraft-windows-setup.exe --repo mookiejones/crateCraft
+gh attestation verify crateCraft-windows.zip --repo mookiejones/crateCraft
+gh attestation verify SHA256SUMS --repo mookiejones/crateCraft
 ```
 
 ## Supported versions

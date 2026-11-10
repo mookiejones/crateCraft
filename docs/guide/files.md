@@ -193,6 +193,6 @@ These are refused before anything is written:
 Closing the app in the middle of a file change leaves a journal at `Library/Backups/file-ops-journal.json`.
 
 1. Quit Serato DJ Pro.
-2. Open Serato Library again.
+2. Open crateCraft again.
 
 The app finishes the change or puts the files back. If the journal and the library do not match, the next save is refused. The message is **An interrupted file change does not match the library. Restore the copy in Library/Backups.** Follow [Restore a backup](safety.md#restore-an-older-database-copy-by-hand). Do not delete the journal by hand before you restore.

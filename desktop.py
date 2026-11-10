@@ -7,8 +7,8 @@ or Qt WebKit on Linux. Chromium is not bundled. Closing the window shuts
 the server down with the desktop shutdown token. A second launch focuses
 that window and does not start another server.
 
-``SERATO_LIBRARY_SMOKE`` is the headless release check. It never imports
-the web view. ``SERATO_LIBRARY_NO_WINDOW=1`` or ``--no-window`` skips the
+``CRATECRAFT_SMOKE`` is the headless release check. It never imports
+the web view. ``CRATECRAFT_NO_WINDOW=1`` or ``--no-window`` skips the
 window on a normal launch and waits until shutdown.
 """
 
@@ -26,6 +26,7 @@ import urllib.request
 from pathlib import Path
 from urllib.parse import urlparse
 
+import app_env
 import app_config
 import app_log
 import server
@@ -33,14 +34,14 @@ import snapshots
 import static_assets
 import telemetry
 
-SMOKE_ENV = "SERATO_LIBRARY_SMOKE"
-WAVEFORM_SMOKE_ENV = "SERATO_LIBRARY_WAVEFORM_SMOKE"
-NO_WINDOW_ENV = "SERATO_LIBRARY_NO_WINDOW"
+SMOKE_ENV = app_env.name("SMOKE")
+WAVEFORM_SMOKE_ENV = app_env.name("WAVEFORM_SMOKE")
+NO_WINDOW_ENV = app_env.name("NO_WINDOW")
 NO_WINDOW_FLAG = "--no-window"
 LOCK_NAME = "instance.lock"
 PORT_NAME = "instance.port"
 FOCUS_NAME = "instance.focus"
-WINDOW_TITLE = "Serato Library"
+WINDOW_TITLE = "crateCraft"
 # Walnut page background (--color-bg in static/tokens.css) so the frame
 # does not flash white before the page paints.
 WINDOW_BACKGROUND = "#231910"
@@ -60,7 +61,7 @@ _ALLOWED_GUI = frozenset({_GUI_WINDOWS, _GUI_MAC, _GUI_GTK, _GUI_QT})
 _WEBVIEW2_CLIENT = "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
 _WEBVIEW2_NEED = (86, 0, 622, 0)
 _ALREADY_RUNNING = (
-    "Serato Library is already running, but its window could not be focused. "
+    "crateCraft is already running, but its window could not be focused. "
     "Close that window and try again."
 )
 
@@ -253,7 +254,7 @@ def _wait_for_url(directory: Path) -> str:
                 return url
         time.sleep(0.05)
     raise SystemExit(
-        "Serato Library is already running, but its page did not answer. "
+        "crateCraft is already running, but its page did not answer. "
         "Close its window and try again."
     )
 
@@ -314,7 +315,7 @@ def _validate_marker(marker: Path) -> None:
     """Refuse a smoke-marker path that could write inside the repository.
 
     Args:
-        marker: Path from ``SERATO_LIBRARY_SMOKE``.
+        marker: Path from ``CRATECRAFT_SMOKE``.
 
     Raises:
         SystemExit: If the path is relative, a symlink, a directory, or
@@ -391,7 +392,7 @@ def smoke_main(marker: Path) -> None:
 
     Does not open the Serato library, a window, or telemetry. The server
     listens on 127.0.0.1 and a free port. The web view is not imported.
-    When ``SERATO_LIBRARY_WAVEFORM_SMOKE`` is a WAV path, that file is
+    When ``CRATECRAFT_WAVEFORM_SMOKE`` is a WAV path, that file is
     analyzed before the server starts. A missing miniaudio extension
     fails the process here.
     """
@@ -426,7 +427,7 @@ def _smoke_waveform() -> None:
     Raises:
         SystemExit: The file cannot be decoded, or the body is not ``SWF1``.
     """
-    probe = os.environ.get(WAVEFORM_SMOKE_ENV)
+    probe = app_env.get("WAVEFORM_SMOKE")
     if not probe:
         return
     import waveform
@@ -447,16 +448,16 @@ def window_skipped(argv: list[str] | None = None) -> bool:
 
     Returns:
         True when ``--no-window`` is one of those arguments, or
-        ``SERATO_LIBRARY_NO_WINDOW`` is exactly ``1``. ``0``, ``true``,
+        ``CRATECRAFT_NO_WINDOW`` is exactly ``1``. ``0``, ``true``,
         and a blank value leave the window on.
 
-    The smoke path does not call this. ``SERATO_LIBRARY_SMOKE`` never
+    The smoke path does not call this. ``CRATECRAFT_SMOKE`` never
     opens a window, including when this flag is absent.
     """
     args = list(sys.argv[1:] if argv is None else argv)
     if NO_WINDOW_FLAG in args:
         return True
-    return os.environ.get(NO_WINDOW_ENV) == "1"
+    return app_env.get("NO_WINDOW") == "1"
 
 
 def webview2_version_ok(build: object) -> bool:
@@ -598,8 +599,8 @@ def choose_gui(
     if platform == "win32":
         if not webview2:
             raise SystemExit(
-                "Serato Library needs the Microsoft Edge WebView2 Runtime. "
-                "Install it, then open Serato Library again."
+                "crateCraft needs the Microsoft Edge WebView2 Runtime. "
+                "Install it, then open crateCraft again."
             )
         return _GUI_WINDOWS
     if platform == "darwin":
@@ -614,7 +615,7 @@ def choose_gui(
             "Install WebKitGTK, or Qt WebKit without Qt WebEngine."
         )
     raise SystemExit(
-        "Serato Library needs WebKitGTK (GTK 3 and WebKit2) or Qt WebKit. "
+        "crateCraft needs WebKitGTK (GTK 3 and WebKit2) or Qt WebKit. "
         "Chromium is not bundled."
     )
 
@@ -1306,7 +1307,7 @@ def run_until_stopped(
         url: Loopback origin.
         token: Shutdown token. SIGTERM and SIGINT POST it.
 
-    Used when ``--no-window`` or ``SERATO_LIBRARY_NO_WINDOW=1`` is set.
+    Used when ``--no-window`` or ``CRATECRAFT_NO_WINDOW=1`` is set.
     The web view is not imported.
     """
 
@@ -1330,9 +1331,12 @@ def launch() -> None:
             cannot be focused. A missing library still opens the page.
 
     Binds 127.0.0.1 on a free port. Closing the window shuts the server
-    down. ``--no-window`` and ``SERATO_LIBRARY_NO_WINDOW=1`` keep the
+    down. ``--no-window`` and ``CRATECRAFT_NO_WINDOW=1`` keep the
     server up without a window until a shutdown request or a signal.
+    Settings from a pre-rename install are copied to the crateCraft
+    folder first; the old folder is kept.
     """
+    app_config.migrate_legacy_config()
     holder = acquire_instance()
     try:
         if holder.existing_url:
@@ -1346,7 +1350,7 @@ def launch() -> None:
         httpd.shutdown_token = token
         httpd.focus_token = focus
         httpd.focus_window = lambda: app_log.logger.info(
-            "Serato Library is already running without a window"
+            "crateCraft is already running without a window"
         )
         holder.publish_focus(focus)
         holder.publish(url)
@@ -1374,7 +1378,7 @@ def launch() -> None:
 def main() -> None:
     """Run the smoke check, or open the library window.
 
-    When ``SERATO_LIBRARY_SMOKE`` is set, :func:`smoke_main` serves health
+    When ``CRATECRAFT_SMOKE`` is set, :func:`smoke_main` serves health
     and returns after shutdown. Otherwise :func:`launch` runs.
     ``--no-window`` is honored only by :func:`launch`.
 
@@ -1382,7 +1386,7 @@ def main() -> None:
         SystemExit: If the smoke marker is unusable, or a page asset is
             missing. A missing library still opens the page.
     """
-    marker = os.environ.get(SMOKE_ENV)
+    marker = app_env.get("SMOKE")
     if marker:
         smoke_main(Path(marker))
         return

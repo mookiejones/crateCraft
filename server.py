@@ -3118,8 +3118,9 @@ def main() -> None:
         SystemExit: If the port is taken. A missing library still serves
             the page.
     """
+    app_config.migrate_legacy_config()
     httpd = serve()
-    print(f"Serato library  http://{HOST}:{PORT}")
+    print(f"crateCraft      http://{HOST}:{PORT}")
     print(f"Library         {db_path()}")
     try:
         httpd.serve_forever()

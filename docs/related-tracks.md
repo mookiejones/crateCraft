@@ -12,11 +12,11 @@ The file name is `related.sqlite`. It sits in the same directory as `settings.js
 
 | System | Path |
 |--------|------|
-| macOS | `~/Library/Application Support/Serato Library/related.sqlite` |
-| Windows | `%APPDATA%\Serato Library\related.sqlite` |
-| Linux | `$XDG_CONFIG_HOME/serato-library/related.sqlite`, or `~/.config/serato-library/related.sqlite` |
+| macOS | `~/Library/Application Support/crateCraft/related.sqlite` |
+| Windows | `%APPDATA%\crateCraft\related.sqlite` |
+| Linux | `$XDG_CONFIG_HOME/cratecraft/related.sqlite`, or `~/.config/cratecraft/related.sqlite` |
 
-`SERATO_LIBRARY_CONFIG_DIR` overrides the directory when the value is an absolute path. A relative value is ignored.
+`CRATECRAFT_CONFIG_DIR` overrides the directory when the value is an absolute path. A relative value is ignored.
 
 ## Opening the file
 

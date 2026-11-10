@@ -1,5 +1,6 @@
 {
-  "name": "serato-library-manager",
+  "name": "cratecraft",
+  "productName": "crateCraft",
   "private": true,
   "type": "module",
   "engines": {

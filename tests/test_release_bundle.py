@@ -139,13 +139,13 @@ class AssetTests(unittest.TestCase):
     def test_spec_uses_the_shared_asset_check(self) -> None:
         """Require the PyInstaller spec to stop when a page file is missing.
 
-        Reads ``serato-library.spec``. It must call ``missing_static_files`` and
+        Reads ``crateCraft.spec``. It must call ``missing_static_files`` and
         raise ``SystemExit``. The spec is not executed.
 
         Returns:
             None. The test fails if the spec no longer shares that check.
         """
-        text = (ROOT / "serato-library.spec").read_text(encoding="utf-8")
+        text = (ROOT / "crateCraft.spec").read_text(encoding="utf-8")
         self.assertIn("missing_static_files", text)
         self.assertIn("SystemExit", text)
         self.assertIn('(str(root / "locales"), "locales")', text)
@@ -283,8 +283,8 @@ class TagAndFooterTests(unittest.TestCase):
         Returns:
             None. The test fails if the placeholder remains.
         """
-        text = release_bundle.footer("mookiejones/serato-library-manager")
-        self.assertIn("mookiejones/serato-library-manager", text)
+        text = release_bundle.footer("mookiejones/cratecraft-manager")
+        self.assertIn("mookiejones/cratecraft-manager", text)
         self.assertNotIn("OWNER/REPO", text)
         self.assertIn("unsigned", text)
         self.assertIn("127.0.0.1", text)
@@ -321,16 +321,16 @@ class ZipTests(unittest.TestCase):
         stays inside the app.
 
         Args:
-            dist: Directory that will contain ``Serato Library.app``.
+            dist: Directory that will contain ``crateCraft.app``.
             static: Page files copied into the bundle.
 
         Returns:
             ``dist``. The executable bit is set on the stand-in binary.
         """
-        root = dist / "Serato Library.app" / "Contents" / "MacOS"
+        root = dist / "crateCraft.app" / "Contents" / "MacOS"
         root.mkdir(parents=True)
-        exe = root / "Serato Library"
-        exe.write_text("#!/bin/sh\nprintf 'ok\\n' > \"$SERATO_LIBRARY_SMOKE\"\n", encoding="utf-8")
+        exe = root / "crateCraft"
+        exe.write_text("#!/bin/sh\nprintf 'ok\\n' > \"$CRATECRAFT_SMOKE\"\n", encoding="utf-8")
         exe.chmod(0o755)
         bundled = root / "static"
         bundled.mkdir()
@@ -340,9 +340,9 @@ class ZipTests(unittest.TestCase):
         locales.mkdir()
         for name in release_bundle.MENU_LOCALE_FILES:
             (locales / name).write_bytes((ROOT / "locales" / name).read_bytes())
-        link = dist / "Serato Library.app" / "Contents" / "Frameworks"
+        link = dist / "crateCraft.app" / "Contents" / "Frameworks"
         link.mkdir()
-        (link / "current").symlink_to(Path("..") / "MacOS" / "Serato Library")
+        (link / "current").symlink_to(Path("..") / "MacOS" / "crateCraft")
         return dist
 
     def test_symlink_targets_must_stay_inside_the_bundle(self) -> None:
@@ -354,10 +354,10 @@ class ZipTests(unittest.TestCase):
         Returns:
             None. The test fails if an escaping link is treated as safe.
         """
-        inside = Path("Serato Library.app/Contents/Frameworks/current")
-        self.assertTrue(release_bundle._link_stays_inside(inside, "../MacOS/Serato Library"))
-        self.assertFalse(release_bundle._link_stays_inside(Path("Serato Library.app/escape"), "/tmp"))
-        self.assertFalse(release_bundle._link_stays_inside(Path("Serato Library.app/escape"), "../../outside"))
+        inside = Path("crateCraft.app/Contents/Frameworks/current")
+        self.assertTrue(release_bundle._link_stays_inside(inside, "../MacOS/crateCraft"))
+        self.assertFalse(release_bundle._link_stays_inside(Path("crateCraft.app/escape"), "/tmp"))
+        self.assertFalse(release_bundle._link_stays_inside(Path("crateCraft.app/escape"), "../../outside"))
 
     @unittest.skipUnless(sys.platform != "win32", "the fixture is a macOS app bundle")
     def test_roundtrip_keeps_mode_symlink_and_page(self) -> None:
@@ -373,17 +373,17 @@ class ZipTests(unittest.TestCase):
             base = Path(tmp)
             static = self._static(base / "source")
             dist = self._bundle(base / "dist", static)
-            archive = base / "Serato-Library-macos.zip"
-            release_bundle.zip_bundle(dist / "Serato Library.app", archive)
+            archive = base / "crateCraft-macos.zip"
+            release_bundle.zip_bundle(dist / "crateCraft.app", archive)
             kind = release_bundle.assert_zip(archive, static, min_bytes=20, max_bytes=5_000_000)
             self.assertEqual(kind, "macos")
             unpacked = base / "out"
             release_bundle.unzip_bundle(archive, unpacked)
-            exe = unpacked / "Serato Library.app" / "Contents" / "MacOS" / "Serato Library"
+            exe = unpacked / "crateCraft.app" / "Contents" / "MacOS" / "crateCraft"
             self.assertTrue(exe.stat().st_mode & stat.S_IXUSR)
-            restored = unpacked / "Serato Library.app" / "Contents" / "Frameworks" / "current"
+            restored = unpacked / "crateCraft.app" / "Contents" / "Frameworks" / "current"
             self.assertTrue(restored.is_symlink())
-            self.assertEqual(os.readlink(restored), os.path.join("..", "MacOS", "Serato Library"))
+            self.assertEqual(os.readlink(restored), os.path.join("..", "MacOS", "crateCraft"))
 
     def test_zip_without_locales_is_refused(self) -> None:
         """Refuse a release zip that has the page and no menu catalogs.
@@ -397,9 +397,9 @@ class ZipTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             archive = Path(tmp) / "nomenu.zip"
             with zipfile.ZipFile(archive, "w") as zipped:
-                zipped.writestr("Serato Library/Serato Library.exe", _pe(0x8664))
-                zipped.writestr("Serato Library/static/index.html", b"<script src=\"app.js\"></script>")
-                zipped.writestr("Serato Library/static/app.js", b"ok")
+                zipped.writestr("crateCraft/crateCraft.exe", _pe(0x8664))
+                zipped.writestr("crateCraft/static/index.html", b"<script src=\"app.js\"></script>")
+                zipped.writestr("crateCraft/static/app.js", b"ok")
             source = Path(tmp) / "static"
             source.mkdir()
             (source / "index.html").write_bytes(b"<script src=\"app.js\"></script>")
@@ -419,7 +419,7 @@ class ZipTests(unittest.TestCase):
         """
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)
-            root = base / "dist" / "Serato Library.app"
+            root = base / "dist" / "crateCraft.app"
             root.mkdir(parents=True)
             (root / "escape").symlink_to("/tmp")
             with self.assertRaises(SystemExit):
@@ -484,7 +484,7 @@ class ZipTests(unittest.TestCase):
 
             httpd = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
             port = httpd.server_address[1]
-            Path(os.environ["SERATO_LIBRARY_SMOKE"]).write_text(
+            Path(os.environ["CRATECRAFT_SMOKE"]).write_text(
                 f"http://127.0.0.1:{port}\\n{TOKEN}\\n", encoding="utf-8"
             )
             httpd.serve_forever()
@@ -619,8 +619,8 @@ class WorkflowTests(unittest.TestCase):
         build_perms = build.split("permissions:", 1)[1].split("strategy:", 1)[0]
         self.assertEqual(build_perms.strip(), "contents: read")
         self.assertEqual(build.count("uses: actions/upload-artifact@"), 3)
-        self.assertIn("name: Serato-Library-windows.zip", build)
-        self.assertIn("name: Serato-Library-windows-setup.exe", build)
+        self.assertIn("name: crateCraft-windows.zip", build)
+        self.assertIn("name: crateCraft-windows-setup.exe", build)
         self.assertNotIn("secrets.", build)
         self.assertNotIn("id-token", build)
         self.assertNotIn("attestations", build)
@@ -641,7 +641,7 @@ class WorkflowTests(unittest.TestCase):
         header = text.split("jobs:", 1)[0]
         self.assertIn("pull_request:", header)
         self.assertIn("packaging/**", header)
-        self.assertIn("serato-library.spec", header)
+        self.assertIn("crateCraft.spec", header)
         self.assertIn("scripts/release_*", header)
         self.assertIn(".github/workflows/release.yml", header)
         self.assertIn("desktop.py", header)
@@ -654,9 +654,9 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("scripts/release_bundle.py check-binaries", text)
         self.assertIn("scripts/release_bundle.py check-checksums", text)
         self.assertIn("macos-15-intel", text)
-        self.assertIn("Serato-Library-macos-arm64.dmg", text)
-        self.assertIn("Serato-Library-macos-x64.dmg", text)
-        self.assertIn("Serato-Library-windows-setup.exe", text)
+        self.assertIn("crateCraft-macos-arm64.dmg", text)
+        self.assertIn("crateCraft-macos-x64.dmg", text)
+        self.assertIn("crateCraft-windows-setup.exe", text)
         self.assertIn("SHA256SUMS", text)
         self.assertIn("gh attestation verify", text)
         self.assertIn("contents: write", text)
@@ -831,9 +831,9 @@ class PackageTests(unittest.TestCase):
         Returns:
             None. The test fails if the script bakes a version of its own.
         """
-        text = (ROOT / "packaging" / "serato-library.iss").read_text(encoding="utf-8")
+        text = (ROOT / "packaging" / "crateCraft.iss").read_text(encoding="utf-8")
         self.assertIn("#ifndef AppVersion", text)
-        self.assertIn("Serato-Library-windows-setup", text)
+        self.assertIn("crateCraft-windows-setup", text)
         self.assertIn("PrivilegesRequired=lowest", text)
         self.assertNotIn("SignTool=", text)
         self.assertEqual(release_bundle.app_version(), version_info.installer_version())
@@ -860,7 +860,7 @@ class PackageTests(unittest.TestCase):
         """
         stub = _pe(0x14C)
         with tempfile.TemporaryDirectory() as tmp:
-            setup = Path(tmp) / "Serato-Library-windows-setup.exe"
+            setup = Path(tmp) / "crateCraft-windows-setup.exe"
             setup.write_bytes(stub)
             release_bundle.assert_setup(setup, min_bytes=len(stub), max_bytes=len(stub))
             setup.write_bytes(b"not a pe")
@@ -880,7 +880,7 @@ class PackageTests(unittest.TestCase):
         text = release_bundle.ISS_PATH.read_text(encoding="utf-8")
         stripped = text.replace("ArchitecturesInstallIn64BitMode=x64compatible", "")
         with tempfile.TemporaryDirectory() as tmp:
-            script = Path(tmp) / "serato-library.iss"
+            script = Path(tmp) / "crateCraft.iss"
             script.write_text(stripped, encoding="utf-8")
             with self.assertRaises(SystemExit) as caught:
                 release_bundle.assert_installer_script(script)
@@ -889,7 +889,7 @@ class PackageTests(unittest.TestCase):
     def test_windows_zip_executable_must_be_x64(self) -> None:
         """Require the portable zip's application executable to be x64.
 
-        A 32-bit PE in ``Serato Library.exe`` must fail. The same zip
+        A 32-bit PE in ``crateCraft.exe`` must fail. The same zip
         with machine ``0x8664`` must pass. The page files are the real
         ``static`` directory. No installer is built.
 
@@ -899,7 +899,7 @@ class PackageTests(unittest.TestCase):
         static = release_bundle.source_static()
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)
-            root = base / "Serato Library"
+            root = base / "crateCraft"
             for path in static.rglob("*"):
                 if not path.is_file() or path.is_symlink():
                     continue
@@ -910,7 +910,7 @@ class PackageTests(unittest.TestCase):
             locales.mkdir()
             for name in release_bundle.MENU_LOCALE_FILES:
                 (locales / name).write_bytes((ROOT / "locales" / name).read_bytes())
-            exe = root / "Serato Library.exe"
+            exe = root / "crateCraft.exe"
             exe.write_bytes(_pe(0x14C))
             narrow = base / "narrow.zip"
             _zip_tree(root, narrow)
@@ -924,7 +924,7 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(kind, "windows")
 
     def test_windows_zip_requires_the_app_executable(self) -> None:
-        """Refuse a portable zip that has no ``Serato Library.exe``.
+        """Refuse a portable zip that has no ``crateCraft.exe``.
 
         A page file alone is not a Windows bundle. The check must fail
         before it compares page bytes.
@@ -935,7 +935,7 @@ class PackageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             archive = Path(tmp) / "missing.zip"
             with zipfile.ZipFile(archive, "w") as zipped:
-                zipped.writestr("Serato Library/static/index.html", b"<p>missing</p>")
+                zipped.writestr("crateCraft/static/index.html", b"<p>missing</p>")
             with self.assertRaises(SystemExit) as caught:
                 release_bundle.assert_zip(
                     archive,
@@ -943,12 +943,12 @@ class PackageTests(unittest.TestCase):
                     min_bytes=1,
                     max_bytes=5_000_000,
                 )
-        self.assertIn("no Serato Library executable", str(caught.exception))
+        self.assertIn("no crateCraft executable", str(caught.exception))
 
     def test_windows_zip_rejects_a_corrupt_pe(self) -> None:
         """Refuse an application executable that is not a PE.
 
-        The member is named ``Serato Library.exe`` and starts with ``MZ``,
+        The member is named ``crateCraft.exe`` and starts with ``MZ``,
         but it has no PE signature. No installer is built.
 
         Returns:
@@ -956,7 +956,7 @@ class PackageTests(unittest.TestCase):
         """
         with tempfile.TemporaryDirectory() as tmp:
             archive = Path(tmp) / "corrupt.zip"
-            _zip_windows_exes(archive, {"Serato Library/Serato Library.exe": b"MZ" + b"\0" * 62})
+            _zip_windows_exes(archive, {"crateCraft/crateCraft.exe": b"MZ" + b"\0" * 62})
             with self.assertRaises(SystemExit) as caught:
                 release_bundle.assert_zip(
                     archive,
@@ -977,7 +977,7 @@ class PackageTests(unittest.TestCase):
         """
         with tempfile.TemporaryDirectory() as tmp:
             archive = Path(tmp) / "arm.zip"
-            _zip_windows_exes(archive, {"Serato Library/Serato Library.exe": _pe(0xAA64)})
+            _zip_windows_exes(archive, {"crateCraft/crateCraft.exe": _pe(0xAA64)})
             with self.assertRaises(SystemExit) as caught:
                 release_bundle.assert_zip(
                     archive,
@@ -990,7 +990,7 @@ class PackageTests(unittest.TestCase):
     def test_windows_zip_rejects_a_32_bit_helper(self) -> None:
         """Refuse a 32-bit helper next to a 64-bit application executable.
 
-        ``Serato Library.exe`` is machine ``0x8664``. ``helper.exe`` is
+        ``crateCraft.exe`` is machine ``0x8664``. ``helper.exe`` is
         machine ``0x14c``. Every ``.exe`` in the zip has to be x64.
 
         Returns:
@@ -1001,8 +1001,8 @@ class PackageTests(unittest.TestCase):
             _zip_windows_exes(
                 archive,
                 {
-                    "Serato Library/Serato Library.exe": _pe(0x8664),
-                    "Serato Library/helper.exe": _pe(0x14C),
+                    "crateCraft/crateCraft.exe": _pe(0x8664),
+                    "crateCraft/helper.exe": _pe(0x14C),
                 },
             )
             with self.assertRaises(SystemExit) as caught:
@@ -1018,7 +1018,7 @@ class PackageTests(unittest.TestCase):
         """Document the release files and Removable Volumes beside Open Anyway.
 
         Reads ``docs/first-install.md``. The page must name each download,
-        say the Serato Library window opens, and tell a Mac user to allow
+        say the crateCraft window opens, and tell a Mac user to allow
         Removable Volumes rather than Full Disk Access. It must not link
         a missing panic page.
 
@@ -1040,7 +1040,7 @@ class PackageTests(unittest.TestCase):
         self.assertIn("127.0.0.1", text)
         self.assertNotIn("panic.md", text)
         self.assertNotIn("PREVIEW", text)
-        spec = (ROOT / "serato-library.spec").read_text(encoding="utf-8")
+        spec = (ROOT / "crateCraft.spec").read_text(encoding="utf-8")
         self.assertIn("NSRemovableVolumesUsageDescription", spec)
         self.assertIn("webview.platforms.edgechromium", spec)
         self.assertIn("webview.platforms.cocoa", spec)

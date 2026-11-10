@@ -1,5 +1,5 @@
 /**
- * Serato library page.
+ * crateCraft page.
  *
  * Wires the screen and starts the first load. The view modules do not
  * fetch when they are imported. This file attaches listeners, then calls

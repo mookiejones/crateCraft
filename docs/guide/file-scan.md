@@ -6,7 +6,7 @@ The note under the crate list says **Quick check reads the start of each file. F
 
 ## Run the check
 
-1. Open Serato Library.
+1. Open crateCraft.
 2. Click **Damaged files** under **Library health**.
 3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The crate name is shown under the crate list.
 4. Click **Quick check**. The report groups empty files, files that cannot be read, files whose bytes do not match the extension (a web page saved as `.mp3`), and files Serato has marked corrupt.

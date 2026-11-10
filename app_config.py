@@ -17,17 +17,29 @@ from __future__ import annotations
 import json
 import logging
 import os
+import shutil
 import sys
 import threading
 import uuid
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
+import app_env
 from app_icons import COLORWAYS, DEFAULT_COLORWAY, normalize_colorway
 import version_info
 
-CONFIG_ENV = "SERATO_LIBRARY_CONFIG_DIR"
-LOG_ENV = "SERATO_LIBRARY_LOG_DIR"
+CONFIG_ENV = app_env.name("CONFIG_DIR")
+LOG_ENV = app_env.name("LOG_DIR")
+LEGACY_CONFIG_ENV = app_env.legacy_name("CONFIG_DIR")
+LEGACY_LOG_ENV = app_env.legacy_name("LOG_DIR")
+# The app's own folders. macOS and Windows use the product name. Linux
+# keeps the lowercase XDG style. The legacy names are read for installs
+# made before the rename and are never deleted.
+APP_DIR_NAME = "crateCraft"
+APP_DIR_NAME_LINUX = "cratecraft"
+LEGACY_DIR_NAME = "Serato Library"
+LEGACY_DIR_NAME_LINUX = "serato-library"
+_MIGRATION_SKIP = ("waveforms", "instance.lock", "instance.port", "instance.focus", "*.migrating-*")
 SETTINGS_NAME = "settings.json"
 LIBRARY_CHOICE_NAME = "library.json"
 _LIBRARY_CHOICE_LIMIT = 65_536
@@ -274,23 +286,24 @@ def _check_track_list_width(value: object) -> int:
     return value
 
 
-def _env_path(name: str) -> Path | None:
+def _env_path(suffix: str) -> Path | None:
     """Return an absolute directory from an environment variable.
 
     Args:
-        name: ``SERATO_LIBRARY_CONFIG_DIR`` or ``SERATO_LIBRARY_LOG_DIR``.
+        suffix: ``CONFIG_DIR`` or ``LOG_DIR``. ``CRATECRAFT_`` plus the
+            suffix is read first, then the older ``SERATO_LIBRARY_`` name.
 
     Returns:
         The path when it is absolute. None when the variable is missing,
         blank, or relative. A relative value is ignored so a test override
         cannot write into the working directory by accident.
     """
-    raw = os.environ.get(name, "")
+    raw = app_env.get(suffix, "")
     if not isinstance(raw, str) or not raw.strip():
         return None
     path = Path(raw.strip())
     if not path.is_absolute():
-        logger.warning("%s must be an absolute path — ignored", name)
+        logger.warning("%s must be an absolute path — ignored", app_env.source(suffix))
         return None
     return path
 
@@ -299,57 +312,143 @@ def default_config_dir() -> Path:
     """Return the settings directory for this operating system.
 
     Returns:
-        Application Support on macOS, ``%APPDATA%\\Serato Library`` on
-        Windows, and ``$XDG_CONFIG_HOME/serato-library`` elsewhere.
+        ``~/Library/Application Support/crateCraft`` on macOS,
+        ``%APPDATA%\\crateCraft`` on Windows, and
+        ``$XDG_CONFIG_HOME/cratecraft`` elsewhere. The folder may not exist.
     """
     if sys.platform == "win32":
         appdata = os.environ.get("APPDATA")
         base = Path(appdata) if appdata else Path.home() / "AppData" / "Roaming"
-        return base / "Serato Library"
+        return base / APP_DIR_NAME
     if sys.platform == "darwin":
-        return Path.home() / "Library" / "Application Support" / "Serato Library"
+        return Path.home() / "Library" / "Application Support" / APP_DIR_NAME
     xdg = os.environ.get("XDG_CONFIG_HOME")
     base = Path(xdg) if xdg else Path.home() / ".config"
-    return base / "serato-library"
+    return base / APP_DIR_NAME_LINUX
+
+
+def legacy_config_dir() -> Path:
+    """Return the settings directory used before the crateCraft rename.
+
+    Returns:
+        ``~/Library/Application Support/Serato Library`` on macOS,
+        ``%APPDATA%\\Serato Library`` on Windows, and
+        ``$XDG_CONFIG_HOME/serato-library`` elsewhere. This is the app's
+        own folder, not Serato's ``_Serato_`` folder. It may not exist.
+    """
+    return default_config_dir().with_name(
+        LEGACY_DIR_NAME_LINUX if _is_linux_style() else LEGACY_DIR_NAME
+    )
+
+
+def _is_linux_style() -> bool:
+    """Return whether the per-system folder names are lowercase.
+
+    Returns:
+        False on Windows and macOS, True elsewhere.
+    """
+    return sys.platform not in ("win32", "darwin")
 
 
 def default_log_dir() -> Path:
     """Return the log directory for this operating system.
 
     Returns:
-        ``~/Library/Logs/Serato Library`` on macOS,
-        ``%LOCALAPPDATA%\\Serato Library\\Logs`` on Windows, and
-        ``$XDG_STATE_HOME/serato-library/logs`` elsewhere.
+        ``~/Library/Logs/crateCraft`` on macOS,
+        ``%LOCALAPPDATA%\\crateCraft\\Logs`` on Windows, and
+        ``$XDG_STATE_HOME/cratecraft/logs`` elsewhere. Logs written by an
+        earlier build stay in the old folder and are not moved.
     """
     if sys.platform == "win32":
         local = os.environ.get("LOCALAPPDATA")
         base = Path(local) if local else Path.home() / "AppData" / "Local"
-        return base / "Serato Library" / "Logs"
+        return base / APP_DIR_NAME / "Logs"
     if sys.platform == "darwin":
-        return Path.home() / "Library" / "Logs" / "Serato Library"
+        return Path.home() / "Library" / "Logs" / APP_DIR_NAME
     xdg = os.environ.get("XDG_STATE_HOME")
     base = Path(xdg) if xdg else Path.home() / ".local" / "state"
-    return base / "serato-library" / "logs"
+    return base / APP_DIR_NAME_LINUX / "logs"
+
+
+def _resolved_default_config_dir() -> Path:
+    """Return the new settings folder, or the old one when only it exists.
+
+    An install from before the rename keeps its settings, related links,
+    and presets in the old folder until :func:`migrate_legacy_config`
+    copies them. Until then the old folder is read, so nothing looks lost.
+
+    Returns:
+        :func:`default_config_dir` when it exists or the old folder does
+        not. Otherwise :func:`legacy_config_dir`.
+    """
+    current = default_config_dir()
+    if current.exists():
+        return current
+    legacy = legacy_config_dir()
+    if legacy.is_dir():
+        return legacy
+    return current
+
+
+def migrate_legacy_config() -> Path | None:
+    """Copy the pre-rename settings folder to the crateCraft folder once.
+
+    The copy goes to a staging folder beside the target and is renamed
+    into place, so a half-finished copy is never read as settings. The
+    old folder is left exactly as it was. Nothing in Serato's own folders
+    is read or written. The waveform cache and the single-instance lock
+    files are not copied; the cache is rebuilt on demand.
+
+    Returns:
+        The new folder when this call copied it. None when an override is
+        set, the new folder already exists, there is nothing to copy, or
+        the copy failed. A failure is logged and the old folder keeps
+        being read.
+    """
+    if _env_path("CONFIG_DIR") is not None:
+        return None
+    target = default_config_dir()
+    legacy = legacy_config_dir()
+    if target.exists() or not legacy.is_dir():
+        return None
+    staging = target.with_name(f"{target.name}.migrating-{os.getpid()}")
+    try:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(
+            legacy,
+            staging,
+            symlinks=True,
+            ignore=shutil.ignore_patterns(*_MIGRATION_SKIP),
+        )
+        os.rename(staging, target)
+    except OSError as exc:
+        logger.warning("Could not copy settings from %s: %s", legacy, exc)
+        shutil.rmtree(staging, ignore_errors=True)
+        return None
+    logger.info("Copied settings from %s to %s", legacy, target)
+    return target
 
 
 def config_dir() -> Path:
     """Return the directory that holds ``settings.json``.
 
     Returns:
-        ``SERATO_LIBRARY_CONFIG_DIR`` when that variable is an absolute
-        path, otherwise :func:`default_config_dir`.
+        ``CRATECRAFT_CONFIG_DIR`` (or the older ``SERATO_LIBRARY_CONFIG_DIR``)
+        when that variable is an absolute path. Otherwise the crateCraft
+        folder, or the pre-rename folder while only that one exists.
     """
-    return _env_path(CONFIG_ENV) or default_config_dir()
+    return _env_path("CONFIG_DIR") or _resolved_default_config_dir()
 
 
 def log_dir() -> Path:
     """Return the directory that holds the rotating log.
 
     Returns:
-        ``SERATO_LIBRARY_LOG_DIR`` when that variable is an absolute path,
-        otherwise :func:`default_log_dir`.
+        ``CRATECRAFT_LOG_DIR`` (or the older ``SERATO_LIBRARY_LOG_DIR``)
+        when that variable is an absolute path, otherwise
+        :func:`default_log_dir`.
     """
-    return _env_path(LOG_ENV) or default_log_dir()
+    return _env_path("LOG_DIR") or default_log_dir()
 
 
 def settings_path() -> Path:

@@ -9,14 +9,14 @@ Events are an allowlist: ``app_opened``, ``library_scanned``,
 ``crate_created``, ``backup_made``, ``tags_read``, ``files_changed``,
 ``related_link_saved``, ``related_link_removed``,
 ``related_crate_written``, and ``duplicates_merged``. Properties are the
-app name ``serato-library-manager``, the app version, the operating
+app name ``crateCraft``, the app version, the operating
 system, a track-count bucket, a file-count bucket, a change type, and a
 cue result for a file change, and ``link_direction`` (``one_way`` or
 ``two_way``) on ``related_link_saved``. ``duplicates_merged`` carries no
 extra properties. Track titles, crate names, file paths, and library
 rows are not properties, and the Sentry ``before_send`` hook removes
 paths if one appears in an exception. Crash reports carry the tag
-``app=serato-library-manager``.
+``app=crateCraft``.
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ logger = logging.getLogger("serato.library.telemetry")
 
 DEFAULT_POSTHOG_HOST = "https://us.i.posthog.com"
 # Shared with the owner's other app, which uses the same PostHog project.
-APP_NAME = "serato-library-manager"
+APP_NAME = "crateCraft"
 EVENT_APP_OPENED = "app_opened"
 EVENT_LIBRARY_SCANNED = "library_scanned"
 EVENT_CRATE_CREATED = "crate_created"
@@ -653,7 +653,7 @@ def _init_sentry(dsn: str) -> None:
     cannot attach a request hook. ``server_name`` is the constant
     ``local`` because the default is the machine hostname. The before-send
     hook scrubs paths and drops the event when consent is no longer granted.
-    The tag ``app`` is ``serato-library-manager`` so a shared Sentry
+    The tag ``app`` is ``crateCraft`` so a shared Sentry
     project can tell this app from the other one. The hook sets that tag
     again after scrubbing, so a caller cannot replace it.
     """

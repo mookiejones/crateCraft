@@ -641,7 +641,7 @@ class CacheTests(unittest.TestCase):
             path.parent.mkdir()
             _write_wav(path, _sine(440.0, 0.5))
             before = _tree(temp.root)
-            with mock.patch.dict(os.environ, {"SERATO_LIBRARY_CONFIG_DIR": str(temp.root.resolve())}):
+            with mock.patch.dict(os.environ, {"CRATECRAFT_CONFIG_DIR": str(temp.root.resolve())}):
                 body, cached = waveform.load(path)
             self.assertFalse(cached)
             self.assertTrue(body.startswith(b"SWF1"))

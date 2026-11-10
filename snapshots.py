@@ -64,6 +64,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Protocol, TypedDict
 
+import app_env
 import app_log
 import error_codes
 import serato_logs
@@ -288,8 +289,8 @@ def read_install() -> SeratoInstall:
     """Read the Serato app version and Protect Library.
 
     A relocated test library does not read the machine's real app or
-    preferences unless ``SERATO_LIBRARY_APP_INFO`` or
-    ``SERATO_LIBRARY_PREFERENCES`` is set. An unreadable file becomes
+    preferences unless ``CRATECRAFT_APP_INFO`` or
+    ``CRATECRAFT_PREFERENCES`` is set (or the older ``SERATO_LIBRARY_`` names). An unreadable file becomes
     ``unknown`` and does not raise.
 
     Returns:
@@ -2553,7 +2554,7 @@ class FolderWatch:
 def start_watch() -> None:
     """Start the folder watch unless it is switched off for a test."""
     global _watch
-    if os.environ.get("SERATO_LIBRARY_DISABLE_WATCH") == "1":
+    if app_env.get("DISABLE_WATCH") == "1":
         return
     if _watch is None:
         _watch = FolderWatch()
@@ -4459,7 +4460,7 @@ def _read_version() -> tuple[str, str]:
         Windows reads the Serato DJ executable under Program Files, then the
         registry. It does not look for a relative ``.app`` bundle.
     """
-    override = os.environ.get("SERATO_LIBRARY_APP_INFO")
+    override = app_env.get("APP_INFO")
     if override:
         return _version_from_plist(Path(override))
     if not _using_live_library():
@@ -4732,7 +4733,7 @@ def _read_protect() -> str:
         missing key, and a file that is not a plist. The database is not
         checked for a lock.
     """
-    override = os.environ.get("SERATO_LIBRARY_PREFERENCES")
+    override = app_env.get("PREFERENCES")
     if override:
         return _protect_from_plist(Path(override))
     if not _using_live_library():

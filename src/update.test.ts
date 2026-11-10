@@ -25,7 +25,7 @@ const OFFER: UpdateStatus = {
   include_prereleases: false,
   current: "v1.2.0",
   update: true,
-  latest: { version: "v1.3.0", url: "https://github.com/mookiejones/serato-library-manager/releases/tag/v1.3.0", prerelease: false },
+  latest: { version: "v1.3.0", url: "https://github.com/mookiejones/crateCraft/releases/tag/v1.3.0", prerelease: false },
 };
 
 let status: unknown = OFFER;

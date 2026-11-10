@@ -27,6 +27,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+import app_env
+
 # Serato keeps about eleven session logs. A few extras still fit in one read.
 _MAX_LOGS = 16
 _EDGE = 256 * 1024
@@ -103,14 +105,14 @@ def home_logs_dir() -> Path:
 def session_directory() -> Path | None:
     """Return the logs folder this process may read, or None.
 
-    ``SERATO_LIBRARY_LOGS`` wins when it is absolute. A relative value is
+    ``CRATECRAFT_LOGS`` (or the older ``SERATO_LIBRARY_LOGS``) wins when it is absolute. A relative value is
     ignored. Otherwise the real logs are read only while this process is
     pointed at the live Serato library. A test library never reads them.
 
     Returns:
         The logs directory, or None when logs must be left alone.
     """
-    override = os.environ.get("SERATO_LIBRARY_LOGS", "").strip()
+    override = (app_env.get("LOGS", "") or "").strip()
     if override:
         candidate = Path(override)
         return candidate if candidate.is_absolute() else None

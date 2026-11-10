@@ -334,7 +334,7 @@ class IconApplyTests(unittest.TestCase):
             None.
         """
         with tempfile.TemporaryDirectory() as tmp:
-            bundle = Path(tmp) / "Serato Library.app" / "Contents" / "Resources"
+            bundle = Path(tmp) / "crateCraft.app" / "Contents" / "Resources"
             bundle.mkdir(parents=True)
             icns = bundle / "icon.icns"
             icns.write_bytes(b"finder-default")
@@ -383,7 +383,7 @@ class IconApplyTests(unittest.TestCase):
             None.
         """
         with tempfile.TemporaryDirectory() as tmp:
-            exe = Path(tmp) / "Serato Library.exe"
+            exe = Path(tmp) / "crateCraft.exe"
             exe.write_bytes(b"MZ-original")
             calls: list[tuple[int, int, int, int]] = []
 
@@ -542,7 +542,7 @@ class IconApplyTests(unittest.TestCase):
         Returns:
             None.
         """
-        spec = (ROOT / "serato-library.spec").read_text(encoding="utf-8")
+        spec = (ROOT / "crateCraft.spec").read_text(encoding="utf-8")
         self.assertIn("app-icon.icns", spec)
         self.assertIn("app-icon.ico", spec)
         self.assertIn("icon=exe_icon", spec)

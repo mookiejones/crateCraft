@@ -66,7 +66,7 @@ Only after you choose Share, and only when the app has a key:
 - A random install id that is not your name and not a Serato account.
 - A crash report, which is the error type and a stack trace. A file path in that report is replaced.
 
-The full list is [PRIVACY.md](https://github.com/mookiejones/serato-library-manager/blob/main/PRIVACY.md).
+The full list is [PRIVACY.md](https://github.com/mookiejones/crateCraft/blob/main/PRIVACY.md).
 
 ## What stays here
 
@@ -76,12 +76,12 @@ Titles, artists, crate names, playlist text, notes, ratings, file paths, and the
 
 ## Logs
 
-The log is `serato-library.log`. It can include the path of the library database. It rotates when it reaches 1 MiB and keeps three older files.
+The log is `cratecraft.log`. It can include the path of the library database. It rotates when it reaches 1 MiB and keeps three older files.
 
 | System | Folder |
 | --- | --- |
-| macOS | `~/Library/Logs/Serato Library/` |
-| Windows | `%LOCALAPPDATA%\Serato Library\Logs\` |
+| macOS | `~/Library/Logs/crateCraft/` |
+| Windows | `%LOCALAPPDATA%\crateCraft\Logs\` |
 
 1. Click **Settings**.
 2. Click **Open logs folder** to open that folder. The line says **Opened the logs folder.** or **Couldn't open the logs folder.**
@@ -104,7 +104,7 @@ If the copy fails, a box of log text appears. The line says **Couldn't copy auto
 
 | Line | Meaning |
 | --- | --- |
-| **App version** | This copy of Serato Library. |
+| **App version** | This copy of crateCraft. |
 | **Commit** | The short commit, when this copy has one. |
 | **Operating system** | The computer's system. |
 | **Python** | The Python version this copy is running. |
@@ -128,7 +128,7 @@ If the copy fails, a box of the report appears. The line says **Couldn't copy th
 
 | System | Settings file |
 | --- | --- |
-| macOS | `~/Library/Application Support/Serato Library/settings.json` |
-| Windows | `%APPDATA%\Serato Library\settings.json` |
+| macOS | `~/Library/Application Support/crateCraft/settings.json` |
+| Windows | `%APPDATA%\crateCraft\settings.json` |
 
-This folder is **Serato Library**, with a space. It is separate from `Serato/Library`, which holds `master.sqlite`. The same file records whether setup has finished, the window size, the width of the track list, the language you picked, the theme, and whether the app icon follows that theme. A new install runs setup until you choose **Open my library**. It also stores the Rekordbox dialog choices: Memory cues, Hot loops, and the key notation. Those choices stay on this computer. If setup was pointed at a library that is not in the usual folder, `library.json` in this same folder remembers that file. The path stays on this computer. It is not a usage report.
+This folder is **crateCraft**. Before the rename it was **Serato Library**; the first launch of crateCraft copies that folder here and leaves the original. It is separate from `Serato/Library`, which holds `master.sqlite`. The same file records whether setup has finished, the window size, the width of the track list, the language you picked, the theme, and whether the app icon follows that theme. A new install runs setup until you choose **Open my library**. It also stores the Rekordbox dialog choices: Memory cues, Hot loops, and the key notation. Those choices stay on this computer. If setup was pointed at a library that is not in the usual folder, `library.json` in this same folder remembers that file. The path stays on this computer. It is not a usage report.
