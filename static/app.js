@@ -3448,15 +3448,15 @@
         return value;
       }
       var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-        var listeners2 = [], signal = this.signal = {
+        var listeners3 = [], signal = this.signal = {
           aborted: false,
           addEventListener: function(type, listener) {
-            listeners2.push(listener);
+            listeners3.push(listener);
           }
         };
         this.abort = function() {
           signal.aborted = true;
-          listeners2.forEach(function(listener) {
+          listeners3.forEach(function(listener) {
             return listener();
           });
         };
@@ -3524,33 +3524,33 @@
       function pingEngtangledActionScope() {
         if (0 === --currentEntangledPendingCount && (entangledTransitionTypes = null, null !== currentEntangledListeners)) {
           null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners2 = currentEntangledListeners;
+          var listeners3 = currentEntangledListeners;
           currentEntangledListeners = null;
           currentEntangledLane = 0;
           currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])();
+          for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners2 = [], thenableWithOverride = {
+        var listeners3 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners2.push(resolve);
+            listeners3.push(resolve);
           }
         };
         thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled";
             thenableWithOverride.value = result;
-            for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])(result);
+            for (var i = 0; i < listeners3.length; i++) (0, listeners3[i])(result);
           },
           function(error2) {
             thenableWithOverride.status = "rejected";
             thenableWithOverride.reason = error2;
-            for (error2 = 0; error2 < listeners2.length; error2++)
-              (0, listeners2[error2])(void 0);
+            for (error2 = 0; error2 < listeners3.length; error2++)
+              (0, listeners3[error2])(void 0);
           }
         );
         return thenableWithOverride;
@@ -11385,15 +11385,15 @@
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners2 = []; null !== targetFiber; ) {
+        for (var captureName = reactName + "Capture", listeners3 = []; null !== targetFiber; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
           _instance2 = _instance2.tag;
-          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners2.unshift(
+          5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners3.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners2.push(
+          ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners3.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
           ));
-          if (3 === targetFiber.tag) return listeners2;
+          if (3 === targetFiber.tag) return listeners3;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -11406,18 +11406,18 @@
         return inst ? inst : null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners2 = []; null !== target && target !== common; ) {
+        for (var registrationName = event._reactName, listeners3 = []; null !== target && target !== common; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           _instance3 = _instance3.tag;
           if (null !== alternate && alternate === common) break;
-          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners2.unshift(
+          5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners3.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners2.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners3.push(
             createDispatchListener(target, stateNode, alternate)
           )));
           target = target.return;
         }
-        0 !== listeners2.length && dispatchQueue.push({ event, listeners: listeners2 });
+        0 !== listeners3.length && dispatchQueue.push({ event, listeners: listeners3 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g;
       var NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
@@ -12566,8 +12566,8 @@
         if (null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && (signal = optionsOrUseCapture.signal || null, null !== signal && signal.aborted))
           return;
         null === this._eventListeners && (this._eventListeners = []);
-        var listeners2 = this._eventListeners;
-        if (-1 === indexOfEventListener(listeners2, type, listener, optionsOrUseCapture)) {
+        var listeners3 = this._eventListeners;
+        if (-1 === indexOfEventListener(listeners3, type, listener, optionsOrUseCapture)) {
           var fragmentInstance = this, attachedListener = listener;
           null != optionsOrUseCapture && "boolean" !== typeof optionsOrUseCapture && true === optionsOrUseCapture.once && (attachedListener = function(event) {
             fragmentInstance.removeEventListener(
@@ -12584,7 +12584,7 @@
             optionsOrUseCapture
           ), signal.addEventListener("abort", cleanup, { once: true }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup));
           signal = getAttachOptions(optionsOrUseCapture);
-          listeners2.push({
+          listeners3.push({
             type,
             listener,
             optionsOrUseCapture,
@@ -12600,7 +12600,7 @@
             signal
           );
         }
-        this._eventListeners = listeners2;
+        this._eventListeners = listeners3;
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
         getInstanceFromHostFiber(child).addEventListener(
@@ -12611,14 +12611,14 @@
         return false;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners2 = this._eventListeners;
-        if (null !== listeners2 && (listener = indexOfEventListener(
-          listeners2,
+        var listeners3 = this._eventListeners;
+        if (null !== listeners3 && (listener = indexOfEventListener(
+          listeners3,
           type,
           listener,
           optionsOrUseCapture
         ), -1 !== listener)) {
-          var _listeners$index = listeners2[listener];
+          var _listeners$index = listeners3[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture);
@@ -12630,7 +12630,7 @@
             optionsOrUseCapture,
             _listeners$index
           );
-          listeners2.splice(listener, 1);
+          listeners3.splice(listener, 1);
           null !== cleanup && cleanup();
         }
       };
@@ -17425,6 +17425,10 @@
   // src/i18n.ts
   var LANGUAGES = ["en", "es"];
   var PSEUDO = "qps-ploc";
+  var LANGUAGE_NAMES = {
+    en: "English",
+    es: "Español"
+  };
   var CATALOGS = {
     en: en_default,
     es: es_default
@@ -21359,14 +21363,14 @@
   }
 
   // src/views.ts
-  var import_react6 = __toESM(require_react(), 1);
+  var import_react8 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom2 = __toESM(require_react_dom(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react7 = __toESM(require_react(), 1);
   var import_react_dom = __toESM(require_react_dom(), 1);
 
   // src/context/PlayerContext.tsx
@@ -21387,11 +21391,29 @@
     return value;
   }
 
+  // src/context/SettingsContext.tsx
+  var import_react2 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var SettingsContext = (0, import_react2.createContext)(null);
+  function SettingsProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SettingsContext, { value, children });
+  }
+  function useSettings() {
+    const value = (0, import_react2.useContext)(SettingsContext);
+    if (value === null) {
+      throw new Error("useSettings must be used within SettingsProvider");
+    }
+    return value;
+  }
+
   // src/player.ts
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react2 = __toESM(require_react(), 1);
+  var import_react3 = __toESM(require_react(), 1);
 
   // src/player-strings.ts
   var playerStrings = {
@@ -21458,7 +21480,7 @@
   };
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21486,7 +21508,7 @@
     function onDoubleClick(event) {
       if (variant === "row") event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       "button",
       {
         type: "button",
@@ -21497,13 +21519,13 @@
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       if (element) setTooltip(element, spec2);
@@ -21515,11 +21537,11 @@
     seek: seek2
   }) {
     if (!(limit > 0) || cues2.length === 0) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: cues2.map((cue) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_jsx_runtime4.Fragment, { children: cues2.map((cue) => {
       const label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`;
       const ratio = Math.min(1, Math.max(0, cue.seconds / limit));
       const percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
         "button",
         {
           type: "button",
@@ -21539,7 +21561,7 @@
   }
   function PlayerBar() {
     const player2 = usePlayer();
-    const [hold, setHold] = (0, import_react2.useState)(null);
+    const [hold, setHold] = (0, import_react3.useState)(null);
     const loaded = player2.trackId !== null;
     const shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying;
     const named = loaded ? player2.title || playerStrings.untitled : "";
@@ -21566,14 +21588,14 @@
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -21585,8 +21607,8 @@
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -21599,13 +21621,13 @@
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "input",
             {
               ref: tooltipRef2(tips.seek),
@@ -21624,16 +21646,16 @@
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "input",
           {
             ref: tooltipRef2(tips.volume),
@@ -22839,7 +22861,7 @@
     stack.className = "player-stack";
     stack.append(waveHost, controls);
     root.append(stack);
-    barRoot = mountIsland(controls, (0, import_react3.createElement)(PlayerBar));
+    barRoot = mountIsland(controls, (0, import_react4.createElement)(PlayerBar));
   }
   function repaintPlayer() {
     const root = document.getElementById("player-bar");
@@ -22993,8 +23015,8 @@
     }
   }
   function emit() {
-    const snapshot = getPlayerState();
-    for (const listener of [...listeners]) listener(snapshot);
+    const snapshot2 = getPlayerState();
+    for (const listener of [...listeners]) listener(snapshot2);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -23005,51 +23027,8 @@
     return Boolean(rows2[index + delta]);
   }
 
-  // src/app/providers.tsx
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
-  function readPlayerValue() {
-    return {
-      ...getPlayerState(),
-      cues: getPlayerCues(),
-      canTogglePlay: canTogglePlay(),
-      canSkipPrevious: canSkip(-1),
-      canSkipNext: canSkip(1),
-      play,
-      pause,
-      playOrToggle,
-      togglePlayPause,
-      next,
-      previous,
-      seek,
-      seekBy,
-      setVolume
-    };
-  }
-  function PlayerProvider2({ children }) {
-    const [value, setValue] = (0, import_react4.useState)(readPlayerValue);
-    (0, import_react4.useEffect)(() => {
-      return subscribe(() => {
-        (0, import_react_dom.flushSync)(() => {
-          setValue(readPlayerValue());
-        });
-      });
-    }, []);
-    const current2 = (0, import_react4.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider, { value: current2, children });
-  }
-  function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PlayerProvider2, { children });
-  }
-
-  // src/app/mount.tsx
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
-  function mountIsland(host, node, existing) {
-    const root = existing ?? (0, import_client.createRoot)(host);
-    (0, import_react_dom2.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AppProviders, { children: node }));
-    });
-    return root;
-  }
+  // src/settings.ts
+  var import_react6 = __toESM(require_react(), 1);
 
   // src/virtual-scroll.ts
   var import_react5 = __toESM(require_react(), 1);
@@ -23268,6 +23247,1427 @@
       paintedPlaying = next2.playing;
       paintRows();
     });
+  }
+
+  // src/quick-open.ts
+  var QUICK_OPEN_MS = 200;
+  var LIMIT = 8;
+  var returnFocus = null;
+  var timer2 = 0;
+  var requestToken = 0;
+  var hits = [];
+  var active = 0;
+  var phase = "idle";
+  var truncated = false;
+  var pendingQuery = "";
+  function parentDirectory(path) {
+    const slash = Math.max(path.lastIndexOf("/"), path.lastIndexOf("\\"));
+    if (slash < 0) return path;
+    const parent = path.slice(0, slash);
+    if (/^[A-Za-z]:$/.test(parent)) return `${parent}\\`;
+    if (parent === "") return path.slice(0, slash + 1);
+    return parent;
+  }
+  function quickOpenIsOpen() {
+    return el("quick-open").open;
+  }
+  function labelQuickOpen() {
+    el("quick-open-title").textContent = t("quickOpen.title");
+    el("quick-open-label").textContent = t("quickOpen.label");
+    el("quick-open-query").placeholder = t("quickOpen.placeholder");
+    el("quick-open-close").textContent = t("common.close");
+    el("quick-open-retry").textContent = t("common.tryAgain");
+    el("quick-open-list").setAttribute("aria-label", t("quickOpen.matches"));
+  }
+  function repaintQuickOpen() {
+    const dialog = document.getElementById("quick-open");
+    if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
+    labelQuickOpen();
+    paint();
+  }
+  function openQuickOpen() {
+    const dialog = el("quick-open");
+    if (dialog.open) return;
+    returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    pendingQuery = "";
+    hits = [];
+    active = 0;
+    phase = "idle";
+    truncated = false;
+    window.clearTimeout(timer2);
+    el("quick-open-query").value = "";
+    labelQuickOpen();
+    paint();
+    dialog.showModal();
+    el("quick-open-query").focus();
+  }
+  function closeQuickOpen() {
+    const dialog = el("quick-open");
+    if (dialog.open) dialog.close();
+  }
+  function wireQuickOpen() {
+    const dialog = el("quick-open");
+    dialog.addEventListener("keydown", onDialogKey);
+    dialog.addEventListener("close", () => {
+      window.clearTimeout(timer2);
+      const node = returnFocus;
+      returnFocus = null;
+      if (node && node.isConnected) node.focus();
+    });
+    el("quick-open-query").addEventListener("input", () => schedule2());
+    el("quick-open-close").addEventListener("click", () => closeQuickOpen());
+    el("quick-open-retry").addEventListener("click", () => {
+      const query = el("quick-open-query").value.trim();
+      if (query) void loadFiles(query, trackHits(query));
+    });
+  }
+  function onDialogKey(event) {
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp" && event.key !== "Enter") return;
+    if (!hits.length && event.key !== "Enter") return;
+    event.preventDefault();
+    if (event.key === "ArrowDown") active = Math.min(hits.length - 1, active + 1);
+    else if (event.key === "ArrowUp") active = Math.max(0, active - 1);
+    else {
+      const chosen = hits[active];
+      if (chosen) void activate(chosen);
+    }
+    if (event.key !== "Enter") paint();
+  }
+  function schedule2() {
+    window.clearTimeout(timer2);
+    const query = el("quick-open-query").value;
+    pendingQuery = query;
+    const tracks = trackHits(query);
+    hits = tracks;
+    active = 0;
+    truncated = false;
+    if (!query.trim()) {
+      phase = "idle";
+      requestToken += 1;
+      paint();
+      return;
+    }
+    phase = "loading";
+    paint();
+    timer2 = window.setTimeout(() => {
+      void loadFiles(query.trim(), tracks);
+    }, QUICK_OPEN_MS);
+  }
+  async function loadFiles(query, tracks) {
+    const token3 = ++requestToken;
+    phase = "loading";
+    try {
+      const response = await fetch(`/api/files?q=${encodeURIComponent(query)}`);
+      const payload = await readJSONOr(response, {});
+      if (token3 !== requestToken) return;
+      if (!response.ok) throw new Error(payload.error || t("quickOpen.fileError"));
+      const files = fileHits(payload);
+      hits = mergeHits(tracks, files);
+      truncated = Boolean(payload.truncated);
+      phase = "ready";
+      if (active >= hits.length) active = Math.max(0, hits.length - 1);
+      paint();
+    } catch {
+      if (token3 !== requestToken) return;
+      hits = tracks;
+      phase = "error";
+      paint();
+    }
+  }
+  function trackHits(query) {
+    const text2 = query.trim();
+    if (!text2) return [];
+    const found = [];
+    for (const track of state.tracks) {
+      const hit = scoreTrack(track, text2);
+      if (hit) found.push(hit);
+    }
+    found.sort(byScore);
+    return found.slice(0, LIMIT);
+  }
+  function scoreTrack(track, query) {
+    const title2 = track.name || "Untitled";
+    const artist2 = track.artist ?? "";
+    const album = track.album ?? "";
+    const file = track.file ?? "";
+    const score = scoreQuery(query, `${title2} ${artist2} ${album} ${file}`);
+    if (score == null) return null;
+    const detail = [artist2, album].filter((part) => part !== "").join(" · ");
+    return { kind: "track", key: `track:${track.id}`, title: title2, detail, score, trackId: track.id };
+  }
+  function fileHits(payload) {
+    const rows2 = Array.isArray(payload.entries) ? payload.entries : [];
+    const found = [];
+    for (const entry of rows2) {
+      if (!isFileEntry(entry)) continue;
+      const score = typeof entry.score === "number" ? entry.score : 0;
+      found.push({
+        kind: "file",
+        key: `file:${entry.path}`,
+        title: entry.name,
+        detail: entry.detail || entry.path,
+        score,
+        path: entry.path
+      });
+    }
+    found.sort(byScore);
+    return found.slice(0, LIMIT);
+  }
+  function isFileEntry(value) {
+    if (!value || typeof value !== "object") return false;
+    const row = value;
+    return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
+  }
+  function mergeHits(tracks, files) {
+    return [...tracks, ...files].sort(byScore).slice(0, LIMIT * 2);
+  }
+  function byScore(left, right) {
+    return right.score - left.score || left.title.localeCompare(right.title);
+  }
+  async function activate(hit) {
+    closeQuickOpen();
+    if (hit.kind === "track") {
+      if (state.mode === "files" || state.mode === "snapshots" || state.mode === "history") setMode("crates");
+      selectCrate("all");
+      await selectTrack(hit.trackId);
+      const index = state.view.findIndex((row) => row.id === hit.trackId);
+      if (index >= 0) el("list").scrollTop = index * ROW;
+      return;
+    }
+    setMode("files");
+    await loadFolder(parentDirectory(hit.path));
+    focusFileByPath(hit.path);
+  }
+  function paint() {
+    const status = el("quick-open-status");
+    const list = el("quick-open-list");
+    const retry = el("quick-open-retry");
+    const query = pendingQuery.trim();
+    retry.hidden = phase !== "error";
+    list.replaceChildren();
+    if (!query) status.textContent = t("quickOpen.empty");
+    else if (phase === "loading") status.textContent = t("quickOpen.searching");
+    else if (phase === "error") status.textContent = t("quickOpen.fileError");
+    else if (!hits.length) status.textContent = t("quickOpen.none", { query });
+    else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
+    hits.forEach((hit, index) => {
+      const item4 = document.createElement("li");
+      const button2 = buttonEl(quickOpenHit(
+        hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
+        hit.title,
+        hit.detail
+      ));
+      button2.className = "quick-open-option";
+      button2.id = `quick-open-option-${index}`;
+      button2.setAttribute("role", "option");
+      button2.setAttribute("aria-selected", String(index === active));
+      button2.tabIndex = -1;
+      if (index === active) button2.classList.add("is-active");
+      const kind2 = document.createElement("span");
+      kind2.className = "quick-open-kind";
+      kind2.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
+      const title2 = document.createElement("span");
+      title2.className = "quick-open-name";
+      title2.textContent = hit.title;
+      const detail = document.createElement("span");
+      detail.className = "quick-open-detail";
+      detail.textContent = hit.detail;
+      button2.append(kind2, title2, detail);
+      button2.addEventListener("click", () => {
+        active = index;
+        void activate(hit);
+      });
+      item4.append(button2);
+      list.append(item4);
+    });
+    const field = el("quick-open-query");
+    const current2 = hits[active];
+    if (current2) field.setAttribute("aria-activedescendant", `quick-open-option-${active}`);
+    else field.removeAttribute("aria-activedescendant");
+    const chosen = list.querySelector(".is-active");
+    if (chosen && typeof chosen.scrollIntoView === "function") chosen.scrollIntoView({ block: "nearest" });
+  }
+
+  // src/shortcuts.ts
+  var SEEK_SECONDS = 5;
+  var SHORTCUT_DEFS = [
+    {
+      id: "focus-search",
+      label: "Focus search",
+      group: "Find",
+      keys: [{ key: "f", mod: true }, { key: "/" }],
+      whileTyping: false
+    },
+    {
+      id: "quick-open",
+      label: "Find a track or file",
+      group: "Find",
+      keys: [{ key: "k", mod: true }],
+      whileTyping: false
+    },
+    {
+      id: "dismiss",
+      label: "Close or clear search",
+      group: "Find",
+      keys: [{ key: "Escape" }],
+      whileTyping: true
+    },
+    {
+      id: "cheat-sheet",
+      label: "Show shortcuts",
+      group: "Find",
+      keys: [{ key: "?" }],
+      whileTyping: false
+    },
+    {
+      id: "list-previous",
+      label: "Previous row",
+      group: "Lists",
+      keys: [{ key: "ArrowUp" }],
+      whileTyping: false
+    },
+    {
+      id: "list-next",
+      label: "Next row",
+      group: "Lists",
+      keys: [{ key: "ArrowDown" }],
+      whileTyping: false
+    },
+    {
+      id: "list-open",
+      label: "Open the row",
+      group: "Lists",
+      keys: [{ key: "Enter" }],
+      whileTyping: false
+    },
+    {
+      id: "play-pause",
+      label: "Play or pause",
+      group: "Play",
+      keys: [{ key: " " }],
+      whileTyping: false
+    },
+    {
+      id: "seek-back",
+      label: "Back 5 seconds",
+      group: "Play",
+      keys: [{ key: "ArrowLeft" }],
+      whileTyping: false
+    },
+    {
+      id: "seek-forward",
+      label: "Forward 5 seconds",
+      group: "Play",
+      keys: [{ key: "ArrowRight" }],
+      whileTyping: false
+    },
+    {
+      id: "view-library",
+      label: "Library",
+      group: "Views",
+      keys: [{ key: "1", mod: true }],
+      whileTyping: false
+    },
+    {
+      id: "view-crates",
+      label: "Crates",
+      group: "Views",
+      keys: [{ key: "2", mod: true }],
+      whileTyping: false
+    },
+    {
+      id: "view-files",
+      label: "Organize files",
+      group: "Views",
+      keys: [{ key: "3", mod: true }],
+      whileTyping: false
+    },
+    {
+      id: "view-history",
+      label: "History",
+      group: "Views",
+      keys: [{ key: "4", mod: true }],
+      whileTyping: false
+    },
+    {
+      id: "view-snapshots",
+      label: "Backups",
+      group: "Views",
+      keys: [{ key: "5", mod: true }],
+      whileTyping: false
+    }
+  ];
+  var SHORTCUTS = SHORTCUT_DEFS;
+  var LABEL_KEY = {
+    "focus-search": "shortcuts.focusSearch",
+    "quick-open": "shortcuts.quickOpen",
+    dismiss: "shortcuts.dismiss",
+    "cheat-sheet": "shortcuts.cheatSheet",
+    "list-previous": "shortcuts.listPrevious",
+    "list-next": "shortcuts.listNext",
+    "list-open": "shortcuts.listOpen",
+    "play-pause": "shortcuts.playPause",
+    "seek-back": "shortcuts.seekBack",
+    "seek-forward": "shortcuts.seekForward",
+    "view-library": "shortcuts.viewLibrary",
+    "view-crates": "shortcuts.viewCrates",
+    "view-files": "shortcuts.viewFiles",
+    "view-history": "shortcuts.viewHistory",
+    "view-snapshots": "shortcuts.viewSnapshots"
+  };
+  var GROUP_KEY = {
+    Find: "shortcuts.groupFind",
+    Lists: "shortcuts.groupLists",
+    Play: "shortcuts.groupPlay",
+    Views: "shortcuts.groupViews"
+  };
+  function cheatSheetModel() {
+    const groups = [];
+    for (const shortcut of SHORTCUTS) {
+      if (!groups.includes(shortcut.group)) groups.push(shortcut.group);
+    }
+    return groups.map((group) => ({
+      group,
+      headingKey: GROUP_KEY[group],
+      playNote: group === "Play",
+      rows: SHORTCUTS.filter((shortcut) => shortcut.group === group).map((shortcut) => ({
+        id: shortcut.id,
+        actionKey: LABEL_KEY[shortcut.id],
+        chords: shortcut.keys
+      }))
+    }));
+  }
+  var player = null;
+  var returnFocus2 = null;
+  var snapshotCursor = 0;
+  function registerPlayerControls(controls) {
+    player = controls;
+  }
+  function chordMatches(chord, event) {
+    if (event.altKey) return false;
+    const mod = event.ctrlKey || event.metaKey;
+    if (mod !== Boolean(chord.mod)) return false;
+    if (chord.key === "?") return event.key === "?" && !mod;
+    if (event.shiftKey !== Boolean(chord.shift)) return false;
+    if (chord.key === " ") return event.key === " ";
+    return event.key === chord.key || event.key.toLowerCase() === chord.key.toLowerCase();
+  }
+  function matchShortcut(event) {
+    for (const shortcut of SHORTCUTS) {
+      if (shortcut.keys.some((chord) => chordMatches(chord, event))) return shortcut;
+    }
+    return null;
+  }
+  function chordLabel(chord) {
+    const names = {
+      Escape: "Esc",
+      " ": "Space",
+      ArrowLeft: "Left arrow",
+      ArrowRight: "Right arrow",
+      ArrowUp: "Up arrow",
+      ArrowDown: "Down arrow",
+      Enter: "Enter"
+    };
+    const named = names[chord.key];
+    if (named) return named;
+    const key = chord.key.length === 1 ? chord.key.toUpperCase() : chord.key;
+    return chord.mod ? `Ctrl/Cmd+${key}` : key;
+  }
+  function isTypingTarget(target) {
+    if (!(target instanceof HTMLElement)) return false;
+    if (target.isContentEditable) return true;
+    const field = target.closest("input, textarea, select");
+    if (!(field instanceof HTMLElement)) return false;
+    if (field instanceof HTMLInputElement) {
+      const inert = /* @__PURE__ */ new Set(["button", "checkbox", "radio", "file", "range", "color", "submit", "reset"]);
+      if (inert.has(field.type)) return false;
+    }
+    return true;
+  }
+  function openCheatSheet() {
+    const dialog = el("settings-dialog");
+    renderCheatSheet();
+    if (!dialog.open) {
+      rememberFocus();
+      dialog.showModal();
+    }
+    const title2 = el("shortcuts-title");
+    title2.tabIndex = -1;
+    title2.focus();
+    if (typeof title2.scrollIntoView === "function") title2.scrollIntoView({ block: "nearest" });
+  }
+  function wireShortcuts() {
+    document.removeEventListener("keydown", onKey);
+    document.addEventListener("keydown", onKey);
+    const dialog = el("settings-dialog");
+    dialog.removeEventListener("close", onSettingsClose);
+    dialog.addEventListener("close", onSettingsClose);
+    renderCheatSheet();
+    wireQuickOpen();
+  }
+  function onSettingsClose() {
+    restoreFocus();
+  }
+  function onKey(event) {
+    if (event.isComposing || event.defaultPrevented) return;
+    const shortcut = matchShortcut(event);
+    if (!shortcut) return;
+    if (isTypingTarget(event.target) && !shortcut.whileTyping) return;
+    if (shortcut.id !== "dismiss" && topDialog()) return;
+    if (skipsListKey(shortcut.id, event.target)) return;
+    if (event.repeat && !repeats(shortcut.id)) return;
+    runShortcut(shortcut.id, event);
+  }
+  function repeats(id) {
+    return id === "list-previous" || id === "list-next" || id === "seek-back" || id === "seek-forward";
+  }
+  function skipsListKey(id, target) {
+    if (!(target instanceof HTMLElement)) return false;
+    if (id === "play-pause" && target.closest("button, a, summary, input, select, textarea, [role='button']")) return true;
+    if (id === "list-open" && target.closest("button, a, summary, textarea, select")) return true;
+    return false;
+  }
+  function topDialog() {
+    const open = [...document.querySelectorAll("dialog")].filter(
+      (node) => node instanceof HTMLDialogElement && node.open
+    );
+    return open.at(-1) ?? null;
+  }
+  var HANDLERS = {
+    "focus-search": (event) => {
+      event.preventDefault();
+      focusCurrentSearch();
+    },
+    "quick-open": (event) => {
+      event.preventDefault();
+      openQuickOpen();
+    },
+    dismiss: (event) => {
+      dismiss(event);
+    },
+    "cheat-sheet": (event) => {
+      event.preventDefault();
+      openCheatSheet();
+    },
+    "list-previous": (event) => {
+      event.preventDefault();
+      moveActiveList(-1);
+    },
+    "list-next": (event) => {
+      event.preventDefault();
+      moveActiveList(1);
+    },
+    "list-open": (event) => {
+      event.preventDefault();
+      openActiveList();
+    },
+    "play-pause": (event) => {
+      if (!player) return;
+      event.preventDefault();
+      player.togglePlayPause();
+    },
+    "seek-back": (event) => {
+      if (!player) return;
+      event.preventDefault();
+      player.seekBy(-SEEK_SECONDS);
+    },
+    "seek-forward": (event) => {
+      if (!player) return;
+      event.preventDefault();
+      player.seekBy(SEEK_SECONDS);
+    },
+    "view-library": (event) => {
+      event.preventDefault();
+      showLibrary();
+    },
+    "view-crates": (event) => {
+      event.preventDefault();
+      showCrates();
+    },
+    "view-files": (event) => {
+      event.preventDefault();
+      setMode("files");
+      el("files-list").focus();
+    },
+    "view-history": (event) => {
+      event.preventDefault();
+      setMode("history");
+      el("list").focus();
+    },
+    "view-snapshots": (event) => {
+      event.preventDefault();
+      setMode("snapshots");
+      snapshotCursor = 0;
+      el("snapshots-list").focus();
+    }
+  };
+  function runShortcut(id, event) {
+    const handler = HANDLERS[id];
+    handler(event);
+  }
+  function focusCurrentSearch() {
+    if (state.mode === "files") {
+      const field2 = el("files-search");
+      field2.focus();
+      field2.select();
+      return;
+    }
+    if (state.mode === "snapshots") {
+      el("snapshots-status").textContent = t("snapshots.noSearch");
+      return;
+    }
+    const field = el("search");
+    field.focus();
+    field.select();
+  }
+  function showLibrary() {
+    setMode("crates");
+    selectCrate("all");
+    el("list").focus();
+  }
+  function showCrates() {
+    setMode("crates");
+    const first = el("crate-list").querySelector(".crate");
+    if (first) focusCrateItem(first);
+    else el("crate-list").focus();
+  }
+  function moveActiveList(delta) {
+    if (quickOpenIsOpen()) return;
+    if (state.mode === "files") {
+      moveFileList(delta);
+      return;
+    }
+    if (state.mode === "snapshots") {
+      moveSnapshots(delta);
+      return;
+    }
+    moveTrackList(delta);
+  }
+  function openActiveList() {
+    if (quickOpenIsOpen()) return;
+    if (state.mode === "files") {
+      openFileList();
+      return;
+    }
+    if (state.mode === "snapshots") {
+      openSnapshot();
+      return;
+    }
+    openTrackList();
+  }
+  function moveSnapshots(delta) {
+    const cards = snapshotCards();
+    if (!cards.length) return;
+    snapshotCursor = Math.max(0, Math.min(cards.length - 1, snapshotCursor + delta));
+    const card = cards[snapshotCursor];
+    card?.querySelector("button")?.focus();
+  }
+  function openSnapshot() {
+    const cards = snapshotCards();
+    const card = cards[snapshotCursor] ?? cards[0];
+    card?.querySelector("button")?.click();
+  }
+  function snapshotCards() {
+    return [...el("snapshots-list").querySelectorAll(".snapshot-card")];
+  }
+  function dismiss(event) {
+    const dialog = topDialog();
+    if (dialog) {
+      if (dialog.id === "quick-open") {
+        event.preventDefault();
+        closeQuickOpen();
+        return;
+      }
+      if (dialog.id === "settings-dialog") {
+        event.preventDefault();
+        dialog.close();
+        return;
+      }
+      return;
+    }
+    const active2 = document.activeElement;
+    if (active2 instanceof HTMLInputElement && isSearchField(active2)) {
+      event.preventDefault();
+      if (active2.value) replaceInput(active2, "");
+      else active2.blur();
+      return;
+    }
+    if (isTypingTarget(active2)) {
+      if (active2 instanceof HTMLElement) active2.blur();
+      return;
+    }
+    if (clearViewSearch()) event.preventDefault();
+  }
+  function isSearchField(field) {
+    return field.id === "search" || field.id === "crate-search" || field.id === "files-search" || field.id === "quick-open-query";
+  }
+  function clearViewSearch() {
+    if (state.mode === "files" && el("files-search").value) {
+      replaceInput(el("files-search"), "");
+      return true;
+    }
+    if (state.mode === "crates" && el("crate-search").value && !el("search").value) {
+      replaceInput(el("crate-search"), "");
+      return true;
+    }
+    if (el("search").value) {
+      replaceInput(el("search"), "");
+      return true;
+    }
+    if (el("crate-search").value) {
+      replaceInput(el("crate-search"), "");
+      return true;
+    }
+    return false;
+  }
+  function replaceInput(field, value) {
+    field.value = value;
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  function repaintCheatSheet() {
+    if (settingsIslandMounted()) {
+      notifySettings();
+      return;
+    }
+    if (!document.getElementById("shortcuts-body")) return;
+    renderCheatSheet();
+  }
+  function renderCheatSheet() {
+    if (settingsIslandMounted()) {
+      notifySettings();
+      return;
+    }
+    if (!document.getElementById("shortcuts-body")) return;
+    const title2 = el("shortcuts-title");
+    title2.textContent = t("shortcuts.title");
+    setTooltip(title2, tips.shortcuts);
+    el("shortcuts-intro").textContent = t("shortcuts.intro");
+    const body = el("shortcuts-body");
+    body.replaceChildren();
+    const groups = [];
+    for (const shortcut of SHORTCUTS) {
+      if (!groups.includes(shortcut.group)) groups.push(shortcut.group);
+    }
+    for (const group of groups) {
+      const heading2 = document.createElement("h3");
+      heading2.textContent = t(GROUP_KEY[group]);
+      body.append(heading2);
+      if (group === "Play") {
+        const note = document.createElement("p");
+        note.className = "dialog-note";
+        note.textContent = t("shortcuts.playNote");
+        body.append(note);
+      }
+      const table = document.createElement("table");
+      table.className = "shortcut-table";
+      const head = document.createElement("thead");
+      const headRow = document.createElement("tr");
+      const actionHead = document.createElement("th");
+      actionHead.scope = "col";
+      actionHead.textContent = t("shortcuts.action");
+      const keyHead = document.createElement("th");
+      keyHead.scope = "col";
+      keyHead.textContent = t("shortcuts.key");
+      headRow.append(actionHead, keyHead);
+      head.append(headRow);
+      const rows2 = document.createElement("tbody");
+      for (const shortcut of SHORTCUTS) {
+        if (shortcut.group !== group) continue;
+        const row = document.createElement("tr");
+        const action = document.createElement("th");
+        action.scope = "row";
+        action.textContent = t(LABEL_KEY[shortcut.id]);
+        const keys = document.createElement("td");
+        shortcut.keys.forEach((chord, index) => {
+          if (index > 0) keys.append(document.createTextNode(" or "));
+          const kbd = document.createElement("kbd");
+          kbd.textContent = chordLabel(chord);
+          keys.append(kbd);
+        });
+        row.append(action, keys);
+        rows2.append(row);
+      }
+      table.append(head, rows2);
+      body.append(table);
+    }
+  }
+  function rememberFocus() {
+    returnFocus2 = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  }
+  function restoreFocus() {
+    const node = returnFocus2;
+    returnFocus2 = null;
+    if (node && node.isConnected) node.focus();
+  }
+
+  // src/components/SettingsPanel.tsx
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var COLORWAY_KEY = {
+    "serato-like": "settings.colorway.seratoLike",
+    "dark-club": "settings.colorway.darkClub",
+    light: "settings.colorway.light",
+    classic: "settings.colorway.classic"
+  };
+  function tooltipRef3(spec2) {
+    return (element) => {
+      if (element) setTooltip(element, spec2);
+    };
+  }
+  function telemetryNote() {
+    if (!state.telemetryConfigured) return t("sharing.noKeys");
+    if (state.telemetryConsent === true) return t("sharing.canSend");
+    return t("sharing.nothingSent");
+  }
+  function CheatSheet() {
+    const groups = cheatSheetModel();
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { id: "shortcuts-section", className: "shortcuts-section", "aria-labelledby": "shortcuts-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { id: "shortcuts-title", tabIndex: -1, ref: tooltipRef3(tips.shortcuts), children: t("shortcuts.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "shortcuts-intro", children: t("shortcuts.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { id: "shortcuts-body", children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: t(group.headingKey) }),
+        group.playNote ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "dialog-note", children: t("shortcuts.playNote") }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("table", { className: "shortcut-table", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("th", { scope: "col", children: t("shortcuts.action") }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("th", { scope: "col", children: t("shortcuts.key") })
+          ] }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("tbody", { children: group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("th", { scope: "row", children: t(row.actionKey) }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("td", { children: row.chords.map((chord, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
+              index > 0 ? " or " : null,
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("kbd", { children: chordLabel(chord) })
+            ] }, `${row.id}-${index}`)) })
+          ] }, row.id)) })
+        ] })
+      ] }, group.group)) })
+    ] });
+  }
+  function SettingsPanel() {
+    const settings = useSettings();
+    const preview = `/img/icons/placeholder-${settings.colorway}.svg`;
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { "data-settings-react": "true", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { id: "settings-title", children: t("settings.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "input",
+          {
+            id: "telemetry-toggle",
+            ref: tooltipRef3(tips.telemetry),
+            type: "checkbox",
+            checked: settings.telemetryOn,
+            disabled: settings.sharingBusy,
+            onChange: (event) => {
+              void settings.saveSharing(event.currentTarget.checked);
+            }
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.share") })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "telemetry-note", className: "dialog-note", children: telemetryNote() }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "input",
+          {
+            id: "update-toggle",
+            ref: tooltipRef3(tips.updateToggle),
+            type: "checkbox",
+            checked: settings.updateEnabled,
+            disabled: settings.updateBusy,
+            onChange: (event) => {
+              void settings.saveUpdateEnabled(event.currentTarget.checked);
+            }
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.updates") })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "input",
+          {
+            id: "update-prereleases",
+            ref: tooltipRef3(tips.updatePrereleases),
+            type: "checkbox",
+            checked: settings.updatePrereleases,
+            disabled: settings.updatePrereleasesDisabled || settings.updateBusy,
+            onChange: (event) => {
+              void settings.saveUpdatePrereleases(event.currentTarget.checked);
+            }
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.updatesPrereleases") })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "update-status", className: "dialog-note", role: "status", "aria-live": "polite", children: settings.updateStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "colorway-row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "settings-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.colorway") }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "select",
+            {
+              id: "colorway-select",
+              ref: tooltipRef3(tips.colorway),
+              value: settings.colorway,
+              onChange: (event) => {
+                void settings.saveColorway(event.currentTarget.value);
+              },
+              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "img",
+          {
+            id: "colorway-preview",
+            className: "colorway-preview",
+            width: 64,
+            height: 64,
+            alt: t("settings.colorwayPreview"),
+            src: preview
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "input",
+          {
+            id: "icon-follows-theme",
+            ref: tooltipRef3(tips.iconFollowsTheme),
+            type: "checkbox",
+            checked: settings.iconFollowsTheme,
+            onChange: (event) => {
+              void settings.saveIconFollow(event.currentTarget.checked);
+            }
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.iconFollowsTheme") })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "icon-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.iconStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("label", { className: "settings-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: t("settings.language") }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+          "select",
+          {
+            id: "language-select",
+            ref: tooltipRef3(tips.language),
+            value: settings.language,
+            onChange: (event) => {
+              void settings.saveLanguage(event.currentTarget.value);
+            },
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: "", children: t("settings.languageSystem") }),
+              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
+            ]
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "language-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.languageStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CheatSheet, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "about", "aria-labelledby": "about-title", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { id: "about-title", children: t("settings.about") }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "about-version", className: "about-version", children: settings.aboutVersion }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "a",
+          {
+            id: "about-github",
+            ref: tooltipRef3(tips.helpGithub),
+            href: "https://github.com/mookiejones/crateCraft",
+            children: t("help.github")
+          }
+        ) }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            id: "copy-version",
+            ref: tooltipRef3(tips.copyVersion),
+            type: "button",
+            onClick: () => {
+              void settings.copyVersion();
+            },
+            children: t("settings.copyVersion")
+          }
+        ) }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "version-copy-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            id: "rerun-wizard",
+            ref: tooltipRef3(tips.rerunWizard),
+            className: "wizard-quiet",
+            type: "button",
+            onClick: () => settings.rerunSetup(),
+            children: t("settings.rerunSetup")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            id: "open-logs",
+            ref: tooltipRef3(tips.openLogs),
+            type: "button",
+            disabled: settings.logsBusy,
+            onClick: () => {
+              void settings.openLogs();
+            },
+            children: t("settings.openLogs")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            id: "copy-logs",
+            ref: tooltipRef3(tips.copyLogs),
+            type: "button",
+            disabled: settings.logsBusy,
+            onClick: () => {
+              void settings.copyLogs();
+            },
+            children: t("settings.copyLogs")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            id: "settings-close",
+            ref: tooltipRef3(tips.settingsClose),
+            type: "button",
+            onClick: () => settings.close(),
+            children: t("common.close")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { id: "settings-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        "textarea",
+        {
+          id: "log-fallback",
+          ref: tooltipRef3(tips.logFallback),
+          className: "log-fallback",
+          readOnly: true,
+          hidden: settings.logFallbackHidden,
+          "aria-label": t("settings.logText"),
+          value: settings.logFallback
+        }
+      )
+    ] });
+  }
+
+  // src/settings.ts
+  var COLORWAYS = ["serato-like", "dark-club", "light", "classic"];
+  var LEGACY_COLORWAYS = {
+    motown: "classic",
+    "deep-house": "classic",
+    "daisy-age": "classic"
+  };
+  var DEFAULT_SNAPSHOT = {
+    language: "",
+    languageStatus: "",
+    colorway: "serato-like",
+    iconFollowsTheme: true,
+    iconStatus: "",
+    telemetryOn: false,
+    telemetryConfigured: false,
+    sharingBusy: false,
+    settingsStatus: "",
+    logFallback: "",
+    logFallbackHidden: true,
+    logsBusy: false,
+    aboutVersion: "",
+    versionCopyStatus: "",
+    updateEnabled: false,
+    updatePrereleases: false,
+    updatePrereleasesDisabled: true,
+    updateBusy: false,
+    updateStatus: ""
+  };
+  var snapshot = { ...DEFAULT_SNAPSHOT };
+  var listeners2 = /* @__PURE__ */ new Set();
+  var islandRoot = null;
+  var appearanceSync = false;
+  var rerunSetupHandler = null;
+  var copyVersionHandler = null;
+  var saveUpdateEnabledHandler = null;
+  var saveUpdatePrereleasesHandler = null;
+  function isColorway(value) {
+    return typeof value === "string" && COLORWAYS.includes(value);
+  }
+  function resolveColorway(value) {
+    if (isColorway(value)) return value;
+    if (typeof value === "string") {
+      const mapped = LEGACY_COLORWAYS[value];
+      if (mapped !== void 0) return mapped;
+    }
+    return "serato-like";
+  }
+  function getSettingsState() {
+    return snapshot;
+  }
+  function subscribeSettings(listener) {
+    listeners2.add(listener);
+    return () => {
+      listeners2.delete(listener);
+    };
+  }
+  function notifySettings() {
+    for (const listener of listeners2) listener();
+  }
+  function patchSettings(patch) {
+    snapshot = { ...snapshot, ...patch };
+    notifySettings();
+  }
+  function settingsIslandMounted() {
+    return islandRoot !== null;
+  }
+  function mountSettings(host) {
+    islandRoot?.unmount();
+    islandRoot = null;
+    const root = host === void 0 ? document.getElementById("settings-dialog") : host;
+    if (!root) return;
+    islandRoot = mountIsland(root, (0, import_react6.createElement)(SettingsPanel));
+  }
+  function systemLanguages() {
+    return Array.isArray(navigator.languages) && navigator.languages.length ? [...navigator.languages] : [navigator.language || "en"];
+  }
+  function selectValue(id) {
+    const node = document.getElementById(id);
+    return node instanceof HTMLSelectElement ? node.value : "";
+  }
+  function checkboxChecked(id) {
+    const node = document.getElementById(id);
+    return node instanceof HTMLInputElement ? node.checked : false;
+  }
+  function setText(id, text2) {
+    const node = document.getElementById(id);
+    if (node) node.textContent = text2;
+  }
+  function telemetryNoteText() {
+    if (!state.telemetryConfigured) return t("sharing.noKeys");
+    if (state.telemetryConsent === true) return t("sharing.canSend");
+    return t("sharing.nothingSent");
+  }
+  function applyPrivacy(payload) {
+    state.telemetryConsent = payload.telemetry_consent ?? null;
+    state.telemetryConfigured = Boolean(payload.telemetry_configured);
+    state.wizardComplete = payload.wizard_complete === true;
+    patchSettings({
+      telemetryOn: state.telemetryConsent === true,
+      telemetryConfigured: state.telemetryConfigured
+    });
+    const toggle = document.getElementById("telemetry-toggle");
+    if (toggle instanceof HTMLInputElement && !settingsIslandMounted()) {
+      toggle.checked = state.telemetryConsent === true;
+    }
+    if (!settingsIslandMounted()) setText("telemetry-note", telemetryNoteText());
+  }
+  function applyLanguage(payload) {
+    if (!("language" in payload)) return;
+    const saved = isLanguage(payload.language) ? payload.language : null;
+    patchSettings({ language: saved ?? "" });
+    const select = document.getElementById("language-select");
+    if (select instanceof HTMLSelectElement && !settingsIslandMounted()) {
+      select.value = saved ?? "";
+    }
+    if (getLocale() !== PSEUDO) setLocale(resolveLocale(saved, systemLanguages()));
+  }
+  function applyAppearance(payload) {
+    const hasColorway = "colorway" in payload;
+    const hasFollow = "icon_follows_theme" in payload;
+    const hasHref = "icon_href" in payload;
+    if (!hasColorway && !hasFollow && !hasHref) return;
+    const current2 = snapshot;
+    const colorway = hasColorway ? resolveColorway(payload.colorway) : resolveColorway(selectValue("colorway-select") || current2.colorway);
+    const follow = hasFollow ? payload.icon_follows_theme !== false : settingsIslandMounted() ? current2.iconFollowsTheme : checkboxChecked("icon-follows-theme");
+    appearanceSync = true;
+    patchSettings({ colorway, iconFollowsTheme: follow });
+    if (!settingsIslandMounted()) {
+      if (hasColorway) {
+        const select = document.getElementById("colorway-select");
+        if (select instanceof HTMLSelectElement) select.value = colorway;
+      }
+      if (hasFollow) {
+        const box = document.getElementById("icon-follows-theme");
+        if (box instanceof HTMLInputElement) box.checked = follow;
+      }
+    }
+    appearanceSync = false;
+    const shown = resolveColorway(selectValue("colorway-select") || colorway);
+    document.documentElement.dataset.colorway = shown;
+    const preview = document.getElementById("colorway-preview");
+    if (preview instanceof HTMLImageElement) {
+      preview.src = `/img/icons/placeholder-${shown}.svg`;
+      preview.alt = t("settings.colorwayPreview");
+    }
+    const href = hasHref && typeof payload.icon_href === "string" ? payload.icon_href : follow ? `/img/icons/placeholder-${shown}.svg` : "/img/icons/default.svg";
+    const icon = document.getElementById("app-icon");
+    if (icon instanceof HTMLLinkElement) icon.href = href;
+  }
+  function iconStatusText(icon) {
+    if (!icon) return t("settings.iconSaved");
+    if (!icon.follows_theme) return t("settings.iconDefault");
+    if (icon.applied && icon.target === "dock") return t("settings.iconAppliedDock");
+    if (icon.applied && icon.target === "window") return t("settings.iconAppliedWindow");
+    if (!icon.applied && (icon.reason === "unsupported" || icon.reason === "no-window")) {
+      return t("settings.iconUnsupported");
+    }
+    return t("settings.iconSaved");
+  }
+  async function saveColorway(next2) {
+    if (appearanceSync) return;
+    const value = next2 ?? selectValue("colorway-select");
+    if (!isColorway(value)) return;
+    document.documentElement.dataset.colorway = value;
+    const preview = document.getElementById("colorway-preview");
+    if (preview instanceof HTMLImageElement) {
+      preview.src = `/img/icons/placeholder-${value}.svg`;
+    }
+    patchSettings({ colorway: value, iconStatus: "" });
+    setText("icon-status", "");
+    try {
+      const payload = await postJSON("/api/settings", { colorway: value });
+      applyAppearance(payload);
+      const status = iconStatusText(payload.icon);
+      patchSettings({ iconStatus: status });
+      setText("icon-status", status);
+    } catch {
+      const status = t("settings.iconNotSaved");
+      patchSettings({ iconStatus: status });
+      setText("icon-status", status);
+    }
+  }
+  async function saveIconFollow(next2) {
+    if (appearanceSync) return;
+    const follow = next2 ?? checkboxChecked("icon-follows-theme");
+    patchSettings({ iconFollowsTheme: follow, iconStatus: "" });
+    setText("icon-status", "");
+    try {
+      const payload = await postJSON("/api/settings", { icon_follows_theme: follow });
+      applyAppearance(payload);
+      const status = iconStatusText(payload.icon);
+      patchSettings({ iconStatus: status });
+      setText("icon-status", status);
+    } catch {
+      const status = t("settings.iconNotSaved");
+      patchSettings({ iconStatus: status });
+      setText("icon-status", status);
+    }
+  }
+  async function saveLanguage(next2) {
+    const value = next2 ?? selectValue("language-select");
+    const saved = isLanguage(value) ? value : null;
+    patchSettings({ language: saved ?? "", languageStatus: "" });
+    setText("language-status", "");
+    setLocale(resolveLocale(saved, systemLanguages()));
+    try {
+      await postJSON("/api/settings", { language: saved });
+    } catch {
+      const status = t("settings.languageNotSaved");
+      patchSettings({ languageStatus: status });
+      setText("language-status", status);
+    }
+  }
+  async function saveSharing(value, status) {
+    const saving2 = t("wizard.saving");
+    patchSettings({ sharingBusy: true, settingsStatus: saving2, telemetryOn: value });
+    if (status) status.textContent = saving2;
+    else setText("settings-status", saving2);
+    try {
+      const payload = await postJSON("/api/settings", { telemetry_consent: value });
+      applyPrivacy(payload);
+      const message = value ? t("sharing.on") : t("sharing.off");
+      patchSettings({ sharingBusy: false, settingsStatus: message, telemetryOn: value });
+      if (status) status.textContent = message;
+      else setText("settings-status", message);
+      return true;
+    } catch {
+      const message = t("wizard.consentFailed");
+      patchSettings({
+        sharingBusy: false,
+        settingsStatus: message,
+        telemetryOn: state.telemetryConsent === true
+      });
+      if (status) status.textContent = message;
+      else setText("settings-status", message);
+      const toggle = document.getElementById("telemetry-toggle");
+      if (toggle instanceof HTMLInputElement && !settingsIslandMounted()) {
+        toggle.checked = state.telemetryConsent === true;
+      }
+      return false;
+    }
+  }
+  async function openLogs() {
+    patchSettings({ logsBusy: true, settingsStatus: t("wizard.opening") });
+    setText("settings-status", t("wizard.opening"));
+    try {
+      await postJSON("/api/logs/open", {});
+      const message = t("logs.opened");
+      patchSettings({ logsBusy: false, settingsStatus: message });
+      setText("settings-status", message);
+    } catch {
+      const message = t("logs.openFailed");
+      patchSettings({ logsBusy: false, settingsStatus: message });
+      setText("settings-status", message);
+    }
+  }
+  async function copyLogs() {
+    patchSettings({ logsBusy: true, settingsStatus: t("logs.copying") });
+    setText("settings-status", t("logs.copying"));
+    try {
+      const response = await fetch("/api/logs");
+      const payload = await readJSONOr(response, {});
+      if (!response.ok) throw new Error(serverMessage(payload, t("logs.copyFailed")));
+      const text2 = payload.text || "";
+      if (!text2) {
+        const message = t("logs.empty");
+        patchSettings({ logsBusy: false, settingsStatus: message });
+        setText("settings-status", message);
+        return;
+      }
+      let copied = false;
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(text2);
+          copied = true;
+        } catch {
+          copied = false;
+        }
+      }
+      if (copied) {
+        const message = payload.truncated ? t("logs.copiedTruncated") : t("logs.copied");
+        patchSettings({ logsBusy: false, settingsStatus: message, logFallbackHidden: true });
+        setText("settings-status", message);
+        const fallback2 = document.getElementById("log-fallback");
+        if (fallback2 instanceof HTMLTextAreaElement) fallback2.hidden = true;
+        return;
+      }
+      patchSettings({
+        logsBusy: false,
+        settingsStatus: t("logs.copyManual"),
+        logFallback: text2,
+        logFallbackHidden: false
+      });
+      const fallback = document.getElementById("log-fallback");
+      if (fallback instanceof HTMLTextAreaElement) {
+        fallback.hidden = false;
+        fallback.value = text2;
+        fallback.focus();
+        fallback.select();
+      }
+      setText("settings-status", t("logs.copyManual"));
+    } catch {
+      const message = t("logs.copyFailed");
+      patchSettings({ logsBusy: false, settingsStatus: message });
+      setText("settings-status", message);
+    }
+  }
+  function closeSettings() {
+    const dialog = document.getElementById("settings-dialog");
+    if (dialog instanceof HTMLDialogElement) dialog.close();
+  }
+  function bindRerunSetup(handler) {
+    rerunSetupHandler = handler;
+  }
+  function rerunSetup() {
+    rerunSetupHandler?.();
+  }
+  function bindCopyVersion(handler) {
+    copyVersionHandler = handler;
+  }
+  async function copySettingsVersion() {
+    await copyVersionHandler?.();
+  }
+  function bindUpdateSaves(enabled, prereleases) {
+    saveUpdateEnabledHandler = enabled;
+    saveUpdatePrereleasesHandler = prereleases;
+  }
+  async function saveUpdateEnabled(on) {
+    patchSettings({ updateEnabled: on, updateBusy: true, updateStatus: "" });
+    await saveUpdateEnabledHandler?.(on);
+  }
+  async function saveUpdatePrereleases(on) {
+    patchSettings({ updatePrereleases: on, updateBusy: true, updateStatus: "" });
+    await saveUpdatePrereleasesHandler?.(on);
+  }
+
+  // src/app/providers.tsx
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  function readPlayerValue() {
+    return {
+      ...getPlayerState(),
+      cues: getPlayerCues(),
+      canTogglePlay: canTogglePlay(),
+      canSkipPrevious: canSkip(-1),
+      canSkipNext: canSkip(1),
+      play,
+      pause,
+      playOrToggle,
+      togglePlayPause,
+      next,
+      previous,
+      seek,
+      seekBy,
+      setVolume
+    };
+  }
+  function readSettingsValue() {
+    return {
+      ...getSettingsState(),
+      saveLanguage,
+      saveColorway,
+      saveIconFollow,
+      saveSharing: async (on) => {
+        await saveSharing(on);
+      },
+      saveUpdateEnabled,
+      saveUpdatePrereleases,
+      openLogs,
+      copyLogs,
+      copyVersion: copySettingsVersion,
+      rerunSetup,
+      close: closeSettings
+    };
+  }
+  function PlayerProvider2({ children }) {
+    const [value, setValue] = (0, import_react7.useState)(readPlayerValue);
+    (0, import_react7.useEffect)(() => {
+      return subscribe(() => {
+        (0, import_react_dom.flushSync)(() => {
+          setValue(readPlayerValue());
+        });
+      });
+    }, []);
+    const current2 = (0, import_react7.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(PlayerProvider, { value: current2, children });
+  }
+  function SettingsProvider2({ children }) {
+    const [value, setValue] = (0, import_react7.useState)(readSettingsValue);
+    (0, import_react7.useEffect)(() => {
+      const refresh = () => {
+        (0, import_react_dom.flushSync)(() => {
+          setValue(readSettingsValue());
+        });
+      };
+      const stopStore = subscribeSettings(refresh);
+      const stopLocale = onLocaleChange(refresh);
+      return () => {
+        stopStore();
+        stopLocale();
+      };
+    }, []);
+    const current2 = (0, import_react7.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(SettingsProvider, { value: current2, children });
+  }
+  function AppProviders({ children }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(SettingsProvider2, { children }) });
+  }
+
+  // src/app/mount.tsx
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  function mountIsland(host, node, existing) {
+    const root = existing ?? (0, import_client.createRoot)(host);
+    (0, import_react_dom2.flushSync)(() => {
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AppProviders, { children: node }));
+    });
+    return root;
   }
 
   // src/views.ts
@@ -23930,7 +25330,7 @@
     const playTitle = track.title || track.name || playerStrings.untitled;
     clearDetailPlay();
     const playHost = document.createElement("span");
-    detailPlayRoot = mountIsland(playHost, (0, import_react6.createElement)(PlayButton, {
+    detailPlayRoot = mountIsland(playHost, (0, import_react8.createElement)(PlayButton, {
       variant: "detail",
       trackId: track.id,
       name: playTitle
@@ -25651,24 +27051,6 @@
   var replaceLoading = false;
   var consentSettled = false;
   var privacySync = false;
-  var appearanceSync = false;
-  var COLORWAYS = ["serato-like", "dark-club", "light", "classic"];
-  var LEGACY_COLORWAYS = {
-    motown: "classic",
-    "deep-house": "classic",
-    "daisy-age": "classic"
-  };
-  function isColorway(value) {
-    return typeof value === "string" && COLORWAYS.includes(value);
-  }
-  function resolveColorway(value) {
-    if (isColorway(value)) return value;
-    if (typeof value === "string") {
-      const mapped = LEGACY_COLORWAYS[value];
-      if (mapped !== void 0) return mapped;
-    }
-    return "serato-like";
-  }
   var filesPreview = null;
   var filesAction = "";
   var filesTagScope = "paths";
@@ -26175,92 +27557,6 @@
       syncReplaceConfirm();
     }
   }
-  function telemetryNoteText() {
-    if (!state.telemetryConfigured) {
-      return t("sharing.noKeys");
-    }
-    if (state.telemetryConsent === true) {
-      return t("sharing.canSend");
-    }
-    return t("sharing.nothingSent");
-  }
-  function applyLanguage(payload) {
-    if (!("language" in payload)) return;
-    const saved = isLanguage(payload.language) ? payload.language : null;
-    el("language-select").value = saved ?? "";
-    if (getLocale() !== PSEUDO) setLocale(resolveLocale(saved, systemLanguages()));
-  }
-  function systemLanguages() {
-    return Array.isArray(navigator.languages) && navigator.languages.length ? [...navigator.languages] : [navigator.language || "en"];
-  }
-  function applyAppearance(payload) {
-    const hasColorway = "colorway" in payload;
-    const hasFollow = "icon_follows_theme" in payload;
-    const hasHref = "icon_href" in payload;
-    if (!hasColorway && !hasFollow && !hasHref) return;
-    const colorway = hasColorway ? resolveColorway(payload.colorway) : resolveColorway(el("colorway-select").value);
-    const follow = hasFollow ? payload.icon_follows_theme !== false : el("icon-follows-theme").checked;
-    appearanceSync = true;
-    if (hasColorway) el("colorway-select").value = colorway;
-    if (hasFollow) el("icon-follows-theme").checked = follow;
-    appearanceSync = false;
-    const shown = resolveColorway(el("colorway-select").value);
-    document.documentElement.dataset.colorway = shown;
-    const preview = el("colorway-preview");
-    preview.src = `/img/icons/placeholder-${shown}.svg`;
-    preview.alt = t("settings.colorwayPreview");
-    const href = hasHref && typeof payload.icon_href === "string" ? payload.icon_href : follow ? `/img/icons/placeholder-${shown}.svg` : "/img/icons/default.svg";
-    const icon = document.getElementById("app-icon");
-    if (icon instanceof HTMLLinkElement) icon.href = href;
-  }
-  function iconStatusText(icon) {
-    if (!icon) return t("settings.iconSaved");
-    if (!icon.follows_theme) return t("settings.iconDefault");
-    if (icon.applied && icon.target === "dock") return t("settings.iconAppliedDock");
-    if (icon.applied && icon.target === "window") return t("settings.iconAppliedWindow");
-    if (!icon.applied && (icon.reason === "unsupported" || icon.reason === "no-window")) {
-      return t("settings.iconUnsupported");
-    }
-    return t("settings.iconSaved");
-  }
-  async function saveColorway() {
-    if (appearanceSync) return;
-    const value = el("colorway-select").value;
-    if (!isColorway(value)) return;
-    document.documentElement.dataset.colorway = value;
-    el("colorway-preview").src = `/img/icons/placeholder-${value}.svg`;
-    el("icon-status").textContent = "";
-    try {
-      const payload = await postJSON("/api/settings", { colorway: value });
-      applyAppearance(payload);
-      el("icon-status").textContent = iconStatusText(payload.icon);
-    } catch {
-      el("icon-status").textContent = t("settings.iconNotSaved");
-    }
-  }
-  async function saveIconFollow() {
-    if (appearanceSync) return;
-    const follow = el("icon-follows-theme").checked;
-    el("icon-status").textContent = "";
-    try {
-      const payload = await postJSON("/api/settings", { icon_follows_theme: follow });
-      applyAppearance(payload);
-      el("icon-status").textContent = iconStatusText(payload.icon);
-    } catch {
-      el("icon-status").textContent = t("settings.iconNotSaved");
-    }
-  }
-  async function saveLanguage() {
-    const value = el("language-select").value;
-    const saved = isLanguage(value) ? value : null;
-    el("language-status").textContent = "";
-    setLocale(resolveLocale(saved, systemLanguages()));
-    try {
-      await postJSON("/api/settings", { language: saved });
-    } catch {
-      el("language-status").textContent = t("settings.languageNotSaved");
-    }
-  }
   function repaintDialogs() {
     el("telemetry-note").textContent = telemetryNoteText();
     el("colorway-preview").alt = t("settings.colorwayPreview");
@@ -26288,26 +27584,8 @@
       el("files-confirm").textContent = filesAction === "delete" ? t("files.moveToTrash") : t("common.confirm");
     }
   }
-  function applyPrivacy(payload) {
-    state.telemetryConsent = payload.telemetry_consent ?? null;
-    state.telemetryConfigured = Boolean(payload.telemetry_configured);
-    state.wizardComplete = payload.wizard_complete === true;
-    privacySync = true;
-    el("telemetry-toggle").checked = state.telemetryConsent === true;
-    privacySync = false;
-    el("telemetry-note").textContent = telemetryNoteText();
-  }
   async function saveConsent(value, status) {
-    status.textContent = t("wizard.saving");
-    try {
-      const payload = await postJSON("/api/settings", { telemetry_consent: value });
-      applyPrivacy(payload);
-      status.textContent = value ? t("sharing.on") : t("sharing.off");
-      return true;
-    } catch (error2) {
-      status.textContent = t("wizard.consentFailed");
-      return false;
-    }
+    return saveSharing(value, status);
   }
   function showConsent() {
     if (typeof el("consent-dialog").showModal !== "function") return;
@@ -26782,92 +28060,99 @@
       });
     });
     el("open-settings").addEventListener("click", () => {
+      patchSettings({ settingsStatus: "", logFallback: "", logFallbackHidden: true });
       el("settings-status").textContent = "";
       el("log-fallback").hidden = true;
       el("telemetry-note").textContent = telemetryNoteText();
       el("settings-dialog").showModal();
     });
-    el("language-select").addEventListener("change", () => {
-      void saveLanguage();
-    });
-    el("colorway-select").addEventListener("change", () => {
-      void saveColorway();
-    });
-    el("icon-follows-theme").addEventListener("change", () => {
-      void saveIconFollow();
-    });
-    el("settings-close").addEventListener("click", () => {
-      el("settings-dialog").close();
-    });
-    el("rerun-wizard").addEventListener("click", () => {
+    bindRerunSetup(() => {
       el("settings-dialog").close();
       openWizard(true, el("open-settings"));
     });
-    el("telemetry-toggle").addEventListener("change", () => {
-      if (privacySync) return;
-      const want = el("telemetry-toggle").checked;
-      el("telemetry-toggle").disabled = true;
-      saveConsent(want, el("settings-status")).then((ok) => {
-        el("telemetry-toggle").disabled = false;
-        if (ok) {
-          consentSettled = true;
-          return;
-        }
-        privacySync = true;
-        el("telemetry-toggle").checked = state.telemetryConsent === true;
-        privacySync = false;
+    if (!settingsIslandMounted()) {
+      el("language-select").addEventListener("change", () => {
+        void saveLanguage();
       });
-    });
-    el("open-logs").addEventListener("click", () => {
-      const button2 = el("open-logs");
-      button2.disabled = true;
-      el("settings-status").textContent = t("wizard.opening");
-      postJSON("/api/logs/open", {}).then(() => {
-        el("settings-status").textContent = t("logs.opened");
-      }).catch(() => {
-        el("settings-status").textContent = t("logs.openFailed");
-      }).finally(() => {
-        button2.disabled = false;
+      el("colorway-select").addEventListener("change", () => {
+        void saveColorway();
       });
-    });
-    el("copy-logs").addEventListener("click", async () => {
-      const button2 = el("copy-logs");
-      button2.disabled = true;
-      el("settings-status").textContent = t("logs.copying");
-      try {
-        const response = await fetch("/api/logs");
-        const payload = await readJSONOr(response, {});
-        if (!response.ok) throw new Error(serverMessage(payload, t("logs.copyFailed")));
-        const text2 = payload.text || "";
-        if (!text2) {
-          el("settings-status").textContent = t("logs.empty");
-          return;
-        }
-        let copied = false;
-        if (navigator.clipboard && window.isSecureContext) {
-          try {
-            await navigator.clipboard.writeText(text2);
-            copied = true;
-          } catch (error2) {
-            copied = false;
+      el("icon-follows-theme").addEventListener("change", () => {
+        void saveIconFollow();
+      });
+      el("settings-close").addEventListener("click", () => {
+        el("settings-dialog").close();
+      });
+      el("rerun-wizard").addEventListener("click", () => {
+        el("settings-dialog").close();
+        openWizard(true, el("open-settings"));
+      });
+      el("telemetry-toggle").addEventListener("change", () => {
+        if (privacySync) return;
+        const want = el("telemetry-toggle").checked;
+        el("telemetry-toggle").disabled = true;
+        saveConsent(want, el("settings-status")).then((ok) => {
+          el("telemetry-toggle").disabled = false;
+          if (ok) {
+            consentSettled = true;
+            return;
           }
+          privacySync = true;
+          el("telemetry-toggle").checked = state.telemetryConsent === true;
+          privacySync = false;
+        });
+      });
+      el("open-logs").addEventListener("click", () => {
+        const button2 = el("open-logs");
+        button2.disabled = true;
+        el("settings-status").textContent = t("wizard.opening");
+        postJSON("/api/logs/open", {}).then(() => {
+          el("settings-status").textContent = t("logs.opened");
+        }).catch(() => {
+          el("settings-status").textContent = t("logs.openFailed");
+        }).finally(() => {
+          button2.disabled = false;
+        });
+      });
+      el("copy-logs").addEventListener("click", async () => {
+        const button2 = el("copy-logs");
+        button2.disabled = true;
+        el("settings-status").textContent = t("logs.copying");
+        try {
+          const response = await fetch("/api/logs");
+          const payload = await readJSONOr(response, {});
+          if (!response.ok) throw new Error(serverMessage(payload, t("logs.copyFailed")));
+          const text2 = payload.text || "";
+          if (!text2) {
+            el("settings-status").textContent = t("logs.empty");
+            return;
+          }
+          let copied = false;
+          if (navigator.clipboard && window.isSecureContext) {
+            try {
+              await navigator.clipboard.writeText(text2);
+              copied = true;
+            } catch {
+              copied = false;
+            }
+          }
+          if (copied) {
+            el("log-fallback").hidden = true;
+            el("settings-status").textContent = payload.truncated ? t("logs.copiedTruncated") : t("logs.copied");
+            return;
+          }
+          el("log-fallback").hidden = false;
+          el("log-fallback").value = text2;
+          el("log-fallback").focus();
+          el("log-fallback").select();
+          el("settings-status").textContent = t("logs.copyManual");
+        } catch {
+          el("settings-status").textContent = t("logs.copyFailed");
+        } finally {
+          button2.disabled = false;
         }
-        if (copied) {
-          el("log-fallback").hidden = true;
-          el("settings-status").textContent = payload.truncated ? t("logs.copiedTruncated") : t("logs.copied");
-          return;
-        }
-        el("log-fallback").hidden = false;
-        el("log-fallback").value = text2;
-        el("log-fallback").focus();
-        el("log-fallback").select();
-        el("settings-status").textContent = t("logs.copyManual");
-      } catch (error2) {
-        el("settings-status").textContent = t("logs.copyFailed");
-      } finally {
-        button2.disabled = false;
-      }
-    });
+      });
+    }
     el("files-up").addEventListener("click", () => {
       if (state.filesParent) {
         loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error2) => failFiles(error2));
@@ -27129,732 +28414,6 @@
     }
   }
 
-  // src/quick-open.ts
-  var QUICK_OPEN_MS = 200;
-  var LIMIT = 8;
-  var returnFocus = null;
-  var timer2 = 0;
-  var requestToken = 0;
-  var hits = [];
-  var active = 0;
-  var phase = "idle";
-  var truncated = false;
-  var pendingQuery = "";
-  function parentDirectory(path) {
-    const slash = Math.max(path.lastIndexOf("/"), path.lastIndexOf("\\"));
-    if (slash < 0) return path;
-    const parent = path.slice(0, slash);
-    if (/^[A-Za-z]:$/.test(parent)) return `${parent}\\`;
-    if (parent === "") return path.slice(0, slash + 1);
-    return parent;
-  }
-  function quickOpenIsOpen() {
-    return el("quick-open").open;
-  }
-  function labelQuickOpen() {
-    el("quick-open-title").textContent = t("quickOpen.title");
-    el("quick-open-label").textContent = t("quickOpen.label");
-    el("quick-open-query").placeholder = t("quickOpen.placeholder");
-    el("quick-open-close").textContent = t("common.close");
-    el("quick-open-retry").textContent = t("common.tryAgain");
-    el("quick-open-list").setAttribute("aria-label", t("quickOpen.matches"));
-  }
-  function repaintQuickOpen() {
-    const dialog = document.getElementById("quick-open");
-    if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
-    labelQuickOpen();
-    paint();
-  }
-  function openQuickOpen() {
-    const dialog = el("quick-open");
-    if (dialog.open) return;
-    returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    pendingQuery = "";
-    hits = [];
-    active = 0;
-    phase = "idle";
-    truncated = false;
-    window.clearTimeout(timer2);
-    el("quick-open-query").value = "";
-    labelQuickOpen();
-    paint();
-    dialog.showModal();
-    el("quick-open-query").focus();
-  }
-  function closeQuickOpen() {
-    const dialog = el("quick-open");
-    if (dialog.open) dialog.close();
-  }
-  function wireQuickOpen() {
-    const dialog = el("quick-open");
-    dialog.addEventListener("keydown", onDialogKey);
-    dialog.addEventListener("close", () => {
-      window.clearTimeout(timer2);
-      const node = returnFocus;
-      returnFocus = null;
-      if (node && node.isConnected) node.focus();
-    });
-    el("quick-open-query").addEventListener("input", () => schedule2());
-    el("quick-open-close").addEventListener("click", () => closeQuickOpen());
-    el("quick-open-retry").addEventListener("click", () => {
-      const query = el("quick-open-query").value.trim();
-      if (query) void loadFiles(query, trackHits(query));
-    });
-  }
-  function onDialogKey(event) {
-    if (event.key !== "ArrowDown" && event.key !== "ArrowUp" && event.key !== "Enter") return;
-    if (!hits.length && event.key !== "Enter") return;
-    event.preventDefault();
-    if (event.key === "ArrowDown") active = Math.min(hits.length - 1, active + 1);
-    else if (event.key === "ArrowUp") active = Math.max(0, active - 1);
-    else {
-      const chosen = hits[active];
-      if (chosen) void activate(chosen);
-    }
-    if (event.key !== "Enter") paint();
-  }
-  function schedule2() {
-    window.clearTimeout(timer2);
-    const query = el("quick-open-query").value;
-    pendingQuery = query;
-    const tracks = trackHits(query);
-    hits = tracks;
-    active = 0;
-    truncated = false;
-    if (!query.trim()) {
-      phase = "idle";
-      requestToken += 1;
-      paint();
-      return;
-    }
-    phase = "loading";
-    paint();
-    timer2 = window.setTimeout(() => {
-      void loadFiles(query.trim(), tracks);
-    }, QUICK_OPEN_MS);
-  }
-  async function loadFiles(query, tracks) {
-    const token3 = ++requestToken;
-    phase = "loading";
-    try {
-      const response = await fetch(`/api/files?q=${encodeURIComponent(query)}`);
-      const payload = await readJSONOr(response, {});
-      if (token3 !== requestToken) return;
-      if (!response.ok) throw new Error(payload.error || t("quickOpen.fileError"));
-      const files = fileHits(payload);
-      hits = mergeHits(tracks, files);
-      truncated = Boolean(payload.truncated);
-      phase = "ready";
-      if (active >= hits.length) active = Math.max(0, hits.length - 1);
-      paint();
-    } catch {
-      if (token3 !== requestToken) return;
-      hits = tracks;
-      phase = "error";
-      paint();
-    }
-  }
-  function trackHits(query) {
-    const text2 = query.trim();
-    if (!text2) return [];
-    const found = [];
-    for (const track of state.tracks) {
-      const hit = scoreTrack(track, text2);
-      if (hit) found.push(hit);
-    }
-    found.sort(byScore);
-    return found.slice(0, LIMIT);
-  }
-  function scoreTrack(track, query) {
-    const title2 = track.name || "Untitled";
-    const artist2 = track.artist ?? "";
-    const album = track.album ?? "";
-    const file = track.file ?? "";
-    const score = scoreQuery(query, `${title2} ${artist2} ${album} ${file}`);
-    if (score == null) return null;
-    const detail = [artist2, album].filter((part) => part !== "").join(" · ");
-    return { kind: "track", key: `track:${track.id}`, title: title2, detail, score, trackId: track.id };
-  }
-  function fileHits(payload) {
-    const rows2 = Array.isArray(payload.entries) ? payload.entries : [];
-    const found = [];
-    for (const entry of rows2) {
-      if (!isFileEntry(entry)) continue;
-      const score = typeof entry.score === "number" ? entry.score : 0;
-      found.push({
-        kind: "file",
-        key: `file:${entry.path}`,
-        title: entry.name,
-        detail: entry.detail || entry.path,
-        score,
-        path: entry.path
-      });
-    }
-    found.sort(byScore);
-    return found.slice(0, LIMIT);
-  }
-  function isFileEntry(value) {
-    if (!value || typeof value !== "object") return false;
-    const row = value;
-    return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
-  }
-  function mergeHits(tracks, files) {
-    return [...tracks, ...files].sort(byScore).slice(0, LIMIT * 2);
-  }
-  function byScore(left, right) {
-    return right.score - left.score || left.title.localeCompare(right.title);
-  }
-  async function activate(hit) {
-    closeQuickOpen();
-    if (hit.kind === "track") {
-      if (state.mode === "files" || state.mode === "snapshots" || state.mode === "history") setMode("crates");
-      selectCrate("all");
-      await selectTrack(hit.trackId);
-      const index = state.view.findIndex((row) => row.id === hit.trackId);
-      if (index >= 0) el("list").scrollTop = index * ROW;
-      return;
-    }
-    setMode("files");
-    await loadFolder(parentDirectory(hit.path));
-    focusFileByPath(hit.path);
-  }
-  function paint() {
-    const status = el("quick-open-status");
-    const list = el("quick-open-list");
-    const retry = el("quick-open-retry");
-    const query = pendingQuery.trim();
-    retry.hidden = phase !== "error";
-    list.replaceChildren();
-    if (!query) status.textContent = t("quickOpen.empty");
-    else if (phase === "loading") status.textContent = t("quickOpen.searching");
-    else if (phase === "error") status.textContent = t("quickOpen.fileError");
-    else if (!hits.length) status.textContent = t("quickOpen.none", { query });
-    else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
-    hits.forEach((hit, index) => {
-      const item4 = document.createElement("li");
-      const button2 = buttonEl(quickOpenHit(
-        hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
-        hit.title,
-        hit.detail
-      ));
-      button2.className = "quick-open-option";
-      button2.id = `quick-open-option-${index}`;
-      button2.setAttribute("role", "option");
-      button2.setAttribute("aria-selected", String(index === active));
-      button2.tabIndex = -1;
-      if (index === active) button2.classList.add("is-active");
-      const kind2 = document.createElement("span");
-      kind2.className = "quick-open-kind";
-      kind2.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
-      const title2 = document.createElement("span");
-      title2.className = "quick-open-name";
-      title2.textContent = hit.title;
-      const detail = document.createElement("span");
-      detail.className = "quick-open-detail";
-      detail.textContent = hit.detail;
-      button2.append(kind2, title2, detail);
-      button2.addEventListener("click", () => {
-        active = index;
-        void activate(hit);
-      });
-      item4.append(button2);
-      list.append(item4);
-    });
-    const field = el("quick-open-query");
-    const current2 = hits[active];
-    if (current2) field.setAttribute("aria-activedescendant", `quick-open-option-${active}`);
-    else field.removeAttribute("aria-activedescendant");
-    const chosen = list.querySelector(".is-active");
-    if (chosen && typeof chosen.scrollIntoView === "function") chosen.scrollIntoView({ block: "nearest" });
-  }
-
-  // src/shortcuts.ts
-  var SEEK_SECONDS = 5;
-  var SHORTCUT_DEFS = [
-    {
-      id: "focus-search",
-      label: "Focus search",
-      group: "Find",
-      keys: [{ key: "f", mod: true }, { key: "/" }],
-      whileTyping: false
-    },
-    {
-      id: "quick-open",
-      label: "Find a track or file",
-      group: "Find",
-      keys: [{ key: "k", mod: true }],
-      whileTyping: false
-    },
-    {
-      id: "dismiss",
-      label: "Close or clear search",
-      group: "Find",
-      keys: [{ key: "Escape" }],
-      whileTyping: true
-    },
-    {
-      id: "cheat-sheet",
-      label: "Show shortcuts",
-      group: "Find",
-      keys: [{ key: "?" }],
-      whileTyping: false
-    },
-    {
-      id: "list-previous",
-      label: "Previous row",
-      group: "Lists",
-      keys: [{ key: "ArrowUp" }],
-      whileTyping: false
-    },
-    {
-      id: "list-next",
-      label: "Next row",
-      group: "Lists",
-      keys: [{ key: "ArrowDown" }],
-      whileTyping: false
-    },
-    {
-      id: "list-open",
-      label: "Open the row",
-      group: "Lists",
-      keys: [{ key: "Enter" }],
-      whileTyping: false
-    },
-    {
-      id: "play-pause",
-      label: "Play or pause",
-      group: "Play",
-      keys: [{ key: " " }],
-      whileTyping: false
-    },
-    {
-      id: "seek-back",
-      label: "Back 5 seconds",
-      group: "Play",
-      keys: [{ key: "ArrowLeft" }],
-      whileTyping: false
-    },
-    {
-      id: "seek-forward",
-      label: "Forward 5 seconds",
-      group: "Play",
-      keys: [{ key: "ArrowRight" }],
-      whileTyping: false
-    },
-    {
-      id: "view-library",
-      label: "Library",
-      group: "Views",
-      keys: [{ key: "1", mod: true }],
-      whileTyping: false
-    },
-    {
-      id: "view-crates",
-      label: "Crates",
-      group: "Views",
-      keys: [{ key: "2", mod: true }],
-      whileTyping: false
-    },
-    {
-      id: "view-files",
-      label: "Organize files",
-      group: "Views",
-      keys: [{ key: "3", mod: true }],
-      whileTyping: false
-    },
-    {
-      id: "view-history",
-      label: "History",
-      group: "Views",
-      keys: [{ key: "4", mod: true }],
-      whileTyping: false
-    },
-    {
-      id: "view-snapshots",
-      label: "Backups",
-      group: "Views",
-      keys: [{ key: "5", mod: true }],
-      whileTyping: false
-    }
-  ];
-  var SHORTCUTS = SHORTCUT_DEFS;
-  var LABEL_KEY = {
-    "focus-search": "shortcuts.focusSearch",
-    "quick-open": "shortcuts.quickOpen",
-    dismiss: "shortcuts.dismiss",
-    "cheat-sheet": "shortcuts.cheatSheet",
-    "list-previous": "shortcuts.listPrevious",
-    "list-next": "shortcuts.listNext",
-    "list-open": "shortcuts.listOpen",
-    "play-pause": "shortcuts.playPause",
-    "seek-back": "shortcuts.seekBack",
-    "seek-forward": "shortcuts.seekForward",
-    "view-library": "shortcuts.viewLibrary",
-    "view-crates": "shortcuts.viewCrates",
-    "view-files": "shortcuts.viewFiles",
-    "view-history": "shortcuts.viewHistory",
-    "view-snapshots": "shortcuts.viewSnapshots"
-  };
-  var GROUP_KEY = {
-    Find: "shortcuts.groupFind",
-    Lists: "shortcuts.groupLists",
-    Play: "shortcuts.groupPlay",
-    Views: "shortcuts.groupViews"
-  };
-  var player = null;
-  var returnFocus2 = null;
-  var snapshotCursor = 0;
-  function registerPlayerControls(controls) {
-    player = controls;
-  }
-  function chordMatches(chord, event) {
-    if (event.altKey) return false;
-    const mod = event.ctrlKey || event.metaKey;
-    if (mod !== Boolean(chord.mod)) return false;
-    if (chord.key === "?") return event.key === "?" && !mod;
-    if (event.shiftKey !== Boolean(chord.shift)) return false;
-    if (chord.key === " ") return event.key === " ";
-    return event.key === chord.key || event.key.toLowerCase() === chord.key.toLowerCase();
-  }
-  function matchShortcut(event) {
-    for (const shortcut of SHORTCUTS) {
-      if (shortcut.keys.some((chord) => chordMatches(chord, event))) return shortcut;
-    }
-    return null;
-  }
-  function chordLabel(chord) {
-    const names = {
-      Escape: "Esc",
-      " ": "Space",
-      ArrowLeft: "Left arrow",
-      ArrowRight: "Right arrow",
-      ArrowUp: "Up arrow",
-      ArrowDown: "Down arrow",
-      Enter: "Enter"
-    };
-    const named = names[chord.key];
-    if (named) return named;
-    const key = chord.key.length === 1 ? chord.key.toUpperCase() : chord.key;
-    return chord.mod ? `Ctrl/Cmd+${key}` : key;
-  }
-  function isTypingTarget(target) {
-    if (!(target instanceof HTMLElement)) return false;
-    if (target.isContentEditable) return true;
-    const field = target.closest("input, textarea, select");
-    if (!(field instanceof HTMLElement)) return false;
-    if (field instanceof HTMLInputElement) {
-      const inert = /* @__PURE__ */ new Set(["button", "checkbox", "radio", "file", "range", "color", "submit", "reset"]);
-      if (inert.has(field.type)) return false;
-    }
-    return true;
-  }
-  function openCheatSheet() {
-    const dialog = el("settings-dialog");
-    renderCheatSheet();
-    if (!dialog.open) {
-      rememberFocus();
-      dialog.showModal();
-    }
-    const title2 = el("shortcuts-title");
-    title2.tabIndex = -1;
-    title2.focus();
-    if (typeof title2.scrollIntoView === "function") title2.scrollIntoView({ block: "nearest" });
-  }
-  function wireShortcuts() {
-    document.removeEventListener("keydown", onKey);
-    document.addEventListener("keydown", onKey);
-    const dialog = el("settings-dialog");
-    dialog.removeEventListener("close", onSettingsClose);
-    dialog.addEventListener("close", onSettingsClose);
-    renderCheatSheet();
-    wireQuickOpen();
-  }
-  function onSettingsClose() {
-    restoreFocus();
-  }
-  function onKey(event) {
-    if (event.isComposing || event.defaultPrevented) return;
-    const shortcut = matchShortcut(event);
-    if (!shortcut) return;
-    if (isTypingTarget(event.target) && !shortcut.whileTyping) return;
-    if (shortcut.id !== "dismiss" && topDialog()) return;
-    if (skipsListKey(shortcut.id, event.target)) return;
-    if (event.repeat && !repeats(shortcut.id)) return;
-    runShortcut(shortcut.id, event);
-  }
-  function repeats(id) {
-    return id === "list-previous" || id === "list-next" || id === "seek-back" || id === "seek-forward";
-  }
-  function skipsListKey(id, target) {
-    if (!(target instanceof HTMLElement)) return false;
-    if (id === "play-pause" && target.closest("button, a, summary, input, select, textarea, [role='button']")) return true;
-    if (id === "list-open" && target.closest("button, a, summary, textarea, select")) return true;
-    return false;
-  }
-  function topDialog() {
-    const open = [...document.querySelectorAll("dialog")].filter(
-      (node) => node instanceof HTMLDialogElement && node.open
-    );
-    return open.at(-1) ?? null;
-  }
-  var HANDLERS = {
-    "focus-search": (event) => {
-      event.preventDefault();
-      focusCurrentSearch();
-    },
-    "quick-open": (event) => {
-      event.preventDefault();
-      openQuickOpen();
-    },
-    dismiss: (event) => {
-      dismiss(event);
-    },
-    "cheat-sheet": (event) => {
-      event.preventDefault();
-      openCheatSheet();
-    },
-    "list-previous": (event) => {
-      event.preventDefault();
-      moveActiveList(-1);
-    },
-    "list-next": (event) => {
-      event.preventDefault();
-      moveActiveList(1);
-    },
-    "list-open": (event) => {
-      event.preventDefault();
-      openActiveList();
-    },
-    "play-pause": (event) => {
-      if (!player) return;
-      event.preventDefault();
-      player.togglePlayPause();
-    },
-    "seek-back": (event) => {
-      if (!player) return;
-      event.preventDefault();
-      player.seekBy(-SEEK_SECONDS);
-    },
-    "seek-forward": (event) => {
-      if (!player) return;
-      event.preventDefault();
-      player.seekBy(SEEK_SECONDS);
-    },
-    "view-library": (event) => {
-      event.preventDefault();
-      showLibrary();
-    },
-    "view-crates": (event) => {
-      event.preventDefault();
-      showCrates();
-    },
-    "view-files": (event) => {
-      event.preventDefault();
-      setMode("files");
-      el("files-list").focus();
-    },
-    "view-history": (event) => {
-      event.preventDefault();
-      setMode("history");
-      el("list").focus();
-    },
-    "view-snapshots": (event) => {
-      event.preventDefault();
-      setMode("snapshots");
-      snapshotCursor = 0;
-      el("snapshots-list").focus();
-    }
-  };
-  function runShortcut(id, event) {
-    const handler = HANDLERS[id];
-    handler(event);
-  }
-  function focusCurrentSearch() {
-    if (state.mode === "files") {
-      const field2 = el("files-search");
-      field2.focus();
-      field2.select();
-      return;
-    }
-    if (state.mode === "snapshots") {
-      el("snapshots-status").textContent = t("snapshots.noSearch");
-      return;
-    }
-    const field = el("search");
-    field.focus();
-    field.select();
-  }
-  function showLibrary() {
-    setMode("crates");
-    selectCrate("all");
-    el("list").focus();
-  }
-  function showCrates() {
-    setMode("crates");
-    const first = el("crate-list").querySelector(".crate");
-    if (first) focusCrateItem(first);
-    else el("crate-list").focus();
-  }
-  function moveActiveList(delta) {
-    if (quickOpenIsOpen()) return;
-    if (state.mode === "files") {
-      moveFileList(delta);
-      return;
-    }
-    if (state.mode === "snapshots") {
-      moveSnapshots(delta);
-      return;
-    }
-    moveTrackList(delta);
-  }
-  function openActiveList() {
-    if (quickOpenIsOpen()) return;
-    if (state.mode === "files") {
-      openFileList();
-      return;
-    }
-    if (state.mode === "snapshots") {
-      openSnapshot();
-      return;
-    }
-    openTrackList();
-  }
-  function moveSnapshots(delta) {
-    const cards = snapshotCards();
-    if (!cards.length) return;
-    snapshotCursor = Math.max(0, Math.min(cards.length - 1, snapshotCursor + delta));
-    const card = cards[snapshotCursor];
-    card?.querySelector("button")?.focus();
-  }
-  function openSnapshot() {
-    const cards = snapshotCards();
-    const card = cards[snapshotCursor] ?? cards[0];
-    card?.querySelector("button")?.click();
-  }
-  function snapshotCards() {
-    return [...el("snapshots-list").querySelectorAll(".snapshot-card")];
-  }
-  function dismiss(event) {
-    const dialog = topDialog();
-    if (dialog) {
-      if (dialog.id === "quick-open") {
-        event.preventDefault();
-        closeQuickOpen();
-        return;
-      }
-      if (dialog.id === "settings-dialog") {
-        event.preventDefault();
-        dialog.close();
-        return;
-      }
-      return;
-    }
-    const active2 = document.activeElement;
-    if (active2 instanceof HTMLInputElement && isSearchField(active2)) {
-      event.preventDefault();
-      if (active2.value) replaceInput(active2, "");
-      else active2.blur();
-      return;
-    }
-    if (isTypingTarget(active2)) {
-      if (active2 instanceof HTMLElement) active2.blur();
-      return;
-    }
-    if (clearViewSearch()) event.preventDefault();
-  }
-  function isSearchField(field) {
-    return field.id === "search" || field.id === "crate-search" || field.id === "files-search" || field.id === "quick-open-query";
-  }
-  function clearViewSearch() {
-    if (state.mode === "files" && el("files-search").value) {
-      replaceInput(el("files-search"), "");
-      return true;
-    }
-    if (state.mode === "crates" && el("crate-search").value && !el("search").value) {
-      replaceInput(el("crate-search"), "");
-      return true;
-    }
-    if (el("search").value) {
-      replaceInput(el("search"), "");
-      return true;
-    }
-    if (el("crate-search").value) {
-      replaceInput(el("crate-search"), "");
-      return true;
-    }
-    return false;
-  }
-  function replaceInput(field, value) {
-    field.value = value;
-    field.dispatchEvent(new Event("input", { bubbles: true }));
-  }
-  function repaintCheatSheet() {
-    if (!document.getElementById("shortcuts-body")) return;
-    renderCheatSheet();
-  }
-  function renderCheatSheet() {
-    const title2 = el("shortcuts-title");
-    title2.textContent = t("shortcuts.title");
-    setTooltip(title2, tips.shortcuts);
-    el("shortcuts-intro").textContent = t("shortcuts.intro");
-    const body = el("shortcuts-body");
-    body.replaceChildren();
-    const groups = [];
-    for (const shortcut of SHORTCUTS) {
-      if (!groups.includes(shortcut.group)) groups.push(shortcut.group);
-    }
-    for (const group of groups) {
-      const heading2 = document.createElement("h3");
-      heading2.textContent = t(GROUP_KEY[group]);
-      body.append(heading2);
-      if (group === "Play") {
-        const note = document.createElement("p");
-        note.className = "dialog-note";
-        note.textContent = t("shortcuts.playNote");
-        body.append(note);
-      }
-      const table = document.createElement("table");
-      table.className = "shortcut-table";
-      const head = document.createElement("thead");
-      const headRow = document.createElement("tr");
-      const actionHead = document.createElement("th");
-      actionHead.scope = "col";
-      actionHead.textContent = t("shortcuts.action");
-      const keyHead = document.createElement("th");
-      keyHead.scope = "col";
-      keyHead.textContent = t("shortcuts.key");
-      headRow.append(actionHead, keyHead);
-      head.append(headRow);
-      const rows2 = document.createElement("tbody");
-      for (const shortcut of SHORTCUTS) {
-        if (shortcut.group !== group) continue;
-        const row = document.createElement("tr");
-        const action = document.createElement("th");
-        action.scope = "row";
-        action.textContent = t(LABEL_KEY[shortcut.id]);
-        const keys = document.createElement("td");
-        shortcut.keys.forEach((chord, index) => {
-          if (index > 0) keys.append(document.createTextNode(" or "));
-          const kbd = document.createElement("kbd");
-          kbd.textContent = chordLabel(chord);
-          keys.append(kbd);
-        });
-        row.append(action, keys);
-        rows2.append(row);
-      }
-      table.append(head, rows2);
-      body.append(table);
-    }
-  }
-  function rememberFocus() {
-    returnFocus2 = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-  }
-  function restoreFocus() {
-    const node = returnFocus2;
-    returnFocus2 = null;
-    if (node && node.isConnected) node.focus();
-  }
-
   // src/update.ts
   var UPDATE_CHOICE_EVENT = "serato-update-choice";
   var latest7 = null;
@@ -27898,11 +28457,21 @@
   }
   function paintUpdate() {
     const status = latest7;
-    const toggle = el("update-toggle");
-    const pre = el("update-prereleases");
-    toggle.checked = status?.enabled === true;
-    pre.checked = status?.include_prereleases === true;
-    pre.disabled = status?.enabled !== true;
+    const toggle = document.getElementById("update-toggle");
+    const pre = document.getElementById("update-prereleases");
+    if (toggle instanceof HTMLInputElement && !settingsIslandMounted()) {
+      toggle.checked = status?.enabled === true;
+    }
+    if (pre instanceof HTMLInputElement && !settingsIslandMounted()) {
+      pre.checked = status?.include_prereleases === true;
+      pre.disabled = status?.enabled !== true;
+    }
+    patchSettings({
+      updateEnabled: status?.enabled === true,
+      updatePrereleases: status?.include_prereleases === true,
+      updatePrereleasesDisabled: status?.enabled !== true,
+      updateBusy: false
+    });
     const banner = el("update-banner");
     const release = status?.latest ?? null;
     if (!status || status.enabled !== true || !status.update || !release || dismissed) {
@@ -27919,6 +28488,10 @@
   function wireUpdate() {
     if (wired3) return;
     wired3 = true;
+    bindUpdateSaves(
+      (on) => save2({ enabled: on }),
+      (on) => save2({ include_prereleases: on })
+    );
     el("update-download").addEventListener("click", () => {
       void download();
     });
@@ -27929,29 +28502,35 @@
       dismissed = true;
       paintUpdate();
     });
-    el("update-toggle").addEventListener("change", () => {
-      void save2({ enabled: el("update-toggle").checked });
-    });
-    el("update-prereleases").addEventListener("change", () => {
-      void save2({ include_prereleases: el("update-prereleases").checked });
-    });
+    if (!settingsIslandMounted()) {
+      el("update-toggle").addEventListener("change", () => {
+        void save2({ enabled: el("update-toggle").checked });
+      });
+      el("update-prereleases").addEventListener("change", () => {
+        void save2({ include_prereleases: el("update-prereleases").checked });
+      });
+    }
     window.addEventListener(UPDATE_CHOICE_EVENT, () => {
       void loadUpdate();
     });
   }
   async function save2(choice) {
-    const toggle = el("update-toggle");
-    const pre = el("update-prereleases");
-    toggle.disabled = true;
-    pre.disabled = true;
-    el("update-status").textContent = "";
+    const toggle = document.getElementById("update-toggle");
+    const pre = document.getElementById("update-prereleases");
+    const note = document.getElementById("update-status");
+    if (toggle instanceof HTMLInputElement) toggle.disabled = true;
+    if (pre instanceof HTMLInputElement) pre.disabled = true;
+    if (note) note.textContent = "";
+    patchSettings({ updateBusy: true, updateStatus: "" });
     try {
       await postJSON("/api/update", choice);
-      toggle.disabled = false;
+      if (toggle instanceof HTMLInputElement) toggle.disabled = false;
       await loadUpdate();
     } catch {
-      toggle.disabled = false;
-      el("update-status").textContent = t("settings.updatesFailed");
+      if (toggle instanceof HTMLInputElement) toggle.disabled = false;
+      const message = t("settings.updatesFailed");
+      if (note) note.textContent = message;
+      patchSettings({ updateBusy: false, updateStatus: message });
       paintUpdate();
     }
   }
@@ -27999,14 +28578,17 @@
   function paint2(label) {
     painted = label;
     const footer = el("app-version");
-    const about = el("about-version");
-    el("version-copy-status").textContent = "";
+    const about = document.getElementById("about-version");
+    const copyStatus = document.getElementById("version-copy-status");
+    if (copyStatus) copyStatus.textContent = "";
     if (!label) {
       copyText2 = "";
       footer.hidden = true;
       footer.replaceChildren();
-      about.textContent = t("version.unavailable");
-      el("help-version").textContent = t("version.unavailable");
+      const unavailable = t("version.unavailable");
+      if (about) about.textContent = unavailable;
+      el("help-version").textContent = unavailable;
+      patchSettings({ aboutVersion: unavailable, versionCopyStatus: "" });
       return;
     }
     copyText2 = label;
@@ -28018,8 +28600,9 @@
     const value = document.createElement("span");
     value.textContent = label;
     footer.append(name, value);
-    about.textContent = label;
+    if (about) about.textContent = label;
     el("help-version").textContent = label;
+    patchSettings({ aboutVersion: label, versionCopyStatus: "" });
   }
   function repaintVersion() {
     if (painted === void 0) return;
@@ -28033,24 +28616,34 @@
     }
   }
   async function copyVersion() {
-    const status = el("version-copy-status");
+    const status = document.getElementById("version-copy-status");
     if (!copyText2) {
-      status.textContent = t("version.unavailable");
+      const message = t("version.unavailable");
+      if (status) status.textContent = message;
+      patchSettings({ versionCopyStatus: message });
       return;
     }
     const writeText = navigator.clipboard?.writeText;
     if (!writeText || !window.isSecureContext) {
-      status.textContent = t("version.copyFailed");
+      const message = t("version.copyFailed");
+      if (status) status.textContent = message;
+      patchSettings({ versionCopyStatus: message });
       return;
     }
     try {
       await writeText.call(navigator.clipboard, copyText2);
-      status.textContent = t("version.copied");
+      const message = t("version.copied");
+      if (status) status.textContent = message;
+      patchSettings({ versionCopyStatus: message });
     } catch {
-      status.textContent = t("version.copyFailed");
+      const message = t("version.copyFailed");
+      if (status) status.textContent = message;
+      patchSettings({ versionCopyStatus: message });
     }
   }
   function wireVersion() {
+    bindCopyVersion(copyVersion);
+    if (settingsIslandMounted()) return;
     el("copy-version").addEventListener("click", () => {
       void copyVersion();
     });
@@ -28498,6 +29091,7 @@
   mountTrackListB();
   wireDualCrates();
   mountPlayer();
+  mountSettings();
   registerPlayerControls(playerControls);
   wireLibrary();
   wireVirtualScroll();

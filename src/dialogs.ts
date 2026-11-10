@@ -44,7 +44,29 @@ import {
   selectedFiles,
   setNotice,
 } from "./views";
-import { PSEUDO, getLocale, isLanguage, resolveLocale, serverMessage, setLocale, t } from "./i18n";
+import { serverMessage, t } from "./i18n";
+import {
+  applyAppearance,
+  applyLanguage,
+  applyPrivacy,
+  bindRerunSetup,
+  saveColorway,
+  saveIconFollow,
+  saveLanguage,
+  patchSettings,
+  saveSharing,
+  settingsIslandMounted,
+  telemetryNoteText,
+} from "./settings";
+
+export {
+  applyAppearance,
+  applyLanguage,
+  applyPrivacy,
+  saveColorway,
+  saveIconFollow,
+  saveLanguage,
+};
 
 let rekordboxXml = "";
 let mergePreview: MergePreview | null = null;
@@ -57,27 +79,6 @@ let replaceToken = 0;
 let replaceLoading = false;
 let consentSettled = false;
 let privacySync = false;
-let appearanceSync = false;
-
-const COLORWAYS = ["serato-like", "dark-club", "light", "classic"] as const;
-const LEGACY_COLORWAYS: Record<string, (typeof COLORWAYS)[number]> = {
-  motown: "classic",
-  "deep-house": "classic",
-  "daisy-age": "classic",
-};
-
-function isColorway(value: unknown): value is (typeof COLORWAYS)[number] {
-  return typeof value === "string" && (COLORWAYS as readonly string[]).includes(value);
-}
-
-function resolveColorway(value: unknown): (typeof COLORWAYS)[number] {
-  if (isColorway(value)) return value;
-  if (typeof value === "string") {
-    const mapped = LEGACY_COLORWAYS[value];
-    if (mapped !== undefined) return mapped;
-  }
-  return "serato-like";
-}
 let filesPreview: FilesPayload | null = null;
 let filesAction = "";
 let filesTagScope: "paths" | "crate" = "paths";
@@ -805,168 +806,6 @@ async function confirmReplaceInCrates(): Promise<void> {
 }
 
 /**
- * Describe the current sharing choice in one sentence.
- *
- * The note sits under the settings checkbox. It does not include the
- * install id or any library data. No request is made.
- *
- * @returns {string} Status sentence for the settings dialog.
- */
-function telemetryNoteText() {
-  if (!state.telemetryConfigured) {
-    return t("sharing.noKeys");
-  }
-  if (state.telemetryConsent === true) {
-    return t("sharing.canSend");
-  }
-  return t("sharing.nothingSent");
-}
-
-/**
- * Apply a /api/settings payload to the checkbox and the note.
- *
- * privacySync keeps the checkbox assignment from posting the choice
- * again. A null consent leaves the checkbox off. No request is made.
- *
- * @param {object} payload Settings object from the server.
- * @returns {void}
- */
-/**
- * Apply the saved language to the picker and the page.
- *
- * A payload without `language` leaves both alone. A saved code switches
- * the page to it. Null follows the OS language. The pseudo-locale from
- * the URL is kept, since it is only for layout checks. No request is made.
- *
- * @param {object} payload Settings object from the server.
- * @returns {void}
- */
-export function applyLanguage(payload: SettingsPayload): void {
-  if (!("language" in payload)) return;
-  const saved = isLanguage(payload.language) ? payload.language : null;
-  el("language-select").value = saved ?? "";
-  if (getLocale() !== PSEUDO) setLocale(resolveLocale(saved, systemLanguages()));
-}
-
-function systemLanguages(): string[] {
-  return Array.isArray(navigator.languages) && navigator.languages.length
-    ? [...navigator.languages]
-    : [navigator.language || "en"];
-}
-
-/**
- * Apply the saved theme to the picker, the page, and the icon preview.
- *
- * A payload without theme fields leaves the controls alone. The checkbox
- * defaults to on. The preview shows the colorway icon even when the
- * running icon stays the usual one. No request is made.
- *
- * @param payload Settings object from the server.
- * @returns {void}
- */
-export function applyAppearance(payload: SettingsPayload): void {
-  const hasColorway = "colorway" in payload;
-  const hasFollow = "icon_follows_theme" in payload;
-  const hasHref = "icon_href" in payload;
-  if (!hasColorway && !hasFollow && !hasHref) return;
-  const colorway = hasColorway ? resolveColorway(payload.colorway) : resolveColorway(el("colorway-select").value);
-  const follow = hasFollow ? payload.icon_follows_theme !== false : el("icon-follows-theme").checked;
-  appearanceSync = true;
-  if (hasColorway) el("colorway-select").value = colorway;
-  if (hasFollow) el("icon-follows-theme").checked = follow;
-  appearanceSync = false;
-  const shown = resolveColorway(el("colorway-select").value);
-  document.documentElement.dataset.colorway = shown;
-  const preview = el("colorway-preview");
-  preview.src = `/img/icons/placeholder-${shown}.svg`;
-  preview.alt = t("settings.colorwayPreview");
-  const href = hasHref && typeof payload.icon_href === "string"
-    ? payload.icon_href
-    : follow
-      ? `/img/icons/placeholder-${shown}.svg`
-      : "/img/icons/default.svg";
-  const icon = document.getElementById("app-icon");
-  if (icon instanceof HTMLLinkElement) icon.href = href;
-}
-
-/** Sentence under the theme controls after a save. */
-function iconStatusText(icon: SettingsPayload["icon"]): string {
-  if (!icon) return t("settings.iconSaved");
-  if (!icon.follows_theme) return t("settings.iconDefault");
-  if (icon.applied && icon.target === "dock") return t("settings.iconAppliedDock");
-  if (icon.applied && icon.target === "window") return t("settings.iconAppliedWindow");
-  if (!icon.applied && (icon.reason === "unsupported" || icon.reason === "no-window")) {
-    return t("settings.iconUnsupported");
-  }
-  return t("settings.iconSaved");
-}
-
-/**
- * Save the theme picked in Settings and paint it now.
- *
- * The page switches before the save answers. A failed save says so and
- * keeps the new theme for this session.
- *
- * @returns {Promise<void>}
- */
-export async function saveColorway(): Promise<void> {
-  if (appearanceSync) return;
-  const value = el("colorway-select").value;
-  if (!isColorway(value)) return;
-  document.documentElement.dataset.colorway = value;
-  el("colorway-preview").src = `/img/icons/placeholder-${value}.svg`;
-  el("icon-status").textContent = "";
-  try {
-    const payload = await postJSON<SettingsPayload>("/api/settings", { colorway: value });
-    applyAppearance(payload);
-    el("icon-status").textContent = iconStatusText(payload.icon);
-  } catch {
-    el("icon-status").textContent = t("settings.iconNotSaved");
-  }
-}
-
-/**
- * Save whether the running icon follows the theme.
- *
- * False is sent as false. A failed save says so and keeps the checkbox
- * where the person left it for this session.
- *
- * @returns {Promise<void>}
- */
-export async function saveIconFollow(): Promise<void> {
-  if (appearanceSync) return;
-  const follow = el("icon-follows-theme").checked;
-  el("icon-status").textContent = "";
-  try {
-    const payload = await postJSON<SettingsPayload>("/api/settings", { icon_follows_theme: follow });
-    applyAppearance(payload);
-    el("icon-status").textContent = iconStatusText(payload.icon);
-  } catch {
-    el("icon-status").textContent = t("settings.iconNotSaved");
-  }
-}
-
-/**
- * Save the language picked in Settings and switch the page now.
- *
- * The page switches before the save answers, so the choice shows at once.
- * A failed save says so and keeps the new language for this session.
- *
- * @returns {Promise<void>}
- */
-export async function saveLanguage(): Promise<void> {
-  const value = el("language-select").value;
-  const saved = isLanguage(value) ? value : null;
-  el("language-status").textContent = "";
-  setLocale(resolveLocale(saved, systemLanguages()));
-  try {
-    await postJSON("/api/settings", { language: saved });
-  } catch {
-    el("language-status").textContent = t("settings.languageNotSaved");
-  }
-}
-
-/**
  * Paint open dialogs again in the active language.
  *
  * The merge plan, the sharing note, and the file dialog's confirm label
@@ -1002,38 +841,8 @@ export function repaintDialogs(): void {
   }
 }
 
-function applyPrivacy(payload: SettingsPayload) {
-  state.telemetryConsent = payload.telemetry_consent ?? null;
-  state.telemetryConfigured = Boolean(payload.telemetry_configured);
-  state.wizardComplete = payload.wizard_complete === true;
-  privacySync = true;
-  el("telemetry-toggle").checked = state.telemetryConsent === true;
-  privacySync = false;
-  el("telemetry-note").textContent = telemetryNoteText();
-}
-
-/**
- * POST the sharing choice.
- *
- * False is sent as false. The button or checkbox stays disabled until
- * the response arrives. A failure leaves the previous choice in place
- * and shows what to do next.
- *
- * @param {boolean} value True to share, false to send nothing.
- * @param {HTMLElement} status Element that receives the result sentence.
- * @returns {Promise<boolean>} True when the server stored the choice.
- */
 async function saveConsent(value: boolean, status: HTMLElement) {
-  status.textContent = t("wizard.saving");
-  try {
-    const payload = await postJSON("/api/settings", { telemetry_consent: value });
-    applyPrivacy(payload);
-    status.textContent = value ? t("sharing.on") : t("sharing.off");
-    return true;
-  } catch (error) {
-    status.textContent = t("wizard.consentFailed");
-    return false;
-  }
+  return saveSharing(value, status);
 }
 
 /**
@@ -1631,105 +1440,113 @@ export function wireDialogs(): void {
   });
 
   el("open-settings").addEventListener("click", () => {
+    patchSettings({ settingsStatus: "", logFallback: "", logFallbackHidden: true });
     el("settings-status").textContent = "";
     el("log-fallback").hidden = true;
     el("telemetry-note").textContent = telemetryNoteText();
     el("settings-dialog").showModal();
   });
 
-  el("language-select").addEventListener("change", () => {
-    void saveLanguage();
-  });
-
-  el("colorway-select").addEventListener("change", () => {
-    void saveColorway();
-  });
-
-  el("icon-follows-theme").addEventListener("change", () => {
-    void saveIconFollow();
-  });
-
-  el("settings-close").addEventListener("click", () => {
-    el("settings-dialog").close();
-  });
-
-  el("rerun-wizard").addEventListener("click", () => {
+  bindRerunSetup(() => {
     el("settings-dialog").close();
     openWizard(true, el("open-settings"));
   });
 
-  el("telemetry-toggle").addEventListener("change", () => {
-    if (privacySync) return;
-    const want = el("telemetry-toggle").checked;
-    el("telemetry-toggle").disabled = true;
-    saveConsent(want, el("settings-status")).then((ok) => {
-      el("telemetry-toggle").disabled = false;
-      if (ok) {
-        consentSettled = true;
-        return;
-      }
-      privacySync = true;
-      el("telemetry-toggle").checked = state.telemetryConsent === true;
-      privacySync = false;
+  if (!settingsIslandMounted()) {
+    el("language-select").addEventListener("change", () => {
+      void saveLanguage();
     });
-  });
 
-  el("open-logs").addEventListener("click", () => {
-    const button = el("open-logs");
-    button.disabled = true;
-    el("settings-status").textContent = t("wizard.opening");
-    postJSON("/api/logs/open", {})
-      .then(() => {
-        el("settings-status").textContent = t("logs.opened");
-      })
-      .catch(() => {
-        el("settings-status").textContent = t("logs.openFailed");
-      })
-      .finally(() => {
-        button.disabled = false;
-      });
-  });
+    el("colorway-select").addEventListener("change", () => {
+      void saveColorway();
+    });
 
-  el("copy-logs").addEventListener("click", async () => {
-    const button = el("copy-logs");
-    button.disabled = true;
-    el("settings-status").textContent = t("logs.copying");
-    try {
-      const response = await fetch("/api/logs");
-      const payload = await readJSONOr<LogsPayload>(response, {});
-      if (!response.ok) throw new Error(serverMessage(payload, t("logs.copyFailed")));
-      const text = payload.text || "";
-      if (!text) {
-        el("settings-status").textContent = t("logs.empty");
-        return;
-      }
-      let copied = false;
-      if (navigator.clipboard && window.isSecureContext) {
-        try {
-          await navigator.clipboard.writeText(text);
-          copied = true;
-        } catch (error) {
-          copied = false;
+    el("icon-follows-theme").addEventListener("change", () => {
+      void saveIconFollow();
+    });
+
+    el("settings-close").addEventListener("click", () => {
+      el("settings-dialog").close();
+    });
+
+    el("rerun-wizard").addEventListener("click", () => {
+      el("settings-dialog").close();
+      openWizard(true, el("open-settings"));
+    });
+
+    el("telemetry-toggle").addEventListener("change", () => {
+      if (privacySync) return;
+      const want = el("telemetry-toggle").checked;
+      el("telemetry-toggle").disabled = true;
+      saveConsent(want, el("settings-status")).then((ok) => {
+        el("telemetry-toggle").disabled = false;
+        if (ok) {
+          consentSettled = true;
+          return;
         }
+        privacySync = true;
+        el("telemetry-toggle").checked = state.telemetryConsent === true;
+        privacySync = false;
+      });
+    });
+
+    el("open-logs").addEventListener("click", () => {
+      const button = el("open-logs");
+      button.disabled = true;
+      el("settings-status").textContent = t("wizard.opening");
+      postJSON("/api/logs/open", {})
+        .then(() => {
+          el("settings-status").textContent = t("logs.opened");
+        })
+        .catch(() => {
+          el("settings-status").textContent = t("logs.openFailed");
+        })
+        .finally(() => {
+          button.disabled = false;
+        });
+    });
+
+    el("copy-logs").addEventListener("click", async () => {
+      const button = el("copy-logs");
+      button.disabled = true;
+      el("settings-status").textContent = t("logs.copying");
+      try {
+        const response = await fetch("/api/logs");
+        const payload = await readJSONOr<LogsPayload>(response, {});
+        if (!response.ok) throw new Error(serverMessage(payload, t("logs.copyFailed")));
+        const text = payload.text || "";
+        if (!text) {
+          el("settings-status").textContent = t("logs.empty");
+          return;
+        }
+        let copied = false;
+        if (navigator.clipboard && window.isSecureContext) {
+          try {
+            await navigator.clipboard.writeText(text);
+            copied = true;
+          } catch {
+            copied = false;
+          }
+        }
+        if (copied) {
+          el("log-fallback").hidden = true;
+          el("settings-status").textContent = payload.truncated
+            ? t("logs.copiedTruncated")
+            : t("logs.copied");
+          return;
+        }
+        el("log-fallback").hidden = false;
+        el("log-fallback").value = text;
+        el("log-fallback").focus();
+        el("log-fallback").select();
+        el("settings-status").textContent = t("logs.copyManual");
+      } catch {
+        el("settings-status").textContent = t("logs.copyFailed");
+      } finally {
+        button.disabled = false;
       }
-      if (copied) {
-        el("log-fallback").hidden = true;
-        el("settings-status").textContent = payload.truncated
-          ? t("logs.copiedTruncated")
-          : t("logs.copied");
-        return;
-      }
-      el("log-fallback").hidden = false;
-      el("log-fallback").value = text;
-      el("log-fallback").focus();
-      el("log-fallback").select();
-      el("settings-status").textContent = t("logs.copyManual");
-    } catch (error) {
-      el("settings-status").textContent = t("logs.copyFailed");
-    } finally {
-      button.disabled = false;
-    }
-  });
+    });
+  }
   el("files-up").addEventListener("click", () => {
     if (state.filesParent) {
       loadFolder(state.filesParent, { elsewhere: state.filesElsewhere }).catch((error) => failFiles(error));

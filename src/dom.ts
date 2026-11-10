@@ -161,6 +161,7 @@ export interface ElementIds {
   "merge-file-note": HTMLParagraphElement;
   "consent-dialog": HTMLDialogElement;
   "settings-dialog": HTMLDialogElement;
+  "settings-title": HTMLHeadingElement;
   "telemetry-toggle": HTMLInputElement;
   "update-toggle": HTMLInputElement;
   "update-prereleases": HTMLInputElement;

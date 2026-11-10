@@ -1,9 +1,9 @@
 /**
  * React providers for the page.
  *
- * Player state is one domain. Later screens add their own context file
- * and one wrapper here. This module reads the player engine; it does not
- * own playback.
+ * Player and Settings are separate domains. Later screens add their own
+ * context file and one wrapper here. This module reads those stores; it
+ * does not own playback or the settings file.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -12,6 +12,11 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import {
+  SettingsProvider as SettingsContextProvider,
+  type SettingsContextValue,
+} from "../context/SettingsContext";
+import { onLocaleChange } from "../i18n";
 import {
   canSkip,
   canTogglePlay,
@@ -28,6 +33,21 @@ import {
   subscribe,
   togglePlayPause,
 } from "../player";
+import {
+  closeSettings,
+  copyLogs,
+  copySettingsVersion,
+  getSettingsState,
+  openLogs,
+  rerunSetup,
+  saveColorway,
+  saveIconFollow,
+  saveLanguage,
+  saveSharing,
+  saveUpdateEnabled,
+  saveUpdatePrereleases,
+  subscribeSettings,
+} from "../settings";
 
 function readPlayerValue(): PlayerContextValue {
   return {
@@ -45,6 +65,25 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+  };
+}
+
+function readSettingsValue(): SettingsContextValue {
+  return {
+    ...getSettingsState(),
+    saveLanguage,
+    saveColorway,
+    saveIconFollow,
+    saveSharing: async (on) => {
+      await saveSharing(on);
+    },
+    saveUpdateEnabled,
+    saveUpdatePrereleases,
+    openLogs,
+    copyLogs,
+    copyVersion: copySettingsVersion,
+    rerunSetup,
+    close: closeSettings,
   };
 }
 
@@ -70,12 +109,44 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Mount the Settings domain at the root of one React island.
+ *
+ * Updates are flushed so tests see the picker and About in the same
+ * turn as a save. A language change also repaints, because labels live
+ * in the catalogs.
+ *
+ * @param children Island that calls `useSettings`.
+ */
+export function SettingsProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readSettingsValue);
+  useEffect(() => {
+    const refresh = (): void => {
+      flushSync(() => {
+        setValue(readSettingsValue());
+      });
+    };
+    const stopStore = subscribeSettings(refresh);
+    const stopLocale = onLocaleChange(refresh);
+    return () => {
+      stopStore();
+      stopLocale();
+    };
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <SettingsContextProvider value={current}>{children}</SettingsContextProvider>;
+}
+
+/**
  * Nest every domain provider.
  *
- * Player is the first domain. A later screen adds one line here.
+ * Player is the first domain. Settings is the second.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
-  return <PlayerProvider>{children}</PlayerProvider>;
+  return (
+    <PlayerProvider>
+      <SettingsProvider>{children}</SettingsProvider>
+    </PlayerProvider>
+  );
 }
