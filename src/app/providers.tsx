@@ -1,11 +1,11 @@
 /**
  * React providers for the page.
  *
- * Player and wizard are separate domains. The wizard bundle mounts its
- * own live `WizardProvider` value; this file supplies an idle wizard so
- * the domain is present on every island without pulling the setup fetch
- * into `app.js`. This module reads the player engine; it does not own
- * playback.
+ * Player, waveform, and wizard are separate domains. The wizard bundle
+ * mounts its own live `WizardProvider` value; this file supplies an idle
+ * wizard so the domain is present on every island without pulling the
+ * setup fetch into `app.js`. This module reads the player engine; it
+ * does not own playback.
  */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -14,13 +14,19 @@ import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
 } from "../context/PlayerContext";
+import { WaveformProvider } from "../context/WaveformContext";
 import {
   idleWizardValue,
   WizardProvider as WizardContextProvider,
 } from "../context/WizardContext";
 import {
+  SEEK_STEP_LARGE_SECONDS,
+  SEEK_STEP_SECONDS,
   canSkip,
   canTogglePlay,
+  formatPlayerTime,
+  getMediaDuration,
+  getMediaTime,
   getPlayerCues,
   getPlayerState,
   next,
@@ -51,6 +57,11 @@ function readPlayerValue(): PlayerContextValue {
     seek,
     seekBy,
     setVolume,
+    mediaTime: getMediaTime,
+    mediaDuration: getMediaDuration,
+    formatTime: formatPlayerTime,
+    seekStep: SEEK_STEP_SECONDS,
+    seekStepLarge: SEEK_STEP_LARGE_SECONDS,
   };
 }
 
@@ -91,15 +102,17 @@ export function WizardProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
- * Player and wizard each have a context file. A later screen adds one
- * line here.
+ * Player is the first domain. Waveform zoom and overview wrap inside it.
+ * An idle wizard wraps the island so `useWizard` is defined.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
-      <WizardProvider>{children}</WizardProvider>
+      <WaveformProvider>
+        <WizardProvider>{children}</WizardProvider>
+      </WaveformProvider>
     </PlayerProvider>
   );
 }
