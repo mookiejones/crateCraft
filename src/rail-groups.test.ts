@@ -1,6 +1,6 @@
 /**
- * Rail primaries: Library, Organize files, Library health, Backups,
- * and Before a gig. Children live in #view-children.
+ * Rail primaries: Music, Organize files, Health, Backups, and Gig.
+ * Children live in #view-children.
  *
  * The markup is index.html. Each tab still has a tooltip. The view ids
  * stay crates, history, stats, files, health, missing, duplicates, stems,
@@ -24,12 +24,14 @@ describe("rail groups", () => {
   it("puts five primaries in the rail, with children in the sheet strip", () => {
     const primaries = [...document.querySelectorAll<HTMLElement>("#views [data-nav]")].map((button) => button.dataset.nav);
     expect(primaries).toEqual(["library", "files", "health", "backups", "gig"]);
+    expect(document.querySelector("h1")?.textContent).toBe("crateCraft");
+    expect(document.querySelector('#space option[value="Serato Library"]')?.textContent).toBe("Library");
     expect([...document.querySelectorAll("#views [data-nav]")].map((node) => node.textContent)).toEqual([
-      "Library",
+      "Music",
       "Organize files",
-      "Library health",
+      "Health",
       "Backups",
-      "Before a gig",
+      "Gig",
     ]);
     const children = [...document.querySelectorAll<HTMLElement>("#view-children [data-view]")].map(
       (button) => button.dataset.view,
@@ -52,13 +54,13 @@ describe("rail groups", () => {
       "drift",
     ]);
     expect(document.querySelector("[data-view='stats']")?.textContent).toBe("Play stats");
-    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Library health");
+    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Overview");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Missing files");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Damaged files");
     expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Suspect quality");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Tag spellings");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
-    expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Before a gig");
+    expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Ready");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Check drive");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo drift");
   });
@@ -77,20 +79,20 @@ describe("rail groups", () => {
     setLocale("es");
     applyStatic(document);
     expect([...document.querySelectorAll("#views [data-nav]")].map((node) => node.textContent)).toEqual([
-      "Biblioteca",
+      "Música",
       "Organizar archivos",
-      "Salud de la biblioteca",
+      "Salud",
       "Copias de seguridad",
-      "Antes del bolo",
+      "Bolo",
     ]);
     expect(document.querySelector("[data-view='stats']")?.textContent).toBe("Estadísticas");
-    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Salud de la biblioteca");
+    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Resumen");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Archivos no encontrados");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Archivos dañados");
     expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Calidad dudosa");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Grafías de etiquetas");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Copias de seguridad");
-    expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Antes del bolo");
+    expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Listo");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Comprobar unidad");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo inestable");
   });

@@ -9,7 +9,7 @@ The note under the crate list says **Needs a crate because it decodes audio.**
 ## Run the check
 
 1. Open crateCraft.
-2. Click **Library health** in the rail, then **Suspect quality** above the sheet.
+2. Click **Health** in the rail, then **Suspect quality** above the sheet.
 3. Click one crate. The crate name is shown under the crate list. **All tracks** stays off, because a whole-space decode can take minutes.
 4. Click **Check again**. The report groups fake 320s and lossless files that look lossy-sourced.
 

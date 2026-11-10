@@ -84,10 +84,12 @@ class DesktopMenuTests(unittest.TestCase):
         titles = _titles(menu)
         self.assertEqual(titles[:5], ["Settings", "Run setup again", "File", "Find a track or file", "Focus search"])
         for name in (
+            "Music",
             "Library",
             "Crates",
             "All tracks",
             "Tools",
+            "Overview",
             "Missing files",
             "Duplicates",
             "Merge copies",
@@ -95,7 +97,7 @@ class DesktopMenuTests(unittest.TestCase):
             "Damaged files",
             "Suspect quality",
             "Tag spellings",
-            "Before a gig",
+            "Ready",
             "Check drive",
             "Tempo drift",
             "Take a backup",

@@ -7,7 +7,7 @@ The note under the crate list says **Quick check reads the start of each file. F
 ## Run the check
 
 1. Open crateCraft.
-2. Click **Library health** in the rail, then **Damaged files** above the sheet.
+2. Click **Health** in the rail, then **Damaged files** above the sheet.
 3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The crate name is shown under the crate list.
 4. Click **Quick check**. The report groups empty files, files that cannot be read, files whose bytes do not match the extension (a web page saved as `.mp3`), and files Serato has marked corrupt.
 5. For a decode, click one crate first, then **Full decode**. That also lists files that will not decode, files that stop part way, and files shorter than the length stored in the library. **Full decode** stays off while **All tracks** is selected.

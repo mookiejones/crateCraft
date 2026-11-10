@@ -10,7 +10,7 @@ The list is in **Settings**, under **Keyboard shortcuts**. **?** opens Settings 
 | Ctrl+K or Command+K | Find a track or a file |
 | Up or Down | Move through the list |
 | Enter | Open the row |
-| Ctrl+1 or Command+1 | Library, which is all tracks |
+| Ctrl+1 or Command+1 | All tracks |
 | Ctrl+2 or Command+2 | Crates |
 | Ctrl+3 or Command+3 | Files |
 | Ctrl+4 or Command+4 | History |

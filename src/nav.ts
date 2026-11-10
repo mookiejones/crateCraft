@@ -1,7 +1,7 @@
 /**
  * Five rail primaries, with children only for the open parent.
  *
- * Library, Organize files, Library health, Backups, and Before a gig live
+ * Music, Organize files, Health, Backups, and Gig live
  * in #views. Children of a parent with more than one view sit in
  * #view-children at the top of the sheet. A parent with one child hides
  * that strip. The last child per parent is remembered for the session.

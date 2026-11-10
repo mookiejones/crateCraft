@@ -9,7 +9,7 @@
   Rekordbox writes rekordbox.xml. The Files view browses folders
   and previews a rename, move, replace, or delete before it is saved.
   Backups lists hash-checked library snapshots and previews a
-  restore before it is confirmed. Before a gig is a read-only ready score,
+  restore before it is confirmed. Ready is a read-only ready score,
   Check drive, and Tempo drift.
   tokens.css, app.css, and app.js are local files. The page talks only to
   the library server on 127.0.0.1. It does not open master.sqlite itself.
@@ -30,7 +30,7 @@
   <div class="app">
     <aside class="rail" aria-label="Library" data-i18n-attr="aria-label:status.library">
       <header class="brand">
-        <h1 data-i18n="rail.heading">Library</h1>
+        <h1 data-i18n="rail.heading">crateCraft</h1>
         <p id="status" data-i18n="status.checking">Checking Serato</p>
         <button id="library-generation" type="button" class="generation" aria-expanded="false" aria-controls="library-generation-note" aria-label="Library generation" data-i18n="generation.checking" data-i18n-attr="aria-label:generation.label">Checking</button>
         <p id="library-generation-note" class="generation-note" hidden></p>
@@ -45,11 +45,11 @@
         </select>
       </label>
       <div id="views" class="view-switch" role="tablist" aria-label="Views" data-i18n-attr="aria-label:view.label">
-        <button type="button" data-nav="library" role="tab" aria-selected="true" data-i18n="view.group.library">Library</button>
+        <button type="button" data-nav="library" role="tab" aria-selected="true" data-i18n="view.group.library">Music</button>
         <button type="button" data-nav="files" role="tab" data-i18n="view.files">Organize files</button>
-        <button type="button" data-nav="health" role="tab" data-i18n="view.group.health">Library health</button>
+        <button type="button" data-nav="health" role="tab" data-i18n="view.group.health">Health</button>
         <button type="button" data-nav="backups" role="tab" data-i18n="view.snapshots">Backups</button>
-        <button type="button" data-nav="gig" role="tab" data-i18n="view.group.gig">Before a gig</button>
+        <button type="button" data-nav="gig" role="tab" data-i18n="view.group.gig">Gig</button>
       </div>
       <div id="crate-tools">
         <label class="rail-field">
@@ -100,12 +100,12 @@
           <button id="update-dismiss" type="button" data-i18n="update.dismiss">Not now</button>
         </div>
       </div>
-      <div id="view-children" class="view-children" role="tablist" aria-label="Library" data-i18n-attr="aria-label:view.group.library">
+      <div id="view-children" class="view-children" role="tablist" aria-label="Music" data-i18n-attr="aria-label:view.group.library">
         <button type="button" data-view="crates" role="tab" aria-selected="true" data-i18n="view.crates">Crates</button>
         <button type="button" data-view="history" role="tab" data-i18n="view.history">History</button>
         <button type="button" id="stats-tab" data-view="stats" role="tab" aria-controls="stats-panel" data-i18n="view.stats">Play stats</button>
         <button type="button" data-view="files" role="tab" hidden data-i18n="view.files">Organize files</button>
-        <button type="button" id="health-tab" data-view="health" role="tab" hidden aria-controls="health-panel" data-i18n="view.health">Library health</button>
+        <button type="button" id="health-tab" data-view="health" role="tab" hidden aria-controls="health-panel" data-i18n="view.health">Overview</button>
         <button type="button" data-view="missing" role="tab" hidden data-i18n="view.missing">Missing files</button>
         <button type="button" data-view="duplicates" role="tab" hidden data-i18n="view.duplicates">Duplicates</button>
         <button type="button" data-view="stems" role="tab" hidden data-i18n="view.stems">Stems</button>
@@ -113,7 +113,7 @@
         <button type="button" id="bitrate-tab" data-view="bitrate" role="tab" hidden aria-controls="bitrate-panel" data-i18n="view.bitrate">Suspect quality</button>
         <button type="button" id="tags-tab" data-view="tags" role="tab" hidden aria-controls="tags-panel" data-i18n="view.tags">Tag spellings</button>
         <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
-        <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Before a gig</button>
+        <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
         <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
         <button type="button" id="drift-tab" data-view="drift" role="tab" hidden aria-controls="drift-panel" data-i18n="view.drift">Tempo drift</button>
       </div>

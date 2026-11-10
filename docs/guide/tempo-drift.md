@@ -7,7 +7,7 @@ The note under the crate list says **Needs a crate because it decodes audio.**
 ## Run the check
 
 1. Open crateCraft.
-2. Click **Before a gig** in the rail, then **Tempo drift** above the sheet.
+2. Click **Gig** in the rail, then **Tempo drift** above the sheet.
 3. Click one crate. The crate name is shown under the crate list. **All tracks** stays off, because a whole-space decode can take minutes.
 4. Click **Check again**. The report groups wandering tempos, live-looking names, and Serato's pending tempo-map mark.
 
