@@ -15569,6 +15569,8 @@
     "settings.updates": "Check GitHub for a newer version once a day",
     "settings.updatesFailed": "The update choice could not be saved.",
     "settings.updatesPrereleases": "Include test versions (beta and release candidates)",
+    "sheet.scope": "Scope: {crate}",
+    "sheet.title": "{view} · {space}",
     "sharing.canSend": "Anonymous counts and crash reports can be sent.",
     "sharing.loadFailed": "Couldn't load sharing settings.",
     "sharing.loadFailedOff": "Couldn't load sharing settings. Nothing is sent.",
@@ -17132,6 +17134,8 @@
     "settings.updates": "Buscar en GitHub una versión más nueva una vez al día",
     "settings.updatesFailed": "No se pudo guardar la opción de actualizaciones.",
     "settings.updatesPrereleases": "Incluir versiones de prueba (beta y candidatas)",
+    "sheet.scope": "Alcance: {crate}",
+    "sheet.title": "{view} · {space}",
     "sharing.canSend": "Se pueden enviar recuentos anónimos e informes de errores.",
     "sharing.loadFailed": "No se pudieron cargar los ajustes de privacidad.",
     "sharing.loadFailedOff": "No se pudieron cargar los ajustes de privacidad. No se envía nada.",
@@ -20390,6 +20394,7 @@
       "shortcuts-title": tips.shortcuts,
       "open-settings": tips.settings,
       search: tips.search,
+      "sheet-scope-all": tips.allTracks,
       "search-field": tips.searchField,
       "export-m3u": tips.exportM3u,
       "export-rekordbox": tips.exportRekordbox,
@@ -29337,6 +29342,63 @@
     }
   }
 
+  // src/sheet-chrome.ts
+  var VIEW_LABEL_KEYS = {
+    crates: "view.crates",
+    history: "view.history",
+    stats: "view.stats",
+    files: "view.files",
+    health: "view.health",
+    missing: "view.missing",
+    duplicates: "view.duplicates",
+    stems: "view.stems",
+    scan: "view.scan",
+    bitrate: "view.bitrate",
+    tags: "view.tags",
+    snapshots: "view.snapshots",
+    gig: "view.gig",
+    portable: "view.portable",
+    drift: "view.drift"
+  };
+  var CRATE_SCOPED_MODES = [
+    "health",
+    "gig",
+    "drift",
+    "scan",
+    "bitrate"
+  ];
+  function isCrateScopedMode(mode) {
+    return CRATE_SCOPED_MODES.includes(mode);
+  }
+  function sheetTitle(mode, space) {
+    const key = VIEW_LABEL_KEYS[mode] ?? "view.crates";
+    const view = t(key);
+    const trimmed = space.trim();
+    if (!trimmed) return view;
+    return t("sheet.title", { view, space: trimmed });
+  }
+  function sheetScopeCrate(activeCrate, crates) {
+    if (activeCrate === "all") return t("crates.allTracks");
+    const crate = crates.find((row) => row.id === activeCrate);
+    return crate?.name || t("crates.allTracks");
+  }
+  function sheetScopeText(crate) {
+    return t("sheet.scope", { crate });
+  }
+  function paintSheetChrome(opts) {
+    const title2 = document.getElementById("sheet-title");
+    if (title2) title2.textContent = sheetTitle(opts.mode, opts.space);
+    const scope = document.getElementById("sheet-scope");
+    const text2 = document.getElementById("sheet-scope-text");
+    const clear = document.getElementById("sheet-scope-all");
+    if (!(scope instanceof HTMLElement) || !(text2 instanceof HTMLElement)) return;
+    const scoped = isCrateScopedMode(opts.mode);
+    scope.hidden = !scoped;
+    if (!scoped) return;
+    text2.textContent = sheetScopeText(sheetScopeCrate(opts.activeCrate, opts.crates));
+    if (clear instanceof HTMLButtonElement) clear.hidden = opts.activeCrate === "all";
+  }
+
   // src/views.ts
   var detailRoot = null;
   var detailPlayRoot = null;
@@ -29663,6 +29725,12 @@
       el("mode-note").textContent = t("mode.snapshots");
     }
     paintNav(state.mode);
+    paintSheetChrome({
+      mode: state.mode,
+      space: state.space,
+      activeCrate: state.activeCrate,
+      crates: state.crates
+    });
     for (const button of document.querySelectorAll("[data-crate-sort]")) {
       button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
     }
@@ -30338,6 +30406,9 @@
     el("view-children").addEventListener("click", (event) => {
       const button = event.target.closest("button");
       if (button?.dataset.view) setMode(button.dataset.view);
+    });
+    el("sheet-scope-all").addEventListener("click", () => {
+      selectCrate("all");
     });
     document.querySelector(".sort-crates").addEventListener("click", (event) => {
       const button = event.target.closest("button");

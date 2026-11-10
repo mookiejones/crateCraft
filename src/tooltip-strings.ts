@@ -390,6 +390,7 @@ export function staticTip(id: string): TipSpec | undefined {
     "shortcuts-title": tips.shortcuts,
     "open-settings": tips.settings,
     search: tips.search,
+    "sheet-scope-all": tips.allTracks,
     "search-field": tips.searchField,
     "export-m3u": tips.exportM3u,
     "export-rekordbox": tips.exportRekordbox,
