@@ -27,7 +27,7 @@ const REASON_KEYS: Record<string, MessageKey> = {
 };
 
 let latest: BitrateCheckReport | null = null;
-let plan: BitrateCratePlan | null = null;
+let cratePlan: BitrateCratePlan | null = null;
 
 /**
  * Attach Check again, Save crate, and Confirm crate.
@@ -64,7 +64,7 @@ export function wireBitrate(): void {
  */
 export async function loadBitrate(): Promise<void> {
   const token = ++state.bitrateToken;
-  plan = null;
+  cratePlan = null;
   beginBusy();
   let settle: "report" | "retry" | "none" = "none";
   if (state.activeCrate === "all") {
@@ -188,7 +188,7 @@ async function previewCrate(): Promise<void> {
       crate: state.activeCrate,
     });
     if (token !== state.bitrateToken) return;
-    plan = payload;
+    cratePlan = payload;
     latest = payload;
     el("bitrate-status").textContent = payload.added
       ? t("bitrate.preview", { count: payload.added, name: payload.name })
@@ -207,7 +207,7 @@ async function previewCrate(): Promise<void> {
 }
 
 async function createCrate(): Promise<void> {
-  if (!plan || !plan.added || state.activeCrate === "all") return;
+  if (!cratePlan || !cratePlan.added || state.activeCrate === "all") return;
   const token = ++state.bitrateToken;
   beginBusy("create");
   try {
@@ -219,7 +219,7 @@ async function createCrate(): Promise<void> {
     if (token !== state.bitrateToken) return;
     await bridge.reloadLibrary();
     if (token !== state.bitrateToken) return;
-    plan = payload;
+    cratePlan = payload;
     latest = payload;
     el("bitrate-status").textContent = payload.written
       ? t("bitrate.written", { count: payload.added, name: payload.name })
@@ -305,16 +305,16 @@ function suspectLine(item: BitrateSuspect): string {
 }
 
 function paintPlan(report: HTMLElement): void {
-  if (!plan) return;
-  if (plan.written && plan.saved) {
-    report.append(noteLine(t("bitrate.written", { count: plan.added, name: plan.name })));
+  if (!cratePlan) return;
+  if (cratePlan.written && cratePlan.saved) {
+    report.append(noteLine(t("bitrate.written", { count: cratePlan.added, name: cratePlan.name })));
     return;
   }
-  if (!plan.added) {
+  if (!cratePlan.added) {
     report.append(noteLine(t("bitrate.previewEmpty")));
     return;
   }
-  report.append(noteLine(t("bitrate.preview", { count: plan.added, name: plan.name })));
+  report.append(noteLine(t("bitrate.preview", { count: cratePlan.added, name: cratePlan.name })));
   const confirm = buttonEl(tips.bitrateConfirm);
   confirm.dataset.bitrateAction = "confirm";
   confirm.textContent = t("bitrate.confirmCrate");

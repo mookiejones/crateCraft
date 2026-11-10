@@ -5208,7 +5208,7 @@
     lossy_source: "bitrate.reason.lossy_source"
   };
   var latest5 = null;
-  var plan = null;
+  var cratePlan = null;
   function wireBitrate() {
     const panel = el("bitrate-panel");
     if (panel.dataset.bitrateWired === "true") return;
@@ -5227,7 +5227,7 @@
   }
   async function loadBitrate() {
     const token3 = ++state.bitrateToken;
-    plan = null;
+    cratePlan = null;
     beginBusy5();
     let settle = "none";
     if (state.activeCrate === "all") {
@@ -5320,7 +5320,7 @@
         crate: state.activeCrate
       });
       if (token3 !== state.bitrateToken) return;
-      plan = payload;
+      cratePlan = payload;
       latest5 = payload;
       el("bitrate-status").textContent = payload.added ? t("bitrate.preview", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
       renderBitrateReport(payload);
@@ -5336,7 +5336,7 @@
     }
   }
   async function createCrate() {
-    if (!plan || !plan.added || state.activeCrate === "all") return;
+    if (!cratePlan || !cratePlan.added || state.activeCrate === "all") return;
     const token3 = ++state.bitrateToken;
     beginBusy5("create");
     try {
@@ -5348,7 +5348,7 @@
       if (token3 !== state.bitrateToken) return;
       await bridge.reloadLibrary();
       if (token3 !== state.bitrateToken) return;
-      plan = payload;
+      cratePlan = payload;
       latest5 = payload;
       el("bitrate-status").textContent = payload.written ? t("bitrate.written", { count: payload.added, name: payload.name }) : t("bitrate.previewEmpty");
       renderBitrateReport(payload);
@@ -5415,16 +5415,16 @@
     return t("bitrate.row", { title: title2, file: item5.file, reason, detail });
   }
   function paintPlan(report) {
-    if (!plan) return;
-    if (plan.written && plan.saved) {
-      report.append(noteLine5(t("bitrate.written", { count: plan.added, name: plan.name })));
+    if (!cratePlan) return;
+    if (cratePlan.written && cratePlan.saved) {
+      report.append(noteLine5(t("bitrate.written", { count: cratePlan.added, name: cratePlan.name })));
       return;
     }
-    if (!plan.added) {
+    if (!cratePlan.added) {
       report.append(noteLine5(t("bitrate.previewEmpty")));
       return;
     }
-    report.append(noteLine5(t("bitrate.preview", { count: plan.added, name: plan.name })));
+    report.append(noteLine5(t("bitrate.preview", { count: cratePlan.added, name: cratePlan.name })));
     const confirm2 = buttonEl(tips.bitrateConfirm);
     confirm2.dataset.bitrateAction = "confirm";
     confirm2.textContent = t("bitrate.confirmCrate");
@@ -5483,26 +5483,26 @@
     const base = t("tags.row", { value, count });
     return suggested ? `${base} — ${t("tags.suggested")}` : base;
   }
-  function previewSummary(plan2) {
-    if (!plan2.changes.length) return t("tags.noChanges");
-    return t("tags.previewSummary", { count: plan2.changes.length, value: plan2.value });
+  function previewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.previewSummary", { count: plan.changes.length, value: plan.value });
   }
-  function titlesPreviewSummary(plan2) {
-    if (!plan2.changes.length) return t("tags.summaryTitlesClear");
-    return t("tags.titlesPreviewSummary", { count: plan2.changes.length });
+  function titlesPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.summaryTitlesClear");
+    return t("tags.titlesPreviewSummary", { count: plan.changes.length });
   }
-  function writtenSummary(plan2) {
-    return t("tags.written", { count: plan2.changes.length, value: plan2.value });
+  function writtenSummary(plan) {
+    return t("tags.written", { count: plan.changes.length, value: plan.value });
   }
-  function titlesWrittenSummary(plan2) {
-    return t("tags.titlesWritten", { count: plan2.changes.length });
+  function titlesWrittenSummary(plan) {
+    return t("tags.titlesWritten", { count: plan.changes.length });
   }
-  function mappingPreviewSummary(plan2) {
-    if (!plan2.changes.length) return t("tags.noChanges");
-    return t("tags.mappingSummary", { count: plan2.changes.length });
+  function mappingPreviewSummary(plan) {
+    if (!plan.changes.length) return t("tags.noChanges");
+    return t("tags.mappingSummary", { count: plan.changes.length });
   }
-  function mappingWrittenSummary(plan2) {
-    return t("tags.mappingWritten", { count: plan2.changes.length });
+  function mappingWrittenSummary(plan) {
+    return t("tags.mappingWritten", { count: plan.changes.length });
   }
   function mappingFieldLabel(field) {
     if (field === "genre") return t("tags.genre");
@@ -5685,14 +5685,14 @@
     }
     if (latest6) renderTagsReport(latest6);
   }
-  function renderTitleReport(plan2) {
+  function renderTitleReport(plan) {
     el("tags-scope").textContent = t("gig.wholeSpace");
     const report = el("tags-report");
     const summary = document.createElement("p");
     summary.className = "gig-note";
-    summary.textContent = titlesSummary(plan2.changes.length);
+    summary.textContent = titlesSummary(plan.changes.length);
     report.replaceChildren(summary);
-    const lines = previewLines(plan2.changes);
+    const lines = previewLines(plan.changes);
     if (lines.length) {
       const diffs = document.createElement("ul");
       for (const line of lines.slice(0, LIST_CAP5)) {
@@ -5707,7 +5707,7 @@
     const apply = buttonEl(tips.tagsApplyTitles);
     apply.dataset.tagsAction = "clean-apply";
     apply.textContent = t("tags.apply");
-    apply.disabled = !canApplyTitles(plan2);
+    apply.disabled = !canApplyTitles(plan);
     actions2.append(apply);
     report.append(actions2);
   }
@@ -5723,14 +5723,14 @@
     actionKey = key;
     paintReport();
     try {
-      const plan2 = await postJSON("/api/tag-clusters", {
+      const plan = await postJSON("/api/tag-clusters", {
         action: "preview",
         space: state.space,
         field: currentField(),
         value
       });
-      plans.set(key, plan2);
-      el("tags-status").textContent = previewSummary(plan2);
+      plans.set(key, plan);
+      el("tags-status").textContent = previewSummary(plan);
       paintReport();
       applyButton(key)?.focus();
     } catch (error2) {
@@ -5741,9 +5741,9 @@
     }
   }
   async function applyGroup(key) {
-    const plan2 = plans.get(key);
+    const plan = plans.get(key);
     const value = selectedValue(key);
-    if (!plan2 || !value || plan2.value !== value || !plan2.changes.length || !state.writable) return;
+    if (!plan || !value || plan.value !== value || !plan.changes.length || !state.writable) return;
     actionKey = key;
     panelBusy = true;
     beginBusy6();
@@ -5775,8 +5775,8 @@
     }
   }
   async function applyMappings() {
-    const plan2 = mappingPlan;
-    if (!plan2 || !canApplyMappings(plan2)) return;
+    const plan = mappingPlan;
+    if (!plan || !canApplyMappings(plan)) return;
     actionKey = MAPPING_KEY;
     panelBusy = true;
     beginBusy6();
@@ -5806,8 +5806,8 @@
     }
   }
   async function applyTitles() {
-    const plan2 = titlePlan;
-    if (!plan2 || !canApplyTitles(plan2)) return;
+    const plan = titlePlan;
+    if (!plan || !canApplyTitles(plan)) return;
     actionKey = TITLE_KEY;
     panelBusy = true;
     beginBusy6();
@@ -5867,17 +5867,17 @@
     }
     el("tags-panel").setAttribute("aria-busy", "false");
   }
-  function canApplyTitles(plan2) {
-    return Boolean(plan2.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
+  function canApplyTitles(plan) {
+    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== TITLE_KEY);
   }
-  function canApplyMappings(plan2) {
-    return Boolean(plan2.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
+  function canApplyMappings(plan) {
+    return Boolean(plan.changes.length && state.writable && !panelBusy && actionKey !== MAPPING_KEY);
   }
   function asMappingPlan(payload) {
     if (payload === null || typeof payload !== "object") return null;
-    const plan2 = payload;
-    if (!Array.isArray(plan2.changes)) return null;
-    return plan2;
+    const plan = payload;
+    if (!Array.isArray(plan.changes)) return null;
+    return plan;
   }
   async function readMappingPreview(token3) {
     try {
@@ -5893,15 +5893,15 @@
     }
   }
   function mappingCard() {
-    const plan2 = mappingPlan;
-    if (!plan2?.changes.length) return null;
+    const plan = mappingPlan;
+    if (!plan?.changes.length) return null;
     const wrap = document.createElement("div");
     wrap.className = "tags-mappings";
     const note = document.createElement("p");
     note.className = "gig-note";
-    note.textContent = mappingPreviewSummary(plan2);
+    note.textContent = mappingPreviewSummary(plan);
     wrap.append(note);
-    const lines = previewLines(plan2.changes);
+    const lines = previewLines(plan.changes);
     if (lines.length) {
       const diffs = document.createElement("ul");
       for (const line of lines.slice(0, LIST_CAP5)) {
@@ -5916,7 +5916,7 @@
     const apply = buttonEl(tips.tagsApplyMappings);
     apply.dataset.tagsAction = "refresh-apply";
     apply.textContent = t("tags.applyMappings");
-    apply.disabled = !canApplyMappings(plan2);
+    apply.disabled = !canApplyMappings(plan);
     actions2.append(apply);
     wrap.append(actions2);
     return wrap;
@@ -5941,10 +5941,10 @@
     return selectedByKey.get(key) ?? group?.suggested ?? "";
   }
   function canApply(key) {
-    const plan2 = plans.get(key);
+    const plan = plans.get(key);
     const value = selectedValue(key);
     return Boolean(
-      plan2 && plan2.value === value && plan2.changes.length && state.writable && !panelBusy && actionKey !== key
+      plan && plan.value === value && plan.changes.length && state.writable && !panelBusy && actionKey !== key
     );
   }
   function applyButton(key) {
@@ -5969,9 +5969,9 @@
       list.append(spellingRow(group.key, spelling.value, spelling.count, spelling.value === group.suggested, spelling.value === chosen));
     }
     details.append(summary, list);
-    const plan2 = plans.get(group.key);
-    if (plan2 && plan2.value === chosen) {
-      const lines = previewLines(plan2.changes);
+    const plan = plans.get(group.key);
+    if (plan && plan.value === chosen) {
+      const lines = previewLines(plan.changes);
       if (lines.length) {
         const diffs = document.createElement("ul");
         const shown = lines.slice(0, LIST_CAP5);
@@ -5983,7 +5983,7 @@
         details.append(diffs);
       }
     }
-    details.append(groupActions(group.key, chosen, plan2));
+    details.append(groupActions(group.key, chosen, plan));
     return details;
   }
   function spellingRow(key, value, count, suggested, checked) {
@@ -6002,7 +6002,7 @@
     row.append(label);
     return row;
   }
-  function groupActions(key, value, plan2) {
+  function groupActions(key, value, plan) {
     const actions2 = document.createElement("div");
     actions2.className = "tags-actions";
     const preview = buttonEl(tips.tagsPreview);
@@ -6015,7 +6015,7 @@
     apply.dataset.key = key;
     apply.textContent = t("tags.apply");
     apply.disabled = !canApply(key);
-    if (plan2 && plan2.value === value && !plan2.changes.length) apply.disabled = true;
+    if (plan && plan.value === value && !plan.changes.length) apply.disabled = true;
     actions2.append(preview, apply);
     return actions2;
   }
@@ -6765,8 +6765,8 @@
     confirm2.disabled = true;
     setSnapshotDialogStatus("");
     el("snapshot-dialog").showModal();
-    const plan2 = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
-    paintSnapshotPlan(plan2);
+    const plan = await postJSON("/api/snapshots", { action: "plan", id: snapshotId });
+    paintSnapshotPlan(plan);
   }
   var lastPlan = null;
   function repaintSnapshotPlan() {
@@ -6835,44 +6835,44 @@
       button2.disabled = false;
     }
   }
-  function paintSnapshotPlan(plan2) {
-    lastPlan = plan2;
+  function paintSnapshotPlan(plan) {
+    lastPlan = plan;
     const planBox = el("snapshot-plan");
     const block = el("snapshot-block");
     const confirm2 = el("snapshot-confirm");
     planBox.replaceChildren();
-    const crates = plan2.crates || {};
-    const tracks = plan2.tracks || {};
+    const crates = plan.crates || {};
+    const tracks = plan.tracks || {};
     appendPlanLine(planBox, t("plan.cratesAdded"), crates.added);
     appendPlanLine(planBox, t("plan.cratesRemoved"), crates.removed);
     appendPlanLine(planBox, t("plan.cratesChanged"), crates.changed);
     appendPlanLine(planBox, t("plan.cratesUnavailable"), crates.unavailable);
-    appendPlanLine(planBox, t("plan.cratesRegistered"), plan2.crates_registered);
-    appendPlanLine(planBox, t("plan.cratesSkipped"), plan2.crates_skipped);
-    if (plan2.registration_warning) {
+    appendPlanLine(planBox, t("plan.cratesRegistered"), plan.crates_registered);
+    appendPlanLine(planBox, t("plan.cratesSkipped"), plan.crates_skipped);
+    if (plan.registration_warning) {
       const warning = document.createElement("p");
-      warning.textContent = codedText(plan2.registration_warning, plan2.registration_warning_code);
+      warning.textContent = codedText(plan.registration_warning, plan.registration_warning_code);
       planBox.append(warning);
     }
     appendPlanLine(planBox, t("plan.tracksAdded"), tracks.added);
     appendPlanLine(planBox, t("plan.tracksRemoved"), tracks.removed);
     appendPlanLine(planBox, t("plan.tracksUnavailable"), tracks.unavailable);
-    appendCueDiffs(planBox, t("plan.cueChanges"), plan2.cues);
-    appendFrameDiffs(planBox, t("plan.gridChanges"), plan2.grids);
-    const deleted = plan2.deleted || {};
+    appendCueDiffs(planBox, t("plan.cueChanges"), plan.cues);
+    appendFrameDiffs(planBox, t("plan.gridChanges"), plan.grids);
+    const deleted = plan.deleted || {};
     appendPlanLine(planBox, t("plan.deletedCrates"), deleted.crates);
     appendPlanLine(planBox, t("plan.deletedTracks"), deleted.tracks);
     appendPlanLine(planBox, t("plan.deletedCues"), deleted.cues);
     appendPlanLine(planBox, t("plan.deletedGrids"), deleted.grids);
-    if (plan2.restore_blocked) {
+    if (plan.restore_blocked) {
       block.textContent = codedText(
-        plan2.restore_blocked,
-        plan2.restore_blocked_code,
-        messageParams(plan2.restore_blocked_params)
+        plan.restore_blocked,
+        plan.restore_blocked_code,
+        messageParams(plan.restore_blocked_params)
       );
       confirm2.disabled = true;
     } else {
-      block.textContent = plan2.dry_run ? t("plan.nothingChanged") : "";
+      block.textContent = plan.dry_run ? t("plan.nothingChanged") : "";
       confirm2.disabled = false;
     }
   }
@@ -12334,10 +12334,10 @@
     }
     syncRelinkConfirm();
   }
-  function seedRelinkChoices(plan2) {
+  function seedRelinkChoices(plan) {
     relinkChosen.clear();
     relinkChecked.clear();
-    for (const match of plan2.matches || []) {
+    for (const match of plan.matches || []) {
       const first = (match.candidates || [])[0];
       if (!first) continue;
       relinkChosen.set(match.asset_id, first.path);
@@ -12359,9 +12359,9 @@
     el("relink-status").textContent = t("relink.finding");
     syncRelinkConfirm();
     try {
-      const plan2 = await getRelink(state.space, el("relink-root").value);
-      relinkPlan = plan2;
-      seedRelinkChoices(plan2);
+      const plan = await getRelink(state.space, el("relink-root").value);
+      relinkPlan = plan;
+      seedRelinkChoices(plan);
       fillRelinkBanner();
       renderRelinkRows();
       el("relink-status").textContent = "";
