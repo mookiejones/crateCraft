@@ -285,8 +285,8 @@ class TokenSheetTests(unittest.TestCase):
         self.assertNotIn("style.color", source)
         self.assertIn('className: key === "column.bpm" ? "bpm"', text)
         self.assertIn('"swatch swatch-lg"', text)
-        self.assertIn("paneSpacer.style.height", text)
-        self.assertIn("paneRows.style.transform", text)
+        self.assertIn("track-grid", text)
+        self.assertIn("rowHeight: 36", text)
         self.assertIn("paddingLeft", source)
         self.assertIn("row.depth * 14", source)
 
@@ -313,7 +313,7 @@ class TokenSheetTests(unittest.TestCase):
         """Point the old palette names at the token roles.
 
         app.css no longer stores the hex values. The row height stays a
-        literal because the list painter inlines ROW as 36.
+        literal because Data Grid inlines ROW as 36.
 
         Returns:
             None. The test fails if an alias or the row comment is missing.
@@ -337,8 +337,8 @@ class TokenSheetTests(unittest.TestCase):
         source = (ROOT / "src" / "lib" / "state.ts").read_text(encoding="utf-8")
         self.assertIn("export const ROW = 36", source)
         script = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
-        self.assertIn("scrollTop / 36", script)
-        self.assertIn("view.length * 36", script)
+        self.assertIn("rowHeight: 36", script)
+        self.assertIn("columnHeaderHeight: 36", script)
 
     def test_react_dce_probe_is_stripped(self) -> None:
         """Strip React's DevTools dead-code probe from the committed bundles.

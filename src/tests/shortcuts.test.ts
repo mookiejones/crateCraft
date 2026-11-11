@@ -23,7 +23,7 @@ import {
 import { state } from "../lib/state";
 import { installPage } from "./test-page";
 import { mountTrackList } from "../lib/ui/virtual-scroll";
-import { renderFiles, renderList, wireLibrary } from "../lib/ui/views";
+import { renderCrates, renderFiles, renderList, wireLibrary } from "../lib/ui/views";
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -501,8 +501,7 @@ describe("keyboard shortcuts", () => {
 
   it("does not seek while the crate list is using the arrow keys", () => {
     usePlayer();
-    state.tracks = [track(1, "Alpha")];
-    renderList();
+    renderCrates();
     const crate = el("crate-list").querySelector<HTMLButtonElement>(".crate");
     expect(crate).toBeTruthy();
     crate!.focus();
