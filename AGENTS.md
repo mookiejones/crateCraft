@@ -36,7 +36,10 @@ npm ci
 npm test
 npm run typecheck
 npm run build
+npm run storybook
 ```
+
+`npm run storybook` serves isolated React components at `http://127.0.0.1:6006`. Vite is the Storybook builder. The page still bundles with esbuild. Stories sit next to the component as `*.stories.tsx` in `src/components/` or `src/pages/`.
 
 The commands to paste into a pull request are the full list under [After a change](#after-a-change).
 
@@ -77,7 +80,7 @@ The commands to paste into a pull request are the full list under [After a chang
 - `docs/serato-library-tools.md` is research notes, not runtime config.
 - `docs/architecture.md` is the code reference. Update it in the same change as the behavior it describes.
 - `tests/` is a `unittest` suite. `tests/fixture.py` points `library.MASTER` at a temporary database. `tests/fixtures/` holds spec-derived Serato 4 and 5 crate, database V2, and audio fixtures built by `tests/fixtures/build_fixtures.py`. Serato 5 fixtures are marked unverified. The builder does not import the application. Tests read those synthetic Serato-format files in place against each tree's `golden.json`, and the backup tests copy the short audio into a temporary library; the files must stay synthetic and must never contain a real user's `master.sqlite`, `root.sqlite`, or other library data. `tests/log_fixtures/captured-serato4/` and `captured-serato5/` keep redacted session logs from real Serato DJ Pro 4.0.10 and 5.0.0 installs. `src/tests/wizard.test.ts` is the Vitest suite for the setup steps.
-- `.vscode/launch.json` starts `server.py` on F5. "Python: Run desktop.py" launches the native window with `.venv`. "Python: Debug Tests" runs the suite. The server launch uses the system Python.
+- `.vscode/launch.json` starts `server.py` on F5. "Python: Run desktop.py" launches the native window with `.venv`. "Python: Debug Tests" runs the suite. "npm: storybook" starts the isolated component server. The server launch uses the system Python.
 
 ## Strict TypeScript
 
@@ -98,7 +101,7 @@ The commands to paste into a pull request are the full list under [After a chang
    npm ci
    npx tsc --noEmit
    npx tsc --noEmit -p e2e
-   npx eslint src e2e
+   npx eslint src e2e .storybook
    npm test
    npx playwright install chromium
    npx playwright test -c e2e/playwright.config.ts

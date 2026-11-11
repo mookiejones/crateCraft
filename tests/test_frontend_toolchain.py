@@ -50,3 +50,30 @@ class FrontendToolchainTests(unittest.TestCase):
         self.assertLess(ver, _triple(upper_s), f"{pinned} outside {peer}")
         resolved = lock["packages"]["node_modules/typescript"]["version"]
         self.assertEqual(resolved, pinned)
+
+    def test_storybook_pins_are_exact(self) -> None:
+        pkg = json.loads(PACKAGE.read_text(encoding="utf-8"))
+        lock = json.loads(LOCK.read_text(encoding="utf-8"))
+        names = (
+            "storybook",
+            "@storybook/react-vite",
+            "@storybook/addon-docs",
+            "eslint-plugin-storybook",
+            "vite",
+        )
+        for name in names:
+            with self.subTest(name=name):
+                pinned = pkg["devDependencies"][name]
+                self.assertRegex(pinned, r"^\d+\.\d+\.\d+$", name)
+                resolved = lock["packages"][f"node_modules/{name}"]["version"]
+                self.assertEqual(resolved, pinned, name)
+
+    def test_storybook_scripts_and_config(self) -> None:
+        pkg = json.loads(PACKAGE.read_text(encoding="utf-8"))
+        self.assertEqual(pkg["scripts"]["storybook"], "storybook dev -p 6006")
+        self.assertEqual(pkg["scripts"]["build-storybook"], "storybook build")
+        main = (ROOT / ".storybook" / "main.ts").read_text(encoding="utf-8")
+        self.assertIn('framework: "@storybook/react-vite"', main)
+        self.assertIn("disableTelemetry: true", main)
+        self.assertIn("../src/**/*.stories.@(ts|tsx)", main)
+        self.assertNotIn("../src/stories", main)

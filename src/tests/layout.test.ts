@@ -61,4 +61,12 @@ describe("src layout", () => {
       .filter((path) => path.endsWith("Context.tsx") && !path.startsWith("containers/"));
     expect(stray).toEqual([]);
   });
+
+  it("colocates Storybook stories next to components or pages", () => {
+    const stray = Object.keys(SRC_FILES)
+      .map(rel)
+      .filter((path) => /\.stories\.(ts|tsx)$/.test(path) || path.endsWith(".mdx"))
+      .filter((path) => !path.startsWith("components/") && !path.startsWith("pages/"));
+    expect(stray).toEqual([]);
+  });
 });

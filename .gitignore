@@ -43,3 +43,6 @@ blob-report/
 
 # Wizard build tools. static/wizard.js is the committed bundle.
 node_modules/
+
+*storybook.log
+storybook-static

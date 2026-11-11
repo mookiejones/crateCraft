@@ -18,7 +18,7 @@ Saying "done", without the issue link, the pull request link, the commit SHA, an
   - `npm ci`
   - `npx tsc --noEmit`
   - `npx tsc --noEmit -p e2e`
-  - `npx eslint src e2e`
+  - `npx eslint src e2e .storybook`
   - `npm test`
   - `npx playwright install chromium`
   - `npx playwright test -c e2e/playwright.config.ts`
@@ -36,7 +36,7 @@ Saying "done", without the issue link, the pull request link, the commit SHA, an
 
 - [ ] Tests for this change are in this pull request; a bug fix has a test that fails before the fix
 - [ ] Tests use only synthetic fixtures and cover relevant edge cases (Windows/macOS paths, symlinks/unmounted drives, Serato 4 vs 5, empty/missing library)
-- [ ] Ran locally and pasted the output in Proof: `python3 -m pip install -r requirements.txt`, `python3 -m unittest discover -s tests -t . -v`, `npm ci`, `npx tsc --noEmit`, `npx tsc --noEmit -p e2e`, `npx eslint src e2e`, `npm test`, `npx playwright install chromium`, `npx playwright test -c e2e/playwright.config.ts`, and `npm run build` (rebuilt `static/app.js` and `static/wizard.js` committed)
+- [ ] Ran locally and pasted the output in Proof: `python3 -m pip install -r requirements.txt`, `python3 -m unittest discover -s tests -t . -v`, `npm ci`, `npx tsc --noEmit`, `npx tsc --noEmit -p e2e`, `npx eslint src e2e .storybook`, `npm test`, `npx playwright install chromium`, `npx playwright test -c e2e/playwright.config.ts`, and `npm run build` (rebuilt `static/app.js` and `static/wizard.js` committed)
 - [ ] CI is green: `tests (ubuntu-latest, Python 3.12)`, `tests (ubuntu-latest, Python 3.14)`, `tests (windows-latest, Python 3.12)`, `tests (macos-latest, Python 3.12)`, `frontend (ubuntu-latest)`, `frontend (windows-latest)`, `frontend (macos-latest)`, and `analyze Python` (CodeQL). `dependency audit` and `review dependency changes` also run. They are not required checks.
 - [ ] Completion report is filled in above and, when an issue exists, posted as a final comment on that issue
 - [ ] Docs for this change are in this pull request
