@@ -19,6 +19,12 @@ function titles(): string[] {
   return [...document.querySelectorAll<HTMLElement>("#list .title")].map((node) => node.textContent ?? "");
 }
 
+function columnLabels(): string[] {
+  return [...document.querySelectorAll<HTMLElement>("#list .MuiDataGrid-columnHeader")]
+    .filter((node) => node.getAttribute("data-field") !== "play")
+    .map((node) => (node.querySelector(".MuiDataGrid-columnHeaderTitle")?.textContent ?? "").trim());
+}
+
 function resetState(): void {
   state.tracks = [];
   state.byId = new Map();
@@ -136,18 +142,16 @@ describe("library views", () => {
     expect(session?.textContent).toContain("Friday");
     expect(session?.textContent).toContain("3");
     expect(session?.getAttribute("aria-selected")).toBe("true");
-    const columns = [...document.querySelectorAll<HTMLButtonElement>(".columns button")].map((button) => button.textContent);
-    expect(columns).toEqual(["Title", "Artist", "Deck", "Played", "Time"]);
-    expect(document.querySelector(".columns")?.classList.contains("for-history")).toBe(true);
+    expect(columnLabels()).toEqual(["Title", "Artist", "Deck", "Played", "Time"]);
+    expect(document.querySelector(".browser")?.classList.contains("for-history")).toBe(true);
     expect(document.getElementById("list")?.classList.contains("for-history")).toBe(true);
     expect(titles()).toEqual(["Alpha"]);
     expect(document.querySelector("#list .row")?.textContent).toContain("Yes");
     expect(document.querySelector("#count")?.textContent).toBe("1 play");
     state.mode = "crates";
     renderList();
-    expect(document.querySelector(".columns")?.classList.contains("for-history")).toBe(false);
-    const crateColumns = [...document.querySelectorAll<HTMLButtonElement>(".columns button")].map((button) => button.textContent);
-    expect(crateColumns).toEqual(["Title", "Artist", "BPM", "Key", "Energy", "Genre", "Added", "Last", "Plays", "Time"]);
+    expect(document.querySelector(".browser")?.classList.contains("for-history")).toBe(false);
+    expect(columnLabels()).toEqual(["Title", "Artist", "BPM", "Key", "Energy", "Genre", "Added", "Last", "Plays", "Time"]);
   });
 
   it("paints energy, genre, dates, and plays on a crate row", () => {

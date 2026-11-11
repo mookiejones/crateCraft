@@ -17,7 +17,9 @@ function track(id: number, name: string): Track {
 }
 
 function columns(): string[] {
-  return [...document.querySelectorAll<HTMLButtonElement>(".columns button")].map((button) => button.textContent ?? "");
+  return [...document.querySelectorAll<HTMLElement>("#list .MuiDataGrid-columnHeader")]
+    .filter((node) => node.getAttribute("data-field") !== "play")
+    .map((node) => (node.querySelector(".MuiDataGrid-columnHeaderTitle")?.textContent ?? "").trim());
 }
 
 function reset(): void {

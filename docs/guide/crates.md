@@ -46,7 +46,7 @@ In the track list, Up and Down move the selection. Enter opens the row. The othe
 
 ## Tracks
 
-The columns are **Title**, **Artist**, **BPM**, **Key**, **Energy**, **Genre**, **Added**, **Last**, **Plays**, and **Time**. **Energy** is the star rating as 1 to 5. **Last** is the last time the track was played.
+The columns are **Play**, **Title**, **Artist**, **BPM**, **Key**, **Energy**, **Genre**, **Added**, **Last**, **Plays**, and **Time**. **Play** is its own first column. **Title** is the name. **Energy** is the star rating as 1 to 5. **Last** is the last time the track was played. Headers stay with the cells when you scroll. Drag a header edge to resize. The column menu can hide a column. A library larger than 100 tracks pages 100 at a time.
 
 1. Type in **Search tracks**. A track matches when the words appear in the title, artist, album, genre, key, or file name. Choose **Comments**, **Grouping**, or **Composer** in the field menu to search that field. Filter words: `bpm:120-128`, `bpm:124~3`, `bpm:none`, `key:8A`, `key:none`, `mix:8A`, `missing:yes`, `nokeybpm:yes`, `cues:none`, `comments:`, `grouping:`, and `composer:`. `missing:yes` is a missing file on a connected drive. `nokeybpm:yes` is a blank key or no BPM. `cues:none` matches a track the page already knows has no cue points. The list load does not open every audio file.
 2. Click a column heading to sort. Click it again to reverse the sort. Numbers start high to low. Words start at A.

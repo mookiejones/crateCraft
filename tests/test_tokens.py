@@ -652,8 +652,9 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".rekordbox-option", ("--color-card",), 15, 400),
     (".rekordbox-help", ("--color-card",), 11, 400),
     (".notice", ("--color-card",), 15, 400),
-    (".columns button", ("--color-card",), 15, 400),
-    ('.columns button[data-active="true"]', ("--color-card",), 15, 400),
+    (".list .MuiDataGrid-root", ("--color-card", "--color-selection", "hover"), 15, 400),
+    (".list .MuiDataGrid-columnHeaders", ("--color-card",), 15, 400),
+    (".list .MuiDataGrid-columnHeader--sorted", ("--color-card",), 15, 400),
     (".cell.num", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".missing-word", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".offline-word", ("--color-card", "--color-selection", "hover"), 15, 400),
@@ -756,7 +757,8 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 #
 # --color-border on --color-card:
 #   .detail border-left, and border-top in the narrow layout
-#   .columns border-bottom
+#   .list .MuiDataGrid-columnHeaders border-bottom
+#   .list .MuiDataGrid-footerContainer border-top
 #   .crate-panes.split #crate-pane-a border-right
 #   .field border-top
 #   .marker and .copy-row border-top
@@ -770,7 +772,8 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 # data-driven swatch, not a control boundary.
 _DECORATIVE = {
     ".detail",
-    ".columns",
+    ".list .MuiDataGrid-columnHeaders",
+    ".list .MuiDataGrid-footerContainer",
     ".crate-panes.split #crate-pane-a",
     ".field",
     ".marker",
@@ -930,7 +933,8 @@ class ContrastTests(unittest.TestCase):
             ".files-elsewhere:focus-visible",
             ".files-portable:focus-visible",
             '.crate-row:has(.crate[aria-selected="true"])',
-            '.row[aria-selected="true"]',
+            ".list .MuiDataGrid-row.Mui-selected",
+            '.list .MuiDataGrid-row[aria-selected="true"]',
             ".crate-row.holds-selection",
             ".rail",
             "#consent-accept",
@@ -997,7 +1001,7 @@ class ContrastTests(unittest.TestCase):
 
         solid_bars = (
             (".crate-row:has(.crate[aria-selected=\"true\"])", "--color-panel"),
-            ('.row[aria-selected="true"]', "--color-selection"),
+            ('.list .MuiDataGrid-row[aria-selected="true"]', "--color-selection"),
         )
         rail_mark = _paint(self._rule(".rail")["box-shadow"], self.colors)
         rail_ratio = contrast(rail_mark, self._surface("--color-bg"))

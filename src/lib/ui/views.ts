@@ -90,7 +90,6 @@ import {
   removeRelatedTip,
   revealTip,
   saveSuggestion,
-  sortTip,
   tips,
 } from "./tooltip-strings";
 import { paintRows } from "./virtual-scroll";
@@ -409,56 +408,28 @@ function renderRules() {
 }
 
 /**
- * Relabel the list headers for tracks or for history.
+ * Mark History chrome on the list host.
  *
- * History shows deck, played, and start time. Other views show BPM, key,
- * energy, genre, date added, last played, plays, and length. The header
- * is rebuilt so the button count matches. The active sort is marked.
- * Does not reorder rows; renderList does that.
+ * The Data Grid swaps column defs. This class is for layout min-width.
  *
  * @returns {void}
  */
 function markHistoryColumns(): void {
   const history = state.mode === "history";
-  document.querySelector(".columns")?.classList.toggle("for-history", history);
   document.querySelector(".browser")?.classList.toggle("for-history", history);
   el("list").classList.toggle("for-history", history);
 }
 
-const HISTORY_COLUMNS: Array<[string, MessageKey]> = [
-  ["name", "column.title"],
-  ["artist", "column.artist"],
-  ["deck", "column.deck"],
-  ["played", "column.played"],
-  ["start", "column.time"],
-];
-
-const TRACK_COLUMNS: Array<[string, MessageKey]> = [
-  ["name", "column.title"],
-  ["artist", "column.artist"],
-  ["bpm", "column.bpm"],
-  ["key", "column.key"],
-  ["energy", "column.energy"],
-  ["genre", "column.genre"],
-  ["time_added", "column.added"],
-  ["last_played", "column.lastPlayed"],
-  ["play_count", "column.plays"],
-  ["length_ms", "column.time"],
-];
-
+/**
+ * Relabel list chrome for tracks or history.
+ *
+ * The Data Grid owns the header buttons. This only marks `#list` and
+ * `.browser` so History can drop the extra crate columns.
+ *
+ * @returns {void}
+ */
 export function renderColumns() {
   markHistoryColumns();
-  const columns = state.mode === "history" ? HISTORY_COLUMNS : TRACK_COLUMNS;
-  const header = document.querySelector(".columns");
-  if (!(header instanceof HTMLElement)) return;
-  header.replaceChildren();
-  for (const [key, label] of columns) {
-    const button = buttonEl(sortTip(key, t(label)));
-    button.dataset.sort = key;
-    button.textContent = t(label);
-    button.dataset.active = String(key === state.sort);
-    header.append(button);
-  }
 }
 
 /**
@@ -2581,20 +2552,6 @@ export function wireLibrary(): void {
   el("crate-rename").addEventListener("click", () => renameCrate().catch((error) => setNotice(failureOf(error).message)));
   el("crate-color").addEventListener("click", () => colorCrate().catch((error) => setNotice(failureOf(error).message)));
   el("crate-delete").addEventListener("click", () => deleteCrate().catch((error) => setNotice(failureOf(error).message)));
-  document.querySelector<HTMLElement>(".columns")!.addEventListener("click", (event) => {
-    const button = (event.target as HTMLElement).closest("button");
-    if (!button?.dataset.sort) return;
-    const key = button.dataset.sort;
-    if (state.sort === key) state.sortDir *= -1;
-    else {
-      state.sort = key;
-      // Numbers open high-to-low. Titles open A-to-Z.
-      state.sortDir = isNumericSort(key) ? -1 : 1;
-    }
-    renderColumns();
-    renderList();
-  });
-
   // Arrow keys follow the tree: Right opens a crate, Left closes it or
   // jumps to the parent. Enter and Space select. The roving tabindex keeps
   // one crate button in the tab order.
@@ -2654,6 +2611,15 @@ registerTrackListActions({
     void openInLibrary(id);
   },
   setNotice,
+  setSort: (key) => {
+    if (state.sort === key) state.sortDir *= -1;
+    else {
+      state.sort = key;
+      state.sortDir = isNumericSort(key) ? -1 : 1;
+    }
+    renderColumns();
+    renderList();
+  },
 });
 bindCrateActions({
   select: selectCrate,

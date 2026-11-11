@@ -1,10 +1,10 @@
 /**
- * Virtual track list.
+ * Track list panes.
  *
- * Row height is ROW from state.ts, which matches --row in app.css. Only
- * the rows inside the scroll window are in the DOM. Each pane is one
- * React island. Play still reads PlayerContext. mountTrackList appends
- * the spacer once, before the first paint.
+ * Each `#list` / `#list-b` host is one MUI X Data Grid Community island.
+ * The grid owns headers, row virtualization, resize, and hide. Row
+ * height is ROW from state.ts, which matches --row in app.css. Play
+ * still reads PlayerContext.
  */
 
 import type { Track } from "../api-types";
@@ -12,40 +12,44 @@ import { bridge } from "../bridge";
 import { el } from "../dom";
 import { createElement } from "react";
 import { mountIsland, type IslandRoot } from "../../app/mount";
-import { TrackListWindow } from "../../components/TrackListWindow";
+import { attachGridTooltips, TrackListWindow } from "../../components/TrackListWindow";
 import { play } from "../player/player";
 import { ROW, state } from "../state";
+import { ensureGridDom } from "./grid-dom-stubs";
 import { emitTrackList } from "./track-list-store";
-
-const spacer = document.createElement("div");
-const rows = document.createElement("div");
-spacer.className = "spacer";
-rows.className = "rows";
-spacer.append(rows);
-
-const spacerB = document.createElement("div");
-const rowsB = document.createElement("div");
-spacerB.className = "spacer";
-rowsB.className = "rows";
-spacerB.append(rowsB);
 
 const paneRoots = new WeakMap<HTMLElement, IslandRoot>();
 
+function mountPane(list: HTMLDivElement, pane: "a" | "b"): void {
+  const root = mountIsland(
+    list,
+    createElement(TrackListWindow, {
+      pane,
+      onFocusList: () => {
+        list.focus({ preventScroll: true });
+      },
+    }),
+    paneRoots.get(list),
+  );
+  paneRoots.set(list, root);
+  attachGridTooltips(list);
+}
+
 /**
- * Append the scroll spacer to the track list.
+ * Mount the Data Grid into the track list.
  *
  * Called once when the page starts, and again in a test after the
- * document body is replaced. Appending an existing node moves it.
- * Does not fetch.
+ * document body is replaced. Does not fetch.
  *
  * @returns {void}
  */
 export function mountTrackList(): void {
-  el("list").append(spacer);
+  ensureGridDom();
+  mountPane(el("list"), "a");
 }
 
 /**
- * Append the scroll spacer to the second crate pane.
+ * Mount the Data Grid into the second crate pane.
  *
  * Called once when the page starts, and again in a test after the
  * document body is replaced. Does not fetch.
@@ -53,63 +57,34 @@ export function mountTrackList(): void {
  * @returns {void}
  */
 export function mountTrackListB(): void {
-  el("list-b").append(spacerB);
+  ensureGridDom();
+  mountPane(el("list-b"), "b");
 }
 
 /**
- * Paint only the track rows inside the scroll window.
+ * Refresh the Data Grid islands from the current view.
  *
- * Row height is ROW. Six extra rows above and below the window keep a
- * fast scroll from flashing empty space. Replaces the row container.
- * Does not fetch track details.
+ * Mounts a pane that is not yet an island (split-on, or a replaced
+ * document). The grid virtualizes; this does not paint extra DOM rows.
  *
  * @returns {void}
  */
 export function paintRows() {
-  paintPane(el("list"), spacer, rows, state.view || []);
+  ensureGridDom();
+  if (!paneRoots.has(el("list"))) mountPane(el("list"), "a");
   if (state.splitCrates && state.mode === "crates") {
-    paintPane(el("list-b"), spacerB, rowsB, state.viewB || []);
+    if (!paneRoots.has(el("list-b"))) mountPane(el("list-b"), "b");
   }
-}
-
-function paintPane(list: HTMLDivElement, paneSpacer: HTMLDivElement, paneRows: HTMLDivElement, view: Track[]): void {
-  const height = list.clientHeight || 600;
-  // Paint six rows past the window so a fast scroll does not flash empty space.
-  const start = Math.max(0, Math.floor(list.scrollTop / ROW) - 6);
-  const end = Math.min(view.length, Math.ceil((list.scrollTop + height) / ROW) + 6);
-  paneSpacer.style.height = `${view.length * ROW}px`;
-  paneRows.style.transform = `translateY(${start * ROW}px)`;
   emitTrackList();
-  const pane = list.id === "list-b" ? "b" : "a";
-  const root = mountIsland(
-    paneRows,
-    createElement(TrackListWindow, {
-      pane,
-      start,
-      end,
-      onFocusList: () => {
-        list.focus({ preventScroll: true });
-      },
-    }),
-    paneRoots.get(paneRows),
-  );
-  paneRoots.set(paneRows, root);
+  attachGridTooltips(el("list"));
+  if (state.splitCrates && state.mode === "crates") attachGridTooltips(el("list-b"));
 }
 
-/**
- * Move the list selection by one visible row and keep it on screen.
- *
- * History rows call selectEntry. Library rows call selectTrack. The scroll
- * window follows the row so the selection does not leave the viewport.
- *
- * @param {number} delta 1 for the next row, -1 for the previous row.
- * @returns {void}
- */
 /**
  * Move the track selection from a shortcut.
  *
- * The list's own arrow keys call the same helper. Does not fetch by
- * itself; selecting a row does.
+ * History rows call selectEntry. Library rows call selectTrack. The
+ * list's own arrow keys call the same helper. Does not fetch by itself.
  *
  * @param delta 1 for the next row, -1 for the previous row.
  * @returns {void}
@@ -145,6 +120,10 @@ function viewForList(list: HTMLElement): Track[] {
   return state.view || [];
 }
 
+function scrollerFor(list: HTMLDivElement): HTMLElement {
+  return list.querySelector(".MuiDataGrid-virtualScroller") ?? list;
+}
+
 function moveSelection(delta: number, view: Track[], list: HTMLDivElement) {
   const index = view.findIndex((track) => track.id === state.selectedId);
   const next = view[Math.max(0, Math.min(view.length - 1, index + delta))];
@@ -152,9 +131,10 @@ function moveSelection(delta: number, view: Track[], list: HTMLDivElement) {
   if (next.entry) bridge.selectEntry(next.id);
   else bridge.selectTrack(next.id);
   const rowTop = view.indexOf(next) * ROW;
-  if (rowTop < list.scrollTop) list.scrollTop = rowTop;
-  if (rowTop + ROW > list.scrollTop + list.clientHeight) {
-    list.scrollTop = rowTop + ROW - list.clientHeight;
+  const scroller = scrollerFor(list);
+  if (rowTop < scroller.scrollTop) scroller.scrollTop = rowTop;
+  if (rowTop + ROW > scroller.scrollTop + scroller.clientHeight) {
+    scroller.scrollTop = rowTop + ROW - scroller.clientHeight;
   }
 }
 
@@ -170,7 +150,7 @@ function moveSelection(delta: number, view: Track[], list: HTMLDivElement) {
  */
 function focusedTrack(target: EventTarget | null, view: Track[]): Track | undefined {
   if (!(target instanceof Element)) return undefined;
-  const row = target.closest(".row");
+  const row = target.closest(".row, .MuiDataGrid-row");
   if (!row) return undefined;
   const id = Number(row.getAttribute("data-id"));
   if (!Number.isInteger(id)) return undefined;
@@ -178,15 +158,15 @@ function focusedTrack(target: EventTarget | null, view: Track[]): Track | undefi
 }
 
 /**
- * Attach scroll and arrow-key listeners on the track list.
+ * Attach arrow-key listeners on the track list.
  *
- * Called once from app.ts after mountTrackList. Scrolling paints the
- * window. Arrow keys move the selection.
+ * Called once from app.ts after mountTrackList. Arrow keys move the
+ * selection. Enter plays the focused or selected library row. The Data
+ * Grid virtualizes on its own scroll.
  *
  * @returns {void}
  */
 function wireListKeys(list: HTMLDivElement): void {
-  list.addEventListener("scroll", () => paintRows());
   list.addEventListener("keydown", (event) => {
     const view = viewForList(list);
     if (event.key === "ArrowDown") {
