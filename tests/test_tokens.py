@@ -44,18 +44,19 @@ THEME_TO_TOKEN = {
 def src_page_text() -> str:
     """Join the page TypeScript that esbuild bundles.
 
-    Test files stay out. React's production runtime still names
-    ``innerHTML`` and ``marginTop``, so XSS and color contracts are
-    checked here instead of in ``static/app.js``.
+    Test files and Storybook stories stay out. React's production
+    runtime still names ``innerHTML`` and ``marginTop``, so XSS and
+    color contracts are checked here instead of in ``static/app.js``.
 
     Returns:
-        Concatenated ``src/**/*.ts`` and ``src/**/*.tsx`` that are not tests.
+        Concatenated ``src/**/*.ts`` and ``src/**/*.tsx`` that are not
+        tests or stories.
     """
     chunks: list[str] = []
     for path in sorted(SRC.rglob("*")):
         if path.suffix not in {".ts", ".tsx"}:
             continue
-        if ".test." in path.name:
+        if ".test." in path.name or ".stories." in path.name:
             continue
         if path.relative_to(SRC).parts[0] == "tests":
             continue
@@ -271,7 +272,7 @@ class TokenSheetTests(unittest.TestCase):
         for path in sorted(SRC.rglob("*")):
             if path.suffix not in {".ts", ".tsx"}:
                 continue
-            if ".test." in path.name:
+            if ".test." in path.name or ".stories." in path.name:
                 continue
             if path.relative_to(SRC).parts[0] == "tests":
                 continue
