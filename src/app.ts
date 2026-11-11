@@ -42,6 +42,7 @@ import { wireFolderSync } from "./lib/crates/folder-sync";
 import { refreshPresetsOnOpen, wirePresets } from "./lib/crates/presets";
 import { loadLibrary, setMode, showFailure, wireLibrary } from "./lib/ui/views";
 import { mountPlayer, playerControls } from "./lib/player/player";
+import { mountAppShell } from "./lib/ui/app-shell";
 import { mountSettings } from "./lib/ui/settings";
 import { installDesktopActions } from "./lib/ui/desktop-actions";
 import { applyStaticTooltips, installTooltips } from "./lib/ui/tooltip";
@@ -49,6 +50,7 @@ import { wireDualCrates } from "./lib/crates/dual-crate";
 import { mountTrackList, mountTrackListB, wireVirtualScroll } from "./lib/ui/virtual-scroll";
 
 wireLocale();
+mountAppShell();
 installTooltips();
 applyStaticTooltips();
 mountTrackList();

@@ -2,12 +2,12 @@
 
 **Library health** is a read-only one-page count of problems in the library database and in audio files on disk. It does not change the library, the crates, or the audio files. You can run it while Serato DJ Pro is open.
 
-The report is **Health** in the rail, then **Overview** on the tabs above the sheet. It is not the same as [Ready](gig-check.md), which scores drives, streaming tracks, empty crates, and snapshots.
+The report is **Health** in the drawer, then **Overview**. It is not the same as [Ready](gig-check.md), which scores drives, streaming tracks, empty crates, and snapshots.
 
 ## Run the report
 
 1. Open crateCraft.
-2. Click **Health** in the rail, then **Overview** above the sheet.
+2. Click **Health** in the drawer, then **Overview**.
 3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The sheet heading names the view. **Scope** under it shows All tracks or the crate. **All tracks** on that chip checks the whole space.
 4. Click **Check again** to refresh. Opening the view also runs the report.
 

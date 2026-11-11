@@ -29,6 +29,12 @@ export interface ElementIds {
   "crate-foot": HTMLParagraphElement;
   "mode-note": HTMLParagraphElement;
   space: HTMLSelectElement;
+  "space-field": HTMLLabelElement;
+  "app-shell": HTMLDivElement;
+  "app-body": HTMLDivElement;
+  "drawer-toggle": HTMLButtonElement;
+  "app-drawer": HTMLElement;
+  "rail-foot": HTMLElement;
   "crate-tools": HTMLDivElement;
   "crate-actions": HTMLDivElement;
   "files-panel": HTMLElement;
