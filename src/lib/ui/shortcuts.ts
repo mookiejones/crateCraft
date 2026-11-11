@@ -123,7 +123,7 @@ const SHORTCUT_DEFS = [
   },
   {
     id: "view-library",
-    label: "Library",
+    label: "All tracks",
     group: "Views",
     keys: [{ key: "1", mod: true }],
     whileTyping: false,

@@ -2,7 +2,7 @@
 
 Snapshots, restore, and undo are in the app. The sidebar views include **Crates** and **Backups**. **Prepare** is a space in the space menu. Open **Backups**, then **Review restore**. Quit Serato first. [Safety and backups](guide/safety.md#snapshots) has the steps.
 
-The gig check is in the app. Open **Before a gig**, or run `python3 gig_check.py`. [Before a gig](guide/gig-check.md). The panic card below is an example layout, not the current window.
+The gig check is in the app. Open **Gig**, then **Ready**, or run `python3 gig_check.py`. [Ready](guide/gig-check.md). The panic card below is an example layout, not the current window.
 
 > **Do this first.** Don't delete, re-import or "rebuild" anything yet. Most crates that look gone are only hidden.
 > Close Serato, then copy the whole `_Serato_` folder (on every drive) somewhere safe. That way every step below can be undone.
@@ -44,7 +44,7 @@ The gig check is in the app. Open **Before a gig**, or run `python3 gig_check.py
 
 ---
 
-The gig check is in the app. Open **Before a gig**, or run `python3 gig_check.py`. [Before a gig](guide/gig-check.md).
+The gig check is in the app. Open **Gig**, then **Ready**, or run `python3 gig_check.py`. [Ready](guide/gig-check.md).
 
 **About this app.** Open **Backups** to restore, or to undo a change another program made. **Review restore** writes nothing until you confirm, and confirm saves a snapshot first. **Review undo** puts back the previous snapshot. [Is my library safe?](is-my-library-safe.md).
 

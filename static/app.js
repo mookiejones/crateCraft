@@ -15190,7 +15190,7 @@
     "menu.file": "File",
     "menu.focusSearch": "Focus search",
     "menu.help": "Help",
-    "menu.library": "Library",
+    "menu.library": "Music",
     "menu.minimize": "Minimize",
     "menu.resetWidth": "Reset list width",
     "menu.tools": "Tools",
@@ -15406,7 +15406,7 @@
     "quickOpen.title": "Find a track or file",
     "quickOpen.track": "Track",
     "quickOpen.truncated": "Some files were not searched. Type more of the name.",
-    "rail.heading": "Library",
+    "rail.heading": "crateCraft",
     "rating.none": "Not rated",
     "rating.stars": {
       one: "{count} star",
@@ -15569,6 +15569,8 @@
     "settings.updates": "Check GitHub for a newer version once a day",
     "settings.updatesFailed": "The update choice could not be saved.",
     "settings.updatesPrereleases": "Include test versions (beta and release candidates)",
+    "sheet.scope": "Scope: {crate}",
+    "sheet.title": "{view} · {space}",
     "sharing.canSend": "Anonymous counts and crash reports can be sent.",
     "sharing.loadFailed": "Couldn't load sharing settings.",
     "sharing.loadFailedOff": "Couldn't load sharing settings. Nothing is sent.",
@@ -15599,7 +15601,7 @@
     "shortcuts.viewCrates": "Crates",
     "shortcuts.viewFiles": "Organize files",
     "shortcuts.viewHistory": "History",
-    "shortcuts.viewLibrary": "Library",
+    "shortcuts.viewLibrary": "All tracks",
     "shortcuts.viewSnapshots": "Backups",
     "snapshots.backupDrives": "Back up drive crates",
     "snapshots.backupDrivesBusy": "Backing up drive crates…",
@@ -15887,6 +15889,9 @@
     "tooltip.mergeTrash": "Move the other audio files to the Trash. You can restore them from there.",
     "tooltip.merging": "Merging the copies.",
     "tooltip.missingDrive": "Connect the drive that holds {name} before opening it.",
+    "tooltip.navGig": "Ready score, portable drive check, and tempo drift.",
+    "tooltip.navHealth": "Overview, missing files, duplicates, stems, damaged files, suspect quality, and tag spellings.",
+    "tooltip.navLibrary": "Crates, history, and play stats.",
     "tooltip.next": "Play the next track in this list.",
     "tooltip.openCopy": "Open this other copy, {name}.",
     "tooltip.openCrate": "Show the tracks in the crate {name}.",
@@ -16069,11 +16074,11 @@
     "view.drift": "Tempo drift",
     "view.duplicates": "Duplicates",
     "view.files": "Organize files",
-    "view.gig": "Before a gig",
-    "view.group.gig": "Before a gig",
-    "view.group.health": "Library health",
-    "view.group.library": "Library",
-    "view.health": "Library health",
+    "view.gig": "Ready",
+    "view.group.gig": "Gig",
+    "view.group.health": "Health",
+    "view.group.library": "Music",
+    "view.health": "Overview",
     "view.history": "History",
     "view.label": "Views",
     "view.missing": "Missing files",
@@ -16750,7 +16755,7 @@
     "menu.file": "Archivo",
     "menu.focusSearch": "Ir a la búsqueda",
     "menu.help": "Ayuda",
-    "menu.library": "Biblioteca",
+    "menu.library": "Música",
     "menu.minimize": "Minimizar",
     "menu.resetWidth": "Restablecer el ancho de la lista",
     "menu.tools": "Herramientas",
@@ -16966,7 +16971,7 @@
     "quickOpen.title": "Buscar una pista o un archivo",
     "quickOpen.track": "Pista",
     "quickOpen.truncated": "Algunos archivos no se buscaron. Escribe más del nombre.",
-    "rail.heading": "Biblioteca",
+    "rail.heading": "crateCraft",
     "rating.none": "Sin valorar",
     "rating.stars": {
       one: "{count} estrella",
@@ -17129,6 +17134,8 @@
     "settings.updates": "Buscar en GitHub una versión más nueva una vez al día",
     "settings.updatesFailed": "No se pudo guardar la opción de actualizaciones.",
     "settings.updatesPrereleases": "Incluir versiones de prueba (beta y candidatas)",
+    "sheet.scope": "Alcance: {crate}",
+    "sheet.title": "{view} · {space}",
     "sharing.canSend": "Se pueden enviar recuentos anónimos e informes de errores.",
     "sharing.loadFailed": "No se pudieron cargar los ajustes de privacidad.",
     "sharing.loadFailedOff": "No se pudieron cargar los ajustes de privacidad. No se envía nada.",
@@ -17159,7 +17166,7 @@
     "shortcuts.viewCrates": "Cajas",
     "shortcuts.viewFiles": "Organizar archivos",
     "shortcuts.viewHistory": "Historial",
-    "shortcuts.viewLibrary": "Biblioteca",
+    "shortcuts.viewLibrary": "Todas las pistas",
     "shortcuts.viewSnapshots": "Copias de seguridad",
     "snapshots.backupDrives": "Copiar cajas de las unidades",
     "snapshots.backupDrivesBusy": "Copiando cajas de las unidades…",
@@ -17447,6 +17454,9 @@
     "tooltip.mergeTrash": "Mueve los otros archivos de audio a la papelera. Puedes restaurarlos desde allí.",
     "tooltip.merging": "Fusionando las copias.",
     "tooltip.missingDrive": "Conecta el disco que contiene {name} antes de abrirlo.",
+    "tooltip.navGig": "Puntuación de listo, comprobar unidad y tempo inestable.",
+    "tooltip.navHealth": "Resumen, archivos no encontrados, duplicados, stems, archivos dañados, calidad dudosa y grafías de etiquetas.",
+    "tooltip.navLibrary": "Cajas, historial y estadísticas de reproducción.",
     "tooltip.next": "Reproduce la pista siguiente de esta lista.",
     "tooltip.openCopy": "Abre esta otra copia, {name}.",
     "tooltip.openCrate": "Muestra las pistas de la caja {name}.",
@@ -17629,11 +17639,11 @@
     "view.drift": "Tempo inestable",
     "view.duplicates": "Duplicados",
     "view.files": "Organizar archivos",
-    "view.gig": "Antes del bolo",
-    "view.group.gig": "Antes del bolo",
-    "view.group.health": "Salud de la biblioteca",
-    "view.group.library": "Biblioteca",
-    "view.health": "Salud de la biblioteca",
+    "view.gig": "Listo",
+    "view.group.gig": "Bolo",
+    "view.group.health": "Salud",
+    "view.group.library": "Música",
+    "view.health": "Resumen",
     "view.history": "Historial",
     "view.label": "Vistas",
     "view.missing": "Archivos no encontrados",
@@ -20215,6 +20225,9 @@
     snapshotsRetry: spec("tooltip.snapshotsRetry"),
     reviewRestore: spec("tooltip.reviewRestore"),
     allTracks: spec("tooltip.allTracks"),
+    navLibrary: spec("tooltip.navLibrary"),
+    navHealth: spec("tooltip.navHealth"),
+    navGig: spec("tooltip.navGig"),
     viewCrates: spec("tooltip.viewCrates"),
     viewHistory: spec("tooltip.viewHistory"),
     viewStats: spec("tooltip.viewStats"),
@@ -20306,6 +20319,16 @@
     if (message) return spec(message);
     return spec("tooltip.sortBy", { label });
   }
+  function navTip(id) {
+    const known = {
+      library: tips.navLibrary,
+      files: tips.viewFiles,
+      health: tips.navHealth,
+      backups: tips.viewSnapshots,
+      gig: tips.navGig
+    };
+    return known[id];
+  }
   function viewTip(view) {
     const known = {
       crates: tips.viewCrates,
@@ -20371,6 +20394,7 @@
       "shortcuts-title": tips.shortcuts,
       "open-settings": tips.settings,
       search: tips.search,
+      "sheet-scope-all": tips.allTracks,
       "search-field": tips.searchField,
       "export-m3u": tips.exportM3u,
       "export-rekordbox": tips.exportRekordbox,
@@ -20643,6 +20667,10 @@
   function applyStaticTooltips(root = document) {
     root.querySelectorAll("[id]").forEach((node) => {
       const text2 = staticTip(node.id);
+      if (text2) setTooltip(node, text2);
+    });
+    root.querySelectorAll("[data-nav]").forEach((node) => {
+      const text2 = navTip(node.dataset.nav ?? "");
       if (text2) setTooltip(node, text2);
     });
     root.querySelectorAll("[data-view]").forEach((node) => {
@@ -25332,7 +25360,7 @@
     },
     {
       id: "view-library",
-      label: "Library",
+      label: "All tracks",
       group: "Views",
       keys: [{ key: "1", mod: true }],
       whileTyping: false
@@ -29265,6 +29293,112 @@
     return /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(TrackBody, { track: detail2.track });
   }
 
+  // src/lib/ui/nav.ts
+  var NAV_GROUPS = [
+    { id: "library", labelKey: "view.group.library", modes: ["crates", "history", "stats"] },
+    { id: "files", labelKey: "view.files", modes: ["files"] },
+    { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags"] },
+    { id: "backups", labelKey: "view.snapshots", modes: ["snapshots"] },
+    { id: "gig", labelKey: "view.group.gig", modes: ["gig", "portable", "drift"] }
+  ];
+  var lastMode = {};
+  function groupOf(id) {
+    return NAV_GROUPS.find((group) => group.id === id) ?? NAV_GROUPS[0];
+  }
+  function groupForMode(mode) {
+    const group = NAV_GROUPS.find((item2) => item2.modes.includes(mode));
+    return group?.id ?? "library";
+  }
+  function rememberMode(mode) {
+    const group = NAV_GROUPS.find((item2) => item2.modes.includes(mode));
+    if (!group) return;
+    lastMode[group.id] = mode;
+  }
+  function modeForGroup(id) {
+    const group = groupOf(id);
+    const remembered = lastMode[group.id];
+    if (remembered && group.modes.includes(remembered)) return remembered;
+    return group.modes[0];
+  }
+  function paintNav(mode) {
+    const groupId = groupForMode(mode);
+    const group = groupOf(groupId);
+    const views = document.getElementById("views");
+    if (views) {
+      for (const button of views.querySelectorAll("[data-nav]")) {
+        button.setAttribute("aria-selected", String(button.dataset.nav === groupId));
+      }
+    }
+    const strip = document.getElementById("view-children");
+    if (!(strip instanceof HTMLElement)) return;
+    const showStrip = group.modes.length > 1;
+    strip.hidden = !showStrip;
+    strip.setAttribute("aria-label", t(group.labelKey));
+    for (const button of strip.querySelectorAll("[data-view]")) {
+      const view = button.dataset.view ?? "";
+      const inGroup = group.modes.includes(view);
+      button.hidden = !inGroup;
+      button.setAttribute("aria-selected", String(view === mode));
+    }
+  }
+
+  // src/lib/ui/sheet-chrome.ts
+  var VIEW_LABEL_KEYS = {
+    crates: "view.crates",
+    history: "view.history",
+    stats: "view.stats",
+    files: "view.files",
+    health: "view.health",
+    missing: "view.missing",
+    duplicates: "view.duplicates",
+    stems: "view.stems",
+    scan: "view.scan",
+    bitrate: "view.bitrate",
+    tags: "view.tags",
+    snapshots: "view.snapshots",
+    gig: "view.gig",
+    portable: "view.portable",
+    drift: "view.drift"
+  };
+  var CRATE_SCOPED_MODES = [
+    "health",
+    "gig",
+    "drift",
+    "scan",
+    "bitrate"
+  ];
+  function isCrateScopedMode(mode) {
+    return CRATE_SCOPED_MODES.includes(mode);
+  }
+  function sheetTitle(mode, space) {
+    const key = VIEW_LABEL_KEYS[mode] ?? "view.crates";
+    const view = t(key);
+    const trimmed = space.trim();
+    if (!trimmed) return view;
+    return t("sheet.title", { view, space: trimmed });
+  }
+  function sheetScopeCrate(activeCrate, crates) {
+    if (activeCrate === "all") return t("crates.allTracks");
+    const crate = crates.find((row) => row.id === activeCrate);
+    return crate?.name || t("crates.allTracks");
+  }
+  function sheetScopeText(crate) {
+    return t("sheet.scope", { crate });
+  }
+  function paintSheetChrome(opts) {
+    const title2 = document.getElementById("sheet-title");
+    if (title2) title2.textContent = sheetTitle(opts.mode, opts.space);
+    const scope = document.getElementById("sheet-scope");
+    const text2 = document.getElementById("sheet-scope-text");
+    const clear = document.getElementById("sheet-scope-all");
+    if (!(scope instanceof HTMLElement) || !(text2 instanceof HTMLElement)) return;
+    const scoped = isCrateScopedMode(opts.mode);
+    scope.hidden = !scoped;
+    if (!scoped) return;
+    text2.textContent = sheetScopeText(sheetScopeCrate(opts.activeCrate, opts.crates));
+    if (clear instanceof HTMLButtonElement) clear.hidden = opts.activeCrate === "all";
+  }
+
   // src/lib/ui/views.ts
   var detailRoot = null;
   var detailPlayRoot = null;
@@ -29590,9 +29724,13 @@
     if (snapshotsMode) {
       el("mode-note").textContent = t("mode.snapshots");
     }
-    for (const button of document.querySelectorAll("#views button")) {
-      button.setAttribute("aria-selected", String(button.dataset.view === state.mode));
-    }
+    paintNav(state.mode);
+    paintSheetChrome({
+      mode: state.mode,
+      space: state.space,
+      activeCrate: state.activeCrate,
+      crates: state.crates
+    });
     for (const button of document.querySelectorAll("[data-crate-sort]")) {
       button.setAttribute("aria-pressed", String(button.dataset.crateSort === state.crateSort));
     }
@@ -30148,6 +30286,7 @@
     renderList();
   }
   function setMode(mode) {
+    rememberMode(mode);
     state.mode = mode;
     el("list").scrollTop = 0;
     if (mode === "history") {
@@ -30262,7 +30401,14 @@
     });
     el("views").addEventListener("click", (event) => {
       const button = event.target.closest("button");
+      if (button?.dataset.nav) setMode(modeForGroup(button.dataset.nav));
+    });
+    el("view-children").addEventListener("click", (event) => {
+      const button = event.target.closest("button");
       if (button?.dataset.view) setMode(button.dataset.view);
+    });
+    el("sheet-scope-all").addEventListener("click", () => {
+      selectCrate("all");
     });
     document.querySelector(".sort-crates").addEventListener("click", (event) => {
       const button = event.target.closest("button");

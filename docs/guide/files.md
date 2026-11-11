@@ -32,11 +32,11 @@ The line at the bottom of the rail counts the files in the folder, or the music 
 
 ## Check a portable drive
 
-**Check drive** is on the first Organize files screen, beside a removable folder that has a Serato library, and under **Before a gig**. **Music** on the internal disk does not get the button. A folder you have already opened does not get it either. The check reads the drive that folder sits on, including the `_Serato_` folder at the top of the drive. It does not write. A drive that is not plugged in is named. It is not treated as a missing file and it is not deleted.
+**Check drive** is on the first Organize files screen, beside a removable folder that has a Serato library, and under **Gig**. **Music** on the internal disk does not get the button. A folder you have already opened does not get it either. The check reads the drive that folder sits on, including the `_Serato_` folder at the top of the drive. It does not write. A drive that is not plugged in is named. It is not treated as a missing file and it is not deleted.
 
-1. Click **Organize files**, or click **Check drive** under **Before a gig**.
-2. On Organize files, on a row such as **Music (GIGDRIVE)**, click **Check drive**. Under **Before a gig**, pick a connected drive that has a `_Serato_` folder.
-3. The note says **This only reads the drive. Nothing is copied or deleted.** While the check runs, the line says **Checking this drive.** On Organize files the title is **Portable drive**. Under **Before a gig** the report stays on the page.
+1. Click **Organize files**, or click **Gig** in the rail, then **Check drive** above the sheet.
+2. On Organize files, on a row such as **Music (GIGDRIVE)**, click **Check drive**. Under **Gig**, pick a connected drive that has a `_Serato_` folder.
+3. The note says **This only reads the drive. Nothing is copied or deleted.** While the check runs, the line says **Checking this drive.** On Organize files the title is **Portable drive**. Under **Gig** the report stays on the page.
 4. Read the result. On Organize files, **Close** leaves the dialog. Nothing was copied or deleted.
 
 | What you see | Meaning |

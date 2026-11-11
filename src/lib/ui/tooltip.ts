@@ -11,7 +11,7 @@
  */
 
 import { hasKey, t } from "../i18n";
-import { crateSortTip, sortTip, staticTip, viewTip, type TipSpec } from "./tooltip-strings";
+import { crateSortTip, navTip, sortTip, staticTip, viewTip, type TipSpec } from "./tooltip-strings";
 
 /** Element id of the shared tooltip. */
 export const TOOLTIP_ID = "app-tooltip";
@@ -164,6 +164,10 @@ export function textareaEl(spec: TipSpec): HTMLTextAreaElement {
 export function applyStaticTooltips(root: ParentNode = document): void {
   root.querySelectorAll<HTMLElement>("[id]").forEach((node) => {
     const text = staticTip(node.id);
+    if (text) setTooltip(node, text);
+  });
+  root.querySelectorAll<HTMLElement>("[data-nav]").forEach((node) => {
+    const text = navTip(node.dataset.nav ?? "");
     if (text) setTooltip(node, text);
   });
   root.querySelectorAll<HTMLElement>("[data-view]").forEach((node) => {

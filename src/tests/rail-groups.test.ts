@@ -1,9 +1,10 @@
 /**
- * Rail groups: Library, Library health, Backups, and Before a gig.
+ * Rail primaries: Music, Organize files, Health, Backups, and Gig.
+ * Children live in #view-children.
  *
- * The markup is index.html. Group labels are headings. Each tab still
- * has a tooltip. The view ids stay crates, history, stats, files, health, missing,
- * duplicates, stems, scan, bitrate, tags, snapshots, gig, portable, and drift.
+ * The markup is index.html. Each tab still has a tooltip. The view ids
+ * stay crates, history, stats, files, health, missing, duplicates, stems,
+ * scan, bitrate, tags, snapshots, gig, portable, and drift.
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
@@ -20,33 +21,53 @@ describe("rail groups", () => {
     applyStaticTooltips(document);
   });
 
-  it("puts everyday views, health, backups, and the gig check in that order", () => {
-    const labels = [...document.querySelectorAll(".view-group-label")].map((node) => node.textContent);
-    expect(labels).toEqual(["Library", "Library health", "Before a gig"]);
-    const groups = [...document.querySelectorAll<HTMLElement>("#views [role='tablist']")].map((list) =>
-      [...list.querySelectorAll<HTMLElement>("[data-view]")].map((button) => button.dataset.view),
+  it("puts five primaries in the rail, with children in the sheet strip", () => {
+    const primaries = [...document.querySelectorAll<HTMLElement>("#views [data-nav]")].map((button) => button.dataset.nav);
+    expect(primaries).toEqual(["library", "files", "health", "backups", "gig"]);
+    expect(document.querySelector("h1")?.textContent).toBe("crateCraft");
+    expect(document.querySelector('#space option[value="Serato Library"]')?.textContent).toBe("Library");
+    expect([...document.querySelectorAll("#views [data-nav]")].map((node) => node.textContent)).toEqual([
+      "Music",
+      "Organize files",
+      "Health",
+      "Backups",
+      "Gig",
+    ]);
+    const children = [...document.querySelectorAll<HTMLElement>("#view-children [data-view]")].map(
+      (button) => button.dataset.view,
     );
-    expect(groups).toEqual([
-      ["crates", "history", "stats", "files"],
-      ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags"],
-      ["snapshots"],
-      ["gig", "portable", "drift"],
+    expect(children).toEqual([
+      "crates",
+      "history",
+      "stats",
+      "files",
+      "health",
+      "missing",
+      "duplicates",
+      "stems",
+      "scan",
+      "bitrate",
+      "tags",
+      "snapshots",
+      "gig",
+      "portable",
+      "drift",
     ]);
     expect(document.querySelector("[data-view='stats']")?.textContent).toBe("Play stats");
-    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Library health");
+    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Overview");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Missing files");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Damaged files");
     expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Suspect quality");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Tag spellings");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
-    expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Before a gig");
+    expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Ready");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Check drive");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo drift");
   });
 
-  it("gives every view tab a tooltip, and says stems does not separate audio", () => {
-    for (const button of document.querySelectorAll<HTMLButtonElement>("#views button")) {
-      expect(button.dataset.tooltip?.trim().length, button.dataset.view).toBeGreaterThan(10);
+  it("gives every primary and view tab a tooltip, and says stems does not separate audio", () => {
+    for (const button of document.querySelectorAll<HTMLButtonElement>("#views [data-nav], #view-children [data-view]")) {
+      expect(button.dataset.tooltip?.trim().length, button.dataset.nav ?? button.dataset.view).toBeGreaterThan(10);
     }
     const stems = document.querySelector<HTMLElement>("[data-view='stems']");
     const backups = document.querySelector<HTMLElement>("[data-view='snapshots']");
@@ -54,19 +75,24 @@ describe("rail groups", () => {
     expect(backups?.dataset.tooltip).toContain("Ctrl/Cmd+5");
   });
 
-  it("translates the group labels and the renamed tabs", () => {
+  it("translates the primaries and the renamed tabs", () => {
     setLocale("es");
     applyStatic(document);
-    const labels = [...document.querySelectorAll(".view-group-label")].map((node) => node.textContent);
-    expect(labels).toEqual(["Biblioteca", "Salud de la biblioteca", "Antes del bolo"]);
+    expect([...document.querySelectorAll("#views [data-nav]")].map((node) => node.textContent)).toEqual([
+      "Música",
+      "Organizar archivos",
+      "Salud",
+      "Copias de seguridad",
+      "Bolo",
+    ]);
     expect(document.querySelector("[data-view='stats']")?.textContent).toBe("Estadísticas");
-    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Salud de la biblioteca");
+    expect(document.querySelector("[data-view='health']")?.textContent).toBe("Resumen");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Archivos no encontrados");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Archivos dañados");
     expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Calidad dudosa");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Grafías de etiquetas");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Copias de seguridad");
-    expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Antes del bolo");
+    expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Listo");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Comprobar unidad");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo inestable");
   });

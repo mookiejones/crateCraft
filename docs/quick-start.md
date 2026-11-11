@@ -136,6 +136,6 @@ Use **Search tracks**, then click a tune. The field menu next to search can limi
 
 Double-click a row, press **Enter**, or click **Play**, to hear it. **Space** plays or pauses. **Left** and **Right** move 5 seconds. The bar under the list shows the title, the artist, previous and next, pause, a seek bar with the file's cue points, and volume. Playback does not write to the audio file and does not add a history row.
 
-The other groups are **Library health** (Library health, Missing files, Duplicates, Stems, Damaged files, Suspect quality, Tag spellings), **Organize files** under Library, **Backups**, and **Before a gig** (Before a gig, Check drive, Tempo drift).
+The rail has five primaries: **Music**, **Organize files**, **Health**, **Backups**, and **Gig**. Tabs for the open parent sit above the main sheet. The heading under those tabs names the open view and the space. **Music** is Crates, History, and Play stats. **Health** is Overview, Missing files, Duplicates, Stems, Damaged files, Suspect quality, and Tag spellings. **Gig** is Ready, Check drive, and Tempo drift. Organize files and Backups have no extra tabs. Overview, Ready, Tempo drift, Damaged files, and Suspect quality show **Scope** for the selected crate, with **All tracks** on that chip to check the whole space.
 
 **Hot loops** sits beside **Memory cues** in the Rekordbox dialog. It starts off, and it uses a free hot-cue pad.

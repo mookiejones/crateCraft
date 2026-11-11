@@ -6,8 +6,10 @@
  * so related tracks and the editor are on the page for the audit.
  */
 
+import { modeForGroup, paintNav, rememberMode } from "../src/lib/ui/nav";
 import { mountPlayer } from "../src/lib/player/player";
 import { mountSettings } from "../src/lib/ui/settings";
+import { paintSheetChrome } from "../src/lib/ui/sheet-chrome";
 import { state } from "../src/lib/state";
 import { applyStaticTooltips, installTooltips, missingTooltipLabels } from "../src/lib/ui/tooltip";
 import { mountTrackList, paintRows } from "../src/lib/ui/virtual-scroll";
@@ -91,11 +93,34 @@ state.filesEntries = [
   { name: "alias", path: "/music/House/alias", kind: "link" },
 ];
 
+function paintChrome(mode: string): void {
+  rememberMode(mode);
+  state.mode = mode;
+  paintNav(mode);
+  paintSheetChrome({
+    mode,
+    space: state.space,
+    activeCrate: state.activeCrate,
+    crates: state.crates,
+  });
+}
+
 applyStaticTooltips();
 installTooltips();
 mountPlayer();
 mountSettings();
 applyStaticTooltips();
+paintChrome(state.mode);
+document.getElementById("views")?.addEventListener("click", (event) => {
+  const button = (event.target as HTMLElement).closest("button");
+  if (!button?.dataset.nav) return;
+  paintChrome(modeForGroup(button.dataset.nav));
+});
+document.getElementById("view-children")?.addEventListener("click", (event) => {
+  const button = (event.target as HTMLElement).closest("button");
+  if (!button?.dataset.view) return;
+  paintChrome(button.dataset.view);
+});
 mountTrackList();
 state.mode = "files";
 renderFiles();
