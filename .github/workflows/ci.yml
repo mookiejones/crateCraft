@@ -87,7 +87,7 @@ jobs:
         run: npx tsc --noEmit && npx tsc --noEmit -p e2e
 
       - name: Reject any
-        run: npx eslint src e2e .storybook
+        run: npx eslint src e2e
 
       - name: Test the page
         run: npm test

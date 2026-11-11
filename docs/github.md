@@ -35,13 +35,13 @@ macOS runs the suite once, on Python 3.12. Python 3.14 stays on Ubuntu. A macOS 
 
 The Windows test job runs `python scripts/release_bundle.py check-tag` with `shell: bash` and `RELEASE_TAG` set to `v0.0.0`. No tag is passed on the command line. That is the same environment path the release job uses, and it runs on `windows-latest` for every pull request. `v0.0.0` is not a published release.
 
-The frontend job runs on `ubuntu-latest`, `windows-latest`, and `macos-latest`. It installs Node 22. `package.json` sets `engines.node` to `>=22`. The job installs from `package-lock.json` with `npm ci`, runs `npx tsc --noEmit` and `npx tsc --noEmit -p e2e`, runs ESLint on `src`, `e2e`, and `.storybook` so `any` is rejected, runs the Vitest suite (`npm test`), runs `node scripts/build_frontend.mjs --check`, then installs Playwright's Chromium and runs `npx playwright test -c e2e/playwright.config.ts`. That check builds `static/app.js` and `static/wizard.js` in memory, does not write `static/`, and fails if either file or its sourcemap differs from the committed copy. The Playwright step screenshots the waveform with cues, a loop, the beatgrid, the shaded overview, a zoomed-in view, a zoomed-out view, and the unavailable note. Canvas shots are compared to the committed baselines. Every operating system uploads `e2e/output/` as `waveform-screenshots-<OS>`. Ubuntu installs the browser with `--with-deps`, then falls back to Chromium only if apt cannot reach the Ubuntu mirror. Windows and macOS install Chromium only. The check names are `frontend (ubuntu-latest)`, `frontend (windows-latest)`, and `frontend (macos-latest)`. On your machine:
+The frontend job runs on `ubuntu-latest`, `windows-latest`, and `macos-latest`. It installs Node 22. `package.json` sets `engines.node` to `>=22`. The job installs from `package-lock.json` with `npm ci`, runs `npx tsc --noEmit` and `npx tsc --noEmit -p e2e`, runs ESLint on `src` and `e2e` so `any` is rejected, runs the Vitest suite (`npm test`), runs `node scripts/build_frontend.mjs --check`, then installs Playwright's Chromium and runs `npx playwright test -c e2e/playwright.config.ts`. That check builds `static/app.js` and `static/wizard.js` in memory, does not write `static/`, and fails if either file or its sourcemap differs from the committed copy. The Playwright step screenshots the waveform with cues, a loop, the beatgrid, the shaded overview, a zoomed-in view, a zoomed-out view, and the unavailable note. Canvas shots are compared to the committed baselines. Every operating system uploads `e2e/output/` as `waveform-screenshots-<OS>`. Ubuntu installs the browser with `--with-deps`, then falls back to Chromium only if apt cannot reach the Ubuntu mirror. Windows and macOS install Chromium only. The check names are `frontend (ubuntu-latest)`, `frontend (windows-latest)`, and `frontend (macos-latest)`. On your machine:
 
 ```bash
 npm ci
 npx tsc --noEmit
 npx tsc --noEmit -p e2e
-npx eslint src e2e .storybook
+npx eslint src e2e
 npm test
 node scripts/build_frontend.mjs --check
 npx playwright install chromium

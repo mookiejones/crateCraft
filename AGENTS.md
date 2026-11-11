@@ -101,7 +101,7 @@ The commands to paste into a pull request are the full list under [After a chang
    npm ci
    npx tsc --noEmit
    npx tsc --noEmit -p e2e
-   npx eslint src e2e .storybook
+   npx eslint src e2e
    npm test
    npx playwright install chromium
    npx playwright test -c e2e/playwright.config.ts

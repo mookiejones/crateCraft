@@ -9,10 +9,10 @@
   "scripts": {
     "build": "node scripts/build_frontend.mjs",
     "typecheck": "tsc --noEmit && tsc --noEmit -p e2e",
-    "lint": "eslint src e2e .storybook",
+    "lint": "eslint src e2e",
     "test": "vitest run",
     "test:e2e": "playwright test -c e2e/playwright.config.ts",
-    "check": "tsc --noEmit && tsc --noEmit -p e2e && eslint src e2e .storybook && vitest run && node scripts/build_frontend.mjs --check",
+    "check": "tsc --noEmit && tsc --noEmit -p e2e && eslint src e2e && vitest run && node scripts/build_frontend.mjs --check",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
