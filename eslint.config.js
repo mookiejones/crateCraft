@@ -1,7 +1,7 @@
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["static/**", "node_modules/**"] },
+  { ignores: ["static/**", "node_modules/**", "e2e/dist/**", "e2e/output/**"] },
   {
     files: ["src/**/*.ts", "src/**/*.tsx", "e2e/**/*.ts"],
     extends: [tseslint.configs.base],

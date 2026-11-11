@@ -472,7 +472,7 @@ function readTrackListValue(): TrackListContextValue {
  */
 export function TrackListRoot({ children }: { children: ReactNode }) {
   const [value, setValue] = useState(readTrackListValue);
-  useEffect(() => {
+  useLayoutEffect(() => {
     return subscribeTrackList(() => {
       flushSync(() => {
         setValue(readTrackListValue());

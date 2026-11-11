@@ -311,7 +311,7 @@ describe("applyStatic", () => {
       const text = (node.textContent ?? "").trim();
       if (!/[A-Za-z]/.test(text) || brands.has(text)) continue;
       const parent = node.parentElement!;
-      if (parent.closest("svg, .columns") || runtime.has(parent.id)) continue;
+      if (parent.closest("svg, .MuiDataGrid-root") || runtime.has(parent.id)) continue;
       if (!text.startsWith("[")) leftover.push(text);
     }
     expect(leftover).toEqual([]);

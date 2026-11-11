@@ -409,17 +409,17 @@ class ErrorCodeTests(unittest.TestCase):
     def test_history_column_and_search_fit_a_longer_language(self) -> None:
         """Spanish history and Reload stay on one row at the default split.
 
-        The played column is 8.5rem so “Reproducida” is not clipped. Export,
+        The played column is 136px so “Reproducida” is not clipped. Export,
         Import, and Reload stay in one row; the Rekordbox options wrap under them.
 
         Returns:
             None.
         """
         css = (ROOT / "static" / "app.css").read_text(encoding="utf-8")
-        self.assertRegex(
-            css,
-            r"\.columns\.for-history,\s*\.list\.for-history \.row \{\s*grid-template-columns:[^}]*8\.5rem",
+        columns = (ROOT / "src" / "lib" / "ui" / "track-list-columns.tsx").read_text(
+            encoding="utf-8"
         )
+        self.assertRegex(columns, r"HISTORY_PLAYED_WIDTH = 136")
         self.assertRegex(css, r"\.browser-actions \{[^}]*flex-wrap: nowrap")
 
 

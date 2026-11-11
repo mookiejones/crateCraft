@@ -7,11 +7,12 @@ import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Track } from "../../lib/api-types";
+import { MuiThemeRoot } from "../../app/mui-theme-root";
 import { PlayerProvider } from "../../app/providers";
 import { TrackListProvider, type TrackListContextValue } from "../../containers/TrackListContext";
 import { setLocale } from "../../lib/i18n";
 import { attachMedia, mountPlayer, type PlayableMedia } from "../../lib/player/player";
-import { ROW, state } from "../../lib/state";
+import { state } from "../../lib/state";
 import { installPage } from "../test-page";
 import { getTrackListActions, readTrackList, setTrackDetail } from "../../lib/ui/track-list-store";
 import { mountTrackList, paintRows } from "../../lib/ui/virtual-scroll";
@@ -76,8 +77,8 @@ describe("TrackListContext", () => {
     paintRows();
     const painted = document.querySelectorAll("#list .row");
     expect(painted.length).toBeGreaterThan(0);
-    expect(painted.length).toBeLessThan(80);
-    expect((document.querySelector("#list .spacer") as HTMLElement).style.height).toBe(`${10_000 * ROW}px`);
+    expect(painted.length).toBeLessThanOrEqual(100);
+    expect(document.querySelector("#list .MuiDataGrid-root")).not.toBeNull();
     expect(document.querySelector("#list .title")?.textContent).toBe("Track 1");
     expect(document.querySelector("#list .row-play")).not.toBeNull();
   });
@@ -86,19 +87,20 @@ describe("TrackListContext", () => {
     const host = document.createElement("div");
     document.body.append(host);
     const root = createRoot(host);
+    host.style.height = "600px";
     flushSync(() => {
       root.render(
-        createElement(PlayerProvider, {
-          children: createElement(TrackListProvider, {
-            value: value({
-              view: [track(4, "Night"), track(5, "Dawn")],
-              selectedId: 4,
-            }),
-            children: createElement(TrackListWindow, {
-              pane: "a",
-              start: 0,
-              end: 2,
-              onFocusList: () => {},
+        createElement(MuiThemeRoot, {
+          children: createElement(PlayerProvider, {
+            children: createElement(TrackListProvider, {
+              value: value({
+                view: [track(4, "Night"), track(5, "Dawn")],
+                selectedId: 4,
+              }),
+              children: createElement(TrackListWindow, {
+                pane: "a",
+                onFocusList: () => {},
+              }),
             }),
           }),
         }),
@@ -154,21 +156,21 @@ describe("TrackListContext", () => {
     const host = document.createElement("div");
     document.body.append(host);
     const root = createRoot(host);
+    host.style.height = "600px";
     flushSync(() => {
       root.render(
-        createElement(PlayerProvider, {
-          children: createElement(TrackListProvider, {
-            value: value({
-              view: [{ id: 3, name: "Old", entry: true }],
-              selectedId: 3,
-              mode: "history",
-            }),
-            children: [
+        createElement(MuiThemeRoot, {
+          children: createElement(PlayerProvider, {
+            children: createElement(TrackListProvider, {
+              value: value({
+                view: [{ id: 3, name: "Old", entry: true }],
+                selectedId: 3,
+                mode: "history",
+              }),
+              children: [
               createElement(TrackListWindow, {
                 key: "list",
                 pane: "a",
-                start: 0,
-                end: 1,
                 onFocusList: () => {},
               }),
               createElement(CuePads, { key: "cues", cues: [] }),
@@ -176,7 +178,8 @@ describe("TrackListContext", () => {
                 key: "grid",
                 track: { id: 1, beatgrid: [], markers_unavailable: true },
               }),
-            ],
+              ],
+            }),
           }),
         }),
       );
@@ -189,3 +192,4 @@ describe("TrackListContext", () => {
     root.unmount();
   });
 });
+

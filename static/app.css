@@ -687,59 +687,12 @@ button:disabled { cursor: default; }
   padding: 6px;
 }
 
-.columns, .row {
-  display: grid;
-  grid-template-columns:
-    minmax(8rem, 1.4fr)
-    minmax(6rem, 1fr)
-    3rem
-    3rem
-    3.5rem
-    minmax(5rem, 0.8fr)
-    4.75rem
-    4.75rem
-    3rem
-    3.5rem;
-  gap: 10px;
-  align-items: center;
-}
-
-.browser:not(.for-history) .columns,
 .browser:not(.for-history) .crate-panes {
   min-width: 58rem;
 }
 
 .browser {
   overflow-x: auto;
-}
-
-/* History's played header is "Reproducida" in Spanish. 8.5rem fits it at 15px
-   without clipping. The track view keeps the extra energy, genre, and date columns. */
-.columns.for-history,
-.list.for-history .row {
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 4.25rem 8.5rem 5.25rem;
-  min-width: 0;
-}
-
-.columns {
-  padding: 0 var(--space-4);
-  border-bottom: 1px solid var(--rule);
-}
-
-.columns button {
-  text-align: left;
-  color: var(--quiet);
-  padding: var(--space-2) 0;
-}
-
-.columns button[data-active="true"] { color: var(--ink); }
-
-/* Translated headers can be longer than the fixed number columns. */
-.columns button {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .crate-panes {
@@ -774,7 +727,9 @@ button:disabled { cursor: default; }
 
 .list {
   position: relative;
-  overflow: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
 }
@@ -783,23 +738,58 @@ button:disabled { cursor: default; }
   outline-offset: -2px;
 }
 
-.spacer { position: relative; width: 100%; }
-
-.rows { position: absolute; left: 0; right: 0; top: 0; }
-
-.row {
-  height: var(--row);
-  padding: 0 var(--space-4);
+.track-grid {
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  text-align: left;
-  background: transparent;
-  border-radius: 0;
-  cursor: pointer;
 }
 
-.row:hover { background: color-mix(in srgb, var(--cadmium) 6%, transparent); }
+.list .MuiDataGrid-root {
+  --DataGrid-rowBorderColor: var(--rule);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+}
 
-.row[aria-selected="true"] {
+.list .MuiDataGrid-columnHeaders {
+  background: transparent;
+  color: var(--quiet);
+  border-bottom: 1px solid var(--rule);
+}
+
+.list .MuiDataGrid-columnHeader--sorted {
+  color: var(--ink);
+}
+
+.list .MuiDataGrid-columnHeaderTitle {
+  font-weight: 500;
+}
+
+.list .MuiDataGrid-cell {
+  border: 0;
+  min-width: 0;
+}
+
+.list .MuiDataGrid-row.row {
+  display: flex;
+  width: auto;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+}
+
+.list .MuiDataGrid-footerContainer {
+  min-height: var(--row);
+  border-top: 1px solid var(--rule);
+  background: transparent;
+}
+
+.list .MuiDataGrid-row:hover {
+  background: color-mix(in srgb, var(--cadmium) 6%, transparent);
+}
+
+.list .MuiDataGrid-row.Mui-selected,
+.list .MuiDataGrid-row[aria-selected="true"] {
   background: var(--color-selection);
   box-shadow: inset 3px 0 0 var(--cadmium);
 }

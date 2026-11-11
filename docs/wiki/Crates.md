@@ -10,10 +10,12 @@ flowchart TD
   space["Space: Library, Video, Apple Music, Prepare"] --> crates["Crates"]
   crates --> all["All tracks"]
   crates --> one["One crate"]
-  one --> tracks["Title, Artist, BPM, Key, Energy, Genre, Added, Last, Plays, Time"]
+  one --> tracks["Play, Title, Artist, BPM, Key, Energy, Genre, Added, Last, Plays, Time"]
   tracks --> tick["Tick a crate on the track"]
   tools["New, Rename, Color, Delete"] --> quit["Quit Serato DJ Pro first"]
 ```
+
+The track list puts **Play** in its own first column. **Title** is the name. Headers stay over the cells when you scroll. Drag a header edge to resize. The column menu can hide a column. A library larger than 100 tracks pages 100 at a time.
 
 **Crates** is the list on the left. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
 
