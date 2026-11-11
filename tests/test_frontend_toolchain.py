@@ -58,6 +58,7 @@ class FrontendToolchainTests(unittest.TestCase):
             "storybook",
             "@storybook/react-vite",
             "@storybook/addon-docs",
+            "@storybook/addon-mcp",
             "eslint-plugin-storybook",
             "vite",
         )
@@ -75,5 +76,10 @@ class FrontendToolchainTests(unittest.TestCase):
         main = (ROOT / ".storybook" / "main.ts").read_text(encoding="utf-8")
         self.assertIn('framework: "@storybook/react-vite"', main)
         self.assertIn("disableTelemetry: true", main)
+        self.assertIn('"@storybook/addon-mcp"', main)
+        self.assertIn("componentsManifest: true", main)
         self.assertIn("../src/**/*.stories.@(ts|tsx)", main)
         self.assertNotIn("../src/stories", main)
+        grok = (ROOT / ".grok" / "config.toml").read_text(encoding="utf-8")
+        self.assertIn("[mcp_servers.storybook]", grok)
+        self.assertIn('url = "http://127.0.0.1:6006/mcp"', grok)

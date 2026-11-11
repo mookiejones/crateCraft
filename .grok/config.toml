@@ -6,3 +6,7 @@ args = [
 ]
 startup_timeout_sec = 90
 enabled = true
+
+[mcp_servers.storybook]
+url = "http://127.0.0.1:6006/mcp"
+enabled = true
