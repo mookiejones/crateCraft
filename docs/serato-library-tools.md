@@ -1,5 +1,7 @@
 # Serato library tools and requested features
 
+Parked crateCraft note: jumping to cue points and writing Markers2 is in [`cue-jump-and-edit.md`](cue-jump-and-edit.md). That is not implemented.
+
 Research notes, 20 October 2026. Sources are vendor sites, Serato's own announcements, the Serato forum, Reddit, and GitHub. Vendor comparison pages (Crate Cleaner, Lexicon, Music Library Doctor) promote their own product. Prices and Serato 4 support claims move. Check the current build before trusting a write.
 
 This project reads the live Serato DJ 4/5 library at `~/Library/Application Support/Serato/Library/master.sqlite` and does not write to it.

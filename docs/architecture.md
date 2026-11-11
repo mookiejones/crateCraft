@@ -2,7 +2,7 @@
 
 A local page for the Serato DJ Pro library. The process reads `master.sqlite`. It writes only after Serato has quit. The first write in a process copies the databases into `Library/Backups`.
 
-`docs/serato-library-tools.md` is research about other tools. It is not a description of this program.
+`docs/serato-library-tools.md` is research about other tools. It is not a description of this program. `docs/cue-jump-and-edit.md` is a parked note on jumping to cue points in the player and writing Markers2 back. It is not a spec and is not implemented.
 
 ## Run
 

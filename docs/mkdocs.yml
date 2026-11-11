@@ -12,6 +12,7 @@ use_directory_urls: false
 
 exclude_docs: |
   architecture.md
+  cue-jump-and-edit.md
   github.md
   related-tracks.md
   serato-library-tools.md
@@ -92,6 +93,7 @@ nav:
       - GitHub and releases: https://github.com/mookiejones/crateCraft/blob/main/docs/github.md
       - Related tracks file: https://github.com/mookiejones/crateCraft/blob/main/docs/related-tracks.md
       - Research notes: https://github.com/mookiejones/crateCraft/blob/main/docs/serato-library-tools.md
+      - Cue jump and edit: https://github.com/mookiejones/crateCraft/blob/main/docs/cue-jump-and-edit.md
       - Privacy note: https://github.com/mookiejones/crateCraft/blob/main/PRIVACY.md
       - Roadmap: https://github.com/users/mookiejones/projects/3
 
