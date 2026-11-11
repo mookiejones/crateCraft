@@ -97,7 +97,7 @@ jobs:
 
       - name: Install Playwright Chromium
         if: runner.os == 'Linux'
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium || npx playwright install chromium
 
       - name: Install Playwright Chromium
         if: runner.os != 'Linux'
