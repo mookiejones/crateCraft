@@ -39,7 +39,7 @@ npm run build
 npm run storybook
 ```
 
-`npm run storybook` serves isolated React components at `http://127.0.0.1:6006`. Vite is the Storybook builder. The page still bundles with esbuild. Stories sit next to the component as `*.stories.tsx` in `src/components/` or `src/pages/`. `@storybook/addon-mcp` exposes MCP at `http://127.0.0.1:6006/mcp` while that process is running. `.grok/config.toml` registers it as `storybook`. When editing a component that has a story, use those MCP tools for docs and props.
+`npm run storybook` serves isolated React components at `http://127.0.0.1:6006`. Vite is the Storybook builder. The page still bundles with esbuild. Stories sit next to the module as `*.stories.tsx` in `src/components/`, `src/pages/`, or `src/containers/`. `@storybook/addon-mcp` exposes MCP at `http://127.0.0.1:6006/mcp` while that process is running. `.grok/config.toml` registers it as `storybook`. When editing a component that has a story, use those MCP tools for docs and props.
 
 The commands to paste into a pull request are the full list under [After a change](#after-a-change).
 

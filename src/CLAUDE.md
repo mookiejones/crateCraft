@@ -27,7 +27,7 @@ src/
 - Domain bind (`*Context.tsx`, `useX`) → `containers/`, plus one wrapper in `app/providers.tsx`
 - Engine or helper → `lib/` or `lib/<domain>/`
 - Vitest → `tests/` (mirror `pages/`, `components/`, `containers/` for those tests)
-- Storybook story → `*.stories.tsx` next to the component in `components/` or `pages/` (`npm run storybook`)
+- Storybook story → `*.stories.tsx` next to the module in `components/`, `pages/`, or `containers/` (`npm run storybook`)
 
 Repo-root `tests/` is Python. `e2e/` is Playwright. No `@/` import alias.
 
