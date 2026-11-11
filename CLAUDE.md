@@ -172,3 +172,7 @@ Single-context: one `CONTEXT.md` and `docs/adr/` at the repo root, created lazil
 ### User docs
 
 DJ-facing copy (wiki drafts, README, MkDocs guide) uses `.grok/skills/updating-user-docs/SKILL.md`. Live wiki.git is a later hop. This repository does not push it.
+
+### Visual choices
+
+Layout, look, chrome, and placement picks use lettered A/B wireframes in the Superpowers visual companion. See `.grok/rules/visual-choices.md`.
