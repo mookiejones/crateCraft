@@ -6,6 +6,7 @@
  * so related tracks and the editor are on the page for the audit.
  */
 
+import { mountAppShell } from "../src/lib/ui/app-shell";
 import { modeForGroup, paintNav, rememberMode } from "../src/lib/ui/nav";
 import { mountPlayer } from "../src/lib/player/player";
 import { mountSettings } from "../src/lib/ui/settings";
@@ -105,6 +106,7 @@ function paintChrome(mode: string): void {
   });
 }
 
+mountAppShell();
 applyStaticTooltips();
 installTooltips();
 mountPlayer();
