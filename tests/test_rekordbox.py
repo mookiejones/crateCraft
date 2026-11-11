@@ -23,6 +23,7 @@ import server
 import tags
 from library import LibraryError
 from tests.fixture import ROOT, TempLibrary, open_database
+from tests.test_tokens import src_page_text
 
 
 def _entry(kind: str, blob: bytes) -> bytes:
@@ -955,7 +956,6 @@ class ExportTests(unittest.TestCase):
             None. The test fails if the label or the help line is missing.
         """
         html = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
-        script = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
         guide = (ROOT / "docs" / "guide" / "playlists.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         page = _HotLoopsMarkup()
@@ -975,7 +975,7 @@ class ExportTests(unittest.TestCase):
         self.assertIn("Uses a free hot-cue pad", guide)
         self.assertIn("settings.json", guide)
         self.assertIn("Uses a free hot-cue pad", readme)
-        self.assertNotIn("localStorage", script)
+        self.assertNotIn("localStorage", src_page_text())
 
     def test_hot_loop_marks_are_position_mark_attributes(self) -> None:
         """Read cue and loop fields from POSITION_MARK elements.

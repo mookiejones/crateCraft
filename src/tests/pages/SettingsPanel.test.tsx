@@ -53,6 +53,28 @@ describe("SettingsPanel context", () => {
     expect(host.querySelector("#language-select")?.getAttribute("data-tooltip-key")).toBe("tooltip.language");
     expect(host.querySelector("#colorway-select")?.getAttribute("data-tooltip-key")).toBe("tooltip.colorway");
     expect(host.querySelector("#telemetry-toggle")?.getAttribute("data-tooltip-key")).toBe("tooltip.telemetry");
+    const proof = host.querySelector("#mui-theme-proof");
+    expect(proof).not.toBeNull();
+    expect(proof?.getAttribute("data-colorway")).toBe("serato-like");
+    expect(proof?.getAttribute("data-primary")).toBe("#ff6a00");
+    expect(proof?.getAttribute("data-mode")).toBe("dark");
+    root.unmount();
+  });
+
+  it("updates the MUI proof when the colorway changes", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    flushSync(() => {
+      root.render(createElement(AppProviders, { children: createElement(SettingsPanel) }));
+    });
+    flushSync(() => {
+      patchSettings({ colorway: "dark-club" });
+    });
+    const proof = host.querySelector("#mui-theme-proof");
+    expect(proof?.getAttribute("data-colorway")).toBe("dark-club");
+    expect(proof?.getAttribute("data-primary")).toBe("#3df0c8");
+    expect(proof?.getAttribute("data-mode")).toBe("dark");
     root.unmount();
   });
 

@@ -6,6 +6,7 @@
  * static markup they replace.
  */
 
+import { MuiThemeProof } from "../components/MuiThemeProof";
 import { useSettings } from "../containers/SettingsContext";
 import { LANGUAGES, LANGUAGE_NAMES, t } from "../lib/i18n";
 import { COLORWAYS, type Colorway } from "../lib/ui/settings";
@@ -159,6 +160,7 @@ export function SettingsPanel() {
           src={preview}
         />
       </div>
+      <MuiThemeProof />
       <label className="check">
         <input
           id="icon-follows-theme"
