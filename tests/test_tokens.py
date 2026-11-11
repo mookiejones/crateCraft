@@ -313,7 +313,7 @@ class TokenSheetTests(unittest.TestCase):
         """Point the old palette names at the token roles.
 
         app.css no longer stores the hex values. The row height stays a
-        literal because the list painter reads ROW in app.js.
+        literal because the list painter inlines ROW as 36.
 
         Returns:
             None. The test fails if an alias or the row comment is missing.
@@ -337,7 +337,24 @@ class TokenSheetTests(unittest.TestCase):
         source = (ROOT / "src" / "lib" / "state.ts").read_text(encoding="utf-8")
         self.assertIn("export const ROW = 36", source)
         script = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
-        self.assertIn("ROW = 36", script)
+        self.assertIn("scrollTop / 36", script)
+        self.assertIn("view.length * 36", script)
+
+    def test_react_dce_probe_is_stripped(self) -> None:
+        """Strip React's DevTools dead-code probe from the committed bundles.
+
+        React's production entry still contains ``throw new Error("^_^")``
+        behind ``process.env.NODE_ENV !== "production"``. React DevTools
+        reads that string on ``checkDCE.toString()`` and throws if it
+        remains. esbuild ``minifySyntax`` must drop that branch.
+
+        Returns:
+            None. The test fails if either bundle still contains the probe.
+        """
+        for name in ("app.js", "wizard.js"):
+            with self.subTest(name=name):
+                text = (ROOT / "static" / name).read_text(encoding="utf-8")
+                self.assertFalse("^_^" in text, f"{name} still contains React's DCE probe")
 
 
 def _rules(css: str) -> list[tuple[str, dict[str, str]]]:
