@@ -6,6 +6,9 @@
  */
 
 import { type MouseEvent } from "react";
+import IconButton from "@mui/material/IconButton";
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { usePlayer } from "../containers/PlayerContext";
 import { playerStrings } from "../lib/player/player-strings";
 import { setTooltip } from "../lib/ui/tooltip";
@@ -63,6 +66,24 @@ export function PlayButton({ variant, trackId, name, onClickExtra }: PlayButtonP
 
   function onDoubleClick(event: MouseEvent<HTMLButtonElement>): void {
     if (variant === "row") event.stopPropagation();
+  }
+
+  if (variant === "bar") {
+    return (
+      <IconButton
+        type="button"
+        ref={tooltipRef(spec)}
+        className={className}
+        size="large"
+        color="inherit"
+        disabled={disabled}
+        aria-label={labelled}
+        aria-pressed={playingThis}
+        onClick={onClick}
+      >
+        {playingThis ? <PauseIcon /> : <PlayArrowIcon />}
+      </IconButton>
+    );
   }
 
   return (

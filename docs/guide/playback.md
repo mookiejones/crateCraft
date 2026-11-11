@@ -4,7 +4,7 @@ Play a file that is already in the library. The app streams it from this compute
 
 1. Click a track.
 2. Double-click the row, press **Enter**, or click the play button on the row. **Enter** on the list plays the selected track. **Enter** on a focused row plays that row. In the detail pane, click **Play**. The list Play button and the detail Play button share one player. Click **Play** on the playing track to pause. Click **Play** on another row to start that track. Both buttons show Play or Pause.
-3. The bar shows the title, the artist, **Previous**, **Play** or **Pause**, **Next**, a seek bar, the elapsed time, the total time, and **Volume**.
+3. The bar under the AppBar shows the title, the artist, **Previous**, **Play** or **Pause**, **Next**, a seek bar, the elapsed time, the total time, and **Volume**.
 
 **Previous** and **Next** follow the list you are looking at, in its current sort and filter order. When a track ends, the next row starts. The last row stops.
 
