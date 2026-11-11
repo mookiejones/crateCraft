@@ -71,7 +71,7 @@
       assign2(pureComponentPrototype, Component.prototype);
       pureComponentPrototype.isPureReactComponent = !0;
       var isArrayImpl = Array.isArray;
-      function noop5() {
+      function noop6() {
       }
       var ReactSharedInternals = { H: null, A: null, T: null, S: null }, hasOwnProperty = Object.prototype.hasOwnProperty;
       function ReactElement(type, key, props) {
@@ -87,7 +87,7 @@
       function cloneAndReplaceKey(oldElement, newKey) {
         return ReactElement(oldElement.type, newKey, oldElement.props);
       }
-      function isValidElement2(object) {
+      function isValidElement5(object) {
         return typeof object == "object" && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
       }
       function escape(key) {
@@ -107,7 +107,7 @@
           case "rejected":
             throw thenable.reason;
           default:
-            switch (typeof thenable.status == "string" ? thenable.then(noop5, noop5) : (thenable.status = "pending", thenable.then(
+            switch (typeof thenable.status == "string" ? thenable.then(noop6, noop6) : (thenable.status = "pending", thenable.then(
               function(fulfilledValue) {
                 thenable.status === "pending" && (thenable.status = "fulfilled", thenable.value = fulfilledValue);
               },
@@ -154,7 +154,7 @@
         if (invokeCallback)
           return callback = callback(children), invokeCallback = nameSoFar === "" ? "." + getElementKey(children, 0) : nameSoFar, isArrayImpl(callback) ? (escapedPrefix = "", invokeCallback != null && (escapedPrefix = invokeCallback.replace(userProvidedKeyEscapeRegex, "$&/") + "/"), mapIntoArray(callback, array, escapedPrefix, "", function(c) {
             return c;
-          })) : callback != null && (isValidElement2(callback) && (callback = cloneAndReplaceKey(
+          })) : callback != null && (isValidElement5(callback) && (callback = cloneAndReplaceKey(
             callback,
             escapedPrefix + (callback.key == null || children && children.key === callback.key ? "" : ("" + callback.key).replace(
               userProvidedKeyEscapeRegex,
@@ -238,7 +238,7 @@
         currentTransition.types = prevTransition !== null ? prevTransition.types : null, ReactSharedInternals.T = currentTransition;
         try {
           var returnValue = scope(), onStartTransitionFinish = ReactSharedInternals.S;
-          onStartTransitionFinish !== null && onStartTransitionFinish(currentTransition, returnValue), typeof returnValue == "object" && returnValue !== null && typeof returnValue.then == "function" && returnValue.then(noop5, reportGlobalError);
+          onStartTransitionFinish !== null && onStartTransitionFinish(currentTransition, returnValue), typeof returnValue == "object" && returnValue !== null && typeof returnValue.then == "function" && returnValue.then(noop6, reportGlobalError);
         } catch (error2) {
           reportGlobalError(error2);
         } finally {
@@ -252,7 +252,7 @@
           transitionTypes === null ? transition.types = [type] : transitionTypes.indexOf(type) === -1 && transitionTypes.push(type);
         } else startTransition(addTransitionType.bind(null, type));
       }
-      var Children = {
+      var Children2 = {
         map: mapChildren,
         forEach: function(children, forEachFunc, forEachContext) {
           mapChildren(
@@ -275,7 +275,7 @@
           }) || [];
         },
         only: function(children) {
-          if (!isValidElement2(children))
+          if (!isValidElement5(children))
             throw Error(
               "React.Children.only expected to receive a single React element child."
             );
@@ -283,7 +283,7 @@
         }
       };
       exports.Activity = REACT_ACTIVITY_TYPE;
-      exports.Children = Children;
+      exports.Children = Children2;
       exports.Component = Component;
       exports.Fragment = REACT_FRAGMENT_TYPE;
       exports.Profiler = REACT_PROFILER_TYPE;
@@ -361,7 +361,7 @@
       exports.forwardRef = function(render) {
         return { $$typeof: REACT_FORWARD_REF_TYPE, render };
       };
-      exports.isValidElement = isValidElement2;
+      exports.isValidElement = isValidElement5;
       exports.lazy = function(ctor) {
         return {
           $$typeof: REACT_LAZY_TYPE,
@@ -456,7 +456,7 @@
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React21 = require_react();
+      var React52 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -466,21 +466,21 @@
         }
         return "Minified React error #" + code + "; visit " + url + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
       }
-      function noop5() {
+      function noop6() {
       }
       var Internals = {
         d: {
-          f: noop5,
+          f: noop6,
           r: function() {
             throw Error(formatProdErrorMessage(522));
           },
-          D: noop5,
-          C: noop5,
-          L: noop5,
-          m: noop5,
-          X: noop5,
-          S: noop5,
-          M: noop5
+          D: noop6,
+          C: noop6,
+          L: noop6,
+          m: noop6,
+          X: noop6,
+          S: noop6,
+          M: noop6
         },
         p: 0,
         findDOMNode: null
@@ -495,7 +495,7 @@
           implementation
         };
       }
-      var ReactSharedInternals = React21.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React52.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if (as === "font") return "";
         if (typeof input == "string")
@@ -860,7 +860,7 @@
   var require_react_dom_client_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
-      var Scheduler = require_scheduler(), React21 = require_react(), ReactDOM = require_react_dom();
+      var Scheduler = require_scheduler(), React52 = require_react(), ReactDOM2 = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -1105,7 +1105,7 @@
           }
         return null;
       }
-      var isArrayImpl = Array.isArray, ReactSharedInternals = React21.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, sharedNotPendingObject = {
+      var isArrayImpl = Array.isArray, ReactSharedInternals = React52.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM2.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, sharedNotPendingObject = {
         pending: !1,
         data: null,
         method: null,
@@ -1800,17 +1800,17 @@ Error generating stack: ` + x.message + `
         var isCustomProperty3 = styleName.indexOf("--") === 0;
         value == null || typeof value == "boolean" || value === "" ? isCustomProperty3 ? style4.setProperty(styleName, "") : styleName === "float" ? style4.cssFloat = "" : style4[styleName] = "" : isCustomProperty3 ? style4.setProperty(styleName, value) : typeof value != "number" || value === 0 || unitlessNumbers.has(styleName) ? styleName === "float" ? style4.cssFloat = value : style4[styleName] = ("" + value).trim() : style4[styleName] = value + "px";
       }
-      function setValueForStyles(node2, styles, prevStyles) {
-        if (styles != null && typeof styles != "object")
+      function setValueForStyles(node2, styles2, prevStyles) {
+        if (styles2 != null && typeof styles2 != "object")
           throw Error(formatProdErrorMessage(62));
         if (node2 = node2.style, prevStyles != null) {
           for (var styleName in prevStyles)
-            !prevStyles.hasOwnProperty(styleName) || styles != null && styles.hasOwnProperty(styleName) || (styleName.indexOf("--") === 0 ? node2.setProperty(styleName, "") : styleName === "float" ? node2.cssFloat = "" : node2[styleName] = "", viewTransitionMutationContext = !0);
-          for (var styleName$16 in styles)
-            styleName = styles[styleName$16], styles.hasOwnProperty(styleName$16) && prevStyles[styleName$16] !== styleName && (setValueForStyle(node2, styleName$16, styleName), viewTransitionMutationContext = !0);
+            !prevStyles.hasOwnProperty(styleName) || styles2 != null && styles2.hasOwnProperty(styleName) || (styleName.indexOf("--") === 0 ? node2.setProperty(styleName, "") : styleName === "float" ? node2.cssFloat = "" : node2[styleName] = "", viewTransitionMutationContext = !0);
+          for (var styleName$16 in styles2)
+            styleName = styles2[styleName$16], styles2.hasOwnProperty(styleName$16) && prevStyles[styleName$16] !== styleName && (setValueForStyle(node2, styleName$16, styleName), viewTransitionMutationContext = !0);
         } else
-          for (var styleName$17 in styles)
-            styles.hasOwnProperty(styleName$17) && setValueForStyle(node2, styleName$17, styles[styleName$17]);
+          for (var styleName$17 in styles2)
+            styles2.hasOwnProperty(styleName$17) && setValueForStyle(node2, styleName$17, styles2[styleName$17]);
       }
       function isCustomElement(tagName) {
         if (tagName.indexOf("-") === -1) return !1;
@@ -2425,10 +2425,10 @@ Error generating stack: ` + x.message + `
         var nodeName = elem && elem.nodeName && elem.nodeName.toLowerCase();
         return nodeName && (nodeName === "input" && (elem.type === "text" || elem.type === "search" || elem.type === "tel" || elem.type === "url" || elem.type === "password") || nodeName === "textarea" || elem.contentEditable === "true");
       }
-      var skipSelectionChangeEvent = canUseDOM && "documentMode" in document && 11 >= document.documentMode, activeElement = null, activeElementInst = null, lastSelection = null, mouseDown = !1;
+      var skipSelectionChangeEvent = canUseDOM && "documentMode" in document && 11 >= document.documentMode, activeElement2 = null, activeElementInst = null, lastSelection = null, mouseDown = !1;
       function constructSelectEvent(dispatchQueue, nativeEvent, nativeEventTarget) {
         var doc = nativeEventTarget.window === nativeEventTarget ? nativeEventTarget.document : nativeEventTarget.nodeType === 9 ? nativeEventTarget : nativeEventTarget.ownerDocument;
-        mouseDown || activeElement == null || activeElement !== getActiveElement(doc) || (doc = activeElement, "selectionStart" in doc && hasSelectionCapabilities(doc) ? doc = { start: doc.selectionStart, end: doc.selectionEnd } : (doc = (doc.ownerDocument && doc.ownerDocument.defaultView || window).getSelection(), doc = {
+        mouseDown || activeElement2 == null || activeElement2 !== getActiveElement(doc) || (doc = activeElement2, "selectionStart" in doc && hasSelectionCapabilities(doc) ? doc = { start: doc.selectionStart, end: doc.selectionEnd } : (doc = (doc.ownerDocument && doc.ownerDocument.defaultView || window).getSelection(), doc = {
           anchorNode: doc.anchorNode,
           anchorOffset: doc.anchorOffset,
           focusNode: doc.focusNode,
@@ -2439,7 +2439,7 @@ Error generating stack: ` + x.message + `
           null,
           nativeEvent,
           nativeEventTarget
-        ), dispatchQueue.push({ event: nativeEvent, listeners: doc }), nativeEvent.target = activeElement)));
+        ), dispatchQueue.push({ event: nativeEvent, listeners: doc }), nativeEvent.target = activeElement2)));
       }
       function makePrefixMap(styleProp, eventName) {
         var prefixes = {};
@@ -4274,7 +4274,7 @@ Error generating stack: ` + x.message + `
           ReactDOMSharedInternals.p = previousPriority, prevTransition !== null && currentTransition.types !== null && (prevTransition.types = currentTransition.types), ReactSharedInternals.T = prevTransition;
         }
       }
-      function noop5() {
+      function noop6() {
       }
       function startHostTransition(formFiber, pendingState, action, formData) {
         if (formFiber.tag !== 5) throw Error(formatProdErrorMessage(476));
@@ -4284,7 +4284,7 @@ Error generating stack: ` + x.message + `
           queue,
           pendingState,
           sharedNotPendingObject,
-          action === null ? noop5 : function() {
+          action === null ? noop6 : function() {
             return requestFormReset$1(formFiber), action(formData);
           }
         );
@@ -5899,18 +5899,18 @@ Error generating stack: ` + x.message + `
               if (nextResource = contextStackCursor.current, popHydrationState(workInProgress2))
                 prepareToHydrateHostInstance(workInProgress2, nextResource);
               else {
-                var ownerDocument = getOwnerDocumentFromRootContainer(
+                var ownerDocument2 = getOwnerDocumentFromRootContainer(
                   rootInstanceStackCursor.current
                 );
                 switch (nextResource) {
                   case 1:
-                    nextResource = ownerDocument.createElementNS(
+                    nextResource = ownerDocument2.createElementNS(
                       "http://www.w3.org/2000/svg",
                       type
                     );
                     break;
                   case 2:
-                    nextResource = ownerDocument.createElementNS(
+                    nextResource = ownerDocument2.createElementNS(
                       "http://www.w3.org/1998/Math/MathML",
                       type
                     );
@@ -5918,46 +5918,46 @@ Error generating stack: ` + x.message + `
                   default:
                     switch (type) {
                       case "svg":
-                        nextResource = ownerDocument.createElementNS(
+                        nextResource = ownerDocument2.createElementNS(
                           "http://www.w3.org/2000/svg",
                           type
                         );
                         break;
                       case "math":
-                        nextResource = ownerDocument.createElementNS(
+                        nextResource = ownerDocument2.createElementNS(
                           "http://www.w3.org/1998/Math/MathML",
                           type
                         );
                         break;
                       case "script":
-                        nextResource = ownerDocument.createElement("div"), nextResource.innerHTML = "<script><\/script>", nextResource = nextResource.removeChild(
+                        nextResource = ownerDocument2.createElement("div"), nextResource.innerHTML = "<script><\/script>", nextResource = nextResource.removeChild(
                           nextResource.firstChild
                         );
                         break;
                       case "select":
-                        nextResource = typeof newProps.is == "string" ? ownerDocument.createElement("select", {
+                        nextResource = typeof newProps.is == "string" ? ownerDocument2.createElement("select", {
                           is: newProps.is
-                        }) : ownerDocument.createElement("select"), newProps.multiple ? nextResource.multiple = !0 : newProps.size && (nextResource.size = newProps.size);
+                        }) : ownerDocument2.createElement("select"), newProps.multiple ? nextResource.multiple = !0 : newProps.size && (nextResource.size = newProps.size);
                         break;
                       default:
-                        nextResource = typeof newProps.is == "string" ? ownerDocument.createElement(type, { is: newProps.is }) : ownerDocument.createElement(type);
+                        nextResource = typeof newProps.is == "string" ? ownerDocument2.createElement(type, { is: newProps.is }) : ownerDocument2.createElement(type);
                     }
                 }
                 nextResource[internalInstanceKey] = workInProgress2, nextResource[internalPropsKey] = newProps;
-                a: for (ownerDocument = workInProgress2.child; ownerDocument !== null; ) {
-                  if (ownerDocument.tag === 5 || ownerDocument.tag === 6)
-                    nextResource.appendChild(ownerDocument.stateNode);
-                  else if (ownerDocument.tag !== 4 && ownerDocument.tag !== 27 && ownerDocument.child !== null) {
-                    ownerDocument.child.return = ownerDocument, ownerDocument = ownerDocument.child;
+                a: for (ownerDocument2 = workInProgress2.child; ownerDocument2 !== null; ) {
+                  if (ownerDocument2.tag === 5 || ownerDocument2.tag === 6)
+                    nextResource.appendChild(ownerDocument2.stateNode);
+                  else if (ownerDocument2.tag !== 4 && ownerDocument2.tag !== 27 && ownerDocument2.child !== null) {
+                    ownerDocument2.child.return = ownerDocument2, ownerDocument2 = ownerDocument2.child;
                     continue;
                   }
-                  if (ownerDocument === workInProgress2) break a;
-                  for (; ownerDocument.sibling === null; ) {
-                    if (ownerDocument.return === null || ownerDocument.return === workInProgress2)
+                  if (ownerDocument2 === workInProgress2) break a;
+                  for (; ownerDocument2.sibling === null; ) {
+                    if (ownerDocument2.return === null || ownerDocument2.return === workInProgress2)
                       break a;
-                    ownerDocument = ownerDocument.return;
+                    ownerDocument2 = ownerDocument2.return;
                   }
-                  ownerDocument.sibling.return = ownerDocument.return, ownerDocument = ownerDocument.sibling;
+                  ownerDocument2.sibling.return = ownerDocument2.return, ownerDocument2 = ownerDocument2.sibling;
                 }
                 workInProgress2.stateNode = nextResource;
                 a: switch (setInitialProperties(nextResource, type, newProps), type) {
@@ -9107,8 +9107,8 @@ Error generating stack: ` + x.message + `
           rootContainerElement[listeningMarker] = !0, allNativeEvents.forEach(function(domEventName) {
             domEventName !== "selectionchange" && (nonDelegatedEvents.has(domEventName) || listenToNativeEvent(domEventName, !1, rootContainerElement), listenToNativeEvent(domEventName, !0, rootContainerElement));
           });
-          var ownerDocument = rootContainerElement.nodeType === 9 ? rootContainerElement : rootContainerElement.ownerDocument;
-          ownerDocument === null || ownerDocument[listeningMarker] || (ownerDocument[listeningMarker] = !0, listenToNativeEvent("selectionchange", !1, ownerDocument));
+          var ownerDocument2 = rootContainerElement.nodeType === 9 ? rootContainerElement : rootContainerElement.ownerDocument;
+          ownerDocument2 === null || ownerDocument2[listeningMarker] || (ownerDocument2[listeningMarker] = !0, listenToNativeEvent("selectionchange", !1, ownerDocument2));
         }
       }
       function addTrappedEventListener(targetContainer, domEventName, eventSystemFlags, isCapturePhaseListener) {
@@ -9326,10 +9326,10 @@ Error generating stack: ` + x.message + `
             }
             switch (handleEventFunc = targetInst ? getNodeFromInstance(targetInst) : window, domEventName) {
               case "focusin":
-                (isTextInputElement(handleEventFunc) || handleEventFunc.contentEditable === "true") && (activeElement = handleEventFunc, activeElementInst = targetInst, lastSelection = null);
+                (isTextInputElement(handleEventFunc) || handleEventFunc.contentEditable === "true") && (activeElement2 = handleEventFunc, activeElementInst = targetInst, lastSelection = null);
                 break;
               case "focusout":
-                lastSelection = activeElementInst = activeElement = null;
+                lastSelection = activeElementInst = activeElement2 = null;
                 break;
               case "mousedown":
                 mouseDown = !0;
@@ -10330,26 +10330,26 @@ Error generating stack: ` + x.message + `
         var computedStyle = getComputedStyle(instance);
         return createMeasurement(measuredRect, computedStyle, instance);
       }
-      function forceLayout(ownerDocument) {
-        return ownerDocument.documentElement.clientHeight;
+      function forceLayout(ownerDocument2) {
+        return ownerDocument2.documentElement.clientHeight;
       }
       function waitForImageToLoad(resolve) {
         this.addEventListener("load", resolve), this.addEventListener("error", resolve);
       }
       function startViewTransition(suspendedState, rootContainer, transitionTypes, mutationCallback, layoutCallback, afterMutationCallback, spawnedWorkCallback, passiveCallback, errorCallback) {
-        var ownerDocument = rootContainer.nodeType === 9 ? rootContainer : rootContainer.ownerDocument;
+        var ownerDocument2 = rootContainer.nodeType === 9 ? rootContainer : rootContainer.ownerDocument;
         try {
-          var transition = ownerDocument.startViewTransition({
+          var transition = ownerDocument2.startViewTransition({
             update: function() {
-              var ownerWindow = ownerDocument.defaultView, pendingNavigation = ownerWindow.navigation && ownerWindow.navigation.transition, previousFontLoadingStatus = ownerDocument.fonts.status;
+              var ownerWindow2 = ownerDocument2.defaultView, pendingNavigation = ownerWindow2.navigation && ownerWindow2.navigation.transition, previousFontLoadingStatus = ownerDocument2.fonts.status;
               mutationCallback();
               var blockingPromises = [];
-              if (previousFontLoadingStatus === "loaded" && (forceLayout(ownerDocument), ownerDocument.fonts.status === "loading" && blockingPromises.push(ownerDocument.fonts.ready)), previousFontLoadingStatus = blockingPromises.length, suspendedState !== null)
+              if (previousFontLoadingStatus === "loaded" && (forceLayout(ownerDocument2), ownerDocument2.fonts.status === "loading" && blockingPromises.push(ownerDocument2.fonts.ready)), previousFontLoadingStatus = blockingPromises.length, suspendedState !== null)
                 for (var suspenseyImages = suspendedState.suspenseyImages, imgBytes = 0, i = 0; i < suspenseyImages.length; i++) {
                   var suspenseyImage = suspenseyImages[i];
                   if (!suspenseyImage.complete) {
                     var rect = suspenseyImage.getBoundingClientRect();
-                    if (0 < rect.bottom && 0 < rect.right && rect.top < ownerWindow.innerHeight && rect.left < ownerWindow.innerWidth) {
+                    if (0 < rect.bottom && 0 < rect.right && rect.top < ownerWindow2.innerHeight && rect.left < ownerWindow2.innerWidth) {
                       if (imgBytes += estimateImageBytes(suspenseyImage), imgBytes > estimatedBytesWithinLimit) {
                         blockingPromises.length = previousFontLoadingStatus;
                         break;
@@ -10361,12 +10361,12 @@ Error generating stack: ` + x.message + `
                   }
                 }
               if (0 < blockingPromises.length)
-                return ownerWindow = Promise.race([
+                return ownerWindow2 = Promise.race([
                   Promise.all(blockingPromises),
                   new Promise(function(resolve) {
                     return setTimeout(resolve, 500);
                   })
-                ]).then(layoutCallback, layoutCallback), (pendingNavigation ? Promise.allSettled([pendingNavigation.finished, ownerWindow]) : ownerWindow).then(afterMutationCallback, afterMutationCallback);
+                ]).then(layoutCallback, layoutCallback), (pendingNavigation ? Promise.allSettled([pendingNavigation.finished, ownerWindow2]) : ownerWindow2).then(afterMutationCallback, afterMutationCallback);
               if (layoutCallback(), pendingNavigation)
                 return pendingNavigation.finished.then(
                   afterMutationCallback,
@@ -10376,11 +10376,11 @@ Error generating stack: ` + x.message + `
             },
             types: transitionTypes
           });
-          ownerDocument.__reactViewTransition = transition;
+          ownerDocument2.__reactViewTransition = transition;
           var viewTransitionAnimations = [];
           return transition.ready.then(
             function() {
-              for (var animations = ownerDocument.documentElement.getAnimations({
+              for (var animations = ownerDocument2.documentElement.getAnimations({
                 subtree: !0
               }), i = 0; i < animations.length; i++) {
                 var animation = animations[i], effect = animation.effect, pseudoElement = effect.pseudoElement;
@@ -10409,7 +10409,7 @@ Error generating stack: ` + x.message + `
               spawnedWorkCallback();
             },
             function(error2) {
-              ownerDocument.__reactViewTransition === transition && (ownerDocument.__reactViewTransition = null);
+              ownerDocument2.__reactViewTransition === transition && (ownerDocument2.__reactViewTransition = null);
               try {
                 typeof error2 == "object" && error2 !== null && error2.name === "InvalidStateError" && (error2.message === "View transition was skipped because document visibility state is hidden." || error2.message === "Skipping view transition because document visibility state has become hidden." || error2.message === "Skipping view transition because viewport size changed." || error2.message === "Transition was aborted because of invalid state") && (error2 = null), error2 !== null && errorCallback(error2);
               } finally {
@@ -10419,7 +10419,7 @@ Error generating stack: ` + x.message + `
           ), transition.finished.finally(function() {
             for (var i = 0; i < viewTransitionAnimations.length; i++)
               viewTransitionAnimations[i].cancel();
-            ownerDocument.__reactViewTransition === transition && (ownerDocument.__reactViewTransition = null), passiveCallback();
+            ownerDocument2.__reactViewTransition === transition && (ownerDocument2.__reactViewTransition = null), passiveCallback();
           }), transition;
         } catch {
           return mutationCallback(), layoutCallback(), spawnedWorkCallback(), null;
@@ -10610,8 +10610,8 @@ Error generating stack: ` + x.message + `
           void 0
         ));
       };
-      function blurActiveElementWithinFragment(child, activeElement2) {
-        return child.tag === 6 ? !1 : (child = getInstanceFromHostFiber(child), child === activeElement2 || child.contains(activeElement2) ? (activeElement2.blur(), !0) : !1);
+      function blurActiveElementWithinFragment(child, activeElement3) {
+        return child.tag === 6 ? !1 : (child = getInstanceFromHostFiber(child), child === activeElement3 || child.contains(activeElement3) ? (activeElement3.blur(), !0) : !1);
       }
       FragmentInstance.prototype.observeUsing = function(observer) {
         this._observers === null && (this._observers = /* @__PURE__ */ new Set()), this._observers.add(observer), traverseVisibleInstancesAndTextInstances(
@@ -10952,15 +10952,15 @@ Error generating stack: ` + x.message + `
         return instance.data === "$!" || instance.data === "$?" && instance.ownerDocument.readyState !== "loading";
       }
       function registerSuspenseInstanceRetry(instance, callback) {
-        var ownerDocument = instance.ownerDocument;
+        var ownerDocument2 = instance.ownerDocument;
         if (instance.data === "$~") instance._reactRetry = callback;
-        else if (instance.data !== "$?" || ownerDocument.readyState !== "loading")
+        else if (instance.data !== "$?" || ownerDocument2.readyState !== "loading")
           callback();
         else {
           var listener = function() {
-            callback(), ownerDocument.removeEventListener("DOMContentLoaded", listener);
+            callback(), ownerDocument2.removeEventListener("DOMContentLoaded", listener);
           };
-          ownerDocument.addEventListener("DOMContentLoaded", listener), instance._reactRetry = listener;
+          ownerDocument2.addEventListener("DOMContentLoaded", listener), instance._reactRetry = listener;
         }
       }
       function getNextHydratable(node2) {
@@ -11083,10 +11083,10 @@ Error generating stack: ` + x.message + `
       }
       var globalDocument = typeof document > "u" ? null : document;
       function preconnectAs(rel, href, crossOrigin) {
-        var ownerDocument = globalDocument;
-        if (ownerDocument && typeof href == "string" && href) {
+        var ownerDocument2 = globalDocument;
+        if (ownerDocument2 && typeof href == "string" && href) {
           var limitedEscapedHref = escapeSelectorAttributeValueInsideDoubleQuotes(href);
-          limitedEscapedHref = 'link[rel="' + rel + '"][href="' + limitedEscapedHref + '"]', typeof crossOrigin == "string" && (limitedEscapedHref += '[crossorigin="' + crossOrigin + '"]'), preconnectsSet.has(limitedEscapedHref) || (preconnectsSet.add(limitedEscapedHref), rel = { rel, crossOrigin, href }, ownerDocument.querySelector(limitedEscapedHref) === null && (href = ownerDocument.createElement("link"), setInitialProperties(href, "link", rel), markNodeAsHoistable(href), ownerDocument.head.appendChild(href)));
+          limitedEscapedHref = 'link[rel="' + rel + '"][href="' + limitedEscapedHref + '"]', typeof crossOrigin == "string" && (limitedEscapedHref += '[crossorigin="' + crossOrigin + '"]'), preconnectsSet.has(limitedEscapedHref) || (preconnectsSet.add(limitedEscapedHref), rel = { rel, crossOrigin, href }, ownerDocument2.querySelector(limitedEscapedHref) === null && (href = ownerDocument2.createElement("link"), setInitialProperties(href, "link", rel), markNodeAsHoistable(href), ownerDocument2.head.appendChild(href)));
         }
       }
       function prefetchDNS(href) {
@@ -11097,8 +11097,8 @@ Error generating stack: ` + x.message + `
       }
       function preload(href, as, options2) {
         previousDispatcher.L(href, as, options2);
-        var ownerDocument = globalDocument;
-        if (ownerDocument && href && as) {
+        var ownerDocument2 = globalDocument;
+        if (ownerDocument2 && href && as) {
           var preloadSelector = 'link[rel="preload"][as="' + escapeSelectorAttributeValueInsideDoubleQuotes(as) + '"]';
           as === "image" && options2 && options2.imageSrcSet ? (preloadSelector += '[imagesrcset="' + escapeSelectorAttributeValueInsideDoubleQuotes(
             options2.imageSrcSet
@@ -11120,18 +11120,18 @@ Error generating stack: ` + x.message + `
               as
             },
             options2
-          ), preloadPropsMap.set(key, href), ownerDocument.querySelector(preloadSelector) !== null || as === "style" && ownerDocument.querySelector(getStylesheetSelectorFromKey(key)) || as === "script" && ownerDocument.querySelector(getScriptSelectorFromKey(key))))) {
-            var instance = ownerDocument.createElement("link");
+          ), preloadPropsMap.set(key, href), ownerDocument2.querySelector(preloadSelector) !== null || as === "style" && ownerDocument2.querySelector(getStylesheetSelectorFromKey(key)) || as === "script" && ownerDocument2.querySelector(getScriptSelectorFromKey(key))))) {
+            var instance = ownerDocument2.createElement("link");
             setInitialProperties(instance, "link", href), as === "style" && (instance[internalLoadPendingKey] = !0, instance.onload = instance.onerror = function() {
               clearPendingLoadOnNode(instance);
-            }), markNodeAsHoistable(instance), ownerDocument.head.appendChild(instance);
+            }), markNodeAsHoistable(instance), ownerDocument2.head.appendChild(instance);
           }
         }
       }
       function preloadModule(href, options2) {
         previousDispatcher.m(href, options2);
-        var ownerDocument = globalDocument;
-        if (ownerDocument && href) {
+        var ownerDocument2 = globalDocument;
+        if (ownerDocument2 && href) {
           var as = options2 && typeof options2.as == "string" ? options2.as : "script", preloadSelector = 'link[rel="modulepreload"][as="' + escapeSelectorAttributeValueInsideDoubleQuotes(as) + '"][href="' + escapeSelectorAttributeValueInsideDoubleQuotes(href) + '"]', key = preloadSelector;
           switch (as) {
             case "audioworklet":
@@ -11142,7 +11142,7 @@ Error generating stack: ` + x.message + `
             case "script":
               key = getScriptKey(href);
           }
-          if (!preloadPropsMap.has(key) && (href = assign2({ rel: "modulepreload", href }, options2), preloadPropsMap.set(key, href), ownerDocument.querySelector(preloadSelector) === null)) {
+          if (!preloadPropsMap.has(key) && (href = assign2({ rel: "modulepreload", href }, options2), preloadPropsMap.set(key, href), ownerDocument2.querySelector(preloadSelector) === null)) {
             switch (as) {
               case "audioworklet":
               case "paintworklet":
@@ -11150,23 +11150,23 @@ Error generating stack: ` + x.message + `
               case "sharedworker":
               case "worker":
               case "script":
-                if (ownerDocument.querySelector(getScriptSelectorFromKey(key)))
+                if (ownerDocument2.querySelector(getScriptSelectorFromKey(key)))
                   return;
             }
-            as = ownerDocument.createElement("link"), setInitialProperties(as, "link", href), markNodeAsHoistable(as), ownerDocument.head.appendChild(as);
+            as = ownerDocument2.createElement("link"), setInitialProperties(as, "link", href), markNodeAsHoistable(as), ownerDocument2.head.appendChild(as);
           }
         }
       }
       function preinitStyle(href, precedence, options2) {
         previousDispatcher.S(href, precedence, options2);
-        var ownerDocument = globalDocument;
-        if (ownerDocument && href) {
-          var styles = getResourcesFromRoot(ownerDocument).hoistableStyles, key = getStyleKey(href);
+        var ownerDocument2 = globalDocument;
+        if (ownerDocument2 && href) {
+          var styles2 = getResourcesFromRoot(ownerDocument2).hoistableStyles, key = getStyleKey(href);
           precedence = precedence || "default";
-          var resource = styles.get(key);
+          var resource = styles2.get(key);
           if (!resource) {
             var state2 = { loading: 0, preload: null };
-            if (resource = ownerDocument.querySelector(
+            if (resource = ownerDocument2.querySelector(
               getStylesheetSelectorFromKey(key)
             ))
               state2.loading = 5;
@@ -11175,30 +11175,30 @@ Error generating stack: ` + x.message + `
                 { rel: "stylesheet", href, "data-precedence": precedence },
                 options2
               ), (options2 = preloadPropsMap.get(key)) && adoptPreloadPropsForStylesheet(href, options2);
-              var link = resource = ownerDocument.createElement("link");
+              var link = resource = ownerDocument2.createElement("link");
               markNodeAsHoistable(link), setInitialProperties(link, "link", href), link._p = new Promise(function(resolve, reject) {
                 link.onload = resolve, link.onerror = reject;
               }), link.addEventListener("load", function() {
                 state2.loading |= 1;
               }), link.addEventListener("error", function() {
                 state2.loading |= 2;
-              }), state2.loading |= 4, insertStylesheet(resource, precedence, ownerDocument);
+              }), state2.loading |= 4, insertStylesheet(resource, precedence, ownerDocument2);
             }
             resource = {
               type: "stylesheet",
               instance: resource,
               count: 1,
               state: state2
-            }, styles.set(key, resource);
+            }, styles2.set(key, resource);
           }
         }
       }
       function preinitScript(src, options2) {
         previousDispatcher.X(src, options2);
-        var ownerDocument = globalDocument;
-        if (ownerDocument && src) {
-          var scripts = getResourcesFromRoot(ownerDocument).hoistableScripts, key = getScriptKey(src), resource = scripts.get(key);
-          resource || (resource = ownerDocument.querySelector(getScriptSelectorFromKey(key)), resource || (src = assign2({ src, async: !0 }, options2), (options2 = preloadPropsMap.get(key)) && adoptPreloadPropsForScript(src, options2), resource = ownerDocument.createElement("script"), markNodeAsHoistable(resource), setInitialProperties(resource, "link", src), ownerDocument.head.appendChild(resource)), resource = {
+        var ownerDocument2 = globalDocument;
+        if (ownerDocument2 && src) {
+          var scripts = getResourcesFromRoot(ownerDocument2).hoistableScripts, key = getScriptKey(src), resource = scripts.get(key);
+          resource || (resource = ownerDocument2.querySelector(getScriptSelectorFromKey(key)), resource || (src = assign2({ src, async: !0 }, options2), (options2 = preloadPropsMap.get(key)) && adoptPreloadPropsForScript(src, options2), resource = ownerDocument2.createElement("script"), markNodeAsHoistable(resource), setInitialProperties(resource, "link", src), ownerDocument2.head.appendChild(resource)), resource = {
             type: "script",
             instance: resource,
             count: 1,
@@ -11208,10 +11208,10 @@ Error generating stack: ` + x.message + `
       }
       function preinitModuleScript(src, options2) {
         previousDispatcher.M(src, options2);
-        var ownerDocument = globalDocument;
-        if (ownerDocument && src) {
-          var scripts = getResourcesFromRoot(ownerDocument).hoistableScripts, key = getScriptKey(src), resource = scripts.get(key);
-          resource || (resource = ownerDocument.querySelector(getScriptSelectorFromKey(key)), resource || (src = assign2({ src, async: !0, type: "module" }, options2), (options2 = preloadPropsMap.get(key)) && adoptPreloadPropsForScript(src, options2), resource = ownerDocument.createElement("script"), markNodeAsHoistable(resource), setInitialProperties(resource, "link", src), ownerDocument.head.appendChild(resource)), resource = {
+        var ownerDocument2 = globalDocument;
+        if (ownerDocument2 && src) {
+          var scripts = getResourcesFromRoot(ownerDocument2).hoistableScripts, key = getScriptKey(src), resource = scripts.get(key);
+          resource || (resource = ownerDocument2.querySelector(getScriptSelectorFromKey(key)), resource || (src = assign2({ src, async: !0, type: "module" }, options2), (options2 = preloadPropsMap.get(key)) && adoptPreloadPropsForScript(src, options2), resource = ownerDocument2.createElement("script"), markNodeAsHoistable(resource), setInitialProperties(resource, "link", src), ownerDocument2.head.appendChild(resource)), resource = {
             type: "script",
             instance: resource,
             count: 1,
@@ -11294,8 +11294,8 @@ Error generating stack: ` + x.message + `
           precedence: null
         });
       }
-      function preloadStylesheet(ownerDocument, key, preloadProps, state2) {
-        if (key = ownerDocument.querySelector(
+      function preloadStylesheet(ownerDocument2, key, preloadProps, state2) {
+        if (key = ownerDocument2.querySelector(
           'link[rel="preload"][as="style"][' + key + "]"
         )) {
           if (key[internalLoadPendingKey] !== !0) {
@@ -11303,7 +11303,7 @@ Error generating stack: ` + x.message + `
             return;
           }
         } else
-          key = ownerDocument.createElement("link"), key[internalLoadPendingKey] = !0, key.onload = key.onerror = clearPendingLoadOnNode.bind(null, key), setInitialProperties(key, "link", preloadProps), markNodeAsHoistable(key), ownerDocument.head.appendChild(key);
+          key = ownerDocument2.createElement("link"), key[internalLoadPendingKey] = !0, key.onload = key.onerror = clearPendingLoadOnNode.bind(null, key), setInitialProperties(key, "link", preloadProps), markNodeAsHoistable(key), ownerDocument2.head.appendChild(key);
         state2.preload = key, key.addEventListener("load", function() {
           return state2.loading |= 1;
         }), key.addEventListener("error", function() {
@@ -11376,15 +11376,15 @@ Error generating stack: ` + x.message + `
         scriptProps.crossOrigin == null && (scriptProps.crossOrigin = preloadProps.crossOrigin), scriptProps.referrerPolicy == null && (scriptProps.referrerPolicy = preloadProps.referrerPolicy), scriptProps.integrity == null && (scriptProps.integrity = preloadProps.integrity);
       }
       var tagCaches = null;
-      function getHydratableHoistableCache(type, keyAttribute, ownerDocument) {
+      function getHydratableHoistableCache(type, keyAttribute, ownerDocument2) {
         if (tagCaches === null) {
           var cache = /* @__PURE__ */ new Map(), caches = tagCaches = /* @__PURE__ */ new Map();
-          caches.set(ownerDocument, cache);
+          caches.set(ownerDocument2, cache);
         } else
-          caches = tagCaches, cache = caches.get(ownerDocument), cache || (cache = /* @__PURE__ */ new Map(), caches.set(ownerDocument, cache));
+          caches = tagCaches, cache = caches.get(ownerDocument2), cache || (cache = /* @__PURE__ */ new Map(), caches.set(ownerDocument2, cache));
         if (cache.has(type)) return cache;
-        for (cache.set(type, null), ownerDocument = ownerDocument.getElementsByTagName(type), caches = 0; caches < ownerDocument.length; caches++) {
-          var node2 = ownerDocument[caches];
+        for (cache.set(type, null), ownerDocument2 = ownerDocument2.getElementsByTagName(type), caches = 0; caches < ownerDocument2.length; caches++) {
+          var node2 = ownerDocument2[caches];
           if (!(node2[internalHoistableMarker] || node2[internalInstanceKey] || type === "link" && node2.getAttribute("rel") === "stylesheet") && node2.namespaceURI !== "http://www.w3.org/2000/svg") {
             var nodeKey = node2.getAttribute(keyAttribute) || "";
             nodeKey = type + nodeKey;
@@ -12033,7 +12033,7 @@ Error generating stack: ` + x.message + `
           queuedExplicitHydrationTargets.splice(i, 0, target), i === 0 && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_2043 = React21.version;
+      var isomorphicReactPackageVersion$jscomp$inline_2043 = React52.version;
       if (isomorphicReactPackageVersion$jscomp$inline_2043 !== "19.3.1")
         throw Error(
           formatProdErrorMessage(
@@ -12123,7 +12123,7 @@ Error generating stack: ` + x.message + `
   var require_react_is_production_min = __commonJS({
     "node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.production.min.js"(exports) {
       "use strict";
-      var b = typeof Symbol == "function" && Symbol.for, c = b ? /* @__PURE__ */ Symbol.for("react.element") : 60103, d = b ? /* @__PURE__ */ Symbol.for("react.portal") : 60106, e = b ? /* @__PURE__ */ Symbol.for("react.fragment") : 60107, f = b ? /* @__PURE__ */ Symbol.for("react.strict_mode") : 60108, g = b ? /* @__PURE__ */ Symbol.for("react.profiler") : 60114, h = b ? /* @__PURE__ */ Symbol.for("react.provider") : 60109, k = b ? /* @__PURE__ */ Symbol.for("react.context") : 60110, l = b ? /* @__PURE__ */ Symbol.for("react.async_mode") : 60111, m = b ? /* @__PURE__ */ Symbol.for("react.concurrent_mode") : 60111, n = b ? /* @__PURE__ */ Symbol.for("react.forward_ref") : 60112, p = b ? /* @__PURE__ */ Symbol.for("react.suspense") : 60113, q = b ? /* @__PURE__ */ Symbol.for("react.suspense_list") : 60120, r = b ? /* @__PURE__ */ Symbol.for("react.memo") : 60115, t2 = b ? /* @__PURE__ */ Symbol.for("react.lazy") : 60116, v = b ? /* @__PURE__ */ Symbol.for("react.block") : 60121, w = b ? /* @__PURE__ */ Symbol.for("react.fundamental") : 60117, x = b ? /* @__PURE__ */ Symbol.for("react.responder") : 60118, y = b ? /* @__PURE__ */ Symbol.for("react.scope") : 60119;
+      var b = typeof Symbol == "function" && Symbol.for, c = b ? /* @__PURE__ */ Symbol.for("react.element") : 60103, d = b ? /* @__PURE__ */ Symbol.for("react.portal") : 60106, e = b ? /* @__PURE__ */ Symbol.for("react.fragment") : 60107, f = b ? /* @__PURE__ */ Symbol.for("react.strict_mode") : 60108, g = b ? /* @__PURE__ */ Symbol.for("react.profiler") : 60114, h = b ? /* @__PURE__ */ Symbol.for("react.provider") : 60109, k = b ? /* @__PURE__ */ Symbol.for("react.context") : 60110, l = b ? /* @__PURE__ */ Symbol.for("react.async_mode") : 60111, m = b ? /* @__PURE__ */ Symbol.for("react.concurrent_mode") : 60111, n = b ? /* @__PURE__ */ Symbol.for("react.forward_ref") : 60112, p = b ? /* @__PURE__ */ Symbol.for("react.suspense") : 60113, q = b ? /* @__PURE__ */ Symbol.for("react.suspense_list") : 60120, r2 = b ? /* @__PURE__ */ Symbol.for("react.memo") : 60115, t2 = b ? /* @__PURE__ */ Symbol.for("react.lazy") : 60116, v = b ? /* @__PURE__ */ Symbol.for("react.block") : 60121, w = b ? /* @__PURE__ */ Symbol.for("react.fundamental") : 60117, x = b ? /* @__PURE__ */ Symbol.for("react.responder") : 60118, y = b ? /* @__PURE__ */ Symbol.for("react.scope") : 60119;
       function z(a) {
         if (typeof a == "object" && a !== null) {
           var u = a.$$typeof;
@@ -12142,7 +12142,7 @@ Error generating stack: ` + x.message + `
                     case k:
                     case n:
                     case t2:
-                    case r:
+                    case r2:
                     case h:
                       return a;
                     default:
@@ -12165,7 +12165,7 @@ Error generating stack: ` + x.message + `
       exports.ForwardRef = n;
       exports.Fragment = e;
       exports.Lazy = t2;
-      exports.Memo = r;
+      exports.Memo = r2;
       exports.Portal = d;
       exports.Profiler = g;
       exports.StrictMode = f;
@@ -12193,7 +12193,7 @@ Error generating stack: ` + x.message + `
         return z(a) === t2;
       };
       exports.isMemo = function(a) {
-        return z(a) === r;
+        return z(a) === r2;
       };
       exports.isPortal = function(a) {
         return z(a) === d;
@@ -12208,7 +12208,7 @@ Error generating stack: ` + x.message + `
         return z(a) === p;
       };
       exports.isValidElementType = function(a) {
-        return typeof a == "string" || typeof a == "function" || a === e || a === m || a === g || a === f || a === p || a === q || typeof a == "object" && a !== null && (a.$$typeof === t2 || a.$$typeof === r || a.$$typeof === h || a.$$typeof === k || a.$$typeof === n || a.$$typeof === w || a.$$typeof === x || a.$$typeof === y || a.$$typeof === v);
+        return typeof a == "string" || typeof a == "function" || a === e || a === m || a === g || a === f || a === p || a === q || typeof a == "object" && a !== null && (a.$$typeof === t2 || a.$$typeof === r2 || a.$$typeof === h || a.$$typeof === k || a.$$typeof === n || a.$$typeof === w || a.$$typeof === x || a.$$typeof === y || a.$$typeof === v);
       };
       exports.typeOf = z;
     }
@@ -13421,6 +13421,8 @@ Error generating stack: ` + x.message + `
     "settings.updatesPrereleases": "Include test versions (beta and release candidates)",
     "sheet.scope": "Scope: {crate}",
     "sheet.title": "{view} · {space}",
+    "shell.drawerHide": "Hide navigation",
+    "shell.drawerShow": "Show navigation",
     "sharing.canSend": "Anonymous counts and crash reports can be sent.",
     "sharing.loadFailed": "Couldn't load sharing settings.",
     "sharing.loadFailedOff": "Couldn't load sharing settings. Nothing is sent.",
@@ -13866,6 +13868,7 @@ Error generating stack: ` + x.message + `
     "tooltip.viewBitrate": "Flag files whose stated bitrate is much higher than the spectrum, or lossless files made from a lossy encode. Needs a crate. Saving a crate writes the library.",
     "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
     "tooltip.viewDrift": "Flag tracks whose tempo wanders, or that look like live recordings. Needs a crate. Read-only.",
+    "tooltip.drawerToggle": "Hide or show the navigation drawer.",
     "tooltip.driftRefresh": "Run the tempo check again on the selected crate.",
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
@@ -14986,6 +14989,8 @@ Error generating stack: ` + x.message + `
     "settings.updatesPrereleases": "Incluir versiones de prueba (beta y candidatas)",
     "sheet.scope": "Alcance: {crate}",
     "sheet.title": "{view} · {space}",
+    "shell.drawerHide": "Ocultar navegación",
+    "shell.drawerShow": "Mostrar navegación",
     "sharing.canSend": "Se pueden enviar recuentos anónimos e informes de errores.",
     "sharing.loadFailed": "No se pudieron cargar los ajustes de privacidad.",
     "sharing.loadFailedOff": "No se pudieron cargar los ajustes de privacidad. No se envía nada.",
@@ -15431,6 +15436,7 @@ Error generating stack: ` + x.message + `
     "tooltip.viewBitrate": "Marca archivos cuya tasa de bits declarada es mucho más alta que la del espectro, o archivos sin pérdida hechos a partir de un códec con pérdida. Necesita una caja. Guardar una caja escribe en la biblioteca.",
     "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
     "tooltip.viewDrift": "Marca pistas cuyo tempo se mueve, o que parecen grabaciones en vivo. Necesita una caja. Solo lectura.",
+    "tooltip.drawerToggle": "Ocultar o mostrar el panel de navegación.",
     "tooltip.driftRefresh": "Vuelve a comprobar el tempo de la caja seleccionada.",
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
@@ -16473,7 +16479,7 @@ Error generating stack: ` + x.message + `
   // node_modules/@mui/utils/formatMuiErrorMessage/formatMuiErrorMessage.mjs
   function formatMuiErrorMessage(code, ...args) {
     let url = new URL(`https://mui.com/production-error/?code=${code}`);
-    return args.forEach((arg) => url.searchParams.append("args[]", arg)), `Minified MUI error #${code}; visit ${url} for the full message.`;
+    return args.forEach((arg2) => url.searchParams.append("args[]", arg2)), `Minified MUI error #${code}; visit ${url} for the full message.`;
   }
 
   // node_modules/@mui/material/styles/identifier.mjs
@@ -16484,7 +16490,7 @@ Error generating stack: ` + x.message + `
     return _extends = Object.assign ? Object.assign.bind() : function(n) {
       for (var e = 1; e < arguments.length; e++) {
         var t2 = arguments[e];
-        for (var r in t2) ({}).hasOwnProperty.call(t2, r) && (n[r] = t2[r]);
+        for (var r2 in t2) ({}).hasOwnProperty.call(t2, r2) && (n[r2] = t2[r2]);
       }
       return n;
     }, _extends.apply(null, arguments);
@@ -16860,8 +16866,8 @@ Error generating stack: ` + x.message + `
   // node_modules/@emotion/memoize/dist/emotion-memoize.esm.js
   function memoize(fn) {
     var cache = /* @__PURE__ */ Object.create(null);
-    return function(arg) {
-      return cache[arg] === void 0 && (cache[arg] = fn(arg)), cache[arg];
+    return function(arg2) {
+      return cache[arg2] === void 0 && (cache[arg2] = fn(arg2)), cache[arg2];
     };
   }
 
@@ -17111,8 +17117,8 @@ Error generating stack: ` + x.message + `
     {
       var currentSheet, finalizingPlugins = [stringify, rulesheet(function(rule) {
         currentSheet.insert(rule);
-      })], serializer = middleware(omnipresentPlugins.concat(stylisPlugins, finalizingPlugins)), stylis = function(styles) {
-        return serialize(compile(styles), serializer);
+      })], serializer = middleware(omnipresentPlugins.concat(stylisPlugins, finalizingPlugins)), stylis = function(styles2) {
+        return serialize(compile(styles2), serializer);
       };
       _insert = function(selector, serialized, sheet, shouldCache) {
         currentSheet = sheet, stylis(selector ? selector + "{" + serialized.styles + "}" : serialized.styles), shouldCache && (cache.inserted[serialized.name] = !0);
@@ -17144,20 +17150,20 @@ Error generating stack: ` + x.message + `
       registered[className] !== void 0 ? registeredStyles.push(registered[className] + ";") : className && (rawClassName += className + " ");
     }), rawClassName;
   }
-  var registerStyles = function(cache, serialized, isStringTag) {
+  var registerStyles = function(cache, serialized, isStringTag2) {
     var className = cache.key + "-" + serialized.name;
     // we only need to add the styles to the registered cache if the
     // class name could be used further down
     // the tree but if it's a string tag, we know it won't
     // so we don't have to add it to registered cache.
     // this improves memory usage since we can avoid storing the whole style string
-    (isStringTag === !1 || // we need to always store it if we're in compat mode and
+    (isStringTag2 === !1 || // we need to always store it if we're in compat mode and
     // in node since emotion-server relies on whether a style is in
     // the registered cache to know whether a style is global or not
     // also, note that this check will be dead code eliminated in the browser
     isBrowser === !1) && cache.registered[className] === void 0 && (cache.registered[className] = serialized.styles);
-  }, insertStyles = function(cache, serialized, isStringTag) {
-    registerStyles(cache, serialized, isStringTag);
+  }, insertStyles = function(cache, serialized, isStringTag2) {
+    registerStyles(cache, serialized, isStringTag2);
     var className = cache.key + "-" + serialized.name;
     if (cache.inserted[serialized.name] === void 0) {
       var current2 = serialized;
@@ -17289,8 +17295,8 @@ Error generating stack: ` + x.message + `
                 styles: next3.styles,
                 next: cursor
               }, next3 = next3.next;
-          var styles = serializedStyles.styles + ";";
-          return styles;
+          var styles2 = serializedStyles.styles + ";";
+          return styles2;
         }
         return createStringFromObject(mergedProps, registered, interpolation);
       }
@@ -17345,27 +17351,27 @@ Error generating stack: ` + x.message + `
   function serializeStyles(args, registered, mergedProps) {
     if (args.length === 1 && typeof args[0] == "object" && args[0] !== null && args[0].styles !== void 0)
       return args[0];
-    var stringMode = !0, styles = "";
+    var stringMode = !0, styles2 = "";
     cursor = void 0;
     var strings = args[0];
     if (strings == null || strings.raw === void 0)
-      stringMode = !1, styles += handleInterpolation(mergedProps, registered, strings);
+      stringMode = !1, styles2 += handleInterpolation(mergedProps, registered, strings);
     else {
       var asTemplateStringsArr = strings;
-      styles += asTemplateStringsArr[0];
+      styles2 += asTemplateStringsArr[0];
     }
     for (var i = 1; i < args.length; i++)
-      if (styles += handleInterpolation(mergedProps, registered, args[i]), stringMode) {
+      if (styles2 += handleInterpolation(mergedProps, registered, args[i]), stringMode) {
         var templateStringsArr = strings;
-        styles += templateStringsArr[i];
+        styles2 += templateStringsArr[i];
       }
     labelPattern.lastIndex = 0;
-    for (var identifierName = "", match2; (match2 = labelPattern.exec(styles)) !== null; )
+    for (var identifierName = "", match2; (match2 = labelPattern.exec(styles2)) !== null; )
       identifierName += "-" + match2[1];
-    var name = murmur2(styles) + identifierName;
+    var name = murmur2(styles2) + identifierName;
     return {
       name,
-      styles,
+      styles: styles2,
       next: cursor
     };
   }
@@ -17399,9 +17405,9 @@ Error generating stack: ` + x.message + `
       hasOwn.call(props, _key) && (newProps[_key] = props[_key]);
     return newProps[typePropName] = type, newProps;
   }, Insertion = function(_ref) {
-    var cache = _ref.cache, serialized = _ref.serialized, isStringTag = _ref.isStringTag;
-    return registerStyles(cache, serialized, isStringTag), useInsertionEffectAlwaysWithSyncFallback(function() {
-      return insertStyles(cache, serialized, isStringTag);
+    var cache = _ref.cache, serialized = _ref.serialized, isStringTag2 = _ref.isStringTag;
+    return registerStyles(cache, serialized, isStringTag2), useInsertionEffectAlwaysWithSyncFallback(function() {
+      return insertStyles(cache, serialized, isStringTag2);
     }), null;
   }, Emotion = /* @__PURE__ */ withEmotionCache(function(props, cache, ref) {
     var cssProp = props.css;
@@ -17432,12 +17438,12 @@ Error generating stack: ` + x.message + `
       createElementArgArray[i] = args[i];
     return React3.createElement.apply(null, createElementArgArray);
   };
-  (function(_jsx14) {
+  (function(_jsx36) {
     var JSX;
-    JSX || (JSX = _jsx14.JSX || (_jsx14.JSX = {}));
+    JSX || (JSX = _jsx36.JSX || (_jsx36.JSX = {}));
   })(jsx || (jsx = {}));
   var Global = /* @__PURE__ */ withEmotionCache(function(props, cache) {
-    var styles = props.styles, serialized = serializeStyles([styles], void 0, React3.useContext(ThemeContext)), sheetRef = React3.useRef();
+    var styles2 = props.styles, serialized = serializeStyles([styles2], void 0, React3.useContext(ThemeContext)), sheetRef = React3.useRef();
     return useInsertionEffectWithLayoutFallback(function() {
       var key = cache.key + "-global", sheet = new cache.sheet.constructor({
         key,
@@ -17461,6 +17467,22 @@ Error generating stack: ` + x.message + `
       cache.insert("", serialized, sheet, !1);
     }, [cache, serialized.name]), null;
   });
+  function css() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++)
+      args[_key] = arguments[_key];
+    return serializeStyles(args);
+  }
+  function keyframes() {
+    var insertable = css.apply(void 0, arguments), name = "animation-" + insertable.name;
+    return {
+      name,
+      styles: "@keyframes " + name + "{" + insertable.styles + "}",
+      anim: 1,
+      toString: function() {
+        return "_EMO_" + this.name + "_" + this.styles + "_EMO_";
+      }
+    };
+  }
 
   // node_modules/@emotion/styled/base/dist/emotion-styled-base.browser.esm.js
   var React4 = __toESM(require_react());
@@ -17482,32 +17504,32 @@ Error generating stack: ` + x.message + `
     // it's a lowercase character
     tag.charCodeAt(0) > 96 ? testOmitPropsOnStringTag : testOmitPropsOnComponent;
   }, composeShouldForwardProps = function(tag, options, isReal) {
-    var shouldForwardProp;
+    var shouldForwardProp2;
     if (options) {
       var optionsShouldForwardProp = options.shouldForwardProp;
-      shouldForwardProp = tag.__emotion_forwardProp && optionsShouldForwardProp ? function(propName) {
+      shouldForwardProp2 = tag.__emotion_forwardProp && optionsShouldForwardProp ? function(propName) {
         return tag.__emotion_forwardProp(propName) && optionsShouldForwardProp(propName);
       } : optionsShouldForwardProp;
     }
-    return typeof shouldForwardProp != "function" && isReal && (shouldForwardProp = tag.__emotion_forwardProp), shouldForwardProp;
+    return typeof shouldForwardProp2 != "function" && isReal && (shouldForwardProp2 = tag.__emotion_forwardProp), shouldForwardProp2;
   }, Insertion3 = function(_ref) {
-    var cache = _ref.cache, serialized = _ref.serialized, isStringTag = _ref.isStringTag;
-    return registerStyles(cache, serialized, isStringTag), useInsertionEffectAlwaysWithSyncFallback(function() {
-      return insertStyles(cache, serialized, isStringTag);
+    var cache = _ref.cache, serialized = _ref.serialized, isStringTag2 = _ref.isStringTag;
+    return registerStyles(cache, serialized, isStringTag2), useInsertionEffectAlwaysWithSyncFallback(function() {
+      return insertStyles(cache, serialized, isStringTag2);
     }), null;
   }, createStyled = function createStyled2(tag, options) {
     var isReal = tag.__emotion_real === tag, baseTag = isReal && tag.__emotion_base || tag, identifierName, targetClassName;
     options !== void 0 && (identifierName = options.label, targetClassName = options.target);
-    var shouldForwardProp = composeShouldForwardProps(tag, options, isReal), defaultShouldForwardProp = shouldForwardProp || getDefaultShouldForwardProp(baseTag), shouldUseAs = !defaultShouldForwardProp("as");
+    var shouldForwardProp2 = composeShouldForwardProps(tag, options, isReal), defaultShouldForwardProp = shouldForwardProp2 || getDefaultShouldForwardProp(baseTag), shouldUseAs = !defaultShouldForwardProp("as");
     return function() {
-      var args = arguments, styles = isReal && tag.__emotion_styles !== void 0 ? tag.__emotion_styles.slice(0) : [];
-      if (identifierName !== void 0 && styles.push("label:" + identifierName + ";"), args[0] == null || args[0].raw === void 0)
-        styles.push.apply(styles, args);
+      var args = arguments, styles2 = isReal && tag.__emotion_styles !== void 0 ? tag.__emotion_styles.slice(0) : [];
+      if (identifierName !== void 0 && styles2.push("label:" + identifierName + ";"), args[0] == null || args[0].raw === void 0)
+        styles2.push.apply(styles2, args);
       else {
         var templateStringsArr = args[0];
-        styles.push(templateStringsArr[0]);
+        styles2.push(templateStringsArr[0]);
         for (var len = args.length, i = 1; i < len; i++)
-          styles.push(args[i], templateStringsArr[i]);
+          styles2.push(args[i], templateStringsArr[i]);
       }
       var Styled = withEmotionCache(function(props, cache, ref) {
         var FinalTag = shouldUseAs && props.as || baseTag, className = "", classInterpolations = [], mergedProps = props;
@@ -17518,9 +17540,9 @@ Error generating stack: ` + x.message + `
           mergedProps.theme = React4.useContext(ThemeContext);
         }
         typeof props.className == "string" ? className = getRegisteredStyles(cache.registered, classInterpolations, props.className) : props.className != null && (className = props.className + " ");
-        var serialized = serializeStyles(styles.concat(classInterpolations), cache.registered, mergedProps);
+        var serialized = serializeStyles(styles2.concat(classInterpolations), cache.registered, mergedProps);
         className += cache.key + "-" + serialized.name, targetClassName !== void 0 && (className += " " + targetClassName);
-        var finalShouldForwardProp = shouldUseAs && shouldForwardProp === void 0 ? getDefaultShouldForwardProp(FinalTag) : defaultShouldForwardProp, newProps = {};
+        var finalShouldForwardProp = shouldUseAs && shouldForwardProp2 === void 0 ? getDefaultShouldForwardProp(FinalTag) : defaultShouldForwardProp, newProps = {};
         for (var _key in props)
           shouldUseAs && _key === "as" || finalShouldForwardProp(_key) && (newProps[_key] = props[_key]);
         return newProps.className = className, ref && (newProps.ref = ref), /* @__PURE__ */ React4.createElement(React4.Fragment, null, /* @__PURE__ */ React4.createElement(Insertion3, {
@@ -17529,7 +17551,7 @@ Error generating stack: ` + x.message + `
           isStringTag: typeof FinalTag == "string"
         }), /* @__PURE__ */ React4.createElement(FinalTag, newProps));
       });
-      return Styled.displayName = identifierName !== void 0 ? identifierName : "Styled(" + (typeof baseTag == "string" ? baseTag : baseTag.displayName || baseTag.name || "Component") + ")", Styled.defaultProps = tag.defaultProps, Styled.__emotion_real = Styled, Styled.__emotion_base = baseTag, Styled.__emotion_styles = styles, Styled.__emotion_forwardProp = shouldForwardProp, Object.defineProperty(Styled, "toString", {
+      return Styled.displayName = identifierName !== void 0 ? identifierName : "Styled(" + (typeof baseTag == "string" ? baseTag : baseTag.displayName || baseTag.name || "Component") + ")", Styled.defaultProps = tag.defaultProps, Styled.__emotion_real = Styled, Styled.__emotion_base = baseTag, Styled.__emotion_styles = styles2, Styled.__emotion_forwardProp = shouldForwardProp2, Object.defineProperty(Styled, "toString", {
         value: function() {
           return targetClassName === void 0 && isDevelopment4 ? "NO_COMPONENT_SELECTOR" : "." + targetClassName;
         }
@@ -17537,7 +17559,7 @@ Error generating stack: ` + x.message + `
         var newStyled = createStyled2(nextTag, _extends({}, options, nextOptions, {
           shouldForwardProp: composeShouldForwardProps(Styled, nextOptions, !0)
         }));
-        return newStyled.apply(void 0, styles);
+        return newStyled.apply(void 0, styles2);
       }, Styled;
     };
   };
@@ -17692,18 +17714,25 @@ Error generating stack: ` + x.message + `
   }
   function GlobalStyles(props) {
     let {
-      styles,
-      defaultTheme: defaultTheme2 = {}
+      styles: styles2,
+      defaultTheme: defaultTheme3 = {}
     } = props;
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Global, {
-      styles: typeof styles == "function" ? (themeInput) => styles(isEmpty(themeInput) ? defaultTheme2 : themeInput) : styles
+      styles: typeof styles2 == "function" ? (themeInput) => styles2(isEmpty(themeInput) ? defaultTheme3 : themeInput) : styles2
     });
   }
 
   // node_modules/@mui/styled-engine/index.mjs
+  function styled2(tag, options) {
+    return styled(tag, options);
+  }
+  var styled_engine_default = styled2;
+  function internal_mutateStyles(tag, processor) {
+    Array.isArray(tag.__emotion_styles) && (tag.__emotion_styles = processor(tag.__emotion_styles));
+  }
   var wrapper = [];
-  function internal_serializeStyles(styles) {
-    return wrapper[0] = styles, serializeStyles(wrapper);
+  function internal_serializeStyles(styles2) {
+    return wrapper[0] = styles2, serializeStyles(wrapper);
   }
 
   // node_modules/@mui/utils/deepmerge/deepmerge.mjs
@@ -18129,8 +18158,8 @@ Error generating stack: ` + x.message + `
   }
 
   // node_modules/@mui/system/compose/compose.mjs
-  function compose(...styles) {
-    let handlers = styles.reduce((acc, style3) => (style3.filterProps.forEach((prop) => {
+  function compose(...styles2) {
+    let handlers = styles2.reduce((acc, style3) => (style3.filterProps.forEach((prop) => {
       acc[prop] = style3;
     }), acc), {}), fn = (props) => {
       let result = {};
@@ -18138,7 +18167,7 @@ Error generating stack: ` + x.message + `
         handlers[prop] && fastDeepAssign(result, handlers[prop](props));
       return result;
     };
-    return fn.propTypes = {}, fn.filterProps = styles.reduce((acc, style3) => acc.concat(style3.filterProps), []), fn;
+    return fn.propTypes = {}, fn.filterProps = styles2.reduce((acc, style3) => acc.concat(style3.filterProps), []), fn;
   }
   var compose_default = compose;
 
@@ -18661,22 +18690,22 @@ Error generating stack: ` + x.message + `
       cssProperty === !1 ? mediaKey ? fastDeepAssign(css2[mediaKey], finalValue) : fastDeepAssign(css2, finalValue) : mediaKey ? css2[mediaKey][cssProperty] = finalValue : css2[cssProperty] = finalValue;
     });
   }
-  function callIfFn(maybeFn, arg) {
-    return typeof maybeFn == "function" ? maybeFn(arg) : maybeFn;
+  function callIfFn(maybeFn, arg2) {
+    return typeof maybeFn == "function" ? maybeFn(arg2) : maybeFn;
   }
 
   // node_modules/@mui/system/createTheme/applyStyles.mjs
-  function applyStyles(key, styles) {
+  function applyStyles(key, styles2) {
     let theme = this;
     if (theme.vars) {
       if (!theme.colorSchemes?.[key] || typeof theme.getColorSchemeSelector != "function")
         return {};
       let selector = theme.getColorSchemeSelector(key);
-      return selector === "&" ? styles : ((selector.includes("data-") || selector.includes(".")) && (selector = `*:where(${selector.replace(/\s*&$/, "")}) &`), {
-        [selector]: styles
+      return selector === "&" ? styles2 : ((selector.includes("data-") || selector.includes(".")) && (selector = `*:where(${selector.replace(/\s*&$/, "")}) &`), {
+        [selector]: styles2
       });
     }
-    return theme.palette.mode === key ? styles : {};
+    return theme.palette.mode === key ? styles2 : {};
   }
 
   // node_modules/@mui/system/createTheme/createTheme.mjs
@@ -18719,39 +18748,318 @@ Error generating stack: ` + x.message + `
   function isObjectEmpty2(obj) {
     return Object.keys(obj).length === 0;
   }
-  function useThemeWithoutDefault(defaultTheme2 = null) {
+  function useThemeWithoutDefault(defaultTheme3 = null) {
     let contextTheme = React6.useContext(ThemeContext);
-    return !contextTheme || isObjectEmpty2(contextTheme) ? defaultTheme2 : contextTheme;
+    return !contextTheme || isObjectEmpty2(contextTheme) ? defaultTheme3 : contextTheme;
   }
   var useThemeWithoutDefault_default = useThemeWithoutDefault;
 
   // node_modules/@mui/system/useTheme/useTheme.mjs
   var systemDefaultTheme = createTheme_default();
-  function useTheme2(defaultTheme2 = systemDefaultTheme) {
-    return useThemeWithoutDefault_default(defaultTheme2);
+  function useTheme2(defaultTheme3 = systemDefaultTheme) {
+    return useThemeWithoutDefault_default(defaultTheme3);
   }
   var useTheme_default = useTheme2;
 
   // node_modules/@mui/system/GlobalStyles/GlobalStyles.mjs
   var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-  function wrapGlobalLayer(styles) {
-    let serialized = internal_serializeStyles(styles);
-    return styles !== serialized && serialized.styles ? (serialized.styles.match(/^@layer\s+[^{]*$/) || (serialized.styles = `@layer global{${serialized.styles}}`), serialized) : styles;
+  function wrapGlobalLayer(styles2) {
+    let serialized = internal_serializeStyles(styles2);
+    return styles2 !== serialized && serialized.styles ? (serialized.styles.match(/^@layer\s+[^{]*$/) || (serialized.styles = `@layer global{${serialized.styles}}`), serialized) : styles2;
   }
   function GlobalStyles2({
-    styles,
+    styles: styles2,
     themeId,
-    defaultTheme: defaultTheme2 = {}
+    defaultTheme: defaultTheme3 = {}
   }) {
-    let upperTheme = useTheme_default(defaultTheme2), resolvedTheme = themeId && upperTheme[themeId] || upperTheme, globalStyles = typeof styles == "function" ? styles(resolvedTheme) : styles;
+    let upperTheme = useTheme_default(defaultTheme3), resolvedTheme = themeId && upperTheme[themeId] || upperTheme, globalStyles = typeof styles2 == "function" ? styles2(resolvedTheme) : styles2;
     return resolvedTheme.modularCssLayers && (Array.isArray(globalStyles) ? globalStyles = globalStyles.map((styleArg) => wrapGlobalLayer(typeof styleArg == "function" ? styleArg(resolvedTheme) : styleArg)) : globalStyles = wrapGlobalLayer(globalStyles)), /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GlobalStyles, {
       styles: globalStyles
     });
   }
   var GlobalStyles_default = GlobalStyles2;
 
+  // node_modules/@mui/utils/ClassNameGenerator/ClassNameGenerator.mjs
+  var defaultGenerator = (componentName) => componentName, createClassNameGenerator = () => {
+    let generate = defaultGenerator;
+    return {
+      configure(generator) {
+        generate = generator;
+      },
+      generate(componentName) {
+        return generate(componentName);
+      },
+      reset() {
+        generate = defaultGenerator;
+      }
+    };
+  }, ClassNameGenerator = createClassNameGenerator(), ClassNameGenerator_default = ClassNameGenerator;
+
+  // node_modules/@mui/system/createBox/createBox.mjs
+  var React7 = __toESM(require_react(), 1);
+
+  // node_modules/clsx/dist/clsx.mjs
+  function r(e) {
+    var t2, f, n = "";
+    if (typeof e == "string" || typeof e == "number") n += e;
+    else if (typeof e == "object") if (Array.isArray(e)) {
+      var o = e.length;
+      for (t2 = 0; t2 < o; t2++) e[t2] && (f = r(e[t2])) && (n && (n += " "), n += f);
+    } else for (f in e) e[f] && (n && (n += " "), n += f);
+    return n;
+  }
+  function clsx() {
+    for (var e, t2, f = 0, n = "", o = arguments.length; f < o; f++) (e = arguments[f]) && (t2 = r(e)) && (n && (n += " "), n += t2);
+    return n;
+  }
+  var clsx_default = clsx;
+
+  // node_modules/@mui/system/createBox/createBox.mjs
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  function createBox(options = {}) {
+    let {
+      themeId,
+      defaultTheme: defaultTheme3,
+      defaultClassName = "MuiBox-root",
+      generateClassName
+    } = options, BoxRoot = styled_engine_default("div", {
+      shouldForwardProp: (prop) => prop !== "theme" && prop !== "sx" && prop !== "as"
+    })(styleFunctionSx_default);
+    return /* @__PURE__ */ React7.forwardRef(function(inProps, ref) {
+      let theme = useTheme_default(defaultTheme3), {
+        className,
+        component = "div",
+        ...other
+      } = inProps;
+      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(BoxRoot, {
+        as: component,
+        ref,
+        className: clsx_default(className, generateClassName ? generateClassName(defaultClassName) : defaultClassName),
+        theme: themeId && theme[themeId] || theme,
+        ...other
+      });
+    });
+  }
+
+  // node_modules/@mui/utils/generateUtilityClass/generateUtilityClass.mjs
+  var globalStateClasses = {
+    active: "active",
+    checked: "checked",
+    completed: "completed",
+    disabled: "disabled",
+    error: "error",
+    expanded: "expanded",
+    focused: "focused",
+    focusVisible: "focusVisible",
+    open: "open",
+    readOnly: "readOnly",
+    required: "required",
+    selected: "selected"
+  };
+  function generateUtilityClass(componentName, slot, globalStatePrefix = "Mui") {
+    let globalStateClass = globalStateClasses[slot];
+    return globalStateClass ? `${globalStatePrefix}-${globalStateClass}` : `${ClassNameGenerator_default.generate(componentName)}-${slot}`;
+  }
+
+  // node_modules/@mui/utils/generateUtilityClasses/generateUtilityClasses.mjs
+  function generateUtilityClasses(componentName, slots, globalStatePrefix = "Mui") {
+    let result = {};
+    return slots.forEach((slot) => {
+      result[slot] = generateUtilityClass(componentName, slot, globalStatePrefix);
+    }), result;
+  }
+
+  // node_modules/@mui/system/preprocessStyles.mjs
+  function preprocessStyles(input) {
+    let {
+      variants,
+      ...style3
+    } = input, result = {
+      variants,
+      style: internal_serializeStyles(style3),
+      isProcessed: !0
+    };
+    return result.style === style3 || variants && variants.forEach((variant) => {
+      typeof variant.style != "function" && (variant.style = internal_serializeStyles(variant.style));
+    }), result;
+  }
+
+  // node_modules/@mui/system/createStyled/createStyled.mjs
+  var systemDefaultTheme2 = createTheme_default();
+  function shouldForwardProp(prop) {
+    return prop !== "ownerState" && prop !== "theme" && prop !== "sx" && prop !== "as";
+  }
+  function shallowLayer(serialized, layerName) {
+    return layerName && serialized && typeof serialized == "object" && serialized.styles && !serialized.styles.startsWith("@layer") && (serialized.styles = `@layer ${layerName}{${String(serialized.styles)}}`), serialized;
+  }
+  function defaultOverridesResolver(slot) {
+    return slot ? (_props, styles2) => styles2[slot] : null;
+  }
+  function attachTheme(props, themeId, defaultTheme3) {
+    props.theme = isObjectEmpty(props.theme) ? defaultTheme3 : props.theme[themeId] || props.theme;
+  }
+  function processStyle(props, style3, layerName) {
+    let resolvedStyle = typeof style3 == "function" ? style3(props) : style3;
+    if (Array.isArray(resolvedStyle))
+      return resolvedStyle.flatMap((subStyle) => processStyle(props, subStyle, layerName));
+    if (Array.isArray(resolvedStyle?.variants)) {
+      let rootStyle;
+      if (resolvedStyle.isProcessed)
+        rootStyle = layerName ? shallowLayer(resolvedStyle.style, layerName) : resolvedStyle.style;
+      else {
+        let {
+          variants,
+          ...otherStyles
+        } = resolvedStyle;
+        rootStyle = layerName ? shallowLayer(internal_serializeStyles(otherStyles), layerName) : otherStyles;
+      }
+      return processStyleVariants(props, resolvedStyle.variants, [rootStyle], layerName);
+    }
+    return resolvedStyle?.isProcessed ? layerName ? shallowLayer(internal_serializeStyles(resolvedStyle.style), layerName) : resolvedStyle.style : layerName ? shallowLayer(internal_serializeStyles(resolvedStyle), layerName) : resolvedStyle;
+  }
+  function processStyleVariants(props, variants, results = [], layerName = void 0) {
+    let mergedState;
+    variantLoop: for (let i = 0; i < variants.length; i += 1) {
+      let variant = variants[i];
+      if (typeof variant.props == "function") {
+        if (mergedState ??= {
+          ...props,
+          ...props.ownerState,
+          ownerState: props.ownerState
+        }, !variant.props(mergedState))
+          continue;
+      } else
+        for (let key in variant.props)
+          if (props[key] !== variant.props[key] && props.ownerState?.[key] !== variant.props[key])
+            continue variantLoop;
+      typeof variant.style == "function" ? (mergedState ??= {
+        ...props,
+        ...props.ownerState,
+        ownerState: props.ownerState
+      }, results.push(layerName ? shallowLayer(internal_serializeStyles(variant.style(mergedState)), layerName) : variant.style(mergedState))) : results.push(layerName ? shallowLayer(internal_serializeStyles(variant.style), layerName) : variant.style);
+    }
+    return results;
+  }
+  function createStyled3(input = {}) {
+    let {
+      themeId,
+      defaultTheme: defaultTheme3 = systemDefaultTheme2,
+      rootShouldForwardProp: rootShouldForwardProp2 = shouldForwardProp,
+      slotShouldForwardProp: slotShouldForwardProp2 = shouldForwardProp
+    } = input;
+    function styleAttachTheme(props) {
+      attachTheme(props, themeId, defaultTheme3);
+    }
+    return (tag, inputOptions = {}) => {
+      internal_mutateStyles(tag, (styles2) => styles2.filter((style3) => style3 !== styleFunctionSx_default));
+      let {
+        name: componentName,
+        slot: componentSlot,
+        skipVariantsResolver: inputSkipVariantsResolver,
+        skipSx: inputSkipSx,
+        // TODO v6: remove `lowercaseFirstLetter()` in the next major release
+        // For more details: https://github.com/mui/material-ui/pull/37908
+        overridesResolver: overridesResolver2 = defaultOverridesResolver(lowercaseFirstLetter(componentSlot)),
+        ...options
+      } = inputOptions, layerName = componentName && componentName.startsWith("Mui") || componentSlot ? "components" : "custom", skipVariantsResolver = inputSkipVariantsResolver !== void 0 ? inputSkipVariantsResolver : (
+        // TODO v6: remove `Root` in the next major release
+        // For more details: https://github.com/mui/material-ui/pull/37908
+        componentSlot && componentSlot !== "Root" && componentSlot !== "root" || !1
+      ), skipSx = inputSkipSx || !1, shouldForwardPropOption = shouldForwardProp;
+      componentSlot === "Root" || componentSlot === "root" ? shouldForwardPropOption = rootShouldForwardProp2 : componentSlot ? shouldForwardPropOption = slotShouldForwardProp2 : isStringTag(tag) && (shouldForwardPropOption = void 0);
+      let defaultStyledResolver = styled_engine_default(tag, {
+        shouldForwardProp: shouldForwardPropOption,
+        label: generateStyledLabel(componentName, componentSlot),
+        ...options
+      }), transformStyle = (style3) => {
+        if (style3.__emotion_real === style3)
+          return style3;
+        if (typeof style3 == "function")
+          return function(props) {
+            return processStyle(props, style3, props.theme.modularCssLayers ? layerName : void 0);
+          };
+        if (isPlainObject(style3)) {
+          let serialized = preprocessStyles(style3);
+          return function(props) {
+            return serialized.variants ? processStyle(props, serialized, props.theme.modularCssLayers ? layerName : void 0) : props.theme.modularCssLayers ? shallowLayer(serialized.style, layerName) : serialized.style;
+          };
+        }
+        return style3;
+      }, muiStyledResolver = (...expressionsInput) => {
+        let expressionsHead = [], expressionsBody = expressionsInput.map(transformStyle), expressionsTail = [];
+        if (expressionsHead.push(styleAttachTheme), componentName && overridesResolver2 && expressionsTail.push(function(props) {
+          let styleOverrides = props.theme.components?.[componentName]?.styleOverrides;
+          if (!styleOverrides)
+            return null;
+          let resolvedStyleOverrides = {};
+          for (let slotKey in styleOverrides)
+            resolvedStyleOverrides[slotKey] = processStyle(props, styleOverrides[slotKey], props.theme.modularCssLayers ? "theme" : void 0);
+          return overridesResolver2(props, resolvedStyleOverrides);
+        }), componentName && !skipVariantsResolver && expressionsTail.push(function(props) {
+          let themeVariants = props.theme?.components?.[componentName]?.variants;
+          return themeVariants ? processStyleVariants(props, themeVariants, [], props.theme.modularCssLayers ? "theme" : void 0) : null;
+        }), skipSx || expressionsTail.push(styleFunctionSx_default), Array.isArray(expressionsBody[0])) {
+          let inputStrings = expressionsBody.shift(), placeholdersHead = new Array(expressionsHead.length).fill(""), placeholdersTail = new Array(expressionsTail.length).fill(""), outputStrings;
+          outputStrings = [...placeholdersHead, ...inputStrings, ...placeholdersTail], outputStrings.raw = [...placeholdersHead, ...inputStrings.raw, ...placeholdersTail], expressionsHead.unshift(outputStrings);
+        }
+        let expressions = [...expressionsHead, ...expressionsBody, ...expressionsTail], Component = defaultStyledResolver(...expressions);
+        return tag.muiName && (Component.muiName = tag.muiName), Component;
+      };
+      return defaultStyledResolver.withConfig && (muiStyledResolver.withConfig = defaultStyledResolver.withConfig), muiStyledResolver;
+    };
+  }
+  function generateStyledLabel(componentName, componentSlot) {
+    return void 0;
+  }
+  function isStringTag(tag) {
+    return typeof tag == "string" && // 96 is one less than the char code
+    // for "a" so this is checking that
+    // it's a lowercase character
+    tag.charCodeAt(0) > 96;
+  }
+  function lowercaseFirstLetter(string) {
+    return string && string.charAt(0).toLowerCase() + string.slice(1);
+  }
+
+  // node_modules/@mui/utils/resolveProps/resolveProps.mjs
+  function resolveProps(defaultProps, props, mergeClassNameAndStyle = !1) {
+    let output = {
+      ...props
+    };
+    for (let key in defaultProps)
+      if (Object.prototype.hasOwnProperty.call(defaultProps, key)) {
+        let propName = key;
+        if (propName === "components" || propName === "slots")
+          output[propName] = {
+            ...defaultProps[propName],
+            ...output[propName]
+          };
+        else if (propName === "componentsProps" || propName === "slotProps") {
+          let defaultSlotProps = defaultProps[propName], slotProps = props[propName];
+          if (!slotProps)
+            output[propName] = defaultSlotProps || {};
+          else if (!defaultSlotProps)
+            output[propName] = slotProps;
+          else {
+            output[propName] = {
+              ...slotProps
+            };
+            for (let slotKey in defaultSlotProps)
+              if (Object.prototype.hasOwnProperty.call(defaultSlotProps, slotKey)) {
+                let slotPropName = slotKey, defaultSlotPropValue = defaultSlotProps[slotPropName], slotPropValue = slotProps[slotPropName];
+                typeof defaultSlotPropValue == "function" || typeof slotPropValue == "function" ? output[propName][slotPropName] = (...args) => resolveProps((typeof defaultSlotPropValue == "function" ? defaultSlotPropValue(...args) : defaultSlotPropValue) ?? {}, (typeof slotPropValue == "function" ? slotPropValue(...args) : slotPropValue) ?? {}, mergeClassNameAndStyle) : output[propName][slotPropName] = resolveProps(defaultSlotPropValue ?? {}, slotPropValue ?? {}, mergeClassNameAndStyle);
+              }
+          }
+        } else propName === "className" && mergeClassNameAndStyle && props.className !== void 0 ? output.className = clsx_default(defaultProps?.className, props?.className) : propName === "style" && mergeClassNameAndStyle && props.style ? output.style = {
+          ...defaultProps?.style,
+          ...props?.style
+        } : output[propName] === void 0 && (output[propName] = defaultProps[propName]);
+      }
+    return output;
+  }
+
   // node_modules/@mui/utils/useEnhancedEffect/useEnhancedEffect.mjs
-  var React7 = __toESM(require_react(), 1), useEnhancedEffect = typeof window < "u" ? React7.useLayoutEffect : React7.useEffect, useEnhancedEffect_default = useEnhancedEffect;
+  var React8 = __toESM(require_react(), 1), useEnhancedEffect = typeof window < "u" ? React8.useLayoutEffect : React8.useEffect, useEnhancedEffect_default = useEnhancedEffect;
 
   // node_modules/@mui/utils/clamp/clamp.mjs
   function clamp(val, min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER) {
@@ -18881,25 +19189,25 @@ Error generating stack: ` + x.message + `
   }
 
   // node_modules/@mui/system/ThemeProvider/ThemeProvider.mjs
-  var React14 = __toESM(require_react(), 1);
+  var React15 = __toESM(require_react(), 1);
 
   // node_modules/@mui/private-theming/ThemeProvider/ThemeProvider.mjs
-  var React10 = __toESM(require_react(), 1);
+  var React11 = __toESM(require_react(), 1);
 
   // node_modules/@mui/private-theming/useTheme/ThemeContext.mjs
-  var React8 = __toESM(require_react(), 1), ThemeContext2 = /* @__PURE__ */ React8.createContext(null), ThemeContext_default = ThemeContext2;
+  var React9 = __toESM(require_react(), 1), ThemeContext2 = /* @__PURE__ */ React9.createContext(null), ThemeContext_default = ThemeContext2;
 
   // node_modules/@mui/private-theming/useTheme/useTheme.mjs
-  var React9 = __toESM(require_react(), 1);
+  var React10 = __toESM(require_react(), 1);
   function useTheme3() {
-    return React9.useContext(ThemeContext_default);
+    return React10.useContext(ThemeContext_default);
   }
 
   // node_modules/@mui/private-theming/ThemeProvider/nested.mjs
   var hasSymbol = typeof Symbol == "function" && Symbol.for, nested_default = hasSymbol ? /* @__PURE__ */ Symbol.for("mui.nested") : "__THEME_NESTED__";
 
   // node_modules/@mui/private-theming/ThemeProvider/ThemeProvider.mjs
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   function mergeOuterLocalTheme(outerTheme, localTheme) {
     return typeof localTheme == "function" ? localTheme(outerTheme) : {
       ...outerTheme,
@@ -18910,13 +19218,13 @@ Error generating stack: ` + x.message + `
     let {
       children,
       theme: localTheme
-    } = props, outerTheme = useTheme3(), theme = React10.useMemo(() => {
+    } = props, outerTheme = useTheme3(), theme = React11.useMemo(() => {
       let output = outerTheme === null ? {
         ...localTheme
       } : mergeOuterLocalTheme(outerTheme, localTheme);
       return output != null && (output[nested_default] = outerTheme !== null), output;
     }, [localTheme, outerTheme]);
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ThemeContext_default.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ThemeContext_default.Provider, {
       value: theme,
       children
     });
@@ -18924,43 +19232,67 @@ Error generating stack: ` + x.message + `
   var ThemeProvider_default = ThemeProvider2;
 
   // node_modules/@mui/system/RtlProvider/index.mjs
-  var React11 = __toESM(require_react(), 1);
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1), RtlContext = /* @__PURE__ */ React11.createContext(void 0);
+  var React12 = __toESM(require_react(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1), RtlContext = /* @__PURE__ */ React12.createContext(void 0);
   function RtlProvider({
     value,
     ...props
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(RtlContext.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(RtlContext.Provider, {
       value: value ?? !0,
       ...props
     });
   }
-  var RtlProvider_default = RtlProvider;
+  var useRtl = () => React12.useContext(RtlContext) ?? !1, RtlProvider_default = RtlProvider;
 
   // node_modules/@mui/system/DefaultPropsProvider/DefaultPropsProvider.mjs
-  var React12 = __toESM(require_react(), 1);
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1), PropsContext = /* @__PURE__ */ React12.createContext(void 0);
+  var React13 = __toESM(require_react(), 1);
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1), PropsContext = /* @__PURE__ */ React13.createContext(void 0);
   function DefaultPropsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PropsContext.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(PropsContext.Provider, {
       value,
       children
+    });
+  }
+  function getThemeProps(params) {
+    let {
+      theme,
+      name,
+      props
+    } = params;
+    if (!theme || !theme.components || !theme.components[name])
+      return props;
+    let config = theme.components[name];
+    return config.defaultProps ? resolveProps(config.defaultProps, props, theme.components.mergeClassNameAndStyle) : !config.styleOverrides && !config.variants ? resolveProps(config, props, theme.components.mergeClassNameAndStyle) : props;
+  }
+  function useDefaultProps({
+    props,
+    name
+  }) {
+    let ctx = React13.useContext(PropsContext);
+    return getThemeProps({
+      props,
+      name,
+      theme: {
+        components: ctx
+      }
     });
   }
   var DefaultPropsProvider_default = DefaultPropsProvider;
 
   // node_modules/@mui/utils/useId/useId.mjs
-  var React13 = __toESM(require_react(), 1), globalId = 0;
+  var React14 = __toESM(require_react(), 1), globalId = 0;
   function useGlobalId(idOverride) {
-    let [defaultId, setDefaultId] = React13.useState(idOverride), id = idOverride || defaultId;
-    return React13.useEffect(() => {
+    let [defaultId, setDefaultId] = React14.useState(idOverride), id = idOverride || defaultId;
+    return React14.useEffect(() => {
       defaultId == null && (globalId += 1, setDefaultId(`mui-${globalId}`));
     }, [defaultId]), id;
   }
   var safeReact = {
-    ...React13
+    ...React14
   }, maybeReactUseId = safeReact.useId;
   function useId(idOverride) {
     if (maybeReactUseId !== void 0) {
@@ -18971,7 +19303,7 @@ Error generating stack: ` + x.message + `
   }
 
   // node_modules/@mui/system/ThemeProvider/useLayerOrder.mjs
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
   function useLayerOrder(theme) {
     let upperTheme = useThemeWithoutDefault_default(), id = useId() || "", {
       modularCssLayers
@@ -18988,15 +19320,15 @@ Error generating stack: ` + x.message + `
         styleElement.setAttribute("data-mui-layer-order", id), styleElement.textContent = layerOrder, head.prepend(styleElement);
       } else
         head.querySelector(`style[data-mui-layer-order="${id}"]`)?.remove();
-    }, [layerOrder, id]), layerOrder ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(GlobalStyles_default, {
+    }, [layerOrder, id]), layerOrder ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(GlobalStyles_default, {
       styles: layerOrder
     }) : null;
   }
 
   // node_modules/@mui/system/ThemeProvider/ThemeProvider.mjs
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1), EMPTY_THEME4 = {};
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1), EMPTY_THEME4 = {};
   function useThemeScoping(themeId, upperTheme, localTheme, isPrivate = !1) {
-    return React14.useMemo(() => {
+    return React15.useMemo(() => {
       let resolvedTheme = themeId && upperTheme[themeId] || upperTheme;
       if (typeof localTheme == "function") {
         let mergedTheme = localTheme(resolvedTheme), result = themeId ? {
@@ -19020,13 +19352,13 @@ Error generating stack: ` + x.message + `
       theme: localTheme,
       themeId
     } = props, upperTheme = useThemeWithoutDefault_default(EMPTY_THEME4), upperPrivateTheme = useTheme3() || EMPTY_THEME4, engineTheme = useThemeScoping(themeId, upperTheme, localTheme), privateTheme = useThemeScoping(themeId, upperPrivateTheme, localTheme, !0), rtlValue = (themeId ? engineTheme[themeId] : engineTheme).direction === "rtl", layerOrder = useLayerOrder(engineTheme);
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(ThemeProvider_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(ThemeProvider_default, {
       theme: privateTheme,
-      children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(ThemeContext.Provider, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(ThemeContext.Provider, {
         value: engineTheme,
-        children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(RtlProvider_default, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(RtlProvider_default, {
           value: rtlValue,
-          children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(DefaultPropsProvider_default, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(DefaultPropsProvider_default, {
             value: themeId ? engineTheme[themeId].components : engineTheme.components,
             children: [layerOrder, children]
           })
@@ -19036,12 +19368,24 @@ Error generating stack: ` + x.message + `
   }
   var ThemeProvider_default2 = ThemeProvider3;
 
+  // node_modules/@mui/system/memoTheme.mjs
+  var arg = {
+    theme: void 0
+  };
+  function unstable_memoTheme(styleFn) {
+    let lastValue, lastTheme;
+    return function(props) {
+      let value = lastValue;
+      return (value === void 0 || props.theme !== lastTheme) && (arg.theme = props.theme, value = preprocessStyles(styleFn(arg)), lastValue = value, lastTheme = props.theme), value;
+    };
+  }
+
   // node_modules/@mui/system/cssVars/createCssVarsProvider.mjs
-  var React17 = __toESM(require_react(), 1);
+  var React18 = __toESM(require_react(), 1);
 
   // node_modules/@mui/system/InitColorSchemeScript/InitColorSchemeScript.mjs
-  var React15 = __toESM(require_react(), 1), import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1), DEFAULT_MODE_STORAGE_KEY = "mode", DEFAULT_COLOR_SCHEME_STORAGE_KEY = "color-scheme", DEFAULT_ATTRIBUTE = "data-color-scheme", safeReact2 = {
-    ...React15
+  var React16 = __toESM(require_react(), 1), import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1), DEFAULT_MODE_STORAGE_KEY = "mode", DEFAULT_COLOR_SCHEME_STORAGE_KEY = "color-scheme", DEFAULT_ATTRIBUTE = "data-color-scheme", safeReact2 = {
+    ...React16
   }, maybeReactUseSyncExternalStore = safeReact2.useSyncExternalStore;
   function serializeScriptValue(value) {
     return JSON.stringify(value).replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
@@ -19077,7 +19421,7 @@ Error generating stack: ` + x.message + `
       setter += `
       ${colorSchemeNode}.setAttribute(${interpolateScheme(attr, "colorScheme")}, ${attributeValue});`;
     } else attribute.startsWith(".") || (setter += `${colorSchemeNode}.setAttribute(${serializeScriptValue(attribute)}, colorScheme);`);
-    return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("script", {
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("script", {
       suppressHydrationWarning: !0,
       nonce: typeof window > "u" ? nonce : "",
       dangerouslySetInnerHTML: {
@@ -19111,7 +19455,7 @@ try {
   }
 
   // node_modules/@mui/system/cssVars/useCurrentColorScheme.mjs
-  var React16 = __toESM(require_react(), 1);
+  var React17 = __toESM(require_react(), 1);
 
   // node_modules/@mui/system/cssVars/localStorageManager.mjs
   function noop2() {
@@ -19184,16 +19528,16 @@ try {
       storageWindow = typeof window > "u" ? void 0 : window,
       storageManager = localStorageManager_default,
       noSsr = !1
-    } = options, joinedColorSchemes = supportedColorSchemes.join(","), isMultiSchemes = supportedColorSchemes.length > 1, modeStorage = React16.useMemo(() => storageManager?.({
+    } = options, joinedColorSchemes = supportedColorSchemes.join(","), isMultiSchemes = supportedColorSchemes.length > 1, modeStorage = React17.useMemo(() => storageManager?.({
       key: modeStorageKey,
       storageWindow
-    }), [storageManager, modeStorageKey, storageWindow]), lightStorage = React16.useMemo(() => storageManager?.({
+    }), [storageManager, modeStorageKey, storageWindow]), lightStorage = React17.useMemo(() => storageManager?.({
       key: `${colorSchemeStorageKey}-light`,
       storageWindow
-    }), [storageManager, colorSchemeStorageKey, storageWindow]), darkStorage = React16.useMemo(() => storageManager?.({
+    }), [storageManager, colorSchemeStorageKey, storageWindow]), darkStorage = React17.useMemo(() => storageManager?.({
       key: `${colorSchemeStorageKey}-dark`,
       storageWindow
-    }), [storageManager, colorSchemeStorageKey, storageWindow]), [state2, setState] = React16.useState(() => {
+    }), [storageManager, colorSchemeStorageKey, storageWindow]), [state2, setState] = React17.useState(() => {
       let initialMode = modeStorage?.get(defaultMode) || defaultMode, lightColorScheme = lightStorage?.get(defaultLightColorScheme) || defaultLightColorScheme, darkColorScheme = darkStorage?.get(defaultDarkColorScheme) || defaultDarkColorScheme;
       return {
         mode: initialMode,
@@ -19201,11 +19545,11 @@ try {
         lightColorScheme,
         darkColorScheme
       };
-    }), [isClient, setIsClient] = React16.useState(noSsr || !isMultiSchemes);
-    React16.useEffect(() => {
+    }), [isClient, setIsClient] = React17.useState(noSsr || !isMultiSchemes);
+    React17.useEffect(() => {
       setIsClient(!0);
     }, []);
-    let colorScheme = getColorScheme(state2), setMode2 = React16.useCallback((mode) => {
+    let colorScheme = getColorScheme(state2), setMode2 = React17.useCallback((mode) => {
       setState((currentState) => {
         if (mode === currentState.mode)
           return currentState;
@@ -19216,7 +19560,7 @@ try {
           systemMode: getSystemMode(newMode)
         };
       });
-    }, [modeStorage, defaultMode]), setColorScheme = React16.useCallback((value) => {
+    }, [modeStorage, defaultMode]), setColorScheme = React17.useCallback((value) => {
       value ? typeof value == "string" ? value && !joinedColorSchemes.includes(value) ? console.error(`\`${value}\` does not exist in \`theme.colorSchemes\`.`) : setState((currentState) => {
         let newState = {
           ...currentState
@@ -19234,7 +19578,7 @@ try {
         lightColorScheme: defaultLightColorScheme,
         darkColorScheme: defaultDarkColorScheme
       }));
-    }, [joinedColorSchemes, lightStorage, darkStorage, defaultLightColorScheme, defaultDarkColorScheme]), handleMediaQuery = React16.useCallback((event) => {
+    }, [joinedColorSchemes, lightStorage, darkStorage, defaultLightColorScheme, defaultDarkColorScheme]), handleMediaQuery = React17.useCallback((event) => {
       state2.mode === "system" && setState((currentState) => {
         let systemMode = event?.matches ? "dark" : "light";
         return currentState.systemMode === systemMode ? currentState : {
@@ -19242,15 +19586,15 @@ try {
           systemMode
         };
       });
-    }, [state2.mode]), mediaListener = React16.useRef(handleMediaQuery);
-    return mediaListener.current = handleMediaQuery, React16.useEffect(() => {
+    }, [state2.mode]), mediaListener = React17.useRef(handleMediaQuery);
+    return mediaListener.current = handleMediaQuery, React17.useEffect(() => {
       if (typeof window.matchMedia != "function" || !isMultiSchemes)
         return;
       let handler = (...args) => mediaListener.current(...args), media2 = window.matchMedia("(prefers-color-scheme: dark)");
       return media2.addListener(handler), handler(media2), () => {
         media2.removeListener(handler);
       };
-    }, [isMultiSchemes]), React16.useEffect(() => {
+    }, [isMultiSchemes]), React17.useEffect(() => {
       if (isMultiSchemes) {
         let unsubscribeMode = modeStorage?.subscribe((value) => {
           (!value || ["light", "dark", "system"].includes(value)) && setMode2(value || defaultMode);
@@ -19278,7 +19622,7 @@ try {
   }
 
   // node_modules/@mui/system/cssVars/createCssVarsProvider.mjs
-  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1), DISABLE_CSS_TRANSITION = "*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}";
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1), DISABLE_CSS_TRANSITION = "*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}";
   function createCssVarsProvider(options) {
     let {
       themeId,
@@ -19288,7 +19632,7 @@ try {
        * `colorSchemes` key with the light and dark (and any other) palette.
        * It should also ideally have a vars object created using `prepareCssVars`.
        */
-      theme: defaultTheme2 = {},
+      theme: defaultTheme3 = {},
       modeStorageKey: defaultModeStorageKey = DEFAULT_MODE_STORAGE_KEY,
       colorSchemeStorageKey: defaultColorSchemeStorageKey = DEFAULT_COLOR_SCHEME_STORAGE_KEY,
       disableTransitionOnChange: designSystemTransitionOnChange = !1,
@@ -19305,7 +19649,7 @@ try {
       setMode: () => {
       },
       systemMode: void 0
-    }, ColorSchemeContext = /* @__PURE__ */ React17.createContext(void 0), useColorScheme2 = () => React17.useContext(ColorSchemeContext) || defaultContext, defaultColorSchemes = {}, defaultComponents = {};
+    }, ColorSchemeContext = /* @__PURE__ */ React18.createContext(void 0), useColorScheme2 = () => React18.useContext(ColorSchemeContext) || defaultContext, defaultColorSchemes = {}, defaultComponents = {};
     function CssVarsProvider2(props) {
       let {
         children,
@@ -19322,11 +19666,11 @@ try {
         defaultMode: initialMode = "system",
         forceThemeRerender = !1,
         noSsr
-      } = props, hasMounted = React17.useRef(!1), upperTheme = useTheme3(), ctx = React17.useContext(ColorSchemeContext), nested = !!ctx && !disableNestedContext, initialTheme = React17.useMemo(() => themeProp || (typeof defaultTheme2 == "function" ? defaultTheme2() : defaultTheme2), [themeProp]), scopedTheme = initialTheme[themeId], restThemeProp = scopedTheme || initialTheme, {
+      } = props, hasMounted = React18.useRef(!1), upperTheme = useTheme3(), ctx = React18.useContext(ColorSchemeContext), nested = !!ctx && !disableNestedContext, initialTheme = React18.useMemo(() => themeProp || (typeof defaultTheme3 == "function" ? defaultTheme3() : defaultTheme3), [themeProp]), scopedTheme = initialTheme[themeId], restThemeProp = scopedTheme || initialTheme, {
         colorSchemes = defaultColorSchemes,
         components = defaultComponents,
         cssVarPrefix
-      } = restThemeProp, joinedColorSchemes = Object.keys(colorSchemes).filter((k) => !!colorSchemes[k]).join(","), allColorSchemes = React17.useMemo(() => joinedColorSchemes.split(","), [joinedColorSchemes]), defaultLightColorScheme2 = typeof defaultColorScheme == "string" ? defaultColorScheme : defaultColorScheme.light, defaultDarkColorScheme2 = typeof defaultColorScheme == "string" ? defaultColorScheme : defaultColorScheme.dark, defaultMode = colorSchemes[defaultLightColorScheme2] && colorSchemes[defaultDarkColorScheme2] ? initialMode : colorSchemes[restThemeProp.defaultColorScheme]?.palette?.mode || restThemeProp.palette?.mode, {
+      } = restThemeProp, joinedColorSchemes = Object.keys(colorSchemes).filter((k) => !!colorSchemes[k]).join(","), allColorSchemes = React18.useMemo(() => joinedColorSchemes.split(","), [joinedColorSchemes]), defaultLightColorScheme2 = typeof defaultColorScheme == "string" ? defaultColorScheme : defaultColorScheme.light, defaultDarkColorScheme2 = typeof defaultColorScheme == "string" ? defaultColorScheme : defaultColorScheme.dark, defaultMode = colorSchemes[defaultLightColorScheme2] && colorSchemes[defaultDarkColorScheme2] ? initialMode : colorSchemes[restThemeProp.defaultColorScheme]?.palette?.mode || restThemeProp.palette?.mode, {
         mode: stateMode,
         setMode: setMode2,
         systemMode,
@@ -19348,7 +19692,7 @@ try {
       nested && (mode = ctx.mode, colorScheme = ctx.colorScheme);
       let calculatedColorScheme = colorScheme || restThemeProp.defaultColorScheme;
       restThemeProp.vars && !forceThemeRerender && (calculatedColorScheme = restThemeProp.defaultColorScheme);
-      let memoTheme = React17.useMemo(() => {
+      let memoTheme2 = React18.useMemo(() => {
         let themeVars = restThemeProp.generateThemeVars?.() || restThemeProp.vars, theme = {
           ...restThemeProp,
           components,
@@ -19383,7 +19727,7 @@ try {
               colorSchemeNode.setAttribute(rule, colorScheme);
           }
         }
-      }, [colorScheme, colorSchemeSelector, colorSchemeNode, allColorSchemes]), React17.useEffect(() => {
+      }, [colorScheme, colorSchemeSelector, colorSchemeNode, allColorSchemes]), React18.useEffect(() => {
         let timer3;
         if (disableTransitionOnChange && hasMounted.current && documentNode) {
           let css2 = documentNode.createElement("style");
@@ -19394,10 +19738,10 @@ try {
         return () => {
           clearTimeout(timer3);
         };
-      }, [colorScheme, disableTransitionOnChange, documentNode]), React17.useEffect(() => (hasMounted.current = !0, () => {
+      }, [colorScheme, disableTransitionOnChange, documentNode]), React18.useEffect(() => (hasMounted.current = !0, () => {
         hasMounted.current = !1;
       }), []);
-      let contextValue = React17.useMemo(() => ({
+      let contextValue = React18.useMemo(() => ({
         allColorSchemes,
         colorScheme,
         darkColorScheme,
@@ -19406,18 +19750,18 @@ try {
         setColorScheme,
         setMode: setMode2,
         systemMode
-      }), [allColorSchemes, colorScheme, darkColorScheme, lightColorScheme, mode, setColorScheme, setMode2, systemMode, memoTheme.colorSchemeSelector]), shouldGenerateStyleSheet = !0;
+      }), [allColorSchemes, colorScheme, darkColorScheme, lightColorScheme, mode, setColorScheme, setMode2, systemMode, memoTheme2.colorSchemeSelector]), shouldGenerateStyleSheet = !0;
       (disableStyleSheetGeneration || restThemeProp.cssVariables === !1 || nested && upperTheme?.cssVarPrefix === cssVarPrefix) && (shouldGenerateStyleSheet = !1);
-      let element = /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(React17.Fragment, {
-        children: [/* @__PURE__ */ (0, import_jsx_runtime9.jsx)(ThemeProvider_default2, {
+      let element = /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(React18.Fragment, {
+        children: [/* @__PURE__ */ (0, import_jsx_runtime10.jsx)(ThemeProvider_default2, {
           themeId: scopedTheme ? themeId : void 0,
-          theme: memoTheme,
+          theme: memoTheme2,
           children
-        }), shouldGenerateStyleSheet && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(GlobalStyles, {
-          styles: memoTheme.generateStyleSheets?.() || []
+        }), shouldGenerateStyleSheet && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(GlobalStyles, {
+          styles: memoTheme2.generateStyleSheets?.() || []
         })]
       });
-      return nested ? element : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(ColorSchemeContext.Provider, {
+      return nested ? element : /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(ColorSchemeContext.Provider, {
         value: contextValue,
         children: element
       });
@@ -19615,6 +19959,20 @@ try {
     return function(colorScheme) {
       return selector === "media" ? `@media (prefers-color-scheme: ${colorScheme})` : selector ? selector.startsWith("data-") && !selector.includes("%s") ? `[${selector}="${colorScheme}"] &` : selector === "class" ? `.${colorScheme} &` : selector === "data" ? `[data-${colorScheme}] &` : `${selector.replace("%s", colorScheme)} &` : "&";
     };
+  }
+
+  // node_modules/@mui/utils/composeClasses/composeClasses.mjs
+  function composeClasses(slots, getUtilityClass, classes = void 0) {
+    let output = {};
+    for (let slotName in slots) {
+      let slot = slots[slotName], buffer = "", start = !0;
+      for (let i = 0; i < slot.length; i += 1) {
+        let value = slot[i];
+        value && (buffer += (start === !0 ? "" : " ") + getUtilityClass(value), start = !1, classes && classes[value] && (buffer += " " + classes[value]));
+      }
+      output[slotName] = buffer;
+    }
+    return output;
   }
 
   // node_modules/@mui/material/colors/common.mjs
@@ -20289,9 +20647,14 @@ try {
     [focusVisibleBehaviorVar]: "initial"
     // reverts the var to guaranteed-invalid so `var(--_focusVisible-behavior, )` falls back to empty — there is no explicit `outset` keyword.
   };
+  function applyChildrenFocusVisible(color2) {
+    return {
+      [focusVisibleShadowVar]: color2
+    };
+  }
   function mergeFocusVisibleInput(optionsFocusVisible, args) {
-    return args.reduce((acc, arg) => arg && "focusVisible" in arg ? deepmerge(acc, {
-      focusVisible: arg.focusVisible
+    return args.reduce((acc, arg2) => arg2 && "focusVisible" in arg2 ? deepmerge(acc, {
+      focusVisible: arg2.focusVisible
     }) : acc, {
       focusVisible: optionsFocusVisible
     }).focusVisible;
@@ -20963,8 +21326,77 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, ...args);
   }
 
+  // node_modules/@mui/utils/isHostComponent/isHostComponent.mjs
+  function isHostComponent(element) {
+    return typeof element == "string";
+  }
+  var isHostComponent_default = isHostComponent;
+
+  // node_modules/@mui/utils/debounce/debounce.mjs
+  function debounce(func, wait = 166) {
+    let timeout;
+    function debounced(...args) {
+      let later = () => {
+        func.apply(this, args);
+      };
+      clearTimeout(timeout), timeout = setTimeout(later, wait);
+    }
+    return debounced.clear = () => {
+      clearTimeout(timeout);
+    }, debounced;
+  }
+
+  // node_modules/@mui/utils/useForkRef/useForkRef.mjs
+  var React19 = __toESM(require_react(), 1);
+  function useForkRef(...refs) {
+    let cleanupRef = React19.useRef(void 0), refEffect = React19.useCallback((instance) => {
+      let cleanups = refs.map((ref) => {
+        if (ref == null)
+          return null;
+        if (typeof ref == "function") {
+          let refCallback = ref, refCleanup = refCallback(instance);
+          return typeof refCleanup == "function" ? refCleanup : () => {
+            refCallback(null);
+          };
+        }
+        return ref.current = instance, () => {
+          ref.current = null;
+        };
+      });
+      return () => {
+        cleanups.forEach((refCleanup) => refCleanup?.());
+      };
+    }, refs);
+    return React19.useMemo(() => refs.every((ref) => ref == null) ? null : (value) => {
+      cleanupRef.current && (cleanupRef.current(), cleanupRef.current = void 0), value != null && (cleanupRef.current = refEffect(value));
+    }, refs);
+  }
+
+  // node_modules/@mui/utils/useEventCallback/useEventCallback.mjs
+  var React20 = __toESM(require_react(), 1);
+  function useEventCallback(fn) {
+    let ref = React20.useRef(fn);
+    return useEnhancedEffect_default(() => {
+      ref.current = fn;
+    }), React20.useRef((...args) => (
+      // @ts-expect-error hide `this`
+      (0, ref.current)(...args)
+    )).current;
+  }
+  var useEventCallback_default = useEventCallback;
+
+  // node_modules/@mui/utils/ownerDocument/ownerDocument.mjs
+  function ownerDocument(node2) {
+    return node2 && node2.ownerDocument || document;
+  }
+
+  // node_modules/@mui/utils/ownerWindow/ownerWindow.mjs
+  function ownerWindow(node2) {
+    return ownerDocument(node2).defaultView || window;
+  }
+
   // node_modules/@mui/material/styles/useTheme.mjs
-  var React18 = __toESM(require_react(), 1);
+  var React21 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/styles/defaultTheme.mjs
   var defaultTheme = createTheme2(), defaultTheme_default = defaultTheme;
@@ -20975,18 +21407,160 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return theme[identifier_default] || theme;
   }
 
+  // node_modules/@mui/material/zero-styled/index.mjs
+  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
+
+  // node_modules/@mui/material/styles/slotShouldForwardProp.mjs
+  function slotShouldForwardProp(prop) {
+    return prop !== "ownerState" && prop !== "theme" && prop !== "sx" && prop !== "as";
+  }
+  var slotShouldForwardProp_default = slotShouldForwardProp;
+
+  // node_modules/@mui/material/styles/rootShouldForwardProp.mjs
+  var rootShouldForwardProp = (prop) => slotShouldForwardProp_default(prop) && prop !== "classes", rootShouldForwardProp_default = rootShouldForwardProp;
+
+  // node_modules/@mui/material/styles/styled.mjs
+  var styled3 = createStyled3({
+    themeId: identifier_default,
+    defaultTheme: defaultTheme_default,
+    rootShouldForwardProp: rootShouldForwardProp_default
+  }), styled_default = styled3;
+
+  // node_modules/@mui/material/utils/memoTheme.mjs
+  var memoTheme = unstable_memoTheme, memoTheme_default = memoTheme;
+
+  // node_modules/@mui/material/DefaultPropsProvider/DefaultPropsProvider.mjs
+  var React22 = __toESM(require_react(), 1);
+  var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
+  function useDefaultProps2(params) {
+    return useDefaultProps(params);
+  }
+
+  // node_modules/@mui/material/utils/capitalize.mjs
+  var capitalize_default = capitalize;
+
+  // node_modules/@mui/material/utils/useForkRef.mjs
+  var useForkRef_default = useForkRef;
+
+  // node_modules/@mui/utils/getActiveElement/getActiveElement.mjs
+  function activeElement(doc) {
+    let element = doc.activeElement;
+    for (; element?.shadowRoot?.activeElement != null; )
+      element = element.shadowRoot.activeElement;
+    return element;
+  }
+
+  // node_modules/@mui/material/utils/getActiveElement.mjs
+  var getActiveElement_default = activeElement;
+
+  // node_modules/@mui/material/styles/reducedMotion.mjs
+  var defaultStyles = {
+    transition: "none"
+  };
+  function resolveReducedMotionStyles(reducedMotion, styles2) {
+    return reducedMotion === "always" ? styles2 : reducedMotion === "system" ? {
+      "@media (prefers-reduced-motion: reduce)": styles2
+    } : null;
+  }
+
+  // node_modules/@mui/material/transitions/utils.mjs
+  var reflow = (node2) => node2.scrollTop, DEFAULT_TRANSLATE_OFFSET = {
+    offsetX: 0,
+    offsetY: 0
+  }, EMPTY_STYLE = {}, DEFAULT_TRANSITION_PROPS2 = ["all"], EMPTY_OPTIONS2 = {}, transformOffsetIndexes = {
+    matrix: [4, 5],
+    matrix3d: [12, 13],
+    translate: [0, 1],
+    translate3d: [0, 1],
+    translateX: [0, null],
+    translateY: [null, 0]
+  };
+  function parseTranslateValue(value) {
+    let parsedValue = parseFloat(value ?? "");
+    return Number.isNaN(parsedValue) ? 0 : parsedValue;
+  }
+  function parseTransform(transform) {
+    let match2 = transform.match(/^(matrix|matrix3d|translate|translate3d|translateX|translateY)\((.+)\)$/);
+    return match2 ? {
+      type: match2[1],
+      values: match2[2].split(",").map(parseTranslateValue)
+    } : null;
+  }
+  function getTranslateOffsetValue(values2, index) {
+    return index === null ? 0 : values2[index] || 0;
+  }
+  function getTranslateOffsets(transform) {
+    if (!transform || transform === "none")
+      return DEFAULT_TRANSLATE_OFFSET;
+    let parsedTransform = parseTransform(transform);
+    if (!parsedTransform)
+      return DEFAULT_TRANSLATE_OFFSET;
+    let {
+      type,
+      values: values2
+    } = parsedTransform, offsetIndexes = transformOffsetIndexes[type];
+    return offsetIndexes ? {
+      offsetX: getTranslateOffsetValue(values2, offsetIndexes[0]),
+      offsetY: getTranslateOffsetValue(values2, offsetIndexes[1])
+    } : DEFAULT_TRANSLATE_OFFSET;
+  }
+  function normalizedTransitionCallback(nodeRef, callback) {
+    return (maybeIsAppearing) => {
+      if (callback) {
+        let node2 = nodeRef.current;
+        maybeIsAppearing === void 0 ? callback(node2) : callback(node2, maybeIsAppearing);
+      }
+    };
+  }
+  function getTransitionChildStyle(state2, inProp, baseStyles, hiddenStyles3, styleProp, childStyle) {
+    let base = state2 === "exited" && !inProp ? hiddenStyles3 : baseStyles[state2] || baseStyles.exited;
+    return styleProp || childStyle ? {
+      ...base,
+      ...styleProp,
+      ...childStyle
+    } : base;
+  }
+  function getTransitionProps(props, options) {
+    let {
+      timeout,
+      easing: easing2,
+      style: style3 = EMPTY_STYLE
+    } = props;
+    return {
+      duration: style3.transitionDuration ?? (typeof timeout == "number" ? timeout : timeout[options.mode] || 0),
+      easing: style3.transitionTimingFunction ?? (typeof easing2 == "object" ? easing2[options.mode] : easing2),
+      delay: style3.transitionDelay
+    };
+  }
+  function getReducedMotionStyles(theme, styles2) {
+    let resolvedStyles = styles2 ?? defaultStyles;
+    return resolveReducedMotionStyles(theme.motion?.reducedMotion, resolvedStyles);
+  }
+  function getTransitionStyles(theme, props = DEFAULT_TRANSITION_PROPS2, options = EMPTY_OPTIONS2) {
+    let transition = theme.transitions?.create?.(props, options), reducedMotionStyles = getReducedMotionStyles(theme);
+    if (transition === void 0)
+      return reducedMotionStyles ?? EMPTY_STYLE;
+    let transitionStyles = {
+      transition
+    };
+    return reducedMotionStyles ? {
+      ...transitionStyles,
+      ...reducedMotionStyles
+    } : transitionStyles;
+  }
+
   // node_modules/@mui/material/styles/ThemeProvider.mjs
-  var React20 = __toESM(require_react(), 1);
+  var React24 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/styles/ThemeProviderNoVars.mjs
-  var React19 = __toESM(require_react(), 1);
-  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
+  var React23 = __toESM(require_react(), 1);
+  var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
   function ThemeProviderNoVars({
     theme: themeInput,
     ...props
   }) {
     let scopedTheme = identifier_default in themeInput ? themeInput[identifier_default] : void 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(ThemeProvider_default2, {
+    return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ThemeProvider_default2, {
       ...props,
       themeId: scopedTheme ? identifier_default : void 0,
       theme: scopedTheme || themeInput
@@ -20994,7 +21568,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/@mui/material/InitColorSchemeScript/InitColorSchemeScript.mjs
-  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1), defaultConfig = {
+  var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1), defaultConfig = {
     attribute: "data-mui-color-scheme",
     colorSchemeStorageKey: "mui-color-scheme",
     defaultLightColorScheme: "light",
@@ -21003,7 +21577,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   };
 
   // node_modules/@mui/material/styles/ThemeProviderWithVars.mjs
-  var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1), {
+  var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1), {
     CssVarsProvider: InternalCssVarsProvider,
     useColorScheme,
     getInitColorSchemeScript: deprecatedGetInitColorSchemeScript
@@ -21035,12 +21609,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var CssVarsProvider = InternalCssVarsProvider;
 
   // node_modules/@mui/material/styles/ThemeProvider.mjs
-  var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
   function ThemeProvider4({
     theme,
     ...props
   }) {
-    let noVarsTheme = React20.useMemo(() => {
+    let noVarsTheme = React24.useMemo(() => {
       if (typeof theme == "function")
         return theme;
       let muiTheme = identifier_default in theme ? theme[identifier_default] : theme;
@@ -21049,10 +21623,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         vars: null
       };
     }, [theme]);
-    return noVarsTheme ? /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ThemeProviderNoVars, {
+    return noVarsTheme ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(ThemeProviderNoVars, {
       theme: noVarsTheme,
       ...props
-    }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CssVarsProvider, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(CssVarsProvider, {
       theme,
       ...props
     });
@@ -21137,12 +21711,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var import_react15 = __toESM(require_react(), 1);
 
   // src/containers/SettingsContext.tsx
-  var import_react6 = __toESM(require_react(), 1), import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1), SettingsContext = (0, import_react6.createContext)(null);
+  var import_react6 = __toESM(require_react(), 1), import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1), SettingsContext = (0, import_react6.createContext)(null);
   function SettingsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(SettingsContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(SettingsContext, { value, children });
   }
   function useSettings() {
     let value = (0, import_react6.useContext)(SettingsContext);
@@ -21152,10 +21726,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/components/MuiThemeProof.tsx
-  var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
   function MuiThemeProof() {
     let theme = useTheme4(), { colorway } = useSettings();
-    return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
       "span",
       {
         id: "mui-theme-proof",
@@ -21214,6 +21788,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     presetCancel: spec("tooltip.presetCancel"),
     presetCreate: spec("tooltip.presetCreate"),
     shortcuts: spec("tooltip.shortcuts"),
+    drawerToggle: spec("tooltip.drawerToggle"),
     help: spec("tooltip.help"),
     helpBug: spec("tooltip.helpBug"),
     helpFeature: spec("tooltip.helpFeature"),
@@ -21498,6 +22073,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       "preset-name": tips.presetName,
       "preset-cancel": tips.presetCancel,
       "preset-create": tips.presetCreate,
+      "drawer-toggle": tips.drawerToggle,
       "open-help": tips.help,
       "shortcuts-title": tips.shortcuts,
       "open-settings": tips.settings,
@@ -21645,8 +22221,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function editField(label) {
     return spec("tooltip.editField", { label });
   }
-  function revealTip(manager) {
-    return spec("tooltip.reveal", { name: manager });
+  function revealTip(manager2) {
+    return spec("tooltip.reveal", { name: manager2 });
   }
   function openCopy(name) {
     return spec("tooltip.openCopy", { name });
@@ -21877,12 +22453,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var import_react14 = __toESM(require_react(), 1);
 
   // src/containers/TrackListContext.tsx
-  var import_react7 = __toESM(require_react(), 1), import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1), TrackListContext = (0, import_react7.createContext)(null);
+  var import_react7 = __toESM(require_react(), 1), import_jsx_runtime19 = __toESM(require_jsx_runtime(), 1), TrackListContext = (0, import_react7.createContext)(null);
   function TrackListProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(TrackListContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(TrackListContext, { value, children });
   }
   function useTrackList() {
     let value = (0, import_react7.useContext)(TrackListContext);
@@ -21956,12 +22532,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   };
 
   // src/containers/PlayerContext.tsx
-  var import_react8 = __toESM(require_react(), 1), import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1), PlayerContext = (0, import_react8.createContext)(null);
+  var import_react8 = __toESM(require_react(), 1), import_jsx_runtime20 = __toESM(require_jsx_runtime(), 1), PlayerContext = (0, import_react8.createContext)(null);
   function PlayerProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(PlayerContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(PlayerContext, { value, children });
   }
   function usePlayer() {
     let value = (0, import_react8.useContext)(PlayerContext);
@@ -21971,7 +22547,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime21 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef2(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -21989,7 +22565,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     function onDoubleClick(event) {
       variant === "row" && event.stopPropagation();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
       "button",
       {
         type: "button",
@@ -22000,15 +22576,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/components/TrackRow.tsx
-  var import_jsx_runtime19 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime22 = __toESM(require_jsx_runtime(), 1);
   function Cell({ text: text2, numeric = !1 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: numeric ? "cell num" : "cell", children: text2 });
+    return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: numeric ? "cell num" : "cell", children: text2 });
   }
   function TrackRow({ track, selected, onFocusList }) {
     let list = useTrackList(), labelName = track.name || playerStrings.untitled;
@@ -22025,7 +22601,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       event.stopPropagation(), list.selectTrack(track.id), onFocusList();
     }
     let history = !!track.entry, bpmText = track.bpm == null ? "" : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 }), hex = colorHex(track.color);
-    return /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(
       "div",
       {
         className: "row",
@@ -22036,8 +22612,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         onClick,
         onDoubleClick,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "cell", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("span", { className: "title-line", children: [
-            !history && /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "cell", children: /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("span", { className: "title-line", children: [
+            !history && /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
               PlayButton,
               {
                 variant: "row",
@@ -22046,26 +22622,26 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 onClickExtra: onPlayClick
               }
             ) }),
-            hex ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
-            track.emoji ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { children: track.emoji }) : null,
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "title", children: track.name || t("track.untitled") }),
-            track.offline ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
-            track.stems ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "missing-word", children: t("track.stemsBadge") }) : null
+            hex ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+            track.emoji ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { children: track.emoji }) : null,
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "title", children: track.name || t("track.untitled") }),
+            track.offline ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
+            track.stems ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "missing-word", children: t("track.stemsBadge") }) : null
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "cell", children: track.artist ?? "" }),
-          history ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: track.deck || "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: track.played || "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: clockLabel(track.start), numeric: !0 })
-          ] }) : /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: bpmText, numeric: !0 }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: track.key ?? "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: energyLabel(track.rating), numeric: !0 }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: track.genre ?? "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: dateLabel(track.time_added), numeric: !0 }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: dateLabel(track.last_played), numeric: !0 }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: track.play_count == null ? "" : formatNumber(Number(track.play_count)), numeric: !0 }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Cell, { text: lengthLabel(track.length_ms), numeric: !0 })
+          /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "cell", children: track.artist ?? "" }),
+          history ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(import_jsx_runtime22.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: track.deck || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: track.played || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: clockLabel(track.start), numeric: !0 })
+          ] }) : /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(import_jsx_runtime22.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: bpmText, numeric: !0 }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: track.key ?? "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: energyLabel(track.rating), numeric: !0 }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: track.genre ?? "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: dateLabel(track.time_added), numeric: !0 }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: dateLabel(track.last_played), numeric: !0 }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: track.play_count == null ? "" : formatNumber(Number(track.play_count)), numeric: !0 }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Cell, { text: lengthLabel(track.length_ms), numeric: !0 })
           ] })
         ]
       }
@@ -22073,14 +22649,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/components/TrackListWindow.tsx
-  var import_jsx_runtime20 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime23 = __toESM(require_jsx_runtime(), 1);
   function TrackListWindow({ pane, start, end, onFocusList }) {
     let list = useTrackList(), view = pane === "b" ? list.viewB : list.view;
     if (!view.length) {
       let empty = list.duplicatesPending ? t("list.readingDuplicates") : t("list.noMatches");
-      return /* @__PURE__ */ (0, import_jsx_runtime20.jsx)("p", { className: "empty-list", children: empty });
+      return /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "empty-list", children: empty });
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(import_jsx_runtime20.Fragment, { children: view.slice(start, end).map((track) => /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(import_jsx_runtime23.Fragment, { children: view.slice(start, end).map((track) => /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
       TrackRow,
       {
         track,
@@ -22166,7 +22742,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // src/components/PlayerBar.tsx
   var import_react9 = __toESM(require_react(), 1);
-  var import_jsx_runtime21 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime24 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef3(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -22177,9 +22753,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     limit,
     seek: seek2
   }) {
-    return !(limit > 0) || cues2.length === 0 ? null : /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(import_jsx_runtime21.Fragment, { children: cues2.map((cue) => {
+    return !(limit > 0) || cues2.length === 0 ? null : /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(import_jsx_runtime24.Fragment, { children: cues2.map((cue) => {
       let label = `${cue.label}, ${formatPlayerTime(cue.seconds)}`, ratio = Math.min(1, Math.max(0, cue.seconds / limit)), percent = Math.round(ratio * 1e3) / 10;
-      return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
         "button",
         {
           type: "button",
@@ -22215,14 +22791,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     function onSeekPointerUp(_event) {
       setHold(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("div", { className: "player-controls", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("div", { className: "player-meta", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
+    return /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "player-controls", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "player-meta", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { className: "player-title", title: shownTitle, children: shownTitle }),
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { className: "player-artist", hidden: player2.artist === "", title: player2.artist, children: player2.artist }),
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { className: "player-status", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("div", { className: "player-transport", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "player-transport", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
           "button",
           {
             type: "button",
@@ -22234,8 +22810,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: playerStrings.previous
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(PlayButton, { variant: "bar", name: named }),
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(PlayButton, { variant: "bar", name: named }),
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
           "button",
           {
             type: "button",
@@ -22248,13 +22824,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("div", { className: "player-seek", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-          /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "player-seek", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("div", { className: "player-seek-track", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "player-seek-track", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
             "input",
             {
               ref: tooltipRef3(tips.seek),
@@ -22273,16 +22849,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               onKeyDown: onSeekKey
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("div", { className: "player-cues", children: /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(CueMarks, { cues: player2.cues, limit, seek: player2.seek }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("span", { className: "player-time", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
-          /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { children: formatPlayerTime(player2.duration) })
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("span", { className: "player-time", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { className: "visually-hidden", children: playerStrings.duration }),
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { children: formatPlayerTime(player2.duration) })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime21.jsxs)("label", { className: "player-volume", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)("span", { children: playerStrings.volume }),
-        /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("label", { className: "player-volume", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { children: playerStrings.volume }),
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
           "input",
           {
             ref: tooltipRef3(tips.volume),
@@ -22305,7 +22881,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (bytes.byteLength < HEADER_BYTES || bytes[0] !== 83 || bytes[1] !== 87 || bytes[2] !== 70 || bytes[3] !== 49) return null;
     let view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     if (view.getUint16(4, !0) !== HEADER_BYTES) return null;
-    let version = view.getUint16(6, !0), flags = view.getUint16(8, !0), analyzerVersion = view.getUint16(10, !0), sampleRate = view.getUint32(12, !0), detailHzMilli = view.getUint32(16, !0), durationMs = view.getUint32(20, !0), detailCount = view.getUint32(24, !0), overviewCount = view.getUint32(28, !0), seratoColumns = view.getUint32(32, !0), seratoBands = view.getUint16(36, !0), lowHzMilli = view.getUint32(40, !0), highHzMilli = view.getUint32(44, !0);
+    let version2 = view.getUint16(6, !0), flags = view.getUint16(8, !0), analyzerVersion = view.getUint16(10, !0), sampleRate = view.getUint32(12, !0), detailHzMilli = view.getUint32(16, !0), durationMs = view.getUint32(20, !0), detailCount = view.getUint32(24, !0), overviewCount = view.getUint32(28, !0), seratoColumns = view.getUint32(32, !0), seratoBands = view.getUint16(36, !0), lowHzMilli = view.getUint32(40, !0), highHzMilli = view.getUint32(44, !0);
     if (detailCount > MAX_POINTS || overviewCount > MAX_POINTS || seratoColumns > MAX_POINTS) return null;
     let detailBytes = detailCount * 6, overviewBytes = overviewCount * 6, seratoBytes = seratoColumns * seratoBands;
     if (!Number.isSafeInteger(detailBytes + overviewBytes + seratoBytes) || HEADER_BYTES + detailBytes + overviewBytes + seratoBytes !== bytes.byteLength) return null;
@@ -22315,7 +22891,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     offset += overviewBytes;
     let serato = bytes.slice(offset, offset + seratoBytes);
     return {
-      version,
+      version: version2,
       flags,
       analyzerVersion,
       sampleRate,
@@ -22397,8 +22973,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (!HEX_COLOR.test(value)) return null;
     let hex = value.slice(1);
     if (hex.length === 3) {
-      let r = hex[0] ?? "", g = hex[1] ?? "", b = hex[2] ?? "";
-      hex = `${r}${r}${g}${g}${b}${b}`;
+      let r2 = hex[0] ?? "", g = hex[1] ?? "", b = hex[2] ?? "";
+      hex = `${r2}${r2}${g}${g}${b}${b}`;
     }
     hex.length === 8 && (hex = hex.slice(0, 6));
     let parsed = Number.parseInt(hex, 16);
@@ -22652,7 +23228,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // src/containers/WaveformContext.tsx
   var import_react10 = __toESM(require_react(), 1), import_react_dom = __toESM(require_react_dom(), 1);
-  var import_jsx_runtime22 = __toESM(require_jsx_runtime(), 1), defaultUi = {
+  var import_jsx_runtime25 = __toESM(require_jsx_runtime(), 1), defaultUi = {
     pps: 80,
     phase: "idle",
     overviewSource: ""
@@ -22671,13 +23247,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       };
     }, [ui]);
-    return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(WaveformContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(WaveformContext, { value, children });
   }
   function WaveformClockProvider({
     clock,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(WaveformClockContext, { value: clock, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(WaveformClockContext, { value: clock, children });
   }
   function useWaveform() {
     let value = (0, import_react10.useContext)(WaveformContext);
@@ -22690,7 +23266,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/components/WaveformPanel.tsx
-  var import_jsx_runtime23 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime26 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef4(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -22726,11 +23302,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         };
     }, [engine, host]), (0, import_react11.useEffect)(() => {
       override || engine.setTrack(player2.trackId);
-    }, [engine, override, player2.trackId]), /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)(import_jsx_runtime23.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "player-wave-main", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
-        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
-        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+    }, [engine, override, player2.trackId]), /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(import_jsx_runtime26.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "player-wave-main", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
+        /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
+        /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
           WaveformOverview,
           {
             canvasRef: overviewCanvasRef,
@@ -22741,7 +23317,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
         WaveformZoom,
         {
           canZoomIn: wave.canZoomIn,
@@ -22757,9 +23333,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     canvasRef,
     phase: phase2
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
-      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
+    return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
     ] });
   }
   function WaveformOverview({
@@ -22769,7 +23345,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     source,
     pps
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
       "div",
       {
         ref: (element) => {
@@ -22783,7 +23359,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         "aria-orientation": "horizontal",
         "data-pps": String(pps),
         "data-waveform-overview": source || void 0,
-        children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
       }
     );
   }
@@ -22794,8 +23370,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     onZoomIn,
     onZoomOut
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
         "button",
         {
           type: "button",
@@ -22807,7 +23383,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: "+"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
         "button",
         {
           type: "button",
@@ -24116,7 +24692,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/SettingsPanel.tsx
-  var import_jsx_runtime24 = __toESM(require_jsx_runtime(), 1), COLORWAY_KEY = {
+  var import_jsx_runtime27 = __toESM(require_jsx_runtime(), 1), COLORWAY_KEY = {
     "serato-like": "settings.colorway.seratoLike",
     "dark-club": "settings.colorway.darkClub",
     light: "settings.colorway.light",
@@ -24132,22 +24708,22 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function CheatSheet() {
     let groups = cheatSheetModel();
-    return /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("section", { id: "shortcuts-section", className: "shortcuts-section", "aria-labelledby": "shortcuts-title", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("h3", { id: "shortcuts-title", tabIndex: -1, ref: tooltipRef5(tips.shortcuts), children: t("shortcuts.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { id: "shortcuts-intro", children: t("shortcuts.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("div", { id: "shortcuts-body", children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("h3", { children: t(group.headingKey) }),
-        group.playNote ? /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { className: "dialog-note", children: t("shortcuts.playNote") }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("table", { className: "shortcut-table", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("tr", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("th", { scope: "col", children: t("shortcuts.action") }),
-            /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("th", { scope: "col", children: t("shortcuts.key") })
+    return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("section", { id: "shortcuts-section", className: "shortcuts-section", "aria-labelledby": "shortcuts-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("h3", { id: "shortcuts-title", tabIndex: -1, ref: tooltipRef5(tips.shortcuts), children: t("shortcuts.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { id: "shortcuts-intro", children: t("shortcuts.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { id: "shortcuts-body", children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("h3", { children: t(group.headingKey) }),
+        group.playNote ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { className: "dialog-note", children: t("shortcuts.playNote") }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("table", { className: "shortcut-table", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("th", { scope: "col", children: t("shortcuts.action") }),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("th", { scope: "col", children: t("shortcuts.key") })
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("tbody", { children: group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("tr", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("th", { scope: "row", children: t(row.actionKey) }),
-            /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("td", { children: row.chords.map((chord, index) => /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("tbody", { children: group.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("th", { scope: "row", children: t(row.actionKey) }),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("td", { children: row.chords.map((chord, index) => /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("span", { children: [
               index > 0 ? " or " : null,
-              /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("kbd", { children: chordLabel(chord) })
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("kbd", { children: chordLabel(chord) })
             ] }, `${row.id}-${index}`)) })
           ] }, row.id)) })
         ] })
@@ -24156,10 +24732,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function SettingsPanel() {
     let settings = useSettings(), preview = `/img/icons/placeholder-${settings.colorway}.svg`;
-    return /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { "data-settings-react": "true", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("h2", { id: "settings-title", children: t("settings.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { "data-settings-react": "true", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("h2", { id: "settings-title", children: t("settings.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "input",
           {
             id: "telemetry-toggle",
@@ -24172,11 +24748,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { children: t("settings.share") })
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { children: t("settings.share") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { id: "telemetry-note", className: "dialog-note", children: telemetryNote() }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { id: "telemetry-note", className: "dialog-note", children: telemetryNote() }),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "input",
           {
             id: "update-toggle",
@@ -24189,10 +24765,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { children: t("settings.updates") })
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { children: t("settings.updates") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "input",
           {
             id: "update-prereleases",
@@ -24205,13 +24781,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { children: t("settings.updatesPrereleases") })
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { children: t("settings.updatesPrereleases") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { id: "update-status", className: "dialog-note", role: "status", "aria-live": "polite", children: settings.updateStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "colorway-row", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("label", { className: "settings-field", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { children: t("settings.colorway") }),
-          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { id: "update-status", className: "dialog-note", role: "status", "aria-live": "polite", children: settings.updateStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: "colorway-row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("label", { className: "settings-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { children: t("settings.colorway") }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "select",
             {
               id: "colorway-select",
@@ -24220,11 +24796,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               onChange: (event) => {
                 settings.saveColorway(event.currentTarget.value);
               },
-              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
+              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "img",
           {
             id: "colorway-preview",
@@ -24236,9 +24812,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(MuiThemeProof, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(MuiThemeProof, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "input",
           {
             id: "icon-follows-theme",
@@ -24250,12 +24826,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { children: t("settings.iconFollowsTheme") })
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { children: t("settings.iconFollowsTheme") })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { id: "icon-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.iconStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("label", { className: "settings-field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { children: t("settings.language") }),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { id: "icon-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.iconStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("label", { className: "settings-field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { children: t("settings.language") }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "select",
           {
             id: "language-select",
@@ -24265,18 +24841,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               settings.saveLanguage(event.currentTarget.value);
             },
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("option", { value: "", children: t("settings.languageSystem") }),
-              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("option", { value: "", children: t("settings.languageSystem") }),
+              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
             ]
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { id: "language-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.languageStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(CheatSheet, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("section", { className: "about", "aria-labelledby": "about-title", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("h3", { id: "about-title", children: t("settings.about") }),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { id: "about-version", className: "about-version", children: settings.aboutVersion }),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { id: "language-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.languageStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(CheatSheet, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("section", { className: "about", "aria-labelledby": "about-title", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("h3", { id: "about-title", children: t("settings.about") }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { id: "about-version", className: "about-version", children: settings.aboutVersion }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "a",
           {
             id: "about-github",
@@ -24285,7 +24861,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("help.github")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "button",
           {
             id: "copy-version",
@@ -24297,10 +24873,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("settings.copyVersion")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { id: "version-copy-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { id: "version-copy-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "dialog-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "button",
           {
             id: "rerun-wizard",
@@ -24311,7 +24887,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("settings.rerunSetup")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "button",
           {
             id: "open-logs",
@@ -24324,7 +24900,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("settings.openLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "button",
           {
             id: "copy-logs",
@@ -24337,7 +24913,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("settings.copyLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "button",
           {
             id: "settings-close",
@@ -24348,8 +24924,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { id: "settings-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { id: "settings-status", className: "dialog-status", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
         "textarea",
         {
           id: "log-fallback",
@@ -24617,7 +25193,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/app/mui-theme-root.tsx
-  var import_jsx_runtime25 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime28 = __toESM(require_jsx_runtime(), 1);
   function MuiThemeRoot({ children }) {
     let [colorway, setColorway] = (0, import_react16.useState)(() => getSettingsState().colorway);
     (0, import_react16.useEffect)(() => subscribeSettings(() => {
@@ -24626,16 +25202,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       });
     }), []);
     let theme = (0, import_react16.useMemo)(() => createAppTheme(colorway), [colorway]);
-    return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(ThemeProvider4, { theme, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(ThemeProvider4, { theme, children });
   }
 
   // src/containers/CrateContext.tsx
-  var import_react17 = __toESM(require_react(), 1), import_jsx_runtime26 = __toESM(require_jsx_runtime(), 1), CrateContext = (0, import_react17.createContext)(null);
+  var import_react17 = __toESM(require_react(), 1), import_jsx_runtime29 = __toESM(require_jsx_runtime(), 1), CrateContext = (0, import_react17.createContext)(null);
   function CrateProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(CrateContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(CrateContext, { value, children });
   }
   function useCrates() {
     let value = (0, import_react17.useContext)(CrateContext);
@@ -24645,12 +25221,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/FilesContext.tsx
-  var import_react18 = __toESM(require_react(), 1), import_jsx_runtime27 = __toESM(require_jsx_runtime(), 1), FilesContext = (0, import_react18.createContext)(null);
+  var import_react18 = __toESM(require_react(), 1), import_jsx_runtime30 = __toESM(require_jsx_runtime(), 1), FilesContext = (0, import_react18.createContext)(null);
   function FilesProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(FilesContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(FilesContext, { value, children });
   }
   function useFiles() {
     let value = (0, import_react18.useContext)(FilesContext);
@@ -24660,12 +25236,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/GigContext.tsx
-  var import_react19 = __toESM(require_react(), 1), import_jsx_runtime28 = __toESM(require_jsx_runtime(), 1), GigContext = (0, import_react19.createContext)(null);
+  var import_react19 = __toESM(require_react(), 1), import_jsx_runtime31 = __toESM(require_jsx_runtime(), 1), GigContext = (0, import_react19.createContext)(null);
   function GigStateProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(GigContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(GigContext, { value, children });
   }
   function useGig() {
     let value = (0, import_react19.useContext)(GigContext);
@@ -24675,12 +25251,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/HealthContext.tsx
-  var import_react20 = __toESM(require_react(), 1), import_jsx_runtime29 = __toESM(require_jsx_runtime(), 1), HealthContext = (0, import_react20.createContext)(null);
+  var import_react20 = __toESM(require_react(), 1), import_jsx_runtime32 = __toESM(require_jsx_runtime(), 1), HealthContext = (0, import_react20.createContext)(null);
   function HealthProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(HealthContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(HealthContext, { value, children });
   }
   function useHealth() {
     let value = (0, import_react20.useContext)(HealthContext);
@@ -24690,7 +25266,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/HistoryContext.tsx
-  var import_react21 = __toESM(require_react(), 1), import_jsx_runtime30 = __toESM(require_jsx_runtime(), 1), historyActions = {
+  var import_react21 = __toESM(require_react(), 1), import_jsx_runtime33 = __toESM(require_jsx_runtime(), 1), historyActions = {
     loadHistory: async () => {
     },
     openSession: async (_id) => {
@@ -24713,7 +25289,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(HistoryContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(HistoryContext, { value, children });
   }
   function useHistory() {
     let value = (0, import_react21.useContext)(HistoryContext);
@@ -25057,13 +25633,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // src/pages/GigDetailsGroup.tsx
   var import_react22 = __toESM(require_react(), 1), import_react_dom3 = __toESM(require_react_dom(), 1);
-  var import_jsx_runtime31 = __toESM(require_jsx_runtime(), 1), LIST_CAP = 100;
+  var import_jsx_runtime34 = __toESM(require_jsx_runtime(), 1), LIST_CAP = 100;
   function GigDetailsGroup({ label, lines }) {
     let [expanded2, setExpanded] = (0, import_react22.useState)(!1), shown = expanded2 || lines.length <= LIST_CAP ? lines : lines.slice(0, LIST_CAP);
-    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)("details", { className: "gig-group", open: !0, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("summary", { children: t("gig.groupCount", { label, count: lines.length }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("ul", { children: shown.map((line2, index) => /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("li", { children: line2 }, `${index}:${line2}`)) }),
-      lines.length > LIST_CAP && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)("details", { className: "gig-group", open: !0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("summary", { children: t("gig.groupCount", { label, count: lines.length }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("ul", { children: shown.map((line2, index) => /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("li", { children: line2 }, `${index}:${line2}`)) }),
+      lines.length > LIST_CAP && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
         "button",
         {
           type: "button",
@@ -25081,26 +25657,26 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/DriftReport.tsx
-  var import_jsx_runtime32 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime35 = __toESM(require_jsx_runtime(), 1);
   function DriftReport() {
     let { drift } = useGig(), payload = drift.report;
     if (!payload) return null;
     let flags = payload.flags || [];
-    return /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(import_jsx_runtime32.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
-      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
-      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
-      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
-      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
-      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
-      flags.length ? driftReasonKinds(flags).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)(import_jsx_runtime35.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
+      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
+      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
+      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
+      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
+      flags.length ? driftReasonKinds(flags).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(
         GigDetailsGroup,
         {
           label: driftReasonHeading(kind2),
           lines: flags.filter((item2) => item2.reasons.includes(kind2)).map(driftFlagLine)
         },
         kind2
-      )) : /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("p", { className: "gig-note", children: t("drift.empty") })
+      )) : /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: t("drift.empty") })
     ] });
   }
 
@@ -25307,7 +25883,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/HealthPanel.tsx
-  var import_jsx_runtime33 = __toESM(require_jsx_runtime(), 1), SECTIONS = [
+  var import_jsx_runtime36 = __toESM(require_jsx_runtime(), 1), SECTIONS = [
     { key: "missing", label: "health.missing", action: "missing" },
     { key: "no_bpm", label: "health.noBpm" },
     { key: "no_key", label: "health.noKey" },
@@ -25329,9 +25905,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     onNavigate
   }) {
     let count = section?.count ?? 0, tracks = section?.tracks ?? [];
-    return /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)("details", { className: "gig-group", open: count > 0, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("summary", { children: t("gig.groupCount", { label, count }) }),
-      action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("details", { className: "gig-group", open: count > 0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("summary", { children: t("gig.groupCount", { label, count }) }),
+      action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
         "button",
         {
           type: "button",
@@ -25341,8 +25917,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("health.openMissing")
         }
       ) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
           "button",
           {
             type: "button",
@@ -25353,7 +25929,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: trackLine(track)
           }
         ),
-        findArt ? /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+        findArt ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
           "button",
           {
             type: "button",
@@ -25367,13 +25943,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         ) : null
       ] }, track.id)) }),
-      count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
+      count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
     ] });
   }
   function Bitrate({ onNavigate }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)("details", { className: "gig-group", open: !0, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("summary", { children: t("health.bitrate") }),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("details", { className: "gig-group", open: !0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("summary", { children: t("health.bitrate") }),
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
         "button",
         {
           type: "button",
@@ -25383,7 +25959,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("health.openBitrate")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
     ] });
   }
   function Unused({
@@ -25391,9 +25967,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     onNavigate
   }) {
     let count = section?.count ?? 0, files = section?.files ?? [];
-    return /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)("details", { className: "gig-group", open: count > 0, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("summary", { children: t("gig.groupCount", { label: t("health.unused"), count }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("details", { className: "gig-group", open: count > 0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("summary", { children: t("gig.groupCount", { label: t("health.unused"), count }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
         "button",
         {
           type: "button",
@@ -25403,8 +25979,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("health.openFiles")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
-      count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
+      count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
     ] });
   }
   function Duplicates({
@@ -25412,9 +25988,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     onNavigate
   }) {
     let count = section?.count ?? 0, groups = section?.groups ?? [];
-    return /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)("details", { className: "gig-group", open: count > 0, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("summary", { children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("details", { className: "gig-group", open: count > 0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("summary", { children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
         "button",
         {
           type: "button",
@@ -25424,20 +26000,20 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("health.openDuplicates")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("li", { children: t("health.duplicateRow", {
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("li", { children: t("health.duplicateRow", {
         title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
         count: group.ids.length
       }) }, group.ids.join(","))) }),
-      count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
+      count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
     ] });
   }
   function HealthPanel() {
     let health = useHealth(), payload = health.healthReport, listed = 0;
-    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(import_jsx_runtime33.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)(import_jsx_runtime36.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
           "button",
           {
             id: "health-refresh",
@@ -25452,11 +26028,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(import_jsx_runtime33.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
-        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)(import_jsx_runtime36.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
+        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
           Section,
           {
             label: t(spec2.label),
@@ -25467,20 +26043,20 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           },
           spec2.key
         )),
-        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Bitrate, { onNavigate: health.navigate }),
-        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("p", { className: "gig-note", children: t("health.clear") })
+        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(Bitrate, { onNavigate: health.navigate }),
+        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "gig-note", children: t("health.clear") })
       ] }) : null })
     ] });
   }
 
   // src/pages/HealthListChrome.tsx
-  var import_jsx_runtime34 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime37 = __toESM(require_jsx_runtime(), 1);
   function HealthListChrome() {
     let health = useHealth();
-    return /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)(import_jsx_runtime34.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime37.jsxs)(import_jsx_runtime37.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime37.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime37.jsx)(
         "button",
         {
           id: "merge-duplicates",
@@ -25490,7 +26066,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("merge.title")
         }
       ) }),
-      /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime37.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime37.jsx)(
         "button",
         {
           id: "open-relink",
@@ -25572,7 +26148,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var import_react25 = __toESM(require_react(), 1);
 
   // src/pages/ScanPanel.tsx
-  var import_jsx_runtime35 = __toESM(require_jsx_runtime(), 1), LIST_CAP2 = 100, PROBLEM_ORDER = [
+  var import_jsx_runtime38 = __toESM(require_jsx_runtime(), 1), LIST_CAP2 = 100, PROBLEM_ORDER = [
     "empty",
     "unreadable",
     "wrong_format",
@@ -25613,19 +26189,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     onExpand
   }) {
     let lines = rows2.map(problemLine), shown = expanded2 ? lines : lines.slice(0, LIST_CAP2);
-    return /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)("details", { className: "gig-group", open: !0, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("summary", { children: t("gig.groupCount", { label: problemHeading(kind2), count: lines.length }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("ul", { children: shown.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("li", { children: line2 }, line2)) }),
-      lines.length > LIST_CAP2 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("button", { type: "button", ref: tooltipRef6(tips.gigShowAll), className: "gig-show-all", onClick: onExpand, children: t("gig.showAll", { count: lines.length }) }) : null
+    return /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)("details", { className: "gig-group", open: !0, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("summary", { children: t("gig.groupCount", { label: problemHeading(kind2), count: lines.length }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("ul", { children: shown.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("li", { children: line2 }, line2)) }),
+      lines.length > LIST_CAP2 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("button", { type: "button", ref: tooltipRef6(tips.gigShowAll), className: "gig-show-all", onClick: onExpand, children: t("gig.showAll", { count: lines.length }) }) : null
     ] });
   }
   function ScanPanel() {
     let health = useHealth(), payload = health.scanReport, problems = payload?.problems ?? [];
-    return /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)(import_jsx_runtime35.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)(import_jsx_runtime38.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
           "button",
           {
             id: "scan-quick",
@@ -25639,7 +26215,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("scan.checkQuick")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
           "button",
           {
             id: "scan-full",
@@ -25654,13 +26230,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)(import_jsx_runtime35.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
-        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
-        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
-        problems.length ? problemKinds(problems).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)(import_jsx_runtime38.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
+        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
+        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
+        problems.length ? problemKinds(problems).map((kind2) => /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
           ProblemGroup,
           {
             kind: kind2,
@@ -25669,7 +26245,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             onExpand: () => health.expandScan(kind2)
           },
           kind2
-        )) : /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("p", { className: "gig-note", children: t("scan.empty") })
+        )) : /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("p", { className: "gig-note", children: t("scan.empty") })
       ] }) : null })
     ] });
   }
@@ -25812,20 +26388,20 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/TagsPanel.tsx
-  var import_jsx_runtime36 = __toESM(require_jsx_runtime(), 1), LIST_CAP3 = 100, TITLE_KEY = "clean", MAPPING_KEY = "saved";
+  var import_jsx_runtime39 = __toESM(require_jsx_runtime(), 1), LIST_CAP3 = 100, TITLE_KEY = "clean", MAPPING_KEY = "saved";
   function DiffLines({ plan }) {
     let lines = previewLines(plan.changes).slice(0, LIST_CAP3);
-    return lines.length ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("ul", { children: lines.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("li", { children: line2 }, line2)) }) : null;
+    return lines.length ? /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("ul", { children: lines.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("li", { children: line2 }, line2)) }) : null;
   }
   function MappingCard({
     plan,
     canApply,
     onApply
   }) {
-    return plan.changes.length ? /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("div", { className: "tags-mappings", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+    return plan.changes.length ? /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("div", { className: "tags-mappings", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
         "button",
         {
           type: "button",
@@ -25850,10 +26426,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     onSelect
   }) {
     let showPlan = plan && plan.value === chosen;
-    return /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("details", { className: "gig-group", open, "data-key": group.key, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("summary", { ref: tooltipRef6(tips.tagsGroup), children: groupHeading(group) }),
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("label", { className: "tags-spelling", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("details", { className: "gig-group", open, "data-key": group.key, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("summary", { ref: tooltipRef6(tips.tagsGroup), children: groupHeading(group) }),
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("label", { className: "tags-spelling", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
           "input",
           {
             ref: tooltipRef6(tips.tagsSpelling),
@@ -25865,11 +26441,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             onChange: (event) => onSelect(event.currentTarget.value)
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
       ] }) }, spelling.value)) }),
-      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(DiffLines, { plan }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("div", { className: "tags-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(DiffLines, { plan }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("div", { className: "tags-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
           "button",
           {
             type: "button",
@@ -25881,7 +26457,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("tags.preview")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
           "button",
           {
             type: "button",
@@ -25901,10 +26477,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     canApply,
     onApply
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)(import_jsx_runtime36.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(import_jsx_runtime39.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
         "button",
         {
           type: "button",
@@ -25927,12 +26503,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       return !!(plan && plan.value === value && plan.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== key);
     }
     let canApplyTitles = !!(health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY), canApplyMappings = !!(health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY);
-    return /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)(import_jsx_runtime36.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
-        /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(import_jsx_runtime39.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
             "button",
             {
               id: "tags-genre",
@@ -25945,7 +26521,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               children: t("tags.genre")
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
             "button",
             {
               id: "tags-artist",
@@ -25958,7 +26534,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               children: t("tags.artist")
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
             "button",
             {
               id: "tags-titles",
@@ -25972,7 +26548,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
           "button",
           {
             id: "tags-refresh",
@@ -25987,15 +26563,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
-        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
+        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => {
           health.applyTitles();
         } }) : null,
-        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)(import_jsx_runtime36.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
-          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(import_jsx_runtime39.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
+          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
             MappingCard,
             {
               plan: health.mappingPlan,
@@ -26007,7 +26583,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           ) : null,
           groups.map((group, index) => {
             let chosen = health.tagsSelected.get(group.key) ?? group.suggested ?? "";
-            return /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+            return /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
               GroupCard,
               {
                 group,
@@ -26216,12 +26792,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/SnapshotsContext.tsx
-  var import_react27 = __toESM(require_react(), 1), import_jsx_runtime37 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react27.createContext)(null);
+  var import_react27 = __toESM(require_react(), 1), import_jsx_runtime40 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react27.createContext)(null);
   function SnapshotsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime37.jsx)(SnapshotsContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(SnapshotsContext, { value, children });
   }
   function useSnapshots() {
     let value = (0, import_react27.useContext)(SnapshotsContext);
@@ -26252,7 +26828,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/WizardContext.tsx
-  var import_jsx_runtime38 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime41 = __toESM(require_jsx_runtime(), 1);
   function noop4() {
   }
   function noopFlag(_value) {
@@ -26292,7 +26868,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(WizardContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(WizardContext, { value, children });
   }
 
   // src/lib/gig/portable.ts
@@ -26576,8 +27152,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     rollback_failed: "operations.outcome.rollbackFailed"
   };
   function snapshotCardText(item2) {
-    let title2 = `${item2.created || t("snapshots.unknownTime")} · ${item2.trigger || t("snapshots.trigger")}`, version = item2.serato_version && item2.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item2.serato_version, build: String(item2.serato_build ?? "") }) : t("snapshots.seratoUnknown"), drives = (item2.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item2.unavailable_drives || []) })}` : "";
-    return { title: title2, detail: `${version}. ${item2.reason || ""}${drives}` };
+    let title2 = `${item2.created || t("snapshots.unknownTime")} · ${item2.trigger || t("snapshots.trigger")}`, version2 = item2.serato_version && item2.serato_version !== "unknown" ? t("snapshots.seratoVersion", { version: item2.serato_version, build: String(item2.serato_build ?? "") }) : t("snapshots.seratoUnknown"), drives = (item2.unavailable_drives || []).length ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item2.unavailable_drives || []) })}` : "";
+    return { title: title2, detail: `${version2}. ${item2.reason || ""}${drives}` };
   }
   function driveName(drive, status4) {
     let name = drive.label || drive.drive_id || t("snapshots.unknownDrive");
@@ -26621,7 +27197,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/RestoreDialog.tsx
-  var import_jsx_runtime39 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime42 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef7(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -26629,46 +27205,46 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function CueSide({ cue, slot }) {
     let color2 = slotColor(slot, cue?.color);
-    return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("span", { className: cue ? "cue-diff-side" : "cue-diff-side marker-empty", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("span", { className: "swatch", style: color2 ? { background: color2 } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("span", { children: cueSummary(cue, t("markers.cueEmpty")) })
+    return /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)("span", { className: cue ? "cue-diff-side" : "cue-diff-side marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("span", { className: "swatch", style: color2 ? { background: color2 } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("span", { children: cueSummary(cue, t("markers.cueEmpty")) })
     ] });
   }
   function CueDiffRow({ diff }) {
     let empty = t("markers.cueEmpty"), beforeText = cueSummary(diff.before, empty), afterText = cueSummary(diff.after, empty);
-    return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)(
       "p",
       {
         className: "cue-diff",
         "aria-label": `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("span", { className: "marker-slot", children: String(diff.slot + 1) }),
-          /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(CueSide, { cue: diff.before, slot: diff.slot }),
-          /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("span", { className: "cue-diff-arrow", "aria-hidden": "true", children: "→" }),
-          /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(CueSide, { cue: diff.after, slot: diff.slot })
+          /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("span", { className: "marker-slot", children: String(diff.slot + 1) }),
+          /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(CueSide, { cue: diff.before, slot: diff.slot }),
+          /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("span", { className: "cue-diff-arrow", "aria-hidden": "true", children: "→" }),
+          /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(CueSide, { cue: diff.after, slot: diff.slot })
         ]
       }
     );
   }
   function PlanLine({ label, rows: rows2 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { children: planLineText(label, rows2) });
+    return /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { children: planLineText(label, rows2) });
   }
   function CueDiffs({ label, rows: rows2 }) {
     let items = rows2 || [];
-    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(import_jsx_runtime39.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
-      items.slice(0, 12).map((item2, index) => /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { children: fileName(item2.path || "") }),
-        cueDiffRows(item2.before, item2.after).map((diff) => /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(CueDiffRow, { diff }, `${diff.slot}:${diff.before?.start_ms ?? ""}:${diff.after?.start_ms ?? ""}`))
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)(import_jsx_runtime42.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item2, index) => /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { children: fileName(item2.path || "") }),
+        cueDiffRows(item2.before, item2.after).map((diff) => /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(CueDiffRow, { diff }, `${diff.slot}:${diff.before?.start_ms ?? ""}:${diff.after?.start_ms ?? ""}`))
       ] }, `${item2.path ?? ""}:${index}`))
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { children: t("plan.none", { label }) });
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { children: t("plan.none", { label }) });
   }
   function FrameDiffs({ label, rows: rows2 }) {
     let items = rows2 || [];
-    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(import_jsx_runtime39.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
-      items.slice(0, 12).map((item2, index) => /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { children: fileName(item2.path || "") }, `${item2.path ?? ""}:${index}`))
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { children: t("plan.none", { label }) });
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)(import_jsx_runtime42.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item2, index) => /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { children: fileName(item2.path || "") }, `${item2.path ?? ""}:${index}`))
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { children: t("plan.none", { label }) });
   }
   function RestoreDialog() {
     let snapshots = useSnapshots(), closePlan2 = snapshots.closePlan;
@@ -26683,30 +27259,30 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       plan.restore_blocked_code,
       messageParams(plan.restore_blocked_params)
     ) : "", reading = snapshots.planOpen && !plan, confirmDisabled = snapshots.confirming || reading || !!plan?.restore_blocked, blockText = reading ? t("snapshots.readingPlan") : blocked || (plan != null && plan.dry_run ? t("plan.nothingChanged") : "");
-    return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(import_jsx_runtime39.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("h2", { id: "snapshot-title", children: t("snapshots.restoreTitle") }),
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(import_jsx_runtime39.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.cratesChanged"), rows: plan.crates?.changed }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),
-        plan.registration_warning ? /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { children: codedText(plan.registration_warning, plan.registration_warning_code) }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.tracksAdded"), rows: plan.tracks?.added }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.tracksRemoved"), rows: plan.tracks?.removed }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.tracksUnavailable"), rows: plan.tracks?.unavailable }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(CueDiffs, { label: t("plan.cueChanges"), rows: plan.cues }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(FrameDiffs, { label: t("plan.gridChanges"), rows: plan.grids }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.deletedCrates"), rows: plan.deleted?.crates }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.deletedTracks"), rows: plan.deleted?.tracks }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.deletedCues"), rows: plan.deleted?.cues }),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(PlanLine, { label: t("plan.deletedGrids"), rows: plan.deleted?.grids })
+    return /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)(import_jsx_runtime42.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("h2", { id: "snapshot-title", children: t("snapshots.restoreTitle") }),
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)(import_jsx_runtime42.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.cratesChanged"), rows: plan.crates?.changed }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),
+        plan.registration_warning ? /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { children: codedText(plan.registration_warning, plan.registration_warning_code) }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.tracksAdded"), rows: plan.tracks?.added }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.tracksRemoved"), rows: plan.tracks?.removed }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.tracksUnavailable"), rows: plan.tracks?.unavailable }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(CueDiffs, { label: t("plan.cueChanges"), rows: plan.cues }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(FrameDiffs, { label: t("plan.gridChanges"), rows: plan.grids }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.deletedCrates"), rows: plan.deleted?.crates }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.deletedTracks"), rows: plan.deleted?.tracks }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.deletedCues"), rows: plan.deleted?.cues }),
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PlanLine, { label: t("plan.deletedGrids"), rows: plan.deleted?.grids })
       ] }) : null }),
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { id: "snapshot-block", className: "dialog-note", role: "status", children: blockText }),
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("div", { className: "dialog-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { id: "snapshot-block", className: "dialog-note", role: "status", children: blockText }),
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(
           "button",
           {
             id: "snapshot-cancel",
@@ -26716,7 +27292,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("common.cancel")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(
           "button",
           {
             id: "snapshot-confirm",
@@ -26730,12 +27306,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("p", { id: "snapshot-status", className: "dialog-status", role: "status", "aria-live": "polite", children: snapshots.planStatus })
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)("p", { id: "snapshot-status", className: "dialog-status", role: "status", "aria-live": "polite", children: snapshots.planStatus })
     ] });
   }
 
   // src/pages/SnapshotsPanel.tsx
-  var import_jsx_runtime40 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime43 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef8(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -26749,10 +27325,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function SnapshotsPanel() {
     let snapshots = useSnapshots(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed";
-    return /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)(import_jsx_runtime40.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { id: "snapshots-heading", className: "files-path", children: t("view.snapshots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)(import_jsx_runtime43.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { id: "snapshots-heading", className: "files-path", children: t("view.snapshots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
           "button",
           {
             id: "snapshots-refresh",
@@ -26764,7 +27340,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("common.refresh")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
           "button",
           {
             id: "snapshots-take",
@@ -26777,7 +27353,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: snapshots.taking ? t("snapshots.saving") : t("snapshots.take")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
           "button",
           {
             id: "snapshots-drives",
@@ -26792,11 +27368,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { id: "snapshots-drives-note", className: "notice", role: "status", children: driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup) }),
-      /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { id: "snapshots-block", className: "notice", role: "status", hidden: !writeBlock, children: writeBlock }),
-      /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)("div", { id: "snapshots-undo", className: "snapshot-undo", hidden: !undoId, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { id: "snapshots-undo-text", children: snapshots.snapshotUndo?.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange") }),
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { id: "snapshots-drives-note", className: "notice", role: "status", children: driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup) }),
+      /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { id: "snapshots-block", className: "notice", role: "status", hidden: !writeBlock, children: writeBlock }),
+      /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)("div", { id: "snapshots-undo", className: "snapshot-undo", hidden: !undoId, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { id: "snapshots-undo-text", children: snapshots.snapshotUndo?.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange") }),
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
           "button",
           {
             id: "snapshots-undo-button",
@@ -26809,8 +27385,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { id: "snapshots-status", className: "notice", role: "status", "aria-live": "polite", children: listStatus(snapshots) }),
-      /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { id: "snapshots-status", className: "notice", role: "status", "aria-live": "polite", children: listStatus(snapshots) }),
+      /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
         "div",
         {
           id: "snapshots-list",
@@ -26820,7 +27396,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           "aria-busy": snapshots.snapshotLoading,
           tabIndex: 0,
           ref: tooltipRef8(tips.snapshotsList),
-          children: snapshots.snapshotLoading ? null : snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+          children: snapshots.snapshotLoading ? null : snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
             "button",
             {
               type: "button",
@@ -26830,12 +27406,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               },
               children: t("common.tryAgain")
             }
-          ) : snapshots.snapshots.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { children: t("snapshots.empty") }) : snapshots.snapshots.map((item2) => {
+          ) : snapshots.snapshots.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { children: t("snapshots.empty") }) : snapshots.snapshots.map((item2) => {
             let copy2 = snapshotCardText(item2);
-            return /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)("article", { className: "snapshot-card", role: "listitem", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { children: copy2.title }),
-              /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { children: copy2.detail }),
-              /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+            return /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)("article", { className: "snapshot-card", role: "listitem", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { children: copy2.title }),
+              /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { children: copy2.detail }),
+              /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
                 "button",
                 {
                   type: "button",
@@ -26850,10 +27426,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           })
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)("section", { id: "operations", className: "operations", "aria-labelledby": "operations-heading", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)("div", { className: "browser-bar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("h2", { id: "operations-heading", className: "operations-heading", children: t("operations.heading") }),
-          /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)("section", { id: "operations", className: "operations", "aria-labelledby": "operations-heading", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)("div", { className: "browser-bar", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("h2", { id: "operations-heading", className: "operations-heading", children: t("operations.heading") }),
+          /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
             "button",
             {
               id: "operations-refresh",
@@ -26867,9 +27443,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { id: "operations-alert", className: "operations-alert", role: "alert", hidden: !failed, children: failed ? t("operations.rollbackFailed") : "" }),
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { id: "operations-status", className: "notice", role: "status", "aria-live": "polite", children: snapshots.operationsLoading && snapshots.operations.length === 0 ? t("operations.reading") : snapshots.operationsError }),
-        /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { id: "operations-alert", className: "operations-alert", role: "alert", hidden: !failed, children: failed ? t("operations.rollbackFailed") : "" }),
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { id: "operations-status", className: "notice", role: "status", "aria-live": "polite", children: snapshots.operationsLoading && snapshots.operations.length === 0 ? t("operations.reading") : snapshots.operationsError }),
+        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
           "div",
           {
             id: "operations-list",
@@ -26879,7 +27455,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             "aria-busy": snapshots.operationsLoading,
             tabIndex: 0,
             ref: tooltipRef8(tips.operationsList),
-            children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+            children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
               "button",
               {
                 type: "button",
@@ -26890,16 +27466,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 },
                 children: t("common.tryAgain")
               }
-            ) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { children: t("operations.empty") }) : [...snapshots.operations].reverse().map((item2, index) => {
+            ) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { children: t("operations.empty") }) : [...snapshots.operations].reverse().map((item2, index) => {
               let copy2 = operationCardText(item2);
-              return /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)(
+              return /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)(
                 "article",
                 {
                   className: "operation-card snapshot-card",
                   role: "listitem",
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { children: copy2.title }),
-                    copy2.detail ? /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("p", { children: copy2.detail }) : null
+                    /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { children: copy2.title }),
+                    copy2.detail ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { children: copy2.detail }) : null
                   ]
                 },
                 `${item2.time ?? ""}:${item2.action ?? ""}:${item2.target ?? ""}:${index}`
@@ -27067,7 +27643,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime41 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime44 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -27191,7 +27767,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       });
     }), []);
     let current2 = (0, import_react31.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(PlayerProvider, { value: current2, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(PlayerProvider, { value: current2, children });
   }
   function readHistoryValue() {
     return {
@@ -27213,7 +27789,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       });
     }), []);
     let current2 = (0, import_react31.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(HistoryProvider, { value: current2, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(HistoryProvider, { value: current2, children });
   }
   function GigProvider({ children }) {
     let [value, setValue] = (0, import_react31.useState)(readGigValue);
@@ -27228,7 +27804,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       };
     }, []);
     let current2 = (0, import_react31.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(GigStateProvider, { value: current2, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(GigStateProvider, { value: current2, children });
   }
   function FilesProvider2({ children }) {
     let hostRef = (0, import_react31.useRef)(null), [value, setValue] = (0, import_react31.useState)(readFilesValue);
@@ -27243,8 +27819,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       };
     }, []);
     let current2 = (0, import_react31.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsxs)(FilesProvider, { value: current2, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime41.jsx)("span", { ref: hostRef, hidden: !0 }),
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsxs)(FilesProvider, { value: current2, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("span", { ref: hostRef, hidden: !0 }),
       children
     ] });
   }
@@ -27256,7 +27832,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       });
     }), []);
     let current2 = (0, import_react31.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(CrateProvider, { value: current2, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(CrateProvider, { value: current2, children });
   }
   function SettingsProvider2({ children }) {
     let [value, setValue] = (0, import_react31.useState)(readSettingsValue);
@@ -27271,7 +27847,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       };
     }, []);
     let current2 = (0, import_react31.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(SettingsProvider, { value: current2, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(SettingsProvider, { value: current2, children });
   }
   function readTrackListValue() {
     return {
@@ -27287,7 +27863,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       });
     }), []);
     let current2 = (0, import_react31.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(TrackListProvider, { value: current2, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(TrackListProvider, { value: current2, children });
   }
   function readSnapshotsValue() {
     return {
@@ -27311,11 +27887,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       });
     }), []);
     let current2 = (0, import_react31.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(SnapshotsProvider, { value: current2, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(SnapshotsProvider, { value: current2, children });
   }
   function WizardProvider2({ children }) {
     let value = (0, import_react31.useMemo)(() => idleWizardValue(), []);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(WizardProvider, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(WizardProvider, { value, children });
   }
   function readHealthValue() {
     return {
@@ -27344,18 +27920,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       });
     }), []);
     let current2 = (0, import_react31.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(HealthProvider, { value: current2, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(HealthProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(MuiThemeRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(SettingsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(TrackListRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(SnapshotsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(WizardProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(HealthProvider2, { children }) }) }) }) }) }) }) }) }) }) }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(MuiThemeRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(SettingsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(TrackListRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(SnapshotsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(WizardProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(HealthProvider2, { children }) }) }) }) }) }) }) }) }) }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime42 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime45 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node2, existing) {
     let root = existing ?? (0, import_client.createRoot)(host);
     return (0, import_react_dom5.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime42.jsx)(AppProviders, { children: node2 }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime45.jsx)(AppProviders, { children: node2 }));
     }), root;
   }
 
@@ -27386,7 +27962,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/GigReport.tsx
-  var import_jsx_runtime43 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime46 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef9(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -27394,8 +27970,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function GigActions({ primary, stepIndex: stepIndex2 }) {
     let gig = useGig();
-    return /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)("div", { className: "gig-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)("div", { className: "gig-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(
         "button",
         {
           type: "button",
@@ -27406,7 +27982,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("common.back")
         }
       ),
-      primary ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
+      primary ? /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(
         "button",
         {
           type: "button",
@@ -27417,7 +27993,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: primary
         }
       ) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(
         "button",
         {
           type: "button",
@@ -27431,44 +28007,44 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function GigSince({ payload }) {
     let note = payload.snapshot_note?.trim() ?? "", changes = payload.changes, groups = GIG_CHANGE_GROUPS.map(([label, key]) => [label, changes?.[key] || []]).filter(([, lines]) => lines.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)(import_jsx_runtime43.Fragment, { children: [
-      note ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { className: "gig-note", children: note }) : null,
-      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
-      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
-      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
+    return /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)(import_jsx_runtime46.Fragment, { children: [
+      note ? /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { className: "gig-note", children: note }) : null,
+      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
+      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
+      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
     ] });
   }
   function GigReport() {
     let { gig } = useGig(), payload = gig.report;
     if (!payload) return null;
     let done = gig.stepIndex >= GIG_STEP_COUNT, step = done ? null : GIG_STEPS[gig.stepIndex], verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady"), crate = payload.scope?.crate_name || t("gig.wholeSpaceInline"), time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "", holding = (payload.holding_it_back || []).map((item2) => item2.summary), lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [];
-    return /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)(import_jsx_runtime43.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)(import_jsx_runtime46.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)(
         "p",
         {
           className: "gig-score",
           "aria-label": t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
+            /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
           ]
         }
       ),
-      done ? /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)(import_jsx_runtime43.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
-        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
-        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
+      done ? /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)(import_jsx_runtime46.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
+        /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
+        /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
           score: payload.score,
           crate,
           time
         }) }),
-        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime43.jsxs)(import_jsx_runtime43.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
-        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime43.jsx)("p", { className: "gig-note", children: t(step.empty) }),
-        /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
+        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)(import_jsx_runtime46.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
+        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { className: "gig-note", children: t(step.empty) }),
+        /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
       ] })
     ] });
   }
@@ -27978,7 +28554,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // src/pages/FilesDialog.tsx
   var import_react33 = __toESM(require_react(), 1);
-  var import_jsx_runtime44 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime47 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef10(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -27995,13 +28571,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       return dialog.addEventListener("cancel", onCancel), () => dialog.removeEventListener("cancel", onCancel);
     }, [files.closeDialog]);
     let action = files.dialogAction, preview = files.dialogPreview, ready = !!(preview?.ok && files.writable && preview.needs_confirm), reviewHidden = action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags", status4 = files.writable ? files.dialogStatus : document.getElementById("status")?.textContent ?? files.dialogStatus, confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm"), confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
-    return /* @__PURE__ */ (0, import_jsx_runtime44.jsxs)(import_jsx_runtime44.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
-      /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
-      /* @__PURE__ */ (0, import_jsx_runtime44.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("span", { children: t("files.newName") }),
-        /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime47.jsxs)(import_jsx_runtime47.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
+      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
+      /* @__PURE__ */ (0, import_jsx_runtime47.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("span", { children: t("files.newName") }),
+        /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
           "input",
           {
             id: "files-name",
@@ -28013,9 +28589,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime44.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("span", { children: t("files.newFile") }),
-        /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime47.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("span", { children: t("files.newFile") }),
+        /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
           "input",
           {
             id: "files-replacement",
@@ -28028,18 +28604,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime44.jsxs)("ul", { id: "files-changes", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime47.jsxs)("ul", { id: "files-changes", children: [
         (preview?.changes || []).map((change, index) => {
           let crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "", effect = change.effect === "trash" ? t("files.trash") : change.to;
-          return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("li", { children: `${change.from} → ${effect}${crates}` }, `change-${index}`);
+          return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("li", { children: `${change.from} → ${effect}${crates}` }, `change-${index}`);
         }),
-        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("li", { children: skip2 }, `skip-${index}`)),
-        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("li", { children: skip2 }, `skip-${index}`)),
+        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 }),
-      /* @__PURE__ */ (0, import_jsx_runtime44.jsxs)("div", { className: "dialog-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 }),
+      /* @__PURE__ */ (0, import_jsx_runtime47.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
           "button",
           {
             id: "files-cancel",
@@ -28049,7 +28625,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("common.cancel")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
           "button",
           {
             id: "files-review",
@@ -28062,7 +28638,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("files.review")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
           "button",
           {
             id: "files-confirm",
@@ -28082,14 +28658,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // src/pages/FilesPanel.tsx
   var import_react34 = __toESM(require_react(), 1), import_react_dom6 = __toESM(require_react_dom(), 1);
-  var import_jsx_runtime45 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime48 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef11(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function FileIcon({ kind: kind2 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
       "svg",
       {
         viewBox: "0 0 24 24",
@@ -28097,14 +28673,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         height: "20",
         "aria-hidden": "true",
         className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
-        children: /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
       }
     );
   }
   function FilesToolbar() {
     let files = useFiles(), crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
-    return /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)("div", { className: "browser-bar", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)("div", { className: "browser-bar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-up",
@@ -28115,10 +28691,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("common.up")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
         let last = index === crumbs.length - 1;
-        return /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)("li", { children: [
-          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)("li", { children: [
+          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
             "button",
             {
               type: "button",
@@ -28127,13 +28703,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               onClick: () => files.openCrumb(crumb.path),
               children: crumb.name
             }
-          ) : /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
-          last ? null : /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" })
+          ) : /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
+          last ? null : /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" })
         ] }, `${crumb.path}:${crumb.name}:${index}`);
       }) }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
-        /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
+        /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           "input",
           {
             id: "files-search",
@@ -28147,8 +28723,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef11(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef11(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-elsewhere",
@@ -28163,8 +28739,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function FilesActions() {
     let files = useFiles(), selected = files.selectedEntries, locked = files.locked;
-    return /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)("div", { className: "files-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)("div", { className: "files-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-rename",
@@ -28175,7 +28751,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-rename-from-tags",
@@ -28187,7 +28763,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-move",
@@ -28198,7 +28774,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("files.moveToFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-move-folder",
@@ -28209,7 +28785,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("files.moveFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-replace",
@@ -28220,7 +28796,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("files.replaceFile")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-delete",
@@ -28231,7 +28807,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-move-here",
@@ -28243,7 +28819,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("files.moveHere")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           id: "files-pick-cancel",
@@ -28263,8 +28839,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       entry.missing ? "is-missing" : "",
       active2 ? "is-active" : ""
     ].filter(Boolean).join(" ");
-    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)("div", { className, role: "listitem", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)(
+    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)("div", { className, role: "listitem", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)(
         "button",
         {
           type: "button",
@@ -28279,19 +28855,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             entry.missing ? files.markActive(index) : files.openRow(entry, index);
           },
           children: [
-            entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
-            entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)("span", { className: "files-root-copy", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "files-root-label", children: entry.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "files-root-detail", children: entry.detail })
-            ] }) : /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)(import_jsx_runtime45.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { children: entry.name }),
-              entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
+            entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
+            entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)("span", { className: "files-root-copy", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "files-root-label", children: entry.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "files-root-detail", children: entry.detail })
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)(import_jsx_runtime48.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { children: entry.name }),
+              entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
             ] }),
-            entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+            entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
           ]
         }
       ),
-      entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "button",
         {
           type: "button",
@@ -28305,7 +28881,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("portable.check")
         }
       ) : null
-    ] }) : entry.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+    ] }) : entry.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
       "button",
       {
         type: "button",
@@ -28317,8 +28893,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         "aria-label": t("files.shortcut", { name: entry.name }),
         children: t("files.shortcut", { name: entry.name })
       }
-    ) }) : /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)("label", { className: "files-file", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+    ) }) : /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "input",
         {
           ref: tooltipRef11(selectFile(entry.name, entry.path)),
@@ -28331,9 +28907,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           onChange: (event) => files.toggleFile(entry, index, event.currentTarget.checked)
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "files-name", children: entry.name }),
-      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
-      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "files-name", children: entry.name }),
+      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
+      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
     ] }) });
   }
   var FILE_OVERSCAN = 8;
@@ -28359,14 +28935,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let ariaLabel = files.searching ? t("files.searchResults") : files.atRoots ? t("files.roots") : t("files.contents"), emptyLoading = files.loading && !rows2.length, emptyError = !!files.error && !rows2.length, emptyRoots = files.atRoots && !files.roots.length, emptyFolder = !rows2.length, body, tabIndex = 0;
     if (emptyLoading) {
       let reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      body = /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("p", { className: "files-empty", children: reading });
+      body = /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("p", { className: "files-empty", children: reading });
     } else if (emptyError)
-      body = /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("p", { className: "files-empty", children: files.error });
+      body = /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("p", { className: "files-empty", children: files.error });
     else if (emptyRoots)
-      tabIndex = -1, body = /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)("div", { className: "files-empty-state", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("h2", { children: t("files.noRoots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("p", { children: t("files.noRootsBody") }),
-        /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+      tabIndex = -1, body = /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           "button",
           {
             id: "files-run-setup",
@@ -28380,15 +28956,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ] });
     else if (emptyFolder) {
       let empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
-      body = /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("p", { className: "files-empty", children: empty });
+      body = /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("p", { className: "files-empty", children: empty });
     } else {
       tabIndex = -1;
       let windowRows = [];
       for (let index = start; index < end; index += 1) {
         let entry = rows2[index];
-        entry && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime45.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
+        entry && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime48.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
       }
-      body = /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("div", { className: "files-spacer", style: { height: `${rows2.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("div", { className: "files-window", style: { transform: `translateY(${start * rowHeight}px)` }, children: windowRows }) });
+      body = /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("div", { className: "files-spacer", style: { height: `${rows2.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("div", { className: "files-window", style: { transform: `translateY(${start * rowHeight}px)` }, children: windowRows }) });
     }
     function onScroll2(event) {
       let node2 = event.currentTarget;
@@ -28399,10 +28975,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     function onKey2(event) {
       files.onListKey(event.nativeEvent);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)(import_jsx_runtime45.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)(import_jsx_runtime48.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
         "div",
         {
           id: "files-list",
@@ -28421,37 +28997,37 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     ] });
   }
   function FilesPanel() {
-    return /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)(import_jsx_runtime45.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(FilesToolbar, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(FilesList, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(FilesActions, {})
+    return /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)(import_jsx_runtime48.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(FilesActions, {})
     ] });
   }
 
   // src/components/PortableDialog.tsx
-  var import_jsx_runtime46 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime49 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
     let files = useFiles(), report = files.portableReport, verdict = "";
     report && (report.missing_drive ? verdict = t("portable.missing") : report.ready ? verdict = t("portable.ready") : verdict = t("portable.notReady"));
     let shown = report ? report.findings.slice(0, FINDING_CAP) : [], hidden = report ? report.findings.length - shown.length : 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)(import_jsx_runtime46.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
-      /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { id: "portable-verdict", children: verdict }),
-      /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)("ul", { id: "portable-findings", children: [
-        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)("li", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
-          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)(import_jsx_runtime46.Fragment, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime49.jsxs)(import_jsx_runtime49.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime49.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime49.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime49.jsxs)(import_jsx_runtime49.Fragment, { children: [
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("span", { className: "portable-fix", children: finding.fix })
+            /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("span", { className: "portable-fix", children: finding.fix })
           ] }) : null
         ] }, `finding-${index}`)),
-        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
-        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime46.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime49.jsx)(
         "button",
         {
           id: "portable-close",
@@ -28538,7 +29114,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var import_react38 = __toESM(require_react(), 1);
 
   // src/pages/CrateActions.tsx
-  var import_jsx_runtime47 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime50 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef12(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -28546,8 +29122,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function CrateActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime47.jsxs)(import_jsx_runtime47.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime50.jsxs)(import_jsx_runtime50.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(
         "button",
         {
           id: "crate-new",
@@ -28558,7 +29134,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("crates.new")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(
         "button",
         {
           id: "crate-rename",
@@ -28569,7 +29145,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(
         "button",
         {
           id: "crate-color",
@@ -28580,7 +29156,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("field.color")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(
         "button",
         {
           id: "crate-delete",
@@ -28591,7 +29167,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(
         "button",
         {
           id: "crate-preset",
@@ -28603,7 +29179,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("presets.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(
         "button",
         {
           id: "crate-folder-sync",
@@ -28615,7 +29191,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("folderSync.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(
         "button",
         {
           id: "crate-rename-from-tags",
@@ -28627,7 +29203,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(
         "button",
         {
           id: "crate-refresh",
@@ -28643,7 +29219,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/CrateBrowserActions.tsx
-  var import_jsx_runtime48 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime51 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef13(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -28651,8 +29227,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function CrateBrowserActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime48.jsxs)(import_jsx_runtime48.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime51.jsxs)(import_jsx_runtime51.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(
         "button",
         {
           id: "crate-split",
@@ -28664,7 +29240,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("crates.split")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(
         "button",
         {
           id: "crate-save-view",
@@ -28676,7 +29252,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("crates.saveView")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(
         "button",
         {
           id: "export-m3u",
@@ -28691,7 +29267,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/CrateTree.tsx
-  var import_jsx_runtime49 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime52 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef14(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -28703,9 +29279,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function Twist({ row, toggle }) {
     if (!row.childCount)
-      return /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
+      return /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
     let spec2 = row.expanded ? collapseCrate(row.name) : expandCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime49.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime52.jsx)(
       "button",
       {
         type: "button",
@@ -28725,14 +29301,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     toggle
   }) {
     let hex = colorHex(row.color), tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime49.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime52.jsxs)(
       "div",
       {
         className: row.holds ? "crate-row holds-selection" : "crate-row",
         style: { paddingLeft: `${row.depth * 14}px` },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime49.jsx)(Twist, { row, toggle }),
-          /* @__PURE__ */ (0, import_jsx_runtime49.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime52.jsx)(Twist, { row, toggle }),
+          /* @__PURE__ */ (0, import_jsx_runtime52.jsxs)(
             "button",
             {
               type: "button",
@@ -28748,12 +29324,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               "aria-expanded": row.childCount ? row.expanded : void 0,
               onClick: (event) => select(row.id, event.nativeEvent),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime49.jsxs)("span", { className: "name", children: [
-                  hex ? /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime52.jsxs)("span", { className: "name", children: [
+                  hex ? /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
                   row.name
                 ] }),
-                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
-                /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("span", { className: "meta", children: formatNumber(row.count) })
+                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("span", { className: "meta", children: formatNumber(row.count) })
               ]
             }
           )
@@ -28763,7 +29339,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function CrateTree() {
     let crates = useCrates(), focusId = focusedCrateId(), tabbable = crates.rows.find((row) => String(row.id) === focusId) ?? crates.rows[0];
-    return /* @__PURE__ */ (0, import_jsx_runtime49.jsx)(import_jsx_runtime49.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime49.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime52.jsx)(import_jsx_runtime52.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime52.jsx)(
       CrateRow,
       {
         row,
@@ -28776,16 +29352,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/HistoryDetail.tsx
-  var import_jsx_runtime50 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime53 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef15(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function Field({ label, value }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime50.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)("div", { className: "label", children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)("div", { className: "value", children: value })
+    return /* @__PURE__ */ (0, import_jsx_runtime53.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime53.jsx)("div", { className: "label", children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime53.jsx)("div", { className: "value", children: value })
     ] });
   }
   function HistoryDetail() {
@@ -28797,11 +29373,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime50.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime50.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime50.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(Field, { label, value }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime53.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime53.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime53.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(Field, { label, value }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(
         "button",
         {
           type: "button",
@@ -28817,7 +29393,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/HistorySessions.tsx
-  var import_jsx_runtime51 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime54 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef16(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -28825,9 +29401,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function HistorySessions() {
     let history = useHistory();
-    return /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(import_jsx_runtime51.Fragment, { children: history.sessions.map((session) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(import_jsx_runtime54.Fragment, { children: history.sessions.map((session) => {
       let name = session.name || t("history.session");
-      return /* @__PURE__ */ (0, import_jsx_runtime51.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)(
         "button",
         {
           type: "button",
@@ -28839,8 +29415,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             history.openSession(session.id);
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime51.jsx)("span", { className: "name", children: name }),
-            /* @__PURE__ */ (0, import_jsx_runtime51.jsx)("span", { className: "meta", children: String(session.played || 0) })
+            /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("span", { className: "name", children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("span", { className: "meta", children: String(session.played || 0) })
           ]
         },
         session.id
@@ -28852,52 +29428,52 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var import_react37 = __toESM(require_react(), 1);
 
   // src/components/BeatgridBlock.tsx
-  var import_jsx_runtime52 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime55 = __toESM(require_jsx_runtime(), 1);
   function BeatgridMarker({ mark }) {
     let bpmNumber = Number(mark.bpm), name = "";
-    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime52.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("span", { children: beatSeconds(mark.position) }),
-      /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("span", { children: name })
+    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: beatSeconds(mark.position) }),
+      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: name })
     ] });
   }
   function BeatgridBlock({ track }) {
     if (!beatgridViewOnly(track.markers_unavailable)) return null;
     let suspect = beatgridIsSuspect(track.beatgrid_warning_code), key = beatgridWarningKey(track.beatgrid_warning_code), reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning == "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown"), empty = !suspect && !(track.beatgrid && track.beatgrid.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime52.jsxs)(import_jsx_runtime52.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("h4", { children: t("markers.gridHeading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
-      suspect ? /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime52.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
-      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime52.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
+    return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)(import_jsx_runtime55.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("h4", { children: t("markers.gridHeading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
+      suspect ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
+      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
     ] });
   }
 
   // src/components/CuePads.tsx
-  var import_jsx_runtime53 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime56 = __toESM(require_jsx_runtime(), 1);
   function CueSlot({ slot, cue }) {
     let color2 = slotColor(slot, cue?.color), named = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime53.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime53.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime53.jsx)("span", { className: "swatch", style: swatchStyle }),
-      /* @__PURE__ */ (0, import_jsx_runtime53.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
-      /* @__PURE__ */ (0, import_jsx_runtime53.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime56.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime56.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime56.jsx)("span", { className: "swatch", style: swatchStyle }),
+      /* @__PURE__ */ (0, import_jsx_runtime56.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
+      /* @__PURE__ */ (0, import_jsx_runtime56.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
     ] });
   }
   function CuePads({ cues: cues2 }) {
     let slots = cueSlots(cues2), extra = extraCues(cues2);
-    return /* @__PURE__ */ (0, import_jsx_runtime53.jsxs)(import_jsx_runtime53.Fragment, { children: [
-      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(CueSlot, { slot, cue }, slot)),
+    return /* @__PURE__ */ (0, import_jsx_runtime56.jsxs)(import_jsx_runtime56.Fragment, { children: [
+      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime56.jsx)(CueSlot, { slot, cue }, slot)),
       extra.map((cue, index) => {
         let cueIndex = Number(cue.index), slot = Number.isInteger(cueIndex) ? cueIndex : -1;
-        return /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
+        return /* @__PURE__ */ (0, import_jsx_runtime56.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
       })
     ] });
   }
 
   // src/components/RelatedTracks.tsx
   var import_react36 = __toESM(require_react(), 1);
-  var import_jsx_runtime54 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime57 = __toESM(require_jsx_runtime(), 1);
   function relatedPath(track) {
     return track.resolved_path || track.edit?.portable_id || "";
   }
@@ -28967,14 +29543,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     function onSearch(event) {
       setQuery(event.currentTarget.value), setChosen(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("h3", { id: headingId, children: t("related.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
-      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("ul", { className: "related-list", children: saved.map((link) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("h3", { id: headingId, children: t("related.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
+      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("ul", { className: "related-list", children: saved.map((link) => {
         let other = link.track || {}, label = other.title || t("track.untitled"), bits = [];
-        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("div", { children: [
-            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(
+        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("div", { children: [
+            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
               "button",
               {
                 type: "button",
@@ -28983,11 +29559,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 onClick: () => list.selectTrack(other.asset_id),
                 children: label
               }
-            ) : /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("span", { children: label }),
-            /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
-            link.note ? /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("p", { className: "related-note", children: link.note }) : null
+            ) : /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
+            link.note ? /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("p", { className: "related-note", children: link.note }) : null
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
             "button",
             {
               type: "button",
@@ -29002,10 +29578,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           )
         ] }, String(link.id));
       }) }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("div", { className: "related-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("label", { children: [
+      payload && /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("div", { className: "related-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("label", { children: [
           t("related.find"),
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
             "input",
             {
               ref: tooltipRef(tips.findRelated),
@@ -29017,9 +29593,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
+        /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
           let name = relatedLabel(hit);
-          return /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
             "button",
             {
               type: "button",
@@ -29032,11 +29608,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           ) }, hit.id);
         }) }),
-        chosen && /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("div", { className: "related-form", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("label", { children: [
+        chosen && /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("div", { className: "related-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("label", { children: [
             t("related.note"),
-            /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkNote),
@@ -29048,23 +29624,23 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("label", { children: [
             t("related.linkRating"),
-            /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)(
               "select",
               {
                 ref: tooltipRef(tips.linkRating),
                 value: rating,
                 onChange: (event) => setRating(event.currentTarget.value),
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("option", { value: "", children: t("rating.none") }),
-                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("option", { value, children: value }, value))
+                  /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("option", { value: "", children: t("rating.none") }),
+                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("option", { value, children: value }, value))
                 ]
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("label", { className: "check", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("label", { className: "check", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkMutual),
@@ -29075,7 +29651,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             ),
             t("related.twoWayLink")
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
             "button",
             {
               type: "button",
@@ -29097,14 +29673,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           )
         ] })
       ] }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)(import_jsx_runtime54.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
-        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("ul", { className: "related-list", children: suggested.map((item2, index) => /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("span", { children: relatedLabel(item2) }),
-            /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("p", { className: "related-meta", children: Array.isArray(item2.reasons) ? item2.reasons.join(" · ") : "" })
+      payload && /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)(import_jsx_runtime57.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
+        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("ul", { className: "related-list", children: suggested.map((item2, index) => /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("span", { children: relatedLabel(item2) }),
+            /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("p", { className: "related-meta", children: Array.isArray(item2.reasons) ? item2.reasons.join(" · ") : "" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
             "button",
             {
               type: "button",
@@ -29126,7 +29702,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           )
         ] }, `${item2.asset_id ?? index}`)) }),
-        /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
           "button",
           {
             type: "button",
@@ -29140,13 +29716,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("related.updateCrate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
+        /* @__PURE__ */ (0, import_jsx_runtime57.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
       ] })
     ] });
   }
 
   // src/components/TrackDetail.tsx
-  var import_jsx_runtime55 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
+  var import_jsx_runtime58 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
     ["name", "column.title", !0],
     ["artist", "column.artist", !1],
     ["album", "field.album", !1],
@@ -29184,36 +29760,36 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function MarkerSection({ track }) {
     let note = t("markers.readOnly");
-    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("h3", { children: t("markers.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-kicker", children: note }),
-      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(CuePads, { cues: track.cues || [] }),
-      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(LoopRow, { loop }, `loop-${index}`)),
-      (track.flips || []).map((flip, index) => /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "marker", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: flip.enabled ? t("common.on") : t("common.off") }),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: flip.name || t("markers.flip", { number: flip.index + 1 }) })
+    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("h3", { children: t("markers.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "detail-kicker", children: note }),
+      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(CuePads, { cues: track.cues || [] }),
+      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(LoopRow, { loop }, `loop-${index}`)),
+      (track.flips || []).map((flip, index) => /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "marker", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: flip.enabled ? t("common.on") : t("common.off") }),
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: flip.name || t("markers.flip", { number: flip.index + 1 }) })
       ] }, `flip-${index}`)),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(BeatgridBlock, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(BeatgridBlock, { track })
     ] });
   }
   function LoopRow({ loop }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
+    return /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
     ] });
   }
   function CopySection({ fromId, copies, writable }) {
     let list = useTrackList();
-    return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("h3", { children: t("copies.heading") }),
+    return /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("h3", { children: t("copies.heading") }),
       copies.map((copy2) => {
         let name = copy2.file || t("track.numbered", { id: String(copy2.id) }), file = copy2.file || `Track ${copy2.id}`;
-        return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "copy-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "copy-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
             "button",
             {
               type: "button",
@@ -29223,10 +29799,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               children: name
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
-          /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
-          /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
-          /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
+          /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
+          /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
             "button",
             {
               type: "button",
@@ -29247,11 +29823,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function MembershipSection({ track, writable }) {
     let list = useTrackList(), chosen = new Set(track.crate_ids || []), crates = [...list.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name)), smart = list.crates.filter((crate) => crate.smart && chosen.has(crate.id));
-    return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("h3", { children: t("crates.heading") }),
-      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("label", { className: "member", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("h3", { children: t("crates.heading") }),
+      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("label", { className: "member", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "input",
           {
             ref: tooltipRef(membershipTip(crate.name)),
@@ -29266,29 +29842,29 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: crate.name })
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: crate.name })
       ] }, crate.id)) })
     ] });
   }
   function FieldGroups({ track }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(import_jsx_runtime55.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
+    return /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(import_jsx_runtime58.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
   }
   function FieldGroupBlock({ group }) {
-    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react37.useState)(open), rows2 = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "label", children: [
+    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react37.useState)(open), rows2 = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "label", children: [
         field2.label ?? "",
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { className: "column", children: field2.column ?? "" })
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { className: "column", children: field2.column ?? "" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("span", { className: "color-value", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { className: "swatch", style: { background: field2.display } }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("span", { className: "color-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { className: "swatch", style: { background: field2.display } }),
         field2.display
       ] }) : field2.display })
     ] }, `${field2.column ?? field2.label ?? index}`));
-    return open ? /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("h3", { children: group.name ?? "" }),
+    return open ? /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("h3", { children: group.name ?? "" }),
       rows2
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)(import_jsx_runtime55.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)(import_jsx_runtime58.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
         "button",
         {
           type: "button",
@@ -29298,8 +29874,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length })
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("section", { className: "group", hidden: !shown, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("h3", { children: group.name ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("section", { className: "group", hidden: !shown, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("h3", { children: group.name ?? "" }),
         rows2
       ] })
     ] });
@@ -29324,10 +29900,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }
       list.saveTrack(track.id, fields);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("form", { className: "editor", onSubmit, children: [
-      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("label", { className: wide ? "wide" : void 0, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("form", { className: "editor", onSubmit, children: [
+      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("label", { className: wide ? "wide" : void 0, children: [
         t(label),
-        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "textarea",
           {
             ref: tooltipRef(editField(t(label))),
@@ -29335,7 +29911,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             defaultValue: String(edit[name] ?? ""),
             disabled: !writable
           }
-        ) : /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        ) : /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "input",
           {
             ref: tooltipRef(editField(t(label))),
@@ -29346,34 +29922,34 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }, name)),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("label", { children: [
         t("field.color"),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackColor),
             name: "color",
             defaultValue: String(currentColor),
             disabled: !writable,
-            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("option", { value: String(value), children: label }, value))
+            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("option", { value: String(value), children: label }, value))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("label", { children: [
         t("field.rating"),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackRating),
             name: "rating",
             defaultValue: ratingValue,
             disabled: !writable,
-            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("option", { value, children: label }, value || "none"))
+            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("option", { value, children: label }, value || "none"))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "input",
           {
             ref: tooltipRef(tips.beatgridLock),
@@ -29385,7 +29961,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         ),
         t("field.beatgridLocked")
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
         "button",
         {
           type: "submit",
@@ -29398,42 +29974,42 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     ] });
   }
   function TrackBody({ track }) {
-    let list = useTrackList(), writable = !!(track.serato?.writable && list.writable), playTitle = track.title || track.name || playerStrings.untitled, manager = track.serato?.file_manager || list.serato?.file_manager || "Finder", facts = [
+    let list = useTrackList(), writable = !!(track.serato?.writable && list.writable), playTitle = track.title || track.name || playerStrings.untitled, manager2 = track.serato?.file_manager || list.serato?.file_manager || "Finder", facts = [
       ["column.bpm", track.bpm],
       ["column.key", track.key || "—"],
       ["column.time", track.length]
     ];
-    return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "detail-body", children: [
-      track.album ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("h2", { children: track.title ?? "" }),
-      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "artist", children: track.artist }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "deck", children: [
-        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
-          /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: t(key) })
+    return /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "detail-body", children: [
+      track.album ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("h2", { children: track.title ?? "" }),
+      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "artist", children: track.artist }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "deck", children: [
+        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
+          /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: t(key) })
         ] }, key)),
-        track.color ? /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
-          /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("span", { children: t("field.color") })
+        track.color ? /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
+          /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("span", { children: t("field.color") })
         ] }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(TrackEditor, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(TrackEditor, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "button",
           {
             type: "button",
-            ref: tooltipRef(revealTip(manager)),
+            ref: tooltipRef(revealTip(manager2)),
             disabled: !track.file_on_disk,
             onClick: () => {
               list.revealTrack(track.id);
             },
-            children: t("detail.reveal", { manager })
+            children: t("detail.reveal", { manager: manager2 })
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "button",
           {
             type: "button",
@@ -29445,7 +30021,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "button",
           {
             type: "button",
@@ -29457,7 +30033,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("detail.relocate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "button",
           {
             type: "button",
@@ -29469,7 +30045,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("detail.removeFromLibrary")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "button",
           {
             type: "button",
@@ -29483,7 +30059,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("detail.useInCrates")
           }
         ),
-        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
           "button",
           {
             type: "button",
@@ -29498,11 +30074,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         ) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(RelatedTracks, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(MarkerSection, { track }),
-      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(MembershipSection, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(FieldGroups, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(RelatedTracks, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(MarkerSection, { track }),
+      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(MembershipSection, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(FieldGroups, { track })
     ] });
   }
   function HistoryBody({ entry }) {
@@ -29512,14 +30088,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)("div", { className: "field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("div", { className: "label", children: label }),
-        /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("div", { className: "value", children: value })
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime58.jsxs)("div", { className: "field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("div", { className: "label", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("div", { className: "value", children: value })
       ] }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(
         "button",
         {
           type: "button",
@@ -29533,7 +30109,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function TrackDetailPane() {
     let list = useTrackList(), { detail: detail2 } = list;
-    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(TrackBody, { track: detail2.track });
+    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(TrackBody, { track: detail2.track });
   }
 
   // src/lib/ui/nav.ts
@@ -31162,13 +31738,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   // src/lib/ui/version.ts
   var copyText2 = "", painted;
   function versionLabel(info) {
-    let version = formatVersion(info.version);
-    if (info.source === "release") return version;
+    let version2 = formatVersion(info.version);
+    if (info.source === "release") return version2;
     let commit = shortCommit(info.commit);
-    return !commit || version.toLowerCase().includes(commit) ? version : `${version} · ${commit}`;
+    return !commit || version2.toLowerCase().includes(commit) ? version2 : `${version2} · ${commit}`;
   }
-  function formatVersion(version) {
-    let trimmed = version.trim();
+  function formatVersion(version2) {
+    let trimmed = version2.trim();
     return /^\d+\.\d+\.\d+/.test(trimmed) ? `v${trimmed}` : trimmed;
   }
   function shortCommit(commit) {
@@ -31418,6 +31994,3546 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }
   });
 
+  // src/lib/ui/app-shell.ts
+  var import_react41 = __toESM(require_react(), 1);
+
+  // src/pages/AppShell.tsx
+  var import_react40 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/AppBar/AppBar.mjs
+  var React26 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/utils/createSimplePaletteValueFilter.mjs
+  function hasCorrectMainProperty(obj) {
+    return typeof obj.main == "string";
+  }
+  function checkSimplePaletteColorValues(obj, additionalPropertiesToCheck = []) {
+    if (!hasCorrectMainProperty(obj))
+      return !1;
+    for (let value of additionalPropertiesToCheck)
+      if (!obj.hasOwnProperty(value) || typeof obj[value] != "string")
+        return !1;
+    return !0;
+  }
+  function createSimplePaletteValueFilter(additionalPropertiesToCheck = []) {
+    return ([, value]) => value && checkSimplePaletteColorValues(value, additionalPropertiesToCheck);
+  }
+
+  // node_modules/@mui/material/Paper/Paper.mjs
+  var React25 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Paper/paperClasses.mjs
+  function getPaperUtilityClass(slot) {
+    return generateUtilityClass("MuiPaper", slot);
+  }
+  var paperClasses = generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
+
+  // node_modules/@mui/material/Paper/Paper.mjs
+  var import_jsx_runtime59 = __toESM(require_jsx_runtime(), 1), useUtilityClasses = (ownerState) => {
+    let {
+      square,
+      elevation,
+      variant,
+      classes
+    } = ownerState, slots = {
+      root: ["root", variant, !square && "rounded", variant === "elevation" && `elevation${elevation}`]
+    };
+    return composeClasses(slots, getPaperUtilityClass, classes);
+  }, PaperRoot = styled_default("div", {
+    name: "MuiPaper",
+    slot: "Root",
+    overridesResolver: (props, styles2) => {
+      let {
+        ownerState
+      } = props;
+      return [styles2.root, styles2[ownerState.variant], !ownerState.square && styles2.rounded, ownerState.variant === "elevation" && styles2[`elevation${ownerState.elevation}`]];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    backgroundColor: (theme.vars || theme).palette.background.paper,
+    color: (theme.vars || theme).palette.text.primary,
+    ...getTransitionStyles(theme, "box-shadow"),
+    variants: [{
+      props: ({
+        ownerState
+      }) => !ownerState.square,
+      style: {
+        borderRadius: (theme.vars || theme).shape.borderRadius
+      }
+    }, {
+      props: {
+        variant: "outlined"
+      },
+      style: {
+        border: `1px solid ${(theme.vars || theme).palette.divider}`
+      }
+    }, {
+      props: {
+        variant: "elevation"
+      },
+      style: {
+        boxShadow: "var(--Paper-shadow)",
+        backgroundImage: "var(--Paper-overlay)"
+      }
+    }]
+  }))), Paper = /* @__PURE__ */ React25.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiPaper"
+    }), theme = useTheme4(), {
+      className,
+      component = "div",
+      elevation = 1,
+      square = !1,
+      variant = "elevation",
+      ...other
+    } = props, ownerState = {
+      ...props,
+      component,
+      elevation,
+      square,
+      variant
+    }, classes = useUtilityClasses(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime59.jsx)(PaperRoot, {
+      as: component,
+      ownerState,
+      className: clsx_default(classes.root, className),
+      ref,
+      ...other,
+      style: {
+        ...variant === "elevation" && {
+          "--Paper-shadow": (theme.vars || theme).shadows[elevation],
+          ...theme.vars && {
+            "--Paper-overlay": theme.vars.overlays?.[elevation]
+          },
+          ...!theme.vars && theme.palette.mode === "dark" && {
+            "--Paper-overlay": `linear-gradient(${alpha("#fff", getOverlayAlpha(elevation))}, ${alpha("#fff", getOverlayAlpha(elevation))})`
+          }
+        },
+        ...other.style
+      }
+    });
+  }), Paper_default = Paper;
+
+  // node_modules/@mui/material/AppBar/appBarClasses.mjs
+  function getAppBarUtilityClass(slot) {
+    return generateUtilityClass("MuiAppBar", slot);
+  }
+  var appBarClasses = generateUtilityClasses("MuiAppBar", ["root", "positionFixed", "positionAbsolute", "positionSticky", "positionStatic", "positionRelative", "colorDefault", "colorPrimary", "colorSecondary", "colorInherit", "colorTransparent", "colorError", "colorInfo", "colorSuccess", "colorWarning"]);
+
+  // node_modules/@mui/material/AppBar/AppBar.mjs
+  var import_jsx_runtime60 = __toESM(require_jsx_runtime(), 1), useUtilityClasses2 = (ownerState) => {
+    let {
+      color: color2,
+      position: position2,
+      classes
+    } = ownerState, slots = {
+      root: ["root", `color${capitalize_default(color2)}`, `position${capitalize_default(position2)}`]
+    };
+    return composeClasses(slots, getAppBarUtilityClass, classes);
+  }, joinVars = (var1, var2) => var1 ? `${var1.replace(")", "")}, ${var2})` : var2, AppBarRoot = styled_default(Paper_default, {
+    name: "MuiAppBar",
+    slot: "Root",
+    overridesResolver: (props, styles2) => {
+      let {
+        ownerState
+      } = props;
+      return [styles2.root, styles2[`position${capitalize_default(ownerState.position)}`], styles2[`color${capitalize_default(ownerState.color)}`]];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    boxSizing: "border-box",
+    // Prevent padding issue with the Modal and fixed positioned AppBar.
+    flexShrink: 0,
+    variants: [{
+      props: {
+        position: "fixed"
+      },
+      style: {
+        position: "fixed",
+        zIndex: (theme.vars || theme).zIndex.appBar,
+        top: 0,
+        left: "auto",
+        right: 0,
+        "@media print": {
+          // Prevent the app bar to be visible on each printed page.
+          position: "absolute"
+        }
+      }
+    }, {
+      props: {
+        position: "absolute"
+      },
+      style: {
+        position: "absolute",
+        zIndex: (theme.vars || theme).zIndex.appBar,
+        top: 0,
+        left: "auto",
+        right: 0
+      }
+    }, {
+      props: {
+        position: "sticky"
+      },
+      style: {
+        position: "sticky",
+        zIndex: (theme.vars || theme).zIndex.appBar,
+        top: 0,
+        left: "auto",
+        right: 0
+      }
+    }, {
+      props: {
+        position: "static"
+      },
+      style: {
+        position: "static"
+      }
+    }, {
+      props: {
+        position: "relative"
+      },
+      style: {
+        position: "relative"
+      }
+    }, {
+      props: {
+        color: "inherit"
+      },
+      style: {
+        "--AppBar-color": "inherit",
+        color: "var(--AppBar-color)"
+      }
+    }, {
+      props: {
+        color: "default"
+      },
+      style: {
+        "--AppBar-background": theme.vars ? theme.vars.palette.AppBar.defaultBg : theme.palette.grey[100],
+        "--AppBar-color": theme.vars ? theme.vars.palette.text.primary : theme.palette.getContrastText(theme.palette.grey[100]),
+        ...theme.applyStyles("dark", {
+          "--AppBar-background": theme.vars ? theme.vars.palette.AppBar.defaultBg : theme.palette.grey[900],
+          "--AppBar-color": theme.vars ? theme.vars.palette.text.primary : theme.palette.getContrastText(theme.palette.grey[900])
+        })
+      }
+    }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["contrastText"])).map(([color2]) => ({
+      props: {
+        color: color2
+      },
+      style: {
+        "--AppBar-background": (theme.vars ?? theme).palette[color2].main,
+        "--AppBar-color": (theme.vars ?? theme).palette[color2].contrastText,
+        ...theme.focusVisible && applyChildrenFocusVisible(`0 0 0 4px ${(theme.vars || theme).palette.background.default}`)
+      }
+    })), {
+      props: (props) => props.enableColorOnDark === !0 && !["inherit", "transparent"].includes(props.color),
+      style: {
+        backgroundColor: "var(--AppBar-background)",
+        color: "var(--AppBar-color)"
+      }
+    }, {
+      props: (props) => props.enableColorOnDark === !1 && !["inherit", "transparent"].includes(props.color),
+      style: {
+        backgroundColor: "var(--AppBar-background)",
+        color: "var(--AppBar-color)",
+        ...theme.applyStyles("dark", {
+          backgroundColor: theme.vars ? joinVars(theme.vars.palette.AppBar.darkBg, "var(--AppBar-background)") : null,
+          color: theme.vars ? joinVars(theme.vars.palette.AppBar.darkColor, "var(--AppBar-color)") : null
+        })
+      }
+    }, {
+      props: {
+        color: "transparent"
+      },
+      style: {
+        "--AppBar-background": "transparent",
+        "--AppBar-color": "inherit",
+        backgroundColor: "var(--AppBar-background)",
+        color: "var(--AppBar-color)",
+        ...theme.applyStyles("dark", {
+          backgroundImage: "none"
+        })
+      }
+    }]
+  }))), AppBar = /* @__PURE__ */ React26.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiAppBar"
+    }), {
+      className,
+      color: color2 = "primary",
+      enableColorOnDark = !1,
+      position: position2 = "fixed",
+      ...other
+    } = props, ownerState = {
+      ...props,
+      color: color2,
+      position: position2,
+      enableColorOnDark
+    }, classes = useUtilityClasses2(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime60.jsx)(AppBarRoot, {
+      square: !0,
+      component: "header",
+      ownerState,
+      elevation: 4,
+      className: clsx_default(classes.root, className, position2 === "fixed" && "mui-fixed"),
+      ref,
+      ...other
+    });
+  }), AppBar_default = AppBar;
+
+  // node_modules/@mui/material/Box/boxClasses.mjs
+  var boxClasses = generateUtilityClasses("MuiBox", ["root"]), boxClasses_default = boxClasses;
+
+  // node_modules/@mui/material/Box/Box.mjs
+  var defaultTheme2 = createTheme2(), Box = createBox({
+    themeId: identifier_default,
+    defaultTheme: defaultTheme2,
+    defaultClassName: boxClasses_default.root,
+    generateClassName: ClassNameGenerator_default.generate
+  }), Box_default = Box;
+
+  // node_modules/@mui/material/Drawer/Drawer.mjs
+  var React41 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/utils/getScrollbarSize/getScrollbarSize.mjs
+  function getScrollbarSize(win = window) {
+    let documentWidth = win.document.documentElement.clientWidth;
+    return win.innerWidth - documentWidth;
+  }
+
+  // node_modules/@mui/material/Modal/ModalManager.mjs
+  function isOverflowing(container2) {
+    let doc = ownerDocument(container2);
+    return container2 === doc.body || container2 === doc.documentElement ? ownerWindow(container2).innerWidth > doc.documentElement.clientWidth : container2.scrollHeight > container2.clientHeight;
+  }
+  function ariaHidden(element, hide2) {
+    hide2 ? element.setAttribute("aria-hidden", "true") : element.removeAttribute("aria-hidden");
+  }
+  function getPaddingRight(element) {
+    return parseFloat(ownerWindow(element).getComputedStyle(element).paddingRight) || 0;
+  }
+  function isAriaHiddenForbiddenOnElement(element) {
+    let isForbiddenTagName = ["TEMPLATE", "SCRIPT", "STYLE", "LINK", "MAP", "META", "NOSCRIPT", "PICTURE", "COL", "COLGROUP", "PARAM", "SLOT", "SOURCE", "TRACK"].includes(element.tagName), isInputHidden = element.tagName === "INPUT" && element.getAttribute("type") === "hidden";
+    return isForbiddenTagName || isInputHidden;
+  }
+  function getKeepChain(node2, container2) {
+    let chain = /* @__PURE__ */ new Set(), current2 = node2;
+    for (; current2 && current2 !== container2; )
+      chain.add(current2), current2 = current2.parentElement;
+    return current2 === container2 ? chain : /* @__PURE__ */ new Set();
+  }
+  function collectHiddenTargets(parent, keep, keepChain, out) {
+    [].forEach.call(parent.children, (element) => {
+      if (!(element === keep || isAriaHiddenForbiddenOnElement(element))) {
+        if (keepChain.has(element)) {
+          collectHiddenTargets(element, keep, keepChain, out);
+          return;
+        }
+        out.add(element);
+      }
+    });
+  }
+  function syncAriaHidden(containerInfo) {
+    let {
+      container: container2,
+      modals
+    } = containerInfo, keep = modals[modals.length - 1].modalRef, next3 = /* @__PURE__ */ new Set();
+    collectHiddenTargets(container2, keep, getKeepChain(keep, container2), next3), next3.forEach((element) => {
+      !containerInfo.hiddenSet.has(element) && element.getAttribute("aria-hidden") === "true" && next3.delete(element);
+    }), containerInfo.hiddenSet.forEach((element) => {
+      next3.has(element) || ariaHidden(element, !1);
+    }), next3.forEach((element) => ariaHidden(element, !0)), keep && ariaHidden(keep, !1), containerInfo.hiddenSet = next3;
+  }
+  function handleContainer(containerInfo, props) {
+    let restoreStyle = [], container2 = containerInfo.container;
+    if (!props.disableScrollLock) {
+      let scrollContainer;
+      if (container2.parentNode instanceof DocumentFragment)
+        scrollContainer = ownerDocument(container2).body;
+      else {
+        let parent = container2.parentElement, containerWindow = ownerWindow(container2);
+        scrollContainer = parent?.nodeName === "HTML" && containerWindow.getComputedStyle(parent).overflowY === "scroll" ? parent : container2;
+      }
+      if (isOverflowing(scrollContainer)) {
+        let scrollbarSize = getScrollbarSize(ownerWindow(scrollContainer));
+        restoreStyle.push({
+          value: scrollContainer.style.paddingRight,
+          property: "padding-right",
+          el: scrollContainer
+        }), scrollContainer.style.paddingRight = `${getPaddingRight(scrollContainer) + scrollbarSize}px`;
+        let fixedElements2 = ownerDocument(container2).querySelectorAll(".mui-fixed");
+        [].forEach.call(fixedElements2, (element) => {
+          restoreStyle.push({
+            value: element.style.paddingRight,
+            property: "padding-right",
+            el: element
+          }), element.style.paddingRight = `${getPaddingRight(element) + scrollbarSize}px`;
+        });
+      }
+      restoreStyle.push({
+        value: scrollContainer.style.overflow,
+        property: "overflow",
+        el: scrollContainer
+      }, {
+        value: scrollContainer.style.overflowX,
+        property: "overflow-x",
+        el: scrollContainer
+      }, {
+        value: scrollContainer.style.overflowY,
+        property: "overflow-y",
+        el: scrollContainer
+      }), scrollContainer.style.overflow = "hidden";
+    }
+    return () => {
+      restoreStyle.forEach(({
+        value,
+        el: el2,
+        property
+      }) => {
+        value ? el2.style.setProperty(property, value) : el2.style.removeProperty(property);
+      });
+    };
+  }
+  var ModalManager = class {
+    containers = [];
+    modals = [];
+    add(modal, container2) {
+      let modalIndex = this.modals.indexOf(modal);
+      if (modalIndex !== -1)
+        return modalIndex;
+      modalIndex = this.modals.length, this.modals.push(modal), modal.modalRef && ariaHidden(modal.modalRef, !1);
+      let containerIndex = this.containers.findIndex((item2) => item2.container === container2);
+      if (containerIndex !== -1)
+        return this.containers[containerIndex].modals.push(modal), syncAriaHidden(this.containers[containerIndex]), modalIndex;
+      let containerInfo = {
+        modals: [modal],
+        container: container2,
+        restore: null,
+        hiddenSet: /* @__PURE__ */ new Set()
+      };
+      return this.containers.push(containerInfo), syncAriaHidden(containerInfo), modalIndex;
+    }
+    mount(modal, props) {
+      let containerIndex = this.containers.findIndex((item2) => item2.modals.includes(modal)), containerInfo = this.containers[containerIndex];
+      containerInfo.restore || (containerInfo.restore = handleContainer(containerInfo, props));
+    }
+    remove(modal, ariaHiddenState = !0) {
+      let modalIndex = this.modals.indexOf(modal);
+      if (modalIndex === -1)
+        return modalIndex;
+      let containerIndex = this.containers.findIndex((item2) => item2.modals.includes(modal)), containerInfo = this.containers[containerIndex];
+      return containerInfo.modals.splice(containerInfo.modals.indexOf(modal), 1), this.modals.splice(modalIndex, 1), containerInfo.modals.length === 0 ? (containerInfo.restore && containerInfo.restore(), modal.modalRef && ariaHidden(modal.modalRef, ariaHiddenState), containerInfo.hiddenSet.forEach((element) => ariaHidden(element, !1)), containerInfo.hiddenSet.clear(), this.containers.splice(containerIndex, 1)) : (syncAriaHidden(containerInfo), modal.modalRef && ariaHidden(modal.modalRef, ariaHiddenState)), modalIndex;
+    }
+    isTopModal(modal) {
+      return this.modals.length > 0 && this.modals[this.modals.length - 1] === modal;
+    }
+  };
+
+  // node_modules/@mui/material/Modal/Modal.mjs
+  var React37 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Unstable_TrapFocus/FocusTrap.mjs
+  var React28 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/utils/getReactElementRef/getReactElementRef.mjs
+  var React27 = __toESM(require_react(), 1);
+  function getReactElementRef(element) {
+    return parseInt(React27.version, 10) >= 19 ? element?.props?.ref || null : element?.ref || null;
+  }
+
+  // node_modules/@mui/utils/contains/contains.mjs
+  function contains(parent, child) {
+    if (!parent || !child)
+      return !1;
+    if (parent.contains(child))
+      return !0;
+    let rootNode = child.getRootNode?.();
+    if (rootNode && rootNode instanceof ShadowRoot) {
+      let next3 = child;
+      for (; next3; ) {
+        if (parent === next3)
+          return !0;
+        next3 = next3.parentNode ?? next3.host ?? null;
+      }
+    }
+    return !1;
+  }
+
+  // node_modules/@mui/material/utils/contains.mjs
+  var contains_default = contains;
+
+  // node_modules/@mui/material/utils/focusable.mjs
+  var FOCUSABLE_ATTRIBUTE = "data-mui-focusable";
+  function getFocusTarget(rootElement) {
+    return rootElement ? rootElement.hasAttribute(FOCUSABLE_ATTRIBUTE) ? rootElement : rootElement.querySelector(`[${FOCUSABLE_ATTRIBUTE}]`) : null;
+  }
+
+  // node_modules/@mui/material/Unstable_TrapFocus/FocusTrap.mjs
+  var import_jsx_runtime61 = __toESM(require_jsx_runtime(), 1), candidatesSelector = ["input", "select", "textarea", "a[href]", "button", "[tabindex]", "audio[controls]", "video[controls]", '[contenteditable]:not([contenteditable="false"])'].join(",");
+  function getTabIndex(node2) {
+    let tabindexAttr = parseInt(node2.getAttribute("tabindex") || "", 10);
+    return Number.isNaN(tabindexAttr) ? node2.contentEditable === "true" || (node2.nodeName === "AUDIO" || node2.nodeName === "VIDEO" || node2.nodeName === "DETAILS") && node2.getAttribute("tabindex") === null ? 0 : node2.tabIndex : tabindexAttr;
+  }
+  function isNonTabbableRadio(node2) {
+    if (node2.tagName !== "INPUT" || node2.type !== "radio" || !node2.name)
+      return !1;
+    let getRadio = (selector) => node2.ownerDocument.querySelector(`input[type="radio"]${selector}`), roving = getRadio(`[name="${node2.name}"]:checked`);
+    return roving || (roving = getRadio(`[name="${node2.name}"]`)), roving !== node2;
+  }
+  function isNodeMatchingSelectorFocusable(node2) {
+    return !(node2.disabled || node2.tagName === "INPUT" && node2.type === "hidden" || isNonTabbableRadio(node2));
+  }
+  function defaultGetTabbable(root) {
+    let regularTabNodes = [], orderedTabNodes = [];
+    return Array.from(root.querySelectorAll(candidatesSelector)).forEach((node2, i) => {
+      let nodeTabIndex = getTabIndex(node2);
+      nodeTabIndex === -1 || !isNodeMatchingSelectorFocusable(node2) || (nodeTabIndex === 0 ? regularTabNodes.push(node2) : orderedTabNodes.push({
+        documentOrder: i,
+        tabIndex: nodeTabIndex,
+        node: node2
+      }));
+    }), orderedTabNodes.sort((a, b) => a.tabIndex === b.tabIndex ? a.documentOrder - b.documentOrder : a.tabIndex - b.tabIndex).map((a) => a.node).concat(regularTabNodes);
+  }
+  function defaultIsEnabled() {
+    return !0;
+  }
+  function FocusTrap(props) {
+    let {
+      children,
+      disableAutoFocus = !1,
+      disableEnforceFocus = !1,
+      disableRestoreFocus = !1,
+      getTabbable = defaultGetTabbable,
+      isEnabled = defaultIsEnabled,
+      open
+    } = props, ignoreNextEnforceFocus = React28.useRef(!1), sentinelStart = React28.useRef(null), sentinelEnd = React28.useRef(null), nodeToRestore = React28.useRef(null), reactFocusEventTarget = React28.useRef(null), activated = React28.useRef(!1), rootRef = React28.useRef(null), handleRef = useForkRef(getReactElementRef(children), rootRef), lastKeydown = React28.useRef(null);
+    React28.useEffect(() => {
+      !open || !rootRef.current || (activated.current = !disableAutoFocus);
+    }, [disableAutoFocus, open]), React28.useEffect(() => {
+      if (ignoreNextEnforceFocus.current = !1, !open || !rootRef.current)
+        return;
+      let doc = ownerDocument(rootRef.current), activeElement2 = getActiveElement_default(doc), focusTarget = getFocusTarget(rootRef.current) ?? rootRef.current;
+      return contains_default(rootRef.current, activeElement2) || (focusTarget.hasAttribute("tabIndex") || focusTarget.setAttribute("tabIndex", "-1"), activated.current && focusTarget.focus()), () => {
+        !disableRestoreFocus && nodeToRestore.current && (ignoreNextEnforceFocus.current = !0, nodeToRestore.current.focus(), nodeToRestore.current = null);
+      };
+    }, [open]), React28.useEffect(() => {
+      if (!open || !rootRef.current)
+        return;
+      let doc = ownerDocument(rootRef.current), loopFocus = (nativeEvent) => {
+        if (lastKeydown.current = nativeEvent, disableEnforceFocus || !isEnabled() || nativeEvent.key !== "Tab")
+          return;
+        let rootElement = rootRef.current, activeElement2 = getActiveElement_default(doc);
+        if (rootElement === null)
+          return;
+        let focusTarget = getFocusTarget(rootElement);
+        if (activeElement2 === rootElement || activeElement2 === focusTarget) {
+          let tabbable = getTabbable(rootElement);
+          if (tabbable.length === 0)
+            return;
+          nativeEvent.preventDefault(), nativeEvent.shiftKey ? tabbable[tabbable.length - 1].focus() : tabbable[0].focus();
+          return;
+        }
+        if (contains_default(rootElement, activeElement2)) {
+          let tabbable = getTabbable(rootElement), currentIndex = tabbable.indexOf(activeElement2);
+          if (currentIndex === -1 || !tabbable.some((node2) => getTabIndex(node2) > 0))
+            return;
+          nativeEvent.preventDefault();
+          let nextIndex = 0;
+          nativeEvent.shiftKey ? nextIndex = currentIndex <= 0 ? tabbable.length - 1 : currentIndex - 1 : nextIndex = currentIndex === tabbable.length - 1 ? 0 : currentIndex + 1, tabbable[nextIndex].focus();
+        }
+      }, contain = () => {
+        let rootElement = rootRef.current;
+        if (rootElement === null)
+          return;
+        let activeEl = getActiveElement_default(doc);
+        if (!doc.hasFocus() || !isEnabled() || ignoreNextEnforceFocus.current) {
+          ignoreNextEnforceFocus.current = !1;
+          return;
+        }
+        if (contains_default(rootElement, activeEl) || disableEnforceFocus && activeEl !== sentinelStart.current && activeEl !== sentinelEnd.current)
+          return;
+        if (activeEl !== reactFocusEventTarget.current)
+          reactFocusEventTarget.current = null;
+        else if (reactFocusEventTarget.current !== null)
+          return;
+        if (!activated.current)
+          return;
+        let tabbable = [];
+        if ((activeEl === sentinelStart.current || activeEl === sentinelEnd.current) && (tabbable = getTabbable(rootRef.current)), tabbable.length > 0) {
+          let isShiftTab = !!(lastKeydown.current?.shiftKey && lastKeydown.current?.key === "Tab"), focusNext = tabbable[0], focusPrevious = tabbable[tabbable.length - 1];
+          typeof focusNext != "string" && typeof focusPrevious != "string" && (isShiftTab ? focusPrevious.focus() : focusNext.focus());
+        } else
+          rootElement.focus();
+      };
+      doc.addEventListener("focusin", contain), doc.addEventListener("keydown", loopFocus, !0);
+      let interval = setInterval(() => {
+        let activeEl = getActiveElement_default(doc);
+        activeEl && activeEl.tagName === "BODY" && contain();
+      }, 50);
+      return () => {
+        clearInterval(interval), doc.removeEventListener("focusin", contain), doc.removeEventListener("keydown", loopFocus, !0);
+      };
+    }, [disableAutoFocus, disableEnforceFocus, disableRestoreFocus, isEnabled, open, getTabbable]);
+    let onFocus = (event) => {
+      nodeToRestore.current === null && (nodeToRestore.current = event.relatedTarget), activated.current = !0, reactFocusEventTarget.current = event.target;
+      let childrenPropsHandler = children.props.onFocus;
+      childrenPropsHandler && childrenPropsHandler(event);
+    }, handleFocusSentinel = (event) => {
+      nodeToRestore.current === null && (nodeToRestore.current = event.relatedTarget), activated.current = !0;
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime61.jsxs)(React28.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime61.jsx)("div", {
+        tabIndex: open ? 0 : -1,
+        onFocus: handleFocusSentinel,
+        ref: sentinelStart,
+        "data-testid": "sentinelStart"
+      }), /* @__PURE__ */ React28.cloneElement(children, {
+        ref: handleRef,
+        onFocus
+      }), /* @__PURE__ */ (0, import_jsx_runtime61.jsx)("div", {
+        tabIndex: open ? 0 : -1,
+        onFocus: handleFocusSentinel,
+        ref: sentinelEnd,
+        "data-testid": "sentinelEnd"
+      })]
+    });
+  }
+  var FocusTrap_default = FocusTrap;
+
+  // node_modules/@mui/material/Portal/Portal.mjs
+  var React29 = __toESM(require_react(), 1), ReactDOM = __toESM(require_react_dom(), 1);
+
+  // node_modules/@mui/utils/setRef/setRef.mjs
+  function setRef(ref, value) {
+    typeof ref == "function" ? ref(value) : ref && (ref.current = value);
+  }
+
+  // node_modules/@mui/material/Portal/Portal.mjs
+  function getContainer(container2) {
+    return typeof container2 == "function" ? container2() : container2;
+  }
+  var Portal = /* @__PURE__ */ React29.forwardRef(function(props, forwardedRef) {
+    let {
+      children,
+      container: container2,
+      disablePortal = !1
+    } = props, [mountNode, setMountNode] = React29.useState(null), handleRef = useForkRef(/* @__PURE__ */ React29.isValidElement(children) ? getReactElementRef(children) : null, forwardedRef);
+    return useEnhancedEffect_default(() => {
+      disablePortal || setMountNode(getContainer(container2) || document.body);
+    }, [container2, disablePortal]), useEnhancedEffect_default(() => {
+      if (mountNode && !disablePortal)
+        return setRef(forwardedRef, mountNode), () => {
+          setRef(forwardedRef, null);
+        };
+    }, [forwardedRef, mountNode, disablePortal]), disablePortal ? /* @__PURE__ */ React29.isValidElement(children) ? /* @__PURE__ */ React29.cloneElement(children, {
+      ref: handleRef
+    }) : children : mountNode && /* @__PURE__ */ ReactDOM.createPortal(children, mountNode);
+  }), Portal_default = Portal;
+
+  // node_modules/@mui/material/Backdrop/Backdrop.mjs
+  var React35 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/utils/appendOwnerState/appendOwnerState.mjs
+  function appendOwnerState(elementType, otherProps, ownerState) {
+    return elementType === void 0 || isHostComponent_default(elementType) ? otherProps : {
+      ...otherProps,
+      ownerState: {
+        ...otherProps.ownerState,
+        ...ownerState
+      }
+    };
+  }
+  var appendOwnerState_default = appendOwnerState;
+
+  // node_modules/@mui/utils/resolveComponentProps/resolveComponentProps.mjs
+  function resolveComponentProps(componentProps, ownerState, slotState) {
+    return typeof componentProps == "function" ? componentProps(ownerState, slotState) : componentProps;
+  }
+  var resolveComponentProps_default = resolveComponentProps;
+
+  // node_modules/@mui/utils/isEventHandler/isEventHandler.mjs
+  function isEventHandler(key, value) {
+    let thirdCharCode = key.charCodeAt(2);
+    return key[0] === "o" && key[1] === "n" && thirdCharCode >= 65 && thirdCharCode <= 90 && typeof value == "function";
+  }
+
+  // node_modules/@mui/utils/extractEventHandlers/extractEventHandlers.mjs
+  function extractEventHandlers(object) {
+    if (object === void 0)
+      return {};
+    let result = {}, keys = Object.keys(object);
+    for (let i = 0; i < keys.length; i += 1) {
+      let key = keys[i];
+      isEventHandler(key, object[key]) && (result[key] = object[key]);
+    }
+    return result;
+  }
+  var extractEventHandlers_default = extractEventHandlers;
+
+  // node_modules/@mui/utils/omitEventHandlers/omitEventHandlers.mjs
+  function omitEventHandlers(object) {
+    if (object === void 0)
+      return {};
+    let result = {}, keys = Object.keys(object);
+    for (let i = 0; i < keys.length; i += 1) {
+      let key = keys[i];
+      isEventHandler(key, object[key]) || (result[key] = object[key]);
+    }
+    return result;
+  }
+  var omitEventHandlers_default = omitEventHandlers;
+
+  // node_modules/@mui/utils/mergeSlotProps/mergeSlotProps.mjs
+  function mergeSlotProps(parameters) {
+    let {
+      getSlotProps,
+      additionalProps,
+      externalSlotProps,
+      externalForwardedProps,
+      className
+    } = parameters;
+    if (!getSlotProps) {
+      let joinedClasses2 = clsx_default(additionalProps?.className, className, externalForwardedProps?.className, externalSlotProps?.className), props2 = {
+        ...additionalProps,
+        ...externalForwardedProps,
+        ...externalSlotProps
+      };
+      if (joinedClasses2.length > 0 && (props2.className = joinedClasses2), additionalProps?.style || externalForwardedProps?.style || externalSlotProps?.style) {
+        let mergedStyle = {
+          ...additionalProps?.style,
+          ...externalForwardedProps?.style,
+          ...externalSlotProps?.style
+        };
+        Object.keys(mergedStyle).length > 0 && (props2.style = mergedStyle);
+      }
+      return {
+        props: props2,
+        internalRef: void 0
+      };
+    }
+    let eventHandlers = extractEventHandlers_default({
+      ...externalForwardedProps,
+      ...externalSlotProps
+    }), componentsPropsWithoutEventHandlers = omitEventHandlers_default(externalSlotProps), otherPropsWithoutEventHandlers = omitEventHandlers_default(externalForwardedProps), internalSlotProps = getSlotProps(eventHandlers), joinedClasses = clsx_default(internalSlotProps?.className, additionalProps?.className, className, externalForwardedProps?.className, externalSlotProps?.className), props = {
+      ...internalSlotProps,
+      ...additionalProps,
+      ...otherPropsWithoutEventHandlers,
+      ...componentsPropsWithoutEventHandlers
+    };
+    if (joinedClasses.length > 0 && (props.className = joinedClasses), internalSlotProps?.style || additionalProps?.style || externalForwardedProps?.style || externalSlotProps?.style) {
+      let mergedStyle = {
+        ...internalSlotProps?.style,
+        ...additionalProps?.style,
+        ...externalForwardedProps?.style,
+        ...externalSlotProps?.style
+      };
+      Object.keys(mergedStyle).length > 0 && (props.style = mergedStyle);
+    }
+    return {
+      props,
+      internalRef: internalSlotProps.ref
+    };
+  }
+  var mergeSlotProps_default = mergeSlotProps;
+
+  // node_modules/@mui/material/utils/useSlot.mjs
+  function useSlot(name, parameters) {
+    let {
+      className,
+      elementType: initialElementType,
+      ownerState,
+      externalForwardedProps,
+      internalForwardedProps,
+      shouldForwardComponentProp = !1,
+      ...useSlotPropsParams
+    } = parameters, {
+      component: rootComponent,
+      slots = {
+        [name]: void 0
+      },
+      slotProps = {
+        [name]: void 0
+      },
+      ...other
+    } = externalForwardedProps, elementType = slots[name] || initialElementType, resolvedComponentsProps = resolveComponentProps_default(slotProps[name], ownerState), {
+      props: {
+        component: slotComponent,
+        ...mergedProps
+      },
+      internalRef
+    } = mergeSlotProps_default({
+      className,
+      ...useSlotPropsParams,
+      externalForwardedProps: name === "root" ? other : void 0,
+      externalSlotProps: resolvedComponentsProps
+    }), ref = useForkRef(internalRef, resolvedComponentsProps?.ref, parameters.ref), LeafComponent = name === "root" ? slotComponent || rootComponent : slotComponent, props = appendOwnerState_default(elementType, {
+      ...name === "root" && !rootComponent && !slots[name] && internalForwardedProps,
+      ...name !== "root" && !slots[name] && internalForwardedProps,
+      ...mergedProps,
+      ...LeafComponent && !shouldForwardComponentProp && {
+        as: LeafComponent
+      },
+      ...LeafComponent && shouldForwardComponentProp && {
+        component: LeafComponent
+      },
+      ref
+    }, ownerState);
+    return [elementType, props];
+  }
+
+  // node_modules/@mui/material/Fade/Fade.mjs
+  var React34 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/internal/Transition.mjs
+  var React32 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/utils/useLazyRef/useLazyRef.mjs
+  var React30 = __toESM(require_react(), 1), UNINITIALIZED = {};
+  function useLazyRef(init, initArg) {
+    let ref = React30.useRef(UNINITIALIZED);
+    return ref.current === UNINITIALIZED && (ref.current = init(initArg)), ref;
+  }
+
+  // node_modules/@mui/utils/useValueAsRef/useValueAsRef.mjs
+  function useValueAsRef(value) {
+    let latest11 = useLazyRef(() => createValueRef(value)).current;
+    return latest11.next = value, useEnhancedEffect_default(latest11.effect), latest11;
+  }
+  function createValueRef(value) {
+    let latest11 = {
+      current: value,
+      next: value,
+      effect: () => {
+        latest11.current = latest11.next;
+      }
+    };
+    return latest11;
+  }
+
+  // node_modules/react-transition-group/esm/TransitionGroupContext.js
+  var import_react39 = __toESM(require_react()), TransitionGroupContext_default = import_react39.default.createContext(null);
+
+  // node_modules/@mui/material/internal/Transition.mjs
+  var import_jsx_runtime62 = __toESM(require_jsx_runtime(), 1);
+  function resolveTimeouts(timeout) {
+    if (timeout == null)
+      return {
+        appear: void 0,
+        enter: void 0,
+        exit: void 0
+      };
+    if (typeof timeout == "number")
+      return {
+        appear: timeout,
+        enter: timeout,
+        exit: timeout
+      };
+    let enter = timeout.enter, exit = timeout.exit;
+    return {
+      appear: timeout.appear !== void 0 ? timeout.appear : enter,
+      enter,
+      exit
+    };
+  }
+  function getCompletionTimeout(params) {
+    if (params.autoTimeout != null)
+      return params.autoTimeout;
+    let resolved = resolveTimeouts(params.timeout);
+    return params.currentStatus === "entering" ? params.isAppearing ? resolved.appear ?? resolved.enter ?? null : resolved.enter ?? null : resolved.exit ?? null;
+  }
+  function Transition(props) {
+    let {
+      in: inProp = !1,
+      appear = !1,
+      enter = !0,
+      exit = !0,
+      mountOnEnter = !1,
+      unmountOnExit = !1,
+      timeout,
+      addEndListener,
+      reduceMotion = !1,
+      getAutoTimeout,
+      nodeRef,
+      onEnter,
+      onEntering,
+      onEntered,
+      onExit,
+      onExiting,
+      onExited,
+      children,
+      ...childProps
+    } = props, parentGroup = React32.useContext(TransitionGroupContext_default), shouldEnterOnMount = parentGroup && !parentGroup.isMounting ? enter : appear, [status4, setStatus] = React32.useState(() => inProp ? shouldEnterOnMount ? "exited" : "entered" : mountOnEnter || unmountOnExit ? "unmounted" : "exited"), statusRef = React32.useRef(status4);
+    statusRef.current = status4, inProp && status4 === "unmounted" && (statusRef.current = "exited", setStatus("exited"));
+    let shouldAppearOnMountRef = React32.useRef(inProp && shouldEnterOnMount), mountedRef = React32.useRef(!1), nextCallbackRef = React32.useRef(null), lastFiredStatusRef = React32.useRef(status4), isAppearingRef = React32.useRef(!1), transitionReduceMotionRef = React32.useRef(reduceMotion), propsRef = useValueAsRef({
+      timeout,
+      addEndListener,
+      reduceMotion,
+      getAutoTimeout,
+      onEnter,
+      onEntering,
+      onEntered,
+      onExit,
+      onExiting,
+      onExited,
+      enter,
+      exit,
+      mountOnEnter,
+      unmountOnExit,
+      nodeRef,
+      parentGroup
+    }), cancelPendingCallback = React32.useCallback(() => {
+      nextCallbackRef.current !== null && (nextCallbackRef.current.cancel(), nextCallbackRef.current = null);
+    }, []), makeCallback = React32.useCallback((handler) => {
+      let active2 = !0, wrapped = () => {
+        active2 && (active2 = !1, nextCallbackRef.current = null, handler());
+      };
+      return wrapped.cancel = () => {
+        active2 = !1;
+      }, nextCallbackRef.current = wrapped, wrapped;
+    }, []), scheduleTransitionEnd = React32.useCallback((nextStatus, currentStatus) => {
+      let timeoutId, clearTimer = () => {
+        timeoutId !== void 0 && (clearTimeout(timeoutId), timeoutId = void 0);
+      }, done = makeCallback(() => {
+        clearTimer(), statusRef.current = nextStatus, setStatus(nextStatus);
+      }), cancelDone = done.cancel;
+      done.cancel = () => {
+        clearTimer(), cancelDone();
+      };
+      let node2 = propsRef.current.nodeRef.current, listener = propsRef.current.addEndListener, hasAutoTimeout = propsRef.current.getAutoTimeout !== void 0, autoTimeout = propsRef.current.getAutoTimeout?.(), authoredTimeout = getCompletionTimeout({
+        currentStatus,
+        isAppearing: isAppearingRef.current,
+        timeout: propsRef.current.timeout,
+        autoTimeout
+      }), transitionReduceMotion = transitionReduceMotionRef.current, fallbackTimeout = authoredTimeout ?? (transitionReduceMotion && hasAutoTimeout ? 0 : null), scheduleTimer = (value) => {
+        timeoutId = setTimeout(done, value);
+      };
+      if (!node2) {
+        scheduleTimer(0);
+        return;
+      }
+      if (listener) {
+        fallbackTimeout != null && scheduleTimer(transitionReduceMotion ? 0 : fallbackTimeout), listener.length >= 2 ? listener(node2, done) : listener(done);
+        return;
+      }
+      scheduleTimer(transitionReduceMotion ? 0 : authoredTimeout ?? 0);
+    }, [makeCallback, propsRef]), performEnter = React32.useCallback((mounting) => {
+      let current2 = propsRef.current, isAppearing = current2.parentGroup ? current2.parentGroup.isMounting : mounting;
+      if (isAppearingRef.current = isAppearing, !mounting && !current2.enter) {
+        statusRef.current = "entered", setStatus("entered");
+        return;
+      }
+      transitionReduceMotionRef.current = current2.reduceMotion, current2.onEnter?.(isAppearing), statusRef.current = "entering", setStatus("entering");
+    }, [propsRef]), performExit = React32.useCallback(() => {
+      let current2 = propsRef.current;
+      if (!current2.exit) {
+        statusRef.current = "exited", setStatus("exited");
+        return;
+      }
+      transitionReduceMotionRef.current = current2.reduceMotion, current2.onExit?.(), statusRef.current = "exiting", setStatus("exiting");
+    }, [propsRef]), updateStatus = React32.useCallback((mounting, nextStatus) => {
+      if (cancelPendingCallback(), nextStatus === "entering") {
+        let current2 = propsRef.current;
+        if (current2.mountOnEnter || current2.unmountOnExit) {
+          let node2 = current2.nodeRef.current;
+          node2 && reflow(node2);
+        }
+        performEnter(mounting);
+      } else
+        performExit();
+    }, [cancelPendingCallback, performEnter, performExit, propsRef]);
+    return useEnhancedEffect_default(() => (mountedRef.current = !0, shouldAppearOnMountRef.current && (shouldAppearOnMountRef.current = !1, updateStatus(!0, "entering")), () => {
+      mountedRef.current = !1, cancelPendingCallback();
+    }), [cancelPendingCallback, updateStatus]), useEnhancedEffect_default(() => {
+      if (!mountedRef.current)
+        return;
+      let current2 = statusRef.current;
+      inProp ? current2 !== "entering" && current2 !== "entered" && updateStatus(!1, "entering") : current2 === "entering" || current2 === "entered" ? updateStatus(!1, "exiting") : current2 === "exited" && unmountOnExit && (statusRef.current = "unmounted", setStatus("unmounted"));
+    }, [inProp, status4, unmountOnExit, updateStatus]), useEnhancedEffect_default(() => {
+      if (status4 === "unmounted" || lastFiredStatusRef.current === "unmounted") {
+        lastFiredStatusRef.current = status4;
+        return;
+      }
+      let statusChanged = lastFiredStatusRef.current !== status4;
+      statusChanged && (lastFiredStatusRef.current = status4);
+      let current2 = propsRef.current;
+      status4 === "entering" ? (statusChanged && current2.onEntering?.(isAppearingRef.current), nextCallbackRef.current === null && statusRef.current === status4 && scheduleTransitionEnd("entered", "entering")) : status4 === "exiting" ? (statusChanged && current2.onExiting?.(), nextCallbackRef.current === null && statusRef.current === status4 && scheduleTransitionEnd("exited", "exiting")) : status4 === "entered" && statusChanged ? current2.onEntered?.(isAppearingRef.current) : status4 === "exited" && statusChanged && current2.onExited?.();
+    }, [propsRef, scheduleTransitionEnd, status4]), status4 === "unmounted" ? null : /* @__PURE__ */ (0, import_jsx_runtime62.jsx)(TransitionGroupContext_default.Provider, {
+      value: null,
+      children: children(status4, childProps)
+    });
+  }
+  var Transition_default = Transition;
+
+  // node_modules/@mui/material/transitions/useReducedMotion.mjs
+  var React33 = __toESM(require_react(), 1);
+  var MEDIA_QUERY = "(prefers-reduced-motion: reduce)", REDUCED_MOTION_DURATION = 0, REDUCED_MOTION_DELAY = "0ms", NOOP = () => {
+  }, getDefaultSnapshot = () => !1, getReducedMotionSnapshot = () => !0, subscribeNoop = () => NOOP;
+  function useReducedMotionMediaQueryOld(enabled) {
+    let [queryState, setQueryState] = React33.useState(() => ({
+      enabled,
+      matches: enabled ? null : !1
+    })), matches = queryState.matches;
+    return queryState.enabled !== enabled && (matches = null, enabled || (matches = !1)), useEnhancedEffect_default(() => {
+      let setResolvedMatches = (nextMatches) => {
+        setQueryState((previousState) => previousState.enabled === enabled && previousState.matches === nextMatches ? previousState : {
+          enabled,
+          matches: nextMatches
+        });
+      };
+      if (!enabled) {
+        queryState.enabled && setResolvedMatches(!1);
+        return;
+      }
+      if (typeof window > "u" || typeof window.matchMedia != "function") {
+        setResolvedMatches(!1);
+        return;
+      }
+      let mediaQueryList = window.matchMedia(MEDIA_QUERY), update = () => {
+        setResolvedMatches(mediaQueryList.matches);
+      };
+      return update(), mediaQueryList.addEventListener("change", update), () => {
+        mediaQueryList.removeEventListener("change", update);
+      };
+    }, [enabled, queryState.enabled]), matches;
+  }
+  var safeReact3 = {
+    ...React33
+  }, maybeReactUseSyncExternalStore2 = safeReact3.useSyncExternalStore;
+  function useReducedMotionMediaQueryNew(enabled) {
+    let getServerSnapshot = enabled ? getReducedMotionSnapshot : getDefaultSnapshot, [getSnapshot, subscribe3] = React33.useMemo(() => {
+      if (!enabled || typeof window > "u" || typeof window.matchMedia != "function")
+        return [getDefaultSnapshot, subscribeNoop];
+      let mediaQueryList = window.matchMedia(MEDIA_QUERY);
+      return [() => mediaQueryList.matches, (notify) => (mediaQueryList.addEventListener("change", notify), () => {
+        mediaQueryList.removeEventListener("change", notify);
+      })];
+    }, [enabled]);
+    return maybeReactUseSyncExternalStore2(subscribe3, getSnapshot, getServerSnapshot);
+  }
+  var useReducedMotionMediaQuery = maybeReactUseSyncExternalStore2 !== void 0 ? useReducedMotionMediaQueryNew : useReducedMotionMediaQueryOld;
+  function useReducedMotion(mode, disablePrefersReducedMotion) {
+    let prefersReducedMotion = useReducedMotionMediaQuery(!disablePrefersReducedMotion && mode === "system"), shouldReduceMotion = !disablePrefersReducedMotion && (mode === "always" || mode === "system" && prefersReducedMotion !== !1);
+    return React33.useMemo(() => ({
+      shouldReduceMotion,
+      getTransitionTiming(timing) {
+        return shouldReduceMotion ? {
+          duration: REDUCED_MOTION_DURATION,
+          delay: REDUCED_MOTION_DELAY
+        } : timing;
+      }
+    }), [shouldReduceMotion]);
+  }
+
+  // node_modules/@mui/material/Fade/Fade.mjs
+  var import_jsx_runtime63 = __toESM(require_jsx_runtime(), 1), styles = {
+    entering: {
+      opacity: 1
+    },
+    entered: {
+      opacity: 1
+    },
+    exiting: {
+      opacity: 0
+    },
+    exited: {
+      opacity: 0
+    }
+  }, hiddenStyles = {
+    opacity: 0,
+    visibility: "hidden"
+  }, Fade = /* @__PURE__ */ React34.forwardRef(function(props, ref) {
+    let theme = useTheme4(), defaultTimeout = {
+      enter: theme.transitions.duration.enteringScreen,
+      exit: theme.transitions.duration.leavingScreen
+    }, {
+      addEndListener,
+      appear = !0,
+      children,
+      disablePrefersReducedMotion = !1,
+      easing: easing2,
+      in: inProp,
+      onEnter,
+      onEntered,
+      onEntering,
+      onExit,
+      onExited,
+      onExiting,
+      style: style3,
+      timeout = defaultTimeout,
+      ...other
+    } = props, reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), nodeRef = React34.useRef(null), handleRef = useForkRef_default(nodeRef, getReactElementRef(children), ref), handleEntering = normalizedTransitionCallback(nodeRef, onEntering), handleEnter = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
+      reducedMotion.shouldReduceMotion || reflow(node2);
+      let transitionProps = getTransitionProps({
+        style: style3,
+        timeout,
+        easing: easing2
+      }, {
+        mode: "enter"
+      }), transitionTiming = reducedMotion.getTransitionTiming({
+        duration: transitionProps.duration,
+        delay: transitionProps.delay
+      });
+      node2.style.transition = theme.transitions.create("opacity", {
+        duration: transitionTiming.duration,
+        easing: transitionProps.easing,
+        delay: transitionTiming.delay
+      }), onEnter && onEnter(node2, isAppearing);
+    }), handleEntered = normalizedTransitionCallback(nodeRef, onEntered), handleExiting = normalizedTransitionCallback(nodeRef, onExiting), handleExit = normalizedTransitionCallback(nodeRef, (node2) => {
+      let transitionProps = getTransitionProps({
+        style: style3,
+        timeout,
+        easing: easing2
+      }, {
+        mode: "exit"
+      }), transitionTiming = reducedMotion.getTransitionTiming({
+        duration: transitionProps.duration,
+        delay: transitionProps.delay
+      });
+      node2.style.transition = theme.transitions.create("opacity", {
+        duration: transitionTiming.duration,
+        easing: transitionProps.easing,
+        delay: transitionTiming.delay
+      }), onExit && onExit(node2);
+    }), handleExited = normalizedTransitionCallback(nodeRef, (node2) => {
+      node2.style.transition = "", onExited && onExited(node2);
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(Transition_default, {
+      appear,
+      in: inProp,
+      nodeRef,
+      onEnter: handleEnter,
+      onEntered: handleEntered,
+      onEntering: handleEntering,
+      onExit: handleExit,
+      onExited: handleExited,
+      onExiting: handleExiting,
+      addEndListener: addEndListener ? (next3) => {
+        addEndListener(nodeRef.current, next3);
+      } : void 0,
+      reduceMotion: reducedMotion.shouldReduceMotion,
+      timeout,
+      ...other,
+      children: (state2, {
+        ownerState,
+        ...restChildProps
+      }) => {
+        let childStyle = getTransitionChildStyle(state2, inProp, styles, hiddenStyles, style3, children.props.style);
+        return /* @__PURE__ */ React34.cloneElement(children, {
+          style: childStyle,
+          ref: handleRef,
+          ...restChildProps
+        });
+      }
+    });
+  }), Fade_default = Fade;
+
+  // node_modules/@mui/material/Backdrop/backdropClasses.mjs
+  function getBackdropUtilityClass(slot) {
+    return generateUtilityClass("MuiBackdrop", slot);
+  }
+  var backdropClasses = generateUtilityClasses("MuiBackdrop", ["root", "invisible"]);
+
+  // node_modules/@mui/material/Backdrop/Backdrop.mjs
+  var import_jsx_runtime64 = __toESM(require_jsx_runtime(), 1), useUtilityClasses3 = (ownerState) => {
+    let {
+      classes,
+      invisible
+    } = ownerState;
+    return composeClasses({
+      root: ["root", invisible && "invisible"]
+    }, getBackdropUtilityClass, classes);
+  }, BackdropRoot = styled_default("div", {
+    name: "MuiBackdrop",
+    slot: "Root",
+    overridesResolver: (props, styles2) => {
+      let {
+        ownerState
+      } = props;
+      return [styles2.root, ownerState.invisible && styles2.invisible];
+    }
+  })({
+    position: "fixed",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    right: 0,
+    bottom: 0,
+    top: 0,
+    left: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    WebkitTapHighlightColor: "transparent",
+    variants: [{
+      props: {
+        invisible: !0
+      },
+      style: {
+        backgroundColor: "transparent"
+      }
+    }]
+  }), Backdrop = /* @__PURE__ */ React35.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiBackdrop"
+    }), {
+      children,
+      className,
+      component = "div",
+      invisible = !1,
+      open,
+      slotProps = {},
+      slots = {},
+      transitionDuration,
+      ...other
+    } = props, ownerState = {
+      ...props,
+      component,
+      invisible
+    }, classes = useUtilityClasses3(ownerState), externalForwardedProps = {
+      component,
+      slots,
+      slotProps
+    }, [RootSlot, rootProps] = useSlot("root", {
+      elementType: BackdropRoot,
+      externalForwardedProps,
+      className: clsx_default(classes.root, className),
+      ownerState
+    }), [TransitionSlot, transitionProps] = useSlot("transition", {
+      elementType: Fade_default,
+      externalForwardedProps,
+      ownerState
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(TransitionSlot, {
+      in: open,
+      timeout: transitionDuration,
+      ...other,
+      ...transitionProps,
+      children: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(RootSlot, {
+        ...rootProps,
+        ref,
+        children
+      })
+    });
+  }), Backdrop_default = Backdrop;
+
+  // node_modules/@mui/material/Modal/useModal.mjs
+  var React36 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/utils/createChainedFunction/createChainedFunction.mjs
+  function createChainedFunction(...funcs) {
+    return funcs.reduce((acc, func) => func == null ? acc : function(...args) {
+      acc.apply(this, args), func.apply(this, args);
+    }, () => {
+    });
+  }
+
+  // node_modules/@mui/material/Modal/useModal.mjs
+  function getContainer2(container2) {
+    return typeof container2 == "function" ? container2() : container2;
+  }
+  function getHasTransition(children) {
+    return children ? children.props.hasOwnProperty("in") : !1;
+  }
+  var noop5 = () => {
+  }, manager = new ModalManager();
+  function useModal(parameters) {
+    let {
+      container: container2,
+      disableScrollLock = !1,
+      closeAfterTransition = !1,
+      onTransitionEnter,
+      onTransitionExited,
+      children,
+      onClose,
+      open,
+      rootRef
+    } = parameters, modal = React36.useRef({}), mountNodeRef = React36.useRef(null), lastMountNodeRef = React36.useRef(null), modalRef = React36.useRef(null), handleRef = useForkRef(modalRef, rootRef), [exited, setExited] = React36.useState(!open), hasTransition = getHasTransition(children), ariaHiddenProp = !0;
+    (parameters["aria-hidden"] === "false" || parameters["aria-hidden"] === !1) && (ariaHiddenProp = !1);
+    let getDoc = () => ownerDocument(mountNodeRef.current), getModal = () => (modal.current.modalRef = modalRef.current, modal.current.mount = mountNodeRef.current, modal.current), handleMounted = () => {
+      manager.mount(getModal(), {
+        disableScrollLock
+      }), modalRef.current && (modalRef.current.scrollTop = 0);
+    }, handleOpen = useEventCallback_default(() => {
+      let resolvedContainer = getContainer2(container2) || getDoc().body;
+      manager.add(getModal(), resolvedContainer), modalRef.current && handleMounted();
+    }), isTopModal = () => manager.isTopModal(getModal()), handlePortalRef = useEventCallback_default((node2) => {
+      mountNodeRef.current = node2, node2 && (lastMountNodeRef.current = node2, open && isTopModal() ? handleMounted() : modalRef.current && ariaHidden(modalRef.current, ariaHiddenProp));
+    }), handleClose = React36.useCallback(() => {
+      manager.remove(getModal(), ariaHiddenProp);
+    }, [ariaHiddenProp]);
+    React36.useEffect(() => () => {
+      handleClose();
+    }, [handleClose]), React36.useEffect(() => {
+      open ? handleOpen() : (!hasTransition || !closeAfterTransition) && handleClose();
+    }, [open, handleClose, hasTransition, closeAfterTransition, handleOpen]);
+    let createHandleKeyDown = (otherHandlers) => (event) => {
+      otherHandlers.onKeyDown?.(event), !(event.key !== "Escape" || event.which === 229 || // Wait until IME is settled.
+      !isTopModal()) && (event.stopPropagation(), onClose && onClose(event, "escapeKeyDown"));
+    }, createHandleBackdropClick = (otherHandlers) => (event) => {
+      otherHandlers.onClick?.(event), event.target === event.currentTarget && onClose && onClose(event, "backdropClick");
+    }, getRootProps = (otherHandlers = {}) => {
+      let propsEventHandlers = extractEventHandlers_default(parameters);
+      delete propsEventHandlers.onTransitionEnter, delete propsEventHandlers.onTransitionExited;
+      let externalEventHandlers = {
+        ...propsEventHandlers,
+        ...otherHandlers
+      };
+      return {
+        /*
+         * Marking an element with the role presentation indicates to assistive technology
+         * that this element should be ignored; it exists to support the web application and
+         * is not meant for humans to interact with directly.
+         * https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/no-static-element-interactions.md
+         */
+        role: "presentation",
+        ...externalEventHandlers,
+        onKeyDown: createHandleKeyDown(externalEventHandlers),
+        ref: handleRef
+      };
+    }, getBackdropProps = (otherHandlers = {}) => {
+      let externalEventHandlers = otherHandlers;
+      return {
+        "aria-hidden": !0,
+        ...externalEventHandlers,
+        onClick: createHandleBackdropClick(externalEventHandlers),
+        open
+      };
+    }, getTransitionProps2 = () => {
+      let handleEnter = () => {
+        setExited(!1), onTransitionEnter && onTransitionEnter();
+      }, handleExited = () => {
+        setExited(!0), onTransitionExited && onTransitionExited(), closeAfterTransition && handleClose();
+      };
+      return {
+        onEnter: createChainedFunction(handleEnter, children?.props.onEnter ?? noop5),
+        onExited: createChainedFunction(handleExited, children?.props.onExited ?? noop5)
+      };
+    }, portalContainer = !open && hasTransition && !exited ? lastMountNodeRef.current ?? container2 : container2;
+    return {
+      getRootProps,
+      getBackdropProps,
+      getTransitionProps: getTransitionProps2,
+      rootRef: handleRef,
+      portalRef: handlePortalRef,
+      portalContainer,
+      isTopModal,
+      exited,
+      hasTransition
+    };
+  }
+  var useModal_default = useModal;
+
+  // node_modules/@mui/material/Modal/modalClasses.mjs
+  function getModalUtilityClass(slot) {
+    return generateUtilityClass("MuiModal", slot);
+  }
+  var modalClasses = generateUtilityClasses("MuiModal", ["root", "hidden", "backdrop"]);
+
+  // node_modules/@mui/material/Modal/Modal.mjs
+  var import_jsx_runtime65 = __toESM(require_jsx_runtime(), 1), useUtilityClasses4 = (ownerState) => {
+    let {
+      open,
+      exited,
+      classes
+    } = ownerState;
+    return composeClasses({
+      root: ["root", !open && exited && "hidden"],
+      backdrop: ["backdrop"]
+    }, getModalUtilityClass, classes);
+  }, ModalRoot = styled_default("div", {
+    name: "MuiModal",
+    slot: "Root",
+    overridesResolver: (props, styles2) => {
+      let {
+        ownerState
+      } = props;
+      return [styles2.root, !ownerState.open && ownerState.exited && styles2.hidden];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    position: "fixed",
+    zIndex: (theme.vars || theme).zIndex.modal,
+    right: 0,
+    bottom: 0,
+    top: 0,
+    left: 0,
+    variants: [{
+      props: ({
+        ownerState
+      }) => !ownerState.open && ownerState.exited,
+      style: {
+        visibility: "hidden"
+      }
+    }]
+  }))), ModalBackdrop = styled_default(Backdrop_default, {
+    name: "MuiModal",
+    slot: "Backdrop"
+  })({
+    zIndex: -1
+  }), Modal = /* @__PURE__ */ React37.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      name: "MuiModal",
+      props: inProps
+    }), {
+      classes: classesProp,
+      className,
+      closeAfterTransition = !1,
+      children,
+      container: container2,
+      component,
+      disableAutoFocus = !1,
+      disableEnforceFocus = !1,
+      disablePortal = !1,
+      disableRestoreFocus = !1,
+      disableScrollLock = !1,
+      hideBackdrop = !1,
+      keepMounted = !1,
+      onClose,
+      onTransitionEnter,
+      onTransitionExited,
+      open,
+      slotProps = {},
+      slots = {},
+      // eslint-disable-next-line react/prop-types
+      theme,
+      ...other
+    } = props, propsWithDefaults = {
+      ...props,
+      closeAfterTransition,
+      disableAutoFocus,
+      disableEnforceFocus,
+      disablePortal,
+      disableRestoreFocus,
+      disableScrollLock,
+      hideBackdrop,
+      keepMounted
+    }, {
+      getRootProps,
+      getBackdropProps,
+      getTransitionProps: getTransitionProps2,
+      portalRef,
+      portalContainer,
+      isTopModal,
+      exited,
+      hasTransition
+    } = useModal_default({
+      ...propsWithDefaults,
+      rootRef: ref
+    }), ownerState = {
+      ...propsWithDefaults,
+      exited
+    }, classes = useUtilityClasses4(ownerState), childProps = {};
+    if (children.props.tabIndex === void 0 && (childProps.tabIndex = "-1"), hasTransition) {
+      let {
+        onEnter,
+        onExited
+      } = getTransitionProps2();
+      childProps.onEnter = onEnter, childProps.onExited = onExited;
+    }
+    let externalForwardedProps = {
+      slots,
+      slotProps
+    }, [RootSlot, rootProps] = useSlot("root", {
+      ref,
+      elementType: ModalRoot,
+      externalForwardedProps: {
+        ...externalForwardedProps,
+        ...other,
+        component
+      },
+      getSlotProps: getRootProps,
+      ownerState,
+      className: clsx_default(className, classes?.root, !ownerState.open && ownerState.exited && classes?.hidden)
+    }), [BackdropSlot, backdropProps] = useSlot("backdrop", {
+      elementType: ModalBackdrop,
+      externalForwardedProps,
+      shouldForwardComponentProp: !0,
+      getSlotProps: (otherHandlers) => getBackdropProps({
+        ...otherHandlers,
+        onClick: (event) => {
+          otherHandlers?.onClick && otherHandlers.onClick(event);
+        }
+      }),
+      className: classes?.backdrop,
+      ownerState
+    });
+    return !keepMounted && !open && (!hasTransition || exited) ? null : /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(Portal_default, {
+      ref: portalRef,
+      container: portalContainer,
+      disablePortal,
+      children: /* @__PURE__ */ (0, import_jsx_runtime65.jsxs)(RootSlot, {
+        ...rootProps,
+        children: [hideBackdrop ? null : /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(BackdropSlot, {
+          ...backdropProps
+        }), /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(FocusTrap_default, {
+          disableEnforceFocus,
+          disableAutoFocus,
+          disableRestoreFocus,
+          isEnabled: isTopModal,
+          open,
+          children: /* @__PURE__ */ React37.cloneElement(children, childProps)
+        })]
+      })
+    });
+  }), Modal_default = Modal;
+
+  // node_modules/@mui/material/Slide/Slide.mjs
+  var React40 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/utils/debounce.mjs
+  var debounce_default = debounce;
+
+  // node_modules/@mui/material/SvgIcon/createSvgIcon.mjs
+  var React39 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/SvgIcon/SvgIcon.mjs
+  var React38 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/SvgIcon/svgIconClasses.mjs
+  function getSvgIconUtilityClass(slot) {
+    return generateUtilityClass("MuiSvgIcon", slot);
+  }
+  var svgIconClasses = generateUtilityClasses("MuiSvgIcon", ["root", "colorPrimary", "colorSecondary", "colorAction", "colorError", "colorDisabled", "fontSizeInherit", "fontSizeSmall", "fontSizeMedium", "fontSizeLarge"]);
+
+  // node_modules/@mui/material/SvgIcon/SvgIcon.mjs
+  var import_jsx_runtime66 = __toESM(require_jsx_runtime(), 1), useUtilityClasses5 = (ownerState) => {
+    let {
+      color: color2,
+      fontSize,
+      classes
+    } = ownerState, slots = {
+      root: ["root", color2 !== "inherit" && `color${capitalize_default(color2)}`, `fontSize${capitalize_default(fontSize)}`]
+    };
+    return composeClasses(slots, getSvgIconUtilityClass, classes);
+  }, SvgIconRoot = styled_default("svg", {
+    name: "MuiSvgIcon",
+    slot: "Root",
+    overridesResolver: (props, styles2) => {
+      let {
+        ownerState
+      } = props;
+      return [styles2.root, ownerState.color !== "inherit" && styles2[`color${capitalize_default(ownerState.color)}`], styles2[`fontSize${capitalize_default(ownerState.fontSize)}`]];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    userSelect: "none",
+    width: "1em",
+    height: "1em",
+    display: "inline-block",
+    flexShrink: 0,
+    ...getTransitionStyles(theme, "fill", {
+      duration: (theme.vars ?? theme).transitions?.duration?.shorter
+    }),
+    variants: [
+      {
+        props: (props) => !props.hasSvgAsChild,
+        style: {
+          // the <svg> will define the property that has `currentColor`
+          // for example heroicons uses fill="none" and stroke="currentColor"
+          fill: "currentColor"
+        }
+      },
+      {
+        props: {
+          fontSize: "inherit"
+        },
+        style: {
+          fontSize: "inherit"
+        }
+      },
+      {
+        props: {
+          fontSize: "small"
+        },
+        style: {
+          fontSize: theme.typography?.pxToRem?.(20) || "1.25rem"
+        }
+      },
+      {
+        props: {
+          fontSize: "medium"
+        },
+        style: {
+          fontSize: theme.typography?.pxToRem?.(24) || "1.5rem"
+        }
+      },
+      {
+        props: {
+          fontSize: "large"
+        },
+        style: {
+          fontSize: theme.typography?.pxToRem?.(35) || "2.1875rem"
+        }
+      },
+      // TODO v5 deprecate color prop, v6 remove for sx
+      ...Object.entries((theme.vars ?? theme).palette).filter(([, value]) => value && value.main).map(([color2]) => ({
+        props: {
+          color: color2
+        },
+        style: {
+          color: (theme.vars ?? theme).palette?.[color2]?.main
+        }
+      })),
+      {
+        props: {
+          color: "action"
+        },
+        style: {
+          color: (theme.vars ?? theme).palette?.action?.active
+        }
+      },
+      {
+        props: {
+          color: "disabled"
+        },
+        style: {
+          color: (theme.vars ?? theme).palette?.action?.disabled
+        }
+      },
+      {
+        props: {
+          color: "inherit"
+        },
+        style: {
+          color: void 0
+        }
+      }
+    ]
+  }))), SvgIcon = /* @__PURE__ */ React38.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiSvgIcon"
+    }), {
+      children,
+      className,
+      color: color2 = "inherit",
+      component = "svg",
+      fontSize = "medium",
+      htmlColor,
+      inheritViewBox = !1,
+      titleAccess,
+      viewBox = "0 0 24 24",
+      ...other
+    } = props, hasSvgAsChild = /* @__PURE__ */ React38.isValidElement(children) && children.type === "svg", ownerState = {
+      ...props,
+      color: color2,
+      component,
+      fontSize,
+      instanceFontSize: inProps.fontSize,
+      inheritViewBox,
+      viewBox,
+      hasSvgAsChild
+    }, more = {};
+    inheritViewBox || (more.viewBox = viewBox);
+    let classes = useUtilityClasses5(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime66.jsxs)(SvgIconRoot, {
+      as: component,
+      className: clsx_default(classes.root, className),
+      focusable: "false",
+      color: htmlColor,
+      "aria-hidden": titleAccess ? void 0 : !0,
+      role: titleAccess ? "img" : void 0,
+      ref,
+      ...more,
+      ...other,
+      ...hasSvgAsChild && children.props,
+      ownerState,
+      children: [hasSvgAsChild ? children.props.children : children, titleAccess ? /* @__PURE__ */ (0, import_jsx_runtime66.jsx)("title", {
+        children: titleAccess
+      }) : null]
+    });
+  });
+  SvgIcon.muiName = "SvgIcon";
+  var SvgIcon_default = SvgIcon;
+
+  // node_modules/@mui/material/SvgIcon/createSvgIcon.mjs
+  var import_jsx_runtime67 = __toESM(require_jsx_runtime(), 1);
+  function createSvgIcon(path, displayName) {
+    function Component(props, ref) {
+      return /* @__PURE__ */ (0, import_jsx_runtime67.jsx)(SvgIcon_default, {
+        "data-testid": void 0,
+        ref,
+        ...props,
+        children: path
+      });
+    }
+    return Component.muiName = SvgIcon_default.muiName, /* @__PURE__ */ React39.memo(/* @__PURE__ */ React39.forwardRef(Component));
+  }
+
+  // node_modules/@mui/material/utils/ownerWindow.mjs
+  var ownerWindow_default = ownerWindow;
+
+  // node_modules/@mui/material/utils/useId.mjs
+  var useId_default = useId;
+
+  // node_modules/@mui/material/utils/useEventCallback.mjs
+  var useEventCallback_default2 = useEventCallback_default;
+
+  // node_modules/@mui/material/utils/mergeSlotProps.mjs
+  function mergeSlotProps2(externalSlotProps, defaultSlotProps) {
+    if (!externalSlotProps)
+      return defaultSlotProps;
+    function extractHandlers(externalSlotPropsValue, defaultSlotPropsValue) {
+      let handlers2 = {};
+      return Object.keys(defaultSlotPropsValue).forEach((key) => {
+        isEventHandler(key, defaultSlotPropsValue[key]) && typeof externalSlotPropsValue[key] == "function" && (handlers2[key] = (...args) => {
+          externalSlotPropsValue[key](...args), defaultSlotPropsValue[key](...args);
+        });
+      }), handlers2;
+    }
+    if (typeof externalSlotProps == "function" || typeof defaultSlotProps == "function")
+      return (ownerState) => {
+        let defaultSlotPropsValue = typeof defaultSlotProps == "function" ? defaultSlotProps(ownerState) : defaultSlotProps, externalSlotPropsValue = typeof externalSlotProps == "function" ? externalSlotProps({
+          ...ownerState,
+          ...defaultSlotPropsValue
+        }) : externalSlotProps, className2 = clsx_default(ownerState?.className, defaultSlotPropsValue?.className, externalSlotPropsValue?.className), handlers2 = extractHandlers(externalSlotPropsValue, defaultSlotPropsValue), result2 = {
+          ...defaultSlotPropsValue,
+          ...externalSlotPropsValue,
+          ...handlers2
+        };
+        return className2 && (result2.className = className2), defaultSlotPropsValue?.style && externalSlotPropsValue?.style && (result2.style = {
+          ...defaultSlotPropsValue.style,
+          ...externalSlotPropsValue.style
+        }), defaultSlotPropsValue?.sx && externalSlotPropsValue?.sx && (result2.sx = [...Array.isArray(defaultSlotPropsValue.sx) ? defaultSlotPropsValue.sx : [defaultSlotPropsValue.sx], ...Array.isArray(externalSlotPropsValue.sx) ? externalSlotPropsValue.sx : [externalSlotPropsValue.sx]]), result2;
+      };
+    let typedDefaultSlotProps = defaultSlotProps, handlers = extractHandlers(externalSlotProps, typedDefaultSlotProps), className = clsx_default(typedDefaultSlotProps?.className, externalSlotProps?.className), result = {
+      ...defaultSlotProps,
+      ...externalSlotProps,
+      ...handlers
+    };
+    return className && (result.className = className), typedDefaultSlotProps?.style && externalSlotProps?.style && (result.style = {
+      ...typedDefaultSlotProps.style,
+      ...externalSlotProps.style
+    }), typedDefaultSlotProps?.sx && externalSlotProps?.sx && (result.sx = [...Array.isArray(typedDefaultSlotProps.sx) ? typedDefaultSlotProps.sx : [typedDefaultSlotProps.sx], ...Array.isArray(externalSlotProps.sx) ? externalSlotProps.sx : [externalSlotProps.sx]]), result;
+  }
+
+  // node_modules/@mui/material/Slide/Slide.mjs
+  var import_jsx_runtime68 = __toESM(require_jsx_runtime(), 1), hiddenStyles2 = {
+    visibility: "hidden"
+  }, DEFAULT_TRANSLATE_OPTIONS = {};
+  function isGestureTranslate(transform) {
+    return typeof transform == "string" && /^translate\(.+,\s*.+\)$/.test(transform);
+  }
+  function getTranslateValue(direction, node2, resolvedContainer, options = DEFAULT_TRANSLATE_OPTIONS) {
+    let {
+      resetInlineTransform = !0
+    } = options, containerRect = resolvedContainer && resolvedContainer.getBoundingClientRect(), containerWindow = ownerWindow_default(node2), rect, transform;
+    if (resetInlineTransform) {
+      let previousTransform = node2.style.transform, previousTransition = node2.style.transition;
+      node2.style.transition = "", node2.style.transform = "", rect = node2.getBoundingClientRect(), transform = containerWindow.getComputedStyle(node2).getPropertyValue("transform"), node2.style.transform = previousTransform, node2.style.transition = previousTransition;
+    } else
+      rect = node2.getBoundingClientRect(), transform = containerWindow.getComputedStyle(node2).getPropertyValue("transform");
+    let {
+      offsetX,
+      offsetY
+    } = getTranslateOffsets(transform);
+    return direction === "left" ? containerRect ? `translateX(${containerRect.right + offsetX - rect.left}px)` : `translateX(${containerWindow.innerWidth + offsetX - rect.left}px)` : direction === "right" ? containerRect ? `translateX(-${rect.right - containerRect.left - offsetX}px)` : `translateX(-${rect.left + rect.width - offsetX}px)` : direction === "up" ? containerRect ? `translateY(${containerRect.bottom + offsetY - rect.top}px)` : `translateY(${containerWindow.innerHeight + offsetY - rect.top}px)` : containerRect ? `translateY(-${rect.top - containerRect.top + rect.height - offsetY}px)` : `translateY(-${rect.top + rect.height - offsetY}px)`;
+  }
+  function resolveContainer(containerPropProp) {
+    return typeof containerPropProp == "function" ? containerPropProp() : containerPropProp;
+  }
+  function setTranslateValue(direction, node2, containerProp, options) {
+    let resolvedContainer = resolveContainer(containerProp), transform = getTranslateValue(direction, node2, resolvedContainer, options);
+    transform && (node2.style.transform = transform);
+  }
+  var Slide = /* @__PURE__ */ React40.forwardRef(function(props, ref) {
+    let theme = useTheme4(), defaultEasing = {
+      enter: theme.transitions.easing.easeOut,
+      exit: theme.transitions.easing.sharp
+    }, defaultTimeout = {
+      enter: theme.transitions.duration.enteringScreen,
+      exit: theme.transitions.duration.leavingScreen
+    }, {
+      addEndListener,
+      appear = !0,
+      children,
+      container: containerProp,
+      disablePrefersReducedMotion = !1,
+      direction = "down",
+      easing: easingProp = defaultEasing,
+      in: inProp,
+      onEnter,
+      onEntered,
+      onEntering,
+      onExit,
+      onExited,
+      onExiting,
+      style: style3,
+      timeout = defaultTimeout,
+      ...other
+    } = props, reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), childrenRef = React40.useRef(null), preserveInlineTransformRef = React40.useRef(!1), handleRef = useForkRef_default(getReactElementRef(children), childrenRef, ref), handleEnter = normalizedTransitionCallback(childrenRef, (node2, isAppearing) => {
+      setTranslateValue(direction, node2, containerProp), reducedMotion.shouldReduceMotion || reflow(node2), onEnter && onEnter(node2, isAppearing);
+    }), handleEntering = normalizedTransitionCallback(childrenRef, (node2, isAppearing) => {
+      let transitionProps = getTransitionProps({
+        timeout,
+        style: style3,
+        easing: easingProp
+      }, {
+        mode: "enter"
+      }), transitionTiming = reducedMotion.getTransitionTiming({
+        duration: transitionProps.duration,
+        delay: transitionProps.delay
+      });
+      node2.style.transition = theme.transitions.create("transform", {
+        duration: transitionTiming.duration,
+        easing: transitionProps.easing,
+        delay: transitionTiming.delay
+      }), node2.style.transform = "none", onEntering && onEntering(node2, isAppearing);
+    }), handleEntered = normalizedTransitionCallback(childrenRef, onEntered), handleExiting = normalizedTransitionCallback(childrenRef, onExiting), handleExit = normalizedTransitionCallback(childrenRef, (node2) => {
+      let transitionProps = getTransitionProps({
+        timeout,
+        style: style3,
+        easing: easingProp
+      }, {
+        mode: "exit"
+      }), transitionTiming = reducedMotion.getTransitionTiming({
+        duration: transitionProps.duration,
+        delay: transitionProps.delay
+      });
+      node2.style.transition = theme.transitions.create("transform", {
+        duration: transitionTiming.duration,
+        easing: transitionProps.easing,
+        delay: transitionTiming.delay
+      });
+      let preserveInlineTransform = isGestureTranslate(node2.style.transform);
+      preserveInlineTransformRef.current = preserveInlineTransform, setTranslateValue(direction, node2, containerProp, {
+        resetInlineTransform: !preserveInlineTransform
+      }), onExit && onExit(node2);
+    }), handleExited = normalizedTransitionCallback(childrenRef, (node2) => {
+      preserveInlineTransformRef.current = !1, node2.style.transition = "", onExited && onExited(node2);
+    }), handleAddEndListener = addEndListener ? (next3) => {
+      addEndListener(childrenRef.current, next3);
+    } : void 0, updatePosition = React40.useCallback(() => {
+      childrenRef.current && setTranslateValue(direction, childrenRef.current, containerProp);
+    }, [direction, containerProp]);
+    return React40.useEffect(() => {
+      if (inProp || direction === "down" || direction === "right")
+        return;
+      let handleResize = debounce_default(() => {
+        childrenRef.current && setTranslateValue(direction, childrenRef.current, containerProp);
+      }), containerWindow = ownerWindow_default(childrenRef.current);
+      return containerWindow.addEventListener("resize", handleResize), () => {
+        handleResize.clear(), containerWindow.removeEventListener("resize", handleResize);
+      };
+    }, [direction, inProp, containerProp]), React40.useEffect(() => {
+      !inProp && !preserveInlineTransformRef.current && updatePosition();
+    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime68.jsx)(Transition_default, {
+      nodeRef: childrenRef,
+      onEnter: handleEnter,
+      onEntered: handleEntered,
+      onEntering: handleEntering,
+      onExit: handleExit,
+      onExited: handleExited,
+      onExiting: handleExiting,
+      addEndListener: handleAddEndListener,
+      appear,
+      in: inProp,
+      reduceMotion: reducedMotion.shouldReduceMotion,
+      timeout,
+      ...other,
+      children: (state2, {
+        ownerState,
+        ...restChildProps
+      }) => {
+        let childStyle;
+        return state2 === "exited" && !inProp ? childStyle = style3 || children.props.style ? {
+          visibility: "hidden",
+          ...style3,
+          ...children.props.style
+        } : hiddenStyles2 : style3 && children.props.style ? childStyle = {
+          ...style3,
+          ...children.props.style
+        } : childStyle = style3 || children.props.style, /* @__PURE__ */ React40.cloneElement(children, {
+          ref: handleRef,
+          style: childStyle,
+          ...restChildProps
+        });
+      }
+    });
+  }), Slide_default = Slide;
+
+  // node_modules/@mui/material/Drawer/drawerClasses.mjs
+  function getDrawerUtilityClass(slot) {
+    return generateUtilityClass("MuiDrawer", slot);
+  }
+  var drawerClasses = generateUtilityClasses("MuiDrawer", ["root", "docked", "paper", "anchorLeft", "anchorRight", "anchorTop", "anchorBottom", "modal"]);
+
+  // node_modules/@mui/material/Drawer/Drawer.mjs
+  var import_jsx_runtime69 = __toESM(require_jsx_runtime(), 1), overridesResolver = (props, styles2) => {
+    let {
+      ownerState
+    } = props;
+    return [styles2.root, (ownerState.variant === "permanent" || ownerState.variant === "persistent") && styles2.docked, ownerState.variant === "temporary" && styles2.modal];
+  }, useUtilityClasses6 = (ownerState) => {
+    let {
+      classes,
+      anchor,
+      variant
+    } = ownerState, slots = {
+      root: ["root", `anchor${capitalize_default(anchor)}`],
+      docked: [(variant === "permanent" || variant === "persistent") && "docked"],
+      modal: ["modal"],
+      paper: ["paper"]
+    };
+    return composeClasses(slots, getDrawerUtilityClass, classes);
+  }, DrawerRoot = styled_default(Modal_default, {
+    name: "MuiDrawer",
+    slot: "Root",
+    overridesResolver
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    zIndex: (theme.vars || theme).zIndex.drawer
+  }))), DrawerDockedRoot = styled_default("div", {
+    shouldForwardProp: rootShouldForwardProp_default,
+    name: "MuiDrawer",
+    slot: "Docked",
+    skipVariantsResolver: !1,
+    overridesResolver
+  })({
+    flex: "0 0 auto"
+  }), DrawerPaper = styled_default(Paper_default, {
+    name: "MuiDrawer",
+    slot: "Paper"
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    overflowY: "auto",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    flex: "1 0 auto",
+    zIndex: (theme.vars || theme).zIndex.drawer,
+    // Add iOS momentum scrolling for iOS < 13.0
+    WebkitOverflowScrolling: "touch",
+    // temporary style
+    position: "fixed",
+    top: 0,
+    // We disable the focus ring for mouse, touch and keyboard users.
+    // At some point, it would be better to keep it for keyboard users.
+    // :focus-ring CSS pseudo-class will help.
+    outline: 0,
+    variants: [{
+      props: {
+        anchor: "left"
+      },
+      style: {
+        left: 0
+      }
+    }, {
+      props: {
+        anchor: "top"
+      },
+      style: {
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "auto",
+        maxHeight: "100%"
+      }
+    }, {
+      props: {
+        anchor: "right"
+      },
+      style: {
+        right: 0
+      }
+    }, {
+      props: {
+        anchor: "bottom"
+      },
+      style: {
+        top: "auto",
+        left: 0,
+        bottom: 0,
+        right: 0,
+        height: "auto",
+        maxHeight: "100%"
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.anchor === "left" && ownerState.variant !== "temporary",
+      style: {
+        borderRight: `1px solid ${(theme.vars || theme).palette.divider}`
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.anchor === "top" && ownerState.variant !== "temporary",
+      style: {
+        borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.anchor === "right" && ownerState.variant !== "temporary",
+      style: {
+        borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.anchor === "bottom" && ownerState.variant !== "temporary",
+      style: {
+        borderTop: `1px solid ${(theme.vars || theme).palette.divider}`
+      }
+    }]
+  }))), oppositeDirection = {
+    left: "right",
+    right: "left",
+    top: "down",
+    bottom: "up"
+  };
+  function isHorizontal(anchor) {
+    return ["left", "right"].includes(anchor);
+  }
+  function getAnchor({
+    direction
+  }, anchor) {
+    return direction === "rtl" && isHorizontal(anchor) ? oppositeDirection[anchor] : anchor;
+  }
+  var Drawer = /* @__PURE__ */ React41.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiDrawer"
+    }), theme = useTheme4(), isRtl = useRtl(), defaultTransitionDuration = {
+      enter: theme.transitions.duration.enteringScreen,
+      exit: theme.transitions.duration.leavingScreen
+    }, {
+      anchor: anchorProp = "left",
+      children,
+      className,
+      elevation = 16,
+      hideBackdrop = !1,
+      ModalProps = {},
+      onClose,
+      open = !1,
+      transitionDuration = defaultTransitionDuration,
+      variant = "temporary",
+      slots = {},
+      slotProps = {},
+      ...other
+    } = props, mounted = React41.useRef(!1), rootRef = React41.useRef(null), handleRef = useForkRef_default(ref, rootRef);
+    React41.useEffect(() => {
+      mounted.current = !0;
+    }, []);
+    let resolveSlideContainer = React41.useCallback(() => rootRef.current, []), anchorInvariant = getAnchor({
+      direction: isRtl ? "rtl" : "ltr"
+    }, anchorProp), ownerState = {
+      ...props,
+      anchor: anchorProp,
+      elevation,
+      open,
+      variant,
+      ...other
+    }, classes = useUtilityClasses6(ownerState), externalForwardedProps = {
+      slots,
+      slotProps: {
+        ...slotProps,
+        backdrop: mergeSlotProps2(slotProps.backdrop, {
+          transitionDuration
+        })
+      }
+    }, [RootSlot, rootSlotProps] = useSlot("root", {
+      ref: handleRef,
+      elementType: DrawerRoot,
+      className: clsx_default(classes.root, classes.modal, className),
+      shouldForwardComponentProp: !0,
+      ownerState,
+      externalForwardedProps: {
+        ...externalForwardedProps,
+        ...other,
+        ...ModalProps
+      },
+      additionalProps: {
+        closeAfterTransition: !0,
+        open,
+        onClose,
+        hideBackdrop,
+        slots: {
+          backdrop: externalForwardedProps.slots.backdrop
+        },
+        slotProps: {
+          backdrop: externalForwardedProps.slotProps.backdrop
+        }
+      }
+    }), [PaperSlot, paperSlotProps] = useSlot("paper", {
+      elementType: DrawerPaper,
+      shouldForwardComponentProp: !0,
+      className: classes.paper,
+      ownerState,
+      externalForwardedProps,
+      additionalProps: {
+        elevation: variant === "temporary" ? elevation : 0,
+        square: !0,
+        ...variant === "temporary" && {
+          role: "dialog",
+          "aria-modal": "true",
+          [FOCUSABLE_ATTRIBUTE]: "",
+          tabIndex: -1
+        }
+      }
+    }), [DockedSlot, dockedSlotProps] = useSlot("docked", {
+      elementType: DrawerDockedRoot,
+      ref: handleRef,
+      className: clsx_default(classes.root, classes.docked, className),
+      ownerState,
+      externalForwardedProps,
+      additionalProps: other
+      // pass `other` here because `DockedSlot` is also a root slot for some variants
+    }), [TransitionSlot, transitionSlotProps] = useSlot("transition", {
+      elementType: Slide_default,
+      ownerState,
+      externalForwardedProps,
+      additionalProps: {
+        in: open,
+        direction: oppositeDirection[anchorInvariant],
+        timeout: transitionDuration,
+        appear: mounted.current,
+        ...variant === "temporary" && (slots.transition == null || slots.transition === Slide_default) && {
+          container: resolveSlideContainer
+        }
+      }
+    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime69.jsx)(PaperSlot, {
+      ...paperSlotProps,
+      children
+    });
+    if (variant === "permanent")
+      return /* @__PURE__ */ (0, import_jsx_runtime69.jsx)(DockedSlot, {
+        ...dockedSlotProps,
+        children: drawer
+      });
+    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime69.jsx)(TransitionSlot, {
+      ...transitionSlotProps,
+      children: drawer
+    });
+    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime69.jsx)(DockedSlot, {
+      ...dockedSlotProps,
+      children: slidingDrawer
+    }) : /* @__PURE__ */ (0, import_jsx_runtime69.jsx)(RootSlot, {
+      ...rootSlotProps,
+      children: slidingDrawer
+    });
+  }), Drawer_default = Drawer;
+
+  // node_modules/@mui/material/IconButton/IconButton.mjs
+  var React50 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/ButtonBase/ButtonBase.mjs
+  var React48 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/utils/isFocusVisible/isFocusVisible.mjs
+  function isFocusVisible(element) {
+    try {
+      return element.matches(":focus-visible");
+    } catch {
+    }
+    return !1;
+  }
+
+  // node_modules/@mui/material/ButtonBase/useButtonBase.mjs
+  var React43 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/utils/useFocusableWhenDisabled.mjs
+  var React42 = __toESM(require_react(), 1);
+  function useFocusableWhenDisabled(parameters) {
+    let {
+      focusableWhenDisabled,
+      disabled,
+      composite = !1,
+      tabIndex: tabIndexProp = 0,
+      isNativeButton
+    } = parameters, isFocusableComposite = composite && focusableWhenDisabled !== !1, isNonFocusableComposite = composite && focusableWhenDisabled === !1;
+    return React42.useMemo(() => {
+      let additionalProps = {
+        // allow Tabbing away from focusableWhenDisabled elements
+        onKeyDown(event) {
+          disabled && focusableWhenDisabled && event.key !== "Tab" && event.preventDefault();
+        }
+      };
+      return composite || (additionalProps.tabIndex = tabIndexProp, !isNativeButton && disabled && (additionalProps.tabIndex = focusableWhenDisabled ? tabIndexProp : -1)), (isNativeButton && (focusableWhenDisabled || isFocusableComposite) || !isNativeButton && disabled) && (additionalProps["aria-disabled"] = disabled), isNativeButton && (!focusableWhenDisabled || isNonFocusableComposite) && (additionalProps.disabled = disabled), additionalProps;
+    }, [composite, disabled, focusableWhenDisabled, isFocusableComposite, isNonFocusableComposite, isNativeButton, tabIndexProp]);
+  }
+
+  // node_modules/@mui/material/ButtonBase/useButtonBase.mjs
+  var EMPTY = {};
+  function useButtonBase(parameters) {
+    let {
+      nativeButton,
+      nativeButtonProp,
+      internalNativeButton = nativeButton,
+      allowInferredHostMismatch = !1,
+      disabled,
+      type,
+      hasFormAction = !1,
+      tabIndex = 0,
+      focusableWhenDisabled: focusableWhenDisabledParam,
+      stopEventPropagation = !1,
+      onBeforeKeyDown,
+      onBeforeKeyUp
+    } = parameters, rootRef = React43.useRef(null), focusableWhenDisabled = focusableWhenDisabledParam === !0, focusableWhenDisabledProps = useFocusableWhenDisabled({
+      focusableWhenDisabled,
+      disabled,
+      isNativeButton: nativeButton,
+      tabIndex
+    }), hasNativeKeyboardActivation = React43.useCallback(() => {
+      let root = rootRef.current;
+      return root == null ? nativeButton : root.tagName === "BUTTON" ? !0 : !!(root.tagName === "A" && root.href);
+    }, [nativeButton]), buttonProps = React43.useMemo(() => {
+      let resolvedButtonProps = focusableWhenDisabled ? {} : {
+        tabIndex: disabled ? -1 : tabIndex
+      };
+      return nativeButton ? (resolvedButtonProps.type = type === void 0 && !hasFormAction ? "button" : type, focusableWhenDisabled || (resolvedButtonProps.disabled = disabled)) : (resolvedButtonProps.role = "button", !focusableWhenDisabled && disabled && (resolvedButtonProps["aria-disabled"] = disabled)), focusableWhenDisabled ? {
+        ...resolvedButtonProps,
+        ...focusableWhenDisabledProps
+      } : resolvedButtonProps;
+    }, [disabled, focusableWhenDisabled, focusableWhenDisabledProps, hasFormAction, nativeButton, tabIndex, type]);
+    return {
+      getButtonProps: React43.useCallback((externalProps = EMPTY) => {
+        let {
+          onClick: externalOnClick,
+          onKeyDown: externalOnKeyDown,
+          onKeyUp: externalOnKeyUp,
+          ...otherExternalProps
+        } = externalProps;
+        return {
+          ...buttonProps,
+          ...otherExternalProps,
+          onClick: (event) => {
+            if (stopEventPropagation && event.stopPropagation(), disabled) {
+              event.preventDefault();
+              return;
+            }
+            externalOnClick?.(event);
+          },
+          onKeyDown: (event) => {
+            if (focusableWhenDisabled && focusableWhenDisabledProps.onKeyDown(event), !disabled && (onBeforeKeyDown?.(event), externalOnKeyDown?.(event), !(event.target !== event.currentTarget || hasNativeKeyboardActivation()))) {
+              if (event.key === " ") {
+                event.preventDefault();
+                return;
+              }
+              event.key === "Enter" && (event.preventDefault(), event.currentTarget.click());
+            }
+          },
+          onKeyUp: (event) => {
+            disabled || (onBeforeKeyUp?.(event), externalOnKeyUp?.(event), event.target === event.currentTarget && !hasNativeKeyboardActivation() && event.key === " " && !event.defaultPrevented && event.currentTarget.click());
+          }
+        };
+      }, [buttonProps, disabled, focusableWhenDisabled, focusableWhenDisabledProps, hasNativeKeyboardActivation, onBeforeKeyDown, onBeforeKeyUp, stopEventPropagation]),
+      rootRef
+    };
+  }
+
+  // node_modules/@mui/material/useLazyRipple/useLazyRipple.mjs
+  var React44 = __toESM(require_react(), 1);
+  var LazyRipple = class _LazyRipple {
+    /** React ref to the ripple instance */
+    ref = {
+      current: null
+    };
+    /** If the ripple component should be mounted */
+    shouldMount = !1;
+    /** Promise that resolves when the ripple component is mounted */
+    mounted = null;
+    /** If the ripple component has been mounted */
+    didMount = !1;
+    /** React state hook setter */
+    setShouldMount = null;
+    static create() {
+      return new _LazyRipple();
+    }
+    static use() {
+      let ripple = useLazyRef(_LazyRipple.create).current, [shouldMount, setShouldMount] = React44.useState(!1);
+      return ripple.shouldMount = shouldMount, ripple.setShouldMount = setShouldMount, React44.useEffect(ripple.mountEffect, [shouldMount]), ripple;
+    }
+    mount() {
+      return this.mounted || (this.mounted = createControlledPromise(), this.shouldMount = !0, this.setShouldMount(this.shouldMount)), this.mounted;
+    }
+    mountEffect = () => {
+      this.shouldMount && !this.didMount && (this.ref.current !== null && (this.didMount = !0), this.mounted.resolve());
+    };
+    /* Ripple API */
+    start(...args) {
+      this.mount().then(() => this.ref.current?.start(...args));
+    }
+    stop(...args) {
+      this.mount().then(() => this.ref.current?.stop(...args));
+    }
+    pulsate(...args) {
+      this.mount().then(() => this.ref.current?.pulsate(...args));
+    }
+  };
+  function useLazyRipple() {
+    return LazyRipple.use();
+  }
+  function createControlledPromise() {
+    let resolve, reject, p = new Promise((resolveFn, rejectFn) => {
+      resolve = resolveFn, reject = rejectFn;
+    });
+    return p.resolve = resolve, p.reject = reject, p;
+  }
+
+  // node_modules/@mui/material/ButtonBase/TouchRipple.mjs
+  var React47 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/utils/useOnMount/useOnMount.mjs
+  var React45 = __toESM(require_react(), 1), EMPTY2 = [];
+  function useOnMount(fn) {
+    React45.useEffect(fn, EMPTY2);
+  }
+
+  // node_modules/@mui/utils/useTimeout/useTimeout.mjs
+  var Timeout = class _Timeout {
+    static create() {
+      return new _Timeout();
+    }
+    currentId = null;
+    /**
+     * Executes `fn` after `delay`, clearing any previously scheduled call.
+     */
+    start(delay, fn) {
+      this.clear(), this.currentId = setTimeout(() => {
+        this.currentId = null, fn();
+      }, delay);
+    }
+    clear = () => {
+      this.currentId !== null && (clearTimeout(this.currentId), this.currentId = null);
+    };
+    disposeEffect = () => this.clear;
+  };
+  function useTimeout() {
+    let timeout = useLazyRef(Timeout.create).current;
+    return useOnMount(timeout.disposeEffect), timeout;
+  }
+
+  // node_modules/@mui/material/ButtonBase/Ripple.mjs
+  var React46 = __toESM(require_react(), 1);
+  var import_jsx_runtime70 = __toESM(require_jsx_runtime(), 1);
+  function Ripple(props) {
+    let {
+      className,
+      classes,
+      pulsate = !1,
+      rippleX,
+      rippleY,
+      rippleSize,
+      in: inProp,
+      onExited,
+      timeout
+    } = props, [leaving, setLeaving] = React46.useState(!1), exitTimer = useTimeout(), exitTimerStartedRef = React46.useRef(!1), onExitedRef = React46.useRef(onExited);
+    onExitedRef.current = onExited;
+    let hasExitedCallback = onExited != null, rippleClassName = clsx_default(className, classes.ripple, classes.rippleVisible, pulsate && classes.ripplePulsate), rippleStyles = {
+      width: rippleSize,
+      height: rippleSize,
+      top: -(rippleSize / 2) + rippleY,
+      left: -(rippleSize / 2) + rippleX
+    }, childClassName = clsx_default(classes.child, leaving && classes.childLeaving, pulsate && classes.childPulsate);
+    return !inProp && !leaving && setLeaving(!0), React46.useEffect(() => {
+      !inProp && hasExitedCallback ? exitTimerStartedRef.current || (exitTimerStartedRef.current = !0, exitTimer.start(timeout, () => {
+        exitTimerStartedRef.current = !1, onExitedRef.current?.();
+      })) : (exitTimerStartedRef.current = !1, exitTimer.clear());
+    }, [exitTimer, hasExitedCallback, inProp, timeout]), /* @__PURE__ */ (0, import_jsx_runtime70.jsx)("span", {
+      className: rippleClassName,
+      style: rippleStyles,
+      children: /* @__PURE__ */ (0, import_jsx_runtime70.jsx)("span", {
+        className: childClassName
+      })
+    });
+  }
+  var Ripple_default = Ripple;
+
+  // node_modules/@mui/material/ButtonBase/touchRippleClasses.mjs
+  var touchRippleClasses = generateUtilityClasses("MuiTouchRipple", ["root", "ripple", "rippleVisible", "ripplePulsate", "child", "childLeaving", "childPulsate"]), touchRippleClasses_default = touchRippleClasses;
+
+  // node_modules/@mui/material/ButtonBase/TouchRipple.mjs
+  var import_jsx_runtime71 = __toESM(require_jsx_runtime(), 1), DURATION = 550, DELAY_RIPPLE = 80, EMPTY_OBJ = {}, EMPTY_ARRAY = [], NOOP2 = () => {
+  };
+  function mergeRippleOrder(prevOrder, nextActiveKeys) {
+    let nextKeySet = new Set(nextActiveKeys), nextKeysPending = /* @__PURE__ */ new Map(), pendingKeys = [];
+    for (let prevKey of prevOrder)
+      nextKeySet.has(prevKey) ? pendingKeys.length > 0 && (nextKeysPending.set(prevKey, pendingKeys), pendingKeys = []) : pendingKeys.push(prevKey);
+    let nextOrder = [];
+    for (let nextKey of nextActiveKeys) {
+      let pendingBefore = nextKeysPending.get(nextKey);
+      pendingBefore && nextOrder.push(...pendingBefore), nextOrder.push(nextKey);
+    }
+    return nextOrder.push(...pendingKeys), nextOrder;
+  }
+  function computeRippleState({
+    event,
+    element,
+    center
+  }) {
+    let rect = element ? element.getBoundingClientRect() : {
+      width: 0,
+      height: 0,
+      left: 0,
+      top: 0
+    }, rippleX, rippleY;
+    if (center || event === void 0 || event.clientX === 0 && event.clientY === 0 || !event.clientX && !event.touches)
+      rippleX = Math.round(rect.width / 2), rippleY = Math.round(rect.height / 2);
+    else {
+      let {
+        clientX,
+        clientY
+      } = event.touches && event.touches.length > 0 ? event.touches[0] : event;
+      rippleX = Math.round(clientX - rect.left), rippleY = Math.round(clientY - rect.top);
+    }
+    let rippleSize;
+    if (center)
+      rippleSize = Math.sqrt((2 * rect.width ** 2 + rect.height ** 2) / 3), rippleSize % 2 === 0 && (rippleSize += 1);
+    else {
+      let sizeX = Math.max(Math.abs((element ? element.clientWidth : 0) - rippleX), rippleX) * 2 + 2, sizeY = Math.max(Math.abs((element ? element.clientHeight : 0) - rippleY), rippleY) * 2 + 2;
+      rippleSize = Math.sqrt(sizeX ** 2 + sizeY ** 2);
+    }
+    return {
+      rippleX,
+      rippleY,
+      rippleSize
+    };
+  }
+  var enterKeyframe = keyframes`
+  0% {
+    transform: scale(0);
+    opacity: 0.1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+`, exitKeyframe = keyframes`
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+`, pulsateKeyframe = keyframes`
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.92);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+`;
+  function getAnimationStyles(theme) {
+    if (theme.motion.reducedMotion === "always")
+      return null;
+    let styles2 = css`
+    &.${touchRippleClasses_default.rippleVisible} {
+      animation-name: ${enterKeyframe};
+      animation-duration: ${DURATION}ms;
+      animation-timing-function: ${theme.transitions.easing.easeInOut};
+    }
+
+    &.${touchRippleClasses_default.ripplePulsate} {
+      animation-duration: ${theme.transitions.duration.shorter}ms;
+    }
+
+    & .${touchRippleClasses_default.childLeaving} {
+      animation-name: ${exitKeyframe};
+      animation-duration: ${DURATION}ms;
+      animation-timing-function: ${theme.transitions.easing.easeInOut};
+    }
+
+    & .${touchRippleClasses_default.childPulsate} {
+      animation-name: ${pulsateKeyframe};
+      animation-duration: 2500ms;
+      animation-timing-function: ${theme.transitions.easing.easeInOut};
+      animation-iteration-count: infinite;
+      animation-delay: 200ms;
+    }
+  `;
+    return theme.motion.reducedMotion === "system" ? css`
+      @media (prefers-reduced-motion: no-preference) {
+        ${styles2}
+      }
+    ` : styles2;
+  }
+  var TouchRippleRoot = styled_default("span", {
+    name: "MuiTouchRipple",
+    slot: "Root"
+  })({
+    overflow: "hidden",
+    pointerEvents: "none",
+    position: "absolute",
+    zIndex: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    borderRadius: "inherit"
+  }), TouchRippleRipple = styled_default(Ripple_default, {
+    name: "MuiTouchRipple",
+    slot: "Ripple"
+  })`
+  opacity: 0;
+  position: absolute;
+
+  &.${touchRippleClasses_default.rippleVisible} {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  /*
+   * Order matters: 'child', 'childLeaving' and 'childPulsate' apply to the same
+   * element with equal specificity, so the later rule wins. 'child' must come
+   * before 'childLeaving' so the leaving 'opacity: 0' takes precedence. A focus
+   * (pulsate) ripple keeps 'pulsateKeyframe' (no opacity animation) on exit, so
+   * it relies on this static 'opacity: 0' to disappear on blur instead of
+   * lingering until removal.
+   */
+  & .${touchRippleClasses_default.child} {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+
+  & .${touchRippleClasses_default.childLeaving} {
+    opacity: 0;
+  }
+
+  & .${touchRippleClasses_default.childPulsate} {
+    position: absolute;
+    /* @noflip */
+    left: 0px;
+    top: 0;
+  }
+
+  ${({
+    theme
+  }) => getAnimationStyles(theme)}
+`, TouchRipple = /* @__PURE__ */ React47.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiTouchRipple"
+    }), theme = useTheme4(), reducedMotion = useReducedMotion(theme.motion.reducedMotion, !1), {
+      center: centerProp = !1,
+      classes = EMPTY_OBJ,
+      className,
+      ...other
+    } = props, [rippleState, setRippleState] = React47.useState({
+      items: EMPTY_ARRAY,
+      order: EMPTY_ARRAY
+    }), ripples = rippleState.items, nextKey = React47.useRef(0), rippleCallback = React47.useRef(null), mountedRef = React47.useRef(!1);
+    useOnMount(() => (mountedRef.current = !0, () => {
+      mountedRef.current = !1;
+    })), React47.useEffect(() => {
+      rippleCallback.current && (rippleCallback.current(), rippleCallback.current = null);
+    }, [ripples]);
+    let ignoringMouseDown = React47.useRef(!1), startTimer = useTimeout(), startTimerCommit = React47.useRef(null), container2 = React47.useRef(null), handleExited = useEventCallback_default2((key) => {
+      mountedRef.current && setRippleState((prevState) => {
+        let nextItems = prevState.items.filter((ripple) => ripple.key !== key), nextOrder = mergeRippleOrder(prevState.order.filter((rippleKey) => rippleKey !== key), nextItems.filter((ripple) => !ripple.exiting).map((ripple) => ripple.key));
+        return {
+          items: nextItems,
+          order: nextOrder
+        };
+      });
+    }), startCommit = useEventCallback_default2((params) => {
+      let {
+        pulsate: pulsate2,
+        rippleX,
+        rippleY,
+        rippleSize,
+        cb
+      } = params, key = nextKey.current;
+      nextKey.current += 1, setRippleState((prevState) => {
+        let nextItems = [...prevState.items, {
+          key,
+          pulsate: pulsate2,
+          rippleX,
+          rippleY,
+          rippleSize,
+          exiting: !1
+        }];
+        return {
+          items: nextItems,
+          order: mergeRippleOrder(prevState.order, nextItems.filter((ripple) => !ripple.exiting).map((ripple) => ripple.key))
+        };
+      }), rippleCallback.current = cb;
+    }), start = useEventCallback_default2((event = EMPTY_OBJ, options = EMPTY_OBJ, cb = NOOP2) => {
+      let {
+        pulsate: pulsate2 = !1,
+        center = centerProp || options.pulsate,
+        fakeElement = !1
+        // Used only by tests.
+      } = options;
+      if (event?.type === "mousedown" && ignoringMouseDown.current) {
+        ignoringMouseDown.current = !1;
+        return;
+      }
+      event?.type === "touchstart" && (ignoringMouseDown.current = !0);
+      let element = fakeElement ? null : container2.current, {
+        rippleX,
+        rippleY,
+        rippleSize
+      } = computeRippleState({
+        event,
+        element,
+        center
+      });
+      event?.touches ? startTimerCommit.current === null && (startTimerCommit.current = () => {
+        startCommit({
+          pulsate: pulsate2,
+          rippleX,
+          rippleY,
+          rippleSize,
+          cb
+        });
+      }, startTimer.start(DELAY_RIPPLE, () => {
+        startTimerCommit.current && (startTimerCommit.current(), startTimerCommit.current = null);
+      })) : startCommit({
+        pulsate: pulsate2,
+        rippleX,
+        rippleY,
+        rippleSize,
+        cb
+      });
+    }), pulsate = useEventCallback_default2(() => {
+      start(EMPTY_OBJ, {
+        pulsate: !0
+      });
+    }), stop2 = useEventCallback_default2((event, cb) => {
+      if (startTimer.clear(), event?.type === "touchend" && startTimerCommit.current) {
+        startTimerCommit.current(), startTimerCommit.current = null, startTimer.start(0, () => {
+          stop2(event, cb);
+        });
+        return;
+      }
+      startTimerCommit.current = null, setRippleState((prevState) => {
+        let firstActiveIndex = prevState.items.findIndex((ripple) => !ripple.exiting);
+        if (firstActiveIndex === -1)
+          return prevState;
+        let nextItems = prevState.items.slice();
+        return nextItems[firstActiveIndex] = {
+          ...nextItems[firstActiveIndex],
+          exiting: !0
+        }, {
+          items: nextItems,
+          order: mergeRippleOrder(prevState.order, nextItems.filter((ripple) => !ripple.exiting).map((ripple) => ripple.key))
+        };
+      }), rippleCallback.current = cb;
+    });
+    React47.useImperativeHandle(ref, () => ({
+      pulsate,
+      start,
+      stop: stop2
+    }), [pulsate, start, stop2]);
+    let rippleByKey = new Map(ripples.map((ripple) => [ripple.key, ripple])), orderedRipples = rippleState.order.map((rippleKey) => rippleByKey.get(rippleKey)).filter(Boolean);
+    return /* @__PURE__ */ (0, import_jsx_runtime71.jsx)(TouchRippleRoot, {
+      className: clsx_default(touchRippleClasses_default.root, classes.root, className),
+      ref: container2,
+      ...other,
+      children: orderedRipples.map((ripple) => /* @__PURE__ */ (0, import_jsx_runtime71.jsx)(TouchRippleRipple, {
+        classes: {
+          ripple: clsx_default(classes.ripple, touchRippleClasses_default.ripple),
+          rippleVisible: clsx_default(classes.rippleVisible, touchRippleClasses_default.rippleVisible),
+          ripplePulsate: clsx_default(classes.ripplePulsate, touchRippleClasses_default.ripplePulsate),
+          child: clsx_default(classes.child, touchRippleClasses_default.child),
+          childLeaving: clsx_default(classes.childLeaving, touchRippleClasses_default.childLeaving),
+          childPulsate: clsx_default(classes.childPulsate, touchRippleClasses_default.childPulsate)
+        },
+        timeout: reducedMotion.shouldReduceMotion ? 0 : DURATION,
+        pulsate: ripple.pulsate,
+        rippleX: ripple.rippleX,
+        rippleY: ripple.rippleY,
+        rippleSize: ripple.rippleSize,
+        in: !ripple.exiting,
+        onExited: () => handleExited(ripple.key)
+      }, ripple.key))
+    });
+  }), TouchRipple_default = TouchRipple;
+
+  // node_modules/@mui/material/ButtonBase/buttonBaseClasses.mjs
+  function getButtonBaseUtilityClass(slot) {
+    return generateUtilityClass("MuiButtonBase", slot);
+  }
+  var buttonBaseClasses = generateUtilityClasses("MuiButtonBase", ["root", "disabled", "focusVisible"]), buttonBaseClasses_default = buttonBaseClasses;
+
+  // node_modules/@mui/material/ButtonBase/ButtonBase.mjs
+  var import_jsx_runtime72 = __toESM(require_jsx_runtime(), 1), useUtilityClasses7 = (ownerState) => {
+    let {
+      disabled,
+      focusVisible,
+      focusVisibleClassName,
+      suppressFocusVisible,
+      classes
+    } = ownerState, composedClasses = composeClasses({
+      root: ["root", disabled && "disabled", focusVisible && !suppressFocusVisible && "focusVisible"]
+    }, getButtonBaseUtilityClass, classes);
+    return focusVisible && !suppressFocusVisible && focusVisibleClassName && (composedClasses.root += ` ${focusVisibleClassName}`), composedClasses;
+  }, ButtonBaseRoot = styled_default("button", {
+    name: "MuiButtonBase",
+    slot: "Root"
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    boxSizing: "border-box",
+    WebkitTapHighlightColor: "transparent",
+    backgroundColor: "transparent",
+    // Reset default value
+    // We disable the focus ring for mouse, touch and keyboard users.
+    outline: 0,
+    border: 0,
+    margin: 0,
+    // Remove the margin in Safari
+    borderRadius: 0,
+    padding: 0,
+    // Remove the padding in Firefox
+    cursor: "pointer",
+    userSelect: "none",
+    verticalAlign: "middle",
+    MozAppearance: "none",
+    // Reset
+    WebkitAppearance: "none",
+    // Reset
+    textDecoration: "none",
+    // So we take precedent over the style of a native <a /> element.
+    color: "inherit",
+    "&::-moz-focus-inner": {
+      borderStyle: "none"
+      // Remove Firefox dotted outline.
+    },
+    [`&.${buttonBaseClasses_default.disabled}`]: {
+      pointerEvents: "none",
+      // Disable link interactions
+      cursor: "default"
+    },
+    "@media print": {
+      colorAdjust: "exact"
+    },
+    variants: [{
+      props: {
+        internalDisabledThemeFocusVisible: !1
+      },
+      style: theme.focusVisible && {
+        ...outsetFocusRing,
+        [`&.${buttonBaseClasses_default.focusVisible}`]: theme.focusVisible
+      }
+    }]
+  }))), ButtonBase = /* @__PURE__ */ React48.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiButtonBase"
+    }), {
+      action,
+      centerRipple = !1,
+      children,
+      className,
+      component = "button",
+      disabled = !1,
+      disableRipple = !1,
+      disableTouchRipple = !1,
+      focusRipple = !1,
+      focusVisibleClassName,
+      /* eslint-disable react/prop-types */
+      // replaces internal handling in Chip, other components can opt-in individually to use this in the future
+      focusableWhenDisabled,
+      // escape hatch to suppress the focusVisible state and callback
+      // used by anchored <Menu>s to to suppress focus visible styling when opened with a pointer
+      suppressFocusVisible = !1,
+      // private prop to allow native vs non-native button props to be resolved before mount
+      internalNativeButton: internalNativeButtonProp,
+      // private prop to let a parent (like SwitchBase) control its own focus visible style
+      internalDisabledThemeFocusVisible = !1,
+      /* eslint-enable react/prop-types */
+      LinkComponent = "a",
+      nativeButton: nativeButtonProp,
+      onBlur,
+      onClick: onClickProp,
+      onContextMenu,
+      onDragLeave,
+      onFocus,
+      onFocusVisible,
+      onKeyDown: onKeyDownProp,
+      onKeyUp: onKeyUpProp,
+      onMouseDown,
+      onMouseLeave,
+      onMouseUp,
+      onTouchEnd,
+      onTouchMove,
+      onTouchStart,
+      tabIndex = 0,
+      TouchRippleProps,
+      touchRippleRef,
+      type,
+      ...other
+    } = props, isLink = !!(other.href || other.to), hasFormAction = !!other.formAction, ComponentProp = component;
+    ComponentProp === "button" && isLink && (ComponentProp = LinkComponent);
+    let internalNativeButton = typeof ComponentProp == "string" ? ComponentProp === "button" : internalNativeButtonProp ?? !1, nativeButton = nativeButtonProp ?? internalNativeButton, ripple = useLazyRipple(), handleRippleRef = useForkRef_default(ripple.ref, touchRippleRef), [focusVisible, setFocusVisible] = React48.useState(!1);
+    (disabled || suppressFocusVisible) && focusVisible && setFocusVisible(!1);
+    let handleBeforeKeyDown = useEventCallback_default2((event) => {
+      focusRipple && !event.repeat && focusVisible && event.key === " " && ripple.stop(event, () => {
+        ripple.start(event);
+      });
+    }), handleBeforeKeyUp = useEventCallback_default2((event) => {
+      focusRipple && event.key === " " && focusVisible && !event.defaultPrevented && ripple.stop(event, () => {
+        ripple.pulsate(event);
+      });
+    }), {
+      getButtonProps,
+      rootRef: buttonRef
+    } = useButtonBase({
+      nativeButton,
+      nativeButtonProp,
+      internalNativeButton,
+      allowInferredHostMismatch: isLink || typeof ComponentProp == "string",
+      disabled,
+      type,
+      hasFormAction,
+      tabIndex,
+      onBeforeKeyDown: handleBeforeKeyDown,
+      onBeforeKeyUp: handleBeforeKeyUp
+    }), {
+      onClick,
+      onKeyDown: onKeyDown2,
+      onKeyUp,
+      ...buttonProps
+    } = getButtonProps({
+      onClick: onClickProp,
+      onKeyDown: onKeyDownProp,
+      onKeyUp: onKeyUpProp
+    });
+    React48.useImperativeHandle(action, () => ({
+      focusVisible: () => {
+        setFocusVisible(!0), buttonRef.current.focus();
+      }
+    }), [buttonRef]);
+    let enableTouchRipple = ripple.shouldMount && !disableRipple && !disabled;
+    React48.useEffect(() => {
+      focusVisible && focusRipple && !disableRipple && ripple.pulsate();
+    }, [disableRipple, focusRipple, focusVisible, ripple]);
+    let handleMouseDown = useRippleHandler(ripple, "start", onMouseDown, disableTouchRipple), handleContextMenu = useRippleHandler(ripple, "stop", onContextMenu, disableTouchRipple), handleDragLeave = useRippleHandler(ripple, "stop", onDragLeave, disableTouchRipple), handleMouseUp = useRippleHandler(ripple, "stop", onMouseUp, disableTouchRipple), handleMouseLeave = useRippleHandler(ripple, "stop", (event) => {
+      focusVisible && event.preventDefault(), onMouseLeave && onMouseLeave(event);
+    }, disableTouchRipple), handleTouchStart = useRippleHandler(ripple, "start", onTouchStart, disableTouchRipple), handleTouchEnd = useRippleHandler(ripple, "stop", onTouchEnd, disableTouchRipple), handleTouchMove = useRippleHandler(ripple, "stop", onTouchMove, disableTouchRipple), handleBlur = useRippleHandler(ripple, "stop", (event) => {
+      isFocusVisible(event.target) || setFocusVisible(!1), onBlur && onBlur(event);
+    }, !1), handleFocus = useEventCallback_default2((event) => {
+      buttonRef.current || (buttonRef.current = event.currentTarget), !suppressFocusVisible && isFocusVisible(event.target) && (setFocusVisible(!0), onFocusVisible && onFocusVisible(event)), onFocus && onFocus(event);
+    }), linkProps = {};
+    isLink && (linkProps.tabIndex = disabled ? -1 : tabIndex, disabled && (linkProps["aria-disabled"] = disabled), linkProps.type = type);
+    let handleRef = useForkRef_default(ref, buttonRef), ownerState = {
+      ...props,
+      centerRipple,
+      component,
+      disabled,
+      disableRipple,
+      disableTouchRipple,
+      focusRipple,
+      suppressFocusVisible,
+      tabIndex,
+      focusVisible,
+      internalDisabledThemeFocusVisible
+    }, classes = useUtilityClasses7(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime72.jsxs)(ButtonBaseRoot, {
+      as: ComponentProp,
+      className: clsx_default(classes.root, className),
+      ownerState,
+      onBlur: handleBlur,
+      onClick,
+      onContextMenu: handleContextMenu,
+      onFocus: handleFocus,
+      onKeyDown: onKeyDown2,
+      onKeyUp,
+      onMouseDown: handleMouseDown,
+      onMouseLeave: handleMouseLeave,
+      onMouseUp: handleMouseUp,
+      onDragLeave: handleDragLeave,
+      onTouchEnd: handleTouchEnd,
+      onTouchMove: handleTouchMove,
+      onTouchStart: handleTouchStart,
+      ref: handleRef,
+      ...isLink ? linkProps : buttonProps,
+      ...other,
+      children: [children, enableTouchRipple ? /* @__PURE__ */ (0, import_jsx_runtime72.jsx)(TouchRipple_default, {
+        ref: handleRippleRef,
+        center: centerRipple,
+        ...TouchRippleProps
+      }) : null]
+    });
+  });
+  function useRippleHandler(ripple, rippleAction, eventCallback, skipRippleAction = !1) {
+    return useEventCallback_default2((event) => (eventCallback && eventCallback(event), skipRippleAction || ripple[rippleAction](event), !0));
+  }
+  var ButtonBase_default = ButtonBase;
+
+  // node_modules/@mui/material/CircularProgress/CircularProgress.mjs
+  var React49 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/CircularProgress/circularProgressClasses.mjs
+  function getCircularProgressUtilityClass(slot) {
+    return generateUtilityClass("MuiCircularProgress", slot);
+  }
+  var circularProgressClasses = generateUtilityClasses("MuiCircularProgress", ["root", "determinate", "indeterminate", "colorPrimary", "colorSecondary", "svg", "track", "circle", "circleDisableShrink"]);
+
+  // node_modules/@mui/material/CircularProgress/CircularProgress.mjs
+  var import_jsx_runtime73 = __toESM(require_jsx_runtime(), 1), SIZE = 44;
+  var circularRotateKeyframe = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+`, circularDashKeyframe = keyframes`
+  0% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -15px;
+  }
+
+  100% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: -126px;
+  }
+`, rotateAnimation = typeof circularRotateKeyframe != "string" ? css`
+        animation: ${circularRotateKeyframe} 1.4s linear infinite;
+      ` : null, dashAnimation = typeof circularDashKeyframe != "string" ? css`
+        animation: ${circularDashKeyframe} 1.4s ease-in-out infinite;
+      ` : null, useUtilityClasses8 = (ownerState) => {
+    let {
+      classes,
+      variant,
+      color: color2,
+      disableShrink
+    } = ownerState, slots = {
+      root: ["root", variant, `color${capitalize_default(color2)}`],
+      svg: ["svg"],
+      track: ["track"],
+      circle: ["circle", disableShrink && "circleDisableShrink"]
+    };
+    return composeClasses(slots, getCircularProgressUtilityClass, classes);
+  }, CircularProgressRoot = styled_default("span", {
+    name: "MuiCircularProgress",
+    slot: "Root",
+    overridesResolver: (props, styles2) => {
+      let {
+        ownerState
+      } = props;
+      return [styles2.root, styles2[ownerState.variant], styles2[`color${capitalize_default(ownerState.color)}`]];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => {
+    let reducedMotionAnimationStyles = getReducedMotionStyles(theme, {
+      animation: "none"
+    });
+    return {
+      display: "inline-block",
+      variants: [{
+        props: {
+          variant: "determinate"
+        },
+        style: {
+          ...getTransitionStyles(theme, "transform")
+        }
+      }, {
+        props: {
+          variant: "indeterminate"
+        },
+        style: rotateAnimation || {
+          animation: `${circularRotateKeyframe} 1.4s linear infinite`
+        }
+      }, ...reducedMotionAnimationStyles ? [{
+        props: {
+          variant: "indeterminate"
+        },
+        style: reducedMotionAnimationStyles
+      }] : [], ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
+        props: {
+          color: color2
+        },
+        style: {
+          color: (theme.vars || theme).palette[color2].main
+        }
+      }))]
+    };
+  })), CircularProgressSVG = styled_default("svg", {
+    name: "MuiCircularProgress",
+    slot: "Svg"
+  })({
+    display: "block"
+    // Keeps the progress centered
+  }), CircularProgressCircle = styled_default("circle", {
+    name: "MuiCircularProgress",
+    slot: "Circle",
+    overridesResolver: (props, styles2) => {
+      let {
+        ownerState
+      } = props;
+      return [styles2.circle, ownerState.disableShrink && styles2.circleDisableShrink];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => {
+    let reducedMotionAnimationStyles = getReducedMotionStyles(theme, {
+      animation: "none"
+    });
+    return {
+      stroke: "currentColor",
+      variants: [{
+        props: {
+          variant: "determinate"
+        },
+        style: {
+          ...getTransitionStyles(theme, "stroke-dashoffset")
+        }
+      }, {
+        props: {
+          variant: "indeterminate"
+        },
+        style: {
+          // Some default value that looks fine while waiting for the animation to kick in.
+          strokeDasharray: "80px, 200px",
+          strokeDashoffset: 0
+          // Add the unit to fix a Edge 16 and below bug.
+        }
+      }, {
+        props: ({
+          ownerState
+        }) => ownerState.variant === "indeterminate" && !ownerState.disableShrink,
+        style: dashAnimation || {
+          // At runtime for Pigment CSS, `dashAnimation` will be null and the generated keyframe will be used.
+          animation: `${circularDashKeyframe} 1.4s ease-in-out infinite`
+        }
+      }, ...reducedMotionAnimationStyles ? [{
+        props: ({
+          ownerState
+        }) => ownerState.variant === "indeterminate" && !ownerState.disableShrink,
+        style: reducedMotionAnimationStyles
+      }] : []]
+    };
+  })), CircularProgressTrack = styled_default("circle", {
+    name: "MuiCircularProgress",
+    slot: "Track"
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    stroke: "currentColor",
+    opacity: (theme.vars || theme).palette.action.activatedOpacity
+  }))), CircularProgress = /* @__PURE__ */ React49.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiCircularProgress"
+    }), {
+      className,
+      color: color2 = "primary",
+      disableShrink = !1,
+      enableTrackSlot = !1,
+      min: minProp,
+      max: maxProp,
+      size = 40,
+      style: style3,
+      thickness = 3.6,
+      value = props.min ?? 0,
+      variant = "indeterminate",
+      ...other
+    } = props, min = minProp ?? 0, max = maxProp ?? 100, ownerState = {
+      ...props,
+      color: color2,
+      disableShrink,
+      size,
+      thickness,
+      value,
+      variant,
+      enableTrackSlot
+    }, classes = useUtilityClasses8(ownerState), circleStyle = {}, rootStyle = {}, rootProps = {};
+    if (variant === "determinate") {
+      let circumference = 2 * Math.PI * ((SIZE - thickness) / 2), range = max - min;
+      circleStyle.strokeDasharray = circumference.toFixed(3), circleStyle.strokeDashoffset = range > 0 ? `${((max - value) / range * circumference).toFixed(3)}px` : `${circumference.toFixed(3)}px`, rootStyle.transform = "rotate(-90deg)", rootProps["aria-valuenow"] = value, rootProps["aria-valuemin"] = min, rootProps["aria-valuemax"] = max;
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime73.jsx)(CircularProgressRoot, {
+      className: clsx_default(classes.root, className),
+      style: {
+        width: size,
+        height: size,
+        ...rootStyle,
+        ...style3
+      },
+      ownerState,
+      ref,
+      role: "progressbar",
+      ...rootProps,
+      ...other,
+      children: /* @__PURE__ */ (0, import_jsx_runtime73.jsxs)(CircularProgressSVG, {
+        className: classes.svg,
+        ownerState,
+        viewBox: `${SIZE / 2} ${SIZE / 2} ${SIZE} ${SIZE}`,
+        children: [enableTrackSlot ? /* @__PURE__ */ (0, import_jsx_runtime73.jsx)(CircularProgressTrack, {
+          className: classes.track,
+          ownerState,
+          cx: SIZE,
+          cy: SIZE,
+          r: (SIZE - thickness) / 2,
+          fill: "none",
+          strokeWidth: thickness,
+          "aria-hidden": "true"
+        }) : null, /* @__PURE__ */ (0, import_jsx_runtime73.jsx)(CircularProgressCircle, {
+          className: classes.circle,
+          style: circleStyle,
+          ownerState,
+          cx: SIZE,
+          cy: SIZE,
+          r: (SIZE - thickness) / 2,
+          fill: "none",
+          strokeWidth: thickness
+        })]
+      })
+    });
+  }), CircularProgress_default = CircularProgress;
+
+  // node_modules/@mui/material/IconButton/iconButtonClasses.mjs
+  function getIconButtonUtilityClass(slot) {
+    return generateUtilityClass("MuiIconButton", slot);
+  }
+  var iconButtonClasses = generateUtilityClasses("MuiIconButton", ["root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge", "loading", "loadingIndicator", "loadingWrapper"]), iconButtonClasses_default = iconButtonClasses;
+
+  // node_modules/@mui/material/IconButton/IconButton.mjs
+  var import_jsx_runtime74 = __toESM(require_jsx_runtime(), 1), useUtilityClasses9 = (ownerState) => {
+    let {
+      classes,
+      disabled,
+      color: color2,
+      edge,
+      size,
+      loading
+    } = ownerState, slots = {
+      root: ["root", loading && "loading", disabled && "disabled", color2 !== "default" && `color${capitalize_default(color2)}`, edge && `edge${capitalize_default(edge)}`, `size${capitalize_default(size)}`],
+      loadingIndicator: ["loadingIndicator"],
+      loadingWrapper: ["loadingWrapper"]
+    };
+    return composeClasses(slots, getIconButtonUtilityClass, classes);
+  }, IconButtonRoot = styled_default(ButtonBase_default, {
+    name: "MuiIconButton",
+    slot: "Root",
+    overridesResolver: (props, styles2) => {
+      let {
+        ownerState
+      } = props;
+      return [styles2.root, ownerState.loading && styles2.loading, ownerState.color !== "default" && styles2[`color${capitalize_default(ownerState.color)}`], ownerState.edge && styles2[`edge${capitalize_default(ownerState.edge)}`], styles2[`size${capitalize_default(ownerState.size)}`]];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    textAlign: "center",
+    flex: "0 0 auto",
+    fontSize: theme.typography.pxToRem(24),
+    padding: 8,
+    borderRadius: "50%",
+    color: (theme.vars || theme).palette.action.active,
+    ...getTransitionStyles(theme, "background-color", {
+      duration: theme.transitions.duration.shortest
+    }),
+    variants: [{
+      props: (props) => !props.disableRipple,
+      style: {
+        "--IconButton-hoverBg": theme.alpha((theme.vars || theme).palette.action.active, (theme.vars || theme).palette.action.hoverOpacity),
+        "&:hover": {
+          backgroundColor: "var(--IconButton-hoverBg)",
+          // Reset on touch devices, it doesn't add specificity
+          "@media (hover: none)": {
+            backgroundColor: "transparent"
+          }
+        }
+      }
+    }, {
+      props: {
+        edge: "start"
+      },
+      style: {
+        marginLeft: -12
+      }
+    }, {
+      props: {
+        edge: "start",
+        size: "small"
+      },
+      style: {
+        marginLeft: -3
+      }
+    }, {
+      props: {
+        edge: "end"
+      },
+      style: {
+        marginRight: -12
+      }
+    }, {
+      props: {
+        edge: "end",
+        size: "small"
+      },
+      style: {
+        marginRight: -3
+      }
+    }]
+  })), memoTheme_default(({
+    theme
+  }) => ({
+    variants: [{
+      props: {
+        color: "inherit"
+      },
+      style: {
+        color: "inherit"
+      }
+    }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
+      props: {
+        color: color2
+      },
+      style: {
+        color: (theme.vars || theme).palette[color2].main,
+        "--IconButton-hoverBg": theme.alpha((theme.vars || theme).palette[color2].main, (theme.vars || theme).palette.action.hoverOpacity)
+      }
+    })), {
+      props: {
+        size: "small"
+      },
+      style: {
+        padding: 5,
+        fontSize: theme.typography.pxToRem(18)
+      }
+    }, {
+      props: {
+        size: "large"
+      },
+      style: {
+        padding: 12,
+        fontSize: theme.typography.pxToRem(28)
+      }
+    }],
+    [`&.${iconButtonClasses_default.disabled}`]: {
+      backgroundColor: "transparent",
+      color: (theme.vars || theme).palette.action.disabled
+    },
+    [`&.${iconButtonClasses_default.loading}`]: {
+      color: "transparent"
+    }
+  }))), IconButtonLoadingIndicator = styled_default("span", {
+    name: "MuiIconButton",
+    slot: "LoadingIndicator"
+  })(({
+    theme
+  }) => ({
+    display: "none",
+    position: "absolute",
+    visibility: "visible",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    color: (theme.vars || theme).palette.action.disabled,
+    variants: [{
+      props: {
+        loading: !0
+      },
+      style: {
+        display: "flex"
+      }
+    }]
+  })), IconButton = /* @__PURE__ */ React50.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiIconButton"
+    }), {
+      edge = !1,
+      children,
+      className,
+      color: color2 = "default",
+      disabled = !1,
+      disableFocusRipple = !1,
+      size = "medium",
+      id: idProp,
+      loading = null,
+      loadingIndicator: loadingIndicatorProp,
+      ...other
+    } = props, loadingId = useId_default(idProp), loadingIndicator = loadingIndicatorProp ?? /* @__PURE__ */ (0, import_jsx_runtime74.jsx)(CircularProgress_default, {
+      "aria-labelledby": loadingId,
+      color: "inherit",
+      size: 16
+    }), ownerState = {
+      ...props,
+      edge,
+      color: color2,
+      disabled,
+      disableFocusRipple,
+      loading,
+      loadingIndicator,
+      size
+    }, classes = useUtilityClasses9(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime74.jsxs)(IconButtonRoot, {
+      id: loading ? loadingId : idProp,
+      className: clsx_default(classes.root, className),
+      centerRipple: !0,
+      internalNativeButton: !0,
+      focusRipple: !disableFocusRipple,
+      disabled: disabled || loading,
+      ref,
+      ...other,
+      ownerState,
+      children: [typeof loading == "boolean" && // use plain HTML span to minimize the runtime overhead
+      /* @__PURE__ */ (0, import_jsx_runtime74.jsx)("span", {
+        className: classes.loadingWrapper,
+        style: {
+          display: "contents"
+        },
+        children: /* @__PURE__ */ (0, import_jsx_runtime74.jsx)(IconButtonLoadingIndicator, {
+          className: classes.loadingIndicator,
+          ownerState,
+          children: loading && loadingIndicator
+        })
+      }), children]
+    });
+  }), IconButton_default = IconButton;
+
+  // node_modules/@mui/material/Toolbar/Toolbar.mjs
+  var React51 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Toolbar/toolbarClasses.mjs
+  function getToolbarUtilityClass(slot) {
+    return generateUtilityClass("MuiToolbar", slot);
+  }
+  var toolbarClasses = generateUtilityClasses("MuiToolbar", ["root", "gutters", "regular", "dense"]);
+
+  // node_modules/@mui/material/Toolbar/Toolbar.mjs
+  var import_jsx_runtime75 = __toESM(require_jsx_runtime(), 1), useUtilityClasses10 = (ownerState) => {
+    let {
+      classes,
+      disableGutters,
+      variant
+    } = ownerState;
+    return composeClasses({
+      root: ["root", !disableGutters && "gutters", variant]
+    }, getToolbarUtilityClass, classes);
+  }, ToolbarRoot = styled_default("div", {
+    name: "MuiToolbar",
+    slot: "Root",
+    overridesResolver: (props, styles2) => {
+      let {
+        ownerState
+      } = props;
+      return [styles2.root, !ownerState.disableGutters && styles2.gutters, styles2[ownerState.variant]];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    variants: [{
+      props: ({
+        ownerState
+      }) => !ownerState.disableGutters,
+      style: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
+        [theme.breakpoints.up("sm")]: {
+          paddingLeft: theme.spacing(3),
+          paddingRight: theme.spacing(3)
+        }
+      }
+    }, {
+      props: {
+        variant: "dense"
+      },
+      style: {
+        minHeight: 48
+      }
+    }, {
+      props: {
+        variant: "regular"
+      },
+      style: theme.mixins.toolbar
+    }]
+  }))), Toolbar = /* @__PURE__ */ React51.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiToolbar"
+    }), {
+      className,
+      component = "div",
+      disableGutters = !1,
+      variant = "regular",
+      ...other
+    } = props, ownerState = {
+      ...props,
+      component,
+      disableGutters,
+      variant
+    }, classes = useUtilityClasses10(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(ToolbarRoot, {
+      as: component,
+      className: clsx_default(classes.root, className),
+      ref,
+      ownerState,
+      ...other
+    });
+  }), Toolbar_default = Toolbar;
+
+  // node_modules/@mui/icons-material/ChevronLeft.mjs
+  var import_jsx_runtime76 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime76.jsx)("path", {
+    d: "M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+  }), "ChevronLeft");
+
+  // node_modules/@mui/icons-material/Menu.mjs
+  var import_jsx_runtime77 = __toESM(require_jsx_runtime(), 1), Menu_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime77.jsx)("path", {
+    d: "M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"
+  }), "Menu");
+
+  // src/pages/AppShell.tsx
+  var import_jsx_runtime78 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 240;
+  function tooltipRef17(spec2) {
+    return (element) => {
+      element && setTooltip(element, spec2);
+    };
+  }
+  function adopt(slot, id) {
+    if (!slot) return;
+    let node2 = document.getElementById(id);
+    node2 && node2.parentElement !== slot && slot.append(node2);
+  }
+  function AppShell() {
+    let [open, setOpen] = (0, import_react40.useState)(!0), [, setLocaleTick] = (0, import_react40.useState)(0), spaceSlot = (0, import_react40.useRef)(null), navSlot = (0, import_react40.useRef)(null), footSlot = (0, import_react40.useRef)(null), bodySlot = (0, import_react40.useRef)(null);
+    return (0, import_react40.useEffect)(() => onLocaleChange(() => {
+      setLocaleTick((n) => n + 1);
+    }), []), (0, import_react40.useLayoutEffect)(() => {
+      adopt(spaceSlot.current, "space-field"), adopt(navSlot.current, "views"), adopt(navSlot.current, "view-children"), adopt(footSlot.current, "rail-foot"), adopt(bodySlot.current, "app-body");
+    }, []), /* @__PURE__ */ (0, import_jsx_runtime78.jsxs)(
+      Box_default,
+      {
+        sx: {
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          minHeight: 0
+        },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime78.jsxs)(Toolbar_default, { sx: { gap: 2, minHeight: 56 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(
+              IconButton_default,
+              {
+                id: "drawer-toggle",
+                type: "button",
+                size: "large",
+                color: "inherit",
+                "aria-expanded": open,
+                "aria-controls": "app-drawer",
+                "aria-label": open ? t("shell.drawerHide") : t("shell.drawerShow"),
+                onClick: () => setOpen((value) => !value),
+                ref: tooltipRef17(tips.drawerToggle),
+                children: open ? /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(Menu_default, {})
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(Box_default, { ref: spaceSlot, className: "app-bar-space" })
+          ] }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime78.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(
+              Drawer_default,
+              {
+                id: "app-drawer",
+                variant: "persistent",
+                open,
+                anchor: "left",
+                slotProps: {
+                  paper: { "aria-hidden": !open }
+                },
+                sx: {
+                  width: open ? DRAWER_WIDTH : 0,
+                  flexShrink: 0,
+                  overflow: "hidden",
+                  visibility: open ? "visible" : "hidden",
+                  whiteSpace: "nowrap",
+                  transition: (theme) => theme.transitions.create("width", {
+                    easing: theme.transitions.easing.sharp,
+                    duration: open ? theme.transitions.duration.enteringScreen : theme.transitions.duration.leavingScreen
+                  }),
+                  "@media (prefers-reduced-motion: reduce)": {
+                    transition: "none"
+                  },
+                  "& .MuiDrawer-paper": {
+                    position: "relative",
+                    width: DRAWER_WIDTH,
+                    boxSizing: "border-box",
+                    overflow: "hidden",
+                    border: 0,
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column"
+                  }
+                },
+                children: /* @__PURE__ */ (0, import_jsx_runtime78.jsxs)(
+                  Box_default,
+                  {
+                    sx: {
+                      display: "flex",
+                      flexDirection: "column",
+                      height: "100%",
+                      minHeight: 0
+                    },
+                    ...open ? {} : { inert: !0 },
+                    children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(
+                        Box_default,
+                        {
+                          ref: navSlot,
+                          className: "drawer-nav",
+                          component: "nav",
+                          "aria-label": t("view.label"),
+                          sx: { flex: 1, minHeight: 0, overflow: "auto" }
+                        }
+                      ),
+                      /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(Box_default, { ref: footSlot, className: "drawer-foot" })
+                    ]
+                  }
+                )
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(
+              Box_default,
+              {
+                ref: bodySlot,
+                sx: { flex: 1, minWidth: 0, minHeight: 0, display: "flex" }
+              }
+            )
+          ] })
+        ]
+      }
+    );
+  }
+
+  // src/lib/ui/app-shell.ts
+  var islandRoot2 = null;
+  function mountAppShell(host) {
+    islandRoot2?.unmount(), islandRoot2 = null;
+    let root = host === void 0 ? document.getElementById("app-shell") : host;
+    root && (islandRoot2 = mountIsland(root, (0, import_react41.createElement)(AppShell)));
+  }
+
   // src/lib/ui/desktop-actions.ts
   var CLICKS = {
     "new-crate": "crate-new",
@@ -31558,6 +35674,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // src/app.ts
   wireLocale();
+  mountAppShell();
   installTooltips();
   applyStaticTooltips();
   mountTrackList();

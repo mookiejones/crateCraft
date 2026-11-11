@@ -2,8 +2,8 @@
 <!--
   crateCraft page.
 
-  One screen: the space menu, five rail primaries, children of the open parent,
-  the crate, history, or play-stats rail,
+  One screen: AppBar (space menu), collapsible Drawer (five primaries and
+  children of the open parent), crate inventory in Main,
   a virtualized track list, the detail pane, and a player bar. The Duplicates view can
   merge a group into the copy you keep. Export writes an M3U playlist.
   Rekordbox writes rekordbox.xml. The Files view browses folders
@@ -28,6 +28,8 @@
 </head>
 <body>
   <div class="app">
+    <div id="app-shell"></div>
+    <div id="app-body" class="app-body">
     <aside class="rail" aria-label="Library" data-i18n-attr="aria-label:status.library">
       <header class="brand">
         <h1 data-i18n="rail.heading">crateCraft</h1>
@@ -35,7 +37,7 @@
         <button id="library-generation" type="button" class="generation" aria-expanded="false" aria-controls="library-generation-note" aria-label="Library generation" data-i18n="generation.checking" data-i18n-attr="aria-label:generation.label">Checking</button>
         <p id="library-generation-note" class="generation-note" hidden></p>
       </header>
-      <label class="rail-field">
+      <label id="space-field" class="rail-field">
         <span class="visually-hidden" data-i18n="space.label">Space</span>
         <select id="space" aria-label="Space" data-i18n-attr="aria-label:space.label">
           <option value="Serato Library" data-i18n="space.library">Library</option>
@@ -84,7 +86,7 @@
         <button id="crate-rename-from-tags" type="button" aria-haspopup="dialog" data-i18n="files.renameFromTags">Rename from tags</button>
         <button id="crate-refresh" type="button" data-i18n="presets.refresh" hidden>Refresh</button>
       </div>
-      <footer class="rail-foot">
+      <footer id="rail-foot" class="rail-foot">
         <p id="app-version" class="app-version" hidden></p>
         <button id="open-help" type="button" aria-haspopup="dialog" data-i18n="help.title">Help</button>
         <button id="open-settings" type="button" aria-haspopup="dialog" data-i18n="settings.title">Settings</button>
@@ -357,6 +359,7 @@
       </section>
       <div id="player-bar" class="player-bar"></div>
     </main>
+    </div>
   </div>
   <dialog id="consent-dialog" aria-labelledby="consent-title" aria-describedby="consent-body">
     <h2 id="consent-title" data-i18n="wizard.heading.consent">Share anonymous usage stats and crash reports?</h2>

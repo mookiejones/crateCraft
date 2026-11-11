@@ -74,20 +74,98 @@ textarea:focus-visible,
 }
 
 .app {
-  display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   height: 100%;
   min-height: 0;
+}
+
+#app-shell {
+  flex: 1;
+  min-height: 0;
+}
+
+#app-shell:empty {
+  display: none;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
 }
 
 .rail {
   display: flex;
   flex-direction: column;
+  width: 280px;
+  flex-shrink: 0;
   min-height: 0;
   overflow: hidden;
   color: var(--color-rail-text);
   padding: 22px var(--space-3) var(--space-4);
   box-shadow: inset 4px 0 0 var(--colorway-accent);
+}
+
+.app-bar-space {
+  min-width: 12rem;
+  max-width: 16rem;
+}
+
+.app-bar-space .rail-field {
+  margin: 0;
+}
+
+.app-bar-space select {
+  width: 100%;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
+  padding: 6px 0;
+}
+
+.drawer-nav {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: var(--space-2);
+}
+
+.drawer-nav .view-children {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  background: transparent;
+  border-bottom: 0;
+  padding: 0 0 0 var(--space-3);
+  margin: 0 0 var(--space-2);
+}
+
+.drawer-nav .view-switch button,
+.drawer-nav .view-children button {
+  color: inherit;
+}
+
+.drawer-nav .view-switch button[aria-selected="true"],
+.drawer-nav .view-children button[aria-selected="true"] {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.drawer-foot {
+  flex-shrink: 0;
+}
+
+.drawer-foot .rail-foot {
+  margin-top: 0;
+}
+
+.drawer-foot .rail-foot button,
+.drawer-foot .app-version {
+  color: inherit;
 }
 
 .colorway-row {
@@ -339,6 +417,7 @@ html[data-colorway="light"] .rail select { color-scheme: light; }
   display: grid;
   grid-template-columns: minmax(0, var(--track-list-width)) 9px minmax(300px, 0.85fr);
   grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  flex: 1;
   min-width: 0;
   min-height: 0;
   margin: var(--space-3) var(--space-3) var(--space-3) 0;
@@ -2129,8 +2208,9 @@ dialog .settings-field select {
 }
 
 @media (max-width: 980px) {
-  .app { grid-template-columns: 1fr; height: auto; }
-  .rail { max-height: 420px; }
+  .app { height: auto; }
+  .app-body { flex-direction: column; height: auto; }
+  .rail { max-height: 420px; width: auto; }
   .editor { grid-template-columns: 1fr; }
   .sheet {
     grid-template-columns: 1fr;
