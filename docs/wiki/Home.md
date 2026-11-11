@@ -29,7 +29,7 @@ The long guide is published at <https://mookiejones.github.io/crateCraft/>.
 
 The drawer has five primaries: **Music**, **Organize files**, **Health**, **Backups**, and **Gig**. The space menu sits in the top bar. Children of the open parent sit in the drawer. The heading at the top of the sheet names the open view and the space. **Music** is Crates, History, and Play stats. **Health** is Overview, Missing files, Duplicates, Stems, Damaged files, Suspect quality, and Tag spellings. **Gig** is Ready, Check drive, and Tempo drift. Organize files and Backups have no extra children. Overview, Ready, Tempo drift, Damaged files, and Suspect quality show **Scope** for the selected crate, with **All tracks** on that chip to check the whole space. Collapse hides Help and Settings and leaves crate names next to the list.
 
-Double-click a track to play it. The bar under the list has pause, seek, and volume. Playback does not change the file.
+Double-click a track to play it. The bar under the AppBar has pause, seek, and volume. Playback does not change the file.
 
 The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**.
 
