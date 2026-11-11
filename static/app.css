@@ -338,7 +338,7 @@ html[data-colorway="light"] .rail select { color-scheme: light; }
   --track-list-width: 1.15fr;
   display: grid;
   grid-template-columns: minmax(0, var(--track-list-width)) 9px minmax(300px, 0.85fr);
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
   min-width: 0;
   min-height: 0;
   margin: var(--space-3) var(--space-3) var(--space-3) 0;
@@ -377,10 +377,60 @@ html[data-colorway="light"] .rail select { color-scheme: light; }
   text-underline-offset: 3px;
 }
 
+.sheet-chrome {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  background: var(--manila);
+}
+
+.sheet-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sheet-scope {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.sheet-scope[hidden] { display: none; }
+
+.sheet-scope button {
+  min-height: 44px;
+}
+
+#health-scope,
+#gig-scope,
+#drift-scope,
+#scan-scope,
+#bitrate-scope {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 .browser,
 .detail,
 .splitter {
-  grid-row: 3;
+  grid-row: 4;
 }
 
 .browser, .detail {
@@ -1296,7 +1346,7 @@ dialog .settings-field select {
 .gig-panel,
 .scan-panel {
   grid-column: 1 / -1;
-  grid-row: 3;
+  grid-row: 4;
   min-width: 0;
   min-height: 0;
   display: flex;
@@ -1348,7 +1398,7 @@ dialog .settings-field select {
 
 .player-bar {
   grid-column: 1 / -1;
-  grid-row: 4;
+  grid-row: 5;
   border-top: 1px solid var(--rule);
   background: var(--manila);
 }
@@ -2095,12 +2145,13 @@ dialog .settings-field select {
   .splitter { display: none; }
   .update-banner { grid-row: 1; }
   .view-children { grid-row: 2; }
-  .browser { grid-row: 3; }
+  .sheet-chrome { grid-row: 3; }
+  .browser { grid-row: 4; }
   .files-panel,
   .gig-panel,
-  .scan-panel { grid-row: 3; }
-  .detail { border-top: 1px solid var(--rule); grid-row: 4; }
-  .player-bar { grid-row: 5; }
+  .scan-panel { grid-row: 4; }
+  .detail { border-top: 1px solid var(--rule); grid-row: 5; }
+  .player-bar { grid-row: 6; }
   .detail h2 { font-size: 32px; }
   .player-controls {
     grid-template-columns: minmax(0, 1fr) auto;

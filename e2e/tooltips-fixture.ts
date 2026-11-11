@@ -9,6 +9,7 @@
 import { modeForGroup, paintNav, rememberMode } from "../src/nav";
 import { mountPlayer } from "../src/player";
 import { mountSettings } from "../src/settings";
+import { paintSheetChrome } from "../src/sheet-chrome";
 import { state } from "../src/state";
 import { applyStaticTooltips, installTooltips, missingTooltipLabels } from "../src/tooltip";
 import { mountTrackList, paintRows } from "../src/virtual-scroll";
@@ -92,24 +93,33 @@ state.filesEntries = [
   { name: "alias", path: "/music/House/alias", kind: "link" },
 ];
 
+function paintChrome(mode: string): void {
+  rememberMode(mode);
+  state.mode = mode;
+  paintNav(mode);
+  paintSheetChrome({
+    mode,
+    space: state.space,
+    activeCrate: state.activeCrate,
+    crates: state.crates,
+  });
+}
+
 applyStaticTooltips();
 installTooltips();
 mountPlayer();
 mountSettings();
 applyStaticTooltips();
-paintNav(state.mode);
+paintChrome(state.mode);
 document.getElementById("views")?.addEventListener("click", (event) => {
   const button = (event.target as HTMLElement).closest("button");
   if (!button?.dataset.nav) return;
-  const mode = modeForGroup(button.dataset.nav);
-  rememberMode(mode);
-  paintNav(mode);
+  paintChrome(modeForGroup(button.dataset.nav));
 });
 document.getElementById("view-children")?.addEventListener("click", (event) => {
   const button = (event.target as HTMLElement).closest("button");
   if (!button?.dataset.view) return;
-  rememberMode(button.dataset.view);
-  paintNav(button.dataset.view);
+  paintChrome(button.dataset.view);
 });
 mountTrackList();
 state.mode = "files";

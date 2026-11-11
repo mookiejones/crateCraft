@@ -92,14 +92,21 @@ test("reduced motion shows the tooltip as soon as the pointer arrives", async ({
   await expect(page.locator("#app-tooltip")).toHaveText("Reload the library from Serato.");
 });
 
-test("Check drive sits under Before a gig with a labelled picker", async ({ page }) => {
-  await expect(page.locator('[data-nav="gig"]')).toHaveText("Before a gig");
+test("Check drive sits under Gig with a labelled picker", async ({ page }) => {
+  await expect(page.locator('[data-nav="gig"]')).toHaveText("Gig");
   await page.locator('[data-nav="gig"]').click();
-  await expect(page.locator("#view-children [data-view='gig']")).toHaveText("Before a gig");
+  await expect(page.locator("#view-children [data-view='gig']")).toHaveText("Ready");
   await expect(page.locator("#view-children [data-view='portable']")).toHaveText("Check drive");
   await expect(page.locator("#view-children [data-view='drift']")).toHaveText("Tempo drift");
+  await expect(page.locator("#sheet-title")).toHaveText("Ready · Serato Library");
+  await expect(page.locator("#sheet-scope")).toBeVisible();
+  await expect(page.locator("#sheet-scope-text")).toHaveText("Scope: Deep");
+  await expect(page.locator("#sheet-scope-all")).toBeVisible();
+  await expect(page.locator("#sheet-scope-all")).toHaveText("All tracks");
   const tab = page.locator('[data-view="portable"]');
   await tab.click();
+  await expect(page.locator("#sheet-title")).toHaveText("Check drive · Serato Library");
+  await expect(page.locator("#sheet-scope")).toBeHidden();
   await tab.focus();
   await expect(page.locator("#app-tooltip")).toContainText("Pick a connected drive");
   await page.locator("#portable-panel").evaluate((node) => {

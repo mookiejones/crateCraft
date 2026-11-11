@@ -3,7 +3,7 @@
 **Stems** lists tracks Serato has given a stems analysis state in the current space. The note says **Tracks with a stems analysis state.**
 
 1. Open crateCraft.
-2. Click **Library health** in the rail, then **Stems** above the sheet.
+2. Click **Health** in the rail, then **Stems** above the sheet.
 
 A matching row shows the word **stems**.
 

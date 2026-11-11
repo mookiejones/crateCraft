@@ -26,7 +26,7 @@ The choice, the skipped version, and the last answer are stored in `updates.json
 
 ## Album art lookup
 
-**Find art** on Library health asks MusicBrainz for recordings that match the track title and artist, then fetches a cover from Cover Art Archive. Those hosts see your IP address, a User-Agent of `crateCraft/<version>`, and the search text. Cover URLs are built from a MusicBrainz release id; the app does not follow a cover URL supplied by the client. Covers are written into the audio file on this machine. The lookup is not a usage report and does not use PostHog or Sentry.
+**Find art** on Overview asks MusicBrainz for recordings that match the track title and artist, then fetches a cover from Cover Art Archive. Those hosts see your IP address, a User-Agent of `crateCraft/<version>`, and the search text. Cover URLs are built from a MusicBrainz release id; the app does not follow a cover URL supplied by the client. Covers are written into the audio file on this machine. The lookup is not a usage report and does not use PostHog or Sentry.
 
 ## What is never sent
 

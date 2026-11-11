@@ -25,9 +25,9 @@ The long guide is published at <https://mookiejones.github.io/crateCraft/>.
 
 ## What you click
 
-**Library** sits at the top of the sidebar. The status line under it starts as **Checking Serato**.
+**crateCraft** sits at the top of the sidebar. The status line under it starts as **Checking Serato**.
 
-The rail has five primaries: **Library**, **Organize files**, **Library health**, **Backups**, and **Before a gig**. Tabs for the open parent sit above the main sheet. **Library** is Crates, History, and Play stats. **Library health** is Library health, Missing files, Duplicates, Stems, Damaged files, Suspect quality, and Tag spellings. **Before a gig** is Before a gig, Check drive, and Tempo drift. Organize files and Backups have no extra tabs.
+The rail has five primaries: **Music**, **Organize files**, **Health**, **Backups**, and **Gig**. Tabs for the open parent sit above the main sheet. The heading under those tabs names the open view and the space. **Music** is Crates, History, and Play stats. **Health** is Overview, Missing files, Duplicates, Stems, Damaged files, Suspect quality, and Tag spellings. **Gig** is Ready, Check drive, and Tempo drift. Organize files and Backups have no extra tabs. Overview, Ready, Tempo drift, Damaged files, and Suspect quality show **Scope** for the selected crate, with **All tracks** on that chip to check the whole space.
 
 Double-click a track to play it. The bar under the list has pause, seek, and volume. Playback does not change the file.
 

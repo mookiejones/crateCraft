@@ -2,7 +2,7 @@
 
 ## The gig check says Not ready
 
-Open [Before a gig](gig-check.md). **Not ready** with a drive name means that drive is absent. **Not ready** with missing files lists each path. The check does not change the library.
+Open [Ready](gig-check.md). **Not ready** with a drive name means that drive is absent. **Not ready** with missing files lists each path. The check does not change the library.
 
 ## The edit buttons are off
 
