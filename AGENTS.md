@@ -89,8 +89,9 @@ The commands to paste into a pull request are the full list under [After a chang
 2. Update `CLAUDE.md` and `AGENTS.md` together. They are copies of the same text. Update them when the run command or the layout summary changes.
 3. Update `docs/github.md` when a workflow, a release check, or a GitHub setting changes.
 4. Update `PRIVACY.md` and the README when sharing, local logs, or telemetry keys change.
-5. Tests. Every behavior change or bug fix ships with tests in the same PR: Python `unittest` under `tests/`, page code as Vitest `*.test.ts` in `src/tests/`. A bug fix needs a test that fails before the fix. Use only synthetic fixtures (`tests/fixtures/`), never a real `master.sqlite`, `root.sqlite`, or audio file.
-6. Before opening a PR, run all checks locally and paste the results in the completion report:
+5. A change a DJ can see also updates `docs/wiki/` and the user guide (`docs/index.md`, `docs/guide/`, `docs/quick-start.md`, `docs/first-install.md`). Use the `updating-user-docs` skill.
+6. Tests. Every behavior change or bug fix ships with tests in the same PR: Python `unittest` under `tests/`, page code as Vitest `*.test.ts` in `src/tests/`. A bug fix needs a test that fails before the fix. Use only synthetic fixtures (`tests/fixtures/`), never a real `master.sqlite`, `root.sqlite`, or audio file.
+7. Before opening a PR, run all checks locally and paste the results in the completion report:
    ```bash
    python3 -m pip install -r requirements.txt
    python3 -m unittest discover -s tests -t . -v
@@ -104,8 +105,8 @@ The commands to paste into a pull request are the full list under [After a chang
    npm run build
    ```
    Commit the rebuilt `static/app.js` and `static/wizard.js`.
-7. Push to a branch and open a PR. Never push to `main`.
-8. Write the [completion report](#completion-report) in the pull request body. When the work has an issue, post the same report as a final comment on that issue.
+8. Push to a branch and open a PR. Never push to `main`.
+9. Write the [completion report](#completion-report) in the pull request body. When the work has an issue, post the same report as a final comment on that issue.
 
 ## Test bar
 
@@ -167,3 +168,7 @@ The five triage roles. `needs-info` maps to the existing `question` label and `w
 ### Domain docs
 
 Single-context: one `CONTEXT.md` and `docs/adr/` at the repo root, created lazily by `/domain-modeling`. See `docs/agents/domain.md`.
+
+### User docs
+
+DJ-facing copy (wiki drafts, README, MkDocs guide) uses `.grok/skills/updating-user-docs/SKILL.md`. Live wiki.git is a later hop. This repository does not push it.
