@@ -17,6 +17,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { failureOf } from "../lib/api";
+import { MuiThemeRoot } from "./mui-theme-root";
 import { CrateProvider as CrateContextProvider } from "../containers/CrateContext";
 import {
   FilesProvider as FilesContextProvider,
@@ -572,6 +573,7 @@ export function HealthProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
+ * MUI ThemeProvider is the outer wrap, mapped to the saved colorway.
  * Player is the first domain. Crates wrap inside it. Waveform wraps
  * inside crates. Before a gig wraps inside waveform. Files wraps inside
  * Before a gig. History wraps inside Files. Settings wraps inside History.
@@ -583,26 +585,28 @@ export function HealthProvider({ children }: { children: ReactNode }) {
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
-    <PlayerProvider>
-      <CrateProvider>
-        <WaveformProvider>
-          <GigProvider>
-            <FilesProvider>
-              <HistoryProvider>
-                <SettingsProvider>
-                  <TrackListRoot>
-                    <SnapshotsProvider>
-                      <WizardProvider>
-                        <HealthProvider>{children}</HealthProvider>
-                      </WizardProvider>
-                    </SnapshotsProvider>
-                  </TrackListRoot>
-                </SettingsProvider>
-              </HistoryProvider>
-            </FilesProvider>
-          </GigProvider>
-        </WaveformProvider>
-      </CrateProvider>
-    </PlayerProvider>
+    <MuiThemeRoot>
+      <PlayerProvider>
+        <CrateProvider>
+          <WaveformProvider>
+            <GigProvider>
+              <FilesProvider>
+                <HistoryProvider>
+                  <SettingsProvider>
+                    <TrackListRoot>
+                      <SnapshotsProvider>
+                        <WizardProvider>
+                          <HealthProvider>{children}</HealthProvider>
+                        </WizardProvider>
+                      </SnapshotsProvider>
+                    </TrackListRoot>
+                  </SettingsProvider>
+                </HistoryProvider>
+              </FilesProvider>
+            </GigProvider>
+          </WaveformProvider>
+        </CrateProvider>
+      </PlayerProvider>
+    </MuiThemeRoot>
   );
 }

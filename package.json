@@ -15,6 +15,11 @@
     "check": "tsc --noEmit && tsc --noEmit -p e2e && eslint src e2e && vitest run && node scripts/build_frontend.mjs --check"
   },
   "dependencies": {
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@mui/icons-material": "9.5.0",
+    "@mui/material": "9.5.0",
+    "@mui/x-data-grid": "9.17.0",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },

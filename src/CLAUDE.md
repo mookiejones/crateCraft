@@ -12,7 +12,7 @@ src/
   wizard-view.ts      # esbuild entry: first-run IIFE
   html-raw.d.ts
   CLAUDE.md
-  app/                # mountIsland, AppProviders
+  app/                # mountIsland, AppProviders, MUI ThemeProvider
   containers/         # one Context + hook per domain
   pages/              # rail screens and dialog hosts
   components/         # pieces a page or island mounts

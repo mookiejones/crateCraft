@@ -1,6 +1,6 @@
 # crateCraft look and layout (MUI walk)
 
-**Status:** DRAFT. Charles has not approved this document. No product UI, no `package.json` MUI add, no `src/` restyle until he says this spec is approved.
+**Status:** APPROVED. Charles said “yes” in chat on 11 Nov 2026. That sentence locks this document, including MUI X Data Grid Community (no Pro). Product work starts at #303.
 
 **Parent issue:** https://github.com/mookiejones/crateCraft/issues/300
 
@@ -12,9 +12,11 @@
 
 ```
 Work #300 MUI walk. Read docs/superpowers/specs/2026-11-11-cratecraft-look-layout-design.md first.
-Kit is MUI + MUI X Data Grid. Theme maps to existing colorways.
-No product code until Charles approves that spec.
-Walk one screen per turn. Current screen: Crates (child issue listed in the spec).
+Kit is MUI + MUI X Data Grid Community (no Pro). Theme maps to existing colorways.
+Spec is APPROVED (Charles “yes”, 11 Nov 2026). First impl is #303 ThemeProvider.
+Screen inventory walk is complete. Community Data Grid is locked. Impl order is #303, then #305 shell, then #304 Crates.
+Shared dialogs are centered modals (A). Wizard stays a dialog over a dimmed shell (A). Settings is a Main page (B). Drawer footer still opens it. Tempo drift uses a Data Grid (B). Check drive uses a Data Grid (B). Gig Ready stays a report (A). Backups uses a Data Grid of snapshots (B). Restore is a row action. Tag spellings uses a Data Grid of clusters (B). Suspect quality uses a Data Grid (B). Damaged files uses a Data Grid (B). Missing / Duplicates / Stems use the same Data Grid as Crates (A). Relink and Merge stay as actions. Health Overview stays a report (A). Organize files keeps the folder browser (A). History uses the same Data Grid (A). Play stats stays a report (A).
+Space switch is AppBar (A). Help/Settings is Drawer footer (B). Player is a strip under the AppBar (A). Row height stays 36px (A). Columns may resize and hide (B). Play is its own first column (A). History uses the same Data Grid (A).
 Hard gates and theirs-vs-guesses are in the spec. Do not reopen nav tickets #291 #295 #297.
 ```
 
@@ -94,14 +96,36 @@ Mark: **theirs** = Charles said it. **guess** = agent call, he can reject.
 | Nav leftovers stay on their tickets | theirs | #291 / #295 / #297 |
 | Feel | theirs (older) | Attractive, simple, professional, fun, modern |
 | App shell | theirs | MainContainer → AppBar + collapsible Drawer + Main content |
+| Drawer contents | theirs | Nested: Library → Crates, History, Play stats (and tools for the open child). Same for Health / Gig. Sheet child tabs go away |
+| Named crates | theirs | Next to the track list in Main content, not in the Drawer |
+| Space switch | theirs | AppBar (Serato Library / Video / Apple Music / Prepare). Not in the Drawer |
+| Help and Settings | theirs | Drawer footer (B). Collapse hides them. Keep `#open-help` and `#open-settings`. Native Help menu stays desktop-only |
 | Player count this pass | theirs | One preview player. Dual files later, not in #303–#306 |
-| Player default dock | guess | Full strip under the AppBar; Settings top/bottom later |
-| Crates three-pane layout (tree \| tracks \| detail) | guess | Keep unless Charles says otherwise |
+| Player default dock | theirs | Full strip under the AppBar (A). Waveform sits with that strip. Dual files later |
+| Crates row height | theirs | Keep 36px `--row` (A). Not MUI compact |
+| Crates columns | theirs | Resize and hide (B). Default is today’s ten fields |
+| Crates Play control | theirs | Own first column (A). Title is only the name |
+| Crates tree + tracks | theirs | Tree next to the Data Grid in Main content |
+| Track detail pane | theirs | Stay where it is: right pane. Tab idea dropped |
 | Detail as right pane, not a drawer | guess | Serato-like; confirm on Crates walk |
 | Data Grid cells read-only | guess | Play / select / sort / resize only |
-| First impl child after approve | guess | ThemeProvider + colorways, then Crates Data Grid |
-| History list same Data Grid as Crates | guess | Same component, different columns |
-| MUI X Community only (no paid Pro) | guess | Confirm if Charles wants Pro |
+| First impl child after approve | theirs | ThemeProvider + colorways (#303), then shell (#305), then Crates Data Grid (#304) |
+| History list same Data Grid as Crates | theirs | Same component, different columns (A) |
+| Play stats | theirs | Keep a report (A). Cards / lists, not a second Data Grid |
+| Organize files | theirs | Keep the folder browser (A). Roots, files, preview/actions. MUI chrome only. Not a files Data Grid |
+| Health Overview | theirs | Keep a report (A). Accordion sections with counts and sample tracks. Not a Data Grid |
+| Missing / Duplicates / Stems | theirs | Same Data Grid as Crates (A). Relink and Merge stay as actions above the grid |
+| Damaged files | theirs | Data Grid of damaged files (B). Problem column. Quick / Full stay above |
+| Suspect quality | theirs | Data Grid of flagged tracks (B). Reason column. Make crate stays above |
+| Tag spellings | theirs | Data Grid of clusters (B). Suggested spelling and counts as columns. Review / Apply stay above |
+| Backups | theirs | Data Grid of snapshots (B). When, size, status as columns. Restore is a row action. Take stays above. Log stays below |
+| Gig Ready | theirs | Keep a report (A). Ready / Not ready score on top. Accordion groups underneath |
+| Check drive | theirs | Data Grid of drive problems (B). Drive picker stays on top. Problem column names the fault |
+| Tempo drift | theirs | Data Grid of drifted tracks (B). Reason column names drift or live |
+| Settings | theirs | Settings as a Main page (B). Same sections. Drawer footer still opens it. Keep #open-settings |
+| Wizard | theirs | Keep a dialog (A). Sits over a dimmed empty shell. AppBar and Drawer wait behind it. Cancel does not finish |
+| Shared dialogs | theirs | Centered modal (A). MUI Dialog over the current view. Relink, Restore, Rekordbox, Merge, Find art, Preset, Sync folder |
+| MUI X Community only (no paid Pro) | theirs | Charles approved the spec as written on 11 Nov 2026 |
 
 ---
 
@@ -161,9 +185,10 @@ Create / rename / color / save view still use `window.prompt`. Delete uses `conf
 
 Open on Crates (theirs to answer):
 
-1. Keep tree \| tracks \| detail as three columns?
-2. How dense (compact Data Grid vs current 36px `--row`)?
-3. May columns resize and hide, or only match today’s ten fields?
+1. Three columns (tree | Data Grid | detail) — **theirs**, already picked.
+2. Density — **theirs**: keep 36px `--row` (A). Not MUI compact.
+3. Columns — **theirs**: resize and hide (B). Default set is today’s ten fields (Title, Artist, BPM, Key, Energy, Genre, Added, Last, Plays, Time).
+4. Play — **theirs**: own first column (A). Title is only the name. Color/emoji may still sit with the title.
 
 ---
 
@@ -195,19 +220,34 @@ Each walk turn: what the screen is for, MUI pieces, what stays (API, Play, i18n)
 
 Charles wants the standard app shell: **AppBar**, **collapsible Drawer**, **Main content**. One preview player this pass. Dual-file players are a later issue.
 
-Guess until he says otherwise: player is a full strip **under the AppBar** (not a second deck, not two `<audio>` elements). Split Crates still shares that one player.
+**Player (theirs, A):** full strip **under the AppBar** (Play, seek, waveform). Not a second deck, not two `<audio>` elements. Split Crates still shares that one player.
 
-Open: crate tree in the Drawer vs inside Main content next to the grid.
+**Nested drawer (theirs):** Sidebar lists primaries. Open **Library** and the children **Crates, History, Play stats** show there, with only tools/links for that child. Same pattern for Health and Gig. Children leave the sheet tab strip (`#view-children`) and live in the Drawer.
+
+Why the current rail is hard: one column does four jobs (app nav, space picker, crate inventory, Help/Settings). Nested drawer splits **where you are** from **what you are working on**.
+
+**Named crates (theirs):** Saturday gig and the rest sit **in Main content, next to the track list**. The Drawer stays a short map (Library → Crates / History / Play stats). Collapse the Drawer and crate names stay.
+
+**Detail (theirs):** keep the **right pane** (cues, fields, related). The tab-next-to-Saturday-gig idea is dropped.
+
+Crates Main content: **tree | Data Grid | detail**.
+
+**Space (theirs):** AppBar dropdown. Drawer does not list Serato Library / Video. “Library” in the Drawer means the Music section (Crates / History / Play stats).
+
+**Help / Settings (theirs, B):** stay in the **Drawer footer**, same job as today’s rail footer. Collapse the Drawer and they hide. Native Help menu stays on the desktop window only (`python3 server.py` has none). Keep `#open-help` and `#open-settings`.
+
+**Player (theirs, A):** full strip under the AppBar. Waveform rides with that strip.
 
 **MUI MCP:** `npx -y @mui/mcp@latest` as Grok server `mui-mcp` (user `~/.grok/config.toml` and project `.grok/config.toml`). Restart or wait for MCP hot-reload to query real MUI docs. Does not install MUI into the app.
 
 ## Implementation order (after this spec is approved)
 
-1. Add `@mui/material` `@mui/icons-material` `@emotion/react` `@emotion/styled` `@mui/x-data-grid`. ThemeProvider in `AppProviders`. Map palette to colorways. No screen restyle yet except proof in Settings appearance or a hidden host.
-2. Crates Data Grid + tree + detail chrome.
-3. Shell (rail / tabs) so later pages share AppBar/Drawer.
-4. History + Play stats (same grid).
-5. Files, Health group, Backups, Gig, Settings, Wizard, leftover dialogs.
+1. ThemeProvider + colorways (#303). Add `@mui/material` `@mui/icons-material` `@emotion/react` `@emotion/styled` `@mui/x-data-grid`. ThemeProvider in `AppProviders`. Map palette to colorways. No screen restyle yet except proof in Settings appearance or a hidden host. Community Data Grid only (no Pro).
+2. Shell (#305): rail / tabs become AppBar + collapsible Drawer + Main, so later pages share chrome.
+3. Crates Data Grid + tree + detail chrome (#304).
+4. Player + waveform (#306).
+5. History + Play stats (#307).
+6. Files, Health group, Backups, Gig, Settings, Wizard, leftover dialogs (#308–#313).
 
 One PR per child. Tests on that screen. Rebuild `static/app.js`.
 
@@ -216,8 +256,8 @@ One PR per child. Tests on that screen. Rebuild `static/app.js`.
 ## Agent rules for child issues
 
 1. `gh issue edit <n> --add-assignee @me` before other writes.
-2. Read this spec. If status is still DRAFT, **consult and update the spec** or stop. Do not install MUI.
-3. After Charles approves (comment on #300 or in chat: “spec approved”), implement only that child’s screen.
+2. Read this spec. Status is APPROVED. Implement only the claimed child’s screen.
+3. Charles approved in chat on 11 Nov 2026 (“yes”). Do not reopen the walk.
 4. Branch `issue-<n>-short-name`. PR `Closes #<n>`. Do not close #300 until every child that Charles wants in this pass is done (or he closes #300 as keep-current-look).
 5. Tooltips, en+es, Vitest, Playwright as AGENTS.md. No `master.sqlite` in the diff.
 6. Do not mix hash routes or rail work into an MUI PR.
@@ -230,13 +270,13 @@ A parent session may spawn **read-only** explorers to map a screen into this spe
 
 ## Child issues
 
-Part of #300. Implementation blocked until this spec is approved.
+Part of #300. Spec approved 11 Nov 2026. Implement children in table order.
 
 | Order | Issue | Screen |
 |---:|---|---|
 | 0 | [#303](https://github.com/mookiejones/crateCraft/issues/303) | ThemeProvider + colorways (first impl) |
-| 1 | [#304](https://github.com/mookiejones/crateCraft/issues/304) | Crates Data Grid, tree, detail **(current walk)** |
-| 2 | [#305](https://github.com/mookiejones/crateCraft/issues/305) | Shell: rail, tabs, heading, splitter |
+| 1 | [#305](https://github.com/mookiejones/crateCraft/issues/305) | Shell: rail, tabs, heading, splitter |
+| 2 | [#304](https://github.com/mookiejones/crateCraft/issues/304) | Crates Data Grid, tree, detail |
 | 3 | [#306](https://github.com/mookiejones/crateCraft/issues/306) | Player + waveform chrome |
 | 4 | [#307](https://github.com/mookiejones/crateCraft/issues/307) | History + Play stats |
 | 5 | [#308](https://github.com/mookiejones/crateCraft/issues/308) | Organize files |
@@ -260,6 +300,4 @@ Part of #300. Implementation blocked until this spec is approved.
 
 ## Approval
 
-Charles approves **this file** in chat or on #300. Until that sentence exists, status stays DRAFT.
-
-Calls he should check while reading: three-pane Crates, read-only cells, Community Data Grid (no Pro), ThemeProvider-first impl order, History sharing the Crates grid.
+Charles approved **this file** in chat on 11 Nov 2026 with “yes”. That locks Community Data Grid (no Pro) as written. Status is APPROVED. Product work starts at #303.
