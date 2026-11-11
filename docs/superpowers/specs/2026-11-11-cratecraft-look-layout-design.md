@@ -93,6 +93,9 @@ Mark: **theirs** = Charles said it. **guess** = agent call, he can reject.
 | No product code until spec approved | theirs (#300) | Hard gate |
 | Nav leftovers stay on their tickets | theirs | #291 / #295 / #297 |
 | Feel | theirs (older) | Attractive, simple, professional, fun, modern |
+| App shell | theirs | MainContainer → AppBar + collapsible Drawer + Main content |
+| Player count this pass | theirs | One preview player. Dual files later, not in #303–#306 |
+| Player default dock | guess | Full strip under the AppBar; Settings top/bottom later |
 | Crates three-pane layout (tree \| tracks \| detail) | guess | Keep unless Charles says otherwise |
 | Detail as right pane, not a drawer | guess | Serato-like; confirm on Crates walk |
 | Data Grid cells read-only | guess | Play / select / sort / resize only |
@@ -187,6 +190,16 @@ Open on Crates (theirs to answer):
 Each walk turn: what the screen is for, MUI pieces, what stays (API, Play, i18n), Charles yes or change.
 
 ---
+
+## Parent shell (in progress)
+
+Charles wants the standard app shell: **AppBar**, **collapsible Drawer**, **Main content**. One preview player this pass. Dual-file players are a later issue.
+
+Guess until he says otherwise: player is a full strip **under the AppBar** (not a second deck, not two `<audio>` elements). Split Crates still shares that one player.
+
+Open: crate tree in the Drawer vs inside Main content next to the grid.
+
+**MUI MCP:** `npx -y @mui/mcp@latest` as Grok server `mui-mcp` (user `~/.grok/config.toml` and project `.grok/config.toml`). Restart or wait for MCP hot-reload to query real MUI docs. Does not install MUI into the app.
 
 ## Implementation order (after this spec is approved)
 
