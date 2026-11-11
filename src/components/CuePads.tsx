@@ -5,9 +5,9 @@
  */
 
 import type { CSSProperties } from "react";
-import type { Marker } from "../api-types";
-import { cueSlots, extraCues, formatCueTime, slotColor } from "../cue-view";
-import { t } from "../i18n";
+import type { Marker } from "../lib/api-types";
+import { cueSlots, extraCues, formatCueTime, slotColor } from "../lib/ui/cue-view";
+import { t } from "../lib/i18n";
 
 export type CueSlotProps = {
   slot: number;

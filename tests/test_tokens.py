@@ -33,13 +33,15 @@ def src_page_text() -> str:
     checked here instead of in ``static/app.js``.
 
     Returns:
-        Concatenated ``src/*.ts`` and ``src/*.tsx`` that are not tests.
+        Concatenated ``src/**/*.ts`` and ``src/**/*.tsx`` that are not tests.
     """
     chunks: list[str] = []
     for path in sorted(SRC.rglob("*")):
         if path.suffix not in {".ts", ".tsx"}:
             continue
         if ".test." in path.name:
+            continue
+        if path.relative_to(SRC).parts[0] == "tests":
             continue
         chunks.append(path.read_text(encoding="utf-8"))
     return "\n".join(chunks)
@@ -235,7 +237,7 @@ class TokenSheetTests(unittest.TestCase):
         for name, token in aliases.items():
             self.assertIn(f"{name}: var({token})", text)
         self.assertIn("--row: 36px; /* must match ROW in app.js */", text)
-        source = (ROOT / "src" / "state.ts").read_text(encoding="utf-8")
+        source = (ROOT / "src" / "lib" / "state.ts").read_text(encoding="utf-8")
         self.assertIn("export const ROW = 36", source)
         script = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
         self.assertIn("ROW = 36", script)

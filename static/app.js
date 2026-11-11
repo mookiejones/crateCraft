@@ -17704,7 +17704,7 @@
     "wizard.yes": "Sí, compartir"
   };
 
-  // src/i18n.ts
+  // src/lib/i18n.ts
   var LANGUAGES = ["en", "es"];
   var PSEUDO = "qps-ploc";
   var LANGUAGE_NAMES = {
@@ -17864,7 +17864,7 @@
     return new Intl.ListFormat(locale === PSEUDO ? "en" : locale, { style: "long", type: "conjunction" }).format(items);
   }
 
-  // src/api.ts
+  // src/lib/api.ts
   async function readJSON(response) {
     return await response.json();
   }
@@ -17948,7 +17948,7 @@
     return payload;
   }
 
-  // src/bridge.ts
+  // src/lib/bridge.ts
   var bridge = {
     selectTrack(_id) {
     },
@@ -17975,14 +17975,14 @@
     }
   };
 
-  // src/dom.ts
+  // src/lib/dom.ts
   function el(id) {
     const node = document.getElementById(id);
     if (node == null) throw new Error(`Missing #${id}`);
     return node;
   }
 
-  // src/state.ts
+  // src/lib/state.ts
   var ROW = 36;
   var FILE_ROW = 44;
   var ROOT_ROW = 64;
@@ -18083,7 +18083,7 @@
     viewB: []
   };
 
-  // src/dual-crate-view.ts
+  // src/lib/crates/dual-crate-view.ts
   function clickPane(split, focused, altKey) {
     if (!split) return "a";
     if (altKey) return focused === "a" ? "b" : "a";
@@ -18140,7 +18140,7 @@
     }
   }
 
-  // src/search-filters.ts
+  // src/lib/ui/search-filters.ts
   var TEXT_SEARCH_FIELDS = [
     "comments",
     "grouping",
@@ -18344,7 +18344,7 @@
     return query.terms.every((term) => hay.includes(term));
   }
 
-  // src/crate-tree.ts
+  // src/lib/crates/crate-tree.ts
   function childLists() {
     const children = /* @__PURE__ */ new Map();
     for (const crate of state.crates) {
@@ -18481,7 +18481,7 @@
     return rows2;
   }
 
-  // src/preset-view.ts
+  // src/lib/crates/preset-view.ts
   function presetName(preset) {
     if (preset.kind === "harmonic") return t("presets.name.harmonic", { key: preset.key });
     if (preset.kind === "bpm") {
@@ -18547,7 +18547,7 @@
     el("crate-refresh").disabled = !state.writable || !preset;
   }
 
-  // src/crate-store.ts
+  // src/lib/crates/crate-store.ts
   var noop = () => void 0;
   var actions = {
     select: noop,
@@ -18615,7 +18615,7 @@
     };
   }
 
-  // src/fuzzy.ts
+  // src/lib/fuzzy.ts
   var BOUNDARY = /[ ._/\-\\]/;
   function fuzzyScore(needle, haystack) {
     const query = needle.toLocaleLowerCase();
@@ -18656,7 +18656,7 @@
     return total;
   }
 
-  // src/splitter.ts
+  // src/lib/ui/splitter.ts
   function clampWidth(width, available, minFirst, minSecond) {
     const max = Math.max(minFirst, available - minSecond);
     return Math.round(Math.min(Math.max(width, minFirst), max));
@@ -18734,7 +18734,7 @@
     };
   }
 
-  // src/format.ts
+  // src/lib/format.ts
   function lengthLabel(ms) {
     if (ms == null || ms === "") return "";
     const total = Math.floor(Number(ms) / 1e3);
@@ -18832,7 +18832,7 @@
     return a.id - b.id;
   }
 
-  // src/gig.ts
+  // src/lib/gig/gig.ts
   var import_react26 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
@@ -18843,7 +18843,7 @@
   var import_react25 = __toESM(require_react(), 1);
   var import_react_dom3 = __toESM(require_react_dom(), 1);
 
-  // src/context/CrateContext.tsx
+  // src/containers/CrateContext.tsx
   var import_react = __toESM(require_react(), 1);
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
   var CrateContext = (0, import_react.createContext)(null);
@@ -18861,7 +18861,7 @@
     return value;
   }
 
-  // src/context/FilesContext.tsx
+  // src/containers/FilesContext.tsx
   var import_react2 = __toESM(require_react(), 1);
   var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
   var FilesContext = (0, import_react2.createContext)(null);
@@ -18879,7 +18879,7 @@
     return value;
   }
 
-  // src/context/GigContext.tsx
+  // src/containers/GigContext.tsx
   var import_react3 = __toESM(require_react(), 1);
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var GigContext = (0, import_react3.createContext)(null);
@@ -18897,7 +18897,7 @@
     return value;
   }
 
-  // src/context/HealthContext.tsx
+  // src/containers/HealthContext.tsx
   var import_react4 = __toESM(require_react(), 1);
   var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   var HealthContext = (0, import_react4.createContext)(null);
@@ -18915,7 +18915,7 @@
     return value;
   }
 
-  // src/context/HistoryContext.tsx
+  // src/containers/HistoryContext.tsx
   var import_react5 = __toESM(require_react(), 1);
   var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   var historyActions = {
@@ -18953,7 +18953,7 @@
     return value;
   }
 
-  // src/context/PlayerContext.tsx
+  // src/containers/PlayerContext.tsx
   var import_react6 = __toESM(require_react(), 1);
   var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   var PlayerContext = (0, import_react6.createContext)(null);
@@ -18971,11 +18971,11 @@
     return value;
   }
 
-  // src/context/WaveformContext.tsx
+  // src/containers/WaveformContext.tsx
   var import_react7 = __toESM(require_react(), 1);
   var import_react_dom = __toESM(require_react_dom(), 1);
 
-  // src/waveform.ts
+  // src/lib/player/waveform.ts
   var TILE_CSS_WIDTH = 256;
   var ZOOM_DEFAULT_PPS = 80;
   var ZOOM_MIN_PPS = 10;
@@ -19490,7 +19490,7 @@
     return value;
   }
 
-  // src/context/WaveformContext.tsx
+  // src/containers/WaveformContext.tsx
   var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
   var defaultUi = {
     pps: ZOOM_DEFAULT_PPS,
@@ -19533,7 +19533,7 @@
     return (0, import_react7.useContext)(WaveformClockContext);
   }
 
-  // src/files-store.ts
+  // src/lib/files/files-store.ts
   var listeners3 = /* @__PURE__ */ new Set();
   function subscribeFiles(listener) {
     listeners3.add(listener);
@@ -19545,7 +19545,7 @@
     for (const listener of listeners3) listener();
   }
 
-  // src/files.ts
+  // src/lib/files/files.ts
   var FILES_SEARCH_MS = 200;
   var filesRequest = 0;
   var filesSearchTimer = 0;
@@ -20018,10 +20018,10 @@
     openFilesDialog(state.filesPick === "move_folder" ? "move_folder" : "move", trigger);
   }
 
-  // src/drift.ts
+  // src/lib/gig/drift.ts
   var import_react9 = __toESM(require_react(), 1);
 
-  // src/drift-view.ts
+  // src/lib/gig/drift-view.ts
   var DRIFT_REASON_ORDER = ["drifting", "live", "pending_map"];
   var REASON_KEYS = {
     drifting: "drift.reason.drifting",
@@ -20049,11 +20049,11 @@
     return t("drift.row", { title: title2, file: item2.file, reasons, bpm });
   }
 
-  // src/components/GigDetailsGroup.tsx
+  // src/pages/GigDetailsGroup.tsx
   var import_react8 = __toESM(require_react(), 1);
   var import_react_dom2 = __toESM(require_react_dom(), 1);
 
-  // src/tooltip-strings.ts
+  // src/lib/ui/tooltip-strings.ts
   function spec(key, params) {
     return params ? { key, params } : { key };
   }
@@ -20589,7 +20589,7 @@
     return spec("tooltip.quickOpenHit", { kind: kind2, title: title2 });
   }
 
-  // src/tooltip.ts
+  // src/lib/ui/tooltip.ts
   var TOOLTIP_ID = "app-tooltip";
   var TOOLTIP_HOVER_MS = 400;
   var INTERACTIVE_SELECTOR = [
@@ -20837,7 +20837,7 @@
     priorDescribedBy = "";
   }
 
-  // src/components/GigDetailsGroup.tsx
+  // src/pages/GigDetailsGroup.tsx
   var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
   var LIST_CAP = 100;
   function GigDetailsGroup({ label, lines }) {
@@ -20863,7 +20863,7 @@
     ] });
   }
 
-  // src/components/DriftReport.tsx
+  // src/pages/DriftReport.tsx
   var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
   function DriftReport() {
     const { drift } = useGig();
@@ -20888,7 +20888,7 @@
     ] });
   }
 
-  // src/drift.ts
+  // src/lib/gig/drift.ts
   var listeners4 = /* @__PURE__ */ new Set();
   var latest = null;
   function emit() {
@@ -20984,7 +20984,7 @@
     emit();
   }
 
-  // src/health-events.ts
+  // src/lib/health/health-events.ts
   var listeners5 = /* @__PURE__ */ new Set();
   function subscribeHealth(listener) {
     listeners5.add(listener);
@@ -20996,7 +20996,7 @@
     for (const listener of [...listeners5]) listener();
   }
 
-  // src/health-list.ts
+  // src/lib/health/health-list.ts
   function crateScopeLabel() {
     if (state.activeCrate === "all") return t("gig.wholeSpace");
     const crate = state.crates.find((row) => row.id === state.activeCrate);
@@ -21028,10 +21028,10 @@
     };
   }
 
-  // src/health.ts
+  // src/lib/health/health.ts
   var import_react10 = __toESM(require_react(), 1);
 
-  // src/album-art.ts
+  // src/lib/health/album-art.ts
   var latest2 = null;
   var trackId = null;
   var busy = false;
@@ -21160,7 +21160,7 @@
     };
   }
 
-  // src/components/HealthPanel.tsx
+  // src/pages/HealthPanel.tsx
   var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
   var SECTIONS = [
     { key: "missing", label: "health.missing", action: "missing" },
@@ -21346,7 +21346,7 @@
     ] });
   }
 
-  // src/components/HealthListChrome.tsx
+  // src/pages/HealthListChrome.tsx
   var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
   function HealthListChrome() {
     const health = useHealth();
@@ -21374,7 +21374,7 @@
     ] });
   }
 
-  // src/health.ts
+  // src/lib/health/health.ts
   var latest3 = null;
   var status = "";
   var busy2 = false;
@@ -21482,10 +21482,10 @@
     emitHealth();
   }
 
-  // src/scan.ts
+  // src/lib/health/scan.ts
   var import_react11 = __toESM(require_react(), 1);
 
-  // src/components/ScanPanel.tsx
+  // src/pages/ScanPanel.tsx
   var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
   var LIST_CAP2 = 100;
   var PROBLEM_ORDER = [
@@ -21605,7 +21605,7 @@
     ] });
   }
 
-  // src/scan.ts
+  // src/lib/health/scan.ts
   var latest4 = null;
   var status2 = "";
   var busy3 = false;
@@ -21707,10 +21707,10 @@
     emitHealth();
   }
 
-  // src/tags.ts
+  // src/lib/health/tags.ts
   var import_react12 = __toESM(require_react(), 1);
 
-  // src/tags-view.ts
+  // src/lib/health/tags-view.ts
   function tagsSummary(field2, values, groups) {
     if (field2 === "titles") return titlesSummary(groups);
     if (groups === 0) {
@@ -21795,7 +21795,7 @@
     });
   }
 
-  // src/components/TagsPanel.tsx
+  // src/pages/TagsPanel.tsx
   var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
   var LIST_CAP3 = 100;
   var TITLE_KEY = "clean";
@@ -22026,7 +22026,7 @@
     ] });
   }
 
-  // src/tags.ts
+  // src/lib/health/tags.ts
   var TITLE_KEY2 = "clean";
   var MAPPING_KEY2 = "saved";
   var latest5 = null;
@@ -22307,7 +22307,7 @@
     return value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
   }
 
-  // src/context/SettingsContext.tsx
+  // src/containers/SettingsContext.tsx
   var import_react13 = __toESM(require_react(), 1);
   var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1);
   var SettingsContext = (0, import_react13.createContext)(null);
@@ -22325,7 +22325,7 @@
     return value;
   }
 
-  // src/context/SnapshotsContext.tsx
+  // src/containers/SnapshotsContext.tsx
   var import_react14 = __toESM(require_react(), 1);
   var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
   var SnapshotsContext = (0, import_react14.createContext)(null);
@@ -22343,7 +22343,7 @@
     return value;
   }
 
-  // src/context/TrackListContext.tsx
+  // src/containers/TrackListContext.tsx
   var import_react15 = __toESM(require_react(), 1);
   var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
   var TrackListContext = (0, import_react15.createContext)(null);
@@ -22361,10 +22361,10 @@
     return value;
   }
 
-  // src/context/WizardContext.tsx
+  // src/containers/WizardContext.tsx
   var import_react16 = __toESM(require_react(), 1);
 
-  // src/wizard.ts
+  // src/lib/wizard/wizard.ts
   function createWizard(input) {
     return {
       step: "welcome",
@@ -22382,7 +22382,7 @@
     };
   }
 
-  // src/context/WizardContext.tsx
+  // src/containers/WizardContext.tsx
   var import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1);
   function noop2() {
   }
@@ -22426,7 +22426,7 @@
     return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(WizardContext, { value, children });
   }
 
-  // src/cue-view.ts
+  // src/lib/ui/cue-view.ts
   var CUE_SLOT_COUNT = 8;
   function cueSlotVar(index) {
     return `var(--cue-slot-${index + 1})`;
@@ -22518,13 +22518,13 @@
     return `${start}\0${color}\0${name}`;
   }
 
-  // src/player.ts
+  // src/lib/player/player.ts
   var import_react20 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
   var import_react17 = __toESM(require_react(), 1);
 
-  // src/player-strings.ts
+  // src/lib/player/player-strings.ts
   var playerStrings = {
     get region() {
       return t("player.region");
@@ -22780,7 +22780,7 @@
     ] });
   }
 
-  // src/waveform-view.ts
+  // src/lib/player/waveform-view.ts
   var import_react19 = __toESM(require_react(), 1);
 
   // src/components/WaveformPanel.tsx
@@ -22932,7 +22932,7 @@
     ] });
   }
 
-  // src/waveform-view.ts
+  // src/lib/player/waveform-view.ts
   var emptyMarkers = () => ({ cues: [], loops: [], beatgrid: [] });
   var idleClock = {
     seek() {
@@ -23454,7 +23454,7 @@
     return { width, height, dpr };
   }
 
-  // src/player.ts
+  // src/lib/player/player.ts
   var SEEK_STEP_SECONDS = 5;
   var SEEK_STEP_LARGE_SECONDS = 30;
   var listeners6 = /* @__PURE__ */ new Set();
@@ -23801,7 +23801,7 @@
     return Boolean(rows2[index + delta]);
   }
 
-  // src/portable.ts
+  // src/lib/gig/portable.ts
   var FINDING_CAP = 100;
   var KIND_KEY = {
     off_drive: "portable.kindOffDrive",
@@ -24128,13 +24128,13 @@
     return body;
   }
 
-  // src/restore.ts
+  // src/lib/snapshots/restore.ts
   var import_react22 = __toESM(require_react(), 1);
 
-  // src/components/RestoreDialog.tsx
+  // src/pages/RestoreDialog.tsx
   var import_react21 = __toESM(require_react(), 1);
 
-  // src/restore-view.ts
+  // src/lib/snapshots/restore-view.ts
   var OPERATION_ACTIONS = {
     crate_create: "operations.action.crateCreate",
     crate_rename: "operations.action.crateRename",
@@ -24234,7 +24234,7 @@
     return { title: title2, detail: "" };
   }
 
-  // src/components/RestoreDialog.tsx
+  // src/pages/RestoreDialog.tsx
   var import_jsx_runtime21 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef6(spec2) {
     return (element) => {
@@ -24358,7 +24358,7 @@
     ] });
   }
 
-  // src/components/SnapshotsPanel.tsx
+  // src/pages/SnapshotsPanel.tsx
   var import_jsx_runtime22 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef7(spec2) {
     return (element) => {
@@ -24543,7 +24543,7 @@
     ] });
   }
 
-  // src/restore.ts
+  // src/lib/snapshots/restore.ts
   var reloadLibrary = async () => {
   };
   function bindLibraryReload(reload) {
@@ -24765,10 +24765,10 @@
     }
   }
 
-  // src/settings.ts
+  // src/lib/ui/settings.ts
   var import_react24 = __toESM(require_react(), 1);
 
-  // src/virtual-scroll.ts
+  // src/lib/ui/virtual-scroll.ts
   var import_react23 = __toESM(require_react(), 1);
 
   // src/components/TrackRow.tsx
@@ -24865,7 +24865,7 @@
     )) });
   }
 
-  // src/track-list-store.ts
+  // src/lib/ui/track-list-store.ts
   var listeners8 = /* @__PURE__ */ new Set();
   var detail = { kind: "none" };
   var actions2 = {
@@ -24937,7 +24937,7 @@
     };
   }
 
-  // src/virtual-scroll.ts
+  // src/lib/ui/virtual-scroll.ts
   var spacer = document.createElement("div");
   var rows = document.createElement("div");
   spacer.className = "spacer";
@@ -25046,7 +25046,7 @@
     wireListKeys(el("list-b"));
   }
 
-  // src/quick-open.ts
+  // src/lib/ui/quick-open.ts
   var QUICK_OPEN_MS = 200;
   var LIMIT = 8;
   var returnFocus = null;
@@ -25285,7 +25285,7 @@
     if (chosen && typeof chosen.scrollIntoView === "function") chosen.scrollIntoView({ block: "nearest" });
   }
 
-  // src/shortcuts.ts
+  // src/lib/ui/shortcuts.ts
   var SEEK_SECONDS = 5;
   var SHORTCUT_DEFS = [
     {
@@ -25797,7 +25797,7 @@
     if (node && node.isConnected) node.focus();
   }
 
-  // src/components/SettingsPanel.tsx
+  // src/pages/SettingsPanel.tsx
   var import_jsx_runtime25 = __toESM(require_jsx_runtime(), 1);
   var COLORWAY_KEY = {
     "serato-like": "settings.colorway.seratoLike",
@@ -26049,7 +26049,7 @@
     ] });
   }
 
-  // src/settings.ts
+  // src/lib/ui/settings.ts
   var COLORWAYS = ["serato-like", "dark-club", "light", "classic"];
   var LEGACY_COLORWAYS = {
     motown: "classic",
@@ -26705,7 +26705,7 @@
     return root;
   }
 
-  // src/gig-view.ts
+  // src/lib/gig/gig-view.ts
   var GIG_STEP_COUNT = 5;
   var GIG_STEPS = [
     { title: "gig.drives", action: "gig.drivesAction", empty: "gig.drivesEmpty" },
@@ -26739,7 +26739,7 @@
     return payload.scope?.crate_name || t("gig.wholeSpace");
   }
 
-  // src/components/GigReport.tsx
+  // src/pages/GigReport.tsx
   var import_jsx_runtime28 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef9(spec2) {
     return (element) => {
@@ -26836,7 +26836,7 @@
     ] });
   }
 
-  // src/gig.ts
+  // src/lib/gig/gig.ts
   var listeners10 = /* @__PURE__ */ new Set();
   var stepIndex = 0;
   var latest7 = null;
@@ -26951,7 +26951,7 @@
     emit4();
   }
 
-  // src/history-stats-view.ts
+  // src/lib/history/history-stats-view.ts
   var IDLE_DAYS_DEFAULT = 365;
   var IDLE_DAYS_MAX = 3650;
   var DAY = 86400;
@@ -26998,7 +26998,7 @@
     return query ? `/api/history-stats.csv?${query}` : "/api/history-stats.csv";
   }
 
-  // src/history-stats.ts
+  // src/lib/history/history-stats.ts
   var LIST_CAP4 = 100;
   var latest8 = null;
   var crateBusy = false;
@@ -27281,7 +27281,7 @@
     return line;
   }
 
-  // src/bitrate.ts
+  // src/lib/health/bitrate.ts
   var LIST_CAP5 = 100;
   var REASON_ORDER = ["upsampled", "lossy_source"];
   var REASON_KEYS2 = {
@@ -27541,10 +27541,10 @@
     return row;
   }
 
-  // src/files-mount.tsx
+  // src/lib/files/files-mount.tsx
   var import_react29 = __toESM(require_react(), 1);
 
-  // src/components/FilesDialog.tsx
+  // src/pages/FilesDialog.tsx
   var import_react27 = __toESM(require_react(), 1);
   var import_jsx_runtime29 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef10(spec2) {
@@ -27657,7 +27657,7 @@
     ] });
   }
 
-  // src/components/FilesPanel.tsx
+  // src/pages/FilesPanel.tsx
   var import_react28 = __toESM(require_react(), 1);
   var import_react_dom5 = __toESM(require_react_dom(), 1);
   var import_jsx_runtime30 = __toESM(require_jsx_runtime(), 1);
@@ -28090,7 +28090,7 @@
     ] });
   }
 
-  // src/files-mount.tsx
+  // src/lib/files/files-mount.tsx
   var panelRoot4 = null;
   var dialogRoot = null;
   var portableRoot = null;
@@ -28123,7 +28123,7 @@
   bindFilesMount(mountFilesIslands);
   bindPortableMount(mountFilesIslands);
 
-  // src/beatgrid-view.ts
+  // src/lib/ui/beatgrid-view.ts
   var GRID_WARNING_KEYS = {
     beatgrid_too_short: "markers.gridTooShort",
     beatgrid_version: "markers.gridVersion",
@@ -28151,7 +28151,7 @@
     return `${number.toFixed(3)}s`;
   }
 
-  // src/folder-sync-view.ts
+  // src/lib/crates/folder-sync-view.ts
   function syncFolderSyncButton() {
     const id = state.activeCrate;
     const crate = typeof id === "number" ? state.crates.find((row) => row.id === id) : void 0;
@@ -28189,10 +28189,10 @@
     return (Number(reply.added) || 0) + (Number(reply.removed) || 0) + (Number(reply.created) || 0) > 0;
   }
 
-  // src/views.ts
+  // src/lib/ui/views.ts
   var import_react32 = __toESM(require_react(), 1);
 
-  // src/components/CrateActions.tsx
+  // src/pages/CrateActions.tsx
   var import_jsx_runtime32 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef12(spec2) {
     return (element) => {
@@ -28297,7 +28297,7 @@
     ] });
   }
 
-  // src/components/CrateBrowserActions.tsx
+  // src/pages/CrateBrowserActions.tsx
   var import_jsx_runtime33 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef13(spec2) {
     return (element) => {
@@ -28345,7 +28345,7 @@
     ] });
   }
 
-  // src/components/CrateTree.tsx
+  // src/pages/CrateTree.tsx
   var import_jsx_runtime34 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef14(spec2) {
     return (element) => {
@@ -28438,7 +28438,7 @@
     )) });
   }
 
-  // src/components/HistoryDetail.tsx
+  // src/pages/HistoryDetail.tsx
   var import_jsx_runtime35 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef15(spec2) {
     return (element) => {
@@ -28481,7 +28481,7 @@
     ] });
   }
 
-  // src/components/HistorySessions.tsx
+  // src/pages/HistorySessions.tsx
   var import_jsx_runtime36 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef16(spec2) {
     return (element) => {
@@ -29293,7 +29293,7 @@
     return /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(TrackBody, { track: detail2.track });
   }
 
-  // src/nav.ts
+  // src/lib/ui/nav.ts
   var NAV_GROUPS = [
     { id: "library", labelKey: "view.group.library", modes: ["crates", "history", "stats"] },
     { id: "files", labelKey: "view.files", modes: ["files"] },
@@ -29342,7 +29342,7 @@
     }
   }
 
-  // src/sheet-chrome.ts
+  // src/lib/ui/sheet-chrome.ts
   var VIEW_LABEL_KEYS = {
     crates: "view.crates",
     history: "view.history",
@@ -29399,7 +29399,7 @@
     if (clear instanceof HTMLButtonElement) clear.hidden = opts.activeCrate === "all";
   }
 
-  // src/views.ts
+  // src/lib/ui/views.ts
   var detailRoot = null;
   var detailPlayRoot = null;
   var crateListRoot = null;
@@ -30513,7 +30513,7 @@
   bridge.renderShell = renderShell;
   bridge.setNotice = setNotice;
 
-  // src/layout.ts
+  // src/lib/ui/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;
   var DETAIL_MIN_WIDTH = 300;
   var SAVE_DELAY_MS = 400;
@@ -30547,7 +30547,7 @@
     splitter.set(typeof width === "number" ? width : null);
   }
 
-  // src/dialogs.ts
+  // src/lib/ui/dialogs.ts
   var rekordboxXml = "";
   var mergePreview = null;
   var mergeToken = 0;
@@ -31546,7 +31546,7 @@
     }
   });
 
-  // src/help.ts
+  // src/lib/ui/help.ts
   var kind = "bug";
   function wireHelp() {
     el("open-help").addEventListener("click", () => {
@@ -31695,7 +31695,7 @@
     }
   }
 
-  // src/update.ts
+  // src/lib/ui/update.ts
   var UPDATE_CHOICE_EVENT = "serato-update-choice";
   var latest10 = null;
   var dismissed = false;
@@ -31835,7 +31835,7 @@
     }
   }
 
-  // src/version.ts
+  // src/lib/ui/version.ts
   var copyText2 = "";
   var painted;
   function versionLabel(info) {
@@ -31930,7 +31930,7 @@
     });
   }
 
-  // src/locale-wiring.ts
+  // src/lib/ui/locale-wiring.ts
   function repaintAll() {
     applyStatic(document);
     repaintViews();
@@ -31960,7 +31960,7 @@
     stop = onLocaleChange(repaintAll);
   }
 
-  // src/folder-sync.ts
+  // src/lib/crates/folder-sync.ts
   var PREVIEW_DELAY_MS = 250;
   var previewTimer = 0;
   var previewToken = 0;
@@ -32061,7 +32061,7 @@
     }
   });
 
-  // src/presets.ts
+  // src/lib/crates/presets.ts
   var PREVIEW_DELAY_MS2 = 250;
   var previewTimer2 = 0;
   var previewToken2 = 0;
@@ -32203,7 +32203,7 @@
     }
   });
 
-  // src/desktop-actions.ts
+  // src/lib/ui/desktop-actions.ts
   var CLICKS = {
     "new-crate": "crate-new",
     "rename-crate": "crate-rename",
@@ -32300,7 +32300,7 @@
     host.seratoDesktop = { run: runDesktopAction };
   }
 
-  // src/dual-crate.ts
+  // src/lib/crates/dual-crate.ts
   var saving = false;
   function toggleSplit() {
     state.splitCrates = !state.splitCrates;

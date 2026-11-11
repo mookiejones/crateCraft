@@ -167,12 +167,12 @@ class LanguageSettingTests(unittest.TestCase):
         self.assertEqual(app_config.set_wizard_complete(False).language, "es")
 
     def test_languages_match_the_page(self) -> None:
-        """app_config, src/i18n.ts, the locale files, and the picker agree.
+        """app_config, src/lib/i18n.ts, the locale files, and the picker agree.
 
         Returns:
             None.
         """
-        source = (ROOT / "src" / "i18n.ts").read_text(encoding="utf-8")
+        source = (ROOT / "src" / "lib" / "i18n.ts").read_text(encoding="utf-8")
         match = re.search(r"export const LANGUAGES = \[([^\]]*)\] as const;", source)
         assert match is not None
         page = tuple(re.findall(r'"([a-z]{2})"', match.group(1)))

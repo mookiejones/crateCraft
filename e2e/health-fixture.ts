@@ -6,11 +6,11 @@
 
 import { createElement } from "react";
 import { createRoot } from "react-dom/client";
-import type { LibraryHealthReport } from "../src/api-types";
-import { HealthProvider, type HealthContextValue } from "../src/context/HealthContext";
-import { HealthPanel } from "../src/components/HealthPanel";
-import { setLocale } from "../src/i18n";
-import { applyStaticTooltips, installTooltips } from "../src/tooltip";
+import type { LibraryHealthReport } from "../src/lib/api-types";
+import { HealthProvider, type HealthContextValue } from "../src/containers/HealthContext";
+import { HealthPanel } from "../src/pages/HealthPanel";
+import { setLocale } from "../src/lib/i18n";
+import { applyStaticTooltips, installTooltips } from "../src/lib/ui/tooltip";
 
 const report: LibraryHealthReport = {
   space: "Serato Library",

@@ -56,7 +56,7 @@ SETTINGS_KEYS = (
     "icon_follows_theme",
 )
 # Page languages a person can pick in Settings. None follows the OS.
-# Keep in sync with LANGUAGES in src/i18n.ts.
+# Keep in sync with LANGUAGES in src/lib/i18n.ts.
 LANGUAGES = ("en", "es")
 LAYOUT_FIELDS = ("track_list_width",)
 # The page clamps the track list to the sheet it sits in. These bounds only

@@ -21,8 +21,8 @@
   --missing: var(--color-danger);
   --rule: var(--color-border);
   --row: 36px; /* must match ROW in app.js */
-  --file-row: 44px; /* must match FILE_ROW in src/state.ts */
-  --file-root-row: 64px; /* must match ROOT_ROW in src/state.ts */
+  --file-row: 44px; /* must match FILE_ROW in src/lib/state.ts */
+  --file-root-row: 64px; /* must match ROOT_ROW in src/lib/state.ts */
   --font: var(--font-family);
   --display: "Fraunces", "Iowan Old Style", Palatino, serif;
 }

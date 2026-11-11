@@ -16,32 +16,32 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
-import { failureOf } from "../api";
-import { CrateProvider as CrateContextProvider } from "../context/CrateContext";
+import { failureOf } from "../lib/api";
+import { CrateProvider as CrateContextProvider } from "../containers/CrateContext";
 import {
   FilesProvider as FilesContextProvider,
   type FilesContextValue,
-} from "../context/FilesContext";
+} from "../containers/FilesContext";
 import {
   GigStateProvider,
   type GigContextValue,
-} from "../context/GigContext";
+} from "../containers/GigContext";
 import {
   HealthProvider as HealthContextProvider,
   type HealthContextValue,
-} from "../context/HealthContext";
+} from "../containers/HealthContext";
 import {
   HistoryProvider as HistoryContextProvider,
   historyActions,
   subscribeHistory,
   type HistoryContextValue,
-} from "../context/HistoryContext";
+} from "../containers/HistoryContext";
 import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
-} from "../context/PlayerContext";
-import { WaveformProvider } from "../context/WaveformContext";
-import { readCrateValue, subscribeCrates } from "../crate-store";
+} from "../containers/PlayerContext";
+import { WaveformProvider } from "../containers/WaveformContext";
+import { readCrateValue, subscribeCrates } from "../lib/crates/crate-store";
 import {
   browserRows,
   cancelFilesPick,
@@ -71,19 +71,19 @@ import {
   subscribeFiles,
   toggleFile,
   toggleFilesElsewhere,
-} from "../files";
+} from "../lib/files/files";
 import {
   backGigStep,
   exitGigCheck,
   getGigSnapshot,
   nextGigStep,
   subscribeGig,
-} from "../gig";
-import { getDriftSnapshot, subscribeDrift } from "../drift";
-import { subscribeHealth } from "../health-events";
-import { getHealthListSnapshot } from "../health-list";
-import { getHealthSnapshot, loadHealth, navigateHealth } from "../health";
-import { expandScan, getScanSnapshot, loadScan } from "../scan";
+} from "../lib/gig/gig";
+import { getDriftSnapshot, subscribeDrift } from "../lib/gig/drift";
+import { subscribeHealth } from "../lib/health/health-events";
+import { getHealthListSnapshot } from "../lib/health/health-list";
+import { getHealthSnapshot, loadHealth, navigateHealth } from "../lib/health/health";
+import { expandScan, getScanSnapshot, loadScan } from "../lib/health/scan";
 import {
   applyGroup,
   applyMappings,
@@ -93,24 +93,24 @@ import {
   previewGroup,
   selectSpelling,
   setTagsField,
-} from "../tags";
-import { LOCALE_EVENT, onLocaleChange } from "../i18n";
+} from "../lib/health/tags";
+import { LOCALE_EVENT, onLocaleChange } from "../lib/i18n";
 import {
   SettingsProvider as SettingsContextProvider,
   type SettingsContextValue,
-} from "../context/SettingsContext";
+} from "../containers/SettingsContext";
 import {
   SnapshotsProvider as SnapshotsContextProvider,
   type SnapshotsContextValue,
-} from "../context/SnapshotsContext";
+} from "../containers/SnapshotsContext";
 import {
   TrackListProvider as TrackListContextProvider,
   type TrackListContextValue,
-} from "../context/TrackListContext";
+} from "../containers/TrackListContext";
 import {
   idleWizardValue,
   WizardProvider as WizardContextProvider,
-} from "../context/WizardContext";
+} from "../containers/WizardContext";
 import {
   SEEK_STEP_LARGE_SECONDS,
   SEEK_STEP_SECONDS,
@@ -131,8 +131,8 @@ import {
   setVolume,
   subscribe,
   togglePlayPause,
-} from "../player";
-import { portableSnapshot } from "../portable";
+} from "../lib/player/player";
+import { portableSnapshot } from "../lib/gig/portable";
 import {
   backupDriveCrates,
   closePlan,
@@ -145,7 +145,7 @@ import {
   setSnapshotDialogStatus,
   subscribe as subscribeSnapshots,
   takeSnapshot,
-} from "../restore";
+} from "../lib/snapshots/restore";
 import {
   closeSettings,
   copyLogs,
@@ -160,13 +160,13 @@ import {
   saveUpdateEnabled,
   saveUpdatePrereleases,
   subscribeSettings,
-} from "../settings";
-import { state } from "../state";
+} from "../lib/ui/settings";
+import { state } from "../lib/state";
 import {
   getTrackListActions,
   readTrackList,
   subscribeTrackList,
-} from "../track-list-store";
+} from "../lib/ui/track-list-store";
 
 function readPlayerValue(): PlayerContextValue {
   return {

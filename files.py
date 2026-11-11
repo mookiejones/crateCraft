@@ -271,7 +271,7 @@ def _fuzzy_score(needle: str, haystack: str) -> int | None:
     """Score one word as a subsequence of a name.
 
     Consecutive letters, a whole word, and a prefix score higher. The
-    same rules are in ``src/fuzzy.ts``.
+    same rules are in ``src/lib/fuzzy.ts``.
 
     Args:
         needle: One word. An empty word does not match.
