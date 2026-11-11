@@ -4,7 +4,9 @@
  * Both outputs are IIFEs so index.html can keep plain script tags. The
  * sourcemap sits beside each bundle. process.env.NODE_ENV is production
  * so React ships its production runtime (the development build paints
- * hex colors and names innerHTML). --check builds in memory with
+ * hex colors and names innerHTML). minifySyntax drops the dead
+ * ``throw new Error("^_^")`` branch React DevTools uses as a DCE
+ * probe. --check builds in memory with
  * write:false and exits non-zero when a committed bundle or map differs.
  * It does not write static/. esbuild is pinned in package.json so the
  * bytes stay the same on Ubuntu and Windows.
@@ -46,6 +48,7 @@ function buildOne(bundle, write) {
     charset: "utf8",
     jsx: "automatic",
     define: { "process.env.NODE_ENV": '"production"' },
+    minifySyntax: true,
     logLevel: "warning",
     write,
   });
