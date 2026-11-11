@@ -5,7 +5,7 @@
  * The library is not opened.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "../lib/api-types";
 import {
   SEEK_STEP_LARGE_SECONDS,
@@ -32,7 +32,7 @@ import { playerStrings } from "../lib/player/player-strings";
 import { registerPlayerControls, wireShortcuts } from "../lib/ui/shortcuts";
 import { state } from "../lib/state";
 import { installPage } from "./test-page";
-import { mountTrackList, paintRows, wireVirtualScroll } from "../lib/ui/virtual-scroll";
+import { mountTrackList, paintRows, unmountTrackList, wireVirtualScroll } from "../lib/ui/virtual-scroll";
 
 class FakeAudio extends EventTarget implements PlayableMedia {
   src = "";
@@ -71,6 +71,10 @@ beforeEach(() => {
   state.splitCrates = false;
   state.focusedPane = "a";
   state.tracks = [];
+});
+
+afterEach(() => {
+  unmountTrackList();
 });
 
 describe("formatPlayerTime", () => {

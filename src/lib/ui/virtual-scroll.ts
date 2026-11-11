@@ -189,3 +189,26 @@ export function wireVirtualScroll(): void {
   wireListKeys(el("list"));
   wireListKeys(el("list-b"));
 }
+
+/**
+ * Unmount both track-list Data Grid islands.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * Data Grid scheduler does not run after jsdom tears the window down.
+ *
+ * @returns {void}
+ */
+export function unmountTrackList(): void {
+  for (const id of ["list", "list-b"] as const) {
+    const host = document.getElementById(id);
+    if (!(host instanceof HTMLElement)) continue;
+    const root = paneRoots.get(host);
+    if (!root) continue;
+    try {
+      root.unmount();
+    } catch {
+      // installPage already dropped the host.
+    }
+    paneRoots.delete(host);
+  }
+}
