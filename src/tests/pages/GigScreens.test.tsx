@@ -4,14 +4,14 @@
 
 import { createElement } from "react";
 import { flushSync } from "react-dom";
-import { createRoot } from "react-dom/client";
+import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { GigReport as GigPayload, TempoDriftReport } from "../../lib/api-types";
 import { AppProviders } from "../../app/providers";
 import { loadDrift, wireDrift } from "../../lib/gig/drift";
 import { loadGigCheck, wireGigCheck } from "../../lib/gig/gig";
 import { state } from "../../lib/state";
-import { installPage } from "../test-page";
+import { drainReactScheduler, installPage } from "../test-page";
 import { DriftReport } from "../../pages/DriftReport";
 import { GigReport } from "../../pages/GigReport";
 
@@ -64,6 +64,8 @@ function reply(body: unknown): Response {
 }
 
 describe("Before a gig context", () => {
+  let panelRoot: Root | null = null;
+
   beforeEach(() => {
     installPage();
     state.space = "Serato Library";
@@ -75,8 +77,15 @@ describe("Before a gig context", () => {
     wireDrift();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    try {
+      panelRoot?.unmount();
+    } catch {
+      // installPage already dropped the host.
+    }
+    panelRoot = null;
     vi.unstubAllGlobals();
+    await drainReactScheduler();
   });
 
   it("renders gig check and Tempo drift from one context", async () => {
@@ -90,9 +99,9 @@ describe("Before a gig context", () => {
 
     const host = document.createElement("div");
     document.body.append(host);
-    const root = createRoot(host);
+    panelRoot = createRoot(host);
     flushSync(() => {
-      root.render(
+      panelRoot!.render(
         createElement(AppProviders, {
           children: [
             createElement(GigReport, { key: "gig" }),
@@ -104,7 +113,9 @@ describe("Before a gig context", () => {
     expect(host.querySelector(".gig-score")?.textContent).toContain("72/100");
     expect(host.querySelector(".gig-score")?.textContent).toContain("✕ Not ready");
     expect(host.textContent).toContain("GIGDRIVE");
-    expect(host.textContent).toContain("A — Old Tape (tape.wav) — Tempo wanders (90–120 BPM)");
-    root.unmount();
+    expect(host.querySelector(".gig-group .MuiAccordionSummary-root")).not.toBeNull();
+    expect(host.textContent).toContain("Old Tape");
+    expect(host.textContent).toContain("Tempo wanders");
+    expect(host.querySelector('[data-field="reason"]')).not.toBeNull();
   });
 });

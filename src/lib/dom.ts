@@ -100,7 +100,7 @@ export interface ElementIds {
   "portable-view-status": HTMLParagraphElement;
   "portable-view-verdict": HTMLParagraphElement;
   "portable-view-summary": HTMLParagraphElement;
-  "portable-view-findings": HTMLUListElement;
+  "portable-view-findings": HTMLDivElement;
   "drift-panel": HTMLElement;
   "drift-scope": HTMLParagraphElement;
   "drift-status": HTMLParagraphElement;

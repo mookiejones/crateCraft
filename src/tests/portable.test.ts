@@ -270,6 +270,13 @@ describe("portable drive view", () => {
     expect(document.querySelector("#portable-view-findings .portable-kind")?.textContent).toBe(
       "Not on this drive",
     );
+    const headers = [...document.querySelectorAll<HTMLElement>("#portable-view-findings .MuiDataGrid-columnHeader")]
+      .map((node) => node.getAttribute("data-field"));
+    expect(headers).toEqual(["problem", "crate", "track", "fix"]);
+    expect(fetchMock.mock.calls.some((call) => {
+      const init = call[1] as RequestInit | undefined;
+      return init?.method && init.method.toUpperCase() !== "GET";
+    })).toBe(false);
     expect((document.querySelector("#portable-dialog") as HTMLDialogElement).open).toBe(false);
     expect(document.querySelector("#portable-hint")?.textContent).toBe(
       "This only reads the drive. Nothing is copied or deleted.",
