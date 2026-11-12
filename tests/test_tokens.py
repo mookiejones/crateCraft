@@ -759,6 +759,7 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 #   .detail border-left, and border-top in the narrow layout
 #   .list .MuiDataGrid-columnHeaders border-bottom
 #   .list .MuiDataGrid-footerContainer border-top
+#   .health-accordion.MuiAccordion-root border
 #   .crate-panes.split #crate-pane-a border-right
 #   .field border-top
 #   .marker and .copy-row border-top
@@ -774,6 +775,7 @@ _DECORATIVE = {
     ".detail",
     ".list .MuiDataGrid-columnHeaders",
     ".list .MuiDataGrid-footerContainer",
+    ".health-accordion.MuiAccordion-root",
     ".crate-panes.split #crate-pane-a",
     ".field",
     ".marker",
