@@ -30,9 +30,9 @@ var SeratoWizard = (() => {
     mod
   )), __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: !0 }), mod);
 
-  // node_modules/react/cjs/react.production.js
+  // ../../node_modules/react/cjs/react.production.js
   var require_react_production = __commonJS({
-    "node_modules/react/cjs/react.production.js"(exports) {
+    "../../node_modules/react/cjs/react.production.js"(exports) {
       "use strict";
       var REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity"), REACT_VIEW_TRANSITION_TYPE = /* @__PURE__ */ Symbol.for("react.view_transition"), MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
       function getIteratorFn(maybeIterable) {
@@ -447,17 +447,17 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/react/index.js
+  // ../../node_modules/react/index.js
   var require_react = __commonJS({
-    "node_modules/react/index.js"(exports, module) {
+    "../../node_modules/react/index.js"(exports, module) {
       "use strict";
       module.exports = require_react_production();
     }
   });
 
-  // node_modules/react-dom/cjs/react-dom.production.js
+  // ../../node_modules/react-dom/cjs/react-dom.production.js
   var require_react_dom_production = __commonJS({
-    "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
+    "../../node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
       var React = require_react();
       function formatProdErrorMessage(code) {
@@ -609,9 +609,9 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/react-dom/index.js
+  // ../../node_modules/react-dom/index.js
   var require_react_dom = __commonJS({
-    "node_modules/react-dom/index.js"(exports, module) {
+    "../../node_modules/react-dom/index.js"(exports, module) {
       "use strict";
       function checkDCE() {
         if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
@@ -625,9 +625,9 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/scheduler/cjs/scheduler.production.js
+  // ../../node_modules/scheduler/cjs/scheduler.production.js
   var require_scheduler_production = __commonJS({
-    "node_modules/scheduler/cjs/scheduler.production.js"(exports) {
+    "../../node_modules/scheduler/cjs/scheduler.production.js"(exports) {
       "use strict";
       function push(heap, node) {
         var index = heap.length;
@@ -851,17 +851,17 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/scheduler/index.js
+  // ../../node_modules/scheduler/index.js
   var require_scheduler = __commonJS({
-    "node_modules/scheduler/index.js"(exports, module) {
+    "../../node_modules/scheduler/index.js"(exports, module) {
       "use strict";
       module.exports = require_scheduler_production();
     }
   });
 
-  // node_modules/react-dom/cjs/react-dom-client.production.js
+  // ../../node_modules/react-dom/cjs/react-dom-client.production.js
   var require_react_dom_client_production = __commonJS({
-    "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
+    "../../node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler(), React = require_react(), ReactDOM = require_react_dom();
       function formatProdErrorMessage(code) {
@@ -12106,9 +12106,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // node_modules/react-dom/client.js
+  // ../../node_modules/react-dom/client.js
   var require_client = __commonJS({
-    "node_modules/react-dom/client.js"(exports, module) {
+    "../../node_modules/react-dom/client.js"(exports, module) {
       "use strict";
       function checkDCE() {
         if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
@@ -12122,9 +12122,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // node_modules/react/cjs/react-jsx-runtime.production.js
+  // ../../node_modules/react/cjs/react-jsx-runtime.production.js
   var require_react_jsx_runtime_production = __commonJS({
-    "node_modules/react/cjs/react-jsx-runtime.production.js"(exports) {
+    "../../node_modules/react/cjs/react-jsx-runtime.production.js"(exports) {
       "use strict";
       var REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment");
       function jsxProd(type, config, maybeKey) {
@@ -12148,9 +12148,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // node_modules/react/jsx-runtime.js
+  // ../../node_modules/react/jsx-runtime.js
   var require_jsx_runtime = __commonJS({
-    "node_modules/react/jsx-runtime.js"(exports, module) {
+    "../../node_modules/react/jsx-runtime.js"(exports, module) {
       "use strict";
       module.exports = require_react_jsx_runtime_production();
     }
@@ -12173,6 +12173,10 @@ Error generating stack: ` + x.message + `
   // locales/en.json
   var en_default = {
     "bitrate.checking": "Checking bitrate…",
+    "bitrate.column.detail": "{stated} kbps on the file, about {estimated} kbps from the spectrum",
+    "bitrate.column.detailEstimate": "about {estimated} kbps from the spectrum",
+    "bitrate.column.kbps": "kbps",
+    "bitrate.column.reason": "Reason",
     "bitrate.confirmCrate": "Confirm crate",
     "bitrate.detail": " · {stated} kbps on the file, about {estimated} kbps from the spectrum",
     "bitrate.detailEstimate": " · about {estimated} kbps from the spectrum",
@@ -12662,6 +12666,8 @@ Error generating stack: ` + x.message + `
     "health.artPick": "Cover to embed",
     "health.artTitle": "Find album art",
     "health.clear": "Nothing to fix in this check.",
+    "health.column.file": "File",
+    "health.column.track": "Track",
     "health.duplicateRow": {
       one: "{title} ({count} copy)",
       other: "{title} ({count} copies)"
@@ -13105,6 +13111,7 @@ Error generating stack: ` + x.message + `
     "rules.saved": "Rules saved.",
     "scan.checkFull": "Full decode",
     "scan.checkQuick": "Quick check",
+    "scan.column.problem": "Problem",
     "scan.checking": "Checking files…",
     "scan.decodeErrorDetail": "Decode stopped at {detail}s",
     "scan.empty": "No damaged files in this check.",
@@ -13299,6 +13306,9 @@ Error generating stack: ` + x.message + `
     "tags.artist": "Artist",
     "tags.checking": "Reading tag spellings…",
     "tags.checkingTitles": "Reading titles…",
+    "tags.column.spellings": "Spellings",
+    "tags.column.suggested": "Suggested spelling",
+    "tags.column.tracks": "Tracks",
     "tags.field": "Field",
     "tags.genre": "Genre",
     "tags.introTitles": "Strips track numbers, URLs, and (Original Mix). Moves feat. into remixer when remixer is empty. Title-cases ALL CAPS or all lowercase. Writes the library, not the audio files. Quit Serato first.",
@@ -13450,6 +13460,7 @@ Error generating stack: ` + x.message + `
     "tooltip.healthOpenFiles": "Open the Files view.",
     "tooltip.healthOpenMissing": "Open the Missing files view.",
     "tooltip.healthRefresh": "Run the library health report again. Read-only.",
+    "tooltip.healthSection": "Open or close this section.",
     "tooltip.healthTrack": "Open this track in Crates.",
     "tooltip.help": "Open Help. Report a bug or request a feature on GitHub. The app does not post it.",
     "tooltip.helpBug": "Describe a bug. GitHub opens so you can review it.",
@@ -13747,6 +13758,10 @@ Error generating stack: ` + x.message + `
   // locales/es.json
   var es_default = {
     "bitrate.checking": "Comprobando la tasa de bits…",
+    "bitrate.column.detail": "{stated} kbps en el archivo, unos {estimated} kbps según el espectro",
+    "bitrate.column.detailEstimate": "unos {estimated} kbps según el espectro",
+    "bitrate.column.kbps": "kbps",
+    "bitrate.column.reason": "Motivo",
     "bitrate.confirmCrate": "Confirmar caja",
     "bitrate.detail": " · {stated} kbps en el archivo, unos {estimated} kbps según el espectro",
     "bitrate.detailEstimate": " · unos {estimated} kbps según el espectro",
@@ -14236,6 +14251,8 @@ Error generating stack: ` + x.message + `
     "health.artPick": "Carátula a incrustar",
     "health.artTitle": "Buscar carátula",
     "health.clear": "Nada que corregir en esta comprobación.",
+    "health.column.file": "Archivo",
+    "health.column.track": "Pista",
     "health.duplicateRow": {
       one: "{title} ({count} copia)",
       other: "{title} ({count} copias)"
@@ -14679,6 +14696,7 @@ Error generating stack: ` + x.message + `
     "rules.saved": "Reglas guardadas.",
     "scan.checkFull": "Decodificación completa",
     "scan.checkQuick": "Comprobación rápida",
+    "scan.column.problem": "Problema",
     "scan.checking": "Comprobando archivos…",
     "scan.decodeErrorDetail": "La decodificación se detuvo a los {detail}s",
     "scan.empty": "Ningún archivo dañado en esta comprobación.",
@@ -14873,6 +14891,9 @@ Error generating stack: ` + x.message + `
     "tags.artist": "Artista",
     "tags.checking": "Leyendo grafías de etiquetas…",
     "tags.checkingTitles": "Leyendo títulos…",
+    "tags.column.spellings": "Grafías",
+    "tags.column.suggested": "Grafía sugerida",
+    "tags.column.tracks": "Pistas",
     "tags.field": "Campo",
     "tags.genre": "Género",
     "tags.introTitles": "Quita números de pista, URL y (Original Mix). Pasa feat. a remixer cuando remixer está vacío. Pasa a mayúsculas iniciales los títulos en MAYÚSCULAS o minúsculas. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
@@ -15024,6 +15045,7 @@ Error generating stack: ` + x.message + `
     "tooltip.healthOpenFiles": "Abre la vista Archivos.",
     "tooltip.healthOpenMissing": "Abre la vista Archivos no encontrados.",
     "tooltip.healthRefresh": "Vuelve a generar el informe de salud de la biblioteca. Solo lectura.",
+    "tooltip.healthSection": "Abrir o cerrar esta sección.",
     "tooltip.healthTrack": "Abre esta pista en Cajas.",
     "tooltip.help": "Abre Ayuda. Informa de un error o pide una función en GitHub. La app no lo publica.",
     "tooltip.helpBug": "Describe un error. GitHub se abre para que lo revises.",
@@ -15772,6 +15794,7 @@ Error generating stack: ` + x.message + `
     viewBitrate: spec("tooltip.viewBitrate"),
     viewTags: spec("tooltip.viewTags"),
     healthRefresh: spec("tooltip.healthRefresh"),
+    healthSection: spec("tooltip.healthSection"),
     healthOpenMissing: spec("tooltip.healthOpenMissing"),
     healthOpenDuplicates: spec("tooltip.healthOpenDuplicates"),
     healthOpenFiles: spec("tooltip.healthOpenFiles"),

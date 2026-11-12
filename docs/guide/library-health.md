@@ -38,6 +38,6 @@ python3 library_health.py
 | **Duplicate groups** | Same title, artist, and length in whole seconds. A crate that holds one copy still lists the group. | [Duplicates](duplicates.md) |
 | **Suspect quality** | Fake 320s and lossless files that look lossy-sourced. The count lives on that view because it decodes audio. | [Suspect quality](bitrate-check.md) |
 
-Each section shows a sample of up to 100 rows. The count is the full number.
+Each section is an accordion. Open it to see a sample of up to 100 rows. The count is the full number. This page is a report, not a track list.
 
 Damaged audio files stay on [Damaged files](file-scan.md). Fake 320s stay on [Suspect quality](bitrate-check.md). The report always includes **Open Suspect quality**.
