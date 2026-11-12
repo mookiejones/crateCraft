@@ -4,6 +4,8 @@
 
 The report is **Health** in the drawer, then **Overview**. It is not the same as [Ready](gig-check.md), which scores drives, streaming tracks, empty crates, and snapshots.
 
+![The Overview report. Accordion sections list counts and sample tracks. Check again is above the sections.](../media/health-overview.png)
+
 ## Run the report
 
 1. Open crateCraft.
