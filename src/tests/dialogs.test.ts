@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadPrivacy, rankReplaceCandidates, rekordboxExportUrl, renderCratesReplacePreview, renderMergePreview, saveRekordboxExport, wireDialogs } from "../lib/ui/dialogs";
 import { el } from "../lib/dom";
 import { state } from "../lib/state";
+import { mountSharedDialogs } from "../lib/ui/shared-dialog-mount";
 import { installPage } from "./test-page";
 import { playlistCrate, renderShell } from "../lib/ui/views";
 
@@ -49,6 +50,32 @@ describe("playlist export chrome", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it("paints Rekordbox, merge, relink, sharing, Find art, preset, and folder-sync as labelled MUI dialogs", () => {
+    mountSharedDialogs();
+    const labelled = [
+      ["rekordbox-dialog", "rekordbox-title"],
+      ["merge-dialog", "merge-title"],
+      ["relink-dialog", "relink-title"],
+      ["consent-dialog", "consent-title"],
+      ["album-art-dialog", "album-art-title"],
+      ["preset-dialog", "preset-title"],
+      ["folder-sync-dialog", "folder-sync-title"],
+      ["crates-replace-dialog", "crates-replace-title"],
+    ] as const;
+    for (const [id, title] of labelled) {
+      const root = document.getElementById(id);
+      expect(root?.getAttribute("data-shared-dialog")).toBe(id);
+      const dialog = root?.querySelector("[role='dialog']");
+      expect(dialog?.getAttribute("aria-labelledby")).toBe(title);
+      el(id).showModal();
+      expect(el(id).open).toBe(true);
+      expect(root?.getAttribute("data-open")).toBe("true");
+      el(id).close();
+      expect(el(id).open).toBe(false);
+    }
+    expect(el("rekordbox-dialog").contains(el("rekordbox-memory"))).toBe(true);
   });
 
   it("keeps Memory cues, Hot loops, and the key in the Rekordbox dialog", () => {

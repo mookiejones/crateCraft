@@ -15,6 +15,7 @@ import { setTooltip } from "./tooltip";
 import { tips } from "./tooltip-strings";
 import { moveTrackList, openTrackList } from "./virtual-scroll";
 import { closeQuickOpen, openQuickOpen, quickOpenIsOpen, wireQuickOpen } from "./quick-open";
+import { isSharedDialogId, setSharedDialogOpen } from "./shared-dialog";
 import { focusCrateItem, moveFileList, openFileList, selectCrate, setMode } from "./views";
 
 /** Seconds the seek keys pass to PlayerControls.seekBy. */
@@ -392,6 +393,8 @@ function skipsListKey(id: string, target: EventTarget | null): boolean {
 }
 
 function topDialog(): HTMLElement | null {
+  const shared = [...document.querySelectorAll<HTMLElement>("[data-shared-dialog][data-open='true']")];
+  if (shared.length) return shared.at(-1) ?? null;
   const open = [...document.querySelectorAll("dialog")].filter(
     (node): node is HTMLDialogElement => node instanceof HTMLDialogElement && node.open,
   );
@@ -559,6 +562,11 @@ function dismiss(event: KeyboardEvent): void {
     if (dialog.id === "settings-dialog" && dialog instanceof HTMLDialogElement) {
       event.preventDefault();
       dialog.close();
+      return;
+    }
+    if (isSharedDialogId(dialog.id)) {
+      event.preventDefault();
+      setSharedDialogOpen(dialog.id, false);
       return;
     }
     return;

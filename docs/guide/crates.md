@@ -63,7 +63,7 @@ Quit Serato first. [Safety and backups](safety.md) explains the status line. The
 1. Select the crate that should hold the new one. Select **All tracks** when you want it at the top level.
 2. Click **New**.
 3. Type a name in **New crate name**.
-4. Confirm the prompt.
+4. Confirm.
 
 The page says **Crate created.** There is no drag and drop. A new crate is created inside the crate you had selected. This app does not move an existing crate to a new parent.
 

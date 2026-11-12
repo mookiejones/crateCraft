@@ -47,8 +47,14 @@ export interface ElementIds {
   "crate-folder-sync": HTMLButtonElement;
   "crate-rename-from-tags": HTMLButtonElement;
   "crate-refresh": HTMLButtonElement;
+  "shared-dialogs": HTMLDivElement;
   "preset-dialog": HTMLDialogElement;
   "folder-sync-dialog": HTMLDialogElement;
+  "crate-prompt-dialog": HTMLDialogElement;
+  "crate-prompt-title": HTMLHeadingElement;
+  "crate-prompt-input": HTMLInputElement;
+  "crate-prompt-cancel": HTMLButtonElement;
+  "crate-prompt-confirm": HTMLButtonElement;
   "folder-sync-path": HTMLInputElement;
   "folder-sync-subcrates": HTMLInputElement;
   "folder-sync-full": HTMLInputElement;

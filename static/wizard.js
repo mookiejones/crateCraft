@@ -22587,7 +22587,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
     "wizard.yes": "Yes, share",
     "files.toolbar": "Folder toolbar",
-    "files.actionsLabel": "File actions"
+    "files.actionsLabel": "File actions",
+    "crates.promptName": "Name",
+    "tooltip.cratePromptCancel": "Close without changing the crate.",
+    "tooltip.cratePromptConfirm": "Save this crate name. Serato DJ Pro must be quit.",
+    "tooltip.cratePromptName": "Type the crate name, or a color name."
   };
 
   // locales/es.json
@@ -24190,7 +24194,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
     "wizard.yes": "Sí, compartir",
     "files.toolbar": "Barra de carpeta",
-    "files.actionsLabel": "Acciones de archivos"
+    "files.actionsLabel": "Acciones de archivos",
+    "crates.promptName": "Nombre",
+    "tooltip.cratePromptCancel": "Cerrar sin cambiar la caja.",
+    "tooltip.cratePromptConfirm": "Guardar este nombre de caja. Hay que salir de Serato DJ Pro.",
+    "tooltip.cratePromptName": "Escribe el nombre de la caja, o un color."
   };
 
   // src/lib/i18n.ts
@@ -24541,6 +24549,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     crateRename: spec("tooltip.crateRename"),
     crateSplit: spec("tooltip.crateSplit"),
     crateSaveView: spec("tooltip.crateSaveView"),
+    cratePromptName: spec("tooltip.cratePromptName"),
+    cratePromptCancel: spec("tooltip.cratePromptCancel"),
+    cratePromptConfirm: spec("tooltip.cratePromptConfirm"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),

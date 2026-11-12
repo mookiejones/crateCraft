@@ -60,14 +60,16 @@ test("every control has a tooltip, and focus shows it", async ({ page }) => {
   await saveShot(page, "tooltip_search");
 
   await page.locator("#rekordbox-dialog").evaluate((node) => {
-    if (node instanceof HTMLDialogElement) node.showModal();
+    const dialog = node as HTMLDialogElement;
+    if (typeof dialog.showModal === "function") dialog.showModal();
   });
   const loops = page.locator("#rekordbox-hot-loops");
   await loops.focus();
   await expect(loops).toHaveAttribute("aria-describedby", /rekordbox-hot-loops-help/);
   await expect(loops).toHaveAttribute("aria-describedby", /app-tooltip/);
   await page.locator("#rekordbox-dialog").evaluate((node) => {
-    if (node instanceof HTMLDialogElement) node.close();
+    const dialog = node as HTMLDialogElement;
+    if (typeof dialog.close === "function") dialog.close();
   });
 
   await page.locator(".player-wave").evaluate((node) => {

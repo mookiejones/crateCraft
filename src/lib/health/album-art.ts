@@ -14,6 +14,7 @@ import { bridge } from "../bridge";
 import { el } from "../dom";
 import { t } from "../i18n";
 import { state } from "../state";
+import { mountSharedDialogs } from "../ui/shared-dialog-mount";
 import { inputEl } from "../ui/tooltip";
 import { tips } from "../ui/tooltip-strings";
 
@@ -30,6 +31,7 @@ let onWrote: (() => void) | null = null;
  */
 export function wireAlbumArt(wrote: () => void): void {
   onWrote = wrote;
+  mountSharedDialogs();
   const dialog = el("album-art-dialog");
   if (dialog.dataset.albumArtWired === "true") return;
   dialog.dataset.albumArtWired = "true";
@@ -48,6 +50,7 @@ export function wireAlbumArt(wrote: () => void): void {
  */
 export async function openAlbumArt(id: number): Promise<void> {
   if (!Number.isInteger(id) || id <= 0) return;
+  mountSharedDialogs();
   if (typeof el("album-art-dialog").showModal !== "function") return;
   trackId = id;
   latest = null;

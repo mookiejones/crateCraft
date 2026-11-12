@@ -2922,14 +2922,14 @@ Error generating stack: ` + x.message + `
         return value;
       }
       var AbortControllerLocal = typeof AbortController < "u" ? AbortController : function() {
-        var listeners12 = [], signal = this.signal = {
+        var listeners13 = [], signal = this.signal = {
           aborted: !1,
           addEventListener: function(type, listener) {
-            listeners12.push(listener);
+            listeners13.push(listener);
           }
         };
         this.abort = function() {
-          signal.aborted = !0, listeners12.forEach(function(listener) {
+          signal.aborted = !0, listeners13.forEach(function(listener) {
             return listener();
           });
         };
@@ -2984,28 +2984,28 @@ Error generating stack: ` + x.message + `
       function pingEngtangledActionScope() {
         if (--currentEntangledPendingCount === 0 && (entangledTransitionTypes = null, currentEntangledListeners !== null)) {
           currentEntangledActionThenable !== null && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners12 = currentEntangledListeners;
+          var listeners13 = currentEntangledListeners;
           currentEntangledListeners = null, currentEntangledLane = 0, currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners12.length; i++) (0, listeners12[i])();
+          for (var i = 0; i < listeners13.length; i++) (0, listeners13[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners12 = [], thenableWithOverride = {
+        var listeners13 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners12.push(resolve);
+            listeners13.push(resolve);
           }
         };
         return thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled", thenableWithOverride.value = result;
-            for (var i = 0; i < listeners12.length; i++) (0, listeners12[i])(result);
+            for (var i = 0; i < listeners13.length; i++) (0, listeners13[i])(result);
           },
           function(error2) {
-            for (thenableWithOverride.status = "rejected", thenableWithOverride.reason = error2, error2 = 0; error2 < listeners12.length; error2++)
-              (0, listeners12[error2])(void 0);
+            for (thenableWithOverride.status = "rejected", thenableWithOverride.reason = error2, error2 = 0; error2 < listeners13.length; error2++)
+              (0, listeners13[error2])(void 0);
           }
         ), thenableWithOverride;
       }
@@ -9400,13 +9400,13 @@ Error generating stack: ` + x.message + `
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners12 = []; targetFiber !== null; ) {
+        for (var captureName = reactName + "Capture", listeners13 = []; targetFiber !== null; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
-          if (_instance2 = _instance2.tag, _instance2 !== 5 && _instance2 !== 26 && _instance2 !== 27 || stateNode === null || (_instance2 = getListener(targetFiber, captureName), _instance2 != null && listeners12.unshift(
+          if (_instance2 = _instance2.tag, _instance2 !== 5 && _instance2 !== 26 && _instance2 !== 27 || stateNode === null || (_instance2 = getListener(targetFiber, captureName), _instance2 != null && listeners13.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), _instance2 != null && listeners12.push(
+          ), _instance2 = getListener(targetFiber, reactName), _instance2 != null && listeners13.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          )), targetFiber.tag === 3) return listeners12;
+          )), targetFiber.tag === 3) return listeners13;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -9419,16 +9419,16 @@ Error generating stack: ` + x.message + `
         return inst || null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common2, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners12 = []; target !== null && target !== common2; ) {
+        for (var registrationName = event._reactName, listeners13 = []; target !== null && target !== common2; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           if (_instance3 = _instance3.tag, alternate !== null && alternate === common2) break;
-          _instance3 !== 5 && _instance3 !== 26 && _instance3 !== 27 || stateNode === null || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), stateNode != null && listeners12.unshift(
+          _instance3 !== 5 && _instance3 !== 26 && _instance3 !== 27 || stateNode === null || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), stateNode != null && listeners13.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), stateNode != null && listeners12.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), stateNode != null && listeners13.push(
             createDispatchListener(target, stateNode, alternate)
           ))), target = target.return;
         }
-        listeners12.length !== 0 && dispatchQueue.push({ event, listeners: listeners12 });
+        listeners13.length !== 0 && dispatchQueue.push({ event, listeners: listeners13 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g, NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
       function normalizeMarkupForTextOrAttribute(markup) {
@@ -10460,8 +10460,8 @@ Error generating stack: ` + x.message + `
         var signal = null, cleanup = null;
         if (!(optionsOrUseCapture != null && typeof optionsOrUseCapture != "boolean" && (signal = optionsOrUseCapture.signal || null, signal !== null && signal.aborted))) {
           this._eventListeners === null && (this._eventListeners = []);
-          var listeners12 = this._eventListeners;
-          if (indexOfEventListener(listeners12, type, listener, optionsOrUseCapture) === -1) {
+          var listeners13 = this._eventListeners;
+          if (indexOfEventListener(listeners13, type, listener, optionsOrUseCapture) === -1) {
             var fragmentInstance = this, attachedListener = listener;
             optionsOrUseCapture != null && typeof optionsOrUseCapture != "boolean" && optionsOrUseCapture.once === !0 && (attachedListener = function(event) {
               fragmentInstance.removeEventListener(
@@ -10474,7 +10474,7 @@ Error generating stack: ` + x.message + `
               type,
               listener,
               optionsOrUseCapture
-            ), signal.addEventListener("abort", cleanup, { once: !0 }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup)), signal = getAttachOptions(optionsOrUseCapture), listeners12.push({
+            ), signal.addEventListener("abort", cleanup, { once: !0 }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup)), signal = getAttachOptions(optionsOrUseCapture), listeners13.push({
               type,
               listener,
               optionsOrUseCapture,
@@ -10489,7 +10489,7 @@ Error generating stack: ` + x.message + `
               signal
             );
           }
-          this._eventListeners = listeners12;
+          this._eventListeners = listeners13;
         }
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
@@ -10500,14 +10500,14 @@ Error generating stack: ` + x.message + `
         ), !1;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners12 = this._eventListeners;
-        if (listeners12 !== null && (listener = indexOfEventListener(
-          listeners12,
+        var listeners13 = this._eventListeners;
+        if (listeners13 !== null && (listener = indexOfEventListener(
+          listeners13,
           type,
           listener,
           optionsOrUseCapture
         ), listener !== -1)) {
-          var _listeners$index = listeners12[listener];
+          var _listeners$index = listeners13[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture), traverseVisibleInstancesAndTextInstances(
@@ -10517,7 +10517,7 @@ Error generating stack: ` + x.message + `
             type,
             optionsOrUseCapture,
             _listeners$index
-          ), listeners12.splice(listener, 1), cleanup !== null && cleanup();
+          ), listeners13.splice(listener, 1), cleanup !== null && cleanup();
         }
       };
       function removeEventListenerFromChild(child, type, listener, optionsOrUseCapture) {
@@ -12435,15 +12435,15 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState68 = React320.useState, useEffect88 = React320.useEffect, useLayoutEffect17 = React320.useLayoutEffect, useDebugValue3 = React320.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState69 = React320.useState, useEffect89 = React320.useEffect, useLayoutEffect19 = React320.useLayoutEffect, useDebugValue3 = React320.useDebugValue;
       function useSyncExternalStore$2(subscribe3, getSnapshot) {
-        var value = getSnapshot(), _useState = useState68({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
-        return useLayoutEffect17(
+        var value = getSnapshot(), _useState = useState69({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
+        return useLayoutEffect19(
           function() {
             inst.value = value, inst.getSnapshot = getSnapshot, checkIfSnapshotChanged(inst) && forceUpdate({ inst });
           },
           [subscribe3, value, getSnapshot]
-        ), useEffect88(
+        ), useEffect89(
           function() {
             return checkIfSnapshotChanged(inst) && forceUpdate({ inst }), subscribe3(function() {
               checkIfSnapshotChanged(inst) && forceUpdate({ inst });
@@ -12486,9 +12486,9 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore3 = shim.useSyncExternalStore, useRef117 = React320.useRef, useEffect88 = React320.useEffect, useMemo67 = React320.useMemo, useDebugValue3 = React320.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore3 = shim.useSyncExternalStore, useRef118 = React320.useRef, useEffect89 = React320.useEffect, useMemo67 = React320.useMemo, useDebugValue3 = React320.useDebugValue;
       exports.useSyncExternalStoreWithSelector = function(subscribe3, getSnapshot, getServerSnapshot, selector, isEqual) {
-        var instRef = useRef117(null);
+        var instRef = useRef118(null);
         if (instRef.current === null) {
           var inst = { hasValue: !1, value: null };
           instRef.current = inst;
@@ -12521,7 +12521,7 @@ Error generating stack: ` + x.message + `
           [getSnapshot, getServerSnapshot, selector, isEqual]
         );
         var value = useSyncExternalStore3(subscribe3, instRef[0], instRef[1]);
-        return useEffect88(
+        return useEffect89(
           function() {
             inst.hasValue = !0, inst.value = value;
           },
@@ -14139,7 +14139,11 @@ Error generating stack: ` + x.message + `
     "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
     "wizard.yes": "Yes, share",
     "files.toolbar": "Folder toolbar",
-    "files.actionsLabel": "File actions"
+    "files.actionsLabel": "File actions",
+    "crates.promptName": "Name",
+    "tooltip.cratePromptCancel": "Close without changing the crate.",
+    "tooltip.cratePromptConfirm": "Save this crate name. Serato DJ Pro must be quit.",
+    "tooltip.cratePromptName": "Type the crate name, or a color name."
   };
 
   // locales/es.json
@@ -15742,7 +15746,11 @@ Error generating stack: ` + x.message + `
     "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
     "wizard.yes": "Sí, compartir",
     "files.toolbar": "Barra de carpeta",
-    "files.actionsLabel": "Acciones de archivos"
+    "files.actionsLabel": "Acciones de archivos",
+    "crates.promptName": "Nombre",
+    "tooltip.cratePromptCancel": "Cerrar sin cambiar la caja.",
+    "tooltip.cratePromptConfirm": "Guardar este nombre de caja. Hay que salir de Serato DJ Pro.",
+    "tooltip.cratePromptName": "Escribe el nombre de la caja, o un color."
   };
 
   // src/lib/i18n.ts
@@ -16650,13 +16658,13 @@ Error generating stack: ` + x.message + `
   }
 
   // src/lib/gig/gig.ts
-  var import_react45 = __toESM(require_react(), 1);
+  var import_react48 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
-  var import_react_dom4 = __toESM(require_react_dom(), 1), import_client = __toESM(require_client(), 1);
+  var import_react_dom5 = __toESM(require_react_dom(), 1), import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react43 = __toESM(require_react(), 1), import_react_dom3 = __toESM(require_react_dom(), 1);
+  var import_react46 = __toESM(require_react(), 1), import_react_dom4 = __toESM(require_react_dom(), 1);
 
   // src/app/mui-theme-root.tsx
   var import_react23 = __toESM(require_react(), 1), import_react_dom2 = __toESM(require_react_dom(), 1);
@@ -30230,6 +30238,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     crateRename: spec("tooltip.crateRename"),
     crateSplit: spec("tooltip.crateSplit"),
     crateSaveView: spec("tooltip.crateSaveView"),
+    cratePromptName: spec("tooltip.cratePromptName"),
+    cratePromptCancel: spec("tooltip.cratePromptCancel"),
+    cratePromptConfirm: spec("tooltip.cratePromptConfirm"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),
@@ -30629,6 +30640,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       "crates-replace-retire": tips.cratesReplaceRetire,
       "crates-replace-cancel": tips.cratesReplaceCancel,
       "crates-replace-confirm": tips.cratesReplaceConfirm,
+      "crate-prompt-input": tips.cratePromptName,
+      "crate-prompt-cancel": tips.cratePromptCancel,
+      "crate-prompt-confirm": tips.cratePromptConfirm,
       "rekordbox-cancel": tips.rekordboxCancel,
       "rekordbox-download": tips.rekordboxDownload,
       "files-name": tips.filesName,
@@ -59823,8 +59837,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       if (!(spacing2 > 0)) continue;
       let first = Math.max(0, Math.ceil((startSeconds - marker.positionSeconds) / spacing2 - 1e-9)), lastExclusive = Math.ceil((endSeconds - marker.positionSeconds) / spacing2 - 1e-9);
       if (lastExclusive <= first) continue;
-      let emit5 = Math.min(lastExclusive, first + MAX_TICKS);
-      pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, emit5, startSeconds, endSeconds, first);
+      let emit6 = Math.min(lastExclusive, first + MAX_TICKS);
+      pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, emit6, startSeconds, endSeconds, first);
     }
     return ticks;
   }
@@ -61168,6 +61182,108 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     chosen && typeof chosen.scrollIntoView == "function" && chosen.scrollIntoView({ block: "nearest" });
   }
 
+  // src/lib/ui/shared-dialog.ts
+  var SHARED_DIALOG_IDS = [
+    "consent-dialog",
+    "merge-dialog",
+    "album-art-dialog",
+    "crates-replace-dialog",
+    "relink-dialog",
+    "preset-dialog",
+    "folder-sync-dialog",
+    "rekordbox-dialog",
+    "crate-prompt-dialog"
+  ], WIDE = {
+    "merge-dialog": "md",
+    "crates-replace-dialog": "md",
+    "rekordbox-dialog": "md",
+    "relink-dialog": "lg"
+  }, openIds = /* @__PURE__ */ new Set(), listeners4 = /* @__PURE__ */ new Set(), cratePrompt = { title: "", value: "", confirmLabel: "" }, cratePromptResolve = null, ensureMount = () => {
+  };
+  function bindSharedDialogMount(fn2) {
+    ensureMount = fn2;
+  }
+  function ensureSharedDialogs() {
+    ensureMount();
+  }
+  function subscribeSharedDialogs(listener) {
+    return listeners4.add(listener), () => {
+      listeners4.delete(listener);
+    };
+  }
+  var escapeBound = !1;
+  function bindEscape() {
+    escapeBound || (escapeBound = !0, document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      let id = [...openIds].at(-1);
+      id && (event.preventDefault(), setSharedDialogOpen(id, !1));
+    }));
+  }
+  function emit2() {
+    bindEscape();
+    for (let listener of listeners4) listener();
+  }
+  function isSharedDialogOpen(id) {
+    return openIds.has(id);
+  }
+  function setSharedDialogOpen(id, open) {
+    let was = openIds.has(id);
+    if (open !== was && (open ? openIds.add(id) : openIds.delete(id), emit2(), !open && (document.getElementById(id)?.dispatchEvent(new Event("close")), id === "crate-prompt-dialog"))) {
+      let resolve = cratePromptResolve;
+      cratePromptResolve = null, resolve?.(null);
+    }
+  }
+  function sharedDialogMaxWidth(id) {
+    return WIDE[id] ?? "sm";
+  }
+  function bindDialogApi(root, id) {
+    Object.defineProperty(root, "open", {
+      configurable: !0,
+      enumerable: !0,
+      get() {
+        return isSharedDialogOpen(id);
+      },
+      set(value) {
+        setSharedDialogOpen(id, !!value);
+      }
+    }), Object.assign(root, {
+      showModal() {
+        ensureSharedDialogs(), setSharedDialogOpen(id, !0);
+      },
+      close() {
+        setSharedDialogOpen(id, !1);
+      }
+    });
+  }
+  function getCratePrompt() {
+    return cratePrompt;
+  }
+  function setCratePromptValue(value) {
+    cratePrompt = { ...cratePrompt, value }, emit2();
+  }
+  function settleCratePrompt(value) {
+    let resolve = cratePromptResolve;
+    cratePromptResolve = null, setSharedDialogOpen("crate-prompt-dialog", !1), resolve?.(value);
+  }
+  function cancelCratePrompt() {
+    settleCratePrompt(null);
+  }
+  function confirmCratePrompt() {
+    settleCratePrompt(cratePrompt.value);
+  }
+  function openCratePrompt(next3) {
+    if (ensureSharedDialogs(), cratePromptResolve) {
+      let previous2 = cratePromptResolve;
+      cratePromptResolve = null, previous2(null);
+    }
+    return cratePrompt = next3, emit2(), setSharedDialogOpen("crate-prompt-dialog", !0), new Promise((resolve) => {
+      cratePromptResolve = resolve;
+    });
+  }
+  function isSharedDialogId(id) {
+    return SHARED_DIALOG_IDS.includes(id);
+  }
+
   // src/lib/ui/shortcuts.ts
   var SEEK_SECONDS = 5, SHORTCUT_DEFS = [
     {
@@ -61372,6 +61488,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return target instanceof HTMLElement ? !!(id === "play-pause" && target.closest("button, a, summary, input, select, textarea, [role='button']") || id === "list-open" && target.closest("button, a, summary, textarea, select")) : !1;
   }
   function topDialog() {
+    let shared = [...document.querySelectorAll("[data-shared-dialog][data-open='true']")];
+    if (shared.length) return shared.at(-1) ?? null;
     let native = [...document.querySelectorAll("dialog")].filter(
       (node2) => node2 instanceof HTMLDialogElement && node2.open
     ).at(-1);
@@ -61496,6 +61614,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       if (dialog.id === "settings-dialog" && dialog instanceof HTMLDialogElement) {
         event.preventDefault(), dialog.close();
+        return;
+      }
+      if (isSharedDialogId(dialog.id)) {
+        event.preventDefault(), setSharedDialogOpen(dialog.id, !1);
         return;
       }
       return;
@@ -61871,7 +61993,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     updatePrereleasesDisabled: !0,
     updateBusy: !1,
     updateStatus: ""
-  }, snapshot = { ...DEFAULT_SNAPSHOT }, listeners4 = /* @__PURE__ */ new Set(), islandRoot = null, appearanceSync = !1, rerunSetupHandler = null, copyVersionHandler = null, saveUpdateEnabledHandler = null, saveUpdatePrereleasesHandler = null;
+  }, snapshot = { ...DEFAULT_SNAPSHOT }, listeners5 = /* @__PURE__ */ new Set(), islandRoot = null, appearanceSync = !1, rerunSetupHandler = null, copyVersionHandler = null, saveUpdateEnabledHandler = null, saveUpdatePrereleasesHandler = null;
   function isColorway(value) {
     return typeof value == "string" && COLORWAYS.includes(value);
   }
@@ -61887,12 +62009,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return snapshot;
   }
   function subscribeSettings(listener) {
-    return listeners4.add(listener), () => {
-      listeners4.delete(listener);
+    return listeners5.add(listener), () => {
+      listeners5.delete(listener);
     };
   }
   function notifySettings() {
-    for (let listener of listeners4) listener();
+    for (let listener of listeners5) listener();
   }
   function patchSettings(patch) {
     snapshot = { ...snapshot, ...patch }, notifySettings();
@@ -62194,14 +62316,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     },
     openInLibrary: async (_assetId) => {
     }
-  }, listeners5 = /* @__PURE__ */ new Set();
+  }, listeners6 = /* @__PURE__ */ new Set();
   function subscribeHistory(listener) {
-    return listeners5.add(listener), () => {
-      listeners5.delete(listener);
+    return listeners6.add(listener), () => {
+      listeners6.delete(listener);
     };
   }
   function notifyHistory() {
-    for (let listener of listeners5) listener();
+    for (let listener of listeners6) listener();
   }
   var HistoryContext = (0, import_react28.createContext)(null);
   function HistoryProvider({
@@ -62218,14 +62340,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/files/files-store.ts
-  var listeners6 = /* @__PURE__ */ new Set();
+  var listeners7 = /* @__PURE__ */ new Set();
   function subscribeFiles(listener) {
-    return listeners6.add(listener), () => {
-      listeners6.delete(listener);
+    return listeners7.add(listener), () => {
+      listeners7.delete(listener);
     };
   }
   function emitFiles() {
-    for (let listener of listeners6) listener();
+    for (let listener of listeners7) listener();
   }
 
   // src/lib/files/files.ts
@@ -62657,10 +62779,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/drift.ts
-  var listeners7 = /* @__PURE__ */ new Set(), latest = null;
-  function emit2() {
+  var listeners8 = /* @__PURE__ */ new Set(), latest = null;
+  function emit3() {
     let snapshot2 = getDriftSnapshot();
-    for (let listener of listeners7) listener(snapshot2);
+    for (let listener of listeners8) listener(snapshot2);
   }
   function beginBusy() {
     let button = el("drift-refresh");
@@ -62680,8 +62802,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { report: latest, scope: driftScopeLabel() };
   }
   function subscribeDrift(listener) {
-    return listeners7.add(listener), () => {
-      listeners7.delete(listener);
+    return listeners8.add(listener), () => {
+      listeners8.delete(listener);
     };
   }
   function wireDrift() {
@@ -62695,7 +62817,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     beginBusy();
     let settle = "none";
     if (state.activeCrate === "all") {
-      failStatus(t("error.tempo_needs_crate")), endBusy(), updateScope(), emit2(), el("drift-refresh").focus();
+      failStatus(t("error.tempo_needs_crate")), endBusy(), updateScope(), emit3(), el("drift-refresh").focus();
       return;
     }
     let crate = String(state.activeCrate);
@@ -62710,7 +62832,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failStatus(serverMessage(payload, t("drift.unreadable"))), settle = "retry";
         return;
       }
-      latest = payload, el("drift-status").textContent = "", updateScope(), emit2(), settle = "report";
+      latest = payload, el("drift-status").textContent = "", updateScope(), emit3(), settle = "report";
     } catch {
       if (token4 !== state.driftToken) return;
       failStatus(t("drift.unreachable")), settle = "retry";
@@ -62724,7 +62846,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     failStatus(message), endBusy(), el("drift-refresh").focus();
   }
   function repaintDrift() {
-    updateScope(), emit2();
+    updateScope(), emit3();
   }
 
   // src/lib/gig/portable.ts
@@ -62812,15 +62934,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/portable.ts
-  var FINDING_CAP = 100, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners8 = /* @__PURE__ */ new Set();
+  var FINDING_CAP = 100, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners9 = /* @__PURE__ */ new Set();
   function emitPortable() {
     let snapshot2 = portableSnapshot();
-    for (let listener of listeners8) listener(snapshot2);
+    for (let listener of listeners9) listener(snapshot2);
     emitFiles();
   }
   function subscribePortable(listener) {
-    return listeners8.add(listener), () => {
-      listeners8.delete(listener);
+    return listeners9.add(listener), () => {
+      listeners9.delete(listener);
     };
   }
   function portableSnapshot() {
@@ -63010,14 +63132,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/health-events.ts
-  var listeners9 = /* @__PURE__ */ new Set();
+  var listeners10 = /* @__PURE__ */ new Set();
   function subscribeHealth(listener) {
-    return listeners9.add(listener), () => {
-      listeners9.delete(listener);
+    return listeners10.add(listener), () => {
+      listeners10.delete(listener);
     };
   }
   function emitHealth() {
-    for (let listener of [...listeners9]) listener();
+    for (let listener of [...listeners10]) listener();
   }
 
   // src/lib/health/health-list.ts
@@ -63047,1972 +63169,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/health.ts
-  var import_react33 = __toESM(require_react(), 1);
-
-  // src/lib/health/album-art.ts
-  var latest3 = null, trackId2 = null, busy = !1, onWrote = null;
-  function wireAlbumArt(wrote) {
-    onWrote = wrote;
-    let dialog = el("album-art-dialog");
-    dialog.dataset.albumArtWired !== "true" && (dialog.dataset.albumArtWired = "true", el("album-art-cancel").addEventListener("click", () => dialog.close()), el("album-art-embed").addEventListener("click", () => {
-      embedCover();
-    }), el("album-art-choices").addEventListener("change", () => syncEmbedEnabled()));
-  }
-  async function openAlbumArt(id) {
-    if (!(!Number.isInteger(id) || id <= 0) && typeof el("album-art-dialog").showModal == "function") {
-      trackId2 = id, latest3 = null, busy = !0, paintDialog(), el("album-art-dialog").open || el("album-art-dialog").showModal(), el("album-art-cancel").focus();
-      try {
-        let plan = await postJSON("/api/album-art", {
-          action: "preview",
-          space: state.space,
-          id
-        });
-        if (trackId2 !== id) return;
-        latest3 = plan, el("album-art-status").textContent = plan.candidates.length ? "" : t("health.artNone"), paintDialog();
-        let first = el("album-art-choices").querySelector("input");
-        first instanceof HTMLInputElement ? first.focus() : el("album-art-cancel").focus();
-      } catch (error2) {
-        if (trackId2 !== id) return;
-        failStatus2(failureOf(error2).message), el("album-art-cancel").focus();
-      } finally {
-        trackId2 === id && (busy = !1), paintDialog();
-      }
-    }
-  }
-  function repaintAlbumArt() {
-    el("album-art-dialog").open && paintDialog();
-  }
-  async function embedCover() {
-    let id = trackId2, chosen = selectedRelease();
-    if (!(id === null || !chosen || !state.writable || busy)) {
-      busy = !0, paintDialog();
-      try {
-        latest3 = await postJSON("/api/album-art", {
-          action: "embed",
-          space: state.space,
-          id,
-          release_id: chosen,
-          confirm: !0
-        }), busy = !1, el("album-art-dialog").close(), onWrote?.();
-      } catch (error2) {
-        let failed = failureOf(error2);
-        failStatus2(failed.message), failed.status === 409 && bridge.lockDown(error2);
-      } finally {
-        busy = !1, paintDialog();
-      }
-    }
-  }
-  function paintDialog() {
-    let plan = latest3;
-    el("album-art-track").textContent = plan ? t("health.row", { title: [plan.artist, plan.name].filter(Boolean).join(" — ") || plan.file }) : t("health.artLooking");
-    let list = el("album-art-choices"), selected = selectedRelease();
-    list.replaceChildren(), (plan?.candidates ?? []).forEach((candidate, index) => {
-      list.append(choiceRow(candidate, selected, index === 0));
-    }), busy && !plan && (el("album-art-status").textContent = t("health.artLooking")), syncEmbedEnabled();
-  }
-  function choiceRow(candidate, selected, fallback) {
-    let row = document.createElement("label");
-    row.className = "check album-art-choice";
-    let radio = inputEl(tips.healthArtPick);
-    radio.type = "radio", radio.name = "album-art-pick", radio.value = candidate.release_id, radio.checked = selected === candidate.release_id || selected === null && fallback;
-    let image = document.createElement("img");
-    image.src = candidate.thumb, image.alt = candidate.title || t("health.artEmbed"), image.width = 96, image.height = 96;
-    let caption = document.createElement("span");
-    return caption.textContent = [candidate.artist, candidate.title].filter(Boolean).join(" — ") || candidate.release_id, row.append(radio, image, caption), row;
-  }
-  function selectedRelease() {
-    return el("album-art-choices").querySelector(
-      "input[name='album-art-pick']:checked"
-    )?.value || null;
-  }
-  function syncEmbedEnabled() {
-    let button = el("album-art-embed");
-    button.disabled = busy || !state.writable || selectedRelease() === null;
-  }
-  function failStatus2(message) {
-    el("album-art-status").textContent = message;
-  }
-
-  // src/pages/HealthPanel.tsx
-  var import_react32 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/material/Accordion/Accordion.mjs
-  var React305 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/material/Collapse/Collapse.mjs
-  var React303 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/material/Collapse/collapseClasses.mjs
-  function getCollapseUtilityClass(slot) {
-    return generateUtilityClass("MuiCollapse", slot);
-  }
-  var collapseClasses = generateUtilityClasses("MuiCollapse", ["root", "horizontal", "vertical", "entered", "hidden", "wrapper", "wrapperInner"]);
-
-  // node_modules/@mui/material/Collapse/Collapse.mjs
-  var import_jsx_runtime234 = __toESM(require_jsx_runtime(), 1), EMPTY_OBJECT2 = {}, useUtilityClasses100 = (ownerState) => {
-    let {
-      orientation,
-      classes: classes2
-    } = ownerState;
-    return composeClasses({
-      root: ["root", orientation],
-      entered: ["entered"],
-      hidden: ["hidden"],
-      wrapper: ["wrapper", orientation],
-      wrapperInner: ["wrapperInner", orientation]
-    }, getCollapseUtilityClass, classes2);
-  }, CollapseRoot = styled_default2("div", {
-    name: "MuiCollapse",
-    slot: "Root",
-    overridesResolver: (props, styles5) => {
-      let {
-        ownerState
-      } = props;
-      return [styles5.root, styles5[ownerState.orientation], ownerState.state === "entered" && styles5.entered, ownerState.state === "exited" && !ownerState.in && ownerState.collapsedSize === "0px" && styles5.hidden];
-    }
-  })(memoTheme_default(({
-    theme
-  }) => ({
-    height: 0,
-    overflow: "hidden",
-    transition: theme.transitions.create("height"),
-    variants: [{
-      props: {
-        orientation: "horizontal"
-      },
-      style: {
-        height: "auto",
-        width: 0,
-        transition: theme.transitions.create("width")
-      }
-    }, {
-      props: {
-        state: "entered"
-      },
-      style: {
-        height: "auto",
-        overflow: "visible"
-      }
-    }, {
-      props: {
-        state: "entered",
-        orientation: "horizontal"
-      },
-      style: {
-        width: "auto"
-      }
-    }, {
-      props: ({
-        ownerState
-      }) => ownerState.state === "exited" && !ownerState.in && ownerState.collapsedSize === "0px",
-      style: {
-        visibility: "hidden"
-      }
-    }]
-  }))), CollapseWrapper = styled_default2("div", {
-    name: "MuiCollapse",
-    slot: "Wrapper"
-  })({
-    // Prevent children with negative margins from making the measured size too small.
-    display: "flex",
-    width: "100%",
-    variants: [{
-      props: {
-        orientation: "horizontal"
-      },
-      style: {
-        width: "auto",
-        height: "100%"
-      }
-    }]
-  }), CollapseWrapperInner = styled_default2("div", {
-    name: "MuiCollapse",
-    slot: "WrapperInner"
-  })({
-    width: "100%",
-    variants: [{
-      props: {
-        orientation: "horizontal"
-      },
-      style: {
-        width: "auto",
-        height: "100%"
-      }
-    }]
-  }), Collapse = /* @__PURE__ */ React303.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiCollapse"
-    }), {
-      addEndListener,
-      children,
-      className,
-      collapsedSize: collapsedSizeProp = "0px",
-      component,
-      disablePrefersReducedMotion = !1,
-      easing: easing2,
-      in: inProp,
-      onEnter,
-      onEntered,
-      onEntering,
-      onExit,
-      onExited,
-      onExiting,
-      orientation = "vertical",
-      slots = EMPTY_OBJECT2,
-      slotProps = EMPTY_OBJECT2,
-      style: style4,
-      timeout = duration.standard,
-      // eslint-disable-next-line react/prop-types
-      TransitionComponent = Transition_default,
-      ...other
-    } = props, ownerState = {
-      ...props,
-      orientation,
-      collapsedSize: collapsedSizeProp
-    }, classes2 = useUtilityClasses100(ownerState), theme = useTheme4(), wrapperRef = React303.useRef(null), autoTransitionDuration = React303.useRef(null), collapsedSize = typeof collapsedSizeProp == "number" ? `${collapsedSizeProp}px` : collapsedSizeProp, isHorizontal2 = orientation === "horizontal", size = isHorizontal2 ? "width" : "height", reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), nodeRef = React303.useRef(null), handleRef = useForkRef_default(ref, nodeRef), getWrapperSize = () => wrapperRef.current ? wrapperRef.current[isHorizontal2 ? "clientWidth" : "clientHeight"] : 0, handleEnter = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
-      wrapperRef.current && isHorizontal2 && (wrapperRef.current.style.position = "absolute"), node2.style[size] = collapsedSize, onEnter && onEnter(node2, isAppearing);
-    }), handleEntering = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
-      let wrapperSize = getWrapperSize();
-      wrapperRef.current && isHorizontal2 && (wrapperRef.current.style.position = "");
-      let {
-        duration: transitionDuration,
-        easing: transitionTimingFunction
-      } = getTransitionProps({
-        style: style4,
-        timeout,
-        easing: easing2
-      }, {
-        mode: "enter"
-      });
-      if (timeout === "auto" && !reducedMotion.shouldReduceMotion) {
-        let duration22 = theme.transitions.getAutoHeightDuration(wrapperSize);
-        autoTransitionDuration.current = duration22;
-      } else
-        autoTransitionDuration.current = null;
-      let transitionTiming = reducedMotion.getTransitionTiming({
-        duration: autoTransitionDuration.current ?? transitionDuration,
-        delay: void 0
-      });
-      node2.style.transitionDuration = typeof transitionTiming.duration == "string" ? transitionTiming.duration : `${transitionTiming.duration}ms`, node2.style[size] = `${wrapperSize}px`, node2.style.transitionTimingFunction = transitionTimingFunction, onEntering && onEntering(node2, isAppearing);
-    }), handleEntered = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
-      node2.style[size] = "auto", onEntered && onEntered(node2, isAppearing);
-    }), handleExit = normalizedTransitionCallback(nodeRef, (node2) => {
-      node2.style[size] = `${getWrapperSize()}px`, onExit && onExit(node2);
-    }), handleExited = normalizedTransitionCallback(nodeRef, onExited), handleExiting = normalizedTransitionCallback(nodeRef, (node2) => {
-      let wrapperSize = getWrapperSize(), {
-        duration: transitionDuration,
-        easing: transitionTimingFunction
-      } = getTransitionProps({
-        style: style4,
-        timeout,
-        easing: easing2
-      }, {
-        mode: "exit"
-      });
-      if (timeout === "auto" && !reducedMotion.shouldReduceMotion) {
-        let duration22 = theme.transitions.getAutoHeightDuration(wrapperSize);
-        autoTransitionDuration.current = duration22;
-      } else
-        autoTransitionDuration.current = null;
-      let transitionTiming = reducedMotion.getTransitionTiming({
-        duration: autoTransitionDuration.current ?? transitionDuration,
-        delay: void 0
-      });
-      node2.style.transitionDuration = typeof transitionTiming.duration == "string" ? transitionTiming.duration : `${transitionTiming.duration}ms`, node2.style[size] = collapsedSize, node2.style.transitionTimingFunction = transitionTimingFunction, onExiting && onExiting(node2);
-    }), handleAddEndListener = addEndListener ? (next3) => {
-      addEndListener(nodeRef.current, next3);
-    } : void 0, externalForwardedProps = {
-      slots,
-      slotProps,
-      component
-    }, [RootSlot, rootSlotProps] = useSlot("root", {
-      ref: handleRef,
-      className: clsx_default(classes2.root, className),
-      elementType: CollapseRoot,
-      externalForwardedProps,
-      ownerState,
-      additionalProps: {
-        style: {
-          [isHorizontal2 ? "minWidth" : "minHeight"]: collapsedSize,
-          ...style4
-        }
-      }
-    }), [WrapperSlot, wrapperSlotProps] = useSlot("wrapper", {
-      ref: wrapperRef,
-      className: classes2.wrapper,
-      elementType: CollapseWrapper,
-      externalForwardedProps,
-      ownerState
-    }), [WrapperInnerSlot, wrapperInnerSlotProps] = useSlot("wrapperInner", {
-      className: classes2.wrapperInner,
-      elementType: CollapseWrapperInner,
-      externalForwardedProps,
-      ownerState
-    });
-    return /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(TransitionComponent, {
-      in: inProp,
-      onEnter: handleEnter,
-      onEntered: handleEntered,
-      onEntering: handleEntering,
-      onExit: handleExit,
-      onExited: handleExited,
-      onExiting: handleExiting,
-      addEndListener: handleAddEndListener,
-      getAutoTimeout: timeout === "auto" ? () => autoTransitionDuration.current : void 0,
-      reduceMotion: reducedMotion.shouldReduceMotion,
-      nodeRef,
-      timeout: timeout === "auto" ? null : timeout,
-      ...other,
-      children: (state2, {
-        ownerState: incomingOwnerState,
-        ...restChildProps
-      }) => {
-        let stateOwnerState = {
-          ...ownerState,
-          state: state2
-        };
-        return /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(RootSlot, {
-          ...rootSlotProps,
-          className: clsx_default(rootSlotProps.className, {
-            entered: classes2.entered,
-            exited: !inProp && collapsedSize === "0px" && classes2.hidden
-          }[state2]),
-          ownerState: stateOwnerState,
-          ...restChildProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(WrapperSlot, {
-            ...wrapperSlotProps,
-            ownerState: stateOwnerState,
-            children: /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(WrapperInnerSlot, {
-              ...wrapperInnerSlotProps,
-              ownerState: stateOwnerState,
-              children
-            })
-          })
-        });
-      }
-    });
-  });
-  Collapse && (Collapse.muiSupportAuto = !0);
-  var Collapse_default = Collapse;
-
-  // node_modules/@mui/material/Accordion/AccordionContext.mjs
-  var React304 = __toESM(require_react(), 1), AccordionContext = /* @__PURE__ */ React304.createContext({}), AccordionContext_default = AccordionContext;
-
-  // node_modules/@mui/material/Accordion/accordionClasses.mjs
-  function getAccordionUtilityClass(slot) {
-    return generateUtilityClass("MuiAccordion", slot);
-  }
-  var accordionClasses = generateUtilityClasses("MuiAccordion", ["root", "heading", "rounded", "expanded", "disabled", "gutters", "region"]), accordionClasses_default = accordionClasses;
-
-  // node_modules/@mui/material/Accordion/Accordion.mjs
-  var import_jsx_runtime235 = __toESM(require_jsx_runtime(), 1), useUtilityClasses101 = (ownerState) => {
-    let {
-      classes: classes2,
-      square,
-      expanded: expanded2,
-      disabled,
-      disableGutters
-    } = ownerState;
-    return composeClasses({
-      root: ["root", !square && "rounded", expanded2 && "expanded", disabled && "disabled", !disableGutters && "gutters"],
-      heading: ["heading"],
-      region: ["region"]
-    }, getAccordionUtilityClass, classes2);
-  }, AccordionRoot = styled_default2(Paper_default, {
-    name: "MuiAccordion",
-    slot: "Root",
-    overridesResolver: (props, styles5) => {
-      let {
-        ownerState
-      } = props;
-      return [{
-        [`& .${accordionClasses_default.region}`]: styles5.region
-      }, styles5.root, !ownerState.square && styles5.rounded, !ownerState.disableGutters && styles5.gutters];
-    }
-  })(memoTheme_default(({
-    theme
-  }) => {
-    let transition2 = {
-      duration: theme.transitions.duration.shortest
-    };
-    return {
-      position: "relative",
-      ...getTransitionStyles(theme, ["margin"], transition2),
-      overflowAnchor: "none",
-      // Keep the same scrolling position
-      "&::before": {
-        position: "absolute",
-        left: 0,
-        top: -1,
-        right: 0,
-        height: 1,
-        content: '""',
-        opacity: 1,
-        backgroundColor: (theme.vars || theme).palette.divider,
-        ...getTransitionStyles(theme, ["opacity", "background-color"], transition2)
-      },
-      "&:first-of-type": {
-        "&::before": {
-          display: "none"
-        }
-      },
-      [`&.${accordionClasses_default.expanded}`]: {
-        "&::before": {
-          opacity: 0
-        },
-        "&:first-of-type": {
-          marginTop: 0
-        },
-        "&:last-of-type": {
-          marginBottom: 0
-        },
-        "& + &": {
-          "&::before": {
-            display: "none"
-          }
-        }
-      },
-      [`&.${accordionClasses_default.disabled}`]: {
-        backgroundColor: (theme.vars || theme).palette.action.disabledBackground
-      }
-    };
-  }), memoTheme_default(({
-    theme
-  }) => ({
-    variants: [{
-      props: (props) => !props.square,
-      style: {
-        borderRadius: 0,
-        "&:first-of-type": {
-          borderTopLeftRadius: (theme.vars || theme).shape.borderRadius,
-          borderTopRightRadius: (theme.vars || theme).shape.borderRadius
-        },
-        "&:last-of-type": {
-          borderBottomLeftRadius: (theme.vars || theme).shape.borderRadius,
-          borderBottomRightRadius: (theme.vars || theme).shape.borderRadius,
-          // Fix a rendering issue on Edge
-          "@supports (-ms-ime-align: auto)": {
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0
-          }
-        }
-      }
-    }, {
-      props: (props) => !props.disableGutters,
-      style: {
-        [`&.${accordionClasses_default.expanded}`]: {
-          margin: "16px 0"
-        }
-      }
-    }]
-  }))), AccordionHeading = styled_default2("h3", {
-    name: "MuiAccordion",
-    slot: "Heading"
-  })({
-    all: "unset"
-  }), AccordionRegion = styled_default2("div", {
-    name: "MuiAccordion",
-    slot: "Region"
-  })({}), Accordion = /* @__PURE__ */ React305.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiAccordion"
-    }), {
-      children: childrenProp,
-      className,
-      defaultExpanded = !1,
-      disabled = !1,
-      disableGutters = !1,
-      expanded: expandedProp,
-      onChange,
-      slots = {},
-      slotProps = {},
-      ...other
-    } = props, [expanded2, setExpandedState] = useControlled_default({
-      controlled: expandedProp,
-      default: defaultExpanded,
-      name: "Accordion",
-      state: "expanded"
-    }), handleChange = React305.useCallback((event) => {
-      setExpandedState(!expanded2), onChange && onChange(event, !expanded2);
-    }, [expanded2, onChange, setExpandedState]), [summary, ...children] = React305.Children.toArray(childrenProp), contextValue = React305.useMemo(() => ({
-      expanded: expanded2,
-      disabled,
-      disableGutters,
-      toggle: handleChange
-    }), [expanded2, disabled, disableGutters, handleChange]), ownerState = {
-      ...props,
-      disabled,
-      disableGutters,
-      expanded: expanded2
-    }, classes2 = useUtilityClasses101(ownerState), externalForwardedProps = {
-      slots,
-      slotProps
-    }, [RootSlot, rootProps] = useSlot("root", {
-      elementType: AccordionRoot,
-      externalForwardedProps: {
-        ...externalForwardedProps,
-        ...other
-      },
-      className: clsx_default(classes2.root, className),
-      shouldForwardComponentProp: !0,
-      ownerState,
-      ref
-    }), [AccordionHeadingSlot, accordionProps] = useSlot("heading", {
-      elementType: AccordionHeading,
-      externalForwardedProps,
-      className: classes2.heading,
-      ownerState
-    }), [TransitionSlot, transitionProps] = useSlot("transition", {
-      elementType: Collapse_default,
-      externalForwardedProps,
-      ownerState
-    }), [AccordionRegionSlot, accordionRegionProps] = useSlot("region", {
-      elementType: AccordionRegion,
-      externalForwardedProps,
-      ownerState,
-      className: classes2.region,
-      additionalProps: {
-        "aria-labelledby": summary.props.id,
-        id: summary.props["aria-controls"],
-        role: "region"
-      }
-    });
-    return /* @__PURE__ */ (0, import_jsx_runtime235.jsxs)(RootSlot, {
-      ...rootProps,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime235.jsx)(AccordionHeadingSlot, {
-        ...accordionProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(AccordionContext_default.Provider, {
-          value: contextValue,
-          children: summary
-        })
-      }), /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(TransitionSlot, {
-        in: expanded2,
-        timeout: "auto",
-        ...transitionProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(AccordionRegionSlot, {
-          ...accordionRegionProps,
-          children
-        })
-      })]
-    });
-  }), Accordion_default = Accordion;
-
-  // node_modules/@mui/material/AccordionDetails/AccordionDetails.mjs
-  var React306 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/material/AccordionDetails/accordionDetailsClasses.mjs
-  function getAccordionDetailsUtilityClass(slot) {
-    return generateUtilityClass("MuiAccordionDetails", slot);
-  }
-  var accordionDetailsClasses = generateUtilityClasses("MuiAccordionDetails", ["root"]);
-
-  // node_modules/@mui/material/AccordionDetails/AccordionDetails.mjs
-  var import_jsx_runtime236 = __toESM(require_jsx_runtime(), 1), useUtilityClasses102 = (ownerState) => {
-    let {
-      classes: classes2
-    } = ownerState;
-    return composeClasses({
-      root: ["root"]
-    }, getAccordionDetailsUtilityClass, classes2);
-  }, AccordionDetailsRoot = styled_default2("div", {
-    name: "MuiAccordionDetails",
-    slot: "Root"
-  })(memoTheme_default(({
-    theme
-  }) => ({
-    padding: theme.spacing(1, 2, 2)
-  }))), AccordionDetails = /* @__PURE__ */ React306.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiAccordionDetails"
-    }), {
-      className,
-      ...other
-    } = props, ownerState = props, classes2 = useUtilityClasses102(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(AccordionDetailsRoot, {
-      className: clsx_default(classes2.root, className),
-      ref,
-      ownerState,
-      ...other
-    });
-  }), AccordionDetails_default = AccordionDetails;
-
-  // node_modules/@mui/material/AccordionSummary/AccordionSummary.mjs
-  var React307 = __toESM(require_react(), 1);
-  var import_jsx_runtime237 = __toESM(require_jsx_runtime(), 1), useUtilityClasses103 = (ownerState) => {
-    let {
-      classes: classes2,
-      expanded: expanded2,
-      disabled,
-      disableGutters
-    } = ownerState;
-    return composeClasses({
-      root: ["root", expanded2 && "expanded", disabled && "disabled", !disableGutters && "gutters"],
-      focusVisible: ["focusVisible"],
-      content: ["content", expanded2 && "expanded"],
-      expandIconWrapper: ["expandIconWrapper", expanded2 && "expanded"]
-    }, getAccordionSummaryUtilityClass, classes2);
-  }, AccordionSummaryRoot = styled_default2(ButtonBase_default, {
-    name: "MuiAccordionSummary",
-    slot: "Root"
-  })(memoTheme_default(({
-    theme
-  }) => ({
-    display: "flex",
-    width: "100%",
-    minHeight: 48,
-    padding: theme.spacing(0, 2),
-    ...getTransitionStyles(theme, ["min-height", "background-color"], {
-      duration: theme.transitions.duration.shortest
-    }),
-    ...!theme.focusVisible && {
-      [`&.${accordionSummaryClasses_default.focusVisible}`]: {
-        backgroundColor: (theme.vars || theme).palette.action.focus
-      }
-    },
-    [`&.${accordionSummaryClasses_default.disabled}`]: {
-      opacity: (theme.vars || theme).palette.action.disabledOpacity
-    },
-    [`&:hover:not(.${accordionSummaryClasses_default.disabled})`]: {
-      cursor: "pointer"
-    },
-    variants: [{
-      props: (props) => !props.disableGutters,
-      style: {
-        [`&.${accordionSummaryClasses_default.expanded}`]: {
-          minHeight: 64
-        }
-      }
-    }]
-  }))), AccordionSummaryContent = styled_default2("span", {
-    name: "MuiAccordionSummary",
-    slot: "Content"
-  })(memoTheme_default(({
-    theme
-  }) => ({
-    display: "flex",
-    textAlign: "start",
-    flexGrow: 1,
-    margin: "12px 0",
-    variants: [{
-      props: (props) => !props.disableGutters,
-      style: {
-        ...getTransitionStyles(theme, ["margin"], {
-          duration: theme.transitions.duration.shortest
-        }),
-        [`&.${accordionSummaryClasses_default.expanded}`]: {
-          margin: "20px 0"
-        }
-      }
-    }]
-  }))), AccordionSummaryExpandIconWrapper = styled_default2("span", {
-    name: "MuiAccordionSummary",
-    slot: "ExpandIconWrapper"
-  })(memoTheme_default(({
-    theme
-  }) => ({
-    display: "flex",
-    color: (theme.vars || theme).palette.action.active,
-    transform: "rotate(0deg)",
-    ...getTransitionStyles(theme, "transform", {
-      duration: theme.transitions.duration.shortest
-    }),
-    [`&.${accordionSummaryClasses_default.expanded}`]: {
-      transform: "rotate(180deg)"
-    }
-  }))), AccordionSummary = /* @__PURE__ */ React307.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiAccordionSummary"
-    }), {
-      children,
-      className,
-      expandIcon,
-      focusVisibleClassName,
-      onClick,
-      slots,
-      slotProps,
-      ...other
-    } = props, {
-      disabled = !1,
-      disableGutters,
-      expanded: expanded2,
-      toggle
-    } = React307.useContext(AccordionContext_default), handleChange = (event) => {
-      toggle && toggle(event), onClick && onClick(event);
-    }, ownerState = {
-      ...props,
-      expanded: expanded2,
-      disabled,
-      disableGutters
-    }, classes2 = useUtilityClasses103(ownerState), externalForwardedProps = {
-      slots,
-      slotProps
-    }, [RootSlot, rootSlotProps] = useSlot("root", {
-      ref,
-      shouldForwardComponentProp: !0,
-      className: clsx_default(classes2.root, className),
-      elementType: AccordionSummaryRoot,
-      externalForwardedProps: {
-        ...externalForwardedProps,
-        ...other
-      },
-      ownerState,
-      additionalProps: {
-        focusRipple: !1,
-        disableRipple: !0,
-        internalNativeButton: !0,
-        disabled,
-        "aria-expanded": expanded2,
-        focusVisibleClassName: clsx_default(classes2.focusVisible, focusVisibleClassName)
-      },
-      getSlotProps: (handlers) => ({
-        ...handlers,
-        onClick: (event) => {
-          handlers.onClick?.(event), handleChange(event);
-        }
-      })
-    }), [ContentSlot, contentSlotProps] = useSlot("content", {
-      className: classes2.content,
-      elementType: AccordionSummaryContent,
-      externalForwardedProps,
-      ownerState
-    }), [ExpandIconWrapperSlot, expandIconWrapperSlotProps] = useSlot("expandIconWrapper", {
-      className: classes2.expandIconWrapper,
-      elementType: AccordionSummaryExpandIconWrapper,
-      externalForwardedProps,
-      ownerState
-    });
-    return /* @__PURE__ */ (0, import_jsx_runtime237.jsxs)(RootSlot, {
-      ...rootSlotProps,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime237.jsx)(ContentSlot, {
-        ...contentSlotProps,
-        children
-      }), expandIcon && /* @__PURE__ */ (0, import_jsx_runtime237.jsx)(ExpandIconWrapperSlot, {
-        ...expandIconWrapperSlotProps,
-        children: expandIcon
-      })]
-    });
-  }), AccordionSummary_default = AccordionSummary;
-
-  // node_modules/@mui/icons-material/ExpandMore.mjs
-  var import_jsx_runtime238 = __toESM(require_jsx_runtime(), 1), ExpandMore_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime238.jsx)("path", {
-    d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-  }), "ExpandMore");
-
-  // src/components/tooltip-ref.ts
-  function tooltipRef6(spec2) {
-    return (element) => {
-      element && setTooltip(element, spec2);
-    };
-  }
-
-  // src/pages/HealthPanel.tsx
-  var import_jsx_runtime239 = __toESM(require_jsx_runtime(), 1), BUTTON_SX = { textTransform: "none", minHeight: 44 }, ACCORDION_SX = {
-    disableGutters: !0,
-    square: !0,
-    elevation: 0,
-    slotProps: { transition: { timeout: 0 } }
-  };
-  function useSectionOpen(start2) {
-    let [open, setOpen] = (0, import_react32.useState)(start2);
-    return {
-      expanded: open,
-      onChange: (_event, next3) => {
-        setOpen(next3);
-      }
-    };
-  }
-  var SECTIONS = [
-    { key: "missing", label: "health.missing", action: "missing" },
-    { key: "no_bpm", label: "health.noBpm" },
-    { key: "no_key", label: "health.noKey" },
-    { key: "no_beatgrid", label: "health.noBeatgrid" },
-    { key: "no_artwork", label: "health.noArtwork" },
-    { key: "empty_genre", label: "health.emptyGenre" },
-    { key: "no_crate", label: "health.noCrate" }
-  ];
-  function trackLine(track) {
-    return t("health.row", {
-      title: [track.artist, track.name].filter(Boolean).join(" — ") || track.file
-    });
-  }
-  function Section({
-    label,
-    section,
-    action,
-    findArt,
-    onNavigate
-  }) {
-    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(
-      Accordion_default,
-      {
-        className: "health-accordion",
-        expanded: accordion.expanded,
-        onChange: accordion.onChange,
-        ...ACCORDION_SX,
-        children: [
-          /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label, count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(AccordionDetails_default, { children: [
-            action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-              Button_default,
-              {
-                type: "button",
-                size: "small",
-                variant: "outlined",
-                sx: BUTTON_SX,
-                ref: tooltipRef6(tips.healthOpenMissing),
-                "data-health-action": "missing",
-                onClick: () => onNavigate("missing"),
-                children: t("health.openMissing")
-              }
-            ) : null,
-            /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-                Button_default,
-                {
-                  type: "button",
-                  size: "small",
-                  variant: "text",
-                  sx: BUTTON_SX,
-                  ref: tooltipRef6(tips.healthTrack),
-                  "data-health-action": "track",
-                  "data-health-id": String(track.id),
-                  onClick: () => onNavigate("track", track.id),
-                  children: trackLine(track)
-                }
-              ),
-              findArt ? /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-                Button_default,
-                {
-                  type: "button",
-                  size: "small",
-                  variant: "outlined",
-                  sx: BUTTON_SX,
-                  ref: tooltipRef6(tips.healthFindArt),
-                  "data-health-action": "artwork",
-                  "data-health-id": String(track.id),
-                  onClick: () => {
-                    openAlbumArt(track.id);
-                  },
-                  children: t("health.findArt")
-                }
-              ) : null
-            ] }, track.id)) }),
-            count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
-          ] })
-        ]
-      }
-    );
-  }
-  function Bitrate({ onNavigate }) {
-    let accordion = useSectionOpen(!0);
-    return /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(
-      Accordion_default,
-      {
-        className: "health-accordion",
-        expanded: accordion.expanded,
-        onChange: accordion.onChange,
-        ...ACCORDION_SX,
-        children: [
-          /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("health.bitrate") }),
-          /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-              Button_default,
-              {
-                type: "button",
-                size: "small",
-                variant: "outlined",
-                sx: BUTTON_SX,
-                ref: tooltipRef6(tips.healthOpenBitrate),
-                "data-health-action": "bitrate",
-                onClick: () => onNavigate("bitrate"),
-                children: t("health.openBitrate")
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
-          ] })
-        ]
-      }
-    );
-  }
-  function Unused({
-    section,
-    onNavigate
-  }) {
-    let count = section?.count ?? 0, files = section?.files ?? [], accordion = useSectionOpen(count > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(
-      Accordion_default,
-      {
-        className: "health-accordion",
-        expanded: accordion.expanded,
-        onChange: accordion.onChange,
-        ...ACCORDION_SX,
-        children: [
-          /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.unused"), count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-              Button_default,
-              {
-                type: "button",
-                size: "small",
-                variant: "outlined",
-                sx: BUTTON_SX,
-                ref: tooltipRef6(tips.healthOpenFiles),
-                "data-health-action": "files",
-                onClick: () => onNavigate("files"),
-                children: t("health.openFiles")
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
-            count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
-          ] })
-        ]
-      }
-    );
-  }
-  function Duplicates({
-    section,
-    onNavigate
-  }) {
-    let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(
-      Accordion_default,
-      {
-        className: "health-accordion",
-        expanded: accordion.expanded,
-        onChange: accordion.onChange,
-        ...ACCORDION_SX,
-        children: [
-          /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-              Button_default,
-              {
-                type: "button",
-                size: "small",
-                variant: "outlined",
-                sx: BUTTON_SX,
-                ref: tooltipRef6(tips.healthOpenDuplicates),
-                "data-health-action": "duplicates",
-                onClick: () => onNavigate("duplicates"),
-                children: t("health.openDuplicates")
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("li", { children: t("health.duplicateRow", {
-              title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
-              count: group.ids.length
-            }) }, group.ids.join(","))) }),
-            count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
-          ] })
-        ]
-      }
-    );
-  }
-  function HealthPanel() {
-    let health = useHealth(), payload = health.healthReport, listed = 0;
-    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(import_jsx_runtime239.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-          Button_default,
-          {
-            id: "health-refresh",
-            type: "button",
-            size: "small",
-            variant: "outlined",
-            sx: BUTTON_SX,
-            ref: tooltipRef6(tips.healthRefresh),
-            disabled: health.healthBusy,
-            "aria-busy": health.healthBusy ? "true" : "false",
-            onClick: () => {
-              health.loadHealth();
-            },
-            children: t("gig.checkAgain")
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(import_jsx_runtime239.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
-        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-          Section,
-          {
-            label: t(spec2.label),
-            section: payload[spec2.key],
-            ...spec2.action ? { action: spec2.action } : {},
-            ...spec2.key === "no_artwork" ? { findArt: !0 } : {},
-            onNavigate: health.navigate
-          },
-          spec2.key
-        )),
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(Bitrate, { onNavigate: health.navigate }),
-        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { className: "gig-note", children: t("health.clear") })
-      ] }) : null })
-    ] });
-  }
-
-  // src/pages/HealthListChrome.tsx
-  var import_jsx_runtime240 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 };
-  function HealthListChrome() {
-    let health = useHealth();
-    return /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)(import_jsx_runtime240.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        Button_default,
-        {
-          id: "merge-duplicates",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX2,
-          ref: tooltipRef6(tips.mergeDuplicates),
-          disabled: health.mergeDisabled,
-          children: t("merge.title")
-        }
-      ) }),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        Button_default,
-        {
-          id: "open-relink",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX2,
-          ref: tooltipRef6(tips.relink),
-          disabled: health.relinkDisabled,
-          children: t("relink.title")
-        }
-      ) })
-    ] });
-  }
-
-  // src/lib/health/health.ts
-  var latest4 = null, status = "", busy2 = !1, go = null, panelRoot, panelHost = null, listRoot, listHost = null, albumArtWired = !1;
-  function getHealthSnapshot() {
-    return {
-      healthReport: latest4,
-      healthStatus: status,
-      healthBusy: busy2,
-      healthScope: crateScopeLabel()
-    };
-  }
-  function navigateHealth(action, id) {
-    typeof id == "number" ? go?.(action, id) : go?.(action);
-  }
-  function wireHealth(navigate) {
-    go = navigate;
-    let panel = el("health-panel");
-    panelRoot && panelHost !== panel && (panelRoot.unmount(), panelRoot = void 0), panelHost = panel, panelRoot = mountIsland(panel, (0, import_react33.createElement)(HealthPanel), panelRoot), mountHealthListChrome(), albumArtWired || (albumArtWired = !0, wireAlbumArt(() => {
-      loadHealth();
-    }));
-  }
-  function mountHealthListChrome() {
-    let host = document.getElementById("health-list-chrome");
-    host instanceof HTMLElement && (listRoot && listHost !== host && (listRoot.unmount(), listRoot = void 0), listHost = host, listRoot = mountIsland(host, (0, import_react33.createElement)(HealthListChrome), listRoot), emitHealth());
-  }
-  async function loadHealth() {
-    let token4 = ++state.healthToken;
-    beginBusy3();
-    let settle = "none", crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      let response = await fetch(
-        `/api/library-health?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
-      );
-      if (token4 !== state.healthToken) return;
-      let payload = await readJSON(response).catch(() => null);
-      if (token4 !== state.healthToken) return;
-      if (!response.ok || payload === null) {
-        failStatus3(serverMessage(payload, t("health.unreadable"))), settle = "retry";
-        return;
-      }
-      latest4 = payload, status = "", emitHealth(), settle = "report";
-    } catch {
-      if (token4 !== state.healthToken) return;
-      failStatus3(t("health.unreachable")), settle = "retry";
-    } finally {
-      if (token4 !== state.healthToken) return;
-      endBusy3(), settle === "retry" && el("health-refresh").focus(), settle === "report" && el("health-report").focus();
-    }
-  }
-  function showHealthFailure(error2) {
-    let message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
-    failStatus3(message), endBusy3(), el("health-refresh").focus();
-  }
-  function repaintHealth() {
-    emitHealth(), repaintAlbumArt();
-  }
-  function beginBusy3() {
-    busy2 = !0, status = t("health.checking"), el("health-panel").setAttribute("aria-busy", "true"), emitHealth();
-  }
-  function endBusy3() {
-    busy2 = !1, el("health-panel").setAttribute("aria-busy", "false"), emitHealth();
-  }
-  function failStatus3(message) {
-    status = message, emitHealth();
-  }
-
-  // src/lib/health/scan.ts
   var import_react36 = __toESM(require_react(), 1);
 
-  // src/pages/ScanPanel.tsx
-  var import_react35 = __toESM(require_react(), 1);
-
-  // src/components/HealthDataGrid.tsx
+  // src/lib/ui/shared-dialog-mount.tsx
   var import_react34 = __toESM(require_react(), 1);
-  var import_jsx_runtime241 = __toESM(require_jsx_runtime(), 1);
-  function gridLocaleText3(locale) {
-    return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
-  }
-  function HealthDataGrid({
-    rows,
-    columns,
-    selectedId,
-    onSelectId
-  }) {
-    ensureGridDom();
-    let hostRef = (0, import_react34.useRef)(null), locale = getLocale(), localeText = (0, import_react34.useMemo)(() => gridLocaleText3(locale), [locale]), [page, setPage] = (0, import_react34.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react34.useMemo)(
-      () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
-      [page, maxPage]
-    ), hideFooter = rows.length <= GRID_PAGE_SIZE, rowSelectionModel = (0, import_react34.useMemo)(() => ({
-      type: "include",
-      ids: selectedId == null ? /* @__PURE__ */ new Set() : /* @__PURE__ */ new Set([selectedId])
-    }), [selectedId]);
-    (0, import_react34.useLayoutEffect)(() => {
-      setPage(0);
-    }, [rows.length]), (0, import_react34.useLayoutEffect)(() => {
-      let node2 = hostRef.current;
-      if (!node2) return;
-      attachGridTooltips(node2);
-      let observer = new MutationObserver(() => attachGridTooltips(node2));
-      return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, rows, locale, paginationModel]), (0, import_react34.useEffect)(() => {
-      let node2 = hostRef.current;
-      node2 && attachGridTooltips(node2);
-    }, [columns, rows, locale, paginationModel]);
-    function onPaginationModelChange(model) {
-      setPage(model.page);
-    }
-    function onRowSelectionModelChange(next3) {
-      if (!onSelectId) return;
-      let id = [...next3.ids][0];
-      id == null || id === selectedId || onSelectId(id);
-    }
-    return /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("div", { ref: hostRef, className: "health-grid", style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(
-      DataGrid2,
-      {
-        rows,
-        columns,
-        getRowId: (row) => row.id,
-        rowHeight: 36,
-        columnHeaderHeight: 36,
-        autoHeight: !0,
-        hideFooter,
-        hideFooterSelectedRowCount: !0,
-        paginationModel,
-        onPaginationModelChange,
-        pageSizeOptions: [GRID_PAGE_SIZE],
-        rowBufferPx: 144,
-        disableColumnFilter: !0,
-        disableDensitySelector: !0,
-        disableEval: !0,
-        disableMultipleRowSelection: !0,
-        disableRowSelectionOnClick: !onSelectId,
-        rowSelectionModel,
-        onRowSelectionModelChange,
-        getRowClassName: () => "row",
-        localeText,
-        sx: {
-          border: 0,
-          bgcolor: "transparent",
-          color: "inherit",
-          font: "inherit",
-          "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within, & .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
-            outline: "none"
-          }
-        }
-      }
-    ) });
-  }
 
-  // src/lib/health/scan-view.ts
-  var PROBLEM_KEYS = {
-    empty: "scan.problem.empty",
-    unreadable: "scan.problem.unreadable",
-    wrong_format: "scan.problem.wrong_format",
-    serato_flagged: "scan.problem.serato_flagged",
-    undecodable: "scan.problem.undecodable",
-    decode_error: "scan.problem.decode_error",
-    short: "scan.problem.short"
-  };
-  function scanProblemHeading(kind2) {
-    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
-  }
-  function scanProblemDetail(item) {
-    let heading = scanProblemHeading(item.problem);
-    return item.problem === "wrong_format" && item.detail ? t("scan.wrongFormatDetail", { detail: item.detail }) : (item.problem === "decode_error" || item.problem === "short") && item.detail ? t(item.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
-      detail: item.detail
-    }) : item.problem === "serato_flagged" && item.detail ? `${heading}: ${item.detail}` : heading;
-  }
-  function scanTrackTitle(item) {
-    return [item.artist, item.name].filter(Boolean).join(" — ") || item.file;
-  }
+  // src/pages/SharedDialogs.tsx
+  var import_react33 = __toESM(require_react(), 1), import_react_dom3 = __toESM(require_react_dom(), 1);
 
-  // src/pages/ScanPanel.tsx
-  var import_jsx_runtime242 = __toESM(require_jsx_runtime(), 1), BUTTON_SX3 = { textTransform: "none", minHeight: 44 };
-  function ScanPanel() {
-    let health = useHealth(), payload = health.scanReport, problems = payload?.problems ?? [], rows = (0, import_react35.useMemo)(
-      () => problems.map((item) => ({ ...item, id: item.id })),
-      [problems]
-    ), columns = (0, import_react35.useMemo)(() => [
-      {
-        field: "track",
-        headerName: t("health.column.track"),
-        flex: 1.2,
-        minWidth: 160,
-        valueGetter: (_value, row) => scanTrackTitle(row)
-      },
-      {
-        field: "file",
-        headerName: t("health.column.file"),
-        flex: 1,
-        minWidth: 120
-      },
-      {
-        field: "problem",
-        headerName: t("scan.column.problem"),
-        flex: 1.4,
-        minWidth: 180,
-        valueGetter: (_value, row) => scanProblemDetail(row)
-      }
-    ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(import_jsx_runtime242.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime242.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
-          Button_default,
-          {
-            id: "scan-quick",
-            type: "button",
-            size: "small",
-            variant: "outlined",
-            sx: BUTTON_SX3,
-            ref: tooltipRef6(tips.scanQuick),
-            disabled: health.scanBusy,
-            "aria-busy": health.scanBusy ? "true" : "false",
-            onClick: () => {
-              health.loadScan("quick");
-            },
-            children: t("scan.checkQuick")
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
-          Button_default,
-          {
-            id: "scan-full",
-            type: "button",
-            size: "small",
-            variant: "outlined",
-            sx: BUTTON_SX3,
-            ref: tooltipRef6(tips.scanFull),
-            disabled: health.scanBusy || health.scanFullDisabled,
-            "aria-busy": health.scanBusy ? "true" : "false",
-            onClick: () => {
-              health.loadScan("full");
-            },
-            children: t("scan.checkFull")
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(import_jsx_runtime242.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime242.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
-        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime242.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
-        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime242.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
-        problems.length ? /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime242.jsx)("p", { className: "gig-note", children: t("scan.empty") })
-      ] }) : null })
-    ] });
-  }
-
-  // src/lib/health/scan.ts
-  var latest5 = null, status2 = "", busy3 = !1, lastDepth = "quick", expanded = /* @__PURE__ */ new Set(), panelRoot2, panelHost2 = null;
-  function getScanSnapshot() {
-    return {
-      scanReport: latest5,
-      scanStatus: status2,
-      scanBusy: busy3,
-      scanScope: crateScopeLabel(),
-      scanFullDisabled: state.activeCrate === "all",
-      scanExpanded: expanded
-    };
-  }
-  function expandScan(kind2) {
-    expanded.add(kind2), emitHealth();
-  }
-  function wireScan() {
-    let panel = el("scan-panel");
-    panelRoot2 && panelHost2 !== panel && (panelRoot2.unmount(), panelRoot2 = void 0), panelHost2 = panel, panelRoot2 = mountIsland(panel, (0, import_react36.createElement)(ScanPanel), panelRoot2);
-  }
-  async function loadScan(depth) {
-    let chosen = resolveDepth(depth), token4 = ++state.scanToken;
-    beginBusy4();
-    let settle = "none";
-    if (chosen === "full" && state.activeCrate === "all") {
-      failStatus4(t("error.scan_full_needs_crate")), endBusy4(), el("scan-full").focus();
-      return;
-    }
-    lastDepth = chosen;
-    let crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
-    try {
-      let response = await fetch(
-        `/api/file-scan?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&depth=${encodeURIComponent(chosen)}`
-      );
-      if (token4 !== state.scanToken) return;
-      let payload = await readJSON(response).catch(() => null);
-      if (token4 !== state.scanToken) return;
-      if (!response.ok || payload === null) {
-        failStatus4(serverMessage(payload, t("scan.unreadable"))), settle = "retry";
-        return;
-      }
-      latest5 = payload, expanded.clear(), status2 = "", emitHealth(), settle = "report";
-    } catch {
-      if (token4 !== state.scanToken) return;
-      failStatus4(t("scan.unreachable")), settle = "retry";
-    } finally {
-      if (token4 !== state.scanToken) return;
-      endBusy4(), settle === "retry" && el("scan-quick").focus(), settle === "report" && el("scan-report").focus();
-    }
-  }
-  function showScanFailure(error2) {
-    let message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
-    failStatus4(message), endBusy4(), el("scan-quick").focus();
-  }
-  function repaintScan() {
-    emitHealth();
-  }
-  function resolveDepth(depth) {
-    return depth === "quick" || depth === "full" ? depth : lastDepth === "full" && state.activeCrate === "all" ? "quick" : lastDepth;
-  }
-  function beginBusy4() {
-    busy3 = !0, status2 = t("scan.checking"), el("scan-panel").setAttribute("aria-busy", "true"), emitHealth();
-  }
-  function endBusy4() {
-    busy3 = !1, el("scan-panel").setAttribute("aria-busy", "false"), emitHealth();
-  }
-  function failStatus4(message) {
-    status2 = message, emitHealth();
-  }
-
-  // src/lib/health/tags.ts
-  var import_react38 = __toESM(require_react(), 1);
-
-  // src/pages/TagsPanel.tsx
-  var import_react37 = __toESM(require_react(), 1);
-
-  // src/lib/health/tags-view.ts
-  function tagsSummary(field2, values3, groups) {
-    return field2 === "titles" ? titlesSummary(groups) : groups === 0 ? field2 === "genre" ? t("tags.summaryGenreClear", { count: values3 }) : t("tags.summaryArtistClear", { count: values3 }) : field2 === "genre" ? t("tags.summaryGenre", { values: values3, count: groups }) : t("tags.summaryArtist", { values: values3, count: groups });
-  }
-  function titlesSummary(changes) {
-    return changes ? t("tags.summaryTitles", { count: changes }) : t("tags.summaryTitlesClear");
-  }
-  function spellingLabel(value, count, suggested) {
-    let base = t("tags.row", { value, count });
-    return suggested ? `${base} — ${t("tags.suggested")}` : base;
-  }
-  function previewSummary(plan) {
-    return plan.changes.length ? t("tags.previewSummary", { count: plan.changes.length, value: plan.value }) : t("tags.noChanges");
-  }
-  function titlesPreviewSummary(plan) {
-    return plan.changes.length ? t("tags.titlesPreviewSummary", { count: plan.changes.length }) : t("tags.summaryTitlesClear");
-  }
-  function writtenSummary(plan) {
-    return t("tags.written", { count: plan.changes.length, value: plan.value });
-  }
-  function titlesWrittenSummary(plan) {
-    return t("tags.titlesWritten", { count: plan.changes.length });
-  }
-  function mappingPreviewSummary(plan) {
-    return plan.changes.length ? t("tags.mappingSummary", { count: plan.changes.length }) : t("tags.noChanges");
-  }
-  function mappingWrittenSummary(plan) {
-    return t("tags.mappingWritten", { count: plan.changes.length });
-  }
-  function mappingFieldLabel(field2) {
-    return field2 === "genre" ? t("tags.genre") : field2 === "artist" ? t("tags.artist") : field2;
-  }
-  function groupChanges(changes) {
-    let rows = /* @__PURE__ */ new Map();
-    for (let change of changes) {
-      let remixer = change.remixer ?? "", id = `${change.field ?? ""}\0${change.from}\0${change.to}\0${remixer}`, existing = rows.get(id);
-      if (existing) existing.count += 1;
-      else {
-        let row = { from: change.from, to: change.to, count: 1 };
-        change.remixer && (row.remixer = change.remixer), change.field && (row.field = change.field), rows.set(id, row);
-      }
-    }
-    return [...rows.values()];
-  }
-  function previewLines(changes) {
-    return groupChanges(changes).map((row) => row.field ? t("tags.previewLineField", {
-      field: mappingFieldLabel(row.field),
-      from: row.from,
-      to: row.to,
-      count: row.count
-    }) : row.remixer ? t("tags.previewLineRemixer", {
-      from: row.from,
-      to: row.to,
-      remixer: row.remixer,
-      count: row.count
-    }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count }));
-  }
-
-  // src/pages/TagsPanel.tsx
-  var import_jsx_runtime243 = __toESM(require_jsx_runtime(), 1), LIST_CAP = 100, TITLE_KEY = "clean", MAPPING_KEY = "saved", BUTTON_SX4 = { textTransform: "none", minHeight: 44 };
-  function DiffLines({ plan }) {
-    let lines = previewLines(plan.changes).slice(0, LIST_CAP);
-    return lines.length ? /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("ul", { children: lines.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("li", { children: line2 }, line2)) }) : null;
-  }
-  function MappingCard({
-    plan,
-    canApply,
-    onApply
-  }) {
-    return plan.changes.length ? /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)("div", { className: "tags-mappings", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-        Button_default,
-        {
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX4,
-          ref: tooltipRef6(tips.tagsApplyMappings),
-          "data-tags-action": "refresh-apply",
-          disabled: !canApply,
-          onClick: onApply,
-          children: t("tags.applyMappings")
-        }
-      ) })
-    ] }) : null;
-  }
-  function TitlesReport({
-    plan,
-    canApply,
-    onApply
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(import_jsx_runtime243.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-        Button_default,
-        {
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX4,
-          ref: tooltipRef6(tips.tagsApplyTitles),
-          "data-tags-action": "clean-apply",
-          disabled: !canApply,
-          onClick: onApply,
-          children: t("tags.apply")
-        }
-      ) })
-    ] });
-  }
-  function ClusterActions({
-    group,
-    chosen,
-    plan,
-    busy: busy4,
-    canApply,
-    onPreview,
-    onApply,
-    onSelect
-  }) {
-    let showPlan = plan && plan.value === chosen;
-    return /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)("div", { className: "tags-cluster-chrome", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)("label", { className: "tags-spelling", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-          "input",
-          {
-            ref: tooltipRef6(tips.tagsSpelling),
-            type: "radio",
-            name: `tags-${group.key}`,
-            value: spelling.value,
-            checked: spelling.value === chosen,
-            disabled: busy4,
-            onChange: (event) => onSelect(event.currentTarget.value)
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
-      ] }) }, spelling.value)) }),
-      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(DiffLines, { plan }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)("div", { className: "tags-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-          Button_default,
-          {
-            type: "button",
-            size: "small",
-            variant: "outlined",
-            sx: BUTTON_SX4,
-            ref: tooltipRef6(tips.tagsPreview),
-            "data-tags-action": "preview",
-            "data-key": group.key,
-            disabled: busy4 || !chosen,
-            onClick: onPreview,
-            children: t("tags.preview")
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-          Button_default,
-          {
-            type: "button",
-            size: "small",
-            variant: "outlined",
-            sx: BUTTON_SX4,
-            ref: tooltipRef6(tips.tagsApply),
-            "data-tags-action": "apply",
-            "data-key": group.key,
-            disabled: !canApply || !!(plan && plan.value === chosen && !plan.changes.length),
-            onClick: onApply,
-            children: t("tags.apply")
-          }
-        )
-      ] })
-    ] });
-  }
-  function TagsPanel() {
-    let health = useHealth(), field2 = health.tagsField, groups = health.tagsClusters?.groups ?? [], [selectedKey, setSelectedKey] = (0, import_react37.useState)(""), selected = groups.find((row) => row.key === selectedKey) ?? groups[0];
-    function onField(next3) {
-      health.tagsField !== next3 && (health.setTagsField(next3), health.loadTags());
-    }
-    function canApply(key) {
-      let plan = health.tagsPlans.get(key), group = groups.find((row) => row.key === key), value = health.tagsSelected.get(key) ?? group?.suggested ?? "";
-      return !!(plan && plan.value === value && plan.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== key);
-    }
-    let canApplyTitles = !!(health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY), canApplyMappings = !!(health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY), rows = (0, import_react37.useMemo)(
-      () => groups.map((group) => ({ ...group, id: group.key })),
-      [groups]
-    ), columns = (0, import_react37.useMemo)(() => [
-      {
-        field: "suggested",
-        headerName: t("tags.column.suggested"),
-        flex: 1.4,
-        minWidth: 160
-      },
-      {
-        field: "tracks",
-        headerName: t("tags.column.tracks"),
-        width: 110,
-        type: "number"
-      },
-      {
-        field: "spellings",
-        headerName: t("tags.column.spellings"),
-        width: 120,
-        type: "number",
-        valueGetter: (_value, row) => row.spellings.length
-      }
-    ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(import_jsx_runtime243.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
-        /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-            Button_default,
-            {
-              id: "tags-genre",
-              type: "button",
-              size: "small",
-              variant: "outlined",
-              sx: BUTTON_SX4,
-              ref: tooltipRef6(tips.tagsGenre),
-              "aria-pressed": field2 === "genre",
-              disabled: health.tagsBusy,
-              "aria-busy": health.tagsBusy ? "true" : "false",
-              onClick: () => onField("genre"),
-              children: t("tags.genre")
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-            Button_default,
-            {
-              id: "tags-artist",
-              type: "button",
-              size: "small",
-              variant: "outlined",
-              sx: BUTTON_SX4,
-              ref: tooltipRef6(tips.tagsArtist),
-              "aria-pressed": field2 === "artist",
-              disabled: health.tagsBusy,
-              "aria-busy": health.tagsBusy ? "true" : "false",
-              onClick: () => onField("artist"),
-              children: t("tags.artist")
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-            Button_default,
-            {
-              id: "tags-titles",
-              type: "button",
-              size: "small",
-              variant: "outlined",
-              sx: BUTTON_SX4,
-              ref: tooltipRef6(tips.tagsTitles),
-              "aria-pressed": field2 === "titles",
-              disabled: health.tagsBusy,
-              "aria-busy": health.tagsBusy ? "true" : "false",
-              onClick: () => onField("titles"),
-              children: t("tags.titles")
-            }
-          )
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-          Button_default,
-          {
-            id: "tags-refresh",
-            type: "button",
-            size: "small",
-            variant: "outlined",
-            sx: BUTTON_SX4,
-            ref: tooltipRef6(tips.tagsRefresh),
-            disabled: health.tagsBusy,
-            "aria-busy": health.tagsBusy ? "true" : "false",
-            onClick: () => {
-              health.loadTags();
-            },
-            children: t("gig.checkAgain")
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
-        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => {
-          health.applyTitles();
-        } }) : null,
-        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(import_jsx_runtime243.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime243.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
-          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-            MappingCard,
-            {
-              plan: health.mappingPlan,
-              canApply: canApplyMappings,
-              onApply: () => {
-                health.applyMappings();
-              }
-            }
-          ) : null,
-          selected ? /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-            ClusterActions,
-            {
-              group: selected,
-              chosen: health.tagsSelected.get(selected.key) ?? selected.suggested ?? "",
-              plan: health.tagsPlans.get(selected.key),
-              busy: health.tagsBusy,
-              canApply: canApply(selected.key),
-              onPreview: () => {
-                health.previewGroup(selected.key);
-              },
-              onApply: () => {
-                health.applyGroup(selected.key);
-              },
-              onSelect: (value) => health.selectSpelling(selected.key, value)
-            }
-          ) : null,
-          selected ? /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
-            HealthDataGrid,
-            {
-              rows,
-              columns,
-              selectedId: selected.key,
-              onSelectId: (id) => setSelectedKey(String(id))
-            }
-          ) : null
-        ] }) : null
-      ] })
-    ] });
-  }
-
-  // src/lib/health/tags.ts
-  var TITLE_KEY2 = "clean", MAPPING_KEY2 = "saved", latest6 = null, titlePlan = null, mappingPlan = null, plans = /* @__PURE__ */ new Map(), selectedByKey = /* @__PURE__ */ new Map(), openKeys = /* @__PURE__ */ new Set(), field = "genre", status3 = "", panelBusy = !1, actionKey = "", panelRoot3, panelHost3 = null;
-  function getTagsSnapshot() {
-    return {
-      tagsField: field,
-      tagsClusters: latest6,
-      titlePlan,
-      mappingPlan,
-      tagsPlans: plans,
-      tagsSelected: selectedByKey,
-      tagsOpen: openKeys,
-      tagsStatus: status3,
-      tagsBusy: panelBusy,
-      tagsActionKey: actionKey,
-      tagsWritable: state.writable
-    };
-  }
-  function setTagsField(next3) {
-    field = next3, emitHealth();
-  }
-  function selectSpelling(key, value) {
-    selectedByKey.set(key, value), plans.delete(key), emitHealth();
-  }
-  function wireTags() {
-    field = "genre";
-    let panel = el("tags-panel");
-    panelRoot3 && panelHost3 !== panel && (panelRoot3.unmount(), panelRoot3 = void 0), panelHost3 = panel, panelRoot3 = mountIsland(panel, (0, import_react38.createElement)(TagsPanel), panelRoot3);
-  }
-  async function loadTags() {
-    let token4 = ++state.tagsToken;
-    plans.clear(), selectedByKey.clear(), openKeys.clear(), beginBusy5();
-    let settle = "none";
-    try {
-      if (field === "titles") {
-        let payload = await postJSON("/api/tag-clusters", {
-          action: "clean-preview",
-          space: state.space
-        });
-        if (token4 !== state.tagsToken) return;
-        titlePlan = payload, latest6 = null, mappingPlan = null, status3 = titlesPreviewSummary(payload), settle = "report";
-      } else {
-        let response = await fetch(
-          `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
-        );
-        if (token4 !== state.tagsToken) return;
-        let payload = await readJSON(response).catch(() => null);
-        if (token4 !== state.tagsToken) return;
-        if (!response.ok || payload === null) {
-          failStatus5(serverMessage(payload, t("tags.unreadable"))), settle = "retry";
-          return;
-        }
-        if (latest6 = payload, titlePlan = null, mappingPlan = await readMappingPreview(token4), token4 !== state.tagsToken) return;
-        status3 = "", settle = "report";
-      }
-    } catch (error2) {
-      if (token4 !== state.tagsToken) return;
-      error2 instanceof TypeError ? failStatus5(t("tags.unreachable")) : failStatus5(failureOf(error2).message), settle = "retry";
-    } finally {
-      if (token4 !== state.tagsToken) return;
-      endBusy5(), emitHealth(), settle === "retry" && el("tags-refresh").focus(), settle === "report" && el("tags-report").focus();
-    }
-  }
-  function showTagsFailure(error2) {
-    let message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
-    failStatus5(message), endBusy5(), el("tags-refresh").focus();
-  }
-  function repaintTags() {
-    emitHealth();
-  }
-  async function previewGroup(key) {
-    let group = groupByKey(key), value = selectedValue(key);
-    if (!(!group || !value)) {
-      actionKey = key, emitHealth();
-      try {
-        let plan = await postJSON("/api/tag-clusters", {
-          action: "preview",
-          space: state.space,
-          field: field === "titles" ? "genre" : field,
-          value
-        });
-        plans.set(key, plan), status3 = previewSummary(plan), emitHealth(), applyButton(key)?.focus();
-      } catch (error2) {
-        failStatus5(failureOf(error2).message);
-      } finally {
-        actionKey = "", emitHealth();
-      }
-    }
-  }
-  async function applyGroup(key) {
-    let plan = plans.get(key), value = selectedValue(key);
-    if (!(!plan || !value || plan.value !== value || !plan.changes.length || !state.writable)) {
-      actionKey = key, panelBusy = !0, beginBusy5(), emitHealth();
-      try {
-        let written = await postJSON("/api/tag-clusters", {
-          action: "apply",
-          space: state.space,
-          field: field === "titles" ? "genre" : field,
-          value
-        });
-        await bridge.reloadLibrary(), actionKey = "", panelBusy = !1, endBusy5(), await loadTags(), status3 = writtenSummary(written), emitHealth();
-      } catch (error2) {
-        let failed = failureOf(error2);
-        failStatus5(failed.message), failed.status === 409 && bridge.lockDown(error2);
-      } finally {
-        actionKey = "", panelBusy = !1, endBusy5(), emitHealth();
-      }
-    }
-  }
-  async function applyMappings() {
-    let plan = mappingPlan;
-    if (!(!plan || !plan.changes.length || !state.writable)) {
-      actionKey = MAPPING_KEY2, panelBusy = !0, beginBusy5(), emitHealth();
-      try {
-        let written = await postJSON("/api/tag-clusters", {
-          action: "refresh-apply",
-          space: state.space
-        });
-        await bridge.reloadLibrary(), actionKey = "", panelBusy = !1, endBusy5(), await loadTags(), status3 = mappingWrittenSummary(written), emitHealth();
-      } catch (error2) {
-        let failed = failureOf(error2);
-        failStatus5(failed.message), failed.status === 409 && bridge.lockDown(error2);
-      } finally {
-        actionKey = "", panelBusy = !1, endBusy5(), emitHealth();
-      }
-    }
-  }
-  async function applyTitles() {
-    let plan = titlePlan;
-    if (!(!plan || !plan.changes.length || !state.writable)) {
-      actionKey = TITLE_KEY2, panelBusy = !0, beginBusy5(), emitHealth();
-      try {
-        let written = await postJSON("/api/tag-clusters", {
-          action: "clean-apply",
-          space: state.space
-        });
-        await bridge.reloadLibrary(), actionKey = "", panelBusy = !1, endBusy5(), await loadTags(), status3 = titlesWrittenSummary(written), emitHealth();
-      } catch (error2) {
-        let failed = failureOf(error2);
-        failStatus5(failed.message), failed.status === 409 && bridge.lockDown(error2);
-      } finally {
-        actionKey = "", panelBusy = !1, endBusy5(), emitHealth();
-      }
-    }
-  }
-  function beginBusy5() {
-    panelBusy = !0, el("tags-panel").setAttribute("aria-busy", "true"), status3 = field === "titles" ? t("tags.checkingTitles") : t("tags.checking"), emitHealth();
-  }
-  function endBusy5() {
-    panelBusy = !1, el("tags-panel").setAttribute("aria-busy", "false"), emitHealth();
-  }
-  function asMappingPlan(payload) {
-    if (payload === null || typeof payload != "object") return null;
-    let plan = payload;
-    return Array.isArray(plan.changes) ? plan : null;
-  }
-  async function readMappingPreview(token4) {
-    try {
-      let payload = await postJSON("/api/tag-clusters", {
-        action: "refresh-preview",
-        space: state.space
-      });
-      return token4 !== state.tagsToken ? null : asMappingPlan(payload);
-    } catch {
-      return token4 !== state.tagsToken, null;
-    }
-  }
-  function failStatus5(message) {
-    status3 = message, emitHealth();
-  }
-  function groupByKey(key) {
-    return latest6?.groups?.find((group) => group.key === key);
-  }
-  function selectedValue(key) {
-    let group = groupByKey(key);
-    return selectedByKey.get(key) ?? group?.suggested ?? "";
-  }
-  function applyButton(key) {
-    return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
-  }
-  function cssEscape(value) {
-    return typeof CSS < "u" && typeof CSS.escape == "function" ? CSS.escape(value) : value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
-  }
-
-  // src/containers/SnapshotsContext.tsx
-  var import_react39 = __toESM(require_react(), 1), import_jsx_runtime244 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react39.createContext)(null);
-  function SnapshotsProvider({
-    value,
-    children
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(SnapshotsContext, { value, children });
-  }
-  function useSnapshots() {
-    let value = (0, import_react39.useContext)(SnapshotsContext);
-    if (value === null)
-      throw new Error("useSnapshots must be used within SnapshotsProvider");
-    return value;
-  }
-
-  // src/containers/WizardContext.tsx
-  var import_react40 = __toESM(require_react(), 1);
-
-  // src/lib/wizard/wizard.ts
-  function createWizard(input) {
-    return {
-      step: "welcome",
-      complete: !1,
-      dismissed: !1,
-      context: {
-        needsConsent: input.needsConsent,
-        library: input.library,
-        seratoRunning: input.seratoRunning,
-        snapshot: "idle",
-        consent: null,
-        needsUpdates: input.needsUpdates ?? !1,
-        updates: null
-      }
-    };
-  }
-
-  // src/containers/WizardContext.tsx
-  var import_jsx_runtime245 = __toESM(require_jsx_runtime(), 1);
-  function noop8() {
-  }
-  function noopFlag(_value) {
-  }
-  function noopPath(_path) {
-  }
-  function idleWizardValue() {
-    return {
-      model: createWizard({
-        needsConsent: !0,
-        library: "pending",
-        seratoRunning: !1
-      }),
-      busy: !1,
-      folderOpen: !1,
-      folderName: "",
-      folderParent: null,
-      folders: [],
-      summary: "",
-      nextHint: "",
-      statusNote: "",
-      focusToken: 0,
-      onPrimary: noop8,
-      onBack: noop8,
-      onCancel: noop8,
-      onChooseFolder: noop8,
-      onConsent: noopFlag,
-      onUpdates: noopFlag,
-      onFolderUp: noop8,
-      onFolderUse: noop8,
-      onFolderClose: noop8,
-      onBrowse: noopPath
-    };
-  }
-  var WizardContext = (0, import_react40.createContext)(null);
-  function WizardProvider({
-    value,
-    children
-  }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(WizardContext, { value, children });
-  }
-
-  // src/lib/snapshots/restore.ts
-  var import_react42 = __toESM(require_react(), 1);
+  // src/components/CenteredDialog.tsx
+  var import_react32 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Dialog/Dialog.mjs
-  var React309 = __toESM(require_react(), 1);
+  var React304 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Dialog/dialogClasses.mjs
   function getDialogUtilityClass(slot) {
@@ -65021,16 +63190,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var dialogClasses = generateUtilityClasses("MuiDialog", ["root", "backdrop", "scrollPaper", "scrollBody", "container", "paper", "paperWidthFalse", "paperWidthXs", "paperWidthSm", "paperWidthMd", "paperWidthLg", "paperWidthXl", "paperFullWidth", "paperFullScreen"]);
 
   // node_modules/@mui/material/Dialog/DialogContext.mjs
-  var React308 = __toESM(require_react(), 1), DialogContext = /* @__PURE__ */ React308.createContext({}), DialogContext_default = DialogContext;
+  var React303 = __toESM(require_react(), 1), DialogContext = /* @__PURE__ */ React303.createContext({}), DialogContext_default = DialogContext;
 
   // node_modules/@mui/material/Dialog/Dialog.mjs
-  var import_jsx_runtime246 = __toESM(require_jsx_runtime(), 1), DialogBackdrop = styled_default2(Backdrop_default, {
+  var import_jsx_runtime234 = __toESM(require_jsx_runtime(), 1), DialogBackdrop = styled_default2(Backdrop_default, {
     name: "MuiDialog",
     slot: "Backdrop"
   })({
     // Improve scrollable dialog support.
     zIndex: -1
-  }), useUtilityClasses104 = (ownerState) => {
+  }), useUtilityClasses100 = (ownerState) => {
     let {
       classes: classes2,
       scroll,
@@ -65202,7 +63371,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         maxWidth: "100%"
       }
     }]
-  }))), Dialog = /* @__PURE__ */ React309.forwardRef(function(inProps, ref) {
+  }))), Dialog = /* @__PURE__ */ React304.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiDialog"
@@ -65234,11 +63403,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       fullWidth,
       maxWidth: maxWidth2,
       scroll
-    }, classes2 = useUtilityClasses104(ownerState), backdropClick = React309.useRef(), handleMouseDown = (event) => {
+    }, classes2 = useUtilityClasses100(ownerState), backdropClick = React304.useRef(), handleMouseDown = (event) => {
       backdropClick.current = event.target === event.currentTarget;
     }, handleBackdropClick = (event) => {
       onClick && onClick(event), backdropClick.current && (backdropClick.current = null, onClose && onClose(event, "backdropClick"));
-    }, ariaLabelledby = useId(ariaLabelledbyProp), dialogContextValue = React309.useMemo(() => ({
+    }, ariaLabelledby = useId(ariaLabelledbyProp), dialogContextValue = React304.useMemo(() => ({
       titleId: ariaLabelledby
     }), [ariaLabelledby]), externalForwardedProps = {
       slots,
@@ -65287,7 +63456,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         role: "presentation"
       }
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(RootSlot, {
       closeAfterTransition: !0,
       slots: {
         backdrop: BackdropSlot
@@ -65303,15 +63472,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       onClick: handleBackdropClick,
       ...rootSlotProps,
       ...other,
-      children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(TransitionSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(TransitionSlot, {
         ...transitionSlotProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(ContainerSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(ContainerSlot, {
           onMouseDown: handleMouseDown,
           ...containerSlotProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(PaperSlot, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(PaperSlot, {
             as: PaperComponent,
             ...paperSlotProps,
-            children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(DialogContext_default.Provider, {
+            children: /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(DialogContext_default.Provider, {
               value: dialogContextValue,
               children
             })
@@ -65321,71 +63490,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     });
   }), Dialog_default = Dialog;
 
-  // node_modules/@mui/material/DialogActions/DialogActions.mjs
-  var React310 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/material/DialogActions/dialogActionsClasses.mjs
-  function getDialogActionsUtilityClass(slot) {
-    return generateUtilityClass("MuiDialogActions", slot);
-  }
-  var dialogActionsClasses = generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
-
-  // node_modules/@mui/material/DialogActions/DialogActions.mjs
-  var import_jsx_runtime247 = __toESM(require_jsx_runtime(), 1), useUtilityClasses105 = (ownerState) => {
-    let {
-      classes: classes2,
-      disableSpacing
-    } = ownerState;
-    return composeClasses({
-      root: ["root", !disableSpacing && "spacing"]
-    }, getDialogActionsUtilityClass, classes2);
-  }, DialogActionsRoot = styled_default2("div", {
-    name: "MuiDialogActions",
-    slot: "Root",
-    overridesResolver: (props, styles5) => {
-      let {
-        ownerState
-      } = props;
-      return [styles5.root, !ownerState.disableSpacing && styles5.spacing];
-    }
-  })({
-    display: "flex",
-    alignItems: "center",
-    padding: 8,
-    justifyContent: "flex-end",
-    flex: "0 0 auto",
-    variants: [{
-      props: ({
-        ownerState
-      }) => !ownerState.disableSpacing,
-      style: {
-        "& > :not(style) ~ :not(style)": {
-          marginLeft: 8
-        }
-      }
-    }]
-  }), DialogActions = /* @__PURE__ */ React310.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiDialogActions"
-    }), {
-      className,
-      disableSpacing = !1,
-      ...other
-    } = props, ownerState = {
-      ...props,
-      disableSpacing
-    }, classes2 = useUtilityClasses105(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(DialogActionsRoot, {
-      className: clsx_default(classes2.root, className),
-      ownerState,
-      ref,
-      ...other
-    });
-  }), DialogActions_default = DialogActions;
-
   // node_modules/@mui/material/DialogContent/DialogContent.mjs
-  var React311 = __toESM(require_react(), 1);
+  var React305 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/DialogContent/dialogContentClasses.mjs
   function getDialogContentUtilityClass(slot) {
@@ -65400,7 +63506,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]), dialogTitleClasses_default = dialogTitleClasses;
 
   // node_modules/@mui/material/DialogContent/DialogContent.mjs
-  var import_jsx_runtime248 = __toESM(require_jsx_runtime(), 1), useUtilityClasses106 = (ownerState) => {
+  var import_jsx_runtime235 = __toESM(require_jsx_runtime(), 1), useUtilityClasses101 = (ownerState) => {
     let {
       classes: classes2,
       dividers
@@ -65450,7 +63556,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       }
     }]
-  }))), DialogContent = /* @__PURE__ */ React311.forwardRef(function(inProps, ref) {
+  }))), DialogContent = /* @__PURE__ */ React305.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiDialogContent"
@@ -65461,8 +63567,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     } = props, ownerState = {
       ...props,
       dividers
-    }, classes2 = useUtilityClasses106(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(DialogContentRoot, {
+    }, classes2 = useUtilityClasses101(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(DialogContentRoot, {
       className: clsx_default(classes2.root, className),
       ownerState,
       ref,
@@ -65470,8 +63576,2249 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     });
   }), DialogContent_default = DialogContent;
 
-  // node_modules/@mui/material/DialogContentText/DialogContentText.mjs
+  // src/components/CenteredDialog.tsx
+  var import_jsx_runtime236 = __toESM(require_jsx_runtime(), 1);
+  function bindSharedRoot(node2, id) {
+    node2 && (node2.id || (node2.id = id), node2.setAttribute("data-shared-dialog", id), node2.setAttribute("data-open", isSharedDialogOpen(id) ? "true" : "false"), bindDialogApi(node2, id));
+  }
+  function CenteredDialog({
+    id,
+    labelledBy,
+    describedBy,
+    children,
+    contentRef
+  }) {
+    let open = isSharedDialogOpen(id), rootRef = (0, import_react32.useRef)(null);
+    return (0, import_react32.useLayoutEffect)(() => {
+      rootRef.current?.setAttribute("data-open", open ? "true" : "false");
+    }, [open]), /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(
+      Dialog_default,
+      {
+        open,
+        keepMounted: !0,
+        fullWidth: !0,
+        maxWidth: sharedDialogMaxWidth(id),
+        scroll: "paper",
+        transitionDuration: 0,
+        "aria-labelledby": labelledBy,
+        "aria-describedby": describedBy,
+        ref: (node2) => {
+          rootRef.current = node2, bindSharedRoot(node2, id);
+        },
+        onClose: (_event, reason) => {
+          reason !== "backdropClick" && setSharedDialogOpen(id, !1);
+        },
+        children: /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(DialogContent_default, { ref: contentRef, sx: { p: 0 }, children })
+      }
+    );
+  }
+
+  // node_modules/@mui/material/DialogActions/DialogActions.mjs
+  var React306 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/DialogActions/dialogActionsClasses.mjs
+  function getDialogActionsUtilityClass(slot) {
+    return generateUtilityClass("MuiDialogActions", slot);
+  }
+  var dialogActionsClasses = generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
+
+  // node_modules/@mui/material/DialogActions/DialogActions.mjs
+  var import_jsx_runtime237 = __toESM(require_jsx_runtime(), 1), useUtilityClasses102 = (ownerState) => {
+    let {
+      classes: classes2,
+      disableSpacing
+    } = ownerState;
+    return composeClasses({
+      root: ["root", !disableSpacing && "spacing"]
+    }, getDialogActionsUtilityClass, classes2);
+  }, DialogActionsRoot = styled_default2("div", {
+    name: "MuiDialogActions",
+    slot: "Root",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.root, !ownerState.disableSpacing && styles5.spacing];
+    }
+  })({
+    display: "flex",
+    alignItems: "center",
+    padding: 8,
+    justifyContent: "flex-end",
+    flex: "0 0 auto",
+    variants: [{
+      props: ({
+        ownerState
+      }) => !ownerState.disableSpacing,
+      style: {
+        "& > :not(style) ~ :not(style)": {
+          marginLeft: 8
+        }
+      }
+    }]
+  }), DialogActions = /* @__PURE__ */ React306.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiDialogActions"
+    }), {
+      className,
+      disableSpacing = !1,
+      ...other
+    } = props, ownerState = {
+      ...props,
+      disableSpacing
+    }, classes2 = useUtilityClasses102(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime237.jsx)(DialogActionsRoot, {
+      className: clsx_default(classes2.root, className),
+      ownerState,
+      ref,
+      ...other
+    });
+  }), DialogActions_default = DialogActions;
+
+  // node_modules/@mui/material/DialogTitle/DialogTitle.mjs
+  var React307 = __toESM(require_react(), 1);
+  var import_jsx_runtime238 = __toESM(require_jsx_runtime(), 1), useUtilityClasses103 = (ownerState) => {
+    let {
+      classes: classes2
+    } = ownerState;
+    return composeClasses({
+      root: ["root"]
+    }, getDialogTitleUtilityClass, classes2);
+  }, DialogTitleRoot = styled_default2(Typography_default, {
+    name: "MuiDialogTitle",
+    slot: "Root"
+  })({
+    padding: "16px 24px",
+    flex: "0 0 auto"
+  }), DialogTitle = /* @__PURE__ */ React307.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiDialogTitle"
+    }), {
+      className,
+      id: idProp,
+      ...other
+    } = props, ownerState = props, classes2 = useUtilityClasses103(ownerState), {
+      titleId = idProp
+    } = React307.useContext(DialogContext_default);
+    return /* @__PURE__ */ (0, import_jsx_runtime238.jsx)(DialogTitleRoot, {
+      component: "h2",
+      className: clsx_default(classes2.root, className),
+      ownerState,
+      ref,
+      variant: "h6",
+      id: idProp ?? titleId,
+      ...other
+    });
+  }), DialogTitle_default = DialogTitle;
+
+  // src/components/tooltip-ref.ts
+  function tooltipRef6(spec2) {
+    return (element) => {
+      element && setTooltip(element, spec2);
+    };
+  }
+
+  // src/components/CratePromptDialog.tsx
+  var import_jsx_runtime239 = __toESM(require_jsx_runtime(), 1);
+  function CratePromptDialog() {
+    let prompt2 = getCratePrompt(), open = isSharedDialogOpen("crate-prompt-dialog"), ready = !!prompt2.value.trim();
+    return /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(CenteredDialog, { id: "crate-prompt-dialog", labelledBy: "crate-prompt-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(DialogTitle_default, { id: "crate-prompt-title", children: prompt2.title }),
+      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
+        TextField_default,
+        {
+          id: "crate-prompt-input",
+          inputRef: tooltipRef6(tips.cratePromptName),
+          label: t("crates.promptName"),
+          value: prompt2.value,
+          autoComplete: "off",
+          autoFocus: open,
+          fullWidth: !0,
+          margin: "dense",
+          onChange: (event) => setCratePromptValue(event.target.value),
+          onKeyDown: (event) => {
+            event.key !== "Enter" || !ready || (event.preventDefault(), confirmCratePrompt());
+          }
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(DialogActions_default, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
+          Button_default,
+          {
+            id: "crate-prompt-cancel",
+            ref: tooltipRef6(tips.cratePromptCancel),
+            type: "button",
+            sx: { minHeight: 44 },
+            onClick: () => cancelCratePrompt(),
+            children: t("common.cancel")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
+          Button_default,
+          {
+            id: "crate-prompt-confirm",
+            ref: tooltipRef6(tips.cratePromptConfirm),
+            type: "button",
+            variant: "contained",
+            disabled: !ready,
+            sx: { minHeight: 44 },
+            onClick: () => confirmCratePrompt(),
+            children: prompt2.confirmLabel || t("common.confirm")
+          }
+        )
+      ] })
+    ] });
+  }
+
+  // src/pages/SharedDialogs.tsx
+  var import_jsx_runtime240 = __toESM(require_jsx_runtime(), 1), ADOPTED = [
+    { id: "consent-dialog", labelledBy: "consent-title", describedBy: "consent-body" },
+    { id: "merge-dialog", labelledBy: "merge-title", describedBy: "merge-intro" },
+    { id: "album-art-dialog", labelledBy: "album-art-title", describedBy: "album-art-intro" },
+    { id: "crates-replace-dialog", labelledBy: "crates-replace-title", describedBy: "crates-replace-intro" },
+    { id: "relink-dialog", labelledBy: "relink-title", describedBy: "relink-intro" },
+    { id: "preset-dialog", labelledBy: "preset-title", describedBy: "preset-intro" },
+    { id: "folder-sync-dialog", labelledBy: "folder-sync-title", describedBy: "folder-sync-intro" },
+    { id: "rekordbox-dialog", labelledBy: "rekordbox-title", describedBy: "rekordbox-intro" }
+  ], buckets = /* @__PURE__ */ new Map();
+  function bucketFor(id) {
+    let bucket = buckets.get(id);
+    return bucket || (bucket = document.createElement("div"), bucket.setAttribute("data-shared-bucket", id), buckets.set(id, bucket)), bucket;
+  }
+  function sourceDialog(id) {
+    let source = document.querySelector(`dialog#${CSS.escape(id)}`);
+    return !(source instanceof HTMLElement) || source.hasAttribute("data-shared-dialog") ? null : source;
+  }
+  function muiRoot(id) {
+    let root = document.querySelector(`[data-shared-dialog="${CSS.escape(id)}"]`);
+    return root instanceof HTMLElement ? root : null;
+  }
+  function adoptNative(id) {
+    let bucket = bucketFor(id), source = sourceDialog(id);
+    if (source) {
+      for (source instanceof HTMLDialogElement && source.open && setSharedDialogOpen(id, !0), bucket.replaceChildren(); source.firstChild; ) bucket.appendChild(source.firstChild);
+      source.remove();
+    }
+    return bucket;
+  }
+  function placeBucket(id, paper) {
+    let bucket = bucketFor(id), root = paper?.closest("[data-shared-dialog]") ?? muiRoot(id);
+    if (root instanceof HTMLElement) {
+      root.id = id, bindDialogApi(root, id);
+      let dest = paper ?? root.querySelector(".MuiDialogContent-root") ?? root;
+      bucket.parentElement !== dest && dest.appendChild(bucket);
+      return;
+    }
+    let host = document.getElementById("shared-dialogs");
+    host instanceof HTMLElement && bucket.parentElement !== host && host.appendChild(bucket);
+  }
+  function AdoptedDialog({
+    id,
+    labelledBy,
+    describedBy
+  }) {
+    return (0, import_react33.useLayoutEffect)(() => {
+      adoptNative(id), placeBucket(id, null);
+    }, [id]), /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
+      CenteredDialog,
+      {
+        id,
+        labelledBy,
+        describedBy,
+        contentRef: (paper) => {
+          paper && (adoptNative(id), placeBucket(id, paper));
+        }
+      }
+    );
+  }
+  function SharedDialogs() {
+    let [, setEpoch] = (0, import_react33.useState)(0);
+    return (0, import_react33.useEffect)(() => subscribeSharedDialogs(() => {
+      (0, import_react_dom3.flushSync)(() => {
+        setEpoch((value) => value + 1);
+      });
+    }), []), /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)(import_jsx_runtime240.Fragment, { children: [
+      ADOPTED.map((dialog) => /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(AdoptedDialog, { ...dialog }, dialog.id)),
+      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(CratePromptDialog, {})
+    ] });
+  }
+
+  // src/lib/ui/shared-dialog-mount.tsx
+  var islandRoot2 = null, islandHost = null;
+  function safeUnmount(root) {
+    if (root)
+      try {
+        root.unmount();
+      } catch {
+      }
+  }
+  function mountSharedDialogs() {
+    let host = document.getElementById("shared-dialogs");
+    if (!(host instanceof HTMLElement)) return;
+    let nativeLeft = !!document.querySelector("dialog#rekordbox-dialog");
+    islandRoot2 && islandHost === host && host.isConnected && !nativeLeft || (safeUnmount(islandRoot2), islandRoot2 = mountIsland(host, (0, import_react34.createElement)(SharedDialogs)), islandHost = host);
+  }
+  bindSharedDialogMount(mountSharedDialogs);
+
+  // src/lib/health/album-art.ts
+  var latest3 = null, trackId2 = null, busy = !1, onWrote = null;
+  function wireAlbumArt(wrote) {
+    onWrote = wrote, mountSharedDialogs();
+    let dialog = el("album-art-dialog");
+    dialog.dataset.albumArtWired !== "true" && (dialog.dataset.albumArtWired = "true", el("album-art-cancel").addEventListener("click", () => dialog.close()), el("album-art-embed").addEventListener("click", () => {
+      embedCover();
+    }), el("album-art-choices").addEventListener("change", () => syncEmbedEnabled()));
+  }
+  async function openAlbumArt(id) {
+    if (!(!Number.isInteger(id) || id <= 0) && (mountSharedDialogs(), typeof el("album-art-dialog").showModal == "function")) {
+      trackId2 = id, latest3 = null, busy = !0, paintDialog(), el("album-art-dialog").open || el("album-art-dialog").showModal(), el("album-art-cancel").focus();
+      try {
+        let plan = await postJSON("/api/album-art", {
+          action: "preview",
+          space: state.space,
+          id
+        });
+        if (trackId2 !== id) return;
+        latest3 = plan, el("album-art-status").textContent = plan.candidates.length ? "" : t("health.artNone"), paintDialog();
+        let first = el("album-art-choices").querySelector("input");
+        first instanceof HTMLInputElement ? first.focus() : el("album-art-cancel").focus();
+      } catch (error2) {
+        if (trackId2 !== id) return;
+        failStatus2(failureOf(error2).message), el("album-art-cancel").focus();
+      } finally {
+        trackId2 === id && (busy = !1), paintDialog();
+      }
+    }
+  }
+  function repaintAlbumArt() {
+    el("album-art-dialog").open && paintDialog();
+  }
+  async function embedCover() {
+    let id = trackId2, chosen = selectedRelease();
+    if (!(id === null || !chosen || !state.writable || busy)) {
+      busy = !0, paintDialog();
+      try {
+        latest3 = await postJSON("/api/album-art", {
+          action: "embed",
+          space: state.space,
+          id,
+          release_id: chosen,
+          confirm: !0
+        }), busy = !1, el("album-art-dialog").close(), onWrote?.();
+      } catch (error2) {
+        let failed = failureOf(error2);
+        failStatus2(failed.message), failed.status === 409 && bridge.lockDown(error2);
+      } finally {
+        busy = !1, paintDialog();
+      }
+    }
+  }
+  function paintDialog() {
+    let plan = latest3;
+    el("album-art-track").textContent = plan ? t("health.row", { title: [plan.artist, plan.name].filter(Boolean).join(" — ") || plan.file }) : t("health.artLooking");
+    let list = el("album-art-choices"), selected = selectedRelease();
+    list.replaceChildren(), (plan?.candidates ?? []).forEach((candidate, index) => {
+      list.append(choiceRow(candidate, selected, index === 0));
+    }), busy && !plan && (el("album-art-status").textContent = t("health.artLooking")), syncEmbedEnabled();
+  }
+  function choiceRow(candidate, selected, fallback) {
+    let row = document.createElement("label");
+    row.className = "check album-art-choice";
+    let radio = inputEl(tips.healthArtPick);
+    radio.type = "radio", radio.name = "album-art-pick", radio.value = candidate.release_id, radio.checked = selected === candidate.release_id || selected === null && fallback;
+    let image = document.createElement("img");
+    image.src = candidate.thumb, image.alt = candidate.title || t("health.artEmbed"), image.width = 96, image.height = 96;
+    let caption = document.createElement("span");
+    return caption.textContent = [candidate.artist, candidate.title].filter(Boolean).join(" — ") || candidate.release_id, row.append(radio, image, caption), row;
+  }
+  function selectedRelease() {
+    return el("album-art-choices").querySelector(
+      "input[name='album-art-pick']:checked"
+    )?.value || null;
+  }
+  function syncEmbedEnabled() {
+    let button = el("album-art-embed");
+    button.disabled = busy || !state.writable || selectedRelease() === null;
+  }
+  function failStatus2(message) {
+    el("album-art-status").textContent = message;
+  }
+
+  // src/pages/HealthPanel.tsx
+  var import_react35 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Accordion/Accordion.mjs
+  var React310 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Collapse/Collapse.mjs
+  var React308 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Collapse/collapseClasses.mjs
+  function getCollapseUtilityClass(slot) {
+    return generateUtilityClass("MuiCollapse", slot);
+  }
+  var collapseClasses = generateUtilityClasses("MuiCollapse", ["root", "horizontal", "vertical", "entered", "hidden", "wrapper", "wrapperInner"]);
+
+  // node_modules/@mui/material/Collapse/Collapse.mjs
+  var import_jsx_runtime241 = __toESM(require_jsx_runtime(), 1), EMPTY_OBJECT2 = {}, useUtilityClasses104 = (ownerState) => {
+    let {
+      orientation,
+      classes: classes2
+    } = ownerState;
+    return composeClasses({
+      root: ["root", orientation],
+      entered: ["entered"],
+      hidden: ["hidden"],
+      wrapper: ["wrapper", orientation],
+      wrapperInner: ["wrapperInner", orientation]
+    }, getCollapseUtilityClass, classes2);
+  }, CollapseRoot = styled_default2("div", {
+    name: "MuiCollapse",
+    slot: "Root",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.root, styles5[ownerState.orientation], ownerState.state === "entered" && styles5.entered, ownerState.state === "exited" && !ownerState.in && ownerState.collapsedSize === "0px" && styles5.hidden];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    height: 0,
+    overflow: "hidden",
+    transition: theme.transitions.create("height"),
+    variants: [{
+      props: {
+        orientation: "horizontal"
+      },
+      style: {
+        height: "auto",
+        width: 0,
+        transition: theme.transitions.create("width")
+      }
+    }, {
+      props: {
+        state: "entered"
+      },
+      style: {
+        height: "auto",
+        overflow: "visible"
+      }
+    }, {
+      props: {
+        state: "entered",
+        orientation: "horizontal"
+      },
+      style: {
+        width: "auto"
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.state === "exited" && !ownerState.in && ownerState.collapsedSize === "0px",
+      style: {
+        visibility: "hidden"
+      }
+    }]
+  }))), CollapseWrapper = styled_default2("div", {
+    name: "MuiCollapse",
+    slot: "Wrapper"
+  })({
+    // Prevent children with negative margins from making the measured size too small.
+    display: "flex",
+    width: "100%",
+    variants: [{
+      props: {
+        orientation: "horizontal"
+      },
+      style: {
+        width: "auto",
+        height: "100%"
+      }
+    }]
+  }), CollapseWrapperInner = styled_default2("div", {
+    name: "MuiCollapse",
+    slot: "WrapperInner"
+  })({
+    width: "100%",
+    variants: [{
+      props: {
+        orientation: "horizontal"
+      },
+      style: {
+        width: "auto",
+        height: "100%"
+      }
+    }]
+  }), Collapse = /* @__PURE__ */ React308.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiCollapse"
+    }), {
+      addEndListener,
+      children,
+      className,
+      collapsedSize: collapsedSizeProp = "0px",
+      component,
+      disablePrefersReducedMotion = !1,
+      easing: easing2,
+      in: inProp,
+      onEnter,
+      onEntered,
+      onEntering,
+      onExit,
+      onExited,
+      onExiting,
+      orientation = "vertical",
+      slots = EMPTY_OBJECT2,
+      slotProps = EMPTY_OBJECT2,
+      style: style4,
+      timeout = duration.standard,
+      // eslint-disable-next-line react/prop-types
+      TransitionComponent = Transition_default,
+      ...other
+    } = props, ownerState = {
+      ...props,
+      orientation,
+      collapsedSize: collapsedSizeProp
+    }, classes2 = useUtilityClasses104(ownerState), theme = useTheme4(), wrapperRef = React308.useRef(null), autoTransitionDuration = React308.useRef(null), collapsedSize = typeof collapsedSizeProp == "number" ? `${collapsedSizeProp}px` : collapsedSizeProp, isHorizontal2 = orientation === "horizontal", size = isHorizontal2 ? "width" : "height", reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), nodeRef = React308.useRef(null), handleRef = useForkRef_default(ref, nodeRef), getWrapperSize = () => wrapperRef.current ? wrapperRef.current[isHorizontal2 ? "clientWidth" : "clientHeight"] : 0, handleEnter = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
+      wrapperRef.current && isHorizontal2 && (wrapperRef.current.style.position = "absolute"), node2.style[size] = collapsedSize, onEnter && onEnter(node2, isAppearing);
+    }), handleEntering = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
+      let wrapperSize = getWrapperSize();
+      wrapperRef.current && isHorizontal2 && (wrapperRef.current.style.position = "");
+      let {
+        duration: transitionDuration,
+        easing: transitionTimingFunction
+      } = getTransitionProps({
+        style: style4,
+        timeout,
+        easing: easing2
+      }, {
+        mode: "enter"
+      });
+      if (timeout === "auto" && !reducedMotion.shouldReduceMotion) {
+        let duration22 = theme.transitions.getAutoHeightDuration(wrapperSize);
+        autoTransitionDuration.current = duration22;
+      } else
+        autoTransitionDuration.current = null;
+      let transitionTiming = reducedMotion.getTransitionTiming({
+        duration: autoTransitionDuration.current ?? transitionDuration,
+        delay: void 0
+      });
+      node2.style.transitionDuration = typeof transitionTiming.duration == "string" ? transitionTiming.duration : `${transitionTiming.duration}ms`, node2.style[size] = `${wrapperSize}px`, node2.style.transitionTimingFunction = transitionTimingFunction, onEntering && onEntering(node2, isAppearing);
+    }), handleEntered = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
+      node2.style[size] = "auto", onEntered && onEntered(node2, isAppearing);
+    }), handleExit = normalizedTransitionCallback(nodeRef, (node2) => {
+      node2.style[size] = `${getWrapperSize()}px`, onExit && onExit(node2);
+    }), handleExited = normalizedTransitionCallback(nodeRef, onExited), handleExiting = normalizedTransitionCallback(nodeRef, (node2) => {
+      let wrapperSize = getWrapperSize(), {
+        duration: transitionDuration,
+        easing: transitionTimingFunction
+      } = getTransitionProps({
+        style: style4,
+        timeout,
+        easing: easing2
+      }, {
+        mode: "exit"
+      });
+      if (timeout === "auto" && !reducedMotion.shouldReduceMotion) {
+        let duration22 = theme.transitions.getAutoHeightDuration(wrapperSize);
+        autoTransitionDuration.current = duration22;
+      } else
+        autoTransitionDuration.current = null;
+      let transitionTiming = reducedMotion.getTransitionTiming({
+        duration: autoTransitionDuration.current ?? transitionDuration,
+        delay: void 0
+      });
+      node2.style.transitionDuration = typeof transitionTiming.duration == "string" ? transitionTiming.duration : `${transitionTiming.duration}ms`, node2.style[size] = collapsedSize, node2.style.transitionTimingFunction = transitionTimingFunction, onExiting && onExiting(node2);
+    }), handleAddEndListener = addEndListener ? (next3) => {
+      addEndListener(nodeRef.current, next3);
+    } : void 0, externalForwardedProps = {
+      slots,
+      slotProps,
+      component
+    }, [RootSlot, rootSlotProps] = useSlot("root", {
+      ref: handleRef,
+      className: clsx_default(classes2.root, className),
+      elementType: CollapseRoot,
+      externalForwardedProps,
+      ownerState,
+      additionalProps: {
+        style: {
+          [isHorizontal2 ? "minWidth" : "minHeight"]: collapsedSize,
+          ...style4
+        }
+      }
+    }), [WrapperSlot, wrapperSlotProps] = useSlot("wrapper", {
+      ref: wrapperRef,
+      className: classes2.wrapper,
+      elementType: CollapseWrapper,
+      externalForwardedProps,
+      ownerState
+    }), [WrapperInnerSlot, wrapperInnerSlotProps] = useSlot("wrapperInner", {
+      className: classes2.wrapperInner,
+      elementType: CollapseWrapperInner,
+      externalForwardedProps,
+      ownerState
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(TransitionComponent, {
+      in: inProp,
+      onEnter: handleEnter,
+      onEntered: handleEntered,
+      onEntering: handleEntering,
+      onExit: handleExit,
+      onExited: handleExited,
+      onExiting: handleExiting,
+      addEndListener: handleAddEndListener,
+      getAutoTimeout: timeout === "auto" ? () => autoTransitionDuration.current : void 0,
+      reduceMotion: reducedMotion.shouldReduceMotion,
+      nodeRef,
+      timeout: timeout === "auto" ? null : timeout,
+      ...other,
+      children: (state2, {
+        ownerState: incomingOwnerState,
+        ...restChildProps
+      }) => {
+        let stateOwnerState = {
+          ...ownerState,
+          state: state2
+        };
+        return /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(RootSlot, {
+          ...rootSlotProps,
+          className: clsx_default(rootSlotProps.className, {
+            entered: classes2.entered,
+            exited: !inProp && collapsedSize === "0px" && classes2.hidden
+          }[state2]),
+          ownerState: stateOwnerState,
+          ...restChildProps,
+          children: /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(WrapperSlot, {
+            ...wrapperSlotProps,
+            ownerState: stateOwnerState,
+            children: /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(WrapperInnerSlot, {
+              ...wrapperInnerSlotProps,
+              ownerState: stateOwnerState,
+              children
+            })
+          })
+        });
+      }
+    });
+  });
+  Collapse && (Collapse.muiSupportAuto = !0);
+  var Collapse_default = Collapse;
+
+  // node_modules/@mui/material/Accordion/AccordionContext.mjs
+  var React309 = __toESM(require_react(), 1), AccordionContext = /* @__PURE__ */ React309.createContext({}), AccordionContext_default = AccordionContext;
+
+  // node_modules/@mui/material/Accordion/accordionClasses.mjs
+  function getAccordionUtilityClass(slot) {
+    return generateUtilityClass("MuiAccordion", slot);
+  }
+  var accordionClasses = generateUtilityClasses("MuiAccordion", ["root", "heading", "rounded", "expanded", "disabled", "gutters", "region"]), accordionClasses_default = accordionClasses;
+
+  // node_modules/@mui/material/Accordion/Accordion.mjs
+  var import_jsx_runtime242 = __toESM(require_jsx_runtime(), 1), useUtilityClasses105 = (ownerState) => {
+    let {
+      classes: classes2,
+      square,
+      expanded: expanded2,
+      disabled,
+      disableGutters
+    } = ownerState;
+    return composeClasses({
+      root: ["root", !square && "rounded", expanded2 && "expanded", disabled && "disabled", !disableGutters && "gutters"],
+      heading: ["heading"],
+      region: ["region"]
+    }, getAccordionUtilityClass, classes2);
+  }, AccordionRoot = styled_default2(Paper_default, {
+    name: "MuiAccordion",
+    slot: "Root",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [{
+        [`& .${accordionClasses_default.region}`]: styles5.region
+      }, styles5.root, !ownerState.square && styles5.rounded, !ownerState.disableGutters && styles5.gutters];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => {
+    let transition2 = {
+      duration: theme.transitions.duration.shortest
+    };
+    return {
+      position: "relative",
+      ...getTransitionStyles(theme, ["margin"], transition2),
+      overflowAnchor: "none",
+      // Keep the same scrolling position
+      "&::before": {
+        position: "absolute",
+        left: 0,
+        top: -1,
+        right: 0,
+        height: 1,
+        content: '""',
+        opacity: 1,
+        backgroundColor: (theme.vars || theme).palette.divider,
+        ...getTransitionStyles(theme, ["opacity", "background-color"], transition2)
+      },
+      "&:first-of-type": {
+        "&::before": {
+          display: "none"
+        }
+      },
+      [`&.${accordionClasses_default.expanded}`]: {
+        "&::before": {
+          opacity: 0
+        },
+        "&:first-of-type": {
+          marginTop: 0
+        },
+        "&:last-of-type": {
+          marginBottom: 0
+        },
+        "& + &": {
+          "&::before": {
+            display: "none"
+          }
+        }
+      },
+      [`&.${accordionClasses_default.disabled}`]: {
+        backgroundColor: (theme.vars || theme).palette.action.disabledBackground
+      }
+    };
+  }), memoTheme_default(({
+    theme
+  }) => ({
+    variants: [{
+      props: (props) => !props.square,
+      style: {
+        borderRadius: 0,
+        "&:first-of-type": {
+          borderTopLeftRadius: (theme.vars || theme).shape.borderRadius,
+          borderTopRightRadius: (theme.vars || theme).shape.borderRadius
+        },
+        "&:last-of-type": {
+          borderBottomLeftRadius: (theme.vars || theme).shape.borderRadius,
+          borderBottomRightRadius: (theme.vars || theme).shape.borderRadius,
+          // Fix a rendering issue on Edge
+          "@supports (-ms-ime-align: auto)": {
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0
+          }
+        }
+      }
+    }, {
+      props: (props) => !props.disableGutters,
+      style: {
+        [`&.${accordionClasses_default.expanded}`]: {
+          margin: "16px 0"
+        }
+      }
+    }]
+  }))), AccordionHeading = styled_default2("h3", {
+    name: "MuiAccordion",
+    slot: "Heading"
+  })({
+    all: "unset"
+  }), AccordionRegion = styled_default2("div", {
+    name: "MuiAccordion",
+    slot: "Region"
+  })({}), Accordion = /* @__PURE__ */ React310.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiAccordion"
+    }), {
+      children: childrenProp,
+      className,
+      defaultExpanded = !1,
+      disabled = !1,
+      disableGutters = !1,
+      expanded: expandedProp,
+      onChange,
+      slots = {},
+      slotProps = {},
+      ...other
+    } = props, [expanded2, setExpandedState] = useControlled_default({
+      controlled: expandedProp,
+      default: defaultExpanded,
+      name: "Accordion",
+      state: "expanded"
+    }), handleChange = React310.useCallback((event) => {
+      setExpandedState(!expanded2), onChange && onChange(event, !expanded2);
+    }, [expanded2, onChange, setExpandedState]), [summary, ...children] = React310.Children.toArray(childrenProp), contextValue = React310.useMemo(() => ({
+      expanded: expanded2,
+      disabled,
+      disableGutters,
+      toggle: handleChange
+    }), [expanded2, disabled, disableGutters, handleChange]), ownerState = {
+      ...props,
+      disabled,
+      disableGutters,
+      expanded: expanded2
+    }, classes2 = useUtilityClasses105(ownerState), externalForwardedProps = {
+      slots,
+      slotProps
+    }, [RootSlot, rootProps] = useSlot("root", {
+      elementType: AccordionRoot,
+      externalForwardedProps: {
+        ...externalForwardedProps,
+        ...other
+      },
+      className: clsx_default(classes2.root, className),
+      shouldForwardComponentProp: !0,
+      ownerState,
+      ref
+    }), [AccordionHeadingSlot, accordionProps] = useSlot("heading", {
+      elementType: AccordionHeading,
+      externalForwardedProps,
+      className: classes2.heading,
+      ownerState
+    }), [TransitionSlot, transitionProps] = useSlot("transition", {
+      elementType: Collapse_default,
+      externalForwardedProps,
+      ownerState
+    }), [AccordionRegionSlot, accordionRegionProps] = useSlot("region", {
+      elementType: AccordionRegion,
+      externalForwardedProps,
+      ownerState,
+      className: classes2.region,
+      additionalProps: {
+        "aria-labelledby": summary.props.id,
+        id: summary.props["aria-controls"],
+        role: "region"
+      }
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(RootSlot, {
+      ...rootProps,
+      children: [/* @__PURE__ */ (0, import_jsx_runtime242.jsx)(AccordionHeadingSlot, {
+        ...accordionProps,
+        children: /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(AccordionContext_default.Provider, {
+          value: contextValue,
+          children: summary
+        })
+      }), /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(TransitionSlot, {
+        in: expanded2,
+        timeout: "auto",
+        ...transitionProps,
+        children: /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(AccordionRegionSlot, {
+          ...accordionRegionProps,
+          children
+        })
+      })]
+    });
+  }), Accordion_default = Accordion;
+
+  // node_modules/@mui/material/AccordionDetails/AccordionDetails.mjs
+  var React311 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/AccordionDetails/accordionDetailsClasses.mjs
+  function getAccordionDetailsUtilityClass(slot) {
+    return generateUtilityClass("MuiAccordionDetails", slot);
+  }
+  var accordionDetailsClasses = generateUtilityClasses("MuiAccordionDetails", ["root"]);
+
+  // node_modules/@mui/material/AccordionDetails/AccordionDetails.mjs
+  var import_jsx_runtime243 = __toESM(require_jsx_runtime(), 1), useUtilityClasses106 = (ownerState) => {
+    let {
+      classes: classes2
+    } = ownerState;
+    return composeClasses({
+      root: ["root"]
+    }, getAccordionDetailsUtilityClass, classes2);
+  }, AccordionDetailsRoot = styled_default2("div", {
+    name: "MuiAccordionDetails",
+    slot: "Root"
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    padding: theme.spacing(1, 2, 2)
+  }))), AccordionDetails = /* @__PURE__ */ React311.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiAccordionDetails"
+    }), {
+      className,
+      ...other
+    } = props, ownerState = props, classes2 = useUtilityClasses106(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(AccordionDetailsRoot, {
+      className: clsx_default(classes2.root, className),
+      ref,
+      ownerState,
+      ...other
+    });
+  }), AccordionDetails_default = AccordionDetails;
+
+  // node_modules/@mui/material/AccordionSummary/AccordionSummary.mjs
   var React312 = __toESM(require_react(), 1);
+  var import_jsx_runtime244 = __toESM(require_jsx_runtime(), 1), useUtilityClasses107 = (ownerState) => {
+    let {
+      classes: classes2,
+      expanded: expanded2,
+      disabled,
+      disableGutters
+    } = ownerState;
+    return composeClasses({
+      root: ["root", expanded2 && "expanded", disabled && "disabled", !disableGutters && "gutters"],
+      focusVisible: ["focusVisible"],
+      content: ["content", expanded2 && "expanded"],
+      expandIconWrapper: ["expandIconWrapper", expanded2 && "expanded"]
+    }, getAccordionSummaryUtilityClass, classes2);
+  }, AccordionSummaryRoot = styled_default2(ButtonBase_default, {
+    name: "MuiAccordionSummary",
+    slot: "Root"
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    display: "flex",
+    width: "100%",
+    minHeight: 48,
+    padding: theme.spacing(0, 2),
+    ...getTransitionStyles(theme, ["min-height", "background-color"], {
+      duration: theme.transitions.duration.shortest
+    }),
+    ...!theme.focusVisible && {
+      [`&.${accordionSummaryClasses_default.focusVisible}`]: {
+        backgroundColor: (theme.vars || theme).palette.action.focus
+      }
+    },
+    [`&.${accordionSummaryClasses_default.disabled}`]: {
+      opacity: (theme.vars || theme).palette.action.disabledOpacity
+    },
+    [`&:hover:not(.${accordionSummaryClasses_default.disabled})`]: {
+      cursor: "pointer"
+    },
+    variants: [{
+      props: (props) => !props.disableGutters,
+      style: {
+        [`&.${accordionSummaryClasses_default.expanded}`]: {
+          minHeight: 64
+        }
+      }
+    }]
+  }))), AccordionSummaryContent = styled_default2("span", {
+    name: "MuiAccordionSummary",
+    slot: "Content"
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    display: "flex",
+    textAlign: "start",
+    flexGrow: 1,
+    margin: "12px 0",
+    variants: [{
+      props: (props) => !props.disableGutters,
+      style: {
+        ...getTransitionStyles(theme, ["margin"], {
+          duration: theme.transitions.duration.shortest
+        }),
+        [`&.${accordionSummaryClasses_default.expanded}`]: {
+          margin: "20px 0"
+        }
+      }
+    }]
+  }))), AccordionSummaryExpandIconWrapper = styled_default2("span", {
+    name: "MuiAccordionSummary",
+    slot: "ExpandIconWrapper"
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    display: "flex",
+    color: (theme.vars || theme).palette.action.active,
+    transform: "rotate(0deg)",
+    ...getTransitionStyles(theme, "transform", {
+      duration: theme.transitions.duration.shortest
+    }),
+    [`&.${accordionSummaryClasses_default.expanded}`]: {
+      transform: "rotate(180deg)"
+    }
+  }))), AccordionSummary = /* @__PURE__ */ React312.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiAccordionSummary"
+    }), {
+      children,
+      className,
+      expandIcon,
+      focusVisibleClassName,
+      onClick,
+      slots,
+      slotProps,
+      ...other
+    } = props, {
+      disabled = !1,
+      disableGutters,
+      expanded: expanded2,
+      toggle
+    } = React312.useContext(AccordionContext_default), handleChange = (event) => {
+      toggle && toggle(event), onClick && onClick(event);
+    }, ownerState = {
+      ...props,
+      expanded: expanded2,
+      disabled,
+      disableGutters
+    }, classes2 = useUtilityClasses107(ownerState), externalForwardedProps = {
+      slots,
+      slotProps
+    }, [RootSlot, rootSlotProps] = useSlot("root", {
+      ref,
+      shouldForwardComponentProp: !0,
+      className: clsx_default(classes2.root, className),
+      elementType: AccordionSummaryRoot,
+      externalForwardedProps: {
+        ...externalForwardedProps,
+        ...other
+      },
+      ownerState,
+      additionalProps: {
+        focusRipple: !1,
+        disableRipple: !0,
+        internalNativeButton: !0,
+        disabled,
+        "aria-expanded": expanded2,
+        focusVisibleClassName: clsx_default(classes2.focusVisible, focusVisibleClassName)
+      },
+      getSlotProps: (handlers) => ({
+        ...handlers,
+        onClick: (event) => {
+          handlers.onClick?.(event), handleChange(event);
+        }
+      })
+    }), [ContentSlot, contentSlotProps] = useSlot("content", {
+      className: classes2.content,
+      elementType: AccordionSummaryContent,
+      externalForwardedProps,
+      ownerState
+    }), [ExpandIconWrapperSlot, expandIconWrapperSlotProps] = useSlot("expandIconWrapper", {
+      className: classes2.expandIconWrapper,
+      elementType: AccordionSummaryExpandIconWrapper,
+      externalForwardedProps,
+      ownerState
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)(RootSlot, {
+      ...rootSlotProps,
+      children: [/* @__PURE__ */ (0, import_jsx_runtime244.jsx)(ContentSlot, {
+        ...contentSlotProps,
+        children
+      }), expandIcon && /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(ExpandIconWrapperSlot, {
+        ...expandIconWrapperSlotProps,
+        children: expandIcon
+      })]
+    });
+  }), AccordionSummary_default = AccordionSummary;
+
+  // node_modules/@mui/icons-material/ExpandMore.mjs
+  var import_jsx_runtime245 = __toESM(require_jsx_runtime(), 1), ExpandMore_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime245.jsx)("path", {
+    d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+  }), "ExpandMore");
+
+  // src/pages/HealthPanel.tsx
+  var import_jsx_runtime246 = __toESM(require_jsx_runtime(), 1), BUTTON_SX = { textTransform: "none", minHeight: 44 }, ACCORDION_SX = {
+    disableGutters: !0,
+    square: !0,
+    elevation: 0,
+    slotProps: { transition: { timeout: 0 } }
+  };
+  function useSectionOpen(start2) {
+    let [open, setOpen] = (0, import_react35.useState)(start2);
+    return {
+      expanded: open,
+      onChange: (_event, next3) => {
+        setOpen(next3);
+      }
+    };
+  }
+  var SECTIONS = [
+    { key: "missing", label: "health.missing", action: "missing" },
+    { key: "no_bpm", label: "health.noBpm" },
+    { key: "no_key", label: "health.noKey" },
+    { key: "no_beatgrid", label: "health.noBeatgrid" },
+    { key: "no_artwork", label: "health.noArtwork" },
+    { key: "empty_genre", label: "health.emptyGenre" },
+    { key: "no_crate", label: "health.noCrate" }
+  ];
+  function trackLine(track) {
+    return t("health.row", {
+      title: [track.artist, track.name].filter(Boolean).join(" — ") || track.file
+    });
+  }
+  function Section({
+    label,
+    section,
+    action,
+    findArt,
+    onNavigate
+  }) {
+    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0);
+    return /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(
+      Accordion_default,
+      {
+        className: "health-accordion",
+        expanded: accordion.expanded,
+        onChange: accordion.onChange,
+        ...ACCORDION_SX,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label, count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(AccordionDetails_default, { children: [
+            action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(
+              Button_default,
+              {
+                type: "button",
+                size: "small",
+                variant: "outlined",
+                sx: BUTTON_SX,
+                ref: tooltipRef6(tips.healthOpenMissing),
+                "data-health-action": "missing",
+                onClick: () => onNavigate("missing"),
+                children: t("health.openMissing")
+              }
+            ) : null,
+            /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(
+                Button_default,
+                {
+                  type: "button",
+                  size: "small",
+                  variant: "text",
+                  sx: BUTTON_SX,
+                  ref: tooltipRef6(tips.healthTrack),
+                  "data-health-action": "track",
+                  "data-health-id": String(track.id),
+                  onClick: () => onNavigate("track", track.id),
+                  children: trackLine(track)
+                }
+              ),
+              findArt ? /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(
+                Button_default,
+                {
+                  type: "button",
+                  size: "small",
+                  variant: "outlined",
+                  sx: BUTTON_SX,
+                  ref: tooltipRef6(tips.healthFindArt),
+                  "data-health-action": "artwork",
+                  "data-health-id": String(track.id),
+                  onClick: () => {
+                    openAlbumArt(track.id);
+                  },
+                  children: t("health.findArt")
+                }
+              ) : null
+            ] }, track.id)) }),
+            count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
+          ] })
+        ]
+      }
+    );
+  }
+  function Bitrate({ onNavigate }) {
+    let accordion = useSectionOpen(!0);
+    return /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(
+      Accordion_default,
+      {
+        className: "health-accordion",
+        expanded: accordion.expanded,
+        onChange: accordion.onChange,
+        ...ACCORDION_SX,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("health.bitrate") }),
+          /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(
+              Button_default,
+              {
+                type: "button",
+                size: "small",
+                variant: "outlined",
+                sx: BUTTON_SX,
+                ref: tooltipRef6(tips.healthOpenBitrate),
+                "data-health-action": "bitrate",
+                onClick: () => onNavigate("bitrate"),
+                children: t("health.openBitrate")
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
+          ] })
+        ]
+      }
+    );
+  }
+  function Unused({
+    section,
+    onNavigate
+  }) {
+    let count = section?.count ?? 0, files = section?.files ?? [], accordion = useSectionOpen(count > 0);
+    return /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(
+      Accordion_default,
+      {
+        className: "health-accordion",
+        expanded: accordion.expanded,
+        onChange: accordion.onChange,
+        ...ACCORDION_SX,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.unused"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(
+              Button_default,
+              {
+                type: "button",
+                size: "small",
+                variant: "outlined",
+                sx: BUTTON_SX,
+                ref: tooltipRef6(tips.healthOpenFiles),
+                "data-health-action": "files",
+                onClick: () => onNavigate("files"),
+                children: t("health.openFiles")
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
+            count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
+          ] })
+        ]
+      }
+    );
+  }
+  function Duplicates({
+    section,
+    onNavigate
+  }) {
+    let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0);
+    return /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(
+      Accordion_default,
+      {
+        className: "health-accordion",
+        expanded: accordion.expanded,
+        onChange: accordion.onChange,
+        ...ACCORDION_SX,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(
+              Button_default,
+              {
+                type: "button",
+                size: "small",
+                variant: "outlined",
+                sx: BUTTON_SX,
+                ref: tooltipRef6(tips.healthOpenDuplicates),
+                "data-health-action": "duplicates",
+                onClick: () => onNavigate("duplicates"),
+                children: t("health.openDuplicates")
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("li", { children: t("health.duplicateRow", {
+              title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
+              count: group.ids.length
+            }) }, group.ids.join(","))) }),
+            count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
+          ] })
+        ]
+      }
+    );
+  }
+  function HealthPanel() {
+    let health = useHealth(), payload = health.healthReport, listed = 0;
+    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(import_jsx_runtime246.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(
+          Button_default,
+          {
+            id: "health-refresh",
+            type: "button",
+            size: "small",
+            variant: "outlined",
+            sx: BUTTON_SX,
+            ref: tooltipRef6(tips.healthRefresh),
+            disabled: health.healthBusy,
+            "aria-busy": health.healthBusy ? "true" : "false",
+            onClick: () => {
+              health.loadHealth();
+            },
+            children: t("gig.checkAgain")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(import_jsx_runtime246.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
+        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(
+          Section,
+          {
+            label: t(spec2.label),
+            section: payload[spec2.key],
+            ...spec2.action ? { action: spec2.action } : {},
+            ...spec2.key === "no_artwork" ? { findArt: !0 } : {},
+            onNavigate: health.navigate
+          },
+          spec2.key
+        )),
+        /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(Bitrate, { onNavigate: health.navigate }),
+        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("p", { className: "gig-note", children: t("health.clear") })
+      ] }) : null })
+    ] });
+  }
+
+  // src/pages/HealthListChrome.tsx
+  var import_jsx_runtime247 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 };
+  function HealthListChrome() {
+    let health = useHealth();
+    return /* @__PURE__ */ (0, import_jsx_runtime247.jsxs)(import_jsx_runtime247.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(
+        Button_default,
+        {
+          id: "merge-duplicates",
+          type: "button",
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX2,
+          ref: tooltipRef6(tips.mergeDuplicates),
+          disabled: health.mergeDisabled,
+          children: t("merge.title")
+        }
+      ) }),
+      /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(
+        Button_default,
+        {
+          id: "open-relink",
+          type: "button",
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX2,
+          ref: tooltipRef6(tips.relink),
+          disabled: health.relinkDisabled,
+          children: t("relink.title")
+        }
+      ) })
+    ] });
+  }
+
+  // src/lib/health/health.ts
+  var latest4 = null, status = "", busy2 = !1, go = null, panelRoot, panelHost = null, listRoot, listHost = null, albumArtWired = !1;
+  function getHealthSnapshot() {
+    return {
+      healthReport: latest4,
+      healthStatus: status,
+      healthBusy: busy2,
+      healthScope: crateScopeLabel()
+    };
+  }
+  function navigateHealth(action, id) {
+    typeof id == "number" ? go?.(action, id) : go?.(action);
+  }
+  function wireHealth(navigate) {
+    go = navigate;
+    let panel = el("health-panel");
+    panelRoot && panelHost !== panel && (panelRoot.unmount(), panelRoot = void 0), panelHost = panel, panelRoot = mountIsland(panel, (0, import_react36.createElement)(HealthPanel), panelRoot), mountHealthListChrome(), albumArtWired || (albumArtWired = !0, wireAlbumArt(() => {
+      loadHealth();
+    }));
+  }
+  function mountHealthListChrome() {
+    let host = document.getElementById("health-list-chrome");
+    host instanceof HTMLElement && (listRoot && listHost !== host && (listRoot.unmount(), listRoot = void 0), listHost = host, listRoot = mountIsland(host, (0, import_react36.createElement)(HealthListChrome), listRoot), emitHealth());
+  }
+  async function loadHealth() {
+    let token4 = ++state.healthToken;
+    beginBusy3();
+    let settle = "none", crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      let response = await fetch(
+        `/api/library-health?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+      );
+      if (token4 !== state.healthToken) return;
+      let payload = await readJSON(response).catch(() => null);
+      if (token4 !== state.healthToken) return;
+      if (!response.ok || payload === null) {
+        failStatus3(serverMessage(payload, t("health.unreadable"))), settle = "retry";
+        return;
+      }
+      latest4 = payload, status = "", emitHealth(), settle = "report";
+    } catch {
+      if (token4 !== state.healthToken) return;
+      failStatus3(t("health.unreachable")), settle = "retry";
+    } finally {
+      if (token4 !== state.healthToken) return;
+      endBusy3(), settle === "retry" && el("health-refresh").focus(), settle === "report" && el("health-report").focus();
+    }
+  }
+  function showHealthFailure(error2) {
+    let message = error2 instanceof Error && error2.message ? error2.message : t("health.unreadable");
+    failStatus3(message), endBusy3(), el("health-refresh").focus();
+  }
+  function repaintHealth() {
+    emitHealth(), repaintAlbumArt();
+  }
+  function beginBusy3() {
+    busy2 = !0, status = t("health.checking"), el("health-panel").setAttribute("aria-busy", "true"), emitHealth();
+  }
+  function endBusy3() {
+    busy2 = !1, el("health-panel").setAttribute("aria-busy", "false"), emitHealth();
+  }
+  function failStatus3(message) {
+    status = message, emitHealth();
+  }
+
+  // src/lib/health/scan.ts
+  var import_react39 = __toESM(require_react(), 1);
+
+  // src/pages/ScanPanel.tsx
+  var import_react38 = __toESM(require_react(), 1);
+
+  // src/components/HealthDataGrid.tsx
+  var import_react37 = __toESM(require_react(), 1);
+  var import_jsx_runtime248 = __toESM(require_jsx_runtime(), 1);
+  function gridLocaleText3(locale) {
+    return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
+  }
+  function HealthDataGrid({
+    rows,
+    columns,
+    selectedId,
+    onSelectId
+  }) {
+    ensureGridDom();
+    let hostRef = (0, import_react37.useRef)(null), locale = getLocale(), localeText = (0, import_react37.useMemo)(() => gridLocaleText3(locale), [locale]), [page, setPage] = (0, import_react37.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react37.useMemo)(
+      () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
+      [page, maxPage]
+    ), hideFooter = rows.length <= GRID_PAGE_SIZE, rowSelectionModel = (0, import_react37.useMemo)(() => ({
+      type: "include",
+      ids: selectedId == null ? /* @__PURE__ */ new Set() : /* @__PURE__ */ new Set([selectedId])
+    }), [selectedId]);
+    (0, import_react37.useLayoutEffect)(() => {
+      setPage(0);
+    }, [rows.length]), (0, import_react37.useLayoutEffect)(() => {
+      let node2 = hostRef.current;
+      if (!node2) return;
+      attachGridTooltips(node2);
+      let observer = new MutationObserver(() => attachGridTooltips(node2));
+      return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
+    }, [columns, rows, locale, paginationModel]), (0, import_react37.useEffect)(() => {
+      let node2 = hostRef.current;
+      node2 && attachGridTooltips(node2);
+    }, [columns, rows, locale, paginationModel]);
+    function onPaginationModelChange(model) {
+      setPage(model.page);
+    }
+    function onRowSelectionModelChange(next3) {
+      if (!onSelectId) return;
+      let id = [...next3.ids][0];
+      id == null || id === selectedId || onSelectId(id);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("div", { ref: hostRef, className: "health-grid", style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+      DataGrid2,
+      {
+        rows,
+        columns,
+        getRowId: (row) => row.id,
+        rowHeight: 36,
+        columnHeaderHeight: 36,
+        autoHeight: !0,
+        hideFooter,
+        hideFooterSelectedRowCount: !0,
+        paginationModel,
+        onPaginationModelChange,
+        pageSizeOptions: [GRID_PAGE_SIZE],
+        rowBufferPx: 144,
+        disableColumnFilter: !0,
+        disableDensitySelector: !0,
+        disableEval: !0,
+        disableMultipleRowSelection: !0,
+        disableRowSelectionOnClick: !onSelectId,
+        rowSelectionModel,
+        onRowSelectionModelChange,
+        getRowClassName: () => "row",
+        localeText,
+        sx: {
+          border: 0,
+          bgcolor: "transparent",
+          color: "inherit",
+          font: "inherit",
+          "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within, & .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
+            outline: "none"
+          }
+        }
+      }
+    ) });
+  }
+
+  // src/lib/health/scan-view.ts
+  var PROBLEM_KEYS = {
+    empty: "scan.problem.empty",
+    unreadable: "scan.problem.unreadable",
+    wrong_format: "scan.problem.wrong_format",
+    serato_flagged: "scan.problem.serato_flagged",
+    undecodable: "scan.problem.undecodable",
+    decode_error: "scan.problem.decode_error",
+    short: "scan.problem.short"
+  };
+  function scanProblemHeading(kind2) {
+    return t(PROBLEM_KEYS[kind2] ?? "scan.problem.unknown");
+  }
+  function scanProblemDetail(item) {
+    let heading = scanProblemHeading(item.problem);
+    return item.problem === "wrong_format" && item.detail ? t("scan.wrongFormatDetail", { detail: item.detail }) : (item.problem === "decode_error" || item.problem === "short") && item.detail ? t(item.problem === "short" ? "scan.shortDetail" : "scan.decodeErrorDetail", {
+      detail: item.detail
+    }) : item.problem === "serato_flagged" && item.detail ? `${heading}: ${item.detail}` : heading;
+  }
+  function scanTrackTitle(item) {
+    return [item.artist, item.name].filter(Boolean).join(" — ") || item.file;
+  }
+
+  // src/pages/ScanPanel.tsx
+  var import_jsx_runtime249 = __toESM(require_jsx_runtime(), 1), BUTTON_SX3 = { textTransform: "none", minHeight: 44 };
+  function ScanPanel() {
+    let health = useHealth(), payload = health.scanReport, problems = payload?.problems ?? [], rows = (0, import_react38.useMemo)(
+      () => problems.map((item) => ({ ...item, id: item.id })),
+      [problems]
+    ), columns = (0, import_react38.useMemo)(() => [
+      {
+        field: "track",
+        headerName: t("health.column.track"),
+        flex: 1.2,
+        minWidth: 160,
+        valueGetter: (_value, row) => scanTrackTitle(row)
+      },
+      {
+        field: "file",
+        headerName: t("health.column.file"),
+        flex: 1,
+        minWidth: 120
+      },
+      {
+        field: "problem",
+        headerName: t("scan.column.problem"),
+        flex: 1.4,
+        minWidth: 180,
+        valueGetter: (_value, row) => scanProblemDetail(row)
+      }
+    ], []);
+    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(import_jsx_runtime249.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          Button_default,
+          {
+            id: "scan-quick",
+            type: "button",
+            size: "small",
+            variant: "outlined",
+            sx: BUTTON_SX3,
+            ref: tooltipRef6(tips.scanQuick),
+            disabled: health.scanBusy,
+            "aria-busy": health.scanBusy ? "true" : "false",
+            onClick: () => {
+              health.loadScan("quick");
+            },
+            children: t("scan.checkQuick")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          Button_default,
+          {
+            id: "scan-full",
+            type: "button",
+            size: "small",
+            variant: "outlined",
+            sx: BUTTON_SX3,
+            ref: tooltipRef6(tips.scanFull),
+            disabled: health.scanBusy || health.scanFullDisabled,
+            "aria-busy": health.scanBusy ? "true" : "false",
+            onClick: () => {
+              health.loadScan("full");
+            },
+            children: t("scan.checkFull")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(import_jsx_runtime249.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
+        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
+        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
+        problems.length ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("scan.empty") })
+      ] }) : null })
+    ] });
+  }
+
+  // src/lib/health/scan.ts
+  var latest5 = null, status2 = "", busy3 = !1, lastDepth = "quick", expanded = /* @__PURE__ */ new Set(), panelRoot2, panelHost2 = null;
+  function getScanSnapshot() {
+    return {
+      scanReport: latest5,
+      scanStatus: status2,
+      scanBusy: busy3,
+      scanScope: crateScopeLabel(),
+      scanFullDisabled: state.activeCrate === "all",
+      scanExpanded: expanded
+    };
+  }
+  function expandScan(kind2) {
+    expanded.add(kind2), emitHealth();
+  }
+  function wireScan() {
+    let panel = el("scan-panel");
+    panelRoot2 && panelHost2 !== panel && (panelRoot2.unmount(), panelRoot2 = void 0), panelHost2 = panel, panelRoot2 = mountIsland(panel, (0, import_react39.createElement)(ScanPanel), panelRoot2);
+  }
+  async function loadScan(depth) {
+    let chosen = resolveDepth(depth), token4 = ++state.scanToken;
+    beginBusy4();
+    let settle = "none";
+    if (chosen === "full" && state.activeCrate === "all") {
+      failStatus4(t("error.scan_full_needs_crate")), endBusy4(), el("scan-full").focus();
+      return;
+    }
+    lastDepth = chosen;
+    let crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    try {
+      let response = await fetch(
+        `/api/file-scan?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&depth=${encodeURIComponent(chosen)}`
+      );
+      if (token4 !== state.scanToken) return;
+      let payload = await readJSON(response).catch(() => null);
+      if (token4 !== state.scanToken) return;
+      if (!response.ok || payload === null) {
+        failStatus4(serverMessage(payload, t("scan.unreadable"))), settle = "retry";
+        return;
+      }
+      latest5 = payload, expanded.clear(), status2 = "", emitHealth(), settle = "report";
+    } catch {
+      if (token4 !== state.scanToken) return;
+      failStatus4(t("scan.unreachable")), settle = "retry";
+    } finally {
+      if (token4 !== state.scanToken) return;
+      endBusy4(), settle === "retry" && el("scan-quick").focus(), settle === "report" && el("scan-report").focus();
+    }
+  }
+  function showScanFailure(error2) {
+    let message = error2 instanceof Error && error2.message ? error2.message : t("scan.unreadable");
+    failStatus4(message), endBusy4(), el("scan-quick").focus();
+  }
+  function repaintScan() {
+    emitHealth();
+  }
+  function resolveDepth(depth) {
+    return depth === "quick" || depth === "full" ? depth : lastDepth === "full" && state.activeCrate === "all" ? "quick" : lastDepth;
+  }
+  function beginBusy4() {
+    busy3 = !0, status2 = t("scan.checking"), el("scan-panel").setAttribute("aria-busy", "true"), emitHealth();
+  }
+  function endBusy4() {
+    busy3 = !1, el("scan-panel").setAttribute("aria-busy", "false"), emitHealth();
+  }
+  function failStatus4(message) {
+    status2 = message, emitHealth();
+  }
+
+  // src/lib/health/tags.ts
+  var import_react41 = __toESM(require_react(), 1);
+
+  // src/pages/TagsPanel.tsx
+  var import_react40 = __toESM(require_react(), 1);
+
+  // src/lib/health/tags-view.ts
+  function tagsSummary(field2, values3, groups) {
+    return field2 === "titles" ? titlesSummary(groups) : groups === 0 ? field2 === "genre" ? t("tags.summaryGenreClear", { count: values3 }) : t("tags.summaryArtistClear", { count: values3 }) : field2 === "genre" ? t("tags.summaryGenre", { values: values3, count: groups }) : t("tags.summaryArtist", { values: values3, count: groups });
+  }
+  function titlesSummary(changes) {
+    return changes ? t("tags.summaryTitles", { count: changes }) : t("tags.summaryTitlesClear");
+  }
+  function spellingLabel(value, count, suggested) {
+    let base = t("tags.row", { value, count });
+    return suggested ? `${base} — ${t("tags.suggested")}` : base;
+  }
+  function previewSummary(plan) {
+    return plan.changes.length ? t("tags.previewSummary", { count: plan.changes.length, value: plan.value }) : t("tags.noChanges");
+  }
+  function titlesPreviewSummary(plan) {
+    return plan.changes.length ? t("tags.titlesPreviewSummary", { count: plan.changes.length }) : t("tags.summaryTitlesClear");
+  }
+  function writtenSummary(plan) {
+    return t("tags.written", { count: plan.changes.length, value: plan.value });
+  }
+  function titlesWrittenSummary(plan) {
+    return t("tags.titlesWritten", { count: plan.changes.length });
+  }
+  function mappingPreviewSummary(plan) {
+    return plan.changes.length ? t("tags.mappingSummary", { count: plan.changes.length }) : t("tags.noChanges");
+  }
+  function mappingWrittenSummary(plan) {
+    return t("tags.mappingWritten", { count: plan.changes.length });
+  }
+  function mappingFieldLabel(field2) {
+    return field2 === "genre" ? t("tags.genre") : field2 === "artist" ? t("tags.artist") : field2;
+  }
+  function groupChanges(changes) {
+    let rows = /* @__PURE__ */ new Map();
+    for (let change of changes) {
+      let remixer = change.remixer ?? "", id = `${change.field ?? ""}\0${change.from}\0${change.to}\0${remixer}`, existing = rows.get(id);
+      if (existing) existing.count += 1;
+      else {
+        let row = { from: change.from, to: change.to, count: 1 };
+        change.remixer && (row.remixer = change.remixer), change.field && (row.field = change.field), rows.set(id, row);
+      }
+    }
+    return [...rows.values()];
+  }
+  function previewLines(changes) {
+    return groupChanges(changes).map((row) => row.field ? t("tags.previewLineField", {
+      field: mappingFieldLabel(row.field),
+      from: row.from,
+      to: row.to,
+      count: row.count
+    }) : row.remixer ? t("tags.previewLineRemixer", {
+      from: row.from,
+      to: row.to,
+      remixer: row.remixer,
+      count: row.count
+    }) : t("tags.previewLine", { from: row.from, to: row.to, count: row.count }));
+  }
+
+  // src/pages/TagsPanel.tsx
+  var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1), LIST_CAP = 100, TITLE_KEY = "clean", MAPPING_KEY = "saved", BUTTON_SX4 = { textTransform: "none", minHeight: 44 };
+  function DiffLines({ plan }) {
+    let lines = previewLines(plan.changes).slice(0, LIST_CAP);
+    return lines.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { children: lines.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("li", { children: line2 }, line2)) }) : null;
+  }
+  function MappingCard({
+    plan,
+    canApply,
+    onApply
+  }) {
+    return plan.changes.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "tags-mappings", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        Button_default,
+        {
+          type: "button",
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX4,
+          ref: tooltipRef6(tips.tagsApplyMappings),
+          "data-tags-action": "refresh-apply",
+          disabled: !canApply,
+          onClick: onApply,
+          children: t("tags.applyMappings")
+        }
+      ) })
+    ] }) : null;
+  }
+  function TitlesReport({
+    plan,
+    canApply,
+    onApply
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        Button_default,
+        {
+          type: "button",
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX4,
+          ref: tooltipRef6(tips.tagsApplyTitles),
+          "data-tags-action": "clean-apply",
+          disabled: !canApply,
+          onClick: onApply,
+          children: t("tags.apply")
+        }
+      ) })
+    ] });
+  }
+  function ClusterActions({
+    group,
+    chosen,
+    plan,
+    busy: busy4,
+    canApply,
+    onPreview,
+    onApply,
+    onSelect
+  }) {
+    let showPlan = plan && plan.value === chosen;
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "tags-cluster-chrome", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("label", { className: "tags-spelling", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+          "input",
+          {
+            ref: tooltipRef6(tips.tagsSpelling),
+            type: "radio",
+            name: `tags-${group.key}`,
+            value: spelling.value,
+            checked: spelling.value === chosen,
+            disabled: busy4,
+            onChange: (event) => onSelect(event.currentTarget.value)
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
+      ] }) }, spelling.value)) }),
+      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(DiffLines, { plan }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "tags-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+          Button_default,
+          {
+            type: "button",
+            size: "small",
+            variant: "outlined",
+            sx: BUTTON_SX4,
+            ref: tooltipRef6(tips.tagsPreview),
+            "data-tags-action": "preview",
+            "data-key": group.key,
+            disabled: busy4 || !chosen,
+            onClick: onPreview,
+            children: t("tags.preview")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+          Button_default,
+          {
+            type: "button",
+            size: "small",
+            variant: "outlined",
+            sx: BUTTON_SX4,
+            ref: tooltipRef6(tips.tagsApply),
+            "data-tags-action": "apply",
+            "data-key": group.key,
+            disabled: !canApply || !!(plan && plan.value === chosen && !plan.changes.length),
+            onClick: onApply,
+            children: t("tags.apply")
+          }
+        )
+      ] })
+    ] });
+  }
+  function TagsPanel() {
+    let health = useHealth(), field2 = health.tagsField, groups = health.tagsClusters?.groups ?? [], [selectedKey, setSelectedKey] = (0, import_react40.useState)(""), selected = groups.find((row) => row.key === selectedKey) ?? groups[0];
+    function onField(next3) {
+      health.tagsField !== next3 && (health.setTagsField(next3), health.loadTags());
+    }
+    function canApply(key) {
+      let plan = health.tagsPlans.get(key), group = groups.find((row) => row.key === key), value = health.tagsSelected.get(key) ?? group?.suggested ?? "";
+      return !!(plan && plan.value === value && plan.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== key);
+    }
+    let canApplyTitles = !!(health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY), canApplyMappings = !!(health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY), rows = (0, import_react40.useMemo)(
+      () => groups.map((group) => ({ ...group, id: group.key })),
+      [groups]
+    ), columns = (0, import_react40.useMemo)(() => [
+      {
+        field: "suggested",
+        headerName: t("tags.column.suggested"),
+        flex: 1.4,
+        minWidth: 160
+      },
+      {
+        field: "tracks",
+        headerName: t("tags.column.tracks"),
+        width: 110,
+        type: "number"
+      },
+      {
+        field: "spellings",
+        headerName: t("tags.column.spellings"),
+        width: 120,
+        type: "number",
+        valueGetter: (_value, row) => row.spellings.length
+      }
+    ], []);
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+            Button_default,
+            {
+              id: "tags-genre",
+              type: "button",
+              size: "small",
+              variant: "outlined",
+              sx: BUTTON_SX4,
+              ref: tooltipRef6(tips.tagsGenre),
+              "aria-pressed": field2 === "genre",
+              disabled: health.tagsBusy,
+              "aria-busy": health.tagsBusy ? "true" : "false",
+              onClick: () => onField("genre"),
+              children: t("tags.genre")
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+            Button_default,
+            {
+              id: "tags-artist",
+              type: "button",
+              size: "small",
+              variant: "outlined",
+              sx: BUTTON_SX4,
+              ref: tooltipRef6(tips.tagsArtist),
+              "aria-pressed": field2 === "artist",
+              disabled: health.tagsBusy,
+              "aria-busy": health.tagsBusy ? "true" : "false",
+              onClick: () => onField("artist"),
+              children: t("tags.artist")
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+            Button_default,
+            {
+              id: "tags-titles",
+              type: "button",
+              size: "small",
+              variant: "outlined",
+              sx: BUTTON_SX4,
+              ref: tooltipRef6(tips.tagsTitles),
+              "aria-pressed": field2 === "titles",
+              disabled: health.tagsBusy,
+              "aria-busy": health.tagsBusy ? "true" : "false",
+              onClick: () => onField("titles"),
+              children: t("tags.titles")
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+          Button_default,
+          {
+            id: "tags-refresh",
+            type: "button",
+            size: "small",
+            variant: "outlined",
+            sx: BUTTON_SX4,
+            ref: tooltipRef6(tips.tagsRefresh),
+            disabled: health.tagsBusy,
+            "aria-busy": health.tagsBusy ? "true" : "false",
+            onClick: () => {
+              health.loadTags();
+            },
+            children: t("gig.checkAgain")
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
+        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => {
+          health.applyTitles();
+        } }) : null,
+        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
+          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+            MappingCard,
+            {
+              plan: health.mappingPlan,
+              canApply: canApplyMappings,
+              onApply: () => {
+                health.applyMappings();
+              }
+            }
+          ) : null,
+          selected ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+            ClusterActions,
+            {
+              group: selected,
+              chosen: health.tagsSelected.get(selected.key) ?? selected.suggested ?? "",
+              plan: health.tagsPlans.get(selected.key),
+              busy: health.tagsBusy,
+              canApply: canApply(selected.key),
+              onPreview: () => {
+                health.previewGroup(selected.key);
+              },
+              onApply: () => {
+                health.applyGroup(selected.key);
+              },
+              onSelect: (value) => health.selectSpelling(selected.key, value)
+            }
+          ) : null,
+          selected ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+            HealthDataGrid,
+            {
+              rows,
+              columns,
+              selectedId: selected.key,
+              onSelectId: (id) => setSelectedKey(String(id))
+            }
+          ) : null
+        ] }) : null
+      ] })
+    ] });
+  }
+
+  // src/lib/health/tags.ts
+  var TITLE_KEY2 = "clean", MAPPING_KEY2 = "saved", latest6 = null, titlePlan = null, mappingPlan = null, plans = /* @__PURE__ */ new Map(), selectedByKey = /* @__PURE__ */ new Map(), openKeys = /* @__PURE__ */ new Set(), field = "genre", status3 = "", panelBusy = !1, actionKey = "", panelRoot3, panelHost3 = null;
+  function getTagsSnapshot() {
+    return {
+      tagsField: field,
+      tagsClusters: latest6,
+      titlePlan,
+      mappingPlan,
+      tagsPlans: plans,
+      tagsSelected: selectedByKey,
+      tagsOpen: openKeys,
+      tagsStatus: status3,
+      tagsBusy: panelBusy,
+      tagsActionKey: actionKey,
+      tagsWritable: state.writable
+    };
+  }
+  function setTagsField(next3) {
+    field = next3, emitHealth();
+  }
+  function selectSpelling(key, value) {
+    selectedByKey.set(key, value), plans.delete(key), emitHealth();
+  }
+  function wireTags() {
+    field = "genre";
+    let panel = el("tags-panel");
+    panelRoot3 && panelHost3 !== panel && (panelRoot3.unmount(), panelRoot3 = void 0), panelHost3 = panel, panelRoot3 = mountIsland(panel, (0, import_react41.createElement)(TagsPanel), panelRoot3);
+  }
+  async function loadTags() {
+    let token4 = ++state.tagsToken;
+    plans.clear(), selectedByKey.clear(), openKeys.clear(), beginBusy5();
+    let settle = "none";
+    try {
+      if (field === "titles") {
+        let payload = await postJSON("/api/tag-clusters", {
+          action: "clean-preview",
+          space: state.space
+        });
+        if (token4 !== state.tagsToken) return;
+        titlePlan = payload, latest6 = null, mappingPlan = null, status3 = titlesPreviewSummary(payload), settle = "report";
+      } else {
+        let response = await fetch(
+          `/api/tag-clusters?space=${encodeURIComponent(state.space)}&field=${encodeURIComponent(field)}`
+        );
+        if (token4 !== state.tagsToken) return;
+        let payload = await readJSON(response).catch(() => null);
+        if (token4 !== state.tagsToken) return;
+        if (!response.ok || payload === null) {
+          failStatus5(serverMessage(payload, t("tags.unreadable"))), settle = "retry";
+          return;
+        }
+        if (latest6 = payload, titlePlan = null, mappingPlan = await readMappingPreview(token4), token4 !== state.tagsToken) return;
+        status3 = "", settle = "report";
+      }
+    } catch (error2) {
+      if (token4 !== state.tagsToken) return;
+      error2 instanceof TypeError ? failStatus5(t("tags.unreachable")) : failStatus5(failureOf(error2).message), settle = "retry";
+    } finally {
+      if (token4 !== state.tagsToken) return;
+      endBusy5(), emitHealth(), settle === "retry" && el("tags-refresh").focus(), settle === "report" && el("tags-report").focus();
+    }
+  }
+  function showTagsFailure(error2) {
+    let message = error2 instanceof Error && error2.message ? error2.message : t("tags.unreadable");
+    failStatus5(message), endBusy5(), el("tags-refresh").focus();
+  }
+  function repaintTags() {
+    emitHealth();
+  }
+  async function previewGroup(key) {
+    let group = groupByKey(key), value = selectedValue(key);
+    if (!(!group || !value)) {
+      actionKey = key, emitHealth();
+      try {
+        let plan = await postJSON("/api/tag-clusters", {
+          action: "preview",
+          space: state.space,
+          field: field === "titles" ? "genre" : field,
+          value
+        });
+        plans.set(key, plan), status3 = previewSummary(plan), emitHealth(), applyButton(key)?.focus();
+      } catch (error2) {
+        failStatus5(failureOf(error2).message);
+      } finally {
+        actionKey = "", emitHealth();
+      }
+    }
+  }
+  async function applyGroup(key) {
+    let plan = plans.get(key), value = selectedValue(key);
+    if (!(!plan || !value || plan.value !== value || !plan.changes.length || !state.writable)) {
+      actionKey = key, panelBusy = !0, beginBusy5(), emitHealth();
+      try {
+        let written = await postJSON("/api/tag-clusters", {
+          action: "apply",
+          space: state.space,
+          field: field === "titles" ? "genre" : field,
+          value
+        });
+        await bridge.reloadLibrary(), actionKey = "", panelBusy = !1, endBusy5(), await loadTags(), status3 = writtenSummary(written), emitHealth();
+      } catch (error2) {
+        let failed = failureOf(error2);
+        failStatus5(failed.message), failed.status === 409 && bridge.lockDown(error2);
+      } finally {
+        actionKey = "", panelBusy = !1, endBusy5(), emitHealth();
+      }
+    }
+  }
+  async function applyMappings() {
+    let plan = mappingPlan;
+    if (!(!plan || !plan.changes.length || !state.writable)) {
+      actionKey = MAPPING_KEY2, panelBusy = !0, beginBusy5(), emitHealth();
+      try {
+        let written = await postJSON("/api/tag-clusters", {
+          action: "refresh-apply",
+          space: state.space
+        });
+        await bridge.reloadLibrary(), actionKey = "", panelBusy = !1, endBusy5(), await loadTags(), status3 = mappingWrittenSummary(written), emitHealth();
+      } catch (error2) {
+        let failed = failureOf(error2);
+        failStatus5(failed.message), failed.status === 409 && bridge.lockDown(error2);
+      } finally {
+        actionKey = "", panelBusy = !1, endBusy5(), emitHealth();
+      }
+    }
+  }
+  async function applyTitles() {
+    let plan = titlePlan;
+    if (!(!plan || !plan.changes.length || !state.writable)) {
+      actionKey = TITLE_KEY2, panelBusy = !0, beginBusy5(), emitHealth();
+      try {
+        let written = await postJSON("/api/tag-clusters", {
+          action: "clean-apply",
+          space: state.space
+        });
+        await bridge.reloadLibrary(), actionKey = "", panelBusy = !1, endBusy5(), await loadTags(), status3 = titlesWrittenSummary(written), emitHealth();
+      } catch (error2) {
+        let failed = failureOf(error2);
+        failStatus5(failed.message), failed.status === 409 && bridge.lockDown(error2);
+      } finally {
+        actionKey = "", panelBusy = !1, endBusy5(), emitHealth();
+      }
+    }
+  }
+  function beginBusy5() {
+    panelBusy = !0, el("tags-panel").setAttribute("aria-busy", "true"), status3 = field === "titles" ? t("tags.checkingTitles") : t("tags.checking"), emitHealth();
+  }
+  function endBusy5() {
+    panelBusy = !1, el("tags-panel").setAttribute("aria-busy", "false"), emitHealth();
+  }
+  function asMappingPlan(payload) {
+    if (payload === null || typeof payload != "object") return null;
+    let plan = payload;
+    return Array.isArray(plan.changes) ? plan : null;
+  }
+  async function readMappingPreview(token4) {
+    try {
+      let payload = await postJSON("/api/tag-clusters", {
+        action: "refresh-preview",
+        space: state.space
+      });
+      return token4 !== state.tagsToken ? null : asMappingPlan(payload);
+    } catch {
+      return token4 !== state.tagsToken, null;
+    }
+  }
+  function failStatus5(message) {
+    status3 = message, emitHealth();
+  }
+  function groupByKey(key) {
+    return latest6?.groups?.find((group) => group.key === key);
+  }
+  function selectedValue(key) {
+    let group = groupByKey(key);
+    return selectedByKey.get(key) ?? group?.suggested ?? "";
+  }
+  function applyButton(key) {
+    return el("tags-report").querySelector(`[data-tags-action="apply"][data-key="${cssEscape(key)}"]`);
+  }
+  function cssEscape(value) {
+    return typeof CSS < "u" && typeof CSS.escape == "function" ? CSS.escape(value) : value.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+  }
+
+  // src/containers/SnapshotsContext.tsx
+  var import_react42 = __toESM(require_react(), 1), import_jsx_runtime251 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react42.createContext)(null);
+  function SnapshotsProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(SnapshotsContext, { value, children });
+  }
+  function useSnapshots() {
+    let value = (0, import_react42.useContext)(SnapshotsContext);
+    if (value === null)
+      throw new Error("useSnapshots must be used within SnapshotsProvider");
+    return value;
+  }
+
+  // src/containers/WizardContext.tsx
+  var import_react43 = __toESM(require_react(), 1);
+
+  // src/lib/wizard/wizard.ts
+  function createWizard(input) {
+    return {
+      step: "welcome",
+      complete: !1,
+      dismissed: !1,
+      context: {
+        needsConsent: input.needsConsent,
+        library: input.library,
+        seratoRunning: input.seratoRunning,
+        snapshot: "idle",
+        consent: null,
+        needsUpdates: input.needsUpdates ?? !1,
+        updates: null
+      }
+    };
+  }
+
+  // src/containers/WizardContext.tsx
+  var import_jsx_runtime252 = __toESM(require_jsx_runtime(), 1);
+  function noop8() {
+  }
+  function noopFlag(_value) {
+  }
+  function noopPath(_path) {
+  }
+  function idleWizardValue() {
+    return {
+      model: createWizard({
+        needsConsent: !0,
+        library: "pending",
+        seratoRunning: !1
+      }),
+      busy: !1,
+      folderOpen: !1,
+      folderName: "",
+      folderParent: null,
+      folders: [],
+      summary: "",
+      nextHint: "",
+      statusNote: "",
+      focusToken: 0,
+      onPrimary: noop8,
+      onBack: noop8,
+      onCancel: noop8,
+      onChooseFolder: noop8,
+      onConsent: noopFlag,
+      onUpdates: noopFlag,
+      onFolderUp: noop8,
+      onFolderUse: noop8,
+      onFolderClose: noop8,
+      onBrowse: noopPath
+    };
+  }
+  var WizardContext = (0, import_react43.createContext)(null);
+  function WizardProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(WizardContext, { value, children });
+  }
+
+  // src/lib/snapshots/restore.ts
+  var import_react45 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/DialogContentText/DialogContentText.mjs
+  var React313 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/DialogContentText/dialogContentTextClasses.mjs
   function getDialogContentTextUtilityClass(slot) {
@@ -65480,7 +65827,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var dialogContentTextClasses = generateUtilityClasses("MuiDialogContentText", ["root"]);
 
   // node_modules/@mui/material/DialogContentText/DialogContentText.mjs
-  var import_jsx_runtime249 = __toESM(require_jsx_runtime(), 1), useUtilityClasses107 = (ownerState) => {
+  var import_jsx_runtime253 = __toESM(require_jsx_runtime(), 1), useUtilityClasses108 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState, composedClasses = composeClasses({
@@ -65495,7 +65842,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     shouldForwardProp: (prop) => rootShouldForwardProp_default(prop) || prop === "classes",
     name: "MuiDialogContentText",
     slot: "Root"
-  })({}), DialogContentText = /* @__PURE__ */ React312.forwardRef(function(inProps, ref) {
+  })({}), DialogContentText = /* @__PURE__ */ React313.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiDialogContentText"
@@ -65503,8 +65850,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       children,
       className,
       ...ownerState
-    } = props, classes2 = useUtilityClasses107(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(DialogContentTextRoot, {
+    } = props, classes2 = useUtilityClasses108(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(DialogContentTextRoot, {
       component: "p",
       variant: "body1",
       color: "textSecondary",
@@ -65515,43 +65862,6 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       classes: classes2
     });
   }), DialogContentText_default = DialogContentText;
-
-  // node_modules/@mui/material/DialogTitle/DialogTitle.mjs
-  var React313 = __toESM(require_react(), 1);
-  var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1), useUtilityClasses108 = (ownerState) => {
-    let {
-      classes: classes2
-    } = ownerState;
-    return composeClasses({
-      root: ["root"]
-    }, getDialogTitleUtilityClass, classes2);
-  }, DialogTitleRoot = styled_default2(Typography_default, {
-    name: "MuiDialogTitle",
-    slot: "Root"
-  })({
-    padding: "16px 24px",
-    flex: "0 0 auto"
-  }), DialogTitle = /* @__PURE__ */ React313.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiDialogTitle"
-    }), {
-      className,
-      id: idProp,
-      ...other
-    } = props, ownerState = props, classes2 = useUtilityClasses108(ownerState), {
-      titleId = idProp
-    } = React313.useContext(DialogContext_default);
-    return /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(DialogTitleRoot, {
-      component: "h2",
-      className: clsx_default(classes2.root, className),
-      ownerState,
-      ref,
-      variant: "h6",
-      id: idProp ?? titleId,
-      ...other
-    });
-  }), DialogTitle_default = DialogTitle;
 
   // src/lib/snapshots/restore-view.ts
   var OPERATION_ACTIONS = {
@@ -65641,49 +65951,49 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/RestoreDialog.tsx
-  var import_jsx_runtime251 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime254 = __toESM(require_jsx_runtime(), 1);
   function CueSide({ cue, slot }) {
     let color2 = slotColor(slot, cue?.color);
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)("span", { className: cue ? "cue-diff-side" : "cue-diff-side marker-empty", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("span", { className: "swatch", style: color2 ? { background: color2 } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("span", { children: cueSummary(cue, t("markers.cueEmpty")) })
+    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("span", { className: cue ? "cue-diff-side" : "cue-diff-side marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("span", { className: "swatch", style: color2 ? { background: color2 } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("span", { children: cueSummary(cue, t("markers.cueEmpty")) })
     ] });
   }
   function CueDiffRow({ diff }) {
     let empty = t("markers.cueEmpty"), beforeText = cueSummary(diff.before, empty), afterText = cueSummary(diff.after, empty);
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(
       "p",
       {
         className: "cue-diff",
         "aria-label": `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("span", { className: "marker-slot", children: String(diff.slot + 1) }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(CueSide, { cue: diff.before, slot: diff.slot }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("span", { className: "cue-diff-arrow", "aria-hidden": "true", children: "→" }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(CueSide, { cue: diff.after, slot: diff.slot })
+          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("span", { className: "marker-slot", children: String(diff.slot + 1) }),
+          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(CueSide, { cue: diff.before, slot: diff.slot }),
+          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("span", { className: "cue-diff-arrow", "aria-hidden": "true", children: "→" }),
+          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(CueSide, { cue: diff.after, slot: diff.slot })
         ]
       }
     );
   }
   function PlanLine({ label, rows }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { children: planLineText(label, rows) });
+    return /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { children: planLineText(label, rows) });
   }
   function CueDiffs({ label, rows }) {
     let items = rows || [];
-    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
-      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { children: fileName(item.path || "") }),
-        cueDiffRows(item.before, item.after).map((diff) => /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(CueDiffRow, { diff }, `${diff.slot}:${diff.before?.start_ms ?? ""}:${diff.after?.start_ms ?? ""}`))
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { children: fileName(item.path || "") }),
+        cueDiffRows(item.before, item.after).map((diff) => /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(CueDiffRow, { diff }, `${diff.slot}:${diff.before?.start_ms ?? ""}:${diff.after?.start_ms ?? ""}`))
       ] }, `${item.path ?? ""}:${index}`))
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { children: t("plan.none", { label }) });
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { children: t("plan.none", { label }) });
   }
   function FrameDiffs({ label, rows }) {
     let items = rows || [];
-    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
-      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { children: fileName(item.path || "") }, `${item.path ?? ""}:${index}`))
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { children: t("plan.none", { label }) });
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { children: fileName(item.path || "") }, `${item.path ?? ""}:${index}`))
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { children: t("plan.none", { label }) });
   }
   function RestoreDialog() {
     let snapshots = useSnapshots(), plan = snapshots.plan, blocked = plan?.restore_blocked ? codedText(
@@ -65691,7 +66001,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       plan.restore_blocked_code,
       messageParams(plan.restore_blocked_params)
     ) : "", reading = snapshots.planOpen && !plan, confirmDisabled = snapshots.confirming || reading || !!plan?.restore_blocked, blockText = reading ? t("snapshots.readingPlan") : blocked || (plan != null && plan.dry_run ? t("plan.nothingChanged") : "");
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(
       Dialog_default,
       {
         open: snapshots.planOpen,
@@ -65705,32 +66015,32 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         fullWidth: !0,
         slotProps: { paper: { id: "snapshot-dialog" } },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(DialogTitle_default, { id: "snapshot-title", component: "h2", children: t("snapshots.restoreTitle") }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(DialogContent_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(DialogContentText_default, { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.cratesChanged"), rows: plan.crates?.changed }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),
-              plan.registration_warning ? /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { children: codedText(plan.registration_warning, plan.registration_warning_code) }) : null,
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.tracksAdded"), rows: plan.tracks?.added }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.tracksRemoved"), rows: plan.tracks?.removed }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.tracksUnavailable"), rows: plan.tracks?.unavailable }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(CueDiffs, { label: t("plan.cueChanges"), rows: plan.cues }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(FrameDiffs, { label: t("plan.gridChanges"), rows: plan.grids }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.deletedCrates"), rows: plan.deleted?.crates }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.deletedTracks"), rows: plan.deleted?.tracks }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.deletedCues"), rows: plan.deleted?.cues }),
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(PlanLine, { label: t("plan.deletedGrids"), rows: plan.deleted?.grids })
+          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(DialogTitle_default, { id: "snapshot-title", component: "h2", children: t("snapshots.restoreTitle") }),
+          /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(DialogContent_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(DialogContentText_default, { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
+            /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.cratesChanged"), rows: plan.crates?.changed }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),
+              plan.registration_warning ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { children: codedText(plan.registration_warning, plan.registration_warning_code) }) : null,
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.tracksAdded"), rows: plan.tracks?.added }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.tracksRemoved"), rows: plan.tracks?.removed }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.tracksUnavailable"), rows: plan.tracks?.unavailable }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(CueDiffs, { label: t("plan.cueChanges"), rows: plan.cues }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(FrameDiffs, { label: t("plan.gridChanges"), rows: plan.grids }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.deletedCrates"), rows: plan.deleted?.crates }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.deletedTracks"), rows: plan.deleted?.tracks }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.deletedCues"), rows: plan.deleted?.cues }),
+              /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(PlanLine, { label: t("plan.deletedGrids"), rows: plan.deleted?.grids })
             ] }) : null }),
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { id: "snapshot-block", className: "dialog-note", role: "status", children: blockText }),
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { id: "snapshot-status", className: "dialog-status", role: "status", "aria-live": "polite", children: snapshots.planStatus })
+            /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "snapshot-block", className: "dialog-note", role: "status", children: blockText }),
+            /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "snapshot-status", className: "dialog-status", role: "status", "aria-live": "polite", children: snapshots.planStatus })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
               Button_default,
               {
                 id: "snapshot-cancel",
@@ -65740,7 +66050,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("common.cancel")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
               Button_default,
               {
                 id: "snapshot-confirm",
@@ -65761,7 +66071,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/SnapshotsPanel.tsx
-  var import_react41 = __toESM(require_react(), 1);
+  var import_react44 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/ListItem/ListItem.mjs
   var React315 = __toESM(require_react(), 1);
@@ -65782,7 +66092,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var listItemSecondaryActionClasses = generateUtilityClasses("MuiListItemSecondaryAction", ["root", "disableGutters"]);
 
   // node_modules/@mui/material/ListItemSecondaryAction/ListItemSecondaryAction.mjs
-  var import_jsx_runtime252 = __toESM(require_jsx_runtime(), 1), useUtilityClasses109 = (ownerState) => {
+  var import_jsx_runtime255 = __toESM(require_jsx_runtime(), 1), useUtilityClasses109 = (ownerState) => {
     let {
       disableGutters,
       classes: classes2
@@ -65824,7 +66134,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ...props,
       disableGutters: context.disableGutters
     }, classes2 = useUtilityClasses109(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ListItemSecondaryActionRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(ListItemSecondaryActionRoot, {
       as: component,
       className: clsx_default(classes2.root, className),
       ownerState,
@@ -65836,7 +66146,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var ListItemSecondaryAction_default = ListItemSecondaryAction;
 
   // node_modules/@mui/material/ListItem/ListItem.mjs
-  var import_jsx_runtime253 = __toESM(require_jsx_runtime(), 1), overridesResolver3 = (props, styles5) => {
+  var import_jsx_runtime256 = __toESM(require_jsx_runtime(), 1), overridesResolver3 = (props, styles5) => {
     let {
       ownerState
     } = props;
@@ -65996,11 +66306,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ownerState,
       className: classes2.secondaryAction
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(ListContext_default.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(ListContext_default.Provider, {
       value: childContext,
-      children: /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)(RootSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(RootSlot, {
         ...rootSlotProps,
-        children: [childrenProp, secondaryAction && /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(SecondaryActionSlot, {
+        children: [childrenProp, secondaryAction && /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(SecondaryActionSlot, {
           ...secondaryActionSlotProps,
           children: secondaryAction
         })]
@@ -66009,9 +66319,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), ListItem_default = ListItem;
 
   // src/lib/snapshots/snapshot-columns.tsx
-  var import_jsx_runtime254 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime257 = __toESM(require_jsx_runtime(), 1);
   function restoreCell(params, handlers) {
-    return /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
       Button_default,
       {
         type: "button",
@@ -66061,7 +66371,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/SnapshotsPanel.tsx
-  var import_jsx_runtime255 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime258 = __toESM(require_jsx_runtime(), 1);
   function gridLocaleText4(locale) {
     return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
   }
@@ -66072,31 +66382,31 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return snapshots.snapshotLoading ? t("snapshots.reading") : snapshots.snapshotError ? snapshots.snapshotError : snapshots.statusOverride ? snapshots.statusOverride : snapshots.snapshotMessage ? t(snapshots.snapshotMessage) : "";
   }
   function EmptySnapshots() {
-    return /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { className: "empty-list", children: t("snapshots.empty") });
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "empty-list", children: t("snapshots.empty") });
   }
   function SnapshotsPanel() {
     ensureGridDom();
-    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react41.useMemo)(
+    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react44.useMemo)(
       () => snapshotColumns({
         onRestore: (snapshotId) => {
           openSnapshotPlan2(snapshotId).catch((error2) => setSnapshotDialogStatus2(failureOf(error2).message));
         }
       }),
       [locale, openSnapshotPlan2, setSnapshotDialogStatus2]
-    ), localeText = (0, import_react41.useMemo)(() => gridLocaleText4(locale), [locale]), operations = (0, import_react41.useMemo)(
+    ), localeText = (0, import_react44.useMemo)(() => gridLocaleText4(locale), [locale]), operations = (0, import_react44.useMemo)(
       () => [...snapshots.operations].reverse(),
       [snapshots.operations]
-    ), listRef = (0, import_react41.useRef)(null);
-    return (0, import_react41.useLayoutEffect)(() => {
+    ), listRef = (0, import_react44.useRef)(null);
+    return (0, import_react44.useLayoutEffect)(() => {
       let node2 = listRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, snapshots.snapshots, locale]), /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)(import_jsx_runtime255.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "snapshots-heading", className: "files-path", children: t("view.snapshots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+    }, [columns, snapshots.snapshots, locale]), /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(import_jsx_runtime258.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "snapshots-heading", className: "files-path", children: t("view.snapshots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           Button_default,
           {
             id: "snapshots-refresh",
@@ -66108,7 +66418,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("common.refresh")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           Button_default,
           {
             id: "snapshots-take",
@@ -66122,7 +66432,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: snapshots.taking ? t("snapshots.saving") : t("snapshots.take")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           Button_default,
           {
             id: "snapshots-drives",
@@ -66137,11 +66447,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "snapshots-drives-note", className: "notice", role: "status", children: driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup) }),
-      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "snapshots-block", className: "notice", role: "status", hidden: !writeBlock, children: writeBlock }),
-      /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { id: "snapshots-undo", className: "snapshot-undo", hidden: !undoId, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "snapshots-undo-text", children: snapshots.snapshotUndo?.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange") }),
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "snapshots-drives-note", className: "notice", role: "status", children: driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup) }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "snapshots-block", className: "notice", role: "status", hidden: !writeBlock, children: writeBlock }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { id: "snapshots-undo", className: "snapshot-undo", hidden: !undoId, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "snapshots-undo-text", children: snapshots.snapshotUndo?.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange") }),
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           Button_default,
           {
             id: "snapshots-undo-button",
@@ -66154,8 +66464,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "snapshots-status", className: "notice", role: "status", "aria-live": "polite", children: listStatus(snapshots) }),
-      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "snapshots-status", className: "notice", role: "status", "aria-live": "polite", children: listStatus(snapshots) }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
         "div",
         {
           id: "snapshots-list",
@@ -66167,7 +66477,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             listRef.current = element, tooltipRef6(tips.snapshotsList)(element);
           },
           style: { height: 320, width: "100%", minWidth: 640 },
-          children: snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+          children: snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
             Button_default,
             {
               type: "button",
@@ -66177,7 +66487,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               },
               children: t("common.tryAgain")
             }
-          ) : /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+          ) : /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
             DataGrid2,
             {
               rows: [...snapshots.snapshots],
@@ -66208,10 +66518,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("section", { id: "operations", className: "operations", "aria-labelledby": "operations-heading", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { className: "browser-bar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("h2", { id: "operations-heading", className: "operations-heading", children: t("operations.heading") }),
-          /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("section", { id: "operations", className: "operations", "aria-labelledby": "operations-heading", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "browser-bar", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("h2", { id: "operations-heading", className: "operations-heading", children: t("operations.heading") }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
             Button_default,
             {
               id: "operations-refresh",
@@ -66225,9 +66535,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "operations-alert", className: "operations-alert", role: "alert", hidden: !failed, children: failed ? t("operations.rollbackFailed") : "" }),
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "operations-status", className: "notice", role: "status", "aria-live": "polite", children: snapshots.operationsLoading && snapshots.operations.length === 0 ? t("operations.reading") : snapshots.operationsError }),
-        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "operations-alert", className: "operations-alert", role: "alert", hidden: !failed, children: failed ? t("operations.rollbackFailed") : "" }),
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "operations-status", className: "notice", role: "status", "aria-live": "polite", children: snapshots.operationsLoading && snapshots.operations.length === 0 ? t("operations.reading") : snapshots.operationsError }),
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           List_default,
           {
             id: "operations-list",
@@ -66237,7 +66547,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             tabIndex: 0,
             ref: tooltipRef6(tips.operationsList),
             dense: !0,
-            children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+            children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
               Button_default,
               {
                 type: "button",
@@ -66248,13 +66558,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 },
                 children: t("common.tryAgain")
               }
-            ) }) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(ListItemText_default, { primary: t("operations.empty") }) }) : operations.map((item, index) => {
+            ) }) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(ListItemText_default, { primary: t("operations.empty") }) }) : operations.map((item, index) => {
               let copy2 = operationCardText(item);
-              return /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+              return /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
                 ListItem_default,
                 {
                   className: "operation-card snapshot-card",
-                  children: /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(ListItemText_default, { primary: copy2.title, secondary: copy2.detail || void 0 })
+                  children: /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(ListItemText_default, { primary: copy2.title, secondary: copy2.detail || void 0 })
                 },
                 `${item.time ?? ""}:${item.action ?? ""}:${item.target ?? ""}:${index}`
               );
@@ -66271,7 +66581,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function bindLibraryReload(reload) {
     reloadLibrary = reload;
   }
-  var hosts = /* @__PURE__ */ new WeakMap(), listeners10 = /* @__PURE__ */ new Set(), lastPlan = null, planOpen = !1, planStatus = "", taking = !1, backingDrives = !1, confirming = !1, driveNoteError = "", statusOverride = "";
+  var hosts = /* @__PURE__ */ new WeakMap(), listeners11 = /* @__PURE__ */ new Set(), lastPlan = null, planOpen = !1, planStatus = "", taking = !1, backingDrives = !1, confirming = !1, driveNoteError = "", statusOverride = "";
   function isDriveCopy(value) {
     if (!value || typeof value != "object") return !1;
     let record = value;
@@ -66315,12 +66625,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function subscribe2(listener) {
-    return listeners10.add(listener), () => {
-      listeners10.delete(listener);
+    return listeners11.add(listener), () => {
+      listeners11.delete(listener);
     };
   }
-  function emit3() {
-    for (let listener of [...listeners10]) listener();
+  function emit4() {
+    for (let listener of [...listeners11]) listener();
   }
   function bindHost(host, node2) {
     if (!host) return;
@@ -66328,7 +66638,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     hosts.set(host, mountIsland(host, node2, existing));
   }
   function mountSnapshots() {
-    bindHost(document.getElementById("snapshots-panel"), (0, import_react42.createElement)(SnapshotsPanel)), bindHost(document.getElementById("snapshot-dialog-host"), (0, import_react42.createElement)(RestoreDialog));
+    bindHost(document.getElementById("snapshots-panel"), (0, import_react45.createElement)(SnapshotsPanel)), bindHost(document.getElementById("snapshot-dialog-host"), (0, import_react45.createElement)(RestoreDialog));
   }
   function ensureMounted() {
     mountSnapshots();
@@ -66338,7 +66648,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     foot && (foot.textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length }));
   }
   function paint2() {
-    ensureMounted(), updateCrateFoot(), emit3();
+    ensureMounted(), updateCrateFoot(), emit4();
   }
   async function loadSnapshots() {
     state.snapshotLoading = !0, state.snapshotError = "", statusOverride = "";
@@ -66416,7 +66726,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime256 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime259 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -66535,14 +66845,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function PlayerProvider2({ children }) {
-    let [value, setValue] = (0, import_react43.useState)(readPlayerValue);
-    (0, import_react43.useEffect)(() => subscribe(() => {
-      (0, import_react_dom3.flushSync)(() => {
+    let [value, setValue] = (0, import_react46.useState)(readPlayerValue);
+    (0, import_react46.useEffect)(() => subscribe(() => {
+      (0, import_react_dom4.flushSync)(() => {
         setValue(readPlayerValue());
       });
     }), []);
-    let current2 = (0, import_react43.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(PlayerProvider, { value: current2, children });
+    let current2 = (0, import_react46.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlayerProvider, { value: current2, children });
   }
   function readHistoryValue() {
     return {
@@ -66557,20 +66867,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function HistoryProvider2({ children }) {
-    let [value, setValue] = (0, import_react43.useState)(readHistoryValue);
-    (0, import_react43.useEffect)(() => subscribeHistory(() => {
-      (0, import_react_dom3.flushSync)(() => {
+    let [value, setValue] = (0, import_react46.useState)(readHistoryValue);
+    (0, import_react46.useEffect)(() => subscribeHistory(() => {
+      (0, import_react_dom4.flushSync)(() => {
         setValue(readHistoryValue());
       });
     }), []);
-    let current2 = (0, import_react43.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(HistoryProvider, { value: current2, children });
+    let current2 = (0, import_react46.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(HistoryProvider, { value: current2, children });
   }
   function GigProvider({ children }) {
-    let [value, setValue] = (0, import_react43.useState)(readGigValue);
-    (0, import_react43.useEffect)(() => {
+    let [value, setValue] = (0, import_react46.useState)(readGigValue);
+    (0, import_react46.useEffect)(() => {
       let refresh = () => {
-        (0, import_react_dom3.flushSync)(() => {
+        (0, import_react_dom4.flushSync)(() => {
           setValue(readGigValue());
         });
       }, stopGig = subscribeGig(refresh), stopDrift = subscribeDrift(refresh), stopPortable = subscribePortable(refresh);
@@ -66578,14 +66888,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stopGig(), stopDrift(), stopPortable();
       };
     }, []);
-    let current2 = (0, import_react43.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(GigStateProvider, { value: current2, children });
+    let current2 = (0, import_react46.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(GigStateProvider, { value: current2, children });
   }
   function FilesProvider2({ children }) {
-    let hostRef = (0, import_react43.useRef)(null), [value, setValue] = (0, import_react43.useState)(readFilesValue);
-    (0, import_react43.useEffect)(() => {
+    let hostRef = (0, import_react46.useRef)(null), [value, setValue] = (0, import_react46.useState)(readFilesValue);
+    (0, import_react46.useEffect)(() => {
       let refresh = () => {
-        hostRef.current?.isConnected && (0, import_react_dom3.flushSync)(() => {
+        hostRef.current?.isConnected && (0, import_react_dom4.flushSync)(() => {
           setValue(readFilesValue());
         });
       }, unsub = subscribeFiles(refresh);
@@ -66593,27 +66903,27 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         unsub(), document.removeEventListener(LOCALE_EVENT, refresh);
       };
     }, []);
-    let current2 = (0, import_react43.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(FilesProvider, { value: current2, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("span", { ref: hostRef, hidden: !0 }),
+    let current2 = (0, import_react46.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(FilesProvider, { value: current2, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("span", { ref: hostRef, hidden: !0 }),
       children
     ] });
   }
   function CrateProvider2({ children }) {
-    let [value, setValue] = (0, import_react43.useState)(readCrateValue);
-    (0, import_react43.useEffect)(() => subscribeCrates(() => {
-      (0, import_react_dom3.flushSync)(() => {
+    let [value, setValue] = (0, import_react46.useState)(readCrateValue);
+    (0, import_react46.useEffect)(() => subscribeCrates(() => {
+      (0, import_react_dom4.flushSync)(() => {
         setValue(readCrateValue());
       });
     }), []);
-    let current2 = (0, import_react43.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(CrateProvider, { value: current2, children });
+    let current2 = (0, import_react46.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(CrateProvider, { value: current2, children });
   }
   function SettingsProvider2({ children }) {
-    let [value, setValue] = (0, import_react43.useState)(readSettingsValue);
-    (0, import_react43.useEffect)(() => {
+    let [value, setValue] = (0, import_react46.useState)(readSettingsValue);
+    (0, import_react46.useEffect)(() => {
       let refresh = () => {
-        (0, import_react_dom3.flushSync)(() => {
+        (0, import_react_dom4.flushSync)(() => {
           setValue(readSettingsValue());
         });
       }, stopStore = subscribeSettings(refresh), stopLocale = onLocaleChange(refresh);
@@ -66621,8 +66931,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stopStore(), stopLocale();
       };
     }, []);
-    let current2 = (0, import_react43.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(SettingsProvider, { value: current2, children });
+    let current2 = (0, import_react46.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(SettingsProvider, { value: current2, children });
   }
   function readTrackListValue() {
     return {
@@ -66631,14 +66941,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function TrackListRoot({ children }) {
-    let [value, setValue] = (0, import_react43.useState)(readTrackListValue);
-    (0, import_react43.useLayoutEffect)(() => subscribeTrackList(() => {
-      (0, import_react_dom3.flushSync)(() => {
+    let [value, setValue] = (0, import_react46.useState)(readTrackListValue);
+    (0, import_react46.useLayoutEffect)(() => subscribeTrackList(() => {
+      (0, import_react_dom4.flushSync)(() => {
         setValue(readTrackListValue());
       });
     }), []);
-    let current2 = (0, import_react43.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(TrackListProvider, { value: current2, children });
+    let current2 = (0, import_react46.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(TrackListProvider, { value: current2, children });
   }
   function readSnapshotsValue() {
     return {
@@ -66655,18 +66965,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function SnapshotsProvider2({ children }) {
-    let [value, setValue] = (0, import_react43.useState)(readSnapshotsValue);
-    (0, import_react43.useEffect)(() => subscribe2(() => {
-      (0, import_react_dom3.flushSync)(() => {
+    let [value, setValue] = (0, import_react46.useState)(readSnapshotsValue);
+    (0, import_react46.useEffect)(() => subscribe2(() => {
+      (0, import_react_dom4.flushSync)(() => {
         setValue(readSnapshotsValue());
       });
     }), []);
-    let current2 = (0, import_react43.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(SnapshotsProvider, { value: current2, children });
+    let current2 = (0, import_react46.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(SnapshotsProvider, { value: current2, children });
   }
   function WizardProvider2({ children }) {
-    let value = (0, import_react43.useMemo)(() => idleWizardValue(), []);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(WizardProvider, { value, children });
+    let value = (0, import_react46.useMemo)(() => idleWizardValue(), []);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(WizardProvider, { value, children });
   }
   function readHealthValue() {
     return {
@@ -66688,25 +66998,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function HealthProvider2({ children }) {
-    let [value, setValue] = (0, import_react43.useState)(readHealthValue);
-    (0, import_react43.useLayoutEffect)(() => subscribeHealth(() => {
-      (0, import_react_dom3.flushSync)(() => {
+    let [value, setValue] = (0, import_react46.useState)(readHealthValue);
+    (0, import_react46.useLayoutEffect)(() => subscribeHealth(() => {
+      (0, import_react_dom4.flushSync)(() => {
         setValue(readHealthValue());
       });
     }), []);
-    let current2 = (0, import_react43.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(HealthProvider, { value: current2, children });
+    let current2 = (0, import_react46.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(HealthProvider, { value: current2, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(MuiThemeRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(SettingsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(TrackListRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(SnapshotsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(WizardProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(HealthProvider2, { children }) }) }) }) }) }) }) }) }) }) }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(MuiThemeRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(SettingsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(TrackListRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(SnapshotsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(WizardProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(HealthProvider2, { children }) }) }) }) }) }) }) }) }) }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime257 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime260 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node2, existing) {
     let root = existing ?? (0, import_client.createRoot)(host);
-    return (0, import_react_dom4.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime257.jsx)(AppProviders, { children: node2 }));
+    return (0, import_react_dom5.flushSync)(() => {
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime260.jsx)(AppProviders, { children: node2 }));
     }), root;
   }
 
@@ -66737,11 +67047,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/GigDetailsGroup.tsx
-  var import_react44 = __toESM(require_react(), 1), import_react_dom5 = __toESM(require_react_dom(), 1);
-  var import_jsx_runtime258 = __toESM(require_jsx_runtime(), 1), LIST_CAP2 = 100;
+  var import_react47 = __toESM(require_react(), 1), import_react_dom6 = __toESM(require_react_dom(), 1);
+  var import_jsx_runtime261 = __toESM(require_jsx_runtime(), 1), LIST_CAP2 = 100;
   function GigDetailsGroup({ label, lines }) {
-    let [expanded2, setExpanded] = (0, import_react44.useState)(!1), [open, setOpen] = (0, import_react44.useState)(!0), shown = expanded2 || lines.length <= LIST_CAP2 ? lines : lines.slice(0, LIST_CAP2);
-    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(
+    let [expanded2, setExpanded] = (0, import_react47.useState)(!1), [open, setOpen] = (0, import_react47.useState)(!0), shown = expanded2 || lines.length <= LIST_CAP2 ? lines : lines.slice(0, LIST_CAP2);
+    return /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -66757,24 +67067,24 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           "&:before": { display: "none" }
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
             AccordionSummary_default,
             {
-              expandIcon: /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(ExpandMore_default, { fontSize: "small" }),
+              expandIcon: /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(ExpandMore_default, { fontSize: "small" }),
               ref: tooltipRef6(tips.gigGroup),
               children: t("gig.groupCount", { label, count: lines.length })
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("ul", { children: shown.map((line2, index) => /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("li", { children: line2 }, `${index}:${line2}`)) }),
-            lines.length > LIST_CAP2 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("ul", { children: shown.map((line2, index) => /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("li", { children: line2 }, `${index}:${line2}`)) }),
+            lines.length > LIST_CAP2 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
               "button",
               {
                 type: "button",
                 ref: tooltipRef6(tips.gigShowAll),
                 className: "gig-show-all",
                 onClick: () => {
-                  (0, import_react_dom5.flushSync)(() => setExpanded(!0));
+                  (0, import_react_dom6.flushSync)(() => setExpanded(!0));
                 },
                 children: t("gig.showAll", { count: lines.length })
               }
@@ -66786,7 +67096,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/GigReport.tsx
-  var import_jsx_runtime259 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime262 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef7(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -66794,8 +67104,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function GigActions({ primary, stepIndex: stepIndex2 }) {
     let gig = useGig();
-    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)("div", { className: "gig-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)("div", { className: "gig-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
         "button",
         {
           type: "button",
@@ -66806,7 +67116,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.back")
         }
       ),
-      primary ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(
+      primary ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
         "button",
         {
           type: "button",
@@ -66817,7 +67127,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: primary
         }
       ) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
         "button",
         {
           type: "button",
@@ -66831,54 +67141,54 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function GigSince({ payload }) {
     let note = payload.snapshot_note?.trim() ?? "", changes = payload.changes, groups = GIG_CHANGE_GROUPS.map(([label, key]) => [label, changes?.[key] || []]).filter(([, lines]) => lines.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(import_jsx_runtime259.Fragment, { children: [
-      note ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { className: "gig-note", children: note }) : null,
-      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
-      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
-      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
+    return /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)(import_jsx_runtime262.Fragment, { children: [
+      note ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { className: "gig-note", children: note }) : null,
+      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
+      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
+      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
     ] });
   }
   function GigReport() {
     let { gig } = useGig(), payload = gig.report;
     if (!payload) return null;
     let done = gig.stepIndex >= GIG_STEP_COUNT, step = done ? null : GIG_STEPS[gig.stepIndex], verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady"), crate = payload.scope?.crate_name || t("gig.wholeSpaceInline"), time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "", holding = (payload.holding_it_back || []).map((item) => item.summary), lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [];
-    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(import_jsx_runtime259.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)(import_jsx_runtime262.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)(
         "p",
         {
           className: "gig-score",
           "aria-label": t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
+            /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
           ]
         }
       ),
-      done ? /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(import_jsx_runtime259.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
-        /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
-        /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
+      done ? /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)(import_jsx_runtime262.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
           score: payload.score,
           crate,
           time
         }) }),
-        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(import_jsx_runtime259.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
-        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { className: "gig-note", children: t(step.empty) }),
-        /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
+        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)(import_jsx_runtime262.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
+        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { className: "gig-note", children: t(step.empty) }),
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
       ] })
     ] });
   }
 
   // src/lib/gig/gig.ts
-  var listeners11 = /* @__PURE__ */ new Set(), stepIndex = 0, latest7 = null, checkedAt = null, exitGig = () => {
+  var listeners12 = /* @__PURE__ */ new Set(), stepIndex = 0, latest7 = null, checkedAt = null, exitGig = () => {
   };
-  function emit4() {
+  function emit5() {
     let snapshot2 = getGigSnapshot();
-    for (let listener of listeners11) listener(snapshot2);
+    for (let listener of listeners12) listener(snapshot2);
   }
   function focusHeading() {
     let headingNode = document.getElementById("gig-step-heading");
@@ -66902,15 +67212,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { report: latest7, stepIndex, checkedAt };
   }
   function subscribeGig(listener) {
-    return listeners11.add(listener), () => {
-      listeners11.delete(listener);
+    return listeners12.add(listener), () => {
+      listeners12.delete(listener);
     };
   }
   function nextGigStep() {
-    latest7 && (stepIndex = Math.min(stepIndex + 1, GIG_STEP_COUNT), emit4(), focusHeading());
+    latest7 && (stepIndex = Math.min(stepIndex + 1, GIG_STEP_COUNT), emit5(), focusHeading());
   }
   function backGigStep() {
-    latest7 && (stepIndex = Math.max(0, stepIndex - 1), emit4(), focusHeading());
+    latest7 && (stepIndex = Math.max(0, stepIndex - 1), emit5(), focusHeading());
   }
   function exitGigCheck() {
     exitGig();
@@ -66920,7 +67230,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let panel = el("gig-panel");
     panel.dataset.gigWired !== "true" && (panel.dataset.gigWired = "true", el("gig-refresh").addEventListener("click", () => {
       loadGigCheck(!0);
-    }), mountIsland(el("gig-report"), (0, import_react45.createElement)(GigReport)));
+    }), mountIsland(el("gig-report"), (0, import_react48.createElement)(GigReport)));
   }
   async function loadGigCheck(keepStep = !1) {
     let token4 = ++state.gigToken;
@@ -66937,7 +67247,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failStatus6(serverMessage(payload, t("gig.unreadable"))), settle = "retry";
         return;
       }
-      checkedAt = /* @__PURE__ */ new Date(), latest7 = payload, el("gig-status").textContent = "", updateScope2(payload), emit4(), settle = "heading";
+      checkedAt = /* @__PURE__ */ new Date(), latest7 = payload, el("gig-status").textContent = "", updateScope2(payload), emit5(), settle = "heading";
     } catch {
       if (token4 !== state.gigToken) return;
       failStatus6(t("gig.unreachable")), settle = "retry";
@@ -66951,7 +67261,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     failStatus6(message), endBusy6(), el("gig-refresh").focus();
   }
   function repaintGig() {
-    latest7 && (updateScope2(latest7), emit4());
+    latest7 && (updateScope2(latest7), emit5());
   }
 
   // src/lib/history/history-stats-view.ts
@@ -67193,10 +67503,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/bitrate.ts
-  var import_react47 = __toESM(require_react(), 1);
+  var import_react50 = __toESM(require_react(), 1);
 
   // src/pages/BitrateReport.tsx
-  var import_react46 = __toESM(require_react(), 1);
+  var import_react49 = __toESM(require_react(), 1);
 
   // src/lib/health/bitrate-view.ts
   var REASON_KEYS2 = {
@@ -67214,14 +67524,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/BitrateReport.tsx
-  var import_jsx_runtime260 = __toESM(require_jsx_runtime(), 1), BUTTON_SX5 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime263 = __toESM(require_jsx_runtime(), 1), BUTTON_SX5 = { textTransform: "none", minHeight: 44 };
   function PlanNote({
     cratePlan: cratePlan2,
     writable
   }) {
-    return cratePlan2 ? cratePlan2.written && cratePlan2.saved ? /* @__PURE__ */ (0, import_jsx_runtime260.jsx)("p", { className: "gig-note", children: t("bitrate.written", { count: cratePlan2.added, name: cratePlan2.name }) }) : cratePlan2.added ? /* @__PURE__ */ (0, import_jsx_runtime260.jsxs)(import_jsx_runtime260.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime260.jsx)("p", { className: "gig-note", children: t("bitrate.preview", { count: cratePlan2.added, name: cratePlan2.name }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(
+    return cratePlan2 ? cratePlan2.written && cratePlan2.saved ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "gig-note", children: t("bitrate.written", { count: cratePlan2.added, name: cratePlan2.name }) }) : cratePlan2.added ? /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)(import_jsx_runtime263.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "gig-note", children: t("bitrate.preview", { count: cratePlan2.added, name: cratePlan2.name }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
         Button_default,
         {
           type: "button",
@@ -67234,17 +67544,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("bitrate.confirmCrate")
         }
       )
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime260.jsx)("p", { className: "gig-note", children: t("bitrate.previewEmpty") }) : null;
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "gig-note", children: t("bitrate.previewEmpty") }) : null;
   }
   function BitrateReport({
     payload,
     cratePlan: cratePlan2,
     writable
   }) {
-    let suspects = payload.suspects || [], rows = (0, import_react46.useMemo)(
+    let suspects = payload.suspects || [], rows = (0, import_react49.useMemo)(
       () => suspects.map((item) => ({ ...item, id: item.id })),
       [suspects]
-    ), columns = (0, import_react46.useMemo)(() => [
+    ), columns = (0, import_react49.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -67273,14 +67583,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         valueGetter: (_value, row) => bitrateDetail(row)
       }
     ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime260.jsxs)(import_jsx_runtime260.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime260.jsx)("p", { className: "gig-note", children: suspects.length ? t("bitrate.summary", { checked: payload.checked, count: suspects.length }) : t("bitrate.summaryClear", { checked: payload.checked }) }),
-      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime260.jsx)("p", { className: "gig-note", children: t("bitrate.notFound", { count: payload.not_found }) }) : null,
-      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime260.jsx)("p", { className: "gig-note", children: t("bitrate.unreadableFiles", { count: payload.unreadable }) }) : null,
-      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime260.jsx)("p", { className: "gig-note", children: t("bitrate.unchecked", { count: payload.unchecked }) }) : null,
-      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime260.jsx)("p", { className: "gig-note", children: t("bitrate.tooQuiet", { count: payload.too_quiet }) }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(PlanNote, { cratePlan: cratePlan2, writable }),
-      suspects.length ? /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime260.jsx)("p", { className: "gig-note", children: t("bitrate.empty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)(import_jsx_runtime263.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "gig-note", children: suspects.length ? t("bitrate.summary", { checked: payload.checked, count: suspects.length }) : t("bitrate.summaryClear", { checked: payload.checked }) }),
+      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "gig-note", children: t("bitrate.notFound", { count: payload.not_found }) }) : null,
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "gig-note", children: t("bitrate.unreadableFiles", { count: payload.unreadable }) }) : null,
+      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "gig-note", children: t("bitrate.unchecked", { count: payload.unchecked }) }) : null,
+      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "gig-note", children: t("bitrate.tooQuiet", { count: payload.too_quiet }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(PlanNote, { cratePlan: cratePlan2, writable }),
+      suspects.length ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "gig-note", children: t("bitrate.empty") })
     ] });
   }
 
@@ -67335,7 +67645,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("bitrate-report");
     reportRoot && reportHost !== report && (reportRoot.unmount(), reportRoot = void 0), reportHost = report, reportRoot = mountIsland(
       report,
-      (0, import_react47.createElement)(BitrateReport, {
+      (0, import_react50.createElement)(BitrateReport, {
         payload,
         cratePlan,
         writable: state.writable
@@ -67413,10 +67723,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/files/files-mount.tsx
-  var import_react49 = __toESM(require_react(), 1);
+  var import_react52 = __toESM(require_react(), 1);
 
   // src/pages/FilesDialog.tsx
-  var import_jsx_runtime261 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime264 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef8(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -67424,7 +67734,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function FilesDialog() {
     let files = useFiles(), action = files.dialogAction, preview = files.dialogPreview, ready = !!(preview?.ok && files.writable && preview.needs_confirm), reviewHidden = action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags", status4 = files.writable ? files.dialogStatus : document.getElementById("status")?.textContent ?? files.dialogStatus, confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm"), confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
-    return /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(
       Dialog_default,
       {
         open: files.dialogOpen,
@@ -67439,18 +67749,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         maxWidth: "sm",
         sx: { "& .MuiDialog-paper": { maxWidth: "42rem" } },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(DialogTitle_default, { id: "files-dialog-title", component: "h2", children: t("files.reviewTitle") }),
-          /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)(DialogContent_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(DialogContentText_default, { id: "files-summary", component: "p", children: preview?.summary || "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(DialogContentText_default, { className: "dialog-note", component: "p", children: t("files.nothingUntilConfirm") }),
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(DialogTitle_default, { id: "files-dialog-title", component: "h2", children: t("files.reviewTitle") }),
+          /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(DialogContent_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(DialogContentText_default, { id: "files-summary", component: "p", children: preview?.summary || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(DialogContentText_default, { className: "dialog-note", component: "p", children: t("files.nothingUntilConfirm") }),
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
               Box_default,
               {
                 id: "files-name-label",
                 className: "files-field",
                 hidden: action !== "rename",
                 sx: action !== "rename" ? { display: "none" } : void 0,
-                children: /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
                   TextField_default,
                   {
                     id: "files-name",
@@ -67464,14 +67774,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
               Box_default,
               {
                 id: "files-replace-label",
                 className: "files-field",
                 hidden: action !== "replace",
                 sx: action !== "replace" ? { display: "none" } : void 0,
-                children: /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
                   TextField_default,
                   {
                     id: "files-replacement",
@@ -67486,19 +67796,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)("ul", { id: "files-changes", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)("ul", { id: "files-changes", children: [
               (preview?.changes || []).map((change, index) => {
                 let crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "", effect4 = change.effect === "trash" ? t("files.trash") : change.to;
-                return /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("li", { children: `${change.from} → ${effect4}${crates}` }, `change-${index}`);
+                return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("li", { children: `${change.from} → ${effect4}${crates}` }, `change-${index}`);
               }),
-              (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("li", { children: skip2 }, `skip-${index}`)),
-              preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+              (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("li", { children: skip2 }, `skip-${index}`)),
+              preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 })
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
               Button_default,
               {
                 id: "files-cancel",
@@ -67508,7 +67818,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("common.cancel")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
               Button_default,
               {
                 id: "files-review",
@@ -67522,7 +67832,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("files.review")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
               Button_default,
               {
                 id: "files-confirm",
@@ -67545,18 +67855,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/FilesPanel.tsx
-  var import_react48 = __toESM(require_react(), 1), import_react_dom6 = __toESM(require_react_dom(), 1);
+  var import_react51 = __toESM(require_react(), 1), import_react_dom7 = __toESM(require_react_dom(), 1);
 
   // node_modules/@mui/material/Breadcrumbs/Breadcrumbs.mjs
   var React316 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/internal/svg-icons/MoreHoriz.mjs
-  var import_jsx_runtime262 = __toESM(require_jsx_runtime(), 1), MoreHoriz_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime262.jsx)("path", {
+  var import_jsx_runtime265 = __toESM(require_jsx_runtime(), 1), MoreHoriz_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime265.jsx)("path", {
     d: "M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
   }), "MoreHoriz");
 
   // node_modules/@mui/material/Breadcrumbs/BreadcrumbCollapsed.mjs
-  var import_jsx_runtime263 = __toESM(require_jsx_runtime(), 1), BreadcrumbCollapsedButton = styled_default2(ButtonBase_default, {
+  var import_jsx_runtime266 = __toESM(require_jsx_runtime(), 1), BreadcrumbCollapsedButton = styled_default2(ButtonBase_default, {
     name: "MuiBreadcrumbCollapsed"
   })(memoTheme_default(({
     theme
@@ -67597,12 +67907,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       nativeButton,
       ...buttonBaseProps
     } = otherProps, ownerState = props;
-    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("li", {
-      children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(BreadcrumbCollapsedButton, {
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("li", {
+      children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(BreadcrumbCollapsedButton, {
         focusRipple: !0,
         ...buttonBaseProps,
         ownerState,
-        children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(BreadcrumbCollapsedIcon, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(BreadcrumbCollapsedIcon, {
           as: slots.CollapsedIcon,
           ownerState,
           ...slotProps.collapsedIcon
@@ -67619,7 +67929,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var breadcrumbsClasses = generateUtilityClasses("MuiBreadcrumbs", ["root", "ol", "li", "separator"]), breadcrumbsClasses_default = breadcrumbsClasses;
 
   // node_modules/@mui/material/Breadcrumbs/Breadcrumbs.mjs
-  var import_jsx_runtime264 = __toESM(require_jsx_runtime(), 1), useUtilityClasses111 = (ownerState) => {
+  var import_jsx_runtime267 = __toESM(require_jsx_runtime(), 1), useUtilityClasses111 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -67655,7 +67965,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     marginRight: 8
   });
   function insertSeparators(items, className, separator, ownerState) {
-    return items.reduce((acc, current2, index) => (acc.push(current2), index < items.length - 1 && acc.push(/* @__PURE__ */ (0, import_jsx_runtime264.jsx)(BreadcrumbsSeparator, {
+    return items.reduce((acc, current2, index) => (acc.push(current2), index < items.length - 1 && acc.push(/* @__PURE__ */ (0, import_jsx_runtime267.jsx)(BreadcrumbsSeparator, {
       "aria-hidden": !0,
       className,
       ownerState,
@@ -67697,7 +68007,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         let focusable = listRef.current.querySelector("a[href],button,[tabindex]");
         focusable && focusable.focus();
       };
-      return itemsBeforeCollapse + itemsAfterCollapse >= allItems2.length ? allItems2 : [...allItems2.slice(0, itemsBeforeCollapse), /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(BreadcrumbCollapsed_default, {
+      return itemsBeforeCollapse + itemsAfterCollapse >= allItems2.length ? allItems2 : [...allItems2.slice(0, itemsBeforeCollapse), /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(BreadcrumbCollapsed_default, {
         "aria-label": expandText,
         slots: {
           CollapsedIcon: slots.CollapsedIcon
@@ -67707,18 +68017,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         },
         onClick: handleClickExpand
       }, "ellipsis"), ...allItems2.slice(allItems2.length - itemsAfterCollapse, allItems2.length)];
-    }, allItems = React316.Children.toArray(children).filter((child) => /* @__PURE__ */ React316.isValidElement(child)).map((child, index) => /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("li", {
+    }, allItems = React316.Children.toArray(children).filter((child) => /* @__PURE__ */ React316.isValidElement(child)).map((child, index) => /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("li", {
       className: classes2.li,
       children: child
     }, `child-${index}`));
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(BreadcrumbsRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(BreadcrumbsRoot, {
       ref,
       component,
       color: "textSecondary",
       className: clsx_default(classes2.root, className),
       ownerState,
       ...other,
-      children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(BreadcrumbsOl, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(BreadcrumbsOl, {
         className: classes2.ol,
         ref: listRef,
         ownerState,
@@ -67728,14 +68038,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), Breadcrumbs_default = Breadcrumbs;
 
   // src/pages/FilesPanel.tsx
-  var import_jsx_runtime265 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime268 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef9(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function FileIcon({ kind: kind2 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
       "svg",
       {
         viewBox: "0 0 24 24",
@@ -67743,13 +68053,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         height: "20",
         "aria-hidden": "true",
         className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
-        children: /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
       }
     );
   }
   function FilesToolbar() {
     let files = useFiles(), crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
-    return /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(
       Toolbar_default,
       {
         className: "browser-bar",
@@ -67758,7 +68068,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-label": t("files.toolbar"),
         sx: { minHeight: 0, flexWrap: "wrap", gap: 1 },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
             Button_default,
             {
               id: "files-up",
@@ -67769,7 +68079,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: t("common.up")
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
             Breadcrumbs_default,
             {
               id: "files-path",
@@ -67781,7 +68091,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 minWidth: 0,
                 "& .MuiBreadcrumbs-ol": { flexWrap: "nowrap" }
               },
-              children: crumbs.map((crumb, index) => !(index === crumbs.length - 1) && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+              children: crumbs.map((crumb, index) => !(index === crumbs.length - 1) && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
                 Button_default,
                 {
                   type: "button",
@@ -67791,7 +68101,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                   children: crumb.name
                 },
                 `${crumb.path}:${crumb.name}:${index}`
-              ) : /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+              ) : /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
                 Typography_default,
                 {
                   className: "files-crumb",
@@ -67803,7 +68113,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               ))
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
             TextField_default,
             {
               id: "files-search",
@@ -67819,8 +68129,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               onInput: (event) => files.onSearchInput(event.target.value)
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(Button_default, { id: "files-refresh", type: "button", ref: tooltipRef9(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
-          /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(Button_default, { id: "files-refresh", type: "button", ref: tooltipRef9(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
             Button_default,
             {
               id: "files-elsewhere",
@@ -67837,8 +68147,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function FilesActions() {
     let files = useFiles(), selected = files.selectedEntries, locked = files.locked;
-    return /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(Box_default, { className: "files-actions", "aria-label": t("files.actionsLabel"), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(Box_default, { className: "files-actions", "aria-label": t("files.actionsLabel"), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         Button_default,
         {
           id: "files-rename",
@@ -67849,7 +68159,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         Button_default,
         {
           id: "files-rename-from-tags",
@@ -67861,7 +68171,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         Button_default,
         {
           id: "files-move",
@@ -67872,7 +68182,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveToFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         Button_default,
         {
           id: "files-move-folder",
@@ -67883,7 +68193,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         Button_default,
         {
           id: "files-replace",
@@ -67894,7 +68204,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.replaceFile")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         Button_default,
         {
           id: "files-delete",
@@ -67905,7 +68215,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         Button_default,
         {
           id: "files-move-here",
@@ -67918,7 +68228,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveHere")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         Button_default,
         {
           id: "files-pick-cancel",
@@ -67939,8 +68249,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       entry.missing ? "is-missing" : "",
       active2 ? "is-active" : ""
     ].filter(Boolean).join(" ");
-    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)("div", { className, role: "listitem", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(
+    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)("div", { className, role: "listitem", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(
         "button",
         {
           type: "button",
@@ -67955,19 +68265,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             entry.missing ? files.markActive(index) : files.openRow(entry, index);
           },
           children: [
-            entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
-            entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)("span", { className: "files-root-copy", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { className: "files-root-label", children: entry.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { className: "files-root-detail", children: entry.detail })
-            ] }) : /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(import_jsx_runtime265.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { children: entry.name }),
-              entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
+            entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
+            entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)("span", { className: "files-root-copy", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("span", { className: "files-root-label", children: entry.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("span", { className: "files-root-detail", children: entry.detail })
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(import_jsx_runtime268.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("span", { children: entry.name }),
+              entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
             ] }),
-            entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+            entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
           ]
         }
       ),
-      entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         "button",
         {
           type: "button",
@@ -67981,7 +68291,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("portable.check")
         }
       ) : null
-    ] }) : entry.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+    ] }) : entry.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
       "button",
       {
         type: "button",
@@ -67993,8 +68303,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-label": t("files.shortcut", { name: entry.name }),
         children: t("files.shortcut", { name: entry.name })
       }
-    ) }) : /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)("label", { className: "files-file", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+    ) }) : /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         "input",
         {
           ref: tooltipRef9(selectFile(entry.name, entry.path)),
@@ -68007,9 +68317,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           onChange: (event) => files.toggleFile(entry, index, event.currentTarget.checked)
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { className: "files-name", children: entry.name }),
-      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
-      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("span", { className: "files-name", children: entry.name }),
+      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
+      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
     ] }) });
   }
   var FILE_OVERSCAN = 8;
@@ -68018,13 +68328,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { start: start2, end: end2 };
   }
   function FilesList() {
-    let files = useFiles(), listRef = (0, import_react48.useRef)(null), [scrollTop, setScrollTop] = (0, import_react48.useState)(0), [viewHeight, setViewHeight] = (0, import_react48.useState)(600);
-    (0, import_react48.useLayoutEffect)(() => {
+    let files = useFiles(), listRef = (0, import_react51.useRef)(null), [scrollTop, setScrollTop] = (0, import_react51.useState)(0), [viewHeight, setViewHeight] = (0, import_react51.useState)(600);
+    (0, import_react51.useLayoutEffect)(() => {
       let list = listRef.current;
       if (!list) return;
       setViewHeight(list.clientHeight || 600), setScrollTop(list.scrollTop);
       let onNativeScroll = () => {
-        (0, import_react_dom6.flushSync)(() => {
+        (0, import_react_dom7.flushSync)(() => {
           setScrollTop(list.scrollTop), setViewHeight(list.clientHeight || 600);
         });
       };
@@ -68035,14 +68345,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let ariaLabel = files.searching ? t("files.searchResults") : files.atRoots ? t("files.roots") : t("files.contents"), emptyLoading = files.loading && !rows.length, emptyError = !!files.error && !rows.length, emptyRoots = files.atRoots && !files.roots.length, emptyFolder = !rows.length, body, tabIndex = 0;
     if (emptyLoading) {
       let reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      body = /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "files-empty", children: reading });
+      body = /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "files-empty", children: reading });
     } else if (emptyError)
-      body = /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "files-empty", children: files.error });
+      body = /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "files-empty", children: files.error });
     else if (emptyRoots)
-      tabIndex = -1, body = /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)("div", { className: "files-empty-state", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("h2", { children: t("files.noRoots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { children: t("files.noRootsBody") }),
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      tabIndex = -1, body = /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
           Button_default,
           {
             id: "files-run-setup",
@@ -68057,29 +68367,29 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ] });
     else if (emptyFolder) {
       let empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
-      body = /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "files-empty", children: empty });
+      body = /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "files-empty", children: empty });
     } else {
       tabIndex = -1;
       let windowRows = [];
       for (let index = start2; index < end2; index += 1) {
         let entry = rows[index];
-        entry && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime265.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
+        entry && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime268.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
       }
-      body = /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("div", { className: "files-spacer", style: { height: `${rows.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("div", { className: "files-window", style: { transform: `translateY(${start2 * rowHeight}px)` }, children: windowRows }) });
+      body = /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("div", { className: "files-spacer", style: { height: `${rows.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("div", { className: "files-window", style: { transform: `translateY(${start2 * rowHeight}px)` }, children: windowRows }) });
     }
     function onScroll2(event) {
       let node2 = event.currentTarget;
-      (0, import_react_dom6.flushSync)(() => {
+      (0, import_react_dom7.flushSync)(() => {
         setScrollTop(node2.scrollTop), setViewHeight(node2.clientHeight || 600);
       });
     }
     function onKey2(event) {
       files.onListKey(event.nativeEvent);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(import_jsx_runtime265.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(import_jsx_runtime268.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
         "div",
         {
           id: "files-list",
@@ -68098,37 +68408,37 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
   function FilesPanel() {
-    return /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(import_jsx_runtime265.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(FilesToolbar, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(FilesList, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(FilesActions, {})
+    return /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(import_jsx_runtime268.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(FilesActions, {})
     ] });
   }
 
   // src/components/PortableDialog.tsx
-  var import_jsx_runtime266 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime269 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
     let files = useFiles(), report = files.portableReport, verdict = "";
     report && (report.missing_drive ? verdict = t("portable.missing") : report.ready ? verdict = t("portable.ready") : verdict = t("portable.notReady"));
     let shown = report ? report.findings.slice(0, FINDING_CAP) : [], hidden = report ? report.findings.length - shown.length : 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(import_jsx_runtime266.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { id: "portable-verdict", children: verdict }),
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)("ul", { id: "portable-findings", children: [
-        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)("li", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
-          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(import_jsx_runtime266.Fragment, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(import_jsx_runtime269.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(import_jsx_runtime269.Fragment, { children: [
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("span", { className: "portable-fix", children: finding.fix })
+            /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("span", { className: "portable-fix", children: finding.fix })
           ] }) : null
         ] }, `finding-${index}`)),
-        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
-        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(
         "button",
         {
           id: "portable-close",
@@ -68145,7 +68455,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/lib/files/files-mount.tsx
   var panelRoot4 = null, dialogRoot = null, portableRoot = null, panelHost4 = null, dialogHost = null, portableHost = null;
-  function safeUnmount(root) {
+  function safeUnmount2(root) {
     if (root)
       try {
         root.unmount();
@@ -68154,11 +68464,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function rootFor(host, current2, lastHost) {
     if (current2 && lastHost === host && host.isConnected) return current2;
-    safeUnmount(current2);
+    safeUnmount2(current2);
   }
   function mountFilesIslands() {
     let panel = el("files-panel"), dialog = el("files-dialog"), portable = el("portable-dialog");
-    panelRoot4 = mountIsland(panel, (0, import_react49.createElement)(FilesPanel), rootFor(panel, panelRoot4, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react49.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react49.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
+    panelRoot4 = mountIsland(panel, (0, import_react52.createElement)(FilesPanel), rootFor(panel, panelRoot4, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react52.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react52.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
   }
   bindFilesMount(mountFilesIslands);
   bindPortableMount(mountFilesIslands);
@@ -68212,10 +68522,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/views.ts
-  var import_react52 = __toESM(require_react(), 1);
+  var import_react55 = __toESM(require_react(), 1);
 
   // src/pages/CrateActions.tsx
-  var import_jsx_runtime267 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef10(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68223,8 +68533,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(import_jsx_runtime267.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)(import_jsx_runtime270.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
         "button",
         {
           id: "crate-new",
@@ -68235,7 +68545,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.new")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
         "button",
         {
           id: "crate-rename",
@@ -68246,7 +68556,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
         "button",
         {
           id: "crate-color",
@@ -68257,7 +68567,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("field.color")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
         "button",
         {
           id: "crate-delete",
@@ -68268,7 +68578,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
         "button",
         {
           id: "crate-preset",
@@ -68280,7 +68590,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("presets.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
         "button",
         {
           id: "crate-folder-sync",
@@ -68292,7 +68602,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("folderSync.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
         "button",
         {
           id: "crate-rename-from-tags",
@@ -68304,7 +68614,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
         "button",
         {
           id: "crate-refresh",
@@ -68320,7 +68630,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateBrowserActions.tsx
-  var import_jsx_runtime268 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime271 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef11(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68328,8 +68638,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateBrowserActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(import_jsx_runtime268.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(import_jsx_runtime271.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
         "button",
         {
           id: "crate-split",
@@ -68341,7 +68651,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.split")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
         "button",
         {
           id: "crate-save-view",
@@ -68353,7 +68663,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.saveView")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
         "button",
         {
           id: "export-m3u",
@@ -68368,7 +68678,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateTree.tsx
-  var import_jsx_runtime269 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime272 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef12(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68380,9 +68690,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function Twist({ row, toggle }) {
     if (!row.childCount)
-      return /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
+      return /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
     let spec2 = row.expanded ? collapseCrate(row.name) : expandCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
       "button",
       {
         type: "button",
@@ -68402,14 +68712,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     toggle
   }) {
     let hex = colorHex(row.color), tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(
       "div",
       {
         className: row.holds ? "crate-row holds-selection" : "crate-row",
         style: { paddingLeft: `${row.depth * 14}px` },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(Twist, { row, toggle }),
-          /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(Twist, { row, toggle }),
+          /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(
             "button",
             {
               type: "button",
@@ -68425,12 +68735,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               "aria-expanded": row.childCount ? row.expanded : void 0,
               onClick: (event) => select(row.id, event.nativeEvent),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)("span", { className: "name", children: [
-                  hex ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)("span", { className: "name", children: [
+                  hex ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
                   row.name
                 ] }),
-                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
-                /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("span", { className: "meta", children: formatNumber(row.count) })
+                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "meta", children: formatNumber(row.count) })
               ]
             }
           )
@@ -68440,7 +68750,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateTree() {
     let crates = useCrates(), focusId = focusedCrateId(), tabbable = crates.rows.find((row) => String(row.id) === focusId) ?? crates.rows[0];
-    return /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(import_jsx_runtime269.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(import_jsx_runtime272.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
       CrateRow,
       {
         row,
@@ -68453,16 +68763,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistoryDetail.tsx
-  var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime273 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef13(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function Field({ label, value }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("div", { className: "label", children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("div", { className: "value", children: value })
+    return /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("div", { className: "label", children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("div", { className: "value", children: value })
     ] });
   }
   function HistoryDetail() {
@@ -68474,11 +68784,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(Field, { label, value }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(Field, { label, value }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
         "button",
         {
           type: "button",
@@ -68494,7 +68804,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistorySessions.tsx
-  var import_jsx_runtime271 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef14(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68502,9 +68812,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HistorySessions() {
     let history = useHistory();
-    return /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(import_jsx_runtime271.Fragment, { children: history.sessions.map((session) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(import_jsx_runtime274.Fragment, { children: history.sessions.map((session) => {
       let name = session.name || t("history.session");
-      return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)(
         "button",
         {
           type: "button",
@@ -68516,8 +68826,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             history.openSession(session.id);
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { className: "name", children: name }),
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { className: "meta", children: String(session.played || 0) })
+            /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("span", { className: "name", children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("span", { className: "meta", children: String(session.played || 0) })
           ]
         },
         session.id
@@ -68526,55 +68836,55 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/TrackDetail.tsx
-  var import_react51 = __toESM(require_react(), 1);
+  var import_react54 = __toESM(require_react(), 1);
 
   // src/components/BeatgridBlock.tsx
-  var import_jsx_runtime272 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1);
   function BeatgridMarker({ mark }) {
     let bpmNumber = Number(mark.bpm), name = "";
-    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { children: beatSeconds(mark.position) }),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { children: name })
+    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: beatSeconds(mark.position) }),
+      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: name })
     ] });
   }
   function BeatgridBlock({ track }) {
     if (!beatgridViewOnly(track.markers_unavailable)) return null;
     let suspect = beatgridIsSuspect(track.beatgrid_warning_code), key = beatgridWarningKey(track.beatgrid_warning_code), reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning == "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown"), empty = !suspect && !(track.beatgrid && track.beatgrid.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(import_jsx_runtime272.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("h4", { children: t("markers.gridHeading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
-      suspect ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
-      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
+    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h4", { children: t("markers.gridHeading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
+      suspect ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
+      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
     ] });
   }
 
   // src/components/CuePads.tsx
-  var import_jsx_runtime273 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime276 = __toESM(require_jsx_runtime(), 1);
   function CueSlot({ slot, cue }) {
     let color2 = slotColor(slot, cue?.color), named = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { className: "swatch", style: swatchStyle }),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "swatch", style: swatchStyle }),
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
     ] });
   }
   function CuePads({ cues: cues2 }) {
     let slots = cueSlots(cues2), extra = extraCues(cues2);
-    return /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)(import_jsx_runtime273.Fragment, { children: [
-      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(CueSlot, { slot, cue }, slot)),
+    return /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)(import_jsx_runtime276.Fragment, { children: [
+      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(CueSlot, { slot, cue }, slot)),
       extra.map((cue, index) => {
         let cueIndex = Number(cue.index), slot = Number.isInteger(cueIndex) ? cueIndex : -1;
-        return /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
+        return /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
       })
     ] });
   }
 
   // src/components/RelatedTracks.tsx
-  var import_react50 = __toESM(require_react(), 1);
-  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1);
+  var import_react53 = __toESM(require_react(), 1);
+  var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1);
   function relatedPath(track) {
     return track.resolved_path || track.edit?.portable_id || "";
   }
@@ -68583,8 +68893,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return item.artist ? `${title2} · ${item.artist}` : title2;
   }
   function RelatedTracks({ track, writable }) {
-    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react50.useState)(!!path), [loadError, setLoadError] = (0, import_react50.useState)(""), [payload, setPayload] = (0, import_react50.useState)(null), [query, setQuery] = (0, import_react50.useState)(""), [chosen, setChosen] = (0, import_react50.useState)(null), [note, setNote] = (0, import_react50.useState)(""), [rating, setRating] = (0, import_react50.useState)(""), [mutual, setMutual] = (0, import_react50.useState)(!0), [saving2, setSaving] = (0, import_react50.useState)(!1);
-    (0, import_react50.useEffect)(() => {
+    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react53.useState)(!!path), [loadError, setLoadError] = (0, import_react53.useState)(""), [payload, setPayload] = (0, import_react53.useState)(null), [query, setQuery] = (0, import_react53.useState)(""), [chosen, setChosen] = (0, import_react53.useState)(null), [note, setNote] = (0, import_react53.useState)(""), [rating, setRating] = (0, import_react53.useState)(""), [mutual, setMutual] = (0, import_react53.useState)(!0), [saving2, setSaving] = (0, import_react53.useState)(!1);
+    (0, import_react53.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
         return;
@@ -68606,7 +68916,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         cancelled = !0;
       };
     }, [path, list.space, track.id]);
-    let hits2 = (0, import_react50.useMemo)(() => {
+    let hits2 = (0, import_react53.useMemo)(() => {
       let parsed = parseQuery(query);
       return !parsed.terms.length && !parsed.filters.length ? null : list.tracks.filter((item) => item.id !== track.id && matchesQuery(item, parsed)).slice(0, 8);
     }, [query, list.tracks, track.id]);
@@ -68644,14 +68954,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onSearch(event) {
       setQuery(event.currentTarget.value), setChosen(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("h3", { id: headingId, children: t("related.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
-      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("ul", { className: "related-list", children: saved.map((link) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("h3", { id: headingId, children: t("related.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
+      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("ul", { className: "related-list", children: saved.map((link) => {
         let other = link.track || {}, label = other.title || t("track.untitled"), bits = [];
-        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("div", { children: [
-            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { children: [
+            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
               "button",
               {
                 type: "button",
@@ -68660,11 +68970,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 onClick: () => list.selectTrack(other.asset_id),
                 children: label
               }
-            ) : /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("span", { children: label }),
-            /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
-            link.note ? /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("p", { className: "related-note", children: link.note }) : null
+            ) : /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
+            link.note ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "related-note", children: link.note }) : null
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
             "button",
             {
               type: "button",
@@ -68679,10 +68989,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] }, String(link.id));
       }) }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("div", { className: "related-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("label", { children: [
+      payload && /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { className: "related-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("label", { children: [
           t("related.find"),
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
             "input",
             {
               ref: tooltipRef(tips.findRelated),
@@ -68694,9 +69004,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
+        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
           let name = relatedLabel(hit);
-          return /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
             "button",
             {
               type: "button",
@@ -68709,11 +69019,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           ) }, hit.id);
         }) }),
-        chosen && /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("div", { className: "related-form", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("label", { children: [
+        chosen && /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { className: "related-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("label", { children: [
             t("related.note"),
-            /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkNote),
@@ -68725,23 +69035,23 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("label", { children: [
             t("related.linkRating"),
-            /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(
               "select",
               {
                 ref: tooltipRef(tips.linkRating),
                 value: rating,
                 onChange: (event) => setRating(event.currentTarget.value),
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("option", { value: "", children: t("rating.none") }),
-                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("option", { value, children: value }, value))
+                  /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("option", { value: "", children: t("rating.none") }),
+                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("option", { value, children: value }, value))
                 ]
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("label", { className: "check", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("label", { className: "check", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkMutual),
@@ -68752,7 +69062,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             ),
             t("related.twoWayLink")
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
             "button",
             {
               type: "button",
@@ -68774,14 +69084,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] })
       ] }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)(import_jsx_runtime274.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
-        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("ul", { className: "related-list", children: suggested.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("span", { children: relatedLabel(item) }),
-            /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("p", { className: "related-meta", children: Array.isArray(item.reasons) ? item.reasons.join(" · ") : "" })
+      payload && /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(import_jsx_runtime277.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
+        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("ul", { className: "related-list", children: suggested.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { children: relatedLabel(item) }),
+            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "related-meta", children: Array.isArray(item.reasons) ? item.reasons.join(" · ") : "" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
             "button",
             {
               type: "button",
@@ -68803,7 +69113,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }, `${item.asset_id ?? index}`)) }),
-        /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
           "button",
           {
             type: "button",
@@ -68817,13 +69127,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("related.updateCrate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
+        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
       ] })
     ] });
   }
 
   // src/components/TrackDetail.tsx
-  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
+  var import_jsx_runtime278 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
     ["name", "column.title", !0],
     ["artist", "column.artist", !1],
     ["album", "field.album", !1],
@@ -68861,36 +69171,36 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MarkerSection({ track }) {
     let note = t("markers.readOnly");
-    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h3", { children: t("markers.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-kicker", children: note }),
-      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(CuePads, { cues: track.cues || [] }),
-      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(LoopRow, { loop }, `loop-${index}`)),
-      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "marker", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
+    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: t("markers.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: note }),
+      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(CuePads, { cues: track.cues || [] }),
+      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(LoopRow, { loop }, `loop-${index}`)),
+      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "marker", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
       ] }, `flip-${index}`)),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(BeatgridBlock, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(BeatgridBlock, { track })
     ] });
   }
   function LoopRow({ loop }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
+    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
     ] });
   }
   function CopySection({ fromId, copies, writable }) {
     let list = useTrackList();
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h3", { children: t("copies.heading") }),
+    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: t("copies.heading") }),
       copies.map((copy2) => {
         let name = copy2.file || t("track.numbered", { id: String(copy2.id) }), file = copy2.file || `Track ${copy2.id}`;
-        return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "copy-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "copy-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
             "button",
             {
               type: "button",
@@ -68900,10 +69210,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: name
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
             "button",
             {
               type: "button",
@@ -68924,11 +69234,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MembershipSection({ track, writable }) {
     let list = useTrackList(), chosen = new Set(track.crate_ids || []), crates = [...list.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name)), smart = list.crates.filter((crate) => crate.smart && chosen.has(crate.id));
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h3", { children: t("crates.heading") }),
-      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("label", { className: "member", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: t("crates.heading") }),
+      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { className: "member", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "input",
           {
             ref: tooltipRef(membershipTip(crate.name)),
@@ -68943,29 +69253,29 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: crate.name })
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: crate.name })
       ] }, crate.id)) })
     ] });
   }
   function FieldGroups({ track }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(import_jsx_runtime275.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
+    return /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(import_jsx_runtime278.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
   }
   function FieldGroupBlock({ group }) {
-    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react51.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "label", children: [
+    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react54.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "label", children: [
         field2.label ?? "",
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "column", children: field2.column ?? "" })
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "column", children: field2.column ?? "" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("span", { className: "color-value", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "swatch", style: { background: field2.display } }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("span", { className: "color-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "swatch", style: { background: field2.display } }),
         field2.display
       ] }) : field2.display })
     ] }, `${field2.column ?? field2.label ?? index}`));
-    return open ? /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h3", { children: group.name ?? "" }),
+    return open ? /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: group.name ?? "" }),
       rows
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)(import_jsx_runtime278.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
         "button",
         {
           type: "button",
@@ -68975,8 +69285,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length })
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("section", { className: "group", hidden: !shown, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h3", { children: group.name ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", hidden: !shown, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: group.name ?? "" }),
         rows
       ] })
     ] });
@@ -69001,10 +69311,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       list.saveTrack(track.id, fields);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("form", { className: "editor", onSubmit, children: [
-      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("label", { className: wide ? "wide" : void 0, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("form", { className: "editor", onSubmit, children: [
+      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { className: wide ? "wide" : void 0, children: [
         t(label),
-        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "textarea",
           {
             ref: tooltipRef(editField(t(label))),
@@ -69012,7 +69322,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             defaultValue: String(edit[name] ?? ""),
             disabled: !writable
           }
-        ) : /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        ) : /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "input",
           {
             ref: tooltipRef(editField(t(label))),
@@ -69023,34 +69333,34 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }, name)),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { children: [
         t("field.color"),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackColor),
             name: "color",
             defaultValue: String(currentColor),
             disabled: !writable,
-            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("option", { value: String(value), children: label }, value))
+            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("option", { value: String(value), children: label }, value))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { children: [
         t("field.rating"),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackRating),
             name: "rating",
             defaultValue: ratingValue,
             disabled: !writable,
-            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("option", { value, children: label }, value || "none"))
+            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("option", { value, children: label }, value || "none"))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "input",
           {
             ref: tooltipRef(tips.beatgridLock),
@@ -69062,7 +69372,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         ),
         t("field.beatgridLocked")
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
         "button",
         {
           type: "submit",
@@ -69080,25 +69390,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ["column.key", track.key || "—"],
       ["column.time", track.length]
     ];
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "detail-body", children: [
-      track.album ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h2", { children: track.title ?? "" }),
-      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "artist", children: track.artist }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "deck", children: [
-        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: t(key) })
+    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "detail-body", children: [
+      track.album ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h2", { children: track.title ?? "" }),
+      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "artist", children: track.artist }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "deck", children: [
+        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: t(key) })
         ] }, key)),
-        track.color ? /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: t("field.color") })
+        track.color ? /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: t("field.color") })
         ] }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(TrackEditor, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(TrackEditor, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "button",
           {
             type: "button",
@@ -69110,7 +69420,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.reveal", { manager: manager2 })
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "button",
           {
             type: "button",
@@ -69122,7 +69432,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "button",
           {
             type: "button",
@@ -69134,7 +69444,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.relocate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "button",
           {
             type: "button",
@@ -69146,7 +69456,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.removeFromLibrary")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "button",
           {
             type: "button",
@@ -69160,7 +69470,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.useInCrates")
           }
         ),
-        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "button",
           {
             type: "button",
@@ -69175,11 +69485,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         ) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(RelatedTracks, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(MarkerSection, { track }),
-      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(MembershipSection, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(FieldGroups, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(RelatedTracks, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(MarkerSection, { track }),
+      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(MembershipSection, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(FieldGroups, { track })
     ] });
   }
   function HistoryBody({ entry }) {
@@ -69189,14 +69499,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("div", { className: "label", children: label }),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("div", { className: "value", children: value })
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("div", { className: "label", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("div", { className: "value", children: value })
       ] }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
         "button",
         {
           type: "button",
@@ -69210,7 +69520,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function TrackDetailPane() {
     let list = useTrackList(), { detail: detail2 } = list;
-    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(TrackBody, { track: detail2.track });
+    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(TrackBody, { track: detail2.track });
   }
 
   // src/lib/ui/nav.ts
@@ -69302,7 +69612,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot?.unmount(), historyDetailRoot = null, historyDetailHost = null;
   }
   function paintDetailIsland() {
-    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react52.createElement)(TrackDetailPane));
+    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react55.createElement)(TrackDetailPane));
   }
   function remountIsland(host, node2, slot) {
     return slot.root && slot.host !== host && (slot.root.unmount(), slot.root = null), slot.host = host, slot.root = mountIsland(host, node2, slot.root ?? void 0), slot.root;
@@ -69313,21 +69623,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountCrates() {
     let list = document.getElementById("crate-list"), listMount = mountCrateIsland(
       list instanceof HTMLElement ? list : null,
-      (0, import_react52.createElement)(CrateTree),
+      (0, import_react55.createElement)(CrateTree),
       crateListRoot,
       crateListHost
     );
     crateListRoot = listMount.root, crateListHost = listMount.host;
     let actions3 = document.getElementById("crate-actions"), actionsMount = mountCrateIsland(
       actions3 instanceof HTMLElement ? actions3 : null,
-      (0, import_react52.createElement)(CrateActions),
+      (0, import_react55.createElement)(CrateActions),
       crateActionsRoot,
       crateActionsHost
     );
     crateActionsRoot = actionsMount.root, crateActionsHost = actionsMount.host;
     let browser = document.getElementById("crate-browser-actions"), browserMount = mountCrateIsland(
       browser instanceof HTMLElement ? browser : null,
-      (0, import_react52.createElement)(CrateBrowserActions),
+      (0, import_react55.createElement)(CrateBrowserActions),
       crateBrowserRoot,
       crateBrowserHost
     );
@@ -69592,7 +69902,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function selectEntry(id) {
     if (state.selectedId = id, paintRows(), notifyHistory(), !state.entries.some((item) => item.id === id)) return;
     let host = el("detail");
-    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react52.createElement)(HistoryDetail), {
+    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react55.createElement)(HistoryDetail), {
       host: historyDetailHost,
       root: historyDetailRoot
     }), historyDetailHost = host;
@@ -69738,7 +70048,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
   async function createCrate2() {
-    let name = prompt(t("crates.newPrompt"));
+    mountSharedDialogs();
+    let name = await openCratePrompt({
+      title: t("crates.newPrompt"),
+      value: "",
+      confirmLabel: t("crates.new")
+    });
     if (!name || !name.trim()) return;
     let parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
     try {
@@ -69751,7 +70066,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function renameCrate() {
     let crate = state.crates.find((item) => item.id === state.activeCrate);
     if (!crate) return;
-    let name = prompt(t("crates.renamePrompt"), crate.name);
+    mountSharedDialogs();
+    let name = await openCratePrompt({
+      title: t("crates.renamePrompt"),
+      value: crate.name,
+      confirmLabel: t("crates.rename")
+    });
     if (!(!name || !name.trim() || name.trim() === crate.name))
       try {
         let result = await postJSON("/api/crate", { action: "rename", id: crate.id, name: name.trim(), space: state.space });
@@ -69767,7 +70087,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function colorCrate() {
     let crate = state.crates.find((item) => item.id === state.activeCrate);
     if (!crate) return;
-    let names = COLORS.map(([, key]) => t(key).toLocaleLowerCase()), choice = prompt(t("crates.colorPrompt", { names: names.join(", ") }));
+    mountSharedDialogs();
+    let names = COLORS.map(([, key]) => t(key).toLocaleLowerCase()), choice = await openCratePrompt({
+      title: t("crates.colorPrompt", { names: names.join(", ") }),
+      value: "",
+      confirmLabel: t("field.color")
+    });
     if (choice == null) return;
     let color2 = colorFromName(choice);
     if (color2 == null) {
@@ -69808,7 +70133,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function renderSessions() {
     notifyHistory();
     let host = el("session-list");
-    sessionRoot = remountIsland(host, (0, import_react52.createElement)(HistorySessions), {
+    sessionRoot = remountIsland(host, (0, import_react55.createElement)(HistorySessions), {
       host: sessionHost,
       root: sessionRoot
     }), sessionHost = host;
@@ -70459,6 +70784,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
   function wireDialogs() {
+    mountSharedDialogs();
     let saveExportBar = () => {
       saveRekordboxExport().catch(() => {
       }), el("rekordbox-dialog").open && requestRekordboxReport();
@@ -70918,13 +71244,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }, PREVIEW_DELAY_MS);
   }
   async function openFolderSyncDialog() {
-    if (!state.writable || typeof state.activeCrate != "number") {
+    if (mountSharedDialogs(), !state.writable || typeof state.activeCrate != "number") {
       setNotice(el("status").textContent || "");
       return;
     }
     el("folder-sync-status").textContent = "", el("folder-sync-dialog").open || el("folder-sync-dialog").showModal(), el("folder-sync-path").focus(), await previewFolderSync();
   }
   async function runFolderSync() {
+    mountSharedDialogs();
     let form = readFolderSyncForm(), crate = state.activeCrate;
     if (!(!form || typeof crate != "number" || syncing)) {
       syncing = !0, el("folder-sync-run").disabled = !0, el("folder-sync-status").textContent = "";
@@ -70946,7 +71273,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
   function wireFolderSync() {
-    el("crate-folder-sync").addEventListener("click", () => {
+    mountSharedDialogs(), el("crate-folder-sync").addEventListener("click", () => {
       openFolderSyncDialog().catch((error2) => setNotice(failureOf(error2).message));
     }), el("folder-sync-path").addEventListener("input", schedulePreview), el("folder-sync-subcrates").addEventListener("change", () => {
       previewFolderSync();
@@ -70989,7 +71316,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }, PREVIEW_DELAY_MS2);
   }
   async function openPresetDialog() {
-    if (!state.writable) {
+    if (mountSharedDialogs(), !state.writable) {
       setNotice(el("status").textContent || "");
       return;
     }
@@ -71001,6 +71328,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     el("preset-scope-label").hidden = !scope, el("preset-scope").checked = !!scope, el("preset-scope-text").textContent = scope ? t("presets.scope", { name: scope.name }) : "", el("preset-name").value = "", el("preset-status").textContent = "", syncPresetFields(), el("preset-dialog").open || el("preset-dialog").showModal(), el("preset-kind").focus(), await previewPreset();
   }
   async function createPreset() {
+    mountSharedDialogs();
     let preset = readPresetForm();
     if (!preset || creating) return;
     creating = !0, el("preset-create").disabled = !0, el("preset-status").textContent = "";
@@ -71043,7 +71371,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
   }
   function wirePresets() {
-    el("crate-preset").addEventListener("click", () => {
+    mountSharedDialogs(), el("crate-preset").addEventListener("click", () => {
       openPresetDialog().catch((error2) => setNotice(failureOf(error2).message));
     }), el("crate-refresh").addEventListener("click", () => {
       refreshActivePreset().catch((error2) => setNotice(failureOf(error2).message));
@@ -71068,10 +71396,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   });
 
   // src/lib/ui/app-shell.ts
-  var import_react54 = __toESM(require_react(), 1);
+  var import_react57 = __toESM(require_react(), 1);
 
   // src/pages/AppShell.tsx
-  var import_react53 = __toESM(require_react(), 1);
+  var import_react56 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
   var React317 = __toESM(require_react(), 1);
@@ -71083,7 +71411,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var appBarClasses = generateUtilityClasses("MuiAppBar", ["root", "positionFixed", "positionAbsolute", "positionSticky", "positionStatic", "positionRelative", "colorDefault", "colorPrimary", "colorSecondary", "colorInherit", "colorTransparent", "colorError", "colorInfo", "colorSuccess", "colorWarning"]);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
-  var import_jsx_runtime276 = __toESM(require_jsx_runtime(), 1), useUtilityClasses112 = (ownerState) => {
+  var import_jsx_runtime279 = __toESM(require_jsx_runtime(), 1), useUtilityClasses112 = (ownerState) => {
     let {
       color: color2,
       position: position2,
@@ -71236,7 +71564,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       position: position2,
       enableColorOnDark
     }, classes2 = useUtilityClasses112(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(AppBarRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(AppBarRoot, {
       square: !0,
       component: "header",
       ownerState,
@@ -71252,7 +71580,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/material/Slide/Slide.mjs
   var React318 = __toESM(require_react(), 1);
-  var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
+  var import_jsx_runtime280 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
     visibility: "hidden"
   }, DEFAULT_TRANSLATE_OPTIONS = {};
   function isGestureTranslate(transform) {
@@ -71361,7 +71689,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       };
     }, [direction, inProp, containerProp]), React318.useEffect(() => {
       !inProp && !preserveInlineTransformRef.current && updatePosition();
-    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(Transition_default, {
+    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(Transition_default, {
       nodeRef: childrenRef,
       onEnter: handleEnter,
       onEntered: handleEntered,
@@ -71403,7 +71731,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var drawerClasses = generateUtilityClasses("MuiDrawer", ["root", "docked", "paper", "anchorLeft", "anchorRight", "anchorTop", "anchorBottom", "modal"]);
 
   // node_modules/@mui/material/Drawer/Drawer.mjs
-  var import_jsx_runtime278 = __toESM(require_jsx_runtime(), 1), overridesResolver4 = (props, styles5) => {
+  var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1), overridesResolver4 = (props, styles5) => {
     let {
       ownerState
     } = props;
@@ -71639,40 +71967,40 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           container: resolveSlideContainer
         }
       }
-    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(PaperSlot, {
+    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(PaperSlot, {
       ...paperSlotProps,
       children
     });
     if (variant === "permanent")
-      return /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(DockedSlot, {
+      return /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(DockedSlot, {
         ...dockedSlotProps,
         children: drawer
       });
-    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(TransitionSlot, {
+    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(TransitionSlot, {
       ...transitionSlotProps,
       children: drawer
     });
-    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(DockedSlot, {
+    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(DockedSlot, {
       ...dockedSlotProps,
       children: slidingDrawer
-    }) : /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(RootSlot, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(RootSlot, {
       ...rootSlotProps,
       children: slidingDrawer
     });
   }), Drawer_default = Drawer;
 
   // node_modules/@mui/icons-material/ChevronLeft.mjs
-  var import_jsx_runtime279 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime279.jsx)("path", {
+  var import_jsx_runtime282 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime282.jsx)("path", {
     d: "M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
   }), "ChevronLeft");
 
   // node_modules/@mui/icons-material/Menu.mjs
-  var import_jsx_runtime280 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime280.jsx)("path", {
+  var import_jsx_runtime283 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime283.jsx)("path", {
     d: "M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"
   }), "Menu");
 
   // src/pages/AppShell.tsx
-  var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 240;
+  var import_jsx_runtime284 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 240;
   function tooltipRef15(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -71684,12 +72012,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     node2 && node2.parentElement !== slot && slot.append(node2);
   }
   function AppShell() {
-    let [open, setOpen] = (0, import_react53.useState)(!0), [, setLocaleTick] = (0, import_react53.useState)(0), spaceSlot = (0, import_react53.useRef)(null), playerSlot = (0, import_react53.useRef)(null), navSlot = (0, import_react53.useRef)(null), footSlot = (0, import_react53.useRef)(null), bodySlot = (0, import_react53.useRef)(null);
-    return (0, import_react53.useEffect)(() => onLocaleChange(() => {
+    let [open, setOpen] = (0, import_react56.useState)(!0), [, setLocaleTick] = (0, import_react56.useState)(0), spaceSlot = (0, import_react56.useRef)(null), playerSlot = (0, import_react56.useRef)(null), navSlot = (0, import_react56.useRef)(null), footSlot = (0, import_react56.useRef)(null), bodySlot = (0, import_react56.useRef)(null);
+    return (0, import_react56.useEffect)(() => onLocaleChange(() => {
       setLocaleTick((n) => n + 1);
-    }), []), (0, import_react53.useLayoutEffect)(() => {
+    }), []), (0, import_react56.useLayoutEffect)(() => {
       adopt(spaceSlot.current, "space-field"), adopt(playerSlot.current, "player-bar"), adopt(navSlot.current, "views"), adopt(navSlot.current, "view-children"), adopt(footSlot.current, "rail-foot"), adopt(bodySlot.current, "app-body");
-    }, []), /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)(
+    }, []), /* @__PURE__ */ (0, import_jsx_runtime284.jsxs)(
       Box_default,
       {
         sx: {
@@ -71699,8 +72027,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           minHeight: 0
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)(Toolbar_default, { sx: { gap: 2, minHeight: 56 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime284.jsxs)(Toolbar_default, { sx: { gap: 2, minHeight: 56 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(
               IconButton_default,
               {
                 id: "drawer-toggle",
@@ -71712,14 +72040,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 "aria-label": open ? t("shell.drawerHide") : t("shell.drawerShow"),
                 onClick: () => setOpen((value) => !value),
                 ref: tooltipRef15(tips.drawerToggle),
-                children: open ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(Menu_default2, {})
+                children: open ? /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(Menu_default2, {})
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(Box_default, { ref: spaceSlot, className: "app-bar-space" })
+            /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(Box_default, { ref: spaceSlot, className: "app-bar-space" })
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(Box_default, { ref: playerSlot, className: "player-strip", sx: { flexShrink: 0 } }),
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(Box_default, { ref: playerSlot, className: "player-strip", sx: { flexShrink: 0 } }),
+          /* @__PURE__ */ (0, import_jsx_runtime284.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(
               Drawer_default,
               {
                 id: "app-drawer",
@@ -71753,7 +72081,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     flexDirection: "column"
                   }
                 },
-                children: /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime284.jsxs)(
                   Box_default,
                   {
                     sx: {
@@ -71764,7 +72092,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     },
                     ...open ? {} : { inert: !0 },
                     children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+                      /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(
                         Box_default,
                         {
                           ref: navSlot,
@@ -71774,13 +72102,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                           sx: { flex: 1, minHeight: 0, overflow: "auto" }
                         }
                       ),
-                      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(Box_default, { ref: footSlot, className: "drawer-foot" })
+                      /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(Box_default, { ref: footSlot, className: "drawer-foot" })
                     ]
                   }
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(
               Box_default,
               {
                 ref: bodySlot,
@@ -71794,11 +72122,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/app-shell.ts
-  var islandRoot2 = null;
+  var islandRoot3 = null;
   function mountAppShell(host) {
-    islandRoot2?.unmount(), islandRoot2 = null;
+    islandRoot3?.unmount(), islandRoot3 = null;
     let root = host === void 0 ? document.getElementById("app-shell") : host;
-    root && (islandRoot2 = mountIsland(root, (0, import_react54.createElement)(AppShell)));
+    root && (islandRoot3 = mountIsland(root, (0, import_react57.createElement)(AppShell)));
   }
 
   // src/lib/ui/desktop-actions.ts
@@ -71904,7 +72232,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       setNotice(t("crates.saveViewEmpty"));
       return;
     }
-    let name = prompt(t("crates.saveViewPrompt"));
+    mountSharedDialogs();
+    let name = await openCratePrompt({
+      title: t("crates.saveViewPrompt"),
+      value: "",
+      confirmLabel: t("crates.saveView")
+    });
     if (!name || !name.trim()) return;
     let source = state.splitCrates && state.focusedPane === "b" ? state.secondCrate : state.activeCrate, parent = source === "all" ? state.rootId : source;
     saving = !0;
@@ -71942,6 +72275,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/app.ts
   wireLocale();
   mountAppShell();
+  mountSharedDialogs();
   installTooltips();
   applyStaticTooltips();
   mountTrackList();

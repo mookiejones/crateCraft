@@ -26,6 +26,7 @@ import { bindCrateActions } from "../crates/crate-store";
 import { el } from "../dom";
 import { scoreQuery } from "../fuzzy";
 import { applyLayout } from "./layout";
+import { mountSharedDialogs } from "./shared-dialog-mount";
 import { state } from "../state";
 import { inputEl, selectEl, setTooltip } from "./tooltip";
 import { keepCopy, openReplaceCopy, tips } from "./tooltip-strings";
@@ -1128,6 +1129,7 @@ async function confirmRelink(): Promise<void> {
  * @returns {void}
  */
 export function wireDialogs(): void {
+  mountSharedDialogs();
   const saveExportBar = () => {
     saveRekordboxExport().catch(() => {
       // saveRekordboxExport already keeps the boxes. This catch is the listener boundary.

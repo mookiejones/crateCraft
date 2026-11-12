@@ -1597,5 +1597,9 @@
   "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
   "wizard.yes": "Sí, compartir",
   "files.toolbar": "Barra de carpeta",
-  "files.actionsLabel": "Acciones de archivos"
+  "files.actionsLabel": "Acciones de archivos",
+  "crates.promptName": "Nombre",
+  "tooltip.cratePromptCancel": "Cerrar sin cambiar la caja.",
+  "tooltip.cratePromptConfirm": "Guardar este nombre de caja. Hay que salir de Serato DJ Pro.",
+  "tooltip.cratePromptName": "Escribe el nombre de la caja, o un color."
 }
