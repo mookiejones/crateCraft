@@ -3,10 +3,13 @@
  */
 
 import type {
+  BitrateCheckReport,
+  BitrateCratePlan,
   FileEntry,
   FileScanReport,
   GigReport,
   HistorySession,
+  HistoryStatsReport,
   LibraryHealthReport,
   RestorePlan,
   SnapshotInfo,
@@ -27,6 +30,7 @@ import type { HistoryContextValue } from "../../containers/HistoryContext";
 import type { PlayerContextValue } from "../../containers/PlayerContext";
 import type { SettingsContextValue } from "../../containers/SettingsContext";
 import type { SnapshotsContextValue } from "../../containers/SnapshotsContext";
+import type { StatsContextValue } from "../../containers/StatsContext";
 import type { TrackListContextValue } from "../../containers/TrackListContext";
 import type { WaveformClock } from "../../containers/WaveformContext";
 import { idleWizardValue, type WizardContextValue } from "../../containers/WizardContext";
@@ -205,6 +209,7 @@ export function filesValue(partial: Partial<FilesContextValue> = {}): FilesConte
     locked: false,
     rowHeight: 48,
     dialogAction: "",
+    dialogOpen: false,
     dialogName: "",
     dialogReplacement: "",
     dialogStatus: "",
@@ -393,12 +398,79 @@ export function gigValue(partial: Partial<GigContextValue> = {}): GigContextValu
   return {
     gig: { report: gigReport, stepIndex: 0, checkedAt: new Date("2026-01-01T12:00:00Z") },
     drift: { report: driftReport, scope: "Friday" },
+    portable: { report: driveReport, status: driveReport.summary },
     nextStep: noop,
     backStep: noop,
     exit: noop,
     ...partial,
   };
 }
+
+export const statsReport: HistoryStatsReport = {
+  from: null,
+  to: null,
+  plays: 8,
+  sessions: 3,
+  idle_days: 365,
+  not_played_count: 2,
+  top_tracks: [
+    { asset_id: 11, name: "Anthem", artist: "Beta", plays: 3, last_played: 1_800_000_000 },
+  ],
+  top_artists: [{ artist: "Beta", plays: 4, tracks: 2, last_played: 1_800_000_000 }],
+  not_played: [
+    { id: 13, name: "Dusty", artist: "Gamma", last_played: null, play_count: 4 },
+  ],
+};
+
+export function statsValue(partial: Partial<StatsContextValue> = {}): StatsContextValue {
+  return {
+    report: statsReport,
+    crateBusy: false,
+    writable: true,
+    makeIdleCrate: noopAsync,
+    ...partial,
+  };
+}
+
+export const bitrateReport: BitrateCheckReport = {
+  crate: 5,
+  checked: 12,
+  not_found: 2,
+  unreadable: 1,
+  too_quiet: 1,
+  unchecked: 1,
+  suspects: [
+    {
+      id: 1,
+      name: "Fake",
+      artist: "A",
+      file: "fake.mp3",
+      reason: "upsampled",
+      stated_kbps: 320,
+      estimated_kbps: 128,
+      cutoff_hz: 16000,
+    },
+    {
+      id: 2,
+      name: "Tape",
+      artist: "B",
+      file: "tape.flac",
+      reason: "lossy_source",
+      stated_kbps: null,
+      estimated_kbps: 192,
+      cutoff_hz: 19000,
+    },
+  ],
+};
+
+export const bitratePlan: BitrateCratePlan = {
+  ...bitrateReport,
+  preview: true,
+  written: false,
+  name: "Suspect quality",
+  added: 2,
+  saved: null,
+};
 
 export const historySessions: HistorySession[] = [
   { id: 4, name: "Friday", played: 3 },
@@ -567,6 +639,8 @@ export function trackListValue(partial: Partial<TrackListContextValue> = {}): Tr
     duplicateGroupSelected: false,
     duplicatesPending: false,
     locale: "en",
+    sort: "name",
+    sortDir: 1,
     detail: { kind: "track", track: nightTrack },
     selectTrack: noop,
     selectEntry: noop,
@@ -579,6 +653,7 @@ export function trackListValue(partial: Partial<TrackListContextValue> = {}): Tr
     setMembership: noopBool,
     openInLibrary: noop,
     setNotice: noop,
+    setSort: noop,
     ...partial,
   };
 }

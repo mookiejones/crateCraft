@@ -9,7 +9,7 @@ const meta = {
   component: TrackRow,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-  args: { track: nightTrack, selected: true, onFocusList: () => {} },
+  args: { track: nightTrack },
   decorators: [
     (Story) => (
       <PlayerProvider value={playerValue()}>
@@ -29,5 +29,5 @@ type Story = StoryObj<typeof meta>;
 export const Selected: Story = {};
 
 export const Unselected: Story = {
-  args: { track: dawnTrack, selected: false, onFocusList: () => {} },
+  args: { track: dawnTrack },
 };

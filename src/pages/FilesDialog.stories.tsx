@@ -18,13 +18,12 @@ export const Rename: Story = {
     <FilesProvider
       value={filesValue({
         dialogAction: "rename",
+        dialogOpen: true,
         dialogName: "Night.mp3",
         dialogPreview: { ok: true, needs_confirm: true, summary: "Rename Night.mp3" },
       })}
     >
-      <dialog id="files-dialog" open>
-        <FilesDialog />
-      </dialog>
+      <FilesDialog />
     </FilesProvider>
   ),
 };
@@ -34,12 +33,11 @@ export const Delete: Story = {
     <FilesProvider
       value={filesValue({
         dialogAction: "delete",
+        dialogOpen: true,
         dialogPreview: { ok: true, needs_confirm: true, summary: "Move 1 file to trash." },
       })}
     >
-      <dialog id="files-dialog" open>
-        <FilesDialog />
-      </dialog>
+      <FilesDialog />
     </FilesProvider>
   ),
 };

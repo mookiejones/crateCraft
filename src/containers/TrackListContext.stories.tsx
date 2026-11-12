@@ -9,7 +9,7 @@ const meta = {
   component: TrackListWindow,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-  args: { pane: "a", start: 0, end: 2, onFocusList: () => {} },
+  args: { pane: "a", onFocusList: () => {} },
 } satisfies Meta<typeof TrackListWindow>;
 
 export default meta;
@@ -20,7 +20,7 @@ export const Rows: Story = {
     <PlayerProvider value={playerValue()}>
       <TrackListProvider value={trackListValue()}>
         <div className="list">
-          <TrackListWindow pane="a" start={0} end={2} onFocusList={() => {}} />
+          <TrackListWindow pane="a" onFocusList={() => {}} />
         </div>
       </TrackListProvider>
     </PlayerProvider>

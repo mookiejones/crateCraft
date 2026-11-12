@@ -9,7 +9,7 @@ const meta = {
   component: TrackListWindow,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-  args: { pane: "a", start: 0, end: 2, onFocusList: () => {} },
+  args: { pane: "a", onFocusList: () => {} },
   decorators: [
     (Story) => (
       <PlayerProvider value={playerValue()}>
