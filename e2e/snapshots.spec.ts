@@ -31,7 +31,10 @@ test("the snapshots list renders from context", async ({ page }) => {
     if (node instanceof HTMLElement) node.hidden = false;
   });
   await expect(page.locator("#snapshots-list")).toContainText("manual");
-  await expect(page.locator("#snapshots-list button")).toHaveText("Review restore");
+  await expect(page.locator("#snapshots-list .MuiDataGrid-columnHeader[data-field='created']")).toHaveCount(1);
+  await expect(page.locator("#snapshots-list .MuiDataGrid-columnHeader[data-field='size']")).toHaveCount(1);
+  await expect(page.locator("#snapshots-list .MuiDataGrid-columnHeader[data-field='status']")).toHaveCount(1);
+  await expect(page.locator('#snapshots-list .MuiDataGrid-cell[data-field="restore"] button')).toHaveText("Review restore");
   await expect(page.locator("#snapshots-take")).toHaveAttribute("data-tooltip", /.+/);
   await saveShot(page, "snapshots_list");
 });

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const postJSON = vi.hoisted(() => vi.fn());
 
@@ -9,11 +9,11 @@ vi.mock("../lib/api", async () => {
 
 import { applyStatic, setLocale, t } from "../lib/i18n";
 import { el } from "../lib/dom";
-import { backupDriveCrates, confirmSnapshotRestore, openSnapshotPlan, renderOperations, renderSnapshots, repaintSnapshotPlan } from "../lib/snapshots/restore";
+import { backupDriveCrates, closePlan, confirmSnapshotRestore, openSnapshotPlan, renderOperations, renderSnapshots, repaintSnapshotPlan, unmountSnapshots } from "../lib/snapshots/restore";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import type { RestorePlan } from "../lib/api-types";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 
 const plan: RestorePlan = {
   crates: {
@@ -65,6 +65,18 @@ describe("restore", () => {
     postJSON.mockReset();
     postJSON.mockResolvedValue({});
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
+  });
+
+  afterEach(async () => {
+    unmountSnapshots();
+    await drainReactScheduler();
+  });
+
+  it("unmounts snapshot islands so the Data Grid scheduler does not outlive the document", () => {
+    renderSnapshots();
+    expect(document.querySelector("#snapshots-panel .MuiDataGrid-root")).not.toBeNull();
+    unmountSnapshots();
+    expect(document.querySelector("#snapshots-panel .MuiDataGrid-root")).toBeNull();
   });
 
   it("reports skipped crates after restore in the active language", async () => {
@@ -373,9 +385,9 @@ describe("restore", () => {
   it("does not repaint a closed plan dialog", async () => {
     postJSON.mockResolvedValue(plan);
     await openSnapshotPlan("snap-9");
-    (document.getElementById("snapshot-dialog") as HTMLDialogElement).close();
-    document.getElementById("snapshot-plan")!.replaceChildren();
+    closePlan();
+    document.getElementById("snapshot-plan")?.replaceChildren();
     repaintSnapshotPlan();
-    expect(document.getElementById("snapshot-plan")?.textContent).toBe("");
+    expect(document.getElementById("snapshot-plan")?.textContent ?? "").toBe("");
   });
 });

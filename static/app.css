@@ -1814,8 +1814,15 @@ dialog .settings-field select {
 .snapshot-undo button,
 #snapshots-list button,
 #operations-list button,
-#operations-refresh {
+#operations-refresh,
+#snapshots-refresh,
+#snapshots-take,
+#snapshots-drives {
   min-height: 44px;
+}
+
+.snapshot-grid {
+  min-height: 12rem;
 }
 
 .snapshot-card {

@@ -13211,6 +13211,10 @@ Error generating stack: ` + x.message + `
     "shortcuts.viewSnapshots": "Backups",
     "snapshots.backupDrives": "Back up drive crates",
     "snapshots.backupDrivesBusy": "Backing up drive crates…",
+    "snapshots.columnRestore": "Restore",
+    "snapshots.columnSize": "Size",
+    "snapshots.columnStatus": "Status",
+    "snapshots.columnWhen": "When",
     "snapshots.count": {
       one: "{count} backup",
       other: "{count} backups"
@@ -13241,10 +13245,13 @@ Error generating stack: ` + x.message + `
     "snapshots.saving": "Saving backup…",
     "snapshots.seratoUnknown": "Serato version unknown",
     "snapshots.seratoVersion": "Serato {version} (build {build})",
+    "snapshots.sizeUnknown": "Unknown size",
     "snapshots.skippedCrates": {
       one: "Restore finished. {count} crate file was skipped because its snapshot copy could not be read: {names}.",
       other: "Restore finished. {count} crate files were skipped because their snapshot copy could not be read: {names}."
     },
+    "snapshots.statusFailed": "Check failed",
+    "snapshots.statusOk": "Checked",
     "snapshots.take": "Take a backup",
     "snapshots.trigger": "snapshot",
     "snapshots.unavailableDrives": "Unavailable: {drives}.",
@@ -14798,6 +14805,10 @@ Error generating stack: ` + x.message + `
     "shortcuts.viewSnapshots": "Copias de seguridad",
     "snapshots.backupDrives": "Copiar cajas de las unidades",
     "snapshots.backupDrivesBusy": "Copiando cajas de las unidades…",
+    "snapshots.columnRestore": "Restaurar",
+    "snapshots.columnSize": "Tamaño",
+    "snapshots.columnStatus": "Estado",
+    "snapshots.columnWhen": "Cuándo",
     "snapshots.count": {
       one: "{count} copia",
       other: "{count} copias"
@@ -14828,10 +14839,13 @@ Error generating stack: ` + x.message + `
     "snapshots.saving": "Guardando copia…",
     "snapshots.seratoUnknown": "Versión de Serato desconocida",
     "snapshots.seratoVersion": "Serato {version} (compilación {build})",
+    "snapshots.sizeUnknown": "Tamaño desconocido",
     "snapshots.skippedCrates": {
       one: "Restauración terminada. Se omitió {count} archivo de caja porque no se pudo leer su copia de la instantánea: {names}.",
       other: "Restauración terminada. Se omitieron {count} archivos de caja porque no se pudo leer su copia de la instantánea: {names}."
     },
+    "snapshots.statusFailed": "Comprobación fallida",
+    "snapshots.statusOk": "Comprobado",
     "snapshots.take": "Hacer una copia de seguridad",
     "snapshots.trigger": "instantánea",
     "snapshots.unavailableDrives": "No disponibles: {drives}.",

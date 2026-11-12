@@ -1,25 +1,25 @@
 /**
- * Restore preview dialog bound to `useSnapshots`.
+ * Restore preview as a centered MUI Dialog bound to `useSnapshots`.
  *
  * Confirm stays off when the dry-run plan sets restore_blocked. Nothing
- * is written until confirm posts through the engine.
+ * is written until confirm posts through the engine. Esc and Cancel
+ * close without restoring.
  */
 
-import { useEffect } from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import { failureOf } from "../lib/api";
 import type { FrameDiff, Marker, PlanName } from "../lib/api-types";
 import { cueDiffRows, cueSummary, slotColor, type CueDiff } from "../lib/ui/cue-view";
 import { codedText, messageParams, t } from "../lib/i18n";
 import { useSnapshots } from "../containers/SnapshotsContext";
 import { fileName, planLineText } from "../lib/snapshots/restore-view";
-import { setTooltip } from "../lib/ui/tooltip";
-import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
-
-function tooltipRef(spec: TipSpec) {
-  return (element: HTMLElement | null) => {
-    if (element) setTooltip(element, spec);
-  };
-}
+import { tooltipRef } from "../components/tooltip-ref";
+import { tips } from "../lib/ui/tooltip-strings";
 
 function CueSide({ cue, slot }: { cue: Marker | null; slot: number }) {
   const color = slotColor(slot, cue?.color);
@@ -84,18 +84,10 @@ function FrameDiffs({ label, rows }: { label: string; rows: FrameDiff[] | undefi
 }
 
 /**
- * Inner restore dialog. The host is the existing `#snapshot-dialog`.
+ * Restore dialog. Open state is `planOpen` from the snapshots engine.
  */
 export function RestoreDialog() {
   const snapshots = useSnapshots();
-  const closePlan = snapshots.closePlan;
-  useEffect(() => {
-    const dialog = document.getElementById("snapshot-dialog");
-    if (!(dialog instanceof HTMLDialogElement)) return undefined;
-    const onClose = () => closePlan();
-    dialog.addEventListener("close", onClose);
-    return () => dialog.removeEventListener("close", onClose);
-  }, [closePlan]);
   const plan = snapshots.plan;
   const blocked = plan?.restore_blocked
     ? codedText(
@@ -111,46 +103,68 @@ export function RestoreDialog() {
     : blocked || (plan != null && plan.dry_run ? t("plan.nothingChanged") : "");
 
   return (
-    <>
-      <h2 id="snapshot-title">{t("snapshots.restoreTitle")}</h2>
-      <p id="snapshot-intro">{t("snapshots.restoreIntro")}</p>
-      <div id="snapshot-plan" aria-live="polite">
-        {plan ? (
-          <>
-            <PlanLine label={t("plan.cratesAdded")} rows={plan.crates?.added} />
-            <PlanLine label={t("plan.cratesRemoved")} rows={plan.crates?.removed} />
-            <PlanLine label={t("plan.cratesChanged")} rows={plan.crates?.changed} />
-            <PlanLine label={t("plan.cratesUnavailable")} rows={plan.crates?.unavailable} />
-            <PlanLine label={t("plan.cratesRegistered")} rows={plan.crates_registered} />
-            <PlanLine label={t("plan.cratesSkipped")} rows={plan.crates_skipped} />
-            {plan.registration_warning ? (
-              <p>{codedText(plan.registration_warning, plan.registration_warning_code)}</p>
-            ) : null}
-            <PlanLine label={t("plan.tracksAdded")} rows={plan.tracks?.added} />
-            <PlanLine label={t("plan.tracksRemoved")} rows={plan.tracks?.removed} />
-            <PlanLine label={t("plan.tracksUnavailable")} rows={plan.tracks?.unavailable} />
-            <CueDiffs label={t("plan.cueChanges")} rows={plan.cues} />
-            <FrameDiffs label={t("plan.gridChanges")} rows={plan.grids} />
-            <PlanLine label={t("plan.deletedCrates")} rows={plan.deleted?.crates} />
-            <PlanLine label={t("plan.deletedTracks")} rows={plan.deleted?.tracks} />
-            <PlanLine label={t("plan.deletedCues")} rows={plan.deleted?.cues} />
-            <PlanLine label={t("plan.deletedGrids")} rows={plan.deleted?.grids} />
-          </>
-        ) : null}
-      </div>
-      <p id="snapshot-block" className="dialog-note" role="status">{blockText}</p>
-      <div className="dialog-actions">
-        <button
+    <Dialog
+      open={snapshots.planOpen}
+      onClose={() => {
+        if (snapshots.confirming) return;
+        snapshots.closePlan();
+      }}
+      aria-labelledby="snapshot-title"
+      aria-describedby="snapshot-intro"
+      scroll="paper"
+      maxWidth="md"
+      fullWidth
+      slotProps={{ paper: { id: "snapshot-dialog" } }}
+    >
+      <DialogTitle id="snapshot-title" component="h2">
+        {t("snapshots.restoreTitle")}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="snapshot-intro">
+          {t("snapshots.restoreIntro")}
+        </DialogContentText>
+        <div id="snapshot-plan" aria-live="polite">
+          {plan ? (
+            <>
+              <PlanLine label={t("plan.cratesAdded")} rows={plan.crates?.added} />
+              <PlanLine label={t("plan.cratesRemoved")} rows={plan.crates?.removed} />
+              <PlanLine label={t("plan.cratesChanged")} rows={plan.crates?.changed} />
+              <PlanLine label={t("plan.cratesUnavailable")} rows={plan.crates?.unavailable} />
+              <PlanLine label={t("plan.cratesRegistered")} rows={plan.crates_registered} />
+              <PlanLine label={t("plan.cratesSkipped")} rows={plan.crates_skipped} />
+              {plan.registration_warning ? (
+                <p>{codedText(plan.registration_warning, plan.registration_warning_code)}</p>
+              ) : null}
+              <PlanLine label={t("plan.tracksAdded")} rows={plan.tracks?.added} />
+              <PlanLine label={t("plan.tracksRemoved")} rows={plan.tracks?.removed} />
+              <PlanLine label={t("plan.tracksUnavailable")} rows={plan.tracks?.unavailable} />
+              <CueDiffs label={t("plan.cueChanges")} rows={plan.cues} />
+              <FrameDiffs label={t("plan.gridChanges")} rows={plan.grids} />
+              <PlanLine label={t("plan.deletedCrates")} rows={plan.deleted?.crates} />
+              <PlanLine label={t("plan.deletedTracks")} rows={plan.deleted?.tracks} />
+              <PlanLine label={t("plan.deletedCues")} rows={plan.deleted?.cues} />
+              <PlanLine label={t("plan.deletedGrids")} rows={plan.deleted?.grids} />
+            </>
+          ) : null}
+        </div>
+        <p id="snapshot-block" className="dialog-note" role="status">{blockText}</p>
+        <p id="snapshot-status" className="dialog-status" role="status" aria-live="polite">
+          {snapshots.planStatus}
+        </p>
+      </DialogContent>
+      <DialogActions className="dialog-actions">
+        <Button
           id="snapshot-cancel"
           type="button"
           ref={tooltipRef(tips.snapshotCancel)}
           onClick={() => snapshots.closePlan()}
         >
           {t("common.cancel")}
-        </button>
-        <button
+        </Button>
+        <Button
           id="snapshot-confirm"
           type="button"
+          variant="contained"
           ref={tooltipRef(tips.snapshotConfirm)}
           disabled={confirmDisabled}
           onClick={() => {
@@ -158,11 +172,8 @@ export function RestoreDialog() {
           }}
         >
           {snapshots.confirming ? t("snapshots.restoring") : t("snapshots.restore")}
-        </button>
-      </div>
-      <p id="snapshot-status" className="dialog-status" role="status" aria-live="polite">
-        {snapshots.planStatus}
-      </p>
-    </>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
