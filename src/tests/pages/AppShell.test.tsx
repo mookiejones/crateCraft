@@ -70,6 +70,17 @@ describe("AppShell", () => {
     expect(toggle?.dataset.tooltip?.trim().length).toBeGreaterThan(10);
   });
 
+  it("places the player strip under the AppBar, outside Main", () => {
+    const bar = document.getElementById("player-bar");
+    const appBar = document.querySelector(".MuiAppBar-root");
+    const strip = appBar?.nextElementSibling;
+    expect(bar).not.toBeNull();
+    expect(strip?.contains(bar)).toBe(true);
+    expect(strip?.querySelector("#app-drawer")).toBeNull();
+    expect(document.getElementById("app-body")?.contains(bar)).toBe(false);
+    expect(document.querySelector("main.sheet")?.contains(bar)).toBe(false);
+  });
+
   it("still paints only the open parent's children after the portal", () => {
     paintNav("crates");
     const visible = [...document.querySelectorAll<HTMLButtonElement>("#view-children [data-view]")]
