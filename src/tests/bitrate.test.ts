@@ -115,8 +115,12 @@ describe("bitrate", () => {
     expect(reportText()).toContain("2 missing tracks were skipped");
     expect(reportText()).toContain("1 file could not be read.");
     expect(reportText()).toContain("Stated bitrate is much higher than the spectrum");
-    expect(reportText()).toContain("A — Fake (fake.mp3) — Stated bitrate is much higher than the spectrum · 320 kbps on the file, about 128 kbps from the spectrum");
+    expect(reportText()).toContain("A — Fake");
+    expect(reportText()).toContain("fake.mp3");
+    expect(reportText()).toContain("320 kbps on the file, about 128 kbps from the spectrum");
     expect(reportText()).toContain("Lossless file looks like it came from a lossy encode");
+    expect(document.querySelector('#bitrate-report .MuiDataGrid-columnHeader[data-field="reason"]')).not.toBeNull();
+    expect(document.querySelector('#bitrate-report .MuiDataGrid-cell[data-field="reason"]')?.textContent).toContain("Stated bitrate is much higher");
     expect(document.getElementById("bitrate-refresh")!.getAttribute("aria-busy")).toBe("false");
     expect((document.getElementById("bitrate-save") as HTMLButtonElement).disabled).toBe(false);
   });

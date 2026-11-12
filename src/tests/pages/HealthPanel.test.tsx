@@ -121,8 +121,67 @@ describe("HealthPanel context", () => {
     });
     const merge = host.querySelector<HTMLButtonElement>("#merge-duplicates");
     expect(merge?.disabled).toBe(false);
+    expect(merge?.className).toContain("MuiButton");
     expect((host.querySelector("#duplicate-actions") as HTMLElement).hidden).toBe(false);
     expect((host.querySelector("#relink-actions") as HTMLElement).hidden).toBe(true);
+    root.unmount();
+  });
+
+  it("uses Accordion sections that toggle from the keyboard", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    flushSync(() => {
+      root.render(
+        createElement(HealthProvider, {
+          value: fakeHealth({ healthReport: report }),
+          children: createElement(HealthPanel),
+        }),
+      );
+    });
+    expect(host.querySelector("details")).toBeNull();
+    const summary = [...host.querySelectorAll<HTMLButtonElement>(".MuiAccordionSummary-root")]
+      .find((node) => node.textContent?.includes("Missing files (1)"));
+    expect(summary).toBeTruthy();
+    expect(summary!.tagName).toBe("BUTTON");
+    expect(summary!.getAttribute("aria-expanded")).toBe("true");
+    summary!.focus();
+    expect(document.activeElement).toBe(summary);
+    flushSync(() => {
+      summary!.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      summary!.click();
+    });
+    expect(summary!.getAttribute("aria-expanded")).toBe("false");
+    flushSync(() => {
+      summary!.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      summary!.click();
+    });
+    expect(summary!.getAttribute("aria-expanded")).toBe("true");
+    expect(host.textContent).toContain("A — Gone");
+    root.unmount();
+  });
+
+  it("renders Relink as an MUI button on the missing chrome", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    flushSync(() => {
+      root.render(
+        createElement(HealthProvider, {
+          value: fakeHealth({
+            mode: "missing",
+            relinkVisible: true,
+            relinkDisabled: false,
+          }),
+          children: createElement(HealthListChrome),
+        }),
+      );
+    });
+    const relink = host.querySelector<HTMLButtonElement>("#open-relink");
+    expect(relink?.disabled).toBe(false);
+    expect(relink?.className).toContain("MuiButton");
+    expect((host.querySelector("#relink-actions") as HTMLElement).hidden).toBe(false);
+    expect((host.querySelector("#duplicate-actions") as HTMLElement).hidden).toBe(true);
     root.unmount();
   });
 });

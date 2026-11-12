@@ -10,7 +10,7 @@ Use this after a drive swap or a folder move, when several tracks went missing a
 
 1. Quit Serato DJ Pro. See [Safety and backups](safety.md).
 2. Click **Health** in the drawer, then **Missing files**.
-3. Click **Relink missing files**.
+3. Click **Relink missing files** above the track list.
 4. Search the music folders. After a drive swap, paste the new folder (for example `/Volumes/NEW/DJ`) and click **Find matches**.
 5. High-confidence matches are ticked. **Accept all high** ticks the rest. When two files fit, pick one.
 6. Confirm **Relink**.

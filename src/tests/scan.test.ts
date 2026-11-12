@@ -67,8 +67,11 @@ describe("scan", () => {
     expect(reportText()).toContain("2 missing tracks were skipped");
     expect(reportText()).toContain("1 file has an extension");
     expect(reportText()).toContain("Empty file");
-    expect(reportText()).toContain("A — Gone (gone.mp3) — Empty file");
+    expect(reportText()).toContain("A — Gone");
+    expect(reportText()).toContain("gone.mp3");
     expect(reportText()).toContain("Looks like html");
+    expect(document.querySelector('#scan-report .MuiDataGrid-columnHeader[data-field="problem"]')).not.toBeNull();
+    expect(document.querySelector('#scan-report .MuiDataGrid-cell[data-field="problem"]')?.textContent).toContain("Empty file");
     expect(document.getElementById("scan-quick")!.getAttribute("aria-busy")).toBe("false");
     expect(document.getElementById("scan-full")!.hasAttribute("disabled")).toBe(false);
   });
