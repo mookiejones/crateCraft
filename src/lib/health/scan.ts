@@ -90,6 +90,7 @@ export function wireScan(): void {
  */
 export function unmountScan(): void {
   state.scanToken += 1;
+  busy = false;
   if (!panelRoot) return;
   try {
     panelRoot.unmount();

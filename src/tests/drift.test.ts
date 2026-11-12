@@ -62,7 +62,6 @@ describe("drift", () => {
     setLocale("en");
     state.space = "Serato Library";
     state.activeCrate = 5;
-    state.driftToken = 0;
     state.crates = [{ id: 5, name: "Friday" }];
     wireDrift();
     document.getElementById("drift-panel")!.hidden = false;

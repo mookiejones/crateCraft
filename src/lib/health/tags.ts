@@ -130,11 +130,14 @@ export function wireTags(): void {
  * Tests replace `document.body` between cases. Unmount first so the
  * Data Grid scheduler does not run after jsdom tears the window down.
  * A pending load is ignored so it does not look up a host that is gone.
+ * Busy is cleared so the next mount is not stuck disabled.
  *
  * @returns {void}
  */
 export function unmountTags(): void {
   state.tagsToken += 1;
+  panelBusy = false;
+  actionKey = "";
   if (!panelRoot) return;
   try {
     panelRoot.unmount();

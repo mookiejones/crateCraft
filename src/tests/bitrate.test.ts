@@ -88,7 +88,6 @@ describe("bitrate", () => {
     setLocale("en");
     state.space = "Serato Library";
     state.activeCrate = 5;
-    state.bitrateToken = 0;
     state.writable = true;
     state.crates = [{ id: 5, name: "Friday" }];
     postJSON.mockReset();

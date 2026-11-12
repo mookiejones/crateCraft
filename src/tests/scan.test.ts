@@ -44,7 +44,6 @@ describe("scan", () => {
     setLocale("en");
     state.space = "Serato Library";
     state.activeCrate = 5;
-    state.scanToken = 0;
     state.crates = [{ id: 5, name: "Friday" }];
     wireScan();
     document.getElementById("scan-panel")!.hidden = false;
