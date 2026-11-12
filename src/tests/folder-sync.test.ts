@@ -10,7 +10,8 @@ import {
 } from "../lib/crates/folder-sync-view";
 import { openFolderSyncDialog, previewFolderSync, runFolderSync, wireFolderSync } from "../lib/crates/folder-sync";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 import * as views from "../lib/ui/views";
 
 vi.mock("../lib/ui/views", () => ({
@@ -60,7 +61,9 @@ beforeEach(() => {
   vi.mocked(views.setNotice).mockClear();
 });
 
-afterEach(() => {
+afterEach(async () => {
+  unmountSharedDialogs();
+  await drainReactScheduler();
   vi.unstubAllGlobals();
   setLocale("en");
 });

@@ -40,4 +40,18 @@ export function mountSharedDialogs(): void {
   islandHost = host;
 }
 
+/**
+ * Unmount the shared-dialog island.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * MUI scheduler does not run after jsdom tears the window down.
+ *
+ * @returns {void}
+ */
+export function unmountSharedDialogs(): void {
+  safeUnmount(islandRoot);
+  islandRoot = null;
+  islandHost = null;
+}
+
 bindSharedDialogMount(mountSharedDialogs);

@@ -132,6 +132,18 @@ function clearDetailIslands(): void {
   historyDetailHost = null;
 }
 
+/**
+ * Unmount the detail pane islands.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * MUI scheduler does not run after jsdom tears the window down.
+ *
+ * @returns {void}
+ */
+export function unmountDetailIslands(): void {
+  clearDetailIslands();
+}
+
 function paintDetailIsland(): void {
   clearDetailIslands();
   detailRoot = mountIsland(el("detail"), createElement(TrackDetailPane));

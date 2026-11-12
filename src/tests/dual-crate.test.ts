@@ -6,8 +6,9 @@ import { paintDualChrome } from "../lib/crates/dual-crate-view";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
 import { setCratePromptValue } from "../lib/ui/shared-dialog";
-import { installPage } from "./test-page";
-import { mountTrackList, mountTrackListB } from "../lib/ui/virtual-scroll";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
+import { mountTrackList, mountTrackListB, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderList, selectCrate } from "../lib/ui/views";
 
 vi.hoisted(() => {
@@ -54,7 +55,10 @@ describe("dual crate panes", () => {
     wireDualCrates();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountTrackList();
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });
@@ -126,6 +130,11 @@ describe("selectCrate while split", () => {
     mountTrackList();
     mountTrackListB();
     resetState();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   it("fills the focused pane on a plain click", () => {

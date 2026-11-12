@@ -7,9 +7,9 @@ import { el } from "../lib/dom";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
 import { cancelCratePrompt, setCratePromptValue } from "../lib/ui/shared-dialog";
-import { mountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { mountSharedDialogs, unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
 import { createCrate, renameCrate } from "../lib/ui/views";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 
 interface Call {
   url: string;
@@ -54,8 +54,10 @@ describe("crate prompt dialog", () => {
     mountSharedDialogs();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     if (el("crate-prompt-dialog").open) cancelCratePrompt();
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });

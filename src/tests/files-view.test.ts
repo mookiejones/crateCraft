@@ -5,13 +5,14 @@
  * virtualized, and the last entry can be scrolled to and opened.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { FileEntry } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
 import { wireDialogs } from "../lib/ui/dialogs";
 import { libraryRootsFixture } from "./library-roots.fixture";
 import { FILE_ROW, state } from "../lib/state";
-import { installPage } from "./test-page";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 import { FILES_SEARCH_MS, renderFiles, wireLibrary } from "../lib/ui/views";
 
 const fetchMock = vi.fn();
@@ -53,6 +54,12 @@ describe("files view", () => {
     fetchMock.mockReset();
     vi.stubGlobal("fetch", fetchMock);
     wireLibrary();
+  });
+
+  afterEach(async () => {
+    unmountSharedDialogs();
+    await drainReactScheduler();
+    vi.unstubAllGlobals();
   });
 
   it("lists distinct labels with the path under each one", () => {

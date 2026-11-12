@@ -5,8 +5,8 @@ import { el } from "../lib/dom";
 import { PSEUDO, setLocale, t } from "../lib/i18n";
 import { repaintAll, wireLocale } from "../lib/ui/locale-wiring";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
-import { mountTrackList } from "../lib/ui/virtual-scroll";
+import { drainReactScheduler, installPage } from "./test-page";
+import { mountTrackList, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderList, renderSessions, renderShell } from "../lib/ui/views";
 
 const fetchMock = vi.hoisted(() => vi.fn());
@@ -54,7 +54,9 @@ describe("switching the language", () => {
     reset();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
     document.documentElement.lang = "en";
   });
 
@@ -215,6 +217,12 @@ describe("the Settings language picker", () => {
     mountTrackList();
     reset();
     wireLocale();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
+    document.documentElement.lang = "en";
   });
 
   it("applies a saved language from settings and selects it", () => {
