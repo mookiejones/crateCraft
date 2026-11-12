@@ -7,6 +7,9 @@
  */
 
 import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { usePlayer } from "../containers/PlayerContext";
 import {
   useWaveform,
@@ -190,26 +193,30 @@ export function WaveformZoom({
 }) {
   return (
     <div className="waveform-zoom" data-pps={String(pps)}>
-      <button
+      <IconButton
         type="button"
         ref={tooltipRef(tips.zoomIn)}
         className="waveform-zoom-button"
+        size="large"
+        color="inherit"
         disabled={!canZoomIn}
         aria-label={playerStrings.zoomIn}
         onClick={onZoomIn}
       >
-        +
-      </button>
-      <button
+        <AddIcon />
+      </IconButton>
+      <IconButton
         type="button"
         ref={tooltipRef(tips.zoomOut)}
         className="waveform-zoom-button"
+        size="large"
+        color="inherit"
         disabled={!canZoomOut}
         aria-label={playerStrings.zoomOut}
         onClick={onZoomOut}
       >
-        {"\u2212"}
-      </button>
+        <RemoveIcon />
+      </IconButton>
     </div>
   );
 }
