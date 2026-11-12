@@ -252,6 +252,7 @@ function readFilesValue(): FilesContextValue {
     locked: !state.writable || state.filesLoading || state.filesAtRoots,
     rowHeight: filesRowHeight(),
     dialogAction: dialog.action,
+    dialogOpen: dialog.open,
     dialogName: dialog.name,
     dialogReplacement: dialog.replacement,
     dialogStatus: dialog.status,
