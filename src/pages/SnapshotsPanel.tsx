@@ -1,20 +1,31 @@
 /**
- * Snapshot list, drive-backup note, undo, and the operation log.
+ * Snapshot Data Grid, drive-backup note, undo, and the operation log.
  *
  * Buttons keep the ids desktop actions and shortcuts already use.
+ * Restore is a row action. Take stays above. The log stays below.
  */
 
+import { useLayoutEffect, useMemo, useRef } from "react";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { DataGrid } from "@mui/x-data-grid";
+import { enUS, esES } from "@mui/x-data-grid/locales";
 import { failureOf } from "../lib/api";
-import { codedText, t } from "../lib/i18n";
+import { codedText, getLocale, t } from "../lib/i18n";
+import { ROW } from "../lib/state";
 import { useSnapshots } from "../containers/SnapshotsContext";
-import { driveCopyText, operationCardText, snapshotCardText } from "../lib/snapshots/restore-view";
-import { setTooltip } from "../lib/ui/tooltip";
-import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
+import { GRID_PAGE_SIZE, attachGridTooltips } from "../components/TrackListWindow";
+import { tooltipRef } from "../components/tooltip-ref";
+import { driveCopyText, operationCardText } from "../lib/snapshots/restore-view";
+import { snapshotColumns } from "../lib/snapshots/snapshot-columns";
+import { ensureGridDom } from "../lib/ui/grid-dom-stubs";
+import { tips } from "../lib/ui/tooltip-strings";
 
-function tooltipRef(spec: TipSpec) {
-  return (element: HTMLElement | null) => {
-    if (element) setTooltip(element, spec);
-  };
+function gridLocaleText(locale: string) {
+  const pack = locale.startsWith("es") ? esES : enUS;
+  return pack.components.MuiDataGrid.defaultProps.localeText;
 }
 
 function driveNote(backing: boolean, error: string, report: ReturnType<typeof useSnapshots>["driveBackup"]): string {
@@ -30,23 +41,54 @@ function listStatus(snapshots: ReturnType<typeof useSnapshots>): string {
   return snapshots.snapshotMessage ? t(snapshots.snapshotMessage) : "";
 }
 
+function EmptySnapshots() {
+  return <p className="empty-list">{t("snapshots.empty")}</p>;
+}
+
 /**
  * Backups panel bound to `useSnapshots`.
  */
 export function SnapshotsPanel() {
+  ensureGridDom();
   const snapshots = useSnapshots();
+  const locale = getLocale();
   const writeBlock = snapshots.writeBlock
     ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams)
     : "";
   const undoId = snapshots.snapshotUndo?.restore_id;
   const latest = snapshots.operations[snapshots.operations.length - 1];
   const failed = latest?.result === "rollback_failed";
+  const openSnapshotPlan = snapshots.openSnapshotPlan;
+  const setSnapshotDialogStatus = snapshots.setSnapshotDialogStatus;
+  const columns = useMemo(
+    () => snapshotColumns({
+      onRestore: (snapshotId) => {
+        openSnapshotPlan(snapshotId).catch((error) => setSnapshotDialogStatus(failureOf(error).message));
+      },
+    }),
+    [locale, openSnapshotPlan, setSnapshotDialogStatus],
+  );
+  const localeText = useMemo(() => gridLocaleText(locale), [locale]);
+  const operations = useMemo(
+    () => [...snapshots.operations].reverse(),
+    [snapshots.operations],
+  );
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const node = listRef.current;
+    if (!node) return undefined;
+    attachGridTooltips(node);
+    const observer = new MutationObserver(() => attachGridTooltips(node));
+    observer.observe(node, { subtree: true, childList: true });
+    return () => observer.disconnect();
+  }, [columns, snapshots.snapshots, locale]);
 
   return (
     <>
       <div className="browser-bar">
         <p id="snapshots-heading" className="files-path">{t("view.snapshots")}</p>
-        <button
+        <Button
           id="snapshots-refresh"
           type="button"
           ref={tooltipRef(tips.snapshotsRefresh)}
@@ -55,10 +97,11 @@ export function SnapshotsPanel() {
           }}
         >
           {t("common.refresh")}
-        </button>
-        <button
+        </Button>
+        <Button
           id="snapshots-take"
           type="button"
+          variant="contained"
           ref={tooltipRef(tips.snapshotsTake)}
           disabled={snapshots.taking}
           onClick={() => {
@@ -66,8 +109,8 @@ export function SnapshotsPanel() {
           }}
         >
           {snapshots.taking ? t("snapshots.saving") : t("snapshots.take")}
-        </button>
-        <button
+        </Button>
+        <Button
           id="snapshots-drives"
           type="button"
           ref={tooltipRef(tips.backupDrives)}
@@ -78,7 +121,7 @@ export function SnapshotsPanel() {
           }}
         >
           {t("snapshots.backupDrives")}
-        </button>
+        </Button>
       </div>
       <p id="snapshots-drives-note" className="notice" role="status">
         {driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup)}
@@ -90,7 +133,7 @@ export function SnapshotsPanel() {
             ? t("snapshots.outsideChangeLexicon")
             : t("snapshots.outsideChange")}
         </p>
-        <button
+        <Button
           id="snapshots-undo-button"
           type="button"
           ref={tooltipRef(tips.snapshotsUndo)}
@@ -100,22 +143,25 @@ export function SnapshotsPanel() {
           }}
         >
           {t("snapshots.reviewUndo")}
-        </button>
+        </Button>
       </div>
       <p id="snapshots-status" className="notice" role="status" aria-live="polite">
         {listStatus(snapshots)}
       </p>
       <div
         id="snapshots-list"
-        className="files-list"
-        role="list"
+        className="files-list snapshot-grid"
         aria-label={t("view.snapshots")}
         aria-busy={snapshots.snapshotLoading}
         tabIndex={0}
-        ref={tooltipRef(tips.snapshotsList)}
+        ref={(element) => {
+          listRef.current = element;
+          tooltipRef(tips.snapshotsList)(element);
+        }}
+        style={{ height: 320, width: "100%", minWidth: 640 }}
       >
-        {snapshots.snapshotLoading ? null : snapshots.snapshotError ? (
-          <button
+        {snapshots.snapshotError ? (
+          <Button
             type="button"
             ref={tooltipRef(tips.snapshotsRetry)}
             onClick={() => {
@@ -123,34 +169,40 @@ export function SnapshotsPanel() {
             }}
           >
             {t("common.tryAgain")}
-          </button>
-        ) : snapshots.snapshots.length === 0 ? (
-          <p>{t("snapshots.empty")}</p>
+          </Button>
         ) : (
-          snapshots.snapshots.map((item) => {
-            const copy = snapshotCardText(item);
-            return (
-              <article key={item.id} className="snapshot-card" role="listitem">
-                <p>{copy.title}</p>
-                <p>{copy.detail}</p>
-                <button
-                  type="button"
-                  ref={tooltipRef(tips.reviewRestore)}
-                  onClick={() => {
-                    snapshots.openSnapshotPlan(item.id).catch((error) => snapshots.setSnapshotDialogStatus(failureOf(error).message));
-                  }}
-                >
-                  {t("snapshots.reviewRestore")}
-                </button>
-              </article>
-            );
-          })
+          <DataGrid
+            rows={[...snapshots.snapshots]}
+            columns={columns}
+            getRowId={(row) => row.id}
+            rowHeight={ROW}
+            columnHeaderHeight={ROW}
+            loading={snapshots.snapshotLoading}
+            hideFooter={snapshots.snapshots.length <= GRID_PAGE_SIZE}
+            hideFooterSelectedRowCount
+            pageSizeOptions={[GRID_PAGE_SIZE]}
+            rowBufferPx={ROW * 4}
+            disableColumnFilter
+            disableDensitySelector
+            disableEval
+            disableMultipleRowSelection
+            getRowClassName={() => "snapshot-card"}
+            localeText={localeText}
+            slots={{ noRowsOverlay: EmptySnapshots }}
+            sx={{
+              height: "100%",
+              border: 0,
+              bgcolor: "transparent",
+              color: "inherit",
+              font: "inherit",
+            }}
+          />
         )}
       </div>
       <section id="operations" className="operations" aria-labelledby="operations-heading">
         <div className="browser-bar">
           <h2 id="operations-heading" className="operations-heading">{t("operations.heading")}</h2>
-          <button
+          <Button
             id="operations-refresh"
             type="button"
             ref={tooltipRef(tips.operationsRefresh)}
@@ -159,7 +211,7 @@ export function SnapshotsPanel() {
             }}
           >
             {t("common.refresh")}
-          </button>
+          </Button>
         </div>
         <p id="operations-alert" className="operations-alert" role="alert" hidden={!failed}>
           {failed ? t("operations.rollbackFailed") : ""}
@@ -169,43 +221,45 @@ export function SnapshotsPanel() {
             ? t("operations.reading")
             : snapshots.operationsError}
         </p>
-        <div
+        <List
           id="operations-list"
           className="files-list"
-          role="list"
           aria-label={t("operations.heading")}
           aria-busy={snapshots.operationsLoading}
           tabIndex={0}
           ref={tooltipRef(tips.operationsList)}
+          dense
         >
           {snapshots.operationsError ? (
-            <button
-              type="button"
-              ref={tooltipRef(tips.operationsRetry)}
-              onClick={() => {
-                snapshots.loadOperations().catch(() => undefined);
-              }}
-            >
-              {t("common.tryAgain")}
-            </button>
+            <ListItem>
+              <Button
+                type="button"
+                ref={tooltipRef(tips.operationsRetry)}
+                onClick={() => {
+                  snapshots.loadOperations().catch(() => undefined);
+                }}
+              >
+                {t("common.tryAgain")}
+              </Button>
+            </ListItem>
           ) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? (
-            <p>{t("operations.empty")}</p>
+            <ListItem>
+              <ListItemText primary={t("operations.empty")} />
+            </ListItem>
           ) : (
-            [...snapshots.operations].reverse().map((item, index) => {
+            operations.map((item, index) => {
               const copy = operationCardText(item);
               return (
-                <article
+                <ListItem
                   key={`${item.time ?? ""}:${item.action ?? ""}:${item.target ?? ""}:${index}`}
                   className="operation-card snapshot-card"
-                  role="listitem"
                 >
-                  <p>{copy.title}</p>
-                  {copy.detail ? <p>{copy.detail}</p> : null}
-                </article>
+                  <ListItemText primary={copy.title} secondary={copy.detail || undefined} />
+                </ListItem>
               );
             })
           )}
-        </div>
+        </List>
       </section>
     </>
   );

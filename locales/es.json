@@ -1046,6 +1046,10 @@
   "shortcuts.viewSnapshots": "Copias de seguridad",
   "snapshots.backupDrives": "Copiar cajas de las unidades",
   "snapshots.backupDrivesBusy": "Copiando cajas de las unidades…",
+  "snapshots.columnRestore": "Restaurar",
+  "snapshots.columnSize": "Tamaño",
+  "snapshots.columnStatus": "Estado",
+  "snapshots.columnWhen": "Cuándo",
   "snapshots.count": {
     "one": "{count} copia",
     "other": "{count} copias"
@@ -1076,10 +1080,13 @@
   "snapshots.saving": "Guardando copia…",
   "snapshots.seratoUnknown": "Versión de Serato desconocida",
   "snapshots.seratoVersion": "Serato {version} (compilación {build})",
+  "snapshots.sizeUnknown": "Tamaño desconocido",
   "snapshots.skippedCrates": {
     "one": "Restauración terminada. Se omitió {count} archivo de caja porque no se pudo leer su copia de la instantánea: {names}.",
     "other": "Restauración terminada. Se omitieron {count} archivos de caja porque no se pudo leer su copia de la instantánea: {names}."
   },
+  "snapshots.statusFailed": "Comprobación fallida",
+  "snapshots.statusOk": "Comprobado",
   "snapshots.take": "Hacer una copia de seguridad",
   "snapshots.trigger": "instantánea",
   "snapshots.unavailableDrives": "No disponibles: {drives}.",
