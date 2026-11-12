@@ -1,5 +1,5 @@
 /**
- * Shared Settings state for the dialog island.
+ * Shared Settings state for the Main page island.
  *
  * Language, appearance, sharing, About, and the cheat sheet read this
  * context. The snapshot lives in `settings.ts`. Providers subscribe so

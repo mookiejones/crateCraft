@@ -329,6 +329,7 @@ export function isTypingTarget(target: EventTarget | null): boolean {
  *
  * Focus moves to the heading. Esc closes Settings and returns focus.
  * When Settings is already open, focus moves to the heading.
+ * Settings is a Main page (`show`), not a modal overlay.
  *
  * @returns {void}
  */
@@ -337,7 +338,8 @@ export function openCheatSheet(): void {
   renderCheatSheet();
   if (!dialog.open) {
     rememberFocus();
-    dialog.showModal();
+    dialog.show();
+    document.getElementById("open-settings")?.setAttribute("aria-expanded", "true");
   }
   const title = el("shortcuts-title");
   title.tabIndex = -1;
@@ -365,6 +367,7 @@ export function wireShortcuts(): void {
 
 function onSettingsClose(): void {
   restoreFocus();
+  document.getElementById("open-settings")?.setAttribute("aria-expanded", "false");
 }
 
 function onKey(event: KeyboardEvent): void {
@@ -395,7 +398,10 @@ function topDialog(): HTMLElement | null {
   const open = [...document.querySelectorAll("dialog")].filter(
     (node): node is HTMLDialogElement => node instanceof HTMLDialogElement && node.open,
   );
-  return open.at(-1) ?? null;
+  const native = open.at(-1);
+  if (native) return native;
+  const mui = document.querySelector<HTMLElement>(".MuiDialog-root:not([aria-hidden='true'])");
+  return mui ?? null;
 }
 
 const HANDLERS: { [K in ShortcutId]: (event: KeyboardEvent) => void } = {
@@ -542,7 +548,7 @@ function openSnapshot(): void {
 }
 
 function snapshotCards(): HTMLElement[] {
-  return [...el("snapshots-list").querySelectorAll<HTMLElement>(".snapshot-card")];
+  return [...el("snapshots-list").querySelectorAll<HTMLElement>(".MuiDataGrid-row, .snapshot-card")];
 }
 
 function dismiss(event: KeyboardEvent): void {

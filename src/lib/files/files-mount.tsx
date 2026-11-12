@@ -11,7 +11,7 @@ import { FilesPanel } from "../../pages/FilesPanel";
 import { PortableDialog } from "../../components/PortableDialog";
 import { el } from "../dom";
 import { bindFilesMount } from "./files";
-import { bindPortableMount } from "../gig/portable";
+import { bindPortableMount } from "../gig/portable-bind";
 
 let panelRoot: IslandRoot | null = null;
 let dialogRoot: IslandRoot | null = null;

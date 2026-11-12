@@ -270,6 +270,7 @@ describe("WizardScreen from context", () => {
         }),
       );
     });
+    expect(host.querySelector(".MuiDialog-root")).not.toBeNull();
     expect(host.querySelector("#wizard-title")?.textContent).toBe("See your Serato library");
     expect(host.querySelector("#wizard-step-label")?.textContent).toBe("Step 1 of 5");
     expect(host.querySelector("#wizard-primary")?.textContent).toBe("Get started");

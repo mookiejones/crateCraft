@@ -9,7 +9,7 @@ The note under the crate list says **Needs a crate because it decodes audio.**
 1. Open crateCraft.
 2. Click **Gig** in the drawer, then **Tempo drift**.
 3. Click one crate. The sheet heading names the view. **Scope** under it shows that crate. **All tracks** on the chip, and in the crate list, stays off, because a whole-space decode can take minutes.
-4. Click **Check again**. The report groups wandering tempos, live-looking names, and Serato's pending tempo-map mark.
+4. Click **Check again**. Flagged tracks sit in a table. The **Reason** column names drift or live in words, not by color alone.
 
 A crate change, a space change, or **Reload** repeats the check. If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
 
