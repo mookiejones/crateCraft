@@ -4,7 +4,7 @@ Play a track that is already in the library. The sound stays on this computer. T
 
 Double-click a row, press **Enter**, or click **Play**. **Enter** on the list plays the selected track. **Enter** on a focused row plays that row. The list Play button and the detail Play button share one player. Click **Play** on the playing track to pause. Click **Play** on another row to start that track. Both buttons show Play or Pause.
 
-The bar under the list shows the title, the artist, **Previous**, **Play** or **Pause**, **Next**, a seek bar, and volume. **Previous** and **Next** follow the list in its sort and filter order. When a track ends, the next row starts.
+The bar under the AppBar shows the title, the artist, **Previous**, **Play** or **Pause**, **Next**, a seek bar, and volume. **Previous** and **Next** follow the list in its sort and filter order. When a track ends, the next row starts.
 
 Cue points from the file sit on the seek bar in their colors. Click a cue to jump there. A track with no cues has no marks. With the seek bar focused, **Left** and **Right** move 5 seconds. **Shift** with **Left** or **Right** moves 30 seconds.
 

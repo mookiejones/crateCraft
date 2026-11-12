@@ -5,7 +5,12 @@
  * Next, seek, and volume read `usePlayer`.
  */
 
-import { useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useState, type KeyboardEvent, type SyntheticEvent } from "react";
+import IconButton from "@mui/material/IconButton";
+import Slider from "@mui/material/Slider";
+import Typography from "@mui/material/Typography";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
+import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import { usePlayer } from "../containers/PlayerContext";
 import {
   SEEK_STEP_LARGE_SECONDS,
@@ -90,49 +95,52 @@ export function PlayerBar() {
     player.seekBy((forward ? 1 : -1) * step);
   }
 
-  function onSeekInput(event: { currentTarget: HTMLInputElement }): void {
-    const next = Number(event.currentTarget.value);
+  function onSeekChange(event: Event | SyntheticEvent, value: number | number[]): void {
+    if ("key" in event) {
+      const key = String(event.key);
+      if (key === "ArrowRight" || key === "ArrowLeft" || key === "ArrowUp" || key === "ArrowDown") {
+        return;
+      }
+    }
+    const next = typeof value === "number" ? value : value[0];
+    if (next === undefined) return;
     setHold(next);
     player.seek(next);
-  }
-
-  function onSeekPointerDown(): void {
-    setHold(player.currentTime);
-  }
-
-  function onSeekPointerUp(_event: PointerEvent<HTMLInputElement>): void {
-    setHold(null);
   }
 
   return (
     <div className="player-controls">
       <div className="player-meta">
-        <p className="player-title" title={shownTitle}>{shownTitle}</p>
-        <p className="player-artist" hidden={player.artist === ""} title={player.artist}>{player.artist}</p>
-        <p className="player-status" role="status" hidden={player.error === ""} title={player.error}>{player.error}</p>
+        <Typography className="player-title" component="p" noWrap title={shownTitle}>{shownTitle}</Typography>
+        <Typography className="player-artist" component="p" noWrap hidden={player.artist === ""} title={player.artist}>{player.artist}</Typography>
+        <Typography className="player-status" component="p" role="status" hidden={player.error === ""} title={player.error}>{player.error}</Typography>
       </div>
       <div className="player-transport">
-        <button
+        <IconButton
           type="button"
           ref={tooltipRef(tips.previous)}
           className="player-toggle"
+          size="large"
+          color="inherit"
           disabled={!player.canSkipPrevious}
           aria-label={playerStrings.previous}
           onClick={() => player.previous()}
         >
-          {playerStrings.previous}
-        </button>
+          <SkipPreviousIcon />
+        </IconButton>
         <PlayButton variant="bar" name={named} />
-        <button
+        <IconButton
           type="button"
           ref={tooltipRef(tips.next)}
           className="player-toggle"
+          size="large"
+          color="inherit"
           disabled={!player.canSkipNext}
           aria-label={playerStrings.next}
           onClick={() => player.next()}
         >
-          {playerStrings.next}
-        </button>
+          <SkipNextIcon />
+        </IconButton>
       </div>
       <div className="player-seek">
         <span className="player-time">
@@ -140,21 +148,22 @@ export function PlayerBar() {
           <span>{formatPlayerTime(player.currentTime)}</span>
         </span>
         <div className="player-seek-track">
-          <input
-            ref={tooltipRef(tips.seek)}
-            type="range"
-            className="player-range"
+          <Slider
             min={0}
             max={limit}
             step={0.1}
             value={shownTime}
             disabled={!loaded || limit === 0}
             aria-label={playerStrings.seek}
-            onPointerDown={onSeekPointerDown}
-            onPointerUp={onSeekPointerUp}
-            onPointerCancel={onSeekPointerUp}
-            onInput={onSeekInput}
-            onKeyDown={onSeekKey}
+            onChange={onSeekChange}
+            onChangeCommitted={() => setHold(null)}
+            slotProps={{
+              input: {
+                className: "player-range",
+                ref: tooltipRef(tips.seek),
+                onKeyDown: onSeekKey,
+              },
+            }}
           />
           <div className="player-cues">
             <CueMarks cues={player.cues} limit={limit} seek={player.seek} />
@@ -167,14 +176,27 @@ export function PlayerBar() {
       </div>
       <label className="player-volume">
         <span>{playerStrings.volume}</span>
-        <input
-          ref={tooltipRef(tips.volume)}
-          type="range"
+        <Slider
           min={0}
           max={1}
           step={0.01}
           value={player.volume}
-          onInput={(event) => player.setVolume(Number(event.currentTarget.value))}
+          aria-label={playerStrings.volume}
+          onChange={(_event, value) => {
+            const next = typeof value === "number" ? value : value[0];
+            if (next === undefined) return;
+            player.setVolume(next);
+          }}
+          slotProps={{
+            input: {
+              ref: tooltipRef(tips.volume),
+              onInput: (event) => {
+                const next = Number(event.currentTarget.value);
+                if (!Number.isFinite(next)) return;
+                player.setVolume(next);
+              },
+            },
+          }}
         />
       </label>
     </div>
