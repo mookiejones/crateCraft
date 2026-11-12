@@ -16,6 +16,7 @@ export const SHARED_DIALOG_IDS = [
   "folder-sync-dialog",
   "rekordbox-dialog",
   "crate-prompt-dialog",
+  "confirm-dialog",
 ] as const;
 
 export type SharedDialogId = (typeof SHARED_DIALOG_IDS)[number];
@@ -31,12 +32,21 @@ export type CratePromptState = {
   title: string;
   value: string;
   confirmLabel: string;
+  fieldLabel?: string;
+};
+
+export type ConfirmState = {
+  title: string;
+  message: string;
+  confirmLabel: string;
 };
 
 const openIds = new Set<SharedDialogId>();
 const listeners = new Set<() => void>();
 let cratePrompt: CratePromptState = { title: "", value: "", confirmLabel: "" };
 let cratePromptResolve: ((value: string | null) => void) | null = null;
+let confirmState: ConfirmState = { title: "", message: "", confirmLabel: "" };
+let confirmResolve: ((value: boolean) => void) | null = null;
 let ensureMount: () => void = () => {};
 
 /**
@@ -122,6 +132,11 @@ export function setSharedDialogOpen(id: SharedDialogId, open: boolean): void {
       const resolve = cratePromptResolve;
       cratePromptResolve = null;
       resolve?.(null);
+    }
+    if (id === "confirm-dialog") {
+      const resolve = confirmResolve;
+      confirmResolve = null;
+      resolve?.(false);
     }
   }
 }
@@ -235,6 +250,63 @@ export function openCratePrompt(next: CratePromptState): Promise<string | null> 
   setSharedDialogOpen("crate-prompt-dialog", true);
   return new Promise((resolve) => {
     cratePromptResolve = resolve;
+  });
+}
+
+/**
+ * Read the confirm dialog fields.
+ *
+ * @returns Title, message, and confirm label.
+ */
+export function getConfirm(): ConfirmState {
+  return confirmState;
+}
+
+function settleConfirm(value: boolean): void {
+  const resolve = confirmResolve;
+  confirmResolve = null;
+  setSharedDialogOpen("confirm-dialog", false);
+  resolve?.(value);
+}
+
+/**
+ * Close the confirm dialog without a write.
+ *
+ * @returns {void}
+ */
+export function cancelConfirm(): void {
+  settleConfirm(false);
+}
+
+/**
+ * Close the confirm dialog and return true.
+ *
+ * @returns {void}
+ */
+export function confirmConfirm(): void {
+  settleConfirm(true);
+}
+
+/**
+ * Open the confirm dialog and wait for Confirm or Cancel.
+ *
+ * Esc and Cancel resolve false. A second confirm cancels the first.
+ *
+ * @param next Title, message, and confirm label.
+ * @returns True when the person confirms.
+ */
+export function openConfirm(next: ConfirmState): Promise<boolean> {
+  ensureSharedDialogs();
+  if (confirmResolve) {
+    const previous = confirmResolve;
+    confirmResolve = null;
+    previous(false);
+  }
+  confirmState = next;
+  emit();
+  setSharedDialogOpen("confirm-dialog", true);
+  return new Promise((resolve) => {
+    confirmResolve = resolve;
   });
 }
 

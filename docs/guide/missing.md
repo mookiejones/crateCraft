@@ -25,7 +25,7 @@ Use this when you already know the new path and the file is still the same recor
 2. Click the track.
 3. Click **Relocate**.
 4. Paste the full path in **Path to the audio file**.
-5. Confirm the prompt.
+5. Confirm in the dialog.
 
 The page says **File location saved.** **Reveal** stays off until the file is on disk at that path.
 

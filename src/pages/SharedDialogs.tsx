@@ -1,6 +1,6 @@
 /**
  * Centered MUI dialogs for Rekordbox, merge, relink, sharing, Find art,
- * preset, folder-sync, crate replace, and the crate name prompt.
+ * preset, folder-sync, crate replace, the crate name prompt, and confirm.
  *
  * Existing markup in index.html is adopted on first paint so field ids
  * and POST contracts stay. Restore, Files, Settings, and Wizard stay
@@ -10,6 +10,7 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { flushSync } from "react-dom";
 import { CenteredDialog } from "../components/CenteredDialog";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 import { CratePromptDialog } from "../components/CratePromptDialog";
 import {
   bindDialogApi,
@@ -19,7 +20,7 @@ import {
 } from "../lib/ui/shared-dialog";
 
 const ADOPTED: ReadonlyArray<{
-  id: Exclude<SharedDialogId, "crate-prompt-dialog">;
+  id: Exclude<SharedDialogId, "crate-prompt-dialog" | "confirm-dialog">;
   labelledBy: string;
   describedBy?: string;
 }> = [
@@ -56,7 +57,7 @@ function muiRoot(id: string): HTMLElement | null {
   return root instanceof HTMLElement ? root : null;
 }
 
-function adoptNative(id: Exclude<SharedDialogId, "crate-prompt-dialog">): HTMLDivElement {
+function adoptNative(id: Exclude<SharedDialogId, "crate-prompt-dialog" | "confirm-dialog">): HTMLDivElement {
   const bucket = bucketFor(id);
   const source = sourceDialog(id);
   if (source) {
@@ -71,7 +72,7 @@ function adoptNative(id: Exclude<SharedDialogId, "crate-prompt-dialog">): HTMLDi
 }
 
 function placeBucket(
-  id: Exclude<SharedDialogId, "crate-prompt-dialog">,
+  id: Exclude<SharedDialogId, "crate-prompt-dialog" | "confirm-dialog">,
   paper: HTMLElement | null,
 ): void {
   const bucket = bucketFor(id);
@@ -130,6 +131,7 @@ export function SharedDialogs() {
         <AdoptedDialog key={dialog.id} {...dialog} />
       ))}
       <CratePromptDialog />
+      <ConfirmDialog />
     </>
   );
 }

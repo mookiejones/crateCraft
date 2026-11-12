@@ -38,8 +38,8 @@ Other groups under the form, such as **Song**, **File**, and **Status**, are for
 | --- | --- |
 | **Reveal in Finder** on a Mac, **Reveal in File Explorer** on Windows | Shows the audio file. The button stays off when the file is not on disk. |
 | **Send to Prepare** or **Remove from Prepare** | Adds or removes the track in Prepare. See [Prepare](prepare.md). |
-| **Relocate** | Asks **Path to the audio file**. Saves that path on the library row. The page says **File location saved.** |
-| **Remove from library** | Asks you to confirm. The audio file stays on disk. The track leaves the library and its crates. |
+| **Relocate** | Opens a dialog labeled **Path to the audio file**. Confirm saves that path on the library row. The page says **File location saved.** |
+| **Remove from library** | Confirm in the dialog. The audio file stays on disk. The track leaves the library and its crates. |
 
 **Relocate** updates the path Serato has stored. It does not move the file. To move the file and update the path together, use [Files](files.md).
 

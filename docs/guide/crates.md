@@ -77,7 +77,7 @@ Select a crate other than **All tracks**.
 | --- | --- | --- |
 | **Rename** | Type the new name in **Rename crate**. | The crate keeps its tracks. |
 | **Color** | Type one of `none`, `red`, `orange`, `yellow`, `green`, `blue`, `purple`, `pink`. | The crate color is saved. Any other word shows **Use one of the palette names.** |
-| **Delete** | Confirm **Delete** and the crates inside it. | Those crates are removed. The tracks stay in the library. |
+| **Delete** | Confirm in the dialog. Nested crates go too. | Those crates are removed. The tracks stay in the library. |
 
 The color names in the track editor are **None**, **Red**, **Orange**, **Yellow**, **Green**, **Blue**, **Purple**, and **Pink**.
 

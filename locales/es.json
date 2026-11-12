@@ -1601,5 +1601,10 @@
   "crates.promptName": "Nombre",
   "tooltip.cratePromptCancel": "Cerrar sin cambiar la caja.",
   "tooltip.cratePromptConfirm": "Guardar este nombre de caja. Hay que salir de Serato DJ Pro.",
-  "tooltip.cratePromptName": "Escribe el nombre de la caja, o un color."
+  "tooltip.cratePromptName": "Escribe el nombre de la caja, o un color.",
+  "tooltip.relocatePath": "Escribe la ruta del archivo de audio.",
+  "tooltip.relocateCancel": "Cerrar sin cambiar la ubicación del archivo.",
+  "tooltip.relocateConfirm": "Guardar esta ubicación. Hay que salir de Serato DJ Pro.",
+  "tooltip.confirmCancel": "Cerrar sin hacer este cambio.",
+  "tooltip.confirmAction": "Confirmar este cambio."
 }

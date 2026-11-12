@@ -28,13 +28,14 @@ export function CratePromptDialog() {
   const prompt = getCratePrompt();
   const open = isSharedDialogOpen("crate-prompt-dialog");
   const ready = Boolean(prompt.value.trim());
+  const pathMode = Boolean(prompt.fieldLabel);
   return (
     <CenteredDialog id="crate-prompt-dialog" labelledBy="crate-prompt-title">
       <DialogTitle id="crate-prompt-title">{prompt.title}</DialogTitle>
       <TextField
         id="crate-prompt-input"
-        inputRef={tooltipRef(tips.cratePromptName)}
-        label={t("crates.promptName")}
+        inputRef={tooltipRef(pathMode ? tips.relocatePath : tips.cratePromptName)}
+        label={prompt.fieldLabel || t("crates.promptName")}
         value={prompt.value}
         autoComplete="off"
         autoFocus={open}
@@ -50,7 +51,7 @@ export function CratePromptDialog() {
       <DialogActions>
         <Button
           id="crate-prompt-cancel"
-          ref={tooltipRef(tips.cratePromptCancel)}
+          ref={tooltipRef(pathMode ? tips.relocateCancel : tips.cratePromptCancel)}
           type="button"
           sx={{ minHeight: 44 }}
           onClick={() => cancelCratePrompt()}
@@ -59,7 +60,7 @@ export function CratePromptDialog() {
         </Button>
         <Button
           id="crate-prompt-confirm"
-          ref={tooltipRef(tips.cratePromptConfirm)}
+          ref={tooltipRef(pathMode ? tips.relocateConfirm : tips.cratePromptConfirm)}
           type="button"
           variant="contained"
           disabled={!ready}

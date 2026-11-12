@@ -72,7 +72,7 @@ import { HistorySessions } from "../../pages/HistorySessions";
 import { PlayButton } from "../../components/PlayButton";
 import { TrackDetailPane } from "../../components/TrackDetail";
 import { bindCrateActions, emitCrates } from "../crates/crate-store";
-import { openCratePrompt } from "./shared-dialog";
+import { openConfirm, openCratePrompt } from "./shared-dialog";
 import { mountSharedDialogs } from "./shared-dialog-mount";
 import { historyActions, notifyHistory } from "../../containers/HistoryContext";
 import { play } from "../player/player";
@@ -1610,7 +1610,11 @@ async function saveRelated(track: Track, section: HTMLElement, body: Record<stri
  */
 async function removeRelated(track: Track, section: HTMLElement, link: RelatedTrack) {
   const label = link.track?.title || t("related.thisTrack");
-  if (!confirm(t("related.confirmRemove", { name: label }))) return;
+  if (!(await openConfirm({
+    title: t("common.remove"),
+    message: t("related.confirmRemove", { name: label }),
+    confirmLabel: t("common.remove"),
+  }))) return;
   try {
     await postJSON("/api/related", { action: "remove", id: link.id });
     setNotice(t("related.removed"));
@@ -1959,8 +1963,13 @@ async function prepareTrack(id: number, add: boolean) {
  * @param {object} track Track payload. The prompt starts from its resolved path.
  * @returns {Promise<void>}
  */
-async function relocateTrack(track: Track) {
-  const path = prompt(t("detail.relocatePrompt"), track.resolved_path || track.edit?.portable_id || "");
+export async function relocateTrack(track: Track) {
+  const path = await openCratePrompt({
+    title: t("detail.relocate"),
+    value: track.resolved_path || track.edit?.portable_id || "",
+    confirmLabel: t("detail.relocate"),
+    fieldLabel: t("detail.relocatePrompt"),
+  });
   if (!path) return;
   try {
     const result = await postJSON("/api/track", {
@@ -1986,8 +1995,12 @@ async function relocateTrack(track: Track) {
  * @param {number} id Asset id.
  * @returns {Promise<void>}
  */
-async function removeTrack(id: number) {
-  if (!confirm(t("detail.confirmRemove"))) return;
+export async function removeTrack(id: number) {
+  if (!(await openConfirm({
+    title: t("detail.removeFromLibrary"),
+    message: t("detail.confirmRemove"),
+    confirmLabel: t("detail.removeFromLibrary"),
+  }))) return;
   try {
     const result = await postJSON("/api/crate", { action: "remove_library", asset: id, space: state.space });
     setNotice(result.warning || t("detail.removed"));
@@ -2186,7 +2199,11 @@ export async function colorCrate() {
 export async function deleteCrate() {
   const crate = state.crates.find((item) => item.id === state.activeCrate);
   if (!crate) return;
-  if (!confirm(t("crates.confirmDelete", { name: crate.name }))) return;
+  if (!(await openConfirm({
+    title: t("common.delete"),
+    message: t("crates.confirmDelete", { name: crate.name }),
+    confirmLabel: t("common.delete"),
+  }))) return;
   try {
     const result = await postJSON("/api/crate", { action: "delete", id: crate.id, space: state.space });
     state.activeCrate = "all";
