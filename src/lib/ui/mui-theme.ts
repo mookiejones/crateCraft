@@ -74,6 +74,12 @@ export function createAppTheme(colorway: string): Theme {
   const id = isThemedColorway(colorway) ? colorway : "serato-like";
   const colors = COLORWAY_PALETTES[id];
   return createTheme({
+    typography: {
+      fontFamily: '"Familjen Grotesk", system-ui, sans-serif',
+      fontSize: 13,
+      button: { textTransform: "none", fontWeight: 600 },
+    },
+    shape: { borderRadius: 8 },
     palette: {
       mode: colors.mode,
       primary: {

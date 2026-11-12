@@ -1,5 +1,7 @@
 # Crates
 
+The navigation highlights the open section. On narrow screens it starts collapsed; use the menu button to open it. The top bar holds the space menu. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
+
 <figure>
   <img alt="Crates with Deep House selected and the open track's crate checkboxes." src="images/features/crates.png">
   <figcaption>Example data. Deep House is open, and the track's crate checkboxes are on the right. The space menu is drawn here as an expanded list. In the app it is the native dropdown.</figcaption>

@@ -21,7 +21,7 @@ import { onLocaleChange, t } from "../lib/i18n";
 import { setTooltip } from "../lib/ui/tooltip";
 import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
 
-const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH = 200;
 
 function tooltipRef(spec: TipSpec) {
   return (element: HTMLElement | null) => {
@@ -39,7 +39,7 @@ function adopt(slot: HTMLElement | null, id: string): void {
  * Page chrome: AppBar, Drawer, and the existing body in Main.
  */
 export function AppShell() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(() => window.innerWidth > 980);
   const [, setLocaleTick] = useState(0);
   const spaceSlot = useRef<HTMLDivElement>(null);
   const playerSlot = useRef<HTMLDivElement>(null);

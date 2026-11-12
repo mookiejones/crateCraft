@@ -225,7 +225,8 @@ export function TrackListWindow({ pane, onFocusList }: TrackListWindowProps) {
           color: "inherit",
           font: "inherit",
           "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within, & .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
-            outline: "none",
+            outline: "2px solid var(--cadmium)",
+            outlineOffset: "-2px",
           },
         }}
       />

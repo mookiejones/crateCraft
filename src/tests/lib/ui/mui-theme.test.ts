@@ -6,6 +6,15 @@ import { describe, expect, it } from "vitest";
 import { COLORWAY_PALETTES, createAppTheme } from "../../../lib/ui/mui-theme";
 
 describe("createAppTheme", () => {
+  it("shares the page typography across all colorways", () => {
+    for (const colorway of Object.keys(COLORWAY_PALETTES)) {
+      const theme = createAppTheme(colorway);
+      expect(theme.typography.fontFamily).toContain("Familjen Grotesk");
+      expect(theme.typography.button.textTransform).toBe("none");
+      expect(theme.typography.fontSize).toBe(13);
+    }
+  });
+
   it("maps Serato-like to a dark orange palette", () => {
     const theme = createAppTheme("serato-like");
     const colors = COLORWAY_PALETTES["serato-like"];
