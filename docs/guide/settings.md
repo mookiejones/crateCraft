@@ -31,7 +31,7 @@ The strip has **Download**, which opens that version's page on GitHub in your br
 
 ![Settings. Sharing is off. This sample copy has no telemetry keys, so nothing is sent either way.](../media/settings.png)
 
-1. Click **Settings** at the bottom of the left rail.
+1. Click **Settings** at the bottom of the left rail. Settings opens as a page in the main area, not a popup.
 2. Tick **Share anonymous usage stats and crash reports** to turn sharing on. Clear the tick to turn it off.
 3. Read the line under the tick.
 4. Tick **Check GitHub for a newer version once a day** to turn the update check on, and **Include test versions (beta and release candidates)** to hear about those too. The second tick is greyed out while the first is off. If a choice cannot be saved, the line under them says **The update choice could not be saved.** and the tick goes back.

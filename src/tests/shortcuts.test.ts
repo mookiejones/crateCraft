@@ -5,7 +5,7 @@
  * keys call the registered player, and do nothing when it is absent.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "../lib/api-types";
 import { el } from "../lib/dom";
 import { setLocale } from "../lib/i18n";
@@ -21,8 +21,8 @@ import {
   wireShortcuts,
 } from "../lib/ui/shortcuts";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
-import { mountTrackList } from "../lib/ui/virtual-scroll";
+import { drainReactScheduler, installPage } from "./test-page";
+import { mountTrackList, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderCrates, renderFiles, renderList, wireLibrary } from "../lib/ui/views";
 
 function json(body: unknown, status = 200): Response {
@@ -380,6 +380,11 @@ describe("keyboard shortcuts", () => {
     vi.stubGlobal("fetch", fetchMock);
     wireLibrary();
     wireShortcuts();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   it.each(cases.map((item) => [item.id, item.event.key, Boolean(item.event.metaKey), item] as const))(

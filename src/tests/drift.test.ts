@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { TempoDriftReport } from "../lib/api-types";
-import { loadDrift, repaintDrift, wireDrift } from "../lib/gig/drift";
+import { loadDrift, repaintDrift, unmountDrift, wireDrift } from "../lib/gig/drift";
 import { setLocale } from "../lib/i18n";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 
 const report: TempoDriftReport = {
   crate: 5,
@@ -62,15 +62,24 @@ describe("drift", () => {
     setLocale("en");
     state.space = "Serato Library";
     state.activeCrate = 5;
-    state.driftToken = 0;
     state.crates = [{ id: 5, name: "Friday" }];
     wireDrift();
     document.getElementById("drift-panel")!.hidden = false;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountDrift();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
+  });
+
+  it("unmounts the drift grid so the Data Grid scheduler does not outlive the document", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
+    await loadDrift();
+    expect(document.querySelector("#drift-report .MuiDataGrid-root")).not.toBeNull();
+    unmountDrift();
+    expect(document.querySelector("#drift-report .MuiDataGrid-root")).toBeNull();
   });
 
   it("asks for the selected crate and paints flagged tracks by reason", async () => {
@@ -85,8 +94,13 @@ describe("drift", () => {
     expect(reportText()).toContain("2 missing tracks were skipped");
     expect(reportText()).toContain("1 file could not be read.");
     expect(reportText()).toContain("Tempo wanders");
-    expect(reportText()).toContain("A — Old Tape (tape.wav) — Tempo wanders (90–120 BPM)");
+    expect(reportText()).toContain("Old Tape");
+    expect(reportText()).toContain("tape.wav");
     expect(reportText()).toContain("Looks like a live recording");
+    const headers = [...document.querySelectorAll<HTMLElement>("#drift-report .MuiDataGrid-columnHeader")]
+      .map((node) => node.getAttribute("data-field"));
+    expect(headers).toEqual(["title", "file", "reason", "bpm"]);
+    expect(document.querySelector('#drift-report .MuiDataGrid-cell[data-field="reason"]')?.textContent).toContain("Tempo wanders");
     expect(document.getElementById("drift-refresh")!.getAttribute("aria-busy")).toBe("false");
   });
 

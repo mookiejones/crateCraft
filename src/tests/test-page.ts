@@ -8,10 +8,11 @@
 import html from "../../static/index.html?raw";
 
 /**
- * Let React's `setImmediate` scheduler run while jsdom still has `window`.
+ * Let React's `setImmediate` scheduler and MUI's `setTimeout` throttle
+ * run while jsdom still has `window`.
  *
- * Data Grid work queued after unmount hits `window is not defined` if the
- * environment tears down first.
+ * Data Grid work queued after unmount hits `window is not defined` or
+ * `getComputedStyle is not a function` if the environment tears down first.
  *
  * @returns {Promise<void>}
  */
@@ -20,11 +21,12 @@ export function drainReactScheduler(): Promise<void> {
     setImmediate?: (callback: () => void) => void;
   };
   return new Promise((resolve) => {
+    const flushTimeout = () => setTimeout(resolve, 0);
     if (typeof queue.setImmediate === "function") {
-      queue.setImmediate(resolve);
+      queue.setImmediate(flushTimeout);
       return;
     }
-    setTimeout(resolve, 0);
+    flushTimeout();
   });
 }
 
@@ -34,6 +36,11 @@ export function installPage(): void {
   const body = html.slice(start, end).replace(/<script[\s\S]*?<\/script>/g, "");
   document.body.outerHTML = `${body}</body>`;
   const dialog = HTMLDialogElement.prototype;
+  if (typeof dialog.show !== "function") {
+    dialog.show = function show(this: HTMLDialogElement) {
+      this.open = true;
+    };
+  }
   if (typeof dialog.showModal !== "function") {
     dialog.showModal = function showModal(this: HTMLDialogElement) {
       this.open = true;

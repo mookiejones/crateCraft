@@ -3,12 +3,12 @@
  * live in the grid, and a 10k library stays virtualized.
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { Track } from "../../lib/api-types";
 import { setLocale } from "../../lib/i18n";
 import { state } from "../../lib/state";
-import { installPage } from "../test-page";
-import { mountTrackList, paintRows } from "../../lib/ui/virtual-scroll";
+import { drainReactScheduler, installPage } from "../test-page";
+import { mountTrackList, paintRows, unmountTrackList } from "../../lib/ui/virtual-scroll";
 import { renderList } from "../../lib/ui/views";
 
 function track(id: number, name: string, extra: Partial<Track> = {}): Track {
@@ -37,6 +37,11 @@ describe("Track list Data Grid", () => {
     state.crates = [];
     state.duplicateIds = null;
     mountTrackList();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   it("puts Play in its own first column and Title holds only the name", () => {

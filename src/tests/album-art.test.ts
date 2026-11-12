@@ -4,7 +4,8 @@ import { openAlbumArt, wireAlbumArt } from "../lib/health/album-art";
 import { el } from "../lib/dom";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 
 const RELEASE = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
@@ -72,7 +73,9 @@ describe("album-art", () => {
     applyStaticTooltips();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });
@@ -135,5 +138,12 @@ describe("album-art", () => {
   it("gives Cancel and Embed tooltips", () => {
     expect(el("album-art-cancel").dataset.tooltipKey).toBe("tooltip.healthArtCancel");
     expect(el("album-art-embed").dataset.tooltipKey).toBe("tooltip.healthArtEmbed");
+  });
+
+  it("unmounts shared dialogs so the MUI scheduler does not outlive the document", async () => {
+    expect(document.querySelector("#album-art-dialog [role='dialog']")).not.toBeNull();
+    unmountSharedDialogs();
+    expect(document.querySelector("#album-art-dialog [role='dialog']")).toBeNull();
+    await drainReactScheduler();
   });
 });

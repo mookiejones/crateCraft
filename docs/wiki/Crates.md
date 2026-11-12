@@ -32,7 +32,7 @@ Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. The sta
 | **New** | Type **New crate name**. The crate is created inside the one you had selected. **All tracks** puts it at the top. |
 | **Rename** | Type **Rename crate**. The tracks stay. |
 | **Color** | Type one of `none`, `red`, `orange`, `yellow`, `green`, `blue`, `purple`, `pink`. |
-| **Delete** | Confirm. Nested crates go too. The tracks stay in the library. |
+| **Delete** | Confirm in the dialog. Nested crates go too. The tracks stay in the library. |
 | **Sync folder** | Type a folder path. Preview, then confirm. Library tracks whose files sit in that folder are added. Files that are not in the library stay skipped. Optional subcrates map each subfolder to a child crate. Optional full remove takes out members whose files left that crate's folder. |
 
 There is no drag and drop. This app does not move an existing crate to a new parent. **New** does not make a smart crate. Make that in Serato, then edit the rules here.

@@ -90,6 +90,7 @@ textarea:focus-visible,
 }
 
 .app-body {
+  position: relative;
   display: flex;
   flex: 1;
   min-height: 0;
@@ -1217,7 +1218,8 @@ button:disabled { cursor: default; }
 
 .marker button, .copy-row button { text-align: left; }
 
-dialog {
+dialog,
+[data-shared-dialog] .MuiDialog-paper {
   border: 1px solid var(--rule);
   border-radius: 10px;
   background: var(--manila);
@@ -1230,6 +1232,20 @@ dialog {
 #settings-dialog {
   max-height: min(40rem, calc(100vh - 32px));
   overflow: auto;
+}
+
+#settings-dialog[open] {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: auto;
+  max-width: none;
+  height: auto;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .shortcuts-section {
@@ -1245,7 +1261,8 @@ dialog::backdrop {
   background: color-mix(in srgb, var(--ink) 62%, transparent);
 }
 
-dialog h2 {
+dialog h2,
+[data-shared-dialog] h2 {
   margin: 0 0 var(--space-3);
   font-family: var(--display);
   font-weight: 500;
@@ -1254,7 +1271,8 @@ dialog h2 {
   line-height: 1.2;
 }
 
-dialog p {
+dialog p,
+[data-shared-dialog] p {
   margin: 0;
   line-height: 1.5;
 }
@@ -1321,7 +1339,8 @@ dialog p {
   font: inherit;
 }
 
-dialog .check {
+dialog .check,
+[data-shared-dialog] .check {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -1329,7 +1348,8 @@ dialog .check {
   margin-top: var(--space-2);
 }
 
-dialog .check input {
+dialog .check input,
+[data-shared-dialog] .check input {
   width: 20px;
   height: 20px;
 }
@@ -1915,6 +1935,20 @@ dialog .settings-field select {
 .gig-note { margin: var(--space-2) 0; }
 
 .gig-group { margin: var(--space-2) 0; }
+
+.gig-group .MuiAccordionSummary-root {
+  min-height: var(--row);
+  padding-inline: 0;
+}
+
+.gig-group .MuiAccordionDetails-root {
+  padding: var(--space-2) 0;
+}
+
+.report-grid {
+  min-height: calc(var(--row) * 5);
+  width: 100%;
+}
 
 .health-art-row {
   display: flex;
@@ -2527,6 +2561,13 @@ dialog .settings-field select {
 
 #wizard {
   max-width: 40rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+#wizard .MuiDialog-paper {
+  margin: 0;
 }
 
 .wizard-step {

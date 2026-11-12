@@ -156,7 +156,7 @@ describe("gig", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it("puts a long list in a details group and can show every row", async () => {
+  it("puts a long list in an Accordion group and can show every row", async () => {
     const missing = Array.from({ length: 101 }, (_, index) => ({
       path: `/Music/${index}.mp3`,
       title: "T",
@@ -166,14 +166,19 @@ describe("gig", () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply({ ...report, missing_files: missing, unavailable_drives: [] })));
     await loadGigCheck();
     clickAction("next");
-    const group = document.querySelector("details.gig-group")!;
-    expect(group.querySelector("summary")!.textContent).toBe("Missing files (101)");
+    const group = document.querySelector(".gig-group")!;
+    const summary = group.querySelector<HTMLElement>(".MuiAccordionSummary-root")!;
+    expect(summary.textContent).toContain("Missing files (101)");
+    expect(summary.getAttribute("aria-expanded")).toBe("true");
     expect(group.querySelectorAll("li")).toHaveLength(100);
-    const show = group.querySelector("button")!;
+    const show = group.querySelector<HTMLButtonElement>("button.gig-show-all")!;
     expect(show.textContent).toBe("Show all 101");
     show.click();
     expect(group.querySelectorAll("li")).toHaveLength(101);
-    expect(group.querySelector("button")).toBeNull();
+    expect(group.querySelector("button.gig-show-all")).toBeNull();
+    expect(summary.tagName === "BUTTON" || summary.getAttribute("role") === "button").toBe(true);
+    expect(summary.tabIndex).toBeGreaterThanOrEqual(0);
+    expect(summary.getAttribute("aria-expanded")).toBe("true");
   });
 
   it("says when a step has nothing to fix", async () => {

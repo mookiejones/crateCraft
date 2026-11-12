@@ -18,6 +18,7 @@ import {
 } from "./folder-sync-view";
 import { state } from "../state";
 import { bindCrateActions } from "./crate-store";
+import { mountSharedDialogs } from "../ui/shared-dialog-mount";
 import { loadLibrary, lockDown, setNotice } from "../ui/views";
 
 const PREVIEW_DELAY_MS = 250;
@@ -79,6 +80,7 @@ function schedulePreview(): void {
  * @returns {Promise<void>}
  */
 export async function openFolderSyncDialog(): Promise<void> {
+  mountSharedDialogs();
   if (!state.writable || typeof state.activeCrate !== "number") {
     setNotice(el("status").textContent || "");
     return;
@@ -95,6 +97,7 @@ export async function openFolderSyncDialog(): Promise<void> {
  * @returns {Promise<void>}
  */
 export async function runFolderSync(): Promise<void> {
+  mountSharedDialogs();
   const form = readFolderSyncForm();
   const crate = state.activeCrate;
   if (!form || typeof crate !== "number" || syncing) return;
@@ -132,6 +135,7 @@ export async function runFolderSync(): Promise<void> {
  * @returns {void}
  */
 export function wireFolderSync(): void {
+  mountSharedDialogs();
   el("crate-folder-sync").addEventListener("click", () => {
     openFolderSyncDialog().catch((error) => setNotice(failureOf(error).message));
   });

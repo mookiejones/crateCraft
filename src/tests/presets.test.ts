@@ -4,7 +4,8 @@ import { setLocale } from "../lib/i18n";
 import { isPresetCrate, presetFoot, presetName, readPresetForm, syncPresetButtons, syncPresetFields } from "../lib/crates/preset-view";
 import { createPreset, openPresetDialog, previewPreset, refreshActivePreset, refreshPresetsOnOpen } from "../lib/crates/presets";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 import * as views from "../lib/ui/views";
 
 vi.mock("../lib/ui/views", () => ({
@@ -57,7 +58,9 @@ beforeEach(() => {
   vi.mocked(views.setNotice).mockClear();
 });
 
-afterEach(() => {
+afterEach(async () => {
+  unmountSharedDialogs();
+  await drainReactScheduler();
   vi.unstubAllGlobals();
   setLocale("en");
 });

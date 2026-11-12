@@ -1,13 +1,21 @@
 /**
  * First-run setup dialog painted from `useWizard`.
  *
- * The step machine stays in `wizard.ts`. Copy uses `t()`. Tooltips stay
- * on every control. Decorative art is the inlined SVG from index.html.
+ * MUI Dialog sits inside the native `#wizard` host so the shell stays
+ * dimmed. The step machine stays in `wizard.ts`. Copy uses `t()`.
+ * Tooltips stay on every control. Decorative art is the inlined SVG.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import { ThemeProvider } from "@mui/material/styles";
 import { useWizard } from "../containers/WizardContext";
 import { getLocale, onLocaleChange, t, type MessageKey } from "../lib/i18n";
+import { createAppTheme } from "../lib/ui/mui-theme";
 import { setTooltip } from "../lib/ui/tooltip";
 import { tips, wizardFolder, wizardPrimaryTip, type TipSpec } from "../lib/ui/tooltip-strings";
 import {
@@ -105,6 +113,8 @@ function statusFor(
  */
 export function WizardScreen() {
   useLocaleTick();
+  const colorway = document.documentElement.dataset.colorway || "serato-like";
+  const theme = useMemo(() => createAppTheme(colorway), [colorway]);
   const wizard = useWizard();
   const {
     model,
@@ -145,193 +155,223 @@ export function WizardScreen() {
   });
 
   return (
-    <>
-      <p id="wizard-step" className="wizard-step">
-        <span id="wizard-step-label">{t("wizard.stepOf", { index: position.index, count: position.count })}</span>
-        <span id="wizard-segments" className="wizard-segments" aria-hidden="true">{segments}</span>
-      </p>
-      <p id="wizard-announce" className="visually-hidden" aria-live="polite">{announcement}</p>
-      {(["welcome", "library", "snapshot", "consent", "done"] as const).map((slot) => {
-        const svg = ART[slot];
-        const current = slot === model.step && svg !== undefined;
-        if (svg === undefined) {
-          return <div key={slot} className="wizard-art" data-art-slot={slot} hidden />;
-        }
-        return (
-          <div
-            key={slot}
-            className="wizard-art"
-            data-art-slot={slot}
-            hidden={!current}
-            dangerouslySetInnerHTML={{ __html: svg }}
-          />
-        );
-      })}
-      <h2 id="wizard-title" tabIndex={-1} ref={titleRef}>{t(HEADINGS[model.step])}</h2>
-      <p id="wizard-body" hidden={body.length === 0}>{body}</p>
-      <p id="wizard-next" className="dialog-note" hidden={!showHint}>{showHint ? hintText : ""}</p>
-      <p
-        id="wizard-status"
-        className={status.kind ? `wizard-status is-${status.kind}` : "wizard-status"}
-        role="status"
-        aria-live="polite"
-        hidden={status.text.length === 0}
+    <ThemeProvider theme={theme}>
+      <Dialog
+        open
+        disablePortal
+        hideBackdrop
+        disableAutoFocus
+        disableEnforceFocus
+        disableScrollLock
+        fullWidth
+        maxWidth="sm"
+        aria-labelledby="wizard-title"
+        aria-describedby="wizard-body"
       >
-        {status.text}
-      </p>
-      {saving ? (
-        <progress id="wizard-progress" max={1} aria-label={t("wizard.progressLabel")} />
-      ) : (
-        <progress
-          id="wizard-progress"
-          max={1}
-          value={saved ? 1 : 0}
-          hidden={!saved}
-          aria-label={t("wizard.progressLabel")}
-        />
-      )}
-      <div id="wizard-folders" hidden={!(folderOpen && model.step === "library")}>
-        <p id="wizard-folder-name" className="wizard-folder-name">{folderName}</p>
-        <div
-          id="wizard-folder-list"
-          className="wizard-folders"
-          role="group"
-          aria-label={t("wizard.folders")}
-        >
-          {folders.length === 0 ? (
-            <p className="wizard-folder-empty">{t("wizard.noSubfolders")}</p>
-          ) : folders.map((folder) => (
-            <button
-              key={folder.path}
-              type="button"
-              className="wizard-folder"
-              ref={tooltipRef(wizardFolder(folder.name))}
-              onClick={() => wizard.onBrowse(folder.path)}
+        <DialogContent>
+          <p id="wizard-step" className="wizard-step">
+            <span id="wizard-step-label">{t("wizard.stepOf", { index: position.index, count: position.count })}</span>
+            <span id="wizard-segments" className="wizard-segments" aria-hidden="true">{segments}</span>
+          </p>
+          <p id="wizard-announce" className="visually-hidden" aria-live="polite">{announcement}</p>
+          {(["welcome", "library", "snapshot", "consent", "done"] as const).map((slot) => {
+            const svg = ART[slot];
+            const current = slot === model.step && svg !== undefined;
+            if (svg === undefined) {
+              return <div key={slot} className="wizard-art" data-art-slot={slot} hidden />;
+            }
+            return (
+              <div
+                key={slot}
+                className="wizard-art"
+                data-art-slot={slot}
+                hidden={!current}
+                dangerouslySetInnerHTML={{ __html: svg }}
+              />
+            );
+          })}
+          <DialogTitle id="wizard-title" tabIndex={-1} ref={titleRef} component="h2" sx={{ px: 0, pt: 1 }}>
+            {t(HEADINGS[model.step])}
+          </DialogTitle>
+          <p id="wizard-body" hidden={body.length === 0}>{body}</p>
+          <p id="wizard-next" className="dialog-note" hidden={!showHint}>{showHint ? hintText : ""}</p>
+          <p
+            id="wizard-status"
+            className={status.kind ? `wizard-status is-${status.kind}` : "wizard-status"}
+            role="status"
+            aria-live="polite"
+            hidden={status.text.length === 0}
+          >
+            {status.text}
+          </p>
+          {saving ? (
+            <progress id="wizard-progress" max={1} aria-label={t("wizard.progressLabel")} />
+          ) : (
+            <progress
+              id="wizard-progress"
+              max={1}
+              value={saved ? 1 : 0}
+              hidden={!saved}
+              aria-label={t("wizard.progressLabel")}
+            />
+          )}
+          <div id="wizard-folders" hidden={!(folderOpen && model.step === "library")}>
+            <p id="wizard-folder-name" className="wizard-folder-name">{folderName}</p>
+            <div
+              id="wizard-folder-list"
+              className="wizard-folders"
+              role="group"
+              aria-label={t("wizard.folders")}
             >
-              {folder.name}
-            </button>
-          ))}
-        </div>
-        <div className="wizard-folder-actions">
-          <button
-            id="wizard-folder-up"
-            className="wizard-quiet"
+              {folders.length === 0 ? (
+                <p className="wizard-folder-empty">{t("wizard.noSubfolders")}</p>
+              ) : folders.map((folder) => (
+                <Button
+                  key={folder.path}
+                  type="button"
+                  className="wizard-folder"
+                  variant="outlined"
+                  fullWidth
+                  ref={tooltipRef(wizardFolder(folder.name))}
+                  onClick={() => wizard.onBrowse(folder.path)}
+                >
+                  {folder.name}
+                </Button>
+              ))}
+            </div>
+            <div className="wizard-folder-actions">
+              <Button
+                id="wizard-folder-up"
+                className="wizard-quiet"
+                type="button"
+                variant="text"
+                ref={tooltipRef(tips.wizardFolderUp)}
+                disabled={folderParent === null}
+                onClick={() => wizard.onFolderUp()}
+              >
+                {t("common.up")}
+              </Button>
+              <Button
+                id="wizard-folder-use"
+                type="button"
+                variant="contained"
+                ref={tooltipRef(tips.wizardFolderUse)}
+                disabled={busy}
+                onClick={() => wizard.onFolderUse()}
+              >
+                {t("wizard.useFolder")}
+              </Button>
+              <Button
+                id="wizard-folder-close"
+                className="wizard-quiet"
+                type="button"
+                variant="text"
+                ref={tooltipRef(tips.wizardFolderClose)}
+                onClick={() => wizard.onFolderClose()}
+              >
+                {t("wizard.closeFolders")}
+              </Button>
+            </div>
+          </div>
+          <div id="wizard-consent" className="wizard-choices" hidden={model.step !== "consent"}>
+            <Button
+              id="wizard-no"
+              className="wizard-choice"
+              type="button"
+              variant="outlined"
+              ref={tooltipRef(tips.wizardNo)}
+              disabled={busy}
+              onClick={() => wizard.onConsent(false)}
+            >
+              {t("wizard.no")}
+            </Button>
+            <Button
+              id="wizard-yes"
+              className="wizard-choice"
+              type="button"
+              variant="outlined"
+              ref={tooltipRef(tips.wizardYes)}
+              disabled={busy}
+              onClick={() => wizard.onConsent(true)}
+            >
+              {t("wizard.yes")}
+            </Button>
+          </div>
+          <div id="wizard-updates" className="wizard-choices" hidden={model.step !== "updates"}>
+            <Button
+              id="wizard-updates-no"
+              className="wizard-choice"
+              type="button"
+              variant="outlined"
+              ref={tooltipRef(tips.wizardUpdatesNo)}
+              disabled={busy}
+              onClick={() => wizard.onUpdates(false)}
+            >
+              {t("wizard.updatesNo")}
+            </Button>
+            <Button
+              id="wizard-updates-yes"
+              className="wizard-choice"
+              type="button"
+              variant="outlined"
+              ref={tooltipRef(tips.wizardUpdatesYes)}
+              disabled={busy}
+              onClick={() => wizard.onUpdates(true)}
+            >
+              {t("wizard.updatesYes")}
+            </Button>
+          </div>
+        </DialogContent>
+        <DialogActions className="wizard-actions" sx={{ justifyContent: "space-between", px: 3, pb: 2 }}>
+          <div className="wizard-actions-start">
+            <Button
+              id="wizard-back"
+              className="wizard-quiet"
+              type="button"
+              variant="text"
+              ref={tooltipRef(tips.wizardBack)}
+              hidden={!canGoBack(model)}
+              disabled={busy}
+              onClick={() => wizard.onBack()}
+            >
+              {t("common.back")}
+            </Button>
+            <Button
+              id="wizard-cancel"
+              className="wizard-quiet"
+              type="button"
+              variant="text"
+              ref={tooltipRef(tips.wizardCancel)}
+              onClick={() => wizard.onCancel()}
+            >
+              {t("common.cancel")}
+            </Button>
+            <Button
+              id="wizard-secondary"
+              className="wizard-quiet"
+              type="button"
+              variant="text"
+              ref={tooltipRef(tips.wizardSecondary)}
+              hidden={model.step !== "library"}
+              disabled={busy}
+              onClick={() => wizard.onChooseFolder()}
+            >
+              {t("wizard.chooseFolder")}
+            </Button>
+          </div>
+          <Button
+            id="wizard-primary"
             type="button"
-            ref={tooltipRef(tips.wizardFolderUp)}
-            disabled={folderParent === null}
-            onClick={() => wizard.onFolderUp()}
+            variant="contained"
+            ref={tooltipRef(wizardPrimaryTip(action, saving))}
+            hidden={action === "none"}
+            disabled={busy || !primaryEnabled(model)}
+            onClick={() => wizard.onPrimary()}
           >
-            {t("common.up")}
-          </button>
-          <button
-            id="wizard-folder-use"
-            type="button"
-            ref={tooltipRef(tips.wizardFolderUse)}
-            disabled={busy}
-            onClick={() => wizard.onFolderUse()}
-          >
-            {t("wizard.useFolder")}
-          </button>
-          <button
-            id="wizard-folder-close"
-            className="wizard-quiet"
-            type="button"
-            ref={tooltipRef(tips.wizardFolderClose)}
-            onClick={() => wizard.onFolderClose()}
-          >
-            {t("wizard.closeFolders")}
-          </button>
-        </div>
-      </div>
-      <div id="wizard-consent" className="wizard-choices" hidden={model.step !== "consent"}>
-        <button
-          id="wizard-no"
-          className="wizard-choice"
-          type="button"
-          ref={tooltipRef(tips.wizardNo)}
-          disabled={busy}
-          onClick={() => wizard.onConsent(false)}
-        >
-          {t("wizard.no")}
-        </button>
-        <button
-          id="wizard-yes"
-          className="wizard-choice"
-          type="button"
-          ref={tooltipRef(tips.wizardYes)}
-          disabled={busy}
-          onClick={() => wizard.onConsent(true)}
-        >
-          {t("wizard.yes")}
-        </button>
-      </div>
-      <div id="wizard-updates" className="wizard-choices" hidden={model.step !== "updates"}>
-        <button
-          id="wizard-updates-no"
-          className="wizard-choice"
-          type="button"
-          ref={tooltipRef(tips.wizardUpdatesNo)}
-          disabled={busy}
-          onClick={() => wizard.onUpdates(false)}
-        >
-          {t("wizard.updatesNo")}
-        </button>
-        <button
-          id="wizard-updates-yes"
-          className="wizard-choice"
-          type="button"
-          ref={tooltipRef(tips.wizardUpdatesYes)}
-          disabled={busy}
-          onClick={() => wizard.onUpdates(true)}
-        >
-          {t("wizard.updatesYes")}
-        </button>
-      </div>
-      <div className="wizard-actions">
-        <div className="wizard-actions-start">
-          <button
-            id="wizard-back"
-            className="wizard-quiet"
-            type="button"
-            ref={tooltipRef(tips.wizardBack)}
-            hidden={!canGoBack(model)}
-            disabled={busy}
-            onClick={() => wizard.onBack()}
-          >
-            {t("common.back")}
-          </button>
-          <button
-            id="wizard-cancel"
-            className="wizard-quiet"
-            type="button"
-            ref={tooltipRef(tips.wizardCancel)}
-            onClick={() => wizard.onCancel()}
-          >
-            {t("common.cancel")}
-          </button>
-          <button
-            id="wizard-secondary"
-            className="wizard-quiet"
-            type="button"
-            ref={tooltipRef(tips.wizardSecondary)}
-            hidden={model.step !== "library"}
-            disabled={busy}
-            onClick={() => wizard.onChooseFolder()}
-          >
-            {t("wizard.chooseFolder")}
-          </button>
-        </div>
-        <button
-          id="wizard-primary"
-          type="button"
-          ref={tooltipRef(wizardPrimaryTip(action, saving))}
-          hidden={action === "none"}
-          disabled={busy || !primaryEnabled(model)}
-          onClick={() => wizard.onPrimary()}
-        >
-          {primaryLabel}
-        </button>
-      </div>
-    </>
+            {primaryLabel}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </ThemeProvider>
   );
 }

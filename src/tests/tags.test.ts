@@ -4,9 +4,9 @@ import type { TagClusterPlan, TagClusters } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
-import { loadTags, repaintTags, wireTags } from "../lib/health/tags";
+import { getTagsSnapshot, loadTags, repaintTags, unmountTags, wireTags } from "../lib/health/tags";
 import { groupChanges, previewLines, tagsSummary, titlesSummary } from "../lib/health/tags-view";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 
 const postJSON = vi.hoisted(() => vi.fn());
@@ -175,7 +175,6 @@ describe("tags", () => {
     installPage();
     setLocale("en");
     state.space = "Serato Library";
-    state.tagsToken = 0;
     state.writable = true;
     postJSON.mockReset();
     stubPosts();
@@ -185,7 +184,9 @@ describe("tags", () => {
     document.getElementById("tags-panel")!.hidden = false;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountTags();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });
@@ -211,6 +212,9 @@ describe("tags", () => {
     vi.stubGlobal("fetch", fetchMock);
     document.getElementById("tags-artist")!.click();
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    await vi.waitFor(() => {
+      expect(document.getElementById("tags-artist")!.getAttribute("aria-busy")).toBe("false");
+    });
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/tag-clusters?space=Serato%20Library&field=artist",
     );
@@ -297,6 +301,18 @@ describe("tags", () => {
     await first;
     expect(reportText()).toContain("Every genre in this space uses one spelling.");
     expect(reportText()).not.toContain("Hip-Hop");
+  });
+
+  it("ignores a late reply after the panel unmounts", async () => {
+    let finish: (value: Response) => void = () => {};
+    vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>((resolve) => { finish = resolve; })));
+    const pending = loadTags();
+    unmountTags();
+    expect(document.getElementById("tags-report")).toBeNull();
+    expect(getTagsSnapshot().tagsBusy).toBe(false);
+    finish(reply(groups));
+    await expect(pending).resolves.toBeUndefined();
+    expect(getTagsSnapshot().tagsBusy).toBe(false);
   });
 
   it("shows the server error sentence when the groups cannot be read", async () => {

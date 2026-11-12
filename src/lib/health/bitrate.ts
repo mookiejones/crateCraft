@@ -142,6 +142,27 @@ export function renderBitrateReport(payload: BitrateCheckReport): void {
 }
 
 /**
+ * Unmount the Suspect-quality Data Grid island.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * Data Grid scheduler does not run after jsdom tears the window down.
+ * A pending load is ignored so it does not look up a host that is gone.
+ *
+ * @returns {void}
+ */
+export function unmountBitrate(): void {
+  state.bitrateToken += 1;
+  if (!reportRoot) return;
+  try {
+    reportRoot.unmount();
+  } catch {
+    // installPage already dropped the host.
+  }
+  reportRoot = undefined;
+  reportHost = null;
+}
+
+/**
  * Paint the last report again in the active language.
  *
  * locale-wiring calls this on a language change. Nothing is fetched.

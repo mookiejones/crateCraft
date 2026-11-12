@@ -26,6 +26,7 @@ import { bindCrateActions } from "../crates/crate-store";
 import { el } from "../dom";
 import { scoreQuery } from "../fuzzy";
 import { applyLayout } from "./layout";
+import { mountSharedDialogs } from "./shared-dialog-mount";
 import { state } from "../state";
 import { inputEl, selectEl, setTooltip } from "./tooltip";
 import { keepCopy, openReplaceCopy, tips } from "./tooltip-strings";
@@ -48,10 +49,11 @@ import {
   applyLanguage,
   applyPrivacy,
   bindRerunSetup,
+  closeSettings,
+  openSettings,
   saveColorway,
   saveIconFollow,
   saveLanguage,
-  patchSettings,
   saveSharing,
   settingsIslandMounted,
   telemetryNoteText,
@@ -1127,6 +1129,7 @@ async function confirmRelink(): Promise<void> {
  * @returns {void}
  */
 export function wireDialogs(): void {
+  mountSharedDialogs();
   const saveExportBar = () => {
     saveRekordboxExport().catch(() => {
       // saveRekordboxExport already keeps the boxes. This catch is the listener boundary.
@@ -1235,15 +1238,11 @@ export function wireDialogs(): void {
   });
 
   el("open-settings").addEventListener("click", () => {
-    patchSettings({ settingsStatus: "", logFallback: "", logFallbackHidden: true });
-    el("settings-status").textContent = "";
-    el("log-fallback").hidden = true;
-    el("telemetry-note").textContent = telemetryNoteText();
-    el("settings-dialog").showModal();
+    openSettings();
   });
 
   bindRerunSetup(() => {
-    el("settings-dialog").close();
+    closeSettings();
     openWizard(true, el("open-settings"));
   });
 
@@ -1261,11 +1260,11 @@ export function wireDialogs(): void {
     });
 
     el("settings-close").addEventListener("click", () => {
-      el("settings-dialog").close();
+      closeSettings();
     });
 
     el("rerun-wizard").addEventListener("click", () => {
-      el("settings-dialog").close();
+      closeSettings();
       openWizard(true, el("open-settings"));
     });
 

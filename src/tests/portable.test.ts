@@ -5,7 +5,7 @@
  * Fix text is painted as text, including a name that looks like markup.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { libraryRootsFixture } from "./library-roots.fixture";
 import { applyStatic, setLocale } from "../lib/i18n";
 import {
@@ -17,13 +17,14 @@ import {
   portableSeratoRoots,
   renderPortableReport,
   repaintPortable,
+  unmountPortable,
   wirePortable,
   type DriveReport,
 } from "../lib/gig/portable";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import { mountFilesIslands } from "../lib/files/files-mount";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 import { renderFiles } from "../lib/ui/views";
 
 const fetchMock = vi.fn();
@@ -244,6 +245,13 @@ describe("portable drive view", () => {
     document.getElementById("portable-panel")!.hidden = false;
   });
 
+  afterEach(async () => {
+    unmountPortable();
+    await drainReactScheduler();
+    vi.unstubAllGlobals();
+    setLocale("en");
+  });
+
   it("lets the person pick a connected drive and does not write", async () => {
     fetchMock.mockImplementation((url: string) => {
       if (String(url).includes("/api/library-roots")) {
@@ -270,6 +278,13 @@ describe("portable drive view", () => {
     expect(document.querySelector("#portable-view-findings .portable-kind")?.textContent).toBe(
       "Not on this drive",
     );
+    const headers = [...document.querySelectorAll<HTMLElement>("#portable-view-findings .MuiDataGrid-columnHeader")]
+      .map((node) => node.getAttribute("data-field"));
+    expect(headers).toEqual(["problem", "crate", "track", "fix"]);
+    expect(fetchMock.mock.calls.some((call) => {
+      const init = call[1] as RequestInit | undefined;
+      return init?.method && init.method.toUpperCase() !== "GET";
+    })).toBe(false);
     expect((document.querySelector("#portable-dialog") as HTMLDialogElement).open).toBe(false);
     expect(document.querySelector("#portable-hint")?.textContent).toBe(
       "This only reads the drive. Nothing is copied or deleted.",

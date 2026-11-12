@@ -7,7 +7,8 @@ import { bridge } from "../lib/bridge";
 import { wireDialogs } from "../lib/ui/dialogs";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 import * as views from "../lib/ui/views";
 
 const fetchMock = vi.fn();
@@ -55,7 +56,9 @@ beforeEach(() => {
   wireDialogs();
 });
 
-afterEach(() => {
+afterEach(async () => {
+  unmountSharedDialogs();
+  await drainReactScheduler();
   vi.unstubAllGlobals();
   setLocale("en");
 });

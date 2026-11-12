@@ -5,7 +5,8 @@ import { loadHealth, repaintHealth, wireHealth } from "../lib/health/health";
 import { setLocale } from "../lib/i18n";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 
 const report: LibraryHealthReport = {
   space: "Serato Library",
@@ -78,7 +79,9 @@ describe("health", () => {
     document.getElementById("health-panel")!.hidden = false;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });
