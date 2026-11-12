@@ -36,7 +36,7 @@ The line at the bottom of the rail counts the files in the folder, or the music 
 
 1. Click **Organize files**, or click **Gig** in the drawer, then **Check drive**.
 2. On Organize files, on a row such as **Music (GIGDRIVE)**, click **Check drive**. Under **Gig**, pick a connected drive that has a `_Serato_` folder.
-3. The note says **This only reads the drive. Nothing is copied or deleted.** While the check runs, the line says **Checking this drive.** On Organize files the title is **Portable drive**. Under **Gig** the report stays on the page.
+3. The note says **This only reads the drive. Nothing is copied or deleted.** While the check runs, the line says **Checking this drive.** On Organize files the title is **Portable drive**. Under **Gig**, pick the drive at the top; problems sit in a table whose **Problem** column names the fault.
 4. Read the result. On Organize files, **Close** leaves the dialog. Nothing was copied or deleted.
 
 | What you see | Meaning |
@@ -60,7 +60,7 @@ The list under that line names each problem. Fix it on the laptop. The check doe
 
 ## Read the review first
 
-Every change opens **Review this change**. The dialog says **Nothing is changed until you confirm.**
+Every change opens **Review this change** as a centered dialog over the folder list. The dialog says **Nothing is changed until you confirm.**
 
 The list shows the old path, an arrow, and the new path or **Trash**. Library tracks also name their crates.
 

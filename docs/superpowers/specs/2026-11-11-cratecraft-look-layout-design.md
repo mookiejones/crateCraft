@@ -1,10 +1,10 @@
 # crateCraft look and layout (MUI walk)
 
-**Status:** APPROVED. Charles said “yes” in chat on 11 Nov 2026. That sentence locks this document, including MUI X Data Grid Community (no Pro). Product work starts at #303.
+**Status:** DONE. Charles said “yes” in chat on 11 Nov 2026. That sentence locked this document, including MUI X Data Grid Community (no Pro). Children #303–#313 landed. Parent #300 is closing.
 
 **Parent issue:** https://github.com/mookiejones/crateCraft/issues/300
 
-**This file is the handoff.** Paste its path into another Grok session. The bot should read this file, then #300, then claim the child issue it is walking. Do not start from memory of a chat.
+**This file is the handoff.** The walk is finished. Do not reopen #303–#313 or nav tickets #291 / #295 / #297 from this spec.
 
 ---
 
@@ -13,11 +13,7 @@
 ```
 Work #300 MUI walk. Read docs/superpowers/specs/2026-11-11-cratecraft-look-layout-design.md first.
 Kit is MUI + MUI X Data Grid Community (no Pro). Theme maps to existing colorways.
-Spec is APPROVED (Charles “yes”, 11 Nov 2026). First impl is #303 ThemeProvider.
-Screen inventory walk is complete. Community Data Grid is locked. Impl order is #303, then #305 shell, then #304 Crates.
-Shared dialogs are centered modals (A). Wizard stays a dialog over a dimmed shell (A). Settings is a Main page (B). Drawer footer still opens it. Tempo drift uses a Data Grid (B). Check drive uses a Data Grid (B). Gig Ready stays a report (A). Backups uses a Data Grid of snapshots (B). Restore is a row action. Tag spellings uses a Data Grid of clusters (B). Suspect quality uses a Data Grid (B). Damaged files uses a Data Grid (B). Missing / Duplicates / Stems use the same Data Grid as Crates (A). Relink and Merge stay as actions. Health Overview stays a report (A). Organize files keeps the folder browser (A). History uses the same Data Grid (A). Play stats stays a report (A).
-Space switch is AppBar (A). Help/Settings is Drawer footer (B). Player is a strip under the AppBar (A). Row height stays 36px (A). Columns may resize and hide (B). Play is its own first column (A). History uses the same Data Grid (A).
-Hard gates and theirs-vs-guesses are in the spec. Do not reopen nav tickets #291 #295 #297.
+Spec is DONE. Children #303–#313 landed. Do not start a new impl child from this walk.
 ```
 
 ---

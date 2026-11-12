@@ -78,7 +78,10 @@ export function runDesktopAction(action: string): void {
   }
   if (action === "about") {
     const dialog = el("settings-dialog");
-    if (!dialog.open) dialog.showModal();
+    if (!dialog.open) {
+      dialog.show();
+      document.getElementById("open-settings")?.setAttribute("aria-expanded", "true");
+    }
     const title = el("about-title");
     title.tabIndex = -1;
     title.focus();

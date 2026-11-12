@@ -89,7 +89,7 @@
       <footer id="rail-foot" class="rail-foot">
         <p id="app-version" class="app-version" hidden></p>
         <button id="open-help" type="button" aria-haspopup="dialog" data-i18n="help.title">Help</button>
-        <button id="open-settings" type="button" aria-haspopup="dialog" data-i18n="settings.title">Settings</button>
+        <button id="open-settings" type="button" aria-expanded="false" data-i18n="settings.title">Settings</button>
       </footer>
     </aside>
 
@@ -160,21 +160,14 @@
           </div>
         </div>
         <p id="notice" class="notice" hidden></p>
-        <div class="columns" aria-hidden="true">
-          <button type="button" data-sort="name">Title</button>
-          <button type="button" data-sort="artist">Artist</button>
-          <button type="button" data-sort="bpm">BPM</button>
-          <button type="button" data-sort="key">Key</button>
-          <button type="button" data-sort="length_ms">Time</button>
-        </div>
         <div id="crate-panes" class="crate-panes">
           <div id="crate-pane-a" class="crate-pane" data-pane="a">
             <p id="crate-pane-a-label" class="pane-label" hidden data-i18n="crates.paneA">Left crate</p>
-            <div id="list" class="list" tabindex="0" role="listbox" aria-label="Tracks" data-i18n-attr="aria-label:list.label"></div>
+            <div id="list" class="list" tabindex="0" aria-label="Tracks" data-i18n-attr="aria-label:list.label"></div>
           </div>
           <div id="crate-pane-b" class="crate-pane" data-pane="b" hidden>
             <p id="crate-pane-b-label" class="pane-label" data-i18n="crates.paneB">Right crate</p>
-            <div id="list-b" class="list" tabindex="0" role="listbox" aria-label="Right crate" data-i18n-attr="aria-label:crates.paneB"></div>
+            <div id="list-b" class="list" tabindex="0" aria-label="Right crate" data-i18n-attr="aria-label:crates.paneB"></div>
           </div>
         </div>
       </section>
@@ -261,7 +254,7 @@
         <p id="portable-view-status" class="gig-status" role="status" aria-live="polite"></p>
         <p id="portable-view-verdict" tabindex="-1"></p>
         <p id="portable-view-summary"></p>
-        <ul id="portable-view-findings"></ul>
+        <div id="portable-view-findings" class="report-grid"></div>
       </section>
 
       <section id="drift-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="drift-heading" aria-busy="false">
@@ -359,18 +352,7 @@
       </section>
       <div id="player-bar" class="player-bar"></div>
     </main>
-    </div>
-  </div>
-  <dialog id="consent-dialog" aria-labelledby="consent-title" aria-describedby="consent-body">
-    <h2 id="consent-title" data-i18n="wizard.heading.consent">Share anonymous usage stats and crash reports?</h2>
-    <p id="consent-body" data-i18n="consent.body">Counts and actions only, plus the app name, the app version, and the operating system. Track titles, crate names, file paths, and library contents stay on this computer. Sharing stays off unless you turn it on.</p>
-    <div class="dialog-actions">
-      <button id="consent-decline" type="button" autofocus data-i18n="consent.decline">Don't share</button>
-      <button id="consent-accept" type="button" data-i18n="consent.accept">Share</button>
-    </div>
-    <p id="consent-status" class="dialog-status" role="status" aria-live="polite"></p>
-  </dialog>
-  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <dialog id="settings-dialog" aria-labelledby="settings-title">
     <h2 id="settings-title" data-i18n="settings.title">Settings</h2>
     <label class="check">
       <input id="telemetry-toggle" type="checkbox">
@@ -434,6 +416,18 @@
     </div>
     <p id="settings-status" class="dialog-status" role="status" aria-live="polite"></p>
     <textarea id="log-fallback" class="log-fallback" readonly hidden aria-label="Log text" data-i18n-attr="aria-label:settings.logText"></textarea>
+  </dialog>
+    </div>
+  </div>
+  <div id="shared-dialogs"></div>
+  <dialog id="consent-dialog" aria-labelledby="consent-title" aria-describedby="consent-body">
+    <h2 id="consent-title" data-i18n="wizard.heading.consent">Share anonymous usage stats and crash reports?</h2>
+    <p id="consent-body" data-i18n="consent.body">Counts and actions only, plus the app name, the app version, and the operating system. Track titles, crate names, file paths, and library contents stay on this computer. Sharing stays off unless you turn it on.</p>
+    <div class="dialog-actions">
+      <button id="consent-decline" type="button" autofocus data-i18n="consent.decline">Don't share</button>
+      <button id="consent-accept" type="button" data-i18n="consent.accept">Share</button>
+    </div>
+    <p id="consent-status" class="dialog-status" role="status" aria-live="polite"></p>
   </dialog>
   <dialog id="help-dialog" aria-labelledby="help-title">
     <h2 id="help-title" data-i18n="help.title">Help</h2>
@@ -661,27 +655,7 @@
     </div>
     <p id="rekordbox-status" class="dialog-status" role="status" aria-live="polite"></p>
   </dialog>
-  <dialog id="files-dialog" aria-labelledby="files-dialog-title">
-    <h2 id="files-dialog-title" data-i18n="files.reviewTitle">Review this change</h2>
-    <p id="files-summary"></p>
-    <p class="dialog-note" data-i18n="files.nothingUntilConfirm">Nothing is changed until you confirm.</p>
-    <label id="files-name-label" class="files-field" hidden>
-      <span data-i18n="files.newName">New name</span>
-      <input id="files-name" type="text" autocomplete="off">
-    </label>
-    <label id="files-replace-label" class="files-field" hidden>
-      <span data-i18n="files.newFile">New file</span>
-      <input id="files-replacement" type="text" autocomplete="off" spellcheck="false">
-    </label>
-    <ul id="files-changes"></ul>
-    <p id="files-warning" class="dialog-note"></p>
-    <p id="files-dialog-status" class="dialog-status" role="status" aria-live="polite"></p>
-    <div class="dialog-actions">
-      <button id="files-cancel" type="button" data-i18n="common.cancel">Cancel</button>
-      <button id="files-review" type="button" data-i18n="files.review">Review</button>
-      <button id="files-confirm" type="button" data-i18n="common.confirm">Confirm</button>
-    </div>
-  </dialog>
+  <div id="files-dialog"></div>
   <dialog id="portable-dialog" aria-labelledby="portable-title" aria-describedby="portable-note">
     <h2 id="portable-title" data-i18n="portable.title">Portable drive</h2>
     <p id="portable-note" class="dialog-note" data-i18n="portable.readOnly">This only reads the drive. Nothing is copied or deleted.</p>
@@ -704,17 +678,7 @@
       <button id="quick-open-close" type="button" data-i18n="common.close">Close</button>
     </div>
   </dialog>
-  <dialog id="snapshot-dialog" aria-labelledby="snapshot-title" aria-describedby="snapshot-intro">
-    <h2 id="snapshot-title" data-i18n="snapshots.restoreTitle">Restore this backup</h2>
-    <p id="snapshot-intro" data-i18n="snapshots.restoreIntro">Nothing is changed until you confirm. A new snapshot is saved first, so this restore can be undone.</p>
-    <div id="snapshot-plan" aria-live="polite"></div>
-    <p id="snapshot-block" class="dialog-note" role="status"></p>
-    <div class="dialog-actions">
-      <button id="snapshot-cancel" type="button" data-i18n="common.cancel">Cancel</button>
-      <button id="snapshot-confirm" type="button" data-i18n="snapshots.restore">Restore</button>
-    </div>
-    <p id="snapshot-status" class="dialog-status" role="status" aria-live="polite"></p>
-  </dialog>
+  <div id="snapshot-dialog-host"></div>
   <!-- The current step shows its spot illustration. The others stay hidden. -->
   <dialog id="wizard" aria-labelledby="wizard-title" aria-describedby="wizard-body">
     <p id="wizard-step" class="wizard-step">

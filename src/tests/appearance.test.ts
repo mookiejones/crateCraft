@@ -9,7 +9,8 @@ import {
 import { el } from "../lib/dom";
 import { setLocale, t } from "../lib/i18n";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 import { applyStaticTooltips, refreshTooltips } from "../lib/ui/tooltip";
 
 function settingsResponse(body: unknown, ok = true): Response {
@@ -40,7 +41,9 @@ describe("theme icon", () => {
     applyStaticTooltips(document);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountSharedDialogs();
+    await drainReactScheduler();
     setLocale("en");
     vi.unstubAllGlobals();
   });

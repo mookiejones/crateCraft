@@ -5,8 +5,10 @@ import { wireDualCrates } from "../lib/crates/dual-crate";
 import { paintDualChrome } from "../lib/crates/dual-crate-view";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
-import { mountTrackList, mountTrackListB } from "../lib/ui/virtual-scroll";
+import { setCratePromptValue } from "../lib/ui/shared-dialog";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
+import { mountTrackList, mountTrackListB, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderList, selectCrate } from "../lib/ui/views";
 
 vi.hoisted(() => {
@@ -53,7 +55,10 @@ describe("dual crate panes", () => {
     wireDualCrates();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountTrackList();
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });
@@ -98,11 +103,16 @@ describe("dual crate panes", () => {
         headers: { "Content-Type": "application/json" },
       });
     }));
-    vi.stubGlobal("prompt", () => "Warmup");
+    vi.stubGlobal("prompt", () => {
+      throw new Error("window.prompt should not run");
+    });
     state.view = [track(2), track(1)];
     state.writable = true;
     paintDualChrome();
     el("crate-save-view").click();
+    await vi.waitFor(() => expect(el("crate-prompt-dialog").open).toBe(true));
+    setCratePromptValue("Warmup");
+    el("crate-prompt-confirm").click();
     await vi.waitFor(() => expect(bodies.length).toBe(1));
     expect(bodies[0]).toMatchObject({
       action: "create",
@@ -120,6 +130,11 @@ describe("selectCrate while split", () => {
     mountTrackList();
     mountTrackListB();
     resetState();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   it("fills the focused pane on a plain click", () => {

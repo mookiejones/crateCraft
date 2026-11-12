@@ -20,7 +20,7 @@ flowchart TD
   rail --> close["Close"]
 ```
 
-**Settings** is at the bottom of the left sidebar. Sharing is off until you turn it on. Track titles, crate names, file paths, and the rows in the library are not usage reports.
+**Settings** is at the bottom of the left sidebar. It opens as a page in the main area, not a popup. Sharing is off until you turn it on. Track titles, crate names, file paths, and the rows in the library are not usage reports.
 
 Tick **Share anonymous usage stats and crash reports** to turn sharing on. Clear it to turn sharing off.
 

@@ -286,8 +286,8 @@ class TokenSheetTests(unittest.TestCase):
         self.assertNotIn("style.color", source)
         self.assertIn('className: key === "column.bpm" ? "bpm"', text)
         self.assertIn('"swatch swatch-lg"', text)
-        self.assertIn("paneSpacer.style.height", text)
-        self.assertIn("paneRows.style.transform", text)
+        self.assertIn("track-grid", text)
+        self.assertIn("rowHeight: 36", text)
         self.assertIn("paddingLeft", source)
         self.assertIn("row.depth * 14", source)
 
@@ -314,7 +314,7 @@ class TokenSheetTests(unittest.TestCase):
         """Point the old palette names at the token roles.
 
         app.css no longer stores the hex values. The row height stays a
-        literal because the list painter inlines ROW as 36.
+        literal because Data Grid inlines ROW as 36.
 
         Returns:
             None. The test fails if an alias or the row comment is missing.
@@ -338,8 +338,8 @@ class TokenSheetTests(unittest.TestCase):
         source = (ROOT / "src" / "lib" / "state.ts").read_text(encoding="utf-8")
         self.assertIn("export const ROW = 36", source)
         script = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
-        self.assertIn("scrollTop / 36", script)
-        self.assertIn("view.length * 36", script)
+        self.assertIn("rowHeight: 36", script)
+        self.assertIn("columnHeaderHeight: 36", script)
 
     def test_react_dce_probe_is_stripped(self) -> None:
         """Strip React's DevTools dead-code probe from the committed bundles.
@@ -620,6 +620,9 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".view-switch button", ("--color-bg",), 15, 400),
     (".view-children button", ("--color-card",), 15, 400),
     (".sheet-title", ("--color-card",), 15, 600),
+    ('.drawer-nav .view-switch button[aria-selected="true"]', ("--color-selection",), 15, 600),
+    ('.drawer-nav .view-children button[aria-selected="true"]', ("--color-selection",), 15, 600),
+    (".search-field select", ("--color-card",), 15, 400),
     (".sheet-scope", ("--color-card",), 13, 400),
     (".sort-crates button", ("--color-bg",), 15, 400),
     (".crate-actions button", ("--color-bg",), 15, 400),
@@ -653,8 +656,9 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".rekordbox-option", ("--color-card",), 15, 400),
     (".rekordbox-help", ("--color-card",), 11, 400),
     (".notice", ("--color-card",), 15, 400),
-    (".columns button", ("--color-card",), 15, 400),
-    ('.columns button[data-active="true"]', ("--color-card",), 15, 400),
+    (".list .MuiDataGrid-root", ("--color-card", "--color-selection", "hover"), 15, 400),
+    (".list .MuiDataGrid-columnHeaders", ("--color-card",), 15, 400),
+    (".list .MuiDataGrid-columnHeader--sorted", ("--color-card",), 15, 400),
     (".cell.num", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".missing-word", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".offline-word", ("--color-card", "--color-selection", "hover"), 15, 400),
@@ -677,6 +681,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".lock-note", ("--color-card",), 15, 400),
     (".editor label", ("--color-card",), 13, 400),
     ("dialog", ("--color-card",), 15, 400),
+    ("[data-shared-dialog] .MuiDialog-paper", ("--color-card",), 15, 400),
     (".shortcut-table thead th", ("--color-card",), 11, 600),
     (".stats-table thead th", ("--color-card",), 11, 600),
     ("#quick-open-query", ("--color-card",), 15, 400),
@@ -757,7 +762,9 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 #
 # --color-border on --color-card:
 #   .detail border-left, and border-top in the narrow layout
-#   .columns border-bottom
+#   .list .MuiDataGrid-columnHeaders border-bottom
+#   .list .MuiDataGrid-footerContainer border-top
+#   .health-accordion.MuiAccordion-root border
 #   .crate-panes.split #crate-pane-a border-right
 #   .field border-top
 #   .marker and .copy-row border-top
@@ -770,14 +777,23 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 # .swatch inset shadow: a 1px hairline of --color-shadow at 18% on a
 # data-driven swatch, not a control boundary.
 _DECORATIVE = {
+    ".app-bar-space select",
+    ".drawer-nav .view-children",
+    ".drawer-foot .rail-foot",
+    ".browser-actions button",
+    ".browser-actions button:hover:not(:disabled)",
+    '.browser-actions button[aria-pressed="true"]',
     ".detail",
-    ".columns",
+    ".list .MuiDataGrid-columnHeaders",
+    ".list .MuiDataGrid-footerContainer",
+    ".health-accordion.MuiAccordion-root",
     ".crate-panes.split #crate-pane-a",
     ".field",
     ".marker",
     ".copy-row",
     ".related-row",
     "dialog",
+    "[data-shared-dialog] .MuiDialog-paper",
     "#merge-dialog fieldset",
     ".log-fallback",
     ".files-row",
@@ -797,8 +813,8 @@ _DECORATIVE = {
 # The only visible edge of these fields. Card surfaces use the sheet.
 # The rail fields sit on walnut.
 _CONTROL_EDGE = (
-    (".search input", "--color-card", "border-bottom"),
-    (".search-field select", "--color-card", "border-bottom"),
+    (".search input", "--color-card", "border"),
+    (".search-field select", "--color-card", "border"),
     (".rail select", "--color-bg", "border-bottom"),
     (".rail-field input", "--color-bg", "border-bottom"),
     (".rekordbox-option select", "--color-card", "border-bottom"),
@@ -931,9 +947,12 @@ class ContrastTests(unittest.TestCase):
             ".files-elsewhere:focus-visible",
             ".files-portable:focus-visible",
             '.crate-row:has(.crate[aria-selected="true"])',
-            '.row[aria-selected="true"]',
+            ".list .MuiDataGrid-row.Mui-selected",
+            '.list .MuiDataGrid-row[aria-selected="true"]',
             ".crate-row.holds-selection",
             ".rail",
+            '.drawer-nav .view-switch button[aria-selected="true"]',
+            '.drawer-nav .view-children button[aria-selected="true"]',
             "#consent-accept",
             "#open-logs",
             "#copy-logs",
@@ -998,7 +1017,7 @@ class ContrastTests(unittest.TestCase):
 
         solid_bars = (
             (".crate-row:has(.crate[aria-selected=\"true\"])", "--color-panel"),
-            ('.row[aria-selected="true"]', "--color-selection"),
+            ('.list .MuiDataGrid-row[aria-selected="true"]', "--color-selection"),
         )
         rail_mark = _paint(self._rule(".rail")["box-shadow"], self.colors)
         rail_ratio = contrast(rail_mark, self._surface("--color-bg"))

@@ -7,6 +7,7 @@
  */
 
 import type { Crate, SeratoStatus, Track } from "../api-types";
+import { isNumericSort } from "../format";
 import { getLocale } from "../i18n";
 import { play } from "../player/player";
 import { state } from "../state";
@@ -36,6 +37,8 @@ export type TrackListSnapshot = {
   duplicateGroupSelected: boolean;
   duplicatesPending: boolean;
   locale: string;
+  sort: string;
+  sortDir: number;
   detail: TrackDetailState;
 };
 
@@ -70,6 +73,7 @@ export type TrackListActions = {
   setMembership: (assetId: number, crateId: number, add: boolean) => Promise<boolean>;
   openInLibrary: (id: number) => void;
   setNotice: (text: string) => void;
+  setSort: (key: string) => void;
 };
 
 const listeners = new Set<() => void>();
@@ -92,6 +96,14 @@ let actions: TrackListActions = {
   },
   openInLibrary() {},
   setNotice() {},
+  setSort(key) {
+    if (state.sort === key) state.sortDir *= -1;
+    else {
+      state.sort = key;
+      state.sortDir = isNumericSort(key) ? -1 : 1;
+    }
+    emitTrackList();
+  },
 };
 
 function duplicateGroupSelected(): boolean {
@@ -120,6 +132,8 @@ export function readTrackList(): TrackListSnapshot {
     duplicateGroupSelected: duplicateGroupSelected(),
     duplicatesPending: state.mode === "duplicates" && !state.duplicateIds,
     locale: getLocale(),
+    sort: state.sort,
+    sortDir: state.sortDir,
     detail,
   };
 }

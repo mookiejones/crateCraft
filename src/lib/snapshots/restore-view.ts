@@ -5,7 +5,7 @@
  */
 
 import type { DriveBackup, DriveCopy, OperationEntry, PlanName, SnapshotInfo } from "../api-types";
-import { formatDate, formatList, t, type MessageKey } from "../i18n";
+import { formatDate, formatList, formatNumber, t, type MessageKey } from "../i18n";
 
 export const OPERATION_ACTIONS: Record<string, MessageKey> = {
   crate_create: "operations.action.crateCreate",
@@ -41,20 +41,64 @@ export const OPERATION_OUTCOMES: Record<string, MessageKey> = {
 };
 
 /**
+ * When column for one snapshot row.
+ *
+ * @param item Row from GET /api/snapshots.
+ * @returns The stored created stamp, or unknown.
+ */
+export function snapshotWhenText(item: SnapshotInfo): string {
+  return item.created || t("snapshots.unknownTime");
+}
+
+/**
+ * Size column for one snapshot row.
+ *
+ * The list API does not send a byte count yet. A later payload with
+ * `size` shows a compact byte label.
+ *
+ * @param item Row from GET /api/snapshots.
+ * @returns A compact size, or unknown.
+ */
+export function snapshotSizeText(item: SnapshotInfo): string {
+  if (typeof item.size === "number" && Number.isFinite(item.size) && item.size >= 0) {
+    return formatNumber(item.size, {
+      notation: "compact",
+      style: "unit",
+      unit: "byte",
+      unitDisplay: "narrow",
+    });
+  }
+  return t("snapshots.sizeUnknown");
+}
+
+/**
+ * Status column for one snapshot row.
+ *
+ * Trigger, hash-check, Serato version, reason, and unplugged drives.
+ *
+ * @param item Row from GET /api/snapshots.
+ * @returns One sentence the grid cell shows.
+ */
+export function snapshotStatusText(item: SnapshotInfo): string {
+  const trigger = item.trigger || t("snapshots.trigger");
+  const check = item.integrity === "failed" ? t("snapshots.statusFailed") : t("snapshots.statusOk");
+  const version = item.serato_version && item.serato_version !== "unknown"
+    ? t("snapshots.seratoVersion", { version: item.serato_version, build: String(item.serato_build ?? "") })
+    : t("snapshots.seratoUnknown");
+  const drives = (item.unavailable_drives || []).length
+    ? t("snapshots.unavailableDrives", { drives: formatList(item.unavailable_drives || []) })
+    : "";
+  return [trigger, check, version, item.reason || "", drives].filter(Boolean).join(". ");
+}
+
+/**
  * Title and detail for one snapshot card.
  *
  * @param item Row from GET /api/snapshots.
  * @returns Two lines the list paints with textContent.
  */
 export function snapshotCardText(item: SnapshotInfo): { title: string; detail: string } {
-  const title = `${item.created || t("snapshots.unknownTime")} · ${item.trigger || t("snapshots.trigger")}`;
-  const version = item.serato_version && item.serato_version !== "unknown"
-    ? t("snapshots.seratoVersion", { version: item.serato_version, build: String(item.serato_build ?? "") })
-    : t("snapshots.seratoUnknown");
-  const drives = (item.unavailable_drives || []).length
-    ? ` ${t("snapshots.unavailableDrives", { drives: formatList(item.unavailable_drives || []) })}`
-    : "";
-  return { title, detail: `${version}. ${item.reason || ""}${drives}` };
+  return { title: snapshotWhenText(item), detail: snapshotStatusText(item) };
 }
 
 function driveName(drive: DriveCopy, status: string): string {

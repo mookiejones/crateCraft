@@ -80,6 +80,28 @@ export function wireScan(): void {
 }
 
 /**
+ * Unmount the Damaged-files Data Grid island.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * Data Grid scheduler does not run after jsdom tears the window down.
+ * A pending load is ignored so it does not look up a host that is gone.
+ *
+ * @returns {void}
+ */
+export function unmountScan(): void {
+  state.scanToken += 1;
+  busy = false;
+  if (!panelRoot) return;
+  try {
+    panelRoot.unmount();
+  } catch {
+    // installPage already dropped the host.
+  }
+  panelRoot = undefined;
+  panelHost = null;
+}
+
+/**
  * Ask for a read-only file check of the open space and crate.
  *
  * The previous report stays on screen until this reply arrives. Both

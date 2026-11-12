@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { HistoryStatsReport } from "../lib/api-types";
+import { bridge } from "../lib/bridge";
 import { loadHistoryStats, repaintHistoryStats, wireHistoryStats } from "../lib/history/history-stats";
 import { setLocale } from "../lib/i18n";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
@@ -50,6 +51,10 @@ describe("history stats", () => {
     state.space = "Serato Library";
     state.statsToken = 0;
     state.writable = true;
+    state.tracks = [];
+    state.crates = [];
+    bridge.reloadLibrary = vi.fn(() => Promise.resolve());
+    bridge.lockDown = vi.fn();
     wireHistoryStats();
     document.getElementById("stats-panel")!.hidden = false;
   });
@@ -71,6 +76,9 @@ describe("history stats", () => {
     expect(reportText()).toContain("Beta");
     expect(reportText()).toContain("Not played (2)");
     expect(reportText()).toContain("Gamma — Dusty");
+    expect(document.querySelector("#stats-report details")).toBeNull();
+    expect(document.querySelector("#stats-report .MuiAccordion-root")).not.toBeNull();
+    expect(document.querySelector("#stats-report .MuiDataGrid-root")).toBeNull();
     expect(document.getElementById("stats-refresh")!.getAttribute("aria-busy")).toBe("false");
   });
 
@@ -170,12 +178,19 @@ describe("history stats", () => {
     expect(reportText()).not.toContain("Most played tracks");
   });
 
-  it("gives every stats control a tooltip", () => {
+  it("gives every stats control a tooltip", async () => {
     applyStaticTooltips();
     expect(document.getElementById("stats-refresh")!.dataset.tooltipKey).toBe("tooltip.statsRefresh");
     expect(document.getElementById("stats-csv")!.dataset.tooltipKey).toBe("tooltip.statsCsv");
     expect(document.getElementById("stats-period")!.dataset.tooltipKey).toBe("tooltip.statsPeriod");
     expect(document.querySelector<HTMLElement>('[data-view="stats"]')!.dataset.tooltipKey).toBe("tooltip.viewStats");
+    vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
+    await loadHistoryStats();
+    expect(document.querySelector<HTMLButtonElement>("[data-stats-action='crate']")?.dataset.tooltipKey)
+      .toBe("tooltip.statsIdleCrate");
+    const summaries = [...document.querySelectorAll<HTMLElement>("#stats-report .MuiAccordionSummary-root")];
+    expect(summaries.length).toBe(3);
+    expect(summaries.every((node) => node.dataset.tooltipKey === "tooltip.gigGroup")).toBe(true);
     const untipped = [...document.querySelectorAll<HTMLButtonElement>("#stats-panel button")].filter(
       (button) => !button.dataset.tooltipKey,
     );

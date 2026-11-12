@@ -5,13 +5,14 @@
  * virtualized, and the last entry can be scrolled to and opened.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { FileEntry } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
 import { wireDialogs } from "../lib/ui/dialogs";
 import { libraryRootsFixture } from "./library-roots.fixture";
 import { FILE_ROW, state } from "../lib/state";
-import { installPage } from "./test-page";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 import { FILES_SEARCH_MS, renderFiles, wireLibrary } from "../lib/ui/views";
 
 const fetchMock = vi.fn();
@@ -55,6 +56,12 @@ describe("files view", () => {
     wireLibrary();
   });
 
+  afterEach(async () => {
+    unmountSharedDialogs();
+    await drainReactScheduler();
+    vi.unstubAllGlobals();
+  });
+
   it("lists distinct labels with the path under each one", () => {
     state.filesAtRoots = true;
     state.filesRoots = libraryRootsFixture.roots.filter((root) => !root.missing);
@@ -73,6 +80,9 @@ describe("files view", () => {
     expect(document.querySelector("#files-elsewhere")?.className).not.toContain("files-primary");
     expect((document.querySelector("#files-up") as HTMLButtonElement).disabled).toBe(true);
     expect(document.querySelector("#files-path [aria-current='page']")?.textContent).toBe("Music folders");
+    expect(document.querySelector("#files-panel .MuiToolbar-root")?.getAttribute("aria-label")).toBe("Folder toolbar");
+    expect(document.querySelector("#files-up")?.className).toContain("MuiButton-root");
+    expect(document.querySelector("#files-panel .MuiDataGrid-root")).toBeNull();
 
     const list = document.querySelector("#files-list") as HTMLElement;
     list.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));

@@ -15,6 +15,7 @@ import { setTooltip } from "./tooltip";
 import { tips } from "./tooltip-strings";
 import { moveTrackList, openTrackList } from "./virtual-scroll";
 import { closeQuickOpen, openQuickOpen, quickOpenIsOpen, wireQuickOpen } from "./quick-open";
+import { isSharedDialogId, setSharedDialogOpen } from "./shared-dialog";
 import { focusCrateItem, moveFileList, openFileList, selectCrate, setMode } from "./views";
 
 /** Seconds the seek keys pass to PlayerControls.seekBy. */
@@ -328,6 +329,7 @@ export function isTypingTarget(target: EventTarget | null): boolean {
  *
  * Focus moves to the heading. Esc closes Settings and returns focus.
  * When Settings is already open, focus moves to the heading.
+ * Settings is a Main page (`show`), not a modal overlay.
  *
  * @returns {void}
  */
@@ -336,7 +338,8 @@ export function openCheatSheet(): void {
   renderCheatSheet();
   if (!dialog.open) {
     rememberFocus();
-    dialog.showModal();
+    dialog.show();
+    document.getElementById("open-settings")?.setAttribute("aria-expanded", "true");
   }
   const title = el("shortcuts-title");
   title.tabIndex = -1;
@@ -364,6 +367,7 @@ export function wireShortcuts(): void {
 
 function onSettingsClose(): void {
   restoreFocus();
+  document.getElementById("open-settings")?.setAttribute("aria-expanded", "false");
 }
 
 function onKey(event: KeyboardEvent): void {
@@ -388,11 +392,16 @@ function skipsListKey(id: string, target: EventTarget | null): boolean {
   return false;
 }
 
-function topDialog(): HTMLDialogElement | null {
+function topDialog(): HTMLElement | null {
+  const shared = [...document.querySelectorAll<HTMLElement>("[data-shared-dialog][data-open='true']")];
+  if (shared.length) return shared.at(-1) ?? null;
   const open = [...document.querySelectorAll("dialog")].filter(
     (node): node is HTMLDialogElement => node instanceof HTMLDialogElement && node.open,
   );
-  return open.at(-1) ?? null;
+  const native = open.at(-1);
+  if (native) return native;
+  const mui = document.querySelector<HTMLElement>(".MuiDialog-root:not([aria-hidden='true'])");
+  return mui ?? null;
 }
 
 const HANDLERS: { [K in ShortcutId]: (event: KeyboardEvent) => void } = {
@@ -539,7 +548,7 @@ function openSnapshot(): void {
 }
 
 function snapshotCards(): HTMLElement[] {
-  return [...el("snapshots-list").querySelectorAll<HTMLElement>(".snapshot-card")];
+  return [...el("snapshots-list").querySelectorAll<HTMLElement>(".MuiDataGrid-row, .snapshot-card")];
 }
 
 function dismiss(event: KeyboardEvent): void {
@@ -550,9 +559,14 @@ function dismiss(event: KeyboardEvent): void {
       closeQuickOpen();
       return;
     }
-    if (dialog.id === "settings-dialog") {
+    if (dialog.id === "settings-dialog" && dialog instanceof HTMLDialogElement) {
       event.preventDefault();
       dialog.close();
+      return;
+    }
+    if (isSharedDialogId(dialog.id)) {
+      event.preventDefault();
+      setSharedDialogOpen(dialog.id, false);
       return;
     }
     return;

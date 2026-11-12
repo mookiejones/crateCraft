@@ -2,10 +2,11 @@
  * MUI AppBar, collapsible Drawer, and Main slot.
  *
  * Existing page nodes keep their ids. This shell portals `#space-field`
- * into the AppBar, `#views` and `#view-children` into the Drawer,
- * `#rail-foot` into the drawer footer, and `#app-body` into Main. Crate
- * names stay in the Main rail so collapse does not hide them. The space
- * control stays a native select. Collapse is not saved.
+ * into the AppBar, `#player-bar` under the AppBar as a full strip,
+ * `#views` and `#view-children` into the Drawer, `#rail-foot` into the
+ * drawer footer, and `#app-body` into Main. Crate names stay in the Main
+ * rail so collapse does not hide them. The space control stays a native
+ * select. Collapse is not saved.
  */
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -20,7 +21,7 @@ import { onLocaleChange, t } from "../lib/i18n";
 import { setTooltip } from "../lib/ui/tooltip";
 import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
 
-const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH = 200;
 
 function tooltipRef(spec: TipSpec) {
   return (element: HTMLElement | null) => {
@@ -38,9 +39,10 @@ function adopt(slot: HTMLElement | null, id: string): void {
  * Page chrome: AppBar, Drawer, and the existing body in Main.
  */
 export function AppShell() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(() => window.innerWidth > 980);
   const [, setLocaleTick] = useState(0);
   const spaceSlot = useRef<HTMLDivElement>(null);
+  const playerSlot = useRef<HTMLDivElement>(null);
   const navSlot = useRef<HTMLDivElement>(null);
   const footSlot = useRef<HTMLDivElement>(null);
   const bodySlot = useRef<HTMLDivElement>(null);
@@ -53,6 +55,7 @@ export function AppShell() {
 
   useLayoutEffect(() => {
     adopt(spaceSlot.current, "space-field");
+    adopt(playerSlot.current, "player-bar");
     adopt(navSlot.current, "views");
     adopt(navSlot.current, "view-children");
     adopt(footSlot.current, "rail-foot");
@@ -86,6 +89,7 @@ export function AppShell() {
           <Box ref={spaceSlot} className="app-bar-space" />
         </Toolbar>
       </AppBar>
+      <Box ref={playerSlot} className="player-strip" sx={{ flexShrink: 0 }} />
       <Box sx={{ display: "flex", flex: 1, minHeight: 0, minWidth: 0 }}>
         <Drawer
           id="app-drawer"

@@ -2,13 +2,15 @@
 
 Crates are the lists on the left when **Crates** is selected. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
 
-![The Crates view on a sample library. Warmup is selected, and the track list shows the one track in that crate.](../media/crates.png)
+The navigation highlights the open section. On narrow screens it starts collapsed; use the menu button to open it. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
 
-The picture uses a small sample library. The button **Reveal in file manager** is the label on this sample computer. On a Mac the button reads **Reveal in Finder**. On Windows it reads **Reveal in File Explorer**.
+![The Crates view with Saturday night selected in an example library of 24 tracks. Search and actions sit above the grid, with track details on the right.](../media/crates-refined.png)
+
+The picture uses a small sample library. Track details include **Reveal in Finder** on Mac or **Reveal in File Explorer** on Windows.
 
 ## Spaces
 
-The menu under the status line chooses a space.
+The menu in the top bar chooses a space.
 
 | Menu label | What it is |
 | --- | --- |
@@ -46,7 +48,7 @@ In the track list, Up and Down move the selection. Enter opens the row. The othe
 
 ## Tracks
 
-The columns are **Title**, **Artist**, **BPM**, **Key**, **Energy**, **Genre**, **Added**, **Last**, **Plays**, and **Time**. **Energy** is the star rating as 1 to 5. **Last** is the last time the track was played.
+The columns are **Play**, **Title**, **Artist**, **BPM**, **Key**, **Energy**, **Genre**, **Added**, **Last**, **Plays**, and **Time**. **Play** is its own first column. **Title** is the name. **Energy** is the star rating as 1 to 5. **Last** is the last time the track was played. Headers stay with the cells when you scroll. Drag a header edge to resize. The column menu can hide a column. A library larger than 100 tracks pages 100 at a time.
 
 1. Type in **Search tracks**. A track matches when the words appear in the title, artist, album, genre, key, or file name. Choose **Comments**, **Grouping**, or **Composer** in the field menu to search that field. Filter words: `bpm:120-128`, `bpm:124~3`, `bpm:none`, `key:8A`, `key:none`, `mix:8A`, `missing:yes`, `nokeybpm:yes`, `cues:none`, `comments:`, `grouping:`, and `composer:`. `missing:yes` is a missing file on a connected drive. `nokeybpm:yes` is a blank key or no BPM. `cues:none` matches a track the page already knows has no cue points. The list load does not open every audio file.
 2. Click a column heading to sort. Click it again to reverse the sort. Numbers start high to low. Words start at A.
@@ -63,7 +65,7 @@ Quit Serato first. [Safety and backups](safety.md) explains the status line. The
 1. Select the crate that should hold the new one. Select **All tracks** when you want it at the top level.
 2. Click **New**.
 3. Type a name in **New crate name**.
-4. Confirm the prompt.
+4. Confirm.
 
 The page says **Crate created.** There is no drag and drop. A new crate is created inside the crate you had selected. This app does not move an existing crate to a new parent.
 
@@ -77,7 +79,7 @@ Select a crate other than **All tracks**.
 | --- | --- | --- |
 | **Rename** | Type the new name in **Rename crate**. | The crate keeps its tracks. |
 | **Color** | Type one of `none`, `red`, `orange`, `yellow`, `green`, `blue`, `purple`, `pink`. | The crate color is saved. Any other word shows **Use one of the palette names.** |
-| **Delete** | Confirm **Delete** and the crates inside it. | Those crates are removed. The tracks stay in the library. |
+| **Delete** | Confirm in the dialog. Nested crates go too. | Those crates are removed. The tracks stay in the library. |
 
 The color names in the track editor are **None**, **Red**, **Orange**, **Yellow**, **Green**, **Blue**, **Purple**, and **Pink**.
 
