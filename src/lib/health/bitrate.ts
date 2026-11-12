@@ -3,31 +3,26 @@
  *
  * GET /api/bitrate-check is read-only. POST preview lists a crate of
  * flagged tracks. POST create writes that crate through safe_write with
- * Serato closed. A newer selection ignores a late response. The report
- * is painted with text nodes. A check needs a crate because it decodes.
+ * Serato closed. A newer selection ignores a late response. BitrateReport
+ * paints a Data Grid. A check needs a crate because it decodes.
  *
  * Page text is in the locale catalogs under bitrate.*.
  */
 
+import { createElement } from "react";
 import { failureOf, postJSON, readJSON } from "../api";
-import type { BitrateCheckReport, BitrateCratePlan, BitrateSuspect } from "../api-types";
+import type { BitrateCheckReport, BitrateCratePlan } from "../api-types";
+import { mountIsland, type IslandRoot } from "../../app/mount";
+import { BitrateReport } from "../../pages/BitrateReport";
 import { bridge } from "../bridge";
 import { el } from "../dom";
-import { serverMessage, t, type MessageKey } from "../i18n";
+import { serverMessage, t } from "../i18n";
 import { state } from "../state";
-import { buttonEl } from "../ui/tooltip";
-import { tips } from "../ui/tooltip-strings";
-
-const LIST_CAP = 100;
-const REASON_ORDER = ["upsampled", "lossy_source"] as const;
-
-const REASON_KEYS: Record<string, MessageKey> = {
-  upsampled: "bitrate.reason.upsampled",
-  lossy_source: "bitrate.reason.lossy_source",
-};
 
 let latest: BitrateCheckReport | null = null;
 let cratePlan: BitrateCratePlan | null = null;
+let reportRoot: IslandRoot | undefined;
+let reportHost: HTMLElement | null = null;
 
 /**
  * Attach Check again, Save crate, and Confirm crate.
@@ -120,7 +115,7 @@ export function showBitrateFailure(error: unknown): void {
 }
 
 /**
- * Paint the counts and the flagged-track list.
+ * Paint the counts and the flagged-track Data Grid.
  *
  * Color is not the only signal: each row names the reason in words.
  *
@@ -130,35 +125,20 @@ export function showBitrateFailure(error: unknown): void {
 export function renderBitrateReport(payload: BitrateCheckReport): void {
   el("bitrate-scope").textContent = scopeLabel();
   const report = el("bitrate-report");
-  const suspects = payload.suspects || [];
-  const summary = document.createElement("p");
-  summary.className = "gig-note";
-  summary.textContent = suspects.length
-    ? t("bitrate.summary", { checked: payload.checked, count: suspects.length })
-    : t("bitrate.summaryClear", { checked: payload.checked });
-  report.replaceChildren(summary);
-  if (payload.not_found) {
-    report.append(noteLine(t("bitrate.notFound", { count: payload.not_found })));
+  if (reportRoot && reportHost !== report) {
+    reportRoot.unmount();
+    reportRoot = undefined;
   }
-  if (payload.unreadable) {
-    report.append(noteLine(t("bitrate.unreadableFiles", { count: payload.unreadable })));
-  }
-  if (payload.unchecked) {
-    report.append(noteLine(t("bitrate.unchecked", { count: payload.unchecked })));
-  }
-  if (payload.too_quiet) {
-    report.append(noteLine(t("bitrate.tooQuiet", { count: payload.too_quiet })));
-  }
-  if (!suspects.length) {
-    report.append(noteLine(t("bitrate.empty")));
-    paintPlan(report);
-    return;
-  }
-  for (const kind of reasonKinds(suspects)) {
-    const rows = suspects.filter((item) => item.reason === kind);
-    report.append(detailsGroup(reasonHeading(kind), rows.map(suspectLine)));
-  }
-  paintPlan(report);
+  reportHost = report;
+  reportRoot = mountIsland(
+    report,
+    createElement(BitrateReport, {
+      payload,
+      cratePlan,
+      writable: state.writable,
+    }),
+    reportRoot,
+  );
 }
 
 /**
@@ -273,81 +253,4 @@ function scopeLabel(): string {
   if (state.activeCrate === "all") return t("gig.wholeSpace");
   const crate = state.crates.find((row) => row.id === state.activeCrate);
   return crate?.name || t("gig.wholeSpace");
-}
-
-function noteLine(text: string): HTMLParagraphElement {
-  const line = document.createElement("p");
-  line.className = "gig-note";
-  line.textContent = text;
-  return line;
-}
-
-function reasonKinds(suspects: BitrateSuspect[]): string[] {
-  const seen = new Set(suspects.map((item) => item.reason));
-  const known = REASON_ORDER.filter((kind) => seen.has(kind));
-  const extra = [...seen].filter((kind) => !REASON_ORDER.includes(kind as (typeof REASON_ORDER)[number])).sort();
-  return [...known, ...extra];
-}
-
-function reasonHeading(kind: string): string {
-  return t(REASON_KEYS[kind] ?? "bitrate.reason.unknown");
-}
-
-function suspectLine(item: BitrateSuspect): string {
-  const title = [item.artist, item.name].filter(Boolean).join(" — ") || item.file;
-  const reason = reasonHeading(item.reason);
-  const detail = item.stated_kbps != null && item.estimated_kbps != null
-    ? t("bitrate.detail", { stated: item.stated_kbps, estimated: item.estimated_kbps })
-    : item.estimated_kbps != null
-      ? t("bitrate.detailEstimate", { estimated: item.estimated_kbps })
-      : "";
-  return t("bitrate.row", { title, file: item.file, reason, detail });
-}
-
-function paintPlan(report: HTMLElement): void {
-  if (!cratePlan) return;
-  if (cratePlan.written && cratePlan.saved) {
-    report.append(noteLine(t("bitrate.written", { count: cratePlan.added, name: cratePlan.name })));
-    return;
-  }
-  if (!cratePlan.added) {
-    report.append(noteLine(t("bitrate.previewEmpty")));
-    return;
-  }
-  report.append(noteLine(t("bitrate.preview", { count: cratePlan.added, name: cratePlan.name })));
-  const confirm = buttonEl(tips.bitrateConfirm);
-  confirm.dataset.bitrateAction = "confirm";
-  confirm.textContent = t("bitrate.confirmCrate");
-  confirm.disabled = !state.writable;
-  report.append(confirm);
-}
-
-function detailsGroup(label: string, lines: string[]): HTMLDetailsElement {
-  const details = document.createElement("details");
-  details.className = "gig-group";
-  details.open = true;
-  const summary = document.createElement("summary");
-  summary.textContent = t("gig.groupCount", { label, count: lines.length });
-  const list = document.createElement("ul");
-  const shown = lines.slice(0, LIST_CAP);
-  for (const line of shown) list.append(item(line));
-  details.append(summary, list);
-  if (lines.length > LIST_CAP) {
-    const show = buttonEl(tips.gigShowAll);
-    show.className = "gig-show-all";
-    show.textContent = t("gig.showAll", { count: lines.length });
-    show.addEventListener("click", () => {
-      list.replaceChildren();
-      for (const line of lines) list.append(item(line));
-      show.remove();
-    });
-    details.append(show);
-  }
-  return details;
-}
-
-function item(text: string): HTMLLIElement {
-  const row = document.createElement("li");
-  row.textContent = text;
-  return row;
 }

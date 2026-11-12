@@ -94,6 +94,8 @@ describe("health", () => {
     expect(reportText()).toContain("12 tracks checked.");
     expect(reportText()).toContain("Missing files (1)");
     expect(reportText()).toContain("A — Gone");
+    expect(document.querySelector("#health-report details")).toBeNull();
+    expect(document.querySelector("#health-report .MuiAccordion-root")).not.toBeNull();
     expect(reportText()).toContain("No BPM (1)");
     expect(reportText()).toContain("No beatgrid (1)");
     expect(reportText()).toContain("No artwork (1)");
