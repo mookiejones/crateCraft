@@ -4,8 +4,8 @@
 
 import { createElement } from "react";
 import { flushSync } from "react-dom";
-import { createRoot } from "react-dom/client";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createRoot, type Root } from "react-dom/client";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const postJSON = vi.hoisted(() => vi.fn());
 
@@ -17,7 +17,7 @@ vi.mock("../../lib/api", async () => {
 import { AppProviders } from "../../app/providers";
 import { t } from "../../lib/i18n";
 import { state } from "../../lib/state";
-import { installPage } from "../test-page";
+import { drainReactScheduler, installPage } from "../test-page";
 import { SnapshotsPanel } from "../../pages/SnapshotsPanel";
 import { RestoreDialog } from "../../pages/RestoreDialog";
 
@@ -36,6 +36,8 @@ function snapshotResponse(): Response {
 }
 
 describe("SnapshotsPanel context", () => {
+  let panelRoot: Root | null = null;
+
   beforeEach(() => {
     installPage();
     postJSON.mockReset();
@@ -64,12 +66,22 @@ describe("SnapshotsPanel context", () => {
     ];
   });
 
+  afterEach(async () => {
+    try {
+      panelRoot?.unmount();
+    } catch {
+      // installPage already dropped the host.
+    }
+    panelRoot = null;
+    await drainReactScheduler();
+  });
+
   it("renders a Data Grid of when, size, and status with Restore as a row action", () => {
     const host = document.createElement("div");
     document.body.append(host);
-    const root = createRoot(host);
+    panelRoot = createRoot(host);
     flushSync(() => {
-      root.render(createElement(AppProviders, { children: createElement(SnapshotsPanel) }));
+      panelRoot!.render(createElement(AppProviders, { children: createElement(SnapshotsPanel) }));
     });
     expect(host.querySelector("#snapshots-list .MuiDataGrid-root")).not.toBeNull();
     expect(headerFields(host)).toEqual(["created", "size", "status", "restore"]);
@@ -85,31 +97,29 @@ describe("SnapshotsPanel context", () => {
       host.querySelector("#snapshots-drives")?.getAttribute("aria-label"),
     );
     expect(host.querySelector("#operations-list")?.textContent).toContain(t("operations.empty"));
-    root.unmount();
   });
 
   it("posts create when Take a backup is pressed", async () => {
     postJSON.mockResolvedValue({ ok: true });
     const host = document.createElement("div");
     document.body.append(host);
-    const root = createRoot(host);
+    panelRoot = createRoot(host);
     flushSync(() => {
-      root.render(createElement(AppProviders, { children: createElement(SnapshotsPanel) }));
+      panelRoot!.render(createElement(AppProviders, { children: createElement(SnapshotsPanel) }));
     });
     host.querySelector<HTMLButtonElement>("#snapshots-take")?.click();
     await vi.waitFor(() => {
       expect(postJSON).toHaveBeenCalledWith("/api/snapshots", { action: "create" });
     });
-    root.unmount();
   });
 
   it("keeps restore confirm off when the plan is blocked and uses an MUI Dialog", async () => {
     postJSON.mockResolvedValue({ restore_blocked: "Quit Serato before restoring." });
     const host = document.createElement("div");
     document.body.append(host);
-    const root = createRoot(host);
+    panelRoot = createRoot(host);
     flushSync(() => {
-      root.render(createElement(AppProviders, {
+      panelRoot!.render(createElement(AppProviders, {
         children: createElement("div", null, createElement(SnapshotsPanel), createElement(RestoreDialog)),
       }));
     });
@@ -120,20 +130,18 @@ describe("SnapshotsPanel context", () => {
       expect(document.getElementById("snapshot-block")?.textContent).toBe("Quit Serato before restoring.");
       expect((document.getElementById("snapshot-confirm") as HTMLButtonElement).disabled).toBe(true);
     });
-    root.unmount();
   });
 
   it("shows the write-block reason on the panel", () => {
     state.writeBlock = "Quit Serato before restoring.";
     const host = document.createElement("div");
     document.body.append(host);
-    const root = createRoot(host);
+    panelRoot = createRoot(host);
     flushSync(() => {
-      root.render(createElement(AppProviders, { children: createElement(SnapshotsPanel) }));
+      panelRoot!.render(createElement(AppProviders, { children: createElement(SnapshotsPanel) }));
     });
     const block = host.querySelector("#snapshots-block");
     expect(block?.textContent).toBe("Quit Serato before restoring.");
     expect(block instanceof HTMLElement && block.hidden).toBe(false);
-    root.unmount();
   });
 });

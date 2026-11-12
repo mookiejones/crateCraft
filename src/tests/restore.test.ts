@@ -13,7 +13,7 @@ import { backupDriveCrates, closePlan, confirmSnapshotRestore, openSnapshotPlan,
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import type { RestorePlan } from "../lib/api-types";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 
 const plan: RestorePlan = {
   crates: {
@@ -67,8 +67,9 @@ describe("restore", () => {
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     unmountSnapshots();
+    await drainReactScheduler();
   });
 
   it("unmounts snapshot islands so the Data Grid scheduler does not outlive the document", () => {
