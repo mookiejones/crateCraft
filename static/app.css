@@ -1480,6 +1480,16 @@ dialog .settings-field select {
   clip: rect(0 0 0 0);
 }
 
+.player-strip {
+  flex-shrink: 0;
+  background: var(--manila);
+}
+
+.player-strip .player-bar {
+  grid-column: auto;
+  grid-row: auto;
+}
+
 .player-bar {
   grid-column: 1 / -1;
   grid-row: 5;
@@ -1597,6 +1607,12 @@ dialog .settings-field select {
   min-width: 0;
   min-height: 44px;
   accent-color: var(--color-primary);
+}
+
+.player-seek .MuiSlider-root,
+.player-volume .MuiSlider-root {
+  min-height: 44px;
+  padding: 13px 0;
 }
 
 .player-time {
