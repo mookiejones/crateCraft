@@ -1568,5 +1568,9 @@
   "wizard.updatesYes": "Yes, check",
   "wizard.useFolder": "Use this folder",
   "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
-  "wizard.yes": "Yes, share"
+  "wizard.yes": "Yes, share",
+  "crates.promptName": "Name",
+  "tooltip.cratePromptCancel": "Close without changing the crate.",
+  "tooltip.cratePromptConfirm": "Save this crate name. Serato DJ Pro must be quit.",
+  "tooltip.cratePromptName": "Type the crate name, or a color name."
 }

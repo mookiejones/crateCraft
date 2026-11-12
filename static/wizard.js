@@ -30,9 +30,9 @@ var SeratoWizard = (() => {
     mod
   )), __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: !0 }), mod);
 
-  // node_modules/react/cjs/react.production.js
+  // ../../node_modules/react/cjs/react.production.js
   var require_react_production = __commonJS({
-    "node_modules/react/cjs/react.production.js"(exports) {
+    "../../node_modules/react/cjs/react.production.js"(exports) {
       "use strict";
       var REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity"), REACT_VIEW_TRANSITION_TYPE = /* @__PURE__ */ Symbol.for("react.view_transition"), MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
       function getIteratorFn(maybeIterable) {
@@ -447,17 +447,17 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/react/index.js
+  // ../../node_modules/react/index.js
   var require_react = __commonJS({
-    "node_modules/react/index.js"(exports, module) {
+    "../../node_modules/react/index.js"(exports, module) {
       "use strict";
       module.exports = require_react_production();
     }
   });
 
-  // node_modules/react-dom/cjs/react-dom.production.js
+  // ../../node_modules/react-dom/cjs/react-dom.production.js
   var require_react_dom_production = __commonJS({
-    "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
+    "../../node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
       var React = require_react();
       function formatProdErrorMessage(code) {
@@ -609,9 +609,9 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/react-dom/index.js
+  // ../../node_modules/react-dom/index.js
   var require_react_dom = __commonJS({
-    "node_modules/react-dom/index.js"(exports, module) {
+    "../../node_modules/react-dom/index.js"(exports, module) {
       "use strict";
       function checkDCE() {
         if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
@@ -625,9 +625,9 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/scheduler/cjs/scheduler.production.js
+  // ../../node_modules/scheduler/cjs/scheduler.production.js
   var require_scheduler_production = __commonJS({
-    "node_modules/scheduler/cjs/scheduler.production.js"(exports) {
+    "../../node_modules/scheduler/cjs/scheduler.production.js"(exports) {
       "use strict";
       function push(heap, node) {
         var index = heap.length;
@@ -851,17 +851,17 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/scheduler/index.js
+  // ../../node_modules/scheduler/index.js
   var require_scheduler = __commonJS({
-    "node_modules/scheduler/index.js"(exports, module) {
+    "../../node_modules/scheduler/index.js"(exports, module) {
       "use strict";
       module.exports = require_scheduler_production();
     }
   });
 
-  // node_modules/react-dom/cjs/react-dom-client.production.js
+  // ../../node_modules/react-dom/cjs/react-dom-client.production.js
   var require_react_dom_client_production = __commonJS({
-    "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
+    "../../node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler(), React = require_react(), ReactDOM = require_react_dom();
       function formatProdErrorMessage(code) {
@@ -12106,9 +12106,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // node_modules/react-dom/client.js
+  // ../../node_modules/react-dom/client.js
   var require_client = __commonJS({
-    "node_modules/react-dom/client.js"(exports, module) {
+    "../../node_modules/react-dom/client.js"(exports, module) {
       "use strict";
       function checkDCE() {
         if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
@@ -12122,9 +12122,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // node_modules/react/cjs/react-jsx-runtime.production.js
+  // ../../node_modules/react/cjs/react-jsx-runtime.production.js
   var require_react_jsx_runtime_production = __commonJS({
-    "node_modules/react/cjs/react-jsx-runtime.production.js"(exports) {
+    "../../node_modules/react/cjs/react-jsx-runtime.production.js"(exports) {
       "use strict";
       var REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment");
       function jsxProd(type, config, maybeKey) {
@@ -12148,9 +12148,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // node_modules/react/jsx-runtime.js
+  // ../../node_modules/react/jsx-runtime.js
   var require_jsx_runtime = __commonJS({
-    "node_modules/react/jsx-runtime.js"(exports, module) {
+    "../../node_modules/react/jsx-runtime.js"(exports, module) {
       "use strict";
       module.exports = require_react_jsx_runtime_production();
     }
@@ -13741,7 +13741,11 @@ Error generating stack: ` + x.message + `
     "wizard.updatesYes": "Yes, check",
     "wizard.useFolder": "Use this folder",
     "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
-    "wizard.yes": "Yes, share"
+    "wizard.yes": "Yes, share",
+    "crates.promptName": "Name",
+    "tooltip.cratePromptCancel": "Close without changing the crate.",
+    "tooltip.cratePromptConfirm": "Save this crate name. Serato DJ Pro must be quit.",
+    "tooltip.cratePromptName": "Type the crate name, or a color name."
   };
 
   // locales/es.json
@@ -15315,7 +15319,11 @@ Error generating stack: ` + x.message + `
     "wizard.updatesYes": "Sí, buscar",
     "wizard.useFolder": "Usar esta carpeta",
     "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
-    "wizard.yes": "Sí, compartir"
+    "wizard.yes": "Sí, compartir",
+    "crates.promptName": "Nombre",
+    "tooltip.cratePromptCancel": "Cerrar sin cambiar la caja.",
+    "tooltip.cratePromptConfirm": "Guardar este nombre de caja. Hay que salir de Serato DJ Pro.",
+    "tooltip.cratePromptName": "Escribe el nombre de la caja, o un color."
   };
 
   // src/lib/i18n.ts
@@ -15591,6 +15599,9 @@ Error generating stack: ` + x.message + `
     crateRename: spec("tooltip.crateRename"),
     crateSplit: spec("tooltip.crateSplit"),
     crateSaveView: spec("tooltip.crateSaveView"),
+    cratePromptName: spec("tooltip.cratePromptName"),
+    cratePromptCancel: spec("tooltip.cratePromptCancel"),
+    cratePromptConfirm: spec("tooltip.cratePromptConfirm"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),

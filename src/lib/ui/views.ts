@@ -71,6 +71,8 @@ import { HistorySessions } from "../../pages/HistorySessions";
 import { PlayButton } from "../../components/PlayButton";
 import { TrackDetailPane } from "../../components/TrackDetail";
 import { bindCrateActions, emitCrates } from "../crates/crate-store";
+import { openCratePrompt } from "./shared-dialog";
+import { mountSharedDialogs } from "./shared-dialog-mount";
 import { historyActions, notifyHistory } from "../../containers/HistoryContext";
 import { play } from "../player/player";
 import { playerStrings } from "../player/player-strings";
@@ -2060,7 +2062,7 @@ async function saveRules(id: number, text: string) {
 }
 
 /**
- * Prompt for a name and create a crate under the current selection.
+ * Ask for a name and create a crate under the current selection.
  *
  * All tracks uses the space root as the parent. POST /api/crate with
  * action create. The new crate is selected after the reload. A 409 locks
@@ -2069,7 +2071,12 @@ async function saveRules(id: number, text: string) {
  * @returns {Promise<void>}
  */
 export async function createCrate() {
-  const name = prompt(t("crates.newPrompt"));
+  mountSharedDialogs();
+  const name = await openCratePrompt({
+    title: t("crates.newPrompt"),
+    value: "",
+    confirmLabel: t("crates.new"),
+  });
   if (!name || !name.trim()) return;
   const parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
   try {
@@ -2084,7 +2091,7 @@ export async function createCrate() {
 }
 
 /**
- * Prompt for a new name and rename the selected crate.
+ * Ask for a new name and rename the selected crate.
  *
  * An empty name, or the same name, does not send a request. POST /api/crate
  * with action rename. A 409 locks the page.
@@ -2094,7 +2101,12 @@ export async function createCrate() {
 export async function renameCrate() {
   const crate = state.crates.find((item) => item.id === state.activeCrate);
   if (!crate) return;
-  const name = prompt(t("crates.renamePrompt"), crate.name);
+  mountSharedDialogs();
+  const name = await openCratePrompt({
+    title: t("crates.renamePrompt"),
+    value: crate.name,
+    confirmLabel: t("crates.rename"),
+  });
   if (!name || !name.trim() || name.trim() === crate.name) return;
   try {
     const result = await postJSON("/api/crate", { action: "rename", id: crate.id, name: name.trim(), space: state.space });
@@ -2123,7 +2135,7 @@ export function colorFromName(choice: string): number | undefined {
 }
 
 /**
- * Prompt for a palette name and save it on the selected crate.
+ * Ask for a palette name and save it on the selected crate.
  *
  * The names match COLOR_NAMES. White is sent as null, which is Serato's
  * "no color" value. POST /api/crate with action color. A 409 locks the page.
@@ -2133,8 +2145,13 @@ export function colorFromName(choice: string): number | undefined {
 export async function colorCrate() {
   const crate = state.crates.find((item) => item.id === state.activeCrate);
   if (!crate) return;
+  mountSharedDialogs();
   const names = COLORS.map(([, key]) => t(key).toLocaleLowerCase());
-  const choice = prompt(t("crates.colorPrompt", { names: names.join(", ") }));
+  const choice = await openCratePrompt({
+    title: t("crates.colorPrompt", { names: names.join(", ") }),
+    value: "",
+    confirmLabel: t("field.color"),
+  });
   if (choice == null) return;
   const color = colorFromName(choice);
   if (color == null) {

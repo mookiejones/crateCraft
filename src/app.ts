@@ -22,6 +22,7 @@
  */
 
 import { wireDialogs } from "./lib/ui/dialogs";
+import { mountSharedDialogs } from "./lib/ui/shared-dialog-mount";
 import { wireGigCheck } from "./lib/gig/gig";
 import { wireDrift } from "./lib/gig/drift";
 import { wireHealth } from "./lib/health/health";
@@ -51,6 +52,7 @@ import { mountTrackList, mountTrackListB, wireVirtualScroll } from "./lib/ui/vir
 
 wireLocale();
 mountAppShell();
+mountSharedDialogs();
 installTooltips();
 applyStaticTooltips();
 mountTrackList();

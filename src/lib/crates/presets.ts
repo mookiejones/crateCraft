@@ -14,6 +14,7 @@ import { t } from "../i18n";
 import { presetName, readPresetForm, scopeCrate, syncPresetFields } from "./preset-view";
 import { state } from "../state";
 import { bindCrateActions } from "./crate-store";
+import { mountSharedDialogs } from "../ui/shared-dialog-mount";
 import { loadLibrary, lockDown, selectCrate, setNotice } from "../ui/views";
 
 const PREVIEW_DELAY_MS = 250;
@@ -101,6 +102,7 @@ function schedulePreview(): void {
  * @returns {Promise<void>}
  */
 export async function openPresetDialog(): Promise<void> {
+  mountSharedDialogs();
   if (!state.writable) {
     setNotice(el("status").textContent || "");
     return;
@@ -127,6 +129,7 @@ export async function openPresetDialog(): Promise<void> {
  * @returns {Promise<void>}
  */
 export async function createPreset(): Promise<void> {
+  mountSharedDialogs();
   const preset = readPresetForm();
   if (!preset || creating) return;
   creating = true;
@@ -208,6 +211,7 @@ export async function refreshPresetsOnOpen(): Promise<void> {
  * @returns {void}
  */
 export function wirePresets(): void {
+  mountSharedDialogs();
   el("crate-preset").addEventListener("click", () => {
     openPresetDialog().catch((error) => setNotice(failureOf(error).message));
   });

@@ -12,6 +12,8 @@ import { focusedView, paintDualChrome, saveViewIds } from "./dual-crate-view";
 import { t } from "../i18n";
 import { state } from "../state";
 import { bindCrateActions } from "./crate-store";
+import { openCratePrompt } from "../ui/shared-dialog";
+import { mountSharedDialogs } from "../ui/shared-dialog-mount";
 import { loadLibrary, lockDown, renderList, selectCrate, setNotice } from "../ui/views";
 
 interface CreateReply {
@@ -41,7 +43,7 @@ export function toggleSplit(): void {
 }
 
 /**
- * Prompt for a name and save the focused list as a normal crate.
+ * Ask for a name and save the focused list as a normal crate.
  *
  * An empty list does not write. POST /api/crate with action create and
  * assets. A 409 locks the page.
@@ -55,7 +57,12 @@ export async function saveFocusedView(): Promise<void> {
     setNotice(t("crates.saveViewEmpty"));
     return;
   }
-  const name = prompt(t("crates.saveViewPrompt"));
+  mountSharedDialogs();
+  const name = await openCratePrompt({
+    title: t("crates.saveViewPrompt"),
+    value: "",
+    confirmLabel: t("crates.saveView"),
+  });
   if (!name || !name.trim()) return;
   const source = state.splitCrates && state.focusedPane === "b" ? state.secondCrate : state.activeCrate;
   const parent = source === "all" ? state.rootId : source;
