@@ -8,6 +8,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import type { GigReport, TempoDriftReport } from "../lib/api-types";
+import type { PortableSnapshot } from "../lib/gig/portable";
 
 export type GigSnapshot = {
   report: GigReport | null;
@@ -20,9 +21,12 @@ export type DriftSnapshot = {
   scope: string;
 };
 
+export type { PortableSnapshot };
+
 export type GigContextValue = {
   gig: GigSnapshot;
   drift: DriftSnapshot;
+  portable: PortableSnapshot;
   nextStep: () => void;
   backStep: () => void;
   exit: () => void;

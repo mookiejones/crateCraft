@@ -249,6 +249,7 @@ export const tips = {
   gigBack: spec("tooltip.gigBack"),
   gigNext: spec("tooltip.gigNext"),
   gigExit: spec("tooltip.gigExit"),
+  gigGroup: spec("tooltip.gigGroup"),
   gigShowAll: spec("tooltip.gigShowAll"),
   sortTitle: spec("tooltip.sortTitle"),
   sortArtist: spec("tooltip.sortArtist"),

@@ -81,6 +81,7 @@ import {
   subscribeGig,
 } from "../lib/gig/gig";
 import { getDriftSnapshot, subscribeDrift } from "../lib/gig/drift";
+import { portableSnapshot, subscribePortable } from "../lib/gig/portable";
 import { subscribeHealth } from "../lib/health/health-events";
 import { getHealthListSnapshot } from "../lib/health/health-list";
 import { getHealthSnapshot, loadHealth, navigateHealth } from "../lib/health/health";
@@ -133,7 +134,7 @@ import {
   subscribe,
   togglePlayPause,
 } from "../lib/player/player";
-import { portableSnapshot } from "../lib/gig/portable";
+
 import {
   backupDriveCrates,
   closePlan,
@@ -216,6 +217,7 @@ function readGigValue(): GigContextValue {
   return {
     gig: getGigSnapshot(),
     drift: getDriftSnapshot(),
+    portable: portableSnapshot(),
     nextStep: nextGigStep,
     backStep: backGigStep,
     exit: exitGigCheck,
@@ -364,9 +366,11 @@ export function GigProvider({ children }: { children: ReactNode }) {
     };
     const stopGig = subscribeGig(refresh);
     const stopDrift = subscribeDrift(refresh);
+    const stopPortable = subscribePortable(refresh);
     return () => {
       stopGig();
       stopDrift();
+      stopPortable();
     };
   }, []);
   const current = useMemo(() => value, [value]);

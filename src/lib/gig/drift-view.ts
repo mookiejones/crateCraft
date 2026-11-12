@@ -65,3 +65,33 @@ export function driftFlagLine(item: TempoDriftFlag): string {
     : "";
   return t("drift.row", { title, file: item.file, reasons, bpm });
 }
+
+export type DriftViewRow = {
+  id: number;
+  title: string;
+  file: string;
+  reason: string;
+  bpm: string;
+};
+
+/**
+ * Data Grid rows for flagged tracks. Reason names drift or live.
+ *
+ * @param flags Flagged tracks from GET /api/tempo-drift.
+ * @returns One row per track.
+ */
+export function driftViewRows(flags: readonly TempoDriftFlag[]): DriftViewRow[] {
+  return flags.map((item) => {
+    const title = [item.artist, item.name].filter(Boolean).join(" — ") || item.file;
+    const bpm = item.bpm_min != null && item.bpm_max != null
+      ? t("drift.bpmRange", { min: item.bpm_min, max: item.bpm_max }).trim()
+      : "";
+    return {
+      id: item.id,
+      title,
+      file: item.file,
+      reason: item.reasons.map(driftReasonHeading).join(", "),
+      bpm,
+    };
+  });
+}

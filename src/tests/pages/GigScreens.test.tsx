@@ -104,7 +104,10 @@ describe("Before a gig context", () => {
     expect(host.querySelector(".gig-score")?.textContent).toContain("72/100");
     expect(host.querySelector(".gig-score")?.textContent).toContain("✕ Not ready");
     expect(host.textContent).toContain("GIGDRIVE");
-    expect(host.textContent).toContain("A — Old Tape (tape.wav) — Tempo wanders (90–120 BPM)");
+    expect(host.querySelector(".gig-group .MuiAccordionSummary-root")).not.toBeNull();
+    expect(host.textContent).toContain("Old Tape");
+    expect(host.textContent).toContain("Tempo wanders");
+    expect(host.querySelector('[data-field="reason"]')).not.toBeNull();
     root.unmount();
   });
 });
