@@ -2,7 +2,8 @@
  * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, tempo drift, and the portable drive check.
  *
  * Files is React on FilesContext. This module re-exports that store so
- * existing callers keep one import. Nothing in this module runs a
+ * existing callers keep one import. Play stats fetch is history-stats.ts;
+ * StatsPanel paints the Accordion report. Nothing in this module runs a
  * request when the file is imported. Listeners are attached by
  * wireLibrary, which app.ts calls once at startup.
  */

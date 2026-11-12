@@ -10,7 +10,7 @@
  * The damaged-file scan is src/lib/health/scan.ts.
  * The suspect-quality report is src/lib/health/bitrate.ts.
  * The library health report is src/lib/health/health.ts.
- * Play stats are src/lib/history/history-stats.ts.
+ * Play stats fetch is src/lib/history/history-stats.ts. StatsPanel paints the report.
  * Tag spellings are src/lib/health/tags.ts.
  * Crate presets are src/lib/crates/presets.ts.
  * Folder sync is src/lib/crates/folder-sync.ts.
