@@ -84,10 +84,12 @@ export function wireScan(): void {
  *
  * Tests replace `document.body` between cases. Unmount first so the
  * Data Grid scheduler does not run after jsdom tears the window down.
+ * A pending load is ignored so it does not look up a host that is gone.
  *
  * @returns {void}
  */
 export function unmountScan(): void {
+  state.scanToken += 1;
   if (!panelRoot) return;
   try {
     panelRoot.unmount();

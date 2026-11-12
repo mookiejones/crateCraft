@@ -63084,6 +63084,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     } catch (error2) {
       fail(error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable")), settle = "retry";
     } finally {
+      if (!islandRoot3) return;
       endBusy2(), settle === "retry" && el("portable-check").focus(), settle === "report" && el("portable-view-verdict").focus();
     }
   }

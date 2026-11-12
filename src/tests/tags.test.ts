@@ -301,6 +301,16 @@ describe("tags", () => {
     expect(reportText()).not.toContain("Hip-Hop");
   });
 
+  it("ignores a late reply after the panel unmounts", async () => {
+    let finish: (value: Response) => void = () => {};
+    vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>((resolve) => { finish = resolve; })));
+    const pending = loadTags();
+    unmountTags();
+    expect(document.getElementById("tags-report")).toBeNull();
+    finish(reply(groups));
+    await expect(pending).resolves.toBeUndefined();
+  });
+
   it("shows the server error sentence when the groups cannot be read", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply({ error: "Choose genre or artist.", code: "choose_genre_or_artist" }, 400)));
     await loadTags();

@@ -271,6 +271,7 @@ export async function loadPortableView(): Promise<void> {
     fail(error instanceof Error && error.message ? error.message : t("portable.unreadable"));
     settle = "retry";
   } finally {
+    if (!islandRoot) return;
     endBusy();
     if (settle === "retry") el("portable-check").focus();
     if (settle === "report") el("portable-view-verdict").focus();
@@ -344,10 +345,12 @@ export function wirePortable(): void {
  *
  * Tests replace `document.body` between cases. Unmount first so the
  * Data Grid scheduler does not run after jsdom tears the window down.
+ * A pending load is ignored so it does not look up a host that is gone.
  *
  * @returns {void}
  */
 export function unmountPortable(): void {
+  token += 1;
   if (!islandRoot) return;
   try {
     islandRoot.unmount();
