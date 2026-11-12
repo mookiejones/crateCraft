@@ -36,6 +36,7 @@ export type FilesContextValue = {
   locked: boolean;
   rowHeight: number;
   dialogAction: string;
+  dialogOpen: boolean;
   dialogName: string;
   dialogReplacement: string;
   dialogStatus: string;

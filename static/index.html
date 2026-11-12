@@ -654,27 +654,7 @@
     </div>
     <p id="rekordbox-status" class="dialog-status" role="status" aria-live="polite"></p>
   </dialog>
-  <dialog id="files-dialog" aria-labelledby="files-dialog-title">
-    <h2 id="files-dialog-title" data-i18n="files.reviewTitle">Review this change</h2>
-    <p id="files-summary"></p>
-    <p class="dialog-note" data-i18n="files.nothingUntilConfirm">Nothing is changed until you confirm.</p>
-    <label id="files-name-label" class="files-field" hidden>
-      <span data-i18n="files.newName">New name</span>
-      <input id="files-name" type="text" autocomplete="off">
-    </label>
-    <label id="files-replace-label" class="files-field" hidden>
-      <span data-i18n="files.newFile">New file</span>
-      <input id="files-replacement" type="text" autocomplete="off" spellcheck="false">
-    </label>
-    <ul id="files-changes"></ul>
-    <p id="files-warning" class="dialog-note"></p>
-    <p id="files-dialog-status" class="dialog-status" role="status" aria-live="polite"></p>
-    <div class="dialog-actions">
-      <button id="files-cancel" type="button" data-i18n="common.cancel">Cancel</button>
-      <button id="files-review" type="button" data-i18n="files.review">Review</button>
-      <button id="files-confirm" type="button" data-i18n="common.confirm">Confirm</button>
-    </div>
-  </dialog>
+  <div id="files-dialog"></div>
   <dialog id="portable-dialog" aria-labelledby="portable-title" aria-describedby="portable-note">
     <h2 id="portable-title" data-i18n="portable.title">Portable drive</h2>
     <p id="portable-note" class="dialog-note" data-i18n="portable.readOnly">This only reads the drive. Nothing is copied or deleted.</p>

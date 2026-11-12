@@ -7,6 +7,12 @@
 
 import { useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode, type UIEvent } from "react";
 import { flushSync } from "react-dom";
+import Box from "@mui/material/Box";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import type { FileEntry } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
 import { useFiles } from "../containers/FilesContext";
@@ -55,8 +61,14 @@ function FilesToolbar() {
       ? [{ name: t("files.roots"), path: "" }]
       : [{ name: files.path, path: files.path }];
   return (
-    <div className="browser-bar">
-      <button
+    <Toolbar
+      className="browser-bar"
+      disableGutters
+      variant="dense"
+      aria-label={t("files.toolbar")}
+      sx={{ minHeight: 0, flexWrap: "wrap", gap: 1 }}
+    >
+      <Button
         id="files-up"
         type="button"
         ref={tooltipRef(tips.filesUp)}
@@ -64,50 +76,62 @@ function FilesToolbar() {
         onClick={() => files.goUp()}
       >
         {t("common.up")}
-      </button>
-      <nav id="files-path" className="files-path" aria-label={t("files.path")}>
-        <ol className="files-crumbs">
-          {crumbs.map((crumb, index) => {
-            const last = index === crumbs.length - 1;
+      </Button>
+      <Breadcrumbs
+        id="files-path"
+        className="files-path"
+        aria-label={t("files.path")}
+        separator="/"
+        sx={{
+          flex: "1 1 8rem",
+          minWidth: 0,
+          "& .MuiBreadcrumbs-ol": { flexWrap: "nowrap" },
+        }}
+      >
+        {crumbs.map((crumb, index) => {
+          const last = index === crumbs.length - 1;
+          if (!last && crumb.path) {
             return (
-              <li key={`${crumb.path}:${crumb.name}:${index}`}>
-                {!last && crumb.path
-                  ? (
-                    <button
-                      type="button"
-                      ref={tooltipRef(openCrumb(crumb.name))}
-                      className="files-crumb"
-                      onClick={() => files.openCrumb(crumb.path)}
-                    >
-                      {crumb.name}
-                    </button>
-                  )
-                  : (
-                    <span className="files-crumb" aria-current="page">{crumb.name}</span>
-                  )}
-                {!last ? <span className="files-sep" aria-hidden="true">/</span> : null}
-              </li>
+              <Button
+                key={`${crumb.path}:${crumb.name}:${index}`}
+                type="button"
+                ref={tooltipRef(openCrumb(crumb.name))}
+                className="files-crumb"
+                onClick={() => files.openCrumb(crumb.path)}
+              >
+                {crumb.name}
+              </Button>
             );
-          })}
-        </ol>
-      </nav>
-      <label className="search files-search" htmlFor="files-search">
-        <span className="visually-hidden">{t("files.searchLabel")}</span>
-        <input
-          id="files-search"
-          ref={tooltipRef(tips.filesSearch)}
-          type="search"
-          placeholder={t("files.searchPlaceholder")}
-          autoComplete="off"
-          spellCheck={false}
-          defaultValue={files.query}
-          onInput={(event) => files.onSearchInput(event.currentTarget.value)}
-        />
-      </label>
-      <button id="files-refresh" type="button" ref={tooltipRef(tips.filesRefresh)} onClick={() => files.refresh()}>
+          }
+          return (
+            <Typography
+              key={`${crumb.path}:${crumb.name}:${index}`}
+              className="files-crumb"
+              component="span"
+              aria-current="page"
+            >
+              {crumb.name}
+            </Typography>
+          );
+        })}
+      </Breadcrumbs>
+      <TextField
+        id="files-search"
+        className="search files-search"
+        size="small"
+        type="search"
+        placeholder={t("files.searchPlaceholder")}
+        autoComplete="off"
+        defaultValue={files.query}
+        inputRef={tooltipRef(tips.filesSearch)}
+        aria-label={t("files.searchLabel")}
+        slotProps={{ htmlInput: { spellCheck: false } }}
+        onInput={(event) => files.onSearchInput((event.target as HTMLInputElement).value)}
+      />
+      <Button id="files-refresh" type="button" ref={tooltipRef(tips.filesRefresh)} onClick={() => files.refresh()}>
         {t("common.refresh")}
-      </button>
-      <button
+      </Button>
+      <Button
         id="files-elsewhere"
         className="files-elsewhere"
         type="button"
@@ -115,8 +139,8 @@ function FilesToolbar() {
         onClick={() => files.toggleElsewhere()}
       >
         {files.elsewhere ? t("files.roots") : t("files.browseElsewhere")}
-      </button>
-    </div>
+      </Button>
+    </Toolbar>
   );
 }
 
@@ -125,8 +149,8 @@ function FilesActions() {
   const selected = files.selectedEntries;
   const locked = files.locked;
   return (
-    <div className="files-actions">
-      <button
+    <Box className="files-actions" aria-label={t("files.actionsLabel")}>
+      <Button
         id="files-rename"
         type="button"
         ref={tooltipRef(tips.filesRename)}
@@ -134,8 +158,8 @@ function FilesActions() {
         onClick={(event) => files.startRename(event.currentTarget)}
       >
         {t("crates.rename")}
-      </button>
-      <button
+      </Button>
+      <Button
         id="files-rename-from-tags"
         type="button"
         ref={tooltipRef(tips.filesRenameFromTags)}
@@ -144,8 +168,8 @@ function FilesActions() {
         onClick={(event) => files.startRenameFromTags(event.currentTarget)}
       >
         {t("files.renameFromTags")}
-      </button>
-      <button
+      </Button>
+      <Button
         id="files-move"
         type="button"
         ref={tooltipRef(tips.filesMove)}
@@ -153,8 +177,8 @@ function FilesActions() {
         onClick={() => files.startMove()}
       >
         {t("files.moveToFolder")}
-      </button>
-      <button
+      </Button>
+      <Button
         id="files-move-folder"
         type="button"
         ref={tooltipRef(tips.filesMoveFolder)}
@@ -162,8 +186,8 @@ function FilesActions() {
         onClick={() => files.startMoveFolder()}
       >
         {t("files.moveFolder")}
-      </button>
-      <button
+      </Button>
+      <Button
         id="files-replace"
         type="button"
         ref={tooltipRef(tips.filesReplace)}
@@ -171,8 +195,8 @@ function FilesActions() {
         onClick={(event) => files.startReplace(event.currentTarget)}
       >
         {t("files.replaceFile")}
-      </button>
-      <button
+      </Button>
+      <Button
         id="files-delete"
         type="button"
         ref={tooltipRef(tips.filesDelete)}
@@ -180,27 +204,29 @@ function FilesActions() {
         onClick={(event) => files.startDelete(event.currentTarget)}
       >
         {t("common.delete")}
-      </button>
-      <button
+      </Button>
+      <Button
         id="files-move-here"
         type="button"
         ref={tooltipRef(tips.filesMoveHere)}
         hidden={!files.pick}
         disabled={locked}
+        sx={!files.pick ? { display: "none" } : undefined}
         onClick={(event) => files.confirmMoveHere(event.currentTarget)}
       >
         {t("files.moveHere")}
-      </button>
-      <button
+      </Button>
+      <Button
         id="files-pick-cancel"
         type="button"
         ref={tooltipRef(tips.filesPickCancel)}
         hidden={!files.pick}
+        sx={!files.pick ? { display: "none" } : undefined}
         onClick={() => files.cancelPick()}
       >
         {t("common.cancel")}
-      </button>
-    </div>
+      </Button>
+    </Box>
   );
 }
 
@@ -374,15 +400,16 @@ function FilesList() {
       <div className="files-empty-state">
         <h2>{t("files.noRoots")}</h2>
         <p>{t("files.noRootsBody")}</p>
-        <button
+        <Button
           id="files-run-setup"
           type="button"
           ref={tooltipRef(tips.runSetup)}
           className="files-primary"
+          variant="contained"
           onClick={() => bridge.openSetup()}
         >
           {t("files.runSetup")}
-        </button>
+        </Button>
       </div>
     );
   } else if (emptyFolder) {

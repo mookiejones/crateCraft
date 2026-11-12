@@ -15,7 +15,6 @@ import type {
   FilesPayload,
 } from "../api-types";
 import { bridge } from "../bridge";
-import { el } from "../dom";
 import { serverMessage, t } from "../i18n";
 import { emitFiles } from "./files-store";
 import { FILE_ROW, ROOT_ROW, state } from "../state";
@@ -43,6 +42,7 @@ export function bindFilesMount(fn: () => void): void {
 
 let filesPreview: FilesPayload | null = null;
 let filesAction = "";
+let filesDialogOpen = false;
 let filesTagScope: "paths" | "crate" = "paths";
 let filesTrigger: HTMLElement | null = null;
 let dialogName = "";
@@ -524,6 +524,7 @@ export type FilesDialogAction = string;
 
 export type FilesDialogSnapshot = {
   action: string;
+  open: boolean;
   name: string;
   replacement: string;
   status: string;
@@ -539,6 +540,7 @@ export type FilesDialogSnapshot = {
 export function getFilesDialog(): FilesDialogSnapshot {
   return {
     action: filesAction,
+    open: filesDialogOpen,
     name: dialogName,
     replacement: dialogReplacement,
     status: dialogStatus,
@@ -561,6 +563,7 @@ export function openFilesDialog(
   scope: "paths" | "crate" = "paths",
 ): void {
   filesAction = action;
+  filesDialogOpen = true;
   filesTagScope = scope;
   filesPreview = null;
   filesTrigger = trigger instanceof HTMLElement ? trigger : null;
@@ -570,15 +573,13 @@ export function openFilesDialog(
   dialogReplacement = "";
   mountFiles();
   emitFiles();
-  const dialog = el("files-dialog");
-  if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
   if (
     action === "delete" ||
     action === "move" ||
     action === "move_folder" ||
     action === "rename_from_tags"
   ) {
-    el("files-cancel").focus();
+    document.getElementById("files-cancel")?.focus();
     reviewFiles().catch((error) => {
       dialogStatus = failureOf(error).message;
       emitFiles();
@@ -632,8 +633,7 @@ export function closeFilesDialog(): void {
   const trigger = filesTrigger;
   filesTrigger = null;
   filesTagScope = "paths";
-  const dialog = document.getElementById("files-dialog");
-  if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
+  filesDialogOpen = false;
   if (trigger instanceof HTMLElement) trigger.focus();
   emitFiles();
 }
