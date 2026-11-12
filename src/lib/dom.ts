@@ -242,7 +242,7 @@ export interface ElementIds {
   "about-version": HTMLParagraphElement;
   "copy-version": HTMLButtonElement;
   "version-copy-status": HTMLParagraphElement;
-  "files-dialog": HTMLDialogElement;
+  "files-dialog": HTMLElement;
   "files-list": HTMLDivElement;
   "files-status": HTMLParagraphElement;
   "files-name": HTMLInputElement;
@@ -259,8 +259,8 @@ export interface ElementIds {
   "files-move-folder": HTMLButtonElement;
   "files-replace": HTMLButtonElement;
   "files-delete": HTMLButtonElement;
-  "files-name-label": HTMLLabelElement;
-  "files-replace-label": HTMLLabelElement;
+  "files-name-label": HTMLElement;
+  "files-replace-label": HTMLElement;
   "files-summary": HTMLParagraphElement;
   "files-warning": HTMLParagraphElement;
   "files-dialog-status": HTMLParagraphElement;

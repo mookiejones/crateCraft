@@ -71,9 +71,12 @@ describe("rename from tags", () => {
       crate: 5,
       space: "Serato Library",
     });
-    expect((document.querySelector("#files-dialog") as HTMLDialogElement).open).toBe(true);
+    const review = document.getElementById("files-dialog-title")?.closest('[role="dialog"]');
+    expect(review).toBeTruthy();
+    expect(review?.className).toContain("MuiDialog-paper");
     expect((document.querySelector("#files-review") as HTMLElement).hidden).toBe(true);
     expect(document.querySelector("#files-changes")?.textContent).toContain("Artist - Same.mp3");
+    expect(document.querySelector("#files-confirm")?.className).toContain("MuiButton-root");
   });
 
   it("posts selected files from the Files button", async () => {

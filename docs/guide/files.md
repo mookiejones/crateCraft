@@ -60,7 +60,7 @@ The list under that line names each problem. Fix it on the laptop. The check doe
 
 ## Read the review first
 
-Every change opens **Review this change**. The dialog says **Nothing is changed until you confirm.**
+Every change opens **Review this change** as a centered dialog over the folder list. The dialog says **Nothing is changed until you confirm.**
 
 The list shows the old path, an arrow, and the new path or **Trash**. Library tracks also name their crates.
 

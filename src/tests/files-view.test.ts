@@ -73,6 +73,9 @@ describe("files view", () => {
     expect(document.querySelector("#files-elsewhere")?.className).not.toContain("files-primary");
     expect((document.querySelector("#files-up") as HTMLButtonElement).disabled).toBe(true);
     expect(document.querySelector("#files-path [aria-current='page']")?.textContent).toBe("Music folders");
+    expect(document.querySelector("#files-panel .MuiToolbar-root")?.getAttribute("aria-label")).toBe("Folder toolbar");
+    expect(document.querySelector("#files-up")?.className).toContain("MuiButton-root");
+    expect(document.querySelector("#files-panel .MuiDataGrid-root")).toBeNull();
 
     const list = document.querySelector("#files-list") as HTMLElement;
     list.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
