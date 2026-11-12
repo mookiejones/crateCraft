@@ -2,7 +2,7 @@
  * Settings snapshot for the React Settings island.
  *
  * Language, appearance, sharing, About, and the update switches live
- * here. The dialog markup is painted by `SettingsPanel`. Callers in
+ * here. The Main page markup is painted by `SettingsPanel`. Callers in
  * dialogs, version, and update write this store so every island sees
  * the same values. Python and the API stay unchanged.
  */
@@ -154,7 +154,7 @@ export function patchSettings(patch: Partial<SettingsSnapshot>): void {
 }
 
 /**
- * Return whether the Settings dialog is a React island.
+ * Return whether the Settings page is a React island.
  *
  * @returns True after `mountSettings` filled `#settings-dialog`.
  */
@@ -542,14 +542,41 @@ export async function copyLogs(): Promise<void> {
   }
 }
 
+function settingsHost(): HTMLDialogElement | null {
+  const dialog = document.getElementById("settings-dialog");
+  return dialog instanceof HTMLDialogElement ? dialog : null;
+}
+
+function markSettingsExpanded(open: boolean): void {
+  const trigger = document.getElementById("open-settings");
+  if (trigger) trigger.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
 /**
- * Close the Settings dialog.
+ * Open Settings as a Main page, not a modal overlay.
+ *
+ * Uses `show()` so AppBar and Drawer stay usable. `#open-settings`
+ * stays the trigger.
+ *
+ * @returns {void}
+ */
+export function openSettings(): void {
+  patchSettings({ settingsStatus: "", logFallback: "", logFallbackHidden: true });
+  const dialog = settingsHost();
+  if (!dialog) return;
+  if (!dialog.open) dialog.show();
+  markSettingsExpanded(true);
+}
+
+/**
+ * Close the Settings Main page.
  *
  * @returns {void}
  */
 export function closeSettings(): void {
-  const dialog = document.getElementById("settings-dialog");
-  if (dialog instanceof HTMLDialogElement) dialog.close();
+  const dialog = settingsHost();
+  if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
+  markSettingsExpanded(false);
 }
 
 /**

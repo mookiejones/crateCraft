@@ -90,6 +90,7 @@ textarea:focus-visible,
 }
 
 .app-body {
+  position: relative;
   display: flex;
   flex: 1;
   min-height: 0;
@@ -1170,6 +1171,20 @@ dialog {
 #settings-dialog {
   max-height: min(40rem, calc(100vh - 32px));
   overflow: auto;
+}
+
+#settings-dialog[open] {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: auto;
+  max-width: none;
+  height: auto;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .shortcuts-section {
@@ -2478,6 +2493,13 @@ dialog .settings-field select {
 
 #wizard {
   max-width: 40rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+#wizard .MuiDialog-paper {
+  margin: 0;
 }
 
 .wizard-step {

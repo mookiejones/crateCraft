@@ -89,7 +89,7 @@
       <footer id="rail-foot" class="rail-foot">
         <p id="app-version" class="app-version" hidden></p>
         <button id="open-help" type="button" aria-haspopup="dialog" data-i18n="help.title">Help</button>
-        <button id="open-settings" type="button" aria-haspopup="dialog" data-i18n="settings.title">Settings</button>
+        <button id="open-settings" type="button" aria-expanded="false" data-i18n="settings.title">Settings</button>
       </footer>
     </aside>
 
@@ -352,18 +352,7 @@
       </section>
       <div id="player-bar" class="player-bar"></div>
     </main>
-    </div>
-  </div>
-  <dialog id="consent-dialog" aria-labelledby="consent-title" aria-describedby="consent-body">
-    <h2 id="consent-title" data-i18n="wizard.heading.consent">Share anonymous usage stats and crash reports?</h2>
-    <p id="consent-body" data-i18n="consent.body">Counts and actions only, plus the app name, the app version, and the operating system. Track titles, crate names, file paths, and library contents stay on this computer. Sharing stays off unless you turn it on.</p>
-    <div class="dialog-actions">
-      <button id="consent-decline" type="button" autofocus data-i18n="consent.decline">Don't share</button>
-      <button id="consent-accept" type="button" data-i18n="consent.accept">Share</button>
-    </div>
-    <p id="consent-status" class="dialog-status" role="status" aria-live="polite"></p>
-  </dialog>
-  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <dialog id="settings-dialog" aria-labelledby="settings-title">
     <h2 id="settings-title" data-i18n="settings.title">Settings</h2>
     <label class="check">
       <input id="telemetry-toggle" type="checkbox">
@@ -427,6 +416,17 @@
     </div>
     <p id="settings-status" class="dialog-status" role="status" aria-live="polite"></p>
     <textarea id="log-fallback" class="log-fallback" readonly hidden aria-label="Log text" data-i18n-attr="aria-label:settings.logText"></textarea>
+  </dialog>
+    </div>
+  </div>
+  <dialog id="consent-dialog" aria-labelledby="consent-title" aria-describedby="consent-body">
+    <h2 id="consent-title" data-i18n="wizard.heading.consent">Share anonymous usage stats and crash reports?</h2>
+    <p id="consent-body" data-i18n="consent.body">Counts and actions only, plus the app name, the app version, and the operating system. Track titles, crate names, file paths, and library contents stay on this computer. Sharing stays off unless you turn it on.</p>
+    <div class="dialog-actions">
+      <button id="consent-decline" type="button" autofocus data-i18n="consent.decline">Don't share</button>
+      <button id="consent-accept" type="button" data-i18n="consent.accept">Share</button>
+    </div>
+    <p id="consent-status" class="dialog-status" role="status" aria-live="polite"></p>
   </dialog>
   <dialog id="help-dialog" aria-labelledby="help-title">
     <h2 id="help-title" data-i18n="help.title">Help</h2>
