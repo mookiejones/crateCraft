@@ -24511,6 +24511,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function createAppTheme(colorway) {
     let id = isThemedColorway(colorway) ? colorway : "serato-like", colors = COLORWAY_PALETTES[id];
     return createTheme2({
+      typography: {
+        fontFamily: '"Familjen Grotesk", system-ui, sans-serif',
+        fontSize: 13,
+        button: { textTransform: "none", fontWeight: 600 }
+      },
+      shape: { borderRadius: 8 },
       palette: {
         mode: colors.mode,
         primary: {

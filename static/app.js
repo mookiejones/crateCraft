@@ -22750,6 +22750,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function createAppTheme(colorway) {
     let id = isThemedColorway(colorway) ? colorway : "serato-like", colors = COLORWAY_PALETTES[id];
     return createTheme2({
+      typography: {
+        fontFamily: '"Familjen Grotesk", system-ui, sans-serif',
+        fontSize: 13,
+        button: { textTransform: "none", fontWeight: 600 }
+      },
+      shape: { borderRadius: 8 },
       palette: {
         mode: colors.mode,
         primary: {
@@ -58323,7 +58329,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           color: "inherit",
           font: "inherit",
           "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within, & .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
-            outline: "none"
+            outline: "2px solid var(--cadmium)",
+            outlineOffset: "-2px"
           }
         }
       },
@@ -72226,7 +72233,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), "Menu");
 
   // src/pages/AppShell.tsx
-  var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 240;
+  var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 200;
   function tooltipRef15(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -72238,7 +72245,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     node2 && node2.parentElement !== slot && slot.append(node2);
   }
   function AppShell() {
-    let [open, setOpen] = (0, import_react59.useState)(!0), [, setLocaleTick] = (0, import_react59.useState)(0), spaceSlot = (0, import_react59.useRef)(null), playerSlot = (0, import_react59.useRef)(null), navSlot = (0, import_react59.useRef)(null), footSlot = (0, import_react59.useRef)(null), bodySlot = (0, import_react59.useRef)(null);
+    let [open, setOpen] = (0, import_react59.useState)(() => window.innerWidth > 980), [, setLocaleTick] = (0, import_react59.useState)(0), spaceSlot = (0, import_react59.useRef)(null), playerSlot = (0, import_react59.useRef)(null), navSlot = (0, import_react59.useRef)(null), footSlot = (0, import_react59.useRef)(null), bodySlot = (0, import_react59.useRef)(null);
     return (0, import_react59.useEffect)(() => onLocaleChange(() => {
       setLocaleTick((n) => n + 1);
     }), []), (0, import_react59.useLayoutEffect)(() => {

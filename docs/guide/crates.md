@@ -2,13 +2,15 @@
 
 Crates are the lists on the left when **Crates** is selected. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
 
-![The Crates view on a sample library. Warmup is selected, and the track list shows the one track in that crate.](../media/crates.png)
+The navigation highlights the open section. On narrow screens it starts collapsed; use the menu button to open it. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
 
-The picture uses a small sample library. The button **Reveal in file manager** is the label on this sample computer. On a Mac the button reads **Reveal in Finder**. On Windows it reads **Reveal in File Explorer**.
+![The Crates view with Saturday night selected in an example library of 24 tracks. Search and actions sit above the grid, with track details on the right.](../media/crates-refined.png)
+
+The picture uses a small sample library. Track details include **Reveal in Finder** on Mac or **Reveal in File Explorer** on Windows.
 
 ## Spaces
 
-The menu under the status line chooses a space.
+The menu in the top bar chooses a space.
 
 | Menu label | What it is |
 | --- | --- |

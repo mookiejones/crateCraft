@@ -70,6 +70,24 @@ describe("AppShell", () => {
     expect(toggle?.dataset.tooltip?.trim().length).toBeGreaterThan(10);
   });
 
+  it("starts collapsed on a narrow screen and can open navigation", () => {
+    const originalWidth = window.innerWidth;
+    try {
+      unmountAppShell();
+      installPage();
+      Object.defineProperty(window, "innerWidth", { configurable: true, value: 390 });
+      mountAppShell();
+      const toggle = document.getElementById("drawer-toggle");
+      expect(toggle?.getAttribute("aria-expanded")).toBe("false");
+      expect(document.getElementById("open-help")?.closest("[inert]")).not.toBeNull();
+      flushSync(() => { toggle?.click(); });
+      expect(toggle?.getAttribute("aria-expanded")).toBe("true");
+      expect(document.getElementById("open-help")?.closest("[inert]")).toBeNull();
+    } finally {
+      Object.defineProperty(window, "innerWidth", { configurable: true, value: originalWidth });
+    }
+  });
+
   it("places the player strip under the AppBar, outside Main", () => {
     const bar = document.getElementById("player-bar");
     const appBar = document.querySelector(".MuiAppBar-root");

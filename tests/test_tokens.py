@@ -619,6 +619,9 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".view-switch button", ("--color-bg",), 15, 400),
     (".view-children button", ("--color-card",), 15, 400),
     (".sheet-title", ("--color-card",), 15, 600),
+    ('.drawer-nav .view-switch button[aria-selected="true"]', ("--color-selection",), 15, 600),
+    ('.drawer-nav .view-children button[aria-selected="true"]', ("--color-selection",), 15, 600),
+    (".search-field select", ("--color-card",), 15, 400),
     (".sheet-scope", ("--color-card",), 13, 400),
     (".sort-crates button", ("--color-bg",), 15, 400),
     (".crate-actions button", ("--color-bg",), 15, 400),
@@ -773,6 +776,12 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 # .swatch inset shadow: a 1px hairline of --color-shadow at 18% on a
 # data-driven swatch, not a control boundary.
 _DECORATIVE = {
+    ".app-bar-space select",
+    ".drawer-nav .view-children",
+    ".drawer-foot .rail-foot",
+    ".browser-actions button",
+    ".browser-actions button:hover:not(:disabled)",
+    '.browser-actions button[aria-pressed="true"]',
     ".detail",
     ".list .MuiDataGrid-columnHeaders",
     ".list .MuiDataGrid-footerContainer",
@@ -803,8 +812,8 @@ _DECORATIVE = {
 # The only visible edge of these fields. Card surfaces use the sheet.
 # The rail fields sit on walnut.
 _CONTROL_EDGE = (
-    (".search input", "--color-card", "border-bottom"),
-    (".search-field select", "--color-card", "border-bottom"),
+    (".search input", "--color-card", "border"),
+    (".search-field select", "--color-card", "border"),
     (".rail select", "--color-bg", "border-bottom"),
     (".rail-field input", "--color-bg", "border-bottom"),
     (".rekordbox-option select", "--color-card", "border-bottom"),
@@ -941,6 +950,8 @@ class ContrastTests(unittest.TestCase):
             '.list .MuiDataGrid-row[aria-selected="true"]',
             ".crate-row.holds-selection",
             ".rail",
+            '.drawer-nav .view-switch button[aria-selected="true"]',
+            '.drawer-nav .view-children button[aria-selected="true"]',
             "#consent-accept",
             "#open-logs",
             "#copy-logs",
