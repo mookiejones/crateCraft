@@ -1859,6 +1859,31 @@ dialog .settings-field select {
   align-items: center;
 }
 
+.health-accordion.MuiAccordion-root {
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  border: 1px solid var(--color-border, currentColor);
+  margin: var(--space-2) 0;
+}
+
+.health-accordion .MuiAccordionSummary-root {
+  min-height: 44px;
+}
+
+.health-accordion .MuiAccordionSummary-content {
+  margin: var(--space-2) 0;
+}
+
+.health-grid {
+  width: 100%;
+  min-height: 120px;
+}
+
+.tags-cluster-chrome {
+  margin: var(--space-2) 0;
+}
+
 .album-art-choice {
   display: flex;
   flex-wrap: wrap;

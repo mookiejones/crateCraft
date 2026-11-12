@@ -5,7 +5,7 @@
 1. Open crateCraft.
 2. Click **Health** in the drawer, then **Stems**.
 
-A matching row shows the word **stems**.
+A matching row shows the word **stems**. The track list is the same list as **Crates**.
 
 This view does not create stems, and it does not separate the drums, bass, melody, or vocal. Open the track and use the same details as any other track. [Track details](tags.md) covers save, reveal, Prepare, and relocate.
 

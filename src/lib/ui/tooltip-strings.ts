@@ -224,6 +224,7 @@ export const tips = {
   viewBitrate: spec("tooltip.viewBitrate"),
   viewTags: spec("tooltip.viewTags"),
   healthRefresh: spec("tooltip.healthRefresh"),
+  healthSection: spec("tooltip.healthSection"),
   healthOpenMissing: spec("tooltip.healthOpenMissing"),
   healthOpenDuplicates: spec("tooltip.healthOpenDuplicates"),
   healthOpenFiles: spec("tooltip.healthOpenFiles"),
