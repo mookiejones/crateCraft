@@ -30,9 +30,9 @@ var SeratoWizard = (() => {
     mod
   )), __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: !0 }), mod);
 
-  // node_modules/react/cjs/react.production.js
+  // ../../node_modules/react/cjs/react.production.js
   var require_react_production = __commonJS({
-    "node_modules/react/cjs/react.production.js"(exports) {
+    "../../node_modules/react/cjs/react.production.js"(exports) {
       "use strict";
       var REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity"), REACT_VIEW_TRANSITION_TYPE = /* @__PURE__ */ Symbol.for("react.view_transition"), MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
       function getIteratorFn(maybeIterable) {
@@ -447,17 +447,17 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/react/index.js
+  // ../../node_modules/react/index.js
   var require_react = __commonJS({
-    "node_modules/react/index.js"(exports, module) {
+    "../../node_modules/react/index.js"(exports, module) {
       "use strict";
       module.exports = require_react_production();
     }
   });
 
-  // node_modules/react-dom/cjs/react-dom.production.js
+  // ../../node_modules/react-dom/cjs/react-dom.production.js
   var require_react_dom_production = __commonJS({
-    "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
+    "../../node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
       var React = require_react();
       function formatProdErrorMessage(code) {
@@ -609,9 +609,9 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/react-dom/index.js
+  // ../../node_modules/react-dom/index.js
   var require_react_dom = __commonJS({
-    "node_modules/react-dom/index.js"(exports, module) {
+    "../../node_modules/react-dom/index.js"(exports, module) {
       "use strict";
       function checkDCE() {
         if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
@@ -625,9 +625,9 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/scheduler/cjs/scheduler.production.js
+  // ../../node_modules/scheduler/cjs/scheduler.production.js
   var require_scheduler_production = __commonJS({
-    "node_modules/scheduler/cjs/scheduler.production.js"(exports) {
+    "../../node_modules/scheduler/cjs/scheduler.production.js"(exports) {
       "use strict";
       function push(heap, node) {
         var index = heap.length;
@@ -851,17 +851,17 @@ var SeratoWizard = (() => {
     }
   });
 
-  // node_modules/scheduler/index.js
+  // ../../node_modules/scheduler/index.js
   var require_scheduler = __commonJS({
-    "node_modules/scheduler/index.js"(exports, module) {
+    "../../node_modules/scheduler/index.js"(exports, module) {
       "use strict";
       module.exports = require_scheduler_production();
     }
   });
 
-  // node_modules/react-dom/cjs/react-dom-client.production.js
+  // ../../node_modules/react-dom/cjs/react-dom-client.production.js
   var require_react_dom_client_production = __commonJS({
-    "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
+    "../../node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler(), React = require_react(), ReactDOM = require_react_dom();
       function formatProdErrorMessage(code) {
@@ -12106,9 +12106,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // node_modules/react-dom/client.js
+  // ../../node_modules/react-dom/client.js
   var require_client = __commonJS({
-    "node_modules/react-dom/client.js"(exports, module) {
+    "../../node_modules/react-dom/client.js"(exports, module) {
       "use strict";
       function checkDCE() {
         if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
@@ -12122,9 +12122,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // node_modules/react/cjs/react-jsx-runtime.production.js
+  // ../../node_modules/react/cjs/react-jsx-runtime.production.js
   var require_react_jsx_runtime_production = __commonJS({
-    "node_modules/react/cjs/react-jsx-runtime.production.js"(exports) {
+    "../../node_modules/react/cjs/react-jsx-runtime.production.js"(exports) {
       "use strict";
       var REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment");
       function jsxProd(type, config, maybeKey) {
@@ -12148,9 +12148,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // node_modules/react/jsx-runtime.js
+  // ../../node_modules/react/jsx-runtime.js
   var require_jsx_runtime = __commonJS({
-    "node_modules/react/jsx-runtime.js"(exports, module) {
+    "../../node_modules/react/jsx-runtime.js"(exports, module) {
       "use strict";
       module.exports = require_react_jsx_runtime_production();
     }
@@ -13204,6 +13204,10 @@ Error generating stack: ` + x.message + `
     "shortcuts.viewSnapshots": "Backups",
     "snapshots.backupDrives": "Back up drive crates",
     "snapshots.backupDrivesBusy": "Backing up drive crates…",
+    "snapshots.columnRestore": "Restore",
+    "snapshots.columnSize": "Size",
+    "snapshots.columnStatus": "Status",
+    "snapshots.columnWhen": "When",
     "snapshots.count": {
       one: "{count} backup",
       other: "{count} backups"
@@ -13234,10 +13238,13 @@ Error generating stack: ` + x.message + `
     "snapshots.saving": "Saving backup…",
     "snapshots.seratoUnknown": "Serato version unknown",
     "snapshots.seratoVersion": "Serato {version} (build {build})",
+    "snapshots.sizeUnknown": "Unknown size",
     "snapshots.skippedCrates": {
       one: "Restore finished. {count} crate file was skipped because its snapshot copy could not be read: {names}.",
       other: "Restore finished. {count} crate files were skipped because their snapshot copy could not be read: {names}."
     },
+    "snapshots.statusFailed": "Check failed",
+    "snapshots.statusOk": "Checked",
     "snapshots.take": "Take a backup",
     "snapshots.trigger": "snapshot",
     "snapshots.unavailableDrives": "Unavailable: {drives}.",
@@ -14778,6 +14785,10 @@ Error generating stack: ` + x.message + `
     "shortcuts.viewSnapshots": "Copias de seguridad",
     "snapshots.backupDrives": "Copiar cajas de las unidades",
     "snapshots.backupDrivesBusy": "Copiando cajas de las unidades…",
+    "snapshots.columnRestore": "Restaurar",
+    "snapshots.columnSize": "Tamaño",
+    "snapshots.columnStatus": "Estado",
+    "snapshots.columnWhen": "Cuándo",
     "snapshots.count": {
       one: "{count} copia",
       other: "{count} copias"
@@ -14808,10 +14819,13 @@ Error generating stack: ` + x.message + `
     "snapshots.saving": "Guardando copia…",
     "snapshots.seratoUnknown": "Versión de Serato desconocida",
     "snapshots.seratoVersion": "Serato {version} (compilación {build})",
+    "snapshots.sizeUnknown": "Tamaño desconocido",
     "snapshots.skippedCrates": {
       one: "Restauración terminada. Se omitió {count} archivo de caja porque no se pudo leer su copia de la instantánea: {names}.",
       other: "Restauración terminada. Se omitieron {count} archivos de caja porque no se pudo leer su copia de la instantánea: {names}."
     },
+    "snapshots.statusFailed": "Comprobación fallida",
+    "snapshots.statusOk": "Comprobado",
     "snapshots.take": "Hacer una copia de seguridad",
     "snapshots.trigger": "instantánea",
     "snapshots.unavailableDrives": "No disponibles: {drives}.",

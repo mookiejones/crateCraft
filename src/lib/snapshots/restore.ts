@@ -13,7 +13,6 @@ import { mountIsland, type IslandRoot } from "../../app/mount";
 import { RestoreDialog } from "../../pages/RestoreDialog";
 import { SnapshotsPanel } from "../../pages/SnapshotsPanel";
 import type { SnapshotsSnapshot } from "../../containers/SnapshotsContext";
-import { el } from "../dom";
 import { messageParams, serverMessage, t } from "../i18n";
 import { state } from "../state";
 
@@ -123,7 +122,7 @@ function bindHost(host: HTMLElement | null, node: ReturnType<typeof createElemen
  */
 export function mountSnapshots(): void {
   bindHost(document.getElementById("snapshots-panel"), createElement(SnapshotsPanel));
-  bindHost(document.getElementById("snapshot-dialog"), createElement(RestoreDialog));
+  bindHost(document.getElementById("snapshot-dialog-host"), createElement(RestoreDialog));
 }
 
 function ensureMounted(): void {
@@ -235,10 +234,11 @@ export function renderOperations() {
 }
 
 /**
- * Ask for a restore plan and open the dialog.
+ * Ask for a restore plan and open the MUI dialog.
  *
  * The plan is a dry run. Confirm stays off when the server says the
- * restore is blocked.
+ * restore is blocked. Open state is `planOpen`; this does not call
+ * `showModal`.
  *
  * @param {string} snapshotId Snapshot to review.
  * @returns {Promise<void>}
@@ -249,8 +249,6 @@ export async function openSnapshotPlan(snapshotId: string) {
   planOpen = true;
   planStatus = "";
   paint();
-  const dialog = el("snapshot-dialog");
-  if (!dialog.open) dialog.showModal();
   const plan = await postJSON<RestorePlan>("/api/snapshots", { action: "plan", id: snapshotId });
   lastPlan = plan;
   paint();
@@ -262,8 +260,7 @@ export async function openSnapshotPlan(snapshotId: string) {
  * @returns {void}
  */
 export function repaintSnapshotPlan() {
-  const dialog = document.getElementById("snapshot-dialog");
-  if (lastPlan && dialog instanceof HTMLDialogElement && dialog.open) paint();
+  if (planOpen) paint();
 }
 
 /**
@@ -313,8 +310,6 @@ export function setSnapshotDialogStatus(message: string) {
  */
 export function closePlan(): void {
   planOpen = false;
-  const dialog = document.getElementById("snapshot-dialog");
-  if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
   paint();
 }
 

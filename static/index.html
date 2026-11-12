@@ -697,17 +697,7 @@
       <button id="quick-open-close" type="button" data-i18n="common.close">Close</button>
     </div>
   </dialog>
-  <dialog id="snapshot-dialog" aria-labelledby="snapshot-title" aria-describedby="snapshot-intro">
-    <h2 id="snapshot-title" data-i18n="snapshots.restoreTitle">Restore this backup</h2>
-    <p id="snapshot-intro" data-i18n="snapshots.restoreIntro">Nothing is changed until you confirm. A new snapshot is saved first, so this restore can be undone.</p>
-    <div id="snapshot-plan" aria-live="polite"></div>
-    <p id="snapshot-block" class="dialog-note" role="status"></p>
-    <div class="dialog-actions">
-      <button id="snapshot-cancel" type="button" data-i18n="common.cancel">Cancel</button>
-      <button id="snapshot-confirm" type="button" data-i18n="snapshots.restore">Restore</button>
-    </div>
-    <p id="snapshot-status" class="dialog-status" role="status" aria-live="polite"></p>
-  </dialog>
+  <div id="snapshot-dialog-host"></div>
   <!-- The current step shows its spot illustration. The others stay hidden. -->
   <dialog id="wizard" aria-labelledby="wizard-title" aria-describedby="wizard-body">
     <p id="wizard-step" class="wizard-step">

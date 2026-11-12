@@ -82,7 +82,8 @@ export interface ElementIds {
   "snapshot-plan": HTMLDivElement;
   "snapshot-block": HTMLParagraphElement;
   "snapshot-confirm": HTMLButtonElement;
-  "snapshot-dialog": HTMLDialogElement;
+  "snapshot-dialog": HTMLElement;
+  "snapshot-dialog-host": HTMLElement;
   "snapshot-status": HTMLParagraphElement;
   "snapshots-take": HTMLButtonElement;
   "snapshots-drives": HTMLButtonElement;

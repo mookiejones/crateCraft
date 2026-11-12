@@ -1031,6 +1031,10 @@
   "shortcuts.viewSnapshots": "Backups",
   "snapshots.backupDrives": "Back up drive crates",
   "snapshots.backupDrivesBusy": "Backing up drive crates…",
+  "snapshots.columnRestore": "Restore",
+  "snapshots.columnSize": "Size",
+  "snapshots.columnStatus": "Status",
+  "snapshots.columnWhen": "When",
   "snapshots.count": {
     "one": "{count} backup",
     "other": "{count} backups"
@@ -1061,10 +1065,13 @@
   "snapshots.saving": "Saving backup…",
   "snapshots.seratoUnknown": "Serato version unknown",
   "snapshots.seratoVersion": "Serato {version} (build {build})",
+  "snapshots.sizeUnknown": "Unknown size",
   "snapshots.skippedCrates": {
     "one": "Restore finished. {count} crate file was skipped because its snapshot copy could not be read: {names}.",
     "other": "Restore finished. {count} crate files were skipped because their snapshot copy could not be read: {names}."
   },
+  "snapshots.statusFailed": "Check failed",
+  "snapshots.statusOk": "Checked",
   "snapshots.take": "Take a backup",
   "snapshots.trigger": "snapshot",
   "snapshots.unavailableDrives": "Unavailable: {drives}.",
