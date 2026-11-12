@@ -19,7 +19,7 @@ flowchart TD
 
 **Organize files** browses folders on this computer. The first folder is **Home**. These actions can move, rename, and trash audio files. Cue points stay inside the file that moves. Crates, history, and **Prepare** follow the new path.
 
-Quit Serato DJ Pro first. Every change opens **Review this change**. The dialog says **Nothing is changed until you confirm.**
+Quit Serato DJ Pro first. Every change opens **Review this change** as a centered dialog over the folder list. The dialog says **Nothing is changed until you confirm.**
 
 | Action | What happens to the audio file |
 | --- | --- |

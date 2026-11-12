@@ -90,7 +90,7 @@
       function cloneAndReplaceKey(oldElement, newKey) {
         return ReactElement(oldElement.type, newKey, oldElement.props);
       }
-      function isValidElement15(object) {
+      function isValidElement16(object) {
         return typeof object == "object" && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
       }
       function escape(key) {
@@ -157,7 +157,7 @@
         if (invokeCallback)
           return callback = callback(children), invokeCallback = nameSoFar === "" ? "." + getElementKey(children, 0) : nameSoFar, isArrayImpl(callback) ? (escapedPrefix = "", invokeCallback != null && (escapedPrefix = invokeCallback.replace(userProvidedKeyEscapeRegex, "$&/") + "/"), mapIntoArray(callback, array, escapedPrefix, "", function(c) {
             return c;
-          })) : callback != null && (isValidElement15(callback) && (callback = cloneAndReplaceKey(
+          })) : callback != null && (isValidElement16(callback) && (callback = cloneAndReplaceKey(
             callback,
             escapedPrefix + (callback.key == null || children && children.key === callback.key ? "" : ("" + callback.key).replace(
               userProvidedKeyEscapeRegex,
@@ -255,7 +255,7 @@
           transitionTypes === null ? transition2.types = [type] : transitionTypes.indexOf(type) === -1 && transitionTypes.push(type);
         } else startTransition(addTransitionType.bind(null, type));
       }
-      var Children9 = {
+      var Children10 = {
         map: mapChildren,
         forEach: function(children, forEachFunc, forEachContext) {
           mapChildren(
@@ -278,7 +278,7 @@
           }) || [];
         },
         only: function(children) {
-          if (!isValidElement15(children))
+          if (!isValidElement16(children))
             throw Error(
               "React.Children.only expected to receive a single React element child."
             );
@@ -286,7 +286,7 @@
         }
       };
       exports.Activity = REACT_ACTIVITY_TYPE;
-      exports.Children = Children9;
+      exports.Children = Children10;
       exports.Component = Component;
       exports.Fragment = REACT_FRAGMENT_TYPE;
       exports.Profiler = REACT_PROFILER_TYPE;
@@ -364,7 +364,7 @@
       exports.forwardRef = function(render) {
         return { $$typeof: REACT_FORWARD_REF_TYPE, render };
       };
-      exports.isValidElement = isValidElement15;
+      exports.isValidElement = isValidElement16;
       exports.lazy = function(ctor) {
         return {
           $$typeof: REACT_LAZY_TYPE,
@@ -459,7 +459,7 @@
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React301 = require_react();
+      var React308 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -498,7 +498,7 @@
           implementation
         };
       }
-      var ReactSharedInternals = React301.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React308.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if (as === "font") return "";
         if (typeof input == "string")
@@ -863,7 +863,7 @@
   var require_react_dom_client_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
-      var Scheduler = require_scheduler(), React301 = require_react(), ReactDOM3 = require_react_dom();
+      var Scheduler = require_scheduler(), React308 = require_react(), ReactDOM3 = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -1108,7 +1108,7 @@
           }
         return null;
       }
-      var isArrayImpl = Array.isArray, ReactSharedInternals = React301.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM3.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, sharedNotPendingObject = {
+      var isArrayImpl = Array.isArray, ReactSharedInternals = React308.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM3.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, sharedNotPendingObject = {
         pending: !1,
         data: null,
         method: null,
@@ -12036,7 +12036,7 @@ Error generating stack: ` + x.message + `
           queuedExplicitHydrationTargets.splice(i, 0, target), i === 0 && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_2043 = React301.version;
+      var isomorphicReactPackageVersion$jscomp$inline_2043 = React308.version;
       if (isomorphicReactPackageVersion$jscomp$inline_2043 !== "19.3.1")
         throw Error(
           formatProdErrorMessage(
@@ -12431,19 +12431,19 @@ Error generating stack: ` + x.message + `
   var require_use_sync_external_store_shim_production = __commonJS({
     "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js"(exports) {
       "use strict";
-      var React301 = require_react();
+      var React308 = require_react();
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState63 = React301.useState, useEffect89 = React301.useEffect, useLayoutEffect14 = React301.useLayoutEffect, useDebugValue3 = React301.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState64 = React308.useState, useEffect88 = React308.useEffect, useLayoutEffect14 = React308.useLayoutEffect, useDebugValue3 = React308.useDebugValue;
       function useSyncExternalStore$2(subscribe3, getSnapshot) {
-        var value = getSnapshot(), _useState = useState63({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
+        var value = getSnapshot(), _useState = useState64({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
         return useLayoutEffect14(
           function() {
             inst.value = value, inst.getSnapshot = getSnapshot, checkIfSnapshotChanged(inst) && forceUpdate({ inst });
           },
           [subscribe3, value, getSnapshot]
-        ), useEffect89(
+        ), useEffect88(
           function() {
             return checkIfSnapshotChanged(inst) && forceUpdate({ inst }), subscribe3(function() {
               checkIfSnapshotChanged(inst) && forceUpdate({ inst });
@@ -12466,7 +12466,7 @@ Error generating stack: ` + x.message + `
         return getSnapshot();
       }
       var shim = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? useSyncExternalStore$1 : useSyncExternalStore$2;
-      exports.useSyncExternalStore = React301.useSyncExternalStore !== void 0 ? React301.useSyncExternalStore : shim;
+      exports.useSyncExternalStore = React308.useSyncExternalStore !== void 0 ? React308.useSyncExternalStore : shim;
     }
   });
 
@@ -12482,18 +12482,18 @@ Error generating stack: ` + x.message + `
   var require_with_selector_production = __commonJS({
     "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.js"(exports) {
       "use strict";
-      var React301 = require_react(), shim = require_shim();
+      var React308 = require_react(), shim = require_shim();
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore3 = shim.useSyncExternalStore, useRef111 = React301.useRef, useEffect89 = React301.useEffect, useMemo57 = React301.useMemo, useDebugValue3 = React301.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore3 = shim.useSyncExternalStore, useRef113 = React308.useRef, useEffect88 = React308.useEffect, useMemo58 = React308.useMemo, useDebugValue3 = React308.useDebugValue;
       exports.useSyncExternalStoreWithSelector = function(subscribe3, getSnapshot, getServerSnapshot, selector, isEqual) {
-        var instRef = useRef111(null);
+        var instRef = useRef113(null);
         if (instRef.current === null) {
           var inst = { hasValue: !1, value: null };
           instRef.current = inst;
         } else inst = instRef.current;
-        instRef = useMemo57(
+        instRef = useMemo58(
           function() {
             function memoizedSelector(nextSnapshot) {
               if (!hasMemo) {
@@ -12521,7 +12521,7 @@ Error generating stack: ` + x.message + `
           [getSnapshot, getServerSnapshot, selector, isEqual]
         );
         var value = useSyncExternalStore3(subscribe3, instRef[0], instRef[1]);
-        return useEffect89(
+        return useEffect88(
           function() {
             inst.hasValue = !0, inst.value = value;
           },
@@ -14110,7 +14110,9 @@ Error generating stack: ` + x.message + `
     "wizard.updatesYes": "Yes, check",
     "wizard.useFolder": "Use this folder",
     "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
-    "wizard.yes": "Yes, share"
+    "wizard.yes": "Yes, share",
+    "files.toolbar": "Folder toolbar",
+    "files.actionsLabel": "File actions"
   };
 
   // locales/es.json
@@ -15684,7 +15686,9 @@ Error generating stack: ` + x.message + `
     "wizard.updatesYes": "Sí, buscar",
     "wizard.useFolder": "Usar esta carpeta",
     "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
-    "wizard.yes": "Sí, compartir"
+    "wizard.yes": "Sí, compartir",
+    "files.toolbar": "Barra de carpeta",
+    "files.actionsLabel": "Acciones de archivos"
   };
 
   // src/lib/i18n.ts
@@ -17565,9 +17569,9 @@ Error generating stack: ` + x.message + `
       createElementArgArray[i] = args[i];
     return React3.createElement.apply(null, createElementArgArray);
   };
-  (function(_jsx210) {
+  (function(_jsx218) {
     var JSX;
-    JSX || (JSX = _jsx210.JSX || (_jsx210.JSX = {}));
+    JSX || (JSX = _jsx218.JSX || (_jsx218.JSX = {}));
   })(jsx || (jsx = {}));
   var Global = /* @__PURE__ */ withEmotionCache(function(props, cache) {
     var styles5 = props.styles, serialized = serializeStyles([styles5], void 0, React3.useContext(ThemeContext)), sheetRef = React3.useRef();
@@ -61700,7 +61704,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function bindFilesMount(fn2) {
     mountHook = fn2;
   }
-  var filesPreview = null, filesAction = "", filesTagScope = "paths", filesTrigger = null, dialogName = "", dialogReplacement = "", dialogStatus = "";
+  var filesPreview = null, filesAction = "", filesDialogOpen = !1, filesTagScope = "paths", filesTrigger = null, dialogName = "", dialogReplacement = "", dialogStatus = "";
   function renderFiles() {
     mountHook(), emitFiles(), bridge.renderShell();
   }
@@ -61883,6 +61887,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function getFilesDialog() {
     return {
       action: filesAction,
+      open: filesDialogOpen,
       name: dialogName,
       replacement: dialogReplacement,
       status: dialogStatus,
@@ -61891,11 +61896,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function openFilesDialog(action, trigger, scope = "paths") {
-    filesAction = action, filesTagScope = scope, filesPreview = null, filesTrigger = trigger instanceof HTMLElement ? trigger : null, dialogStatus = "";
+    filesAction = action, filesDialogOpen = !0, filesTagScope = scope, filesPreview = null, filesTrigger = trigger instanceof HTMLElement ? trigger : null, dialogStatus = "";
     let selected = selectedFiles();
-    dialogName = action === "rename" && selected.length === 1 ? selected[0].name : "", dialogReplacement = "", mountFiles(), emitFiles();
-    let dialog = el("files-dialog");
-    typeof dialog.showModal == "function" && !dialog.open && dialog.showModal(), action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags" ? (el("files-cancel").focus(), reviewFiles().catch((error2) => {
+    dialogName = action === "rename" && selected.length === 1 ? selected[0].name : "", dialogReplacement = "", mountFiles(), emitFiles(), action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags" ? (document.getElementById("files-cancel")?.focus(), reviewFiles().catch((error2) => {
       dialogStatus = failureOf(error2).message, emitFiles();
     })) : action === "rename" ? document.getElementById("files-name")?.focus() : document.getElementById("files-replacement")?.focus();
   }
@@ -61916,9 +61919,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function closeFilesDialog() {
     let trigger = filesTrigger;
-    filesTrigger = null, filesTagScope = "paths";
-    let dialog = document.getElementById("files-dialog");
-    dialog instanceof HTMLDialogElement && dialog.open && dialog.close(), trigger instanceof HTMLElement && trigger.focus(), emitFiles();
+    filesTrigger = null, filesTagScope = "paths", filesDialogOpen = !1, trigger instanceof HTMLElement && trigger.focus(), emitFiles();
   }
   async function confirmFiles() {
     if (!filesPreview?.ok || !state.writable) return;
@@ -64106,6 +64107,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       locked: !state.writable || state.filesLoading || state.filesAtRoots,
       rowHeight: filesRowHeight(),
       dialogAction: dialog.action,
+      dialogOpen: dialog.open,
       dialogName: dialog.name,
       dialogReplacement: dialog.replacement,
       dialogStatus: dialog.status,
@@ -64934,122 +64936,882 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/files/files-mount.tsx
-  var import_react42 = __toESM(require_react(), 1);
+  var import_react41 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Box/boxClasses.mjs
+  var boxClasses = generateUtilityClasses("MuiBox", ["root"]), boxClasses_default = boxClasses;
+
+  // node_modules/@mui/material/Box/Box.mjs
+  var defaultTheme2 = createTheme2(), Box = createBox({
+    themeId: identifier_default,
+    defaultTheme: defaultTheme2,
+    defaultClassName: boxClasses_default.root,
+    generateClassName: ClassNameGenerator_default.generate
+  }), Box_default = Box;
+
+  // node_modules/@mui/material/Dialog/Dialog.mjs
+  var React299 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Dialog/dialogClasses.mjs
+  function getDialogUtilityClass(slot) {
+    return generateUtilityClass("MuiDialog", slot);
+  }
+  var dialogClasses = generateUtilityClasses("MuiDialog", ["root", "backdrop", "scrollPaper", "scrollBody", "container", "paper", "paperWidthFalse", "paperWidthXs", "paperWidthSm", "paperWidthMd", "paperWidthLg", "paperWidthXl", "paperFullWidth", "paperFullScreen"]);
+
+  // node_modules/@mui/material/Dialog/DialogContext.mjs
+  var React298 = __toESM(require_react(), 1), DialogContext = /* @__PURE__ */ React298.createContext({}), DialogContext_default = DialogContext;
+
+  // node_modules/@mui/material/Dialog/Dialog.mjs
+  var import_jsx_runtime239 = __toESM(require_jsx_runtime(), 1), DialogBackdrop = styled_default2(Backdrop_default, {
+    name: "MuiDialog",
+    slot: "Backdrop"
+  })({
+    // Improve scrollable dialog support.
+    zIndex: -1
+  }), useUtilityClasses96 = (ownerState) => {
+    let {
+      classes: classes2,
+      scroll,
+      maxWidth: maxWidth2,
+      fullWidth,
+      fullScreen
+    } = ownerState, slots = {
+      root: ["root"],
+      backdrop: ["backdrop"],
+      container: ["container", `scroll${capitalize_default(scroll)}`],
+      paper: ["paper", `paperWidth${capitalize_default(String(maxWidth2))}`, fullWidth && "paperFullWidth", fullScreen && "paperFullScreen"]
+    };
+    return composeClasses(slots, getDialogUtilityClass, classes2);
+  }, DialogRoot = styled_default2(Modal_default, {
+    name: "MuiDialog",
+    slot: "Root"
+  })({
+    "@media print": {
+      // Use !important to override the Modal inline-style.
+      position: "absolute !important"
+    }
+  }), DialogContainer = styled_default2("div", {
+    name: "MuiDialog",
+    slot: "Container",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.container, styles5[`scroll${capitalize_default(ownerState.scroll)}`]];
+    }
+  })({
+    height: "100%",
+    "@media print": {
+      height: "auto"
+    },
+    // We disable the focus ring for mouse, touch and keyboard users.
+    outline: 0,
+    variants: [{
+      props: {
+        scroll: "paper"
+      },
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }
+    }, {
+      props: {
+        scroll: "body"
+      },
+      style: {
+        overflowY: "auto",
+        overflowX: "hidden",
+        textAlign: "center",
+        "&::after": {
+          content: '""',
+          display: "inline-block",
+          verticalAlign: "middle",
+          height: "100%",
+          width: "0"
+        }
+      }
+    }]
+  }), DialogPaper = styled_default2(Paper_default, {
+    name: "MuiDialog",
+    slot: "Paper",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.paper, styles5[`paperWidth${capitalize_default(String(ownerState.maxWidth))}`], ownerState.fullWidth && styles5.paperFullWidth, ownerState.fullScreen && styles5.paperFullScreen];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    margin: 32,
+    position: "relative",
+    overflowY: "auto",
+    // We disable the focus ring for mouse, touch and keyboard users.
+    outline: 0,
+    "@media print": {
+      overflowY: "visible",
+      boxShadow: "none"
+    },
+    variants: [{
+      props: {
+        scroll: "paper"
+      },
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        maxHeight: "calc(100% - 64px)"
+      }
+    }, {
+      props: {
+        scroll: "body"
+      },
+      style: {
+        display: "inline-block",
+        verticalAlign: "middle",
+        textAlign: "initial"
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => !ownerState.maxWidth,
+      style: {
+        maxWidth: "calc(100% - 64px)"
+      }
+    }, {
+      props: {
+        maxWidth: "xs"
+      },
+      style: {
+        maxWidth: theme.breakpoints.unit === "px" ? Math.max(theme.breakpoints.values.xs, 444) : `max(${theme.breakpoints.values.xs}${theme.breakpoints.unit}, 444px)`
+      }
+    }, {
+      props: {
+        maxWidth: "xs",
+        scroll: "body"
+      },
+      style: {
+        [theme.breakpoints.down(Math.max(theme.breakpoints.values.xs, 444) + 64)]: {
+          maxWidth: "calc(100% - 64px)"
+        }
+      }
+    }, ...Object.keys(theme.breakpoints.values).filter((maxWidth2) => maxWidth2 !== "xs").map((maxWidth2) => ({
+      props: {
+        maxWidth: maxWidth2
+      },
+      style: {
+        maxWidth: `${theme.breakpoints.values[maxWidth2]}${theme.breakpoints.unit}`
+      }
+    })), ...Object.keys(theme.breakpoints.values).filter((maxWidth2) => maxWidth2 !== "xs").map((maxWidth2) => ({
+      props: {
+        maxWidth: maxWidth2,
+        scroll: "body"
+      },
+      style: {
+        [theme.breakpoints.down(theme.breakpoints.values[maxWidth2] + 64)]: {
+          maxWidth: "calc(100% - 64px)"
+        }
+      }
+    })), {
+      props: ({
+        ownerState
+      }) => ownerState.fullWidth,
+      style: {
+        width: "calc(100% - 64px)"
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.fullScreen,
+      style: {
+        margin: 0,
+        width: "100%",
+        maxWidth: "100%",
+        height: "100%",
+        maxHeight: "none",
+        borderRadius: 0
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.fullScreen && ownerState.scroll === "body",
+      style: {
+        margin: 0,
+        maxWidth: "100%"
+      }
+    }]
+  }))), Dialog = /* @__PURE__ */ React299.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiDialog"
+    }), theme = useTheme4(), defaultTransitionDuration = {
+      enter: theme.transitions.duration.enteringScreen,
+      exit: theme.transitions.duration.leavingScreen
+    }, {
+      "aria-describedby": ariaDescribedby,
+      "aria-labelledby": ariaLabelledbyProp,
+      "aria-modal": ariaModal = !0,
+      children,
+      className,
+      fullScreen = !1,
+      fullWidth = !1,
+      maxWidth: maxWidth2 = "sm",
+      onClick,
+      onClose,
+      open,
+      PaperComponent = Paper_default,
+      role = "dialog",
+      scroll = "paper",
+      slots = {},
+      slotProps = {},
+      transitionDuration = defaultTransitionDuration,
+      ...other
+    } = props, ownerState = {
+      ...props,
+      fullScreen,
+      fullWidth,
+      maxWidth: maxWidth2,
+      scroll
+    }, classes2 = useUtilityClasses96(ownerState), backdropClick = React299.useRef(), handleMouseDown = (event) => {
+      backdropClick.current = event.target === event.currentTarget;
+    }, handleBackdropClick = (event) => {
+      onClick && onClick(event), backdropClick.current && (backdropClick.current = null, onClose && onClose(event, "backdropClick"));
+    }, ariaLabelledby = useId(ariaLabelledbyProp), dialogContextValue = React299.useMemo(() => ({
+      titleId: ariaLabelledby
+    }), [ariaLabelledby]), externalForwardedProps = {
+      slots,
+      slotProps
+    }, [RootSlot, rootSlotProps] = useSlot("root", {
+      elementType: DialogRoot,
+      shouldForwardComponentProp: !0,
+      externalForwardedProps,
+      ownerState,
+      className: clsx_default(classes2.root, className),
+      ref
+    }), [BackdropSlot, backdropSlotProps] = useSlot("backdrop", {
+      elementType: DialogBackdrop,
+      shouldForwardComponentProp: !0,
+      externalForwardedProps,
+      ownerState,
+      className: classes2.backdrop
+    }), [PaperSlot, paperSlotProps] = useSlot("paper", {
+      elementType: DialogPaper,
+      shouldForwardComponentProp: !0,
+      externalForwardedProps,
+      ownerState,
+      className: classes2.paper,
+      additionalProps: {
+        elevation: 24,
+        role,
+        "aria-describedby": ariaDescribedby,
+        "aria-labelledby": ariaLabelledby,
+        "aria-modal": ariaModal,
+        tabIndex: -1,
+        [FOCUSABLE_ATTRIBUTE]: ""
+      }
+    }), [ContainerSlot, containerSlotProps] = useSlot("container", {
+      elementType: DialogContainer,
+      externalForwardedProps,
+      ownerState,
+      className: classes2.container
+    }), [TransitionSlot, transitionSlotProps] = useSlot("transition", {
+      elementType: Fade_default,
+      externalForwardedProps,
+      ownerState,
+      additionalProps: {
+        appear: !0,
+        in: open,
+        timeout: transitionDuration,
+        role: "presentation"
+      }
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(RootSlot, {
+      closeAfterTransition: !0,
+      slots: {
+        backdrop: BackdropSlot
+      },
+      slotProps: {
+        backdrop: {
+          transitionDuration,
+          ...backdropSlotProps
+        }
+      },
+      onClose,
+      open,
+      onClick: handleBackdropClick,
+      ...rootSlotProps,
+      ...other,
+      children: /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(TransitionSlot, {
+        ...transitionSlotProps,
+        children: /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(ContainerSlot, {
+          onMouseDown: handleMouseDown,
+          ...containerSlotProps,
+          children: /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(PaperSlot, {
+            as: PaperComponent,
+            ...paperSlotProps,
+            children: /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(DialogContext_default.Provider, {
+              value: dialogContextValue,
+              children
+            })
+          })
+        })
+      })
+    });
+  }), Dialog_default = Dialog;
+
+  // node_modules/@mui/material/DialogActions/DialogActions.mjs
+  var React300 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/DialogActions/dialogActionsClasses.mjs
+  function getDialogActionsUtilityClass(slot) {
+    return generateUtilityClass("MuiDialogActions", slot);
+  }
+  var dialogActionsClasses = generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
+
+  // node_modules/@mui/material/DialogActions/DialogActions.mjs
+  var import_jsx_runtime240 = __toESM(require_jsx_runtime(), 1), useUtilityClasses97 = (ownerState) => {
+    let {
+      classes: classes2,
+      disableSpacing
+    } = ownerState;
+    return composeClasses({
+      root: ["root", !disableSpacing && "spacing"]
+    }, getDialogActionsUtilityClass, classes2);
+  }, DialogActionsRoot = styled_default2("div", {
+    name: "MuiDialogActions",
+    slot: "Root",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.root, !ownerState.disableSpacing && styles5.spacing];
+    }
+  })({
+    display: "flex",
+    alignItems: "center",
+    padding: 8,
+    justifyContent: "flex-end",
+    flex: "0 0 auto",
+    variants: [{
+      props: ({
+        ownerState
+      }) => !ownerState.disableSpacing,
+      style: {
+        "& > :not(style) ~ :not(style)": {
+          marginLeft: 8
+        }
+      }
+    }]
+  }), DialogActions = /* @__PURE__ */ React300.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiDialogActions"
+    }), {
+      className,
+      disableSpacing = !1,
+      ...other
+    } = props, ownerState = {
+      ...props,
+      disableSpacing
+    }, classes2 = useUtilityClasses97(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(DialogActionsRoot, {
+      className: clsx_default(classes2.root, className),
+      ownerState,
+      ref,
+      ...other
+    });
+  }), DialogActions_default = DialogActions;
+
+  // node_modules/@mui/material/DialogContent/DialogContent.mjs
+  var React301 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/DialogContent/dialogContentClasses.mjs
+  function getDialogContentUtilityClass(slot) {
+    return generateUtilityClass("MuiDialogContent", slot);
+  }
+  var dialogContentClasses = generateUtilityClasses("MuiDialogContent", ["root", "dividers"]);
+
+  // node_modules/@mui/material/DialogTitle/dialogTitleClasses.mjs
+  function getDialogTitleUtilityClass(slot) {
+    return generateUtilityClass("MuiDialogTitle", slot);
+  }
+  var dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]), dialogTitleClasses_default = dialogTitleClasses;
+
+  // node_modules/@mui/material/DialogContent/DialogContent.mjs
+  var import_jsx_runtime241 = __toESM(require_jsx_runtime(), 1), useUtilityClasses98 = (ownerState) => {
+    let {
+      classes: classes2,
+      dividers
+    } = ownerState;
+    return composeClasses({
+      root: ["root", dividers && "dividers"]
+    }, getDialogContentUtilityClass, classes2);
+  }, DialogContentRoot = styled_default2("div", {
+    name: "MuiDialogContent",
+    slot: "Root",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.root, ownerState.dividers && styles5.dividers];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    flex: "1 1 auto",
+    // Add iOS momentum scrolling for iOS < 13.0
+    WebkitOverflowScrolling: "touch",
+    overflowY: "auto",
+    padding: "20px 24px",
+    ...theme.focusVisible && {
+      "&:focus-visible": {
+        ...applyInsetFocusVisible(1),
+        ...theme.focusVisible
+      }
+    },
+    variants: [{
+      props: ({
+        ownerState
+      }) => ownerState.dividers,
+      style: {
+        padding: "16px 24px",
+        borderTop: `1px solid ${(theme.vars || theme).palette.divider}`,
+        borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => !ownerState.dividers,
+      style: {
+        [`.${dialogTitleClasses_default.root} + &`]: {
+          paddingTop: 0
+        }
+      }
+    }]
+  }))), DialogContent = /* @__PURE__ */ React301.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiDialogContent"
+    }), {
+      className,
+      dividers = !1,
+      ...other
+    } = props, ownerState = {
+      ...props,
+      dividers
+    }, classes2 = useUtilityClasses98(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(DialogContentRoot, {
+      className: clsx_default(classes2.root, className),
+      ownerState,
+      ref,
+      ...other
+    });
+  }), DialogContent_default = DialogContent;
+
+  // node_modules/@mui/material/DialogContentText/DialogContentText.mjs
+  var React302 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/DialogContentText/dialogContentTextClasses.mjs
+  function getDialogContentTextUtilityClass(slot) {
+    return generateUtilityClass("MuiDialogContentText", slot);
+  }
+  var dialogContentTextClasses = generateUtilityClasses("MuiDialogContentText", ["root"]);
+
+  // node_modules/@mui/material/DialogContentText/DialogContentText.mjs
+  var import_jsx_runtime242 = __toESM(require_jsx_runtime(), 1), useUtilityClasses99 = (ownerState) => {
+    let {
+      classes: classes2
+    } = ownerState, composedClasses = composeClasses({
+      root: ["root"]
+    }, getDialogContentTextUtilityClass, classes2);
+    return {
+      ...classes2,
+      // forward classes to the Typography
+      ...composedClasses
+    };
+  }, DialogContentTextRoot = styled_default2(Typography_default, {
+    shouldForwardProp: (prop) => rootShouldForwardProp_default(prop) || prop === "classes",
+    name: "MuiDialogContentText",
+    slot: "Root"
+  })({}), DialogContentText = /* @__PURE__ */ React302.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiDialogContentText"
+    }), {
+      children,
+      className,
+      ...ownerState
+    } = props, classes2 = useUtilityClasses99(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(DialogContentTextRoot, {
+      component: "p",
+      variant: "body1",
+      color: "textSecondary",
+      ref,
+      ownerState,
+      className: clsx_default(classes2.root, className),
+      ...props,
+      classes: classes2
+    });
+  }), DialogContentText_default = DialogContentText;
+
+  // node_modules/@mui/material/DialogTitle/DialogTitle.mjs
+  var React303 = __toESM(require_react(), 1);
+  var import_jsx_runtime243 = __toESM(require_jsx_runtime(), 1), useUtilityClasses100 = (ownerState) => {
+    let {
+      classes: classes2
+    } = ownerState;
+    return composeClasses({
+      root: ["root"]
+    }, getDialogTitleUtilityClass, classes2);
+  }, DialogTitleRoot = styled_default2(Typography_default, {
+    name: "MuiDialogTitle",
+    slot: "Root"
+  })({
+    padding: "16px 24px",
+    flex: "0 0 auto"
+  }), DialogTitle = /* @__PURE__ */ React303.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiDialogTitle"
+    }), {
+      className,
+      id: idProp,
+      ...other
+    } = props, ownerState = props, classes2 = useUtilityClasses100(ownerState), {
+      titleId = idProp
+    } = React303.useContext(DialogContext_default);
+    return /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(DialogTitleRoot, {
+      component: "h2",
+      className: clsx_default(classes2.root, className),
+      ownerState,
+      ref,
+      variant: "h6",
+      id: idProp ?? titleId,
+      ...other
+    });
+  }), DialogTitle_default = DialogTitle;
 
   // src/pages/FilesDialog.tsx
-  var import_react40 = __toESM(require_react(), 1);
-  var import_jsx_runtime239 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime244 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef10(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function FilesDialog() {
-    let files = useFiles();
-    (0, import_react40.useEffect)(() => {
-      let dialog = document.getElementById("files-dialog");
-      if (!(dialog instanceof HTMLDialogElement)) return;
-      let onCancel = (event) => {
-        event.preventDefault(), files.closeDialog();
-      };
-      return dialog.addEventListener("cancel", onCancel), () => dialog.removeEventListener("cancel", onCancel);
-    }, [files.closeDialog]);
-    let action = files.dialogAction, preview = files.dialogPreview, ready = !!(preview?.ok && files.writable && preview.needs_confirm), reviewHidden = action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags", status4 = files.writable ? files.dialogStatus : document.getElementById("status")?.textContent ?? files.dialogStatus, confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm"), confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
-    return /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)(import_jsx_runtime239.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("h2", { id: "files-dialog-title", children: t("files.reviewTitle") }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { id: "files-summary", children: preview?.summary || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { className: "dialog-note", children: t("files.nothingUntilConfirm") }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)("label", { id: "files-name-label", className: "files-field", hidden: action !== "rename", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("span", { children: t("files.newName") }),
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-          "input",
-          {
-            id: "files-name",
-            ref: tooltipRef10(tips.filesName),
-            type: "text",
-            autoComplete: "off",
-            value: files.dialogName,
-            onInput: (event) => files.setDialogName(event.currentTarget.value)
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)("label", { id: "files-replace-label", className: "files-field", hidden: action !== "replace", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("span", { children: t("files.newFile") }),
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-          "input",
-          {
-            id: "files-replacement",
-            ref: tooltipRef10(tips.filesReplacement),
-            type: "text",
-            autoComplete: "off",
-            spellCheck: !1,
-            value: files.dialogReplacement,
-            onInput: (event) => files.setDialogReplacement(event.currentTarget.value)
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)("ul", { id: "files-changes", children: [
-        (preview?.changes || []).map((change, index) => {
-          let crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "", effect4 = change.effect === "trash" ? t("files.trash") : change.to;
-          return /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("li", { children: `${change.from} → ${effect4}${crates}` }, `change-${index}`);
-        }),
-        (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("li", { children: skip2 }, `skip-${index}`)),
-        preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 }),
-      /* @__PURE__ */ (0, import_jsx_runtime239.jsxs)("div", { className: "dialog-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-          "button",
-          {
-            id: "files-cancel",
-            type: "button",
-            ref: tooltipRef10(tips.filesCancel),
-            onClick: () => files.closeDialog(),
-            children: t("common.cancel")
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-          "button",
-          {
-            id: "files-review",
-            type: "button",
-            ref: tooltipRef10(tips.filesReview),
-            hidden: reviewHidden,
-            onClick: () => {
-              files.review();
-            },
-            children: t("files.review")
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(
-          "button",
-          {
-            id: "files-confirm",
-            type: "button",
-            ref: tooltipRef10(confirmTip),
-            className: action === "delete" ? "danger" : void 0,
-            disabled: !ready,
-            onClick: () => {
-              files.confirm();
-            },
-            children: confirmLabel
-          }
-        )
-      ] })
-    ] });
+    let files = useFiles(), action = files.dialogAction, preview = files.dialogPreview, ready = !!(preview?.ok && files.writable && preview.needs_confirm), reviewHidden = action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags", status4 = files.writable ? files.dialogStatus : document.getElementById("status")?.textContent ?? files.dialogStatus, confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm"), confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
+    return /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)(
+      Dialog_default,
+      {
+        open: files.dialogOpen,
+        onClose: (_event, reason) => {
+          reason !== "backdropClick" && files.closeDialog();
+        },
+        "aria-labelledby": "files-dialog-title",
+        disableAutoFocus: !0,
+        disableScrollLock: !0,
+        keepMounted: !0,
+        fullWidth: !0,
+        maxWidth: "sm",
+        sx: { "& .MuiDialog-paper": { maxWidth: "42rem" } },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(DialogTitle_default, { id: "files-dialog-title", component: "h2", children: t("files.reviewTitle") }),
+          /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)(DialogContent_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(DialogContentText_default, { id: "files-summary", component: "p", children: preview?.summary || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(DialogContentText_default, { className: "dialog-note", component: "p", children: t("files.nothingUntilConfirm") }),
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
+              Box_default,
+              {
+                id: "files-name-label",
+                className: "files-field",
+                hidden: action !== "rename",
+                sx: action !== "rename" ? { display: "none" } : void 0,
+                children: /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
+                  TextField_default,
+                  {
+                    id: "files-name",
+                    label: t("files.newName"),
+                    fullWidth: !0,
+                    autoComplete: "off",
+                    value: files.dialogName,
+                    inputRef: tooltipRef10(tips.filesName),
+                    onInput: (event) => files.setDialogName(event.target.value)
+                  }
+                )
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
+              Box_default,
+              {
+                id: "files-replace-label",
+                className: "files-field",
+                hidden: action !== "replace",
+                sx: action !== "replace" ? { display: "none" } : void 0,
+                children: /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
+                  TextField_default,
+                  {
+                    id: "files-replacement",
+                    label: t("files.newFile"),
+                    fullWidth: !0,
+                    autoComplete: "off",
+                    value: files.dialogReplacement,
+                    inputRef: tooltipRef10(tips.filesReplacement),
+                    slotProps: { htmlInput: { spellCheck: !1 } },
+                    onInput: (event) => files.setDialogReplacement(event.target.value)
+                  }
+                )
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)("ul", { id: "files-changes", children: [
+              (preview?.changes || []).map((change, index) => {
+                let crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "", effect4 = change.effect === "trash" ? t("files.trash") : change.to;
+                return /* @__PURE__ */ (0, import_jsx_runtime244.jsx)("li", { children: `${change.from} → ${effect4}${crates}` }, `change-${index}`);
+              }),
+              (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime244.jsx)("li", { children: skip2 }, `skip-${index}`)),
+              preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime244.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
+              Button_default,
+              {
+                id: "files-cancel",
+                type: "button",
+                ref: tooltipRef10(tips.filesCancel),
+                onClick: () => files.closeDialog(),
+                children: t("common.cancel")
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
+              Button_default,
+              {
+                id: "files-review",
+                type: "button",
+                ref: tooltipRef10(tips.filesReview),
+                hidden: reviewHidden,
+                sx: reviewHidden ? { display: "none" } : void 0,
+                onClick: () => {
+                  files.review();
+                },
+                children: t("files.review")
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
+              Button_default,
+              {
+                id: "files-confirm",
+                type: "button",
+                ref: tooltipRef10(confirmTip),
+                className: action === "delete" ? "danger" : void 0,
+                color: action === "delete" ? "error" : "primary",
+                variant: "contained",
+                disabled: !ready,
+                onClick: () => {
+                  files.confirm();
+                },
+                children: confirmLabel
+              }
+            )
+          ] })
+        ]
+      }
+    );
   }
 
   // src/pages/FilesPanel.tsx
-  var import_react41 = __toESM(require_react(), 1), import_react_dom6 = __toESM(require_react_dom(), 1);
-  var import_jsx_runtime240 = __toESM(require_jsx_runtime(), 1);
+  var import_react40 = __toESM(require_react(), 1), import_react_dom6 = __toESM(require_react_dom(), 1);
+
+  // node_modules/@mui/material/Breadcrumbs/Breadcrumbs.mjs
+  var React304 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/internal/svg-icons/MoreHoriz.mjs
+  var import_jsx_runtime245 = __toESM(require_jsx_runtime(), 1), MoreHoriz_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime245.jsx)("path", {
+    d: "M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+  }), "MoreHoriz");
+
+  // node_modules/@mui/material/Breadcrumbs/BreadcrumbCollapsed.mjs
+  var import_jsx_runtime246 = __toESM(require_jsx_runtime(), 1), BreadcrumbCollapsedButton = styled_default2(ButtonBase_default, {
+    name: "MuiBreadcrumbCollapsed"
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    display: "flex",
+    marginLeft: `calc(${theme.spacing(1)} * 0.5)`,
+    marginRight: `calc(${theme.spacing(1)} * 0.5)`,
+    backgroundColor: (theme.vars || theme).palette.grey[100],
+    color: (theme.vars || theme).palette.grey[700],
+    borderRadius: 2,
+    "&:hover, &:focus": {
+      backgroundColor: (theme.vars || theme).palette.grey[200]
+    },
+    "&:active": {
+      boxShadow: theme.shadows[0],
+      backgroundColor: emphasize(theme.palette.grey[200], 0.12)
+    },
+    ...theme.applyStyles("dark", {
+      backgroundColor: (theme.vars || theme).palette.grey[700],
+      color: (theme.vars || theme).palette.grey[100],
+      "&:hover, &:focus": {
+        backgroundColor: (theme.vars || theme).palette.grey[600]
+      },
+      "&:active": {
+        backgroundColor: emphasize(theme.palette.grey[600], 0.12)
+      }
+    })
+  }))), BreadcrumbCollapsedIcon = styled_default2(MoreHoriz_default)({
+    width: 24,
+    height: 16
+  });
+  function BreadcrumbCollapsed(props) {
+    let {
+      slots = {},
+      slotProps = {},
+      ...otherProps
+    } = props, {
+      nativeButton,
+      ...buttonBaseProps
+    } = otherProps, ownerState = props;
+    return /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("li", {
+      children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(BreadcrumbCollapsedButton, {
+        focusRipple: !0,
+        ...buttonBaseProps,
+        ownerState,
+        children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(BreadcrumbCollapsedIcon, {
+          as: slots.CollapsedIcon,
+          ownerState,
+          ...slotProps.collapsedIcon
+        })
+      })
+    });
+  }
+  var BreadcrumbCollapsed_default = BreadcrumbCollapsed;
+
+  // node_modules/@mui/material/Breadcrumbs/breadcrumbsClasses.mjs
+  function getBreadcrumbsUtilityClass(slot) {
+    return generateUtilityClass("MuiBreadcrumbs", slot);
+  }
+  var breadcrumbsClasses = generateUtilityClasses("MuiBreadcrumbs", ["root", "ol", "li", "separator"]), breadcrumbsClasses_default = breadcrumbsClasses;
+
+  // node_modules/@mui/material/Breadcrumbs/Breadcrumbs.mjs
+  var import_jsx_runtime247 = __toESM(require_jsx_runtime(), 1), useUtilityClasses101 = (ownerState) => {
+    let {
+      classes: classes2
+    } = ownerState;
+    return composeClasses({
+      root: ["root"],
+      li: ["li"],
+      ol: ["ol"],
+      separator: ["separator"]
+    }, getBreadcrumbsUtilityClass, classes2);
+  }, BreadcrumbsRoot = styled_default2(Typography_default, {
+    name: "MuiBreadcrumbs",
+    slot: "Root",
+    overridesResolver: (props, styles5) => [{
+      [`& .${breadcrumbsClasses_default.li}`]: styles5.li
+    }, styles5.root]
+  })({}), BreadcrumbsOl = styled_default2("ol", {
+    name: "MuiBreadcrumbs",
+    slot: "Ol"
+  })({
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "center",
+    padding: 0,
+    margin: 0,
+    listStyle: "none"
+  }), BreadcrumbsSeparator = styled_default2("li", {
+    name: "MuiBreadcrumbs",
+    slot: "Separator"
+  })({
+    display: "flex",
+    userSelect: "none",
+    marginLeft: 8,
+    marginRight: 8
+  });
+  function insertSeparators(items, className, separator, ownerState) {
+    return items.reduce((acc, current2, index) => (acc.push(current2), index < items.length - 1 && acc.push(/* @__PURE__ */ (0, import_jsx_runtime247.jsx)(BreadcrumbsSeparator, {
+      "aria-hidden": !0,
+      className,
+      ownerState,
+      children: separator
+    }, `separator-${index}`)), acc), []);
+  }
+  var Breadcrumbs = /* @__PURE__ */ React304.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiBreadcrumbs"
+    }), {
+      children,
+      className,
+      component = "nav",
+      slots = {},
+      slotProps = {},
+      expandText = "Show path",
+      itemsAfterCollapse = 1,
+      itemsBeforeCollapse = 1,
+      maxItems = 8,
+      separator = "/",
+      ...other
+    } = props, [expanded2, setExpanded] = React304.useState(!1), ownerState = {
+      ...props,
+      component,
+      expanded: expanded2,
+      expandText,
+      itemsAfterCollapse,
+      itemsBeforeCollapse,
+      maxItems,
+      separator
+    }, classes2 = useUtilityClasses101(ownerState), collapsedIconSlotProps = useSlotProps_default({
+      elementType: slots.CollapsedIcon,
+      externalSlotProps: slotProps.collapsedIcon,
+      ownerState
+    }), listRef = React304.useRef(null), renderItemsBeforeAndAfter = (allItems2) => {
+      let handleClickExpand = () => {
+        setExpanded(!0);
+        let focusable = listRef.current.querySelector("a[href],button,[tabindex]");
+        focusable && focusable.focus();
+      };
+      return itemsBeforeCollapse + itemsAfterCollapse >= allItems2.length ? allItems2 : [...allItems2.slice(0, itemsBeforeCollapse), /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(BreadcrumbCollapsed_default, {
+        "aria-label": expandText,
+        slots: {
+          CollapsedIcon: slots.CollapsedIcon
+        },
+        slotProps: {
+          collapsedIcon: collapsedIconSlotProps
+        },
+        onClick: handleClickExpand
+      }, "ellipsis"), ...allItems2.slice(allItems2.length - itemsAfterCollapse, allItems2.length)];
+    }, allItems = React304.Children.toArray(children).filter((child) => /* @__PURE__ */ React304.isValidElement(child)).map((child, index) => /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("li", {
+      className: classes2.li,
+      children: child
+    }, `child-${index}`));
+    return /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(BreadcrumbsRoot, {
+      ref,
+      component,
+      color: "textSecondary",
+      className: clsx_default(classes2.root, className),
+      ownerState,
+      ...other,
+      children: /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(BreadcrumbsOl, {
+        className: classes2.ol,
+        ref: listRef,
+        ownerState,
+        children: insertSeparators(expanded2 || maxItems && allItems.length <= maxItems ? allItems : renderItemsBeforeAndAfter(allItems), classes2.separator, separator, ownerState)
+      })
+    });
+  }), Breadcrumbs_default = Breadcrumbs;
+
+  // src/pages/FilesPanel.tsx
+  var import_jsx_runtime248 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef11(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function FileIcon({ kind: kind2 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
       "svg",
       {
         viewBox: "0 0 24 24",
@@ -65057,75 +65819,103 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         height: "20",
         "aria-hidden": "true",
         className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
-        children: /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
       }
     );
   }
   function FilesToolbar() {
     let files = useFiles(), crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
-    return /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)("div", { className: "browser-bar", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
-        {
-          id: "files-up",
-          type: "button",
-          ref: tooltipRef11(tips.filesUp),
-          disabled: !files.parent || files.loading,
-          onClick: () => files.goUp(),
-          children: t("common.up")
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("nav", { id: "files-path", className: "files-path", "aria-label": t("files.path"), children: /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("ol", { className: "files-crumbs", children: crumbs.map((crumb, index) => {
-        let last = index === crumbs.length - 1;
-        return /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)("li", { children: [
-          !last && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-            "button",
+    return /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)(
+      Toolbar_default,
+      {
+        className: "browser-bar",
+        disableGutters: !0,
+        variant: "dense",
+        "aria-label": t("files.toolbar"),
+        sx: { minHeight: 0, flexWrap: "wrap", gap: 1 },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+            Button_default,
             {
+              id: "files-up",
               type: "button",
-              ref: tooltipRef11(openCrumb(crumb.name)),
-              className: "files-crumb",
-              onClick: () => files.openCrumb(crumb.path),
-              children: crumb.name
+              ref: tooltipRef11(tips.filesUp),
+              disabled: !files.parent || files.loading,
+              onClick: () => files.goUp(),
+              children: t("common.up")
             }
-          ) : /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "files-crumb", "aria-current": "page", children: crumb.name }),
-          last ? null : /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "files-sep", "aria-hidden": "true", children: "/" })
-        ] }, `${crumb.path}:${crumb.name}:${index}`);
-      }) }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)("label", { className: "search files-search", htmlFor: "files-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "visually-hidden", children: t("files.searchLabel") }),
-        /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-          "input",
-          {
-            id: "files-search",
-            ref: tooltipRef11(tips.filesSearch),
-            type: "search",
-            placeholder: t("files.searchPlaceholder"),
-            autoComplete: "off",
-            spellCheck: !1,
-            defaultValue: files.query,
-            onInput: (event) => files.onSearchInput(event.currentTarget.value)
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("button", { id: "files-refresh", type: "button", ref: tooltipRef11(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
-        {
-          id: "files-elsewhere",
-          className: "files-elsewhere",
-          type: "button",
-          ref: tooltipRef11(files.elsewhere ? tips.filesMusicFolders : tips.filesElsewhere),
-          onClick: () => files.toggleElsewhere(),
-          children: files.elsewhere ? t("files.roots") : t("files.browseElsewhere")
-        }
-      )
-    ] });
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+            Breadcrumbs_default,
+            {
+              id: "files-path",
+              className: "files-path",
+              "aria-label": t("files.path"),
+              separator: "/",
+              sx: {
+                flex: "1 1 8rem",
+                minWidth: 0,
+                "& .MuiBreadcrumbs-ol": { flexWrap: "nowrap" }
+              },
+              children: crumbs.map((crumb, index) => !(index === crumbs.length - 1) && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+                Button_default,
+                {
+                  type: "button",
+                  ref: tooltipRef11(openCrumb(crumb.name)),
+                  className: "files-crumb",
+                  onClick: () => files.openCrumb(crumb.path),
+                  children: crumb.name
+                },
+                `${crumb.path}:${crumb.name}:${index}`
+              ) : /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+                Typography_default,
+                {
+                  className: "files-crumb",
+                  component: "span",
+                  "aria-current": "page",
+                  children: crumb.name
+                },
+                `${crumb.path}:${crumb.name}:${index}`
+              ))
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+            TextField_default,
+            {
+              id: "files-search",
+              className: "search files-search",
+              size: "small",
+              type: "search",
+              placeholder: t("files.searchPlaceholder"),
+              autoComplete: "off",
+              defaultValue: files.query,
+              inputRef: tooltipRef11(tips.filesSearch),
+              "aria-label": t("files.searchLabel"),
+              slotProps: { htmlInput: { spellCheck: !1 } },
+              onInput: (event) => files.onSearchInput(event.target.value)
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(Button_default, { id: "files-refresh", type: "button", ref: tooltipRef11(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+          /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+            Button_default,
+            {
+              id: "files-elsewhere",
+              className: "files-elsewhere",
+              type: "button",
+              ref: tooltipRef11(files.elsewhere ? tips.filesMusicFolders : tips.filesElsewhere),
+              onClick: () => files.toggleElsewhere(),
+              children: files.elsewhere ? t("files.roots") : t("files.browseElsewhere")
+            }
+          )
+        ]
+      }
+    );
   }
   function FilesActions() {
     let files = useFiles(), selected = files.selectedEntries, locked = files.locked;
-    return /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)("div", { className: "files-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
+    return /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)(Box_default, { className: "files-actions", "aria-label": t("files.actionsLabel"), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+        Button_default,
         {
           id: "files-rename",
           type: "button",
@@ -65135,8 +65925,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+        Button_default,
         {
           id: "files-rename-from-tags",
           type: "button",
@@ -65147,8 +65937,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+        Button_default,
         {
           id: "files-move",
           type: "button",
@@ -65158,8 +65948,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveToFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+        Button_default,
         {
           id: "files-move-folder",
           type: "button",
@@ -65169,8 +65959,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+        Button_default,
         {
           id: "files-replace",
           type: "button",
@@ -65180,8 +65970,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.replaceFile")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+        Button_default,
         {
           id: "files-delete",
           type: "button",
@@ -65191,25 +65981,27 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+        Button_default,
         {
           id: "files-move-here",
           type: "button",
           ref: tooltipRef11(tips.filesMoveHere),
           hidden: !files.pick,
           disabled: locked,
+          sx: files.pick ? void 0 : { display: "none" },
           onClick: (event) => files.confirmMoveHere(event.currentTarget),
           children: t("files.moveHere")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-        "button",
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+        Button_default,
         {
           id: "files-pick-cancel",
           type: "button",
           ref: tooltipRef11(tips.filesPickCancel),
           hidden: !files.pick,
+          sx: files.pick ? void 0 : { display: "none" },
           onClick: () => files.cancelPick(),
           children: t("common.cancel")
         }
@@ -65223,8 +66015,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       entry.missing ? "is-missing" : "",
       active2 ? "is-active" : ""
     ].filter(Boolean).join(" ");
-    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)("div", { className, role: "listitem", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)(
+    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)("div", { className, role: "listitem", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)(
         "button",
         {
           type: "button",
@@ -65239,19 +66031,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             entry.missing ? files.markActive(index) : files.openRow(entry, index);
           },
           children: [
-            entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
-            entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)("span", { className: "files-root-copy", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "files-root-label", children: entry.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "files-root-detail", children: entry.detail })
-            ] }) : /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)(import_jsx_runtime240.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { children: entry.name }),
-              entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
+            entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
+            entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)("span", { className: "files-root-copy", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { className: "files-root-label", children: entry.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { className: "files-root-detail", children: entry.detail })
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)(import_jsx_runtime248.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { children: entry.name }),
+              entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
             ] }),
-            entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+            entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
           ]
         }
       ),
-      entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
+      entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
         "button",
         {
           type: "button",
@@ -65265,7 +66057,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("portable.check")
         }
       ) : null
-    ] }) : entry.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
+    ] }) : entry.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
       "button",
       {
         type: "button",
@@ -65277,8 +66069,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-label": t("files.shortcut", { name: entry.name }),
         children: t("files.shortcut", { name: entry.name })
       }
-    ) }) : /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)("label", { className: "files-file", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
+    ) }) : /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
         "input",
         {
           ref: tooltipRef11(selectFile(entry.name, entry.path)),
@@ -65291,9 +66083,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           onChange: (event) => files.toggleFile(entry, index, event.currentTarget.checked)
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "files-name", children: entry.name }),
-      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
-      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { className: "files-name", children: entry.name }),
+      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
+      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
     ] }) });
   }
   var FILE_OVERSCAN = 8;
@@ -65302,8 +66094,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { start: start2, end: end2 };
   }
   function FilesList() {
-    let files = useFiles(), listRef = (0, import_react41.useRef)(null), [scrollTop, setScrollTop] = (0, import_react41.useState)(0), [viewHeight, setViewHeight] = (0, import_react41.useState)(600);
-    (0, import_react41.useLayoutEffect)(() => {
+    let files = useFiles(), listRef = (0, import_react40.useRef)(null), [scrollTop, setScrollTop] = (0, import_react40.useState)(0), [viewHeight, setViewHeight] = (0, import_react40.useState)(600);
+    (0, import_react40.useLayoutEffect)(() => {
       let list = listRef.current;
       if (!list) return;
       setViewHeight(list.clientHeight || 600), setScrollTop(list.scrollTop);
@@ -65319,20 +66111,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let ariaLabel = files.searching ? t("files.searchResults") : files.atRoots ? t("files.roots") : t("files.contents"), emptyLoading = files.loading && !rows.length, emptyError = !!files.error && !rows.length, emptyRoots = files.atRoots && !files.roots.length, emptyFolder = !rows.length, body, tabIndex = 0;
     if (emptyLoading) {
       let reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      body = /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("p", { className: "files-empty", children: reading });
+      body = /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("p", { className: "files-empty", children: reading });
     } else if (emptyError)
-      body = /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("p", { className: "files-empty", children: files.error });
+      body = /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("p", { className: "files-empty", children: files.error });
     else if (emptyRoots)
-      tabIndex = -1, body = /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)("div", { className: "files-empty-state", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("h2", { children: t("files.noRoots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("p", { children: t("files.noRootsBody") }),
-        /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
-          "button",
+      tabIndex = -1, body = /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
+          Button_default,
           {
             id: "files-run-setup",
             type: "button",
             ref: tooltipRef11(tips.runSetup),
             className: "files-primary",
+            variant: "contained",
             onClick: () => bridge.openSetup(),
             children: t("files.runSetup")
           }
@@ -65340,15 +66133,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ] });
     else if (emptyFolder) {
       let empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
-      body = /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("p", { className: "files-empty", children: empty });
+      body = /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("p", { className: "files-empty", children: empty });
     } else {
       tabIndex = -1;
       let windowRows = [];
       for (let index = start2; index < end2; index += 1) {
         let entry = rows[index];
-        entry && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime240.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
+        entry && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime248.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
       }
-      body = /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("div", { className: "files-spacer", style: { height: `${rows.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("div", { className: "files-window", style: { transform: `translateY(${start2 * rowHeight}px)` }, children: windowRows }) });
+      body = /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("div", { className: "files-spacer", style: { height: `${rows.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("div", { className: "files-window", style: { transform: `translateY(${start2 * rowHeight}px)` }, children: windowRows }) });
     }
     function onScroll2(event) {
       let node2 = event.currentTarget;
@@ -65359,10 +66152,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onKey2(event) {
       files.onListKey(event.nativeEvent);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)(import_jsx_runtime240.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)(import_jsx_runtime248.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(
         "div",
         {
           id: "files-list",
@@ -65381,37 +66174,37 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
   function FilesPanel() {
-    return /* @__PURE__ */ (0, import_jsx_runtime240.jsxs)(import_jsx_runtime240.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(FilesToolbar, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(FilesList, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(FilesActions, {})
+    return /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)(import_jsx_runtime248.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(FilesActions, {})
     ] });
   }
 
   // src/components/PortableDialog.tsx
-  var import_jsx_runtime241 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime249 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
     let files = useFiles(), report = files.portableReport, verdict = "";
     report && (report.missing_drive ? verdict = t("portable.missing") : report.ready ? verdict = t("portable.ready") : verdict = t("portable.notReady"));
     let shown = report ? report.findings.slice(0, FINDING_CAP) : [], hidden = report ? report.findings.length - shown.length : 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime241.jsxs)(import_jsx_runtime241.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
-      /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("p", { id: "portable-verdict", children: verdict }),
-      /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime241.jsxs)("ul", { id: "portable-findings", children: [
-        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime241.jsxs)("li", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
-          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime241.jsxs)(import_jsx_runtime241.Fragment, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(import_jsx_runtime249.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(import_jsx_runtime249.Fragment, { children: [
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("span", { className: "portable-fix", children: finding.fix })
+            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("span", { className: "portable-fix", children: finding.fix })
           ] }) : null
         ] }, `finding-${index}`)),
-        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
-        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime241.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
         "button",
         {
           id: "portable-close",
@@ -65441,7 +66234,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function mountFilesIslands() {
     let panel = el("files-panel"), dialog = el("files-dialog"), portable = el("portable-dialog");
-    panelRoot4 = mountIsland(panel, (0, import_react42.createElement)(FilesPanel), rootFor(panel, panelRoot4, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react42.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react42.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
+    panelRoot4 = mountIsland(panel, (0, import_react41.createElement)(FilesPanel), rootFor(panel, panelRoot4, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react41.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react41.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
   }
   bindFilesMount(mountFilesIslands);
   bindPortableMount(mountFilesIslands);
@@ -65495,10 +66288,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/views.ts
-  var import_react45 = __toESM(require_react(), 1);
+  var import_react44 = __toESM(require_react(), 1);
 
   // src/pages/CrateActions.tsx
-  var import_jsx_runtime242 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef12(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -65506,8 +66299,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(import_jsx_runtime242.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
         "button",
         {
           id: "crate-new",
@@ -65518,7 +66311,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.new")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
         "button",
         {
           id: "crate-rename",
@@ -65529,7 +66322,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
         "button",
         {
           id: "crate-color",
@@ -65540,7 +66333,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("field.color")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
         "button",
         {
           id: "crate-delete",
@@ -65551,7 +66344,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
         "button",
         {
           id: "crate-preset",
@@ -65563,7 +66356,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("presets.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
         "button",
         {
           id: "crate-folder-sync",
@@ -65575,7 +66368,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("folderSync.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
         "button",
         {
           id: "crate-rename-from-tags",
@@ -65587,7 +66380,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
         "button",
         {
           id: "crate-refresh",
@@ -65603,7 +66396,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateBrowserActions.tsx
-  var import_jsx_runtime243 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime251 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef13(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -65611,8 +66404,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateBrowserActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(import_jsx_runtime243.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
         "button",
         {
           id: "crate-split",
@@ -65624,7 +66417,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.split")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
         "button",
         {
           id: "crate-save-view",
@@ -65636,7 +66429,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.saveView")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
         "button",
         {
           id: "export-m3u",
@@ -65651,7 +66444,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateTree.tsx
-  var import_jsx_runtime244 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime252 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef14(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -65663,9 +66456,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function Twist({ row, toggle }) {
     if (!row.childCount)
-      return /* @__PURE__ */ (0, import_jsx_runtime244.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
+      return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
     let spec2 = row.expanded ? collapseCrate(row.name) : expandCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
       "button",
       {
         type: "button",
@@ -65685,14 +66478,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     toggle
   }) {
     let hex = colorHex(row.color), tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(
       "div",
       {
         className: row.holds ? "crate-row holds-selection" : "crate-row",
         style: { paddingLeft: `${row.depth * 14}px` },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(Twist, { row, toggle }),
-          /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(Twist, { row, toggle }),
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(
             "button",
             {
               type: "button",
@@ -65708,12 +66501,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               "aria-expanded": row.childCount ? row.expanded : void 0,
               onClick: (event) => select(row.id, event.nativeEvent),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)("span", { className: "name", children: [
-                  hex ? /* @__PURE__ */ (0, import_jsx_runtime244.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)("span", { className: "name", children: [
+                  hex ? /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
                   row.name
                 ] }),
-                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime244.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
-                /* @__PURE__ */ (0, import_jsx_runtime244.jsx)("span", { className: "meta", children: formatNumber(row.count) })
+                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("span", { className: "meta", children: formatNumber(row.count) })
               ]
             }
           )
@@ -65723,7 +66516,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateTree() {
     let crates = useCrates(), focusId = focusedCrateId(), tabbable = crates.rows.find((row) => String(row.id) === focusId) ?? crates.rows[0];
-    return /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(import_jsx_runtime244.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(import_jsx_runtime252.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
       CrateRow,
       {
         row,
@@ -65736,16 +66529,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistoryDetail.tsx
-  var import_jsx_runtime245 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime253 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef15(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function Field({ label, value }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime245.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime245.jsx)("div", { className: "label", children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime245.jsx)("div", { className: "value", children: value })
+    return /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("div", { className: "label", children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("div", { className: "value", children: value })
     ] });
   }
   function HistoryDetail() {
@@ -65757,11 +66550,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime245.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime245.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime245.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(Field, { label, value }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(Field, { label, value }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(
         "button",
         {
           type: "button",
@@ -65777,7 +66570,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistorySessions.tsx
-  var import_jsx_runtime246 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime254 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef16(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -65785,9 +66578,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HistorySessions() {
     let history = useHistory();
-    return /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(import_jsx_runtime246.Fragment, { children: history.sessions.map((session) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(import_jsx_runtime254.Fragment, { children: history.sessions.map((session) => {
       let name = session.name || t("history.session");
-      return /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(
         "button",
         {
           type: "button",
@@ -65799,8 +66592,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             history.openSession(session.id);
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("span", { className: "name", children: name }),
-            /* @__PURE__ */ (0, import_jsx_runtime246.jsx)("span", { className: "meta", children: String(session.played || 0) })
+            /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("span", { className: "name", children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("span", { className: "meta", children: String(session.played || 0) })
           ]
         },
         session.id
@@ -65809,55 +66602,55 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/TrackDetail.tsx
-  var import_react44 = __toESM(require_react(), 1);
+  var import_react43 = __toESM(require_react(), 1);
 
   // src/components/BeatgridBlock.tsx
-  var import_jsx_runtime247 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime255 = __toESM(require_jsx_runtime(), 1);
   function BeatgridMarker({ mark }) {
     let bpmNumber = Number(mark.bpm), name = "";
-    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime247.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("span", { children: beatSeconds(mark.position) }),
-      /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("span", { children: name })
+    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("span", { children: beatSeconds(mark.position) }),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("span", { children: name })
     ] });
   }
   function BeatgridBlock({ track }) {
     if (!beatgridViewOnly(track.markers_unavailable)) return null;
     let suspect = beatgridIsSuspect(track.beatgrid_warning_code), key = beatgridWarningKey(track.beatgrid_warning_code), reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning == "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown"), empty = !suspect && !(track.beatgrid && track.beatgrid.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime247.jsxs)(import_jsx_runtime247.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("h4", { children: t("markers.gridHeading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
-      suspect ? /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime247.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
-      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
+    return /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)(import_jsx_runtime255.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("h4", { children: t("markers.gridHeading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
+      suspect ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
+      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
     ] });
   }
 
   // src/components/CuePads.tsx
-  var import_jsx_runtime248 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime256 = __toESM(require_jsx_runtime(), 1);
   function CueSlot({ slot, cue }) {
     let color2 = slotColor(slot, cue?.color), named = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { className: "swatch", style: swatchStyle }),
-      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
-      /* @__PURE__ */ (0, import_jsx_runtime248.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("span", { className: "swatch", style: swatchStyle }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
     ] });
   }
   function CuePads({ cues: cues2 }) {
     let slots = cueSlots(cues2), extra = extraCues(cues2);
-    return /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)(import_jsx_runtime248.Fragment, { children: [
-      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(CueSlot, { slot, cue }, slot)),
+    return /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(import_jsx_runtime256.Fragment, { children: [
+      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(CueSlot, { slot, cue }, slot)),
       extra.map((cue, index) => {
         let cueIndex = Number(cue.index), slot = Number.isInteger(cueIndex) ? cueIndex : -1;
-        return /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
+        return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
       })
     ] });
   }
 
   // src/components/RelatedTracks.tsx
-  var import_react43 = __toESM(require_react(), 1);
-  var import_jsx_runtime249 = __toESM(require_jsx_runtime(), 1);
+  var import_react42 = __toESM(require_react(), 1);
+  var import_jsx_runtime257 = __toESM(require_jsx_runtime(), 1);
   function relatedPath(track) {
     return track.resolved_path || track.edit?.portable_id || "";
   }
@@ -65866,8 +66659,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return item2.artist ? `${title2} · ${item2.artist}` : title2;
   }
   function RelatedTracks({ track, writable }) {
-    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react43.useState)(!!path), [loadError, setLoadError] = (0, import_react43.useState)(""), [payload, setPayload] = (0, import_react43.useState)(null), [query, setQuery] = (0, import_react43.useState)(""), [chosen, setChosen] = (0, import_react43.useState)(null), [note, setNote] = (0, import_react43.useState)(""), [rating, setRating] = (0, import_react43.useState)(""), [mutual, setMutual] = (0, import_react43.useState)(!0), [saving2, setSaving] = (0, import_react43.useState)(!1);
-    (0, import_react43.useEffect)(() => {
+    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react42.useState)(!!path), [loadError, setLoadError] = (0, import_react42.useState)(""), [payload, setPayload] = (0, import_react42.useState)(null), [query, setQuery] = (0, import_react42.useState)(""), [chosen, setChosen] = (0, import_react42.useState)(null), [note, setNote] = (0, import_react42.useState)(""), [rating, setRating] = (0, import_react42.useState)(""), [mutual, setMutual] = (0, import_react42.useState)(!0), [saving2, setSaving] = (0, import_react42.useState)(!1);
+    (0, import_react42.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
         return;
@@ -65889,7 +66682,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         cancelled = !0;
       };
     }, [path, list.space, track.id]);
-    let hits2 = (0, import_react43.useMemo)(() => {
+    let hits2 = (0, import_react42.useMemo)(() => {
       let parsed = parseQuery(query);
       return !parsed.terms.length && !parsed.filters.length ? null : list.tracks.filter((item2) => item2.id !== track.id && matchesQuery(item2, parsed)).slice(0, 8);
     }, [query, list.tracks, track.id]);
@@ -65927,14 +66720,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onSearch(event) {
       setQuery(event.currentTarget.value), setChosen(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("h3", { id: headingId, children: t("related.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
-      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("ul", { className: "related-list", children: saved.map((link) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("h3", { id: headingId, children: t("related.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
+      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("ul", { className: "related-list", children: saved.map((link) => {
         let other = link.track || {}, label = other.title || t("track.untitled"), bits = [];
-        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("div", { children: [
-            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("div", { children: [
+            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
               "button",
               {
                 type: "button",
@@ -65943,11 +66736,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 onClick: () => list.selectTrack(other.asset_id),
                 children: label
               }
-            ) : /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("span", { children: label }),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
-            link.note ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "related-note", children: link.note }) : null
+            ) : /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
+            link.note ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { className: "related-note", children: link.note }) : null
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
             "button",
             {
               type: "button",
@@ -65962,10 +66755,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] }, String(link.id));
       }) }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("div", { className: "related-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("label", { children: [
+      payload && /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("div", { className: "related-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("label", { children: [
           t("related.find"),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
             "input",
             {
               ref: tooltipRef(tips.findRelated),
@@ -65977,9 +66770,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
+        /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
           let name = relatedLabel(hit);
-          return /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
             "button",
             {
               type: "button",
@@ -65992,11 +66785,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           ) }, hit.id);
         }) }),
-        chosen && /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("div", { className: "related-form", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("label", { children: [
+        chosen && /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("div", { className: "related-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("label", { children: [
             t("related.note"),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkNote),
@@ -66008,23 +66801,23 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("label", { children: [
             t("related.linkRating"),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(
               "select",
               {
                 ref: tooltipRef(tips.linkRating),
                 value: rating,
                 onChange: (event) => setRating(event.currentTarget.value),
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("option", { value: "", children: t("rating.none") }),
-                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("option", { value, children: value }, value))
+                  /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("option", { value: "", children: t("rating.none") }),
+                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("option", { value, children: value }, value))
                 ]
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("label", { className: "check", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("label", { className: "check", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkMutual),
@@ -66035,7 +66828,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             ),
             t("related.twoWayLink")
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
             "button",
             {
               type: "button",
@@ -66057,14 +66850,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] })
       ] }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(import_jsx_runtime249.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
-        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("ul", { className: "related-list", children: suggested.map((item2, index) => /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("span", { children: relatedLabel(item2) }),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "related-meta", children: Array.isArray(item2.reasons) ? item2.reasons.join(" · ") : "" })
+      payload && /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
+        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("ul", { className: "related-list", children: suggested.map((item2, index) => /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { children: relatedLabel(item2) }),
+            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { className: "related-meta", children: Array.isArray(item2.reasons) ? item2.reasons.join(" · ") : "" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
             "button",
             {
               type: "button",
@@ -66086,7 +66879,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }, `${item2.asset_id ?? index}`)) }),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
           "button",
           {
             type: "button",
@@ -66100,13 +66893,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("related.updateCrate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
+        /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
       ] })
     ] });
   }
 
   // src/components/TrackDetail.tsx
-  var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
+  var import_jsx_runtime258 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
     ["name", "column.title", !0],
     ["artist", "column.artist", !1],
     ["album", "field.album", !1],
@@ -66144,36 +66937,36 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MarkerSection({ track }) {
     let note = t("markers.readOnly");
-    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h3", { children: t("markers.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "detail-kicker", children: note }),
-      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(CuePads, { cues: track.cues || [] }),
-      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(LoopRow, { loop }, `loop-${index}`)),
-      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "marker", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
+    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("h3", { children: t("markers.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "detail-kicker", children: note }),
+      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(CuePads, { cues: track.cues || [] }),
+      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(LoopRow, { loop }, `loop-${index}`)),
+      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "marker", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
       ] }, `flip-${index}`)),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(BeatgridBlock, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(BeatgridBlock, { track })
     ] });
   }
   function LoopRow({ loop }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
     ] });
   }
   function CopySection({ fromId, copies, writable }) {
     let list = useTrackList();
-    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h3", { children: t("copies.heading") }),
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("h3", { children: t("copies.heading") }),
       copies.map((copy2) => {
         let name = copy2.file || t("track.numbered", { id: String(copy2.id) }), file = copy2.file || `Track ${copy2.id}`;
-        return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "copy-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "copy-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
             "button",
             {
               type: "button",
@@ -66183,10 +66976,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: name
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
-          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
-          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
-          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
             "button",
             {
               type: "button",
@@ -66207,11 +67000,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MembershipSection({ track, writable }) {
     let list = useTrackList(), chosen = new Set(track.crate_ids || []), crates = [...list.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name)), smart = list.crates.filter((crate) => crate.smart && chosen.has(crate.id));
-    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h3", { children: t("crates.heading") }),
-      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("label", { className: "member", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("h3", { children: t("crates.heading") }),
+      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("label", { className: "member", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "input",
           {
             ref: tooltipRef(membershipTip(crate.name)),
@@ -66226,29 +67019,29 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: crate.name })
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: crate.name })
       ] }, crate.id)) })
     ] });
   }
   function FieldGroups({ track }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(import_jsx_runtime250.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(import_jsx_runtime258.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
   }
   function FieldGroupBlock({ group }) {
-    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react44.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "label", children: [
+    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react43.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "label", children: [
         field2.label ?? "",
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { className: "column", children: field2.column ?? "" })
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { className: "column", children: field2.column ?? "" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("span", { className: "color-value", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { className: "swatch", style: { background: field2.display } }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("span", { className: "color-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { className: "swatch", style: { background: field2.display } }),
         field2.display
       ] }) : field2.display })
     ] }, `${field2.column ?? field2.label ?? index}`));
-    return open ? /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h3", { children: group.name ?? "" }),
+    return open ? /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("h3", { children: group.name ?? "" }),
       rows
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(import_jsx_runtime258.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
         "button",
         {
           type: "button",
@@ -66258,8 +67051,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length })
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("section", { className: "group", hidden: !shown, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h3", { children: group.name ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("section", { className: "group", hidden: !shown, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("h3", { children: group.name ?? "" }),
         rows
       ] })
     ] });
@@ -66284,10 +67077,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       list.saveTrack(track.id, fields);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("form", { className: "editor", onSubmit, children: [
-      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("label", { className: wide ? "wide" : void 0, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("form", { className: "editor", onSubmit, children: [
+      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("label", { className: wide ? "wide" : void 0, children: [
         t(label),
-        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "textarea",
           {
             ref: tooltipRef(editField(t(label))),
@@ -66295,7 +67088,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             defaultValue: String(edit[name] ?? ""),
             disabled: !writable
           }
-        ) : /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        ) : /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "input",
           {
             ref: tooltipRef(editField(t(label))),
@@ -66306,34 +67099,34 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }, name)),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("label", { children: [
         t("field.color"),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackColor),
             name: "color",
             defaultValue: String(currentColor),
             disabled: !writable,
-            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("option", { value: String(value), children: label }, value))
+            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("option", { value: String(value), children: label }, value))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("label", { children: [
         t("field.rating"),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackRating),
             name: "rating",
             defaultValue: ratingValue,
             disabled: !writable,
-            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("option", { value, children: label }, value || "none"))
+            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("option", { value, children: label }, value || "none"))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "input",
           {
             ref: tooltipRef(tips.beatgridLock),
@@ -66345,7 +67138,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         ),
         t("field.beatgridLocked")
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
         "button",
         {
           type: "submit",
@@ -66363,25 +67156,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ["column.key", track.key || "—"],
       ["column.time", track.length]
     ];
-    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "detail-body", children: [
-      track.album ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h2", { children: track.title ?? "" }),
-      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "artist", children: track.artist }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "deck", children: [
-        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
-          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: t(key) })
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "detail-body", children: [
+      track.album ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("h2", { children: track.title ?? "" }),
+      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "artist", children: track.artist }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "deck", children: [
+        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: t(key) })
         ] }, key)),
-        track.color ? /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
-          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { children: t("field.color") })
+        track.color ? /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: t("field.color") })
         ] }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(TrackEditor, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(TrackEditor, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "button",
           {
             type: "button",
@@ -66393,7 +67186,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.reveal", { manager: manager2 })
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "button",
           {
             type: "button",
@@ -66405,7 +67198,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "button",
           {
             type: "button",
@@ -66417,7 +67210,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.relocate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "button",
           {
             type: "button",
@@ -66429,7 +67222,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.removeFromLibrary")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "button",
           {
             type: "button",
@@ -66443,7 +67236,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.useInCrates")
           }
         ),
-        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
           "button",
           {
             type: "button",
@@ -66458,11 +67251,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         ) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(RelatedTracks, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(MarkerSection, { track }),
-      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(MembershipSection, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(FieldGroups, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(RelatedTracks, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(MarkerSection, { track }),
+      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(MembershipSection, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(FieldGroups, { track })
     ] });
   }
   function HistoryBody({ entry }) {
@@ -66472,14 +67265,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { className: "label", children: label }),
-        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { className: "value", children: value })
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { className: "field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("div", { className: "label", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("div", { className: "value", children: value })
       ] }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
         "button",
         {
           type: "button",
@@ -66493,7 +67286,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function TrackDetailPane() {
     let list = useTrackList(), { detail: detail2 } = list;
-    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(TrackBody, { track: detail2.track });
+    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(TrackBody, { track: detail2.track });
   }
 
   // src/lib/ui/nav.ts
@@ -66585,7 +67378,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot?.unmount(), historyDetailRoot = null, historyDetailHost = null;
   }
   function paintDetailIsland() {
-    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react45.createElement)(TrackDetailPane));
+    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react44.createElement)(TrackDetailPane));
   }
   function remountIsland(host, node2, slot) {
     return slot.root && slot.host !== host && (slot.root.unmount(), slot.root = null), slot.host = host, slot.root = mountIsland(host, node2, slot.root ?? void 0), slot.root;
@@ -66596,21 +67389,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountCrates() {
     let list = document.getElementById("crate-list"), listMount = mountCrateIsland(
       list instanceof HTMLElement ? list : null,
-      (0, import_react45.createElement)(CrateTree),
+      (0, import_react44.createElement)(CrateTree),
       crateListRoot,
       crateListHost
     );
     crateListRoot = listMount.root, crateListHost = listMount.host;
     let actions3 = document.getElementById("crate-actions"), actionsMount = mountCrateIsland(
       actions3 instanceof HTMLElement ? actions3 : null,
-      (0, import_react45.createElement)(CrateActions),
+      (0, import_react44.createElement)(CrateActions),
       crateActionsRoot,
       crateActionsHost
     );
     crateActionsRoot = actionsMount.root, crateActionsHost = actionsMount.host;
     let browser = document.getElementById("crate-browser-actions"), browserMount = mountCrateIsland(
       browser instanceof HTMLElement ? browser : null,
-      (0, import_react45.createElement)(CrateBrowserActions),
+      (0, import_react44.createElement)(CrateBrowserActions),
       crateBrowserRoot,
       crateBrowserHost
     );
@@ -66875,7 +67668,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function selectEntry(id) {
     if (state.selectedId = id, paintRows(), notifyHistory(), !state.entries.some((item2) => item2.id === id)) return;
     let host = el("detail");
-    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react45.createElement)(HistoryDetail), {
+    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react44.createElement)(HistoryDetail), {
       host: historyDetailHost,
       root: historyDetailRoot
     }), historyDetailHost = host;
@@ -67091,7 +67884,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function renderSessions() {
     notifyHistory();
     let host = el("session-list");
-    sessionRoot = remountIsland(host, (0, import_react45.createElement)(HistorySessions), {
+    sessionRoot = remountIsland(host, (0, import_react44.createElement)(HistorySessions), {
       host: sessionHost,
       root: sessionRoot
     }), sessionHost = host;
@@ -68351,13 +69144,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   });
 
   // src/lib/ui/app-shell.ts
-  var import_react47 = __toESM(require_react(), 1);
-
-  // src/pages/AppShell.tsx
   var import_react46 = __toESM(require_react(), 1);
 
+  // src/pages/AppShell.tsx
+  var import_react45 = __toESM(require_react(), 1);
+
   // node_modules/@mui/material/AppBar/AppBar.mjs
-  var React298 = __toESM(require_react(), 1);
+  var React305 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/AppBar/appBarClasses.mjs
   function getAppBarUtilityClass(slot) {
@@ -68366,7 +69159,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var appBarClasses = generateUtilityClasses("MuiAppBar", ["root", "positionFixed", "positionAbsolute", "positionSticky", "positionStatic", "positionRelative", "colorDefault", "colorPrimary", "colorSecondary", "colorInherit", "colorTransparent", "colorError", "colorInfo", "colorSuccess", "colorWarning"]);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
-  var import_jsx_runtime251 = __toESM(require_jsx_runtime(), 1), useUtilityClasses96 = (ownerState) => {
+  var import_jsx_runtime259 = __toESM(require_jsx_runtime(), 1), useUtilityClasses102 = (ownerState) => {
     let {
       color: color2,
       position: position2,
@@ -68503,7 +69296,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         })
       }
     }]
-  }))), AppBar = /* @__PURE__ */ React298.forwardRef(function(inProps, ref) {
+  }))), AppBar = /* @__PURE__ */ React305.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiAppBar"
@@ -68518,8 +69311,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       color: color2,
       position: position2,
       enableColorOnDark
-    }, classes2 = useUtilityClasses96(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AppBarRoot, {
+    }, classes2 = useUtilityClasses102(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(AppBarRoot, {
       square: !0,
       component: "header",
       ownerState,
@@ -68530,23 +69323,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     });
   }), AppBar_default = AppBar;
 
-  // node_modules/@mui/material/Box/boxClasses.mjs
-  var boxClasses = generateUtilityClasses("MuiBox", ["root"]), boxClasses_default = boxClasses;
-
-  // node_modules/@mui/material/Box/Box.mjs
-  var defaultTheme2 = createTheme2(), Box = createBox({
-    themeId: identifier_default,
-    defaultTheme: defaultTheme2,
-    defaultClassName: boxClasses_default.root,
-    generateClassName: ClassNameGenerator_default.generate
-  }), Box_default = Box;
-
   // node_modules/@mui/material/Drawer/Drawer.mjs
-  var React300 = __toESM(require_react(), 1);
+  var React307 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Slide/Slide.mjs
-  var React299 = __toESM(require_react(), 1);
-  var import_jsx_runtime252 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
+  var React306 = __toESM(require_react(), 1);
+  var import_jsx_runtime260 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
     visibility: "hidden"
   }, DEFAULT_TRANSLATE_OPTIONS = {};
   function isGestureTranslate(transform) {
@@ -68574,7 +69356,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let resolvedContainer = resolveContainer(containerProp), transform = getTranslateValue(direction, node2, resolvedContainer, options);
     transform && (node2.style.transform = transform);
   }
-  var Slide = /* @__PURE__ */ React299.forwardRef(function(props, ref) {
+  var Slide = /* @__PURE__ */ React306.forwardRef(function(props, ref) {
     let theme = useTheme4(), defaultEasing = {
       enter: theme.transitions.easing.easeOut,
       exit: theme.transitions.easing.sharp
@@ -68599,7 +69381,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       style: style3,
       timeout = defaultTimeout,
       ...other
-    } = props, reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), childrenRef = React299.useRef(null), preserveInlineTransformRef = React299.useRef(!1), handleRef = useForkRef_default(getReactElementRef(children), childrenRef, ref), handleEnter = normalizedTransitionCallback(childrenRef, (node2, isAppearing) => {
+    } = props, reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), childrenRef = React306.useRef(null), preserveInlineTransformRef = React306.useRef(!1), handleRef = useForkRef_default(getReactElementRef(children), childrenRef, ref), handleEnter = normalizedTransitionCallback(childrenRef, (node2, isAppearing) => {
       setTranslateValue(direction, node2, containerProp), reducedMotion.shouldReduceMotion || reflow(node2), onEnter && onEnter(node2, isAppearing);
     }), handleEntering = normalizedTransitionCallback(childrenRef, (node2, isAppearing) => {
       let transitionProps = getTransitionProps({
@@ -68641,10 +69423,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       preserveInlineTransformRef.current = !1, node2.style.transition = "", onExited && onExited(node2);
     }), handleAddEndListener = addEndListener ? (next3) => {
       addEndListener(childrenRef.current, next3);
-    } : void 0, updatePosition = React299.useCallback(() => {
+    } : void 0, updatePosition = React306.useCallback(() => {
       childrenRef.current && setTranslateValue(direction, childrenRef.current, containerProp);
     }, [direction, containerProp]);
-    return React299.useEffect(() => {
+    return React306.useEffect(() => {
       if (inProp || direction === "down" || direction === "right")
         return;
       let handleResize = debounce_default(() => {
@@ -68653,9 +69435,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       return containerWindow.addEventListener("resize", handleResize), () => {
         handleResize.clear(), containerWindow.removeEventListener("resize", handleResize);
       };
-    }, [direction, inProp, containerProp]), React299.useEffect(() => {
+    }, [direction, inProp, containerProp]), React306.useEffect(() => {
       !inProp && !preserveInlineTransformRef.current && updatePosition();
-    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(Transition_default, {
+    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(Transition_default, {
       nodeRef: childrenRef,
       onEnter: handleEnter,
       onEntered: handleEntered,
@@ -68681,7 +69463,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         } : hiddenStyles3 : style3 && children.props.style ? childStyle = {
           ...style3,
           ...children.props.style
-        } : childStyle = style3 || children.props.style, /* @__PURE__ */ React299.cloneElement(children, {
+        } : childStyle = style3 || children.props.style, /* @__PURE__ */ React306.cloneElement(children, {
           ref: handleRef,
           style: childStyle,
           ...restChildProps
@@ -68697,12 +69479,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var drawerClasses = generateUtilityClasses("MuiDrawer", ["root", "docked", "paper", "anchorLeft", "anchorRight", "anchorTop", "anchorBottom", "modal"]);
 
   // node_modules/@mui/material/Drawer/Drawer.mjs
-  var import_jsx_runtime253 = __toESM(require_jsx_runtime(), 1), overridesResolver3 = (props, styles5) => {
+  var import_jsx_runtime261 = __toESM(require_jsx_runtime(), 1), overridesResolver3 = (props, styles5) => {
     let {
       ownerState
     } = props;
     return [styles5.root, (ownerState.variant === "permanent" || ownerState.variant === "persistent") && styles5.docked, ownerState.variant === "temporary" && styles5.modal];
-  }, useUtilityClasses97 = (ownerState) => {
+  }, useUtilityClasses103 = (ownerState) => {
     let {
       classes: classes2,
       anchor,
@@ -68831,7 +69613,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }, anchor) {
     return direction === "rtl" && isHorizontal(anchor) ? oppositeDirection[anchor] : anchor;
   }
-  var Drawer = /* @__PURE__ */ React300.forwardRef(function(inProps, ref) {
+  var Drawer = /* @__PURE__ */ React307.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiDrawer"
@@ -68852,11 +69634,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       slots = {},
       slotProps = {},
       ...other
-    } = props, mounted = React300.useRef(!1), rootRef = React300.useRef(null), handleRef = useForkRef_default(ref, rootRef);
-    React300.useEffect(() => {
+    } = props, mounted = React307.useRef(!1), rootRef = React307.useRef(null), handleRef = useForkRef_default(ref, rootRef);
+    React307.useEffect(() => {
       mounted.current = !0;
     }, []);
-    let resolveSlideContainer = React300.useCallback(() => rootRef.current, []), anchorInvariant = getAnchor({
+    let resolveSlideContainer = React307.useCallback(() => rootRef.current, []), anchorInvariant = getAnchor({
       direction: isRtl ? "rtl" : "ltr"
     }, anchorProp), ownerState = {
       ...props,
@@ -68865,7 +69647,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       open,
       variant,
       ...other
-    }, classes2 = useUtilityClasses97(ownerState), externalForwardedProps = {
+    }, classes2 = useUtilityClasses103(ownerState), externalForwardedProps = {
       slots,
       slotProps: {
         ...slotProps,
@@ -68933,40 +69715,40 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           container: resolveSlideContainer
         }
       }
-    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(PaperSlot, {
+    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(PaperSlot, {
       ...paperSlotProps,
       children
     });
     if (variant === "permanent")
-      return /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(DockedSlot, {
+      return /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(DockedSlot, {
         ...dockedSlotProps,
         children: drawer
       });
-    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(TransitionSlot, {
+    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(TransitionSlot, {
       ...transitionSlotProps,
       children: drawer
     });
-    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(DockedSlot, {
+    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(DockedSlot, {
       ...dockedSlotProps,
       children: slidingDrawer
-    }) : /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(RootSlot, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(RootSlot, {
       ...rootSlotProps,
       children: slidingDrawer
     });
   }), Drawer_default = Drawer;
 
   // node_modules/@mui/icons-material/ChevronLeft.mjs
-  var import_jsx_runtime254 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime254.jsx)("path", {
+  var import_jsx_runtime262 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime262.jsx)("path", {
     d: "M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
   }), "ChevronLeft");
 
   // node_modules/@mui/icons-material/Menu.mjs
-  var import_jsx_runtime255 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime255.jsx)("path", {
+  var import_jsx_runtime263 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime263.jsx)("path", {
     d: "M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"
   }), "Menu");
 
   // src/pages/AppShell.tsx
-  var import_jsx_runtime256 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 240;
+  var import_jsx_runtime264 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 240;
   function tooltipRef17(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68978,12 +69760,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     node2 && node2.parentElement !== slot && slot.append(node2);
   }
   function AppShell() {
-    let [open, setOpen] = (0, import_react46.useState)(!0), [, setLocaleTick] = (0, import_react46.useState)(0), spaceSlot = (0, import_react46.useRef)(null), playerSlot = (0, import_react46.useRef)(null), navSlot = (0, import_react46.useRef)(null), footSlot = (0, import_react46.useRef)(null), bodySlot = (0, import_react46.useRef)(null);
-    return (0, import_react46.useEffect)(() => onLocaleChange(() => {
+    let [open, setOpen] = (0, import_react45.useState)(!0), [, setLocaleTick] = (0, import_react45.useState)(0), spaceSlot = (0, import_react45.useRef)(null), playerSlot = (0, import_react45.useRef)(null), navSlot = (0, import_react45.useRef)(null), footSlot = (0, import_react45.useRef)(null), bodySlot = (0, import_react45.useRef)(null);
+    return (0, import_react45.useEffect)(() => onLocaleChange(() => {
       setLocaleTick((n) => n + 1);
-    }), []), (0, import_react46.useLayoutEffect)(() => {
+    }), []), (0, import_react45.useLayoutEffect)(() => {
       adopt(spaceSlot.current, "space-field"), adopt(playerSlot.current, "player-bar"), adopt(navSlot.current, "views"), adopt(navSlot.current, "view-children"), adopt(footSlot.current, "rail-foot"), adopt(bodySlot.current, "app-body");
-    }, []), /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(
+    }, []), /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(
       Box_default,
       {
         sx: {
@@ -68993,8 +69775,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           minHeight: 0
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(Toolbar_default, { sx: { gap: 2, minHeight: 56 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(Toolbar_default, { sx: { gap: 2, minHeight: 56 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
               IconButton_default,
               {
                 id: "drawer-toggle",
@@ -69006,14 +69788,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 "aria-label": open ? t("shell.drawerHide") : t("shell.drawerShow"),
                 onClick: () => setOpen((value) => !value),
                 ref: tooltipRef17(tips.drawerToggle),
-                children: open ? /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(Menu_default2, {})
+                children: open ? /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(Menu_default2, {})
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(Box_default, { ref: spaceSlot, className: "app-bar-space" })
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(Box_default, { ref: spaceSlot, className: "app-bar-space" })
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(Box_default, { ref: playerSlot, className: "player-strip", sx: { flexShrink: 0 } }),
-          /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(Box_default, { ref: playerSlot, className: "player-strip", sx: { flexShrink: 0 } }),
+          /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
               Drawer_default,
               {
                 id: "app-drawer",
@@ -69047,7 +69829,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     flexDirection: "column"
                   }
                 },
-                children: /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(
                   Box_default,
                   {
                     sx: {
@@ -69058,7 +69840,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     },
                     ...open ? {} : { inert: !0 },
                     children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
+                      /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
                         Box_default,
                         {
                           ref: navSlot,
@@ -69068,13 +69850,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                           sx: { flex: 1, minHeight: 0, overflow: "auto" }
                         }
                       ),
-                      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(Box_default, { ref: footSlot, className: "drawer-foot" })
+                      /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(Box_default, { ref: footSlot, className: "drawer-foot" })
                     ]
                   }
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
               Box_default,
               {
                 ref: bodySlot,
@@ -69092,7 +69874,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountAppShell(host) {
     islandRoot2?.unmount(), islandRoot2 = null;
     let root = host === void 0 ? document.getElementById("app-shell") : host;
-    root && (islandRoot2 = mountIsland(root, (0, import_react47.createElement)(AppShell)));
+    root && (islandRoot2 = mountIsland(root, (0, import_react46.createElement)(AppShell)));
   }
 
   // src/lib/ui/desktop-actions.ts
