@@ -55,8 +55,12 @@ describe("WaveformPanel context", () => {
     expect(zoom?.getAttribute("data-pps")).toBe(String(ZOOM_DEFAULT_PPS));
     expect(overview?.getAttribute("data-pps")).toBe(String(ZOOM_DEFAULT_PPS));
     expect(overview?.getAttribute("data-waveform-overview")).toBe("computed");
-    expect(host.querySelector("[aria-label='Zoom in']")).not.toBeNull();
-    expect(host.querySelector("[aria-label='Zoom out']")).not.toBeNull();
+    const zoomIn = host.querySelector("[aria-label='Zoom in']");
+    const zoomOut = host.querySelector("[aria-label='Zoom out']");
+    expect(zoomIn?.className).toContain("MuiIconButton-root");
+    expect(zoomOut?.className).toContain("MuiIconButton-root");
+    expect(zoomIn?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
+    expect(zoomOut?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
     host.querySelector<HTMLButtonElement>("[aria-label='Zoom in']")?.click();
     expect(view.pixelsPerSecond()).toBe(100);
     expect(zoom?.getAttribute("data-pps")).toBe("100");
