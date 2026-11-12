@@ -1568,5 +1568,7 @@
   "wizard.updatesYes": "Yes, check",
   "wizard.useFolder": "Use this folder",
   "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
-  "wizard.yes": "Yes, share"
+  "wizard.yes": "Yes, share",
+  "files.toolbar": "Folder toolbar",
+  "files.actionsLabel": "File actions"
 }
