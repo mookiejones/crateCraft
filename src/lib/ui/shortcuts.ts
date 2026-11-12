@@ -391,11 +391,14 @@ function skipsListKey(id: string, target: EventTarget | null): boolean {
   return false;
 }
 
-function topDialog(): HTMLDialogElement | null {
+function topDialog(): HTMLElement | null {
   const open = [...document.querySelectorAll("dialog")].filter(
     (node): node is HTMLDialogElement => node instanceof HTMLDialogElement && node.open,
   );
-  return open.at(-1) ?? null;
+  const native = open.at(-1);
+  if (native) return native;
+  const mui = document.querySelector<HTMLElement>(".MuiDialog-root:not([aria-hidden='true'])");
+  return mui ?? null;
 }
 
 const HANDLERS: { [K in ShortcutId]: (event: KeyboardEvent) => void } = {
@@ -542,7 +545,7 @@ function openSnapshot(): void {
 }
 
 function snapshotCards(): HTMLElement[] {
-  return [...el("snapshots-list").querySelectorAll<HTMLElement>(".snapshot-card")];
+  return [...el("snapshots-list").querySelectorAll<HTMLElement>(".MuiDataGrid-row, .snapshot-card")];
 }
 
 function dismiss(event: KeyboardEvent): void {
@@ -553,7 +556,7 @@ function dismiss(event: KeyboardEvent): void {
       closeQuickOpen();
       return;
     }
-    if (dialog.id === "settings-dialog") {
+    if (dialog.id === "settings-dialog" && dialog instanceof HTMLDialogElement) {
       event.preventDefault();
       dialog.close();
       return;

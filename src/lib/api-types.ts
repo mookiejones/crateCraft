@@ -638,6 +638,10 @@ export interface SnapshotInfo {
   serato_build?: string;
   unavailable_drives?: string[];
   reason?: string;
+  /** Hash check of the stored database copy. */
+  integrity?: string;
+  /** Optional byte size when the API sends one. */
+  size?: number;
 }
 
 export interface PendingUndo {

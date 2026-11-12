@@ -82,7 +82,8 @@ export interface ElementIds {
   "snapshot-plan": HTMLDivElement;
   "snapshot-block": HTMLParagraphElement;
   "snapshot-confirm": HTMLButtonElement;
-  "snapshot-dialog": HTMLDialogElement;
+  "snapshot-dialog": HTMLElement;
+  "snapshot-dialog-host": HTMLElement;
   "snapshot-status": HTMLParagraphElement;
   "snapshots-take": HTMLButtonElement;
   "snapshots-drives": HTMLButtonElement;
@@ -99,7 +100,7 @@ export interface ElementIds {
   "portable-view-status": HTMLParagraphElement;
   "portable-view-verdict": HTMLParagraphElement;
   "portable-view-summary": HTMLParagraphElement;
-  "portable-view-findings": HTMLUListElement;
+  "portable-view-findings": HTMLDivElement;
   "drift-panel": HTMLElement;
   "drift-scope": HTMLParagraphElement;
   "drift-status": HTMLParagraphElement;

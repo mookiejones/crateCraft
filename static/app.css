@@ -1767,8 +1767,15 @@ dialog .settings-field select {
 .snapshot-undo button,
 #snapshots-list button,
 #operations-list button,
-#operations-refresh {
+#operations-refresh,
+#snapshots-refresh,
+#snapshots-take,
+#snapshots-drives {
   min-height: 44px;
+}
+
+.snapshot-grid {
+  min-height: 12rem;
 }
 
 .snapshot-card {
@@ -1861,6 +1868,20 @@ dialog .settings-field select {
 .gig-note { margin: var(--space-2) 0; }
 
 .gig-group { margin: var(--space-2) 0; }
+
+.gig-group .MuiAccordionSummary-root {
+  min-height: var(--row);
+  padding-inline: 0;
+}
+
+.gig-group .MuiAccordionDetails-root {
+  padding: var(--space-2) 0;
+}
+
+.report-grid {
+  min-height: calc(var(--row) * 5);
+  width: 100%;
+}
 
 .health-art-row {
   display: flex;
