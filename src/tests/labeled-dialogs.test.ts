@@ -13,14 +13,15 @@ import {
   cancelCratePrompt,
   setCratePromptValue,
 } from "../lib/ui/shared-dialog";
-import { mountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { mountSharedDialogs, unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
 import {
   deleteCrate,
   relocateTrack,
   removeTrack,
   selectTrack,
+  unmountDetailIslands,
 } from "../lib/ui/views";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 
 interface Call {
   url: string;
@@ -109,9 +110,14 @@ describe("labeled dialogs", () => {
     mountSharedDialogs();
   });
 
-  afterEach(() => {
-    if (el("crate-prompt-dialog").open) cancelCratePrompt();
-    if (el("confirm-dialog").open) cancelConfirm();
+  afterEach(async () => {
+    const prompt = document.getElementById("crate-prompt-dialog") as HTMLDialogElement | null;
+    if (prompt?.open) cancelCratePrompt();
+    const confirm = document.getElementById("confirm-dialog") as HTMLDialogElement | null;
+    if (confirm?.open) cancelConfirm();
+    unmountDetailIslands();
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });
@@ -231,6 +237,13 @@ describe("labeled dialogs", () => {
       { url: "/api/related", body: { action: "remove", id: 12 } },
     ]));
     expect(el("confirm-dialog").open).toBe(false);
+  });
+
+  it("unmounts shared dialogs so the MUI scheduler does not outlive the document", async () => {
+    expect(document.querySelector("#confirm-dialog [role='dialog']")).not.toBeNull();
+    unmountSharedDialogs();
+    expect(document.querySelector("#confirm-dialog [role='dialog']")).toBeNull();
+    await drainReactScheduler();
   });
 
   it("posts nothing when a related-link remove is cancelled", async () => {

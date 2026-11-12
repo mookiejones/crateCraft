@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadPrivacy, rankReplaceCandidates, rekordboxExportUrl, renderCratesReplacePreview, renderMergePreview, saveRekordboxExport, wireDialogs } from "../lib/ui/dialogs";
 import { el } from "../lib/dom";
 import { state } from "../lib/state";
-import { mountSharedDialogs } from "../lib/ui/shared-dialog-mount";
-import { installPage } from "./test-page";
+import { mountSharedDialogs, unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 import { playlistCrate, renderShell } from "../lib/ui/views";
 
 describe("rekordboxExportUrl", () => {
@@ -48,7 +48,9 @@ describe("playlist export chrome", () => {
     state.activeCrate = "all";
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
   });
 
@@ -143,7 +145,9 @@ describe("Rekordbox export settings", () => {
     vi.stubGlobal("fetch", vi.fn());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
   });
 
@@ -373,7 +377,9 @@ describe("relink missing files", () => {
     vi.stubGlobal("fetch", vi.fn());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
   });
 
