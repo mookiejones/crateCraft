@@ -6,7 +6,8 @@ import { paintDualChrome } from "../lib/crates/dual-crate-view";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
 import { setCratePromptValue } from "../lib/ui/shared-dialog";
-import { installPage } from "./test-page";
+import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { drainReactScheduler, installPage } from "./test-page";
 import { mountTrackList, mountTrackListB } from "../lib/ui/virtual-scroll";
 import { renderList, selectCrate } from "../lib/ui/views";
 
@@ -54,7 +55,9 @@ describe("dual crate panes", () => {
     wireDualCrates();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });
