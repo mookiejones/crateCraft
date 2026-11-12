@@ -22591,7 +22591,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "crates.promptName": "Name",
     "tooltip.cratePromptCancel": "Close without changing the crate.",
     "tooltip.cratePromptConfirm": "Save this crate name. Serato DJ Pro must be quit.",
-    "tooltip.cratePromptName": "Type the crate name, or a color name."
+    "tooltip.cratePromptName": "Type the crate name, or a color name.",
+    "tooltip.relocatePath": "Type the path to the audio file.",
+    "tooltip.relocateCancel": "Close without changing the file location.",
+    "tooltip.relocateConfirm": "Save this file location. Serato DJ Pro must be quit.",
+    "tooltip.confirmCancel": "Close without making this change.",
+    "tooltip.confirmAction": "Confirm this change."
   };
 
   // locales/es.json
@@ -24198,7 +24203,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "crates.promptName": "Nombre",
     "tooltip.cratePromptCancel": "Cerrar sin cambiar la caja.",
     "tooltip.cratePromptConfirm": "Guardar este nombre de caja. Hay que salir de Serato DJ Pro.",
-    "tooltip.cratePromptName": "Escribe el nombre de la caja, o un color."
+    "tooltip.cratePromptName": "Escribe el nombre de la caja, o un color.",
+    "tooltip.relocatePath": "Escribe la ruta del archivo de audio.",
+    "tooltip.relocateCancel": "Cerrar sin cambiar la ubicación del archivo.",
+    "tooltip.relocateConfirm": "Guardar esta ubicación. Hay que salir de Serato DJ Pro.",
+    "tooltip.confirmCancel": "Cerrar sin hacer este cambio.",
+    "tooltip.confirmAction": "Confirmar este cambio."
   };
 
   // src/lib/i18n.ts
@@ -24552,6 +24562,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     cratePromptName: spec("tooltip.cratePromptName"),
     cratePromptCancel: spec("tooltip.cratePromptCancel"),
     cratePromptConfirm: spec("tooltip.cratePromptConfirm"),
+    relocatePath: spec("tooltip.relocatePath"),
+    relocateCancel: spec("tooltip.relocateCancel"),
+    relocateConfirm: spec("tooltip.relocateConfirm"),
+    confirmCancel: spec("tooltip.confirmCancel"),
+    confirmAction: spec("tooltip.confirmAction"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),

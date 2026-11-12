@@ -55,6 +55,11 @@ export interface ElementIds {
   "crate-prompt-input": HTMLInputElement;
   "crate-prompt-cancel": HTMLButtonElement;
   "crate-prompt-confirm": HTMLButtonElement;
+  "confirm-dialog": HTMLDialogElement;
+  "confirm-title": HTMLHeadingElement;
+  "confirm-message": HTMLParagraphElement;
+  "confirm-cancel": HTMLButtonElement;
+  "confirm-confirm": HTMLButtonElement;
   "folder-sync-path": HTMLInputElement;
   "folder-sync-subcrates": HTMLInputElement;
   "folder-sync-full": HTMLInputElement;

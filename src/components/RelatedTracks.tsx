@@ -13,6 +13,7 @@ import { useTrackList } from "../containers/TrackListContext";
 import { t } from "../lib/i18n";
 import { matchesQuery, parseQuery } from "../lib/ui/search-filters";
 import { tooltipRef } from "../lib/ui/tooltip";
+import { openConfirm } from "../lib/ui/shared-dialog";
 import {
   chooseRelated,
   openRelated,
@@ -110,7 +111,11 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
 
   async function onRemove(link: RelatedTrack): Promise<void> {
     const label = link.track?.title || t("related.thisTrack");
-    if (!confirm(t("related.confirmRemove", { name: label }))) return;
+    if (!(await openConfirm({
+      title: t("common.remove"),
+      message: t("related.confirmRemove", { name: label }),
+      confirmLabel: t("common.remove"),
+    }))) return;
     try {
       await postJSON("/api/related", { action: "remove", id: link.id });
       list.setNotice(t("related.removed"));

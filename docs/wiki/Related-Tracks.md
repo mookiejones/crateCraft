@@ -26,7 +26,7 @@ Related tracks are songs you want to remember together. The links live in `relat
 6. Leave **Two-way link** ticked, or clear it for a one-way link.
 7. Click **Save link**.
 
-The bar says **Link saved.** A two-way link reads **Two-way**. A one-way link reads **One-way**. **Remove** asks you to confirm. The audio file and the Serato library do not change.
+The bar says **Link saved.** A two-way link reads **Two-way**. A one-way link reads **One-way**. **Remove** opens a dialog with **Remove the link to …**. Cancel or Esc leaves the link. Confirm removes it. The audio file and the Serato library do not change.
 
 Suggestions use the same key, a neighbor on the Camelot wheel, a tempo within 6 percent, or a shared normal crate. The line says **Suggested from key, tempo within 6%, and shared crates. Save stores a two-way link.** That save has no note and no rating.
 
