@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const postJSON = vi.hoisted(() => vi.fn());
 
@@ -9,7 +9,7 @@ vi.mock("../lib/api", async () => {
 
 import { applyStatic, setLocale, t } from "../lib/i18n";
 import { el } from "../lib/dom";
-import { backupDriveCrates, closePlan, confirmSnapshotRestore, openSnapshotPlan, renderOperations, renderSnapshots, repaintSnapshotPlan } from "../lib/snapshots/restore";
+import { backupDriveCrates, closePlan, confirmSnapshotRestore, openSnapshotPlan, renderOperations, renderSnapshots, repaintSnapshotPlan, unmountSnapshots } from "../lib/snapshots/restore";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import type { RestorePlan } from "../lib/api-types";
 import { state } from "../lib/state";
@@ -65,6 +65,17 @@ describe("restore", () => {
     postJSON.mockReset();
     postJSON.mockResolvedValue({});
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
+  });
+
+  afterEach(() => {
+    unmountSnapshots();
+  });
+
+  it("unmounts snapshot islands so the Data Grid scheduler does not outlive the document", () => {
+    renderSnapshots();
+    expect(document.querySelector("#snapshots-panel .MuiDataGrid-root")).not.toBeNull();
+    unmountSnapshots();
+    expect(document.querySelector("#snapshots-panel .MuiDataGrid-root")).toBeNull();
   });
 
   it("reports skipped crates after restore in the active language", async () => {

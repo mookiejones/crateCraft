@@ -125,6 +125,29 @@ export function mountSnapshots(): void {
   bindHost(document.getElementById("snapshot-dialog-host"), createElement(RestoreDialog));
 }
 
+/**
+ * Unmount the snapshot panel and restore-dialog islands.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * Data Grid scheduler does not run after jsdom tears the window down.
+ *
+ * @returns {void}
+ */
+export function unmountSnapshots(): void {
+  for (const id of ["snapshots-panel", "snapshot-dialog-host"] as const) {
+    const host = document.getElementById(id);
+    if (!(host instanceof HTMLElement)) continue;
+    const root = hosts.get(host);
+    if (!root) continue;
+    try {
+      root.unmount();
+    } catch {
+      // installPage already dropped the host.
+    }
+    hosts.delete(host);
+  }
+}
+
 function ensureMounted(): void {
   mountSnapshots();
 }
