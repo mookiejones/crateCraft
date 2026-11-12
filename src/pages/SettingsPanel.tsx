@@ -1,11 +1,25 @@
 /**
- * Settings dialog painted by React.
+ * Settings Main page painted by React.
  *
  * Shortcut cheat sheet, language, appearance, sharing, updates, and
- * About read `useSettings`. Tooltips use the same sentences as the
- * static markup they replace.
+ * About read `useSettings`. The Drawer footer still opens this page.
+ * Tooltips use the same sentences as the static markup they replace.
  */
 
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+import Switch from "@mui/material/Switch";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
 import { MuiThemeProof } from "../components/MuiThemeProof";
 import { useSettings } from "../containers/SettingsContext";
 import { LANGUAGES, LANGUAGE_NAMES, t } from "../lib/i18n";
@@ -34,49 +48,54 @@ function telemetryNote(): string {
   return t("sharing.nothingSent");
 }
 
+function selectValue(event: { target: EventTarget }): string {
+  const target = event.target;
+  return target instanceof HTMLSelectElement ? target.value : "";
+}
+
 /**
  * Cheat-sheet tables from the shortcut list.
  */
 function CheatSheet() {
   const groups = cheatSheetModel();
   return (
-    <section id="shortcuts-section" className="shortcuts-section" aria-labelledby="shortcuts-title">
-      <h3 id="shortcuts-title" tabIndex={-1} ref={tooltipRef(tips.shortcuts)}>
+    <Box id="shortcuts-section" className="shortcuts-section" component="section" aria-labelledby="shortcuts-title">
+      <Typography id="shortcuts-title" variant="h6" component="h3" tabIndex={-1} ref={tooltipRef(tips.shortcuts)}>
         {t("shortcuts.title")}
-      </h3>
-      <p id="shortcuts-intro">{t("shortcuts.intro")}</p>
-      <div id="shortcuts-body">
+      </Typography>
+      <Typography id="shortcuts-intro" component="p">{t("shortcuts.intro")}</Typography>
+      <Box id="shortcuts-body">
         {groups.map((group) => (
-          <div key={group.group}>
-            <h3>{t(group.headingKey)}</h3>
-            {group.playNote ? <p className="dialog-note">{t("shortcuts.playNote")}</p> : null}
-            <table className="shortcut-table">
-              <thead>
-                <tr>
-                  <th scope="col">{t("shortcuts.action")}</th>
-                  <th scope="col">{t("shortcuts.key")}</th>
-                </tr>
-              </thead>
-              <tbody>
+          <Box key={group.group} sx={{ mt: 2 }}>
+            <Typography variant="subtitle1" component="h3">{t(group.headingKey)}</Typography>
+            {group.playNote ? <Typography className="dialog-note" component="p">{t("shortcuts.playNote")}</Typography> : null}
+            <Table className="shortcut-table" size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell component="th" scope="col">{t("shortcuts.action")}</TableCell>
+                  <TableCell component="th" scope="col">{t("shortcuts.key")}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {group.rows.map((row) => (
-                  <tr key={row.id}>
-                    <th scope="row">{t(row.actionKey)}</th>
-                    <td>
+                  <TableRow key={row.id}>
+                    <TableCell component="th" scope="row">{t(row.actionKey)}</TableCell>
+                    <TableCell>
                       {row.chords.map((chord, index) => (
                         <span key={`${row.id}-${index}`}>
                           {index > 0 ? " or " : null}
                           <kbd>{chordLabel(chord)}</kbd>
                         </span>
                       ))}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
+          </Box>
         ))}
-      </div>
-    </section>
+      </Box>
+    </Box>
   );
 }
 
@@ -88,60 +107,65 @@ export function SettingsPanel() {
   const preview = `/img/icons/placeholder-${settings.colorway}.svg`;
 
   return (
-    <div data-settings-react="true">
-      <h2 id="settings-title">{t("settings.title")}</h2>
-      <label className="check">
-        <input
-          id="telemetry-toggle"
-          ref={tooltipRef(tips.telemetry)}
-          type="checkbox"
-          checked={settings.telemetryOn}
-          disabled={settings.sharingBusy}
-          onChange={(event) => {
-            void settings.saveSharing(event.currentTarget.checked);
-          }}
-        />
-        <span>{t("settings.share")}</span>
-      </label>
-      <p id="telemetry-note" className="dialog-note">{telemetryNote()}</p>
-      <label className="check">
-        <input
-          id="update-toggle"
-          ref={tooltipRef(tips.updateToggle)}
-          type="checkbox"
-          checked={settings.updateEnabled}
-          disabled={settings.updateBusy}
-          onChange={(event) => {
-            void settings.saveUpdateEnabled(event.currentTarget.checked);
-          }}
-        />
-        <span>{t("settings.updates")}</span>
-      </label>
-      <label className="check">
-        <input
-          id="update-prereleases"
-          ref={tooltipRef(tips.updatePrereleases)}
-          type="checkbox"
-          checked={settings.updatePrereleases}
-          disabled={settings.updatePrereleasesDisabled || settings.updateBusy}
-          onChange={(event) => {
-            void settings.saveUpdatePrereleases(event.currentTarget.checked);
-          }}
-        />
-        <span>{t("settings.updatesPrereleases")}</span>
-      </label>
-      <p id="update-status" className="dialog-note" role="status" aria-live="polite">
+    <Stack data-settings-react="true" data-settings-page="true" spacing={2} sx={{ maxWidth: 720 }}>
+      <Typography id="settings-title" variant="h5" component="h2">{t("settings.title")}</Typography>
+      <FormControlLabel
+        control={
+          <Switch
+            id="telemetry-toggle"
+            slotProps={{ input: { ref: tooltipRef(tips.telemetry) } }}
+            checked={settings.telemetryOn}
+            disabled={settings.sharingBusy}
+            onChange={(event) => {
+              void settings.saveSharing(event.currentTarget.checked);
+            }}
+          />
+        }
+        label={t("settings.share")}
+      />
+      <Typography id="telemetry-note" className="dialog-note" component="p">{telemetryNote()}</Typography>
+      <FormControlLabel
+        control={
+          <Switch
+            id="update-toggle"
+            slotProps={{ input: { ref: tooltipRef(tips.updateToggle) } }}
+            checked={settings.updateEnabled}
+            disabled={settings.updateBusy}
+            onChange={(event) => {
+              void settings.saveUpdateEnabled(event.currentTarget.checked);
+            }}
+          />
+        }
+        label={t("settings.updates")}
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            id="update-prereleases"
+            slotProps={{ input: { ref: tooltipRef(tips.updatePrereleases) } }}
+            checked={settings.updatePrereleases}
+            disabled={settings.updatePrereleasesDisabled || settings.updateBusy}
+            onChange={(event) => {
+              void settings.saveUpdatePrereleases(event.currentTarget.checked);
+            }}
+          />
+        }
+        label={t("settings.updatesPrereleases")}
+      />
+      <Typography id="update-status" className="dialog-note" component="p" role="status" aria-live="polite">
         {settings.updateStatus}
-      </p>
-      <div className="colorway-row">
-        <label className="settings-field">
-          <span>{t("settings.colorway")}</span>
-          <select
+      </Typography>
+      <Stack className="colorway-row" direction="row" spacing={2} sx={{ alignItems: "center" }}>
+        <FormControl className="settings-field" size="small" fullWidth>
+          <InputLabel htmlFor="colorway-select" shrink>{t("settings.colorway")}</InputLabel>
+          <Select
+            native
             id="colorway-select"
-            ref={tooltipRef(tips.colorway)}
+            label={t("settings.colorway")}
+            inputRef={tooltipRef(tips.colorway)}
             value={settings.colorway}
             onChange={(event) => {
-              void settings.saveColorway(event.currentTarget.value as Colorway);
+              void settings.saveColorway(selectValue(event) as Colorway);
             }}
           >
             {COLORWAYS.map((id) => (
@@ -149,9 +173,10 @@ export function SettingsPanel() {
                 {t(COLORWAY_KEY[id])}
               </option>
             ))}
-          </select>
-        </label>
-        <img
+          </Select>
+        </FormControl>
+        <Box
+          component="img"
           id="colorway-preview"
           className="colorway-preview"
           width={64}
@@ -159,31 +184,34 @@ export function SettingsPanel() {
           alt={t("settings.colorwayPreview")}
           src={preview}
         />
-      </div>
+      </Stack>
       <MuiThemeProof />
-      <label className="check">
-        <input
-          id="icon-follows-theme"
-          ref={tooltipRef(tips.iconFollowsTheme)}
-          type="checkbox"
-          checked={settings.iconFollowsTheme}
-          onChange={(event) => {
-            void settings.saveIconFollow(event.currentTarget.checked);
-          }}
-        />
-        <span>{t("settings.iconFollowsTheme")}</span>
-      </label>
-      <p id="icon-status" className="dialog-status" role="status" aria-live="polite">
+      <FormControlLabel
+        control={
+          <Switch
+            id="icon-follows-theme"
+            slotProps={{ input: { ref: tooltipRef(tips.iconFollowsTheme) } }}
+            checked={settings.iconFollowsTheme}
+            onChange={(event) => {
+              void settings.saveIconFollow(event.currentTarget.checked);
+            }}
+          />
+        }
+        label={t("settings.iconFollowsTheme")}
+      />
+      <Typography id="icon-status" className="dialog-status" component="p" role="status" aria-live="polite">
         {settings.iconStatus}
-      </p>
-      <label className="settings-field">
-        <span>{t("settings.language")}</span>
-        <select
+      </Typography>
+      <FormControl className="settings-field" size="small" fullWidth>
+        <InputLabel htmlFor="language-select" shrink>{t("settings.language")}</InputLabel>
+        <Select
+          native
           id="language-select"
-          ref={tooltipRef(tips.language)}
+          label={t("settings.language")}
+          inputRef={tooltipRef(tips.language)}
           value={settings.language}
           onChange={(event) => {
-            void settings.saveLanguage(event.currentTarget.value);
+            void settings.saveLanguage(selectValue(event));
           }}
         >
           <option value="">{t("settings.languageSystem")}</option>
@@ -192,16 +220,16 @@ export function SettingsPanel() {
               {LANGUAGE_NAMES[code]}
             </option>
           ))}
-        </select>
-      </label>
-      <p id="language-status" className="dialog-status" role="status" aria-live="polite">
+        </Select>
+      </FormControl>
+      <Typography id="language-status" className="dialog-status" component="p" role="status" aria-live="polite">
         {settings.languageStatus}
-      </p>
+      </Typography>
       <CheatSheet />
-      <section className="about" aria-labelledby="about-title">
-        <h3 id="about-title">{t("settings.about")}</h3>
-        <p id="about-version" className="about-version">{settings.aboutVersion}</p>
-        <p>
+      <Box className="about" component="section" aria-labelledby="about-title">
+        <Typography id="about-title" variant="h6" component="h3">{t("settings.about")}</Typography>
+        <Typography id="about-version" className="about-version" component="p">{settings.aboutVersion}</Typography>
+        <Typography component="p">
           <a
             id="about-github"
             ref={tooltipRef(tips.helpGithub)}
@@ -209,67 +237,72 @@ export function SettingsPanel() {
           >
             {t("help.github")}
           </a>
-        </p>
-        <div className="dialog-actions">
-          <button
+        </Typography>
+        <Stack className="dialog-actions" direction="row" spacing={1}>
+          <Button
             id="copy-version"
             ref={tooltipRef(tips.copyVersion)}
             type="button"
+            variant="outlined"
             onClick={() => {
               void settings.copyVersion();
             }}
           >
             {t("settings.copyVersion")}
-          </button>
-        </div>
-        <p id="version-copy-status" className="dialog-status" role="status" aria-live="polite">
+          </Button>
+        </Stack>
+        <Typography id="version-copy-status" className="dialog-status" component="p" role="status" aria-live="polite">
           {settings.versionCopyStatus}
-        </p>
-      </section>
-      <div className="dialog-actions">
-        <button
+        </Typography>
+      </Box>
+      <Stack className="dialog-actions" direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
+        <Button
           id="rerun-wizard"
           ref={tooltipRef(tips.rerunWizard)}
           className="wizard-quiet"
           type="button"
+          variant="text"
           onClick={() => settings.rerunSetup()}
         >
           {t("settings.rerunSetup")}
-        </button>
-        <button
+        </Button>
+        <Button
           id="open-logs"
           ref={tooltipRef(tips.openLogs)}
           type="button"
+          variant="outlined"
           disabled={settings.logsBusy}
           onClick={() => {
             void settings.openLogs();
           }}
         >
           {t("settings.openLogs")}
-        </button>
-        <button
+        </Button>
+        <Button
           id="copy-logs"
           ref={tooltipRef(tips.copyLogs)}
           type="button"
+          variant="outlined"
           disabled={settings.logsBusy}
           onClick={() => {
             void settings.copyLogs();
           }}
         >
           {t("settings.copyLogs")}
-        </button>
-        <button
+        </Button>
+        <Button
           id="settings-close"
           ref={tooltipRef(tips.settingsClose)}
           type="button"
+          variant="contained"
           onClick={() => settings.close()}
         >
           {t("common.close")}
-        </button>
-      </div>
-      <p id="settings-status" className="dialog-status" role="status" aria-live="polite">
+        </Button>
+      </Stack>
+      <Typography id="settings-status" className="dialog-status" component="p" role="status" aria-live="polite">
         {settings.settingsStatus}
-      </p>
+      </Typography>
       <textarea
         id="log-fallback"
         ref={tooltipRef(tips.logFallback)}
@@ -279,6 +312,6 @@ export function SettingsPanel() {
         aria-label={t("settings.logText")}
         value={settings.logFallback}
       />
-    </div>
+    </Stack>
   );
 }

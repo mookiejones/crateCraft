@@ -19,7 +19,7 @@ flowchart TD
   skip --> done
 ```
 
-The first open runs setup until you choose **Open my library**. **Cancel** closes setup and does not change the library. Setup shows again next time. Esc cancels too. It does not answer the sharing question.
+The first open runs setup until you choose **Open my library**. Setup is a dialog over a dimmed empty shell. The bar and sidebar wait behind it. **Cancel** closes setup and does not change the library. Setup shows again next time. Esc cancels too. It does not answer the sharing question.
 
 | Step | Heading | Button |
 | --- | --- | --- |

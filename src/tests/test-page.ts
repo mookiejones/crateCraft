@@ -13,6 +13,11 @@ export function installPage(): void {
   const body = html.slice(start, end).replace(/<script[\s\S]*?<\/script>/g, "");
   document.body.outerHTML = `${body}</body>`;
   const dialog = HTMLDialogElement.prototype;
+  if (typeof dialog.show !== "function") {
+    dialog.show = function show(this: HTMLDialogElement) {
+      this.open = true;
+    };
+  }
   if (typeof dialog.showModal !== "function") {
     dialog.showModal = function showModal(this: HTMLDialogElement) {
       this.open = true;

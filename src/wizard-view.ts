@@ -2,8 +2,9 @@
  * First-run wizard screen.
  *
  * The state machine in wizard.ts decides the step. This file talks to
- * the local server, owns the session, and mounts the React dialog.
- * Text from the server is assigned with textContent in that tree.
+ * the local server, owns the session, and mounts the MUI Dialog inside
+ * the native `#wizard` host so the shell stays dimmed. Cancel and Esc
+ * do not write wizard_complete.
  */
 
 import { createElement } from "react";

@@ -328,6 +328,7 @@ export function isTypingTarget(target: EventTarget | null): boolean {
  *
  * Focus moves to the heading. Esc closes Settings and returns focus.
  * When Settings is already open, focus moves to the heading.
+ * Settings is a Main page (`show`), not a modal overlay.
  *
  * @returns {void}
  */
@@ -336,7 +337,8 @@ export function openCheatSheet(): void {
   renderCheatSheet();
   if (!dialog.open) {
     rememberFocus();
-    dialog.showModal();
+    dialog.show();
+    document.getElementById("open-settings")?.setAttribute("aria-expanded", "true");
   }
   const title = el("shortcuts-title");
   title.tabIndex = -1;
@@ -364,6 +366,7 @@ export function wireShortcuts(): void {
 
 function onSettingsClose(): void {
   restoreFocus();
+  document.getElementById("open-settings")?.setAttribute("aria-expanded", "false");
 }
 
 function onKey(event: KeyboardEvent): void {
