@@ -127,6 +127,10 @@ describe("TagsPanel apply clicks", () => {
     host.querySelector<HTMLButtonElement>('[data-tags-action="apply"]')!.click();
     expect(applyGroup).toHaveBeenCalledTimes(1);
     expect(applyGroup).toHaveBeenCalledWith("hiphop");
+    expect(host.querySelector('.MuiDataGrid-columnHeader[data-field="suggested"]')).not.toBeNull();
+    expect(host.querySelector('.MuiDataGrid-columnHeader[data-field="tracks"]')).not.toBeNull();
+    expect(host.querySelector('.MuiDataGrid-columnHeader[data-field="spellings"]')).not.toBeNull();
+    expect(host.querySelector("details")).toBeNull();
     root.unmount();
   });
 
