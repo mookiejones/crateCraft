@@ -13748,7 +13748,9 @@ Error generating stack: ` + x.message + `
     "wizard.updatesYes": "Yes, check",
     "wizard.useFolder": "Use this folder",
     "wizard.welcomeBody": "This app shows the library Serato already keeps on this computer. It will not change anything without asking.",
-    "wizard.yes": "Yes, share"
+    "wizard.yes": "Yes, share",
+    "files.toolbar": "Folder toolbar",
+    "files.actionsLabel": "File actions"
   };
 
   // locales/es.json
@@ -15329,7 +15331,9 @@ Error generating stack: ` + x.message + `
     "wizard.updatesYes": "Sí, buscar",
     "wizard.useFolder": "Usar esta carpeta",
     "wizard.welcomeBody": "Esta app muestra la biblioteca que Serato ya guarda en este equipo. No cambiará nada sin preguntar.",
-    "wizard.yes": "Sí, compartir"
+    "wizard.yes": "Sí, compartir",
+    "files.toolbar": "Barra de carpeta",
+    "files.actionsLabel": "Acciones de archivos"
   };
 
   // src/lib/i18n.ts
