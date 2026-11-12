@@ -4,9 +4,9 @@ import type { TagClusterPlan, TagClusters } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
-import { loadTags, repaintTags, wireTags } from "../lib/health/tags";
+import { loadTags, repaintTags, unmountTags, wireTags } from "../lib/health/tags";
 import { groupChanges, previewLines, tagsSummary, titlesSummary } from "../lib/health/tags-view";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 
 const postJSON = vi.hoisted(() => vi.fn());
@@ -185,7 +185,9 @@ describe("tags", () => {
     document.getElementById("tags-panel")!.hidden = false;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountTags();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });

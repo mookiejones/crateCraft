@@ -125,6 +125,25 @@ export function wireTags(): void {
 }
 
 /**
+ * Unmount the Tag spellings Data Grid island.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * Data Grid scheduler does not run after jsdom tears the window down.
+ *
+ * @returns {void}
+ */
+export function unmountTags(): void {
+  if (!panelRoot) return;
+  try {
+    panelRoot.unmount();
+  } catch {
+    // installPage already dropped the host.
+  }
+  panelRoot = undefined;
+  panelHost = null;
+}
+
+/**
  * Ask for spelling groups of the open space and field.
  *
  * The previous report stays on screen until this reply arrives. Genre,

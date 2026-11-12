@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { FileScanReport } from "../lib/api-types";
-import { loadScan, repaintScan, wireScan } from "../lib/health/scan";
+import { loadScan, repaintScan, unmountScan, wireScan } from "../lib/health/scan";
 import { setLocale } from "../lib/i18n";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 
 const report: FileScanReport = {
   depth: "quick",
@@ -50,7 +50,9 @@ describe("scan", () => {
     document.getElementById("scan-panel")!.hidden = false;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountScan();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });

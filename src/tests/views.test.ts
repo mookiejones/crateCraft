@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "../lib/api-types";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
-import { mountTrackList } from "../lib/ui/virtual-scroll";
+import { drainReactScheduler, installPage } from "./test-page";
+import { mountTrackList, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderCrates, renderFiles, renderList, renderSessions, selectCrate, toggleCrate } from "../lib/ui/views";
 
 vi.hoisted(() => {
@@ -81,6 +81,11 @@ describe("library views", () => {
     installPage();
     mountTrackList();
     resetState();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   it("paints the crate tree, keeps a matching child's parent, and counts the track search", () => {
@@ -316,6 +321,11 @@ describe("crate search (#38)", () => {
       { id: 7, name: "Hip Hop", parent: 1, order: 2 },
     ];
     state.crateTracks = new Map();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   function shown(): string[] {

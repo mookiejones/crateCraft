@@ -11,7 +11,7 @@
 import { createElement } from "react";
 import { fetchLibraryRoots, readJSON } from "../api";
 import type { LibraryRoot } from "../api-types";
-import { mountIsland } from "../../app/mount";
+import { mountIsland, type IslandRoot } from "../../app/mount";
 import { PortableReport } from "../../pages/PortableReport";
 import { el } from "../dom";
 import { emitFiles } from "../files/files-store";
@@ -22,6 +22,8 @@ import { portableCheck } from "../ui/tooltip-strings";
 
 /** Findings painted before the rest are counted as "and more". */
 export const FINDING_CAP = 100;
+
+let islandRoot: IslandRoot | null = null;
 
 export interface DriveFinding {
   kind: string;
@@ -334,7 +336,25 @@ export function wirePortable(): void {
   el("portable-drive").addEventListener("change", () => {
     void runPortableCheck(el("portable-drive").value);
   });
-  mountIsland(el("portable-view-findings"), createElement(PortableReport));
+  islandRoot = mountIsland(el("portable-view-findings"), createElement(PortableReport));
+}
+
+/**
+ * Unmount the Check-drive Data Grid island.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * Data Grid scheduler does not run after jsdom tears the window down.
+ *
+ * @returns {void}
+ */
+export function unmountPortable(): void {
+  if (!islandRoot) return;
+  try {
+    islandRoot.unmount();
+  } catch {
+    // installPage already dropped the host.
+  }
+  islandRoot = null;
 }
 
 /**

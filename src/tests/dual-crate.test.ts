@@ -8,7 +8,7 @@ import { state } from "../lib/state";
 import { setCratePromptValue } from "../lib/ui/shared-dialog";
 import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
 import { drainReactScheduler, installPage } from "./test-page";
-import { mountTrackList, mountTrackListB } from "../lib/ui/virtual-scroll";
+import { mountTrackList, mountTrackListB, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderList, selectCrate } from "../lib/ui/views";
 
 vi.hoisted(() => {
@@ -56,6 +56,7 @@ describe("dual crate panes", () => {
   });
 
   afterEach(async () => {
+    unmountTrackList();
     unmountSharedDialogs();
     await drainReactScheduler();
     vi.unstubAllGlobals();
@@ -129,6 +130,11 @@ describe("selectCrate while split", () => {
     mountTrackList();
     mountTrackListB();
     resetState();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   it("fills the focused pane on a plain click", () => {

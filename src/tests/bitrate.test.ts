@@ -2,11 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { BitrateCheckReport, BitrateCratePlan } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
-import { loadBitrate, repaintBitrate, wireBitrate } from "../lib/health/bitrate";
+import { loadBitrate, repaintBitrate, unmountBitrate, wireBitrate } from "../lib/health/bitrate";
 import { setLocale } from "../lib/i18n";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 
 const postJSON = vi.hoisted(() => vi.fn());
 
@@ -98,7 +98,9 @@ describe("bitrate", () => {
     document.getElementById("bitrate-panel")!.hidden = false;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountBitrate();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });

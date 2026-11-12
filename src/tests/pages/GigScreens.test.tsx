@@ -8,7 +8,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { GigReport as GigPayload, TempoDriftReport } from "../../lib/api-types";
 import { AppProviders } from "../../app/providers";
-import { loadDrift, wireDrift } from "../../lib/gig/drift";
+import { loadDrift, unmountDrift, wireDrift } from "../../lib/gig/drift";
 import { loadGigCheck, wireGigCheck } from "../../lib/gig/gig";
 import { state } from "../../lib/state";
 import { drainReactScheduler, installPage } from "../test-page";
@@ -84,6 +84,7 @@ describe("Before a gig context", () => {
       // installPage already dropped the host.
     }
     panelRoot = null;
+    unmountDrift();
     vi.unstubAllGlobals();
     await drainReactScheduler();
   });

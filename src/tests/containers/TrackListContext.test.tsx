@@ -5,7 +5,7 @@
 import { createElement } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { Track } from "../../lib/api-types";
 import { MuiThemeRoot } from "../../app/mui-theme-root";
 import { PlayerProvider } from "../../app/providers";
@@ -13,9 +13,9 @@ import { TrackListProvider, type TrackListContextValue } from "../../containers/
 import { setLocale } from "../../lib/i18n";
 import { attachMedia, mountPlayer, type PlayableMedia } from "../../lib/player/player";
 import { state } from "../../lib/state";
-import { installPage } from "../test-page";
+import { drainReactScheduler, installPage } from "../test-page";
 import { getTrackListActions, readTrackList, setTrackDetail } from "../../lib/ui/track-list-store";
-import { mountTrackList, paintRows } from "../../lib/ui/virtual-scroll";
+import { mountTrackList, paintRows, unmountTrackList } from "../../lib/ui/virtual-scroll";
 import { BeatgridBlock } from "../../components/BeatgridBlock";
 import { CuePads } from "../../components/CuePads";
 import { TrackDetailPane } from "../../components/TrackDetail";
@@ -67,6 +67,11 @@ describe("TrackListContext", () => {
     state.duplicateIds = null;
     state.duplicateGroups = [];
     setTrackDetail({ kind: "none" });
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   it("paints virtualized rows from TrackListContext without 10k DOM nodes", () => {

@@ -62840,7 +62840,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/drift.ts
-  var listeners8 = /* @__PURE__ */ new Set(), latest = null;
+  var listeners8 = /* @__PURE__ */ new Set(), latest = null, islandRoot2 = null;
   function emit3() {
     let snapshot2 = getDriftSnapshot();
     for (let listener of listeners8) listener(snapshot2);
@@ -62871,7 +62871,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let panel = el("drift-panel");
     panel.dataset.driftWired !== "true" && (panel.dataset.driftWired = "true", el("drift-refresh").addEventListener("click", () => {
       loadDrift();
-    }), mountIsland(el("drift-report"), (0, import_react31.createElement)(DriftReport)));
+    }), islandRoot2 = mountIsland(el("drift-report"), (0, import_react31.createElement)(DriftReport)));
   }
   async function loadDrift() {
     let token4 = ++state.driftToken;
@@ -62995,7 +62995,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/portable.ts
-  var FINDING_CAP = 100, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners9 = /* @__PURE__ */ new Set();
+  var FINDING_CAP = 100, islandRoot3 = null, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners9 = /* @__PURE__ */ new Set();
   function emitPortable() {
     let snapshot2 = portableSnapshot();
     for (let listener of listeners9) listener(snapshot2);
@@ -63109,7 +63109,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       runPortableCheck(el("portable-drive").value);
     }), el("portable-drive").addEventListener("change", () => {
       runPortableCheck(el("portable-drive").value);
-    }), mountIsland(el("portable-view-findings"), (0, import_react32.createElement)(PortableReport)));
+    }), islandRoot3 = mountIsland(el("portable-view-findings"), (0, import_react32.createElement)(PortableReport)));
   }
   function renderPortableReport(report) {
     latest2 = report;
@@ -63998,7 +63998,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/shared-dialog-mount.tsx
-  var islandRoot2 = null, islandHost = null;
+  var islandRoot4 = null, islandHost = null;
   function safeUnmount(root) {
     if (root)
       try {
@@ -64010,7 +64010,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let host = document.getElementById("shared-dialogs");
     if (!(host instanceof HTMLElement)) return;
     let nativeLeft = !!document.querySelector("dialog#rekordbox-dialog");
-    islandRoot2 && islandHost === host && host.isConnected && !nativeLeft || (safeUnmount(islandRoot2), islandRoot2 = mountIsland(host, (0, import_react35.createElement)(SharedDialogs)), islandHost = host);
+    islandRoot4 && islandHost === host && host.isConnected && !nativeLeft || (safeUnmount(islandRoot4), islandRoot4 = mountIsland(host, (0, import_react35.createElement)(SharedDialogs)), islandHost = host);
   }
   bindSharedDialogMount(mountSharedDialogs);
 
@@ -72347,11 +72347,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/app-shell.ts
-  var islandRoot3 = null;
+  var islandRoot5 = null;
   function mountAppShell(host) {
-    islandRoot3?.unmount(), islandRoot3 = null;
+    islandRoot5?.unmount(), islandRoot5 = null;
     let root = host === void 0 ? document.getElementById("app-shell") : host;
-    root && (islandRoot3 = mountIsland(root, (0, import_react60.createElement)(AppShell)));
+    root && (islandRoot5 = mountIsland(root, (0, import_react60.createElement)(AppShell)));
   }
 
   // src/lib/ui/desktop-actions.ts

@@ -12,7 +12,7 @@
 import { createElement } from "react";
 import { readJSON } from "../api";
 import type { TempoDriftReport } from "../api-types";
-import { mountIsland } from "../../app/mount";
+import { mountIsland, type IslandRoot } from "../../app/mount";
 import { DriftReport as DriftReportView } from "../../pages/DriftReport";
 import type { DriftSnapshot } from "../../containers/GigContext";
 import { el } from "../dom";
@@ -25,6 +25,7 @@ type DriftListener = (snapshot: DriftSnapshot) => void;
 const listeners = new Set<DriftListener>();
 
 let latest: TempoDriftReport | null = null;
+let islandRoot: IslandRoot | null = null;
 
 function emit(): void {
   const snapshot = getDriftSnapshot();
@@ -93,7 +94,25 @@ export function wireDrift(): void {
   el("drift-refresh").addEventListener("click", () => {
     void loadDrift();
   });
-  mountIsland(el("drift-report"), createElement(DriftReportView));
+  islandRoot = mountIsland(el("drift-report"), createElement(DriftReportView));
+}
+
+/**
+ * Unmount the Tempo-drift Data Grid island.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * Data Grid scheduler does not run after jsdom tears the window down.
+ *
+ * @returns {void}
+ */
+export function unmountDrift(): void {
+  if (!islandRoot) return;
+  try {
+    islandRoot.unmount();
+  } catch {
+    // installPage already dropped the host.
+  }
+  islandRoot = null;
 }
 
 /**
