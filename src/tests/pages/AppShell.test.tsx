@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { applyStatic, setLocale, t } from "../../lib/i18n";
 import { mountAppShell, unmountAppShell } from "../../lib/ui/app-shell";
 import { paintNav, resetNav } from "../../lib/ui/nav";
+import { resetNotice, setNotice } from "../../lib/ui/notice-store";
 import { applyStaticTooltips } from "../../lib/ui/tooltip";
 import { installPage } from "../test-page";
 
@@ -23,6 +24,7 @@ describe("AppShell", () => {
   afterEach(() => {
     unmountAppShell();
     resetNav();
+    resetNotice();
     setLocale("en");
   });
 
@@ -97,6 +99,20 @@ describe("AppShell", () => {
     expect(strip?.querySelector("#app-drawer")).toBeNull();
     expect(document.getElementById("app-body")?.contains(bar)).toBe(false);
     expect(document.querySelector("main.sheet")?.contains(bar)).toBe(false);
+  });
+
+  it("places a dismissible Alert under the player for setNotice", () => {
+    expect(document.getElementById("app-notice")).toBeNull();
+    flushSync(() => {
+      setNotice("That file is not on disk.", "error");
+    });
+    const banner = document.getElementById("app-notice");
+    const strip = document.querySelector(".MuiAppBar-root")?.nextElementSibling;
+    expect(banner?.textContent).toContain("That file is not on disk.");
+    expect(strip?.nextElementSibling?.contains(banner)).toBe(true);
+    expect(document.getElementById("app-body")?.contains(banner)).toBe(false);
+    document.querySelector<HTMLButtonElement>("#app-notice button")?.click();
+    expect(document.getElementById("app-notice")).toBeNull();
   });
 
   it("still paints only the open parent's children after the portal", () => {

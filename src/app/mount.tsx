@@ -2,10 +2,11 @@
  * Mount a React island into an existing DOM host.
  *
  * The page is still mostly hand-written DOM. Each island wraps
- * `AppProviders` so list Play, detail Play, the player bar, the
- * waveform, the crate rail, the gig check, Tempo drift, the Files view,
- * History, Play stats, Settings, the track list, Snapshots, an idle
- * wizard, and Library health share their domain contexts.
+ * `AppProviders` so the action-flash notice, list Play, detail Play,
+ * the player bar, the waveform, the crate rail, the gig check, Tempo
+ * drift, the Files view, History, Play stats, Settings, the track list,
+ * Snapshots, an idle wizard, and Library health share their domain
+ * contexts.
  * `flushSync` keeps the paint in the same turn as the engine update.
  */
 

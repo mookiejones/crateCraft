@@ -23,6 +23,7 @@ import type {
 } from "../api-types";
 import { bridge } from "../bridge";
 import { el } from "../dom";
+import { setNotice as writeNotice, type NoticeSeverity } from "./notice-store";
 import { clickPane, paintDualChrome } from "../crates/dual-crate-view";
 import { colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "../format";
 import { loadGigCheck, showGigFailure } from "../gig/gig";
@@ -741,7 +742,7 @@ export function toggleCrate(id: number | "all") {
     if (result.warning) setNotice(result.warning);
   }).catch((error) => {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   });
 }
 
@@ -1051,7 +1052,7 @@ function renderDetail(track: Track) {
   useInCrates.textContent = t("detail.useInCrates");
   useInCrates.disabled = !writable;
   useInCrates.addEventListener("click", () => {
-    bridge.openReplaceInCratesDialog(track.id).catch((error) => setNotice(failureOf(error).message));
+    bridge.openReplaceInCratesDialog(track.id).catch((error) => setNotice(failureOf(error).message, "error"));
   });
   actions.append(reveal, prepare, relocate, remove, useInCrates);
   if (state.mode === "duplicates" && selectedDuplicateGroup()) {
@@ -1059,7 +1060,7 @@ function renderDetail(track: Track) {
     merge.textContent = t("merge.title");
     merge.disabled = !writable;
     merge.addEventListener("click", () => {
-      bridge.openMergeDialog().catch((error) => setNotice(failureOf(error).message));
+      bridge.openMergeDialog().catch((error) => setNotice(failureOf(error).message, "error"));
     });
     actions.append(merge);
   }
@@ -1220,7 +1221,7 @@ function copySection(fromId: number, copies: CopyRow[], writable: boolean) {
     replace.textContent = t("copies.useInCrates");
     replace.disabled = !writable;
     replace.addEventListener("click", () => {
-      bridge.openReplaceInCratesDialog(fromId, copy.id as number).catch((error) => setNotice(failureOf(error).message));
+      bridge.openReplaceInCratesDialog(fromId, copy.id as number).catch((error) => setNotice(failureOf(error).message, "error"));
     });
     row.append(button, rate, plays, crates, replace);
     section.append(row);
@@ -1603,7 +1604,7 @@ async function saveRelated(track: Track, section: HTMLElement, body: Record<stri
     await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : query);
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
     const status = section.querySelector("[role=status]");
     if (status) status.textContent = failureOf(error).message;
   }
@@ -1633,7 +1634,7 @@ async function removeRelated(track: Track, section: HTMLElement, link: RelatedTr
     const kept = section.querySelector<HTMLInputElement>(".related-search input");
     await loadRelated(track, section, Boolean(track.serato?.writable && state.writable), kept ? kept.value : "");
   } catch (error) {
-    setNotice(failureOf(error).message);
+    setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -1660,7 +1661,7 @@ async function refreshRelatedCrate(track: Track, section: HTMLElement) {
       lockDown(error);
       if (button) button.disabled = true;
     } else {
-      setNotice(failureOf(error).message);
+      setNotice(failureOf(error).message, "error");
       if (button) button.disabled = !state.writable;
     }
   }
@@ -1738,14 +1739,16 @@ export function repaintViews(): void {
  * Show or hide the notice line above the track list.
  *
  * An empty string hides it. Used for save warnings and request errors.
- * Does not change the library.
+ * Does not change the library. The AppShell Alert under the player
+ * shows the last write on every view until dismiss or the next notice.
  *
- * @param {string} text Notice text.
+ * @param text Notice text.
+ * @param severity Alert color. Defaults to info. Pass error from lock
+ *   and failed requests.
  * @returns {void}
  */
-export function setNotice(text: string) {
-  el("notice").textContent = text || "";
-  el("notice").hidden = !text;
+export function setNotice(text: string, severity: NoticeSeverity = "info") {
+  writeNotice(text, severity);
 }
 
 /**
@@ -1871,7 +1874,7 @@ export function applyStatus(info: SeratoStatus | null | undefined) {
 export function lockDown(error: unknown) {
   const failed = failureOf(error);
   applyStatus(failed.payload?.serato || { writable: false, message: failed.message });
-  setNotice(failed.message);
+  setNotice(failed.message, "error");
 }
 
 /**
@@ -1887,7 +1890,7 @@ export function lockDown(error: unknown) {
  */
 async function saveTrack(id: number, fields: TrackSaveFields) {
   if (fields.bpm != null && Number.isNaN(fields.bpm)) {
-    setNotice(t("detail.bpmNumber"));
+    setNotice(t("detail.bpmNumber"), "error");
     return;
   }
   try {
@@ -1897,7 +1900,7 @@ async function saveTrack(id: number, fields: TrackSaveFields) {
     selectTrack(id);
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -1939,7 +1942,7 @@ async function revealTrack(id: number) {
   try {
     await postJSON("/api/reveal", { id });
   } catch (error) {
-    setNotice(failureOf(error).message);
+    setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -1961,7 +1964,7 @@ async function prepareTrack(id: number, add: boolean) {
     selectTrack(id);
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -1994,7 +1997,7 @@ export async function relocateTrack(track: Track) {
     selectTrack(track.id);
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -2020,7 +2023,7 @@ export async function removeTrack(id: number) {
     await loadLibrary();
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -2052,7 +2055,7 @@ async function setMembership(assetId: number, crateId: number, add: boolean, inp
   } catch (error) {
     if (input) input.checked = !add;
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
     return false;
   }
 }
@@ -2073,7 +2076,7 @@ async function saveRules(id: number, text: string) {
   try {
     rules = JSON.parse(text);
   } catch {
-    setNotice(t("error.smart_rules_json"));
+    setNotice(t("error.smart_rules_json"), "error");
     return;
   }
   try {
@@ -2083,7 +2086,7 @@ async function saveRules(id: number, text: string) {
     selectCrate(id);
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -2112,7 +2115,7 @@ export async function createCrate() {
     selectCrate(result.id as number);
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -2141,7 +2144,7 @@ export async function renameCrate() {
     selectCrate(crate.id);
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -2181,7 +2184,7 @@ export async function colorCrate() {
   if (choice == null) return;
   const color = colorFromName(choice);
   if (color == null) {
-    setNotice(t("crates.colorUnknown"));
+    setNotice(t("crates.colorUnknown"), "error");
     return;
   }
   try {
@@ -2195,7 +2198,7 @@ export async function colorCrate() {
     await loadLibrary();
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -2223,7 +2226,7 @@ export async function deleteCrate() {
     await loadLibrary();
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -2249,7 +2252,7 @@ export async function importPlaylist(file: File) {
     selectCrate(result.id as number);
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -2305,7 +2308,7 @@ export async function openSession(id: number) {
   const response = await fetch(`/api/history?session=${id}`);
   const payload = await readJSONOr<HistoryPayload>(response, {});
   if (!response.ok) {
-    setNotice(serverMessage(payload, t("history.sessionFailed")));
+    setNotice(serverMessage(payload, t("history.sessionFailed")), "error");
     return;
   }
   state.entries = payload.entries || [];
@@ -2406,13 +2409,13 @@ export function setMode(mode: string) {
   if (mode === "history") {
     state.sort = "start";
     state.sortDir = -1;
-    if (!state.historySessions.length) loadHistory().catch((error) => setNotice(failureOf(error).message));
+    if (!state.historySessions.length) loadHistory().catch((error) => setNotice(failureOf(error).message, "error"));
   } else if (state.sort === "start" || state.sort === "deck" || state.sort === "played") {
     state.sort = "name";
     state.sortDir = 1;
   }
   if (mode === "duplicates" && state.duplicateSpace !== state.space) {
-    loadDuplicates().catch((error) => setNotice(failureOf(error).message));
+    loadDuplicates().catch((error) => setNotice(failureOf(error).message, "error"));
   }
   if (mode === "files") {
     state.filesLoading = true;
@@ -2553,7 +2556,7 @@ export function wireLibrary(): void {
   el("import-file").addEventListener("change", (event) => {
     const file = (event.target as HTMLInputElement).files?.[0];
     (event.target as HTMLInputElement).value = "";
-    if (file) importPlaylist(file).catch((error) => setNotice(failureOf(error).message));
+    if (file) importPlaylist(file).catch((error) => setNotice(failureOf(error).message, "error"));
   });
 
   el("space").addEventListener("change", () => {
@@ -2595,10 +2598,10 @@ export function wireLibrary(): void {
     renderShell();
   });
 
-  el("crate-new").addEventListener("click", () => createCrate().catch((error) => setNotice(failureOf(error).message)));
-  el("crate-rename").addEventListener("click", () => renameCrate().catch((error) => setNotice(failureOf(error).message)));
-  el("crate-color").addEventListener("click", () => colorCrate().catch((error) => setNotice(failureOf(error).message)));
-  el("crate-delete").addEventListener("click", () => deleteCrate().catch((error) => setNotice(failureOf(error).message)));
+  el("crate-new").addEventListener("click", () => createCrate().catch((error) => setNotice(failureOf(error).message, "error")));
+  el("crate-rename").addEventListener("click", () => renameCrate().catch((error) => setNotice(failureOf(error).message, "error")));
+  el("crate-color").addEventListener("click", () => colorCrate().catch((error) => setNotice(failureOf(error).message, "error")));
+  el("crate-delete").addEventListener("click", () => deleteCrate().catch((error) => setNotice(failureOf(error).message, "error")));
   // Arrow keys follow the tree: Right opens a crate, Left closes it or
   // jumps to the parent. Enter and Space select. The roving tabindex keeps
   // one crate button in the tab order.
@@ -2672,16 +2675,16 @@ bindCrateActions({
   select: selectCrate,
   toggle: toggleCrate,
   create: () => {
-    createCrate().catch((error) => setNotice(failureOf(error).message));
+    createCrate().catch((error) => setNotice(failureOf(error).message, "error"));
   },
   rename: () => {
-    renameCrate().catch((error) => setNotice(failureOf(error).message));
+    renameCrate().catch((error) => setNotice(failureOf(error).message, "error"));
   },
   color: () => {
-    colorCrate().catch((error) => setNotice(failureOf(error).message));
+    colorCrate().catch((error) => setNotice(failureOf(error).message, "error"));
   },
   remove: () => {
-    deleteCrate().catch((error) => setNotice(failureOf(error).message));
+    deleteCrate().catch((error) => setNotice(failureOf(error).message, "error"));
   },
   exportM3u: exportPlaylistM3u,
 });

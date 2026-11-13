@@ -9,12 +9,19 @@ import { renderCrates } from "../src/lib/ui/views";
 import { applyStaticTooltips, installTooltips } from "../src/lib/ui/tooltip";
 import { saveColorway } from "../src/lib/ui/settings";
 import { applyStatic, setLocale } from "../src/lib/i18n";
+import { setNotice } from "../src/lib/ui/notice-store";
 
 declare global {
-  interface Window { cratesFixture: { setColorway: typeof saveColorway }; }
+  interface Window {
+    cratesFixture: {
+      setColorway: typeof saveColorway;
+      setNotice: typeof setNotice;
+      paintNav: typeof paintNav;
+    };
+  }
 }
 window.fetch = () => Promise.resolve(new Response("{}", { headers: { "Content-Type": "application/json" } }));
-window.cratesFixture = { setColorway: saveColorway };
+window.cratesFixture = { setColorway: saveColorway, setNotice, paintNav };
 setLocale(document.documentElement.lang === "es" ? "es" : "en");
 applyStatic(document);
 

@@ -38,6 +38,34 @@ test("Crates keeps horizontal scrolling in the grid across colorways", async ({ 
   }
 });
 
+test("action-flash Alert sits under the player on every view until dismiss", async ({ page }) => {
+  await page.addScriptTag({ path: "e2e/dist/crates.js" });
+  await expect(page.locator("#app-notice")).toHaveCount(0);
+  await page.evaluate(() => {
+    window.cratesFixture.setNotice("That file is not on disk.", "error");
+  });
+  const banner = page.locator("#app-notice");
+  await expect(banner).toContainText("That file is not on disk.");
+  await expect(banner).toHaveAttribute("role", "alert");
+  expect(await page.evaluate(() => {
+    const notice = document.getElementById("app-notice");
+    const strip = document.querySelector(".player-strip");
+    return Boolean(
+      notice &&
+      strip?.nextElementSibling?.contains(notice) &&
+      !document.getElementById("app-body")?.contains(notice),
+    );
+  })).toBe(true);
+  await page.evaluate(() => {
+    window.cratesFixture.paintNav("files");
+  });
+  await expect(banner).toBeVisible();
+  mkdirSync("e2e/output", { recursive: true });
+  await page.screenshot({ path: "e2e/output/notice_banner_files.png", animations: "disabled" });
+  await page.locator("#app-notice button").click();
+  await expect(banner).toHaveCount(0);
+});
+
 for (const locale of ["en", "es"]) {
 test(`narrow screens keep controls in view in ${locale}`, async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
