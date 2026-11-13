@@ -5,6 +5,7 @@
     "ms-python.vscode-pylance",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
+    "storybook.storybook-vscode",
     "streetsidesoftware.code-spell-checker"
   ]
 }

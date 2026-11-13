@@ -68,7 +68,7 @@ python3 -m venv .venv
 
 `python3 server.py` serves `http://127.0.0.1:8765`. Press F5 in VS Code to run that launch. **Python: Run desktop.py** debugs the native window with `.venv`.
 
-Page color and type tokens are in `static/tokens.css`. The page source is strict TypeScript in `src/`. Edit that, then run `npm run build` so the committed `static/app.js` stays current. Node 22 or newer matches `engines` in `package.json`. Do not hand-edit `static/app.js`.
+Page color and type tokens are in `static/tokens.css`. The page source is strict TypeScript in `src/`. Edit that, then run `npm run build` so the committed `static/app.js` stays current. `npm run storybook` serves isolated components at `http://127.0.0.1:6006`. Node 22 or newer matches `engines` in `package.json`. Do not hand-edit `static/app.js`.
 
 ## Tests
 
