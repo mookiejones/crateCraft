@@ -1,6 +1,7 @@
 /*
   Layout and color for the crateCraft page.
 
+  The AppBar holds crateCraft, the generation chip, Help, and Settings.
   The rail holds the space menu, the view switch, and the crate or history
   list. The sheet holds the track list and the detail pane, including
   related tracks, the Files folder list, or the read-only gig check.
@@ -141,15 +142,54 @@ textarea:focus-visible,
   margin: 0;
 }
 
+.drawer-nav .view-switch [data-nav] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.drawer-nav .nav-icon {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+}
+
 .drawer-nav .view-children {
   flex-direction: column;
   flex-wrap: nowrap;
   background: transparent;
   border-bottom: 0;
-  padding: var(--space-2) 0 0 var(--space-3);
-  margin: var(--space-2) 0 0;
-  border-top: 1px solid var(--rule);
+  padding: var(--space-2) 0 var(--space-2) var(--space-6);
+  margin: 0 0 var(--space-1);
+  border-top: 0;
   gap: var(--space-1);
+}
+
+#app-drawer[data-mini] .view-children {
+  display: none;
+}
+
+#app-drawer[data-mini] .drawer-nav {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#app-drawer[data-mini] .view-switch {
+  margin: 0;
+  gap: var(--space-1);
+}
+
+#app-drawer[data-mini] .view-switch [data-nav] {
+  justify-content: center;
+  width: 56px;
+  max-width: 56px;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: 16px;
+  padding-right: 16px;
+  gap: 0;
+  font-size: 0;
 }
 
 .drawer-nav .view-switch button,
@@ -225,6 +265,21 @@ textarea:focus-visible,
   font-size: var(--font-heading);
 }
 
+.app-bar-lock:not(:has(#status:not([hidden]))) {
+  display: none;
+}
+
+.app-bar-lock {
+  background: var(--color-warn-bg);
+  color: var(--color-warn-text);
+  border-bottom: 1px solid var(--color-warn-border);
+  padding: var(--space-2) var(--space-4);
+}
+
+.app-bar-lock #status {
+  margin: 0;
+}
+
 .generation {
   display: block;
   width: 100%;
@@ -235,6 +290,43 @@ textarea:focus-visible,
   text-align: left;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.app-bar-generation {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.app-bar-generation .generation {
+  width: auto;
+  min-height: 44px;
+  margin: 0;
+  padding: 6px 10px;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.app-bar-generation .generation-note {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 2;
+  min-width: 16rem;
+  margin: 4px 0 0;
+  padding: var(--space-2);
+  background: var(--color-card);
+  color: var(--color-text);
+  font-size: var(--font-body);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--ink) 24%, transparent);
+}
+
+.app-bar-actions button {
+  min-height: 44px;
+  padding: 10px 12px;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
 }
 
 .brand .generation-note {
@@ -318,6 +410,10 @@ html[data-colorway="light"] .rail select { color-scheme: light; }
 .rail-foot {
   margin-top: auto;
   padding: var(--space-2) var(--space-1) 0;
+}
+
+.rail-foot:not(:has(button)) {
+  display: none;
 }
 
 .rail-foot button {
@@ -1544,14 +1640,17 @@ dialog .settings-field select {
   clip: rect(0 0 0 0);
 }
 
-.player-strip {
-  flex-shrink: 0;
-  background: var(--manila);
+.app-bar-player {
+  min-width: 0;
 }
 
-.player-strip .player-bar {
+.app-bar-player .player-bar {
   grid-column: auto;
   grid-row: auto;
+  border-top: 0;
+  background: transparent;
+  width: 100%;
+  min-width: 0;
 }
 
 .player-bar {
@@ -1562,12 +1661,18 @@ dialog .settings-field select {
 }
 
 .player-controls {
-  display: grid;
-  grid-template-columns: minmax(12rem, 18rem) auto minmax(0, 1fr) auto;
-  gap: var(--space-3);
+  display: flex;
   align-items: center;
-  padding: var(--space-2) var(--space-4);
-  min-height: 64px;
+  gap: var(--space-2);
+  padding: 0;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.player-wave-slot {
+  flex: 1;
+  min-width: 0;
 }
 
 .player-meta {
@@ -1709,6 +1814,17 @@ dialog .settings-field select {
   gap: var(--space-2);
   align-items: start;
   padding: var(--space-2) var(--space-4) 0;
+}
+
+.player-wave-compact {
+  display: block;
+  padding: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+.player-wave-compact .waveform-overview {
+  height: 32px;
 }
 
 .player-wave-main {
@@ -2370,17 +2486,6 @@ dialog .settings-field select {
   .detail { border-top: 1px solid var(--rule); grid-row: 5; }
   .player-bar { grid-row: 6; }
   .detail h2 { font-size: 32px; }
-  .player-controls {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "meta toggle"
-      "seek seek"
-      "volume volume";
-  }
-  .player-meta { grid-area: meta; }
-  .player-transport { grid-area: toggle; }
-  .player-seek { grid-area: seek; }
-  .player-volume { grid-area: volume; width: auto; }
 }
 
 .files-match-detail {

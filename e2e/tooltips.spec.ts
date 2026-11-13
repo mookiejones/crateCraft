@@ -72,12 +72,14 @@ test("every control has a tooltip, and focus shows it", async ({ page }) => {
     if (typeof dialog.close === "function") dialog.close();
   });
 
-  await page.locator(".player-wave").evaluate((node) => {
-    if (node instanceof HTMLElement) node.hidden = false;
+  // Compact AppBar has no zoom. Overview stays hidden until a track
+  // loads a wave, so this fixture unhides the player slot and checks Play.
+  await page.locator(".app-bar-player").evaluate((node) => {
+    if (node instanceof HTMLElement) {
+      node.hidden = false;
+      node.style.display = "flex";
+    }
   });
-  await page.locator("[aria-label='Zoom in']").focus();
-  await expect(tip).toHaveText("Show a shorter stretch of the waveform around the playhead.");
-  await saveShot(page, "tooltip_zoom");
 
   await expect(page.locator("#files-list")).toContainText("Sets");
   await expect(page.locator("#files-path")).toContainText("House");

@@ -2,7 +2,7 @@
 
 Crates are the lists on the left when **Crates** is selected. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
 
-The navigation highlights the open section. On narrow screens it starts collapsed; use the menu button to open it. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
+The navigation highlights the open section. On a narrow window the rail starts mini; use the menu button to open labels. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
 
 ![The Crates view with Saturday night selected in an example library of 24 tracks. Search and actions sit above the grid, with track details on the right.](../media/crates-refined.png)
 
@@ -10,7 +10,7 @@ The picture uses a small sample library. Track details include **Reveal in Finde
 
 ## Spaces
 
-The menu in the top bar chooses a space.
+The space menu in the crate list header chooses a space.
 
 | Menu label | What it is |
 | --- | --- |

@@ -130,4 +130,23 @@ describe("library generation", () => {
     );
     expect(button().dataset.tooltip).not.toBe(button().getAttribute("aria-label"));
   });
+
+  it("hides #status while checking or writable and shows the lock sentence when Serato is open", () => {
+    expect(document.getElementById("status")?.hidden).toBe(true);
+    applyStatus({
+      writable: true,
+      message: "Serato is quit. Edits save to the library.",
+      generation: generation({}),
+    });
+    expect(document.getElementById("status")?.hidden).toBe(true);
+    expect(button().textContent).toBe(t("generation.serato4"));
+    applyStatus({
+      writable: false,
+      message: "Serato is open. Changes are paused.",
+      generation: generation({}),
+    });
+    expect(document.getElementById("status")?.hidden).toBe(false);
+    expect(document.getElementById("status")?.textContent).toBe("Serato is open. Changes are paused.");
+    expect(button().textContent).toBe(t("generation.serato4"));
+  });
 });

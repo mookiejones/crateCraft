@@ -2,8 +2,9 @@
 <!--
   crateCraft page.
 
-  One screen: AppBar (space menu), collapsible Drawer (five primaries and
-  children of the open parent), crate inventory in Main,
+  One screen: AppBar (crateCraft, generation, Help, Settings), collapsible
+  Drawer (five primaries and children of the open parent), crate inventory
+  in Main with the space menu in the crate rail header,
   a virtualized track list, the detail pane, and a player bar. The Duplicates view can
   merge a group into the copy you keep. Export writes an M3U playlist.
   Rekordbox writes rekordbox.xml. The Files view browses folders
@@ -33,21 +34,38 @@
     <aside class="rail" aria-label="Library" data-i18n-attr="aria-label:status.library">
       <header class="brand">
         <h1 data-i18n="rail.heading">crateCraft</h1>
-        <p id="status" data-i18n="status.checking">Checking Serato</p>
+        <p id="status" hidden data-i18n="status.checking">Checking Serato</p>
         <button id="library-generation" type="button" class="generation" aria-expanded="false" aria-controls="library-generation-note" aria-label="Library generation" data-i18n="generation.checking" data-i18n-attr="aria-label:generation.label">Checking</button>
         <p id="library-generation-note" class="generation-note" hidden></p>
+        <label id="space-field" class="rail-field">
+          <span class="visually-hidden" data-i18n="space.label">Space</span>
+          <select id="space" aria-label="Space" data-i18n-attr="aria-label:space.label">
+            <option value="Serato Library" data-i18n="space.library">Library</option>
+            <option value="Serato Video" data-i18n="space.video">Video</option>
+            <option value="Apple Music" data-i18n="space.appleMusic">Apple Music</option>
+            <option value="Prepare" data-i18n="space.prepare">Prepare</option>
+          </select>
+        </label>
       </header>
-      <label id="space-field" class="rail-field">
-        <span class="visually-hidden" data-i18n="space.label">Space</span>
-        <select id="space" aria-label="Space" data-i18n-attr="aria-label:space.label">
-          <option value="Serato Library" data-i18n="space.library">Library</option>
-          <option value="Serato Video" data-i18n="space.video">Video</option>
-          <option value="Apple Music" data-i18n="space.appleMusic">Apple Music</option>
-          <option value="Prepare" data-i18n="space.prepare">Prepare</option>
-        </select>
-      </label>
       <div id="views" class="view-switch" role="tablist" aria-label="Views" data-i18n-attr="aria-label:view.label">
         <button type="button" data-nav="library" role="tab" aria-selected="true" data-i18n="view.group.library">Music</button>
+        <div id="view-children" class="view-children" role="tablist" aria-label="Music" data-i18n-attr="aria-label:view.group.library">
+          <button type="button" data-view="crates" role="tab" aria-selected="true" data-i18n="view.crates">Crates</button>
+          <button type="button" data-view="history" role="tab" data-i18n="view.history">History</button>
+          <button type="button" id="stats-tab" data-view="stats" role="tab" aria-controls="stats-panel" data-i18n="view.stats">Play stats</button>
+          <button type="button" data-view="files" role="tab" hidden data-i18n="view.files">Organize files</button>
+          <button type="button" id="health-tab" data-view="health" role="tab" hidden aria-controls="health-panel" data-i18n="view.health">Overview</button>
+          <button type="button" data-view="missing" role="tab" hidden data-i18n="view.missing">Missing files</button>
+          <button type="button" data-view="duplicates" role="tab" hidden data-i18n="view.duplicates">Duplicates</button>
+          <button type="button" data-view="stems" role="tab" hidden data-i18n="view.stems">Stems</button>
+          <button type="button" id="scan-tab" data-view="scan" role="tab" hidden aria-controls="scan-panel" data-i18n="view.scan">Damaged files</button>
+          <button type="button" id="bitrate-tab" data-view="bitrate" role="tab" hidden aria-controls="bitrate-panel" data-i18n="view.bitrate">Suspect quality</button>
+          <button type="button" id="tags-tab" data-view="tags" role="tab" hidden aria-controls="tags-panel" data-i18n="view.tags">Tag spellings</button>
+          <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
+          <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
+          <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
+          <button type="button" id="drift-tab" data-view="drift" role="tab" hidden aria-controls="drift-panel" data-i18n="view.drift">Tempo drift</button>
+        </div>
         <button type="button" data-nav="files" role="tab" data-i18n="view.files">Organize files</button>
         <button type="button" data-nav="health" role="tab" data-i18n="view.group.health">Health</button>
         <button type="button" data-nav="backups" role="tab" data-i18n="view.snapshots">Backups</button>
@@ -100,23 +118,6 @@
           <button id="update-skip" type="button" data-i18n="update.skip">Skip this version</button>
           <button id="update-dismiss" type="button" data-i18n="update.dismiss">Not now</button>
         </div>
-      </div>
-      <div id="view-children" class="view-children" role="tablist" aria-label="Music" data-i18n-attr="aria-label:view.group.library">
-        <button type="button" data-view="crates" role="tab" aria-selected="true" data-i18n="view.crates">Crates</button>
-        <button type="button" data-view="history" role="tab" data-i18n="view.history">History</button>
-        <button type="button" id="stats-tab" data-view="stats" role="tab" aria-controls="stats-panel" data-i18n="view.stats">Play stats</button>
-        <button type="button" data-view="files" role="tab" hidden data-i18n="view.files">Organize files</button>
-        <button type="button" id="health-tab" data-view="health" role="tab" hidden aria-controls="health-panel" data-i18n="view.health">Overview</button>
-        <button type="button" data-view="missing" role="tab" hidden data-i18n="view.missing">Missing files</button>
-        <button type="button" data-view="duplicates" role="tab" hidden data-i18n="view.duplicates">Duplicates</button>
-        <button type="button" data-view="stems" role="tab" hidden data-i18n="view.stems">Stems</button>
-        <button type="button" id="scan-tab" data-view="scan" role="tab" hidden aria-controls="scan-panel" data-i18n="view.scan">Damaged files</button>
-        <button type="button" id="bitrate-tab" data-view="bitrate" role="tab" hidden aria-controls="bitrate-panel" data-i18n="view.bitrate">Suspect quality</button>
-        <button type="button" id="tags-tab" data-view="tags" role="tab" hidden aria-controls="tags-panel" data-i18n="view.tags">Tag spellings</button>
-        <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
-        <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
-        <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
-        <button type="button" id="drift-tab" data-view="drift" role="tab" hidden aria-controls="drift-panel" data-i18n="view.drift">Tempo drift</button>
       </div>
       <div id="sheet-chrome" class="sheet-chrome">
         <h2 id="sheet-title" class="sheet-title"></h2>

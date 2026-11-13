@@ -1739,7 +1739,7 @@ export function repaintViews(): void {
  * Show or hide the notice line above the track list.
  *
  * An empty string hides it. Used for save warnings and request errors.
- * Does not change the library. The AppShell Alert under the player
+ * Does not change the library. The AppShell Alert under the AppBar
  * shows the last write on every view until dismiss or the next notice.
  *
  * @param text Notice text.
@@ -1857,7 +1857,9 @@ export function paintGeneration(info: SeratoStatus | null | undefined): void {
 export function applyStatus(info: SeratoStatus | null | undefined) {
   state.serato = info;
   state.writable = Boolean(info?.writable);
-  el("status").textContent = statusLine(info);
+  const status = el("status");
+  status.textContent = statusLine(info);
+  status.hidden = info?.writable !== false;
   paintGeneration(info);
   renderShell();
 }

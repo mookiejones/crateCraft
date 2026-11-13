@@ -3,9 +3,8 @@
  *
  * One `<audio>` element plays `GET /api/audio`. The bar, list Play, and
  * detail Play are React components on `PlayerContext`. The engine in this
- * file is the single store those islands subscribe to. The bar shows the
- * title, the artist, previous, play/pause, next, a seek bar with cue
- * markers, elapsed and total time, volume, and the waveform. Strings live
+ * file is the single store those islands subscribe to. The AppBar bar
+ * shows Play, title, the SWF1 waveform, and elapsed time. Strings live
  * in `player-strings.ts`. Cue points, loops, and the beatgrid come from
  * `GET /api/track` and are not written back. The waveform is React on
  * `WaveformContext`. Space and the seek keys stay in the shortcut table.
@@ -29,10 +28,7 @@
  * `playerControls` is what `app.ts` passes to `registerPlayerControls` right
  * after `mountPlayer()`. The shortcut table is the only Space listener.
  * `togglePlayPause` plays the selected library track when nothing is loaded.
- * The table's Left and Right call `seekBy` with 5 seconds. On the seek bar,
- * Left and Right move `SEEK_STEP_SECONDS` (5) and Shift moves
- * `SEEK_STEP_LARGE_SECONDS` (30). That handler marks the event handled so
- * the table does not seek a second time.
+ * The table's Left and Right call `seekBy` with 5 seconds.
  */
 
 import type { Marker, Track } from "../api-types";
@@ -477,6 +473,7 @@ export function mountPlayer(host?: HTMLElement | null): void {
   waveform?.destroy();
   waveform = null;
   resetPlayback();
+  emit();
   const root = host === undefined ? document.getElementById("player-bar") : host;
   if (!root) return;
   root.classList.add("player-bar");
@@ -486,13 +483,13 @@ export function mountPlayer(host?: HTMLElement | null): void {
   root.replaceChildren();
   if (element instanceof Node) root.append(element);
   const waveHost = document.createElement("div");
-  waveform = mountWaveform(waveHost);
+  waveform = mountWaveform(waveHost, undefined, true);
   const controls = document.createElement("div");
-  const stack = document.createElement("div");
-  stack.className = "player-stack";
-  stack.append(waveHost, controls);
-  root.append(stack);
+  root.append(controls);
   barRoot = mountIsland(controls, createElement(PlayerBar));
+  const slot = controls.querySelector(".player-wave-slot");
+  if (slot instanceof HTMLElement) slot.append(waveHost);
+  else controls.append(waveHost);
 }
 
 /**

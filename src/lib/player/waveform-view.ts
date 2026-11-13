@@ -80,14 +80,20 @@ const idleClock: WaveformClock = {
  *
  * @param host Element that will hold the canvases and zoom buttons.
  * @param hooks Seek, time, and the existing seek steps. No new keys.
+ * @param compact AppBar row: no zoom buttons, overview-scale wave, no wheel zoom.
  * @returns The controller.
  */
-export function mountWaveform(host: HTMLElement, hooks?: WaveformHooks): WaveformController {
-  const engine = new WaveformEngine();
+export function mountWaveform(
+  host: HTMLElement,
+  hooks?: WaveformHooks,
+  compact = false,
+): WaveformController {
+  const engine = new WaveformEngine(compact);
   host.classList.add("player-wave");
+  if (compact) host.classList.add("player-wave-compact");
   host.hidden = true;
   if (hooks) engine.setClock(hooks);
-  const panel = createElement(WaveformPanel, { engine, host });
+  const panel = createElement(WaveformPanel, { engine, host, compact });
   const tree = hooks ? createElement(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
   const root = mountIsland(host, tree);
   engine.bindRoot(root);
@@ -171,7 +177,7 @@ export class WaveformEngine implements WaveformController {
   private readonly onOverviewKey: (event: KeyboardEvent) => void;
   private resizeObserver: ResizeObserver | null = null;
 
-  constructor() {
+  constructor(private readonly compact = false) {
     this.onWheel = (event) => this.wheel(event);
     this.onResize = () => this.paint();
     this.onPointerDown = (event) => this.pointerDown(event);
@@ -220,7 +226,9 @@ export class WaveformEngine implements WaveformController {
     this.overviewCanvas = nodes.overviewCanvas;
     this.overviewHit = nodes.overviewHit;
     this.attached = true;
-    this.host.addEventListener("wheel", this.onWheel, { passive: false });
+    if (!this.compact) {
+      this.host.addEventListener("wheel", this.onWheel, { passive: false });
+    }
     this.overviewHit.addEventListener("pointerdown", this.onPointerDown);
     this.overviewHit.addEventListener("pointermove", this.onPointerMove);
     this.overviewHit.addEventListener("pointerup", this.onPointerUp);
@@ -572,7 +580,7 @@ export class WaveformEngine implements WaveformController {
 
   private paintOverview(time: number, duration: number): void {
     if (!this.overviewCanvas) return;
-    const size = sizeCanvas(this.overviewCanvas, 36);
+    const size = sizeCanvas(this.overviewCanvas, this.compact ? 32 : 36);
     if (!size) return;
     const source = this.overviewPixels(size.width, size.height);
     if (!source) return;

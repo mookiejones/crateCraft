@@ -145,6 +145,39 @@ describe("waveform controls", () => {
     expect(seen).toEqual([5, 10]);
   });
 
+  it("compact AppBar wave shows overview, seeks on pointer, and ignores wheel zoom", () => {
+    const seen: number[] = [];
+    const host = document.createElement("div");
+    document.body.append(host);
+    const view = mountWaveform(host, hooks((seconds) => seen.push(seconds)), true);
+    view.showComputed(parsedWave());
+    expect(host.classList.contains("player-wave-compact")).toBe(true);
+    expect(host.querySelector("[aria-label='Zoom in']")).toBeNull();
+    expect(host.querySelector<HTMLElement>(".waveform-detail-wrap")?.hidden).toBe(true);
+    const overview = host.querySelector<HTMLElement>(".waveform-overview");
+    expect(overview?.hidden).toBe(false);
+    overview!.getBoundingClientRect = () =>
+      ({
+        left: 10,
+        width: 200,
+        top: 0,
+        height: 32,
+        right: 210,
+        bottom: 32,
+        x: 10,
+        y: 0,
+        toJSON() {
+          return {};
+        },
+      }) as DOMRect;
+    overview!.dispatchEvent(new PointerEvent("pointerdown", { button: 0, clientX: 60, bubbles: true }));
+    expect(seen).toEqual([5]);
+    const before = view.pixelsPerSecond();
+    const wheel = new WheelEvent("wheel", { deltaY: -40, ctrlKey: true, cancelable: true });
+    host.dispatchEvent(wheel);
+    expect(view.pixelsPerSecond()).toBe(before);
+  });
+
   it("leaves the shortcut table unchanged", () => {
     expect(SHORTCUTS.map((shortcut) => shortcut.id)).toEqual([
       "focus-search",

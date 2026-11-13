@@ -1,6 +1,6 @@
 # Crates
 
-The navigation highlights the open section. On narrow screens it starts collapsed; use the menu button to open it. The top bar holds the space menu. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
+The navigation highlights the open section. On a narrow window the rail starts mini; use the menu button to open labels. The crate list header holds the space menu. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
 
 <figure>
   <img alt="Crates with Deep House selected and the open track's crate checkboxes." src="images/features/crates.png">
@@ -25,7 +25,7 @@ The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**. E
 
 **Find a crate** keeps a parent visible when a nested name matches. **Order** is Serato's own order. **Name** is alphabetical. **Added** is the date the crate was created.
 
-Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. The status line under **Library** says when edits can save.
+Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. When Serato is open, a notice under the top bar says edits stay off.
 
 | Button | What you do |
 | --- | --- |

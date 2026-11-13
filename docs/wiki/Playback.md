@@ -4,19 +4,17 @@ Play a track that is already in the library. The sound stays on this computer. T
 
 Double-click a row, press **Enter**, or click **Play**. **Enter** on the list plays the selected track. **Enter** on a focused row plays that row. The list Play button and the detail Play button share one player. Click **Play** on the playing track to pause. Click **Play** on another row to start that track. Both buttons show Play or Pause.
 
-The bar under the AppBar shows the title, the artist, **Previous**, **Play** or **Pause**, **Next**, a seek bar, and volume. **Previous** and **Next** follow the list in its sort and filter order. When a track ends, the next row starts.
+After a track loads, **Play**, the title, the waveform, and the time sit in the top bar, between the Serato chip and Help. Pause keeps that bar. It hides again when there is no current track. When a track ends, the next row in the list starts.
 
-Cue points from the file sit on the seek bar in their colors. Click a cue to jump there. A track with no cues has no marks. With the seek bar focused, **Left** and **Right** move 5 seconds. **Shift** with **Left** or **Right** moves 30 seconds.
+Cue points from the file sit on the pads in the detail pane. Click a pad to jump there. A track with no cues has empty pads.
 
-The bar also shows a waveform. The zoomed view keeps the playhead in the center and scrolls the track past it. Lows are red, mids are green, and highs are blue. **+** and **−** zoom in and out. Hold **Ctrl**, or **Command** on a Mac, and roll the mouse wheel to zoom. Those controls are not shortcut keys.
+The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. Click or drag it to move through the track. Zoom stays off that bar.
 
-Under that is the whole track. The part you have already played is darker. Click or drag there to move through the track. Cue points and loops are drawn on both views, in the colors stored on the file. A loop is a shaded region. Beat marks sit on the zoomed view, as short lines along the top and bottom. A downbeat is a little longer than the other beats.
+If the file has no waveform, the bar says **Waveform unavailable for this format**. The track still plays.
 
-While the waveform is still being read, the overview uses the Serato Overview stored in the file, then switches to the computed one. If the file has no waveform, the bar says **Waveform unavailable for this format**. The track still plays.
+**Play** and **Pause** are one button. Its name changes with the state. Hover a player control, or tab to it, and a note names the action. **Space**, **Left**, and **Right** are written there when they apply.
 
-**Play** and **Pause** are one button. Its name changes with the state. Hover a player control, or tab to it, and a note names the action. **Space**, **Left**, and **Right** are written there when they apply. **+** and **−** and the overview do the same.
-
-**Space** plays or pauses. When nothing is playing, it starts the selected track. It does nothing while you are typing in a field. **Left** moves 5 seconds back. **Right** moves 5 seconds forward. Those are the only playback keys in the shortcut table. With the seek bar focused, **Shift** with **Left** or **Right** moves 30 seconds.
+**Space** plays or pauses. When nothing is playing, it starts the selected track. It does nothing while you are typing in a field. **Left** moves 5 seconds back. **Right** moves 5 seconds forward. Those are the only playback keys in the shortcut table.
 
 Playback does not change the audio file and does not add a history row. If the track is not in the library, or the file is missing, the bar says **Not in the library or file missing**. If the window cannot play the file, the bar says **This file cannot be played in this window.**
 

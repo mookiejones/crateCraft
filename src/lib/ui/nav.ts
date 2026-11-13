@@ -3,9 +3,9 @@
  *
  * Music, Organize files, Health, Backups, and Gig live
  * in #views. Children of a parent with more than one view sit in
- * #view-children. After AppShell mounts they live in the Drawer. A parent
- * with one child hides that strip. The last child per parent is
- * remembered for the session.
+ * #view-children, inserted after that parent button. Mini hides the
+ * nested list. A parent with one child hides that strip. The last child
+ * per parent is remembered for the session.
  */
 
 import { t, type MessageKey } from "../i18n";
@@ -44,6 +44,34 @@ export const NAV_GROUPS: readonly NavGroup[] = [
 ];
 
 const lastMode: Partial<Record<NavGroupId, ViewMode>> = {};
+
+const NAV_ICON_PATHS: Record<NavGroupId, string> = {
+  library: "M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z",
+  files: "M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z",
+  health: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z",
+  backups: "M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z",
+  gig: "M7 18h2V6H7v12zm4 4h2V2h-2v20zm-8-8h2v-4H3v4zm12 4h2V8h-2v10zm4-8v4h2v-4h-2z",
+};
+
+function drawerIsMini(): boolean {
+  return document.getElementById("drawer-toggle")?.getAttribute("aria-expanded") === "false";
+}
+
+function ensureNavIcon(button: HTMLElement, groupId: NavGroupId): void {
+  if (button.querySelector("svg")) return;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("width", "24");
+  svg.setAttribute("height", "24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  svg.classList.add("nav-icon");
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", NAV_ICON_PATHS[groupId]);
+  path.setAttribute("fill", "currentColor");
+  svg.append(path);
+  button.prepend(svg);
+}
 
 function groupOf(id: string): NavGroup {
   return NAV_GROUPS.find((group) => group.id === id) ?? NAV_GROUPS[0]!;
@@ -115,12 +143,18 @@ export function paintNav(mode: string): void {
   const views = document.getElementById("views");
   if (views) {
     for (const button of views.querySelectorAll<HTMLButtonElement>("[data-nav]")) {
-      button.setAttribute("aria-selected", String(button.dataset.nav === groupId));
+      const id = button.dataset.nav;
+      button.setAttribute("aria-selected", String(id === groupId));
+      if (id === "library" || id === "files" || id === "health" || id === "backups" || id === "gig") {
+        ensureNavIcon(button, id);
+      }
     }
   }
   const strip = document.getElementById("view-children");
   if (!(strip instanceof HTMLElement)) return;
-  const showStrip = group.modes.length > 1;
+  const selected = views?.querySelector(`[data-nav="${groupId}"]`);
+  if (selected instanceof HTMLElement) selected.after(strip);
+  const showStrip = group.modes.length > 1 && !drawerIsMini();
   strip.hidden = !showStrip;
   strip.setAttribute("aria-label", t(group.labelKey));
   for (const button of strip.querySelectorAll<HTMLButtonElement>("[data-view]")) {

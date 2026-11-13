@@ -58,7 +58,7 @@ SETTINGS_KEYS = (
 # Page languages a person can pick in Settings. None follows the OS.
 # Keep in sync with LANGUAGES in src/lib/i18n.ts.
 LANGUAGES = ("en", "es")
-LAYOUT_FIELDS = ("track_list_width",)
+LAYOUT_FIELDS = ("track_list_width", "drawer_open")
 # The page clamps the track list to the sheet it sits in. These bounds only
 # keep a hand-edited file from storing a width no screen could show.
 TRACK_LIST_MIN_WIDTH = 240
@@ -187,6 +187,8 @@ class Settings:
             including a file written before this key existed.
         track_list_width: Width of the track list beside the detail pane,
             in CSS pixels. None is the default split.
+        drawer_open: True is the labelled 200px rail. False is the 56px
+            mini rail. None means the person has not chosen yet.
         language: Page language code from ``LANGUAGES``. None follows the
             operating system language.
         colorway: Theme id from ``COLORWAYS``. Missing means Serato-like.
@@ -201,6 +203,7 @@ class Settings:
     window: WindowGeometry | None = None
     wizard_complete: bool = False
     track_list_width: int | None = None
+    drawer_open: bool | None = None
     language: str | None = None
     colorway: str = DEFAULT_COLORWAY
     icon_follows_theme: bool = True
@@ -210,13 +213,16 @@ class Settings:
 
         Raises:
             ValueError: If ``colorway`` is not in ``COLORWAYS``, or
-                ``icon_follows_theme`` is not a boolean. ``True`` and
-                ``False`` are both accepted. An integer is not.
+                ``icon_follows_theme`` is not a boolean, or
+                ``drawer_open`` is set and is not a boolean. ``True``
+                and ``False`` are both accepted. An integer is not.
         """
         if not isinstance(self.colorway, str) or self.colorway not in COLORWAYS:
             raise ValueError("colorway is not a known theme.")
         if not isinstance(self.icon_follows_theme, bool):
             raise ValueError("icon_follows_theme must be a boolean.")
+        if self.drawer_open is not None and not isinstance(self.drawer_open, bool):
+            raise ValueError("layout.drawer_open must be a boolean.")
 
     def as_json(self) -> dict[str, object]:
         """Return the settings object for the file.
@@ -225,8 +231,8 @@ class Settings:
             The completed telemetry pair when both fields are set, the
             setup flag with that pair, the window frame when one has been
             saved, the export bar in full, and the layout when a pane width
-            has been saved. A window, the export bar, or the layout may be
-            stored before the sharing choice.
+            or a rail choice has been saved. A window, the export bar, or
+            the layout may be stored before the sharing choice.
 
         Raises:
             ValueError: If the install id and the choice disagree, or if
@@ -253,8 +259,13 @@ class Settings:
                 "width": self.window.width,
                 "height": self.window.height,
             }
+        layout: dict[str, object] = {}
         if self.track_list_width is not None:
-            body["layout"] = {"track_list_width": self.track_list_width}
+            layout["track_list_width"] = self.track_list_width
+        if self.drawer_open is not None:
+            layout["drawer_open"] = self.drawer_open
+        if layout:
+            body["layout"] = layout
         if self.language is not None:
             if self.language not in LANGUAGES:
                 raise ValueError("language is not a known page language.")
@@ -538,31 +549,40 @@ def _parse_window(value: object) -> WindowGeometry | None:
     return WindowGeometry(parsed["x"], parsed["y"], parsed["width"], parsed["height"])
 
 
-def _parse_layout(value: object) -> int | None:
+def _parse_layout(value: object) -> tuple[int | None, bool | None]:
     """Validate the ``layout`` object.
 
     Args:
         value: The ``layout`` member of the settings file.
 
     Returns:
-        The saved track list width. None when the object is not a mapping,
-        the width is missing, or it is not an integer in range. The page
-        then draws the default split.
+        The saved track list width and the rail open flag. Each is None
+        when the object is not a mapping, that key is missing, or its
+        type is wrong. A missing width draws the default split. A missing
+        rail flag means the person has not chosen yet.
     """
     if not isinstance(value, dict):
         logger.warning("Config key 'layout' must be a mapping — ignored")
-        return None
+        return None, None
     for key in value:
         if key not in LAYOUT_FIELDS:
             logger.warning("Unknown config key '%s' — ignored", f"layout.{key}")
-    if "track_list_width" not in value:
-        return None
-    return _window_int(
-        value["track_list_width"],
-        "layout.track_list_width",
-        TRACK_LIST_MIN_WIDTH,
-        TRACK_LIST_MAX_WIDTH,
-    )
+    width = None
+    if "track_list_width" in value:
+        width = _window_int(
+            value["track_list_width"],
+            "layout.track_list_width",
+            TRACK_LIST_MIN_WIDTH,
+            TRACK_LIST_MAX_WIDTH,
+        )
+    drawer_open: bool | None = None
+    if "drawer_open" in value:
+        raw_open = value["drawer_open"]
+        if isinstance(raw_open, bool):
+            drawer_open = raw_open
+        else:
+            logger.warning("Config key 'layout.drawer_open' has wrong type — ignored")
+    return width, drawer_open
 
 
 def _parse(payload: object) -> Settings:
@@ -598,7 +618,10 @@ def _parse(payload: object) -> Settings:
             logger.warning("Config key 'telemetry_consent' has wrong type — ignored")
             consent = None
     window = _parse_window(payload["window"]) if "window" in payload else None
-    track_list_width = _parse_layout(payload["layout"]) if "layout" in payload else None
+    if "layout" in payload:
+        track_list_width, drawer_open = _parse_layout(payload["layout"])
+    else:
+        track_list_width, drawer_open = None, None
     wizard_complete = False
     if "wizard_complete" in payload:
         raw_wizard = payload.get("wizard_complete")
@@ -639,6 +662,7 @@ def _parse(payload: object) -> Settings:
         wizard_complete=wizard_complete,
         rekordbox=rekordbox,
         track_list_width=track_list_width,
+        drawer_open=drawer_open,
         language=language,
         colorway=colorway,
         icon_follows_theme=icon_follows_theme,
@@ -997,6 +1021,43 @@ def set_track_list_width(value: int | None) -> Settings:
             telemetry_consent=consent,
             wizard_complete=current.wizard_complete is True,
             track_list_width=value,
+        )
+        save_settings(updated)
+        return updated
+
+
+def set_drawer_open(value: bool) -> Settings:
+    """Store whether the navigation rail is open with labels.
+
+    Args:
+        value: True for the labelled 200px rail. False for the 56px mini
+            rail.
+
+    Returns:
+        The settings that were written.
+
+    Raises:
+        ValueError: If ``value`` is not a boolean. An integer is refused.
+        OSError: If the settings file cannot be written.
+
+    The track list width and every other field are kept. A partial sharing
+    pair is dropped, as in :func:`set_track_list_width`.
+    """
+    if not isinstance(value, bool):
+        raise ValueError("layout.drawer_open must be a boolean.")
+    with _settings_lock:
+        current = load_settings()
+        install_id = current.install_id
+        consent = current.telemetry_consent
+        if not isinstance(consent, bool) or install_id is None:
+            install_id = None
+            consent = None
+        updated = replace(
+            current,
+            install_id=install_id,
+            telemetry_consent=consent,
+            wizard_complete=current.wizard_complete is True,
+            drawer_open=value,
         )
         save_settings(updated)
         return updated

@@ -2336,8 +2336,10 @@ class Handler(BaseHTTPRequestHandler):
             payload: JSON object. ``{"wizard_complete": bool}`` is accepted
                 alone, and setup can be marked finished only after the
                 sharing choice is already a boolean.
-                ``{"layout": {"track_list_width": int | None}}`` is accepted
-                alone. A null width resets the default split. Otherwise
+                ``{"layout": {"track_list_width": int | None}}`` and
+                ``{"layout": {"drawer_open": bool}}`` are accepted alone
+                or together. A null width resets the default split.
+                Unknown layout keys are a 400. Otherwise
                 ``telemetry_consent`` must be a boolean when it is present,
                 and ``rekordbox`` must be an object whose fields are
                 ``hot_loops``, ``memory_cues``, and ``key_notation``.
@@ -2372,12 +2374,28 @@ class Handler(BaseHTTPRequestHandler):
         if keys == {"layout"} and isinstance(payload.get("layout"), dict):
             layout = payload["layout"]
             assert isinstance(layout, dict)
+            given = set(layout)
+            allowed = set(app_config.LAYOUT_FIELDS)
+            if not given or given - allowed:
+                self.send_json({"error": "That request is not valid."}, status=400)
+                return
+            width_present = "track_list_width" in layout
+            open_present = "drawer_open" in layout
             width = layout.get("track_list_width")
-            if set(layout) != {"track_list_width"} or not (width is None or isinstance(width, int)):
+            drawer_open = layout.get("drawer_open")
+            width_ok = width is None or (isinstance(width, int) and not isinstance(width, bool))
+            if width_present and not width_ok:
+                self.send_json({"error": "That request is not valid."}, status=400)
+                return
+            if open_present and not isinstance(drawer_open, bool):
                 self.send_json({"error": "That request is not valid."}, status=400)
                 return
             try:
-                app_config.set_track_list_width(width)
+                if width_present:
+                    app_config.set_track_list_width(width if isinstance(width, int) else None)
+                if open_present:
+                    assert isinstance(drawer_open, bool)
+                    app_config.set_drawer_open(drawer_open)
             except ValueError:
                 self.send_json({"error": "That request is not valid."}, status=400)
                 return

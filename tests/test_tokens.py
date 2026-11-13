@@ -614,6 +614,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".brand p", ("--color-bg",), 14, 400),
     (".generation", ("--color-bg",), 15, 400),
     (".brand .generation-note", ("--color-bg",), 13, 400),
+    (".app-bar-generation .generation-note", ("--color-card",), 13, 400),
+    (".app-bar-lock", ("--color-warn-bg",), 15, 400),
     (".rail select", ("--color-bg",), 15, 400),
     (".rail-field input", ("--color-bg",), 15, 400),
     (".view-group-label", ("--color-bg",), 13, 600),
@@ -777,7 +779,6 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 # data-driven swatch, not a control boundary.
 _DECORATIVE = {
     ".app-bar-space select",
-    ".drawer-nav .view-children",
     ".drawer-foot .rail-foot",
     ".browser-actions button",
     ".browser-actions button:hover:not(:disabled)",
@@ -804,6 +805,7 @@ _DECORATIVE = {
     ".stats-table td",
     ".swatch",
     ".player-bar",
+    ".app-bar-generation .generation-note",
     ".operations",
     ".view-children",
     ".sheet-chrome",
@@ -966,6 +968,7 @@ class ContrastTests(unittest.TestCase):
             "#portable-view-verdict:focus-visible",
             ".detail-play",
             ".operations-alert",
+            ".app-bar-lock",
         } | {selector for selector, _, _ in _CONTROL_EDGE}
         self.assertEqual(bordered - checked_borders, set(), "borders missing from the contrast list")
         self.assertEqual(checked_borders - bordered, set(), "contrast list names a border that is not painted")
@@ -1043,6 +1046,9 @@ class ContrastTests(unittest.TestCase):
         alert_border = _paint(self._rule(".operations-alert")["border"], self.colors)
         alert_ratio = contrast(alert_border, self._surface("--color-warn-bg"))
         self.assertGreaterEqual(alert_ratio, 3, f".operations-alert border is {alert_ratio:.2f}:1")
+        lock_border = _paint(self._rule(".app-bar-lock")["border-bottom"], self.colors)
+        lock_ratio = contrast(lock_border, self._surface("--color-warn-bg"))
+        self.assertGreaterEqual(lock_ratio, 3, f".app-bar-lock border is {lock_ratio:.2f}:1")
         active_mark = _paint(self._rule(".quick-open-option.is-active")["border-left"], self.colors)
         for background_name in ("--color-card", "--color-selection"):
             ratio = contrast(active_mark, self._surface(background_name))

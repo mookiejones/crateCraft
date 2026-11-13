@@ -47,14 +47,20 @@ function clockFromPlayer(
 /**
  * Waveform island: detail canvas, overview, and zoom.
  *
- * @param props Engine that paints canvases, and the host element.
+ * Compact skips the zoom buttons and hides the detail wrap. The
+ * overview stays in the DOM so `engine.attach` still receives both
+ * canvases, and it is the seekable AppBar wave.
+ *
+ * @param props Engine that paints canvases, the host element, and compact.
  */
 export function WaveformPanel({
   engine,
   host,
+  compact = false,
 }: {
   engine: WaveformEngine;
   host: HTMLElement;
+  compact?: boolean;
 }) {
   const player = usePlayer();
   const wave = useWaveform();
@@ -90,25 +96,27 @@ export function WaveformPanel({
   return (
     <>
       <div className="player-wave-main">
-        <WaveformDetail canvasRef={detailRef} phase={wave.phase} />
+        <WaveformDetail canvasRef={detailRef} phase={wave.phase} compact={compact} />
         <p className="waveform-note" hidden={wave.phase !== "unavailable"}>
           {t("player.waveformUnavailable")}
         </p>
         <WaveformOverview
           canvasRef={overviewCanvasRef}
           hitRef={overviewHitRef}
-          hidden={wave.overviewSource === ""}
+          hidden={compact ? wave.phase === "unavailable" : wave.overviewSource === ""}
           source={wave.overviewSource}
           pps={wave.pps}
         />
       </div>
-      <WaveformZoom
-        canZoomIn={wave.canZoomIn}
-        canZoomOut={wave.canZoomOut}
-        pps={wave.pps}
-        onZoomIn={() => engine.zoom(1)}
-        onZoomOut={() => engine.zoom(-1)}
-      />
+      {compact ? null : (
+        <WaveformZoom
+          canZoomIn={wave.canZoomIn}
+          canZoomOut={wave.canZoomOut}
+          pps={wave.pps}
+          onZoomIn={() => engine.zoom(1)}
+          onZoomOut={() => engine.zoom(-1)}
+        />
+      )}
     </>
   );
 }
@@ -121,12 +129,14 @@ export function WaveformPanel({
 export function WaveformDetail({
   canvasRef,
   phase,
+  compact = false,
 }: {
   canvasRef: RefObject<HTMLCanvasElement | null>;
   phase: WaveformPhase;
+  compact?: boolean;
 }) {
   return (
-    <div className="waveform-detail-wrap" hidden={phase === "unavailable"}>
+    <div className="waveform-detail-wrap" hidden={compact || phase === "unavailable"}>
       <canvas className="waveform-detail" ref={canvasRef} aria-hidden="true" />
       <p className="waveform-reading" hidden={phase !== "reading"}>
         {playerStrings.waveformReading}
