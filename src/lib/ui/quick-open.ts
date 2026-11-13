@@ -1,25 +1,49 @@
 /**
- * Quick-open: one box for tracks in the library and files on disk.
+ * Quick-open: one box for views, crates, tracks, and files on disk.
  *
+ * Views and crates are scored from the rail and the loaded library.
  * Tracks are scored from the loaded library. Files come from
  * GET /api/files?q=, which is read-only. Enter opens the highlighted
- * row. Esc closes the box.
+ * row. Esc closes the box. A view jump uses setMode, so the hash
+ * updates and Back works.
  */
 
 import { readJSONOr } from "../api";
-import type { FileEntry, FilesPayload, Track } from "../api-types";
+import type { Crate, FileEntry, FilesPayload, Track } from "../api-types";
 import { el } from "../dom";
 import { t } from "../i18n";
 import { scoreQuery } from "../fuzzy";
 import { ROW, state } from "../state";
+import { groupForMode, modeForGroup, NAV_GROUPS, type ViewMode } from "./nav";
+import { VIEW_LABEL_KEYS } from "./sheet-chrome";
 import { buttonEl } from "./tooltip";
 import { quickOpenHit } from "./tooltip-strings";
-import { focusFileByPath, loadFolder, selectCrate, selectTrack, setMode } from "./views";
+import { focusCrateItem, focusFileByPath, loadFolder, selectCrate, selectTrack, setMode } from "./views";
 
 /** Wait before asking the disk, so a fast typist does not search every letter. */
 export const QUICK_OPEN_MS = 200;
 
 const LIMIT = 8;
+
+const KIND_RANK = { view: 0, crate: 1, track: 2, file: 3 } as const;
+
+export interface ViewHit {
+  kind: "view";
+  key: string;
+  title: string;
+  detail: string;
+  score: number;
+  mode: ViewMode;
+}
+
+export interface CrateHit {
+  kind: "crate";
+  key: string;
+  title: string;
+  detail: string;
+  score: number;
+  crateId: number | "all";
+}
 
 interface TrackHit {
   kind: "track";
@@ -39,7 +63,7 @@ interface FileHit {
   path: string;
 }
 
-type QuickHit = TrackHit | FileHit;
+type QuickHit = ViewHit | CrateHit | TrackHit | FileHit;
 
 let returnFocus: HTMLElement | null = null;
 let timer = 0;
@@ -74,6 +98,90 @@ export function parentDirectory(path: string): string {
  */
 export function quickOpenIsOpen(): boolean {
   return el("quick-open").open;
+}
+
+/**
+ * Score rail views and parent groups against the query.
+ *
+ * Group names that differ from the first child (Music, Health, Gig)
+ * open the same view the rail primary does. Duplicate titles for the
+ * same view are dropped. Blank text matches nothing.
+ *
+ * @param query Text the person typed.
+ * @returns Matching view hits, highest score first.
+ */
+export function matchViewHits(query: string): ViewHit[] {
+  const text = query.trim();
+  if (!text) return [];
+  const found: ViewHit[] = [];
+  const seen = new Set<string>();
+  const add = (hit: ViewHit): void => {
+    const id = `${hit.mode}:${hit.title}`;
+    if (seen.has(id)) return;
+    seen.add(id);
+    found.push(hit);
+  };
+  for (const group of NAV_GROUPS) {
+    const groupTitle = t(group.labelKey);
+    for (const mode of group.modes) {
+      const title = t(VIEW_LABEL_KEYS[mode]);
+      const score = scoreQuery(text, title);
+      if (score == null) continue;
+      add({
+        kind: "view",
+        key: `view:${mode}`,
+        title,
+        detail: groupTitle,
+        score,
+        mode,
+      });
+    }
+    const first = modeForGroup(group.id);
+    const score = scoreQuery(text, groupTitle);
+    if (score == null) continue;
+    add({
+      kind: "view",
+      key: `view-group:${group.id}`,
+      title: groupTitle,
+      detail: t(VIEW_LABEL_KEYS[first]),
+      score,
+      mode: first,
+    });
+  }
+  found.sort(byScore);
+  return found.slice(0, LIMIT);
+}
+
+/**
+ * Score loaded crates, including All tracks, against the query.
+ *
+ * Blank text matches nothing. An empty crate name is skipped.
+ *
+ * @param query Text the person typed.
+ * @returns Matching crate hits, highest score first.
+ */
+export function matchCrateHits(query: string): CrateHit[] {
+  const text = query.trim();
+  if (!text) return [];
+  const found: CrateHit[] = [];
+  const allTitle = t("crates.allTracks");
+  const allScore = scoreQuery(text, allTitle);
+  if (allScore != null) {
+    found.push({
+      kind: "crate",
+      key: "crate:all",
+      title: allTitle,
+      detail: t("quickOpen.crate"),
+      score: allScore,
+      crateId: "all",
+    });
+  }
+  for (const crate of state.crates) {
+    const hit = scoreCrate(crate, text);
+    if (hit) found.push(hit);
+  }
+  found.sort(byScore);
+  return found.slice(0, LIMIT);
 }
 
 /** Fill the find-box labels in the active language. */
@@ -148,7 +256,7 @@ export function wireQuickOpen(): void {
   el("quick-open-close").addEventListener("click", () => closeQuickOpen());
   el("quick-open-retry").addEventListener("click", () => {
     const query = el("quick-open-query").value.trim();
-    if (query) void loadFiles(query, trackHits(query));
+    if (query) void loadFiles(query, localHits(query));
   });
 }
 
@@ -169,8 +277,8 @@ function schedule(): void {
   window.clearTimeout(timer);
   const query = el("quick-open-query").value;
   pendingQuery = query;
-  const tracks = trackHits(query);
-  hits = tracks;
+  const local = localHits(query);
+  hits = local;
   active = 0;
   truncated = false;
   if (!query.trim()) {
@@ -182,11 +290,15 @@ function schedule(): void {
   phase = "loading";
   paint();
   timer = window.setTimeout(() => {
-    void loadFiles(query.trim(), tracks);
+    void loadFiles(query.trim(), local);
   }, QUICK_OPEN_MS);
 }
 
-async function loadFiles(query: string, tracks: TrackHit[]): Promise<void> {
+function localHits(query: string): QuickHit[] {
+  return mergeHits(matchViewHits(query), matchCrateHits(query), trackHits(query), []);
+}
+
+async function loadFiles(query: string, local: QuickHit[]): Promise<void> {
   const token = ++requestToken;
   phase = "loading";
   try {
@@ -195,14 +307,17 @@ async function loadFiles(query: string, tracks: TrackHit[]): Promise<void> {
     if (token !== requestToken) return;
     if (!response.ok) throw new Error(payload.error || t("quickOpen.fileError"));
     const files = fileHits(payload);
-    hits = mergeHits(tracks, files);
+    const views = local.filter((hit): hit is ViewHit => hit.kind === "view");
+    const crates = local.filter((hit): hit is CrateHit => hit.kind === "crate");
+    const tracks = local.filter((hit): hit is TrackHit => hit.kind === "track");
+    hits = mergeHits(views, crates, tracks, files);
     truncated = Boolean(payload.truncated);
     phase = "ready";
     if (active >= hits.length) active = Math.max(0, hits.length - 1);
     paint();
   } catch {
     if (token !== requestToken) return;
-    hits = tracks;
+    hits = local;
     phase = "error";
     paint();
   }
@@ -231,6 +346,27 @@ function scoreTrack(track: Track, query: string): TrackHit | null {
   return { kind: "track", key: `track:${track.id}`, title, detail, score, trackId: track.id };
 }
 
+function scoreCrate(crate: Crate, query: string): CrateHit | null {
+  const title = crate.name || "";
+  if (!title) return null;
+  const score = scoreQuery(query, title);
+  if (score == null) return null;
+  return {
+    kind: "crate",
+    key: `crate:${crate.id}`,
+    title,
+    detail: crateParentName(crate),
+    score,
+    crateId: crate.id,
+  };
+}
+
+function crateParentName(crate: Crate): string {
+  if (crate.parent == null) return t("quickOpen.crate");
+  const parent = state.crates.find((row) => row.id === crate.parent);
+  return parent?.name || t("quickOpen.crate");
+}
+
 function fileHits(payload: FilesPayload): FileHit[] {
   const rows = Array.isArray(payload.entries) ? payload.entries : [];
   const found: FileHit[] = [];
@@ -256,16 +392,34 @@ function isFileEntry(value: unknown): value is FileEntry {
   return typeof row.name === "string" && typeof row.path === "string" && typeof row.kind === "string";
 }
 
-function mergeHits(tracks: TrackHit[], files: FileHit[]): QuickHit[] {
-  return [...tracks, ...files].sort(byScore).slice(0, LIMIT * 2);
+function mergeHits(views: ViewHit[], crates: CrateHit[], tracks: TrackHit[], files: FileHit[]): QuickHit[] {
+  return [...views, ...crates, ...tracks, ...files].sort(byScore).slice(0, LIMIT * 2);
 }
 
 function byScore(left: QuickHit, right: QuickHit): number {
-  return right.score - left.score || left.title.localeCompare(right.title);
+  return right.score - left.score || KIND_RANK[left.kind] - KIND_RANK[right.kind] || left.title.localeCompare(right.title);
+}
+
+function kindLabel(hit: QuickHit): string {
+  if (hit.kind === "view") return t("quickOpen.view");
+  if (hit.kind === "crate") return t("quickOpen.crate");
+  if (hit.kind === "track") return t("quickOpen.track");
+  return t("quickOpen.file");
 }
 
 async function activate(hit: QuickHit): Promise<void> {
   closeQuickOpen();
+  if (hit.kind === "view") {
+    setMode(hit.mode);
+    focusOpened(hit);
+    return;
+  }
+  if (hit.kind === "crate") {
+    if (state.mode !== "crates") setMode("crates");
+    selectCrate(hit.crateId);
+    focusOpened(hit);
+    return;
+  }
   if (hit.kind === "track") {
     if (state.mode === "files" || state.mode === "snapshots" || state.mode === "history") setMode("crates");
     selectCrate("all");
@@ -277,6 +431,21 @@ async function activate(hit: QuickHit): Promise<void> {
   setMode("files");
   await loadFolder(parentDirectory(hit.path));
   focusFileByPath(hit.path);
+}
+
+function focusOpened(hit: ViewHit | CrateHit): void {
+  if (hit.kind === "view") {
+    const child = document.querySelector<HTMLElement>(`#view-children [data-view="${hit.mode}"]`);
+    if (child && !child.hidden) {
+      child.focus();
+      return;
+    }
+    const primary = document.querySelector<HTMLElement>(`#views [data-nav="${groupForMode(hit.mode)}"]`);
+    if (primary) primary.focus();
+    return;
+  }
+  const item = document.querySelector<HTMLElement>(`#crate-list .crate[data-id="${String(hit.crateId)}"]`);
+  if (item) focusCrateItem(item);
 }
 
 function paint(): void {
@@ -293,27 +462,24 @@ function paint(): void {
   else status.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length });
   hits.forEach((hit, index) => {
     const item = document.createElement("li");
-    const button = buttonEl(quickOpenHit(
-      hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
-      hit.title,
-      hit.detail,
-    ));
+    const kind = kindLabel(hit);
+    const button = buttonEl(quickOpenHit(kind, hit.title, hit.detail));
     button.className = "quick-open-option";
     button.id = `quick-open-option-${index}`;
     button.setAttribute("role", "option");
     button.setAttribute("aria-selected", String(index === active));
     button.tabIndex = -1;
     if (index === active) button.classList.add("is-active");
-    const kind = document.createElement("span");
-    kind.className = "quick-open-kind";
-    kind.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
+    const kindEl = document.createElement("span");
+    kindEl.className = "quick-open-kind";
+    kindEl.textContent = kind;
     const title = document.createElement("span");
     title.className = "quick-open-name";
     title.textContent = hit.title;
     const detail = document.createElement("span");
     detail.className = "quick-open-detail";
     detail.textContent = hit.detail;
-    button.append(kind, title, detail);
+    button.append(kindEl, title, detail);
     button.addEventListener("click", () => {
       active = index;
       void activate(hit);

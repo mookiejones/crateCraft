@@ -82,7 +82,7 @@ class DesktopMenuTests(unittest.TestCase):
         seen: list[str] = []
         menu = desktop_menu.build_menu(seen.append, "en")
         titles = _titles(menu)
-        self.assertEqual(titles[:5], ["Settings", "Run setup again", "File", "Find a track or file", "Focus search"])
+        self.assertEqual(titles[:5], ["Settings", "Run setup again", "File", "Find a view, crate, track, or file", "Focus search"])
         for name in (
             "Music",
             "Library",
