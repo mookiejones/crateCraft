@@ -8,14 +8,14 @@ Open [Ready](gig-check.md). **Not ready** with a drive name means that drive is 
 
 Serato DJ Pro still has the library, or the database is locked.
 
-1. Read the status line under **Library**.
+1. Read the notice under the top bar, if one is showing.
 2. Quit Serato DJ Pro. Quit it fully. A window in the Dock or on the taskbar still counts.
 3. Return to crateCraft.
 4. Click **Reload**.
 
-The line you want is **Serato is quit. Edits save to the library.**
+The notice should be gone. Write buttons then work.
 
-A save that hits a lock shows the error in the banner under the player. The merge dialog says **Quit Serato before merging. The preview shows the plan.** The file dialog shows the same status line and leaves **Confirm** off.
+A save that hits a lock shows the error in the banner under the top bar. The merge dialog says **Quit Serato before merging. The preview shows the plan.** The file dialog shows the same lock sentence and leaves **Confirm** off.
 
 ## No Serato library was found
 

@@ -32,10 +32,7 @@ A window titled **crateCraft** opens. The page is served on `127.0.0.1`. The fir
 
 **Back** is on every step except Welcome. **Cancel** closes setup and does not change the library. Setup shows again the next time you open the app until you choose **Open my library**. Pressing Esc cancels setup. It does not answer the sharing question.
 
-After that, the left side says **Library**. The status line starts as **Checking Serato**, then changes to one of these:
-
-- **Serato is quit. Edits save to the library.**
-- **Serato DJ Pro is open. Edits stay off until it quits.** The process name in the sentence matches the program that has the library open.
+After that, the top bar chip starts as **Checking**, then **Serato 4** or **Serato 5**. The crate list header holds the space menu. When Serato is still open, a notice under the top bar says edits stay off. The process name in that sentence matches the program that has the library open. The notice is hidden when writes are on.
 
 Close the window to quit. A second double-click focuses the same window. The page is served on `127.0.0.1` only. Nothing in the release is your library. The app reads the library Serato already keeps on this computer.
 

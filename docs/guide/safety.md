@@ -4,15 +4,15 @@ Quit Serato DJ Pro before you change the library. Serato and this app must not w
 
 ## How you know edits are on
 
-Read the status line under **Library**.
+When Serato is open, a notice under the top bar says edits stay off. That notice is hidden when writes are on.
 
-| Status line | What it means |
+| Notice | What it means |
 | --- | --- |
-| **Serato is quit. Edits save to the library.** | Saves, crate edits, merges, and file changes are allowed. |
+| No notice under the top bar | Saves, crate edits, merges, and file changes are allowed. |
 | A sentence that names Serato and says **Edits stay off until it quits.** | Serato still has the library. Buttons that write stay off. |
 | **Serato DJ Pro has the library open. Edits stay off until it quits.** | The database is locked. Quit Serato, then choose Reload. |
 
-The same sentence appears on the open track. A failed save shows the error in the banner under the player.
+A failed save shows the error in the banner under the top bar.
 
 Saving a related-track link is the exception. That link is stored beside the app settings, not in Serato's library, so it can be saved while Serato is open. Writing those links into a Serato crate still waits until Serato has quit. [Related tracks](related.md) explains the difference.
 
