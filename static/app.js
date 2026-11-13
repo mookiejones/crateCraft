@@ -13372,21 +13372,23 @@ Error generating stack: ` + x.message + `
     "presets.scope": "Only tracks in {name} and its subcrates",
     "presets.title": "New crate from a preset",
     "presets.updated": "⟳ updated {date}",
-    "quickOpen.empty": "Type a track or file name.",
+    "quickOpen.crate": "Crate",
+    "quickOpen.empty": "Type a view, crate, track, or file name.",
     "quickOpen.file": "File",
-    "quickOpen.fileError": "Files on disk could not be searched. Track matches are still listed.",
+    "quickOpen.fileError": "Files on disk could not be searched. View, crate, and track matches are still listed.",
     "quickOpen.label": "Name",
     "quickOpen.matchCount": {
       one: "{count} match",
       other: "{count} matches"
     },
     "quickOpen.matches": "Matches",
-    "quickOpen.none": "No tracks or files match “{query}”.",
-    "quickOpen.placeholder": "Track or file name",
+    "quickOpen.none": "No views, crates, tracks, or files match “{query}”.",
+    "quickOpen.placeholder": "View, crate, track, or file name",
     "quickOpen.searching": "Searching files…",
-    "quickOpen.title": "Find a track or file",
+    "quickOpen.title": "Find a view, crate, track, or file",
     "quickOpen.track": "Track",
     "quickOpen.truncated": "Some files were not searched. Type more of the name.",
+    "quickOpen.view": "View",
     "rail.heading": "crateCraft",
     "rating.none": "Not rated",
     "rating.stars": {
@@ -13578,7 +13580,7 @@ Error generating stack: ` + x.message + `
     "shortcuts.open": "Shortcuts",
     "shortcuts.playNote": "Space plays or pauses. Left moves 5 seconds back. Right moves 5 seconds forward.",
     "shortcuts.playPause": "Play or pause",
-    "shortcuts.quickOpen": "Find a track or file",
+    "shortcuts.quickOpen": "Find a view, crate, track, or file",
     "shortcuts.seekBack": "Back 5 seconds",
     "shortcuts.seekForward": "Forward 5 seconds",
     "shortcuts.title": "Keyboard shortcuts",
@@ -13607,7 +13609,7 @@ Error generating stack: ` + x.message + `
     "snapshots.drivesSaved": "Drive crates were copied into the backup on this computer.",
     "snapshots.drivesSkipped": "Skipped: {drives}.",
     "snapshots.empty": "No backups yet. Take a backup to keep a point you can restore. Backups are kept, and this page does not expire them.",
-    "snapshots.noSearch": "Backups has no search. Press Ctrl+K to find a track or a file.",
+    "snapshots.noSearch": "Backups has no search. Press Ctrl+K to find a view, crate, track, or file.",
     "snapshots.outsideChange": "Something outside this app changed the Serato folder. A snapshot was saved after that change. Undo puts back the previous snapshot.",
     "snapshots.outsideChangeLexicon": "Lexicon changed the Serato folder. A snapshot was saved after that change. Undo puts back the previous snapshot.",
     "snapshots.reading": "Reading backups",
@@ -13925,7 +13927,7 @@ Error generating stack: ` + x.message + `
     "tooltip.presetRange": "How far above or below that tempo a track can be.",
     "tooltip.presetScope": "Look only at tracks in the selected crate and the crates inside it.",
     "tooltip.previous": "Play the previous track in this list.",
-    "tooltip.quickOpen": "Find a track or a file by name. Ctrl/Cmd+K. Esc closes this box.",
+    "tooltip.quickOpen": "Find a view, crate, track, or file by name. Ctrl/Cmd+K. Esc closes this box.",
     "tooltip.quickOpenClose": "Close find. Esc.",
     "tooltip.quickOpenHit": "Open {kind} {title}. Enter.",
     "tooltip.quickOpenHitDetail": "Open {kind} {title}. {detail}. Enter.",
@@ -14987,21 +14989,23 @@ Error generating stack: ` + x.message + `
     "presets.scope": "Solo pistas de {name} y sus subcajas",
     "presets.title": "Nueva caja a partir de un preajuste",
     "presets.updated": "⟳ actualizada {date}",
-    "quickOpen.empty": "Escribe el nombre de una pista o de un archivo.",
+    "quickOpen.crate": "Caja",
+    "quickOpen.empty": "Escribe el nombre de una vista, una caja, una pista o un archivo.",
     "quickOpen.file": "Archivo",
-    "quickOpen.fileError": "No se pudieron buscar los archivos del disco. Las pistas que coinciden siguen en la lista.",
+    "quickOpen.fileError": "No se pudieron buscar los archivos del disco. Las vistas, cajas y pistas que coinciden siguen en la lista.",
     "quickOpen.label": "Nombre",
     "quickOpen.matchCount": {
       one: "{count} coincidencia",
       other: "{count} coincidencias"
     },
     "quickOpen.matches": "Coincidencias",
-    "quickOpen.none": "Ninguna pista ni archivo coincide con “{query}”.",
-    "quickOpen.placeholder": "Nombre de la pista o del archivo",
+    "quickOpen.none": "Ninguna vista, caja, pista ni archivo coincide con “{query}”.",
+    "quickOpen.placeholder": "Nombre de la vista, la caja, la pista o el archivo",
     "quickOpen.searching": "Buscando archivos…",
-    "quickOpen.title": "Buscar una pista o un archivo",
+    "quickOpen.title": "Buscar una vista, una caja, una pista o un archivo",
     "quickOpen.track": "Pista",
     "quickOpen.truncated": "Algunos archivos no se buscaron. Escribe más del nombre.",
+    "quickOpen.view": "Vista",
     "rail.heading": "crateCraft",
     "rating.none": "Sin valorar",
     "rating.stars": {
@@ -15193,7 +15197,7 @@ Error generating stack: ` + x.message + `
     "shortcuts.open": "Atajos",
     "shortcuts.playNote": "Espacio reproduce o pausa. Izquierda retrocede 5 segundos. Derecha avanza 5 segundos.",
     "shortcuts.playPause": "Reproducir o pausar",
-    "shortcuts.quickOpen": "Buscar una pista o un archivo",
+    "shortcuts.quickOpen": "Buscar una vista, una caja, una pista o un archivo",
     "shortcuts.seekBack": "Retroceder 5 segundos",
     "shortcuts.seekForward": "Avanzar 5 segundos",
     "shortcuts.title": "Atajos de teclado",
@@ -15222,7 +15226,7 @@ Error generating stack: ` + x.message + `
     "snapshots.drivesSaved": "Las cajas de las unidades se copiaron en la copia de este equipo.",
     "snapshots.drivesSkipped": "Omitidas: {drives}.",
     "snapshots.empty": "Todavía no hay copias. Haz una copia para guardar un punto al que puedas volver. Las copias se conservan y esta página no las caduca.",
-    "snapshots.noSearch": "Copias de seguridad no tiene búsqueda. Pulsa Ctrl+K para buscar una pista o un archivo.",
+    "snapshots.noSearch": "Copias de seguridad no tiene búsqueda. Pulsa Ctrl+K para buscar una vista, una caja, una pista o un archivo.",
     "snapshots.outsideChange": "Algo ajeno a esta app cambió la carpeta de Serato. Se guardó una instantánea después de ese cambio. Deshacer restaura la instantánea anterior.",
     "snapshots.outsideChangeLexicon": "Lexicon cambió la carpeta de Serato. Se guardó una instantánea después de ese cambio. Deshacer restaura la instantánea anterior.",
     "snapshots.reading": "Leyendo copias",
@@ -15540,7 +15544,7 @@ Error generating stack: ` + x.message + `
     "tooltip.presetRange": "Cuánto puede subir o bajar una pista respecto a ese tempo.",
     "tooltip.presetScope": "Mira solo las pistas de la caja elegida y de las cajas que contiene.",
     "tooltip.previous": "Reproduce la pista anterior de esta lista.",
-    "tooltip.quickOpen": "Busca una pista o un archivo por nombre. Ctrl/Cmd+K. Esc cierra este cuadro.",
+    "tooltip.quickOpen": "Busca una vista, una caja, una pista o un archivo por nombre. Ctrl/Cmd+K. Esc cierra este cuadro.",
     "tooltip.quickOpenClose": "Cierra la búsqueda. Esc.",
     "tooltip.quickOpenHit": "Abre {kind} {title}. Intro.",
     "tooltip.quickOpenHitDetail": "Abre {kind} {title}. {detail}. Intro.",
@@ -59725,8 +59729,111 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     wireListKeys(el("list")), wireListKeys(el("list-b"));
   }
 
+  // src/lib/ui/nav.ts
+  var NAV_GROUPS = [
+    { id: "library", labelKey: "view.group.library", modes: ["crates", "history", "stats"] },
+    { id: "files", labelKey: "view.files", modes: ["files"] },
+    { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags"] },
+    { id: "backups", labelKey: "view.snapshots", modes: ["snapshots"] },
+    { id: "gig", labelKey: "view.group.gig", modes: ["gig", "portable", "drift"] }
+  ], lastMode = {}, NAV_ICON_PATHS = {
+    library: "M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z",
+    files: "M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z",
+    health: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z",
+    backups: "M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z",
+    gig: "M7 18h2V6H7v12zm4 4h2V2h-2v20zm-8-8h2v-4H3v4zm12 4h2V8h-2v10zm4-8v4h2v-4h-2z"
+  };
+  function drawerIsMini() {
+    return document.getElementById("drawer-toggle")?.getAttribute("aria-expanded") === "false";
+  }
+  function ensureNavIcon(button, groupId) {
+    if (button.querySelector("svg")) return;
+    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 24 24"), svg.setAttribute("width", "24"), svg.setAttribute("height", "24"), svg.setAttribute("aria-hidden", "true"), svg.setAttribute("focusable", "false"), svg.classList.add("nav-icon");
+    let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", NAV_ICON_PATHS[groupId]), path.setAttribute("fill", "currentColor"), svg.append(path), button.prepend(svg);
+  }
+  function groupOf(id) {
+    return NAV_GROUPS.find((group) => group.id === id) ?? NAV_GROUPS[0];
+  }
+  function groupForMode(mode) {
+    return NAV_GROUPS.find((item) => item.modes.includes(mode))?.id ?? "library";
+  }
+  function rememberMode(mode) {
+    let group = NAV_GROUPS.find((item) => item.modes.includes(mode));
+    group && (lastMode[group.id] = mode);
+  }
+  function modeForGroup(id) {
+    let group = groupOf(id), remembered = lastMode[group.id];
+    return remembered && group.modes.includes(remembered) ? remembered : group.modes[0];
+  }
+  function paintNav(mode) {
+    let groupId = groupForMode(mode), group = groupOf(groupId), views = document.getElementById("views");
+    if (views)
+      for (let button of views.querySelectorAll("[data-nav]")) {
+        let id = button.dataset.nav;
+        button.setAttribute("aria-selected", String(id === groupId)), (id === "library" || id === "files" || id === "health" || id === "backups" || id === "gig") && ensureNavIcon(button, id);
+      }
+    let strip = document.getElementById("view-children");
+    if (!(strip instanceof HTMLElement)) return;
+    let selected = views?.querySelector(`[data-nav="${groupId}"]`);
+    selected instanceof HTMLElement && selected.after(strip);
+    let showStrip = group.modes.length > 1 && !drawerIsMini();
+    strip.hidden = !showStrip, strip.setAttribute("aria-label", t(group.labelKey));
+    for (let button of strip.querySelectorAll("[data-view]")) {
+      let view = button.dataset.view ?? "", inGroup = group.modes.includes(view);
+      button.hidden = !inGroup, button.setAttribute("aria-selected", String(view === mode));
+    }
+  }
+
+  // src/lib/ui/sheet-chrome.ts
+  var VIEW_LABEL_KEYS = {
+    crates: "view.crates",
+    history: "view.history",
+    stats: "view.stats",
+    files: "view.files",
+    health: "view.health",
+    missing: "view.missing",
+    duplicates: "view.duplicates",
+    stems: "view.stems",
+    scan: "view.scan",
+    bitrate: "view.bitrate",
+    tags: "view.tags",
+    snapshots: "view.snapshots",
+    gig: "view.gig",
+    portable: "view.portable",
+    drift: "view.drift"
+  }, CRATE_SCOPED_MODES = [
+    "health",
+    "gig",
+    "drift",
+    "scan",
+    "bitrate"
+  ];
+  function isCrateScopedMode(mode) {
+    return CRATE_SCOPED_MODES.includes(mode);
+  }
+  function sheetTitle(mode, space) {
+    let key = VIEW_LABEL_KEYS[mode] ?? "view.crates", view = t(key), trimmed = space.trim();
+    return trimmed ? t("sheet.title", { view, space: trimmed }) : view;
+  }
+  function sheetScopeCrate(activeCrate, crates) {
+    return activeCrate === "all" ? t("crates.allTracks") : crates.find((row) => row.id === activeCrate)?.name || t("crates.allTracks");
+  }
+  function sheetScopeText(crate) {
+    return t("sheet.scope", { crate });
+  }
+  function paintSheetChrome(opts) {
+    let title2 = document.getElementById("sheet-title");
+    title2 && (title2.textContent = sheetTitle(opts.mode, opts.space));
+    let scope = document.getElementById("sheet-scope"), text2 = document.getElementById("sheet-scope-text"), clear = document.getElementById("sheet-scope-all");
+    if (!(scope instanceof HTMLElement) || !(text2 instanceof HTMLElement)) return;
+    let scoped = isCrateScopedMode(opts.mode);
+    scope.hidden = !scoped, scoped && (text2.textContent = sheetScopeText(sheetScopeCrate(opts.activeCrate, opts.crates)), clear instanceof HTMLButtonElement && (clear.hidden = opts.activeCrate === "all"));
+  }
+
   // src/lib/ui/quick-open.ts
-  var QUICK_OPEN_MS = 200, LIMIT = 8, returnFocus = null, timer2 = 0, requestToken = 0, hits = [], active = 0, phase = "idle", truncated = !1, pendingQuery = "";
+  var QUICK_OPEN_MS = 200, LIMIT = 8, KIND_RANK = { view: 0, crate: 1, track: 2, file: 3 }, returnFocus = null, timer2 = 0, requestToken = 0, hits = [], active = 0, phase = "idle", truncated = !1, pendingQuery = "";
   function parentDirectory(path) {
     let slash = Math.max(path.lastIndexOf("/"), path.lastIndexOf("\\"));
     if (slash < 0) return path;
@@ -59735,6 +59842,56 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function quickOpenIsOpen() {
     return el("quick-open").open;
+  }
+  function matchViewHits(query) {
+    let text2 = query.trim();
+    if (!text2) return [];
+    let found = [], seen = /* @__PURE__ */ new Set(), add = (hit) => {
+      let id = `${hit.mode}:${hit.title}`;
+      seen.has(id) || (seen.add(id), found.push(hit));
+    };
+    for (let group of NAV_GROUPS) {
+      let groupTitle = t(group.labelKey);
+      for (let mode of group.modes) {
+        let title2 = t(VIEW_LABEL_KEYS[mode]), score2 = scoreQuery(text2, title2);
+        score2 != null && add({
+          kind: "view",
+          key: `view:${mode}`,
+          title: title2,
+          detail: groupTitle,
+          score: score2,
+          mode
+        });
+      }
+      let first = modeForGroup(group.id), score = scoreQuery(text2, groupTitle);
+      score != null && add({
+        kind: "view",
+        key: `view-group:${group.id}`,
+        title: groupTitle,
+        detail: t(VIEW_LABEL_KEYS[first]),
+        score,
+        mode: first
+      });
+    }
+    return found.sort(byScore), found.slice(0, LIMIT);
+  }
+  function matchCrateHits(query) {
+    let text2 = query.trim();
+    if (!text2) return [];
+    let found = [], allTitle = t("crates.allTracks"), allScore = scoreQuery(text2, allTitle);
+    allScore != null && found.push({
+      kind: "crate",
+      key: "crate:all",
+      title: allTitle,
+      detail: t("quickOpen.crate"),
+      score: allScore,
+      crateId: "all"
+    });
+    for (let crate of state.crates) {
+      let hit = scoreCrate(crate, text2);
+      hit && found.push(hit);
+    }
+    return found.sort(byScore), found.slice(0, LIMIT);
   }
   function labelQuickOpen() {
     el("quick-open-title").textContent = t("quickOpen.title"), el("quick-open-label").textContent = t("quickOpen.label"), el("quick-open-query").placeholder = t("quickOpen.placeholder"), el("quick-open-close").textContent = t("common.close"), el("quick-open-retry").textContent = t("common.tryAgain"), el("quick-open-list").setAttribute("aria-label", t("quickOpen.matches"));
@@ -59759,7 +59916,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       returnFocus = null, node2 && node2.isConnected && node2.focus();
     }), el("quick-open-query").addEventListener("input", () => schedule2()), el("quick-open-close").addEventListener("click", () => closeQuickOpen()), el("quick-open-retry").addEventListener("click", () => {
       let query = el("quick-open-query").value.trim();
-      query && loadFiles(query, trackHits(query));
+      query && loadFiles(query, localHits(query));
     });
   }
   function onDialogKey(event) {
@@ -59777,27 +59934,30 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     window.clearTimeout(timer2);
     let query = el("quick-open-query").value;
     pendingQuery = query;
-    let tracks = trackHits(query);
-    if (hits = tracks, active = 0, truncated = !1, !query.trim()) {
+    let local = localHits(query);
+    if (hits = local, active = 0, truncated = !1, !query.trim()) {
       phase = "idle", requestToken += 1, paint();
       return;
     }
     phase = "loading", paint(), timer2 = window.setTimeout(() => {
-      loadFiles(query.trim(), tracks);
+      loadFiles(query.trim(), local);
     }, QUICK_OPEN_MS);
   }
-  async function loadFiles(query, tracks) {
+  function localHits(query) {
+    return mergeHits(matchViewHits(query), matchCrateHits(query), trackHits(query), []);
+  }
+  async function loadFiles(query, local) {
     let token4 = ++requestToken;
     phase = "loading";
     try {
       let response = await fetch(`/api/files?q=${encodeURIComponent(query)}`), payload = await readJSONOr(response, {});
       if (token4 !== requestToken) return;
       if (!response.ok) throw new Error(payload.error || t("quickOpen.fileError"));
-      let files = fileHits(payload);
-      hits = mergeHits(tracks, files), truncated = !!payload.truncated, phase = "ready", active >= hits.length && (active = Math.max(0, hits.length - 1)), paint();
+      let files = fileHits(payload), views = local.filter((hit) => hit.kind === "view"), crates = local.filter((hit) => hit.kind === "crate"), tracks = local.filter((hit) => hit.kind === "track");
+      hits = mergeHits(views, crates, tracks, files), truncated = !!payload.truncated, phase = "ready", active >= hits.length && (active = Math.max(0, hits.length - 1)), paint();
     } catch {
       if (token4 !== requestToken) return;
-      hits = tracks, phase = "error", paint();
+      hits = local, phase = "error", paint();
     }
   }
   function trackHits(query) {
@@ -59815,6 +59975,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (score == null) return null;
     let detail2 = [artist2, album].filter((part) => part !== "").join(" · ");
     return { kind: "track", key: `track:${track.id}`, title: title2, detail: detail2, score, trackId: track.id };
+  }
+  function scoreCrate(crate, query) {
+    let title2 = crate.name || "";
+    if (!title2) return null;
+    let score = scoreQuery(query, title2);
+    return score == null ? null : {
+      kind: "crate",
+      key: `crate:${crate.id}`,
+      title: title2,
+      detail: crateParentName(crate),
+      score,
+      crateId: crate.id
+    };
+  }
+  function crateParentName(crate) {
+    return crate.parent == null ? t("quickOpen.crate") : state.crates.find((row) => row.id === crate.parent)?.name || t("quickOpen.crate");
   }
   function fileHits(payload) {
     let rows = Array.isArray(payload.entries) ? payload.entries : [], found = [];
@@ -59837,14 +60013,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let row = value;
     return typeof row.name == "string" && typeof row.path == "string" && typeof row.kind == "string";
   }
-  function mergeHits(tracks, files) {
-    return [...tracks, ...files].sort(byScore).slice(0, LIMIT * 2);
+  function mergeHits(views, crates, tracks, files) {
+    return [...views, ...crates, ...tracks, ...files].sort(byScore).slice(0, LIMIT * 2);
   }
   function byScore(left2, right2) {
-    return right2.score - left2.score || left2.title.localeCompare(right2.title);
+    return right2.score - left2.score || KIND_RANK[left2.kind] - KIND_RANK[right2.kind] || left2.title.localeCompare(right2.title);
+  }
+  function kindLabel(hit) {
+    return hit.kind === "view" ? t("quickOpen.view") : hit.kind === "crate" ? t("quickOpen.crate") : hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
   }
   async function activate(hit) {
-    if (closeQuickOpen(), hit.kind === "track") {
+    if (closeQuickOpen(), hit.kind === "view") {
+      setMode(hit.mode), focusOpened(hit);
+      return;
+    }
+    if (hit.kind === "crate") {
+      state.mode !== "crates" && setMode("crates"), selectCrate(hit.crateId), focusOpened(hit);
+      return;
+    }
+    if (hit.kind === "track") {
       (state.mode === "files" || state.mode === "snapshots" || state.mode === "history") && setMode("crates"), selectCrate("all"), await selectTrack(hit.trackId);
       let index = state.view.findIndex((row) => row.id === hit.trackId);
       index >= 0 && (el("list").scrollTop = index * 36);
@@ -59852,21 +60039,31 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
     setMode("files"), await loadFolder(parentDirectory(hit.path)), focusFileByPath(hit.path);
   }
+  function focusOpened(hit) {
+    if (hit.kind === "view") {
+      let child = document.querySelector(`#view-children [data-view="${hit.mode}"]`);
+      if (child && !child.hidden) {
+        child.focus();
+        return;
+      }
+      let primary = document.querySelector(`#views [data-nav="${groupForMode(hit.mode)}"]`);
+      primary && primary.focus();
+      return;
+    }
+    let item = document.querySelector(`#crate-list .crate[data-id="${String(hit.crateId)}"]`);
+    item && focusCrateItem(item);
+  }
   function paint() {
     let status4 = el("quick-open-status"), list = el("quick-open-list"), retry = el("quick-open-retry"), query = pendingQuery.trim();
     retry.hidden = phase !== "error", list.replaceChildren(), query ? phase === "loading" ? status4.textContent = t("quickOpen.searching") : phase === "error" ? status4.textContent = t("quickOpen.fileError") : hits.length ? status4.textContent = truncated ? t("quickOpen.truncated") : t("quickOpen.matchCount", { count: hits.length }) : status4.textContent = t("quickOpen.none", { query }) : status4.textContent = t("quickOpen.empty"), hits.forEach((hit, index) => {
-      let item = document.createElement("li"), button = buttonEl(quickOpenHit(
-        hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file"),
-        hit.title,
-        hit.detail
-      ));
+      let item = document.createElement("li"), kind2 = kindLabel(hit), button = buttonEl(quickOpenHit(kind2, hit.title, hit.detail));
       button.className = "quick-open-option", button.id = `quick-open-option-${index}`, button.setAttribute("role", "option"), button.setAttribute("aria-selected", String(index === active)), button.tabIndex = -1, index === active && button.classList.add("is-active");
-      let kind2 = document.createElement("span");
-      kind2.className = "quick-open-kind", kind2.textContent = hit.kind === "track" ? t("quickOpen.track") : t("quickOpen.file");
+      let kindEl = document.createElement("span");
+      kindEl.className = "quick-open-kind", kindEl.textContent = kind2;
       let title2 = document.createElement("span");
       title2.className = "quick-open-name", title2.textContent = hit.title;
       let detail2 = document.createElement("span");
-      detail2.className = "quick-open-detail", detail2.textContent = hit.detail, button.append(kind2, title2, detail2), button.addEventListener("click", () => {
+      detail2.className = "quick-open-detail", detail2.textContent = hit.detail, button.append(kindEl, title2, detail2), button.addEventListener("click", () => {
         active = index, activate(hit);
       }), item.append(button), list.append(item);
     });
@@ -60018,7 +60215,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     },
     {
       id: "quick-open",
-      label: "Find a track or file",
+      label: "Find a view, crate, track, or file",
       group: "Find",
       keys: [{ key: "k", mod: !0 }],
       whileTyping: !1
@@ -68508,63 +68705,6 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(TrackBody, { track: detail2.track });
   }
 
-  // src/lib/ui/nav.ts
-  var NAV_GROUPS = [
-    { id: "library", labelKey: "view.group.library", modes: ["crates", "history", "stats"] },
-    { id: "files", labelKey: "view.files", modes: ["files"] },
-    { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags"] },
-    { id: "backups", labelKey: "view.snapshots", modes: ["snapshots"] },
-    { id: "gig", labelKey: "view.group.gig", modes: ["gig", "portable", "drift"] }
-  ], lastMode = {}, NAV_ICON_PATHS = {
-    library: "M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z",
-    files: "M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z",
-    health: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z",
-    backups: "M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z",
-    gig: "M7 18h2V6H7v12zm4 4h2V2h-2v20zm-8-8h2v-4H3v4zm12 4h2V8h-2v10zm4-8v4h2v-4h-2z"
-  };
-  function drawerIsMini() {
-    return document.getElementById("drawer-toggle")?.getAttribute("aria-expanded") === "false";
-  }
-  function ensureNavIcon(button, groupId) {
-    if (button.querySelector("svg")) return;
-    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", "0 0 24 24"), svg.setAttribute("width", "24"), svg.setAttribute("height", "24"), svg.setAttribute("aria-hidden", "true"), svg.setAttribute("focusable", "false"), svg.classList.add("nav-icon");
-    let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", NAV_ICON_PATHS[groupId]), path.setAttribute("fill", "currentColor"), svg.append(path), button.prepend(svg);
-  }
-  function groupOf(id) {
-    return NAV_GROUPS.find((group) => group.id === id) ?? NAV_GROUPS[0];
-  }
-  function groupForMode(mode) {
-    return NAV_GROUPS.find((item) => item.modes.includes(mode))?.id ?? "library";
-  }
-  function rememberMode(mode) {
-    let group = NAV_GROUPS.find((item) => item.modes.includes(mode));
-    group && (lastMode[group.id] = mode);
-  }
-  function modeForGroup(id) {
-    let group = groupOf(id), remembered = lastMode[group.id];
-    return remembered && group.modes.includes(remembered) ? remembered : group.modes[0];
-  }
-  function paintNav(mode) {
-    let groupId = groupForMode(mode), group = groupOf(groupId), views = document.getElementById("views");
-    if (views)
-      for (let button of views.querySelectorAll("[data-nav]")) {
-        let id = button.dataset.nav;
-        button.setAttribute("aria-selected", String(id === groupId)), (id === "library" || id === "files" || id === "health" || id === "backups" || id === "gig") && ensureNavIcon(button, id);
-      }
-    let strip = document.getElementById("view-children");
-    if (!(strip instanceof HTMLElement)) return;
-    let selected = views?.querySelector(`[data-nav="${groupId}"]`);
-    selected instanceof HTMLElement && selected.after(strip);
-    let showStrip = group.modes.length > 1 && !drawerIsMini();
-    strip.hidden = !showStrip, strip.setAttribute("aria-label", t(group.labelKey));
-    for (let button of strip.querySelectorAll("[data-view]")) {
-      let view = button.dataset.view ?? "", inGroup = group.modes.includes(view);
-      button.hidden = !inGroup, button.setAttribute("aria-selected", String(view === mode));
-    }
-  }
-
   // src/lib/ui/hash-route.ts
   var SPACE_SLUGS = {
     library: "Serato Library",
@@ -68608,52 +68748,6 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     url.hash = next3;
     let target = `${url.pathname}${url.search}${url.hash}`;
     replace2 ? history.replaceState(history.state, "", target) : history.pushState(history.state, "", target);
-  }
-
-  // src/lib/ui/sheet-chrome.ts
-  var VIEW_LABEL_KEYS = {
-    crates: "view.crates",
-    history: "view.history",
-    stats: "view.stats",
-    files: "view.files",
-    health: "view.health",
-    missing: "view.missing",
-    duplicates: "view.duplicates",
-    stems: "view.stems",
-    scan: "view.scan",
-    bitrate: "view.bitrate",
-    tags: "view.tags",
-    snapshots: "view.snapshots",
-    gig: "view.gig",
-    portable: "view.portable",
-    drift: "view.drift"
-  }, CRATE_SCOPED_MODES = [
-    "health",
-    "gig",
-    "drift",
-    "scan",
-    "bitrate"
-  ];
-  function isCrateScopedMode(mode) {
-    return CRATE_SCOPED_MODES.includes(mode);
-  }
-  function sheetTitle(mode, space) {
-    let key = VIEW_LABEL_KEYS[mode] ?? "view.crates", view = t(key), trimmed = space.trim();
-    return trimmed ? t("sheet.title", { view, space: trimmed }) : view;
-  }
-  function sheetScopeCrate(activeCrate, crates) {
-    return activeCrate === "all" ? t("crates.allTracks") : crates.find((row) => row.id === activeCrate)?.name || t("crates.allTracks");
-  }
-  function sheetScopeText(crate) {
-    return t("sheet.scope", { crate });
-  }
-  function paintSheetChrome(opts) {
-    let title2 = document.getElementById("sheet-title");
-    title2 && (title2.textContent = sheetTitle(opts.mode, opts.space));
-    let scope = document.getElementById("sheet-scope"), text2 = document.getElementById("sheet-scope-text"), clear = document.getElementById("sheet-scope-all");
-    if (!(scope instanceof HTMLElement) || !(text2 instanceof HTMLElement)) return;
-    let scoped = isCrateScopedMode(opts.mode);
-    scope.hidden = !scoped, scoped && (text2.textContent = sheetScopeText(sheetScopeCrate(opts.activeCrate, opts.crates)), clear instanceof HTMLButtonElement && (clear.hidden = opts.activeCrate === "all"));
   }
 
   // src/lib/ui/views.ts

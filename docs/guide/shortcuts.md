@@ -7,7 +7,7 @@ The list is in **Settings**, under **Keyboard shortcuts**. **?** opens Settings 
 | Key | Action |
 | --- | --- |
 | Ctrl+F or Command+F, or / | Focus search in the current view |
-| Ctrl+K or Command+K | Find a track or a file |
+| Ctrl+K or Command+K | Find a view, crate, track, or file |
 | Up or Down | Move through the list |
 | Enter | Open the row |
 | Ctrl+1 or Command+1 | All tracks |
@@ -25,13 +25,13 @@ On Windows the key with the command is Ctrl. On a Mac it is Command. Both are li
 
 Space plays or pauses. Left moves 5 seconds back. Right moves 5 seconds forward. They do not change the library.
 
-## Find a track or a file
+## Find a view, crate, track, or file
 
-Ctrl+K or Command+K opens **Find a track or file**.
+Ctrl+K or Command+K opens **Find a view, crate, track, or file**.
 
 1. Type a name. A few letters are enough. Each word has to appear in the name, or in the folder name.
-2. Tracks from the open library show at once. Files on disk follow. A file row says **File**. A track row says **Track**.
-3. Use Up and Down to move. Enter opens that row. A track opens in the library. A file opens in **Organize files**, in its folder.
+2. Views, crates, and tracks from the open library show at once. Files on disk follow. A view row says **View**. A crate row says **Crate**. A file row says **File**. A track row says **Track**.
+3. Use Up and Down to move. Enter opens that row. A view opens the same screen as the rail. A crate opens in **Crates**. A track opens in the library. A file opens in **Organize files**, in its folder. The address bar updates, so Back restores the previous screen.
 4. Esc closes the box and leaves the search behind it as it was.
 
 If the disk search cannot be read, the box says so and keeps the track matches. **Try again** asks for the files again.

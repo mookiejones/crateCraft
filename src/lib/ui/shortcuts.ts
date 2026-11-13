@@ -61,7 +61,7 @@ const SHORTCUT_DEFS = [
   },
   {
     id: "quick-open",
-    label: "Find a track or file",
+    label: "Find a view, crate, track, or file",
     group: "Find",
     keys: [{ key: "k", mod: true }],
     whileTyping: false,
