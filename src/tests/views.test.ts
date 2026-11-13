@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "../lib/api-types";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
-import { mountTrackList } from "../lib/ui/virtual-scroll";
+import { drainReactScheduler, installPage } from "./test-page";
+import { mountTrackList, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderCrates, renderFiles, renderList, renderSessions, selectCrate, toggleCrate } from "../lib/ui/views";
 
 vi.hoisted(() => {
@@ -17,6 +17,12 @@ function track(id: number, fields: Partial<Track> = {}): Track {
 
 function titles(): string[] {
   return [...document.querySelectorAll<HTMLElement>("#list .title")].map((node) => node.textContent ?? "");
+}
+
+function columnLabels(): string[] {
+  return [...document.querySelectorAll<HTMLElement>("#list .MuiDataGrid-columnHeader")]
+    .filter((node) => node.getAttribute("data-field") !== "play")
+    .map((node) => (node.querySelector(".MuiDataGrid-columnHeaderTitle")?.textContent ?? "").trim());
 }
 
 function resetState(): void {
@@ -75,6 +81,11 @@ describe("library views", () => {
     installPage();
     mountTrackList();
     resetState();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   it("paints the crate tree, keeps a matching child's parent, and counts the track search", () => {
@@ -136,18 +147,16 @@ describe("library views", () => {
     expect(session?.textContent).toContain("Friday");
     expect(session?.textContent).toContain("3");
     expect(session?.getAttribute("aria-selected")).toBe("true");
-    const columns = [...document.querySelectorAll<HTMLButtonElement>(".columns button")].map((button) => button.textContent);
-    expect(columns).toEqual(["Title", "Artist", "Deck", "Played", "Time"]);
-    expect(document.querySelector(".columns")?.classList.contains("for-history")).toBe(true);
+    expect(columnLabels()).toEqual(["Title", "Artist", "Deck", "Played", "Time"]);
+    expect(document.querySelector(".browser")?.classList.contains("for-history")).toBe(true);
     expect(document.getElementById("list")?.classList.contains("for-history")).toBe(true);
     expect(titles()).toEqual(["Alpha"]);
     expect(document.querySelector("#list .row")?.textContent).toContain("Yes");
     expect(document.querySelector("#count")?.textContent).toBe("1 play");
     state.mode = "crates";
     renderList();
-    expect(document.querySelector(".columns")?.classList.contains("for-history")).toBe(false);
-    const crateColumns = [...document.querySelectorAll<HTMLButtonElement>(".columns button")].map((button) => button.textContent);
-    expect(crateColumns).toEqual(["Title", "Artist", "BPM", "Key", "Energy", "Genre", "Added", "Last", "Plays", "Time"]);
+    expect(document.querySelector(".browser")?.classList.contains("for-history")).toBe(false);
+    expect(columnLabels()).toEqual(["Title", "Artist", "BPM", "Key", "Energy", "Genre", "Added", "Last", "Plays", "Time"]);
   });
 
   it("paints energy, genre, dates, and plays on a crate row", () => {
@@ -312,6 +321,11 @@ describe("crate search (#38)", () => {
       { id: 7, name: "Hip Hop", parent: 1, order: 2 },
     ];
     state.crateTracks = new Map();
+  });
+
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
   });
 
   function shown(): string[] {

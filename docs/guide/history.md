@@ -4,7 +4,7 @@ History is the record of tracks Serato has played. This view reads that record. 
 
 ![History for a sample session named Friday. The row shows the deck, whether it played, and the start time.](../media/history.png)
 
-1. Click **Music** in the rail, then **History** above the sheet.
+1. Click **Music** in the drawer, then **History**.
 2. Click a session in the list. The name is the session name, or **Session** when Serato stored no name. The number is how many tracks were played.
 3. Read the rows. The columns are **Title**, **Artist**, **Deck**, **Played**, and **Time**. Time is when the play started. The list starts with the latest play.
 

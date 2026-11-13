@@ -10,7 +10,7 @@ import type { Track } from "../lib/api-types";
 import { mountPlayer } from "../lib/player/player";
 import { chordLabel, SHORTCUTS, type ShortcutId } from "../lib/ui/shortcuts";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 import en from "../../locales/en.json";
 import es from "../../locales/es.json";
 import { PSEUDO, setLocale, t } from "../lib/i18n";
@@ -25,7 +25,7 @@ import {
   TOOLTIP_ID,
 } from "../lib/ui/tooltip";
 import { playTip, tipText, tips, wizardPrimaryTip, type TipSpec } from "../lib/ui/tooltip-strings";
-import { mountTrackList, paintRows } from "../lib/ui/virtual-scroll";
+import { mountTrackList, paintRows, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderCrates, renderFiles, renderSessions, selectEntry, selectTrack } from "../lib/ui/views";
 
 function tip(): HTMLElement {
@@ -188,7 +188,9 @@ describe("rendered controls", () => {
     state.request = 0;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
   });
 

@@ -5,7 +5,7 @@
  * keys call the registered player, and do nothing when it is absent.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "../lib/api-types";
 import { el } from "../lib/dom";
 import { setLocale } from "../lib/i18n";
@@ -21,9 +21,9 @@ import {
   wireShortcuts,
 } from "../lib/ui/shortcuts";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
-import { mountTrackList } from "../lib/ui/virtual-scroll";
-import { renderFiles, renderList, wireLibrary } from "../lib/ui/views";
+import { drainReactScheduler, installPage } from "./test-page";
+import { mountTrackList, unmountTrackList } from "../lib/ui/virtual-scroll";
+import { renderCrates, renderFiles, renderList, wireLibrary } from "../lib/ui/views";
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -382,6 +382,11 @@ describe("keyboard shortcuts", () => {
     wireShortcuts();
   });
 
+  afterEach(async () => {
+    unmountTrackList();
+    await drainReactScheduler();
+  });
+
   it.each(cases.map((item) => [item.id, item.event.key, Boolean(item.event.metaKey), item] as const))(
     "%s (%s, command %s) runs",
     (_id, _key, _command, item) => {
@@ -501,8 +506,7 @@ describe("keyboard shortcuts", () => {
 
   it("does not seek while the crate list is using the arrow keys", () => {
     usePlayer();
-    state.tracks = [track(1, "Alpha")];
-    renderList();
+    renderCrates();
     const crate = el("crate-list").querySelector<HTMLButtonElement>(".crate");
     expect(crate).toBeTruthy();
     crate!.focus();

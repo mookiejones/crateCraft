@@ -2,7 +2,8 @@
  * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, tempo drift, and the portable drive check.
  *
  * Files is React on FilesContext. This module re-exports that store so
- * existing callers keep one import. Nothing in this module runs a
+ * existing callers keep one import. Play stats fetch is history-stats.ts;
+ * StatsPanel paints the Accordion report. Nothing in this module runs a
  * request when the file is imported. Listeners are attached by
  * wireLibrary, which app.ts calls once at startup.
  */
@@ -71,6 +72,8 @@ import { HistorySessions } from "../../pages/HistorySessions";
 import { PlayButton } from "../../components/PlayButton";
 import { TrackDetailPane } from "../../components/TrackDetail";
 import { bindCrateActions, emitCrates } from "../crates/crate-store";
+import { openConfirm, openCratePrompt } from "./shared-dialog";
+import { mountSharedDialogs } from "./shared-dialog-mount";
 import { historyActions, notifyHistory } from "../../containers/HistoryContext";
 import { play } from "../player/player";
 import { playerStrings } from "../player/player-strings";
@@ -90,7 +93,6 @@ import {
   removeRelatedTip,
   revealTip,
   saveSuggestion,
-  sortTip,
   tips,
 } from "./tooltip-strings";
 import { paintRows } from "./virtual-scroll";
@@ -128,6 +130,18 @@ function clearDetailIslands(): void {
   historyDetailRoot?.unmount();
   historyDetailRoot = null;
   historyDetailHost = null;
+}
+
+/**
+ * Unmount the detail pane islands.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * MUI scheduler does not run after jsdom tears the window down.
+ *
+ * @returns {void}
+ */
+export function unmountDetailIslands(): void {
+  clearDetailIslands();
 }
 
 function paintDetailIsland(): void {
@@ -409,56 +423,28 @@ function renderRules() {
 }
 
 /**
- * Relabel the list headers for tracks or for history.
+ * Mark History chrome on the list host.
  *
- * History shows deck, played, and start time. Other views show BPM, key,
- * energy, genre, date added, last played, plays, and length. The header
- * is rebuilt so the button count matches. The active sort is marked.
- * Does not reorder rows; renderList does that.
+ * The Data Grid swaps column defs. This class is for layout min-width.
  *
  * @returns {void}
  */
 function markHistoryColumns(): void {
   const history = state.mode === "history";
-  document.querySelector(".columns")?.classList.toggle("for-history", history);
   document.querySelector(".browser")?.classList.toggle("for-history", history);
   el("list").classList.toggle("for-history", history);
 }
 
-const HISTORY_COLUMNS: Array<[string, MessageKey]> = [
-  ["name", "column.title"],
-  ["artist", "column.artist"],
-  ["deck", "column.deck"],
-  ["played", "column.played"],
-  ["start", "column.time"],
-];
-
-const TRACK_COLUMNS: Array<[string, MessageKey]> = [
-  ["name", "column.title"],
-  ["artist", "column.artist"],
-  ["bpm", "column.bpm"],
-  ["key", "column.key"],
-  ["energy", "column.energy"],
-  ["genre", "column.genre"],
-  ["time_added", "column.added"],
-  ["last_played", "column.lastPlayed"],
-  ["play_count", "column.plays"],
-  ["length_ms", "column.time"],
-];
-
+/**
+ * Relabel list chrome for tracks or history.
+ *
+ * The Data Grid owns the header buttons. This only marks `#list` and
+ * `.browser` so History can drop the extra crate columns.
+ *
+ * @returns {void}
+ */
 export function renderColumns() {
   markHistoryColumns();
-  const columns = state.mode === "history" ? HISTORY_COLUMNS : TRACK_COLUMNS;
-  const header = document.querySelector(".columns");
-  if (!(header instanceof HTMLElement)) return;
-  header.replaceChildren();
-  for (const [key, label] of columns) {
-    const button = buttonEl(sortTip(key, t(label)));
-    button.dataset.sort = key;
-    button.textContent = t(label);
-    button.dataset.active = String(key === state.sort);
-    header.append(button);
-  }
 }
 
 /**
@@ -1636,7 +1622,11 @@ async function saveRelated(track: Track, section: HTMLElement, body: Record<stri
  */
 async function removeRelated(track: Track, section: HTMLElement, link: RelatedTrack) {
   const label = link.track?.title || t("related.thisTrack");
-  if (!confirm(t("related.confirmRemove", { name: label }))) return;
+  if (!(await openConfirm({
+    title: t("common.remove"),
+    message: t("related.confirmRemove", { name: label }),
+    confirmLabel: t("common.remove"),
+  }))) return;
   try {
     await postJSON("/api/related", { action: "remove", id: link.id });
     setNotice(t("related.removed"));
@@ -1985,8 +1975,13 @@ async function prepareTrack(id: number, add: boolean) {
  * @param {object} track Track payload. The prompt starts from its resolved path.
  * @returns {Promise<void>}
  */
-async function relocateTrack(track: Track) {
-  const path = prompt(t("detail.relocatePrompt"), track.resolved_path || track.edit?.portable_id || "");
+export async function relocateTrack(track: Track) {
+  const path = await openCratePrompt({
+    title: t("detail.relocate"),
+    value: track.resolved_path || track.edit?.portable_id || "",
+    confirmLabel: t("detail.relocate"),
+    fieldLabel: t("detail.relocatePrompt"),
+  });
   if (!path) return;
   try {
     const result = await postJSON("/api/track", {
@@ -2012,8 +2007,12 @@ async function relocateTrack(track: Track) {
  * @param {number} id Asset id.
  * @returns {Promise<void>}
  */
-async function removeTrack(id: number) {
-  if (!confirm(t("detail.confirmRemove"))) return;
+export async function removeTrack(id: number) {
+  if (!(await openConfirm({
+    title: t("detail.removeFromLibrary"),
+    message: t("detail.confirmRemove"),
+    confirmLabel: t("detail.removeFromLibrary"),
+  }))) return;
   try {
     const result = await postJSON("/api/crate", { action: "remove_library", asset: id, space: state.space });
     setNotice(result.warning || t("detail.removed"));
@@ -2089,7 +2088,7 @@ async function saveRules(id: number, text: string) {
 }
 
 /**
- * Prompt for a name and create a crate under the current selection.
+ * Ask for a name and create a crate under the current selection.
  *
  * All tracks uses the space root as the parent. POST /api/crate with
  * action create. The new crate is selected after the reload. A 409 locks
@@ -2098,7 +2097,12 @@ async function saveRules(id: number, text: string) {
  * @returns {Promise<void>}
  */
 export async function createCrate() {
-  const name = prompt(t("crates.newPrompt"));
+  mountSharedDialogs();
+  const name = await openCratePrompt({
+    title: t("crates.newPrompt"),
+    value: "",
+    confirmLabel: t("crates.new"),
+  });
   if (!name || !name.trim()) return;
   const parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
   try {
@@ -2113,7 +2117,7 @@ export async function createCrate() {
 }
 
 /**
- * Prompt for a new name and rename the selected crate.
+ * Ask for a new name and rename the selected crate.
  *
  * An empty name, or the same name, does not send a request. POST /api/crate
  * with action rename. A 409 locks the page.
@@ -2123,7 +2127,12 @@ export async function createCrate() {
 export async function renameCrate() {
   const crate = state.crates.find((item) => item.id === state.activeCrate);
   if (!crate) return;
-  const name = prompt(t("crates.renamePrompt"), crate.name);
+  mountSharedDialogs();
+  const name = await openCratePrompt({
+    title: t("crates.renamePrompt"),
+    value: crate.name,
+    confirmLabel: t("crates.rename"),
+  });
   if (!name || !name.trim() || name.trim() === crate.name) return;
   try {
     const result = await postJSON("/api/crate", { action: "rename", id: crate.id, name: name.trim(), space: state.space });
@@ -2152,7 +2161,7 @@ export function colorFromName(choice: string): number | undefined {
 }
 
 /**
- * Prompt for a palette name and save it on the selected crate.
+ * Ask for a palette name and save it on the selected crate.
  *
  * The names match COLOR_NAMES. White is sent as null, which is Serato's
  * "no color" value. POST /api/crate with action color. A 409 locks the page.
@@ -2162,8 +2171,13 @@ export function colorFromName(choice: string): number | undefined {
 export async function colorCrate() {
   const crate = state.crates.find((item) => item.id === state.activeCrate);
   if (!crate) return;
+  mountSharedDialogs();
   const names = COLORS.map(([, key]) => t(key).toLocaleLowerCase());
-  const choice = prompt(t("crates.colorPrompt", { names: names.join(", ") }));
+  const choice = await openCratePrompt({
+    title: t("crates.colorPrompt", { names: names.join(", ") }),
+    value: "",
+    confirmLabel: t("field.color"),
+  });
   if (choice == null) return;
   const color = colorFromName(choice);
   if (color == null) {
@@ -2197,7 +2211,11 @@ export async function colorCrate() {
 export async function deleteCrate() {
   const crate = state.crates.find((item) => item.id === state.activeCrate);
   if (!crate) return;
-  if (!confirm(t("crates.confirmDelete", { name: crate.name }))) return;
+  if (!(await openConfirm({
+    title: t("common.delete"),
+    message: t("crates.confirmDelete", { name: crate.name }),
+    confirmLabel: t("common.delete"),
+  }))) return;
   try {
     const result = await postJSON("/api/crate", { action: "delete", id: crate.id, space: state.space });
     state.activeCrate = "all";
@@ -2581,20 +2599,6 @@ export function wireLibrary(): void {
   el("crate-rename").addEventListener("click", () => renameCrate().catch((error) => setNotice(failureOf(error).message)));
   el("crate-color").addEventListener("click", () => colorCrate().catch((error) => setNotice(failureOf(error).message)));
   el("crate-delete").addEventListener("click", () => deleteCrate().catch((error) => setNotice(failureOf(error).message)));
-  document.querySelector<HTMLElement>(".columns")!.addEventListener("click", (event) => {
-    const button = (event.target as HTMLElement).closest("button");
-    if (!button?.dataset.sort) return;
-    const key = button.dataset.sort;
-    if (state.sort === key) state.sortDir *= -1;
-    else {
-      state.sort = key;
-      // Numbers open high-to-low. Titles open A-to-Z.
-      state.sortDir = isNumericSort(key) ? -1 : 1;
-    }
-    renderColumns();
-    renderList();
-  });
-
   // Arrow keys follow the tree: Right opens a crate, Left closes it or
   // jumps to the parent. Enter and Space select. The roving tabindex keeps
   // one crate button in the tab order.
@@ -2654,6 +2658,15 @@ registerTrackListActions({
     void openInLibrary(id);
   },
   setNotice,
+  setSort: (key) => {
+    if (state.sort === key) state.sortDir *= -1;
+    else {
+      state.sort = key;
+      state.sortDir = isNumericSort(key) ? -1 : 1;
+    }
+    renderColumns();
+    renderList();
+  },
 });
 bindCrateActions({
   select: selectCrate,

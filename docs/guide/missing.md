@@ -9,8 +9,8 @@ A missing row shows the word **missing**. An offline row uses a quieter **offlin
 Use this after a drive swap or a folder move, when several tracks went missing at once.
 
 1. Quit Serato DJ Pro. See [Safety and backups](safety.md).
-2. Click **Health** in the rail, then **Missing files** above the sheet.
-3. Click **Relink missing files**.
+2. Click **Health** in the drawer, then **Missing files**.
+3. Click **Relink missing files** above the track list.
 4. Search the music folders. After a drive swap, paste the new folder (for example `/Volumes/NEW/DJ`) and click **Find matches**.
 5. High-confidence matches are ticked. **Accept all high** ticks the rest. When two files fit, pick one.
 6. Confirm **Relink**.
@@ -25,7 +25,7 @@ Use this when you already know the new path and the file is still the same recor
 2. Click the track.
 3. Click **Relocate**.
 4. Paste the full path in **Path to the audio file**.
-5. Confirm the prompt.
+5. Confirm in the dialog.
 
 The page says **File location saved.** **Reveal** stays off until the file is on disk at that path.
 

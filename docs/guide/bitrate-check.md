@@ -9,9 +9,9 @@ The note under the crate list says **Needs a crate because it decodes audio.**
 ## Run the check
 
 1. Open crateCraft.
-2. Click **Health** in the rail, then **Suspect quality** above the sheet.
+2. Click **Health** in the drawer, then **Suspect quality**.
 3. Click one crate. The sheet heading names the view. **Scope** under it shows that crate. **All tracks** on the chip, and in the crate list, stays off, because a whole-space decode can take minutes.
-4. Click **Check again**. The report groups fake 320s and lossless files that look lossy-sourced.
+4. Click **Check again**. The report is a list of flagged tracks. The **Reason** column names fake 320s and lossless files that look lossy-sourced. **Save crate** stays above that list.
 
 A crate change, a space change, or **Reload** repeats the check. If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
 

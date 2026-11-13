@@ -12,7 +12,7 @@ src/
   wizard-view.ts      # esbuild entry: first-run IIFE
   html-raw.d.ts
   CLAUDE.md
-  app/                # mountIsland, AppProviders
+  app/                # mountIsland, AppProviders, MUI ThemeProvider
   containers/         # one Context + hook per domain
   pages/              # rail screens and dialog hosts
   components/         # pieces a page or island mounts
@@ -27,6 +27,7 @@ src/
 - Domain bind (`*Context.tsx`, `useX`) → `containers/`, plus one wrapper in `app/providers.tsx`
 - Engine or helper → `lib/` or `lib/<domain>/`
 - Vitest → `tests/` (mirror `pages/`, `components/`, `containers/` for those tests)
+- Storybook story → `*.stories.tsx` next to the module in `components/`, `pages/`, or `containers/` (`npm run storybook`)
 
 Repo-root `tests/` is Python. `e2e/` is Playwright. No `@/` import alias.
 

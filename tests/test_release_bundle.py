@@ -1158,8 +1158,8 @@ class PackageTests(unittest.TestCase):
                 (locales / name).write_bytes((ROOT / "locales" / name).read_bytes())
             exe = root / "crateCraft.exe"
             exe.write_bytes(_pe(0x14C))
-            # Real static/ plus maps after the React wizard bundle is ~6 MB.
-            zip_cap = 8_000_000
+            # Real static/ plus maps after MUI X Data Grid is ~12 MB.
+            zip_cap = 20_000_000
             narrow = base / "narrow.zip"
             _zip_tree(root, narrow)
             with self.assertRaises(SystemExit) as caught:

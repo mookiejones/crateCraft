@@ -3,20 +3,21 @@
  *
  * Player is one domain. The crate rail is the next. Waveform zoom and
  * overview are another. Before a gig is a fourth. Files is a fifth.
- * History is a sixth. Settings is a seventh. Track list selection and
- * detail fields are an eighth. Snapshots is a ninth. The first-run
- * wizard is a tenth; this file mounts an idle value so the domain is
- * present on every island. The wizard bundle supplies the live value.
- * Library health is an eleventh. Later screens add their own context
- * file and one wrapper here. This module reads those engines; it does
- * not own fetch, playback, crate writes, history loads, the folder
- * load, the settings file, restore writes, setup fetch, or health
- * fetches.
+ * History is a sixth. Play stats is a seventh. Settings is an eighth.
+ * Track list selection and detail fields are a ninth. Snapshots is a
+ * tenth. The first-run wizard is an eleventh; this file mounts an idle
+ * value so the domain is present on every island. The wizard bundle
+ * supplies the live value. Library health is a twelfth. Later screens
+ * add their own context file and one wrapper here. This module reads
+ * those engines; it does not own fetch, playback, crate writes, history
+ * loads, play-stats fetches, the folder load, the settings file,
+ * restore writes, setup fetch, or health fetches.
  */
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { failureOf } from "../lib/api";
+import { MuiThemeRoot } from "./mui-theme-root";
 import { CrateProvider as CrateContextProvider } from "../containers/CrateContext";
 import {
   FilesProvider as FilesContextProvider,
@@ -36,6 +37,10 @@ import {
   subscribeHistory,
   type HistoryContextValue,
 } from "../containers/HistoryContext";
+import {
+  StatsProvider as StatsContextProvider,
+  type StatsContextValue,
+} from "../containers/StatsContext";
 import {
   PlayerProvider as PlayerContextProvider,
   type PlayerContextValue,
@@ -80,9 +85,15 @@ import {
   subscribeGig,
 } from "../lib/gig/gig";
 import { getDriftSnapshot, subscribeDrift } from "../lib/gig/drift";
+import { portableSnapshot, subscribePortable } from "../lib/gig/portable";
 import { subscribeHealth } from "../lib/health/health-events";
 import { getHealthListSnapshot } from "../lib/health/health-list";
 import { getHealthSnapshot, loadHealth, navigateHealth } from "../lib/health/health";
+import {
+  getStatsSnapshot,
+  makeIdleCrate,
+  subscribeStats,
+} from "../lib/history/history-stats";
 import { expandScan, getScanSnapshot, loadScan } from "../lib/health/scan";
 import {
   applyGroup,
@@ -132,7 +143,7 @@ import {
   subscribe,
   togglePlayPause,
 } from "../lib/player/player";
-import { portableSnapshot } from "../lib/gig/portable";
+
 import {
   backupDriveCrates,
   closePlan,
@@ -215,6 +226,7 @@ function readGigValue(): GigContextValue {
   return {
     gig: getGigSnapshot(),
     drift: getDriftSnapshot(),
+    portable: portableSnapshot(),
     nextStep: nextGigStep,
     backStep: backGigStep,
     exit: exitGigCheck,
@@ -251,6 +263,7 @@ function readFilesValue(): FilesContextValue {
     locked: !state.writable || state.filesLoading || state.filesAtRoots,
     rowHeight: filesRowHeight(),
     dialogAction: dialog.action,
+    dialogOpen: dialog.open,
     dialogName: dialog.name,
     dialogReplacement: dialog.replacement,
     dialogStatus: dialog.status,
@@ -345,6 +358,34 @@ export function HistoryProvider({ children }: { children: ReactNode }) {
   return <HistoryContextProvider value={current}>{children}</HistoryContextProvider>;
 }
 
+function readStatsValue(): StatsContextValue {
+  return {
+    ...getStatsSnapshot(),
+    makeIdleCrate,
+  };
+}
+
+/**
+ * Mount the Play stats domain at the root of one React island.
+ *
+ * Updates are flushed so the Accordion report stays in step with the
+ * last GET /api/history-stats reply.
+ *
+ * @param children Island that calls `useStats`.
+ */
+export function StatsRoot({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readStatsValue);
+  useLayoutEffect(() => {
+    return subscribeStats(() => {
+      flushSync(() => {
+        setValue(readStatsValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <StatsContextProvider value={current}>{children}</StatsContextProvider>;
+}
+
 /**
  * Mount the Before a gig domain at the root of one React island.
  *
@@ -363,9 +404,11 @@ export function GigProvider({ children }: { children: ReactNode }) {
     };
     const stopGig = subscribeGig(refresh);
     const stopDrift = subscribeDrift(refresh);
+    const stopPortable = subscribePortable(refresh);
     return () => {
       stopGig();
       stopDrift();
+      stopPortable();
     };
   }, []);
   const current = useMemo(() => value, [value]);
@@ -471,7 +514,7 @@ function readTrackListValue(): TrackListContextValue {
  */
 export function TrackListRoot({ children }: { children: ReactNode }) {
   const [value, setValue] = useState(readTrackListValue);
-  useEffect(() => {
+  useLayoutEffect(() => {
     return subscribeTrackList(() => {
       flushSync(() => {
         setValue(readTrackListValue());
@@ -572,37 +615,43 @@ export function HealthProvider({ children }: { children: ReactNode }) {
 /**
  * Nest every domain provider.
  *
+ * MUI ThemeProvider is the outer wrap, mapped to the saved colorway.
  * Player is the first domain. Crates wrap inside it. Waveform wraps
  * inside crates. Before a gig wraps inside waveform. Files wraps inside
- * Before a gig. History wraps inside Files. Settings wraps inside History.
- * Track list wraps inside Settings. Snapshots wraps inside Track list.
- * An idle wizard wraps the island so `useWizard` is defined. Library
- * health wraps inside the wizard.
+ * Before a gig. History wraps inside Files. Play stats wraps inside
+ * History. Settings wraps inside Play stats. Track list wraps inside
+ * Settings. Snapshots wraps inside Track list. An idle wizard wraps
+ * the island so `useWizard` is defined. Library health wraps inside
+ * the wizard.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
-    <PlayerProvider>
-      <CrateProvider>
-        <WaveformProvider>
-          <GigProvider>
-            <FilesProvider>
-              <HistoryProvider>
-                <SettingsProvider>
-                  <TrackListRoot>
-                    <SnapshotsProvider>
-                      <WizardProvider>
-                        <HealthProvider>{children}</HealthProvider>
-                      </WizardProvider>
-                    </SnapshotsProvider>
-                  </TrackListRoot>
-                </SettingsProvider>
-              </HistoryProvider>
-            </FilesProvider>
-          </GigProvider>
-        </WaveformProvider>
-      </CrateProvider>
-    </PlayerProvider>
+    <MuiThemeRoot>
+      <PlayerProvider>
+        <CrateProvider>
+          <WaveformProvider>
+            <GigProvider>
+              <FilesProvider>
+                <HistoryProvider>
+                  <StatsRoot>
+                    <SettingsProvider>
+                      <TrackListRoot>
+                        <SnapshotsProvider>
+                          <WizardProvider>
+                            <HealthProvider>{children}</HealthProvider>
+                          </WizardProvider>
+                        </SnapshotsProvider>
+                      </TrackListRoot>
+                    </SettingsProvider>
+                  </StatsRoot>
+                </HistoryProvider>
+              </FilesProvider>
+            </GigProvider>
+          </WaveformProvider>
+        </CrateProvider>
+      </PlayerProvider>
+    </MuiThemeRoot>
   );
 }

@@ -10,7 +10,7 @@
  * The damaged-file scan is src/lib/health/scan.ts.
  * The suspect-quality report is src/lib/health/bitrate.ts.
  * The library health report is src/lib/health/health.ts.
- * Play stats are src/lib/history/history-stats.ts.
+ * Play stats fetch is src/lib/history/history-stats.ts. StatsPanel paints the report.
  * Tag spellings are src/lib/health/tags.ts.
  * Crate presets are src/lib/crates/presets.ts.
  * Folder sync is src/lib/crates/folder-sync.ts.
@@ -22,6 +22,7 @@
  */
 
 import { wireDialogs } from "./lib/ui/dialogs";
+import { mountSharedDialogs } from "./lib/ui/shared-dialog-mount";
 import { wireGigCheck } from "./lib/gig/gig";
 import { wireDrift } from "./lib/gig/drift";
 import { wireHealth } from "./lib/health/health";
@@ -42,6 +43,7 @@ import { wireFolderSync } from "./lib/crates/folder-sync";
 import { refreshPresetsOnOpen, wirePresets } from "./lib/crates/presets";
 import { loadLibrary, setMode, showFailure, wireLibrary } from "./lib/ui/views";
 import { mountPlayer, playerControls } from "./lib/player/player";
+import { mountAppShell } from "./lib/ui/app-shell";
 import { mountSettings } from "./lib/ui/settings";
 import { installDesktopActions } from "./lib/ui/desktop-actions";
 import { applyStaticTooltips, installTooltips } from "./lib/ui/tooltip";
@@ -49,6 +51,8 @@ import { wireDualCrates } from "./lib/crates/dual-crate";
 import { mountTrackList, mountTrackListB, wireVirtualScroll } from "./lib/ui/virtual-scroll";
 
 wireLocale();
+mountAppShell();
+mountSharedDialogs();
 installTooltips();
 applyStaticTooltips();
 mountTrackList();

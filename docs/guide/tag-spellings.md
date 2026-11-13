@@ -9,11 +9,11 @@ This view covers the whole space. The crate list is hidden.
 ## Review a group
 
 1. Open crateCraft.
-2. Click **Health** in the rail, then **Tag spellings** above the sheet.
+2. Click **Health** in the drawer, then **Tag spellings**.
 3. Click **Genre** or **Artist**. **Genre** is the first field.
-4. Open a group. The suggested spelling is the one most tracks already use.
-5. Select the spelling you want.
-6. Click **Review**. The status line names how many rows would change, and the group lists each stored spelling and the spelling it would become.
+4. Click a group in the list. The **Suggested spelling** column is the spelling most tracks already use. **Tracks** and **Spellings** are counts.
+5. Select the spelling you want. **Review** and **Apply** stay above the list.
+6. Click **Review**. The status line names how many rows would change, and the selected group lists each stored spelling and the spelling it would become.
 7. Click **Apply**. Apply stays off until Review matches the selected spelling, the library is writable, and at least one row would change.
 
 When a later track still uses another spelling of a saved mapping, a banner lists those rows and **Apply saved mappings** writes them. Opening the view does not write.
@@ -29,7 +29,7 @@ While Serato has the library open, Apply stays off.
 ## Clean titles
 
 1. Open crateCraft.
-2. Click **Health** in the rail, then **Tag spellings** above the sheet.
+2. Click **Health** in the drawer, then **Tag spellings**.
 3. Click **Titles**. The report lists each title that would change, including a remixer move.
 4. Click **Apply**. Apply stays off when every title already matches, or while Serato has the library open.
 

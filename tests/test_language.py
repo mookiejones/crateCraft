@@ -407,20 +407,20 @@ class ErrorCodeTests(unittest.TestCase):
         self.assertIsNone(snapshots.write_block_notice(snapshots.SeratoInstall("4.1.0", "4.1.0.1", "off")))
 
     def test_history_column_and_search_fit_a_longer_language(self) -> None:
-        """Spanish history and Reload stay on one row at the default split.
+        """Spanish history headers fit and crate actions can wrap when narrow.
 
-        The played column is 8.5rem so “Reproducida” is not clipped. Export,
-        Import, and Reload stay in one row; the Rekordbox options wrap under them.
+        The played column is 136px so “Reproducida” is not clipped. Export,
+        Import, and Reload can wrap below search when the pane narrows.
 
         Returns:
             None.
         """
         css = (ROOT / "static" / "app.css").read_text(encoding="utf-8")
-        self.assertRegex(
-            css,
-            r"\.columns\.for-history,\s*\.list\.for-history \.row \{\s*grid-template-columns:[^}]*8\.5rem",
+        columns = (ROOT / "src" / "lib" / "ui" / "track-list-columns.tsx").read_text(
+            encoding="utf-8"
         )
-        self.assertRegex(css, r"\.browser-actions \{[^}]*flex-wrap: nowrap")
+        self.assertRegex(columns, r"HISTORY_PLAYED_WIDTH = 136")
+        self.assertRegex(css, r"\.browser-actions \{[^}]*flex-wrap: wrap")
 
 
 if __name__ == "__main__":

@@ -3,6 +3,8 @@ declare module "*.html?raw" {
   export default content;
 }
 
+declare module "*.css";
+
 interface ImportMeta {
   glob(pattern: string | readonly string[]): Record<string, () => Promise<unknown>>;
   glob(

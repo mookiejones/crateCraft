@@ -5,7 +5,7 @@
  * The library is not opened.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "../lib/api-types";
 import {
   SEEK_STEP_LARGE_SECONDS,
@@ -32,7 +32,7 @@ import { playerStrings } from "../lib/player/player-strings";
 import { registerPlayerControls, wireShortcuts } from "../lib/ui/shortcuts";
 import { state } from "../lib/state";
 import { installPage } from "./test-page";
-import { mountTrackList, paintRows, wireVirtualScroll } from "../lib/ui/virtual-scroll";
+import { mountTrackList, paintRows, unmountTrackList, wireVirtualScroll } from "../lib/ui/virtual-scroll";
 
 class FakeAudio extends EventTarget implements PlayableMedia {
   src = "";
@@ -73,6 +73,30 @@ beforeEach(() => {
   state.tracks = [];
 });
 
+afterEach(() => {
+  unmountTrackList();
+});
+
+describe("player chrome", () => {
+  it("paints transport and sliders with MUI controls and tooltips", () => {
+    const previous = document.querySelector('[aria-label="Previous"]');
+    const play = document.querySelector(".player-play");
+    const next = document.querySelector('[aria-label="Next"]');
+    const seek = document.querySelector(".player-seek .MuiSlider-root");
+    const volume = document.querySelector(".player-volume .MuiSlider-root");
+    expect(previous?.className).toContain("MuiIconButton-root");
+    expect(play?.className).toContain("MuiIconButton-root");
+    expect(next?.className).toContain("MuiIconButton-root");
+    expect(seek).not.toBeNull();
+    expect(volume).not.toBeNull();
+    expect(previous?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
+    expect(play?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
+    expect(next?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
+    expect(document.querySelector(".player-range")?.getAttribute("data-tooltip")?.trim().length)
+      .toBeGreaterThan(10);
+  });
+});
+
 describe("formatPlayerTime", () => {
   it("formats minutes and hours and treats a bad number as zero", () => {
     expect(formatPlayerTime(0)).toBe("0:00");
@@ -95,7 +119,9 @@ describe("player API", () => {
     expect(getPlayerState().title).toBe("Night");
     expect(getPlayerState().artist).toBe("Ada");
     expect(document.querySelector(".player-title")?.textContent).toBe("Night");
-    expect(document.querySelector(".player-play")?.textContent).toBe(playerStrings.pause);
+    expect(document.querySelector(".player-play")?.getAttribute("aria-label")).toBe(
+      `${playerStrings.pause} Night`,
+    );
 
     pause();
     expect(isPlaying()).toBe(false);

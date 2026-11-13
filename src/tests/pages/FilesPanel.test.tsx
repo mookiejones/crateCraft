@@ -50,6 +50,11 @@ describe("FilesPanel context", () => {
     expect(host?.querySelectorAll(".files-root-detail")).toHaveLength(2);
     expect((host?.querySelector("#files-up") as HTMLButtonElement).disabled).toBe(true);
     expect(host?.querySelector("#files-path [aria-current='page']")?.textContent).toBe("Music folders");
+    const toolbar = host?.querySelector(".MuiToolbar-root");
+    expect(toolbar).toBeTruthy();
+    expect(toolbar?.getAttribute("aria-label")).toBe("Folder toolbar");
+    expect(host?.querySelector("#files-up")?.className).toContain("MuiButton-root");
+    expect(host?.querySelector(".MuiDataGrid-root")).toBeNull();
     root.unmount();
   });
 });

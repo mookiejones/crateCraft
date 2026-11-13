@@ -8,7 +8,7 @@ import { parentDirectory, QUICK_OPEN_MS } from "../lib/ui/quick-open";
 import { wireShortcuts } from "../lib/ui/shortcuts";
 import { state } from "../lib/state";
 import { installPage } from "./test-page";
-import { mountTrackList } from "../lib/ui/virtual-scroll";
+import { mountTrackList, unmountTrackList } from "../lib/ui/virtual-scroll";
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -42,6 +42,7 @@ describe("quick-open", () => {
   });
 
   afterEach(() => {
+    unmountTrackList();
     vi.useRealTimers();
   });
 

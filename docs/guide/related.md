@@ -50,7 +50,7 @@ When nothing is close, the page says **No suggestions from key, tempo, or shared
 ## Remove a link
 
 1. Click **Remove** on the saved row.
-2. Confirm **Remove the link to** the track name.
+2. Confirm **Remove the link to** the track name in the dialog.
 
 The bar says **Link removed.** The audio file and the Serato library do not change. A two-way link is removed from both tracks.
 

@@ -2,11 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { BitrateCheckReport, BitrateCratePlan } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
-import { loadBitrate, repaintBitrate, wireBitrate } from "../lib/health/bitrate";
+import { loadBitrate, repaintBitrate, unmountBitrate, wireBitrate } from "../lib/health/bitrate";
 import { setLocale } from "../lib/i18n";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 
 const postJSON = vi.hoisted(() => vi.fn());
 
@@ -88,7 +88,6 @@ describe("bitrate", () => {
     setLocale("en");
     state.space = "Serato Library";
     state.activeCrate = 5;
-    state.bitrateToken = 0;
     state.writable = true;
     state.crates = [{ id: 5, name: "Friday" }];
     postJSON.mockReset();
@@ -98,7 +97,9 @@ describe("bitrate", () => {
     document.getElementById("bitrate-panel")!.hidden = false;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    unmountBitrate();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });
@@ -115,8 +116,12 @@ describe("bitrate", () => {
     expect(reportText()).toContain("2 missing tracks were skipped");
     expect(reportText()).toContain("1 file could not be read.");
     expect(reportText()).toContain("Stated bitrate is much higher than the spectrum");
-    expect(reportText()).toContain("A — Fake (fake.mp3) — Stated bitrate is much higher than the spectrum · 320 kbps on the file, about 128 kbps from the spectrum");
+    expect(reportText()).toContain("A — Fake");
+    expect(reportText()).toContain("fake.mp3");
+    expect(reportText()).toContain("320 kbps on the file, about 128 kbps from the spectrum");
     expect(reportText()).toContain("Lossless file looks like it came from a lossy encode");
+    expect(document.querySelector('#bitrate-report .MuiDataGrid-columnHeader[data-field="reason"]')).not.toBeNull();
+    expect(document.querySelector('#bitrate-report .MuiDataGrid-cell[data-field="reason"]')?.textContent).toContain("Stated bitrate is much higher");
     expect(document.getElementById("bitrate-refresh")!.getAttribute("aria-busy")).toBe("false");
     expect((document.getElementById("bitrate-save") as HTMLButtonElement).disabled).toBe(false);
   });

@@ -11,7 +11,9 @@ import { el } from "../../lib/dom";
 import { setLocale, t } from "../../lib/i18n";
 import {
   applyLanguage,
+  closeSettings,
   mountSettings,
+  openSettings,
   patchSettings,
   resetSettingsForTests,
   saveLanguage,
@@ -41,6 +43,7 @@ describe("SettingsPanel context", () => {
       root.render(createElement(AppProviders, { children: createElement(SettingsPanel) }));
     });
     expect(host.querySelector("[data-settings-react]")).not.toBeNull();
+    expect(host.querySelector("[data-settings-page]")).not.toBeNull();
     expect(host.querySelector("#settings-title")?.textContent).toBe(t("settings.title"));
     expect(host.querySelector("#language-select")).not.toBeNull();
     expect(host.querySelector("#colorway-select")).not.toBeNull();
@@ -53,6 +56,28 @@ describe("SettingsPanel context", () => {
     expect(host.querySelector("#language-select")?.getAttribute("data-tooltip-key")).toBe("tooltip.language");
     expect(host.querySelector("#colorway-select")?.getAttribute("data-tooltip-key")).toBe("tooltip.colorway");
     expect(host.querySelector("#telemetry-toggle")?.getAttribute("data-tooltip-key")).toBe("tooltip.telemetry");
+    const proof = host.querySelector("#mui-theme-proof");
+    expect(proof).not.toBeNull();
+    expect(proof?.getAttribute("data-colorway")).toBe("serato-like");
+    expect(proof?.getAttribute("data-primary")).toBe("#ff6a00");
+    expect(proof?.getAttribute("data-mode")).toBe("dark");
+    root.unmount();
+  });
+
+  it("updates the MUI proof when the colorway changes", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    flushSync(() => {
+      root.render(createElement(AppProviders, { children: createElement(SettingsPanel) }));
+    });
+    flushSync(() => {
+      patchSettings({ colorway: "dark-club" });
+    });
+    const proof = host.querySelector("#mui-theme-proof");
+    expect(proof?.getAttribute("data-colorway")).toBe("dark-club");
+    expect(proof?.getAttribute("data-primary")).toBe("#3df0c8");
+    expect(proof?.getAttribute("data-mode")).toBe("dark");
     root.unmount();
   });
 
@@ -92,5 +117,57 @@ describe("SettingsPanel context", () => {
     mountSettings();
     patchSettings({ aboutVersion: "v1.4.2" });
     expect(el("about-version").textContent).toBe("v1.4.2");
+  });
+
+  it("opens Settings as a Main page, not a modal overlay", () => {
+    mountSettings();
+    const dialog = el("settings-dialog");
+    const showModal = vi.spyOn(dialog, "showModal");
+    openSettings();
+    expect(dialog.open).toBe(true);
+    expect(showModal).not.toHaveBeenCalled();
+    expect(el("open-settings").getAttribute("aria-expanded")).toBe("true");
+    expect(document.getElementById("app-body")?.contains(dialog)).toBe(true);
+    closeSettings();
+    expect(dialog.open).toBe(false);
+    expect(el("open-settings").getAttribute("aria-expanded")).toBe("false");
+    showModal.mockRestore();
+  });
+
+  it("saves sharing, colorway, and update switches from the island", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = typeof input === "string" ? input : String(input);
+      const body = typeof init?.body === "string" ? JSON.parse(init.body) as Record<string, unknown> : {};
+      if (url === "/api/settings") {
+        return new Response(JSON.stringify({
+          telemetry_consent: body.telemetry_consent === true,
+          telemetry_configured: true,
+          colorway: body.colorway ?? "serato-like",
+          icon_follows_theme: true,
+        }), { status: 200 });
+      }
+      if (url === "/api/update") {
+        return new Response(JSON.stringify({ enabled: body.enabled === true, prereleases: false }), { status: 200 });
+      }
+      return new Response("{}", { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    mountSettings();
+    el("telemetry-toggle").click();
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalled();
+    });
+    expect(fetchMock.mock.calls.some((call) => {
+      const init = call[1] as RequestInit | undefined;
+      return typeof init?.body === "string" && init.body.includes("telemetry_consent");
+    })).toBe(true);
+    el("colorway-select").value = "light";
+    el("colorway-select").dispatchEvent(new Event("change", { bubbles: true }));
+    await vi.waitFor(() => {
+      expect(fetchMock.mock.calls.some((call) => {
+        const init = call[1] as RequestInit | undefined;
+        return typeof init?.body === "string" && init.body.includes("colorway");
+      })).toBe(true);
+    });
   });
 });

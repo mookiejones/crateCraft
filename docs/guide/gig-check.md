@@ -5,10 +5,10 @@
 ## Run the check
 
 1. Open crateCraft.
-2. Click **Gig** in the rail, then **Ready** above the sheet.
+2. Click **Gig** in the drawer, then **Ready**.
 3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The sheet heading names the view. **Scope** under it shows All tracks or the crate. **All tracks** on that chip checks the whole space.
-4. Walk the five steps: **Drives**, **Missing files**, **Streaming**, **Empty crates**, and **Since last gig**. Each step says **Step N of 5**. One button names the thing to do, such as **Locate missing files**. **Back** returns to the previous step. **Exit gig check** leaves the check.
-5. Read the score on each step. It shows the number out of 100, such as **72/100**, and **✓ Ready** or **✕ Not ready**. **Ready** means the score is at least 70 and nothing below is a hard stop. **Not ready** means do not treat the crate as ready to play.
+4. Walk the five steps: **Drives**, **Missing files**, **Streaming**, **Empty crates**, and **Since last gig**. Each step says **Step N of 5**. One button names the thing to do, such as **Locate missing files**. **Back** returns to the previous step. **Exit gig check** leaves the check. Lists sit in groups you can open and close. Tab to a group heading, then Enter or Space to hide or show it.
+5. Read the score on each step. It shows the number out of 100, such as **72/100**, and **✓ Ready** or **✕ Not ready**. Color is not the only signal. **Ready** means the score is at least 70 and nothing below is a hard stop. **Not ready** means do not treat the crate as ready to play.
 6. The last screen says whether you are ready for the gig, the score, the crate, and the time of the check. **Check again** after you plug a drive back in or move a file. The report stays up while the new check runs. If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
 
 The same check from a terminal, in the repository directory:

@@ -61,4 +61,28 @@ describe("src layout", () => {
       .filter((path) => path.endsWith("Context.tsx") && !path.startsWith("containers/"));
     expect(stray).toEqual([]);
   });
+
+  it("colocates Storybook stories next to components, containers, or pages", () => {
+    const stray = Object.keys(SRC_FILES)
+      .map(rel)
+      .filter((path) => /\.stories\.(ts|tsx)$/.test(path) || path.endsWith(".mdx"))
+      .filter(
+        (path) =>
+          !path.startsWith("components/") &&
+          !path.startsWith("pages/") &&
+          !path.startsWith("containers/"),
+      );
+    expect(stray).toEqual([]);
+  });
+
+  it("gives every component, container, and page a sibling story", () => {
+    const paths = Object.keys(SRC_FILES).map(rel);
+    const layers = ["components/", "containers/", "pages/"];
+    const missing = paths.filter((path) => {
+      if (!path.endsWith(".tsx") || path.endsWith(".stories.tsx")) return false;
+      if (!layers.some((layer) => path.startsWith(layer))) return false;
+      return !paths.includes(path.replace(/\.tsx$/, ".stories.tsx"));
+    });
+    expect(missing).toEqual([]);
+  });
 });

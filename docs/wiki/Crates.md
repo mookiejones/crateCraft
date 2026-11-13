@@ -1,5 +1,7 @@
 # Crates
 
+The navigation highlights the open section. On narrow screens it starts collapsed; use the menu button to open it. The top bar holds the space menu. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
+
 <figure>
   <img alt="Crates with Deep House selected and the open track's crate checkboxes." src="images/features/crates.png">
   <figcaption>Example data. Deep House is open, and the track's crate checkboxes are on the right. The space menu is drawn here as an expanded list. In the app it is the native dropdown.</figcaption>
@@ -10,10 +12,12 @@ flowchart TD
   space["Space: Library, Video, Apple Music, Prepare"] --> crates["Crates"]
   crates --> all["All tracks"]
   crates --> one["One crate"]
-  one --> tracks["Title, Artist, BPM, Key, Energy, Genre, Added, Last, Plays, Time"]
+  one --> tracks["Play, Title, Artist, BPM, Key, Energy, Genre, Added, Last, Plays, Time"]
   tracks --> tick["Tick a crate on the track"]
   tools["New, Rename, Color, Delete"] --> quit["Quit Serato DJ Pro first"]
 ```
+
+The track list puts **Play** in its own first column. **Title** is the name. Headers stay over the cells when you scroll. Drag a header edge to resize. The column menu can hide a column. A library larger than 100 tracks pages 100 at a time.
 
 **Crates** is the list on the left. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
 
@@ -28,7 +32,7 @@ Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. The sta
 | **New** | Type **New crate name**. The crate is created inside the one you had selected. **All tracks** puts it at the top. |
 | **Rename** | Type **Rename crate**. The tracks stay. |
 | **Color** | Type one of `none`, `red`, `orange`, `yellow`, `green`, `blue`, `purple`, `pink`. |
-| **Delete** | Confirm. Nested crates go too. The tracks stay in the library. |
+| **Delete** | Confirm in the dialog. Nested crates go too. The tracks stay in the library. |
 | **Sync folder** | Type a folder path. Preview, then confirm. Library tracks whose files sit in that folder are added. Files that are not in the library stay skipped. Optional subcrates map each subfolder to a child crate. Optional full remove takes out members whose files left that crate's folder. |
 
 There is no drag and drop. This app does not move an existing crate to a new parent. **New** does not make a smart crate. Make that in Serato, then edit the rules here.

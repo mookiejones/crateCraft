@@ -1,10 +1,11 @@
 /**
- * Five rail primaries, with children only for the open parent.
+ * Five primaries, with children only for the open parent.
  *
  * Music, Organize files, Health, Backups, and Gig live
  * in #views. Children of a parent with more than one view sit in
- * #view-children at the top of the sheet. A parent with one child hides
- * that strip. The last child per parent is remembered for the session.
+ * #view-children. After AppShell mounts they live in the Drawer. A parent
+ * with one child hides that strip. The last child per parent is
+ * remembered for the session.
  */
 
 import { t, type MessageKey } from "../i18n";
@@ -103,7 +104,7 @@ export function resetNav(): void {
  * Mark the open primary and show only that parent's children.
  *
  * A parent with one child hides #view-children. Missing nodes are skipped
- * so a test document without the sheet still runs.
+ * so a test document without the shell still runs.
  *
  * @param mode Open view id.
  * @returns {void}

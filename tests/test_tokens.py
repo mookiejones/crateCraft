@@ -21,25 +21,42 @@ TOKENS = ROOT / "static" / "tokens.css"
 HEX_COLOR = re.compile(
     r"#(?=[0-9a-fA-F]*[0-9])(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})(?![0-9a-fA-F])"
 )
+QUOTED_HEX = re.compile(
+    r"""['"](#(?=[0-9a-fA-F]*[0-9])(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8}))['"]"""
+)
 TOKEN_DECL = re.compile(r"(--[A-Za-z0-9-]+)\s*:\s*(#[0-9A-Fa-f]{6})\b")
 SRC = ROOT / "src"
+MUI_THEME = SRC / "lib" / "ui" / "mui-theme.ts"
+# Serato cue/loop data on the waveform fixture, not page chrome.
+SERATO_MARKER_HEX = {"#CC0000", "#27AAE1"}
+THEME_TO_TOKEN = {
+    "bg": "--color-bg",
+    "paper": "--color-card",
+    "text": "--color-text",
+    "muted": "--color-text-muted",
+    "border": "--color-border",
+    "primary": "--color-primary",
+    "danger": "--color-danger",
+    "onPrimary": "--color-on-primary",
+}
 
 
 def src_page_text() -> str:
     """Join the page TypeScript that esbuild bundles.
 
-    Test files stay out. React's production runtime still names
-    ``innerHTML`` and ``marginTop``, so XSS and color contracts are
-    checked here instead of in ``static/app.js``.
+    Test files and Storybook stories stay out. React's production
+    runtime still names ``innerHTML`` and ``marginTop``, so XSS and
+    color contracts are checked here instead of in ``static/app.js``.
 
     Returns:
-        Concatenated ``src/**/*.ts`` and ``src/**/*.tsx`` that are not tests.
+        Concatenated ``src/**/*.ts`` and ``src/**/*.tsx`` that are not
+        tests or stories.
     """
     chunks: list[str] = []
     for path in sorted(SRC.rglob("*")):
         if path.suffix not in {".ts", ".tsx"}:
             continue
-        if ".test." in path.name:
+        if ".test." in path.name or ".stories." in path.name:
             continue
         if path.relative_to(SRC).parts[0] == "tests":
             continue
@@ -110,6 +127,52 @@ def token_colors(text: str) -> dict[str, str]:
     return found
 
 
+def colorway_tokens(text: str, colorway: str) -> dict[str, str]:
+    """Return hex tokens for one colorway.
+
+    ``:root`` is Serato-like. A later ``html[data-colorway]`` block
+    overrides those names.
+
+    Args:
+        text: CSS source.
+        colorway: Saved colorway id.
+
+    Returns:
+        Map of custom property name to lowercase #rrggbb.
+    """
+    merged: dict[str, str] = {}
+    stripped = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+    for selector, body in re.findall(r"([^{]+)\{([^}]+)\}", stripped):
+        if selector.strip() == ":root" or f'data-colorway="{colorway}"' in selector:
+            merged.update(token_colors(body))
+    return merged
+
+
+def theme_palettes(text: str) -> dict[str, dict[str, str]]:
+    """Return COLORWAY_PALETTES hex fields from the theme map.
+
+    Args:
+        text: ``mui-theme.ts`` source.
+
+    Returns:
+        Colorway id to field name to lowercase #rrggbb.
+    """
+    found: dict[str, dict[str, str]] = {}
+    for name in ("serato-like", "dark-club", "light", "classic"):
+        match = re.search(
+            rf'(?:"{re.escape(name)}"|{re.escape(name)}): \{{([^}}]+)\}}',
+            text,
+        )
+        if match is None:
+            continue
+        fields: dict[str, str] = {}
+        for field, value in re.findall(r'(\w+): "(#[0-9A-Fa-f]+)"', match.group(1)):
+            if field in THEME_TO_TOKEN:
+                fields[field] = value.lower()
+        found[name] = fields
+    return found
+
+
 class TokenSheetTests(unittest.TestCase):
     """Check the link order and that stylesheets do not keep raw colors."""
 
@@ -167,7 +230,8 @@ class TokenSheetTests(unittest.TestCase):
     def test_serato_cue_slot_colors(self) -> None:
         """Keep Mixxx Serato DJ Pro GUI pad colors on --cue-slot-1..8.
 
-        Hex stays in tokens.css so app.js has no #rrggbb literals.
+        Hex stays in tokens.css. Page chrome does not paint those pads
+        with a quoted #rrggbb in ``src/``.
         The assignment is Mixxx kSeratoDJProHotcueColorPalette at
         {0, 2, 12, 3, 6, 15, 9, 14}.
 
@@ -190,33 +254,67 @@ class TokenSheetTests(unittest.TestCase):
         )
 
     def test_app_js_has_no_hex_colors(self) -> None:
-        """Keep CSS colors out of app.js.
+        """Keep page paints in tokens.css.
 
         Serato color integers such as 0xffffff stay. They are data, not
-        paints. A #rrggbb literal in the script is a color that belongs
-        in the stylesheet. The detail swatch size and the BPM color are
-        classes.
+        paints. MUI's bundle ships its own greys, so ``static/app.js``
+        is no longer empty of hex. Quoted #rrggbb in ``src/`` still
+        belongs in the stylesheet, except the theme map (a copy of
+        those tokens) and Serato cue/loop marker data. The detail
+        swatch size and the BPM color are classes.
 
         Returns:
-            None. The test fails if a hex color, marginTop, or inline BPM color remains.
+            None. The test fails if a paint hex, marginTop, or inline BPM color remains.
         """
         source = src_page_text()
         text = APP_JS.read_text(encoding="utf-8")
-        self.assertEqual(HEX_COLOR.findall(text), [])
+        paints: list[str] = []
+        for path in sorted(SRC.rglob("*")):
+            if path.suffix not in {".ts", ".tsx"}:
+                continue
+            if ".test." in path.name or ".stories." in path.name:
+                continue
+            if path.relative_to(SRC).parts[0] == "tests":
+                continue
+            if path == MUI_THEME:
+                continue
+            for color in QUOTED_HEX.findall(path.read_text(encoding="utf-8")):
+                if color not in SERATO_MARKER_HEX:
+                    paints.append(f"{path.relative_to(ROOT)}:{color}")
+        self.assertEqual(paints, [])
         self.assertNotIn("marginTop", source)
         self.assertNotIn("style.color", source)
         self.assertIn('className: key === "column.bpm" ? "bpm"', text)
         self.assertIn('"swatch swatch-lg"', text)
-        self.assertIn("paneSpacer.style.height", text)
-        self.assertIn("paneRows.style.transform", text)
+        self.assertIn("track-grid", text)
+        self.assertIn("rowHeight: 36", text)
         self.assertIn("paddingLeft", source)
         self.assertIn("row.depth * 14", source)
+
+    def test_mui_theme_hex_matches_tokens(self) -> None:
+        """Keep COLORWAY_PALETTES in lockstep with tokens.css.
+
+        The theme map copies --color-bg, --color-card, --color-text,
+        --color-text-muted, --color-border, --color-primary,
+        --color-danger, and --color-on-primary for each colorway.
+
+        Returns:
+            None. The test fails if a mapped hex drifts from the sheet.
+        """
+        css = TOKENS.read_text(encoding="utf-8")
+        palettes = theme_palettes(MUI_THEME.read_text(encoding="utf-8"))
+        self.assertEqual(set(palettes), {"serato-like", "dark-club", "light", "classic"})
+        for colorway, fields in palettes.items():
+            tokens = colorway_tokens(css, colorway)
+            self.assertEqual(set(fields), set(THEME_TO_TOKEN))
+            for field, token in THEME_TO_TOKEN.items():
+                self.assertEqual(fields[field], tokens[token], f"{colorway}.{field}")
 
     def test_palette_aliases_point_at_tokens(self) -> None:
         """Point the old palette names at the token roles.
 
         app.css no longer stores the hex values. The row height stays a
-        literal because the list painter inlines ROW as 36.
+        literal because Data Grid inlines ROW as 36.
 
         Returns:
             None. The test fails if an alias or the row comment is missing.
@@ -240,8 +338,8 @@ class TokenSheetTests(unittest.TestCase):
         source = (ROOT / "src" / "lib" / "state.ts").read_text(encoding="utf-8")
         self.assertIn("export const ROW = 36", source)
         script = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
-        self.assertIn("scrollTop / 36", script)
-        self.assertIn("view.length * 36", script)
+        self.assertIn("rowHeight: 36", script)
+        self.assertIn("columnHeaderHeight: 36", script)
 
     def test_react_dce_probe_is_stripped(self) -> None:
         """Strip React's DevTools dead-code probe from the committed bundles.
@@ -522,6 +620,9 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".view-switch button", ("--color-bg",), 15, 400),
     (".view-children button", ("--color-card",), 15, 400),
     (".sheet-title", ("--color-card",), 15, 600),
+    ('.drawer-nav .view-switch button[aria-selected="true"]', ("--color-selection",), 15, 600),
+    ('.drawer-nav .view-children button[aria-selected="true"]', ("--color-selection",), 15, 600),
+    (".search-field select", ("--color-card",), 15, 400),
     (".sheet-scope", ("--color-card",), 13, 400),
     (".sort-crates button", ("--color-bg",), 15, 400),
     (".crate-actions button", ("--color-bg",), 15, 400),
@@ -555,8 +656,9 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".rekordbox-option", ("--color-card",), 15, 400),
     (".rekordbox-help", ("--color-card",), 11, 400),
     (".notice", ("--color-card",), 15, 400),
-    (".columns button", ("--color-card",), 15, 400),
-    ('.columns button[data-active="true"]', ("--color-card",), 15, 400),
+    (".list .MuiDataGrid-root", ("--color-card", "--color-selection", "hover"), 15, 400),
+    (".list .MuiDataGrid-columnHeaders", ("--color-card",), 15, 400),
+    (".list .MuiDataGrid-columnHeader--sorted", ("--color-card",), 15, 400),
     (".cell.num", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".missing-word", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".offline-word", ("--color-card", "--color-selection", "hover"), 15, 400),
@@ -579,6 +681,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".lock-note", ("--color-card",), 15, 400),
     (".editor label", ("--color-card",), 13, 400),
     ("dialog", ("--color-card",), 15, 400),
+    ("[data-shared-dialog] .MuiDialog-paper", ("--color-card",), 15, 400),
     (".shortcut-table thead th", ("--color-card",), 11, 600),
     (".stats-table thead th", ("--color-card",), 11, 600),
     ("#quick-open-query", ("--color-card",), 15, 400),
@@ -659,7 +762,9 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 #
 # --color-border on --color-card:
 #   .detail border-left, and border-top in the narrow layout
-#   .columns border-bottom
+#   .list .MuiDataGrid-columnHeaders border-bottom
+#   .list .MuiDataGrid-footerContainer border-top
+#   .health-accordion.MuiAccordion-root border
 #   .crate-panes.split #crate-pane-a border-right
 #   .field border-top
 #   .marker and .copy-row border-top
@@ -672,14 +777,23 @@ _FOCUS_SURFACES = ("--color-bg", "--color-panel", "--color-card", "--color-selec
 # .swatch inset shadow: a 1px hairline of --color-shadow at 18% on a
 # data-driven swatch, not a control boundary.
 _DECORATIVE = {
+    ".app-bar-space select",
+    ".drawer-nav .view-children",
+    ".drawer-foot .rail-foot",
+    ".browser-actions button",
+    ".browser-actions button:hover:not(:disabled)",
+    '.browser-actions button[aria-pressed="true"]',
     ".detail",
-    ".columns",
+    ".list .MuiDataGrid-columnHeaders",
+    ".list .MuiDataGrid-footerContainer",
+    ".health-accordion.MuiAccordion-root",
     ".crate-panes.split #crate-pane-a",
     ".field",
     ".marker",
     ".copy-row",
     ".related-row",
     "dialog",
+    "[data-shared-dialog] .MuiDialog-paper",
     "#merge-dialog fieldset",
     ".log-fallback",
     ".files-row",
@@ -699,8 +813,8 @@ _DECORATIVE = {
 # The only visible edge of these fields. Card surfaces use the sheet.
 # The rail fields sit on walnut.
 _CONTROL_EDGE = (
-    (".search input", "--color-card", "border-bottom"),
-    (".search-field select", "--color-card", "border-bottom"),
+    (".search input", "--color-card", "border"),
+    (".search-field select", "--color-card", "border"),
     (".rail select", "--color-bg", "border-bottom"),
     (".rail-field input", "--color-bg", "border-bottom"),
     (".rekordbox-option select", "--color-card", "border-bottom"),
@@ -833,9 +947,12 @@ class ContrastTests(unittest.TestCase):
             ".files-elsewhere:focus-visible",
             ".files-portable:focus-visible",
             '.crate-row:has(.crate[aria-selected="true"])',
-            '.row[aria-selected="true"]',
+            ".list .MuiDataGrid-row.Mui-selected",
+            '.list .MuiDataGrid-row[aria-selected="true"]',
             ".crate-row.holds-selection",
             ".rail",
+            '.drawer-nav .view-switch button[aria-selected="true"]',
+            '.drawer-nav .view-children button[aria-selected="true"]',
             "#consent-accept",
             "#open-logs",
             "#copy-logs",
@@ -900,7 +1017,7 @@ class ContrastTests(unittest.TestCase):
 
         solid_bars = (
             (".crate-row:has(.crate[aria-selected=\"true\"])", "--color-panel"),
-            ('.row[aria-selected="true"]', "--color-selection"),
+            ('.list .MuiDataGrid-row[aria-selected="true"]', "--color-selection"),
         )
         rail_mark = _paint(self._rule(".rail")["box-shadow"], self.colors)
         rail_ratio = contrast(rail_mark, self._surface("--color-bg"))

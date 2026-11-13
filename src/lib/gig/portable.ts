@@ -8,16 +8,22 @@
  * is ignored when a newer check has started.
  */
 
+import { createElement } from "react";
 import { fetchLibraryRoots, readJSON } from "../api";
 import type { LibraryRoot } from "../api-types";
+import { mountIsland, type IslandRoot } from "../../app/mount";
+import { PortableReport } from "../../pages/PortableReport";
 import { el } from "../dom";
 import { emitFiles } from "../files/files-store";
-import { serverMessage, t, type MessageKey } from "../i18n";
+import { runPortableMount } from "./portable-bind";
+import { serverMessage, t } from "../i18n";
 import { buttonEl } from "../ui/tooltip";
 import { portableCheck } from "../ui/tooltip-strings";
 
 /** Findings painted before the rest are counted as "and more". */
 export const FINDING_CAP = 100;
+
+let islandRoot: IslandRoot | null = null;
 
 export interface DriveFinding {
   kind: string;
@@ -43,14 +49,8 @@ export interface DriveReport {
   errors: DriveError[];
 }
 
-const KIND_KEY: Readonly<Record<string, MessageKey>> = {
-  off_drive: "portable.kindOffDrive",
-  missing: "portable.kindMissing",
-  smart_crate: "portable.kindSmartCrate",
-  unsafe_name: "portable.kindUnsafeName",
-  path_length: "portable.kindPathLength",
-  file_size: "portable.kindFileSize",
-};
+export { portableKindLabel } from "./portable-view";
+export type { PortableViewRow } from "./portable-view";
 
 let token = 0;
 let latest: DriveReport | null = null;
@@ -58,16 +58,30 @@ let lastRoots: LibraryRoot[] = [];
 let opener: HTMLElement | null = null;
 let hasConnected = false;
 let statusText = "";
-let mountIslands: () => void = () => {};
+
+type PortableListener = (snapshot: PortableSnapshot) => void;
+const listeners = new Set<PortableListener>();
+
+function emitPortable(): void {
+  const snapshot = portableSnapshot();
+  for (const listener of listeners) listener(snapshot);
+  emitFiles();
+}
 
 /**
- * Point portable paint at the Files React islands.
+ * Run a callback after each Gig Check-drive change.
  *
- * @param fn Mounts the Files panel and dialogs.
- * @returns {void}
+ * The callback is not run immediately. Call `portableSnapshot` for the
+ * current snapshot. The returned function removes the callback.
+ *
+ * @param listener Called with a snapshot. Do not mutate it.
+ * @returns Unsubscribes the listener.
  */
-export function bindPortableMount(fn: () => void): void {
-  mountIslands = fn;
+export function subscribePortable(listener: PortableListener): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 }
 
 export type PortableSnapshot = {
@@ -82,16 +96,6 @@ export type PortableSnapshot = {
  */
 export function portableSnapshot(): PortableSnapshot {
   return { report: latest, status: statusText };
-}
-
-/**
- * Kind label in the active language.
- *
- * @param kind Finding kind from the report.
- * @returns Translated label, or the raw kind.
- */
-export function portableKindLabel(kind: string): string {
-  return kindLabel(kind);
 }
 
 /**
@@ -230,7 +234,7 @@ export function portableDriveButton(name: string, path: string): HTMLButtonEleme
  */
 export async function openPortableCheck(path: string, trigger?: HTMLElement): Promise<void> {
   wirePortable();
-  mountIslands();
+  runPortableMount();
   opener = trigger ?? null;
   const dialog = el("portable-dialog");
   if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
@@ -267,6 +271,7 @@ export async function loadPortableView(): Promise<void> {
     fail(error instanceof Error && error.message ? error.message : t("portable.unreadable"));
     settle = "retry";
   } finally {
+    if (!islandRoot) return;
     endBusy();
     if (settle === "retry") el("portable-check").focus();
     if (settle === "report") el("portable-view-verdict").focus();
@@ -332,13 +337,34 @@ export function wirePortable(): void {
   el("portable-drive").addEventListener("change", () => {
     void runPortableCheck(el("portable-drive").value);
   });
+  islandRoot = mountIsland(el("portable-view-findings"), createElement(PortableReport));
+}
+
+/**
+ * Unmount the Check-drive Data Grid island.
+ *
+ * Tests replace `document.body` between cases. Unmount first so the
+ * Data Grid scheduler does not run after jsdom tears the window down.
+ * A pending load is ignored so it does not look up a host that is gone.
+ *
+ * @returns {void}
+ */
+export function unmountPortable(): void {
+  token += 1;
+  if (!islandRoot) return;
+  try {
+    islandRoot.unmount();
+  } catch {
+    // installPage already dropped the host.
+  }
+  islandRoot = null;
 }
 
 /**
  * Paint the Before a gig panel and notify the Files dialog.
  *
- * The dialog reads `portableSnapshot` through FilesContext. This painter
- * only writes the gig panel nodes.
+ * The dialog reads `portableSnapshot` through FilesContext. Verdict and
+ * summary stay page chrome. Findings are the Check-drive Data Grid.
  *
  * @param report Parsed drive-check body.
  * @returns {void}
@@ -350,15 +376,11 @@ export function renderPortableReport(report: DriveReport): void {
     : report.ready
       ? t("portable.ready")
       : t("portable.notReady");
-  const items = findingItems(report);
-  for (const surface of surfaces()) {
-    surface.verdict.textContent = verdictText;
-    surface.summary.textContent = report.summary;
-    surface.findings.replaceChildren(...items.map((item) => item.cloneNode(true) as HTMLLIElement));
-    surface.status.textContent = "";
-  }
+  el("portable-view-verdict").textContent = verdictText;
+  el("portable-view-summary").textContent = report.summary;
+  el("portable-view-status").textContent = "";
   statusText = "";
-  emitFiles();
+  emitPortable();
 }
 
 /**
@@ -428,59 +450,6 @@ function paintDrivePicker(roots: readonly LibraryRoot[]): void {
   note.textContent = missing.map((root) => t("portable.offlineNamed", { name: root.label })).join(" ");
 }
 
-function findingItems(report: DriveReport): HTMLLIElement[] {
-  const items: HTMLLIElement[] = [];
-  const shown = report.findings.slice(0, FINDING_CAP);
-  for (const finding of shown) {
-    const row = document.createElement("li");
-    const kind = document.createElement("span");
-    kind.className = "portable-kind";
-    kind.textContent = kindLabel(finding.kind);
-    row.append(kind);
-    if (finding.fix) {
-      row.append(document.createTextNode(" "));
-      const fix = document.createElement("span");
-      fix.className = "portable-fix";
-      fix.textContent = finding.fix;
-      row.append(fix);
-    }
-    items.push(row);
-  }
-  for (const error of report.errors) {
-    const row = document.createElement("li");
-    row.textContent = error.crate ? `${error.crate}: ${error.message}` : error.message;
-    items.push(row);
-  }
-  const hidden = report.findings.length - shown.length;
-  if (hidden > 0) {
-    const row = document.createElement("li");
-    row.textContent = t("files.andMore", { count: hidden });
-    items.push(row);
-  }
-  return items;
-}
-
-function surfaces(): Array<{
-  verdict: HTMLParagraphElement;
-  summary: HTMLParagraphElement;
-  findings: HTMLUListElement;
-  status: HTMLParagraphElement;
-}> {
-  return [
-    {
-      verdict: el("portable-view-verdict"),
-      summary: el("portable-view-summary"),
-      findings: el("portable-view-findings"),
-      status: el("portable-view-status"),
-    },
-  ];
-}
-
-function kindLabel(kind: string): string {
-  const key = KIND_KEY[kind];
-  return key ? t(key) : kind;
-}
-
 function fail(message: string): void {
   latest = null;
   clearReport();
@@ -488,17 +457,14 @@ function fail(message: string): void {
 }
 
 function clearReport(): void {
-  for (const surface of surfaces()) {
-    surface.verdict.textContent = "";
-    surface.summary.textContent = "";
-    surface.findings.replaceChildren();
-  }
+  el("portable-view-verdict").textContent = "";
+  el("portable-view-summary").textContent = "";
 }
 
 function paintStatus(message: string): void {
   statusText = message;
-  for (const surface of surfaces()) surface.status.textContent = message;
-  emitFiles();
+  el("portable-view-status").textContent = message;
+  emitPortable();
 }
 
 function beginBusy(): void {

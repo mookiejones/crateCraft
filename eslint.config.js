@@ -1,9 +1,10 @@
 import tseslint from "typescript-eslint";
+import storybook from "eslint-plugin-storybook";
 
 export default tseslint.config(
-  { ignores: ["static/**", "node_modules/**"] },
+  { ignores: ["static/**", "node_modules/**", "storybook-static/**", "e2e/dist/**", "e2e/output/**"] },
   {
-    files: ["src/**/*.ts", "src/**/*.tsx", "e2e/**/*.ts"],
+    files: ["src/**/*.ts", "src/**/*.tsx", "e2e/**/*.ts", ".storybook/**/*.ts", ".storybook/**/*.tsx"],
     extends: [tseslint.configs.base],
     languageOptions: {
       parserOptions: {
@@ -20,4 +21,5 @@ export default tseslint.config(
       }],
     },
   },
+  storybook.configs["flat/recommended"],
 );
