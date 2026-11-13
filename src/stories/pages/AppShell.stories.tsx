@@ -4,10 +4,30 @@ import { AppShell } from "../../pages/AppShell";
 function ShellSlots() {
   return (
     <div style={{ height: "100vh" }}>
-      <div id="space-field">
-        <select id="space" aria-label="Space">
-          <option>Serato Library</option>
-        </select>
+      <div id="app-body">
+        <aside className="rail">
+          <header className="brand">
+            <h1>crateCraft</h1>
+            <button id="library-generation" type="button" className="generation">
+              Checking Serato
+            </button>
+            <p id="library-generation-note" className="generation-note" hidden />
+            <label id="space-field">
+              <select id="space" aria-label="Space">
+                <option>Serato Library</option>
+              </select>
+            </label>
+          </header>
+          <footer id="rail-foot">
+            <button type="button" id="open-help">
+              Help
+            </button>
+            <button type="button" id="open-settings">
+              Settings
+            </button>
+          </footer>
+        </aside>
+        <p>Main</p>
       </div>
       <div id="player-bar">Night — Ada</div>
       <nav id="views">
@@ -16,13 +36,6 @@ function ShellSlots() {
       </nav>
       <div id="view-children">
         <button type="button">Crates</button>
-      </div>
-      <div id="rail-foot">
-        <button type="button" id="open-help">Help</button>
-        <button type="button" id="open-settings">Settings</button>
-      </div>
-      <div id="app-body">
-        <p>Main</p>
       </div>
       <AppShell />
     </div>

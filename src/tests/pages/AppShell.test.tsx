@@ -36,20 +36,30 @@ describe("AppShell", () => {
     const settings = document.getElementById("open-settings");
     const crates = document.getElementById("crate-list");
     const space = document.getElementById("space");
+    const heading = document.querySelector("h1");
+    const generation = document.getElementById("library-generation");
+    const appBar = document.querySelector(".MuiAppBar-root");
     expect(drawer).not.toBeNull();
     expect(drawer?.contains(views)).toBe(true);
     expect(drawer?.contains(children)).toBe(true);
-    expect(drawer?.contains(help)).toBe(true);
-    expect(drawer?.contains(settings)).toBe(true);
+    expect(drawer?.contains(help)).toBe(false);
+    expect(drawer?.contains(settings)).toBe(false);
     expect(drawer?.contains(crates)).toBe(false);
     expect(document.querySelector(".rail")?.contains(crates)).toBe(true);
     expect(document.getElementById("sheet-title")).not.toBeNull();
     expect(space?.tagName).toBe("SELECT");
-    expect(document.querySelector(".MuiAppBar-root")?.contains(space)).toBe(true);
+    expect(appBar?.contains(space)).toBe(false);
+    expect(document.querySelector(".brand")?.contains(space)).toBe(true);
+    expect(document.querySelector(".brand")?.contains(heading)).toBe(false);
+    expect(appBar?.contains(help)).toBe(true);
+    expect(appBar?.contains(settings)).toBe(true);
+    expect(appBar?.contains(heading)).toBe(true);
+    expect(heading?.textContent).toBe("crateCraft");
+    expect(appBar?.contains(generation)).toBe(true);
     expect(document.getElementById("track-splitter")?.getAttribute("role")).toBe("separator");
   });
 
-  it("collapse hides Help and Settings and keeps crate names", () => {
+  it("collapse keeps Help in the AppBar and crate names in the rail", () => {
     const toggle = document.getElementById("drawer-toggle");
     const help = document.getElementById("open-help");
     const crates = document.getElementById("crate-list");
@@ -61,7 +71,8 @@ describe("AppShell", () => {
     });
     expect(toggle?.getAttribute("aria-expanded")).toBe("false");
     expect(toggle?.getAttribute("aria-label")).toBe(t("shell.drawerShow"));
-    expect(help?.closest("[inert]")).not.toBeNull();
+    expect(help?.closest("[inert]")).toBeNull();
+    expect(document.querySelector(".MuiAppBar-root")?.contains(help)).toBe(true);
     expect(crates?.isConnected).toBe(true);
     expect(document.querySelector(".rail")?.contains(crates)).toBe(true);
     expect(document.getElementById("app-drawer")?.contains(crates)).toBe(false);
@@ -81,7 +92,7 @@ describe("AppShell", () => {
       mountAppShell();
       const toggle = document.getElementById("drawer-toggle");
       expect(toggle?.getAttribute("aria-expanded")).toBe("false");
-      expect(document.getElementById("open-help")?.closest("[inert]")).not.toBeNull();
+      expect(document.getElementById("open-help")?.closest("[inert]")).toBeNull();
       flushSync(() => { toggle?.click(); });
       expect(toggle?.getAttribute("aria-expanded")).toBe("true");
       expect(document.getElementById("open-help")?.closest("[inert]")).toBeNull();
@@ -113,6 +124,18 @@ describe("AppShell", () => {
     expect(document.getElementById("app-body")?.contains(banner)).toBe(false);
     document.querySelector<HTMLButtonElement>("#app-notice button")?.click();
     expect(document.getElementById("app-notice")).toBeNull();
+  });
+
+  it("keeps Help in the AppBar while Settings fills Main", () => {
+    const help = document.getElementById("open-help");
+    const dialog = document.getElementById("settings-dialog");
+    expect(dialog).not.toBeNull();
+    if (dialog instanceof HTMLDialogElement && typeof dialog.show === "function") {
+      dialog.show();
+    }
+    expect(document.querySelector(".MuiAppBar-root")?.contains(help)).toBe(true);
+    expect(help?.closest("[inert]")).toBeNull();
+    expect(document.getElementById("app-body")?.contains(dialog)).toBe(true);
   });
 
   it("still paints only the open parent's children after the portal", () => {

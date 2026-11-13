@@ -2,8 +2,9 @@
 <!--
   crateCraft page.
 
-  One screen: AppBar (space menu), collapsible Drawer (five primaries and
-  children of the open parent), crate inventory in Main,
+  One screen: AppBar (crateCraft, generation, Help, Settings), collapsible
+  Drawer (five primaries and children of the open parent), crate inventory
+  in Main with the space menu in the crate rail header,
   a virtualized track list, the detail pane, and a player bar. The Duplicates view can
   merge a group into the copy you keep. Export writes an M3U playlist.
   Rekordbox writes rekordbox.xml. The Files view browses folders
@@ -36,16 +37,16 @@
         <p id="status" data-i18n="status.checking">Checking Serato</p>
         <button id="library-generation" type="button" class="generation" aria-expanded="false" aria-controls="library-generation-note" aria-label="Library generation" data-i18n="generation.checking" data-i18n-attr="aria-label:generation.label">Checking</button>
         <p id="library-generation-note" class="generation-note" hidden></p>
+        <label id="space-field" class="rail-field">
+          <span class="visually-hidden" data-i18n="space.label">Space</span>
+          <select id="space" aria-label="Space" data-i18n-attr="aria-label:space.label">
+            <option value="Serato Library" data-i18n="space.library">Library</option>
+            <option value="Serato Video" data-i18n="space.video">Video</option>
+            <option value="Apple Music" data-i18n="space.appleMusic">Apple Music</option>
+            <option value="Prepare" data-i18n="space.prepare">Prepare</option>
+          </select>
+        </label>
       </header>
-      <label id="space-field" class="rail-field">
-        <span class="visually-hidden" data-i18n="space.label">Space</span>
-        <select id="space" aria-label="Space" data-i18n-attr="aria-label:space.label">
-          <option value="Serato Library" data-i18n="space.library">Library</option>
-          <option value="Serato Video" data-i18n="space.video">Video</option>
-          <option value="Apple Music" data-i18n="space.appleMusic">Apple Music</option>
-          <option value="Prepare" data-i18n="space.prepare">Prepare</option>
-        </select>
-      </label>
       <div id="views" class="view-switch" role="tablist" aria-label="Views" data-i18n-attr="aria-label:view.label">
         <button type="button" data-nav="library" role="tab" aria-selected="true" data-i18n="view.group.library">Music</button>
         <button type="button" data-nav="files" role="tab" data-i18n="view.files">Organize files</button>
