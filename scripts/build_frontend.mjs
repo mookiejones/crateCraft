@@ -9,12 +9,14 @@
  * probe. --check builds in memory with
  * write:false and exits non-zero when a committed bundle or map differs.
  * It does not write static/. esbuild is pinned in package.json so the
- * bytes stay the same on Ubuntu and Windows.
+ * bytes stay the same on Ubuntu and Windows. Map sources must stay
+ * inside the repo after joining from static/; a node_modules symlink
+ * that points outside the tree makes CI --check fail.
  */
 
 import esbuild from "esbuild";
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { dirname, join, posix, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -55,7 +57,8 @@ function buildOne(bundle, write) {
 }
 
 /**
- * Reject a sourcemap whose sources are not relative forward-slash paths.
+ * Reject a sourcemap whose sources are not relative forward-slash paths
+ * that stay inside the repository when joined from the bundle directory.
  *
  * @param {string} outfile Bundle path used in the error.
  * @param {string} text Sourcemap JSON.
@@ -68,9 +71,15 @@ function checkMapSources(outfile, text) {
     console.error(`${outfile}.map has no sources`);
     process.exit(1);
   }
+  const outDir = posix.dirname(outfile.replaceAll("\\", "/"));
   for (const source of sources) {
     if (typeof source !== "string" || source.includes("\\") || source.startsWith("/") || /^[A-Za-z]:/.test(source)) {
       console.error(`${outfile}.map source is not a relative forward-slash path: ${source}`);
+      process.exit(1);
+    }
+    const resolved = posix.normalize(posix.join(outDir, source));
+    if (resolved === ".." || resolved.startsWith("../") || posix.isAbsolute(resolved)) {
+      console.error(`${outfile}.map source escapes the repo: ${source}`);
       process.exit(1);
     }
   }
