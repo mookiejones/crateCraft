@@ -8,7 +8,7 @@ After a track loads, **Play**, the title, the waveform, and the time sit in the 
 
 Cue points from the file sit on the pads in the detail pane. Click a pad to jump there. A track with no cues has empty pads.
 
-The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. Click or drag it to move through the track. Zoom and the whole-track overview stay off that bar.
+The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. Click or drag it to move through the track. Zoom stays off that bar.
 
 If the file has no waveform, the bar says **Waveform unavailable for this format**. The track still plays.
 

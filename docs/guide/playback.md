@@ -10,7 +10,7 @@ When a track ends, the next row in the list starts. The last row stops.
 
 Cue points read from the file sit on the pads in the detail pane. The name shows when you point at a pad, and in the pad's label for a screen reader. Click a pad to jump there. A track with no cues has empty pads.
 
-The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. The brighter core is the sustained level. The fainter edge is the peak. Click it, or drag, to move through the track. Zoom and the whole-track overview stay off that bar.
+The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. The brighter core is the sustained level. The fainter edge is the peak. Click it, or drag, to move through the track. Zoom stays off that bar.
 
 If this computer cannot build a waveform for the file, the bar says **Waveform unavailable for this format**. The track still plays.
 

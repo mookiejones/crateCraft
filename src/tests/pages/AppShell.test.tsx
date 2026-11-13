@@ -2,6 +2,9 @@
  * AppShell portals existing ids into AppBar, Drawer, and Main.
  */
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { flushSync } from "react-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "../../lib/api-types";
@@ -22,6 +25,11 @@ import { resetNotice, setNotice } from "../../lib/ui/notice-store";
 import { applyStatus } from "../../lib/ui/views";
 import { applyStaticTooltips } from "../../lib/ui/tooltip";
 import { installPage } from "../test-page";
+
+const appCss = readFileSync(
+  join(dirname(fileURLToPath(import.meta.url)), "../../../static/app.css"),
+  "utf8",
+);
 
 class FakeAudio extends EventTarget implements PlayableMedia {
   src = "";
@@ -399,5 +407,14 @@ describe("AppShell", () => {
       expect(button.hidden).toBe(false);
       expect(button.querySelector("svg")).not.toBeNull();
     }
+  });
+
+  it("mini drawer CSS fits a 24px icon in 56px without label gap", () => {
+    const miniNav = appCss.match(/#app-drawer\[data-mini\] \.view-switch \[data-nav\] \{[^}]+\}/);
+    expect(miniNav).not.toBeNull();
+    expect(miniNav![0]).toMatch(/gap:\s*0/);
+    expect(miniNav![0]).toMatch(/font-size:\s*0/);
+    expect(miniNav![0]).toMatch(/padding-left:\s*16px/);
+    expect(miniNav![0]).toMatch(/padding-right:\s*16px/);
   });
 });

@@ -58880,14 +58880,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       override || engine.setTrack(player2.trackId);
     }, [engine, override, player2.trackId]), /* @__PURE__ */ (0, import_jsx_runtime219.jsxs)(import_jsx_runtime219.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime219.jsxs)("div", { className: "player-wave-main", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime219.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase }),
+        /* @__PURE__ */ (0, import_jsx_runtime219.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase, compact }),
         /* @__PURE__ */ (0, import_jsx_runtime219.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
         /* @__PURE__ */ (0, import_jsx_runtime219.jsx)(
           WaveformOverview,
           {
             canvasRef: overviewCanvasRef,
             hitRef: overviewHitRef,
-            hidden: compact || wave.overviewSource === "",
+            hidden: compact ? wave.phase === "unavailable" : wave.overviewSource === "",
             source: wave.overviewSource,
             pps: wave.pps
           }
@@ -58907,9 +58907,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function WaveformDetail({
     canvasRef,
-    phase: phase2
+    phase: phase2,
+    compact = !1
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime219.jsxs)("div", { className: "waveform-detail-wrap", hidden: phase2 === "unavailable", children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime219.jsxs)("div", { className: "waveform-detail-wrap", hidden: compact || phase2 === "unavailable", children: [
       /* @__PURE__ */ (0, import_jsx_runtime219.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
       /* @__PURE__ */ (0, import_jsx_runtime219.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
     ] });
@@ -58992,12 +58993,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     seekStepLarge: 30
   };
   function mountWaveform(host, hooks2, compact = !1) {
-    let engine = new WaveformEngine();
+    let engine = new WaveformEngine(compact);
     host.classList.add("player-wave"), compact && host.classList.add("player-wave-compact"), host.hidden = !0, hooks2 && engine.setClock(hooks2);
     let panel = (0, import_react18.createElement)(WaveformPanel, { engine, host, compact }), tree = hooks2 ? (0, import_react18.createElement)(WaveformClockProvider, { clock: hooks2, children: panel }) : panel, root = mountIsland(host, tree);
     return engine.bindRoot(root), engine;
   }
   var WaveformEngine = class {
+    constructor(compact = !1) {
+      this.compact = compact;
+      this.onWheel = (event) => this.wheel(event), this.onResize = () => this.paint(), this.onPointerDown = (event) => this.pointerDown(event), this.onPointerMove = (event) => this.pointerMove(event), this.onPointerUp = (event) => this.pointerUp(event), this.onOverviewKey = (event) => this.overviewKeyDown(event);
+    }
+    compact;
     host = null;
     detail = null;
     overviewCanvas = null;
@@ -59031,9 +59037,6 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onPointerUp;
     onOverviewKey;
     resizeObserver = null;
-    constructor() {
-      this.onWheel = (event) => this.wheel(event), this.onResize = () => this.paint(), this.onPointerDown = (event) => this.pointerDown(event), this.onPointerMove = (event) => this.pointerMove(event), this.onPointerUp = (event) => this.pointerUp(event), this.onOverviewKey = (event) => this.overviewKeyDown(event);
-    }
     /**
      * Keep the React root so destroy can unmount it.
      *
@@ -59064,7 +59067,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
      * @param nodes Host, detail canvas, overview canvas, and overview hit target.
      */
     attach(nodes) {
-      this.disposed || (this.detach(), this.host = nodes.host, this.detail = nodes.detail, this.overviewCanvas = nodes.overviewCanvas, this.overviewHit = nodes.overviewHit, this.attached = !0, this.host.addEventListener("wheel", this.onWheel, { passive: !1 }), this.overviewHit.addEventListener("pointerdown", this.onPointerDown), this.overviewHit.addEventListener("pointermove", this.onPointerMove), this.overviewHit.addEventListener("pointerup", this.onPointerUp), this.overviewHit.addEventListener("pointercancel", this.onPointerUp), this.overviewHit.addEventListener("keydown", this.onOverviewKey), typeof ResizeObserver == "function" && (this.resizeObserver = new ResizeObserver(this.onResize), this.resizeObserver.observe(this.host)), this.paint());
+      this.disposed || (this.detach(), this.host = nodes.host, this.detail = nodes.detail, this.overviewCanvas = nodes.overviewCanvas, this.overviewHit = nodes.overviewHit, this.attached = !0, this.compact || this.host.addEventListener("wheel", this.onWheel, { passive: !1 }), this.overviewHit.addEventListener("pointerdown", this.onPointerDown), this.overviewHit.addEventListener("pointermove", this.onPointerMove), this.overviewHit.addEventListener("pointerup", this.onPointerUp), this.overviewHit.addEventListener("pointercancel", this.onPointerUp), this.overviewHit.addEventListener("keydown", this.onOverviewKey), typeof ResizeObserver == "function" && (this.resizeObserver = new ResizeObserver(this.onResize), this.resizeObserver.observe(this.host)), this.paint());
     }
     /**
      * Drop canvas listeners. Does not unmount React.
@@ -59281,7 +59284,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
     paintOverview(time, duration3) {
       if (!this.overviewCanvas) return;
-      let size = sizeCanvas(this.overviewCanvas, 36);
+      let size = sizeCanvas(this.overviewCanvas, this.compact ? 32 : 36);
       if (!size) return;
       let source = this.overviewPixels(size.width, size.height);
       if (!source) return;

@@ -188,6 +188,8 @@ textarea:focus-visible,
   white-space: nowrap;
   padding-left: 16px;
   padding-right: 16px;
+  gap: 0;
+  font-size: 0;
 }
 
 .drawer-nav .view-switch button,
@@ -1821,8 +1823,7 @@ dialog .settings-field select {
   min-width: 0;
 }
 
-.player-wave-compact .waveform-detail-wrap,
-.player-wave-compact .waveform-detail {
+.player-wave-compact .waveform-overview {
   height: 32px;
 }
 
