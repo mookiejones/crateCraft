@@ -74,7 +74,7 @@ The unsigned-app warnings, including Removable Volumes, are in [First install](f
   <figcaption>3 Open</figcaption>
 </figure>
 
-A window titled **crateCraft** opens. It stays on this computer. Close the window to quit.
+A window titled **crateCraft** opens. It stays on this computer. Close the window to quit. The address bar holds the open view and crate. Refresh and Back restore it.
 
 Choose **Get started**. When the page names your library, choose **Use this library**.
 
@@ -136,6 +136,6 @@ Use **Search tracks**, then click a tune. The field menu next to search can limi
 
 Double-click a row, press **Enter**, or click **Play**, to hear it. **Space** plays or pauses. **Left** and **Right** move 5 seconds. After a track loads, **Play**, the title, the waveform, and the time sit in the top bar. Playback does not write to the audio file and does not add a history row.
 
-The drawer has five primaries: **Music**, **Organize files**, **Health**, **Backups**, and **Gig**. The space menu sits in the crate list header. Children of the open parent sit in the drawer. Help and Settings stay in the top bar when the rail is mini. After you play a track, Play, the title, the waveform, and the time sit in the top bar. The heading at the top of the sheet names the open view and the space. **Music** is Crates, History, and Play stats. **Health** is Overview, Missing files, Duplicates, Stems, Damaged files, Suspect quality, and Tag spellings. **Gig** is Ready, Check drive, and Tempo drift. Organize files and Backups have no extra children. Overview, Ready, Tempo drift, Damaged files, and Suspect quality show **Scope** for the selected crate, with **All tracks** on that chip to check the whole space. Mini rail leaves crate names next to the list.
+The drawer has five primaries: **Music**, **Organize files**, **Health**, **Backups**, and **Gig**. The space menu sits in the crate list header. Children of the open parent sit in the drawer. Help and Settings stay in the top bar when the rail is mini. After you play a track, Play, the title, the waveform, and the time sit in the top bar. The heading at the top of the sheet names the open view and the space. The address bar keeps the open view and crate (`#library/crates` for All tracks). Refresh and the window Back button restore that screen. A hash the app does not know opens Crates. **Music** is Crates, History, and Play stats. **Health** is Overview, Missing files, Duplicates, Stems, Damaged files, Suspect quality, and Tag spellings. **Gig** is Ready, Check drive, and Tempo drift. Organize files and Backups have no extra children. Overview, Ready, Tempo drift, Damaged files, and Suspect quality show **Scope** for the selected crate, with **All tracks** on that chip to check the whole space. Mini rail leaves crate names next to the list.
 
 **Hot loops** sits beside **Memory cues** in the Rekordbox dialog. It starts off, and it uses a free hot-cue pad.

@@ -52,6 +52,7 @@ describe("dual crate panes", () => {
     mountTrackList();
     mountTrackListB();
     resetState();
+    history.replaceState(null, "", `${location.pathname}${location.search}`);
     wireDualCrates();
   });
 
@@ -130,6 +131,7 @@ describe("selectCrate while split", () => {
     mountTrackList();
     mountTrackListB();
     resetState();
+    history.replaceState(null, "", `${location.pathname}${location.search}`);
   });
 
   afterEach(async () => {
@@ -143,5 +145,6 @@ describe("selectCrate while split", () => {
     selectCrate(2);
     expect(state.secondCrate).toBe(2);
     expect(state.activeCrate).toBe("all");
+    expect(location.hash).toBe("");
   });
 });

@@ -98,8 +98,25 @@ import {
 } from "./tooltip-strings";
 import { paintRows } from "./virtual-scroll";
 import { codedText, formatNumber, messageParams, serverMessage, t, type MessageKey } from "../i18n";
+import { formatHash, parseHash, writeHash } from "./hash-route";
 import { modeForGroup, paintNav, rememberMode } from "./nav";
 import { paintSheetChrome } from "./sheet-chrome";
+
+/** True while applyIncomingHash is driving setMode and selectCrate. */
+let applyingHash = false;
+
+/**
+ * Write the open space, view, and crate into the URL hash.
+ *
+ * Pane B is not stored. A write that applyIncomingHash is already applying
+ * is skipped so Back does not loop.
+ *
+ * @returns {void}
+ */
+function syncHash(): void {
+  if (applyingHash) return;
+  writeHash(formatHash(state.space, state.mode, state.activeCrate), false);
+}
 
 /**
  * Related-track request counter.
@@ -771,6 +788,7 @@ export function selectCrate(id: number | "all", event?: MouseEvent) {
   if (state.mode === "health") loadHealth().catch(showHealthFailure);
   if (state.mode === "scan") loadScan().catch(showScanFailure);
   if (state.mode === "bitrate") loadBitrate().catch(showBitrateFailure);
+  if (pane !== "b") syncHash();
 }
 
 /**
@@ -2358,6 +2376,7 @@ export async function openInLibrary(assetId: number) {
   state.selectedId = assetId;
   await loadLibrary();
   selectTrack(assetId);
+  syncHash();
 }
 
 /**
@@ -2436,6 +2455,58 @@ export function setMode(mode: string) {
   if (mode === "bitrate") loadBitrate().catch(showBitrateFailure);
   if (mode === "tags") loadTags().catch(showTagsFailure);
   renderList();
+  syncHash();
+}
+
+/**
+ * Open the view, space, and crate named in location.hash.
+ *
+ * An unknown hash opens Crates with All tracks. A crate id that is not
+ * in the loaded library becomes All tracks and keeps the view. Own
+ * writes skip this path; Back and Forward call it.
+ *
+ * @returns {Promise<void>} Resolves after the screen matches the hash.
+ */
+export async function applyIncomingHash(): Promise<void> {
+  const parsed = parseHash(location.hash);
+  const space = parsed.space ?? state.space;
+  const crateInList = (id: number | "all") =>
+    id === "all" || state.crates.some((crate) => crate.id === id);
+  let crate: number | "all" = crateInList(parsed.crate) ? parsed.crate : "all";
+  const canonical = formatHash(space, parsed.mode, crate);
+  if (space === state.space && parsed.mode === state.mode && crate === state.activeCrate) {
+    writeHash(canonical, true);
+    return;
+  }
+  applyingHash = true;
+  try {
+    if (space !== state.space) {
+      state.space = space;
+      el("space").value = space;
+      await loadLibrary();
+      crate = crateInList(parsed.crate) ? parsed.crate : "all";
+    }
+    if (state.mode !== parsed.mode) setMode(parsed.mode);
+    if (state.activeCrate !== crate) selectCrate(crate);
+    writeHash(formatHash(state.space, state.mode, state.activeCrate), true);
+  } finally {
+    applyingHash = false;
+  }
+}
+
+/**
+ * Restore the hash on Back, Forward, and an edited address.
+ *
+ * Called once from app.ts after wireLibrary.
+ *
+ * @returns {void}
+ */
+export function wireHashRoutes(): void {
+  const onHash = () => {
+    void applyIncomingHash();
+  };
+  window.addEventListener("hashchange", onHash);
+  window.addEventListener("popstate", onHash);
 }
 
 /**
@@ -2567,6 +2638,7 @@ export function wireLibrary(): void {
     state.selectedId = null;
     state.duplicateIds = null;
     state.duplicateGroups = [];
+    syncHash();
     loadLibrary().then(() => {
       if (state.mode === "duplicates") return loadDuplicates();
       if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);

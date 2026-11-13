@@ -21,7 +21,7 @@ The track list puts **Play** in its own first column. **Title** is the name. Hea
 
 **Crates** is the list on the left. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
 
-The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**. Each space has its own crates. Switching space returns you to **All tracks**.
+The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**. Each space has its own crates. Switching space returns you to **All tracks**. The address bar keeps the open view and crate (`#library/crates` for All tracks). Refresh and Back restore that screen.
 
 **Find a crate** keeps a parent visible when a nested name matches. **Order** is Serato's own order. **Name** is alphabetical. **Added** is the date the crate was created.
 

@@ -19,7 +19,7 @@ The space menu in the crate list header chooses a space.
 | Apple Music | Apple Music tracks Serato has indexed |
 | Prepare | The Prepare list |
 
-Each space has its own crates. Switching space returns you to **All tracks**.
+Each space has its own crates. Switching space returns you to **All tracks**. The address bar keeps the open view and crate (`#library/crates` for All tracks). Refresh and Back restore that screen.
 
 ## Find and sort
 
