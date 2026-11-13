@@ -3,13 +3,43 @@
  */
 
 import { flushSync } from "react-dom";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { applyStatic, setLocale, t } from "../../lib/i18n";
+import { applyLayout } from "../../lib/ui/layout";
 import { mountAppShell, unmountAppShell } from "../../lib/ui/app-shell";
 import { paintNav, resetNav } from "../../lib/ui/nav";
 import { resetNotice, setNotice } from "../../lib/ui/notice-store";
 import { applyStaticTooltips } from "../../lib/ui/tooltip";
 import { installPage } from "../test-page";
+
+const DRAWER_MINI_CUTOFF = 560;
+
+function remountShell(): void {
+  unmountAppShell();
+  installPage();
+  mountAppShell();
+}
+
+function setInnerWidth(width: number): void {
+  Object.defineProperty(window, "innerWidth", { configurable: true, value: width });
+}
+
+function drawerPaper(): HTMLElement {
+  const paper = document.querySelector(".MuiDrawer-paper");
+  if (!(paper instanceof HTMLElement)) {
+    throw new Error("drawer paper missing");
+  }
+  return paper;
+}
+
+function layoutBodies(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
+  return fetchMock.mock.calls
+    .filter((call) => call[0] === "/api/settings")
+    .map((call) => {
+      const init = call[1] as RequestInit | undefined;
+      return JSON.parse(String(init?.body ?? "{}")) as unknown;
+    });
+}
 
 describe("AppShell", () => {
   beforeEach(() => {
@@ -26,6 +56,7 @@ describe("AppShell", () => {
     resetNav();
     resetNotice();
     setLocale("en");
+    vi.unstubAllGlobals();
   });
 
   it("portals primaries and children into the drawer, crates stay in Main", () => {
@@ -94,7 +125,8 @@ describe("AppShell", () => {
       expect(toggle?.getAttribute("aria-expanded")).toBe("false");
       expect(document.getElementById("open-help")?.closest("[inert]")).toBeNull();
       flushSync(() => { toggle?.click(); });
-      expect(toggle?.getAttribute("aria-expanded")).toBe("true");
+      expect(toggle?.getAttribute("aria-expanded")).toBe("false");
+      expect(document.getElementById("views")?.closest("[inert]")).toBeNull();
       expect(document.getElementById("open-help")?.closest("[inert]")).toBeNull();
     } finally {
       Object.defineProperty(window, "innerWidth", { configurable: true, value: originalWidth });
@@ -136,6 +168,73 @@ describe("AppShell", () => {
     expect(document.querySelector(".MuiAppBar-root")?.contains(help)).toBe(true);
     expect(help?.closest("[inert]")).toBeNull();
     expect(document.getElementById("app-body")?.contains(dialog)).toBe(true);
+  });
+
+  it("opens the 200px drawer on a wide first launch", () => {
+    setInnerWidth(1200);
+    remountShell();
+    expect(document.getElementById("drawer-toggle")?.getAttribute("aria-expanded")).toBe("true");
+    expect(drawerPaper().style.width || getComputedStyle(drawerPaper()).width).toBe("200px");
+  });
+
+  it("uses a 56px mini drawer on a narrow first launch without inert", () => {
+    setInnerWidth(390);
+    remountShell();
+    const views = document.getElementById("views");
+    expect(document.getElementById("drawer-toggle")?.getAttribute("aria-expanded")).toBe("false");
+    expect(document.getElementById("app-drawer")?.contains(views)).toBe(true);
+    expect(views?.closest("[inert]")).toBeNull();
+    expect(document.querySelector(".MuiAppBar-root")?.contains(document.getElementById("open-help"))).toBe(true);
+    expect(drawerPaper().style.width || getComputedStyle(drawerPaper()).width).toBe("56px");
+  });
+
+  it("starts mini when settings saved the drawer closed on a wide window", () => {
+    setInnerWidth(1200);
+    remountShell();
+    flushSync(() => {
+      applyLayout({ layout: { track_list_width: null, drawer_open: false } });
+    });
+    expect(document.getElementById("drawer-toggle")?.getAttribute("aria-expanded")).toBe("false");
+    expect(document.getElementById("views")?.closest("[inert]")).toBeNull();
+    expect(drawerPaper().style.width || getComputedStyle(drawerPaper()).width).toBe("56px");
+  });
+
+  it("goes mini on a narrow resize without posting drawer_open false", () => {
+    const fetchMock = vi.fn(async () => new Response("{}", { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    setInnerWidth(1200);
+    remountShell();
+    expect(document.getElementById("drawer-toggle")?.getAttribute("aria-expanded")).toBe("true");
+    setInnerWidth(500);
+    flushSync(() => {
+      window.dispatchEvent(new Event("resize"));
+    });
+    expect(document.getElementById("drawer-toggle")?.getAttribute("aria-expanded")).toBe("false");
+    expect(500).toBeLessThan(DRAWER_MINI_CUTOFF);
+    expect(layoutBodies(fetchMock).some((body) => {
+      const layout = (body as { layout?: { drawer_open?: boolean } }).layout;
+      return layout?.drawer_open === false;
+    })).toBe(false);
+  });
+
+  it("posts drawer_open when the toggle is clicked", async () => {
+    const fetchMock = vi.fn(async () => new Response("{}", { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    setInnerWidth(1200);
+    remountShell();
+    const toggle = document.getElementById("drawer-toggle");
+    flushSync(() => {
+      toggle?.click();
+    });
+    await vi.waitFor(() => {
+      expect(layoutBodies(fetchMock)).toContainEqual({ layout: { drawer_open: false } });
+    });
+    flushSync(() => {
+      toggle?.click();
+    });
+    await vi.waitFor(() => {
+      expect(layoutBodies(fetchMock)).toContainEqual({ layout: { drawer_open: true } });
+    });
   });
 
   it("still paints only the open parent's children after the portal", () => {

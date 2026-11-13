@@ -7,7 +7,7 @@
  * under the AppBar as a full strip, then a MUI Alert for the last action
  * notice, `#views` and `#view-children` into the Drawer, and `#app-body`
  * into Main. Space stays in `.brand`. Crate names stay in the Main rail
- * so collapse does not hide them. Collapse is not saved.
+ * so collapse does not hide them. Mini width is remembered in settings.
  */
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -20,10 +20,19 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
 import { NoticeBanner } from "../components/NoticeBanner";
 import { onLocaleChange, t } from "../lib/i18n";
+import {
+  DRAWER_MINI_CUTOFF,
+  DRAWER_MINI_WIDTH,
+  DRAWER_WIDTH,
+  saveDrawerOpen,
+  subscribeDrawerOpen,
+} from "../lib/ui/layout";
 import { setTooltip } from "../lib/ui/tooltip";
 import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
 
-const DRAWER_WIDTH = 200;
+function drawerExpanded(saved: boolean | null, innerWidth: number): boolean {
+  return innerWidth >= DRAWER_MINI_CUTOFF && (saved ?? true);
+}
 
 function tooltipRef(spec: TipSpec) {
   return (element: HTMLElement | null) => {
@@ -46,7 +55,10 @@ function adoptNode(slot: HTMLElement | null, node: Element | null): void {
  * Page chrome: AppBar, Drawer, and the existing body in Main.
  */
 export function AppShell() {
-  const [open, setOpen] = useState(() => window.innerWidth > 980);
+  const [savedOpen, setSavedOpen] = useState<boolean | null>(null);
+  const [innerWidth, setInnerWidth] = useState(() => window.innerWidth);
+  const open = drawerExpanded(savedOpen, innerWidth);
+  const postedOpen = useRef(false);
   const [, setLocaleTick] = useState(0);
   const headingSlot = useRef<HTMLDivElement>(null);
   const generationSlot = useRef<HTMLDivElement>(null);
@@ -60,6 +72,28 @@ export function AppShell() {
       setLocaleTick((n) => n + 1);
     });
   }, []);
+
+  useEffect(() => {
+    return subscribeDrawerOpen((saved) => {
+      if (postedOpen.current) return;
+      setSavedOpen(saved);
+    });
+  }, []);
+
+  useEffect(() => {
+    const onResize = (): void => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  function toggleDrawer(): void {
+    const next = !open;
+    postedOpen.current = true;
+    setSavedOpen(next);
+    saveDrawerOpen(next);
+  }
 
   useLayoutEffect(() => {
     adoptNode(headingSlot.current, document.querySelector(".brand h1"));
@@ -92,7 +126,7 @@ export function AppShell() {
             aria-expanded={open}
             aria-controls="app-drawer"
             aria-label={open ? t("shell.drawerHide") : t("shell.drawerShow")}
-            onClick={() => setOpen((value) => !value)}
+            onClick={toggleDrawer}
             ref={tooltipRef(tips.drawerToggle)}
           >
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
@@ -126,16 +160,18 @@ export function AppShell() {
         <Drawer
           id="app-drawer"
           variant="persistent"
-          open={open}
+          open
           anchor="left"
           slotProps={{
-            paper: { "aria-hidden": !open },
+            paper: {
+              "aria-hidden": false,
+              style: { width: open ? DRAWER_WIDTH : DRAWER_MINI_WIDTH },
+            },
           }}
           sx={{
-            width: open ? DRAWER_WIDTH : 0,
+            width: open ? DRAWER_WIDTH : DRAWER_MINI_WIDTH,
             flexShrink: 0,
             overflow: "hidden",
-            visibility: open ? "visible" : "hidden",
             whiteSpace: "nowrap",
             transition: (theme) =>
               theme.transitions.create("width", {
@@ -149,9 +185,10 @@ export function AppShell() {
             },
             "& .MuiDrawer-paper": {
               position: "relative",
-              width: DRAWER_WIDTH,
+              width: open ? DRAWER_WIDTH : DRAWER_MINI_WIDTH,
               boxSizing: "border-box",
-              overflow: "hidden",
+              overflowX: "hidden",
+              overflowY: "auto",
               border: 0,
               height: "100%",
               display: "flex",
@@ -166,7 +203,6 @@ export function AppShell() {
               height: "100%",
               minHeight: 0,
             }}
-            {...(!open ? { inert: true } : {})}
           >
             <Box
               ref={navSlot}
