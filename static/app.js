@@ -32810,7 +32810,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ownerState: ownerStateProp,
       // prevent from spreading to DOM, it can come from the parent component e.g. Select.
       ...other
-    } = props, tooltipRef16 = React92.useRef(null), ownRef = useForkRef(tooltipRef16, forwardedRef), popperRef = React92.useRef(null), handlePopperRef = useForkRef(popperRef, popperRefProp), handlePopperRefRef = React92.useRef(handlePopperRef);
+    } = props, tooltipRef14 = React92.useRef(null), ownRef = useForkRef(tooltipRef14, forwardedRef), popperRef = React92.useRef(null), handlePopperRef = useForkRef(popperRef, popperRefProp), handlePopperRefRef = React92.useRef(handlePopperRef);
     useEnhancedEffect_default(() => {
       handlePopperRefRef.current = handlePopperRef;
     }, [handlePopperRef]), React92.useImperativeHandle(popperRefProp, () => popperRef.current, []);
@@ -32843,13 +32843,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       }];
       modifiers != null && (popperModifiers = popperModifiers.concat(modifiers)), popperOptions && popperOptions.modifiers != null && (popperModifiers = popperModifiers.concat(popperOptions.modifiers));
-      let popper2 = createPopper(resolvedAnchorElement, tooltipRef16.current, {
+      let popper2 = createPopper(resolvedAnchorElement, tooltipRef14.current, {
         placement: rtlPlacement,
         ...popperOptions,
         modifiers: popperModifiers
       });
       handlePopperRefRef.current(popper2);
-      let popperElement = tooltipRef16.current;
+      let popperElement = tooltipRef14.current;
       return () => {
         if (popperElement) {
           let {
@@ -68804,65 +68804,75 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var import_react59 = __toESM(require_react(), 1);
 
   // src/pages/CrateActions.tsx
-  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef10(spec2) {
-    return (element) => {
-      element && setTooltip(element, spec2);
-    };
-  }
+  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none" };
   function CrateActions() {
     let crates = useCrates();
     return /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)(import_jsx_runtime274.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-new",
           type: "button",
-          ref: tooltipRef10(tips.crateNew),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX7,
+          ref: tooltipRef6(tips.crateNew),
           disabled: !crates.canCreate,
           onClick: () => crates.create(),
           children: t("crates.new")
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-rename",
           type: "button",
-          ref: tooltipRef10(tips.crateRename),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX7,
+          ref: tooltipRef6(tips.crateRename),
           disabled: !crates.canRename,
           onClick: () => crates.rename(),
           children: t("crates.rename")
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-color",
           type: "button",
-          ref: tooltipRef10(tips.crateColor),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX7,
+          ref: tooltipRef6(tips.crateColor),
           disabled: !crates.canColor,
           onClick: () => crates.color(),
           children: t("field.color")
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-delete",
           type: "button",
-          ref: tooltipRef10(tips.crateDelete),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX7,
+          ref: tooltipRef6(tips.crateDelete),
           disabled: !crates.canDelete,
           onClick: () => crates.remove(),
           children: t("common.delete")
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-preset",
           type: "button",
-          ref: tooltipRef10(tips.cratePreset),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX7,
+          ref: tooltipRef6(tips.cratePreset),
           "aria-haspopup": "dialog",
           disabled: !crates.canPreset,
           onClick: () => crates.preset(),
@@ -68870,11 +68880,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-folder-sync",
           type: "button",
-          ref: tooltipRef10(tips.crateFolderSync),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX7,
+          ref: tooltipRef6(tips.crateFolderSync),
           "aria-haspopup": "dialog",
           disabled: !crates.canFolderSync,
           onClick: () => crates.folderSync(),
@@ -68882,11 +68895,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-rename-from-tags",
           type: "button",
-          ref: tooltipRef10(tips.crateRenameFromTags),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX7,
+          ref: tooltipRef6(tips.crateRenameFromTags),
           "aria-haspopup": "dialog",
           disabled: !crates.canRenameFromTags,
           onClick: (event) => crates.renameFromTags(event.currentTarget),
@@ -68894,11 +68910,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-refresh",
           type: "button",
-          ref: tooltipRef10(tips.crateRefresh),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX7,
+          ref: tooltipRef6(tips.crateRefresh),
           hidden: crates.refreshHidden,
           disabled: !crates.canRefresh,
           onClick: () => crates.refresh(),
@@ -68909,21 +68928,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateBrowserActions.tsx
-  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef11(spec2) {
-    return (element) => {
-      element && setTooltip(element, spec2);
-    };
-  }
+  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1), BUTTON_SX8 = { textTransform: "none" };
   function CrateBrowserActions() {
     let crates = useCrates();
     return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-split",
           type: "button",
-          ref: tooltipRef11(tips.crateSplit),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX8,
+          ref: tooltipRef6(tips.crateSplit),
           hidden: crates.splitHidden,
           "aria-pressed": crates.splitPressed,
           onClick: () => crates.split(),
@@ -68931,11 +68948,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
-        "button",
+        Button_default,
         {
           id: "crate-save-view",
           type: "button",
-          ref: tooltipRef11(tips.crateSaveView),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX8,
+          ref: tooltipRef6(tips.crateSaveView),
           hidden: crates.saveViewHidden,
           disabled: !crates.canSaveView,
           onClick: () => crates.saveView(),
@@ -68943,11 +68963,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
-        "button",
+        Button_default,
         {
           id: "export-m3u",
           type: "button",
-          ref: tooltipRef11(tips.exportM3u),
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX8,
+          ref: tooltipRef6(tips.exportM3u),
           hidden: crates.exportHidden,
           onClick: () => crates.exportM3u(),
           children: t("export.m3u")
@@ -68958,7 +68981,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/pages/CrateTree.tsx
   var import_jsx_runtime276 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef12(spec2) {
+  function tooltipRef10(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
@@ -68975,7 +68998,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       "button",
       {
         type: "button",
-        ref: tooltipRef12(spec2),
+        ref: tooltipRef10(spec2),
         className: "twist",
         tabIndex: -1,
         "aria-expanded": row.expanded,
@@ -69002,7 +69025,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             "button",
             {
               type: "button",
-              ref: tooltipRef12(tip),
+              ref: tooltipRef10(tip),
               className: "crate",
               "data-id": String(row.id),
               "data-parent": row.parent != null ? String(row.parent) : void 0,
@@ -69043,7 +69066,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/pages/HistoryDetail.tsx
   var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef13(spec2) {
+  function tooltipRef11(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
@@ -69071,7 +69094,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "button",
         {
           type: "button",
-          ref: tooltipRef13(tips.openInLibrary),
+          ref: tooltipRef11(tips.openInLibrary),
           className: "text-button",
           onClick: () => {
             history.openInLibrary(entry.asset_id);
@@ -69084,7 +69107,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/pages/HistorySessions.tsx
   var import_jsx_runtime278 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef14(spec2) {
+  function tooltipRef12(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
@@ -69097,7 +69120,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "button",
         {
           type: "button",
-          ref: tooltipRef14(sessionTip(session.name || "Session")),
+          ref: tooltipRef12(sessionTip(session.name || "Session")),
           className: "crate",
           role: "option",
           "aria-selected": session.id === history.historyId,
@@ -72554,7 +72577,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/pages/AppShell.tsx
   var import_jsx_runtime294 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 200;
-  function tooltipRef15(spec2) {
+  function tooltipRef13(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
@@ -72592,7 +72615,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 "aria-controls": "app-drawer",
                 "aria-label": open ? t("shell.drawerHide") : t("shell.drawerShow"),
                 onClick: () => setOpen((value) => !value),
-                ref: tooltipRef15(tips.drawerToggle),
+                ref: tooltipRef13(tips.drawerToggle),
                 children: open ? /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(Menu_default2, {})
               }
             ),

@@ -68,6 +68,11 @@ describe("CrateTree context", () => {
     expect(host.querySelector(".smart")?.textContent).toBe("smart");
     expect(host.querySelector<HTMLButtonElement>("#crate-new")?.textContent).toBe("New");
     expect(host.querySelector<HTMLButtonElement>("#crate-new")?.disabled).toBe(false);
+    expect(host.querySelector("#crate-new")?.className).toContain("MuiButton");
+    expect(host.querySelector("#crate-rename")?.className).toContain("MuiButton");
+    expect(host.querySelector("#crate-split")?.className).toContain("MuiButton");
+    expect(host.querySelector("#crate-save-view")?.className).toContain("MuiButton");
+    expect(host.querySelector("#export-m3u")?.className).toContain("MuiButton");
     expect(host.querySelector<HTMLButtonElement>("#crate-rename")?.disabled).toBe(true);
     expect(host.querySelector<HTMLButtonElement>("#crate-split")?.getAttribute("aria-pressed")).toBe("false");
 
@@ -93,5 +98,17 @@ describe("CrateTree context", () => {
     });
     expect(el("crate-list").querySelector<HTMLButtonElement>(".crate")?.dataset.id).toBe("all");
     root.unmount();
+  });
+
+  it("does not force a 44px minHeight on crate action buttons", () => {
+    const sources = import.meta.glob("../../pages/Crate*Actions.tsx", {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    });
+    expect(Object.keys(sources)).toHaveLength(2);
+    for (const [path, src] of Object.entries(sources)) {
+      expect(src, path).not.toMatch(/minHeight:\s*44/);
+    }
   });
 });
