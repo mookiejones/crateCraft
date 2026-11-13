@@ -68,6 +68,11 @@ describe("CrateTree context", () => {
     expect(host.querySelector(".smart")?.textContent).toBe("smart");
     expect(host.querySelector<HTMLButtonElement>("#crate-new")?.textContent).toBe("New");
     expect(host.querySelector<HTMLButtonElement>("#crate-new")?.disabled).toBe(false);
+    expect(host.querySelector("#crate-new")?.className).toContain("MuiButton");
+    expect(host.querySelector("#crate-rename")?.className).toContain("MuiButton");
+    expect(host.querySelector("#crate-split")?.className).toContain("MuiButton");
+    expect(host.querySelector("#crate-save-view")?.className).toContain("MuiButton");
+    expect(host.querySelector("#export-m3u")?.className).toContain("MuiButton");
     expect(host.querySelector<HTMLButtonElement>("#crate-rename")?.disabled).toBe(true);
     expect(host.querySelector<HTMLButtonElement>("#crate-split")?.getAttribute("aria-pressed")).toBe("false");
 
