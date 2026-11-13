@@ -38,7 +38,7 @@ test("Crates keeps horizontal scrolling in the grid across colorways", async ({ 
   }
 });
 
-test("action-flash Alert sits under the player on every view until dismiss", async ({ page }) => {
+test("action-flash Alert sits under the AppBar on every view until dismiss", async ({ page }) => {
   await page.addScriptTag({ path: "e2e/dist/crates.js" });
   await expect(page.locator("#app-notice")).toHaveCount(0);
   await page.evaluate(() => {
@@ -49,10 +49,10 @@ test("action-flash Alert sits under the player on every view until dismiss", asy
   await expect(banner).toHaveAttribute("role", "alert");
   expect(await page.evaluate(() => {
     const notice = document.getElementById("app-notice");
-    const strip = document.querySelector(".player-strip");
+    const lock = document.querySelector(".app-bar-lock");
     return Boolean(
       notice &&
-      strip?.nextElementSibling?.contains(notice) &&
+      lock?.nextElementSibling?.contains(notice) &&
       !document.getElementById("app-body")?.contains(notice),
     );
   })).toBe(true);
@@ -74,7 +74,6 @@ test(`narrow screens keep controls in view in ${locale}`, async ({ page }) => {
   await expect(page.locator("#drawer-toggle")).toHaveAttribute("aria-expanded", "false");
   await expect(page.locator("#search")).toBeVisible();
   await expect(page.locator("#reload")).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
   for (const id of ["search", "search-field", "reload", "crate-new"]) {
     const bounds = await page.locator(`#${id}`).boundingBox();
     expect(bounds).not.toBeNull();

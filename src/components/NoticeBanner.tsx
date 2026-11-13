@@ -1,5 +1,5 @@
 /**
- * Persistent MUI Alert under the player strip.
+ * Persistent MUI Alert under the AppBar lock banner.
  *
  * Empty notice renders nothing. Error and warning use role=alert.
  * Success and info use role=status. Dismiss stays until the next notice.
