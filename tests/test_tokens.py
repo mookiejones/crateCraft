@@ -630,7 +630,6 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ('.view-children button[aria-selected="true"]', ("--color-card",), 15, 400),
     ('.sort-crates button[aria-pressed="true"]', ("--color-bg",), 15, 400),
     (".rail-foot button", ("--color-bg",), 15, 400),
-    (".app-version", ("--color-bg",), 13, 400),
     (".app-tooltip", ("--color-bg",), 13, 400),
     (".app-tooltip:popover-open", ("--color-bg",), 13, 400),
     (".mode-note", ("--color-bg",), 13, 400),

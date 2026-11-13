@@ -243,7 +243,6 @@ export interface ElementIds {
   "settings-close": HTMLButtonElement;
   "open-logs": HTMLButtonElement;
   "copy-logs": HTMLButtonElement;
-  "app-version": HTMLParagraphElement;
   "about-title": HTMLHeadingElement;
   "about-version": HTMLParagraphElement;
   "copy-version": HTMLButtonElement;

@@ -1,9 +1,9 @@
 /**
- * App version in the rail footer and in Settings.
+ * App version in Settings About and Help.
  *
- * The text comes from GET /api/version. A failed request leaves the
- * footer empty and says Version unavailable in About. The page does
- * not show the server's error text.
+ * The text comes from GET /api/version. A failed request says Version
+ * unavailable in About and Help. The page does not show the server's
+ * error text. The drawer footer does not repeat the line.
  */
 
 import { getVersion } from "../api";
@@ -27,7 +27,7 @@ let painted: string | null | undefined;
  * the version text.
  *
  * @param info The GET /api/version object.
- * @returns The footer and About label.
+ * @returns The About and Help label.
  */
 export function versionLabel(info: VersionPayload): string {
   const version = formatVersion(info.version);
@@ -52,14 +52,11 @@ function shortCommit(commit: string | null): string | null {
 
 function paint(label: string | null): void {
   painted = label;
-  const footer = el("app-version");
   const about = document.getElementById("about-version");
   const copyStatus = document.getElementById("version-copy-status");
   if (copyStatus) copyStatus.textContent = "";
   if (!label) {
     copyText = "";
-    footer.hidden = true;
-    footer.replaceChildren();
     const unavailable = t("version.unavailable");
     if (about) about.textContent = unavailable;
     el("help-version").textContent = unavailable;
@@ -67,21 +64,13 @@ function paint(label: string | null): void {
     return;
   }
   copyText = label;
-  footer.hidden = false;
-  footer.replaceChildren();
-  const name = document.createElement("span");
-  name.className = "visually-hidden";
-  name.textContent = `${t("version.app")} `;
-  const value = document.createElement("span");
-  value.textContent = label;
-  footer.append(name, value);
   if (about) about.textContent = label;
   el("help-version").textContent = label;
   patchSettings({ aboutVersion: label, versionCopyStatus: "" });
 }
 
 /**
- * Paint the footer and About again in the active language.
+ * Paint About and Help again in the active language.
  *
  * Uses the last version read. Before the first read it does nothing.
  *
@@ -93,7 +82,7 @@ export function repaintVersion(): void {
 }
 
 /**
- * Read GET /api/version and paint the footer and About.
+ * Read GET /api/version and paint About and Help.
  *
  * A failure, including a body that is not the version object, paints
  * the unavailable state. This function does not reject.

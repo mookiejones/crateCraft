@@ -1,0 +1,53 @@
+diff --git a/.gitignore b/.gitignore
+index c76fc5d..8ed8dcd 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -38,5 +38,8 @@ blob-report/
+ # MkDocs output from `mkdocs build -f docs/mkdocs.yml`
+ /site/
+ 
++# Local brainstorm mockups
++.superpowers/
++
+ # Wizard build tools. static/wizard.js is the committed bundle.
+ node_modules/
+diff --git a/docs/superpowers/specs/2026-11-11-cratecraft-look-layout-design.md b/docs/superpowers/specs/2026-11-11-cratecraft-look-layout-design.md
+index a5e4e8c..110ba7f 100644
+--- a/docs/superpowers/specs/2026-11-11-cratecraft-look-layout-design.md
++++ b/docs/superpowers/specs/2026-11-11-cratecraft-look-layout-design.md
+@@ -94,9 +94,13 @@ Mark: **theirs** = Charles said it. **guess** = agent call, he can reject.
+ | Nav leftovers stay on their tickets | theirs | #291 / #295 / #297 |
+ | Feel | theirs (older) | Attractive, simple, professional, fun, modern |
+ | App shell | theirs | MainContainer → AppBar + collapsible Drawer + Main content |
++| Drawer contents | theirs | Nested: Library → Crates, History, Play stats (and tools for the open child). Same for Health / Gig. Sheet child tabs go away |
++| Named crates | theirs | Next to the track list in Main content, not in the Drawer |
++| Space switch | theirs | AppBar (Serato Library / Video / Apple Music / Prepare). Not in the Drawer |
+ | Player count this pass | theirs | One preview player. Dual files later, not in #303–#306 |
+ | Player default dock | guess | Full strip under the AppBar; Settings top/bottom later |
+-| Crates three-pane layout (tree \| tracks \| detail) | guess | Keep unless Charles says otherwise |
++| Crates tree + tracks | theirs | Tree next to the Data Grid in Main content |
++| Track detail pane | theirs | Stay where it is: right pane. Tab idea dropped |
+ | Detail as right pane, not a drawer | guess | Serato-like; confirm on Crates walk |
+ | Data Grid cells read-only | guess | Play / select / sort / resize only |
+ | First impl child after approve | guess | ThemeProvider + colorways, then Crates Data Grid |
+@@ -197,7 +201,19 @@ Charles wants the standard app shell: **AppBar**, **collapsible Drawer**, **Main
+ 
+ Guess until he says otherwise: player is a full strip **under the AppBar** (not a second deck, not two `<audio>` elements). Split Crates still shares that one player.
+ 
+-Open: crate tree in the Drawer vs inside Main content next to the grid.
++**Nested drawer (theirs):** Sidebar lists primaries. Open **Library** and the children **Crates, History, Play stats** show there, with only tools/links for that child. Same pattern for Health and Gig. Children leave the sheet tab strip (`#view-children`) and live in the Drawer.
++
++Why the current rail is hard: one column does four jobs (app nav, space picker, crate inventory, Help/Settings). Nested drawer splits **where you are** from **what you are working on**.
++
++**Named crates (theirs):** Saturday gig and the rest sit **in Main content, next to the track list**. The Drawer stays a short map (Library → Crates / History / Play stats). Collapse the Drawer and crate names stay.
++
++**Detail (theirs):** keep the **right pane** (cues, fields, related). The tab-next-to-Saturday-gig idea is dropped.
++
++Crates Main content: **tree | Data Grid | detail**.
++
++**Space (theirs):** AppBar dropdown. Drawer does not list Serato Library / Video. “Library” in the Drawer means the Music section (Crates / History / Play stats).
++
++Open: AppBar also holds Help and Settings (moved off the rail footer), or those stay in the Drawer footer.
+ 
+ **MUI MCP:** `npx -y @mui/mcp@latest` as Grok server `mui-mcp` (user `~/.grok/config.toml` and project `.grok/config.toml`). Restart or wait for MCP hot-reload to query real MUI docs. Does not install MUI into the app.
+ 

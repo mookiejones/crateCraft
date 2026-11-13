@@ -777,11 +777,12 @@ class PageVersionTests(unittest.TestCase):
     """The page reads ``GET /api/version`` and shows that text."""
 
     def test_page_includes_the_version_hook(self) -> None:
-        """Point the footer and About at the version request.
+        """Point About and Help at the version request.
 
         This does not execute the script. It ties the elements the person
         reads to the request ``app.js`` sends. A missing id would leave
-        the typed lookup with nothing to paint.
+        the typed lookup with nothing to paint. The drawer footer is not
+        a version hook.
 
         Returns:
             None. The test fails if the hook, the copy control, or the
@@ -789,8 +790,9 @@ class PageVersionTests(unittest.TestCase):
         """
         page = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
         script = (ROOT / "static" / "app.js").read_text(encoding="utf-8")
-        self.assertIn('id="app-version"', page)
+        self.assertNotIn('id="app-version"', page)
         self.assertIn('id="about-version"', page)
+        self.assertIn('id="help-version"', page)
         self.assertIn('id="copy-version"', page)
         self.assertIn('id="version-copy-status"', page)
         self.assertIn('aria-live="polite"', page)

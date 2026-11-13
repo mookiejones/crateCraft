@@ -63655,7 +63655,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     labelledBy,
     describedBy,
     children,
-    contentRef
+    contentRef,
+    onRoot
   }) {
     let open = isSharedDialogOpen(id), rootRef = (0, import_react33.useRef)(null);
     return (0, import_react33.useLayoutEffect)(() => {
@@ -63672,7 +63673,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-labelledby": labelledBy,
         "aria-describedby": describedBy,
         ref: (node2) => {
-          rootRef.current = node2, bindSharedRoot(node2, id);
+          rootRef.current = node2, bindSharedRoot(node2, id), onRoot?.(node2);
         },
         onClose: (_event, reason) => {
           reason !== "backdropClick" && setSharedDialogOpen(id, !1);
@@ -63962,16 +63963,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
     return bucket;
   }
-  function placeBucket(id, paper) {
-    let bucket = bucketFor(id), root = paper?.closest("[data-shared-dialog]") ?? muiRoot(id);
-    if (root instanceof HTMLElement) {
-      root.id = id, bindDialogApi(root, id);
-      let dest = paper ?? root.querySelector(".MuiDialogContent-root") ?? root;
-      bucket.parentElement !== dest && dest.appendChild(bucket);
+  function parkSharedDialogBucket(bucket, dest, host) {
+    if (dest) {
+      bucket.parentElement !== dest && dest.appendChild(bucket), bucket.hidden = !1;
       return;
     }
-    let host = document.getElementById("shared-dialogs");
-    host instanceof HTMLElement && bucket.parentElement !== host && host.appendChild(bucket);
+    host && bucket.parentElement !== host && host.appendChild(bucket), bucket.hidden = !0;
+  }
+  function placeBucket(id, paper) {
+    let bucket = bucketFor(id), root = paper?.closest("[data-shared-dialog]") ?? muiRoot(id);
+    root instanceof HTMLElement && (root.id = id, bindDialogApi(root, id));
+    let content = root instanceof HTMLElement ? root.querySelector(".MuiDialogContent-root") : null, dest = paper ?? (content instanceof HTMLElement ? content : null) ?? (root instanceof HTMLElement ? root : null), host = document.getElementById("shared-dialogs");
+    parkSharedDialogBucket(
+      bucket,
+      dest,
+      host instanceof HTMLElement ? host : null
+    );
   }
   function AdoptedDialog({
     id,
@@ -63986,6 +63993,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         id,
         labelledBy,
         describedBy,
+        onRoot: (node2) => {
+          if (node2) {
+            adoptNative(id);
+            let paper = node2.querySelector(".MuiDialogContent-root");
+            placeBucket(id, paper instanceof HTMLElement ? paper : node2);
+          }
+        },
         contentRef: (paper) => {
           paper && (adoptNative(id), placeBucket(id, paper));
         }
@@ -71386,18 +71400,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function paint3(label) {
     painted = label;
-    let footer = el("app-version"), about = document.getElementById("about-version"), copyStatus = document.getElementById("version-copy-status");
+    let about = document.getElementById("about-version"), copyStatus = document.getElementById("version-copy-status");
     if (copyStatus && (copyStatus.textContent = ""), !label) {
-      copyText2 = "", footer.hidden = !0, footer.replaceChildren();
+      copyText2 = "";
       let unavailable = t("version.unavailable");
       about && (about.textContent = unavailable), el("help-version").textContent = unavailable, patchSettings({ aboutVersion: unavailable, versionCopyStatus: "" });
       return;
     }
-    copyText2 = label, footer.hidden = !1, footer.replaceChildren();
-    let name = document.createElement("span");
-    name.className = "visually-hidden", name.textContent = `${t("version.app")} `;
-    let value = document.createElement("span");
-    value.textContent = label, footer.append(name, value), about && (about.textContent = label), el("help-version").textContent = label, patchSettings({ aboutVersion: label, versionCopyStatus: "" });
+    copyText2 = label, about && (about.textContent = label), el("help-version").textContent = label, patchSettings({ aboutVersion: label, versionCopyStatus: "" });
   }
   function repaintVersion() {
     painted !== void 0 && paint3(painted);
