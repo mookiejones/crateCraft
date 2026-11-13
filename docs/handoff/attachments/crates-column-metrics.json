@@ -1,0 +1,47 @@
+{
+  "captured": "2026-11-11",
+  "library": "synthetic TempLibrary fixture (not the live Serato library)",
+  "viewport": "1280x800, deviceScaleFactor 1",
+  "url": "http://127.0.0.1:50861/",
+  "metricsAtRest": {
+    "browserScrollLeft": 0,
+    "listScrollLeft": 0,
+    "browserClientWidth": 563,
+    "columnsMinWidth": "870px",
+    "headerButtons": [
+      { "text": "Title", "left": 296, "width": 160 },
+      { "text": "Artist", "left": 466, "width": 114 },
+      { "text": "BPM", "left": 590, "width": 45 },
+      { "text": "Key", "left": 645, "width": 45 },
+      { "text": "Energy", "left": 700, "width": 53 },
+      { "text": "Genre", "left": 763, "width": 91 },
+      { "text": "Added", "left": 864, "width": 71 },
+      { "text": "Last", "left": 945, "width": 71 },
+      { "text": "Plays", "left": 1027, "width": 45 },
+      { "text": "Time", "left": 1082, "width": 53 }
+    ],
+    "cells": [
+      { "text": "Second Long Title For Independent Scroll", "left": 296, "width": 120, "className": "cell" },
+      { "text": "Another Artist With Extra Words", "left": 426, "width": 90, "className": "cell" },
+      { "text": "128", "left": 526, "width": 45, "className": "cell num" },
+      { "text": "9A", "left": 581, "width": 45, "className": "cell" },
+      { "text": "", "left": 636, "width": 53, "className": "cell num" },
+      { "text": "Techno", "left": 699, "width": 75, "className": "cell" },
+      { "text": "Dec 31, 1969", "left": 784, "width": 71, "className": "cell num" },
+      { "text": "", "left": 865, "width": 71, "className": "cell num" },
+      { "text": "0", "left": 946, "width": 45, "className": "cell num" },
+      { "text": "3:00", "left": 1001, "width": 53, "className": "cell num" }
+    ]
+  },
+  "metricsAfterListScrollLeft220": {
+    "browserScrollLeft": 0,
+    "listScrollLeft": 220,
+    "firstHeaderLeft": 296,
+    "firstCellLeft": 76,
+    "deltaPx": -220
+  },
+  "metricsAfterBrowserScrollLeft180": {
+    "browserScrollLeft": 180,
+    "listScrollLeft": 0
+  }
+}

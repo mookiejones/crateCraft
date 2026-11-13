@@ -84,14 +84,13 @@ describe("version on the page", () => {
     return vi.mocked(fetch);
   }
 
-  it("shows the version in the footer and in About", async () => {
+  it("shows the version in About and Help, not in the drawer footer", async () => {
     fetchMock().mockResolvedValue(jsonResponse(versionBody()));
     await loadVersion();
-    const footer = el("app-version");
-    expect(footer.hidden).toBe(false);
-    expect(footer.textContent).toBe("App version v1.4.2");
-    expect(footer.querySelector(".visually-hidden")?.textContent).toBe("App version ");
+    expect(document.getElementById("app-version")).toBeNull();
+    expect(el("rail-foot").textContent).not.toContain("v1.4.2");
     expect(el("about-version").textContent).toBe("v1.4.2");
+    expect(el("help-version").textContent).toBe("v1.4.2");
     expect(el("about-version").textContent).not.toBe(VERSION_UNAVAILABLE);
     expect(fetchMock()).toHaveBeenCalledWith("/api/version");
   });
@@ -103,9 +102,9 @@ describe("version on the page", () => {
       source: "git",
     })));
     await loadVersion();
-    expect(el("app-version").hidden).toBe(false);
     expect(el("about-version").textContent).toBe("v1.1.0-rc2 · abc123d");
-    expect(el("app-version").textContent).toContain("v1.1.0-rc2 · abc123d");
+    expect(el("help-version").textContent).toBe("v1.1.0-rc2 · abc123d");
+    expect(el("rail-foot").textContent).not.toContain("v1.1.0-rc2");
   });
 
   it("shows a dev source with the fallback version and a short commit", async () => {
@@ -115,18 +114,18 @@ describe("version on the page", () => {
       source: "dev",
     }));
     await loadVersion();
-    expect(el("app-version").hidden).toBe(false);
     expect(el("about-version").textContent).toBe("v0.0.0+dev · abc123d");
-    expect(el("app-version").textContent).toBe("App version v0.0.0+dev · abc123d");
+    expect(el("help-version").textContent).toBe("v0.0.0+dev · abc123d");
+    expect(el("rail-foot").textContent).not.toContain("v0.0.0+dev");
   });
 
   it("hides the footer and says Version unavailable when the request fails", async () => {
     const raw = "OperationalError: disk I/O error near master.sqlite";
     fetchMock().mockResolvedValue(jsonResponse({ error: raw }, false));
     await loadVersion();
-    expect(el("app-version").hidden).toBe(true);
-    expect(el("app-version").textContent).toBe("");
+    expect(document.getElementById("app-version")).toBeNull();
     expect(el("about-version").textContent).toBe(VERSION_UNAVAILABLE);
+    expect(el("help-version").textContent).toBe(VERSION_UNAVAILABLE);
     expect(document.body.textContent).not.toContain(raw);
     expect(document.body.textContent).not.toContain("OperationalError");
   });
@@ -134,14 +133,15 @@ describe("version on the page", () => {
   it("treats a rejected request and a malformed body as unavailable", async () => {
     fetchMock().mockRejectedValue(new Error("Failed to fetch: ECONNREFUSED"));
     await loadVersion();
-    expect(el("app-version").hidden).toBe(true);
+    expect(document.getElementById("app-version")).toBeNull();
     expect(el("about-version").textContent).toBe(VERSION_UNAVAILABLE);
+    expect(el("help-version").textContent).toBe(VERSION_UNAVAILABLE);
     expect(document.body.textContent).not.toContain("ECONNREFUSED");
 
     fetchMock().mockResolvedValue(jsonResponse({ version: "v1.4.2" }));
     await loadVersion();
-    expect(el("app-version").hidden).toBe(true);
     expect(el("about-version").textContent).toBe(VERSION_UNAVAILABLE);
+    expect(el("help-version").textContent).toBe(VERSION_UNAVAILABLE);
     expect(document.body.textContent).not.toContain("v1.4.2");
   });
 
@@ -189,9 +189,9 @@ describe("version on the page", () => {
 
   async function expectUnavailable(): Promise<void> {
     await expect(loadVersion()).resolves.toBeUndefined();
-    expect(el("app-version").hidden).toBe(true);
-    expect(el("app-version").textContent).toBe("");
+    expect(document.getElementById("app-version")).toBeNull();
     expect(el("about-version").textContent).toBe("Version unavailable");
+    expect(el("help-version").textContent).toBe("Version unavailable");
     expect(VERSION_UNAVAILABLE).toBe("Version unavailable");
   }
 
@@ -232,7 +232,7 @@ describe("version on the page", () => {
     fetchMock().mockResolvedValueOnce(jsonResponse(versionBody({ version: "v3.3.3" })));
     await loadVersion();
     expect(el("about-version").textContent).toBe("v3.3.3");
-    expect(el("app-version").hidden).toBe(false);
+    expect(el("help-version").textContent).toBe("v3.3.3");
     fetchMock().mockResolvedValueOnce(jsonResponse({ error: "disk I/O" }, false));
     await expectUnavailable();
     expect(document.body.textContent).not.toContain("v3.3.3");
@@ -273,8 +273,8 @@ describe("version on the page", () => {
     await loadVersion();
     expect(el("version-copy-status").textContent).toBe("");
     expect(el("about-version").textContent).toBe("v2.0.0");
-    expect(el("app-version").textContent).toBe("App version v2.0.0");
-    expect(el("app-version").querySelectorAll("span")).toHaveLength(2);
+    expect(el("help-version").textContent).toBe("v2.0.0");
+    expect(el("rail-foot").textContent).not.toContain("v2.0.0");
   });
 
   it("shows a git version without a null or non-hex commit", async () => {
@@ -284,8 +284,8 @@ describe("version on the page", () => {
       source: "git",
     })));
     await loadVersion();
-    expect(el("app-version").hidden).toBe(false);
     expect(el("about-version").textContent).toBe("v1.2.3");
+    expect(el("help-version").textContent).toBe("v1.2.3");
     fetchMock().mockResolvedValue(jsonResponse(versionBody({
       version: "v1.2.3",
       commit: "not-a-commit",
@@ -293,7 +293,8 @@ describe("version on the page", () => {
     })));
     await loadVersion();
     expect(el("about-version").textContent).toBe("v1.2.3");
-    expect(el("app-version").textContent).not.toContain("not-a-commit");
+    expect(el("help-version").textContent).not.toContain("not-a-commit");
+    expect(el("rail-foot").textContent).not.toContain("not-a-commit");
   });
 
   it("shows an XSS version string as text and does not create an image", async () => {
@@ -304,10 +305,11 @@ describe("version on the page", () => {
     expect(images.map((img) => img.id)).toEqual(["colorway-preview"]);
     expect(images[0]?.getAttribute("src")).not.toBe("x");
     expect(el("about-version").querySelector("img")).toBeNull();
-    expect(el("app-version").querySelector("img")).toBeNull();
+    expect(el("help-version").querySelector("img")).toBeNull();
     expect(el("about-version").children).toHaveLength(0);
     expect(el("about-version").textContent).toBe(hostile);
-    expect(el("app-version").textContent).toBe(`App version ${hostile}`);
+    expect(el("help-version").textContent).toBe(hostile);
+    expect(el("rail-foot").textContent).not.toContain(hostile);
   });
 
   it("getVersion rejects a null body and a blank version", async () => {
@@ -327,7 +329,8 @@ describe("version on the page", () => {
     await expect(getVersion()).resolves.toMatchObject({ version: "v8.8.8", source: "release" });
     await loadVersion();
     expect(el("about-version").textContent).toBe("v8.8.8");
-    expect(el("app-version").textContent).toBe("App version v8.8.8");
+    expect(el("help-version").textContent).toBe("v8.8.8");
+    expect(el("rail-foot").textContent).not.toContain("v8.8.8");
   });
 
   it("has nothing to copy before a version loads", async () => {

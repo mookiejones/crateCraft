@@ -187,8 +187,7 @@ textarea:focus-visible,
   border-top: 1px solid var(--rule);
 }
 
-.drawer-foot .rail-foot button,
-.drawer-foot .app-version {
+.drawer-foot .rail-foot button {
   color: inherit;
 }
 
@@ -330,15 +329,6 @@ html[data-colorway="light"] .rail select { color-scheme: light; }
   text-align: left;
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-.app-version {
-  margin: 0 0 var(--space-1);
-  color: var(--color-rail-text);
-  font-size: var(--font-body);
-  font-variant-numeric: tabular-nums;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
 }
 
 .mode-note,
@@ -1217,6 +1207,10 @@ button:disabled { cursor: default; }
 .related-results li { padding: var(--space-1) 0; }
 
 .marker button, .copy-row button { text-align: left; }
+
+#shared-dialogs [data-shared-bucket] {
+  display: none;
+}
 
 dialog,
 [data-shared-dialog] .MuiDialog-paper {

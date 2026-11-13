@@ -22,6 +22,7 @@ export type CenteredDialogProps = {
   describedBy?: string | undefined;
   children?: ReactNode;
   contentRef?: Ref<HTMLDivElement>;
+  onRoot?: (node: HTMLElement | null) => void;
 };
 
 /**
@@ -51,6 +52,7 @@ export function CenteredDialog({
   describedBy,
   children,
   contentRef,
+  onRoot,
 }: CenteredDialogProps) {
   const open = isSharedDialogOpen(id);
   const rootRef = useRef<HTMLElement | null>(null);
@@ -70,6 +72,7 @@ export function CenteredDialog({
       ref={(node) => {
         rootRef.current = node;
         bindSharedRoot(node, id);
+        onRoot?.(node);
       }}
       onClose={(_event, reason) => {
         if (reason === "backdropClick") return;

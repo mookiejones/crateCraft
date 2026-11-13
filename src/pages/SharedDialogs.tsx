@@ -71,6 +71,32 @@ function adoptNative(id: Exclude<SharedDialogId, "crate-prompt-dialog" | "confir
   return bucket;
 }
 
+/**
+ * Park an adopted dialog body on the MUI paper, or hide it on the host.
+ *
+ * A missing dest is the browser race: MUI has not bound the root yet.
+ * Leaving the body visible in `#shared-dialogs` paints closed dialogs
+ * under the Crates page.
+ *
+ * @param bucket Adopted markup wrapper.
+ * @param dest MUI paper or dialog root, or null while that node is missing.
+ * @param host `#shared-dialogs`.
+ * @returns {void}
+ */
+export function parkSharedDialogBucket(
+  bucket: HTMLElement,
+  dest: HTMLElement | null,
+  host: HTMLElement | null,
+): void {
+  if (dest) {
+    if (bucket.parentElement !== dest) dest.appendChild(bucket);
+    bucket.hidden = false;
+    return;
+  }
+  if (host && bucket.parentElement !== host) host.appendChild(bucket);
+  bucket.hidden = true;
+}
+
 function placeBucket(
   id: Exclude<SharedDialogId, "crate-prompt-dialog" | "confirm-dialog">,
   paper: HTMLElement | null,
@@ -80,12 +106,19 @@ function placeBucket(
   if (root instanceof HTMLElement) {
     root.id = id;
     bindDialogApi(root, id);
-    const dest = paper ?? root.querySelector(".MuiDialogContent-root") ?? root;
-    if (bucket.parentElement !== dest) dest.appendChild(bucket);
-    return;
   }
+  const content =
+    root instanceof HTMLElement ? root.querySelector(".MuiDialogContent-root") : null;
+  const dest =
+    paper ??
+    (content instanceof HTMLElement ? content : null) ??
+    (root instanceof HTMLElement ? root : null);
   const host = document.getElementById("shared-dialogs");
-  if (host instanceof HTMLElement && bucket.parentElement !== host) host.appendChild(bucket);
+  parkSharedDialogBucket(
+    bucket,
+    dest,
+    host instanceof HTMLElement ? host : null,
+  );
 }
 
 function AdoptedDialog({
@@ -103,6 +136,13 @@ function AdoptedDialog({
       id={id}
       labelledBy={labelledBy}
       describedBy={describedBy}
+      onRoot={(node) => {
+        if (node) {
+          adoptNative(id);
+          const paper = node.querySelector(".MuiDialogContent-root");
+          placeBucket(id, paper instanceof HTMLElement ? paper : node);
+        }
+      }}
       contentRef={(paper) => {
         if (paper) {
           adoptNative(id);
