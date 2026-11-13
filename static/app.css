@@ -1218,6 +1218,10 @@ button:disabled { cursor: default; }
 
 .marker button, .copy-row button { text-align: left; }
 
+#shared-dialogs [data-shared-bucket] {
+  display: none;
+}
+
 dialog,
 [data-shared-dialog] .MuiDialog-paper {
   border: 1px solid var(--rule);

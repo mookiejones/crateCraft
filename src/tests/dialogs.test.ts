@@ -3,6 +3,7 @@ import { loadPrivacy, rankReplaceCandidates, rekordboxExportUrl, renderCratesRep
 import { el } from "../lib/dom";
 import { state } from "../lib/state";
 import { mountSharedDialogs, unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { parkSharedDialogBucket } from "../pages/SharedDialogs";
 import { drainReactScheduler, installPage } from "./test-page";
 import { playlistCrate, renderShell } from "../lib/ui/views";
 
@@ -80,6 +81,19 @@ describe("playlist export chrome", () => {
     expect(el("rekordbox-dialog").contains(el("rekordbox-memory"))).toBe(true);
   });
 
+  it("hides adopted bodies that remain in #shared-dialogs", () => {
+    mountSharedDialogs();
+    const host = document.getElementById("shared-dialogs");
+    expect(host).toBeInstanceOf(HTMLElement);
+    const parked = [...host!.querySelectorAll("[data-shared-bucket]")];
+    for (const bucket of parked) {
+      expect(bucket).toBeInstanceOf(HTMLElement);
+      expect((bucket as HTMLElement).hidden).toBe(true);
+    }
+    expect(el("rekordbox-dialog").contains(el("rekordbox-memory"))).toBe(true);
+    expect(el("rekordbox-dialog").open).toBe(false);
+  });
+
   it("keeps Memory cues, Hot loops, and the key in the Rekordbox dialog", () => {
     const dialog = el("rekordbox-dialog");
     expect(dialog.contains(el("rekordbox-memory"))).toBe(true);
@@ -126,6 +140,33 @@ describe("playlist export chrome", () => {
     el("export-rekordbox").click();
     expect(fetchMock).not.toHaveBeenCalled();
     expect(el("rekordbox-dialog").open).toBe(false);
+  });
+});
+
+describe("parkSharedDialogBucket", () => {
+  beforeEach(() => {
+    installPage();
+  });
+
+  it("hides a bucket parked on the host when the paper is missing", () => {
+    const host = document.getElementById("shared-dialogs") as HTMLDivElement;
+    const bucket = document.createElement("div");
+    bucket.setAttribute("data-shared-bucket", "rekordbox-dialog");
+    parkSharedDialogBucket(bucket, null, host);
+    expect(bucket.parentElement).toBe(host);
+    expect(bucket.hidden).toBe(true);
+  });
+
+  it("moves a bucket into the paper before the MUI root is bound", () => {
+    const host = document.getElementById("shared-dialogs") as HTMLDivElement;
+    const paper = document.createElement("div");
+    document.body.appendChild(paper);
+    const bucket = document.createElement("div");
+    bucket.setAttribute("data-shared-bucket", "rekordbox-dialog");
+    host.appendChild(bucket);
+    parkSharedDialogBucket(bucket, paper, host);
+    expect(bucket.parentElement).toBe(paper);
+    expect(bucket.hidden).toBe(false);
   });
 });
 
