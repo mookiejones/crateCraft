@@ -41,7 +41,7 @@ import { loadUpdate, wireUpdate } from "./lib/ui/update";
 import { loadVersion, wireVersion } from "./lib/ui/version";
 import { wireFolderSync } from "./lib/crates/folder-sync";
 import { refreshPresetsOnOpen, wirePresets } from "./lib/crates/presets";
-import { loadLibrary, setMode, showFailure, wireLibrary } from "./lib/ui/views";
+import { applyIncomingHash, loadLibrary, setMode, showFailure, wireHashRoutes, wireLibrary } from "./lib/ui/views";
 import { mountPlayer, playerControls } from "./lib/player/player";
 import { mountAppShell } from "./lib/ui/app-shell";
 import { mountSettings } from "./lib/ui/settings";
@@ -63,6 +63,7 @@ mountSettings();
 mountSnapshots();
 registerPlayerControls(playerControls);
 wireLibrary();
+wireHashRoutes();
 wireVirtualScroll();
 wireShortcuts();
 installDesktopActions();
@@ -94,5 +95,8 @@ wireUpdate();
 void loadUpdate();
 bindLibraryReload(loadLibrary);
 loadLibrary()
-  .then(() => refreshPresetsOnOpen())
+  .then(async () => {
+    await applyIncomingHash();
+    return refreshPresetsOnOpen();
+  })
   .catch(showFailure);

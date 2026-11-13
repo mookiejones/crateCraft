@@ -58171,7 +58171,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
     return grow ? (column2.flex = 1, column2) : (column2.width = field2 === "played" ? HISTORY_PLAYED_WIDTH : 88, column2);
   }
-  function trackListColumns(history, handlers) {
+  function trackListColumns(history2, handlers) {
     let playLabel = t("column.play");
     return [{
       field: "play",
@@ -58189,7 +58189,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       headerAlign: "center",
       renderHeader: () => /* @__PURE__ */ (0, import_jsx_runtime212.jsx)("span", { className: "visually-hidden", children: playLabel }),
       renderCell: (params) => playCell(params, handlers)
-    }, ...(history ? HISTORY_COLUMN_FIELDS : TRACK_COLUMN_FIELDS).map(dataColumn)];
+    }, ...(history2 ? HISTORY_COLUMN_FIELDS : TRACK_COLUMN_FIELDS).map(dataColumn)];
   }
 
   // src/containers/TrackListContext.tsx
@@ -58259,12 +58259,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function TrackListWindow({ pane, onFocusList }) {
     ensureGridDom();
-    let list = useTrackList(), hostRef = (0, import_react15.useRef)(null), [height2, setHeight] = (0, import_react15.useState)(() => 600), view = pane === "b" ? list.viewB : list.view, history = list.mode === "history", columns = (0, import_react15.useMemo)(
-      () => trackListColumns(history, {
+    let list = useTrackList(), hostRef = (0, import_react15.useRef)(null), [height2, setHeight] = (0, import_react15.useState)(() => 600), view = pane === "b" ? list.viewB : list.view, history2 = list.mode === "history", columns = (0, import_react15.useMemo)(
+      () => trackListColumns(history2, {
         selectTrack: list.selectTrack,
         onFocusList
       }),
-      [history, list.selectTrack, list.locale, onFocusList]
+      [history2, list.selectTrack, list.locale, onFocusList]
     ), sortModel = (0, import_react15.useMemo)(() => list.sort ? [{ field: list.sort, sort: list.sortDir < 0 ? "desc" : "asc" }] : [], [list.sort, list.sortDir]), rowSelectionModel = (0, import_react15.useMemo)(() => ({
       type: "include",
       ids: list.selectedId == null ? /* @__PURE__ */ new Set() : /* @__PURE__ */ new Set([list.selectedId])
@@ -58274,7 +58274,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ), hideFooter = view.length <= GRID_PAGE_SIZE;
     (0, import_react15.useLayoutEffect)(() => {
       setPage(0);
-    }, [history, list.mode, list.sort, list.sortDir, view.length]), (0, import_react15.useLayoutEffect)(() => {
+    }, [history2, list.mode, list.sort, list.sortDir, view.length]), (0, import_react15.useLayoutEffect)(() => {
       let parent = hostRef.current?.parentElement ?? null, measure = () => {
         setHeight(paneHeight(parent));
       };
@@ -58346,7 +58346,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         }
       },
-      `${history ? "history" : "tracks"}-${view.length === 0 ? "empty" : "data"}`
+      `${history2 ? "history" : "tracks"}-${view.length === 0 ? "empty" : "data"}`
     ) });
   }
 
@@ -67717,7 +67717,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
   function HistoryDetail() {
-    let history = useHistory(), entry = history.entries.find((item) => item.id === history.selectedId);
+    let history2 = useHistory(), entry = history2.entries.find((item) => item.id === history2.selectedId);
     if (!entry) return null;
     let lines = [
       [t("column.played"), entry.played ? t("common.yes") : t("common.no")],
@@ -67736,7 +67736,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           ref: tooltipRef10(tips.openInLibrary),
           className: "text-button",
           onClick: () => {
-            history.openInLibrary(entry.asset_id);
+            history2.openInLibrary(entry.asset_id);
           },
           children: t("history.openInLibrary")
         }
@@ -67752,8 +67752,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function HistorySessions() {
-    let history = useHistory();
-    return /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(import_jsx_runtime274.Fragment, { children: history.sessions.map((session) => {
+    let history2 = useHistory();
+    return /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(import_jsx_runtime274.Fragment, { children: history2.sessions.map((session) => {
       let name = session.name || t("history.session");
       return /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)(
         "button",
@@ -67762,9 +67762,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           ref: tooltipRef11(sessionTip(session.name || "Session")),
           className: "crate",
           role: "option",
-          "aria-selected": session.id === history.historyId,
+          "aria-selected": session.id === history2.historyId,
           onClick: () => {
-            history.openSession(session.id);
+            history2.openSession(session.id);
           },
           children: [
             /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("span", { className: "name", children: name }),
@@ -68525,6 +68525,51 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
 
+  // src/lib/ui/hash-route.ts
+  var SPACE_SLUGS = {
+    library: "Serato Library",
+    video: "Serato Video",
+    "apple-music": "Apple Music",
+    prepare: "Prepare"
+  }, SPACE_TO_SLUG = Object.fromEntries(
+    Object.entries(SPACE_SLUGS).map(([slug, space]) => [space, slug])
+  ), VIEW_MODES = new Set(NAV_GROUPS.flatMap((group) => [...group.modes]));
+  function isViewMode(mode) {
+    return VIEW_MODES.has(mode);
+  }
+  function formatHash(space, mode, crate) {
+    let slug = SPACE_TO_SLUG[space] ?? "library", view = isViewMode(mode) ? mode : "crates";
+    return crate === "all" || typeof crate != "number" || !Number.isInteger(crate) || crate < 0 ? `#${slug}/${view}` : `#${slug}/${view}/${crate}`;
+  }
+  function parseHash(hash5) {
+    let raw = hash5.replace(/^#/, "").trim();
+    if (!raw) return { space: null, mode: "crates", crate: "all" };
+    let parts = raw.split("/").filter((part) => part.length > 0);
+    if (parts.length === 0 || parts.length > 3)
+      return { space: null, mode: "crates", crate: "all" };
+    let space = null, rest = parts, first = parts[0] ?? "";
+    if (first in SPACE_SLUGS)
+      space = SPACE_SLUGS[first] ?? null, rest = parts.slice(1);
+    else if (!isViewMode(first))
+      if (parts.length >= 2 && isViewMode(parts[1] ?? ""))
+        rest = parts.slice(1);
+      else
+        return { space: null, mode: "crates", crate: "all" };
+    if (rest.length === 0) return { space, mode: "crates", crate: "all" };
+    let modePart = rest[0] ?? "";
+    if (!isViewMode(modePart)) return { space, mode: "crates", crate: "all" };
+    let cratePart = rest[1];
+    return cratePart == null || cratePart === "" ? { space, mode: modePart, crate: "all" } : /^\d+$/.test(cratePart) ? { space, mode: modePart, crate: Number(cratePart) } : { space, mode: modePart, crate: "all" };
+  }
+  function writeHash(hash5, replace2) {
+    let next3 = hash5.startsWith("#") ? hash5 : `#${hash5}`;
+    if (location.hash === next3) return;
+    let url = new URL(location.href);
+    url.hash = next3;
+    let target = `${url.pathname}${url.search}${url.hash}`;
+    replace2 ? history.replaceState(history.state, "", target) : history.pushState(history.state, "", target);
+  }
+
   // src/lib/ui/sheet-chrome.ts
   var VIEW_LABEL_KEYS = {
     crates: "view.crates",
@@ -68572,6 +68617,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/views.ts
+  var applyingHash = !1;
+  function syncHash() {
+    applyingHash || writeHash(formatHash(state.space, state.mode, state.activeCrate), !1);
+  }
   var detailRoot = null, detailPlayRoot = null, crateListRoot = null, crateListHost = null, crateActionsRoot = null, crateActionsHost = null, crateBrowserRoot = null, crateBrowserHost = null, historyDetailRoot = null, historyDetailHost = null, sessionRoot = null, sessionHost = null;
   function clearDetailIslands() {
     detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot?.unmount(), historyDetailRoot = null, historyDetailHost = null;
@@ -68706,8 +68755,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     bar.after(editor), bar.after(line2);
   }
   function markHistoryColumns() {
-    let history = state.mode === "history";
-    document.querySelector(".browser")?.classList.toggle("for-history", history), el("list").classList.toggle("for-history", history);
+    let history2 = state.mode === "history";
+    document.querySelector(".browser")?.classList.toggle("for-history", history2), el("list").classList.toggle("for-history", history2);
   }
   function renderColumns() {
     markHistoryColumns();
@@ -68842,7 +68891,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let alt = !!(event?.altKey || event?.shiftKey), pane = clickPane(state.splitCrates && state.mode === "crates", state.focusedPane, alt);
     pane === "b" ? state.secondCrate = id : state.activeCrate = id, !alt && state.splitCrates && state.mode === "crates" && (state.focusedPane = pane), id !== "all" && expandAncestors(id);
     let list = pane === "b" ? el("list-b") : el("list");
-    list.scrollTop = 0, renderList(), state.mode === "gig" && loadGigCheck().catch(showGigFailure), state.mode === "drift" && loadDrift().catch(showDriftFailure), state.mode === "health" && loadHealth().catch(showHealthFailure), state.mode === "scan" && loadScan().catch(showScanFailure), state.mode === "bitrate" && loadBitrate().catch(showBitrateFailure);
+    list.scrollTop = 0, renderList(), state.mode === "gig" && loadGigCheck().catch(showGigFailure), state.mode === "drift" && loadDrift().catch(showDriftFailure), state.mode === "health" && loadHealth().catch(showHealthFailure), state.mode === "scan" && loadScan().catch(showScanFailure), state.mode === "bitrate" && loadBitrate().catch(showBitrateFailure), pane !== "b" && syncHash();
   }
   function focusCrateItem(item) {
     if (item) {
@@ -69142,7 +69191,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     state.duplicateIds = ids, state.duplicateSpace = state.space, state.mode === "duplicates" && renderList();
   }
   async function openInLibrary(assetId) {
-    state.space = "Serato Library", el("space").value = state.space, state.mode = "crates", state.activeCrate = "all", state.selectedId = assetId, await loadLibrary(), selectTrack(assetId);
+    state.space = "Serato Library", el("space").value = state.space, state.mode = "crates", state.activeCrate = "all", state.selectedId = assetId, await loadLibrary(), selectTrack(assetId), syncHash();
   }
   async function loadLibrary() {
     el("count").textContent = t("library.loading");
@@ -69157,7 +69206,26 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let path = state.filesAtRoots ? "" : state.filesPath || "";
       loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots }).catch((error2) => failFiles(error2));
     }
-    mode === "snapshots" && loadSnapshots().catch((error2) => failSnapshots(error2)), mode === "gig" && loadGigCheck().catch(showGigFailure), mode === "portable" && loadPortableView().catch(showPortableFailure), mode === "drift" && loadDrift().catch(showDriftFailure), mode === "health" && loadHealth().catch(showHealthFailure), mode === "stats" && loadHistoryStats().catch(showHistoryStatsFailure), mode === "scan" && loadScan("quick").catch(showScanFailure), mode === "bitrate" && loadBitrate().catch(showBitrateFailure), mode === "tags" && loadTags().catch(showTagsFailure), renderList();
+    mode === "snapshots" && loadSnapshots().catch((error2) => failSnapshots(error2)), mode === "gig" && loadGigCheck().catch(showGigFailure), mode === "portable" && loadPortableView().catch(showPortableFailure), mode === "drift" && loadDrift().catch(showDriftFailure), mode === "health" && loadHealth().catch(showHealthFailure), mode === "stats" && loadHistoryStats().catch(showHistoryStatsFailure), mode === "scan" && loadScan("quick").catch(showScanFailure), mode === "bitrate" && loadBitrate().catch(showBitrateFailure), mode === "tags" && loadTags().catch(showTagsFailure), renderList(), syncHash();
+  }
+  async function applyIncomingHash() {
+    let parsed = parseHash(location.hash), space = parsed.space ?? state.space, crateInList = (id) => id === "all" || state.crates.some((crate2) => crate2.id === id), crate = crateInList(parsed.crate) ? parsed.crate : "all", canonical = formatHash(space, parsed.mode, crate);
+    if (space === state.space && parsed.mode === state.mode && crate === state.activeCrate) {
+      writeHash(canonical, !0);
+      return;
+    }
+    applyingHash = !0;
+    try {
+      space !== state.space && (state.space = space, el("space").value = space, await loadLibrary(), crate = crateInList(parsed.crate) ? parsed.crate : "all"), state.mode !== parsed.mode && setMode(parsed.mode), state.activeCrate !== crate && selectCrate(crate), writeHash(formatHash(state.space, state.mode, state.activeCrate), !0);
+    } finally {
+      applyingHash = !1;
+    }
+  }
+  function wireHashRoutes() {
+    let onHash = () => {
+      applyIncomingHash();
+    };
+    window.addEventListener("hashchange", onHash), window.addEventListener("popstate", onHash);
   }
   function showFailure(error2) {
     el("count").textContent = t("library.unavailable"), setTrackDetail({ kind: "error", message: failureOf(error2).message }), paintDetailIsland();
@@ -69196,7 +69264,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let file = event.target.files?.[0];
       event.target.value = "", file && importPlaylist(file).catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("space").addEventListener("change", () => {
-      state.space = el("space").value, state.activeCrate = "all", state.selectedId = null, state.duplicateIds = null, state.duplicateGroups = [], loadLibrary().then(() => state.mode === "duplicates" ? loadDuplicates() : state.mode === "gig" ? loadGigCheck().catch(showGigFailure) : state.mode === "portable" ? loadPortableView().catch(showPortableFailure) : state.mode === "drift" ? loadDrift().catch(showDriftFailure) : state.mode === "health" ? loadHealth().catch(showHealthFailure) : state.mode === "stats" ? loadHistoryStats().catch(showHistoryStatsFailure) : state.mode === "scan" ? loadScan().catch(showScanFailure) : state.mode === "bitrate" ? loadBitrate().catch(showBitrateFailure) : state.mode === "tags" ? loadTags().catch(showTagsFailure) : null).catch(showFailure);
+      state.space = el("space").value, state.activeCrate = "all", state.selectedId = null, state.duplicateIds = null, state.duplicateGroups = [], syncHash(), loadLibrary().then(() => state.mode === "duplicates" ? loadDuplicates() : state.mode === "gig" ? loadGigCheck().catch(showGigFailure) : state.mode === "portable" ? loadPortableView().catch(showPortableFailure) : state.mode === "drift" ? loadDrift().catch(showDriftFailure) : state.mode === "health" ? loadHealth().catch(showHealthFailure) : state.mode === "stats" ? loadHistoryStats().catch(showHistoryStatsFailure) : state.mode === "scan" ? loadScan().catch(showScanFailure) : state.mode === "bitrate" ? loadBitrate().catch(showBitrateFailure) : state.mode === "tags" ? loadTags().catch(showTagsFailure) : null).catch(showFailure);
     }), el("views").addEventListener("click", (event) => {
       let button = event.target.closest("button");
       button?.dataset.nav && setMode(modeForGroup(button.dataset.nav));
@@ -71598,6 +71666,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   mountSnapshots();
   registerPlayerControls(playerControls);
   wireLibrary();
+  wireHashRoutes();
   wireVirtualScroll();
   wireShortcuts();
   installDesktopActions();
@@ -71623,6 +71692,6 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   wireUpdate();
   loadUpdate();
   bindLibraryReload(loadLibrary);
-  loadLibrary().then(() => refreshPresetsOnOpen()).catch(showFailure);
+  loadLibrary().then(async () => (await applyIncomingHash(), refreshPresetsOnOpen())).catch(showFailure);
 })();
 //# sourceMappingURL=app.js.map
