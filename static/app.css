@@ -615,6 +615,11 @@ body.is-resizing {
   border-color: var(--cadmium);
 }
 
+.browser-actions .MuiButton-root {
+  min-height: unset;
+  background-color: transparent;
+}
+
 .crate-browser-actions {
   display: contents;
 }
@@ -2031,6 +2036,9 @@ dialog .settings-field select {
 .preset-field[hidden],
 #preset-scope-label[hidden],
 #crate-refresh[hidden],
+#crate-split[hidden],
+#crate-save-view[hidden],
+#export-m3u[hidden],
 #files-move-here[hidden],
 #files-pick-cancel[hidden],
 #files-pick[hidden],
