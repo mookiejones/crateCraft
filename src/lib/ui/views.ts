@@ -1857,7 +1857,9 @@ export function paintGeneration(info: SeratoStatus | null | undefined): void {
 export function applyStatus(info: SeratoStatus | null | undefined) {
   state.serato = info;
   state.writable = Boolean(info?.writable);
-  el("status").textContent = statusLine(info);
+  const status = el("status");
+  status.textContent = statusLine(info);
+  status.hidden = info?.writable !== false;
   paintGeneration(info);
   renderShell();
 }

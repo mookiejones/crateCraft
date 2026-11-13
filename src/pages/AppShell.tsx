@@ -4,10 +4,11 @@
  * Existing page nodes keep their ids. This shell portals the crateCraft
  * heading and `#library-generation` into the AppBar after the menu
  * toggle, `#player-bar` into the Toolbar flex slot between the chip and
- * Help, `#open-help` and `#open-settings` to the AppBar end, then a MUI
- * Alert for the last action notice, `#views` into the Drawer, and
- * `#app-body` into Main. The player slot stays hidden while `trackId`
- * is null. `paintNav` inserts `#view-children` after the open primary.
+ * Help, `#open-help` and `#open-settings` to the AppBar end, `#status`
+ * into a persistent lock bar under the AppBar, then a MUI Alert for the
+ * last action notice, `#views` into the Drawer, and `#app-body` into
+ * Main. The player slot stays hidden while `trackId` is null. `paintNav`
+ * inserts `#view-children` after the open primary.
  * Space stays in `.brand`. Crate names stay in the Main rail so collapse
  * does not hide them. Mini width is remembered in settings.
  */
@@ -70,6 +71,7 @@ export function AppShell() {
   const generationSlot = useRef<HTMLDivElement>(null);
   const actionsSlot = useRef<HTMLDivElement>(null);
   const playerSlot = useRef<HTMLDivElement>(null);
+  const lockSlot = useRef<HTMLDivElement>(null);
   const navSlot = useRef<HTMLDivElement>(null);
   const bodySlot = useRef<HTMLDivElement>(null);
 
@@ -114,6 +116,7 @@ export function AppShell() {
     adopt(actionsSlot.current, "open-help");
     adopt(actionsSlot.current, "open-settings");
     adopt(playerSlot.current, "player-bar");
+    adopt(lockSlot.current, "status");
     adopt(navSlot.current, "views");
     adopt(bodySlot.current, "app-body");
     paintNav(state.mode);
@@ -176,6 +179,7 @@ export function AppShell() {
           />
         </Toolbar>
       </AppBar>
+      <Box ref={lockSlot} className="app-bar-lock" sx={{ flexShrink: 0 }} />
       <NoticeBanner />
       <Box sx={{ display: "flex", flex: 1, minHeight: 0, minWidth: 0 }}>
         <Drawer

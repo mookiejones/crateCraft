@@ -19,6 +19,7 @@ import { applyLayout } from "../../lib/ui/layout";
 import { mountAppShell, unmountAppShell } from "../../lib/ui/app-shell";
 import { paintNav, resetNav } from "../../lib/ui/nav";
 import { resetNotice, setNotice } from "../../lib/ui/notice-store";
+import { applyStatus } from "../../lib/ui/views";
 import { applyStaticTooltips } from "../../lib/ui/tooltip";
 import { installPage } from "../test-page";
 
@@ -215,6 +216,49 @@ describe("AppShell", () => {
     expect(playerSlotHidden(document.getElementById("player-bar"))).toBe(true);
   });
 
+  it("shows the Serato lock copy under the AppBar without changing the chip", () => {
+    const status = document.getElementById("status");
+    const chip = document.getElementById("library-generation");
+    const appBar = document.querySelector(".MuiAppBar-root");
+    expect(status).not.toBeNull();
+    expect(status?.hidden).toBe(true);
+    expect(appBar?.contains(status)).toBe(false);
+    expect(appBar?.nextElementSibling?.contains(status)).toBe(true);
+    expect(document.querySelector(".brand")?.contains(status)).toBe(false);
+    expect(chip?.textContent).not.toBe("Serato is open. Changes are paused.");
+
+    flushSync(() => {
+      applyStatus({
+        writable: false,
+        message: "Serato is open. Changes are paused.",
+        generation: { kind: "serato4" },
+      });
+    });
+    expect(status?.hidden).toBe(false);
+    expect(status?.textContent).toBe("Serato is open. Changes are paused.");
+    expect(appBar?.nextElementSibling?.contains(status)).toBe(true);
+    expect(chip?.textContent).toBe(t("generation.serato4"));
+    expect(appBar?.contains(document.getElementById("open-help"))).toBe(true);
+    expect(document.getElementById("app-notice")).toBeNull();
+
+    flushSync(() => {
+      applyStatus({
+        writable: true,
+        generation: { kind: "serato4" },
+      });
+    });
+    expect(status?.hidden).toBe(true);
+    expect(chip?.textContent).toBe(t("generation.serato4"));
+
+    flushSync(() => {
+      setNotice("That file is not on disk.", "error");
+    });
+    const banner = document.getElementById("app-notice");
+    expect(banner?.textContent).toContain("That file is not on disk.");
+    expect(status?.parentElement?.nextElementSibling?.contains(banner)).toBe(true);
+    expect(document.getElementById("app-body")?.contains(banner)).toBe(false);
+  });
+
   it("places a dismissible Alert under the AppBar for setNotice", () => {
     expect(document.getElementById("app-notice")).toBeNull();
     flushSync(() => {
@@ -223,7 +267,8 @@ describe("AppShell", () => {
     const banner = document.getElementById("app-notice");
     const appBar = document.querySelector(".MuiAppBar-root");
     expect(banner?.textContent).toContain("That file is not on disk.");
-    expect(appBar?.nextElementSibling?.contains(banner)).toBe(true);
+    expect(appBar?.contains(banner)).toBe(false);
+    expect(document.getElementById("status")?.parentElement?.nextElementSibling?.contains(banner)).toBe(true);
     expect(document.getElementById("app-body")?.contains(banner)).toBe(false);
     document.querySelector<HTMLButtonElement>("#app-notice button")?.click();
     expect(document.getElementById("app-notice")).toBeNull();

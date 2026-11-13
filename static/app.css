@@ -263,6 +263,21 @@ textarea:focus-visible,
   font-size: var(--font-heading);
 }
 
+.app-bar-lock:not(:has(#status:not([hidden]))) {
+  display: none;
+}
+
+.app-bar-lock {
+  background: var(--color-warn-bg);
+  color: var(--color-warn-text);
+  border-bottom: 1px solid var(--color-warn-border);
+  padding: var(--space-2) var(--space-4);
+}
+
+.app-bar-lock #status {
+  margin: 0;
+}
+
 .generation {
   display: block;
   width: 100%;
