@@ -1,0 +1,74 @@
+name: Milestone empty
+
+on:
+  issues:
+    types: [closed]
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      milestone:
+        description: Milestone number to check
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: milestone-empty-${{ github.event.issue.milestone.number || github.event.pull_request.milestone.number || inputs.milestone }}
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    name: comment on Next release
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' && github.event.issue.milestone != null) ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.milestone != null &&
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Comment when the milestone is empty
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_REPO: ${{ github.repository }}
+          MILESTONE_NUMBER: ${{ github.event.issue.milestone.number || github.event.pull_request.milestone.number || inputs.milestone }}
+        run: |
+          set -euo pipefail
+          milestone="$(gh api "repos/${RELEASE_REPO}/milestones/${MILESTONE_NUMBER}")"
+          title="$(printf '%s\n' "$milestone" | jq -r .title)"
+          url="$(printf '%s\n' "$milestone" | jq -r .html_url)"
+          open_count="$(printf '%s\n' "$milestone" | jq -r .open_issues)"
+          numbers="$(gh issue list --repo "$RELEASE_REPO" --state open --search 'in:title "Next release"' --json number,title --jq '.[] | select(.title=="Next release") | .number')"
+          count="$(printf '%s\n' "$numbers" | grep -c . || true)"
+          if [ "$count" -eq 0 ]; then
+            echo "No open Next release issue; not commenting."
+            exit 0
+          fi
+          number="$(printf '%s\n' "$numbers" | sort -n | head -1)"
+          gh api --paginate "repos/${RELEASE_REPO}/issues/${number}/comments" | jq '[.[].body]' > comments.json
+          python scripts/milestone_empty.py \
+            --milestone-number "$MILESTONE_NUMBER" \
+            --milestone-title "$title" \
+            --milestone-url "$url" \
+            --open-count "$open_count" \
+            --comments-file comments.json \
+            --write comment.md
+          if [ -f comment.md ]; then
+            gh issue comment "$number" --repo "$RELEASE_REPO" --body-file comment.md
+          fi

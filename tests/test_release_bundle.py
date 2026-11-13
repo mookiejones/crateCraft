@@ -538,6 +538,7 @@ class WorkflowTests(unittest.TestCase):
                 "ci.yml",
                 "codeql.yml",
                 "dependency-review.yml",
+                "milestone-empty.yml",
                 "pages.yml",
                 "pr-labels.yml",
                 "prepare-release.yml",
