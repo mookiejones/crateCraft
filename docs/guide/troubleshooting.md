@@ -132,7 +132,7 @@ Read the line under the checkbox in **Settings**. **This copy has no telemetry k
 
 **Settings**, then **Open logs folder** or **Copy logs**. The folders are in [Settings and privacy](settings.md#logs). The log can include the path of `master.sqlite`. It is not uploaded.
 
-The same Settings page has **About**. **Copy version** puts the version on the clipboard for a bug report. The line says **Copied**. When the version cannot be read, About says **Version unavailable** and the sidebar does not show a version.
+The same Settings page has **About**. **Copy version** puts the version on the clipboard for a bug report. The line says **Copied**. When the version cannot be read, About says **Version unavailable**. The sidebar does not show a version.
 
 ## Does this upload my music?
 

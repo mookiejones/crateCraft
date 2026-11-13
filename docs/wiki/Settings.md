@@ -40,7 +40,7 @@ What can leave, and only after you choose share and only when a key is present, 
 
 **Open logs folder** says **Opened the logs folder.** or **Couldn't open the logs folder.** **Copy logs** says **Copied the logs.** A long log says **Copied the latest log entries. Older entries were left out.** An empty log says **No log entries yet.**
 
-**About** shows the version of this copy, such as **v1.4.2**. The same text sits at the bottom of the sidebar, so you can see it without opening Settings. **Copy version** puts that line on the clipboard and the next line says **Copied**. When the version cannot be read, About says **Version unavailable** and the sidebar line is blank.
+**About** shows the version of this copy, such as **v1.4.2**. **Copy version** puts that line on the clipboard and the next line says **Copied**. When the version cannot be read, About says **Version unavailable**. The sidebar does not repeat the version.
 
 The same settings file remembers the window, the track-list width, the language, the theme, whether the app icon follows that theme, that setup finished, and the Rekordbox dialog: Memory cues, Hot loops, and the key notation. If setup was pointed at a library that is not in the usual folder, `library.json` in that same folder remembers the file. The path stays on this computer.
 

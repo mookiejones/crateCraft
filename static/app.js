@@ -71400,18 +71400,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function paint3(label) {
     painted = label;
-    let footer = el("app-version"), about = document.getElementById("about-version"), copyStatus = document.getElementById("version-copy-status");
+    let about = document.getElementById("about-version"), copyStatus = document.getElementById("version-copy-status");
     if (copyStatus && (copyStatus.textContent = ""), !label) {
-      copyText2 = "", footer.hidden = !0, footer.replaceChildren();
+      copyText2 = "";
       let unavailable = t("version.unavailable");
       about && (about.textContent = unavailable), el("help-version").textContent = unavailable, patchSettings({ aboutVersion: unavailable, versionCopyStatus: "" });
       return;
     }
-    copyText2 = label, footer.hidden = !1, footer.replaceChildren();
-    let name = document.createElement("span");
-    name.className = "visually-hidden", name.textContent = `${t("version.app")} `;
-    let value = document.createElement("span");
-    value.textContent = label, footer.append(name, value), about && (about.textContent = label), el("help-version").textContent = label, patchSettings({ aboutVersion: label, versionCopyStatus: "" });
+    copyText2 = label, about && (about.textContent = label), el("help-version").textContent = label, patchSettings({ aboutVersion: label, versionCopyStatus: "" });
   }
   function repaintVersion() {
     painted !== void 0 && paint3(painted);
