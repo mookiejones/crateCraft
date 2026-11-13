@@ -224,6 +224,18 @@ describe("AppShell", () => {
     expect(playerSlotHidden(document.getElementById("player-bar"))).toBe(true);
   });
 
+  it("keeps Help on the AppBar right while the player is hidden", () => {
+    const bar = document.getElementById("player-bar");
+    const actions = document.querySelector(".app-bar-actions");
+    const help = document.getElementById("open-help");
+    const settings = document.getElementById("open-settings");
+    expect(playerSlotHidden(bar)).toBe(true);
+    expect(actions).toBeInstanceOf(HTMLElement);
+    expect(actions?.contains(help)).toBe(true);
+    expect(actions?.contains(settings)).toBe(true);
+    expect(getComputedStyle(actions as HTMLElement).marginLeft).toBe("auto");
+  });
+
   it("shows the Serato lock copy under the AppBar without changing the chip", () => {
     const status = document.getElementById("status");
     const chip = document.getElementById("library-generation");

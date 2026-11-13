@@ -33,7 +33,7 @@ Double-click a track to play it. After a track loads, **Play**, the title, the w
 
 The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**.
 
-**Help** and **Settings** sit on the right of the top bar. Settings lists the keys under **Keyboard shortcuts**. **?** opens that list. Ctrl+K or Command+K finds a track or a file. Hover a control, or tab to it, to read what it does. If it has a shortcut, the note shows that key.
+**Help** and **Settings** sit on the right of the top bar, even before a track loads. Settings lists the keys under **Keyboard shortcuts**. **?** opens that list. Ctrl+K or Command+K finds a track or a file. Hover a control, or tab to it, to read what it does. If it has a shortcut, the note shows that key.
 
 ## Cue points and Backups
 

@@ -4,7 +4,8 @@
  * Existing page nodes keep their ids. This shell portals the crateCraft
  * heading and `#library-generation` into the AppBar after the menu
  * toggle, `#player-bar` into the Toolbar flex slot between the chip and
- * Help, `#open-help` and `#open-settings` to the AppBar end, `#status`
+ * Help, `#open-help` and `#open-settings` to the AppBar end (`ml: auto`
+ * so they stay right while the player is hidden), `#status`
  * into a persistent lock bar under the AppBar, then a MUI Alert for the
  * last action notice, `#views` into the Drawer, and `#app-body` into
  * Main. The player slot stays hidden while `trackId` is null. `paintNav`
@@ -175,7 +176,7 @@ export function AppShell() {
           <Box
             ref={actionsSlot}
             className="app-bar-actions"
-            sx={{ display: "flex", gap: 1, flexShrink: 0 }}
+            sx={{ display: "flex", gap: 1, flexShrink: 0, ml: "auto" }}
           />
         </Toolbar>
       </AppBar>

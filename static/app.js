@@ -71352,7 +71352,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               {
                 ref: actionsSlot,
                 className: "app-bar-actions",
-                sx: { display: "flex", gap: 1, flexShrink: 0 }
+                sx: { display: "flex", gap: 1, flexShrink: 0, ml: "auto" }
               }
             )
           ] }) }),
