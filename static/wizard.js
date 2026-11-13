@@ -30,9 +30,9 @@ var SeratoWizard = (() => {
     mod
   )), __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: !0 }), mod);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react/cjs/react.production.js
+  // node_modules/react/cjs/react.production.js
   var require_react_production = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react/cjs/react.production.js"(exports) {
+    "node_modules/react/cjs/react.production.js"(exports) {
       "use strict";
       var REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity"), REACT_VIEW_TRANSITION_TYPE = /* @__PURE__ */ Symbol.for("react.view_transition"), MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
       function getIteratorFn(maybeIterable) {
@@ -447,17 +447,17 @@ var SeratoWizard = (() => {
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react/index.js
+  // node_modules/react/index.js
   var require_react = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react/index.js"(exports, module) {
+    "node_modules/react/index.js"(exports, module) {
       "use strict";
       module.exports = require_react_production();
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react-dom/cjs/react-dom.production.js
+  // node_modules/react-dom/cjs/react-dom.production.js
   var require_react_dom_production = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react-dom/cjs/react-dom.production.js"(exports) {
+    "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
       var React53 = require_react();
       function formatProdErrorMessage(code) {
@@ -609,9 +609,9 @@ var SeratoWizard = (() => {
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react-dom/index.js
+  // node_modules/react-dom/index.js
   var require_react_dom = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react-dom/index.js"(exports, module) {
+    "node_modules/react-dom/index.js"(exports, module) {
       "use strict";
       function checkDCE() {
         if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
@@ -625,9 +625,9 @@ var SeratoWizard = (() => {
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/scheduler/cjs/scheduler.production.js
+  // node_modules/scheduler/cjs/scheduler.production.js
   var require_scheduler_production = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/scheduler/cjs/scheduler.production.js"(exports) {
+    "node_modules/scheduler/cjs/scheduler.production.js"(exports) {
       "use strict";
       function push(heap, node2) {
         var index = heap.length;
@@ -851,17 +851,17 @@ var SeratoWizard = (() => {
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/scheduler/index.js
+  // node_modules/scheduler/index.js
   var require_scheduler = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/scheduler/index.js"(exports, module) {
+    "node_modules/scheduler/index.js"(exports, module) {
       "use strict";
       module.exports = require_scheduler_production();
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react-dom/cjs/react-dom-client.production.js
+  // node_modules/react-dom/cjs/react-dom-client.production.js
   var require_react_dom_client_production = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
+    "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler(), React53 = require_react(), ReactDOM2 = require_react_dom();
       function formatProdErrorMessage(code) {
@@ -12106,9 +12106,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react-dom/client.js
+  // node_modules/react-dom/client.js
   var require_client = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react-dom/client.js"(exports, module) {
+    "node_modules/react-dom/client.js"(exports, module) {
       "use strict";
       function checkDCE() {
         if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
@@ -12122,9 +12122,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react-is/cjs/react-is.production.js
+  // node_modules/react-is/cjs/react-is.production.js
   var require_react_is_production = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react-is/cjs/react-is.production.js"(exports) {
+    "node_modules/react-is/cjs/react-is.production.js"(exports) {
       "use strict";
       var REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy"), REACT_VIEW_TRANSITION_TYPE = /* @__PURE__ */ Symbol.for("react.view_transition"), REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference");
       function typeOf(object) {
@@ -12213,17 +12213,17 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react-is/index.js
+  // node_modules/react-is/index.js
   var require_react_is = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react-is/index.js"(exports, module) {
+    "node_modules/react-is/index.js"(exports, module) {
       "use strict";
       module.exports = require_react_is_production();
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.production.min.js
+  // node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.production.min.js
   var require_react_is_production_min = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.production.min.js"(exports) {
+    "node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.production.min.js"(exports) {
       "use strict";
       var b = typeof Symbol == "function" && Symbol.for, c = b ? /* @__PURE__ */ Symbol.for("react.element") : 60103, d = b ? /* @__PURE__ */ Symbol.for("react.portal") : 60106, e = b ? /* @__PURE__ */ Symbol.for("react.fragment") : 60107, f = b ? /* @__PURE__ */ Symbol.for("react.strict_mode") : 60108, g = b ? /* @__PURE__ */ Symbol.for("react.profiler") : 60114, h = b ? /* @__PURE__ */ Symbol.for("react.provider") : 60109, k = b ? /* @__PURE__ */ Symbol.for("react.context") : 60110, l = b ? /* @__PURE__ */ Symbol.for("react.async_mode") : 60111, m = b ? /* @__PURE__ */ Symbol.for("react.concurrent_mode") : 60111, n = b ? /* @__PURE__ */ Symbol.for("react.forward_ref") : 60112, p = b ? /* @__PURE__ */ Symbol.for("react.suspense") : 60113, q = b ? /* @__PURE__ */ Symbol.for("react.suspense_list") : 60120, r2 = b ? /* @__PURE__ */ Symbol.for("react.memo") : 60115, t2 = b ? /* @__PURE__ */ Symbol.for("react.lazy") : 60116, v = b ? /* @__PURE__ */ Symbol.for("react.block") : 60121, w = b ? /* @__PURE__ */ Symbol.for("react.fundamental") : 60117, x = b ? /* @__PURE__ */ Symbol.for("react.responder") : 60118, y = b ? /* @__PURE__ */ Symbol.for("react.scope") : 60119;
       function z(a) {
@@ -12316,17 +12316,17 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/hoist-non-react-statics/node_modules/react-is/index.js
+  // node_modules/hoist-non-react-statics/node_modules/react-is/index.js
   var require_react_is2 = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/hoist-non-react-statics/node_modules/react-is/index.js"(exports, module) {
+    "node_modules/hoist-non-react-statics/node_modules/react-is/index.js"(exports, module) {
       "use strict";
       module.exports = require_react_is_production_min();
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js
+  // node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js
   var require_hoist_non_react_statics_cjs = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js"(exports, module) {
+    "node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js"(exports, module) {
       "use strict";
       var reactIs = require_react_is2(), REACT_STATICS = {
         childContextTypes: !0,
@@ -12393,9 +12393,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react/cjs/react-jsx-runtime.production.js
+  // node_modules/react/cjs/react-jsx-runtime.production.js
   var require_react_jsx_runtime_production = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react/cjs/react-jsx-runtime.production.js"(exports) {
+    "node_modules/react/cjs/react-jsx-runtime.production.js"(exports) {
       "use strict";
       var REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment");
       function jsxProd(type, config, maybeKey) {
@@ -12419,9 +12419,9 @@ Error generating stack: ` + x.message + `
     }
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react/jsx-runtime.js
+  // node_modules/react/jsx-runtime.js
   var require_jsx_runtime = __commonJS({
-    "../../../Users/charlesberman/serato-library-manager/node_modules/react/jsx-runtime.js"(exports, module) {
+    "node_modules/react/jsx-runtime.js"(exports, module) {
       "use strict";
       module.exports = require_react_jsx_runtime_production();
     }
@@ -12438,10 +12438,10 @@ Error generating stack: ` + x.message + `
   // src/pages/WizardScreen.tsx
   var import_react8 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Button/Button.mjs
+  // node_modules/@mui/material/Button/Button.mjs
   var React34 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/clsx/dist/clsx.mjs
+  // node_modules/clsx/dist/clsx.mjs
   function r(e) {
     var t2, f, n = "";
     if (typeof e == "string" || typeof e == "number") n += e;
@@ -12457,7 +12457,7 @@ Error generating stack: ` + x.message + `
   }
   var clsx_default = clsx;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/resolveProps/resolveProps.mjs
+  // node_modules/@mui/utils/resolveProps/resolveProps.mjs
   function resolveProps(defaultProps, props, mergeClassNameAndStyle = !1) {
     let output = {
       ...props
@@ -12494,7 +12494,7 @@ Error generating stack: ` + x.message + `
     return output;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/composeClasses/composeClasses.mjs
+  // node_modules/@mui/utils/composeClasses/composeClasses.mjs
   function composeClasses(slots, getUtilityClass, classes = void 0) {
     let output = {};
     for (let slotName in slots) {
@@ -12508,7 +12508,7 @@ Error generating stack: ` + x.message + `
     return output;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/ClassNameGenerator/ClassNameGenerator.mjs
+  // node_modules/@mui/utils/ClassNameGenerator/ClassNameGenerator.mjs
   var defaultGenerator = (componentName) => componentName, createClassNameGenerator = () => {
     let generate = defaultGenerator;
     return {
@@ -12524,23 +12524,23 @@ Error generating stack: ` + x.message + `
     };
   }, ClassNameGenerator = createClassNameGenerator(), ClassNameGenerator_default = ClassNameGenerator;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/formatMuiErrorMessage/formatMuiErrorMessage.mjs
+  // node_modules/@mui/utils/formatMuiErrorMessage/formatMuiErrorMessage.mjs
   function formatMuiErrorMessage(code, ...args) {
     let url = new URL(`https://mui.com/production-error/?code=${code}`);
     return args.forEach((arg2) => url.searchParams.append("args[]", arg2)), `Minified MUI error #${code}; visit ${url} for the full message.`;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/capitalize/capitalize.mjs
+  // node_modules/@mui/utils/capitalize/capitalize.mjs
   function capitalize(string) {
     if (typeof string != "string")
       throw new Error(formatMuiErrorMessage(7));
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/capitalize.mjs
+  // node_modules/@mui/material/utils/capitalize.mjs
   var capitalize_default = capitalize;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/createChainedFunction/createChainedFunction.mjs
+  // node_modules/@mui/utils/createChainedFunction/createChainedFunction.mjs
   function createChainedFunction(...funcs) {
     return funcs.reduce((acc, func) => func == null ? acc : function(...args) {
       acc.apply(this, args), func.apply(this, args);
@@ -12548,7 +12548,7 @@ Error generating stack: ` + x.message + `
     });
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/fastDeepAssign/fastDeepAssign.mjs
+  // node_modules/@mui/utils/fastDeepAssign/fastDeepAssign.mjs
   function fastDeepAssign(target, source) {
     let sourceIsArray = Array.isArray(source), targetIsArray = Array.isArray(target);
     return isPrimitive(source) ? source : isPrimitiveOrBuiltIn(target) ? clone(source) : sourceIsArray && targetIsArray ? mergeArray(target, source) : sourceIsArray !== targetIsArray ? clone(source) : mergeObject(target, source);
@@ -12589,7 +12589,7 @@ Error generating stack: ` + x.message + `
     return target;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/isObjectEmpty/isObjectEmpty.mjs
+  // node_modules/@mui/utils/isObjectEmpty/isObjectEmpty.mjs
   function isObjectEmpty(object) {
     if (object == null)
       return !0;
@@ -12598,7 +12598,7 @@ Error generating stack: ` + x.message + `
     return !0;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/deepmerge/deepmerge.mjs
+  // node_modules/@mui/utils/deepmerge/deepmerge.mjs
   var React = __toESM(require_react(), 1), import_react_is = __toESM(require_react_is(), 1);
   function isPlainObject(item) {
     if (typeof item != "object" || item === null)
@@ -12626,7 +12626,7 @@ Error generating stack: ` + x.message + `
     }), output;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssContainerQueries/cssContainerQueries.mjs
+  // node_modules/@mui/system/cssContainerQueries/cssContainerQueries.mjs
   var MIN_WIDTH_PATTERN = /min-width:\s*([0-9.]+)/;
   function sortContainerQueries(theme, css2) {
     if (!theme.containerQueries || !hasContainerQuery(css2))
@@ -12673,7 +12673,7 @@ Error generating stack: ` + x.message + `
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/createBreakpoints/createBreakpoints.mjs
+  // node_modules/@mui/system/createBreakpoints/createBreakpoints.mjs
   var sortBreakpointsValues = (values2) => {
     let breakpointsAsArray = Object.keys(values2).map((key) => ({
       key,
@@ -12731,7 +12731,7 @@ Error generating stack: ` + x.message + `
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/breakpoints/breakpoints.mjs
+  // node_modules/@mui/system/breakpoints/breakpoints.mjs
   var EMPTY_THEME = {}, values = {
     xs: 0,
     // phone
@@ -12818,7 +12818,7 @@ Error generating stack: ` + x.message + `
     return !1;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/style/style.mjs
+  // node_modules/@mui/system/style/style.mjs
   function getStyleValue2(themeMapping, transform, userValue, alternateProp) {
     let value;
     return typeof themeMapping == "function" ? value = themeMapping(userValue) : Array.isArray(themeMapping) ? value = themeMapping[userValue] || userValue : typeof userValue == "string" ? value = getPath(themeMapping, userValue, !0, alternateProp) || userValue : value = userValue, transform && (value = transform(value, userValue, themeMapping)), value;
@@ -12867,7 +12867,7 @@ Error generating stack: ` + x.message + `
     return fn.propTypes = {}, fn.filterProps = [prop], fn;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/spacing/spacing.mjs
+  // node_modules/@mui/system/spacing/spacing.mjs
   var EMPTY_THEME2 = {
     internal_cache: {}
   }, properties = {
@@ -12945,7 +12945,7 @@ Error generating stack: ` + x.message + `
   spacingFn.propTypes = {};
   spacingFn.filterProps = spacingKeys;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/compose/compose.mjs
+  // node_modules/@mui/system/compose/compose.mjs
   function compose(...styles2) {
     let handlers = styles2.reduce((acc, style3) => (style3.filterProps.forEach((prop) => {
       acc[prop] = style3;
@@ -12959,7 +12959,7 @@ Error generating stack: ` + x.message + `
   }
   var compose_default = compose;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/borders/borders.mjs
+  // node_modules/@mui/system/borders/borders.mjs
   function borderTransform(value) {
     return typeof value != "number" ? value : `${value}px solid`;
   }
@@ -12983,7 +12983,7 @@ Error generating stack: ` + x.message + `
   borderRadius.filterProps = ["borderRadius"];
   var borders = compose_default(border, borderTop, borderRight, borderBottom, borderLeft, borderColor, borderTopColor, borderRightColor, borderBottomColor, borderLeftColor, borderRadius, outline, outlineColor);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssGrid/cssGrid.mjs
+  // node_modules/@mui/system/cssGrid/cssGrid.mjs
   var gap = (props) => {
     if (props.gap !== void 0 && props.gap !== null) {
       let transformer = createUnaryUnit(props.theme, "spacing", 8, "gap"), styleFromPropValue = (propValue) => ({
@@ -13037,7 +13037,7 @@ Error generating stack: ` + x.message + `
     prop: "gridArea"
   }), grid = compose_default(gap, columnGap, rowGap, gridColumn, gridRow, gridAutoFlow, gridAutoColumns, gridAutoRows, gridTemplateColumns, gridTemplateRows, gridTemplateAreas, gridArea);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/palette/palette.mjs
+  // node_modules/@mui/system/palette/palette.mjs
   function paletteTransform(value, userValue) {
     return userValue === "grey" ? userValue : value;
   }
@@ -13056,7 +13056,7 @@ Error generating stack: ` + x.message + `
     transform: paletteTransform
   }), palette = compose_default(color, bgcolor, backgroundColor);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/sizing/sizing.mjs
+  // node_modules/@mui/system/sizing/sizing.mjs
   var breakpointsValues = values;
   function sizingTransform(value) {
     return value <= 1 && value !== 0 ? `${value * 100}%` : value;
@@ -13105,7 +13105,7 @@ Error generating stack: ` + x.message + `
     prop: "boxSizing"
   }), sizing = compose_default(width, maxWidth, minWidth, height, maxHeight, minHeight, boxSizing);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/styleFunctionSx/defaultSxConfig.mjs
+  // node_modules/@mui/system/styleFunctionSx/defaultSxConfig.mjs
   var defaultSxConfig = {
     // borders
     border: {
@@ -13395,7 +13395,7 @@ Error generating stack: ` + x.message + `
     }
   }, defaultSxConfig_default = defaultSxConfig;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/styleFunctionSx/styleFunctionSx.mjs
+  // node_modules/@mui/system/styleFunctionSx/styleFunctionSx.mjs
   var EMPTY_THEME3 = {};
   function unstable_createStyleFunctionSx() {
     function styleFunctionSx(props) {
@@ -13482,10 +13482,10 @@ Error generating stack: ` + x.message + `
     return typeof maybeFn == "function" ? maybeFn(arg2) : maybeFn;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/useTheme.mjs
+  // node_modules/@mui/material/styles/useTheme.mjs
   var React18 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@babel/runtime/helpers/esm/extends.js
+  // node_modules/@babel/runtime/helpers/esm/extends.js
   function _extends() {
     return _extends = Object.assign ? Object.assign.bind() : function(n) {
       for (var e = 1; e < arguments.length; e++) {
@@ -13496,10 +13496,10 @@ Error generating stack: ` + x.message + `
     }, _extends.apply(null, arguments);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/react/dist/emotion-element-f0de968e.browser.esm.js
+  // node_modules/@emotion/react/dist/emotion-element-f0de968e.browser.esm.js
   var React3 = __toESM(require_react()), import_react = __toESM(require_react());
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/sheet/dist/emotion-sheet.esm.js
+  // node_modules/@emotion/sheet/dist/emotion-sheet.esm.js
   var isDevelopment = !1;
   function sheetForTag(tag) {
     if (tag.sheet)
@@ -13543,13 +13543,13 @@ Error generating stack: ` + x.message + `
     }, StyleSheet2;
   })();
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/stylis/src/Enum.js
+  // node_modules/stylis/src/Enum.js
   var MS = "-ms-", MOZ = "-moz-", WEBKIT = "-webkit-", COMMENT = "comm", RULESET = "rule", DECLARATION = "decl";
   var IMPORT = "@import";
   var KEYFRAMES = "@keyframes";
   var LAYER = "@layer";
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/stylis/src/Utility.js
+  // node_modules/stylis/src/Utility.js
   var abs = Math.abs, from = String.fromCharCode, assign = Object.assign;
   function hash(value, length2) {
     return charat(value, 0) ^ 45 ? (((length2 << 2 ^ charat(value, 0)) << 2 ^ charat(value, 1)) << 2 ^ charat(value, 2)) << 2 ^ charat(value, 3) : 0;
@@ -13585,7 +13585,7 @@ Error generating stack: ` + x.message + `
     return array.map(callback).join("");
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/stylis/src/Tokenizer.js
+  // node_modules/stylis/src/Tokenizer.js
   var line = 1, column = 1, length = 0, position = 0, character = 0, characters = "";
   function node(value, root, parent, type, props, children, length2) {
     return { value, root, parent, type, props, children, line, column, length: length2, return: "" };
@@ -13702,7 +13702,7 @@ Error generating stack: ` + x.message + `
     return slice(index, position);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/stylis/src/Parser.js
+  // node_modules/stylis/src/Parser.js
   function compile(value) {
     return dealloc(parse("", null, null, null, [""], value = alloc(value), 0, [0], value));
   }
@@ -13825,7 +13825,7 @@ Error generating stack: ` + x.message + `
     return node(value, root, parent, DECLARATION, substr(value, 0, length2), substr(value, length2 + 1, -1), length2);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/stylis/src/Serializer.js
+  // node_modules/stylis/src/Serializer.js
   function serialize(children, callback) {
     for (var output = "", length2 = sizeof(children), i = 0; i < length2; i++)
       output += callback(children[i], i, children, callback) || "";
@@ -13848,7 +13848,7 @@ Error generating stack: ` + x.message + `
     return strlen(children = serialize(element.children, callback)) ? element.return = element.value + "{" + children + "}" : "";
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/stylis/src/Middleware.js
+  // node_modules/stylis/src/Middleware.js
   function middleware(collection) {
     var length2 = sizeof(collection);
     return function(element, index, children, callback) {
@@ -13863,7 +13863,7 @@ Error generating stack: ` + x.message + `
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/memoize/dist/emotion-memoize.esm.js
+  // node_modules/@emotion/memoize/dist/emotion-memoize.esm.js
   function memoize(fn) {
     var cache = /* @__PURE__ */ Object.create(null);
     return function(arg2) {
@@ -13871,7 +13871,7 @@ Error generating stack: ` + x.message + `
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/cache/dist/emotion-cache.browser.esm.js
+  // node_modules/@emotion/cache/dist/emotion-cache.browser.esm.js
   var identifierWithPointTracking = function(begin2, points, index) {
     for (var previous = 0, character2 = 0; previous = character2, character2 = peek(), previous === 38 && character2 === 12 && (points[index] = 1), !token(character2); )
       next();
@@ -14142,7 +14142,7 @@ Error generating stack: ` + x.message + `
     return cache.sheet.hydrate(nodesToHydrate), cache;
   };
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/utils/dist/emotion-utils.browser.esm.js
+  // node_modules/@emotion/utils/dist/emotion-utils.browser.esm.js
   var isBrowser = !0;
   function getRegisteredStyles(registered, registeredStyles, classNames) {
     var rawClassName = "";
@@ -14173,7 +14173,7 @@ Error generating stack: ` + x.message + `
     }
   };
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/hash/dist/emotion-hash.esm.js
+  // node_modules/@emotion/hash/dist/emotion-hash.esm.js
   function murmur2(str) {
     for (var h = 0, k, i = 0, len = str.length; len >= 4; ++i, len -= 4)
       k = str.charCodeAt(i) & 255 | (str.charCodeAt(++i) & 255) << 8 | (str.charCodeAt(++i) & 255) << 16 | (str.charCodeAt(++i) & 255) << 24, k = /* Math.imul(k, m): */
@@ -14194,7 +14194,7 @@ Error generating stack: ` + x.message + `
     (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16), ((h ^ h >>> 15) >>> 0).toString(36);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/unitless/dist/emotion-unitless.esm.js
+  // node_modules/@emotion/unitless/dist/emotion-unitless.esm.js
   var unitlessKeys = {
     animationIterationCount: 1,
     aspectRatio: 1,
@@ -14246,7 +14246,7 @@ Error generating stack: ` + x.message + `
     strokeWidth: 1
   };
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/serialize/dist/emotion-serialize.esm.js
+  // node_modules/@emotion/serialize/dist/emotion-serialize.esm.js
   var isDevelopment2 = !1, hyphenateRegex = /[A-Z]|^ms/g, animationRegex = /_EMO_([^_]+?)_([^]*?)_EMO_/g, isCustomProperty = function(property) {
     return property.charCodeAt(1) === 45;
   }, isProcessableValue = function(value) {
@@ -14376,12 +14376,12 @@ Error generating stack: ` + x.message + `
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/use-insertion-effect-with-fallbacks/dist/emotion-use-insertion-effect-with-fallbacks.browser.esm.js
+  // node_modules/@emotion/use-insertion-effect-with-fallbacks/dist/emotion-use-insertion-effect-with-fallbacks.browser.esm.js
   var React2 = __toESM(require_react()), syncFallback = function(create) {
     return create();
   }, useInsertionEffect2 = React2.useInsertionEffect ? React2.useInsertionEffect : !1, useInsertionEffectAlwaysWithSyncFallback = useInsertionEffect2 || syncFallback, useInsertionEffectWithLayoutFallback = useInsertionEffect2 || React2.useLayoutEffect;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/react/dist/emotion-element-f0de968e.browser.esm.js
+  // node_modules/@emotion/react/dist/emotion-element-f0de968e.browser.esm.js
   var isDevelopment3 = !1, EmotionCacheContext = /* @__PURE__ */ React3.createContext(
     // we're doing this to avoid preconstruct's dead code elimination in this one case
     // because this module is primarily intended for the browser and node
@@ -14426,7 +14426,7 @@ Error generating stack: ` + x.message + `
     }), /* @__PURE__ */ React3.createElement(WrappedComponent, newProps));
   }), Emotion$1 = Emotion;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/react/dist/emotion-react.browser.esm.js
+  // node_modules/@emotion/react/dist/emotion-react.browser.esm.js
   var React4 = __toESM(require_react());
   var import_hoist_non_react_statics = __toESM(require_hoist_non_react_statics_cjs()), jsx = function(type, props) {
     var args = arguments;
@@ -14484,10 +14484,10 @@ Error generating stack: ` + x.message + `
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/styled/base/dist/emotion-styled-base.browser.esm.js
+  // node_modules/@emotion/styled/base/dist/emotion-styled-base.browser.esm.js
   var React5 = __toESM(require_react());
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/is-prop-valid/dist/emotion-is-prop-valid.esm.js
+  // node_modules/@emotion/is-prop-valid/dist/emotion-is-prop-valid.esm.js
   var reactPropsRegex = /^((children|dangerouslySetInnerHTML|key|ref|autoFocus|defaultValue|defaultChecked|innerHTML|suppressContentEditableWarning|suppressHydrationWarning|valueLink|abbr|accept|acceptCharset|accessKey|action|allow|allowUserMedia|allowPaymentRequest|allowFullScreen|allowTransparency|alt|async|autoComplete|autoPlay|capture|cellPadding|cellSpacing|challenge|charSet|checked|cite|classID|className|cols|colSpan|content|contentEditable|contextMenu|controls|controlsList|coords|crossOrigin|data|dateTime|decoding|default|defer|dir|disabled|disablePictureInPicture|disableRemotePlayback|download|draggable|encType|enterKeyHint|fetchpriority|fetchPriority|form|formAction|formEncType|formMethod|formNoValidate|formTarget|frameBorder|headers|height|hidden|high|href|hrefLang|htmlFor|httpEquiv|id|inputMode|integrity|is|keyParams|keyType|kind|label|lang|list|loading|loop|low|marginHeight|marginWidth|max|maxLength|media|mediaGroup|method|min|minLength|multiple|muted|name|nonce|noValidate|open|optimum|pattern|placeholder|playsInline|popover|popoverTarget|popoverTargetAction|poster|preload|profile|radioGroup|readOnly|referrerPolicy|rel|required|reversed|role|rows|rowSpan|sandbox|scope|scoped|scrolling|seamless|selected|shape|size|sizes|slot|span|spellCheck|src|srcDoc|srcLang|srcSet|start|step|style|summary|tabIndex|target|title|translate|type|useMap|value|width|wmode|wrap|about|datatype|inlist|prefix|property|resource|typeof|vocab|autoCapitalize|autoCorrect|autoSave|color|incremental|fallback|inert|itemProp|itemScope|itemType|itemID|itemRef|on|option|results|security|unselectable|accentHeight|accumulate|additive|alignmentBaseline|allowReorder|alphabetic|amplitude|arabicForm|ascent|attributeName|attributeType|autoReverse|azimuth|baseFrequency|baselineShift|baseProfile|bbox|begin|bias|by|calcMode|capHeight|clip|clipPathUnits|clipPath|clipRule|colorInterpolation|colorInterpolationFilters|colorProfile|colorRendering|contentScriptType|contentStyleType|cursor|cx|cy|d|decelerate|descent|diffuseConstant|direction|display|divisor|dominantBaseline|dur|dx|dy|edgeMode|elevation|enableBackground|end|exponent|externalResourcesRequired|fill|fillOpacity|fillRule|filter|filterRes|filterUnits|floodColor|floodOpacity|focusable|fontFamily|fontSize|fontSizeAdjust|fontStretch|fontStyle|fontVariant|fontWeight|format|from|fr|fx|fy|g1|g2|glyphName|glyphOrientationHorizontal|glyphOrientationVertical|glyphRef|gradientTransform|gradientUnits|hanging|horizAdvX|horizOriginX|ideographic|imageRendering|in|in2|intercept|k|k1|k2|k3|k4|kernelMatrix|kernelUnitLength|kerning|keyPoints|keySplines|keyTimes|lengthAdjust|letterSpacing|lightingColor|limitingConeAngle|local|markerEnd|markerMid|markerStart|markerHeight|markerUnits|markerWidth|mask|maskContentUnits|maskUnits|mathematical|mode|numOctaves|offset|opacity|operator|order|orient|orientation|origin|overflow|overlinePosition|overlineThickness|panose1|paintOrder|pathLength|patternContentUnits|patternTransform|patternUnits|pointerEvents|points|pointsAtX|pointsAtY|pointsAtZ|preserveAlpha|preserveAspectRatio|primitiveUnits|r|radius|refX|refY|renderingIntent|repeatCount|repeatDur|requiredExtensions|requiredFeatures|restart|result|rotate|rx|ry|scale|seed|shapeRendering|slope|spacing|specularConstant|specularExponent|speed|spreadMethod|startOffset|stdDeviation|stemh|stemv|stitchTiles|stopColor|stopOpacity|strikethroughPosition|strikethroughThickness|string|stroke|strokeDasharray|strokeDashoffset|strokeLinecap|strokeLinejoin|strokeMiterlimit|strokeOpacity|strokeWidth|surfaceScale|systemLanguage|tableValues|targetX|targetY|textAnchor|textDecoration|textRendering|textLength|to|transform|u1|u2|underlinePosition|underlineThickness|unicode|unicodeBidi|unicodeRange|unitsPerEm|vAlphabetic|vHanging|vIdeographic|vMathematical|values|vectorEffect|version|vertAdvY|vertOriginX|vertOriginY|viewBox|viewTarget|visibility|widths|wordSpacing|writingMode|x|xHeight|x1|x2|xChannelSelector|xlinkActuate|xlinkArcrole|xlinkHref|xlinkRole|xlinkShow|xlinkTitle|xlinkType|xmlBase|xmlns|xmlnsXlink|xmlLang|xmlSpace|y|y1|y2|yChannelSelector|z|zoomAndPan|for|class|autofocus)|(([Dd][Aa][Tt][Aa]|[Aa][Rr][Ii][Aa]|x)-.*))$/, isPropValid = /* @__PURE__ */ memoize(
     function(prop) {
       return reactPropsRegex.test(prop) || prop.charCodeAt(0) === 111 && prop.charCodeAt(1) === 110 && prop.charCodeAt(2) < 91;
@@ -14495,7 +14495,7 @@ Error generating stack: ` + x.message + `
     /* Z+1 */
   );
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/styled/base/dist/emotion-styled-base.browser.esm.js
+  // node_modules/@emotion/styled/base/dist/emotion-styled-base.browser.esm.js
   var isDevelopment4 = !1, testOmitPropsOnStringTag = isPropValid, testOmitPropsOnComponent = function(key) {
     return key !== "theme";
   }, getDefaultShouldForwardProp = function(tag) {
@@ -14564,7 +14564,7 @@ Error generating stack: ` + x.message + `
     };
   };
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@emotion/styled/dist/emotion-styled.browser.esm.js
+  // node_modules/@emotion/styled/dist/emotion-styled.browser.esm.js
   var import_react3 = __toESM(require_react());
   var tags = [
     "a",
@@ -14707,7 +14707,7 @@ Error generating stack: ` + x.message + `
     styled[tagName] = styled(tagName);
   });
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/styled-engine/GlobalStyles/GlobalStyles.mjs
+  // node_modules/@mui/styled-engine/GlobalStyles/GlobalStyles.mjs
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
   function isEmpty(obj) {
     return obj == null || Object.keys(obj).length === 0;
@@ -14722,7 +14722,7 @@ Error generating stack: ` + x.message + `
     });
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/styled-engine/index.mjs
+  // node_modules/@mui/styled-engine/index.mjs
   function styled2(tag, options2) {
     return styled(tag, options2);
   }
@@ -14735,12 +14735,12 @@ Error generating stack: ` + x.message + `
     return wrapper[0] = styles2, serializeStyles(wrapper);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/createTheme/shape.mjs
+  // node_modules/@mui/system/createTheme/shape.mjs
   var shape = {
     borderRadius: 4
   }, shape_default = shape;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/createTheme/createSpacing.mjs
+  // node_modules/@mui/system/createTheme/createSpacing.mjs
   function createSpacing(spacingInput = 8, transform = createUnarySpacing({
     spacing: spacingInput
   })) {
@@ -14753,7 +14753,7 @@ Error generating stack: ` + x.message + `
     return spacing.mui = !0, spacing;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/createTheme/applyStyles.mjs
+  // node_modules/@mui/system/createTheme/applyStyles.mjs
   function applyStyles(key, styles2) {
     let theme = this;
     if (theme.vars) {
@@ -14767,7 +14767,7 @@ Error generating stack: ` + x.message + `
     return theme.palette.mode === key ? styles2 : {};
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/createTheme/createTheme.mjs
+  // node_modules/@mui/system/createTheme/createTheme.mjs
   function createTheme(options2 = {}, ...args) {
     let {
       breakpoints: breakpointsInput = {},
@@ -14802,7 +14802,7 @@ Error generating stack: ` + x.message + `
   }
   var createTheme_default = createTheme;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/useThemeWithoutDefault/useThemeWithoutDefault.mjs
+  // node_modules/@mui/system/useThemeWithoutDefault/useThemeWithoutDefault.mjs
   var React6 = __toESM(require_react(), 1);
   function isObjectEmpty2(obj) {
     return Object.keys(obj).length === 0;
@@ -14813,14 +14813,14 @@ Error generating stack: ` + x.message + `
   }
   var useThemeWithoutDefault_default = useThemeWithoutDefault;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/useTheme/useTheme.mjs
+  // node_modules/@mui/system/useTheme/useTheme.mjs
   var systemDefaultTheme = createTheme_default();
   function useTheme2(defaultTheme2 = systemDefaultTheme) {
     return useThemeWithoutDefault_default(defaultTheme2);
   }
   var useTheme_default = useTheme2;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/GlobalStyles/GlobalStyles.mjs
+  // node_modules/@mui/system/GlobalStyles/GlobalStyles.mjs
   var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
   function wrapGlobalLayer(styles2) {
     let serialized = internal_serializeStyles(styles2);
@@ -14838,7 +14838,7 @@ Error generating stack: ` + x.message + `
   }
   var GlobalStyles_default = GlobalStyles2;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/generateUtilityClass/generateUtilityClass.mjs
+  // node_modules/@mui/utils/generateUtilityClass/generateUtilityClass.mjs
   var globalStateClasses = {
     active: "active",
     checked: "checked",
@@ -14858,7 +14858,7 @@ Error generating stack: ` + x.message + `
     return globalStateClass ? `${globalStatePrefix}-${globalStateClass}` : `${ClassNameGenerator_default.generate(componentName)}-${slot}`;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/generateUtilityClasses/generateUtilityClasses.mjs
+  // node_modules/@mui/utils/generateUtilityClasses/generateUtilityClasses.mjs
   function generateUtilityClasses(componentName, slots, globalStatePrefix = "Mui") {
     let result = {};
     return slots.forEach((slot) => {
@@ -14866,7 +14866,7 @@ Error generating stack: ` + x.message + `
     }), result;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/preprocessStyles.mjs
+  // node_modules/@mui/system/preprocessStyles.mjs
   function preprocessStyles(input) {
     let {
       variants,
@@ -14881,7 +14881,7 @@ Error generating stack: ` + x.message + `
     }), result;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/createStyled/createStyled.mjs
+  // node_modules/@mui/system/createStyled/createStyled.mjs
   var systemDefaultTheme2 = createTheme_default();
   function shouldForwardProp(prop) {
     return prop !== "ownerState" && prop !== "theme" && prop !== "sx" && prop !== "as";
@@ -15018,16 +15018,16 @@ Error generating stack: ` + x.message + `
     return string && string.charAt(0).toLowerCase() + string.slice(1);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/useEnhancedEffect/useEnhancedEffect.mjs
+  // node_modules/@mui/utils/useEnhancedEffect/useEnhancedEffect.mjs
   var React7 = __toESM(require_react(), 1), useEnhancedEffect = typeof window < "u" ? React7.useLayoutEffect : React7.useEffect, useEnhancedEffect_default = useEnhancedEffect;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/clamp/clamp.mjs
+  // node_modules/@mui/utils/clamp/clamp.mjs
   function clamp(val, min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER) {
     return Math.max(min, Math.min(val, max));
   }
   var clamp_default = clamp;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/colorManipulator/colorManipulator.mjs
+  // node_modules/@mui/system/colorManipulator/colorManipulator.mjs
   function clampWrapper(value, min = 0, max = 1) {
     return clamp_default(value, min, max);
   }
@@ -15148,25 +15148,25 @@ Error generating stack: ` + x.message + `
     }
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/ThemeProvider/ThemeProvider.mjs
+  // node_modules/@mui/system/ThemeProvider/ThemeProvider.mjs
   var React14 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/private-theming/ThemeProvider/ThemeProvider.mjs
+  // node_modules/@mui/private-theming/ThemeProvider/ThemeProvider.mjs
   var React10 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/private-theming/useTheme/ThemeContext.mjs
+  // node_modules/@mui/private-theming/useTheme/ThemeContext.mjs
   var React8 = __toESM(require_react(), 1), ThemeContext2 = /* @__PURE__ */ React8.createContext(null), ThemeContext_default = ThemeContext2;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/private-theming/useTheme/useTheme.mjs
+  // node_modules/@mui/private-theming/useTheme/useTheme.mjs
   var React9 = __toESM(require_react(), 1);
   function useTheme3() {
     return React9.useContext(ThemeContext_default);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/private-theming/ThemeProvider/nested.mjs
+  // node_modules/@mui/private-theming/ThemeProvider/nested.mjs
   var hasSymbol = typeof Symbol == "function" && Symbol.for, nested_default = hasSymbol ? /* @__PURE__ */ Symbol.for("mui.nested") : "__THEME_NESTED__";
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/private-theming/ThemeProvider/ThemeProvider.mjs
+  // node_modules/@mui/private-theming/ThemeProvider/ThemeProvider.mjs
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   function mergeOuterLocalTheme(outerTheme, localTheme) {
     return typeof localTheme == "function" ? localTheme(outerTheme) : {
@@ -15191,7 +15191,7 @@ Error generating stack: ` + x.message + `
   }
   var ThemeProvider_default = ThemeProvider2;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/RtlProvider/index.mjs
+  // node_modules/@mui/system/RtlProvider/index.mjs
   var React11 = __toESM(require_react(), 1);
   var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1), RtlContext = /* @__PURE__ */ React11.createContext(void 0);
   function RtlProvider({
@@ -15205,7 +15205,7 @@ Error generating stack: ` + x.message + `
   }
   var RtlProvider_default = RtlProvider;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/DefaultPropsProvider/DefaultPropsProvider.mjs
+  // node_modules/@mui/system/DefaultPropsProvider/DefaultPropsProvider.mjs
   var React12 = __toESM(require_react(), 1);
   var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1), PropsContext = /* @__PURE__ */ React12.createContext(void 0);
   function DefaultPropsProvider({
@@ -15243,7 +15243,7 @@ Error generating stack: ` + x.message + `
   }
   var DefaultPropsProvider_default = DefaultPropsProvider;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/useId/useId.mjs
+  // node_modules/@mui/utils/useId/useId.mjs
   var React13 = __toESM(require_react(), 1), globalId = 0;
   function useGlobalId(idOverride) {
     let [defaultId, setDefaultId] = React13.useState(idOverride), id = idOverride || defaultId;
@@ -15262,7 +15262,7 @@ Error generating stack: ` + x.message + `
     return useGlobalId(idOverride);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/ThemeProvider/useLayerOrder.mjs
+  // node_modules/@mui/system/ThemeProvider/useLayerOrder.mjs
   var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   function useLayerOrder(theme) {
     let upperTheme = useThemeWithoutDefault_default(), id = useId() || "", {
@@ -15285,7 +15285,7 @@ Error generating stack: ` + x.message + `
     }) : null;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/ThemeProvider/ThemeProvider.mjs
+  // node_modules/@mui/system/ThemeProvider/ThemeProvider.mjs
   var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1), EMPTY_THEME4 = {};
   function useThemeScoping(themeId, upperTheme, localTheme, isPrivate = !1) {
     return React14.useMemo(() => {
@@ -15328,7 +15328,7 @@ Error generating stack: ` + x.message + `
   }
   var ThemeProvider_default2 = ThemeProvider3;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/memoTheme.mjs
+  // node_modules/@mui/system/memoTheme.mjs
   var arg = {
     theme: void 0
   };
@@ -15340,10 +15340,10 @@ Error generating stack: ` + x.message + `
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/createCssVarsProvider.mjs
+  // node_modules/@mui/system/cssVars/createCssVarsProvider.mjs
   var React17 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/InitColorSchemeScript/InitColorSchemeScript.mjs
+  // node_modules/@mui/system/InitColorSchemeScript/InitColorSchemeScript.mjs
   var React15 = __toESM(require_react(), 1), import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1), DEFAULT_MODE_STORAGE_KEY = "mode", DEFAULT_COLOR_SCHEME_STORAGE_KEY = "color-scheme", DEFAULT_ATTRIBUTE = "data-color-scheme", safeReact2 = {
     ...React15
   }, maybeReactUseSyncExternalStore = safeReact2.useSyncExternalStore;
@@ -15414,10 +15414,10 @@ try {
     }, "mui-color-scheme-init");
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/useCurrentColorScheme.mjs
+  // node_modules/@mui/system/cssVars/useCurrentColorScheme.mjs
   var React16 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/localStorageManager.mjs
+  // node_modules/@mui/system/cssVars/localStorageManager.mjs
   function noop() {
   }
   var localStorageManager = ({
@@ -15456,7 +15456,7 @@ try {
     }
   }), localStorageManager_default = localStorageManager;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/useCurrentColorScheme.mjs
+  // node_modules/@mui/system/cssVars/useCurrentColorScheme.mjs
   function noop2() {
   }
   function getSystemMode(mode) {
@@ -15581,7 +15581,7 @@ try {
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/createCssVarsProvider.mjs
+  // node_modules/@mui/system/cssVars/createCssVarsProvider.mjs
   var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1), DISABLE_CSS_TRANSITION = "*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}";
   function createCssVarsProvider(options2) {
     let {
@@ -15740,7 +15740,7 @@ try {
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/createGetCssVar.mjs
+  // node_modules/@mui/system/cssVars/createGetCssVar.mjs
   function createGetCssVar(prefix2 = "") {
     function appendVar(...vars) {
       if (!vars.length)
@@ -15751,7 +15751,7 @@ try {
     return (field, ...fallbacks) => `var(--${prefix2 ? `${prefix2}-` : ""}${field}${appendVar(...fallbacks)})`;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/cssVarsParser.mjs
+  // node_modules/@mui/system/cssVars/cssVarsParser.mjs
   var prototypePollutingKeys = /* @__PURE__ */ new Set(["__proto__", "constructor", "prototype"]), assignNestedKeys = (obj, keys, value, arrayKeys = []) => {
     let temp = obj;
     for (let index = 0; index < keys.length; index += 1) {
@@ -15792,7 +15792,7 @@ try {
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/prepareCssVars.mjs
+  // node_modules/@mui/system/cssVars/prepareCssVars.mjs
   function prepareCssVars(theme, parserConfig = {}) {
     let {
       getSelector = defaultGetSelector,
@@ -15914,14 +15914,14 @@ try {
   }
   var prepareCssVars_default = prepareCssVars;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/getColorSchemeSelector.mjs
+  // node_modules/@mui/system/cssVars/getColorSchemeSelector.mjs
   function createGetColorSchemeSelector(selector) {
     return function(colorScheme) {
       return selector === "media" ? `@media (prefers-color-scheme: ${colorScheme})` : selector ? selector.startsWith("data-") && !selector.includes("%s") ? `[${selector}="${colorScheme}"] &` : selector === "class" ? `.${colorScheme} &` : selector === "data" ? `[data-${colorScheme}] &` : `${selector.replace("%s", colorScheme)} &` : "&";
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/colors/common.mjs
+  // node_modules/@mui/material/colors/common.mjs
   var common = {
     /**
      * Preview: ![common black](https://mui.com/static/colors-preview/common-black-24x24.png)
@@ -15933,7 +15933,7 @@ try {
     white: "#fff"
   }, common_default = common;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/colors/grey.mjs
+  // node_modules/@mui/material/colors/grey.mjs
   var grey = {
     /**
      * Preview: ![grey 50](https://mui.com/static/colors-preview/grey-50-24x24.png)
@@ -15993,7 +15993,7 @@ try {
     A700: "#616161"
   }, grey_default = grey;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/colors/purple.mjs
+  // node_modules/@mui/material/colors/purple.mjs
   var purple = {
     /**
      * Preview: ![purple 50](https://mui.com/static/colors-preview/purple-50-24x24.png)
@@ -16053,7 +16053,7 @@ try {
     A700: "#aa00ff"
   }, purple_default = purple;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/colors/red.mjs
+  // node_modules/@mui/material/colors/red.mjs
   var red = {
     /**
      * Preview: ![red 50](https://mui.com/static/colors-preview/red-50-24x24.png)
@@ -16113,7 +16113,7 @@ try {
     A700: "#d50000"
   }, red_default = red;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/colors/orange.mjs
+  // node_modules/@mui/material/colors/orange.mjs
   var orange = {
     /**
      * Preview: ![orange 50](https://mui.com/static/colors-preview/orange-50-24x24.png)
@@ -16173,7 +16173,7 @@ try {
     A700: "#ff6d00"
   }, orange_default = orange;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/colors/blue.mjs
+  // node_modules/@mui/material/colors/blue.mjs
   var blue = {
     /**
      * Preview: ![blue 50](https://mui.com/static/colors-preview/blue-50-24x24.png)
@@ -16233,7 +16233,7 @@ try {
     A700: "#2962ff"
   }, blue_default = blue;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/colors/lightBlue.mjs
+  // node_modules/@mui/material/colors/lightBlue.mjs
   var lightBlue = {
     /**
      * Preview: ![lightBlue 50](https://mui.com/static/colors-preview/lightBlue-50-24x24.png)
@@ -16293,7 +16293,7 @@ try {
     A700: "#0091ea"
   }, lightBlue_default = lightBlue;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/colors/green.mjs
+  // node_modules/@mui/material/colors/green.mjs
   var green = {
     /**
      * Preview: ![green 50](https://mui.com/static/colors-preview/green-50-24x24.png)
@@ -16353,7 +16353,7 @@ try {
     A700: "#00c853"
   }, green_default = green;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createPalette.mjs
+  // node_modules/@mui/material/styles/createPalette.mjs
   function getLight() {
     return {
       // The colors used to style the text.
@@ -16587,7 +16587,7 @@ try {
     }, other);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/focusVisible.mjs
+  // node_modules/@mui/material/styles/focusVisible.mjs
   var focusVisibleOffsetVar = "--_focusVisible-offset", focusVisibleBehaviorVar = "--_focusVisible-behavior", focusVisibleShadowVar = "--_focusVisible-shadow", offsetValue = `var(${focusVisibleOffsetVar}, 1)`, behaviorValue = `var(${focusVisibleBehaviorVar}, )`, outsetFocusRing = {
     [focusVisibleOffsetVar]: 1,
     [focusVisibleBehaviorVar]: "initial"
@@ -16630,7 +16630,7 @@ try {
     return typeof resolved.boxShadow == "string" && !standaloneBoxShadows.has(resolved.boxShadow.trim().toLowerCase()) && !/\binset\b/.test(resolved.boxShadow) && !resolved.boxShadow.includes(focusVisibleBehaviorVar) && (resolved.boxShadow = `${behaviorValue} ${resolved.boxShadow}`), resolved;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/system/cssVars/prepareTypographyVars.mjs
+  // node_modules/@mui/system/cssVars/prepareTypographyVars.mjs
   function prepareTypographyVars(typography) {
     let vars = {};
     return Object.entries(typography).forEach((entry) => {
@@ -16639,7 +16639,7 @@ try {
     }), vars;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createMixins.mjs
+  // node_modules/@mui/material/styles/createMixins.mjs
   function createMixins(breakpoints, mixins) {
     return {
       toolbar: {
@@ -16657,7 +16657,7 @@ try {
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createTypography.mjs
+  // node_modules/@mui/material/styles/createTypography.mjs
   function round(value) {
     return Math.round(value * 1e5) / 1e5;
   }
@@ -16733,13 +16733,13 @@ try {
     });
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/shadows.mjs
+  // node_modules/@mui/material/styles/shadows.mjs
   function createShadow(...px) {
     return [`${px[0]}px ${px[1]}px ${px[2]}px ${px[3]}px rgba(0,0,0,${0.2})`, `${px[4]}px ${px[5]}px ${px[6]}px ${px[7]}px rgba(0,0,0,${0.14})`, `${px[8]}px ${px[9]}px ${px[10]}px ${px[11]}px rgba(0,0,0,${0.12})`].join(",");
   }
   var shadows = ["none", createShadow(0, 2, 1, -1, 0, 1, 1, 0, 0, 1, 3, 0), createShadow(0, 3, 1, -2, 0, 2, 2, 0, 0, 1, 5, 0), createShadow(0, 3, 3, -2, 0, 3, 4, 0, 0, 1, 8, 0), createShadow(0, 2, 4, -1, 0, 4, 5, 0, 0, 1, 10, 0), createShadow(0, 3, 5, -1, 0, 5, 8, 0, 0, 1, 14, 0), createShadow(0, 3, 5, -1, 0, 6, 10, 0, 0, 1, 18, 0), createShadow(0, 4, 5, -2, 0, 7, 10, 1, 0, 2, 16, 1), createShadow(0, 5, 5, -3, 0, 8, 10, 1, 0, 3, 14, 2), createShadow(0, 5, 6, -3, 0, 9, 12, 1, 0, 3, 16, 2), createShadow(0, 6, 6, -3, 0, 10, 14, 1, 0, 4, 18, 3), createShadow(0, 6, 7, -4, 0, 11, 15, 1, 0, 4, 20, 3), createShadow(0, 7, 8, -4, 0, 12, 17, 2, 0, 5, 22, 4), createShadow(0, 7, 8, -4, 0, 13, 19, 2, 0, 5, 24, 4), createShadow(0, 7, 9, -4, 0, 14, 21, 2, 0, 5, 26, 4), createShadow(0, 8, 9, -5, 0, 15, 22, 2, 0, 6, 28, 5), createShadow(0, 8, 10, -5, 0, 16, 24, 2, 0, 6, 30, 5), createShadow(0, 8, 11, -5, 0, 17, 26, 2, 0, 6, 32, 5), createShadow(0, 9, 11, -5, 0, 18, 28, 2, 0, 7, 34, 6), createShadow(0, 9, 12, -6, 0, 19, 29, 2, 0, 7, 36, 6), createShadow(0, 10, 13, -6, 0, 20, 31, 3, 0, 8, 38, 7), createShadow(0, 10, 13, -6, 0, 21, 33, 3, 0, 8, 40, 7), createShadow(0, 10, 14, -6, 0, 22, 35, 3, 0, 8, 42, 7), createShadow(0, 11, 14, -7, 0, 23, 36, 3, 0, 9, 44, 8), createShadow(0, 11, 15, -7, 0, 24, 38, 3, 0, 9, 46, 8)], shadows_default = shadows;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createTransitions.mjs
+  // node_modules/@mui/material/styles/createTransitions.mjs
   var DEFAULT_TRANSITION_PROPS = ["all"], EMPTY_OPTIONS = {}, easing = {
     // This is the most common easing curve.
     easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)",
@@ -16801,7 +16801,7 @@ try {
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createMotion.mjs
+  // node_modules/@mui/material/styles/createMotion.mjs
   var EMPTY_MOTION = {};
   function createMotion(inputMotion = EMPTY_MOTION) {
     return {
@@ -16810,7 +16810,7 @@ try {
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/zIndex.mjs
+  // node_modules/@mui/material/styles/zIndex.mjs
   var zIndex = {
     mobileStepper: 1e3,
     fab: 1050,
@@ -16822,7 +16822,7 @@ try {
     tooltip: 1500
   }, zIndex_default = zIndex;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/stringifyTheme.mjs
+  // node_modules/@mui/material/styles/stringifyTheme.mjs
   function isSerializable(val) {
     return isPlainObject(val) || typeof val > "u" || typeof val == "string" || typeof val == "boolean" || typeof val == "number" || Array.isArray(val);
   }
@@ -16850,7 +16850,7 @@ theme.transitions = createTransitions(theme.transitions || {});
 export default theme;`;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createThemeNoVars.mjs
+  // node_modules/@mui/material/styles/createThemeNoVars.mjs
   function coefficientToPercentage(coefficient) {
     return typeof coefficient == "number" ? `${(coefficient * 100).toFixed(0)}%` : `calc((${coefficient}) * 100%)`;
   }
@@ -16945,13 +16945,13 @@ export default theme;`;
   }
   var createThemeNoVars_default = createThemeNoVars;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/getOverlayAlpha.mjs
+  // node_modules/@mui/material/styles/getOverlayAlpha.mjs
   function getOverlayAlpha(elevation) {
     let alphaValue;
     return elevation < 1 ? alphaValue = 5.11916 * elevation ** 2 : alphaValue = 4.5 * Math.log(elevation + 1) + 2, Math.round(alphaValue * 10) / 1e3;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createColorScheme.mjs
+  // node_modules/@mui/material/styles/createColorScheme.mjs
   var defaultDarkOverlays = [...Array(25)].map((_, index) => {
     if (index === 0)
       return "none";
@@ -16994,7 +16994,7 @@ export default theme;`;
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/shouldSkipGeneratingVar.mjs
+  // node_modules/@mui/material/styles/shouldSkipGeneratingVar.mjs
   function shouldSkipGeneratingVar(keys) {
     return keys[0] === "motion" || // Keep `focusVisible` inline: its values reference the per-component private vars
     // (`--_focusVisible-offset`/`-behavior`). Hoisted to a `:root` var they resolve where those
@@ -17003,10 +17003,10 @@ export default theme;`;
     keys[0] === "palette" && !!keys[1]?.match(/(mode|contrastThreshold|tonalOffset)/);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/excludeVariablesFromRoot.mjs
+  // node_modules/@mui/material/styles/excludeVariablesFromRoot.mjs
   var excludeVariablesFromRoot = (cssVarPrefix) => [...[...Array(25)].map((_, index) => `--${cssVarPrefix ? `${cssVarPrefix}-` : ""}overlays-${index}`), `--${cssVarPrefix ? `${cssVarPrefix}-` : ""}palette-AppBar-darkBg`, `--${cssVarPrefix ? `${cssVarPrefix}-` : ""}palette-AppBar-darkColor`], excludeVariablesFromRoot_default = excludeVariablesFromRoot;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createGetSelector.mjs
+  // node_modules/@mui/material/styles/createGetSelector.mjs
   var createGetSelector_default = (theme) => (colorScheme, css2) => {
     let root = theme.rootSelector || ":root", selector = theme.colorSchemeSelector, rule = selector;
     if (selector === "class" && (rule = ".%s"), selector === "data" && (rule = "[data-%s]"), selector?.startsWith("data-") && !selector.includes("%s") && (rule = `[${selector}="%s"]`), theme.defaultColorScheme === colorScheme) {
@@ -17044,7 +17044,7 @@ export default theme;`;
     return root;
   };
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createThemeWithVars.mjs
+  // node_modules/@mui/material/styles/createThemeWithVars.mjs
   function assignNode(obj, keys) {
     keys.forEach((k) => {
       obj[k] || (obj[k] = {});
@@ -17203,7 +17203,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, theme.internal_cache = {}, theme.toRuntimeSource = stringifyTheme, theme;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/createTheme.mjs
+  // node_modules/@mui/material/styles/createTheme.mjs
   function attachColorScheme2(theme, scheme, colorScheme) {
     theme.colorSchemes && colorScheme && (theme.colorSchemes[scheme] = {
       ...colorScheme !== !0 && colorScheme,
@@ -17273,48 +17273,48 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, ...args);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/defaultTheme.mjs
+  // node_modules/@mui/material/styles/defaultTheme.mjs
   var defaultTheme = createTheme2(), defaultTheme_default = defaultTheme;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/identifier.mjs
+  // node_modules/@mui/material/styles/identifier.mjs
   var identifier_default = "$$material";
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/useTheme.mjs
+  // node_modules/@mui/material/styles/useTheme.mjs
   function useTheme4() {
     let theme = useTheme_default(defaultTheme_default);
     return theme[identifier_default] || theme;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/zero-styled/index.mjs
+  // node_modules/@mui/material/zero-styled/index.mjs
   var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/slotShouldForwardProp.mjs
+  // node_modules/@mui/material/styles/slotShouldForwardProp.mjs
   function slotShouldForwardProp(prop) {
     return prop !== "ownerState" && prop !== "theme" && prop !== "sx" && prop !== "as";
   }
   var slotShouldForwardProp_default = slotShouldForwardProp;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/rootShouldForwardProp.mjs
+  // node_modules/@mui/material/styles/rootShouldForwardProp.mjs
   var rootShouldForwardProp = (prop) => slotShouldForwardProp_default(prop) && prop !== "classes", rootShouldForwardProp_default = rootShouldForwardProp;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/styled.mjs
+  // node_modules/@mui/material/styles/styled.mjs
   var styled3 = createStyled3({
     themeId: identifier_default,
     defaultTheme: defaultTheme_default,
     rootShouldForwardProp: rootShouldForwardProp_default
   }), styled_default = styled3;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/memoTheme.mjs
+  // node_modules/@mui/material/utils/memoTheme.mjs
   var memoTheme = unstable_memoTheme, memoTheme_default = memoTheme;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DefaultPropsProvider/DefaultPropsProvider.mjs
+  // node_modules/@mui/material/DefaultPropsProvider/DefaultPropsProvider.mjs
   var React19 = __toESM(require_react(), 1);
   var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
   function useDefaultProps2(params) {
     return useDefaultProps(params);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/reducedMotion.mjs
+  // node_modules/@mui/material/styles/reducedMotion.mjs
   var defaultStyles = {
     transition: "none"
   };
@@ -17324,7 +17324,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     } : null;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/transitions/utils.mjs
+  // node_modules/@mui/material/transitions/utils.mjs
   var reflow = (node2) => node2.scrollTop;
   var EMPTY_STYLE = {}, DEFAULT_TRANSITION_PROPS2 = ["all"], EMPTY_OPTIONS2 = {};
   function normalizedTransitionCallback(nodeRef, callback) {
@@ -17372,7 +17372,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     } : transitionStyles;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/getActiveElement/getActiveElement.mjs
+  // node_modules/@mui/utils/getActiveElement/getActiveElement.mjs
   function activeElement(doc) {
     let element = doc.activeElement;
     for (; element?.shadowRoot?.activeElement != null; )
@@ -17380,28 +17380,28 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return element;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/getActiveElement.mjs
+  // node_modules/@mui/material/utils/getActiveElement.mjs
   var getActiveElement_default = activeElement;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/ownerDocument/ownerDocument.mjs
+  // node_modules/@mui/utils/ownerDocument/ownerDocument.mjs
   function ownerDocument(node2) {
     return node2 && node2.ownerDocument || document;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/ownerWindow/ownerWindow.mjs
+  // node_modules/@mui/utils/ownerWindow/ownerWindow.mjs
   function ownerWindow(node2) {
     return ownerDocument(node2).defaultView || window;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/setRef/setRef.mjs
+  // node_modules/@mui/utils/setRef/setRef.mjs
   function setRef(ref, value) {
     typeof ref == "function" ? ref(value) : ref && (ref.current = value);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/useId.mjs
+  // node_modules/@mui/material/utils/useId.mjs
   var useId_default = useId;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/useEventCallback/useEventCallback.mjs
+  // node_modules/@mui/utils/useEventCallback/useEventCallback.mjs
   var React20 = __toESM(require_react(), 1);
   function useEventCallback(fn) {
     let ref = React20.useRef(fn);
@@ -17414,10 +17414,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var useEventCallback_default = useEventCallback;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/useEventCallback.mjs
+  // node_modules/@mui/material/utils/useEventCallback.mjs
   var useEventCallback_default2 = useEventCallback_default;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/useForkRef/useForkRef.mjs
+  // node_modules/@mui/utils/useForkRef/useForkRef.mjs
   var React21 = __toESM(require_react(), 1);
   function useForkRef(...refs) {
     let cleanupRef = React21.useRef(void 0), refEffect = React21.useCallback((instance) => {
@@ -17443,19 +17443,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, refs);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/useForkRef.mjs
+  // node_modules/@mui/material/utils/useForkRef.mjs
   var useForkRef_default = useForkRef;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/isEventHandler/isEventHandler.mjs
+  // node_modules/@mui/utils/isEventHandler/isEventHandler.mjs
   function isEventHandler(key, value) {
     let thirdCharCode = key.charCodeAt(2);
     return key[0] === "o" && key[1] === "n" && thirdCharCode >= 65 && thirdCharCode <= 90 && typeof value == "function";
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonBase/ButtonBase.mjs
+  // node_modules/@mui/material/ButtonBase/ButtonBase.mjs
   var React30 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/isFocusVisible/isFocusVisible.mjs
+  // node_modules/@mui/utils/isFocusVisible/isFocusVisible.mjs
   function isFocusVisible(element) {
     try {
       return element.matches(":focus-visible");
@@ -17464,10 +17464,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return !1;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonBase/useButtonBase.mjs
+  // node_modules/@mui/material/ButtonBase/useButtonBase.mjs
   var React23 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/useFocusableWhenDisabled.mjs
+  // node_modules/@mui/material/utils/useFocusableWhenDisabled.mjs
   var React22 = __toESM(require_react(), 1);
   function useFocusableWhenDisabled(parameters) {
     let {
@@ -17488,7 +17488,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, [composite, disabled, focusableWhenDisabled, isFocusableComposite, isNonFocusableComposite, isNativeButton, tabIndexProp]);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonBase/useButtonBase.mjs
+  // node_modules/@mui/material/ButtonBase/useButtonBase.mjs
   var EMPTY = {};
   function useButtonBase(parameters) {
     let {
@@ -17557,17 +17557,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     };
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/useLazyRipple/useLazyRipple.mjs
+  // node_modules/@mui/material/useLazyRipple/useLazyRipple.mjs
   var React25 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/useLazyRef/useLazyRef.mjs
+  // node_modules/@mui/utils/useLazyRef/useLazyRef.mjs
   var React24 = __toESM(require_react(), 1), UNINITIALIZED = {};
   function useLazyRef(init, initArg) {
     let ref = React24.useRef(UNINITIALIZED);
     return ref.current === UNINITIALIZED && (ref.current = init(initArg)), ref;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/useLazyRipple/useLazyRipple.mjs
+  // node_modules/@mui/material/useLazyRipple/useLazyRipple.mjs
   var LazyRipple = class _LazyRipple {
     /** React ref to the ripple instance */
     ref = {
@@ -17615,16 +17615,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return p.resolve = resolve, p.reject = reject, p;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonBase/TouchRipple.mjs
+  // node_modules/@mui/material/ButtonBase/TouchRipple.mjs
   var React29 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/useOnMount/useOnMount.mjs
+  // node_modules/@mui/utils/useOnMount/useOnMount.mjs
   var React26 = __toESM(require_react(), 1), EMPTY2 = [];
   function useOnMount(fn) {
     React26.useEffect(fn, EMPTY2);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/useTimeout/useTimeout.mjs
+  // node_modules/@mui/utils/useTimeout/useTimeout.mjs
   var Timeout = class _Timeout {
     static create() {
       return new _Timeout();
@@ -17648,7 +17648,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return useOnMount(timeout.disposeEffect), timeout;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonBase/Ripple.mjs
+  // node_modules/@mui/material/ButtonBase/Ripple.mjs
   var React27 = __toESM(require_react(), 1);
   var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
   function Ripple(props) {
@@ -17684,10 +17684,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var Ripple_default = Ripple;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonBase/touchRippleClasses.mjs
+  // node_modules/@mui/material/ButtonBase/touchRippleClasses.mjs
   var touchRippleClasses = generateUtilityClasses("MuiTouchRipple", ["root", "ripple", "rippleVisible", "ripplePulsate", "child", "childLeaving", "childPulsate"]), touchRippleClasses_default = touchRippleClasses;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/transitions/useReducedMotion.mjs
+  // node_modules/@mui/material/transitions/useReducedMotion.mjs
   var React28 = __toESM(require_react(), 1);
   var MEDIA_QUERY = "(prefers-reduced-motion: reduce)", REDUCED_MOTION_DURATION = 0, REDUCED_MOTION_DELAY = "0ms", NOOP = () => {
   }, getDefaultSnapshot = () => !1, getReducedMotionSnapshot = () => !0, subscribeNoop = () => NOOP;
@@ -17747,7 +17747,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }), [shouldReduceMotion]);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonBase/TouchRipple.mjs
+  // node_modules/@mui/material/ButtonBase/TouchRipple.mjs
   var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1), DURATION = 550, DELAY_RIPPLE = 80, EMPTY_OBJ = {}, EMPTY_ARRAY = [], NOOP2 = () => {
   };
   function mergeRippleOrder(prevOrder, nextActiveKeys) {
@@ -18056,13 +18056,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), TouchRipple_default = TouchRipple;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonBase/buttonBaseClasses.mjs
+  // node_modules/@mui/material/ButtonBase/buttonBaseClasses.mjs
   function getButtonBaseUtilityClass(slot) {
     return generateUtilityClass("MuiButtonBase", slot);
   }
   var buttonBaseClasses = generateUtilityClasses("MuiButtonBase", ["root", "disabled", "focusVisible"]), buttonBaseClasses_default = buttonBaseClasses;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonBase/ButtonBase.mjs
+  // node_modules/@mui/material/ButtonBase/ButtonBase.mjs
   var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1), useUtilityClasses = (ownerState) => {
     let {
       disabled,
@@ -18272,10 +18272,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var ButtonBase_default = ButtonBase;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/CircularProgress/CircularProgress.mjs
+  // node_modules/@mui/material/CircularProgress/CircularProgress.mjs
   var React31 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/createSimplePaletteValueFilter.mjs
+  // node_modules/@mui/material/utils/createSimplePaletteValueFilter.mjs
   function hasCorrectMainProperty(obj) {
     return typeof obj.main == "string";
   }
@@ -18291,13 +18291,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return ([, value]) => value && checkSimplePaletteColorValues(value, additionalPropertiesToCheck);
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/CircularProgress/circularProgressClasses.mjs
+  // node_modules/@mui/material/CircularProgress/circularProgressClasses.mjs
   function getCircularProgressUtilityClass(slot) {
     return generateUtilityClass("MuiCircularProgress", slot);
   }
   var circularProgressClasses = generateUtilityClasses("MuiCircularProgress", ["root", "determinate", "indeterminate", "colorPrimary", "colorSecondary", "svg", "track", "circle", "circleDisableShrink"]);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/CircularProgress/CircularProgress.mjs
+  // node_modules/@mui/material/CircularProgress/CircularProgress.mjs
   var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1), SIZE = 44;
   var circularRotateKeyframe = keyframes`
   0% {
@@ -18518,19 +18518,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), CircularProgress_default = CircularProgress;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Button/buttonClasses.mjs
+  // node_modules/@mui/material/Button/buttonClasses.mjs
   function getButtonUtilityClass(slot) {
     return generateUtilityClass("MuiButton", slot);
   }
   var buttonClasses = generateUtilityClasses("MuiButton", ["root", "text", "outlined", "contained", "disableElevation", "focusVisible", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorSuccess", "colorError", "colorInfo", "colorWarning", "sizeMedium", "sizeSmall", "sizeLarge", "fullWidth", "startIcon", "endIcon", "icon", "loading", "loadingWrapper", "loadingIconPlaceholder", "loadingIndicator", "loadingPositionCenter", "loadingPositionStart", "loadingPositionEnd"]), buttonClasses_default = buttonClasses;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonGroup/ButtonGroupContext.mjs
+  // node_modules/@mui/material/ButtonGroup/ButtonGroupContext.mjs
   var React32 = __toESM(require_react(), 1), ButtonGroupContext = /* @__PURE__ */ React32.createContext({}), ButtonGroupContext_default = ButtonGroupContext;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/ButtonGroup/ButtonGroupButtonContext.mjs
+  // node_modules/@mui/material/ButtonGroup/ButtonGroupButtonContext.mjs
   var React33 = __toESM(require_react(), 1), ButtonGroupButtonContext = /* @__PURE__ */ React33.createContext(void 0), ButtonGroupButtonContext_default = ButtonGroupButtonContext;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Button/Button.mjs
+  // node_modules/@mui/material/Button/Button.mjs
   var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1), useUtilityClasses3 = (ownerState) => {
     let {
       color: color2,
@@ -19069,16 +19069,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), Button_default = Button;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Dialog/Dialog.mjs
+  // node_modules/@mui/material/Dialog/Dialog.mjs
   var React46 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/getScrollbarSize/getScrollbarSize.mjs
+  // node_modules/@mui/utils/getScrollbarSize/getScrollbarSize.mjs
   function getScrollbarSize(win = window) {
     let documentWidth = win.document.documentElement.clientWidth;
     return win.innerWidth - documentWidth;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Modal/ModalManager.mjs
+  // node_modules/@mui/material/Modal/ModalManager.mjs
   function isOverflowing(container2) {
     let doc = ownerDocument(container2);
     return container2 === doc.body || container2 === doc.documentElement ? ownerWindow(container2).innerWidth > doc.documentElement.clientWidth : container2.scrollHeight > container2.clientHeight;
@@ -19206,19 +19206,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }
   };
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Modal/Modal.mjs
+  // node_modules/@mui/material/Modal/Modal.mjs
   var React43 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Unstable_TrapFocus/FocusTrap.mjs
+  // node_modules/@mui/material/Unstable_TrapFocus/FocusTrap.mjs
   var React36 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/getReactElementRef/getReactElementRef.mjs
+  // node_modules/@mui/utils/getReactElementRef/getReactElementRef.mjs
   var React35 = __toESM(require_react(), 1);
   function getReactElementRef(element) {
     return parseInt(React35.version, 10) >= 19 ? element?.props?.ref || null : element?.ref || null;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/contains/contains.mjs
+  // node_modules/@mui/utils/contains/contains.mjs
   function contains(parent, child) {
     if (!parent || !child)
       return !1;
@@ -19236,16 +19236,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return !1;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/contains.mjs
+  // node_modules/@mui/material/utils/contains.mjs
   var contains_default = contains;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/focusable.mjs
+  // node_modules/@mui/material/utils/focusable.mjs
   var FOCUSABLE_ATTRIBUTE = "data-mui-focusable";
   function getFocusTarget(rootElement) {
     return rootElement ? rootElement.hasAttribute(FOCUSABLE_ATTRIBUTE) ? rootElement : rootElement.querySelector(`[${FOCUSABLE_ATTRIBUTE}]`) : null;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Unstable_TrapFocus/FocusTrap.mjs
+  // node_modules/@mui/material/Unstable_TrapFocus/FocusTrap.mjs
   var import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1), candidatesSelector = ["input", "select", "textarea", "a[href]", "button", "[tabindex]", "audio[controls]", "video[controls]", '[contenteditable]:not([contenteditable="false"])'].join(",");
   function getTabIndex(node2) {
     let tabindexAttr = parseInt(node2.getAttribute("tabindex") || "", 10);
@@ -19377,7 +19377,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var FocusTrap_default = FocusTrap;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Portal/Portal.mjs
+  // node_modules/@mui/material/Portal/Portal.mjs
   var React37 = __toESM(require_react(), 1), ReactDOM = __toESM(require_react_dom(), 1);
   function getContainer(container2) {
     return typeof container2 == "function" ? container2() : container2;
@@ -19400,16 +19400,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }) : children : mountNode && /* @__PURE__ */ ReactDOM.createPortal(children, mountNode);
   }), Portal_default = Portal;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Backdrop/Backdrop.mjs
+  // node_modules/@mui/material/Backdrop/Backdrop.mjs
   var React41 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/isHostComponent/isHostComponent.mjs
+  // node_modules/@mui/utils/isHostComponent/isHostComponent.mjs
   function isHostComponent(element) {
     return typeof element == "string";
   }
   var isHostComponent_default = isHostComponent;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/appendOwnerState/appendOwnerState.mjs
+  // node_modules/@mui/utils/appendOwnerState/appendOwnerState.mjs
   function appendOwnerState(elementType, otherProps, ownerState) {
     return elementType === void 0 || isHostComponent_default(elementType) ? otherProps : {
       ...otherProps,
@@ -19421,13 +19421,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var appendOwnerState_default = appendOwnerState;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/resolveComponentProps/resolveComponentProps.mjs
+  // node_modules/@mui/utils/resolveComponentProps/resolveComponentProps.mjs
   function resolveComponentProps(componentProps, ownerState, slotState) {
     return typeof componentProps == "function" ? componentProps(ownerState, slotState) : componentProps;
   }
   var resolveComponentProps_default = resolveComponentProps;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/extractEventHandlers/extractEventHandlers.mjs
+  // node_modules/@mui/utils/extractEventHandlers/extractEventHandlers.mjs
   function extractEventHandlers(object) {
     if (object === void 0)
       return {};
@@ -19440,7 +19440,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var extractEventHandlers_default = extractEventHandlers;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/omitEventHandlers/omitEventHandlers.mjs
+  // node_modules/@mui/utils/omitEventHandlers/omitEventHandlers.mjs
   function omitEventHandlers(object) {
     if (object === void 0)
       return {};
@@ -19453,7 +19453,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var omitEventHandlers_default = omitEventHandlers;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/mergeSlotProps/mergeSlotProps.mjs
+  // node_modules/@mui/utils/mergeSlotProps/mergeSlotProps.mjs
   function mergeSlotProps(parameters) {
     let {
       getSlotProps,
@@ -19506,7 +19506,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var mergeSlotProps_default = mergeSlotProps;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/utils/useSlot.mjs
+  // node_modules/@mui/material/utils/useSlot.mjs
   function useSlot(name, parameters) {
     let {
       className,
@@ -19551,13 +19551,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return [elementType, props];
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Fade/Fade.mjs
+  // node_modules/@mui/material/Fade/Fade.mjs
   var React40 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/internal/Transition.mjs
+  // node_modules/@mui/material/internal/Transition.mjs
   var React39 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/utils/useValueAsRef/useValueAsRef.mjs
+  // node_modules/@mui/utils/useValueAsRef/useValueAsRef.mjs
   function useValueAsRef(value) {
     let latest = useLazyRef(() => createValueRef(value)).current;
     return latest.next = value, useEnhancedEffect_default(latest.effect), latest;
@@ -19573,10 +19573,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return latest;
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/react-transition-group/esm/TransitionGroupContext.js
+  // node_modules/react-transition-group/esm/TransitionGroupContext.js
   var import_react6 = __toESM(require_react()), TransitionGroupContext_default = import_react6.default.createContext(null);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/internal/Transition.mjs
+  // node_modules/@mui/material/internal/Transition.mjs
   var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
   function resolveTimeouts(timeout) {
     if (timeout == null)
@@ -19727,7 +19727,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var Transition_default = Transition;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Fade/Fade.mjs
+  // node_modules/@mui/material/Fade/Fade.mjs
   var import_jsx_runtime19 = __toESM(require_jsx_runtime(), 1), styles = {
     entering: {
       opacity: 1
@@ -19830,13 +19830,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), Fade_default = Fade;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Backdrop/backdropClasses.mjs
+  // node_modules/@mui/material/Backdrop/backdropClasses.mjs
   function getBackdropUtilityClass(slot) {
     return generateUtilityClass("MuiBackdrop", slot);
   }
   var backdropClasses = generateUtilityClasses("MuiBackdrop", ["root", "invisible"]);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Backdrop/Backdrop.mjs
+  // node_modules/@mui/material/Backdrop/Backdrop.mjs
   var import_jsx_runtime20 = __toESM(require_jsx_runtime(), 1), useUtilityClasses4 = (ownerState) => {
     let {
       classes,
@@ -19918,7 +19918,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), Backdrop_default = Backdrop;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Modal/useModal.mjs
+  // node_modules/@mui/material/Modal/useModal.mjs
   var React42 = __toESM(require_react(), 1);
   function getContainer2(container2) {
     return typeof container2 == "function" ? container2() : container2;
@@ -20015,13 +20015,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var useModal_default = useModal;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Modal/modalClasses.mjs
+  // node_modules/@mui/material/Modal/modalClasses.mjs
   function getModalUtilityClass(slot) {
     return generateUtilityClass("MuiModal", slot);
   }
   var modalClasses = generateUtilityClasses("MuiModal", ["root", "hidden", "backdrop"]);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Modal/Modal.mjs
+  // node_modules/@mui/material/Modal/Modal.mjs
   var import_jsx_runtime21 = __toESM(require_jsx_runtime(), 1), useUtilityClasses5 = (ownerState) => {
     let {
       open: open2,
@@ -20170,16 +20170,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), Modal_default = Modal;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Paper/Paper.mjs
+  // node_modules/@mui/material/Paper/Paper.mjs
   var React44 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Paper/paperClasses.mjs
+  // node_modules/@mui/material/Paper/paperClasses.mjs
   function getPaperUtilityClass(slot) {
     return generateUtilityClass("MuiPaper", slot);
   }
   var paperClasses = generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Paper/Paper.mjs
+  // node_modules/@mui/material/Paper/Paper.mjs
   var import_jsx_runtime22 = __toESM(require_jsx_runtime(), 1), useUtilityClasses6 = (ownerState) => {
     let {
       square,
@@ -20267,16 +20267,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), Paper_default = Paper;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Dialog/dialogClasses.mjs
+  // node_modules/@mui/material/Dialog/dialogClasses.mjs
   function getDialogUtilityClass(slot) {
     return generateUtilityClass("MuiDialog", slot);
   }
   var dialogClasses = generateUtilityClasses("MuiDialog", ["root", "backdrop", "scrollPaper", "scrollBody", "container", "paper", "paperWidthFalse", "paperWidthXs", "paperWidthSm", "paperWidthMd", "paperWidthLg", "paperWidthXl", "paperFullWidth", "paperFullScreen"]);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Dialog/DialogContext.mjs
+  // node_modules/@mui/material/Dialog/DialogContext.mjs
   var React45 = __toESM(require_react(), 1), DialogContext = /* @__PURE__ */ React45.createContext({}), DialogContext_default = DialogContext;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Dialog/Dialog.mjs
+  // node_modules/@mui/material/Dialog/Dialog.mjs
   var import_jsx_runtime23 = __toESM(require_jsx_runtime(), 1), DialogBackdrop = styled_default(Backdrop_default, {
     name: "MuiDialog",
     slot: "Backdrop"
@@ -20574,16 +20574,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), Dialog_default = Dialog;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DialogActions/DialogActions.mjs
+  // node_modules/@mui/material/DialogActions/DialogActions.mjs
   var React47 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DialogActions/dialogActionsClasses.mjs
+  // node_modules/@mui/material/DialogActions/dialogActionsClasses.mjs
   function getDialogActionsUtilityClass(slot) {
     return generateUtilityClass("MuiDialogActions", slot);
   }
   var dialogActionsClasses = generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DialogActions/DialogActions.mjs
+  // node_modules/@mui/material/DialogActions/DialogActions.mjs
   var import_jsx_runtime24 = __toESM(require_jsx_runtime(), 1), useUtilityClasses8 = (ownerState) => {
     let {
       classes,
@@ -20637,22 +20637,22 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), DialogActions_default = DialogActions;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DialogContent/DialogContent.mjs
+  // node_modules/@mui/material/DialogContent/DialogContent.mjs
   var React48 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DialogContent/dialogContentClasses.mjs
+  // node_modules/@mui/material/DialogContent/dialogContentClasses.mjs
   function getDialogContentUtilityClass(slot) {
     return generateUtilityClass("MuiDialogContent", slot);
   }
   var dialogContentClasses = generateUtilityClasses("MuiDialogContent", ["root", "dividers"]);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DialogTitle/dialogTitleClasses.mjs
+  // node_modules/@mui/material/DialogTitle/dialogTitleClasses.mjs
   function getDialogTitleUtilityClass(slot) {
     return generateUtilityClass("MuiDialogTitle", slot);
   }
   var dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]), dialogTitleClasses_default = dialogTitleClasses;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DialogContent/DialogContent.mjs
+  // node_modules/@mui/material/DialogContent/DialogContent.mjs
   var import_jsx_runtime25 = __toESM(require_jsx_runtime(), 1), useUtilityClasses9 = (ownerState) => {
     let {
       classes,
@@ -20723,19 +20723,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), DialogContent_default = DialogContent;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DialogTitle/DialogTitle.mjs
+  // node_modules/@mui/material/DialogTitle/DialogTitle.mjs
   var React50 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Typography/Typography.mjs
+  // node_modules/@mui/material/Typography/Typography.mjs
   var React49 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Typography/typographyClasses.mjs
+  // node_modules/@mui/material/Typography/typographyClasses.mjs
   function getTypographyUtilityClass(slot) {
     return generateUtilityClass("MuiTypography", slot);
   }
   var typographyClasses = generateUtilityClasses("MuiTypography", ["root", "h1", "h2", "h3", "h4", "h5", "h6", "subtitle1", "subtitle2", "body1", "body2", "inherit", "button", "caption", "overline", "alignLeft", "alignRight", "alignCenter", "alignJustify", "noWrap", "gutterBottom"]);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/Typography/Typography.mjs
+  // node_modules/@mui/material/Typography/Typography.mjs
   var import_jsx_runtime26 = __toESM(require_jsx_runtime(), 1), useUtilityClasses10 = (ownerState) => {
     let {
       align,
@@ -20865,7 +20865,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), Typography_default = Typography;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/DialogTitle/DialogTitle.mjs
+  // node_modules/@mui/material/DialogTitle/DialogTitle.mjs
   var import_jsx_runtime27 = __toESM(require_jsx_runtime(), 1), useUtilityClasses11 = (ownerState) => {
     let {
       classes
@@ -20901,10 +20901,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), DialogTitle_default = DialogTitle;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/ThemeProvider.mjs
+  // node_modules/@mui/material/styles/ThemeProvider.mjs
   var React52 = __toESM(require_react(), 1);
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/ThemeProviderNoVars.mjs
+  // node_modules/@mui/material/styles/ThemeProviderNoVars.mjs
   var React51 = __toESM(require_react(), 1);
   var import_jsx_runtime28 = __toESM(require_jsx_runtime(), 1);
   function ThemeProviderNoVars({
@@ -20919,7 +20919,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/InitColorSchemeScript/InitColorSchemeScript.mjs
+  // node_modules/@mui/material/InitColorSchemeScript/InitColorSchemeScript.mjs
   var import_jsx_runtime29 = __toESM(require_jsx_runtime(), 1), defaultConfig = {
     attribute: "data-mui-color-scheme",
     colorSchemeStorageKey: "mui-color-scheme",
@@ -20928,7 +20928,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     modeStorageKey: "mui-mode"
   };
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/ThemeProviderWithVars.mjs
+  // node_modules/@mui/material/styles/ThemeProviderWithVars.mjs
   var import_jsx_runtime30 = __toESM(require_jsx_runtime(), 1), {
     CssVarsProvider: InternalCssVarsProvider,
     useColorScheme,
@@ -20960,7 +20960,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   });
   var CssVarsProvider = InternalCssVarsProvider;
 
-  // ../../../Users/charlesberman/serato-library-manager/node_modules/@mui/material/styles/ThemeProvider.mjs
+  // node_modules/@mui/material/styles/ThemeProvider.mjs
   var import_jsx_runtime31 = __toESM(require_jsx_runtime(), 1);
   function ThemeProvider4({
     theme,
