@@ -99,4 +99,16 @@ describe("CrateTree context", () => {
     expect(el("crate-list").querySelector<HTMLButtonElement>(".crate")?.dataset.id).toBe("all");
     root.unmount();
   });
+
+  it("does not force a 44px minHeight on crate action buttons", () => {
+    const sources = import.meta.glob("../../pages/Crate*Actions.tsx", {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    });
+    expect(Object.keys(sources)).toHaveLength(2);
+    for (const [path, src] of Object.entries(sources)) {
+      expect(src, path).not.toMatch(/minHeight:\s*44/);
+    }
+  });
 });

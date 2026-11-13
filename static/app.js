@@ -68804,7 +68804,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var import_react59 = __toESM(require_react(), 1);
 
   // src/pages/CrateActions.tsx
-  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none" };
   function CrateActions() {
     let crates = useCrates();
     return /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)(import_jsx_runtime274.Fragment, { children: [
@@ -68928,7 +68928,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateBrowserActions.tsx
-  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1), BUTTON_SX8 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1), BUTTON_SX8 = { textTransform: "none" };
   function CrateBrowserActions() {
     let crates = useCrates();
     return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [

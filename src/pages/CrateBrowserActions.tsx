@@ -2,8 +2,10 @@
  * Split, Save view, and Export painted by React.
  *
  * The host is `#crate-browser-actions` in the track-sheet bar. Import,
- * Rekordbox, and Reload stay in the markup. Outlined MUI Buttons match
- * HealthListChrome. Split stays a Button with `aria-pressed`.
+ * Rekordbox, and Reload stay in the markup. Outlined MUI Buttons, size
+ * small. `.browser-actions .MuiButton-root` unsets min-height so the
+ * native 36px rule does not pin them. Split stays a Button with
+ * `aria-pressed`.
  */
 
 import Button from "@mui/material/Button";
@@ -12,7 +14,7 @@ import { t } from "../lib/i18n";
 import { tips } from "../lib/ui/tooltip-strings";
 import { tooltipRef } from "../components/tooltip-ref";
 
-const BUTTON_SX = { textTransform: "none" as const, minHeight: 44 };
+const BUTTON_SX = { textTransform: "none" as const };
 
 /**
  * Split, Save view, and M3U Export.

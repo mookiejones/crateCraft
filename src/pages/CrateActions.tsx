@@ -2,8 +2,7 @@
  * Crate action buttons painted by React.
  *
  * Ids stay the ones the desktop menu and tests click. Tooltips use
- * `tooltip.*` through `setTooltip`. Outlined MUI Buttons match
- * HealthListChrome.
+ * `tooltip.*` through `setTooltip`. Outlined MUI Buttons, size small.
  */
 
 import Button from "@mui/material/Button";
@@ -12,7 +11,7 @@ import { t } from "../lib/i18n";
 import { tips } from "../lib/ui/tooltip-strings";
 import { tooltipRef } from "../components/tooltip-ref";
 
-const BUTTON_SX = { textTransform: "none" as const, minHeight: 44 };
+const BUTTON_SX = { textTransform: "none" as const };
 
 /**
  * New, rename, color, delete, preset, folder-sync, rename from tags, refresh.
