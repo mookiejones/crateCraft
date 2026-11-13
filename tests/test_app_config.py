@@ -851,6 +851,49 @@ class LayoutSettingsTests(unittest.TestCase):
                 loaded = app_config.load_settings()
             self.assertIsNone(loaded.track_list_width, layout)
 
+    def test_drawer_open_round_trips_and_keeps_the_width(self) -> None:
+        """Save the rail open flag and keep a stored track list width.
+
+        Returns:
+            None. The test fails if the flag is missing or the width is dropped.
+        """
+        app_config.set_drawer_open(True)
+        stored = json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
+        self.assertEqual(stored["layout"], {"drawer_open": True})
+        self.assertIs(app_config.load_settings().drawer_open, True)
+        app_config.set_track_list_width(520)
+        app_config.set_drawer_open(False)
+        loaded = app_config.load_settings()
+        self.assertEqual(loaded.track_list_width, 520)
+        self.assertIs(loaded.drawer_open, False)
+        stored = json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
+        self.assertEqual(stored["layout"], {"track_list_width": 520, "drawer_open": False})
+
+    def test_missing_drawer_open_is_none(self) -> None:
+        """Treat a file with no rail flag as never chosen.
+
+        Returns:
+            None. The test fails if a missing key becomes False.
+        """
+        self.assertIsNone(app_config.load_settings().drawer_open)
+        path = self.config / "settings.json"
+        path.write_text(json.dumps({"layout": {"track_list_width": 400}}), encoding="utf-8")
+        loaded = app_config.load_settings()
+        self.assertIsNone(loaded.drawer_open)
+        self.assertEqual(loaded.track_list_width, 400)
+
+    def test_bad_stored_drawer_open_is_ignored(self) -> None:
+        """Drop a hand-edited rail flag that is not a boolean.
+
+        Returns:
+            None. The test fails if the loader keeps 1 as True.
+        """
+        path = self.config / "settings.json"
+        path.write_text(json.dumps({"layout": {"drawer_open": 1}}), encoding="utf-8")
+        with self.assertLogs("serato.library.config", level="WARNING"):
+            loaded = app_config.load_settings()
+        self.assertIsNone(loaded.drawer_open)
+
 
 class SettingsIntegrityTests(unittest.TestCase):
     """Gaps that let a settings save drop or tear another field.

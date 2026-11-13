@@ -360,6 +360,34 @@ class SetupApiTests(unittest.TestCase):
         assert isinstance(reset, dict)
         self.assertEqual(reset["layout"], {"track_list_width": None})
 
+    def test_layout_drawer_open_is_saved_and_keeps_the_width(self) -> None:
+        """Save the rail flag over HTTP, keep a width, and refuse a string.
+
+        Returns:
+            None. The test fails if a bad body is stored or a width-only
+            POST drops the flag.
+        """
+        path = self.config / "settings.json"
+        status, saved = _request(self.base, "/api/settings", {"layout": {"drawer_open": True}})
+        self.assertEqual(status, 200)
+        assert isinstance(saved, dict)
+        self.assertIs(saved["layout"]["drawer_open"], True)
+        status, fetched = _request(self.base, "/api/settings")
+        assert isinstance(fetched, dict)
+        self.assertIs(fetched["layout"]["drawer_open"], True)
+        status, with_width = _request(
+            self.base, "/api/settings", {"layout": {"track_list_width": 520}},
+        )
+        self.assertEqual(status, 200)
+        assert isinstance(with_width, dict)
+        self.assertEqual(with_width["layout"]["track_list_width"], 520)
+        self.assertIs(with_width["layout"]["drawer_open"], True)
+        status, bad = _request(self.base, "/api/settings", {"layout": {"drawer_open": "yes"}})
+        self.assertEqual(status, 400)
+        self.assertTrue(path.exists())
+        stored = json.loads(path.read_text(encoding="utf-8"))
+        self.assertIs(stored["layout"]["drawer_open"], True)
+
     def test_wizard_complete_keeps_the_window_and_a_rerun_keeps_settings(self) -> None:
         """Keep the desktop frame, the install id, and the sharing choice.
 
