@@ -80,14 +80,20 @@ const idleClock: WaveformClock = {
  *
  * @param host Element that will hold the canvases and zoom buttons.
  * @param hooks Seek, time, and the existing seek steps. No new keys.
+ * @param compact AppBar row: no zoom buttons, overview stays hidden.
  * @returns The controller.
  */
-export function mountWaveform(host: HTMLElement, hooks?: WaveformHooks): WaveformController {
+export function mountWaveform(
+  host: HTMLElement,
+  hooks?: WaveformHooks,
+  compact = false,
+): WaveformController {
   const engine = new WaveformEngine();
   host.classList.add("player-wave");
+  if (compact) host.classList.add("player-wave-compact");
   host.hidden = true;
   if (hooks) engine.setClock(hooks);
-  const panel = createElement(WaveformPanel, { engine, host });
+  const panel = createElement(WaveformPanel, { engine, host, compact });
   const tree = hooks ? createElement(WaveformClockProvider, { clock: hooks, children: panel }) : panel;
   const root = mountIsland(host, tree);
   engine.bindRoot(root);

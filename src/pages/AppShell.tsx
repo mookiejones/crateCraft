@@ -3,12 +3,13 @@
  *
  * Existing page nodes keep their ids. This shell portals the crateCraft
  * heading and `#library-generation` into the AppBar after the menu
- * toggle, `#open-help` and `#open-settings` to the AppBar end, `#player-bar`
- * under the AppBar as a full strip, then a MUI Alert for the last action
- * notice, `#views` into the Drawer, and `#app-body` into Main. `paintNav`
- * inserts `#view-children` after the open primary. Space stays in `.brand`.
- * Crate names stay in the Main rail so collapse does not hide them. Mini
- * width is remembered in settings.
+ * toggle, `#player-bar` into the Toolbar flex slot between the chip and
+ * Help, `#open-help` and `#open-settings` to the AppBar end, then a MUI
+ * Alert for the last action notice, `#views` into the Drawer, and
+ * `#app-body` into Main. The player slot stays hidden while `trackId`
+ * is null. `paintNav` inserts `#view-children` after the open primary.
+ * Space stays in `.brand`. Crate names stay in the Main rail so collapse
+ * does not hide them. Mini width is remembered in settings.
  */
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -21,6 +22,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
 import { NoticeBanner } from "../components/NoticeBanner";
 import { onLocaleChange, t } from "../lib/i18n";
+import { getPlayerState, subscribe } from "../lib/player/player";
 import { state } from "../lib/state";
 import {
   DRAWER_MINI_CUTOFF,
@@ -60,6 +62,7 @@ function adoptNode(slot: HTMLElement | null, node: Element | null): void {
 export function AppShell() {
   const [savedOpen, setSavedOpen] = useState<boolean | null>(null);
   const [innerWidth, setInnerWidth] = useState(() => window.innerWidth);
+  const [hasTrack, setHasTrack] = useState(() => getPlayerState().trackId !== null);
   const open = drawerExpanded(savedOpen, innerWidth);
   const postedOpen = useRef(false);
   const [, setLocaleTick] = useState(0);
@@ -80,6 +83,12 @@ export function AppShell() {
     return subscribeDrawerOpen((saved) => {
       if (postedOpen.current) return;
       setSavedOpen(saved);
+    });
+  }, []);
+
+  useEffect(() => {
+    return subscribe((snapshot) => {
+      setHasTrack(snapshot.trackId !== null);
     });
   }, []);
 
@@ -149,7 +158,17 @@ export function AppShell() {
             }}
           />
           <Box ref={generationSlot} className="app-bar-generation" />
-          <Box sx={{ flex: 1, minWidth: 0 }} />
+          <Box
+            ref={playerSlot}
+            className="app-bar-player"
+            hidden={!hasTrack}
+            sx={{
+              flex: 1,
+              minWidth: 0,
+              display: hasTrack ? "flex" : "none",
+              alignItems: "center",
+            }}
+          />
           <Box
             ref={actionsSlot}
             className="app-bar-actions"
@@ -157,7 +176,6 @@ export function AppShell() {
           />
         </Toolbar>
       </AppBar>
-      <Box ref={playerSlot} className="player-strip" sx={{ flexShrink: 0 }} />
       <NoticeBanner />
       <Box sx={{ display: "flex", flex: 1, minHeight: 0, minWidth: 0 }}>
         <Drawer

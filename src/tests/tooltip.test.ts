@@ -254,9 +254,8 @@ describe("rendered controls", () => {
   it("covers the player, the detail pane, related tracks, and a history row", async () => {
     mountPlayer();
     expectCovered();
-    expect(document.querySelector("[aria-label='Zoom in']")?.getAttribute("data-tooltip")).toBe(tipText(tips.zoomIn));
-    expect(document.querySelector("[aria-label='Zoom in']")?.getAttribute("data-tooltip")).not.toBe("Zoom in");
-    expect(document.querySelector(".waveform-overview")?.getAttribute("data-tooltip")).toContain("Left arrow");
+    expect(document.querySelector(".player-play")?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
+    expect(document.querySelector("[aria-label='Zoom in']")).toBeNull();
 
     state.mode = "duplicates";
     state.writable = true;

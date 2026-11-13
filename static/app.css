@@ -1623,14 +1623,17 @@ dialog .settings-field select {
   clip: rect(0 0 0 0);
 }
 
-.player-strip {
-  flex-shrink: 0;
-  background: var(--manila);
+.app-bar-player {
+  min-width: 0;
 }
 
-.player-strip .player-bar {
+.app-bar-player .player-bar {
   grid-column: auto;
   grid-row: auto;
+  border-top: 0;
+  background: transparent;
+  width: 100%;
+  min-width: 0;
 }
 
 .player-bar {
@@ -1641,12 +1644,18 @@ dialog .settings-field select {
 }
 
 .player-controls {
-  display: grid;
-  grid-template-columns: minmax(12rem, 18rem) auto minmax(0, 1fr) auto;
-  gap: var(--space-3);
+  display: flex;
   align-items: center;
-  padding: var(--space-2) var(--space-4);
-  min-height: 64px;
+  gap: var(--space-2);
+  padding: 0;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.player-wave-slot {
+  flex: 1;
+  min-width: 0;
 }
 
 .player-meta {
@@ -1788,6 +1797,18 @@ dialog .settings-field select {
   gap: var(--space-2);
   align-items: start;
   padding: var(--space-2) var(--space-4) 0;
+}
+
+.player-wave-compact {
+  display: block;
+  padding: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+.player-wave-compact .waveform-detail-wrap,
+.player-wave-compact .waveform-detail {
+  height: 32px;
 }
 
 .player-wave-main {
@@ -2449,17 +2470,6 @@ dialog .settings-field select {
   .detail { border-top: 1px solid var(--rule); grid-row: 5; }
   .player-bar { grid-row: 6; }
   .detail h2 { font-size: 32px; }
-  .player-controls {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "meta toggle"
-      "seek seek"
-      "volume volume";
-  }
-  .player-meta { grid-area: meta; }
-  .player-transport { grid-area: toggle; }
-  .player-seek { grid-area: seek; }
-  .player-volume { grid-area: volume; width: auto; }
 }
 
 .files-match-detail {

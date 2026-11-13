@@ -4,13 +4,56 @@
 
 import { flushSync } from "react-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { Track } from "../../lib/api-types";
 import { applyStatic, setLocale, t } from "../../lib/i18n";
+import {
+  attachMedia,
+  getPlayerState,
+  mountPlayer,
+  pause,
+  play,
+  type PlayableMedia,
+} from "../../lib/player/player";
+import { state } from "../../lib/state";
 import { applyLayout } from "../../lib/ui/layout";
 import { mountAppShell, unmountAppShell } from "../../lib/ui/app-shell";
 import { paintNav, resetNav } from "../../lib/ui/nav";
 import { resetNotice, setNotice } from "../../lib/ui/notice-store";
 import { applyStaticTooltips } from "../../lib/ui/tooltip";
 import { installPage } from "../test-page";
+
+class FakeAudio extends EventTarget implements PlayableMedia {
+  src = "";
+  currentTime = 0;
+  duration = 0;
+  volume = 1;
+  paused = true;
+  play(): Promise<void> {
+    this.paused = false;
+    this.dispatchEvent(new Event("play"));
+    return Promise.resolve();
+  }
+  pause(): void {
+    this.paused = true;
+    this.dispatchEvent(new Event("pause"));
+  }
+}
+
+function sampleTrack(id: number, name: string, artist = "Ada"): Track {
+  return { id, name, artist };
+}
+
+function playerSlotHidden(bar: HTMLElement | null): boolean {
+  if (!bar) return true;
+  const slot = bar.parentElement;
+  if (!(slot instanceof HTMLElement)) return bar.hidden;
+  return (
+    bar.hidden
+    || slot.hidden
+    || slot.style.display === "none"
+    || getComputedStyle(slot).display === "none"
+  );
+}
 
 const DRAWER_MINI_CUTOFF = 560;
 
@@ -133,26 +176,54 @@ describe("AppShell", () => {
     }
   });
 
-  it("places the player strip under the AppBar, outside Main", () => {
+  it("docks the compact player in the AppBar after a track loads", () => {
+    attachMedia(new FakeAudio());
+    mountPlayer();
     const bar = document.getElementById("player-bar");
     const appBar = document.querySelector(".MuiAppBar-root");
-    const strip = appBar?.nextElementSibling;
     expect(bar).not.toBeNull();
-    expect(strip?.contains(bar)).toBe(true);
-    expect(strip?.querySelector("#app-drawer")).toBeNull();
+    expect(appBar?.contains(bar)).toBe(true);
+    expect(appBar?.nextElementSibling?.contains(bar)).toBe(false);
     expect(document.getElementById("app-body")?.contains(bar)).toBe(false);
-    expect(document.querySelector("main.sheet")?.contains(bar)).toBe(false);
+    expect(getPlayerState().trackId).toBeNull();
+    expect(playerSlotHidden(bar)).toBe(true);
+
+    const night = sampleTrack(4, "Night");
+    state.byId.set(4, night);
+    flushSync(() => {
+      play(4);
+    });
+    expect(playerSlotHidden(bar)).toBe(false);
+    expect(bar?.querySelector(".player-play")).not.toBeNull();
+    expect(bar?.querySelector(".player-title")?.textContent).toBe("Night");
+    expect(bar?.querySelector("canvas")).not.toBeNull();
+    expect(bar?.querySelector(".player-time")).not.toBeNull();
+    expect(bar?.querySelector("[aria-label='Zoom in']")).toBeNull();
+    expect(bar?.querySelector("[aria-label='Zoom out']")).toBeNull();
+
+    flushSync(() => {
+      pause();
+    });
+    expect(getPlayerState().playing).toBe(false);
+    expect(getPlayerState().trackId).toBe(4);
+    expect(playerSlotHidden(bar)).toBe(false);
+
+    flushSync(() => {
+      mountPlayer();
+    });
+    expect(getPlayerState().trackId).toBeNull();
+    expect(playerSlotHidden(document.getElementById("player-bar"))).toBe(true);
   });
 
-  it("places a dismissible Alert under the player for setNotice", () => {
+  it("places a dismissible Alert under the AppBar for setNotice", () => {
     expect(document.getElementById("app-notice")).toBeNull();
     flushSync(() => {
       setNotice("That file is not on disk.", "error");
     });
     const banner = document.getElementById("app-notice");
-    const strip = document.querySelector(".MuiAppBar-root")?.nextElementSibling;
+    const appBar = document.querySelector(".MuiAppBar-root");
     expect(banner?.textContent).toContain("That file is not on disk.");
-    expect(strip?.nextElementSibling?.contains(banner)).toBe(true);
+    expect(appBar?.nextElementSibling?.contains(banner)).toBe(true);
     expect(document.getElementById("app-body")?.contains(banner)).toBe(false);
     document.querySelector<HTMLButtonElement>("#app-notice button")?.click();
     expect(document.getElementById("app-notice")).toBeNull();

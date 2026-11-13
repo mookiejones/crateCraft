@@ -12,6 +12,7 @@ import {
   SEEK_STEP_SECONDS,
   attachMedia,
   formatPlayerTime,
+  getPlayerCues,
   getPlayerState,
   isPlaying,
   markersFromCues,
@@ -24,6 +25,7 @@ import {
   previous,
   seek,
   seekBy,
+  setVolume,
   subscribe,
   togglePlayPause,
   type PlayableMedia,
@@ -78,22 +80,19 @@ afterEach(() => {
 });
 
 describe("player chrome", () => {
-  it("paints transport and sliders with MUI controls and tooltips", () => {
-    const previous = document.querySelector('[aria-label="Previous"]');
-    const play = document.querySelector(".player-play");
-    const next = document.querySelector('[aria-label="Next"]');
-    const seek = document.querySelector(".player-seek .MuiSlider-root");
-    const volume = document.querySelector(".player-volume .MuiSlider-root");
-    expect(previous?.className).toContain("MuiIconButton-root");
-    expect(play?.className).toContain("MuiIconButton-root");
-    expect(next?.className).toContain("MuiIconButton-root");
-    expect(seek).not.toBeNull();
-    expect(volume).not.toBeNull();
-    expect(previous?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
-    expect(play?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
-    expect(next?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
-    expect(document.querySelector(".player-range")?.getAttribute("data-tooltip")?.trim().length)
-      .toBeGreaterThan(10);
+  it("paints Play, title, waveform, and time without transport sliders or zoom", () => {
+    const playButton = document.querySelector(".player-play");
+    expect(playButton?.className).toContain("MuiIconButton-root");
+    expect(playButton?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
+    expect(document.querySelector(".player-title")).not.toBeNull();
+    expect(document.querySelector("#player-bar canvas")).not.toBeNull();
+    expect(document.querySelector(".player-time")).not.toBeNull();
+    expect(document.querySelector('[aria-label="Previous"]')).toBeNull();
+    expect(document.querySelector('[aria-label="Next"]')).toBeNull();
+    expect(document.querySelector(".player-volume")).toBeNull();
+    expect(document.querySelector(".player-seek .MuiSlider-root")).toBeNull();
+    expect(document.querySelector("[aria-label='Zoom in']")).toBeNull();
+    expect(document.querySelector("[aria-label='Zoom out']")).toBeNull();
   });
 });
 
@@ -165,11 +164,8 @@ describe("player API", () => {
     expect(seen.length).toBe(count);
   });
 
-  it("sets the volume from the slider without treating zero as missing", () => {
-    const input = document.querySelector<HTMLInputElement>(".player-volume input");
-    expect(input).not.toBeNull();
-    input!.value = "0";
-    input!.dispatchEvent(new Event("input", { bubbles: true }));
+  it("sets the volume without treating zero as missing", () => {
+    setVolume(0);
     expect(fake.volume).toBe(0);
     expect(getPlayerState().volume).toBe(0);
   });
@@ -321,37 +317,24 @@ describe("shortcut table", () => {
     expect(fake.currentTime).toBe(15);
     document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true, cancelable: true }));
     expect(fake.currentTime).toBe(10);
-
-    const range = document.querySelector<HTMLInputElement>(".player-range");
-    range!.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true, cancelable: true }));
-    expect(fake.currentTime).toBe(15);
   });
 });
 
 describe("seek keys", () => {
-  it("moves 5 seconds, and 30 with Shift, without bubbling", () => {
+  it("moves 5 seconds from the document shortcuts, and 30 from seekBy", () => {
+    registerPlayerControls(playerControls);
+    wireShortcuts();
     state.byId.set(4, track(4, "Night"));
     fake.duration = 100;
     play(4);
     fake.dispatchEvent(new Event("durationchange"));
     seek(10);
-    const range = document.querySelector<HTMLInputElement>(".player-range");
-    expect(range).not.toBeNull();
-    let bubbled = false;
-    const hear = () => {
-      bubbled = true;
-    };
-    document.addEventListener("keydown", hear);
-    const forward = new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true, cancelable: true });
-    range!.dispatchEvent(forward);
-    expect(forward.defaultPrevented).toBe(true);
-    expect(bubbled).toBe(false);
+    document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true, cancelable: true }));
     expect(fake.currentTime).toBe(15);
-    range!.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", shiftKey: true, bubbles: true, cancelable: true }));
+    seekBy(SEEK_STEP_LARGE_SECONDS);
     expect(fake.currentTime).toBe(45);
-    range!.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true, cancelable: true }));
+    document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true, cancelable: true }));
     expect(fake.currentTime).toBe(40);
-    document.removeEventListener("keydown", hear);
   });
 });
 
@@ -380,13 +363,13 @@ describe("cue markers", () => {
     fake.duration = 10;
     play(4);
     fake.dispatchEvent(new Event("durationchange"));
-    await vi.waitUntil(() => document.querySelectorAll(".player-cue").length === 2);
-    const marks = [...document.querySelectorAll<HTMLButtonElement>(".player-cue")];
-    expect(marks[0]?.style.getPropertyValue("--cue")).toBe("#CC0000");
-    expect(marks[0]?.getAttribute("aria-label")).toBe("Drop, 0:01");
-    expect(marks[0]?.style.left).toBe("15%");
-    expect(marks[1]?.getAttribute("aria-label")).toBe("Cue 4, 0:08");
-    marks[0]?.click();
+    await vi.waitUntil(() => getPlayerCues().length === 2);
+    const marks = getPlayerCues();
+    expect(marks[0]?.color).toBe("#CC0000");
+    expect(marks[0]?.label).toBe("Drop");
+    expect(marks[0]?.seconds).toBe(1.5);
+    expect(marks[1]?.label).toBe("Cue 4");
+    seek(1.5);
     expect(fake.currentTime).toBe(1.5);
     expect(isPlaying()).toBe(true);
   });

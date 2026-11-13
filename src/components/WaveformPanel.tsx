@@ -47,14 +47,19 @@ function clockFromPlayer(
 /**
  * Waveform island: detail canvas, overview, and zoom.
  *
- * @param props Engine that paints canvases, and the host element.
+ * Compact skips the zoom buttons and keeps the overview in the DOM
+ * hidden so `engine.attach` still receives both canvases.
+ *
+ * @param props Engine that paints canvases, the host element, and compact.
  */
 export function WaveformPanel({
   engine,
   host,
+  compact = false,
 }: {
   engine: WaveformEngine;
   host: HTMLElement;
+  compact?: boolean;
 }) {
   const player = usePlayer();
   const wave = useWaveform();
@@ -97,18 +102,20 @@ export function WaveformPanel({
         <WaveformOverview
           canvasRef={overviewCanvasRef}
           hitRef={overviewHitRef}
-          hidden={wave.overviewSource === ""}
+          hidden={compact || wave.overviewSource === ""}
           source={wave.overviewSource}
           pps={wave.pps}
         />
       </div>
-      <WaveformZoom
-        canZoomIn={wave.canZoomIn}
-        canZoomOut={wave.canZoomOut}
-        pps={wave.pps}
-        onZoomIn={() => engine.zoom(1)}
-        onZoomOut={() => engine.zoom(-1)}
-      />
+      {compact ? null : (
+        <WaveformZoom
+          canZoomIn={wave.canZoomIn}
+          canZoomOut={wave.canZoomOut}
+          pps={wave.pps}
+          onZoomIn={() => engine.zoom(1)}
+          onZoomOut={() => engine.zoom(-1)}
+        />
+      )}
     </>
   );
 }
