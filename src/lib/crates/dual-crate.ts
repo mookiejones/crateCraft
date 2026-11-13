@@ -54,7 +54,7 @@ export async function saveFocusedView(): Promise<void> {
   if (saving || !state.writable) return;
   const assets = saveViewIds(focusedView());
   if (!assets.length) {
-    setNotice(t("crates.saveViewEmpty"));
+    setNotice(t("crates.saveViewEmpty"), "error");
     return;
   }
   mountSharedDialogs();
@@ -80,7 +80,7 @@ export async function saveFocusedView(): Promise<void> {
     if (typeof result.id === "number") selectCrate(result.id);
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
   } finally {
     saving = false;
   }
@@ -96,7 +96,7 @@ export async function saveFocusedView(): Promise<void> {
 export function wireDualCrates(): void {
   el("crate-split").addEventListener("click", () => toggleSplit());
   el("crate-save-view").addEventListener("click", () => {
-    saveFocusedView().catch((error) => setNotice(failureOf(error).message));
+    saveFocusedView().catch((error) => setNotice(failureOf(error).message, "error"));
   });
   el("crate-pane-a").addEventListener("focusin", () => {
     if (!state.splitCrates || state.focusedPane === "a") return;
@@ -113,6 +113,6 @@ export function wireDualCrates(): void {
 bindCrateActions({
   split: toggleSplit,
   saveView: () => {
-    saveFocusedView().catch((error) => setNotice(failureOf(error).message));
+    saveFocusedView().catch((error) => setNotice(failureOf(error).message, "error"));
   },
 });

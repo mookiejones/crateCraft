@@ -12,6 +12,7 @@ import { getLocale } from "../i18n";
 import { play } from "../player/player";
 import { state } from "../state";
 import { bridge } from "../bridge";
+import type { NoticeSeverity } from "./notice-store";
 
 /** What the detail pane is showing. */
 export type TrackDetailState =
@@ -72,7 +73,7 @@ export type TrackListActions = {
   removeTrack: (id: number) => Promise<void>;
   setMembership: (assetId: number, crateId: number, add: boolean) => Promise<boolean>;
   openInLibrary: (id: number) => void;
-  setNotice: (text: string) => void;
+  setNotice: (text: string, severity?: NoticeSeverity) => void;
   setSort: (key: string) => void;
 };
 

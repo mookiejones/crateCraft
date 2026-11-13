@@ -9,6 +9,7 @@
  */
 
 import type { SeratoStatus } from "./api-types";
+import type { NoticeSeverity } from "./ui/notice-store";
 
 export const bridge: {
   selectTrack: (id: number) => void | Promise<void>;
@@ -20,7 +21,7 @@ export const bridge: {
   lockDown: (error: unknown) => void;
   applyStatus: (info: SeratoStatus | null | undefined) => void;
   renderShell: () => void;
-  setNotice: (text: string) => void;
+  setNotice: (text: string, severity?: NoticeSeverity) => void;
 } = {
   selectTrack(_id: number) {},
   selectEntry(_id: number) {},

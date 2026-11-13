@@ -175,7 +175,7 @@ export async function refreshActivePreset(): Promise<void> {
     await loadLibrary();
   } catch (error) {
     if (failureOf(error).status === 409) lockDown(error);
-    else setNotice(failureOf(error).message);
+    else setNotice(failureOf(error).message, "error");
     if (failureOf(error).status === 404) await loadLibrary();
   }
 }
@@ -199,7 +199,7 @@ export async function refreshPresetsOnOpen(): Promise<void> {
     setNotice(reply.warning ? `${message} ${reply.warning}` : message);
     await loadLibrary();
   } catch (error) {
-    if (failureOf(error).status !== 409) setNotice(failureOf(error).message);
+    if (failureOf(error).status !== 409) setNotice(failureOf(error).message, "error");
   }
 }
 
@@ -213,10 +213,10 @@ export async function refreshPresetsOnOpen(): Promise<void> {
 export function wirePresets(): void {
   mountSharedDialogs();
   el("crate-preset").addEventListener("click", () => {
-    openPresetDialog().catch((error) => setNotice(failureOf(error).message));
+    openPresetDialog().catch((error) => setNotice(failureOf(error).message, "error"));
   });
   el("crate-refresh").addEventListener("click", () => {
-    refreshActivePreset().catch((error) => setNotice(failureOf(error).message));
+    refreshActivePreset().catch((error) => setNotice(failureOf(error).message, "error"));
   });
   el("preset-kind").addEventListener("change", () => {
     syncPresetFields();
@@ -230,15 +230,15 @@ export function wirePresets(): void {
   });
   el("preset-cancel").addEventListener("click", () => el("preset-dialog").close());
   el("preset-create").addEventListener("click", () => {
-    createPreset().catch((error) => setNotice(failureOf(error).message));
+    createPreset().catch((error) => setNotice(failureOf(error).message, "error"));
   });
 }
 
 bindCrateActions({
   preset: () => {
-    openPresetDialog().catch((error) => setNotice(failureOf(error).message));
+    openPresetDialog().catch((error) => setNotice(failureOf(error).message, "error"));
   },
   refresh: () => {
-    refreshActivePreset().catch((error) => setNotice(failureOf(error).message));
+    refreshActivePreset().catch((error) => setNotice(failureOf(error).message, "error"));
   },
 });

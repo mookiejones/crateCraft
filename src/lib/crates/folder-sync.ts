@@ -137,7 +137,7 @@ export async function runFolderSync(): Promise<void> {
 export function wireFolderSync(): void {
   mountSharedDialogs();
   el("crate-folder-sync").addEventListener("click", () => {
-    openFolderSyncDialog().catch((error) => setNotice(failureOf(error).message));
+    openFolderSyncDialog().catch((error) => setNotice(failureOf(error).message, "error"));
   });
   el("folder-sync-path").addEventListener("input", schedulePreview);
   el("folder-sync-subcrates").addEventListener("change", () => {
@@ -148,12 +148,12 @@ export function wireFolderSync(): void {
   });
   el("folder-sync-cancel").addEventListener("click", () => el("folder-sync-dialog").close());
   el("folder-sync-run").addEventListener("click", () => {
-    runFolderSync().catch((error) => setNotice(failureOf(error).message));
+    runFolderSync().catch((error) => setNotice(failureOf(error).message, "error"));
   });
 }
 
 bindCrateActions({
   folderSync: () => {
-    openFolderSyncDialog().catch((error) => setNotice(failureOf(error).message));
+    openFolderSyncDialog().catch((error) => setNotice(failureOf(error).message, "error"));
   },
 });

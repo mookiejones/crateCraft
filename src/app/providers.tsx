@@ -1,17 +1,18 @@
 /**
  * React providers for the page.
  *
- * Player is one domain. The crate rail is the next. Waveform zoom and
- * overview are another. Before a gig is a fourth. Files is a fifth.
- * History is a sixth. Play stats is a seventh. Settings is an eighth.
- * Track list selection and detail fields are a ninth. Snapshots is a
- * tenth. The first-run wizard is an eleventh; this file mounts an idle
- * value so the domain is present on every island. The wizard bundle
- * supplies the live value. Library health is a twelfth. Later screens
- * add their own context file and one wrapper here. This module reads
- * those engines; it does not own fetch, playback, crate writes, history
- * loads, play-stats fetches, the folder load, the settings file,
- * restore writes, setup fetch, or health fetches.
+ * The action-flash notice is one domain. Player is the next. The crate
+ * rail is the next. Waveform zoom and overview are another. Before a
+ * gig is a fourth. Files is a fifth. History is a sixth. Play stats is
+ * a seventh. Settings is an eighth. Track list selection and detail
+ * fields are a ninth. Snapshots is a tenth. The first-run wizard is an
+ * eleventh; this file mounts an idle value so the domain is present on
+ * every island. The wizard bundle supplies the live value. Library
+ * health is a twelfth. Later screens add their own context file and
+ * one wrapper here. This module reads those engines; it does not own
+ * fetch, playback, crate writes, history loads, play-stats fetches,
+ * the folder load, the settings file, restore writes, setup fetch, or
+ * health fetches.
  */
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -32,6 +33,10 @@ import {
   type HealthContextValue,
 } from "../containers/HealthContext";
 import {
+  NoticeProvider as NoticeContextProvider,
+  type NoticeContextValue,
+} from "../containers/NoticeContext";
+import {
   HistoryProvider as HistoryContextProvider,
   historyActions,
   subscribeHistory,
@@ -47,6 +52,11 @@ import {
 } from "../containers/PlayerContext";
 import { WaveformProvider } from "../containers/WaveformContext";
 import { readCrateValue, subscribeCrates } from "../lib/crates/crate-store";
+import {
+  dismissNotice,
+  getNotice,
+  subscribeNotice,
+} from "../lib/ui/notice-store";
 import {
   browserRows,
   cancelFilesPick,
@@ -612,46 +622,72 @@ export function HealthProvider({ children }: { children: ReactNode }) {
   return <HealthContextProvider value={current}>{children}</HealthContextProvider>;
 }
 
+function readNoticeValue(): NoticeContextValue {
+  return { notice: getNotice(), dismiss: dismissNotice };
+}
+
+/**
+ * Mount the action-flash notice at the root of one React island.
+ *
+ * Updates are flushed so `setNotice` paints the Alert in the same turn.
+ *
+ * @param children Island that calls `useNotice`.
+ */
+export function NoticeProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readNoticeValue);
+  useLayoutEffect(() => {
+    return subscribeNotice(() => {
+      flushSync(() => {
+        setValue(readNoticeValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <NoticeContextProvider value={current}>{children}</NoticeContextProvider>;
+}
+
 /**
  * Nest every domain provider.
  *
  * MUI ThemeProvider is the outer wrap, mapped to the saved colorway.
- * Player is the first domain. Crates wrap inside it. Waveform wraps
- * inside crates. Before a gig wraps inside waveform. Files wraps inside
- * Before a gig. History wraps inside Files. Play stats wraps inside
- * History. Settings wraps inside Play stats. Track list wraps inside
- * Settings. Snapshots wraps inside Track list. An idle wizard wraps
- * the island so `useWizard` is defined. Library health wraps inside
- * the wizard.
+ * The action-flash notice wraps inside it. Player is the next domain.
+ * Crates wrap inside it. Waveform wraps inside crates. Before a gig
+ * wraps inside waveform. Files wraps inside Before a gig. History
+ * wraps inside Files. Play stats wraps inside History. Settings wraps
+ * inside Play stats. Track list wraps inside Settings. Snapshots wraps
+ * inside Track list. An idle wizard wraps the island so `useWizard` is
+ * defined. Library health wraps inside the wizard.
  *
  * @param children Page island.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <MuiThemeRoot>
-      <PlayerProvider>
-        <CrateProvider>
-          <WaveformProvider>
-            <GigProvider>
-              <FilesProvider>
-                <HistoryProvider>
-                  <StatsRoot>
-                    <SettingsProvider>
-                      <TrackListRoot>
-                        <SnapshotsProvider>
-                          <WizardProvider>
-                            <HealthProvider>{children}</HealthProvider>
-                          </WizardProvider>
-                        </SnapshotsProvider>
-                      </TrackListRoot>
-                    </SettingsProvider>
-                  </StatsRoot>
-                </HistoryProvider>
-              </FilesProvider>
-            </GigProvider>
-          </WaveformProvider>
-        </CrateProvider>
-      </PlayerProvider>
+      <NoticeProvider>
+        <PlayerProvider>
+          <CrateProvider>
+            <WaveformProvider>
+              <GigProvider>
+                <FilesProvider>
+                  <HistoryProvider>
+                    <StatsRoot>
+                      <SettingsProvider>
+                        <TrackListRoot>
+                          <SnapshotsProvider>
+                            <WizardProvider>
+                              <HealthProvider>{children}</HealthProvider>
+                            </WizardProvider>
+                          </SnapshotsProvider>
+                        </TrackListRoot>
+                      </SettingsProvider>
+                    </StatsRoot>
+                  </HistoryProvider>
+                </FilesProvider>
+              </GigProvider>
+            </WaveformProvider>
+          </CrateProvider>
+        </PlayerProvider>
+      </NoticeProvider>
     </MuiThemeRoot>
   );
 }

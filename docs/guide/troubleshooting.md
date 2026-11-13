@@ -15,7 +15,7 @@ Serato DJ Pro still has the library, or the database is locked.
 
 The line you want is **Serato is quit. Edits save to the library.**
 
-A save that hits a lock shows the error in the bar above the list. The merge dialog says **Quit Serato before merging. The preview shows the plan.** The file dialog shows the same status line and leaves **Confirm** off.
+A save that hits a lock shows the error in the banner under the player. The merge dialog says **Quit Serato before merging. The preview shows the plan.** The file dialog shows the same status line and leaves **Confirm** off.
 
 ## No Serato library was found
 

@@ -295,7 +295,10 @@ describe("refresh", () => {
     state.activeCrate = 5;
     answer({ status: 404, body: { error: "That preset crate is no longer in the library." } });
     await refreshActivePreset();
-    expect(views.setNotice).toHaveBeenCalledWith("That preset crate is no longer in the library.");
+    expect(views.setNotice).toHaveBeenCalledWith(
+      "That preset crate is no longer in the library.",
+      "error",
+    );
     expect(views.loadLibrary).toHaveBeenCalledOnce();
   });
 
