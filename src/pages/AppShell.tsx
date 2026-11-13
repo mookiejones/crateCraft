@@ -5,9 +5,10 @@
  * heading and `#library-generation` into the AppBar after the menu
  * toggle, `#open-help` and `#open-settings` to the AppBar end, `#player-bar`
  * under the AppBar as a full strip, then a MUI Alert for the last action
- * notice, `#views` and `#view-children` into the Drawer, and `#app-body`
- * into Main. Space stays in `.brand`. Crate names stay in the Main rail
- * so collapse does not hide them. Mini width is remembered in settings.
+ * notice, `#views` into the Drawer, and `#app-body` into Main. `paintNav`
+ * inserts `#view-children` after the open primary. Space stays in `.brand`.
+ * Crate names stay in the Main rail so collapse does not hide them. Mini
+ * width is remembered in settings.
  */
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -20,6 +21,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
 import { NoticeBanner } from "../components/NoticeBanner";
 import { onLocaleChange, t } from "../lib/i18n";
+import { state } from "../lib/state";
 import {
   DRAWER_MINI_CUTOFF,
   DRAWER_MINI_WIDTH,
@@ -27,6 +29,7 @@ import {
   saveDrawerOpen,
   subscribeDrawerOpen,
 } from "../lib/ui/layout";
+import { paintNav } from "../lib/ui/nav";
 import { setTooltip } from "../lib/ui/tooltip";
 import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
 
@@ -103,9 +106,9 @@ export function AppShell() {
     adopt(actionsSlot.current, "open-settings");
     adopt(playerSlot.current, "player-bar");
     adopt(navSlot.current, "views");
-    adopt(navSlot.current, "view-children");
     adopt(bodySlot.current, "app-body");
-  }, []);
+    paintNav(state.mode);
+  }, [open]);
 
   return (
     <Box
@@ -162,6 +165,7 @@ export function AppShell() {
           variant="persistent"
           open
           anchor="left"
+          data-mini={!open || undefined}
           slotProps={{
             paper: {
               "aria-hidden": false,

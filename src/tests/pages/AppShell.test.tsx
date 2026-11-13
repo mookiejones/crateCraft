@@ -247,4 +247,41 @@ describe("AppShell", () => {
     paintNav("files");
     expect(document.getElementById("view-children")?.hidden).toBe(true);
   });
+
+  it("nests Music children under the Music button inside #views", () => {
+    paintNav("crates");
+    const strip = document.getElementById("view-children");
+    const views = document.getElementById("views");
+    const music = document.querySelector('[data-nav="library"]');
+    expect(views?.contains(strip)).toBe(true);
+    expect(music?.nextElementSibling).toBe(strip);
+    expect(document.querySelector("main.sheet")?.contains(strip)).toBe(false);
+    const visible = [...document.querySelectorAll<HTMLButtonElement>("#view-children [data-view]")]
+      .filter((button) => !button.hidden)
+      .map((button) => button.dataset.view);
+    expect(visible).toEqual(["crates", "history", "stats"]);
+  });
+
+  it("hides the child strip on Organize files", () => {
+    paintNav("files");
+    const strip = document.getElementById("view-children");
+    const files = document.querySelector('[data-nav="files"]');
+    expect(strip?.hidden).toBe(true);
+    expect(files?.querySelector("#view-children")).toBeNull();
+  });
+
+  it("hides nested children when the drawer is mini and keeps five primaries", () => {
+    setInnerWidth(390);
+    remountShell();
+    paintNav("crates");
+    const strip = document.getElementById("view-children");
+    expect(document.getElementById("drawer-toggle")?.getAttribute("aria-expanded")).toBe("false");
+    expect(strip?.hidden || getComputedStyle(strip!).display === "none").toBe(true);
+    const primaries = [...document.querySelectorAll<HTMLButtonElement>("#views [data-nav]")];
+    expect(primaries).toHaveLength(5);
+    for (const button of primaries) {
+      expect(button.hidden).toBe(false);
+      expect(button.querySelector("svg")).not.toBeNull();
+    }
+  });
 });
