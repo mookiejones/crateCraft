@@ -1,6 +1,6 @@
 # GitHub
 
-This repository is a local program. `server.py` binds `127.0.0.1` port `8765` and has no login. GitHub Actions builds and tests that program. It does not host the library server. GitHub Pages hosts the user guide only, as a static site built from `docs/`. Do not publish the port or put the process behind a tunnel.
+This repository is a local program. `server.py` binds `127.0.0.1` port `8765` and has no login. GitHub Actions builds and tests that program. It does not host the library server. GitHub Pages hosts the user guide from `docs/` and the isolated Storybook UI at `/storybook/`. Do not publish the port or put the process behind a tunnel.
 
 The HTTP banner in `server.py` is `SeratoLibrary/1.0`. A release tag does not change that string.
 
@@ -15,9 +15,9 @@ The HTTP banner in `server.py` is `SeratoLibrary/1.0`. A release tag does not ch
 | Prepare release | Push to `main`, or a manual run on `main` | Drafts the next `vMAJOR.MINOR.PATCH` and notes since the latest final tag, uploads them as an artifact, and updates the open **Next release** issue. It does not create a tag or a GitHub Release |
 | Milestone empty | A milestoned issue or same-repo pull request closes, or a manual run | When that GitHub milestone has no remaining open items, comments on the open **Next release** issue that it is ready to tag. It does not create a tag, close the milestone, or publish a GitHub Release |
 | Release | Tag `v*.*.*`, or a manual run | Builds the macOS disk images, the Windows installer, and the portable zip. A tag also publishes a GitHub Release |
-| Pages | Push to `main` when `docs/` or `.github/workflows/pages.yml` changes, a pull request that changes those paths, or a manual run | Builds the user guide with MkDocs. A push to `main` also publishes it. A pull request builds the site and does not publish it |
+| Pages | Push to `main` when `docs/`, `.storybook/`, `src/`, `package.json`, the page CSS, or `.github/workflows/pages.yml` changes, a pull request that changes those paths, or a manual run | Builds the user guide with MkDocs and Storybook into one site tree. A push to `main` also publishes it. A pull request builds the site and does not publish it |
 
-A push to `main` runs CI, CodeQL, and Prepare release once. When that push also changes `docs/` or the Pages workflow, Pages runs too. A pull request runs CI, CodeQL, dependency review, and PR labels. A pull request that changes the guide also builds the site. The two events do not both fire for the same commit on a feature branch, because CI, CodeQL, Pages, and Prepare release listen to `push` only on `main`. Prepare release does not run on pull requests. Milestone empty runs when a milestoned issue or same-repo pull request closes, not on every push.
+A push to `main` runs CI, CodeQL, and Prepare release once. When that push also changes `docs/`, the page, Storybook, or the Pages workflow, Pages runs too. A pull request runs CI, CodeQL, dependency review, and PR labels. A pull request that changes the guide or Storybook also builds the site. The two events do not both fire for the same commit on a feature branch, because CI, CodeQL, Pages, and Prepare release listen to `push` only on `main`. Prepare release does not run on pull requests. Milestone empty runs when a milestoned issue or same-repo pull request closes, not on every push.
 
 Each workflow sets `permissions: contents: read` and a `timeout-minutes` value. The CI tests job allows 20 minutes, because the Windows run takes about 9 minutes and grows with the suite. A job that needs more access sets its own permissions, which replace the workflow floor. CI, CodeQL, dependency review, PR labels, and Prepare release cancel an older run on the same group. The release workflow does not. Milestone empty does not cancel an in-progress run, because it may write a comment. The Pages workflow does not cancel an in-progress run, because a publish should finish. The Pages deploy job sets `contents: read`, `pages: write`, and `id-token: write`. The Prepare release job and the Milestone empty job set `contents: read` and `issues: write`. They cannot push a tag. The PR labels job needs only `contents: read`. It does not check out the repository.
 
@@ -188,11 +188,11 @@ To build without publishing, open Actions, choose Release, and run the workflow.
 
 The guide source is `docs/index.md`, `docs/quick-start.md`, `docs/first-install.md`, `docs/guide/`, `docs/coming-from-rekordbox.md`, `docs/panic.md`, `docs/is-my-library-safe.md`, and `docs/media/`. `docs/mkdocs.yml` is the site config. `docs/requirements-docs.txt` pins MkDocs. A local check is `mkdocs build --strict -f docs/mkdocs.yml`. The command writes `site/` next to `docs/`. The Pages job passes `-d` and does not publish that folder. Developer pages (`architecture.md`, `github.md`, `related-tracks.md`, `serato-library-tools.md`) and the wiki drafts (`wiki/*.md`) stay in `docs/` and are excluded from the site build. The pictures and GIFs for the Quick Start stay under `docs/wiki/images/` and the guide page uses them. README links that Quick Start first. The site nav links to the developer pages on GitHub under **For developers**.
 
-The published URL is `https://mookiejones.github.io/crateCraft/`.
+The published URL is `https://mookiejones.github.io/crateCraft/`. Isolated React UI is `https://mookiejones.github.io/crateCraft/storybook/`. GitHub Pages accepts one artifact per deploy, so the Pages job copies the Storybook build into `storybook/` inside the MkDocs tree. `STORYBOOK_BASE` is `/crateCraft/storybook/` so Vite asset paths match that folder. Local `npm run storybook` still uses `/`.
 
-One repository setting is required before the first publish. Open Settings, then Pages, then Build and deployment. Set Source to **GitHub Actions**. A push to `main` that changes the guide then deploys the site. The workflow does not change that setting by itself.
+One repository setting is required before the first publish. Open Settings, then Pages, then Build and deployment. Set Source to **GitHub Actions**. A push to `main` that changes the guide or Storybook then deploys the site. The workflow does not change that setting by itself.
 
-The library server is still not on Pages. The site is the static guide.
+The library server is still not on Pages. The site is the static guide plus Storybook.
 
 ## Repository settings
 

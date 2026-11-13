@@ -581,6 +581,30 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("tests (macos-latest, Python 3.12)", guide)
         self.assertIn("frontend (macos-latest)", guide)
 
+    def test_pages_publishes_storybook_under_the_guide(self) -> None:
+        """Keep Storybook in the same Pages artifact as the MkDocs guide.
+
+        GitHub Pages accepts one artifact per deploy. The job must build
+        Storybook with the /crateCraft/storybook/ Vite base and copy it
+        into site/storybook after MkDocs. A pull request builds and does
+        not publish.
+
+        Returns:
+            None. The test fails if the workflow drops Storybook or the base.
+        """
+        text = (ROOT / ".github" / "workflows" / "pages.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('STORYBOOK_BASE: /crateCraft/storybook/', text)
+        self.assertIn("npm run build-storybook", text)
+        self.assertIn('"$RUNNER_TEMP/site/storybook"', text)
+        self.assertIn("src/**", text)
+        self.assertIn(".storybook/**", text)
+        self.assertIn("node-version: \"22\"", text)
+        self.assertIn("cancel-in-progress: false", text)
+        guide = (ROOT / "docs" / "github.md").read_text(encoding="utf-8")
+        self.assertIn("https://mookiejones.github.io/crateCraft/storybook/", guide)
+
     def test_release_does_not_cancel_and_checks_the_zip(self) -> None:
         """Keep a release running, and check the zip without launching it on Linux.
 

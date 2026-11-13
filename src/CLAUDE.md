@@ -4,7 +4,7 @@ TypeScript and TSX for the crateCraft page. Bundles: `npm run build` writes `sta
 
 ## Root
 
-Four files plus six folders. Do not add another file here (`src/tests/layout.test.ts` fails).
+Four files plus seven folders. Do not add another file here (`src/tests/layout.test.ts` fails).
 
 ```
 src/
@@ -18,6 +18,7 @@ src/
   components/         # pieces a page or island mounts
   lib/                # engines and pure helpers
   tests/              # all Vitest files
+  stories/            # all Storybook stories
 ```
 
 ## Where a new file goes
@@ -27,7 +28,7 @@ src/
 - Domain bind (`*Context.tsx`, `useX`) → `containers/`, plus one wrapper in `app/providers.tsx`
 - Engine or helper → `lib/` or `lib/<domain>/`
 - Vitest → `tests/` (mirror `pages/`, `components/`, `containers/` for those tests)
-- Storybook story → `*.stories.tsx` next to the module in `components/`, `pages/`, or `containers/` (`npm run storybook`)
+- Storybook story → `stories/` (mirror `pages/`, `components/`, `containers/` as `*.stories.tsx`; `npm run storybook`)
 
 Repo-root `tests/` is Python. `e2e/` is Playwright. No `@/` import alias.
 

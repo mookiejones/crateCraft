@@ -1,8 +1,8 @@
 /**
  * Fail when a new file lands outside the src layer folders.
  *
- * A new engine goes in lib/. A new screen goes in pages/. A colocated
- * test or a file at src root turns this red.
+ * A new engine goes in lib/. A new screen goes in pages/. A test or
+ * story outside tests/ or stories/, or a file at src root, turns this red.
  */
 
 import { describe, expect, it } from "vitest";
@@ -22,6 +22,7 @@ const ROOT_ALLOW = [
   "html-raw.d.ts",
   "lib",
   "pages",
+  "stories",
   "tests",
   "wizard-view.ts",
 ];
@@ -62,26 +63,33 @@ describe("src layout", () => {
     expect(stray).toEqual([]);
   });
 
-  it("colocates Storybook stories next to components, containers, or pages", () => {
+  it("keeps Storybook stories under src/stories", () => {
     const stray = Object.keys(SRC_FILES)
       .map(rel)
       .filter((path) => /\.stories\.(ts|tsx)$/.test(path) || path.endsWith(".mdx"))
-      .filter(
-        (path) =>
-          !path.startsWith("components/") &&
-          !path.startsWith("pages/") &&
-          !path.startsWith("containers/"),
-      );
+      .filter((path) => !path.startsWith("stories/"));
     expect(stray).toEqual([]);
   });
 
-  it("gives every component, container, and page a sibling story", () => {
+  it("mirrors stories onto components, containers, or pages", () => {
+    const paths = Object.keys(SRC_FILES).map(rel);
+    const stray = paths.filter((path) => {
+      if (!path.startsWith("stories/") || !/\.stories\.(ts|tsx)$/.test(path)) {
+        return false;
+      }
+      const target = path.replace(/^stories\//, "").replace(/\.stories\.tsx$/, ".tsx");
+      return !paths.includes(target);
+    });
+    expect(stray).toEqual([]);
+  });
+
+  it("gives every component, container, and page a mirrored story", () => {
     const paths = Object.keys(SRC_FILES).map(rel);
     const layers = ["components/", "containers/", "pages/"];
     const missing = paths.filter((path) => {
       if (!path.endsWith(".tsx") || path.endsWith(".stories.tsx")) return false;
       if (!layers.some((layer) => path.startsWith(layer))) return false;
-      return !paths.includes(path.replace(/\.tsx$/, ".stories.tsx"));
+      return !paths.includes(`stories/${path.replace(/\.tsx$/, ".stories.tsx")}`);
     });
     expect(missing).toEqual([]);
   });

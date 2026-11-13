@@ -78,8 +78,19 @@ class FrontendToolchainTests(unittest.TestCase):
         self.assertIn("disableTelemetry: true", main)
         self.assertIn('"@storybook/addon-mcp"', main)
         self.assertIn("componentsManifest: true", main)
-        self.assertIn("../src/**/*.stories.@(ts|tsx)", main)
-        self.assertNotIn("../src/stories", main)
+        self.assertIn("../src/stories/**/*.stories.@(ts|tsx)", main)
+        self.assertIn("STORYBOOK_BASE", main)
+        self.assertNotIn("../src/components/**/*.stories", main)
         grok = (ROOT / ".grok" / "config.toml").read_text(encoding="utf-8")
         self.assertIn("[mcp_servers.storybook]", grok)
         self.assertIn('url = "http://127.0.0.1:6006/mcp"', grok)
+
+    def test_storybook_stories_live_under_src_stories(self) -> None:
+        src = ROOT / "src"
+        stray = [
+            path.relative_to(src).as_posix()
+            for path in src.rglob("*.stories.tsx")
+            if "stories" not in path.relative_to(src).parts[:1]
+        ]
+        self.assertEqual(stray, [])
+        self.assertTrue((src / "stories" / "components" / "PlayButton.stories.tsx").is_file())

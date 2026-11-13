@@ -88,6 +88,7 @@ nav:
       - Settings and privacy: guide/settings.md
       - Troubleshooting: guide/troubleshooting.md
   - For developers:
+      - Isolated UI: https://mookiejones.github.io/crateCraft/storybook/
       - Code reference: https://github.com/mookiejones/crateCraft/blob/main/docs/architecture.md
       - GitHub and releases: https://github.com/mookiejones/crateCraft/blob/main/docs/github.md
       - Related tracks file: https://github.com/mookiejones/crateCraft/blob/main/docs/related-tracks.md
