@@ -4,6 +4,7 @@ import { el } from "../lib/dom";
 import { state } from "../lib/state";
 import { mountSharedDialogs, unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
 import { drainReactScheduler, installPage } from "./test-page";
+import { getNotice, resetNotice } from "../lib/ui/notice-store";
 import { playlistCrate, renderShell } from "../lib/ui/views";
 
 describe("rekordboxExportUrl", () => {
@@ -379,6 +380,7 @@ describe("relink missing files", () => {
 
   afterEach(async () => {
     unmountSharedDialogs();
+    resetNotice();
     await drainReactScheduler();
     vi.unstubAllGlobals();
   });
@@ -490,7 +492,7 @@ describe("relink missing files", () => {
     expect(posts).toHaveLength(2);
     expect(JSON.parse(String(posts[0]?.[1]?.body)).confirm).toBeUndefined();
     expect(JSON.parse(String(posts[1]?.[1]?.body)).confirm).toBe(true);
-    expect(document.getElementById("notice")?.textContent).toContain("Cue tags were not found");
+    expect(getNotice()?.text).toContain("Cue tags were not found");
   });
 
   it("stops on a preview that is not ok and does not write", async () => {

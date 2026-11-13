@@ -38,7 +38,7 @@ function save(width: number | null): void {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     postJSON("/api/settings", { layout: { track_list_width: width } }).catch(() => {
-      setNotice(t("layout.widthNotSaved"));
+      setNotice(t("layout.widthNotSaved"), "error");
     });
   }, SAVE_DELAY_MS);
 }

@@ -459,7 +459,7 @@
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React320 = require_react();
+      var React321 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -498,7 +498,7 @@
           implementation
         };
       }
-      var ReactSharedInternals = React320.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React321.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if (as === "font") return "";
         if (typeof input == "string")
@@ -863,7 +863,7 @@
   var require_react_dom_client_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
-      var Scheduler = require_scheduler(), React320 = require_react(), ReactDOM3 = require_react_dom();
+      var Scheduler = require_scheduler(), React321 = require_react(), ReactDOM3 = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -1108,7 +1108,7 @@
           }
         return null;
       }
-      var isArrayImpl = Array.isArray, ReactSharedInternals = React320.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM3.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, sharedNotPendingObject = {
+      var isArrayImpl = Array.isArray, ReactSharedInternals = React321.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM3.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, sharedNotPendingObject = {
         pending: !1,
         data: null,
         method: null,
@@ -2564,19 +2564,19 @@ Error generating stack: ` + x.message + `
       function shouldConstruct(Component) {
         return Component = Component.prototype, !(!Component || !Component.isReactComponent);
       }
-      function createWorkInProgress(current2, pendingProps) {
-        var workInProgress2 = current2.alternate;
+      function createWorkInProgress(current3, pendingProps) {
+        var workInProgress2 = current3.alternate;
         return workInProgress2 === null ? (workInProgress2 = createFiberImplClass(
-          current2.tag,
+          current3.tag,
           pendingProps,
-          current2.key,
-          current2.mode
-        ), workInProgress2.elementType = current2.elementType, workInProgress2.type = current2.type, workInProgress2.stateNode = current2.stateNode, workInProgress2.alternate = current2, current2.alternate = workInProgress2) : (workInProgress2.pendingProps = pendingProps, workInProgress2.type = current2.type, workInProgress2.flags = 0, workInProgress2.subtreeFlags = 0, workInProgress2.deletions = null), workInProgress2.flags = current2.flags & 1206910976, workInProgress2.childLanes = current2.childLanes, workInProgress2.lanes = current2.lanes, workInProgress2.child = current2.child, workInProgress2.memoizedProps = current2.memoizedProps, workInProgress2.memoizedState = current2.memoizedState, workInProgress2.updateQueue = current2.updateQueue, pendingProps = current2.dependencies, workInProgress2.dependencies = pendingProps === null ? null : { lanes: pendingProps.lanes, firstContext: pendingProps.firstContext }, workInProgress2.sibling = current2.sibling, workInProgress2.index = current2.index, workInProgress2.ref = current2.ref, workInProgress2.refCleanup = current2.refCleanup, workInProgress2;
+          current3.key,
+          current3.mode
+        ), workInProgress2.elementType = current3.elementType, workInProgress2.type = current3.type, workInProgress2.stateNode = current3.stateNode, workInProgress2.alternate = current3, current3.alternate = workInProgress2) : (workInProgress2.pendingProps = pendingProps, workInProgress2.type = current3.type, workInProgress2.flags = 0, workInProgress2.subtreeFlags = 0, workInProgress2.deletions = null), workInProgress2.flags = current3.flags & 1206910976, workInProgress2.childLanes = current3.childLanes, workInProgress2.lanes = current3.lanes, workInProgress2.child = current3.child, workInProgress2.memoizedProps = current3.memoizedProps, workInProgress2.memoizedState = current3.memoizedState, workInProgress2.updateQueue = current3.updateQueue, pendingProps = current3.dependencies, workInProgress2.dependencies = pendingProps === null ? null : { lanes: pendingProps.lanes, firstContext: pendingProps.firstContext }, workInProgress2.sibling = current3.sibling, workInProgress2.index = current3.index, workInProgress2.ref = current3.ref, workInProgress2.refCleanup = current3.refCleanup, workInProgress2;
       }
       function resetWorkInProgress(workInProgress2, renderLanes2) {
         workInProgress2.flags &= 1206910978;
-        var current2 = workInProgress2.alternate;
-        return current2 === null ? (workInProgress2.childLanes = 0, workInProgress2.lanes = renderLanes2, workInProgress2.child = null, workInProgress2.subtreeFlags = 0, workInProgress2.memoizedProps = null, workInProgress2.memoizedState = null, workInProgress2.updateQueue = null, workInProgress2.dependencies = null, workInProgress2.stateNode = null) : (workInProgress2.childLanes = current2.childLanes, workInProgress2.lanes = current2.lanes, workInProgress2.child = current2.child, workInProgress2.subtreeFlags = 0, workInProgress2.deletions = null, workInProgress2.memoizedProps = current2.memoizedProps, workInProgress2.memoizedState = current2.memoizedState, workInProgress2.updateQueue = current2.updateQueue, workInProgress2.type = current2.type, renderLanes2 = current2.dependencies, workInProgress2.dependencies = renderLanes2 === null ? null : {
+        var current3 = workInProgress2.alternate;
+        return current3 === null ? (workInProgress2.childLanes = 0, workInProgress2.lanes = renderLanes2, workInProgress2.child = null, workInProgress2.subtreeFlags = 0, workInProgress2.memoizedProps = null, workInProgress2.memoizedState = null, workInProgress2.updateQueue = null, workInProgress2.dependencies = null, workInProgress2.stateNode = null) : (workInProgress2.childLanes = current3.childLanes, workInProgress2.lanes = current3.lanes, workInProgress2.child = current3.child, workInProgress2.subtreeFlags = 0, workInProgress2.deletions = null, workInProgress2.memoizedProps = current3.memoizedProps, workInProgress2.memoizedState = current3.memoizedState, workInProgress2.updateQueue = current3.updateQueue, workInProgress2.type = current3.type, renderLanes2 = current3.dependencies, workInProgress2.dependencies = renderLanes2 === null ? null : {
           lanes: renderLanes2.lanes,
           firstContext: renderLanes2.firstContext
         }), workInProgress2;
@@ -2866,8 +2866,8 @@ Error generating stack: ` + x.message + `
           fiber = nextFiber;
         }
       }
-      function propagateParentContextChanges(current2, workInProgress2, renderLanes2, forcePropagateEntireTree) {
-        current2 = null;
+      function propagateParentContextChanges(current3, workInProgress2, renderLanes2, forcePropagateEntireTree) {
+        current3 = null;
         for (var parent = workInProgress2, isInsidePropagationBailout = !1; parent !== null; ) {
           if (!isInsidePropagationBailout) {
             if ((parent.flags & 524288) !== 0) isInsidePropagationBailout = !0;
@@ -2878,20 +2878,20 @@ Error generating stack: ` + x.message + `
             if (currentParent === null) throw Error(formatProdErrorMessage(387));
             if (currentParent = currentParent.memoizedProps, currentParent !== null) {
               var context = parent.type;
-              objectIs(parent.pendingProps.value, currentParent.value) || (current2 !== null ? current2.push(context) : current2 = [context]);
+              objectIs(parent.pendingProps.value, currentParent.value) || (current3 !== null ? current3.push(context) : current3 = [context]);
             }
           } else if (parent === hostTransitionProviderCursor.current) {
             if (currentParent = parent.alternate, currentParent === null) throw Error(formatProdErrorMessage(387));
-            currentParent.memoizedState.memoizedState !== parent.memoizedState.memoizedState && (current2 !== null ? current2.push(HostTransitionContext) : current2 = [HostTransitionContext]);
+            currentParent.memoizedState.memoizedState !== parent.memoizedState.memoizedState && (current3 !== null ? current3.push(HostTransitionContext) : current3 = [HostTransitionContext]);
           }
           parent = parent.return;
         }
-        return current2 !== null && propagateContextChanges(
+        return current3 !== null && propagateContextChanges(
           workInProgress2,
-          current2,
+          current3,
           renderLanes2,
           forcePropagateEntireTree
-        ), workInProgress2.flags |= 262144, current2 !== null;
+        ), workInProgress2.flags |= 262144, current3 !== null;
       }
       function checkIfContextChanged(currentDependencies) {
         for (currentDependencies = currentDependencies.firstContext; currentDependencies !== null; ) {
@@ -2922,14 +2922,14 @@ Error generating stack: ` + x.message + `
         return value;
       }
       var AbortControllerLocal = typeof AbortController < "u" ? AbortController : function() {
-        var listeners14 = [], signal = this.signal = {
+        var listeners15 = [], signal = this.signal = {
           aborted: !1,
           addEventListener: function(type, listener) {
-            listeners14.push(listener);
+            listeners15.push(listener);
           }
         };
         this.abort = function() {
-          signal.aborted = !0, listeners14.forEach(function(listener) {
+          signal.aborted = !0, listeners15.forEach(function(listener) {
             return listener();
           });
         };
@@ -2984,28 +2984,28 @@ Error generating stack: ` + x.message + `
       function pingEngtangledActionScope() {
         if (--currentEntangledPendingCount === 0 && (entangledTransitionTypes = null, currentEntangledListeners !== null)) {
           currentEntangledActionThenable !== null && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners14 = currentEntangledListeners;
+          var listeners15 = currentEntangledListeners;
           currentEntangledListeners = null, currentEntangledLane = 0, currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners14.length; i++) (0, listeners14[i])();
+          for (var i = 0; i < listeners15.length; i++) (0, listeners15[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners14 = [], thenableWithOverride = {
+        var listeners15 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners14.push(resolve);
+            listeners15.push(resolve);
           }
         };
         return thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled", thenableWithOverride.value = result;
-            for (var i = 0; i < listeners14.length; i++) (0, listeners14[i])(result);
+            for (var i = 0; i < listeners15.length; i++) (0, listeners15[i])(result);
           },
           function(error2) {
-            for (thenableWithOverride.status = "rejected", thenableWithOverride.reason = error2, error2 = 0; error2 < listeners14.length; error2++)
-              (0, listeners14[error2])(void 0);
+            for (thenableWithOverride.status = "rejected", thenableWithOverride.reason = error2, error2 = 0; error2 < listeners15.length; error2++)
+              (0, listeners15[error2])(void 0);
           }
         ), thenableWithOverride;
       }
@@ -3140,36 +3140,36 @@ Error generating stack: ` + x.message + `
         function placeSingleChild(newFiber) {
           return shouldTrackSideEffects && newFiber.alternate === null && (newFiber.flags |= 134217730), newFiber;
         }
-        function updateTextNode(returnFiber, current2, textContent, lanes) {
-          return current2 === null || current2.tag !== 6 ? (current2 = createFiberFromText(textContent, returnFiber.mode, lanes), current2.return = returnFiber, current2) : (current2 = useFiber(current2, textContent), current2.return = returnFiber, current2);
+        function updateTextNode(returnFiber, current3, textContent, lanes) {
+          return current3 === null || current3.tag !== 6 ? (current3 = createFiberFromText(textContent, returnFiber.mode, lanes), current3.return = returnFiber, current3) : (current3 = useFiber(current3, textContent), current3.return = returnFiber, current3);
         }
-        function updateElement(returnFiber, current2, element, lanes) {
+        function updateElement(returnFiber, current3, element, lanes) {
           var elementType = element.type;
           return elementType === REACT_FRAGMENT_TYPE ? (returnFiber = updateFragment(
             returnFiber,
-            current2,
+            current3,
             element.props.children,
             lanes,
             element.key
-          ), coerceRef(returnFiber, element), returnFiber) : current2 !== null && (current2.elementType === elementType || typeof elementType == "object" && elementType !== null && elementType.$$typeof === REACT_LAZY_TYPE && resolveLazy(elementType) === current2.type) ? (current2 = useFiber(current2, element.props), coerceRef(current2, element), current2.return = returnFiber, current2) : (current2 = createFiberFromTypeAndProps(
+          ), coerceRef(returnFiber, element), returnFiber) : current3 !== null && (current3.elementType === elementType || typeof elementType == "object" && elementType !== null && elementType.$$typeof === REACT_LAZY_TYPE && resolveLazy(elementType) === current3.type) ? (current3 = useFiber(current3, element.props), coerceRef(current3, element), current3.return = returnFiber, current3) : (current3 = createFiberFromTypeAndProps(
             element.type,
             element.key,
             element.props,
             null,
             returnFiber.mode,
             lanes
-          ), coerceRef(current2, element), current2.return = returnFiber, current2);
+          ), coerceRef(current3, element), current3.return = returnFiber, current3);
         }
-        function updatePortal(returnFiber, current2, portal, lanes) {
-          return current2 === null || current2.tag !== 4 || current2.stateNode.containerInfo !== portal.containerInfo || current2.stateNode.implementation !== portal.implementation ? (current2 = createFiberFromPortal(portal, returnFiber.mode, lanes), current2.return = returnFiber, current2) : (current2 = useFiber(current2, portal.children || []), current2.return = returnFiber, current2);
+        function updatePortal(returnFiber, current3, portal, lanes) {
+          return current3 === null || current3.tag !== 4 || current3.stateNode.containerInfo !== portal.containerInfo || current3.stateNode.implementation !== portal.implementation ? (current3 = createFiberFromPortal(portal, returnFiber.mode, lanes), current3.return = returnFiber, current3) : (current3 = useFiber(current3, portal.children || []), current3.return = returnFiber, current3);
         }
-        function updateFragment(returnFiber, current2, fragment, lanes, key) {
-          return current2 === null || current2.tag !== 7 ? (current2 = createFiberFromFragment(
+        function updateFragment(returnFiber, current3, fragment, lanes, key) {
+          return current3 === null || current3.tag !== 7 ? (current3 = createFiberFromFragment(
             fragment,
             returnFiber.mode,
             lanes,
             key
-          ), current2.return = returnFiber, current2) : (current2 = useFiber(current2, fragment), current2.return = returnFiber, current2);
+          ), current3.return = returnFiber, current3) : (current3 = useFiber(current3, fragment), current3.return = returnFiber, current3);
         }
         function createChild(returnFiber, newChild, lanes) {
           if (typeof newChild == "string" && newChild !== "" || typeof newChild == "number" || typeof newChild == "bigint")
@@ -3496,12 +3496,12 @@ Error generating stack: ` + x.message + `
           callbacks: null
         };
       }
-      function cloneUpdateQueue(current2, workInProgress2) {
-        current2 = current2.updateQueue, workInProgress2.updateQueue === current2 && (workInProgress2.updateQueue = {
-          baseState: current2.baseState,
-          firstBaseUpdate: current2.firstBaseUpdate,
-          lastBaseUpdate: current2.lastBaseUpdate,
-          shared: current2.shared,
+      function cloneUpdateQueue(current3, workInProgress2) {
+        current3 = current3.updateQueue, workInProgress2.updateQueue === current3 && (workInProgress2.updateQueue = {
+          baseState: current3.baseState,
+          firstBaseUpdate: current3.firstBaseUpdate,
+          lastBaseUpdate: current3.lastBaseUpdate,
+          shared: current3.shared,
           callbacks: null
         });
       }
@@ -3524,8 +3524,8 @@ Error generating stack: ` + x.message + `
         }
       }
       function enqueueCapturedUpdate(workInProgress2, capturedUpdate) {
-        var queue = workInProgress2.updateQueue, current2 = workInProgress2.alternate;
-        if (current2 !== null && (current2 = current2.updateQueue, queue === current2)) {
+        var queue = workInProgress2.updateQueue, current3 = workInProgress2.alternate;
+        if (current3 !== null && (current3 = current3.updateQueue, queue === current3)) {
           var newFirst = null, newLast = null;
           if (queue = queue.firstBaseUpdate, queue !== null) {
             do {
@@ -3541,11 +3541,11 @@ Error generating stack: ` + x.message + `
             newLast === null ? newFirst = newLast = capturedUpdate : newLast = newLast.next = capturedUpdate;
           } else newFirst = newLast = capturedUpdate;
           queue = {
-            baseState: current2.baseState,
+            baseState: current3.baseState,
             firstBaseUpdate: newFirst,
             lastBaseUpdate: newLast,
-            shared: current2.shared,
-            callbacks: current2.callbacks
+            shared: current3.shared,
+            callbacks: current3.callbacks
           }, workInProgress2.updateQueue = queue;
           return;
         }
@@ -3567,16 +3567,16 @@ Error generating stack: ` + x.message + `
           queue.shared.pending = null;
           var lastPendingUpdate = pendingQueue, firstPendingUpdate = lastPendingUpdate.next;
           lastPendingUpdate.next = null, lastBaseUpdate === null ? firstBaseUpdate = firstPendingUpdate : lastBaseUpdate.next = firstPendingUpdate, lastBaseUpdate = lastPendingUpdate;
-          var current2 = workInProgress$jscomp$0.alternate;
-          current2 !== null && (current2 = current2.updateQueue, pendingQueue = current2.lastBaseUpdate, pendingQueue !== lastBaseUpdate && (pendingQueue === null ? current2.firstBaseUpdate = firstPendingUpdate : pendingQueue.next = firstPendingUpdate, current2.lastBaseUpdate = lastPendingUpdate));
+          var current3 = workInProgress$jscomp$0.alternate;
+          current3 !== null && (current3 = current3.updateQueue, pendingQueue = current3.lastBaseUpdate, pendingQueue !== lastBaseUpdate && (pendingQueue === null ? current3.firstBaseUpdate = firstPendingUpdate : pendingQueue.next = firstPendingUpdate, current3.lastBaseUpdate = lastPendingUpdate));
         }
         if (firstBaseUpdate !== null) {
           var newState = queue.baseState;
-          lastBaseUpdate = 0, current2 = firstPendingUpdate = lastPendingUpdate = null, pendingQueue = firstBaseUpdate;
+          lastBaseUpdate = 0, current3 = firstPendingUpdate = lastPendingUpdate = null, pendingQueue = firstBaseUpdate;
           do {
             var updateLane = pendingQueue.lane & -536870913, isHiddenUpdate = updateLane !== pendingQueue.lane;
             if (isHiddenUpdate ? (workInProgressRootRenderLanes & updateLane) === updateLane : (renderLanes2 & updateLane) === updateLane) {
-              updateLane !== 0 && updateLane === currentEntangledLane && (didReadFromEntangledAsyncAction = !0), current2 !== null && (current2 = current2.next = {
+              updateLane !== 0 && updateLane === currentEntangledLane && (didReadFromEntangledAsyncAction = !0), current3 !== null && (current3 = current3.next = {
                 lane: 0,
                 tag: pendingQueue.tag,
                 payload: pendingQueue.payload,
@@ -3613,14 +3613,14 @@ Error generating stack: ` + x.message + `
                 payload: pendingQueue.payload,
                 callback: pendingQueue.callback,
                 next: null
-              }, current2 === null ? (firstPendingUpdate = current2 = isHiddenUpdate, lastPendingUpdate = newState) : current2 = current2.next = isHiddenUpdate, lastBaseUpdate |= updateLane;
+              }, current3 === null ? (firstPendingUpdate = current3 = isHiddenUpdate, lastPendingUpdate = newState) : current3 = current3.next = isHiddenUpdate, lastBaseUpdate |= updateLane;
             if (pendingQueue = pendingQueue.next, pendingQueue === null) {
               if (pendingQueue = queue.shared.pending, pendingQueue === null)
                 break;
               isHiddenUpdate = pendingQueue, pendingQueue = isHiddenUpdate.next, isHiddenUpdate.next = null, queue.lastBaseUpdate = isHiddenUpdate, queue.shared.pending = null;
             }
           } while (!0);
-          current2 === null && (lastPendingUpdate = newState), queue.baseState = lastPendingUpdate, queue.firstBaseUpdate = firstPendingUpdate, queue.lastBaseUpdate = current2, firstBaseUpdate === null && (queue.shared.lanes = 0), workInProgressRootSkippedLanes |= lastBaseUpdate, workInProgress$jscomp$0.lanes = lastBaseUpdate, workInProgress$jscomp$0.memoizedState = newState;
+          current3 === null && (lastPendingUpdate = newState), queue.baseState = lastPendingUpdate, queue.firstBaseUpdate = firstPendingUpdate, queue.lastBaseUpdate = current3, firstBaseUpdate === null && (queue.shared.lanes = 0), workInProgressRootSkippedLanes |= lastBaseUpdate, workInProgress$jscomp$0.lanes = lastBaseUpdate, workInProgress$jscomp$0.memoizedState = newState;
         }
       }
       function callCallback(callback, context) {
@@ -3646,8 +3646,8 @@ Error generating stack: ` + x.message + `
       }
       var suspenseHandlerStackCursor = createCursor(null), shellBoundary = null;
       function pushPrimaryTreeSuspenseHandler(handler) {
-        var current2 = handler.alternate;
-        push(suspenseStackCursor, suspenseStackCursor.current & 1), push(suspenseHandlerStackCursor, handler), shellBoundary === null && (current2 === null || currentTreeHiddenStackCursor.current !== null || current2.memoizedState !== null) && (shellBoundary = handler);
+        var current3 = handler.alternate;
+        push(suspenseStackCursor, suspenseStackCursor.current & 1), push(suspenseHandlerStackCursor, handler), shellBoundary === null && (current3 === null || currentTreeHiddenStackCursor.current !== null || current3.memoizedState !== null) && (shellBoundary = handler);
       }
       function pushDehydratedActivitySuspenseHandler(fiber) {
         push(suspenseStackCursor, suspenseStackCursor.current), push(suspenseHandlerStackCursor, fiber), shellBoundary === null && (shellBoundary = fiber);
@@ -3699,19 +3699,19 @@ Error generating stack: ` + x.message + `
           if (!objectIs(nextDeps[i], prevDeps[i])) return !1;
         return !0;
       }
-      function renderWithHooks(current2, workInProgress2, Component, props, secondArg, nextRenderLanes) {
-        return renderLanes = nextRenderLanes, currentlyRenderingFiber = workInProgress2, workInProgress2.memoizedState = null, workInProgress2.updateQueue = null, workInProgress2.lanes = 0, ReactSharedInternals.H = current2 === null || current2.memoizedState === null ? HooksDispatcherOnMount : HooksDispatcherOnUpdate, shouldDoubleInvokeUserFnsInHooksDEV = !1, nextRenderLanes = Component(props, secondArg), shouldDoubleInvokeUserFnsInHooksDEV = !1, didScheduleRenderPhaseUpdateDuringThisPass && (nextRenderLanes = renderWithHooksAgain(
+      function renderWithHooks(current3, workInProgress2, Component, props, secondArg, nextRenderLanes) {
+        return renderLanes = nextRenderLanes, currentlyRenderingFiber = workInProgress2, workInProgress2.memoizedState = null, workInProgress2.updateQueue = null, workInProgress2.lanes = 0, ReactSharedInternals.H = current3 === null || current3.memoizedState === null ? HooksDispatcherOnMount : HooksDispatcherOnUpdate, shouldDoubleInvokeUserFnsInHooksDEV = !1, nextRenderLanes = Component(props, secondArg), shouldDoubleInvokeUserFnsInHooksDEV = !1, didScheduleRenderPhaseUpdateDuringThisPass && (nextRenderLanes = renderWithHooksAgain(
           workInProgress2,
           Component,
           props,
           secondArg
-        )), finishRenderingHooks(current2), nextRenderLanes;
+        )), finishRenderingHooks(current3), nextRenderLanes;
       }
-      function finishRenderingHooks(current2) {
+      function finishRenderingHooks(current3) {
         ReactSharedInternals.H = ContextOnlyDispatcher;
         var didRenderTooFewHooks = currentHook !== null && currentHook.next !== null;
         if (renderLanes = 0, workInProgressHook = currentHook = currentlyRenderingFiber = null, didScheduleRenderPhaseUpdate = !1, thenableIndexCounter = 0, thenableState = null, didRenderTooFewHooks) throw Error(formatProdErrorMessage(300));
-        current2 === null || didReceiveUpdate || (current2 = current2.dependencies, current2 !== null && checkIfContextChanged(current2) && (didReceiveUpdate = !0));
+        current3 === null || didReceiveUpdate || (current3 = current3.dependencies, current3 !== null && checkIfContextChanged(current3) && (didReceiveUpdate = !0));
       }
       function renderWithHooksAgain(workInProgress2, Component, props, secondArg) {
         currentlyRenderingFiber = workInProgress2;
@@ -3734,8 +3734,8 @@ Error generating stack: ` + x.message + `
         var didRenderIdHook = localIdCounter !== 0;
         return localIdCounter = 0, didRenderIdHook;
       }
-      function bailoutHooks(current2, workInProgress2, lanes) {
-        workInProgress2.updateQueue = current2.updateQueue, workInProgress2.flags &= -2053, current2.lanes &= ~lanes;
+      function bailoutHooks(current3, workInProgress2, lanes) {
+        workInProgress2.updateQueue = current3.updateQueue, workInProgress2.flags &= -2053, current3.lanes &= ~lanes;
       }
       function resetHooksOnUnwind(workInProgress2) {
         if (didScheduleRenderPhaseUpdate) {
@@ -3796,17 +3796,17 @@ Error generating stack: ` + x.message + `
       function useMemoCache(size) {
         var memoCache = null, updateQueue = currentlyRenderingFiber.updateQueue;
         if (updateQueue !== null && (memoCache = updateQueue.memoCache), memoCache == null) {
-          var current2 = currentlyRenderingFiber.alternate;
-          current2 !== null && (current2 = current2.updateQueue, current2 !== null && (current2 = current2.memoCache, current2 != null && (memoCache = {
-            data: current2.data.map(function(array) {
+          var current3 = currentlyRenderingFiber.alternate;
+          current3 !== null && (current3 = current3.updateQueue, current3 !== null && (current3 = current3.memoCache, current3 != null && (memoCache = {
+            data: current3.data.map(function(array) {
               return array.slice();
             }),
             index: 0
           })));
         }
         if (memoCache == null && (memoCache = { data: [], index: 0 }), updateQueue === null && (updateQueue = createFunctionComponentUpdateQueue(), currentlyRenderingFiber.updateQueue = updateQueue), updateQueue.memoCache = memoCache, updateQueue = memoCache.data[memoCache.index], updateQueue === void 0)
-          for (updateQueue = memoCache.data[memoCache.index] = Array(size), current2 = 0; current2 < size; current2++)
-            updateQueue[current2] = REACT_MEMO_CACHE_SENTINEL;
+          for (updateQueue = memoCache.data[memoCache.index] = Array(size), current3 = 0; current3 < size; current3++)
+            updateQueue[current3] = REACT_MEMO_CACHE_SENTINEL;
         return memoCache.index++, updateQueue;
       }
       function basicStateReducer(state2, action) {
@@ -3816,7 +3816,7 @@ Error generating stack: ` + x.message + `
         var hook = updateWorkInProgressHook();
         return updateReducerImpl(hook, currentHook, reducer);
       }
-      function updateReducerImpl(hook, current2, reducer) {
+      function updateReducerImpl(hook, current3, reducer) {
         var queue = hook.queue;
         if (queue === null) throw Error(formatProdErrorMessage(311));
         queue.lastRenderedReducer = reducer;
@@ -3826,12 +3826,12 @@ Error generating stack: ` + x.message + `
             var baseFirst = baseQueue.next;
             baseQueue.next = pendingQueue.next, pendingQueue.next = baseFirst;
           }
-          current2.baseQueue = baseQueue = pendingQueue, queue.pending = null;
+          current3.baseQueue = baseQueue = pendingQueue, queue.pending = null;
         }
         if (pendingQueue = hook.baseState, baseQueue === null) hook.memoizedState = pendingQueue;
         else {
-          current2 = baseQueue.next;
-          var newBaseQueueFirst = baseFirst = null, newBaseQueueLast = null, update = current2, didReadFromEntangledAsyncAction$64 = !1;
+          current3 = baseQueue.next;
+          var newBaseQueueFirst = baseFirst = null, newBaseQueueLast = null, update = current3, didReadFromEntangledAsyncAction$64 = !1;
           do {
             var updateLane = update.lane & -536870913;
             if (updateLane !== update.lane ? (workInProgressRootRenderLanes & updateLane) === updateLane : (renderLanes & updateLane) === updateLane) {
@@ -3871,7 +3871,7 @@ Error generating stack: ` + x.message + `
                 next: null
               }, newBaseQueueLast === null ? (newBaseQueueFirst = newBaseQueueLast = revertLane, baseFirst = pendingQueue) : newBaseQueueLast = newBaseQueueLast.next = revertLane, currentlyRenderingFiber.lanes |= updateLane, workInProgressRootSkippedLanes |= updateLane;
             update = update.next;
-          } while (update !== null && update !== current2);
+          } while (update !== null && update !== current3);
           if (newBaseQueueLast === null ? baseFirst = pendingQueue : newBaseQueueLast.next = newBaseQueueFirst, !objectIs(pendingQueue, hook.memoizedState) && (didReceiveUpdate = !0, didReadFromEntangledAsyncAction$64 && (reducer = currentEntangledActionThenable, reducer !== null)))
             throw reducer;
           hook.memoizedState = pendingQueue, hook.baseState = baseFirst, hook.baseQueue = newBaseQueueLast, queue.lastRenderedState = pendingQueue;
@@ -3962,7 +3962,7 @@ Error generating stack: ` + x.message + `
           lastRenderedState: initialState
         }, hook;
       }
-      function updateOptimisticImpl(hook, current2, passthrough, reducer) {
+      function updateOptimisticImpl(hook, current3, passthrough, reducer) {
         return hook.baseState = passthrough, updateReducerImpl(
           hook,
           currentHook,
@@ -4862,15 +4862,15 @@ Error generating stack: ` + x.message + `
         return !1;
       }
       var SelectiveHydrationException = Error(formatProdErrorMessage(461)), didReceiveUpdate = !1;
-      function reconcileChildren(current2, workInProgress2, nextChildren, renderLanes2) {
-        workInProgress2.child = current2 === null ? mountChildFibers(workInProgress2, null, nextChildren, renderLanes2) : reconcileChildFibers(
+      function reconcileChildren(current3, workInProgress2, nextChildren, renderLanes2) {
+        workInProgress2.child = current3 === null ? mountChildFibers(workInProgress2, null, nextChildren, renderLanes2) : reconcileChildFibers(
           workInProgress2,
-          current2.child,
+          current3.child,
           nextChildren,
           renderLanes2
         );
       }
-      function updateForwardRef(current2, workInProgress2, Component, nextProps, renderLanes2) {
+      function updateForwardRef(current3, workInProgress2, Component, nextProps, renderLanes2) {
         Component = Component.render;
         var ref = workInProgress2.ref;
         if ("ref" in nextProps) {
@@ -4879,72 +4879,72 @@ Error generating stack: ` + x.message + `
             key !== "ref" && (propsWithoutRef[key] = nextProps[key]);
         } else propsWithoutRef = nextProps;
         return prepareToReadContext(workInProgress2), nextProps = renderWithHooks(
-          current2,
+          current3,
           workInProgress2,
           Component,
           propsWithoutRef,
           ref,
           renderLanes2
-        ), key = checkDidRenderIdHook(), current2 !== null && !didReceiveUpdate ? (bailoutHooks(current2, workInProgress2, renderLanes2), bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2)) : (isHydrating && key && pushMaterializedTreeId(workInProgress2), workInProgress2.flags |= 1, reconcileChildren(current2, workInProgress2, nextProps, renderLanes2), workInProgress2.child);
+        ), key = checkDidRenderIdHook(), current3 !== null && !didReceiveUpdate ? (bailoutHooks(current3, workInProgress2, renderLanes2), bailoutOnAlreadyFinishedWork(current3, workInProgress2, renderLanes2)) : (isHydrating && key && pushMaterializedTreeId(workInProgress2), workInProgress2.flags |= 1, reconcileChildren(current3, workInProgress2, nextProps, renderLanes2), workInProgress2.child);
       }
-      function updateMemoComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
-        if (current2 === null) {
+      function updateMemoComponent(current3, workInProgress2, Component, nextProps, renderLanes2) {
+        if (current3 === null) {
           var type = Component.type;
           return typeof type == "function" && !shouldConstruct(type) && type.defaultProps === void 0 && Component.compare === null ? (workInProgress2.tag = 15, workInProgress2.type = type, updateSimpleMemoComponent(
-            current2,
+            current3,
             workInProgress2,
             type,
             nextProps,
             renderLanes2
-          )) : (current2 = createFiberFromTypeAndProps(
+          )) : (current3 = createFiberFromTypeAndProps(
             Component.type,
             null,
             nextProps,
             workInProgress2,
             workInProgress2.mode,
             renderLanes2
-          ), current2.ref = workInProgress2.ref, current2.return = workInProgress2, workInProgress2.child = current2);
+          ), current3.ref = workInProgress2.ref, current3.return = workInProgress2, workInProgress2.child = current3);
         }
-        if (type = current2.child, !checkScheduledUpdateOrContext(current2, renderLanes2)) {
+        if (type = current3.child, !checkScheduledUpdateOrContext(current3, renderLanes2)) {
           var prevProps = type.memoizedProps;
-          if (Component = Component.compare, Component = Component !== null ? Component : shallowEqual, Component(prevProps, nextProps) && current2.ref === workInProgress2.ref)
-            return bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2);
+          if (Component = Component.compare, Component = Component !== null ? Component : shallowEqual, Component(prevProps, nextProps) && current3.ref === workInProgress2.ref)
+            return bailoutOnAlreadyFinishedWork(current3, workInProgress2, renderLanes2);
         }
-        return workInProgress2.flags |= 1, current2 = createWorkInProgress(type, nextProps), current2.ref = workInProgress2.ref, current2.return = workInProgress2, workInProgress2.child = current2;
+        return workInProgress2.flags |= 1, current3 = createWorkInProgress(type, nextProps), current3.ref = workInProgress2.ref, current3.return = workInProgress2, workInProgress2.child = current3;
       }
-      function updateSimpleMemoComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
-        if (current2 !== null) {
-          var prevProps = current2.memoizedProps;
-          if (shallowEqual(prevProps, nextProps) && current2.ref === workInProgress2.ref)
-            if (didReceiveUpdate = !1, workInProgress2.pendingProps = nextProps = prevProps, checkScheduledUpdateOrContext(current2, renderLanes2))
-              (current2.flags & 131072) !== 0 && (didReceiveUpdate = !0);
+      function updateSimpleMemoComponent(current3, workInProgress2, Component, nextProps, renderLanes2) {
+        if (current3 !== null) {
+          var prevProps = current3.memoizedProps;
+          if (shallowEqual(prevProps, nextProps) && current3.ref === workInProgress2.ref)
+            if (didReceiveUpdate = !1, workInProgress2.pendingProps = nextProps = prevProps, checkScheduledUpdateOrContext(current3, renderLanes2))
+              (current3.flags & 131072) !== 0 && (didReceiveUpdate = !0);
             else
-              return workInProgress2.lanes = current2.lanes, bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2);
+              return workInProgress2.lanes = current3.lanes, bailoutOnAlreadyFinishedWork(current3, workInProgress2, renderLanes2);
         }
         return updateFunctionComponent(
-          current2,
+          current3,
           workInProgress2,
           Component,
           nextProps,
           renderLanes2
         );
       }
-      function updateOffscreenComponent(current2, workInProgress2, renderLanes2, nextProps) {
-        var nextChildren = nextProps.children, prevState = current2 !== null ? current2.memoizedState : null;
-        if (current2 === null && workInProgress2.stateNode === null && (workInProgress2.stateNode = {
+      function updateOffscreenComponent(current3, workInProgress2, renderLanes2, nextProps) {
+        var nextChildren = nextProps.children, prevState = current3 !== null ? current3.memoizedState : null;
+        if (current3 === null && workInProgress2.stateNode === null && (workInProgress2.stateNode = {
           _visibility: 1,
           _pendingMarkers: null,
           _retryCache: null,
           _transitions: null
         }), nextProps.mode === "hidden") {
           if ((workInProgress2.flags & 128) !== 0) {
-            if (prevState = prevState !== null ? prevState.baseLanes | renderLanes2 : renderLanes2, current2 !== null) {
-              for (nextProps = workInProgress2.child = current2.child, nextChildren = 0; nextProps !== null; )
+            if (prevState = prevState !== null ? prevState.baseLanes | renderLanes2 : renderLanes2, current3 !== null) {
+              for (nextProps = workInProgress2.child = current3.child, nextChildren = 0; nextProps !== null; )
                 nextChildren = nextChildren | nextProps.lanes | nextProps.childLanes, nextProps = nextProps.sibling;
               nextProps = nextChildren & ~prevState;
             } else nextProps = 0, workInProgress2.child = null;
             return deferHiddenOffscreenComponent(
-              current2,
+              current3,
               workInProgress2,
               prevState,
               renderLanes2,
@@ -4952,36 +4952,36 @@ Error generating stack: ` + x.message + `
             );
           }
           if ((renderLanes2 & 536870912) !== 0)
-            workInProgress2.memoizedState = { baseLanes: 0, cachePool: null }, current2 !== null && pushTransition(
+            workInProgress2.memoizedState = { baseLanes: 0, cachePool: null }, current3 !== null && pushTransition(
               workInProgress2,
               prevState !== null ? prevState.cachePool : null
             ), prevState !== null ? pushHiddenContext(workInProgress2, prevState) : reuseHiddenContextOnStack(), pushOffscreenSuspenseHandler(workInProgress2);
           else
             return nextProps = workInProgress2.lanes = 536870912, deferHiddenOffscreenComponent(
-              current2,
+              current3,
               workInProgress2,
               prevState !== null ? prevState.baseLanes | renderLanes2 : renderLanes2,
               renderLanes2,
               nextProps
             );
         } else
-          prevState !== null ? (pushTransition(workInProgress2, prevState.cachePool), pushHiddenContext(workInProgress2, prevState), reuseSuspenseHandlerOnStack(), workInProgress2.memoizedState = null) : (current2 !== null && pushTransition(workInProgress2, null), reuseHiddenContextOnStack(), reuseSuspenseHandlerOnStack());
-        return reconcileChildren(current2, workInProgress2, nextChildren, renderLanes2), workInProgress2.child;
+          prevState !== null ? (pushTransition(workInProgress2, prevState.cachePool), pushHiddenContext(workInProgress2, prevState), reuseSuspenseHandlerOnStack(), workInProgress2.memoizedState = null) : (current3 !== null && pushTransition(workInProgress2, null), reuseHiddenContextOnStack(), reuseSuspenseHandlerOnStack());
+        return reconcileChildren(current3, workInProgress2, nextChildren, renderLanes2), workInProgress2.child;
       }
-      function bailoutOffscreenComponent(current2, workInProgress2) {
-        return current2 !== null && current2.tag === 22 || workInProgress2.stateNode !== null || (workInProgress2.stateNode = {
+      function bailoutOffscreenComponent(current3, workInProgress2) {
+        return current3 !== null && current3.tag === 22 || workInProgress2.stateNode !== null || (workInProgress2.stateNode = {
           _visibility: 1,
           _pendingMarkers: null,
           _retryCache: null,
           _transitions: null
         }), workInProgress2.sibling;
       }
-      function deferHiddenOffscreenComponent(current2, workInProgress2, nextBaseLanes, renderLanes2, remainingChildLanes) {
+      function deferHiddenOffscreenComponent(current3, workInProgress2, nextBaseLanes, renderLanes2, remainingChildLanes) {
         var JSCompiler_inline_result = peekCacheFromPool();
         return JSCompiler_inline_result = JSCompiler_inline_result === null ? null : { parent: CacheContext._currentValue, pool: JSCompiler_inline_result }, workInProgress2.memoizedState = {
           baseLanes: nextBaseLanes,
           cachePool: JSCompiler_inline_result
-        }, current2 !== null && pushTransition(workInProgress2, null), reuseHiddenContextOnStack(), pushOffscreenSuspenseHandler(workInProgress2), current2 !== null && propagateParentContextChanges(current2, workInProgress2, renderLanes2, !0), workInProgress2.childLanes = remainingChildLanes, null;
+        }, current3 !== null && pushTransition(workInProgress2, null), reuseHiddenContextOnStack(), pushOffscreenSuspenseHandler(workInProgress2), current3 !== null && propagateParentContextChanges(current3, workInProgress2, renderLanes2, !0), workInProgress2.childLanes = remainingChildLanes, null;
       }
       function mountActivityChildren(workInProgress2, nextProps) {
         return nextProps = mountWorkInProgressOffscreenFiber(
@@ -4989,90 +4989,90 @@ Error generating stack: ` + x.message + `
           workInProgress2.mode
         ), nextProps.ref = workInProgress2.ref, workInProgress2.child = nextProps, nextProps.return = workInProgress2, nextProps;
       }
-      function retryActivityComponentWithoutHydrating(current2, workInProgress2, renderLanes2) {
-        return reconcileChildFibers(workInProgress2, current2.child, null, renderLanes2), current2 = mountActivityChildren(workInProgress2, workInProgress2.pendingProps), current2.flags |= 2, popSuspenseHandler(workInProgress2), workInProgress2.memoizedState = null, current2;
+      function retryActivityComponentWithoutHydrating(current3, workInProgress2, renderLanes2) {
+        return reconcileChildFibers(workInProgress2, current3.child, null, renderLanes2), current3 = mountActivityChildren(workInProgress2, workInProgress2.pendingProps), current3.flags |= 2, popSuspenseHandler(workInProgress2), workInProgress2.memoizedState = null, current3;
       }
-      function updateActivityComponent(current2, workInProgress2, renderLanes2) {
+      function updateActivityComponent(current3, workInProgress2, renderLanes2) {
         var nextProps = workInProgress2.pendingProps, didSuspend = (workInProgress2.flags & 128) !== 0;
-        if (workInProgress2.flags &= -129, current2 === null) {
+        if (workInProgress2.flags &= -129, current3 === null) {
           if (isHydrating) {
             if (nextProps.mode === "hidden")
-              return current2 = mountActivityChildren(workInProgress2, nextProps), workInProgress2.lanes = 536870912, current2.memoizedState = { baseLanes: 0, cachePool: null }, bailoutOffscreenComponent(null, current2);
-            if (pushDehydratedActivitySuspenseHandler(workInProgress2), (current2 = nextHydratableInstance) ? (current2 = canHydrateHydrationBoundary(
-              current2,
+              return current3 = mountActivityChildren(workInProgress2, nextProps), workInProgress2.lanes = 536870912, current3.memoizedState = { baseLanes: 0, cachePool: null }, bailoutOffscreenComponent(null, current3);
+            if (pushDehydratedActivitySuspenseHandler(workInProgress2), (current3 = nextHydratableInstance) ? (current3 = canHydrateHydrationBoundary(
+              current3,
               rootOrSingletonContext
-            ), current2 = current2 !== null && current2.data === "&" ? current2 : null, current2 !== null && (workInProgress2.memoizedState = {
-              dehydrated: current2,
+            ), current3 = current3 !== null && current3.data === "&" ? current3 : null, current3 !== null && (workInProgress2.memoizedState = {
+              dehydrated: current3,
               treeContext: treeContextProvider !== null ? { id: treeContextId, overflow: treeContextOverflow } : null,
               retryLane: 536870912,
               hydrationErrors: null
-            }, renderLanes2 = createFiberFromDehydratedFragment(current2), renderLanes2.return = workInProgress2, workInProgress2.child = renderLanes2, hydrationParentFiber = workInProgress2, nextHydratableInstance = null)) : current2 = null, current2 === null) throw throwOnHydrationMismatch(workInProgress2);
+            }, renderLanes2 = createFiberFromDehydratedFragment(current3), renderLanes2.return = workInProgress2, workInProgress2.child = renderLanes2, hydrationParentFiber = workInProgress2, nextHydratableInstance = null)) : current3 = null, current3 === null) throw throwOnHydrationMismatch(workInProgress2);
             return workInProgress2.lanes = 536870912, null;
           }
           return mountActivityChildren(workInProgress2, nextProps);
         }
-        var prevState = current2.memoizedState;
+        var prevState = current3.memoizedState;
         if (prevState !== null) {
           var dehydrated = prevState.dehydrated;
           if (pushDehydratedActivitySuspenseHandler(workInProgress2), didSuspend)
             if (workInProgress2.flags & 256)
               workInProgress2.flags &= -257, workInProgress2 = retryActivityComponentWithoutHydrating(
-                current2,
+                current3,
                 workInProgress2,
                 renderLanes2
               );
             else if (workInProgress2.memoizedState !== null)
-              workInProgress2.child = current2.child, workInProgress2.flags |= 128, workInProgress2 = null;
+              workInProgress2.child = current3.child, workInProgress2.flags |= 128, workInProgress2 = null;
             else throw Error(formatProdErrorMessage(558));
-          else if (didReceiveUpdate || propagateParentContextChanges(current2, workInProgress2, renderLanes2, !1), didSuspend = (renderLanes2 & current2.childLanes) !== 0, didReceiveUpdate || didSuspend) {
+          else if (didReceiveUpdate || propagateParentContextChanges(current3, workInProgress2, renderLanes2, !1), didSuspend = (renderLanes2 & current3.childLanes) !== 0, didReceiveUpdate || didSuspend) {
             if (currentTreeHiddenStackCursor.current === null) {
               if (nextProps = workInProgressRoot, nextProps !== null && (dehydrated = getBumpedLaneForHydration(nextProps, renderLanes2), dehydrated !== 0 && dehydrated !== prevState.retryLane))
-                throw prevState.retryLane = dehydrated, enqueueConcurrentRenderForLane(current2, dehydrated), scheduleUpdateOnFiber(nextProps, current2, dehydrated), SelectiveHydrationException;
+                throw prevState.retryLane = dehydrated, enqueueConcurrentRenderForLane(current3, dehydrated), scheduleUpdateOnFiber(nextProps, current3, dehydrated), SelectiveHydrationException;
               renderDidSuspendDelayIfPossible();
             }
             workInProgress2 = retryActivityComponentWithoutHydrating(
-              current2,
+              current3,
               workInProgress2,
               renderLanes2
             );
           } else
-            current2 = prevState.treeContext, nextHydratableInstance = getNextHydratable(dehydrated.nextSibling), hydrationParentFiber = workInProgress2, isHydrating = !0, hydrationErrors = null, rootOrSingletonContext = !1, current2 !== null && restoreSuspendedTreeContext(workInProgress2, current2), workInProgress2 = mountActivityChildren(workInProgress2, nextProps), workInProgress2.flags |= 134221824;
+            current3 = prevState.treeContext, nextHydratableInstance = getNextHydratable(dehydrated.nextSibling), hydrationParentFiber = workInProgress2, isHydrating = !0, hydrationErrors = null, rootOrSingletonContext = !1, current3 !== null && restoreSuspendedTreeContext(workInProgress2, current3), workInProgress2 = mountActivityChildren(workInProgress2, nextProps), workInProgress2.flags |= 134221824;
           return workInProgress2;
         }
-        return current2 = createWorkInProgress(current2.child, {
+        return current3 = createWorkInProgress(current3.child, {
           mode: nextProps.mode,
           children: nextProps.children
-        }), current2.ref = workInProgress2.ref, workInProgress2.child = current2, current2.return = workInProgress2, current2;
+        }), current3.ref = workInProgress2.ref, workInProgress2.child = current3, current3.return = workInProgress2, current3;
       }
-      function markRef(current2, workInProgress2) {
+      function markRef(current3, workInProgress2) {
         var ref = workInProgress2.ref;
         if (ref === null)
-          current2 !== null && current2.ref !== null && (workInProgress2.flags |= 4194816);
+          current3 !== null && current3.ref !== null && (workInProgress2.flags |= 4194816);
         else {
           if (typeof ref != "function" && typeof ref != "object")
             throw Error(formatProdErrorMessage(284));
-          (current2 === null || current2.ref !== ref) && (workInProgress2.flags |= 4194816);
+          (current3 === null || current3.ref !== ref) && (workInProgress2.flags |= 4194816);
         }
       }
-      function updateFunctionComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
+      function updateFunctionComponent(current3, workInProgress2, Component, nextProps, renderLanes2) {
         return prepareToReadContext(workInProgress2), Component = renderWithHooks(
-          current2,
+          current3,
           workInProgress2,
           Component,
           nextProps,
           void 0,
           renderLanes2
-        ), nextProps = checkDidRenderIdHook(), current2 !== null && !didReceiveUpdate ? (bailoutHooks(current2, workInProgress2, renderLanes2), bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2)) : (isHydrating && nextProps && pushMaterializedTreeId(workInProgress2), workInProgress2.flags |= 1, reconcileChildren(current2, workInProgress2, Component, renderLanes2), workInProgress2.child);
+        ), nextProps = checkDidRenderIdHook(), current3 !== null && !didReceiveUpdate ? (bailoutHooks(current3, workInProgress2, renderLanes2), bailoutOnAlreadyFinishedWork(current3, workInProgress2, renderLanes2)) : (isHydrating && nextProps && pushMaterializedTreeId(workInProgress2), workInProgress2.flags |= 1, reconcileChildren(current3, workInProgress2, Component, renderLanes2), workInProgress2.child);
       }
-      function replayFunctionComponent(current2, workInProgress2, nextProps, Component, secondArg, renderLanes2) {
+      function replayFunctionComponent(current3, workInProgress2, nextProps, Component, secondArg, renderLanes2) {
         return prepareToReadContext(workInProgress2), workInProgress2.updateQueue = null, nextProps = renderWithHooksAgain(
           workInProgress2,
           Component,
           nextProps,
           secondArg
-        ), finishRenderingHooks(current2), Component = checkDidRenderIdHook(), current2 !== null && !didReceiveUpdate ? (bailoutHooks(current2, workInProgress2, renderLanes2), bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2)) : (isHydrating && Component && pushMaterializedTreeId(workInProgress2), workInProgress2.flags |= 1, reconcileChildren(current2, workInProgress2, nextProps, renderLanes2), workInProgress2.child);
+        ), finishRenderingHooks(current3), Component = checkDidRenderIdHook(), current3 !== null && !didReceiveUpdate ? (bailoutHooks(current3, workInProgress2, renderLanes2), bailoutOnAlreadyFinishedWork(current3, workInProgress2, renderLanes2)) : (isHydrating && Component && pushMaterializedTreeId(workInProgress2), workInProgress2.flags |= 1, reconcileChildren(current3, workInProgress2, nextProps, renderLanes2), workInProgress2.child);
       }
-      function updateClassComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
+      function updateClassComponent(current3, workInProgress2, Component, nextProps, renderLanes2) {
         if (prepareToReadContext(workInProgress2), workInProgress2.stateNode === null) {
           var context = emptyContextObject, contextType = Component.contextType;
           typeof contextType == "object" && contextType !== null && (context = readContext(contextType)), context = new Component(nextProps, context), workInProgress2.memoizedState = context.state !== null && context.state !== void 0 ? context.state : null, context.updater = classComponentUpdater, workInProgress2.stateNode = context, context._reactInternals = workInProgress2, context = workInProgress2.stateNode, context.props = nextProps, context.state = workInProgress2.memoizedState, context.refs = {}, initializeUpdateQueue(workInProgress2), contextType = Component.contextType, context.context = typeof contextType == "object" && contextType !== null ? readContext(contextType) : emptyContextObject, context.state = workInProgress2.memoizedState, contextType = Component.getDerivedStateFromProps, typeof contextType == "function" && (applyDerivedStateFromProps(
@@ -5081,7 +5081,7 @@ Error generating stack: ` + x.message + `
             contextType,
             nextProps
           ), context.state = workInProgress2.memoizedState), typeof Component.getDerivedStateFromProps == "function" || typeof context.getSnapshotBeforeUpdate == "function" || typeof context.UNSAFE_componentWillMount != "function" && typeof context.componentWillMount != "function" || (contextType = context.state, typeof context.componentWillMount == "function" && context.componentWillMount(), typeof context.UNSAFE_componentWillMount == "function" && context.UNSAFE_componentWillMount(), contextType !== context.state && classComponentUpdater.enqueueReplaceState(context, context.state, null), processUpdateQueue(workInProgress2, nextProps, context, renderLanes2), suspendIfUpdateReadFromEntangledAsyncAction(), context.state = workInProgress2.memoizedState), typeof context.componentDidMount == "function" && (workInProgress2.flags |= 4194308), nextProps = !0;
-        } else if (current2 === null) {
+        } else if (current3 === null) {
           context = workInProgress2.stateNode;
           var unresolvedOldProps = workInProgress2.memoizedProps, oldProps = resolveClassComponentProps(Component, unresolvedOldProps);
           context.props = oldProps;
@@ -5110,14 +5110,14 @@ Error generating stack: ` + x.message + `
             contextType
           )) ? (contextType$jscomp$0 || typeof context.UNSAFE_componentWillMount != "function" && typeof context.componentWillMount != "function" || (typeof context.componentWillMount == "function" && context.componentWillMount(), typeof context.UNSAFE_componentWillMount == "function" && context.UNSAFE_componentWillMount()), typeof context.componentDidMount == "function" && (workInProgress2.flags |= 4194308)) : (typeof context.componentDidMount == "function" && (workInProgress2.flags |= 4194308), workInProgress2.memoizedProps = nextProps, workInProgress2.memoizedState = oldContext), context.props = nextProps, context.state = oldContext, context.context = contextType, nextProps = oldProps) : (typeof context.componentDidMount == "function" && (workInProgress2.flags |= 4194308), nextProps = !1);
         } else {
-          context = workInProgress2.stateNode, cloneUpdateQueue(current2, workInProgress2), contextType = workInProgress2.memoizedProps, contextType$jscomp$0 = resolveClassComponentProps(Component, contextType), context.props = contextType$jscomp$0, getDerivedStateFromProps = workInProgress2.pendingProps, oldState = context.context, oldContext = Component.contextType, oldProps = emptyContextObject, typeof oldContext == "object" && oldContext !== null && (oldProps = readContext(oldContext)), unresolvedOldProps = Component.getDerivedStateFromProps, (oldContext = typeof unresolvedOldProps == "function" || typeof context.getSnapshotBeforeUpdate == "function") || typeof context.UNSAFE_componentWillReceiveProps != "function" && typeof context.componentWillReceiveProps != "function" || (contextType !== getDerivedStateFromProps || oldState !== oldProps) && callComponentWillReceiveProps(
+          context = workInProgress2.stateNode, cloneUpdateQueue(current3, workInProgress2), contextType = workInProgress2.memoizedProps, contextType$jscomp$0 = resolveClassComponentProps(Component, contextType), context.props = contextType$jscomp$0, getDerivedStateFromProps = workInProgress2.pendingProps, oldState = context.context, oldContext = Component.contextType, oldProps = emptyContextObject, typeof oldContext == "object" && oldContext !== null && (oldProps = readContext(oldContext)), unresolvedOldProps = Component.getDerivedStateFromProps, (oldContext = typeof unresolvedOldProps == "function" || typeof context.getSnapshotBeforeUpdate == "function") || typeof context.UNSAFE_componentWillReceiveProps != "function" && typeof context.componentWillReceiveProps != "function" || (contextType !== getDerivedStateFromProps || oldState !== oldProps) && callComponentWillReceiveProps(
             workInProgress2,
             context,
             nextProps,
             oldProps
           ), hasForceUpdate = !1, oldState = workInProgress2.memoizedState, context.state = oldState, processUpdateQueue(workInProgress2, nextProps, context, renderLanes2), suspendIfUpdateReadFromEntangledAsyncAction();
           var newState = workInProgress2.memoizedState;
-          contextType !== getDerivedStateFromProps || oldState !== newState || hasForceUpdate || current2 !== null && current2.dependencies !== null && checkIfContextChanged(current2.dependencies) ? (typeof unresolvedOldProps == "function" && (applyDerivedStateFromProps(
+          contextType !== getDerivedStateFromProps || oldState !== newState || hasForceUpdate || current3 !== null && current3.dependencies !== null && checkIfContextChanged(current3.dependencies) ? (typeof unresolvedOldProps == "function" && (applyDerivedStateFromProps(
             workInProgress2,
             Component,
             unresolvedOldProps,
@@ -5130,15 +5130,15 @@ Error generating stack: ` + x.message + `
             oldState,
             newState,
             oldProps
-          ) || current2 !== null && current2.dependencies !== null && checkIfContextChanged(current2.dependencies)) ? (oldContext || typeof context.UNSAFE_componentWillUpdate != "function" && typeof context.componentWillUpdate != "function" || (typeof context.componentWillUpdate == "function" && context.componentWillUpdate(nextProps, newState, oldProps), typeof context.UNSAFE_componentWillUpdate == "function" && context.UNSAFE_componentWillUpdate(
+          ) || current3 !== null && current3.dependencies !== null && checkIfContextChanged(current3.dependencies)) ? (oldContext || typeof context.UNSAFE_componentWillUpdate != "function" && typeof context.componentWillUpdate != "function" || (typeof context.componentWillUpdate == "function" && context.componentWillUpdate(nextProps, newState, oldProps), typeof context.UNSAFE_componentWillUpdate == "function" && context.UNSAFE_componentWillUpdate(
             nextProps,
             newState,
             oldProps
-          )), typeof context.componentDidUpdate == "function" && (workInProgress2.flags |= 4), typeof context.getSnapshotBeforeUpdate == "function" && (workInProgress2.flags |= 1024)) : (typeof context.componentDidUpdate != "function" || contextType === current2.memoizedProps && oldState === current2.memoizedState || (workInProgress2.flags |= 4), typeof context.getSnapshotBeforeUpdate != "function" || contextType === current2.memoizedProps && oldState === current2.memoizedState || (workInProgress2.flags |= 1024), workInProgress2.memoizedProps = nextProps, workInProgress2.memoizedState = newState), context.props = nextProps, context.state = newState, context.context = oldProps, nextProps = contextType$jscomp$0) : (typeof context.componentDidUpdate != "function" || contextType === current2.memoizedProps && oldState === current2.memoizedState || (workInProgress2.flags |= 4), typeof context.getSnapshotBeforeUpdate != "function" || contextType === current2.memoizedProps && oldState === current2.memoizedState || (workInProgress2.flags |= 1024), nextProps = !1);
+          )), typeof context.componentDidUpdate == "function" && (workInProgress2.flags |= 4), typeof context.getSnapshotBeforeUpdate == "function" && (workInProgress2.flags |= 1024)) : (typeof context.componentDidUpdate != "function" || contextType === current3.memoizedProps && oldState === current3.memoizedState || (workInProgress2.flags |= 4), typeof context.getSnapshotBeforeUpdate != "function" || contextType === current3.memoizedProps && oldState === current3.memoizedState || (workInProgress2.flags |= 1024), workInProgress2.memoizedProps = nextProps, workInProgress2.memoizedState = newState), context.props = nextProps, context.state = newState, context.context = oldProps, nextProps = contextType$jscomp$0) : (typeof context.componentDidUpdate != "function" || contextType === current3.memoizedProps && oldState === current3.memoizedState || (workInProgress2.flags |= 4), typeof context.getSnapshotBeforeUpdate != "function" || contextType === current3.memoizedProps && oldState === current3.memoizedState || (workInProgress2.flags |= 1024), nextProps = !1);
         }
-        return context = nextProps, markRef(current2, workInProgress2), nextProps = (workInProgress2.flags & 128) !== 0, context || nextProps ? (context = workInProgress2.stateNode, Component = nextProps && typeof Component.getDerivedStateFromError != "function" ? null : context.render(), workInProgress2.flags |= 1, current2 !== null && nextProps ? (workInProgress2.child = reconcileChildFibers(
+        return context = nextProps, markRef(current3, workInProgress2), nextProps = (workInProgress2.flags & 128) !== 0, context || nextProps ? (context = workInProgress2.stateNode, Component = nextProps && typeof Component.getDerivedStateFromError != "function" ? null : context.render(), workInProgress2.flags |= 1, current3 !== null && nextProps ? (workInProgress2.child = reconcileChildFibers(
           workInProgress2,
-          current2.child,
+          current3.child,
           null,
           renderLanes2
         ), workInProgress2.child = reconcileChildFibers(
@@ -5146,14 +5146,14 @@ Error generating stack: ` + x.message + `
           null,
           Component,
           renderLanes2
-        )) : reconcileChildren(current2, workInProgress2, Component, renderLanes2), workInProgress2.memoizedState = context.state, current2 = workInProgress2.child) : current2 = bailoutOnAlreadyFinishedWork(
-          current2,
+        )) : reconcileChildren(current3, workInProgress2, Component, renderLanes2), workInProgress2.memoizedState = context.state, current3 = workInProgress2.child) : current3 = bailoutOnAlreadyFinishedWork(
+          current3,
           workInProgress2,
           renderLanes2
-        ), current2;
+        ), current3;
       }
-      function mountHostRootWithoutHydrating(current2, workInProgress2, nextChildren, renderLanes2) {
-        return resetHydrationState(), workInProgress2.flags |= 256, reconcileChildren(current2, workInProgress2, nextChildren, renderLanes2), workInProgress2.child;
+      function mountHostRootWithoutHydrating(current3, workInProgress2, nextChildren, renderLanes2) {
+        return resetHydrationState(), workInProgress2.flags |= 256, reconcileChildren(current3, workInProgress2, nextChildren, renderLanes2), workInProgress2.child;
       }
       var SUSPENDED_MARKER = {
         dehydrated: null,
@@ -5164,23 +5164,23 @@ Error generating stack: ` + x.message + `
       function mountSuspenseOffscreenState(renderLanes2) {
         return { baseLanes: renderLanes2, cachePool: getSuspendedCache() };
       }
-      function getRemainingWorkInPrimaryTree(current2, primaryTreeDidDefer, renderLanes2) {
-        return current2 = current2 !== null ? current2.childLanes & ~renderLanes2 : 0, primaryTreeDidDefer && (current2 |= workInProgressDeferredLane), current2;
+      function getRemainingWorkInPrimaryTree(current3, primaryTreeDidDefer, renderLanes2) {
+        return current3 = current3 !== null ? current3.childLanes & ~renderLanes2 : 0, primaryTreeDidDefer && (current3 |= workInProgressDeferredLane), current3;
       }
-      function updateSuspenseComponent(current2, workInProgress2, renderLanes2) {
+      function updateSuspenseComponent(current3, workInProgress2, renderLanes2) {
         var nextProps = workInProgress2.pendingProps, showFallback = !1, didSuspend = (workInProgress2.flags & 128) !== 0, JSCompiler_temp;
-        if ((JSCompiler_temp = didSuspend) || (JSCompiler_temp = current2 !== null && current2.memoizedState === null ? !1 : (suspenseStackCursor.current & 2) !== 0), JSCompiler_temp && (showFallback = !0, workInProgress2.flags &= -129), JSCompiler_temp = (workInProgress2.flags & 32) !== 0, workInProgress2.flags &= -33, current2 === null) {
+        if ((JSCompiler_temp = didSuspend) || (JSCompiler_temp = current3 !== null && current3.memoizedState === null ? !1 : (suspenseStackCursor.current & 2) !== 0), JSCompiler_temp && (showFallback = !0, workInProgress2.flags &= -129), JSCompiler_temp = (workInProgress2.flags & 32) !== 0, workInProgress2.flags &= -33, current3 === null) {
           if (isHydrating) {
-            if (showFallback ? pushPrimaryTreeSuspenseHandler(workInProgress2) : reuseSuspenseHandlerOnStack(), (current2 = nextHydratableInstance) ? (current2 = canHydrateHydrationBoundary(
-              current2,
+            if (showFallback ? pushPrimaryTreeSuspenseHandler(workInProgress2) : reuseSuspenseHandlerOnStack(), (current3 = nextHydratableInstance) ? (current3 = canHydrateHydrationBoundary(
+              current3,
               rootOrSingletonContext
-            ), current2 = current2 !== null && current2.data !== "&" ? current2 : null, current2 !== null && (workInProgress2.memoizedState = {
-              dehydrated: current2,
+            ), current3 = current3 !== null && current3.data !== "&" ? current3 : null, current3 !== null && (workInProgress2.memoizedState = {
+              dehydrated: current3,
               treeContext: treeContextProvider !== null ? { id: treeContextId, overflow: treeContextOverflow } : null,
               retryLane: 536870912,
               hydrationErrors: null
-            }, renderLanes2 = createFiberFromDehydratedFragment(current2), renderLanes2.return = workInProgress2, workInProgress2.child = renderLanes2, hydrationParentFiber = workInProgress2, nextHydratableInstance = null)) : current2 = null, current2 === null) throw throwOnHydrationMismatch(workInProgress2);
-            return isSuspenseInstanceFallback(current2) ? workInProgress2.lanes = 32 : workInProgress2.lanes = 536870912, null;
+            }, renderLanes2 = createFiberFromDehydratedFragment(current3), renderLanes2.return = workInProgress2, workInProgress2.child = renderLanes2, hydrationParentFiber = workInProgress2, nextHydratableInstance = null)) : current3 = null, current3 === null) throw throwOnHydrationMismatch(workInProgress2);
+            return isSuspenseInstanceFallback(current3) ? workInProgress2.lanes = 32 : workInProgress2.lanes = 536870912, null;
           }
           return didSuspend = nextProps.children, nextProps = nextProps.fallback, showFallback ? (reuseSuspenseHandlerOnStack(), showFallback = workInProgress2.mode, didSuspend = mountWorkInProgressOffscreenFiber(
             { mode: "hidden", children: didSuspend },
@@ -5191,17 +5191,17 @@ Error generating stack: ` + x.message + `
             renderLanes2,
             null
           ), didSuspend.return = workInProgress2, nextProps.return = workInProgress2, didSuspend.sibling = nextProps, workInProgress2.child = didSuspend, nextProps = workInProgress2.child, nextProps.memoizedState = mountSuspenseOffscreenState(renderLanes2), nextProps.childLanes = getRemainingWorkInPrimaryTree(
-            current2,
+            current3,
             JSCompiler_temp,
             renderLanes2
           ), workInProgress2.memoizedState = SUSPENDED_MARKER, bailoutOffscreenComponent(null, nextProps)) : (pushPrimaryTreeSuspenseHandler(workInProgress2), mountSuspensePrimaryChildren(workInProgress2, didSuspend));
         }
-        var prevState = current2.memoizedState;
+        var prevState = current3.memoizedState;
         if (prevState !== null) {
           var dehydrated$96 = prevState.dehydrated;
           if (dehydrated$96 !== null)
             return updateDehydratedSuspenseComponent(
-              current2,
+              current3,
               workInProgress2,
               didSuspend,
               JSCompiler_temp,
@@ -5211,7 +5211,7 @@ Error generating stack: ` + x.message + `
               renderLanes2
             );
         }
-        return showFallback ? (reuseSuspenseHandlerOnStack(), showFallback = nextProps.fallback, didSuspend = workInProgress2.mode, prevState = current2.child, dehydrated$96 = prevState.sibling, nextProps = createWorkInProgress(prevState, {
+        return showFallback ? (reuseSuspenseHandlerOnStack(), showFallback = nextProps.fallback, didSuspend = workInProgress2.mode, prevState = current3.child, dehydrated$96 = prevState.sibling, nextProps = createWorkInProgress(prevState, {
           mode: "hidden",
           children: nextProps.children
         }), nextProps.subtreeFlags = prevState.subtreeFlags & 1206910976, dehydrated$96 !== null ? showFallback = createWorkInProgress(dehydrated$96, showFallback) : (showFallback = createFiberFromFragment(
@@ -5219,17 +5219,17 @@ Error generating stack: ` + x.message + `
           didSuspend,
           renderLanes2,
           null
-        ), showFallback.flags |= 2), showFallback.return = workInProgress2, nextProps.return = workInProgress2, nextProps.sibling = showFallback, workInProgress2.child = nextProps, bailoutOffscreenComponent(null, nextProps), nextProps = workInProgress2.child, showFallback = current2.child.memoizedState, showFallback === null ? showFallback = mountSuspenseOffscreenState(renderLanes2) : (didSuspend = showFallback.cachePool, didSuspend !== null ? (prevState = CacheContext._currentValue, didSuspend = didSuspend.parent !== prevState ? { parent: prevState, pool: prevState } : didSuspend) : didSuspend = getSuspendedCache(), showFallback = {
+        ), showFallback.flags |= 2), showFallback.return = workInProgress2, nextProps.return = workInProgress2, nextProps.sibling = showFallback, workInProgress2.child = nextProps, bailoutOffscreenComponent(null, nextProps), nextProps = workInProgress2.child, showFallback = current3.child.memoizedState, showFallback === null ? showFallback = mountSuspenseOffscreenState(renderLanes2) : (didSuspend = showFallback.cachePool, didSuspend !== null ? (prevState = CacheContext._currentValue, didSuspend = didSuspend.parent !== prevState ? { parent: prevState, pool: prevState } : didSuspend) : didSuspend = getSuspendedCache(), showFallback = {
           baseLanes: showFallback.baseLanes | renderLanes2,
           cachePool: didSuspend
         }), nextProps.memoizedState = showFallback, nextProps.childLanes = getRemainingWorkInPrimaryTree(
-          current2,
+          current3,
           JSCompiler_temp,
           renderLanes2
-        ), workInProgress2.memoizedState = SUSPENDED_MARKER, bailoutOffscreenComponent(current2.child, nextProps)) : (pushPrimaryTreeSuspenseHandler(workInProgress2), renderLanes2 = current2.child, current2 = renderLanes2.sibling, renderLanes2 = createWorkInProgress(renderLanes2, {
+        ), workInProgress2.memoizedState = SUSPENDED_MARKER, bailoutOffscreenComponent(current3.child, nextProps)) : (pushPrimaryTreeSuspenseHandler(workInProgress2), renderLanes2 = current3.child, current3 = renderLanes2.sibling, renderLanes2 = createWorkInProgress(renderLanes2, {
           mode: "visible",
           children: nextProps.children
-        }), renderLanes2.return = workInProgress2, renderLanes2.sibling = null, current2 !== null && (JSCompiler_temp = workInProgress2.deletions, JSCompiler_temp === null ? (workInProgress2.deletions = [current2], workInProgress2.flags |= 16) : JSCompiler_temp.push(current2)), workInProgress2.child = renderLanes2, workInProgress2.memoizedState = null, renderLanes2);
+        }), renderLanes2.return = workInProgress2, renderLanes2.sibling = null, current3 !== null && (JSCompiler_temp = workInProgress2.deletions, JSCompiler_temp === null ? (workInProgress2.deletions = [current3], workInProgress2.flags |= 16) : JSCompiler_temp.push(current3)), workInProgress2.child = renderLanes2, workInProgress2.memoizedState = null, renderLanes2);
       }
       function mountSuspensePrimaryChildren(workInProgress2, primaryChildren) {
         return primaryChildren = mountWorkInProgressOffscreenFiber(
@@ -5240,19 +5240,19 @@ Error generating stack: ` + x.message + `
       function mountWorkInProgressOffscreenFiber(offscreenProps, mode) {
         return offscreenProps = createFiberImplClass(22, offscreenProps, null, mode), offscreenProps.lanes = 0, offscreenProps;
       }
-      function retrySuspenseComponentWithoutHydrating(current2, workInProgress2, renderLanes2) {
-        return reconcileChildFibers(workInProgress2, current2.child, null, renderLanes2), current2 = mountSuspensePrimaryChildren(
+      function retrySuspenseComponentWithoutHydrating(current3, workInProgress2, renderLanes2) {
+        return reconcileChildFibers(workInProgress2, current3.child, null, renderLanes2), current3 = mountSuspensePrimaryChildren(
           workInProgress2,
           workInProgress2.pendingProps.children
-        ), current2.flags |= 2, workInProgress2.memoizedState = null, current2;
+        ), current3.flags |= 2, workInProgress2.memoizedState = null, current3;
       }
-      function updateDehydratedSuspenseComponent(current2, workInProgress2, didSuspend, didPrimaryChildrenDefer, nextProps, suspenseInstance, suspenseState, renderLanes2) {
+      function updateDehydratedSuspenseComponent(current3, workInProgress2, didSuspend, didPrimaryChildrenDefer, nextProps, suspenseInstance, suspenseState, renderLanes2) {
         if (didSuspend)
           return workInProgress2.flags & 256 ? (pushPrimaryTreeSuspenseHandler(workInProgress2), workInProgress2.flags &= -257, retrySuspenseComponentWithoutHydrating(
-            current2,
+            current3,
             workInProgress2,
             renderLanes2
-          )) : workInProgress2.memoizedState !== null ? (reuseSuspenseHandlerOnStack(), workInProgress2.child = current2.child, workInProgress2.flags |= 128, null) : (reuseSuspenseHandlerOnStack(), suspenseInstance = nextProps.fallback, suspenseState = workInProgress2.mode, nextProps = mountWorkInProgressOffscreenFiber(
+          )) : workInProgress2.memoizedState !== null ? (reuseSuspenseHandlerOnStack(), workInProgress2.child = current3.child, workInProgress2.flags |= 128, null) : (reuseSuspenseHandlerOnStack(), suspenseInstance = nextProps.fallback, suspenseState = workInProgress2.mode, nextProps = mountWorkInProgressOffscreenFiber(
             { mode: "visible", children: nextProps.children },
             suspenseState
           ), suspenseInstance = createFiberFromFragment(
@@ -5260,23 +5260,23 @@ Error generating stack: ` + x.message + `
             suspenseState,
             renderLanes2,
             null
-          ), suspenseInstance.flags |= 2, nextProps.return = workInProgress2, suspenseInstance.return = workInProgress2, nextProps.sibling = suspenseInstance, workInProgress2.child = nextProps, reconcileChildFibers(workInProgress2, current2.child, null, renderLanes2), nextProps = workInProgress2.child, nextProps.memoizedState = mountSuspenseOffscreenState(renderLanes2), nextProps.childLanes = getRemainingWorkInPrimaryTree(
-            current2,
+          ), suspenseInstance.flags |= 2, nextProps.return = workInProgress2, suspenseInstance.return = workInProgress2, nextProps.sibling = suspenseInstance, workInProgress2.child = nextProps, reconcileChildFibers(workInProgress2, current3.child, null, renderLanes2), nextProps = workInProgress2.child, nextProps.memoizedState = mountSuspenseOffscreenState(renderLanes2), nextProps.childLanes = getRemainingWorkInPrimaryTree(
+            current3,
             didPrimaryChildrenDefer,
             renderLanes2
           ), workInProgress2.memoizedState = SUSPENDED_MARKER, bailoutOffscreenComponent(null, nextProps));
         if (pushPrimaryTreeSuspenseHandler(workInProgress2), isSuspenseInstanceFallback(suspenseInstance)) {
           if (didPrimaryChildrenDefer = suspenseInstance.nextSibling && suspenseInstance.nextSibling.dataset, didPrimaryChildrenDefer) var digest = didPrimaryChildrenDefer.dgst;
           return didPrimaryChildrenDefer = digest, didPrimaryChildrenDefer !== "" && (nextProps = Error(formatProdErrorMessage(419)), nextProps.stack = "", nextProps.digest = didPrimaryChildrenDefer, queueHydrationError({ value: nextProps, source: null, stack: null })), retrySuspenseComponentWithoutHydrating(
-            current2,
+            current3,
             workInProgress2,
             renderLanes2
           );
         }
-        if (didReceiveUpdate || propagateParentContextChanges(current2, workInProgress2, renderLanes2, !1), didPrimaryChildrenDefer = (renderLanes2 & current2.childLanes) !== 0, didReceiveUpdate || didPrimaryChildrenDefer) {
+        if (didReceiveUpdate || propagateParentContextChanges(current3, workInProgress2, renderLanes2, !1), didPrimaryChildrenDefer = (renderLanes2 & current3.childLanes) !== 0, didReceiveUpdate || didPrimaryChildrenDefer) {
           if (currentTreeHiddenStackCursor.current !== null)
             return retrySuspenseComponentWithoutHydrating(
-              current2,
+              current3,
               workInProgress2,
               renderLanes2
             );
@@ -5284,14 +5284,14 @@ Error generating stack: ` + x.message + `
             didPrimaryChildrenDefer,
             renderLanes2
           ), nextProps !== 0 && nextProps !== suspenseState.retryLane))
-            throw suspenseState.retryLane = nextProps, enqueueConcurrentRenderForLane(current2, nextProps), scheduleUpdateOnFiber(didPrimaryChildrenDefer, current2, nextProps), SelectiveHydrationException;
+            throw suspenseState.retryLane = nextProps, enqueueConcurrentRenderForLane(current3, nextProps), scheduleUpdateOnFiber(didPrimaryChildrenDefer, current3, nextProps), SelectiveHydrationException;
           return isSuspenseInstancePending(suspenseInstance) || renderDidSuspendDelayIfPossible(), retrySuspenseComponentWithoutHydrating(
-            current2,
+            current3,
             workInProgress2,
             renderLanes2
           );
         }
-        return isSuspenseInstancePending(suspenseInstance) ? (workInProgress2.flags |= 192, workInProgress2.child = current2.child, null) : (current2 = suspenseState.treeContext, nextHydratableInstance = getNextHydratable(suspenseInstance.nextSibling), hydrationParentFiber = workInProgress2, isHydrating = !0, hydrationErrors = null, rootOrSingletonContext = !1, current2 !== null && restoreSuspendedTreeContext(workInProgress2, current2), workInProgress2 = mountSuspensePrimaryChildren(
+        return isSuspenseInstancePending(suspenseInstance) ? (workInProgress2.flags |= 192, workInProgress2.child = current3.child, null) : (current3 = suspenseState.treeContext, nextHydratableInstance = getNextHydratable(suspenseInstance.nextSibling), hydrationParentFiber = workInProgress2, isHydrating = !0, hydrationErrors = null, rootOrSingletonContext = !1, current3 !== null && restoreSuspendedTreeContext(workInProgress2, current3), workInProgress2 = mountSuspensePrimaryChildren(
           workInProgress2,
           nextProps.children
         ), workInProgress2.flags |= 134221824, workInProgress2);
@@ -5327,30 +5327,30 @@ Error generating stack: ` + x.message + `
           row.sibling = fiber.child, fiber.child = row, row = nextRow;
         }
       }
-      function updateSuspenseListComponent(current2, workInProgress2, renderLanes2) {
+      function updateSuspenseListComponent(current3, workInProgress2, renderLanes2) {
         var nextProps = workInProgress2.pendingProps, revealOrder = nextProps.revealOrder, tailMode = nextProps.tail;
         nextProps = nextProps.children;
         var suspenseContext = suspenseStackCursor.current;
         if (workInProgress2.flags & 128)
           return pushSuspenseListContext(workInProgress2, suspenseContext), null;
         var shouldForceFallback = (suspenseContext & 2) !== 0;
-        if (shouldForceFallback ? (suspenseContext = suspenseContext & 1 | 2, workInProgress2.flags |= 128) : suspenseContext &= 1, pushSuspenseListContext(workInProgress2, suspenseContext), revealOrder === "backwards" && current2 !== null ? (reverseChildren(current2), reconcileChildren(current2, workInProgress2, nextProps, renderLanes2), reverseChildren(current2)) : reconcileChildren(current2, workInProgress2, nextProps, renderLanes2), nextProps = isHydrating ? treeForkCount : 0, !shouldForceFallback && current2 !== null && (current2.flags & 128) !== 0)
-          a: for (current2 = workInProgress2.child; current2 !== null; ) {
-            if (current2.tag === 13)
-              current2.memoizedState !== null && scheduleSuspenseWorkOnFiber(current2, renderLanes2, workInProgress2);
-            else if (current2.tag === 19)
-              scheduleSuspenseWorkOnFiber(current2, renderLanes2, workInProgress2);
-            else if (current2.child !== null) {
-              current2.child.return = current2, current2 = current2.child;
+        if (shouldForceFallback ? (suspenseContext = suspenseContext & 1 | 2, workInProgress2.flags |= 128) : suspenseContext &= 1, pushSuspenseListContext(workInProgress2, suspenseContext), revealOrder === "backwards" && current3 !== null ? (reverseChildren(current3), reconcileChildren(current3, workInProgress2, nextProps, renderLanes2), reverseChildren(current3)) : reconcileChildren(current3, workInProgress2, nextProps, renderLanes2), nextProps = isHydrating ? treeForkCount : 0, !shouldForceFallback && current3 !== null && (current3.flags & 128) !== 0)
+          a: for (current3 = workInProgress2.child; current3 !== null; ) {
+            if (current3.tag === 13)
+              current3.memoizedState !== null && scheduleSuspenseWorkOnFiber(current3, renderLanes2, workInProgress2);
+            else if (current3.tag === 19)
+              scheduleSuspenseWorkOnFiber(current3, renderLanes2, workInProgress2);
+            else if (current3.child !== null) {
+              current3.child.return = current3, current3 = current3.child;
               continue;
             }
-            if (current2 === workInProgress2) break a;
-            for (; current2.sibling === null; ) {
-              if (current2.return === null || current2.return === workInProgress2)
+            if (current3 === workInProgress2) break a;
+            for (; current3.sibling === null; ) {
+              if (current3.return === null || current3.return === workInProgress2)
                 break a;
-              current2 = current2.return;
+              current3 = current3.return;
             }
-            current2.sibling.return = current2.return, current2 = current2.sibling;
+            current3.sibling.return = current3.return, current3 = current3.sibling;
           }
         switch (revealOrder) {
           case "backwards":
@@ -5365,11 +5365,11 @@ Error generating stack: ` + x.message + `
             break;
           case "unstable_legacy-backwards":
             for (renderLanes2 = null, revealOrder = workInProgress2.child, workInProgress2.child = null; revealOrder !== null; ) {
-              if (current2 = revealOrder.alternate, current2 !== null && findFirstSuspended(current2) === null) {
+              if (current3 = revealOrder.alternate, current3 !== null && findFirstSuspended(current3) === null) {
                 workInProgress2.child = revealOrder;
                 break;
               }
-              current2 = revealOrder.sibling, revealOrder.sibling = renderLanes2, renderLanes2 = revealOrder, revealOrder = current2;
+              current3 = revealOrder.sibling, revealOrder.sibling = renderLanes2, renderLanes2 = revealOrder, revealOrder = current3;
             }
             initSuspenseListRenderState(
               workInProgress2,
@@ -5405,37 +5405,37 @@ Error generating stack: ` + x.message + `
         }
         return workInProgress2.child;
       }
-      function updateContextProvider(current2, workInProgress2, renderLanes2) {
+      function updateContextProvider(current3, workInProgress2, renderLanes2) {
         var newProps = workInProgress2.pendingProps;
-        return pushProvider(workInProgress2, workInProgress2.type, newProps.value), reconcileChildren(current2, workInProgress2, newProps.children, renderLanes2), workInProgress2.child;
+        return pushProvider(workInProgress2, workInProgress2.type, newProps.value), reconcileChildren(current3, workInProgress2, newProps.children, renderLanes2), workInProgress2.child;
       }
-      function bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2) {
-        if (current2 !== null && (workInProgress2.dependencies = current2.dependencies), workInProgressRootSkippedLanes |= workInProgress2.lanes, (renderLanes2 & workInProgress2.childLanes) === 0)
-          if (current2 !== null) {
+      function bailoutOnAlreadyFinishedWork(current3, workInProgress2, renderLanes2) {
+        if (current3 !== null && (workInProgress2.dependencies = current3.dependencies), workInProgressRootSkippedLanes |= workInProgress2.lanes, (renderLanes2 & workInProgress2.childLanes) === 0)
+          if (current3 !== null) {
             if (propagateParentContextChanges(
-              current2,
+              current3,
               workInProgress2,
               renderLanes2,
               !1
             ), (renderLanes2 & workInProgress2.childLanes) === 0)
               return null;
           } else return null;
-        if (current2 !== null && workInProgress2.child !== current2.child)
+        if (current3 !== null && workInProgress2.child !== current3.child)
           throw Error(formatProdErrorMessage(153));
         if (workInProgress2.child !== null) {
-          for (current2 = workInProgress2.child, renderLanes2 = createWorkInProgress(current2, current2.pendingProps), workInProgress2.child = renderLanes2, renderLanes2.return = workInProgress2; current2.sibling !== null; )
-            current2 = current2.sibling, renderLanes2 = renderLanes2.sibling = createWorkInProgress(current2, current2.pendingProps), renderLanes2.return = workInProgress2;
+          for (current3 = workInProgress2.child, renderLanes2 = createWorkInProgress(current3, current3.pendingProps), workInProgress2.child = renderLanes2, renderLanes2.return = workInProgress2; current3.sibling !== null; )
+            current3 = current3.sibling, renderLanes2 = renderLanes2.sibling = createWorkInProgress(current3, current3.pendingProps), renderLanes2.return = workInProgress2;
           renderLanes2.sibling = null;
         }
         return workInProgress2.child;
       }
-      function checkScheduledUpdateOrContext(current2, renderLanes2) {
-        return (current2.lanes & renderLanes2) !== 0 ? !0 : (current2 = current2.dependencies, !!(current2 !== null && checkIfContextChanged(current2)));
+      function checkScheduledUpdateOrContext(current3, renderLanes2) {
+        return (current3.lanes & renderLanes2) !== 0 ? !0 : (current3 = current3.dependencies, !!(current3 !== null && checkIfContextChanged(current3)));
       }
-      function attemptEarlyBailoutIfNoScheduledUpdate(current2, workInProgress2, renderLanes2) {
+      function attemptEarlyBailoutIfNoScheduledUpdate(current3, workInProgress2, renderLanes2) {
         switch (workInProgress2.tag) {
           case 3:
-            pushHostContainer(workInProgress2, workInProgress2.stateNode.containerInfo), pushProvider(workInProgress2, CacheContext, current2.memoizedState.cache), resetHydrationState();
+            pushHostContainer(workInProgress2, workInProgress2.stateNode.containerInfo), pushProvider(workInProgress2, CacheContext, current3.memoizedState.cache), resetHydrationState();
             break;
           case 27:
           case 5:
@@ -5461,36 +5461,36 @@ Error generating stack: ` + x.message + `
               if (state$108.dehydrated !== null)
                 return pushPrimaryTreeSuspenseHandler(workInProgress2), workInProgress2.flags |= 128, null;
               state$108 = propagateParentContextChanges(
-                current2,
+                current3,
                 workInProgress2,
                 renderLanes2,
                 !1
               );
               var primaryChildLanes = workInProgress2.child.childLanes;
-              return state$108 || (renderLanes2 & primaryChildLanes) !== 0 ? updateSuspenseComponent(current2, workInProgress2, renderLanes2) : (pushPrimaryTreeSuspenseHandler(workInProgress2), current2 = bailoutOnAlreadyFinishedWork(
-                current2,
+              return state$108 || (renderLanes2 & primaryChildLanes) !== 0 ? updateSuspenseComponent(current3, workInProgress2, renderLanes2) : (pushPrimaryTreeSuspenseHandler(workInProgress2), current3 = bailoutOnAlreadyFinishedWork(
+                current3,
                 workInProgress2,
                 renderLanes2
-              ), current2 !== null ? current2.sibling : null);
+              ), current3 !== null ? current3.sibling : null);
             }
             pushPrimaryTreeSuspenseHandler(workInProgress2);
             break;
           case 19:
             if (workInProgress2.flags & 128)
               return updateSuspenseListComponent(
-                current2,
+                current3,
                 workInProgress2,
                 renderLanes2
               );
-            if (primaryChildLanes = (current2.flags & 128) !== 0, state$108 = (renderLanes2 & workInProgress2.childLanes) !== 0, state$108 || (propagateParentContextChanges(
-              current2,
+            if (primaryChildLanes = (current3.flags & 128) !== 0, state$108 = (renderLanes2 & workInProgress2.childLanes) !== 0, state$108 || (propagateParentContextChanges(
+              current3,
               workInProgress2,
               renderLanes2,
               !1
             ), state$108 = (renderLanes2 & workInProgress2.childLanes) !== 0), primaryChildLanes) {
               if (state$108)
                 return updateSuspenseListComponent(
-                  current2,
+                  current3,
                   workInProgress2,
                   renderLanes2
                 );
@@ -5500,28 +5500,28 @@ Error generating stack: ` + x.message + `
             return null;
           case 22:
             return workInProgress2.lanes = 0, updateOffscreenComponent(
-              current2,
+              current3,
               workInProgress2,
               renderLanes2,
               workInProgress2.pendingProps
             );
           case 24:
-            pushProvider(workInProgress2, CacheContext, current2.memoizedState.cache);
+            pushProvider(workInProgress2, CacheContext, current3.memoizedState.cache);
         }
-        return bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2);
+        return bailoutOnAlreadyFinishedWork(current3, workInProgress2, renderLanes2);
       }
-      function beginWork(current2, workInProgress2, renderLanes2) {
-        if (current2 !== null)
-          if (current2.memoizedProps !== workInProgress2.pendingProps)
+      function beginWork(current3, workInProgress2, renderLanes2) {
+        if (current3 !== null)
+          if (current3.memoizedProps !== workInProgress2.pendingProps)
             didReceiveUpdate = !0;
           else {
-            if (!checkScheduledUpdateOrContext(current2, renderLanes2) && (workInProgress2.flags & 128) === 0)
+            if (!checkScheduledUpdateOrContext(current3, renderLanes2) && (workInProgress2.flags & 128) === 0)
               return didReceiveUpdate = !1, attemptEarlyBailoutIfNoScheduledUpdate(
-                current2,
+                current3,
                 workInProgress2,
                 renderLanes2
               );
-            didReceiveUpdate = (current2.flags & 131072) !== 0;
+            didReceiveUpdate = (current3.flags & 131072) !== 0;
           }
         else
           didReceiveUpdate = !1, isHydrating && (workInProgress2.flags & 1048576) !== 0 && pushTreeId(workInProgress2, treeForkCount, workInProgress2.index);
@@ -5529,28 +5529,28 @@ Error generating stack: ` + x.message + `
           case 16:
             a: {
               var props = workInProgress2.pendingProps;
-              if (current2 = resolveLazy(workInProgress2.elementType), workInProgress2.type = current2, typeof current2 == "function")
-                shouldConstruct(current2) ? (props = resolveClassComponentProps(current2, props), workInProgress2.tag = 1, workInProgress2 = updateClassComponent(
+              if (current3 = resolveLazy(workInProgress2.elementType), workInProgress2.type = current3, typeof current3 == "function")
+                shouldConstruct(current3) ? (props = resolveClassComponentProps(current3, props), workInProgress2.tag = 1, workInProgress2 = updateClassComponent(
                   null,
                   workInProgress2,
-                  current2,
+                  current3,
                   props,
                   renderLanes2
                 )) : (workInProgress2.tag = 0, workInProgress2 = updateFunctionComponent(
                   null,
                   workInProgress2,
-                  current2,
+                  current3,
                   props,
                   renderLanes2
                 ));
               else {
-                if (current2 != null) {
-                  var $$typeof = current2.$$typeof;
+                if (current3 != null) {
+                  var $$typeof = current3.$$typeof;
                   if ($$typeof === REACT_FORWARD_REF_TYPE) {
                     workInProgress2.tag = 11, workInProgress2 = updateForwardRef(
                       null,
                       workInProgress2,
-                      current2,
+                      current3,
                       props,
                       renderLanes2
                     );
@@ -5559,13 +5559,13 @@ Error generating stack: ` + x.message + `
                     workInProgress2.tag = 14, workInProgress2 = updateMemoComponent(
                       null,
                       workInProgress2,
-                      current2,
+                      current3,
                       props,
                       renderLanes2
                     );
                     break a;
                   } else if ($$typeof === REACT_CONTEXT_TYPE) {
-                    workInProgress2.tag = 10, workInProgress2.type = current2, workInProgress2 = updateContextProvider(
+                    workInProgress2.tag = 10, workInProgress2.type = current3, workInProgress2 = updateContextProvider(
                       null,
                       workInProgress2,
                       renderLanes2
@@ -5573,13 +5573,13 @@ Error generating stack: ` + x.message + `
                     break a;
                   }
                 }
-                throw workInProgress2 = getComponentNameFromType(current2) || current2, Error(formatProdErrorMessage(306, workInProgress2, ""));
+                throw workInProgress2 = getComponentNameFromType(current3) || current3, Error(formatProdErrorMessage(306, workInProgress2, ""));
               }
             }
             return workInProgress2;
           case 0:
             return updateFunctionComponent(
-              current2,
+              current3,
               workInProgress2,
               workInProgress2.type,
               workInProgress2.pendingProps,
@@ -5590,7 +5590,7 @@ Error generating stack: ` + x.message + `
               props,
               workInProgress2.pendingProps
             ), updateClassComponent(
-              current2,
+              current3,
               workInProgress2,
               props,
               $$typeof,
@@ -5601,10 +5601,10 @@ Error generating stack: ` + x.message + `
               if (pushHostContainer(
                 workInProgress2,
                 workInProgress2.stateNode.containerInfo
-              ), current2 === null) throw Error(formatProdErrorMessage(387));
+              ), current3 === null) throw Error(formatProdErrorMessage(387));
               props = workInProgress2.pendingProps;
               var prevState = workInProgress2.memoizedState;
-              $$typeof = prevState.element, cloneUpdateQueue(current2, workInProgress2), processUpdateQueue(workInProgress2, props, null, renderLanes2);
+              $$typeof = prevState.element, cloneUpdateQueue(current3, workInProgress2), processUpdateQueue(workInProgress2, props, null, renderLanes2);
               var nextState = workInProgress2.memoizedState;
               if (props = nextState.cache, pushProvider(workInProgress2, CacheContext, props), props !== prevState.cache && propagateContextChanges(
                 workInProgress2,
@@ -5618,7 +5618,7 @@ Error generating stack: ` + x.message + `
                   cache: nextState.cache
                 }, workInProgress2.updateQueue.baseState = prevState, workInProgress2.memoizedState = prevState, workInProgress2.flags & 256) {
                   workInProgress2 = mountHostRootWithoutHydrating(
-                    current2,
+                    current3,
                     workInProgress2,
                     props,
                     renderLanes2
@@ -5629,14 +5629,14 @@ Error generating stack: ` + x.message + `
                     Error(formatProdErrorMessage(424)),
                     workInProgress2
                   ), queueHydrationError($$typeof), workInProgress2 = mountHostRootWithoutHydrating(
-                    current2,
+                    current3,
                     workInProgress2,
                     props,
                     renderLanes2
                   );
                   break a;
                 } else
-                  for (current2 = workInProgress2.stateNode.containerInfo, current2.nodeType === 9 ? current2 = current2.body : current2 = current2.nodeName === "HTML" ? current2.ownerDocument.body : current2, nextHydratableInstance = getNextHydratable(current2.firstChild), hydrationParentFiber = workInProgress2, isHydrating = !0, hydrationErrors = null, rootOrSingletonContext = !0, renderLanes2 = mountChildFibers(
+                  for (current3 = workInProgress2.stateNode.containerInfo, current3.nodeType === 9 ? current3 = current3.body : current3 = current3.nodeName === "HTML" ? current3.ownerDocument.body : current3, nextHydratableInstance = getNextHydratable(current3.firstChild), hydrationParentFiber = workInProgress2, isHydrating = !0, hydrationErrors = null, rootOrSingletonContext = !0, renderLanes2 = mountChildFibers(
                     workInProgress2,
                     null,
                     props,
@@ -5646,19 +5646,19 @@ Error generating stack: ` + x.message + `
               else {
                 if (resetHydrationState(), props === $$typeof) {
                   workInProgress2 = bailoutOnAlreadyFinishedWork(
-                    current2,
+                    current3,
                     workInProgress2,
                     renderLanes2
                   );
                   break a;
                 }
-                reconcileChildren(current2, workInProgress2, props, renderLanes2);
+                reconcileChildren(current3, workInProgress2, props, renderLanes2);
               }
               workInProgress2 = workInProgress2.child;
             }
             return workInProgress2;
           case 26:
-            return markRef(current2, workInProgress2), current2 === null ? (renderLanes2 = getResource(
+            return markRef(current3, workInProgress2), current3 === null ? (renderLanes2 = getResource(
               workInProgress2.type,
               null,
               workInProgress2.pendingProps,
@@ -5670,84 +5670,84 @@ Error generating stack: ` + x.message + `
               workInProgress2
             )) : workInProgress2.memoizedState = getResource(
               workInProgress2.type,
-              current2.memoizedProps,
+              current3.memoizedProps,
               workInProgress2.pendingProps,
-              current2.memoizedState
+              current3.memoizedState
             ), null;
           case 27:
-            return pushHostContext(workInProgress2), current2 === null && isHydrating && (props = workInProgress2.stateNode = resolveSingletonInstance(
+            return pushHostContext(workInProgress2), current3 === null && isHydrating && (props = workInProgress2.stateNode = resolveSingletonInstance(
               workInProgress2.type,
               workInProgress2.pendingProps,
               rootInstanceStackCursor.current
             ), hydrationParentFiber = workInProgress2, rootOrSingletonContext = !0, $$typeof = nextHydratableInstance, isSingletonScope(workInProgress2.type) ? (previousHydratableOnEnteringScopedSingleton = $$typeof, nextHydratableInstance = getNextHydratable(props.firstChild)) : nextHydratableInstance = $$typeof), reconcileChildren(
-              current2,
+              current3,
               workInProgress2,
               workInProgress2.pendingProps.children,
               renderLanes2
-            ), markRef(current2, workInProgress2), current2 === null && (workInProgress2.flags |= 4194304), workInProgress2.child;
+            ), markRef(current3, workInProgress2), current3 === null && (workInProgress2.flags |= 4194304), workInProgress2.child;
           case 5:
-            return current2 === null && isHydrating && (($$typeof = props = nextHydratableInstance) && (props = canHydrateInstance(
+            return current3 === null && isHydrating && (($$typeof = props = nextHydratableInstance) && (props = canHydrateInstance(
               props,
               workInProgress2.type,
               workInProgress2.pendingProps,
               rootOrSingletonContext
-            ), props !== null ? (workInProgress2.stateNode = props, hydrationParentFiber = workInProgress2, nextHydratableInstance = getNextHydratable(props.firstChild), rootOrSingletonContext = !1, $$typeof = !0) : $$typeof = !1), $$typeof || throwOnHydrationMismatch(workInProgress2)), pushHostContext(workInProgress2), $$typeof = workInProgress2.type, prevState = workInProgress2.pendingProps, nextState = current2 !== null ? current2.memoizedProps : null, props = prevState.children, shouldSetTextContent($$typeof, prevState) ? props = null : nextState !== null && shouldSetTextContent($$typeof, nextState) && (workInProgress2.flags |= 32), workInProgress2.memoizedState !== null && ($$typeof = renderWithHooks(
-              current2,
+            ), props !== null ? (workInProgress2.stateNode = props, hydrationParentFiber = workInProgress2, nextHydratableInstance = getNextHydratable(props.firstChild), rootOrSingletonContext = !1, $$typeof = !0) : $$typeof = !1), $$typeof || throwOnHydrationMismatch(workInProgress2)), pushHostContext(workInProgress2), $$typeof = workInProgress2.type, prevState = workInProgress2.pendingProps, nextState = current3 !== null ? current3.memoizedProps : null, props = prevState.children, shouldSetTextContent($$typeof, prevState) ? props = null : nextState !== null && shouldSetTextContent($$typeof, nextState) && (workInProgress2.flags |= 32), workInProgress2.memoizedState !== null && ($$typeof = renderWithHooks(
+              current3,
               workInProgress2,
               TransitionAwareHostComponent,
               null,
               null,
               renderLanes2
-            ), HostTransitionContext._currentValue = $$typeof), markRef(current2, workInProgress2), reconcileChildren(current2, workInProgress2, props, renderLanes2), workInProgress2.child;
+            ), HostTransitionContext._currentValue = $$typeof), markRef(current3, workInProgress2), reconcileChildren(current3, workInProgress2, props, renderLanes2), workInProgress2.child;
           case 6:
-            return current2 === null && isHydrating && ((current2 = renderLanes2 = nextHydratableInstance) && (renderLanes2 = canHydrateTextInstance(
+            return current3 === null && isHydrating && ((current3 = renderLanes2 = nextHydratableInstance) && (renderLanes2 = canHydrateTextInstance(
               renderLanes2,
               workInProgress2.pendingProps,
               rootOrSingletonContext
-            ), renderLanes2 !== null ? (workInProgress2.stateNode = renderLanes2, hydrationParentFiber = workInProgress2, nextHydratableInstance = null, current2 = !0) : current2 = !1), current2 || throwOnHydrationMismatch(workInProgress2)), null;
+            ), renderLanes2 !== null ? (workInProgress2.stateNode = renderLanes2, hydrationParentFiber = workInProgress2, nextHydratableInstance = null, current3 = !0) : current3 = !1), current3 || throwOnHydrationMismatch(workInProgress2)), null;
           case 13:
-            return updateSuspenseComponent(current2, workInProgress2, renderLanes2);
+            return updateSuspenseComponent(current3, workInProgress2, renderLanes2);
           case 4:
             return pushHostContainer(
               workInProgress2,
               workInProgress2.stateNode.containerInfo
-            ), props = workInProgress2.pendingProps, current2 === null ? workInProgress2.child = reconcileChildFibers(
+            ), props = workInProgress2.pendingProps, current3 === null ? workInProgress2.child = reconcileChildFibers(
               workInProgress2,
               null,
               props,
               renderLanes2
-            ) : reconcileChildren(current2, workInProgress2, props, renderLanes2), workInProgress2.child;
+            ) : reconcileChildren(current3, workInProgress2, props, renderLanes2), workInProgress2.child;
           case 11:
             return updateForwardRef(
-              current2,
+              current3,
               workInProgress2,
               workInProgress2.type,
               workInProgress2.pendingProps,
               renderLanes2
             );
           case 7:
-            return props = workInProgress2.pendingProps, markRef(current2, workInProgress2), reconcileChildren(current2, workInProgress2, props, renderLanes2), workInProgress2.child;
+            return props = workInProgress2.pendingProps, markRef(current3, workInProgress2), reconcileChildren(current3, workInProgress2, props, renderLanes2), workInProgress2.child;
           case 8:
             return reconcileChildren(
-              current2,
+              current3,
               workInProgress2,
               workInProgress2.pendingProps.children,
               renderLanes2
             ), workInProgress2.child;
           case 12:
             return reconcileChildren(
-              current2,
+              current3,
               workInProgress2,
               workInProgress2.pendingProps.children,
               renderLanes2
             ), workInProgress2.child;
           case 10:
-            return updateContextProvider(current2, workInProgress2, renderLanes2);
+            return updateContextProvider(current3, workInProgress2, renderLanes2);
           case 9:
-            return $$typeof = workInProgress2.type._context, props = workInProgress2.pendingProps.children, prepareToReadContext(workInProgress2), $$typeof = readContext($$typeof), props = props($$typeof), workInProgress2.flags |= 1, reconcileChildren(current2, workInProgress2, props, renderLanes2), workInProgress2.child;
+            return $$typeof = workInProgress2.type._context, props = workInProgress2.pendingProps.children, prepareToReadContext(workInProgress2), $$typeof = readContext($$typeof), props = props($$typeof), workInProgress2.flags |= 1, reconcileChildren(current3, workInProgress2, props, renderLanes2), workInProgress2.child;
           case 14:
             return updateMemoComponent(
-              current2,
+              current3,
               workInProgress2,
               workInProgress2.type,
               workInProgress2.pendingProps,
@@ -5755,31 +5755,31 @@ Error generating stack: ` + x.message + `
             );
           case 15:
             return updateSimpleMemoComponent(
-              current2,
+              current3,
               workInProgress2,
               workInProgress2.type,
               workInProgress2.pendingProps,
               renderLanes2
             );
           case 19:
-            return updateSuspenseListComponent(current2, workInProgress2, renderLanes2);
+            return updateSuspenseListComponent(current3, workInProgress2, renderLanes2);
           case 31:
-            return updateActivityComponent(current2, workInProgress2, renderLanes2);
+            return updateActivityComponent(current3, workInProgress2, renderLanes2);
           case 22:
             return updateOffscreenComponent(
-              current2,
+              current3,
               workInProgress2,
               renderLanes2,
               workInProgress2.pendingProps
             );
           case 24:
-            return prepareToReadContext(workInProgress2), props = readContext(CacheContext), current2 === null ? ($$typeof = peekCacheFromPool(), $$typeof === null && ($$typeof = workInProgressRoot, prevState = createCache3(), $$typeof.pooledCache = prevState, prevState.refCount++, prevState !== null && ($$typeof.pooledCacheLanes |= renderLanes2), $$typeof = prevState), workInProgress2.memoizedState = { parent: props, cache: $$typeof }, initializeUpdateQueue(workInProgress2), pushProvider(workInProgress2, CacheContext, $$typeof)) : ((current2.lanes & renderLanes2) !== 0 && (cloneUpdateQueue(current2, workInProgress2), processUpdateQueue(workInProgress2, null, null, renderLanes2), suspendIfUpdateReadFromEntangledAsyncAction()), $$typeof = current2.memoizedState, prevState = workInProgress2.memoizedState, $$typeof.parent !== props ? ($$typeof = { parent: props, cache: props }, workInProgress2.memoizedState = $$typeof, workInProgress2.lanes === 0 && (workInProgress2.memoizedState = workInProgress2.updateQueue.baseState = $$typeof), pushProvider(workInProgress2, CacheContext, props)) : (props = prevState.cache, pushProvider(workInProgress2, CacheContext, props), props !== $$typeof.cache && propagateContextChanges(
+            return prepareToReadContext(workInProgress2), props = readContext(CacheContext), current3 === null ? ($$typeof = peekCacheFromPool(), $$typeof === null && ($$typeof = workInProgressRoot, prevState = createCache3(), $$typeof.pooledCache = prevState, prevState.refCount++, prevState !== null && ($$typeof.pooledCacheLanes |= renderLanes2), $$typeof = prevState), workInProgress2.memoizedState = { parent: props, cache: $$typeof }, initializeUpdateQueue(workInProgress2), pushProvider(workInProgress2, CacheContext, $$typeof)) : ((current3.lanes & renderLanes2) !== 0 && (cloneUpdateQueue(current3, workInProgress2), processUpdateQueue(workInProgress2, null, null, renderLanes2), suspendIfUpdateReadFromEntangledAsyncAction()), $$typeof = current3.memoizedState, prevState = workInProgress2.memoizedState, $$typeof.parent !== props ? ($$typeof = { parent: props, cache: props }, workInProgress2.memoizedState = $$typeof, workInProgress2.lanes === 0 && (workInProgress2.memoizedState = workInProgress2.updateQueue.baseState = $$typeof), pushProvider(workInProgress2, CacheContext, props)) : (props = prevState.cache, pushProvider(workInProgress2, CacheContext, props), props !== $$typeof.cache && propagateContextChanges(
               workInProgress2,
               [CacheContext],
               renderLanes2,
               !0
             ))), reconcileChildren(
-              current2,
+              current3,
               workInProgress2,
               workInProgress2.pendingProps.children,
               renderLanes2
@@ -5790,7 +5790,7 @@ Error generating stack: ` + x.message + `
               paired: null,
               clones: null,
               ref: null
-            }), props = workInProgress2.pendingProps, props.name != null && props.name !== "auto" ? workInProgress2.flags |= current2 === null ? 18882560 : 18874368 : isHydrating && pushMaterializedTreeId(workInProgress2), current2 !== null && current2.memoizedProps.name !== props.name ? workInProgress2.flags |= 4194816 : markRef(current2, workInProgress2), reconcileChildren(current2, workInProgress2, props.children, renderLanes2), workInProgress2.child;
+            }), props = workInProgress2.pendingProps, props.name != null && props.name !== "auto" ? workInProgress2.flags |= current3 === null ? 18882560 : 18874368 : isHydrating && pushMaterializedTreeId(workInProgress2), current3 !== null && current3.memoizedProps.name !== props.name ? workInProgress2.flags |= 4194816 : markRef(current3, workInProgress2), reconcileChildren(current3, workInProgress2, props.children, renderLanes2), workInProgress2.child;
           case 29:
             throw workInProgress2.pendingProps;
         }
@@ -5846,7 +5846,7 @@ Error generating stack: ` + x.message + `
             newChildLanes |= child$113.lanes | child$113.childLanes, subtreeFlags |= child$113.subtreeFlags, subtreeFlags |= child$113.flags, child$113.return = completedWork, child$113 = child$113.sibling;
         return completedWork.subtreeFlags |= subtreeFlags, completedWork.childLanes = newChildLanes, didBailout;
       }
-      function completeWork(current2, workInProgress2, renderLanes2) {
+      function completeWork(current3, workInProgress2, renderLanes2) {
         var newProps = workInProgress2.pendingProps;
         switch (popTreeContext(workInProgress2), workInProgress2.tag) {
           case 16:
@@ -5862,37 +5862,37 @@ Error generating stack: ` + x.message + `
           case 1:
             return bubbleProperties(workInProgress2), null;
           case 3:
-            return renderLanes2 = workInProgress2.stateNode, newProps = null, current2 !== null && (newProps = current2.memoizedState.cache), workInProgress2.memoizedState.cache !== newProps && (workInProgress2.flags |= 2048), popProvider(CacheContext), popHostContainer(), renderLanes2.pendingContext && (renderLanes2.context = renderLanes2.pendingContext, renderLanes2.pendingContext = null), (current2 === null || current2.child === null) && (popHydrationState(workInProgress2) ? markUpdate(workInProgress2) : current2 === null || current2.memoizedState.isDehydrated && (workInProgress2.flags & 256) === 0 || (workInProgress2.flags |= 1024, upgradeHydrationErrorsToRecoverable())), bubbleProperties(workInProgress2), null;
+            return renderLanes2 = workInProgress2.stateNode, newProps = null, current3 !== null && (newProps = current3.memoizedState.cache), workInProgress2.memoizedState.cache !== newProps && (workInProgress2.flags |= 2048), popProvider(CacheContext), popHostContainer(), renderLanes2.pendingContext && (renderLanes2.context = renderLanes2.pendingContext, renderLanes2.pendingContext = null), (current3 === null || current3.child === null) && (popHydrationState(workInProgress2) ? markUpdate(workInProgress2) : current3 === null || current3.memoizedState.isDehydrated && (workInProgress2.flags & 256) === 0 || (workInProgress2.flags |= 1024, upgradeHydrationErrorsToRecoverable())), bubbleProperties(workInProgress2), null;
           case 26:
             var type = workInProgress2.type, nextResource = workInProgress2.memoizedState;
-            return current2 === null ? (markUpdate(workInProgress2), nextResource !== null ? (bubbleProperties(workInProgress2), preloadResourceAndSuspendIfNeeded(workInProgress2, nextResource)) : (bubbleProperties(workInProgress2), preloadInstanceAndSuspendIfNeeded(
+            return current3 === null ? (markUpdate(workInProgress2), nextResource !== null ? (bubbleProperties(workInProgress2), preloadResourceAndSuspendIfNeeded(workInProgress2, nextResource)) : (bubbleProperties(workInProgress2), preloadInstanceAndSuspendIfNeeded(
               workInProgress2,
               type,
               null,
               newProps,
               renderLanes2
-            ))) : nextResource ? nextResource !== current2.memoizedState ? (markUpdate(workInProgress2), bubbleProperties(workInProgress2), preloadResourceAndSuspendIfNeeded(workInProgress2, nextResource)) : (bubbleProperties(workInProgress2), workInProgress2.flags &= -16777217) : (current2 = current2.memoizedProps, current2 !== newProps && markUpdate(workInProgress2), bubbleProperties(workInProgress2), preloadInstanceAndSuspendIfNeeded(
+            ))) : nextResource ? nextResource !== current3.memoizedState ? (markUpdate(workInProgress2), bubbleProperties(workInProgress2), preloadResourceAndSuspendIfNeeded(workInProgress2, nextResource)) : (bubbleProperties(workInProgress2), workInProgress2.flags &= -16777217) : (current3 = current3.memoizedProps, current3 !== newProps && markUpdate(workInProgress2), bubbleProperties(workInProgress2), preloadInstanceAndSuspendIfNeeded(
               workInProgress2,
               type,
-              current2,
+              current3,
               newProps,
               renderLanes2
             )), null;
           case 27:
-            if (popHostContext(workInProgress2), renderLanes2 = rootInstanceStackCursor.current, type = workInProgress2.type, current2 !== null && workInProgress2.stateNode != null)
-              current2.memoizedProps !== newProps && markUpdate(workInProgress2);
+            if (popHostContext(workInProgress2), renderLanes2 = rootInstanceStackCursor.current, type = workInProgress2.type, current3 !== null && workInProgress2.stateNode != null)
+              current3.memoizedProps !== newProps && markUpdate(workInProgress2);
             else {
               if (!newProps) {
                 if (workInProgress2.stateNode === null)
                   throw Error(formatProdErrorMessage(166));
                 return bubbleProperties(workInProgress2), workInProgress2.subtreeFlags &= -33554433, null;
               }
-              current2 = contextStackCursor.current, popHydrationState(workInProgress2) ? prepareToHydrateHostInstance(workInProgress2, current2) : (current2 = resolveSingletonInstance(type, newProps, renderLanes2), workInProgress2.stateNode = current2, markUpdate(workInProgress2));
+              current3 = contextStackCursor.current, popHydrationState(workInProgress2) ? prepareToHydrateHostInstance(workInProgress2, current3) : (current3 = resolveSingletonInstance(type, newProps, renderLanes2), workInProgress2.stateNode = current3, markUpdate(workInProgress2));
             }
             return bubbleProperties(workInProgress2), workInProgress2.subtreeFlags &= -33554433, null;
           case 5:
-            if (popHostContext(workInProgress2), type = workInProgress2.type, current2 !== null && workInProgress2.stateNode != null)
-              current2.memoizedProps !== newProps && markUpdate(workInProgress2);
+            if (popHostContext(workInProgress2), type = workInProgress2.type, current3 !== null && workInProgress2.stateNode != null)
+              current3.memoizedProps !== newProps && markUpdate(workInProgress2);
             else {
               if (!newProps) {
                 if (workInProgress2.stateNode === null)
@@ -5982,52 +5982,52 @@ Error generating stack: ` + x.message + `
             return bubbleProperties(workInProgress2), workInProgress2.subtreeFlags &= -33554433, preloadInstanceAndSuspendIfNeeded(
               workInProgress2,
               workInProgress2.type,
-              current2 === null ? null : current2.memoizedProps,
+              current3 === null ? null : current3.memoizedProps,
               workInProgress2.pendingProps,
               renderLanes2
             ), null;
           case 6:
-            if (current2 && workInProgress2.stateNode != null)
-              current2.memoizedProps !== newProps && markUpdate(workInProgress2);
+            if (current3 && workInProgress2.stateNode != null)
+              current3.memoizedProps !== newProps && markUpdate(workInProgress2);
             else {
               if (typeof newProps != "string" && workInProgress2.stateNode === null)
                 throw Error(formatProdErrorMessage(166));
-              if (current2 = rootInstanceStackCursor.current, popHydrationState(workInProgress2)) {
-                if (current2 = workInProgress2.stateNode, renderLanes2 = workInProgress2.memoizedProps, newProps = null, type = hydrationParentFiber, type !== null)
+              if (current3 = rootInstanceStackCursor.current, popHydrationState(workInProgress2)) {
+                if (current3 = workInProgress2.stateNode, renderLanes2 = workInProgress2.memoizedProps, newProps = null, type = hydrationParentFiber, type !== null)
                   switch (type.tag) {
                     case 27:
                     case 5:
                       newProps = type.memoizedProps;
                   }
-                current2[internalInstanceKey] = workInProgress2, current2 = !!(current2.nodeValue === renderLanes2 || newProps !== null && newProps.suppressHydrationWarning === !0 || checkForUnmatchedText(current2.nodeValue, renderLanes2)), current2 || throwOnHydrationMismatch(workInProgress2, !0);
+                current3[internalInstanceKey] = workInProgress2, current3 = !!(current3.nodeValue === renderLanes2 || newProps !== null && newProps.suppressHydrationWarning === !0 || checkForUnmatchedText(current3.nodeValue, renderLanes2)), current3 || throwOnHydrationMismatch(workInProgress2, !0);
               } else
-                current2 = getOwnerDocumentFromRootContainer(current2).createTextNode(
+                current3 = getOwnerDocumentFromRootContainer(current3).createTextNode(
                   newProps
-                ), current2[internalInstanceKey] = workInProgress2, workInProgress2.stateNode = current2;
+                ), current3[internalInstanceKey] = workInProgress2, workInProgress2.stateNode = current3;
             }
             return bubbleProperties(workInProgress2), null;
           case 31:
-            if (renderLanes2 = workInProgress2.memoizedState, current2 === null || current2.memoizedState !== null) {
+            if (renderLanes2 = workInProgress2.memoizedState, current3 === null || current3.memoizedState !== null) {
               if (newProps = popHydrationState(workInProgress2), renderLanes2 !== null) {
-                if (current2 === null) {
+                if (current3 === null) {
                   if (!newProps) throw Error(formatProdErrorMessage(318));
-                  if (current2 = workInProgress2.memoizedState, current2 = current2 !== null ? current2.dehydrated : null, !current2) throw Error(formatProdErrorMessage(557));
-                  current2[internalInstanceKey] = workInProgress2;
+                  if (current3 = workInProgress2.memoizedState, current3 = current3 !== null ? current3.dehydrated : null, !current3) throw Error(formatProdErrorMessage(557));
+                  current3[internalInstanceKey] = workInProgress2;
                 } else
                   resetHydrationState(), (workInProgress2.flags & 128) === 0 && (workInProgress2.memoizedState = null), workInProgress2.flags |= 4;
-                bubbleProperties(workInProgress2), current2 = !1;
+                bubbleProperties(workInProgress2), current3 = !1;
               } else
-                renderLanes2 = upgradeHydrationErrorsToRecoverable(), current2 !== null && current2.memoizedState !== null && (current2.memoizedState.hydrationErrors = renderLanes2), current2 = !0;
-              if (!current2)
+                renderLanes2 = upgradeHydrationErrorsToRecoverable(), current3 !== null && current3.memoizedState !== null && (current3.memoizedState.hydrationErrors = renderLanes2), current3 = !0;
+              if (!current3)
                 return workInProgress2.flags & 256 ? (popSuspenseHandler(workInProgress2), workInProgress2) : (popSuspenseHandler(workInProgress2), null);
               if ((workInProgress2.flags & 128) !== 0)
                 throw Error(formatProdErrorMessage(558));
             }
             return bubbleProperties(workInProgress2), null;
           case 13:
-            if (newProps = workInProgress2.memoizedState, current2 === null || current2.memoizedState !== null && current2.memoizedState.dehydrated !== null) {
+            if (newProps = workInProgress2.memoizedState, current3 === null || current3.memoizedState !== null && current3.memoizedState.dehydrated !== null) {
               if (type = popHydrationState(workInProgress2), newProps !== null && newProps.dehydrated !== null) {
-                if (current2 === null) {
+                if (current3 === null) {
                   if (!type) throw Error(formatProdErrorMessage(318));
                   if (type = workInProgress2.memoizedState, type = type !== null ? type.dehydrated : null, !type) throw Error(formatProdErrorMessage(317));
                   type[internalInstanceKey] = workInProgress2;
@@ -6035,13 +6035,13 @@ Error generating stack: ` + x.message + `
                   resetHydrationState(), (workInProgress2.flags & 128) === 0 && (workInProgress2.memoizedState = null), workInProgress2.flags |= 4;
                 bubbleProperties(workInProgress2), type = !1;
               } else
-                type = upgradeHydrationErrorsToRecoverable(), current2 !== null && current2.memoizedState !== null && (current2.memoizedState.hydrationErrors = type), type = !0;
+                type = upgradeHydrationErrorsToRecoverable(), current3 !== null && current3.memoizedState !== null && (current3.memoizedState.hydrationErrors = type), type = !0;
               if (!type)
                 return workInProgress2.flags & 256 ? (popSuspenseHandler(workInProgress2), workInProgress2) : (popSuspenseHandler(workInProgress2), null);
             }
-            return popSuspenseHandler(workInProgress2), (workInProgress2.flags & 128) !== 0 ? (workInProgress2.lanes = renderLanes2, workInProgress2) : (renderLanes2 = newProps !== null, current2 = current2 !== null && current2.memoizedState !== null, renderLanes2 && (newProps = workInProgress2.child, type = null, newProps.alternate !== null && newProps.alternate.memoizedState !== null && newProps.alternate.memoizedState.cachePool !== null && (type = newProps.alternate.memoizedState.cachePool.pool), nextResource = null, newProps.memoizedState !== null && newProps.memoizedState.cachePool !== null && (nextResource = newProps.memoizedState.cachePool.pool), nextResource !== type && (newProps.flags |= 2048)), renderLanes2 !== current2 && renderLanes2 && (workInProgress2.child.flags |= 8192), scheduleRetryEffect(workInProgress2, workInProgress2.updateQueue), bubbleProperties(workInProgress2), null);
+            return popSuspenseHandler(workInProgress2), (workInProgress2.flags & 128) !== 0 ? (workInProgress2.lanes = renderLanes2, workInProgress2) : (renderLanes2 = newProps !== null, current3 = current3 !== null && current3.memoizedState !== null, renderLanes2 && (newProps = workInProgress2.child, type = null, newProps.alternate !== null && newProps.alternate.memoizedState !== null && newProps.alternate.memoizedState.cachePool !== null && (type = newProps.alternate.memoizedState.cachePool.pool), nextResource = null, newProps.memoizedState !== null && newProps.memoizedState.cachePool !== null && (nextResource = newProps.memoizedState.cachePool.pool), nextResource !== type && (newProps.flags |= 2048)), renderLanes2 !== current3 && renderLanes2 && (workInProgress2.child.flags |= 8192), scheduleRetryEffect(workInProgress2, workInProgress2.updateQueue), bubbleProperties(workInProgress2), null);
           case 4:
-            return popHostContainer(), current2 === null && listenToAllSupportedEvents(workInProgress2.stateNode.containerInfo), workInProgress2.flags |= 67108864, bubbleProperties(workInProgress2), null;
+            return popHostContainer(), current3 === null && listenToAllSupportedEvents(workInProgress2.stateNode.containerInfo), workInProgress2.flags |= 67108864, bubbleProperties(workInProgress2), null;
           case 10:
             return popProvider(workInProgress2.type), bubbleProperties(workInProgress2), null;
           case 19:
@@ -6049,33 +6049,33 @@ Error generating stack: ` + x.message + `
             if (type = (workInProgress2.flags & 128) !== 0, nextResource = newProps.rendering, nextResource === null)
               if (type) cutOffTailIfNeeded(newProps, !1);
               else {
-                if (workInProgressRootExitStatus !== 0 || current2 !== null && (current2.flags & 128) !== 0)
-                  for (current2 = workInProgress2.child; current2 !== null; ) {
-                    if (nextResource = findFirstSuspended(current2), nextResource !== null) {
-                      for (workInProgress2.flags |= 128, cutOffTailIfNeeded(newProps, !1), current2 = nextResource.updateQueue, workInProgress2.updateQueue = current2, scheduleRetryEffect(workInProgress2, current2), workInProgress2.subtreeFlags = 0, current2 = renderLanes2, renderLanes2 = workInProgress2.child; renderLanes2 !== null; )
-                        resetWorkInProgress(renderLanes2, current2), renderLanes2 = renderLanes2.sibling;
+                if (workInProgressRootExitStatus !== 0 || current3 !== null && (current3.flags & 128) !== 0)
+                  for (current3 = workInProgress2.child; current3 !== null; ) {
+                    if (nextResource = findFirstSuspended(current3), nextResource !== null) {
+                      for (workInProgress2.flags |= 128, cutOffTailIfNeeded(newProps, !1), current3 = nextResource.updateQueue, workInProgress2.updateQueue = current3, scheduleRetryEffect(workInProgress2, current3), workInProgress2.subtreeFlags = 0, current3 = renderLanes2, renderLanes2 = workInProgress2.child; renderLanes2 !== null; )
+                        resetWorkInProgress(renderLanes2, current3), renderLanes2 = renderLanes2.sibling;
                       return pushSuspenseListContext(
                         workInProgress2,
                         suspenseStackCursor.current & 1 | 2
                       ), isHydrating && pushTreeFork(workInProgress2, newProps.treeForkCount), workInProgress2.child;
                     }
-                    current2 = current2.sibling;
+                    current3 = current3.sibling;
                   }
                 newProps.tail !== null && now() > workInProgressRootRenderTargetTime && (workInProgress2.flags |= 128, type = !0, cutOffTailIfNeeded(newProps, !1), workInProgress2.lanes = 4194304);
               }
             else {
               if (!type)
-                if (current2 = findFirstSuspended(nextResource), current2 !== null) {
-                  if (workInProgress2.flags |= 128, type = !0, current2 = current2.updateQueue, workInProgress2.updateQueue = current2, scheduleRetryEffect(workInProgress2, current2), cutOffTailIfNeeded(newProps, !0), newProps.tail === null && newProps.tailMode !== "collapsed" && newProps.tailMode !== "visible" && !nextResource.alternate && !isHydrating)
+                if (current3 = findFirstSuspended(nextResource), current3 !== null) {
+                  if (workInProgress2.flags |= 128, type = !0, current3 = current3.updateQueue, workInProgress2.updateQueue = current3, scheduleRetryEffect(workInProgress2, current3), cutOffTailIfNeeded(newProps, !0), newProps.tail === null && newProps.tailMode !== "collapsed" && newProps.tailMode !== "visible" && !nextResource.alternate && !isHydrating)
                     return bubbleProperties(workInProgress2), null;
                 } else
                   2 * now() - newProps.renderingStartTime > workInProgressRootRenderTargetTime && renderLanes2 !== 536870912 && (workInProgress2.flags |= 128, type = !0, cutOffTailIfNeeded(newProps, !1), workInProgress2.lanes = 4194304);
-              newProps.isBackwards ? (nextResource.sibling = workInProgress2.child, workInProgress2.child = nextResource) : (current2 = newProps.last, current2 !== null ? current2.sibling = nextResource : workInProgress2.child = nextResource, newProps.last = nextResource);
+              newProps.isBackwards ? (nextResource.sibling = workInProgress2.child, workInProgress2.child = nextResource) : (current3 = newProps.last, current3 !== null ? current3.sibling = nextResource : workInProgress2.child = nextResource, newProps.last = nextResource);
             }
             if (newProps.tail !== null) {
-              current2 = newProps.tail;
+              current3 = newProps.tail;
               a: {
-                for (renderLanes2 = current2; renderLanes2 !== null; ) {
+                for (renderLanes2 = current3; renderLanes2 !== null; ) {
                   if (renderLanes2.alternate !== null) {
                     renderLanes2 = !1;
                     break a;
@@ -6084,14 +6084,14 @@ Error generating stack: ` + x.message + `
                 }
                 renderLanes2 = !0;
               }
-              return newProps.rendering = current2, newProps.tail = current2.sibling, newProps.renderingStartTime = now(), current2.sibling = null, nextResource = suspenseStackCursor.current, nextResource = type ? nextResource & 1 | 2 : nextResource & 1, newProps.tailMode === "visible" || newProps.tailMode === "collapsed" || !renderLanes2 || isHydrating ? pushSuspenseListContext(workInProgress2, nextResource) : (renderLanes2 = nextResource, push(suspenseHandlerStackCursor, workInProgress2), push(suspenseStackCursor, renderLanes2), shellBoundary === null && (shellBoundary = workInProgress2)), isHydrating && pushTreeFork(workInProgress2, newProps.treeForkCount), current2;
+              return newProps.rendering = current3, newProps.tail = current3.sibling, newProps.renderingStartTime = now(), current3.sibling = null, nextResource = suspenseStackCursor.current, nextResource = type ? nextResource & 1 | 2 : nextResource & 1, newProps.tailMode === "visible" || newProps.tailMode === "collapsed" || !renderLanes2 || isHydrating ? pushSuspenseListContext(workInProgress2, nextResource) : (renderLanes2 = nextResource, push(suspenseHandlerStackCursor, workInProgress2), push(suspenseStackCursor, renderLanes2), shellBoundary === null && (shellBoundary = workInProgress2)), isHydrating && pushTreeFork(workInProgress2, newProps.treeForkCount), current3;
             }
             return bubbleProperties(workInProgress2), null;
           case 22:
           case 23:
-            return popSuspenseHandler(workInProgress2), popHiddenContext(), newProps = workInProgress2.memoizedState !== null, current2 !== null ? current2.memoizedState !== null !== newProps && (workInProgress2.flags |= 8192) : newProps && (workInProgress2.flags |= 8192), newProps ? (renderLanes2 & 536870912) !== 0 && (workInProgress2.flags & 128) === 0 && (bubbleProperties(workInProgress2), workInProgress2.subtreeFlags & 6 && (workInProgress2.flags |= 8192)) : bubbleProperties(workInProgress2), renderLanes2 = workInProgress2.updateQueue, renderLanes2 !== null && scheduleRetryEffect(workInProgress2, renderLanes2.retryQueue), renderLanes2 = null, current2 !== null && current2.memoizedState !== null && current2.memoizedState.cachePool !== null && (renderLanes2 = current2.memoizedState.cachePool.pool), newProps = null, workInProgress2.memoizedState !== null && workInProgress2.memoizedState.cachePool !== null && (newProps = workInProgress2.memoizedState.cachePool.pool), newProps !== renderLanes2 && (workInProgress2.flags |= 2048), current2 !== null && pop(resumedCache), null;
+            return popSuspenseHandler(workInProgress2), popHiddenContext(), newProps = workInProgress2.memoizedState !== null, current3 !== null ? current3.memoizedState !== null !== newProps && (workInProgress2.flags |= 8192) : newProps && (workInProgress2.flags |= 8192), newProps ? (renderLanes2 & 536870912) !== 0 && (workInProgress2.flags & 128) === 0 && (bubbleProperties(workInProgress2), workInProgress2.subtreeFlags & 6 && (workInProgress2.flags |= 8192)) : bubbleProperties(workInProgress2), renderLanes2 = workInProgress2.updateQueue, renderLanes2 !== null && scheduleRetryEffect(workInProgress2, renderLanes2.retryQueue), renderLanes2 = null, current3 !== null && current3.memoizedState !== null && current3.memoizedState.cachePool !== null && (renderLanes2 = current3.memoizedState.cachePool.pool), newProps = null, workInProgress2.memoizedState !== null && workInProgress2.memoizedState.cachePool !== null && (newProps = workInProgress2.memoizedState.cachePool.pool), newProps !== renderLanes2 && (workInProgress2.flags |= 2048), current3 !== null && pop(resumedCache), null;
           case 24:
-            return renderLanes2 = null, current2 !== null && (renderLanes2 = current2.memoizedState.cache), workInProgress2.memoizedState.cache !== renderLanes2 && (workInProgress2.flags |= 2048), popProvider(CacheContext), bubbleProperties(workInProgress2), null;
+            return renderLanes2 = null, current3 !== null && (renderLanes2 = current3.memoizedState.cache), workInProgress2.memoizedState.cache !== renderLanes2 && (workInProgress2.flags |= 2048), popProvider(CacheContext), bubbleProperties(workInProgress2), null;
           case 25:
             return null;
           case 30:
@@ -6099,12 +6099,12 @@ Error generating stack: ` + x.message + `
         }
         throw Error(formatProdErrorMessage(156, workInProgress2.tag));
       }
-      function unwindWork(current2, workInProgress2) {
+      function unwindWork(current3, workInProgress2) {
         switch (popTreeContext(workInProgress2), workInProgress2.tag) {
           case 1:
-            return current2 = workInProgress2.flags, current2 & 65536 ? (workInProgress2.flags = current2 & -65537 | 128, workInProgress2) : null;
+            return current3 = workInProgress2.flags, current3 & 65536 ? (workInProgress2.flags = current3 & -65537 | 128, workInProgress2) : null;
           case 3:
-            return popProvider(CacheContext), popHostContainer(), current2 = workInProgress2.flags, (current2 & 65536) !== 0 && (current2 & 128) === 0 ? (workInProgress2.flags = current2 & -65537 | 128, workInProgress2) : null;
+            return popProvider(CacheContext), popHostContainer(), current3 = workInProgress2.flags, (current3 & 65536) !== 0 && (current3 & 128) === 0 ? (workInProgress2.flags = current3 & -65537 | 128, workInProgress2) : null;
           case 26:
           case 27:
           case 5:
@@ -6115,23 +6115,23 @@ Error generating stack: ` + x.message + `
                 throw Error(formatProdErrorMessage(340));
               resetHydrationState();
             }
-            return current2 = workInProgress2.flags, current2 & 65536 ? (workInProgress2.flags = current2 & -65537 | 128, workInProgress2) : null;
+            return current3 = workInProgress2.flags, current3 & 65536 ? (workInProgress2.flags = current3 & -65537 | 128, workInProgress2) : null;
           case 13:
-            if (popSuspenseHandler(workInProgress2), current2 = workInProgress2.memoizedState, current2 !== null && current2.dehydrated !== null) {
+            if (popSuspenseHandler(workInProgress2), current3 = workInProgress2.memoizedState, current3 !== null && current3.dehydrated !== null) {
               if (workInProgress2.alternate === null)
                 throw Error(formatProdErrorMessage(340));
               resetHydrationState();
             }
-            return current2 = workInProgress2.flags, current2 & 65536 ? (workInProgress2.flags = current2 & -65537 | 128, workInProgress2) : null;
+            return current3 = workInProgress2.flags, current3 & 65536 ? (workInProgress2.flags = current3 & -65537 | 128, workInProgress2) : null;
           case 19:
-            return popSuspenseListContext(workInProgress2), current2 = workInProgress2.flags, current2 & 65536 ? (workInProgress2.flags = current2 & -65537 | 128, current2 = workInProgress2.memoizedState, current2 !== null && (current2.rendering = null, current2.tail = null), workInProgress2.flags |= 4, workInProgress2) : null;
+            return popSuspenseListContext(workInProgress2), current3 = workInProgress2.flags, current3 & 65536 ? (workInProgress2.flags = current3 & -65537 | 128, current3 = workInProgress2.memoizedState, current3 !== null && (current3.rendering = null, current3.tail = null), workInProgress2.flags |= 4, workInProgress2) : null;
           case 4:
             return popHostContainer(), null;
           case 10:
             return popProvider(workInProgress2.type), null;
           case 22:
           case 23:
-            return popSuspenseHandler(workInProgress2), popHiddenContext(), current2 !== null && pop(resumedCache), current2 = workInProgress2.flags, current2 & 65536 ? (workInProgress2.flags = current2 & -65537 | 128, workInProgress2) : null;
+            return popSuspenseHandler(workInProgress2), popHiddenContext(), current3 !== null && pop(resumedCache), current3 = workInProgress2.flags, current3 & 65536 ? (workInProgress2.flags = current3 & -65537 | 128, workInProgress2) : null;
           case 24:
             return popProvider(CacheContext), null;
           case 25:
@@ -6140,7 +6140,7 @@ Error generating stack: ` + x.message + `
             return null;
         }
       }
-      function unwindInterruptedWork(current2, interruptedWork) {
+      function unwindInterruptedWork(current3, interruptedWork) {
         switch (popTreeContext(interruptedWork), interruptedWork.tag) {
           case 3:
             popProvider(CacheContext), popHostContainer();
@@ -6167,7 +6167,7 @@ Error generating stack: ` + x.message + `
             break;
           case 22:
           case 23:
-            popSuspenseHandler(interruptedWork), popHiddenContext(), current2 !== null && pop(resumedCache);
+            popSuspenseHandler(interruptedWork), popHiddenContext(), current3 !== null && pop(resumedCache);
             break;
           case 24:
             popProvider(CacheContext);
@@ -6233,70 +6233,70 @@ Error generating stack: ` + x.message + `
           }
         }
       }
-      function safelyCallComponentWillUnmount(current2, nearestMountedAncestor, instance) {
+      function safelyCallComponentWillUnmount(current3, nearestMountedAncestor, instance) {
         instance.props = resolveClassComponentProps(
-          current2.type,
-          current2.memoizedProps
-        ), instance.state = current2.memoizedState;
+          current3.type,
+          current3.memoizedProps
+        ), instance.state = current3.memoizedState;
         try {
           instance.componentWillUnmount();
         } catch (error2) {
-          captureCommitPhaseError(current2, nearestMountedAncestor, error2);
+          captureCommitPhaseError(current3, nearestMountedAncestor, error2);
         }
       }
-      function safelyAttachRef(current2, nearestMountedAncestor) {
+      function safelyAttachRef(current3, nearestMountedAncestor) {
         try {
-          var ref = current2.ref;
+          var ref = current3.ref;
           if (ref !== null) {
-            switch (current2.tag) {
+            switch (current3.tag) {
               case 26:
               case 27:
               case 5:
-                var instanceToUse = current2.stateNode;
+                var instanceToUse = current3.stateNode;
                 break;
               case 30:
-                var instance = current2.stateNode, name = getViewTransitionName(current2.memoizedProps, instance);
+                var instance = current3.stateNode, name = getViewTransitionName(current3.memoizedProps, instance);
                 (instance.ref === null || instance.ref.name !== name) && (instance.ref = createViewTransitionInstance(name)), instanceToUse = instance.ref;
                 break;
               case 7:
-                if (current2.stateNode === null) {
-                  var fragmentInstance = new FragmentInstance(current2);
+                if (current3.stateNode === null) {
+                  var fragmentInstance = new FragmentInstance(current3);
                   traverseVisibleInstancesAndTextInstances(
-                    current2.child,
+                    current3.child,
                     !1,
                     addFragmentHandleToFiber,
                     fragmentInstance,
                     void 0,
                     void 0
-                  ), current2.stateNode = fragmentInstance;
+                  ), current3.stateNode = fragmentInstance;
                 }
-                instanceToUse = current2.stateNode;
+                instanceToUse = current3.stateNode;
                 break;
               default:
-                instanceToUse = current2.stateNode;
+                instanceToUse = current3.stateNode;
             }
-            typeof ref == "function" ? current2.refCleanup = ref(instanceToUse) : ref.current = instanceToUse;
+            typeof ref == "function" ? current3.refCleanup = ref(instanceToUse) : ref.current = instanceToUse;
           }
         } catch (error2) {
-          captureCommitPhaseError(current2, nearestMountedAncestor, error2);
+          captureCommitPhaseError(current3, nearestMountedAncestor, error2);
         }
       }
-      function safelyDetachRef(current2, nearestMountedAncestor) {
-        var ref = current2.ref, refCleanup = current2.refCleanup;
+      function safelyDetachRef(current3, nearestMountedAncestor) {
+        var ref = current3.ref, refCleanup = current3.refCleanup;
         if (ref !== null)
           if (typeof refCleanup == "function")
             try {
               refCleanup();
             } catch (error2) {
-              captureCommitPhaseError(current2, nearestMountedAncestor, error2);
+              captureCommitPhaseError(current3, nearestMountedAncestor, error2);
             } finally {
-              current2.refCleanup = null, current2 = current2.alternate, current2 != null && (current2.refCleanup = null);
+              current3.refCleanup = null, current3 = current3.alternate, current3 != null && (current3.refCleanup = null);
             }
           else if (typeof ref == "function")
             try {
               ref(null);
             } catch (error$148) {
-              captureCommitPhaseError(current2, nearestMountedAncestor, error$148);
+              captureCommitPhaseError(current3, nearestMountedAncestor, error$148);
             }
           else ref.current = null;
       }
@@ -6701,15 +6701,15 @@ Error generating stack: ` + x.message + `
       }
       function commitBeforeMutationEffects_complete(isViewTransitionEligible$jscomp$0) {
         for (; nextEffect !== null; ) {
-          var fiber = nextEffect, isViewTransitionEligible = isViewTransitionEligible$jscomp$0, current2 = fiber.alternate, flags = fiber.flags;
+          var fiber = nextEffect, isViewTransitionEligible = isViewTransitionEligible$jscomp$0, current3 = fiber.alternate, flags = fiber.flags;
           switch (fiber.tag) {
             case 0:
             case 11:
             case 15:
               break;
             case 1:
-              if ((flags & 1024) !== 0 && current2 !== null) {
-                isViewTransitionEligible = void 0, flags = current2.memoizedProps, current2 = current2.memoizedState;
+              if ((flags & 1024) !== 0 && current3 !== null) {
+                isViewTransitionEligible = void 0, flags = current3.memoizedProps, current3 = current3.memoizedState;
                 var instance = fiber.stateNode;
                 try {
                   var resolvedPrevProps = resolveClassComponentProps(
@@ -6718,7 +6718,7 @@ Error generating stack: ` + x.message + `
                   );
                   isViewTransitionEligible = instance.getSnapshotBeforeUpdate(
                     resolvedPrevProps,
-                    current2
+                    current3
                   ), instance.__reactInternalSnapshotBeforeUpdate = isViewTransitionEligible;
                 } catch (error2) {
                   captureCommitPhaseError(fiber, fiber.return, error2);
@@ -6727,17 +6727,17 @@ Error generating stack: ` + x.message + `
               break;
             case 3:
               if ((flags & 1024) !== 0) {
-                if (current2 = fiber.stateNode.containerInfo, isViewTransitionEligible = current2.nodeType, isViewTransitionEligible === 9)
-                  clearContainerSparingly(current2);
+                if (current3 = fiber.stateNode.containerInfo, isViewTransitionEligible = current3.nodeType, isViewTransitionEligible === 9)
+                  clearContainerSparingly(current3);
                 else if (isViewTransitionEligible === 1)
-                  switch (current2.nodeName) {
+                  switch (current3.nodeName) {
                     case "HEAD":
                     case "HTML":
                     case "BODY":
-                      clearContainerSparingly(current2);
+                      clearContainerSparingly(current3);
                       break;
                     default:
-                      current2.textContent = "";
+                      current3.textContent = "";
                   }
               }
               break;
@@ -6749,28 +6749,28 @@ Error generating stack: ` + x.message + `
             case 17:
               break;
             case 30:
-              isViewTransitionEligible && current2 !== null && (isViewTransitionEligible = getViewTransitionName(
-                current2.memoizedProps,
-                current2.stateNode
+              isViewTransitionEligible && current3 !== null && (isViewTransitionEligible = getViewTransitionName(
+                current3.memoizedProps,
+                current3.stateNode
               ), flags = fiber.memoizedProps, flags = getViewTransitionClassName(flags.default, flags.update), flags !== "none" && applyViewTransitionToHostInstances(
-                current2,
+                current3,
                 isViewTransitionEligible,
                 flags,
-                current2.memoizedState = [],
+                current3.memoizedState = [],
                 !0
               ));
               break;
             default:
               if ((flags & 1024) !== 0) throw Error(formatProdErrorMessage(163));
           }
-          if (current2 = fiber.sibling, current2 !== null) {
-            current2.return = fiber.return, nextEffect = current2;
+          if (current3 = fiber.sibling, current3 !== null) {
+            current3.return = fiber.return, nextEffect = current3;
             break;
           }
           nextEffect = fiber.return;
         }
       }
-      function commitLayoutEffectOnFiber(finishedRoot, current2, finishedWork) {
+      function commitLayoutEffectOnFiber(finishedRoot, current3, finishedWork) {
         var flags = finishedWork.flags;
         switch (finishedWork.tag) {
           case 0:
@@ -6780,7 +6780,7 @@ Error generating stack: ` + x.message + `
             break;
           case 1:
             if (recursivelyTraverseLayoutEffects(finishedRoot, finishedWork), flags & 4)
-              if (finishedRoot = finishedWork.stateNode, current2 === null)
+              if (finishedRoot = finishedWork.stateNode, current3 === null)
                 try {
                   finishedRoot.componentDidMount();
                 } catch (error2) {
@@ -6789,13 +6789,13 @@ Error generating stack: ` + x.message + `
               else {
                 var prevProps = resolveClassComponentProps(
                   finishedWork.type,
-                  current2.memoizedProps
+                  current3.memoizedProps
                 );
-                current2 = current2.memoizedState;
+                current3 = current3.memoizedState;
                 try {
                   finishedRoot.componentDidUpdate(
                     prevProps,
-                    current2,
+                    current3,
                     finishedRoot.__reactInternalSnapshotBeforeUpdate
                   );
                 } catch (error$146) {
@@ -6810,27 +6810,27 @@ Error generating stack: ` + x.message + `
             break;
           case 3:
             if (recursivelyTraverseLayoutEffects(finishedRoot, finishedWork), flags & 64 && (finishedRoot = finishedWork.updateQueue, finishedRoot !== null)) {
-              if (current2 = null, finishedWork.child !== null)
+              if (current3 = null, finishedWork.child !== null)
                 switch (finishedWork.child.tag) {
                   case 27:
                   case 5:
-                    current2 = finishedWork.child.stateNode;
+                    current3 = finishedWork.child.stateNode;
                     break;
                   case 1:
-                    current2 = finishedWork.child.stateNode;
+                    current3 = finishedWork.child.stateNode;
                 }
               try {
-                commitCallbacks(finishedRoot, current2);
+                commitCallbacks(finishedRoot, current3);
               } catch (error2) {
                 captureCommitPhaseError(finishedWork, finishedWork.return, error2);
               }
             }
             break;
           case 27:
-            current2 === null && flags & 4 && commitHostSingletonAcquisition(finishedWork);
+            current3 === null && flags & 4 && commitHostSingletonAcquisition(finishedWork);
           case 26:
           case 5:
-            recursivelyTraverseLayoutEffects(finishedRoot, finishedWork), current2 === null && flags & 4 && commitHostMount(finishedWork), flags & 512 && safelyAttachRef(finishedWork, finishedWork.return);
+            recursivelyTraverseLayoutEffects(finishedRoot, finishedWork), current3 === null && flags & 4 && commitHostMount(finishedWork), flags & 512 && safelyAttachRef(finishedWork, finishedWork.return);
             break;
           case 12:
             recursivelyTraverseLayoutEffects(finishedRoot, finishedWork);
@@ -6846,12 +6846,12 @@ Error generating stack: ` + x.message + `
             break;
           case 22:
             if (flags = finishedWork.memoizedState !== null || offscreenSubtreeIsHidden, !flags) {
-              var newOffscreenSubtreeWasHidden = current2 !== null && current2.memoizedState !== null || offscreenSubtreeWasHidden;
-              current2 = offscreenSubtreeIsHidden, prevProps = offscreenSubtreeWasHidden, offscreenSubtreeIsHidden = flags, (offscreenSubtreeWasHidden = newOffscreenSubtreeWasHidden) && !prevProps ? (flags = 2, (finishedWork.subtreeFlags & 8772) !== 0 && (flags |= 1), recursivelyTraverseReappearLayoutEffects(
+              var newOffscreenSubtreeWasHidden = current3 !== null && current3.memoizedState !== null || offscreenSubtreeWasHidden;
+              current3 = offscreenSubtreeIsHidden, prevProps = offscreenSubtreeWasHidden, offscreenSubtreeIsHidden = flags, (offscreenSubtreeWasHidden = newOffscreenSubtreeWasHidden) && !prevProps ? (flags = 2, (finishedWork.subtreeFlags & 8772) !== 0 && (flags |= 1), recursivelyTraverseReappearLayoutEffects(
                 finishedRoot,
                 finishedWork,
                 flags
-              )) : recursivelyTraverseLayoutEffects(finishedRoot, finishedWork), offscreenSubtreeIsHidden = current2, offscreenSubtreeWasHidden = prevProps;
+              )) : recursivelyTraverseLayoutEffects(finishedRoot, finishedWork), offscreenSubtreeIsHidden = current3, offscreenSubtreeWasHidden = prevProps;
             }
             break;
           case 30:
@@ -7135,25 +7135,25 @@ Error generating stack: ` + x.message + `
       }
       var currentHoistableRoot = null;
       function commitMutationEffectsOnFiber(finishedWork, root2, lanes) {
-        var current2 = finishedWork.alternate, flags = finishedWork.flags;
+        var current3 = finishedWork.alternate, flags = finishedWork.flags;
         switch (finishedWork.tag) {
           case 0:
           case 11:
           case 14:
           case 15:
-            if (flags & 4 && (current2 = finishedWork.updateQueue, current2 = current2 !== null ? current2.events : null, current2 !== null))
-              for (var ii = 0; ii < current2.length; ii++) {
-                var _eventPayloads$ii2 = current2[ii];
+            if (flags & 4 && (current3 = finishedWork.updateQueue, current3 = current3 !== null ? current3.events : null, current3 !== null))
+              for (var ii = 0; ii < current3.length; ii++) {
+                var _eventPayloads$ii2 = current3[ii];
                 _eventPayloads$ii2.ref.impl = _eventPayloads$ii2.nextImpl;
               }
             recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), flags & 4 && (commitHookEffectListUnmount(3, finishedWork, finishedWork.return), commitHookEffectListMount(3, finishedWork), commitHookEffectListUnmount(5, finishedWork, finishedWork.return));
             break;
           case 1:
-            recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), flags & 512 && (offscreenSubtreeWasHidden || current2 === null || safelyDetachRef(current2, current2.return)), flags & 64 && offscreenSubtreeIsHidden && (finishedWork = finishedWork.updateQueue, finishedWork !== null && (root2 = finishedWork.callbacks, root2 !== null && (lanes = finishedWork.shared.hiddenCallbacks, finishedWork.shared.hiddenCallbacks = lanes === null ? root2 : lanes.concat(root2))));
+            recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), flags & 512 && (offscreenSubtreeWasHidden || current3 === null || safelyDetachRef(current3, current3.return)), flags & 64 && offscreenSubtreeIsHidden && (finishedWork = finishedWork.updateQueue, finishedWork !== null && (root2 = finishedWork.callbacks, root2 !== null && (lanes = finishedWork.shared.hiddenCallbacks, finishedWork.shared.hiddenCallbacks = lanes === null ? root2 : lanes.concat(root2))));
             break;
           case 26:
-            if (ii = currentHoistableRoot, recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), flags & 512 && (offscreenSubtreeWasHidden || current2 === null || safelyDetachRef(current2, current2.return)), flags & 4)
-              if (flags = current2 !== null ? current2.memoizedState : null, lanes = finishedWork.memoizedState, current2 === null)
+            if (ii = currentHoistableRoot, recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), flags & 512 && (offscreenSubtreeWasHidden || current3 === null || safelyDetachRef(current3, current3.return)), flags & 4)
+              if (flags = current3 !== null ? current3.memoizedState : null, lanes = finishedWork.memoizedState, current3 === null)
                 if (lanes === null)
                   if (finishedWork.stateNode === null)
                     if (offscreenSubtreeIsHidden)
@@ -7168,10 +7168,10 @@ Error generating stack: ` + x.message + `
                         root2 = finishedWork.type, lanes = finishedWork.memoizedProps, flags = ii.ownerDocument || ii;
                         b: switch (root2) {
                           case "title":
-                            current2 = flags.getElementsByTagName("title")[0], (!current2 || current2[internalHoistableMarker] || current2[internalInstanceKey] || current2.namespaceURI === "http://www.w3.org/2000/svg" || current2.hasAttribute("itemprop")) && (current2 = flags.createElement(root2), flags.head.insertBefore(
-                              current2,
+                            current3 = flags.getElementsByTagName("title")[0], (!current3 || current3[internalHoistableMarker] || current3[internalInstanceKey] || current3.namespaceURI === "http://www.w3.org/2000/svg" || current3.hasAttribute("itemprop")) && (current3 = flags.createElement(root2), flags.head.insertBefore(
+                              current3,
                               flags.querySelector("head > title")
-                            )), setInitialProperties(current2, root2, lanes), current2[internalInstanceKey] = finishedWork, markNodeAsHoistable(current2), root2 = current2;
+                            )), setInitialProperties(current3, root2, lanes), current3[internalInstanceKey] = finishedWork, markNodeAsHoistable(current3), root2 = current3;
                             break a;
                           case "link":
                             if (ii = getHydratableHoistableCache(
@@ -7180,12 +7180,12 @@ Error generating stack: ` + x.message + `
                               flags
                             ).get(root2 + (lanes.href || ""))) {
                               for (_eventPayloads$ii2 = 0; _eventPayloads$ii2 < ii.length; _eventPayloads$ii2++)
-                                if (current2 = ii[_eventPayloads$ii2], current2.getAttribute("href") === (lanes.href == null || lanes.href === "" ? null : lanes.href) && current2.getAttribute("rel") === (lanes.rel == null ? null : lanes.rel) && current2.getAttribute("title") === (lanes.title == null ? null : lanes.title) && current2.getAttribute("crossorigin") === (lanes.crossOrigin == null ? null : lanes.crossOrigin)) {
+                                if (current3 = ii[_eventPayloads$ii2], current3.getAttribute("href") === (lanes.href == null || lanes.href === "" ? null : lanes.href) && current3.getAttribute("rel") === (lanes.rel == null ? null : lanes.rel) && current3.getAttribute("title") === (lanes.title == null ? null : lanes.title) && current3.getAttribute("crossorigin") === (lanes.crossOrigin == null ? null : lanes.crossOrigin)) {
                                   ii.splice(_eventPayloads$ii2, 1);
                                   break b;
                                 }
                             }
-                            current2 = flags.createElement(root2), setInitialProperties(current2, root2, lanes), flags.head.appendChild(current2);
+                            current3 = flags.createElement(root2), setInitialProperties(current3, root2, lanes), flags.head.appendChild(current3);
                             break;
                           case "meta":
                             if (ii = getHydratableHoistableCache(
@@ -7194,17 +7194,17 @@ Error generating stack: ` + x.message + `
                               flags
                             ).get(root2 + (lanes.content || ""))) {
                               for (_eventPayloads$ii2 = 0; _eventPayloads$ii2 < ii.length; _eventPayloads$ii2++)
-                                if (current2 = ii[_eventPayloads$ii2], current2.getAttribute("content") === (lanes.content == null ? null : "" + lanes.content) && current2.getAttribute("name") === (lanes.name == null ? null : lanes.name) && current2.getAttribute("property") === (lanes.property == null ? null : lanes.property) && current2.getAttribute("http-equiv") === (lanes.httpEquiv == null ? null : lanes.httpEquiv) && current2.getAttribute("charset") === (lanes.charSet == null ? null : lanes.charSet)) {
+                                if (current3 = ii[_eventPayloads$ii2], current3.getAttribute("content") === (lanes.content == null ? null : "" + lanes.content) && current3.getAttribute("name") === (lanes.name == null ? null : lanes.name) && current3.getAttribute("property") === (lanes.property == null ? null : lanes.property) && current3.getAttribute("http-equiv") === (lanes.httpEquiv == null ? null : lanes.httpEquiv) && current3.getAttribute("charset") === (lanes.charSet == null ? null : lanes.charSet)) {
                                   ii.splice(_eventPayloads$ii2, 1);
                                   break b;
                                 }
                             }
-                            current2 = flags.createElement(root2), setInitialProperties(current2, root2, lanes), flags.head.appendChild(current2);
+                            current3 = flags.createElement(root2), setInitialProperties(current3, root2, lanes), flags.head.appendChild(current3);
                             break;
                           default:
                             throw Error(formatProdErrorMessage(468, root2));
                         }
-                        current2[internalInstanceKey] = finishedWork, markNodeAsHoistable(current2), root2 = current2;
+                        current3[internalInstanceKey] = finishedWork, markNodeAsHoistable(current3), root2 = current3;
                       }
                       finishedWork.stateNode = root2;
                     }
@@ -7217,21 +7217,21 @@ Error generating stack: ` + x.message + `
                     finishedWork.memoizedProps
                   );
               else
-                flags !== lanes ? (flags === null ? (root2 = current2.stateNode, root2 === null || offscreenSubtreeWasHidden || root2.parentNode.removeChild(root2)) : flags.count--, lanes === null ? offscreenSubtreeIsHidden || mountHoistable(ii, finishedWork.type, finishedWork.stateNode) : acquireResource(ii, lanes, finishedWork.memoizedProps)) : lanes === null && finishedWork.stateNode !== null && commitHostUpdate(
+                flags !== lanes ? (flags === null ? (root2 = current3.stateNode, root2 === null || offscreenSubtreeWasHidden || root2.parentNode.removeChild(root2)) : flags.count--, lanes === null ? offscreenSubtreeIsHidden || mountHoistable(ii, finishedWork.type, finishedWork.stateNode) : acquireResource(ii, lanes, finishedWork.memoizedProps)) : lanes === null && finishedWork.stateNode !== null && commitHostUpdate(
                   finishedWork,
                   finishedWork.memoizedProps,
-                  current2.memoizedProps
+                  current3.memoizedProps
                 );
             break;
           case 27:
-            recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), flags & 512 && (offscreenSubtreeWasHidden || current2 === null || safelyDetachRef(current2, current2.return)), current2 !== null && flags & 4 && commitHostUpdate(
+            recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), flags & 512 && (offscreenSubtreeWasHidden || current3 === null || safelyDetachRef(current3, current3.return)), current3 !== null && flags & 4 && commitHostUpdate(
               finishedWork,
               finishedWork.memoizedProps,
-              current2.memoizedProps
+              current3.memoizedProps
             );
             break;
           case 5:
-            if (ii = offscreenDirectParentIsHidden, offscreenDirectParentIsHidden = !1, recursivelyTraverseMutationEffects(root2, finishedWork, lanes), offscreenDirectParentIsHidden = ii, commitReconciliationEffects(finishedWork), flags & 512 && (offscreenSubtreeWasHidden || current2 === null || safelyDetachRef(current2, current2.return)), finishedWork.flags & 32) {
+            if (ii = offscreenDirectParentIsHidden, offscreenDirectParentIsHidden = !1, recursivelyTraverseMutationEffects(root2, finishedWork, lanes), offscreenDirectParentIsHidden = ii, commitReconciliationEffects(finishedWork), flags & 512 && (offscreenSubtreeWasHidden || current3 === null || safelyDetachRef(current3, current3.return)), finishedWork.flags & 32) {
               root2 = finishedWork.stateNode;
               try {
                 setTextContent(root2, ""), viewTransitionMutationContext = !0;
@@ -7242,7 +7242,7 @@ Error generating stack: ` + x.message + `
             flags & 4 && finishedWork.stateNode != null && (root2 = finishedWork.memoizedProps, commitHostUpdate(
               finishedWork,
               root2,
-              current2 !== null ? current2.memoizedProps : root2
+              current3 !== null ? current3.memoizedProps : root2
             )), flags & 1024 && (needsFormReset = !0);
             break;
           case 6:
@@ -7258,7 +7258,7 @@ Error generating stack: ` + x.message + `
             }
             break;
           case 3:
-            if (viewTransitionMutationContext = !1, tagCaches = null, ii = currentHoistableRoot, currentHoistableRoot = getHoistableRoot(root2.containerInfo), recursivelyTraverseMutationEffects(root2, finishedWork, lanes), currentHoistableRoot = ii, commitReconciliationEffects(finishedWork), flags & 4 && current2 !== null && current2.memoizedState.isDehydrated)
+            if (viewTransitionMutationContext = !1, tagCaches = null, ii = currentHoistableRoot, currentHoistableRoot = getHoistableRoot(root2.containerInfo), recursivelyTraverseMutationEffects(root2, finishedWork, lanes), currentHoistableRoot = ii, commitReconciliationEffects(finishedWork), flags & 4 && current3 !== null && current3.memoizedState.isDehydrated)
               try {
                 retryIfBlockedOn(root2.containerInfo);
               } catch (error2) {
@@ -7267,9 +7267,9 @@ Error generating stack: ` + x.message + `
             needsFormReset && (needsFormReset = !1, recursivelyResetForms(finishedWork)), viewTransitionMutationContext = !1;
             break;
           case 4:
-            flags = offscreenDirectParentIsHidden, offscreenDirectParentIsHidden = offscreenSubtreeIsHidden, current2 = pushMutationContext(), ii = currentHoistableRoot, currentHoistableRoot = getHoistableRoot(
+            flags = offscreenDirectParentIsHidden, offscreenDirectParentIsHidden = offscreenSubtreeIsHidden, current3 = pushMutationContext(), ii = currentHoistableRoot, currentHoistableRoot = getHoistableRoot(
               finishedWork.stateNode.containerInfo
-            ), recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), currentHoistableRoot = ii, viewTransitionMutationContext && inUpdateViewTransition && (rootViewTransitionAffected = !0), viewTransitionMutationContext = current2, offscreenDirectParentIsHidden = flags;
+            ), recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), currentHoistableRoot = ii, viewTransitionMutationContext && inUpdateViewTransition && (rootViewTransitionAffected = !0), viewTransitionMutationContext = current3, offscreenDirectParentIsHidden = flags;
             break;
           case 12:
             recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork);
@@ -7278,26 +7278,26 @@ Error generating stack: ` + x.message + `
             recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), flags & 4 && (root2 = finishedWork.updateQueue, root2 !== null && (finishedWork.updateQueue = null, attachSuspenseRetryListeners(finishedWork, root2)));
             break;
           case 13:
-            recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), finishedWork.child.flags & 8192 && finishedWork.memoizedState !== null != (current2 !== null && current2.memoizedState !== null) && (globalMostRecentFallbackTime = now()), flags & 4 && (root2 = finishedWork.updateQueue, root2 !== null && (finishedWork.updateQueue = null, attachSuspenseRetryListeners(finishedWork, root2)));
+            recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), finishedWork.child.flags & 8192 && finishedWork.memoizedState !== null != (current3 !== null && current3.memoizedState !== null) && (globalMostRecentFallbackTime = now()), flags & 4 && (root2 = finishedWork.updateQueue, root2 !== null && (finishedWork.updateQueue = null, attachSuspenseRetryListeners(finishedWork, root2)));
             break;
           case 22:
-            ii = finishedWork.memoizedState !== null, _eventPayloads$ii2 = current2 !== null && current2.memoizedState !== null;
+            ii = finishedWork.memoizedState !== null, _eventPayloads$ii2 = current3 !== null && current3.memoizedState !== null;
             var prevOffscreenSubtreeIsHidden = offscreenSubtreeIsHidden, prevOffscreenSubtreeWasHidden = offscreenSubtreeWasHidden, prevOffscreenDirectParentIsHidden$166 = offscreenDirectParentIsHidden;
-            offscreenSubtreeIsHidden = prevOffscreenSubtreeIsHidden || ii, offscreenDirectParentIsHidden = prevOffscreenDirectParentIsHidden$166 || ii, offscreenSubtreeWasHidden = prevOffscreenSubtreeWasHidden || _eventPayloads$ii2, recursivelyTraverseMutationEffects(root2, finishedWork, lanes), offscreenSubtreeWasHidden = prevOffscreenSubtreeWasHidden, offscreenDirectParentIsHidden = prevOffscreenDirectParentIsHidden$166, offscreenSubtreeIsHidden = prevOffscreenSubtreeIsHidden, commitReconciliationEffects(finishedWork), flags & 8192 && (root2 = finishedWork.stateNode, root2._visibility = ii ? root2._visibility & -2 : root2._visibility | 1, !ii || current2 === null || _eventPayloads$ii2 || offscreenSubtreeIsHidden || offscreenSubtreeWasHidden || (root2 = _eventPayloads$ii2 || offscreenSubtreeWasHidden, lanes = offscreenSubtreeIsHidden, current2 = offscreenSubtreeWasHidden, offscreenSubtreeIsHidden = ii || offscreenSubtreeIsHidden, offscreenSubtreeWasHidden = root2, recursivelyTraverseDisappearLayoutEffects(finishedWork, 2), offscreenSubtreeIsHidden = lanes, offscreenSubtreeWasHidden = current2), !ii && offscreenDirectParentIsHidden || hideOrUnhideAllChildren(finishedWork, ii)), flags & 4 && (root2 = finishedWork.updateQueue, root2 !== null && (lanes = root2.retryQueue, lanes !== null && (root2.retryQueue = null, attachSuspenseRetryListeners(finishedWork, lanes))));
+            offscreenSubtreeIsHidden = prevOffscreenSubtreeIsHidden || ii, offscreenDirectParentIsHidden = prevOffscreenDirectParentIsHidden$166 || ii, offscreenSubtreeWasHidden = prevOffscreenSubtreeWasHidden || _eventPayloads$ii2, recursivelyTraverseMutationEffects(root2, finishedWork, lanes), offscreenSubtreeWasHidden = prevOffscreenSubtreeWasHidden, offscreenDirectParentIsHidden = prevOffscreenDirectParentIsHidden$166, offscreenSubtreeIsHidden = prevOffscreenSubtreeIsHidden, commitReconciliationEffects(finishedWork), flags & 8192 && (root2 = finishedWork.stateNode, root2._visibility = ii ? root2._visibility & -2 : root2._visibility | 1, !ii || current3 === null || _eventPayloads$ii2 || offscreenSubtreeIsHidden || offscreenSubtreeWasHidden || (root2 = _eventPayloads$ii2 || offscreenSubtreeWasHidden, lanes = offscreenSubtreeIsHidden, current3 = offscreenSubtreeWasHidden, offscreenSubtreeIsHidden = ii || offscreenSubtreeIsHidden, offscreenSubtreeWasHidden = root2, recursivelyTraverseDisappearLayoutEffects(finishedWork, 2), offscreenSubtreeIsHidden = lanes, offscreenSubtreeWasHidden = current3), !ii && offscreenDirectParentIsHidden || hideOrUnhideAllChildren(finishedWork, ii)), flags & 4 && (root2 = finishedWork.updateQueue, root2 !== null && (lanes = root2.retryQueue, lanes !== null && (root2.retryQueue = null, attachSuspenseRetryListeners(finishedWork, lanes))));
             break;
           case 19:
             recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), flags & 4 && (root2 = finishedWork.updateQueue, root2 !== null && (finishedWork.updateQueue = null, attachSuspenseRetryListeners(finishedWork, root2)));
             break;
           case 30:
-            flags & 512 && (offscreenSubtreeWasHidden || current2 === null || safelyDetachRef(current2, current2.return)), flags = pushMutationContext(), ii = inUpdateViewTransition, _eventPayloads$ii2 = (lanes & 335544064) === lanes, prevOffscreenSubtreeIsHidden = finishedWork.memoizedProps, inUpdateViewTransition = _eventPayloads$ii2 && getViewTransitionClassName(
+            flags & 512 && (offscreenSubtreeWasHidden || current3 === null || safelyDetachRef(current3, current3.return)), flags = pushMutationContext(), ii = inUpdateViewTransition, _eventPayloads$ii2 = (lanes & 335544064) === lanes, prevOffscreenSubtreeIsHidden = finishedWork.memoizedProps, inUpdateViewTransition = _eventPayloads$ii2 && getViewTransitionClassName(
               prevOffscreenSubtreeIsHidden.default,
               prevOffscreenSubtreeIsHidden.update
-            ) !== "none", recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), _eventPayloads$ii2 && current2 !== null && viewTransitionMutationContext && (finishedWork.flags |= 4), inUpdateViewTransition = ii, viewTransitionMutationContext = flags;
+            ) !== "none", recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork), _eventPayloads$ii2 && current3 !== null && viewTransitionMutationContext && (finishedWork.flags |= 4), inUpdateViewTransition = ii, viewTransitionMutationContext = flags;
             break;
           case 21:
             break;
           case 7:
-            flags & 512 && (offscreenSubtreeWasHidden || current2 === null || safelyDetachRef(current2, current2.return)), current2 && current2.stateNode !== null && (current2.stateNode._fragmentFiber = finishedWork);
+            flags & 512 && (offscreenSubtreeWasHidden || current3 === null || safelyDetachRef(current3, current3.return)), current3 && current3.stateNode !== null && (current3.stateNode._fragmentFiber = finishedWork);
           default:
             recursivelyTraverseMutationEffects(root2, finishedWork, lanes), commitReconciliationEffects(finishedWork);
         }
@@ -7379,17 +7379,17 @@ Error generating stack: ` + x.message + `
         else measureNestedViewTransitions(parentFiber, !1);
       }
       function commitAfterMutationEffectsOnFiber(finishedWork, root2) {
-        var current2 = finishedWork.alternate;
-        if (current2 === null) commitEnterViewTransitions(finishedWork, !1);
+        var current3 = finishedWork.alternate;
+        if (current3 === null) commitEnterViewTransitions(finishedWork, !1);
         else
           switch (finishedWork.tag) {
             case 3:
               if (rootViewTransitionNameCanceled = viewTransitionContextChanged = !1, pushViewTransitionCancelableScope(), recursivelyTraverseAfterMutationEffects(root2, finishedWork), !viewTransitionContextChanged && !rootViewTransitionAffected) {
                 if (finishedWork = viewTransitionCancelableChildren, finishedWork !== null)
                   for (var i = 0; i < finishedWork.length; i += 3) {
-                    current2 = finishedWork[i];
+                    current3 = finishedWork[i];
                     var oldName = finishedWork[i + 1];
-                    restoreViewTransitionName(current2, finishedWork[i + 2]), current2 = current2.ownerDocument.documentElement, current2 !== null && current2.animate(
+                    restoreViewTransitionName(current3, finishedWork[i + 2]), current3 = current3.ownerDocument.documentElement, current3 !== null && current3.animate(
                       { opacity: [0, 0], pointerEvents: ["none", "none"] },
                       {
                         duration: 0,
@@ -7423,16 +7423,16 @@ Error generating stack: ` + x.message + `
               i = viewTransitionContextChanged, viewTransitionContextChanged = !1, recursivelyTraverseAfterMutationEffects(root2, finishedWork), viewTransitionContextChanged && (rootViewTransitionAffected = !0), viewTransitionContextChanged = i;
               break;
             case 22:
-              finishedWork.memoizedState === null && (current2.memoizedState !== null ? commitEnterViewTransitions(finishedWork, !1) : recursivelyTraverseAfterMutationEffects(root2, finishedWork));
+              finishedWork.memoizedState === null && (current3.memoizedState !== null ? commitEnterViewTransitions(finishedWork, !1) : recursivelyTraverseAfterMutationEffects(root2, finishedWork));
               break;
             case 30:
               i = viewTransitionContextChanged, oldName = pushViewTransitionCancelableScope(), viewTransitionContextChanged = !1, recursivelyTraverseAfterMutationEffects(root2, finishedWork), viewTransitionContextChanged && (finishedWork.flags |= 4);
               var props = finishedWork.memoizedProps, state2 = finishedWork.stateNode;
-              root2 = getViewTransitionName(props, state2), state2 = getViewTransitionName(current2.memoizedProps, state2);
+              root2 = getViewTransitionName(props, state2), state2 = getViewTransitionName(current3.memoizedProps, state2);
               var className = getViewTransitionClassName(props.default, props.update);
-              className === "none" ? root2 = !1 : (props = current2.memoizedState, current2.memoizedState = null, current2 = finishedWork.child, viewTransitionHostInstanceIdx = 0, root2 = measureViewTransitionHostInstancesRecursive(
+              className === "none" ? root2 = !1 : (props = current3.memoizedState, current3.memoizedState = null, current3 = finishedWork.child, viewTransitionHostInstanceIdx = 0, root2 = measureViewTransitionHostInstancesRecursive(
                 finishedWork,
-                current2,
+                current3,
                 root2,
                 state2,
                 className,
@@ -7523,7 +7523,7 @@ Error generating stack: ` + x.message + `
       }
       function recursivelyTraverseReappearLayoutEffects(finishedRoot$jscomp$0, parentFiber, layoutEffectTraversalFlags) {
         for (layoutEffectTraversalFlags = (parentFiber.subtreeFlags & 8772) !== 0 ? layoutEffectTraversalFlags : layoutEffectTraversalFlags & -2, parentFiber = parentFiber.child; parentFiber !== null; ) {
-          var current2 = parentFiber.alternate, finishedRoot = finishedRoot$jscomp$0, finishedWork = parentFiber, flags = finishedWork.flags, includeWorkInProgressEffects = (layoutEffectTraversalFlags & 1) !== 0;
+          var current3 = parentFiber.alternate, finishedRoot = finishedRoot$jscomp$0, finishedWork = parentFiber, flags = finishedWork.flags, includeWorkInProgressEffects = (layoutEffectTraversalFlags & 1) !== 0;
           switch (finishedWork.tag) {
             case 0:
             case 11:
@@ -7539,21 +7539,21 @@ Error generating stack: ` + x.message + `
                 finishedRoot,
                 finishedWork,
                 layoutEffectTraversalFlags
-              ), current2 = finishedWork, finishedRoot = current2.stateNode, typeof finishedRoot.componentDidMount == "function")
+              ), current3 = finishedWork, finishedRoot = current3.stateNode, typeof finishedRoot.componentDidMount == "function")
                 try {
                   finishedRoot.componentDidMount();
                 } catch (error2) {
-                  captureCommitPhaseError(current2, current2.return, error2);
+                  captureCommitPhaseError(current3, current3.return, error2);
                 }
-              if (current2 = finishedWork, finishedRoot = current2.updateQueue, finishedRoot !== null) {
-                var instance = current2.stateNode;
+              if (current3 = finishedWork, finishedRoot = current3.updateQueue, finishedRoot !== null) {
+                var instance = current3.stateNode;
                 try {
                   var hiddenCallbacks = finishedRoot.shared.hiddenCallbacks;
                   if (hiddenCallbacks !== null)
                     for (finishedRoot.shared.hiddenCallbacks = null, finishedRoot = 0; finishedRoot < hiddenCallbacks.length; finishedRoot++)
                       callCallback(hiddenCallbacks[finishedRoot], instance);
                 } catch (error2) {
-                  captureCommitPhaseError(current2, current2.return, error2);
+                  captureCommitPhaseError(current3, current3.return, error2);
                 }
               }
               includeWorkInProgressEffects && flags & 64 && commitClassCallbacks(finishedWork), safelyAttachRef(finishedWork, finishedWork.return);
@@ -7565,7 +7565,7 @@ Error generating stack: ` + x.message + `
                 finishedRoot,
                 finishedWork,
                 layoutEffectTraversalFlags
-              ), includeWorkInProgressEffects && current2 === null && flags & 4 && commitHostMount(finishedWork), safelyAttachRef(finishedWork, finishedWork.return);
+              ), includeWorkInProgressEffects && current3 === null && flags & 4 && commitHostMount(finishedWork), safelyAttachRef(finishedWork, finishedWork.return);
               break;
             case 6:
               commitFragmentInstanceInsertionEffects(finishedWork);
@@ -7579,7 +7579,7 @@ Error generating stack: ` + x.message + `
                 finishedRoot,
                 finishedWork,
                 layoutEffectTraversalFlags
-              ), includeWorkInProgressEffects && current2 === null && flags & 4 && commitHostMount(finishedWork), safelyAttachRef(finishedWork, finishedWork.return);
+              ), includeWorkInProgressEffects && current3 === null && flags & 4 && commitHostMount(finishedWork), safelyAttachRef(finishedWork, finishedWork.return);
               break;
             case 12:
               recursivelyTraverseReappearLayoutEffects(
@@ -7628,12 +7628,12 @@ Error generating stack: ` + x.message + `
           parentFiber = parentFiber.sibling;
         }
       }
-      function commitOffscreenPassiveMountEffects(current2, finishedWork) {
+      function commitOffscreenPassiveMountEffects(current3, finishedWork) {
         var previousCache = null;
-        current2 !== null && current2.memoizedState !== null && current2.memoizedState.cachePool !== null && (previousCache = current2.memoizedState.cachePool.pool), current2 = null, finishedWork.memoizedState !== null && finishedWork.memoizedState.cachePool !== null && (current2 = finishedWork.memoizedState.cachePool.pool), current2 !== previousCache && (current2 != null && current2.refCount++, previousCache != null && releaseCache(previousCache));
+        current3 !== null && current3.memoizedState !== null && current3.memoizedState.cachePool !== null && (previousCache = current3.memoizedState.cachePool.pool), current3 = null, finishedWork.memoizedState !== null && finishedWork.memoizedState.cachePool !== null && (current3 = finishedWork.memoizedState.cachePool.pool), current3 !== previousCache && (current3 != null && current3.refCount++, previousCache != null && releaseCache(previousCache));
       }
-      function commitCachePassiveMountEffect(current2, finishedWork) {
-        current2 = null, finishedWork.alternate !== null && (current2 = finishedWork.alternate.memoizedState.cache), finishedWork = finishedWork.memoizedState.cache, finishedWork !== current2 && (finishedWork.refCount++, current2 != null && releaseCache(current2));
+      function commitCachePassiveMountEffect(current3, finishedWork) {
+        current3 = null, finishedWork.alternate !== null && (current3 = finishedWork.alternate.memoizedState.cache), finishedWork = finishedWork.memoizedState.cache, finishedWork !== current3 && (finishedWork.refCount++, current3 != null && releaseCache(current3));
       }
       function recursivelyTraversePassiveMountEffects(root2, parentFiber, committedLanes, committedTransitions) {
         var isViewTransitionEligible = (committedLanes & 335544064) === committedLanes;
@@ -8454,12 +8454,12 @@ Error generating stack: ` + x.message + `
         unitOfWork.memoizedProps = unitOfWork.pendingProps, next3 === null ? completeUnitOfWork(unitOfWork) : workInProgress = next3;
       }
       function replaySuspendedUnitOfWork(unitOfWork) {
-        var next3 = unitOfWork, current2 = next3.alternate;
+        var next3 = unitOfWork, current3 = next3.alternate;
         switch (next3.tag) {
           case 15:
           case 0:
             next3 = replayFunctionComponent(
-              current2,
+              current3,
               next3,
               next3.pendingProps,
               next3.type,
@@ -8469,7 +8469,7 @@ Error generating stack: ` + x.message + `
             break;
           case 11:
             next3 = replayFunctionComponent(
-              current2,
+              current3,
               next3,
               next3.pendingProps,
               next3.type.render,
@@ -8482,7 +8482,7 @@ Error generating stack: ` + x.message + `
             var fiber = next3;
             fiber === hydrationParentFiber && (isHydrating ? (popToNextHostParent(fiber), fiber.tag === 5 && fiber.stateNode != null && (nextHydratableInstance = fiber.stateNode)) : (popToNextHostParent(fiber), isHydrating = !0));
           default:
-            unwindInterruptedWork(current2, next3), next3 = workInProgress = resetWorkInProgress(next3, entangledRenderLanes), next3 = beginWork(current2, next3, entangledRenderLanes);
+            unwindInterruptedWork(current3, next3), next3 = workInProgress = resetWorkInProgress(next3, entangledRenderLanes), next3 = beginWork(current3, next3, entangledRenderLanes);
         }
         unitOfWork.memoizedProps = unitOfWork.pendingProps, next3 === null ? completeUnitOfWork(unitOfWork) : workInProgress = next3;
       }
@@ -9400,13 +9400,13 @@ Error generating stack: ` + x.message + `
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners14 = []; targetFiber !== null; ) {
+        for (var captureName = reactName + "Capture", listeners15 = []; targetFiber !== null; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
-          if (_instance2 = _instance2.tag, _instance2 !== 5 && _instance2 !== 26 && _instance2 !== 27 || stateNode === null || (_instance2 = getListener(targetFiber, captureName), _instance2 != null && listeners14.unshift(
+          if (_instance2 = _instance2.tag, _instance2 !== 5 && _instance2 !== 26 && _instance2 !== 27 || stateNode === null || (_instance2 = getListener(targetFiber, captureName), _instance2 != null && listeners15.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), _instance2 != null && listeners14.push(
+          ), _instance2 = getListener(targetFiber, reactName), _instance2 != null && listeners15.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          )), targetFiber.tag === 3) return listeners14;
+          )), targetFiber.tag === 3) return listeners15;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -9419,16 +9419,16 @@ Error generating stack: ` + x.message + `
         return inst || null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common2, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners14 = []; target !== null && target !== common2; ) {
+        for (var registrationName = event._reactName, listeners15 = []; target !== null && target !== common2; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           if (_instance3 = _instance3.tag, alternate !== null && alternate === common2) break;
-          _instance3 !== 5 && _instance3 !== 26 && _instance3 !== 27 || stateNode === null || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), stateNode != null && listeners14.unshift(
+          _instance3 !== 5 && _instance3 !== 26 && _instance3 !== 27 || stateNode === null || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), stateNode != null && listeners15.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), stateNode != null && listeners14.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), stateNode != null && listeners15.push(
             createDispatchListener(target, stateNode, alternate)
           ))), target = target.return;
         }
-        listeners14.length !== 0 && dispatchQueue.push({ event, listeners: listeners14 });
+        listeners15.length !== 0 && dispatchQueue.push({ event, listeners: listeners15 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g, NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
       function normalizeMarkupForTextOrAttribute(markup) {
@@ -10460,8 +10460,8 @@ Error generating stack: ` + x.message + `
         var signal = null, cleanup = null;
         if (!(optionsOrUseCapture != null && typeof optionsOrUseCapture != "boolean" && (signal = optionsOrUseCapture.signal || null, signal !== null && signal.aborted))) {
           this._eventListeners === null && (this._eventListeners = []);
-          var listeners14 = this._eventListeners;
-          if (indexOfEventListener(listeners14, type, listener, optionsOrUseCapture) === -1) {
+          var listeners15 = this._eventListeners;
+          if (indexOfEventListener(listeners15, type, listener, optionsOrUseCapture) === -1) {
             var fragmentInstance = this, attachedListener = listener;
             optionsOrUseCapture != null && typeof optionsOrUseCapture != "boolean" && optionsOrUseCapture.once === !0 && (attachedListener = function(event) {
               fragmentInstance.removeEventListener(
@@ -10474,7 +10474,7 @@ Error generating stack: ` + x.message + `
               type,
               listener,
               optionsOrUseCapture
-            ), signal.addEventListener("abort", cleanup, { once: !0 }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup)), signal = getAttachOptions(optionsOrUseCapture), listeners14.push({
+            ), signal.addEventListener("abort", cleanup, { once: !0 }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup)), signal = getAttachOptions(optionsOrUseCapture), listeners15.push({
               type,
               listener,
               optionsOrUseCapture,
@@ -10489,7 +10489,7 @@ Error generating stack: ` + x.message + `
               signal
             );
           }
-          this._eventListeners = listeners14;
+          this._eventListeners = listeners15;
         }
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
@@ -10500,14 +10500,14 @@ Error generating stack: ` + x.message + `
         ), !1;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners14 = this._eventListeners;
-        if (listeners14 !== null && (listener = indexOfEventListener(
-          listeners14,
+        var listeners15 = this._eventListeners;
+        if (listeners15 !== null && (listener = indexOfEventListener(
+          listeners15,
           type,
           listener,
           optionsOrUseCapture
         ), listener !== -1)) {
-          var _listeners$index = listeners14[listener];
+          var _listeners$index = listeners15[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture), traverseVisibleInstancesAndTextInstances(
@@ -10517,7 +10517,7 @@ Error generating stack: ` + x.message + `
             type,
             optionsOrUseCapture,
             _listeners$index
-          ), listeners14.splice(listener, 1), cleanup !== null && cleanup();
+          ), listeners15.splice(listener, 1), cleanup !== null && cleanup();
         }
       };
       function removeEventListenerFromChild(child, type, listener, optionsOrUseCapture) {
@@ -12014,8 +12014,8 @@ Error generating stack: ` + x.message + `
       ReactDOMHydrationRoot.prototype.render = ReactDOMRoot.prototype.render = function(children) {
         var root2 = this._internalRoot;
         if (root2 === null) throw Error(formatProdErrorMessage(409));
-        var current2 = root2.current, lane = requestUpdateLane();
-        updateContainerImpl(current2, lane, children, root2, null, null);
+        var current3 = root2.current, lane = requestUpdateLane();
+        updateContainerImpl(current3, lane, children, root2, null, null);
       };
       ReactDOMHydrationRoot.prototype.unmount = ReactDOMRoot.prototype.unmount = function() {
         var root2 = this._internalRoot;
@@ -12036,7 +12036,7 @@ Error generating stack: ` + x.message + `
           queuedExplicitHydrationTargets.splice(i, 0, target), i === 0 && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_2043 = React320.version;
+      var isomorphicReactPackageVersion$jscomp$inline_2043 = React321.version;
       if (isomorphicReactPackageVersion$jscomp$inline_2043 !== "19.3.1")
         throw Error(
           formatProdErrorMessage(
@@ -12431,11 +12431,11 @@ Error generating stack: ` + x.message + `
   var require_use_sync_external_store_shim_production = __commonJS({
     "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js"(exports) {
       "use strict";
-      var React320 = require_react();
+      var React321 = require_react();
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState70 = React320.useState, useEffect89 = React320.useEffect, useLayoutEffect19 = React320.useLayoutEffect, useDebugValue3 = React320.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState70 = React321.useState, useEffect89 = React321.useEffect, useLayoutEffect19 = React321.useLayoutEffect, useDebugValue3 = React321.useDebugValue;
       function useSyncExternalStore$2(subscribe3, getSnapshot) {
         var value = getSnapshot(), _useState = useState70({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
         return useLayoutEffect19(
@@ -12466,7 +12466,7 @@ Error generating stack: ` + x.message + `
         return getSnapshot();
       }
       var shim = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? useSyncExternalStore$1 : useSyncExternalStore$2;
-      exports.useSyncExternalStore = React320.useSyncExternalStore !== void 0 ? React320.useSyncExternalStore : shim;
+      exports.useSyncExternalStore = React321.useSyncExternalStore !== void 0 ? React321.useSyncExternalStore : shim;
     }
   });
 
@@ -12482,11 +12482,11 @@ Error generating stack: ` + x.message + `
   var require_with_selector_production = __commonJS({
     "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.js"(exports) {
       "use strict";
-      var React320 = require_react(), shim = require_shim();
+      var React321 = require_react(), shim = require_shim();
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore3 = shim.useSyncExternalStore, useRef118 = React320.useRef, useEffect89 = React320.useEffect, useMemo67 = React320.useMemo, useDebugValue3 = React320.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore3 = shim.useSyncExternalStore, useRef118 = React321.useRef, useEffect89 = React321.useEffect, useMemo67 = React321.useMemo, useDebugValue3 = React321.useDebugValue;
       exports.useSyncExternalStoreWithSelector = function(subscribe3, getSnapshot, getServerSnapshot, selector, isEqual) {
         var instRef = useRef118(null);
         if (instRef.current === null) {
@@ -16327,9 +16327,9 @@ Error generating stack: ` + x.message + `
     let byId = new Map(state.crates.map((crate) => [crate.id, crate])), keep = /* @__PURE__ */ new Set();
     for (let crate of state.crates) {
       if (!terms.every((term) => crate.name.toLocaleLowerCase().includes(term))) continue;
-      let current2 = crate, guard = /* @__PURE__ */ new Set();
-      for (; current2 && !guard.has(current2.id); )
-        guard.add(current2.id), keep.add(current2.id), current2 = byId.get(current2.parent);
+      let current3 = crate, guard = /* @__PURE__ */ new Set();
+      for (; current3 && !guard.has(current3.id); )
+        guard.add(current3.id), keep.add(current3.id), current3 = byId.get(current3.parent);
     }
     return keep;
   }
@@ -16553,14 +16553,14 @@ Error generating stack: ` + x.message + `
     return Math.round(Math.min(Math.max(width2, minFirst), max2));
   }
   function mountSplitter(options) {
-    let { handle, container: container2, first, property, minFirst, minSecond, onCommit } = options, step = options.step ?? 16, current2 = null, available = () => container2.clientWidth - handle.offsetWidth, fitted = (width2) => clampWidth(width2, available(), minFirst, minSecond), shown = () => current2 == null ? first.getBoundingClientRect().width : fitted(current2);
+    let { handle, container: container2, first, property, minFirst, minSecond, onCommit } = options, step = options.step ?? 16, current3 = null, available = () => container2.clientWidth - handle.offsetWidth, fitted = (width2) => clampWidth(width2, available(), minFirst, minSecond), shown = () => current3 == null ? first.getBoundingClientRect().width : fitted(current3);
     function paint4() {
-      current2 == null ? container2.style.removeProperty(property) : container2.style.setProperty(property, `${fitted(current2)}px`);
+      current3 == null ? container2.style.removeProperty(property) : container2.style.setProperty(property, `${fitted(current3)}px`);
       let room = available();
       handle.setAttribute("aria-valuemin", String(minFirst)), handle.setAttribute("aria-valuemax", String(Math.max(minFirst, Math.round(room - minSecond)))), handle.setAttribute("aria-valuenow", String(Math.round(shown())));
     }
     function move(width2) {
-      current2 = fitted(width2), paint4();
+      current3 = fitted(width2), paint4();
     }
     return handle.addEventListener("pointerdown", (event) => {
       if (event.button !== 0) return;
@@ -16570,7 +16570,7 @@ Error generating stack: ` + x.message + `
       let onMove = (next3) => {
         moved = !0, move(startWidth + next3.clientX - startX);
       }, onEnd = () => {
-        handle.removeEventListener("pointermove", onMove), handle.removeEventListener("pointerup", onEnd), handle.removeEventListener("pointercancel", onEnd), delete handle.dataset.dragging, document.body.classList.remove("is-resizing"), moved && onCommit(current2);
+        handle.removeEventListener("pointermove", onMove), handle.removeEventListener("pointerup", onEnd), handle.removeEventListener("pointercancel", onEnd), delete handle.dataset.dragging, document.body.classList.remove("is-resizing"), moved && onCommit(current3);
       };
       handle.addEventListener("pointermove", onMove), handle.addEventListener("pointerup", onEnd), handle.addEventListener("pointercancel", onEnd);
     }), handle.addEventListener("keydown", (event) => {
@@ -16581,16 +16581,37 @@ Error generating stack: ` + x.message + `
       else if (event.key === "End") next3 = available() - minSecond;
       else return;
       event.preventDefault();
-      let before = current2;
-      move(next3), current2 !== before && onCommit(current2);
+      let before = current3;
+      move(next3), current3 !== before && onCommit(current3);
     }), handle.addEventListener("dblclick", () => {
-      current2 = null, paint4(), onCommit(null);
+      current3 = null, paint4(), onCommit(null);
     }), paint4(), {
       set(width2) {
-        current2 = width2 == null ? null : Math.round(width2), paint4();
+        current3 = width2 == null ? null : Math.round(width2), paint4();
       },
-      width: () => current2,
+      width: () => current3,
       refit: paint4
+    };
+  }
+
+  // src/lib/ui/notice-store.ts
+  var current = null, listeners2 = /* @__PURE__ */ new Set();
+  function emit() {
+    for (let listener of listeners2) listener();
+  }
+  function getNotice() {
+    return current;
+  }
+  function setNotice(text2, severity = "info") {
+    let trimmed = text2.trim();
+    current = trimmed ? { text: trimmed, severity } : null, emit();
+  }
+  function dismissNotice() {
+    current !== null && (current = null, emit());
+  }
+  function subscribeNotice(listener) {
+    return listeners2.add(listener), () => {
+      listeners2.delete(listener);
     };
   }
 
@@ -16668,13 +16689,13 @@ Error generating stack: ` + x.message + `
   }
 
   // src/lib/gig/gig.ts
-  var import_react51 = __toESM(require_react(), 1);
+  var import_react52 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom5 = __toESM(require_react_dom(), 1), import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react49 = __toESM(require_react(), 1), import_react_dom4 = __toESM(require_react_dom(), 1);
+  var import_react50 = __toESM(require_react(), 1), import_react_dom4 = __toESM(require_react_dom(), 1);
 
   // src/app/mui-theme-root.tsx
   var import_react23 = __toESM(require_react(), 1), import_react_dom2 = __toESM(require_react_dom(), 1);
@@ -17369,10 +17390,10 @@ Error generating stack: ` + x.message + `
     registerStyles(cache, serialized, isStringTag2);
     var className = cache.key + "-" + serialized.name;
     if (cache.inserted[serialized.name] === void 0) {
-      var current2 = serialized;
+      var current3 = serialized;
       do
-        cache.insert(serialized === current2 ? "." + className : "", current2, cache.sheet, !0), current2 = current2.next;
-      while (current2 !== void 0);
+        cache.insert(serialized === current3 ? "." + className : "", current3, cache.sheet, !0), current3 = current3.next;
+      while (current3 !== void 0);
     }
   };
 
@@ -17641,9 +17662,9 @@ Error generating stack: ` + x.message + `
       createElementArgArray[i] = args[i];
     return React3.createElement.apply(null, createElementArgArray);
   };
-  (function(_jsx230) {
+  (function(_jsx235) {
     var JSX;
-    JSX || (JSX = _jsx230.JSX || (_jsx230.JSX = {}));
+    JSX || (JSX = _jsx235.JSX || (_jsx235.JSX = {}));
   })(jsx || (jsx = {}));
   var Global = /* @__PURE__ */ withEmotionCache(function(props, cache) {
     var styles5 = props.styles, serialized = serializeStyles([styles5], void 0, React3.useContext(ThemeContext)), sheetRef = React3.useRef();
@@ -20327,7 +20348,7 @@ try {
       createStyledComponent = defaultCreateStyledComponent,
       useThemeProps: useThemeProps2 = useThemePropsDefault,
       componentName = "MuiStack"
-    } = options, useUtilityClasses114 = () => composeClasses({
+    } = options, useUtilityClasses115 = () => composeClasses({
       root: ["root"]
     }, (slot) => generateUtilityClass(componentName, slot), {}), StackRoot = createStyledComponent(style3);
     return /* @__PURE__ */ React20.forwardRef(function(inProps, ref) {
@@ -20344,7 +20365,7 @@ try {
         direction,
         spacing: spacing2,
         useFlexGap
-      }, classes2 = useUtilityClasses114();
+      }, classes2 = useUtilityClasses115();
       return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(StackRoot, {
         as: component,
         ownerState,
@@ -26266,24 +26287,24 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }
       scheduleTimer(transitionReduceMotion ? 0 : authoredTimeout ?? 0);
     }, [makeCallback, propsRef]), performEnter = React61.useCallback((mounting) => {
-      let current2 = propsRef.current, isAppearing = current2.parentGroup ? current2.parentGroup.isMounting : mounting;
-      if (isAppearingRef.current = isAppearing, !mounting && !current2.enter) {
+      let current3 = propsRef.current, isAppearing = current3.parentGroup ? current3.parentGroup.isMounting : mounting;
+      if (isAppearingRef.current = isAppearing, !mounting && !current3.enter) {
         statusRef.current = "entered", setStatus("entered");
         return;
       }
-      transitionReduceMotionRef.current = current2.reduceMotion, current2.onEnter?.(isAppearing), statusRef.current = "entering", setStatus("entering");
+      transitionReduceMotionRef.current = current3.reduceMotion, current3.onEnter?.(isAppearing), statusRef.current = "entering", setStatus("entering");
     }, [propsRef]), performExit = React61.useCallback(() => {
-      let current2 = propsRef.current;
-      if (!current2.exit) {
+      let current3 = propsRef.current;
+      if (!current3.exit) {
         statusRef.current = "exited", setStatus("exited");
         return;
       }
-      transitionReduceMotionRef.current = current2.reduceMotion, current2.onExit?.(), statusRef.current = "exiting", setStatus("exiting");
+      transitionReduceMotionRef.current = current3.reduceMotion, current3.onExit?.(), statusRef.current = "exiting", setStatus("exiting");
     }, [propsRef]), updateStatus = React61.useCallback((mounting, nextStatus) => {
       if (cancelPendingCallback(), nextStatus === "entering") {
-        let current2 = propsRef.current;
-        if (current2.mountOnEnter || current2.unmountOnExit) {
-          let node2 = current2.nodeRef.current;
+        let current3 = propsRef.current;
+        if (current3.mountOnEnter || current3.unmountOnExit) {
+          let node2 = current3.nodeRef.current;
           node2 && reflow(node2);
         }
         performEnter(mounting);
@@ -26295,8 +26316,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }), [cancelPendingCallback, updateStatus]), useEnhancedEffect_default(() => {
       if (!mountedRef.current)
         return;
-      let current2 = statusRef.current;
-      inProp ? current2 !== "entering" && current2 !== "entered" && updateStatus(!1, "entering") : current2 === "entering" || current2 === "entered" ? updateStatus(!1, "exiting") : current2 === "exited" && unmountOnExit && (statusRef.current = "unmounted", setStatus("unmounted"));
+      let current3 = statusRef.current;
+      inProp ? current3 !== "entering" && current3 !== "entered" && updateStatus(!1, "entering") : current3 === "entering" || current3 === "entered" ? updateStatus(!1, "exiting") : current3 === "exited" && unmountOnExit && (statusRef.current = "unmounted", setStatus("unmounted"));
     }, [inProp, status4, unmountOnExit, updateStatus]), useEnhancedEffect_default(() => {
       if (status4 === "unmounted" || lastFiredStatusRef.current === "unmounted") {
         lastFiredStatusRef.current = status4;
@@ -26304,8 +26325,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }
       let statusChanged = lastFiredStatusRef.current !== status4;
       statusChanged && (lastFiredStatusRef.current = status4);
-      let current2 = propsRef.current;
-      status4 === "entering" ? (statusChanged && current2.onEntering?.(isAppearingRef.current), nextCallbackRef.current === null && statusRef.current === status4 && scheduleTransitionEnd("entered", "entering")) : status4 === "exiting" ? (statusChanged && current2.onExiting?.(), nextCallbackRef.current === null && statusRef.current === status4 && scheduleTransitionEnd("exited", "exiting")) : status4 === "entered" && statusChanged ? current2.onEntered?.(isAppearingRef.current) : status4 === "exited" && statusChanged && current2.onExited?.();
+      let current3 = propsRef.current;
+      status4 === "entering" ? (statusChanged && current3.onEntering?.(isAppearingRef.current), nextCallbackRef.current === null && statusRef.current === status4 && scheduleTransitionEnd("entered", "entering")) : status4 === "exiting" ? (statusChanged && current3.onExiting?.(), nextCallbackRef.current === null && statusRef.current === status4 && scheduleTransitionEnd("exited", "exiting")) : status4 === "entered" && statusChanged ? current3.onEntered?.(isAppearingRef.current) : status4 === "exited" && statusChanged && current3.onExited?.();
     }, [propsRef, scheduleTransitionEnd, status4]), status4 === "unmounted" ? null : /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(TransitionGroupContext_default.Provider, {
       value: null,
       children: children(status4, childProps)
@@ -26459,10 +26480,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return isForbiddenTagName || isInputHidden;
   }
   function getKeepChain(node2, container2) {
-    let chain = /* @__PURE__ */ new Set(), current2 = node2;
-    for (; current2 && current2 !== container2; )
-      chain.add(current2), current2 = current2.parentElement;
-    return current2 === container2 ? chain : /* @__PURE__ */ new Set();
+    let chain = /* @__PURE__ */ new Set(), current3 = node2;
+    for (; current3 && current3 !== container2; )
+      chain.add(current3), current3 = current3.parentElement;
+    return current3 === container2 ? chain : /* @__PURE__ */ new Set();
   }
   function collectHiddenTargets(parent, keep, keepChain, out) {
     [].forEach.call(parent.children, (element) => {
@@ -30794,7 +30815,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "[role='checkbox']",
     "[role='radio']",
     "[tabindex]:not([tabindex='-1'])"
-  ].join(","), installed = !1, current = null, timer = 0, priorDescribedBy = "", tipParams = /* @__PURE__ */ new WeakMap();
+  ].join(","), installed = !1, current2 = null, timer = 0, priorDescribedBy = "", tipParams = /* @__PURE__ */ new WeakMap();
   function writeTooltip(element) {
     let key = element.dataset.tooltipKey ?? "";
     if (!hasKey(key)) throw new Error(`Unknown tooltip key ${key}.`);
@@ -30803,12 +30824,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     element.dataset.tooltip = value;
   }
   function syncOpenTooltip() {
-    if (!current) return;
+    if (!current2) return;
     let tip = document.getElementById(TOOLTIP_ID);
-    tip instanceof HTMLElement && (tip.textContent = current.dataset.tooltip ?? "");
+    tip instanceof HTMLElement && (tip.textContent = current2.dataset.tooltip ?? "");
   }
   function setTooltip(element, spec2) {
-    element.dataset.tooltipKey = spec2.key, spec2.params ? tipParams.set(element, spec2.params) : tipParams.delete(element), writeTooltip(element), element.removeAttribute("title"), current === element && syncOpenTooltip();
+    element.dataset.tooltipKey = spec2.key, spec2.params ? tipParams.set(element, spec2.params) : tipParams.delete(element), writeTooltip(element), element.removeAttribute("title"), current2 === element && syncOpenTooltip();
   }
   function tooltipRef(spec2) {
     return (element) => {
@@ -30850,7 +30871,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }
   function refreshTooltips(root = document) {
-    if (root.querySelectorAll("[data-tooltip-key]").forEach((node2) => writeTooltip(node2)), current && !current.isConnected) {
+    if (root.querySelectorAll("[data-tooltip-key]").forEach((node2) => writeTooltip(node2)), current2 && !current2.isConnected) {
       hide();
       return;
     }
@@ -30867,7 +30888,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function onPointerOut(event) {
     if (event.pointerType && event.pointerType !== "mouse") return;
     let target = tooltipTarget(event.target);
-    !target || tooltipTarget(event.relatedTarget) === target || current === target && hide();
+    !target || tooltipTarget(event.relatedTarget) === target || current2 === target && hide();
   }
   function onFocusIn(event) {
     let target = tooltipTarget(event.target);
@@ -30876,13 +30897,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function onFocusOut(event) {
     if (tooltipTarget(event.relatedTarget)) return;
     let target = tooltipTarget(event.target);
-    target && current === target && hide();
+    target && current2 === target && hide();
   }
   function onKeyDown(event) {
-    event.key !== "Escape" || !current || hide();
+    event.key !== "Escape" || !current2 || hide();
   }
   function onScroll() {
-    current && hide();
+    current2 && hide();
   }
   function schedule(target, delay) {
     if (window.clearTimeout(timer), timer = 0, delay <= 0) {
@@ -30894,12 +30915,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function show(target) {
     let text2 = target.dataset.tooltip?.trim() ?? "";
     if (!text2) return;
-    current && current !== target && restoreDescribedBy(current), current = target;
+    current2 && current2 !== target && restoreDescribedBy(current2), current2 = target;
     let tip = ensureTip();
     tip.textContent = text2, openTip(tip), place(target, tip), addDescribedBy(target);
   }
   function hide() {
-    window.clearTimeout(timer), timer = 0, current && restoreDescribedBy(current), current = null;
+    window.clearTimeout(timer), timer = 0, current2 && restoreDescribedBy(current2), current2 = null;
     let tip = document.getElementById(TOOLTIP_ID);
     tip instanceof HTMLElement && closeTip(tip);
   }
@@ -32604,12 +32625,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // node_modules/@popperjs/core/lib/utils/mergeByName.js
   function mergeByName(modifiers) {
-    var merged = modifiers.reduce(function(merged2, current2) {
-      var existing = merged2[current2.name];
-      return merged2[current2.name] = existing ? Object.assign({}, existing, current2, {
-        options: Object.assign({}, existing.options, current2.options),
-        data: Object.assign({}, existing.data, current2.data)
-      }) : current2, merged2;
+    var merged = modifiers.reduce(function(merged2, current3) {
+      var existing = merged2[current3.name];
+      return merged2[current3.name] = existing ? Object.assign({}, existing, current3, {
+        options: Object.assign({}, existing.options, current3.options),
+        data: Object.assign({}, existing.data, current3.data)
+      }) : current3, merged2;
     }, {});
     return Object.keys(merged).map(function(key) {
       return merged[key];
@@ -41173,8 +41194,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         entry = { key, value };
       },
       findMatchingEntry(value, resultEqualityCheck) {
-        let current2 = entry;
-        return current2 !== void 0 && resultEqualityCheck(current2.value, value) ? current2 : void 0;
+        let current3 = entry;
+        return current3 !== void 0 && resultEqualityCheck(current3.value, value) ? current3 : void 0;
       },
       clear() {
         entry = void 0;
@@ -44122,9 +44143,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       node: node2,
       params: comparatorList.map((el2) => el2.getSortCellParams(node2.id))
     })).sort((a, b) => compareRows(comparatorList, a, b)).map((row) => row.node.id);
-  }, getNextGridSortDirection = (sortingOrder, current2) => {
-    let currentIdx = sortingOrder.indexOf(current2);
-    return !current2 || currentIdx === -1 || currentIdx + 1 === sortingOrder.length ? sortingOrder[0] : sortingOrder[currentIdx + 1];
+  }, getNextGridSortDirection = (sortingOrder, current3) => {
+    let currentIdx = sortingOrder.indexOf(current3);
+    return !current3 || currentIdx === -1 || currentIdx + 1 === sortingOrder.length ? sortingOrder[0] : sortingOrder[currentIdx + 1];
   }, gridNillComparator = (v1, v2) => v1 == null && v2 != null ? -1 : v2 == null && v1 != null ? 1 : v1 == null && v2 == null ? 0 : null, collator = new Intl.Collator(), gridStringOrNumberComparator = (value1, value2) => {
     let nillResult = gridNillComparator(value1, value2);
     return nillResult !== null ? nillResult : typeof value1 == "string" ? collator.compare(value1.toString(), value2.toString()) : value1 - value2;
@@ -59861,8 +59882,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       if (!(spacing2 > 0)) continue;
       let first = Math.max(0, Math.ceil((startSeconds - marker.positionSeconds) / spacing2 - 1e-9)), lastExclusive = Math.ceil((endSeconds - marker.positionSeconds) / spacing2 - 1e-9);
       if (lastExclusive <= first) continue;
-      let emit7 = Math.min(lastExclusive, first + MAX_TICKS);
-      pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, emit7, startSeconds, endSeconds, first);
+      let emit8 = Math.min(lastExclusive, first + MAX_TICKS);
+      pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, emit8, startSeconds, endSeconds, first);
     }
     return ticks;
   }
@@ -59872,8 +59893,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function overviewXToTime(x, width2, durationSeconds) {
     return !(width2 > 0) || !(durationSeconds > 0) || !Number.isFinite(x) ? 0 : Math.min(1, Math.max(0, x / width2)) * durationSeconds;
   }
-  function zoomPixelsPerSecond(current2, direction) {
-    let next3 = (Number.isFinite(current2) && current2 > 0 ? current2 : 80) * (direction > 0 ? 1.25 : 1 / 1.25);
+  function zoomPixelsPerSecond(current3, direction) {
+    let next3 = (Number.isFinite(current3) && current3 > 0 ? current3 : 80) * (direction > 0 ? 1.25 : 1 / 1.25);
     return next3 >= 320 ? 320 : next3 <= 10 ? 10 : next3;
   }
   function tileDeviceWidth(dpr) {
@@ -60650,8 +60671,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
      * @returns The buffer to draw into.
      */
     canvasImage(context, which, width2, height2) {
-      let current2 = which === "detail" ? this.detailImage : this.overviewImage;
-      if (current2 && current2.width === width2 && current2.height === height2) return current2;
+      let current3 = which === "detail" ? this.detailImage : this.overviewImage;
+      if (current3 && current3.width === width2 && current3.height === height2) return current3;
       let image = context.createImageData(width2, height2);
       return which === "detail" ? this.detailImage = image : this.overviewImage = image, image;
     }
@@ -60688,7 +60709,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/player/player.ts
-  var SEEK_STEP_SECONDS = 5, SEEK_STEP_LARGE_SECONDS = 30, listeners2 = /* @__PURE__ */ new Set(), wired = /* @__PURE__ */ new WeakSet(), media = null, trackId = null, title = "", artist = "", playing = !1, currentTime = 0, duration2 = 0, volume = 1, error = "", ignoreMediaPause = !1, cueToken = 0, cues = [], barRoot = null, waveform = null;
+  var SEEK_STEP_SECONDS = 5, SEEK_STEP_LARGE_SECONDS = 30, listeners3 = /* @__PURE__ */ new Set(), wired = /* @__PURE__ */ new WeakSet(), media = null, trackId = null, title = "", artist = "", playing = !1, currentTime = 0, duration2 = 0, volume = 1, error = "", ignoreMediaPause = !1, cueToken = 0, cues = [], barRoot = null, waveform = null;
   function formatPlayerTime(seconds) {
     if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
     let total = Math.floor(seconds), secs = total % 60, minutes = Math.floor(total / 60);
@@ -60725,7 +60746,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         let row = state.byId.get(nextId);
         title = row?.name || row?.title || playerStrings.untitled, artist = row?.artist ?? "", trackId = nextId, currentTime = 0, duration2 = 0, element.src = trackUrl(nextId), element.currentTime = 0, waveform?.setTrack(nextId), loadCues(nextId);
       }
-      error = "", playing = !0, emit();
+      error = "", playing = !0, emit2();
       let pending = element.play();
       pending && typeof pending.then == "function" && pending.catch(() => {
         trackId === nextId && noteFailure(nextId);
@@ -60738,7 +60759,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     trackId === nextId && playing ? pause() : play(nextId);
   }
   function pause() {
-    trackId !== null && (playing = !1, ensureMedia().pause(), emit());
+    trackId !== null && (playing = !1, ensureMedia().pause(), emit2());
   }
   function togglePlayPause() {
     if (trackId === null) {
@@ -60757,7 +60778,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function seek(seconds) {
     if (!Number.isFinite(seconds) || trackId === null) return;
     let element = ensureMedia(), next3 = seconds < 0 ? 0 : seconds, limit = element.duration;
-    Number.isFinite(limit) && limit > 0 && next3 > limit && (next3 = limit), element.currentTime = next3, currentTime = next3, emit();
+    Number.isFinite(limit) && limit > 0 && next3 > limit && (next3 = limit), element.currentTime = next3, currentTime = next3, emit2();
   }
   function seekBy(deltaSeconds) {
     Number.isFinite(deltaSeconds) && seek(currentTime + deltaSeconds);
@@ -60785,11 +60806,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return canMove(delta);
   }
   function setVolume(next3) {
-    Number.isFinite(next3) && (volume = Math.min(1, Math.max(0, next3)), media && (media.volume = volume), emit());
+    Number.isFinite(next3) && (volume = Math.min(1, Math.max(0, next3)), media && (media.volume = volume), emit2());
   }
   function subscribe(listener) {
-    return listeners2.add(listener), () => {
-      listeners2.delete(listener);
+    return listeners3.add(listener), () => {
+      listeners3.delete(listener);
     };
   }
   function mountPlayer(host) {
@@ -60806,7 +60827,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function repaintPlayer() {
     let root = document.getElementById("player-bar");
-    root && root.setAttribute("aria-label", playerStrings.region), waveform?.relabel(), emit();
+    root && root.setAttribute("aria-label", playerStrings.region), waveform?.relabel(), emit2();
   }
   function resetPlayback() {
     cueToken += 1, trackId = null, title = "", artist = "", playing = !1, currentTime = 0, duration2 = 0, error = "", cues = [];
@@ -60818,15 +60839,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wire(element) {
     wired.has(element) || (wired.add(element), element.addEventListener("play", () => {
-      playing = !0, emit();
+      playing = !0, emit2();
     }), element.addEventListener("pause", () => {
-      ignoreMediaPause || (playing = !1, emit());
+      ignoreMediaPause || (playing = !1, emit2());
     }), element.addEventListener("ended", () => {
-      currentTime = Number.isFinite(element.currentTime) ? element.currentTime : currentTime, moveBy(1) || (playing = !1, emit());
+      currentTime = Number.isFinite(element.currentTime) ? element.currentTime : currentTime, moveBy(1) || (playing = !1, emit2());
     }), element.addEventListener("timeupdate", () => {
-      currentTime = element.currentTime, Number.isFinite(element.duration) && (duration2 = element.duration), emit();
+      currentTime = element.currentTime, Number.isFinite(element.duration) && (duration2 = element.duration), emit2();
     }), element.addEventListener("durationchange", () => {
-      duration2 = Number.isFinite(element.duration) ? element.duration : 0, emit();
+      duration2 = Number.isFinite(element.duration) ? element.duration : 0, emit2();
     }), element.addEventListener("error", () => {
       trackId !== null && noteFailure(trackId);
     }));
@@ -60862,10 +60883,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let token4 = ++cueToken;
     cues = [], waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] }), readCues(id).then(
       (found) => {
-        token4 !== cueToken || trackId !== id || (cues = found.cues, waveform?.setMarkers(id, found), emit());
+        token4 !== cueToken || trackId !== id || (cues = found.cues, waveform?.setMarkers(id, found), emit2());
       },
       () => {
-        token4 !== cueToken || trackId !== id || (cues = [], waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] }), emit());
+        token4 !== cueToken || trackId !== id || (cues = [], waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] }), emit2());
       }
     );
   }
@@ -60885,7 +60906,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function noteFailure(forId) {
     playing = !1, classifyStatus(forId).then((message) => {
-      trackId === forId && (playing = !1, error = message, emit());
+      trackId === forId && (playing = !1, error = message, emit2());
     });
   }
   async function classifyStatus(forId) {
@@ -60897,9 +60918,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       return playerStrings.cannotPlay;
     }
   }
-  function emit() {
+  function emit2() {
     let snapshot2 = getPlayerState();
-    for (let listener of [...listeners2]) listener(snapshot2);
+    for (let listener of [...listeners3]) listener(snapshot2);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -60910,7 +60931,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/track-list-store.ts
-  var listeners3 = /* @__PURE__ */ new Set(), detail = { kind: "none" }, actions2 = {
+  var listeners4 = /* @__PURE__ */ new Set(), detail = { kind: "none" }, actions2 = {
     selectTrack(id) {
       bridge.selectTrack(id);
     },
@@ -60973,11 +60994,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     detail = next3, emitTrackList();
   }
   function emitTrackList() {
-    for (let listener of listeners3) listener();
+    for (let listener of listeners4) listener();
   }
   function subscribeTrackList(listener) {
-    return listeners3.add(listener), () => {
-      listeners3.delete(listener);
+    return listeners4.add(listener), () => {
+      listeners4.delete(listener);
     };
   }
 
@@ -61010,8 +61031,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     moveSelection(delta, viewForList(list), list);
   }
   function openTrackList() {
-    let view = viewForList(focusedList()), current2 = view.find((track) => track.id === state.selectedId) ?? view[0];
-    current2 && (current2.entry ? bridge.selectEntry(current2.id) : bridge.selectTrack(current2.id));
+    let view = viewForList(focusedList()), current3 = view.find((track) => track.id === state.selectedId) ?? view[0];
+    current3 && (current3.entry ? bridge.selectEntry(current3.id) : bridge.selectTrack(current3.id));
   }
   function focusedList() {
     return state.splitCrates && state.focusedPane === "b" ? el("list-b") : el("list");
@@ -61223,7 +61244,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     "crates-replace-dialog": "md",
     "rekordbox-dialog": "md",
     "relink-dialog": "lg"
-  }, openIds = /* @__PURE__ */ new Set(), listeners4 = /* @__PURE__ */ new Set(), cratePrompt = { title: "", value: "", confirmLabel: "" }, cratePromptResolve = null, confirmState = { title: "", message: "", confirmLabel: "" }, confirmResolve = null, ensureMount = () => {
+  }, openIds = /* @__PURE__ */ new Set(), listeners5 = /* @__PURE__ */ new Set(), cratePrompt = { title: "", value: "", confirmLabel: "" }, cratePromptResolve = null, confirmState = { title: "", message: "", confirmLabel: "" }, confirmResolve = null, ensureMount = () => {
   };
   function bindSharedDialogMount(fn2) {
     ensureMount = fn2;
@@ -61232,8 +61253,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ensureMount();
   }
   function subscribeSharedDialogs(listener) {
-    return listeners4.add(listener), () => {
-      listeners4.delete(listener);
+    return listeners5.add(listener), () => {
+      listeners5.delete(listener);
     };
   }
   var escapeBound = !1;
@@ -61244,16 +61265,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       id && (event.preventDefault(), setSharedDialogOpen(id, !1));
     }));
   }
-  function emit2() {
+  function emit3() {
     bindEscape();
-    for (let listener of listeners4) listener();
+    for (let listener of listeners5) listener();
   }
   function isSharedDialogOpen(id) {
     return openIds.has(id);
   }
   function setSharedDialogOpen(id, open) {
     let was = openIds.has(id);
-    if (open !== was && (open ? openIds.add(id) : openIds.delete(id), emit2(), !open)) {
+    if (open !== was && (open ? openIds.add(id) : openIds.delete(id), emit3(), !open)) {
       if (document.getElementById(id)?.dispatchEvent(new Event("close")), id === "crate-prompt-dialog") {
         let resolve = cratePromptResolve;
         cratePromptResolve = null, resolve?.(null);
@@ -61290,7 +61311,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return cratePrompt;
   }
   function setCratePromptValue(value) {
-    cratePrompt = { ...cratePrompt, value }, emit2();
+    cratePrompt = { ...cratePrompt, value }, emit3();
   }
   function settleCratePrompt(value) {
     let resolve = cratePromptResolve;
@@ -61307,7 +61328,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let previous2 = cratePromptResolve;
       cratePromptResolve = null, previous2(null);
     }
-    return cratePrompt = next3, emit2(), setSharedDialogOpen("crate-prompt-dialog", !0), new Promise((resolve) => {
+    return cratePrompt = next3, emit3(), setSharedDialogOpen("crate-prompt-dialog", !0), new Promise((resolve) => {
       cratePromptResolve = resolve;
     });
   }
@@ -61329,7 +61350,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let previous2 = confirmResolve;
       confirmResolve = null, previous2(!1);
     }
-    return confirmState = next3, emit2(), setSharedDialogOpen("confirm-dialog", !0), new Promise((resolve) => {
+    return confirmState = next3, emit3(), setSharedDialogOpen("confirm-dialog", !0), new Promise((resolve) => {
       confirmResolve = resolve;
     });
   }
@@ -62046,7 +62067,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     updatePrereleasesDisabled: !0,
     updateBusy: !1,
     updateStatus: ""
-  }, snapshot = { ...DEFAULT_SNAPSHOT }, listeners5 = /* @__PURE__ */ new Set(), islandRoot = null, appearanceSync = !1, rerunSetupHandler = null, copyVersionHandler = null, saveUpdateEnabledHandler = null, saveUpdatePrereleasesHandler = null;
+  }, snapshot = { ...DEFAULT_SNAPSHOT }, listeners6 = /* @__PURE__ */ new Set(), islandRoot = null, appearanceSync = !1, rerunSetupHandler = null, copyVersionHandler = null, saveUpdateEnabledHandler = null, saveUpdatePrereleasesHandler = null;
   function isColorway(value) {
     return typeof value == "string" && COLORWAYS.includes(value);
   }
@@ -62062,12 +62083,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return snapshot;
   }
   function subscribeSettings(listener) {
-    return listeners5.add(listener), () => {
-      listeners5.delete(listener);
+    return listeners6.add(listener), () => {
+      listeners6.delete(listener);
     };
   }
   function notifySettings() {
-    for (let listener of listeners5) listener();
+    for (let listener of listeners6) listener();
   }
   function patchSettings(patch) {
     snapshot = { ...snapshot, ...patch }, notifySettings();
@@ -62116,7 +62137,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function applyAppearance(payload) {
     let hasColorway = "colorway" in payload, hasFollow = "icon_follows_theme" in payload, hasHref = "icon_href" in payload;
     if (!hasColorway && !hasFollow && !hasHref) return;
-    let current2 = snapshot, colorway = resolveColorway(hasColorway ? payload.colorway : selectValue2("colorway-select") || current2.colorway), follow = hasFollow ? payload.icon_follows_theme !== !1 : settingsIslandMounted() ? current2.iconFollowsTheme : checkboxChecked("icon-follows-theme");
+    let current3 = snapshot, colorway = resolveColorway(hasColorway ? payload.colorway : selectValue2("colorway-select") || current3.colorway), follow = hasFollow ? payload.icon_follows_theme !== !1 : settingsIslandMounted() ? current3.iconFollowsTheme : checkboxChecked("icon-follows-theme");
     if (appearanceSync = !0, patchSettings({ colorway, iconFollowsTheme: follow }), !settingsIslandMounted()) {
       if (hasColorway) {
         let select = document.getElementById("colorway-select");
@@ -62359,8 +62380,23 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return value;
   }
 
+  // src/containers/NoticeContext.tsx
+  var import_react28 = __toESM(require_react(), 1), import_jsx_runtime230 = __toESM(require_jsx_runtime(), 1), NoticeContext = (0, import_react28.createContext)(null);
+  function NoticeProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime230.jsx)(NoticeContext, { value, children });
+  }
+  function useNotice() {
+    let value = (0, import_react28.useContext)(NoticeContext);
+    if (value === null)
+      throw new Error("useNotice must be used within NoticeProvider");
+    return value;
+  }
+
   // src/containers/HistoryContext.tsx
-  var import_react28 = __toESM(require_react(), 1), import_jsx_runtime230 = __toESM(require_jsx_runtime(), 1), historyActions = {
+  var import_react29 = __toESM(require_react(), 1), import_jsx_runtime231 = __toESM(require_jsx_runtime(), 1), historyActions = {
     loadHistory: async () => {
     },
     openSession: async (_id) => {
@@ -62369,53 +62405,53 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     },
     openInLibrary: async (_assetId) => {
     }
-  }, listeners6 = /* @__PURE__ */ new Set();
+  }, listeners7 = /* @__PURE__ */ new Set();
   function subscribeHistory(listener) {
-    return listeners6.add(listener), () => {
-      listeners6.delete(listener);
+    return listeners7.add(listener), () => {
+      listeners7.delete(listener);
     };
   }
   function notifyHistory() {
-    for (let listener of listeners6) listener();
+    for (let listener of listeners7) listener();
   }
-  var HistoryContext = (0, import_react28.createContext)(null);
+  var HistoryContext = (0, import_react29.createContext)(null);
   function HistoryProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime230.jsx)(HistoryContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime231.jsx)(HistoryContext, { value, children });
   }
   function useHistory() {
-    let value = (0, import_react28.useContext)(HistoryContext);
+    let value = (0, import_react29.useContext)(HistoryContext);
     if (value === null)
       throw new Error("useHistory must be used within HistoryProvider");
     return value;
   }
 
   // src/containers/StatsContext.tsx
-  var import_react29 = __toESM(require_react(), 1), import_jsx_runtime231 = __toESM(require_jsx_runtime(), 1), StatsContext = (0, import_react29.createContext)(null);
+  var import_react30 = __toESM(require_react(), 1), import_jsx_runtime232 = __toESM(require_jsx_runtime(), 1), StatsContext = (0, import_react30.createContext)(null);
   function StatsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime231.jsx)(StatsContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime232.jsx)(StatsContext, { value, children });
   }
   function useStats() {
-    let value = (0, import_react29.useContext)(StatsContext);
+    let value = (0, import_react30.useContext)(StatsContext);
     if (value === null)
       throw new Error("useStats must be used within StatsProvider");
     return value;
   }
 
   // src/lib/files/files-store.ts
-  var listeners7 = /* @__PURE__ */ new Set();
+  var listeners8 = /* @__PURE__ */ new Set();
   function subscribeFiles(listener) {
-    return listeners7.add(listener), () => {
-      listeners7.delete(listener);
+    return listeners8.add(listener), () => {
+      listeners8.delete(listener);
     };
   }
   function emitFiles() {
-    for (let listener of listeners7) listener();
+    for (let listener of listeners8) listener();
   }
 
   // src/lib/files/files.ts
@@ -62714,11 +62750,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/drift.ts
-  var import_react31 = __toESM(require_react(), 1);
+  var import_react32 = __toESM(require_react(), 1);
 
   // src/components/ReportGrid.tsx
-  var import_react30 = __toESM(require_react(), 1);
-  var import_jsx_runtime232 = __toESM(require_jsx_runtime(), 1);
+  var import_react31 = __toESM(require_react(), 1);
+  var import_jsx_runtime233 = __toESM(require_jsx_runtime(), 1);
   function gridLocaleText2(locale) {
     return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
   }
@@ -62728,19 +62764,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     getRowId
   }) {
     ensureGridDom();
-    let hostRef = (0, import_react30.useRef)(null), locale = getLocale(), localeText = (0, import_react30.useMemo)(() => gridLocaleText2(locale), [locale]), [page, setPage] = (0, import_react30.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react30.useMemo)(
+    let hostRef = (0, import_react31.useRef)(null), locale = getLocale(), localeText = (0, import_react31.useMemo)(() => gridLocaleText2(locale), [locale]), [page, setPage] = (0, import_react31.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react31.useMemo)(
       () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
       [page, maxPage]
     ), hideFooter = rows.length <= GRID_PAGE_SIZE, height2 = Math.max(180, Math.min(36 * (rows.length + 2) + (hideFooter ? 0 : 52), 400));
-    return (0, import_react30.useLayoutEffect)(() => {
+    return (0, import_react31.useLayoutEffect)(() => {
       setPage(0);
-    }, [rows.length]), (0, import_react30.useLayoutEffect)(() => {
+    }, [rows.length]), (0, import_react31.useLayoutEffect)(() => {
       let node2 = hostRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, rows, locale, height2]), /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("div", { ref: hostRef, className: "report-grid", style: { height: height2, width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime232.jsx)(
+    }, [columns, rows, locale, height2]), /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("div", { ref: hostRef, className: "report-grid", style: { height: height2, width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime233.jsx)(
       DataGrid2,
       {
         rows: [...rows],
@@ -62802,7 +62838,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/DriftReport.tsx
-  var import_jsx_runtime233 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime234 = __toESM(require_jsx_runtime(), 1);
   function driftColumns() {
     return [
       {
@@ -62835,22 +62871,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let { drift } = useGig(), payload = drift.report, rows = payload ? driftViewRows(payload.flags || []) : [], columns = driftColumns();
     if (!payload) return null;
     let flags = payload.flags || [];
-    return /* @__PURE__ */ (0, import_jsx_runtime233.jsxs)(import_jsx_runtime233.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
-      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
-      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
-      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
-      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
-      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
-      flags.length ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)(ReportGrid, { rows, columns, getRowId: (row) => row.id }) : /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.empty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime234.jsxs)(import_jsx_runtime234.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
+      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
+      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
+      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
+      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
+      flags.length ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(ReportGrid, { rows, columns, getRowId: (row) => row.id }) : /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.empty") })
     ] });
   }
 
   // src/lib/gig/drift.ts
-  var listeners8 = /* @__PURE__ */ new Set(), latest = null, islandRoot2 = null;
-  function emit3() {
+  var listeners9 = /* @__PURE__ */ new Set(), latest = null, islandRoot2 = null;
+  function emit4() {
     let snapshot2 = getDriftSnapshot();
-    for (let listener of listeners8) listener(snapshot2);
+    for (let listener of listeners9) listener(snapshot2);
   }
   function beginBusy() {
     let button = el("drift-refresh");
@@ -62870,22 +62906,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { report: latest, scope: driftScopeLabel() };
   }
   function subscribeDrift(listener) {
-    return listeners8.add(listener), () => {
-      listeners8.delete(listener);
+    return listeners9.add(listener), () => {
+      listeners9.delete(listener);
     };
   }
   function wireDrift() {
     let panel = el("drift-panel");
     panel.dataset.driftWired !== "true" && (panel.dataset.driftWired = "true", el("drift-refresh").addEventListener("click", () => {
       loadDrift();
-    }), islandRoot2 = mountIsland(el("drift-report"), (0, import_react31.createElement)(DriftReport)));
+    }), islandRoot2 = mountIsland(el("drift-report"), (0, import_react32.createElement)(DriftReport)));
   }
   async function loadDrift() {
     let token4 = ++state.driftToken;
     beginBusy();
     let settle = "none";
     if (state.activeCrate === "all") {
-      failStatus(t("error.tempo_needs_crate")), endBusy(), updateScope(), emit3(), el("drift-refresh").focus();
+      failStatus(t("error.tempo_needs_crate")), endBusy(), updateScope(), emit4(), el("drift-refresh").focus();
       return;
     }
     let crate = String(state.activeCrate);
@@ -62900,7 +62936,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failStatus(serverMessage(payload, t("drift.unreadable"))), settle = "retry";
         return;
       }
-      latest = payload, el("drift-status").textContent = "", updateScope(), emit3(), settle = "report";
+      latest = payload, el("drift-status").textContent = "", updateScope(), emit4(), settle = "report";
     } catch {
       if (token4 !== state.driftToken) return;
       failStatus(t("drift.unreachable")), settle = "retry";
@@ -62914,11 +62950,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     failStatus(message), endBusy(), el("drift-refresh").focus();
   }
   function repaintDrift() {
-    updateScope(), emit3();
+    updateScope(), emit4();
   }
 
   // src/lib/gig/portable.ts
-  var import_react32 = __toESM(require_react(), 1);
+  var import_react33 = __toESM(require_react(), 1);
 
   // src/lib/gig/portable-view.ts
   var KIND_KEY = {
@@ -62955,7 +62991,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/PortableReport.tsx
-  var import_jsx_runtime234 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime235 = __toESM(require_jsx_runtime(), 1);
   function portableColumns() {
     return [
       {
@@ -62963,7 +62999,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         headerName: t("portable.column.problem"),
         flex: 1,
         minWidth: 140,
-        renderCell: (params) => /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("span", { className: "portable-kind", children: params.value })
+        renderCell: (params) => /* @__PURE__ */ (0, import_jsx_runtime235.jsx)("span", { className: "portable-kind", children: params.value })
       },
       {
         field: "crate",
@@ -62982,13 +63018,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         headerName: t("portable.column.fix"),
         flex: 1.4,
         minWidth: 160,
-        renderCell: (params) => params.value ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("span", { className: "portable-fix", children: String(params.value) }) : null
+        renderCell: (params) => params.value ? /* @__PURE__ */ (0, import_jsx_runtime235.jsx)("span", { className: "portable-fix", children: String(params.value) }) : null
       }
     ];
   }
   function PortableReport() {
     let { portable } = useGig(), report = portable.report, rows = report ? portableViewRows(report) : [], columns = portableColumns();
-    return rows.length ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(ReportGrid, { rows, columns, getRowId: (row) => row.id }) : null;
+    return rows.length ? /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(ReportGrid, { rows, columns, getRowId: (row) => row.id }) : null;
   }
 
   // src/lib/gig/portable-bind.ts
@@ -63002,15 +63038,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/portable.ts
-  var FINDING_CAP = 100, islandRoot3 = null, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners9 = /* @__PURE__ */ new Set();
+  var FINDING_CAP = 100, islandRoot3 = null, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners10 = /* @__PURE__ */ new Set();
   function emitPortable() {
     let snapshot2 = portableSnapshot();
-    for (let listener of listeners9) listener(snapshot2);
+    for (let listener of listeners10) listener(snapshot2);
     emitFiles();
   }
   function subscribePortable(listener) {
-    return listeners9.add(listener), () => {
-      listeners9.delete(listener);
+    return listeners10.add(listener), () => {
+      listeners10.delete(listener);
     };
   }
   function portableSnapshot() {
@@ -63117,7 +63153,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       runPortableCheck(el("portable-drive").value);
     }), el("portable-drive").addEventListener("change", () => {
       runPortableCheck(el("portable-drive").value);
-    }), islandRoot3 = mountIsland(el("portable-view-findings"), (0, import_react32.createElement)(PortableReport)));
+    }), islandRoot3 = mountIsland(el("portable-view-findings"), (0, import_react33.createElement)(PortableReport)));
   }
   function renderPortableReport(report) {
     latest2 = report;
@@ -63201,14 +63237,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/health-events.ts
-  var listeners10 = /* @__PURE__ */ new Set();
+  var listeners11 = /* @__PURE__ */ new Set();
   function subscribeHealth(listener) {
-    return listeners10.add(listener), () => {
-      listeners10.delete(listener);
+    return listeners11.add(listener), () => {
+      listeners11.delete(listener);
     };
   }
   function emitHealth() {
-    for (let listener of [...listeners10]) listener();
+    for (let listener of [...listeners11]) listener();
   }
 
   // src/lib/health/health-list.ts
@@ -63238,16 +63274,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/health.ts
-  var import_react37 = __toESM(require_react(), 1);
+  var import_react38 = __toESM(require_react(), 1);
 
   // src/lib/ui/shared-dialog-mount.tsx
-  var import_react35 = __toESM(require_react(), 1);
+  var import_react36 = __toESM(require_react(), 1);
 
   // src/pages/SharedDialogs.tsx
-  var import_react34 = __toESM(require_react(), 1), import_react_dom3 = __toESM(require_react_dom(), 1);
+  var import_react35 = __toESM(require_react(), 1), import_react_dom3 = __toESM(require_react_dom(), 1);
 
   // src/components/CenteredDialog.tsx
-  var import_react33 = __toESM(require_react(), 1);
+  var import_react34 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Dialog/Dialog.mjs
   var React304 = __toESM(require_react(), 1);
@@ -63262,7 +63298,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var React303 = __toESM(require_react(), 1), DialogContext = /* @__PURE__ */ React303.createContext({}), DialogContext_default = DialogContext;
 
   // node_modules/@mui/material/Dialog/Dialog.mjs
-  var import_jsx_runtime235 = __toESM(require_jsx_runtime(), 1), DialogBackdrop = styled_default2(Backdrop_default, {
+  var import_jsx_runtime236 = __toESM(require_jsx_runtime(), 1), DialogBackdrop = styled_default2(Backdrop_default, {
     name: "MuiDialog",
     slot: "Backdrop"
   })({
@@ -63525,7 +63561,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         role: "presentation"
       }
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(RootSlot, {
       closeAfterTransition: !0,
       slots: {
         backdrop: BackdropSlot
@@ -63541,15 +63577,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       onClick: handleBackdropClick,
       ...rootSlotProps,
       ...other,
-      children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(TransitionSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(TransitionSlot, {
         ...transitionSlotProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(ContainerSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(ContainerSlot, {
           onMouseDown: handleMouseDown,
           ...containerSlotProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(PaperSlot, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(PaperSlot, {
             as: PaperComponent,
             ...paperSlotProps,
-            children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(DialogContext_default.Provider, {
+            children: /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(DialogContext_default.Provider, {
               value: dialogContextValue,
               children
             })
@@ -63575,7 +63611,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]), dialogTitleClasses_default = dialogTitleClasses;
 
   // node_modules/@mui/material/DialogContent/DialogContent.mjs
-  var import_jsx_runtime236 = __toESM(require_jsx_runtime(), 1), useUtilityClasses101 = (ownerState) => {
+  var import_jsx_runtime237 = __toESM(require_jsx_runtime(), 1), useUtilityClasses101 = (ownerState) => {
     let {
       classes: classes2,
       dividers
@@ -63637,7 +63673,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ...props,
       dividers
     }, classes2 = useUtilityClasses101(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(DialogContentRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime237.jsx)(DialogContentRoot, {
       className: clsx_default(classes2.root, className),
       ownerState,
       ref,
@@ -63646,7 +63682,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), DialogContent_default = DialogContent;
 
   // src/components/CenteredDialog.tsx
-  var import_jsx_runtime237 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime238 = __toESM(require_jsx_runtime(), 1);
   function bindSharedRoot(node2, id) {
     node2 && (node2.id || (node2.id = id), node2.setAttribute("data-shared-dialog", id), node2.setAttribute("data-open", isSharedDialogOpen(id) ? "true" : "false"), bindDialogApi(node2, id));
   }
@@ -63657,10 +63693,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     children,
     contentRef
   }) {
-    let open = isSharedDialogOpen(id), rootRef = (0, import_react33.useRef)(null);
-    return (0, import_react33.useLayoutEffect)(() => {
+    let open = isSharedDialogOpen(id), rootRef = (0, import_react34.useRef)(null);
+    return (0, import_react34.useLayoutEffect)(() => {
       rootRef.current?.setAttribute("data-open", open ? "true" : "false");
-    }, [open]), /* @__PURE__ */ (0, import_jsx_runtime237.jsx)(
+    }, [open]), /* @__PURE__ */ (0, import_jsx_runtime238.jsx)(
       Dialog_default,
       {
         open,
@@ -63677,7 +63713,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onClose: (_event, reason) => {
           reason !== "backdropClick" && setSharedDialogOpen(id, !1);
         },
-        children: /* @__PURE__ */ (0, import_jsx_runtime237.jsx)(DialogContent_default, { ref: contentRef, sx: { p: 0 }, children })
+        children: /* @__PURE__ */ (0, import_jsx_runtime238.jsx)(DialogContent_default, { ref: contentRef, sx: { p: 0 }, children })
       }
     );
   }
@@ -63692,7 +63728,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var dialogActionsClasses = generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
 
   // node_modules/@mui/material/DialogActions/DialogActions.mjs
-  var import_jsx_runtime238 = __toESM(require_jsx_runtime(), 1), useUtilityClasses102 = (ownerState) => {
+  var import_jsx_runtime239 = __toESM(require_jsx_runtime(), 1), useUtilityClasses102 = (ownerState) => {
     let {
       classes: classes2,
       disableSpacing
@@ -63737,7 +63773,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ...props,
       disableSpacing
     }, classes2 = useUtilityClasses102(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime238.jsx)(DialogActionsRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(DialogActionsRoot, {
       className: clsx_default(classes2.root, className),
       ownerState,
       ref,
@@ -63755,7 +63791,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var dialogContentTextClasses = generateUtilityClasses("MuiDialogContentText", ["root"]);
 
   // node_modules/@mui/material/DialogContentText/DialogContentText.mjs
-  var import_jsx_runtime239 = __toESM(require_jsx_runtime(), 1), useUtilityClasses103 = (ownerState) => {
+  var import_jsx_runtime240 = __toESM(require_jsx_runtime(), 1), useUtilityClasses103 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState, composedClasses = composeClasses({
@@ -63779,7 +63815,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       className,
       ...ownerState
     } = props, classes2 = useUtilityClasses103(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(DialogContentTextRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(DialogContentTextRoot, {
       component: "p",
       variant: "body1",
       color: "textSecondary",
@@ -63793,7 +63829,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/material/DialogTitle/DialogTitle.mjs
   var React308 = __toESM(require_react(), 1);
-  var import_jsx_runtime240 = __toESM(require_jsx_runtime(), 1), useUtilityClasses104 = (ownerState) => {
+  var import_jsx_runtime241 = __toESM(require_jsx_runtime(), 1), useUtilityClasses104 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -63817,7 +63853,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     } = props, ownerState = props, classes2 = useUtilityClasses104(ownerState), {
       titleId = idProp
     } = React308.useContext(DialogContext_default);
-    return /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(DialogTitleRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(DialogTitleRoot, {
       component: "h2",
       className: clsx_default(classes2.root, className),
       ownerState,
@@ -63836,20 +63872,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/ConfirmDialog.tsx
-  var import_jsx_runtime241 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime242 = __toESM(require_jsx_runtime(), 1);
   function ConfirmDialog() {
     let prompt = getConfirm(), open = isSharedDialogOpen("confirm-dialog");
-    return /* @__PURE__ */ (0, import_jsx_runtime241.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(
       CenteredDialog,
       {
         id: "confirm-dialog",
         labelledBy: "confirm-title",
         describedBy: "confirm-message",
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(DialogTitle_default, { id: "confirm-title", children: prompt.title }),
-          /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(DialogContentText_default, { id: "confirm-message", sx: { px: 3, pb: 1 }, children: prompt.message }),
-          /* @__PURE__ */ (0, import_jsx_runtime241.jsxs)(DialogActions_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(DialogTitle_default, { id: "confirm-title", children: prompt.title }),
+          /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(DialogContentText_default, { id: "confirm-message", sx: { px: 3, pb: 1 }, children: prompt.message }),
+          /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(DialogActions_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
               Button_default,
               {
                 id: "confirm-cancel",
@@ -63861,7 +63897,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("common.cancel")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
               Button_default,
               {
                 id: "confirm-confirm",
@@ -63880,12 +63916,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/CratePromptDialog.tsx
-  var import_jsx_runtime242 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime243 = __toESM(require_jsx_runtime(), 1);
   function CratePromptDialog() {
     let prompt = getCratePrompt(), open = isSharedDialogOpen("crate-prompt-dialog"), ready = !!prompt.value.trim(), pathMode = !!prompt.fieldLabel;
-    return /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(CenteredDialog, { id: "crate-prompt-dialog", labelledBy: "crate-prompt-title", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(DialogTitle_default, { id: "crate-prompt-title", children: prompt.title }),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(CenteredDialog, { id: "crate-prompt-dialog", labelledBy: "crate-prompt-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(DialogTitle_default, { id: "crate-prompt-title", children: prompt.title }),
+      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
         TextField_default,
         {
           id: "crate-prompt-input",
@@ -63902,8 +63938,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(DialogActions_default, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(DialogActions_default, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
           Button_default,
           {
             id: "crate-prompt-cancel",
@@ -63914,7 +63950,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("common.cancel")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
           Button_default,
           {
             id: "crate-prompt-confirm",
@@ -63932,7 +63968,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/SharedDialogs.tsx
-  var import_jsx_runtime243 = __toESM(require_jsx_runtime(), 1), ADOPTED = [
+  var import_jsx_runtime244 = __toESM(require_jsx_runtime(), 1), ADOPTED = [
     { id: "consent-dialog", labelledBy: "consent-title", describedBy: "consent-body" },
     { id: "merge-dialog", labelledBy: "merge-title", describedBy: "merge-intro" },
     { id: "album-art-dialog", labelledBy: "album-art-title", describedBy: "album-art-intro" },
@@ -63978,9 +64014,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     labelledBy,
     describedBy
   }) {
-    return (0, import_react34.useLayoutEffect)(() => {
+    return (0, import_react35.useLayoutEffect)(() => {
       adoptNative(id), placeBucket(id, null);
-    }, [id]), /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
+    }, [id]), /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
       CenteredDialog,
       {
         id,
@@ -63993,15 +64029,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     );
   }
   function SharedDialogs() {
-    let [, setEpoch] = (0, import_react34.useState)(0);
-    return (0, import_react34.useEffect)(() => subscribeSharedDialogs(() => {
+    let [, setEpoch] = (0, import_react35.useState)(0);
+    return (0, import_react35.useEffect)(() => subscribeSharedDialogs(() => {
       (0, import_react_dom3.flushSync)(() => {
         setEpoch((value) => value + 1);
       });
-    }), []), /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(import_jsx_runtime243.Fragment, { children: [
-      ADOPTED.map((dialog) => /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(AdoptedDialog, { ...dialog }, dialog.id)),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(CratePromptDialog, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(ConfirmDialog, {})
+    }), []), /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)(import_jsx_runtime244.Fragment, { children: [
+      ADOPTED.map((dialog) => /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(AdoptedDialog, { ...dialog }, dialog.id)),
+      /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(CratePromptDialog, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(ConfirmDialog, {})
     ] });
   }
 
@@ -64018,7 +64054,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let host = document.getElementById("shared-dialogs");
     if (!(host instanceof HTMLElement)) return;
     let nativeLeft = !!document.querySelector("dialog#rekordbox-dialog");
-    islandRoot4 && islandHost === host && host.isConnected && !nativeLeft || (safeUnmount(islandRoot4), islandRoot4 = mountIsland(host, (0, import_react35.createElement)(SharedDialogs)), islandHost = host);
+    islandRoot4 && islandHost === host && host.isConnected && !nativeLeft || (safeUnmount(islandRoot4), islandRoot4 = mountIsland(host, (0, import_react36.createElement)(SharedDialogs)), islandHost = host);
   }
   bindSharedDialogMount(mountSharedDialogs);
 
@@ -64107,7 +64143,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HealthPanel.tsx
-  var import_react36 = __toESM(require_react(), 1);
+  var import_react37 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Accordion/Accordion.mjs
   var React311 = __toESM(require_react(), 1);
@@ -64122,7 +64158,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var collapseClasses = generateUtilityClasses("MuiCollapse", ["root", "horizontal", "vertical", "entered", "hidden", "wrapper", "wrapperInner"]);
 
   // node_modules/@mui/material/Collapse/Collapse.mjs
-  var import_jsx_runtime244 = __toESM(require_jsx_runtime(), 1), EMPTY_OBJECT2 = {}, useUtilityClasses105 = (ownerState) => {
+  var import_jsx_runtime245 = __toESM(require_jsx_runtime(), 1), EMPTY_OBJECT2 = {}, useUtilityClasses105 = (ownerState) => {
     let {
       orientation,
       classes: classes2
@@ -64323,7 +64359,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       externalForwardedProps,
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(TransitionComponent, {
+    return /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(TransitionComponent, {
       in: inProp,
       onEnter: handleEnter,
       onEntered: handleEntered,
@@ -64345,7 +64381,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           ...ownerState,
           state: state2
         };
-        return /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(RootSlot, {
+        return /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(RootSlot, {
           ...rootSlotProps,
           className: clsx_default(rootSlotProps.className, {
             entered: classes2.entered,
@@ -64353,10 +64389,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }[state2]),
           ownerState: stateOwnerState,
           ...restChildProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(WrapperSlot, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(WrapperSlot, {
             ...wrapperSlotProps,
             ownerState: stateOwnerState,
-            children: /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(WrapperInnerSlot, {
+            children: /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(WrapperInnerSlot, {
               ...wrapperInnerSlotProps,
               ownerState: stateOwnerState,
               children
@@ -64379,7 +64415,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var accordionClasses = generateUtilityClasses("MuiAccordion", ["root", "heading", "rounded", "expanded", "disabled", "gutters", "region"]), accordionClasses_default = accordionClasses;
 
   // node_modules/@mui/material/Accordion/Accordion.mjs
-  var import_jsx_runtime245 = __toESM(require_jsx_runtime(), 1), useUtilityClasses106 = (ownerState) => {
+  var import_jsx_runtime246 = __toESM(require_jsx_runtime(), 1), useUtilityClasses106 = (ownerState) => {
     let {
       classes: classes2,
       square,
@@ -64552,19 +64588,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         role: "region"
       }
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime245.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(RootSlot, {
       ...rootProps,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime245.jsx)(AccordionHeadingSlot, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionHeadingSlot, {
         ...accordionProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(AccordionContext_default.Provider, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionContext_default.Provider, {
           value: contextValue,
           children: summary
         })
-      }), /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(TransitionSlot, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(TransitionSlot, {
         in: expanded2,
         timeout: "auto",
         ...transitionProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(AccordionRegionSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionRegionSlot, {
           ...accordionRegionProps,
           children
         })
@@ -64582,7 +64618,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var accordionDetailsClasses = generateUtilityClasses("MuiAccordionDetails", ["root"]);
 
   // node_modules/@mui/material/AccordionDetails/AccordionDetails.mjs
-  var import_jsx_runtime246 = __toESM(require_jsx_runtime(), 1), useUtilityClasses107 = (ownerState) => {
+  var import_jsx_runtime247 = __toESM(require_jsx_runtime(), 1), useUtilityClasses107 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -64604,7 +64640,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       className,
       ...other
     } = props, ownerState = props, classes2 = useUtilityClasses107(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionDetailsRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(AccordionDetailsRoot, {
       className: clsx_default(classes2.root, className),
       ref,
       ownerState,
@@ -64614,7 +64650,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/material/AccordionSummary/AccordionSummary.mjs
   var React313 = __toESM(require_react(), 1);
-  var import_jsx_runtime247 = __toESM(require_jsx_runtime(), 1), useUtilityClasses108 = (ownerState) => {
+  var import_jsx_runtime248 = __toESM(require_jsx_runtime(), 1), useUtilityClasses108 = (ownerState) => {
     let {
       classes: classes2,
       expanded: expanded2,
@@ -64758,12 +64794,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       externalForwardedProps,
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime247.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)(RootSlot, {
       ...rootSlotProps,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime247.jsx)(ContentSlot, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime248.jsx)(ContentSlot, {
         ...contentSlotProps,
         children
-      }), expandIcon && /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(ExpandIconWrapperSlot, {
+      }), expandIcon && /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(ExpandIconWrapperSlot, {
         ...expandIconWrapperSlotProps,
         children: expandIcon
       })]
@@ -64771,19 +64807,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), AccordionSummary_default = AccordionSummary;
 
   // node_modules/@mui/icons-material/ExpandMore.mjs
-  var import_jsx_runtime248 = __toESM(require_jsx_runtime(), 1), ExpandMore_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime248.jsx)("path", {
+  var import_jsx_runtime249 = __toESM(require_jsx_runtime(), 1), ExpandMore_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime249.jsx)("path", {
     d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
   }), "ExpandMore");
 
   // src/pages/HealthPanel.tsx
-  var import_jsx_runtime249 = __toESM(require_jsx_runtime(), 1), BUTTON_SX = { textTransform: "none", minHeight: 44 }, ACCORDION_SX = {
+  var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1), BUTTON_SX = { textTransform: "none", minHeight: 44 }, ACCORDION_SX = {
     disableGutters: !0,
     square: !0,
     elevation: 0,
     slotProps: { transition: { timeout: 0 } }
   };
   function useSectionOpen(start2) {
-    let [open, setOpen] = (0, import_react36.useState)(start2);
+    let [open, setOpen] = (0, import_react37.useState)(start2);
     return {
       expanded: open,
       onChange: (_event, next3) => {
@@ -64813,7 +64849,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onNavigate
   }) {
     let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
       Accordion_default,
       {
         className: "health-accordion",
@@ -64821,9 +64857,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label, count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
-            action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label, count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
               Button_default,
               {
                 type: "button",
@@ -64836,8 +64872,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("health.openMissing")
               }
             ) : null,
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
                 Button_default,
                 {
                   type: "button",
@@ -64851,7 +64887,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                   children: trackLine(track)
                 }
               ),
-              findArt ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+              findArt ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
                 Button_default,
                 {
                   type: "button",
@@ -64868,7 +64904,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 }
               ) : null
             ] }, track.id)) }),
-            count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
+            count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
           ] })
         ]
       }
@@ -64876,7 +64912,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function Bitrate({ onNavigate }) {
     let accordion = useSectionOpen(!0);
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
       Accordion_default,
       {
         className: "health-accordion",
@@ -64884,9 +64920,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("health.bitrate") }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("health.bitrate") }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
               Button_default,
               {
                 type: "button",
@@ -64899,7 +64935,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("health.openBitrate")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
           ] })
         ]
       }
@@ -64910,7 +64946,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onNavigate
   }) {
     let count = section?.count ?? 0, files = section?.files ?? [], accordion = useSectionOpen(count > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
       Accordion_default,
       {
         className: "health-accordion",
@@ -64918,9 +64954,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.unused"), count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.unused"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
               Button_default,
               {
                 type: "button",
@@ -64933,8 +64969,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("health.openFiles")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
-            count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
+            count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
           ] })
         ]
       }
@@ -64945,7 +64981,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onNavigate
   }) {
     let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
       Accordion_default,
       {
         className: "health-accordion",
@@ -64953,9 +64989,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
               Button_default,
               {
                 type: "button",
@@ -64968,11 +65004,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("health.openDuplicates")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("li", { children: t("health.duplicateRow", {
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("li", { children: t("health.duplicateRow", {
               title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
               count: group.ids.length
             }) }, group.ids.join(","))) }),
-            count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
+            count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
           ] })
         ]
       }
@@ -64980,11 +65016,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HealthPanel() {
     let health = useHealth(), payload = health.healthReport, listed = 0;
-    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(import_jsx_runtime249.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
           Button_default,
           {
             id: "health-refresh",
@@ -65002,11 +65038,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(import_jsx_runtime249.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
-        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
+        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
           Section,
           {
             label: t(spec2.label),
@@ -65017,20 +65053,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           },
           spec2.key
         )),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(Bitrate, { onNavigate: health.navigate }),
-        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.clear") })
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Bitrate, { onNavigate: health.navigate }),
+        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.clear") })
       ] }) : null })
     ] });
   }
 
   // src/pages/HealthListChrome.tsx
-  var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime251 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 };
   function HealthListChrome() {
     let health = useHealth();
-    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
         Button_default,
         {
           id: "merge-duplicates",
@@ -65043,7 +65079,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("merge.title")
         }
       ) }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
         Button_default,
         {
           id: "open-relink",
@@ -65075,13 +65111,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function wireHealth(navigate) {
     go = navigate;
     let panel = el("health-panel");
-    panelRoot && panelHost !== panel && (panelRoot.unmount(), panelRoot = void 0), panelHost = panel, panelRoot = mountIsland(panel, (0, import_react37.createElement)(HealthPanel), panelRoot), mountHealthListChrome(), albumArtWired || (albumArtWired = !0, wireAlbumArt(() => {
+    panelRoot && panelHost !== panel && (panelRoot.unmount(), panelRoot = void 0), panelHost = panel, panelRoot = mountIsland(panel, (0, import_react38.createElement)(HealthPanel), panelRoot), mountHealthListChrome(), albumArtWired || (albumArtWired = !0, wireAlbumArt(() => {
       loadHealth();
     }));
   }
   function mountHealthListChrome() {
     let host = document.getElementById("health-list-chrome");
-    host instanceof HTMLElement && (listRoot && listHost !== host && (listRoot.unmount(), listRoot = void 0), listHost = host, listRoot = mountIsland(host, (0, import_react37.createElement)(HealthListChrome), listRoot), emitHealth());
+    host instanceof HTMLElement && (listRoot && listHost !== host && (listRoot.unmount(), listRoot = void 0), listHost = host, listRoot = mountIsland(host, (0, import_react38.createElement)(HealthListChrome), listRoot), emitHealth());
   }
   async function loadHealth() {
     let token4 = ++state.healthToken;
@@ -65125,18 +65161,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/history/history-stats.ts
-  var import_react39 = __toESM(require_react(), 1);
+  var import_react40 = __toESM(require_react(), 1);
 
   // src/pages/StatsPanel.tsx
-  var import_react38 = __toESM(require_react(), 1);
-  var import_jsx_runtime251 = __toESM(require_jsx_runtime(), 1), LIST_CAP = 100, BUTTON_SX3 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX2 = {
+  var import_react39 = __toESM(require_react(), 1);
+  var import_jsx_runtime252 = __toESM(require_jsx_runtime(), 1), LIST_CAP = 100, BUTTON_SX3 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX2 = {
     disableGutters: !0,
     square: !0,
     elevation: 0,
     slotProps: { transition: { timeout: 0 } }
   };
   function useSectionOpen2(start2) {
-    let [open, setOpen] = (0, import_react38.useState)(start2);
+    let [open, setOpen] = (0, import_react39.useState)(start2);
     return {
       expanded: open,
       onChange: (_event, next3) => {
@@ -65145,20 +65181,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function noteLine(text2) {
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { className: "gig-note", children: text2 });
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("p", { className: "gig-note", children: text2 });
   }
   function StatsTable({
     headers,
     rows
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)("table", { className: "stats-table", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("tr", { children: headers.map((key) => /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("th", { scope: "col", children: t(key) }, key)) }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("tbody", { children: rows.map((cells, index) => /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("tr", { children: cells.map((cell, cellIndex) => /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("td", { children: cell }, `${index}:${cellIndex}`)) }, cells.join("\0") + String(index))) })
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)("table", { className: "stats-table", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("tr", { children: headers.map((key) => /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("th", { scope: "col", children: t(key) }, key)) }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("tbody", { children: rows.map((cells, index) => /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("tr", { children: cells.map((cell, cellIndex) => /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("td", { children: cell }, `${index}:${cellIndex}`)) }, cells.join("\0") + String(index))) })
     ] });
   }
   function TrackGroup({ rows }) {
     let accordion = useSectionOpen2(rows.length > 0), shown = rows.slice(0, LIST_CAP);
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -65166,9 +65202,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX2,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.tracks"), count: rows.length }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.tracks"), count: rows.length }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
               StatsTable,
               {
                 headers: ["column.title", "column.artist", "column.plays", "column.lastPlayed"],
@@ -65188,7 +65224,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function ArtistGroup({ rows }) {
     let accordion = useSectionOpen2(rows.length > 0), shown = rows.slice(0, LIST_CAP);
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -65196,9 +65232,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX2,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.artists"), count: rows.length }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.artists"), count: rows.length }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
               StatsTable,
               {
                 headers: ["column.artist", "column.plays", "stats.artistTracks", "column.lastPlayed"],
@@ -65222,7 +65258,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     idleDays
   }) {
     let stats = useStats(), accordion = useSectionOpen2(count > 0), shown = rows.slice(0, LIST_CAP), extra = count > rows.length ? count - rows.length : rows.length > LIST_CAP ? rows.length - LIST_CAP : 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -65230,10 +65266,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX2,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.idle"), count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(AccordionDetails_default, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.idle"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(AccordionDetails_default, { children: [
             noteLine(t("stats.idleHint", { days: idleDays })),
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
               Button_default,
               {
                 type: "button",
@@ -65249,10 +65285,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("stats.idleCrate")
               }
             ),
-            count ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("ul", { children: shown.map((row, index) => {
+            count ? /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("ul", { children: shown.map((row, index) => {
                 let last = row.last_played == null ? t("stats.never") : clockLabel(row.last_played) || "—";
-                return /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("li", { children: t("stats.idleRow", {
+                return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("li", { children: t("stats.idleRow", {
                   title: [row.artist, row.name].filter(Boolean).join(" — ") || row.name || "—",
                   last
                 }) }, `${row.id ?? row.asset_id ?? index}:${row.name ?? ""}`);
@@ -65268,11 +65304,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let { report } = useStats();
     if (!report) return null;
     let plays = report.plays ?? 0, sessions = report.sessions ?? 0, idleDays = report.idle_days ?? 365, idleCount = report.not_played_count ?? 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
       noteLine(plays ? t("stats.summary", { plays, sessions }) : t("stats.empty")),
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(TrackGroup, { rows: report.top_tracks ?? [] }),
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ArtistGroup, { rows: report.top_artists ?? [] }),
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(IdleGroup, { rows: report.not_played ?? [], count: idleCount, idleDays })
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(TrackGroup, { rows: report.top_tracks ?? [] }),
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ArtistGroup, { rows: report.top_artists ?? [] }),
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(IdleGroup, { rows: report.not_played ?? [], count: idleCount, idleDays })
     ] });
   }
 
@@ -65315,9 +65351,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/history/history-stats.ts
-  var listeners11 = /* @__PURE__ */ new Set(), latest5 = null, crateBusy = !1, panelRoot2, reportHost = null;
-  function emit4() {
-    for (let listener of [...listeners11]) listener();
+  var listeners12 = /* @__PURE__ */ new Set(), latest5 = null, crateBusy = !1, panelRoot2, reportHost = null;
+  function emit5() {
+    for (let listener of [...listeners12]) listener();
   }
   function getStatsSnapshot() {
     return {
@@ -65327,8 +65363,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function subscribeStats(listener) {
-    return listeners11.add(listener), () => {
-      listeners11.delete(listener);
+    return listeners12.add(listener), () => {
+      listeners12.delete(listener);
     };
   }
   function wireHistoryStats() {
@@ -65347,7 +65383,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("stats-csv").addEventListener("click", () => {
       let link = document.createElement("a");
       link.href = csvHref(currentQuery()), link.download = "play-stats.csv", link.click();
-    }), syncPeriodFields()), reportHost = report, panelRoot2 = mountIsland(report, (0, import_react39.createElement)(StatsPanel), panelRoot2);
+    }), syncPeriodFields()), reportHost = report, panelRoot2 = mountIsland(report, (0, import_react40.createElement)(StatsPanel), panelRoot2);
   }
   async function loadHistoryStats() {
     let token4 = ++state.statsToken;
@@ -65362,7 +65398,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failStatus4(serverMessage(payload, t("stats.unreadable"))), settle = "retry";
         return;
       }
-      latest5 = payload, el("stats-status").textContent = "", el("stats-scope").textContent = t("gig.wholeSpace"), emit4(), settle = "report";
+      latest5 = payload, el("stats-status").textContent = "", el("stats-scope").textContent = t("gig.wholeSpace"), emit5(), settle = "report";
     } catch {
       if (token4 !== state.statsToken) return;
       failStatus4(t("stats.unreachable")), settle = "retry";
@@ -65376,7 +65412,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     failStatus4(message), endBusy4(), el("stats-refresh").focus();
   }
   function repaintHistoryStats() {
-    el("stats-scope").textContent = t("gig.wholeSpace"), syncPeriodFields(), emit4();
+    el("stats-scope").textContent = t("gig.wholeSpace"), syncPeriodFields(), emit5();
   }
   function currentPeriod() {
     let value = el("stats-period").value;
@@ -65409,7 +65445,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function makeIdleCrate() {
     if (crateBusy) return;
     let idleDays = idleDaysFromInput(el("stats-idle-days").value), name = t("stats.idleCrateName", { days: idleDays });
-    crateBusy = !0, emit4();
+    crateBusy = !0, emit5();
     try {
       let preview = await postJSON("/api/history-stats", {
         action: "preview",
@@ -65444,19 +65480,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       el("stats-status").textContent = failureOf(error2).message;
     } finally {
-      crateBusy = !1, emit4();
+      crateBusy = !1, emit5();
     }
   }
 
   // src/lib/health/scan.ts
-  var import_react42 = __toESM(require_react(), 1);
+  var import_react43 = __toESM(require_react(), 1);
 
   // src/pages/ScanPanel.tsx
-  var import_react41 = __toESM(require_react(), 1);
+  var import_react42 = __toESM(require_react(), 1);
 
   // src/components/HealthDataGrid.tsx
-  var import_react40 = __toESM(require_react(), 1);
-  var import_jsx_runtime252 = __toESM(require_jsx_runtime(), 1);
+  var import_react41 = __toESM(require_react(), 1);
+  var import_jsx_runtime253 = __toESM(require_jsx_runtime(), 1);
   function gridLocaleText3(locale) {
     return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
   }
@@ -65467,22 +65503,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onSelectId
   }) {
     ensureGridDom();
-    let hostRef = (0, import_react40.useRef)(null), locale = getLocale(), localeText = (0, import_react40.useMemo)(() => gridLocaleText3(locale), [locale]), [page, setPage] = (0, import_react40.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react40.useMemo)(
+    let hostRef = (0, import_react41.useRef)(null), locale = getLocale(), localeText = (0, import_react41.useMemo)(() => gridLocaleText3(locale), [locale]), [page, setPage] = (0, import_react41.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react41.useMemo)(
       () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
       [page, maxPage]
-    ), hideFooter = rows.length <= GRID_PAGE_SIZE, rowSelectionModel = (0, import_react40.useMemo)(() => ({
+    ), hideFooter = rows.length <= GRID_PAGE_SIZE, rowSelectionModel = (0, import_react41.useMemo)(() => ({
       type: "include",
       ids: selectedId == null ? /* @__PURE__ */ new Set() : /* @__PURE__ */ new Set([selectedId])
     }), [selectedId]);
-    (0, import_react40.useLayoutEffect)(() => {
+    (0, import_react41.useLayoutEffect)(() => {
       setPage(0);
-    }, [rows.length]), (0, import_react40.useLayoutEffect)(() => {
+    }, [rows.length]), (0, import_react41.useLayoutEffect)(() => {
       let node2 = hostRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, rows, locale, paginationModel]), (0, import_react40.useEffect)(() => {
+    }, [columns, rows, locale, paginationModel]), (0, import_react41.useEffect)(() => {
       let node2 = hostRef.current;
       node2 && attachGridTooltips(node2);
     }, [columns, rows, locale, paginationModel]);
@@ -65494,7 +65530,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let id = [...next3.ids][0];
       id == null || id === selectedId || onSelectId(id);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("div", { ref: hostRef, className: "health-grid", style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("div", { ref: hostRef, className: "health-grid", style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(
       DataGrid2,
       {
         rows,
@@ -65555,12 +65591,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/ScanPanel.tsx
-  var import_jsx_runtime253 = __toESM(require_jsx_runtime(), 1), BUTTON_SX4 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime254 = __toESM(require_jsx_runtime(), 1), BUTTON_SX4 = { textTransform: "none", minHeight: 44 };
   function ScanPanel() {
-    let health = useHealth(), payload = health.scanReport, problems = payload?.problems ?? [], rows = (0, import_react41.useMemo)(
+    let health = useHealth(), payload = health.scanReport, problems = payload?.problems ?? [], rows = (0, import_react42.useMemo)(
       () => problems.map((item) => ({ ...item, id: item.id })),
       [problems]
-    ), columns = (0, import_react41.useMemo)(() => [
+    ), columns = (0, import_react42.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -65582,11 +65618,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         valueGetter: (_value, row) => scanProblemDetail(row)
       }
     ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)(import_jsx_runtime253.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
           Button_default,
           {
             id: "scan-quick",
@@ -65603,7 +65639,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("scan.checkQuick")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
           Button_default,
           {
             id: "scan-full",
@@ -65621,13 +65657,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)(import_jsx_runtime253.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
-        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
-        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
-        problems.length ? /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { className: "gig-note", children: t("scan.empty") })
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
+        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
+        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
+        problems.length ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: t("scan.empty") })
       ] }) : null })
     ] });
   }
@@ -65649,7 +65685,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wireScan() {
     let panel = el("scan-panel");
-    panelRoot3 && panelHost2 !== panel && (panelRoot3.unmount(), panelRoot3 = void 0), panelHost2 = panel, panelRoot3 = mountIsland(panel, (0, import_react42.createElement)(ScanPanel), panelRoot3);
+    panelRoot3 && panelHost2 !== panel && (panelRoot3.unmount(), panelRoot3 = void 0), panelHost2 = panel, panelRoot3 = mountIsland(panel, (0, import_react43.createElement)(ScanPanel), panelRoot3);
   }
   async function loadScan(depth) {
     let chosen = resolveDepth(depth), token4 = ++state.scanToken;
@@ -65702,10 +65738,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/tags.ts
-  var import_react44 = __toESM(require_react(), 1);
+  var import_react45 = __toESM(require_react(), 1);
 
   // src/pages/TagsPanel.tsx
-  var import_react43 = __toESM(require_react(), 1);
+  var import_react44 = __toESM(require_react(), 1);
 
   // src/lib/health/tags-view.ts
   function tagsSummary(field2, values3, groups) {
@@ -65766,20 +65802,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/TagsPanel.tsx
-  var import_jsx_runtime254 = __toESM(require_jsx_runtime(), 1), LIST_CAP2 = 100, TITLE_KEY = "clean", MAPPING_KEY = "saved", BUTTON_SX5 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime255 = __toESM(require_jsx_runtime(), 1), LIST_CAP2 = 100, TITLE_KEY = "clean", MAPPING_KEY = "saved", BUTTON_SX5 = { textTransform: "none", minHeight: 44 };
   function DiffLines({ plan }) {
     let lines = previewLines(plan.changes).slice(0, LIST_CAP2);
-    return lines.length ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("ul", { children: lines.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("li", { children: line2 }, line2)) }) : null;
+    return lines.length ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("ul", { children: lines.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("li", { children: line2 }, line2)) }) : null;
   }
   function MappingCard({
     plan,
     canApply,
     onApply
   }) {
-    return plan.changes.length ? /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "tags-mappings", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+    return plan.changes.length ? /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { className: "tags-mappings", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
         Button_default,
         {
           type: "button",
@@ -65800,10 +65836,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     canApply,
     onApply
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)(import_jsx_runtime255.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
         Button_default,
         {
           type: "button",
@@ -65830,9 +65866,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onSelect
   }) {
     let showPlan = plan && plan.value === chosen;
-    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "tags-cluster-chrome", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("label", { className: "tags-spelling", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { className: "tags-cluster-chrome", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("label", { className: "tags-spelling", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
           "input",
           {
             ref: tooltipRef6(tips.tagsSpelling),
@@ -65844,11 +65880,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             onChange: (event) => onSelect(event.currentTarget.value)
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
+        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
       ] }) }, spelling.value)) }),
-      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(DiffLines, { plan }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "tags-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(DiffLines, { plan }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { className: "tags-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
           Button_default,
           {
             type: "button",
@@ -65863,7 +65899,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("tags.preview")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
           Button_default,
           {
             type: "button",
@@ -65882,7 +65918,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
   function TagsPanel() {
-    let health = useHealth(), field2 = health.tagsField, groups = health.tagsClusters?.groups ?? [], [selectedKey, setSelectedKey] = (0, import_react43.useState)(""), selected = groups.find((row) => row.key === selectedKey) ?? groups[0];
+    let health = useHealth(), field2 = health.tagsField, groups = health.tagsClusters?.groups ?? [], [selectedKey, setSelectedKey] = (0, import_react44.useState)(""), selected = groups.find((row) => row.key === selectedKey) ?? groups[0];
     function onField(next3) {
       health.tagsField !== next3 && (health.setTagsField(next3), health.loadTags());
     }
@@ -65890,10 +65926,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let plan = health.tagsPlans.get(key), group = groups.find((row) => row.key === key), value = health.tagsSelected.get(key) ?? group?.suggested ?? "";
       return !!(plan && plan.value === value && plan.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== key);
     }
-    let canApplyTitles = !!(health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY), canApplyMappings = !!(health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY), rows = (0, import_react43.useMemo)(
+    let canApplyTitles = !!(health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY), canApplyMappings = !!(health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY), rows = (0, import_react44.useMemo)(
       () => groups.map((group) => ({ ...group, id: group.key })),
       [groups]
-    ), columns = (0, import_react43.useMemo)(() => [
+    ), columns = (0, import_react44.useMemo)(() => [
       {
         field: "suggested",
         headerName: t("tags.column.suggested"),
@@ -65914,12 +65950,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         valueGetter: (_value, row) => row.spellings.length
       }
     ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)(import_jsx_runtime255.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
+        /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
             Button_default,
             {
               id: "tags-genre",
@@ -65935,7 +65971,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: t("tags.genre")
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
             Button_default,
             {
               id: "tags-artist",
@@ -65951,7 +65987,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: t("tags.artist")
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
             Button_default,
             {
               id: "tags-titles",
@@ -65968,7 +66004,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
           Button_default,
           {
             id: "tags-refresh",
@@ -65986,15 +66022,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
-        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
+        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => {
           health.applyTitles();
         } }) : null,
-        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
-          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)(import_jsx_runtime255.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
+          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
             MappingCard,
             {
               plan: health.mappingPlan,
@@ -66004,7 +66040,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             }
           ) : null,
-          selected ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+          selected ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
             ClusterActions,
             {
               group: selected,
@@ -66021,7 +66057,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               onSelect: (value) => health.selectSpelling(selected.key, value)
             }
           ) : null,
-          selected ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+          selected ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
             HealthDataGrid,
             {
               rows,
@@ -66061,7 +66097,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function wireTags() {
     field = "genre";
     let panel = el("tags-panel");
-    panelRoot4 && panelHost3 !== panel && (panelRoot4.unmount(), panelRoot4 = void 0), panelHost3 = panel, panelRoot4 = mountIsland(panel, (0, import_react44.createElement)(TagsPanel), panelRoot4);
+    panelRoot4 && panelHost3 !== panel && (panelRoot4.unmount(), panelRoot4 = void 0), panelHost3 = panel, panelRoot4 = mountIsland(panel, (0, import_react45.createElement)(TagsPanel), panelRoot4);
   }
   async function loadTags() {
     let token4 = ++state.tagsToken;
@@ -66219,22 +66255,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/containers/SnapshotsContext.tsx
-  var import_react45 = __toESM(require_react(), 1), import_jsx_runtime255 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react45.createContext)(null);
+  var import_react46 = __toESM(require_react(), 1), import_jsx_runtime256 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react46.createContext)(null);
   function SnapshotsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(SnapshotsContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(SnapshotsContext, { value, children });
   }
   function useSnapshots() {
-    let value = (0, import_react45.useContext)(SnapshotsContext);
+    let value = (0, import_react46.useContext)(SnapshotsContext);
     if (value === null)
       throw new Error("useSnapshots must be used within SnapshotsProvider");
     return value;
   }
 
   // src/containers/WizardContext.tsx
-  var import_react46 = __toESM(require_react(), 1);
+  var import_react47 = __toESM(require_react(), 1);
 
   // src/lib/wizard/wizard.ts
   function createWizard(input) {
@@ -66255,7 +66291,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/containers/WizardContext.tsx
-  var import_jsx_runtime256 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime257 = __toESM(require_jsx_runtime(), 1);
   function noop8() {
   }
   function noopFlag(_value) {
@@ -66290,16 +66326,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       onBrowse: noopPath
     };
   }
-  var WizardContext = (0, import_react46.createContext)(null);
+  var WizardContext = (0, import_react47.createContext)(null);
   function WizardProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(WizardContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(WizardContext, { value, children });
   }
 
   // src/lib/snapshots/restore.ts
-  var import_react48 = __toESM(require_react(), 1);
+  var import_react49 = __toESM(require_react(), 1);
 
   // src/lib/snapshots/restore-view.ts
   var OPERATION_ACTIONS = {
@@ -66389,49 +66425,49 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/RestoreDialog.tsx
-  var import_jsx_runtime257 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime258 = __toESM(require_jsx_runtime(), 1);
   function CueSide({ cue, slot }) {
     let color2 = slotColor(slot, cue?.color);
-    return /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("span", { className: cue ? "cue-diff-side" : "cue-diff-side marker-empty", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { className: "swatch", style: color2 ? { background: color2 } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { children: cueSummary(cue, t("markers.cueEmpty")) })
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("span", { className: cue ? "cue-diff-side" : "cue-diff-side marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { className: "swatch", style: color2 ? { background: color2 } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { children: cueSummary(cue, t("markers.cueEmpty")) })
     ] });
   }
   function CueDiffRow({ diff }) {
     let empty = t("markers.cueEmpty"), beforeText = cueSummary(diff.before, empty), afterText = cueSummary(diff.after, empty);
-    return /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(
       "p",
       {
         className: "cue-diff",
         "aria-label": `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { className: "marker-slot", children: String(diff.slot + 1) }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CueSide, { cue: diff.before, slot: diff.slot }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { className: "cue-diff-arrow", "aria-hidden": "true", children: "→" }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CueSide, { cue: diff.after, slot: diff.slot })
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { className: "marker-slot", children: String(diff.slot + 1) }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(CueSide, { cue: diff.before, slot: diff.slot }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("span", { className: "cue-diff-arrow", "aria-hidden": "true", children: "→" }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(CueSide, { cue: diff.after, slot: diff.slot })
         ]
       }
     );
   }
   function PlanLine({ label, rows }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: planLineText(label, rows) });
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { children: planLineText(label, rows) });
   }
   function CueDiffs({ label, rows }) {
     let items = rows || [];
-    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
-      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: fileName(item.path || "") }),
-        cueDiffRows(item.before, item.after).map((diff) => /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CueDiffRow, { diff }, `${diff.slot}:${diff.before?.start_ms ?? ""}:${diff.after?.start_ms ?? ""}`))
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(import_jsx_runtime258.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { children: fileName(item.path || "") }),
+        cueDiffRows(item.before, item.after).map((diff) => /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(CueDiffRow, { diff }, `${diff.slot}:${diff.before?.start_ms ?? ""}:${diff.after?.start_ms ?? ""}`))
       ] }, `${item.path ?? ""}:${index}`))
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: t("plan.none", { label }) });
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { children: t("plan.none", { label }) });
   }
   function FrameDiffs({ label, rows }) {
     let items = rows || [];
-    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
-      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: fileName(item.path || "") }, `${item.path ?? ""}:${index}`))
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: t("plan.none", { label }) });
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(import_jsx_runtime258.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { children: fileName(item.path || "") }, `${item.path ?? ""}:${index}`))
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { children: t("plan.none", { label }) });
   }
   function RestoreDialog() {
     let snapshots = useSnapshots(), plan = snapshots.plan, blocked = plan?.restore_blocked ? codedText(
@@ -66439,7 +66475,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       plan.restore_blocked_code,
       messageParams(plan.restore_blocked_params)
     ) : "", reading = snapshots.planOpen && !plan, confirmDisabled = snapshots.confirming || reading || !!plan?.restore_blocked, blockText = reading ? t("snapshots.readingPlan") : blocked || (plan != null && plan.dry_run ? t("plan.nothingChanged") : "");
-    return /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(
       Dialog_default,
       {
         open: snapshots.planOpen,
@@ -66453,32 +66489,32 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         fullWidth: !0,
         slotProps: { paper: { id: "snapshot-dialog" } },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(DialogTitle_default, { id: "snapshot-title", component: "h2", children: t("snapshots.restoreTitle") }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(DialogContent_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(DialogContentText_default, { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesChanged"), rows: plan.crates?.changed }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),
-              plan.registration_warning ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: codedText(plan.registration_warning, plan.registration_warning_code) }) : null,
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.tracksAdded"), rows: plan.tracks?.added }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.tracksRemoved"), rows: plan.tracks?.removed }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.tracksUnavailable"), rows: plan.tracks?.unavailable }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CueDiffs, { label: t("plan.cueChanges"), rows: plan.cues }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(FrameDiffs, { label: t("plan.gridChanges"), rows: plan.grids }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.deletedCrates"), rows: plan.deleted?.crates }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.deletedTracks"), rows: plan.deleted?.tracks }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.deletedCues"), rows: plan.deleted?.cues }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.deletedGrids"), rows: plan.deleted?.grids })
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(DialogTitle_default, { id: "snapshot-title", component: "h2", children: t("snapshots.restoreTitle") }),
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(DialogContent_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(DialogContentText_default, { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
+            /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(import_jsx_runtime258.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.cratesChanged"), rows: plan.crates?.changed }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),
+              plan.registration_warning ? /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { children: codedText(plan.registration_warning, plan.registration_warning_code) }) : null,
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.tracksAdded"), rows: plan.tracks?.added }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.tracksRemoved"), rows: plan.tracks?.removed }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.tracksUnavailable"), rows: plan.tracks?.unavailable }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(CueDiffs, { label: t("plan.cueChanges"), rows: plan.cues }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(FrameDiffs, { label: t("plan.gridChanges"), rows: plan.grids }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.deletedCrates"), rows: plan.deleted?.crates }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.deletedTracks"), rows: plan.deleted?.tracks }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.deletedCues"), rows: plan.deleted?.cues }),
+              /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(PlanLine, { label: t("plan.deletedGrids"), rows: plan.deleted?.grids })
             ] }) : null }),
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { id: "snapshot-block", className: "dialog-note", role: "status", children: blockText }),
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { id: "snapshot-status", className: "dialog-status", role: "status", "aria-live": "polite", children: snapshots.planStatus })
+            /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "snapshot-block", className: "dialog-note", role: "status", children: blockText }),
+            /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "snapshot-status", className: "dialog-status", role: "status", "aria-live": "polite", children: snapshots.planStatus })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
               Button_default,
               {
                 id: "snapshot-cancel",
@@ -66488,7 +66524,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("common.cancel")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(
               Button_default,
               {
                 id: "snapshot-confirm",
@@ -66509,7 +66545,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/SnapshotsPanel.tsx
-  var import_react47 = __toESM(require_react(), 1);
+  var import_react48 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/ListItem/ListItem.mjs
   var React315 = __toESM(require_react(), 1);
@@ -66530,7 +66566,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var listItemSecondaryActionClasses = generateUtilityClasses("MuiListItemSecondaryAction", ["root", "disableGutters"]);
 
   // node_modules/@mui/material/ListItemSecondaryAction/ListItemSecondaryAction.mjs
-  var import_jsx_runtime258 = __toESM(require_jsx_runtime(), 1), useUtilityClasses109 = (ownerState) => {
+  var import_jsx_runtime259 = __toESM(require_jsx_runtime(), 1), useUtilityClasses109 = (ownerState) => {
     let {
       disableGutters,
       classes: classes2
@@ -66572,7 +66608,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ...props,
       disableGutters: context.disableGutters
     }, classes2 = useUtilityClasses109(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(ListItemSecondaryActionRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(ListItemSecondaryActionRoot, {
       as: component,
       className: clsx_default(classes2.root, className),
       ownerState,
@@ -66584,7 +66620,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var ListItemSecondaryAction_default = ListItemSecondaryAction;
 
   // node_modules/@mui/material/ListItem/ListItem.mjs
-  var import_jsx_runtime259 = __toESM(require_jsx_runtime(), 1), overridesResolver3 = (props, styles5) => {
+  var import_jsx_runtime260 = __toESM(require_jsx_runtime(), 1), overridesResolver3 = (props, styles5) => {
     let {
       ownerState
     } = props;
@@ -66744,11 +66780,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ownerState,
       className: classes2.secondaryAction
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(ListContext_default.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(ListContext_default.Provider, {
       value: childContext,
-      children: /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(RootSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime260.jsxs)(RootSlot, {
         ...rootSlotProps,
-        children: [childrenProp, secondaryAction && /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(SecondaryActionSlot, {
+        children: [childrenProp, secondaryAction && /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(SecondaryActionSlot, {
           ...secondaryActionSlotProps,
           children: secondaryAction
         })]
@@ -66757,9 +66793,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), ListItem_default = ListItem;
 
   // src/lib/snapshots/snapshot-columns.tsx
-  var import_jsx_runtime260 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime261 = __toESM(require_jsx_runtime(), 1);
   function restoreCell(params, handlers) {
-    return /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
       Button_default,
       {
         type: "button",
@@ -66809,7 +66845,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/SnapshotsPanel.tsx
-  var import_jsx_runtime261 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime262 = __toESM(require_jsx_runtime(), 1);
   function gridLocaleText4(locale) {
     return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
   }
@@ -66820,31 +66856,31 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return snapshots.snapshotLoading ? t("snapshots.reading") : snapshots.snapshotError ? snapshots.snapshotError : snapshots.statusOverride ? snapshots.statusOverride : snapshots.snapshotMessage ? t(snapshots.snapshotMessage) : "";
   }
   function EmptySnapshots() {
-    return /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { className: "empty-list", children: t("snapshots.empty") });
+    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { className: "empty-list", children: t("snapshots.empty") });
   }
   function SnapshotsPanel() {
     ensureGridDom();
-    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react47.useMemo)(
+    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react48.useMemo)(
       () => snapshotColumns({
         onRestore: (snapshotId) => {
           openSnapshotPlan2(snapshotId).catch((error2) => setSnapshotDialogStatus2(failureOf(error2).message));
         }
       }),
       [locale, openSnapshotPlan2, setSnapshotDialogStatus2]
-    ), localeText = (0, import_react47.useMemo)(() => gridLocaleText4(locale), [locale]), operations = (0, import_react47.useMemo)(
+    ), localeText = (0, import_react48.useMemo)(() => gridLocaleText4(locale), [locale]), operations = (0, import_react48.useMemo)(
       () => [...snapshots.operations].reverse(),
       [snapshots.operations]
-    ), listRef = (0, import_react47.useRef)(null);
-    return (0, import_react47.useLayoutEffect)(() => {
+    ), listRef = (0, import_react48.useRef)(null);
+    return (0, import_react48.useLayoutEffect)(() => {
       let node2 = listRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, snapshots.snapshots, locale]), /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)(import_jsx_runtime261.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "snapshots-heading", className: "files-path", children: t("view.snapshots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+    }, [columns, snapshots.snapshots, locale]), /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)(import_jsx_runtime262.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { id: "snapshots-heading", className: "files-path", children: t("view.snapshots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
           Button_default,
           {
             id: "snapshots-refresh",
@@ -66856,7 +66892,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("common.refresh")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
           Button_default,
           {
             id: "snapshots-take",
@@ -66870,7 +66906,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: snapshots.taking ? t("snapshots.saving") : t("snapshots.take")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
           Button_default,
           {
             id: "snapshots-drives",
@@ -66885,11 +66921,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "snapshots-drives-note", className: "notice", role: "status", children: driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup) }),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "snapshots-block", className: "notice", role: "status", hidden: !writeBlock, children: writeBlock }),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)("div", { id: "snapshots-undo", className: "snapshot-undo", hidden: !undoId, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "snapshots-undo-text", children: snapshots.snapshotUndo?.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange") }),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { id: "snapshots-drives-note", className: "notice", role: "status", children: driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup) }),
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { id: "snapshots-block", className: "notice", role: "status", hidden: !writeBlock, children: writeBlock }),
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)("div", { id: "snapshots-undo", className: "snapshot-undo", hidden: !undoId, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { id: "snapshots-undo-text", children: snapshots.snapshotUndo?.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange") }),
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
           Button_default,
           {
             id: "snapshots-undo-button",
@@ -66902,8 +66938,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "snapshots-status", className: "notice", role: "status", "aria-live": "polite", children: listStatus(snapshots) }),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { id: "snapshots-status", className: "notice", role: "status", "aria-live": "polite", children: listStatus(snapshots) }),
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
         "div",
         {
           id: "snapshots-list",
@@ -66915,7 +66951,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             listRef.current = element, tooltipRef6(tips.snapshotsList)(element);
           },
           style: { height: 320, width: "100%", minWidth: 640 },
-          children: snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+          children: snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
             Button_default,
             {
               type: "button",
@@ -66925,7 +66961,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               },
               children: t("common.tryAgain")
             }
-          ) : /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+          ) : /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
             DataGrid2,
             {
               rows: [...snapshots.snapshots],
@@ -66956,10 +66992,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)("section", { id: "operations", className: "operations", "aria-labelledby": "operations-heading", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)("div", { className: "browser-bar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("h2", { id: "operations-heading", className: "operations-heading", children: t("operations.heading") }),
-          /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)("section", { id: "operations", className: "operations", "aria-labelledby": "operations-heading", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)("div", { className: "browser-bar", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("h2", { id: "operations-heading", className: "operations-heading", children: t("operations.heading") }),
+          /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
             Button_default,
             {
               id: "operations-refresh",
@@ -66973,9 +67009,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "operations-alert", className: "operations-alert", role: "alert", hidden: !failed, children: failed ? t("operations.rollbackFailed") : "" }),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "operations-status", className: "notice", role: "status", "aria-live": "polite", children: snapshots.operationsLoading && snapshots.operations.length === 0 ? t("operations.reading") : snapshots.operationsError }),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { id: "operations-alert", className: "operations-alert", role: "alert", hidden: !failed, children: failed ? t("operations.rollbackFailed") : "" }),
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { id: "operations-status", className: "notice", role: "status", "aria-live": "polite", children: snapshots.operationsLoading && snapshots.operations.length === 0 ? t("operations.reading") : snapshots.operationsError }),
+        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
           List_default,
           {
             id: "operations-list",
@@ -66985,7 +67021,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             tabIndex: 0,
             ref: tooltipRef6(tips.operationsList),
             dense: !0,
-            children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+            children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
               Button_default,
               {
                 type: "button",
@@ -66996,13 +67032,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 },
                 children: t("common.tryAgain")
               }
-            ) }) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(ListItemText_default, { primary: t("operations.empty") }) }) : operations.map((item, index) => {
+            ) }) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(ListItemText_default, { primary: t("operations.empty") }) }) : operations.map((item, index) => {
               let copy2 = operationCardText(item);
-              return /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+              return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
                 ListItem_default,
                 {
                   className: "operation-card snapshot-card",
-                  children: /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(ListItemText_default, { primary: copy2.title, secondary: copy2.detail || void 0 })
+                  children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(ListItemText_default, { primary: copy2.title, secondary: copy2.detail || void 0 })
                 },
                 `${item.time ?? ""}:${item.action ?? ""}:${item.target ?? ""}:${index}`
               );
@@ -67019,7 +67055,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function bindLibraryReload(reload) {
     reloadLibrary = reload;
   }
-  var hosts = /* @__PURE__ */ new WeakMap(), listeners12 = /* @__PURE__ */ new Set(), lastPlan = null, planOpen = !1, planStatus = "", taking = !1, backingDrives = !1, confirming = !1, driveNoteError = "", statusOverride = "";
+  var hosts = /* @__PURE__ */ new WeakMap(), listeners13 = /* @__PURE__ */ new Set(), lastPlan = null, planOpen = !1, planStatus = "", taking = !1, backingDrives = !1, confirming = !1, driveNoteError = "", statusOverride = "";
   function isDriveCopy(value) {
     if (!value || typeof value != "object") return !1;
     let record = value;
@@ -67063,12 +67099,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function subscribe2(listener) {
-    return listeners12.add(listener), () => {
-      listeners12.delete(listener);
+    return listeners13.add(listener), () => {
+      listeners13.delete(listener);
     };
   }
-  function emit5() {
-    for (let listener of [...listeners12]) listener();
+  function emit6() {
+    for (let listener of [...listeners13]) listener();
   }
   function bindHost(host, node2) {
     if (!host) return;
@@ -67076,7 +67112,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     hosts.set(host, mountIsland(host, node2, existing));
   }
   function mountSnapshots() {
-    bindHost(document.getElementById("snapshots-panel"), (0, import_react48.createElement)(SnapshotsPanel)), bindHost(document.getElementById("snapshot-dialog-host"), (0, import_react48.createElement)(RestoreDialog));
+    bindHost(document.getElementById("snapshots-panel"), (0, import_react49.createElement)(SnapshotsPanel)), bindHost(document.getElementById("snapshot-dialog-host"), (0, import_react49.createElement)(RestoreDialog));
   }
   function ensureMounted() {
     mountSnapshots();
@@ -67086,7 +67122,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     foot && (foot.textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length }));
   }
   function paint2() {
-    ensureMounted(), updateCrateFoot(), emit5();
+    ensureMounted(), updateCrateFoot(), emit6();
   }
   async function loadSnapshots() {
     state.snapshotLoading = !0, state.snapshotError = "", statusOverride = "";
@@ -67164,7 +67200,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime262 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime263 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -67283,14 +67319,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function PlayerProvider2({ children }) {
-    let [value, setValue] = (0, import_react49.useState)(readPlayerValue);
-    (0, import_react49.useEffect)(() => subscribe(() => {
+    let [value, setValue] = (0, import_react50.useState)(readPlayerValue);
+    (0, import_react50.useEffect)(() => subscribe(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readPlayerValue());
       });
     }), []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(PlayerProvider, { value: current2, children });
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(PlayerProvider, { value: current3, children });
   }
   function readHistoryValue() {
     return {
@@ -67305,14 +67341,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function HistoryProvider2({ children }) {
-    let [value, setValue] = (0, import_react49.useState)(readHistoryValue);
-    (0, import_react49.useEffect)(() => subscribeHistory(() => {
+    let [value, setValue] = (0, import_react50.useState)(readHistoryValue);
+    (0, import_react50.useEffect)(() => subscribeHistory(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readHistoryValue());
       });
     }), []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(HistoryProvider, { value: current2, children });
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(HistoryProvider, { value: current3, children });
   }
   function readStatsValue() {
     return {
@@ -67321,18 +67357,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function StatsRoot({ children }) {
-    let [value, setValue] = (0, import_react49.useState)(readStatsValue);
-    (0, import_react49.useLayoutEffect)(() => subscribeStats(() => {
+    let [value, setValue] = (0, import_react50.useState)(readStatsValue);
+    (0, import_react50.useLayoutEffect)(() => subscribeStats(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readStatsValue());
       });
     }), []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(StatsProvider, { value: current2, children });
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(StatsProvider, { value: current3, children });
   }
   function GigProvider({ children }) {
-    let [value, setValue] = (0, import_react49.useState)(readGigValue);
-    (0, import_react49.useEffect)(() => {
+    let [value, setValue] = (0, import_react50.useState)(readGigValue);
+    (0, import_react50.useEffect)(() => {
       let refresh = () => {
         (0, import_react_dom4.flushSync)(() => {
           setValue(readGigValue());
@@ -67342,12 +67378,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stopGig(), stopDrift(), stopPortable();
       };
     }, []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(GigStateProvider, { value: current2, children });
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(GigStateProvider, { value: current3, children });
   }
   function FilesProvider2({ children }) {
-    let hostRef = (0, import_react49.useRef)(null), [value, setValue] = (0, import_react49.useState)(readFilesValue);
-    (0, import_react49.useEffect)(() => {
+    let hostRef = (0, import_react50.useRef)(null), [value, setValue] = (0, import_react50.useState)(readFilesValue);
+    (0, import_react50.useEffect)(() => {
       let refresh = () => {
         hostRef.current?.isConnected && (0, import_react_dom4.flushSync)(() => {
           setValue(readFilesValue());
@@ -67357,25 +67393,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         unsub(), document.removeEventListener(LOCALE_EVENT, refresh);
       };
     }, []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)(FilesProvider, { value: current2, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("span", { ref: hostRef, hidden: !0 }),
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)(FilesProvider, { value: current3, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("span", { ref: hostRef, hidden: !0 }),
       children
     ] });
   }
   function CrateProvider2({ children }) {
-    let [value, setValue] = (0, import_react49.useState)(readCrateValue);
-    (0, import_react49.useEffect)(() => subscribeCrates(() => {
+    let [value, setValue] = (0, import_react50.useState)(readCrateValue);
+    (0, import_react50.useEffect)(() => subscribeCrates(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readCrateValue());
       });
     }), []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(CrateProvider, { value: current2, children });
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(CrateProvider, { value: current3, children });
   }
   function SettingsProvider2({ children }) {
-    let [value, setValue] = (0, import_react49.useState)(readSettingsValue);
-    (0, import_react49.useEffect)(() => {
+    let [value, setValue] = (0, import_react50.useState)(readSettingsValue);
+    (0, import_react50.useEffect)(() => {
       let refresh = () => {
         (0, import_react_dom4.flushSync)(() => {
           setValue(readSettingsValue());
@@ -67385,8 +67421,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stopStore(), stopLocale();
       };
     }, []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(SettingsProvider, { value: current2, children });
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(SettingsProvider, { value: current3, children });
   }
   function readTrackListValue() {
     return {
@@ -67395,14 +67431,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function TrackListRoot({ children }) {
-    let [value, setValue] = (0, import_react49.useState)(readTrackListValue);
-    (0, import_react49.useLayoutEffect)(() => subscribeTrackList(() => {
+    let [value, setValue] = (0, import_react50.useState)(readTrackListValue);
+    (0, import_react50.useLayoutEffect)(() => subscribeTrackList(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readTrackListValue());
       });
     }), []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(TrackListProvider, { value: current2, children });
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(TrackListProvider, { value: current3, children });
   }
   function readSnapshotsValue() {
     return {
@@ -67419,18 +67455,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function SnapshotsProvider2({ children }) {
-    let [value, setValue] = (0, import_react49.useState)(readSnapshotsValue);
-    (0, import_react49.useEffect)(() => subscribe2(() => {
+    let [value, setValue] = (0, import_react50.useState)(readSnapshotsValue);
+    (0, import_react50.useEffect)(() => subscribe2(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readSnapshotsValue());
       });
     }), []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(SnapshotsProvider, { value: current2, children });
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(SnapshotsProvider, { value: current3, children });
   }
   function WizardProvider2({ children }) {
-    let value = (0, import_react49.useMemo)(() => idleWizardValue(), []);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(WizardProvider, { value, children });
+    let value = (0, import_react50.useMemo)(() => idleWizardValue(), []);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(WizardProvider, { value, children });
   }
   function readHealthValue() {
     return {
@@ -67452,25 +67488,38 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function HealthProvider2({ children }) {
-    let [value, setValue] = (0, import_react49.useState)(readHealthValue);
-    (0, import_react49.useLayoutEffect)(() => subscribeHealth(() => {
+    let [value, setValue] = (0, import_react50.useState)(readHealthValue);
+    (0, import_react50.useLayoutEffect)(() => subscribeHealth(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readHealthValue());
       });
     }), []);
-    let current2 = (0, import_react49.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(HealthProvider, { value: current2, children });
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(HealthProvider, { value: current3, children });
+  }
+  function readNoticeValue() {
+    return { notice: getNotice(), dismiss: dismissNotice };
+  }
+  function NoticeProvider2({ children }) {
+    let [value, setValue] = (0, import_react50.useState)(readNoticeValue);
+    (0, import_react50.useLayoutEffect)(() => subscribeNotice(() => {
+      (0, import_react_dom4.flushSync)(() => {
+        setValue(readNoticeValue());
+      });
+    }), []);
+    let current3 = (0, import_react50.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(NoticeProvider, { value: current3, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(MuiThemeRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(StatsRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(SettingsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(TrackListRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(SnapshotsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(WizardProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(HealthProvider2, { children }) }) }) }) }) }) }) }) }) }) }) }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(MuiThemeRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(NoticeProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(StatsRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(SettingsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(TrackListRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(SnapshotsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(WizardProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(HealthProvider2, { children }) }) }) }) }) }) }) }) }) }) }) }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime263 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime264 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node2, existing) {
     let root = existing ?? (0, import_client.createRoot)(host);
     return (0, import_react_dom5.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime263.jsx)(AppProviders, { children: node2 }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime264.jsx)(AppProviders, { children: node2 }));
     }), root;
   }
 
@@ -67501,11 +67550,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/GigDetailsGroup.tsx
-  var import_react50 = __toESM(require_react(), 1), import_react_dom6 = __toESM(require_react_dom(), 1);
-  var import_jsx_runtime264 = __toESM(require_jsx_runtime(), 1), LIST_CAP3 = 100;
+  var import_react51 = __toESM(require_react(), 1), import_react_dom6 = __toESM(require_react_dom(), 1);
+  var import_jsx_runtime265 = __toESM(require_jsx_runtime(), 1), LIST_CAP3 = 100;
   function GigDetailsGroup({ label, lines }) {
-    let [expanded2, setExpanded] = (0, import_react50.useState)(!1), [open, setOpen] = (0, import_react50.useState)(!0), shown = expanded2 || lines.length <= LIST_CAP3 ? lines : lines.slice(0, LIST_CAP3);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(
+    let [expanded2, setExpanded] = (0, import_react51.useState)(!1), [open, setOpen] = (0, import_react51.useState)(!0), shown = expanded2 || lines.length <= LIST_CAP3 ? lines : lines.slice(0, LIST_CAP3);
+    return /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -67521,17 +67570,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           "&:before": { display: "none" }
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
             AccordionSummary_default,
             {
-              expandIcon: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(ExpandMore_default, { fontSize: "small" }),
+              expandIcon: /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(ExpandMore_default, { fontSize: "small" }),
               ref: tooltipRef6(tips.gigGroup),
               children: t("gig.groupCount", { label, count: lines.length })
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("ul", { children: shown.map((line2, index) => /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("li", { children: line2 }, `${index}:${line2}`)) }),
-            lines.length > LIST_CAP3 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("ul", { children: shown.map((line2, index) => /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("li", { children: line2 }, `${index}:${line2}`)) }),
+            lines.length > LIST_CAP3 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
               "button",
               {
                 type: "button",
@@ -67550,7 +67599,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/GigReport.tsx
-  var import_jsx_runtime265 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime266 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef7(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -67558,8 +67607,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function GigActions({ primary, stepIndex: stepIndex2 }) {
     let gig = useGig();
-    return /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)("div", { className: "gig-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)("div", { className: "gig-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(
         "button",
         {
           type: "button",
@@ -67570,7 +67619,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.back")
         }
       ),
-      primary ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      primary ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(
         "button",
         {
           type: "button",
@@ -67581,7 +67630,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: primary
         }
       ) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(
         "button",
         {
           type: "button",
@@ -67595,54 +67644,54 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function GigSince({ payload }) {
     let note = payload.snapshot_note?.trim() ?? "", changes = payload.changes, groups = GIG_CHANGE_GROUPS.map(([label, key]) => [label, changes?.[key] || []]).filter(([, lines]) => lines.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(import_jsx_runtime265.Fragment, { children: [
-      note ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "gig-note", children: note }) : null,
-      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
-      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
-      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(import_jsx_runtime266.Fragment, { children: [
+      note ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: note }) : null,
+      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
+      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
+      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
     ] });
   }
   function GigReport() {
     let { gig } = useGig(), payload = gig.report;
     if (!payload) return null;
     let done = gig.stepIndex >= GIG_STEP_COUNT, step = done ? null : GIG_STEPS[gig.stepIndex], verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady"), crate = payload.scope?.crate_name || t("gig.wholeSpaceInline"), time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "", holding = (payload.holding_it_back || []).map((item) => item.summary), lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [];
-    return /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(import_jsx_runtime265.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(import_jsx_runtime266.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(
         "p",
         {
           className: "gig-score",
           "aria-label": t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
+            /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
           ]
         }
       ),
-      done ? /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(import_jsx_runtime265.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
+      done ? /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(import_jsx_runtime266.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
+        /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
+        /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
           score: payload.score,
           crate,
           time
         }) }),
-        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(import_jsx_runtime265.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
-        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "gig-note", children: t(step.empty) }),
-        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
+        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(import_jsx_runtime266.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
+        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t(step.empty) }),
+        /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
       ] })
     ] });
   }
 
   // src/lib/gig/gig.ts
-  var listeners13 = /* @__PURE__ */ new Set(), stepIndex = 0, latest8 = null, checkedAt = null, exitGig = () => {
+  var listeners14 = /* @__PURE__ */ new Set(), stepIndex = 0, latest8 = null, checkedAt = null, exitGig = () => {
   };
-  function emit6() {
+  function emit7() {
     let snapshot2 = getGigSnapshot();
-    for (let listener of listeners13) listener(snapshot2);
+    for (let listener of listeners14) listener(snapshot2);
   }
   function focusHeading() {
     let headingNode = document.getElementById("gig-step-heading");
@@ -67666,15 +67715,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { report: latest8, stepIndex, checkedAt };
   }
   function subscribeGig(listener) {
-    return listeners13.add(listener), () => {
-      listeners13.delete(listener);
+    return listeners14.add(listener), () => {
+      listeners14.delete(listener);
     };
   }
   function nextGigStep() {
-    latest8 && (stepIndex = Math.min(stepIndex + 1, GIG_STEP_COUNT), emit6(), focusHeading());
+    latest8 && (stepIndex = Math.min(stepIndex + 1, GIG_STEP_COUNT), emit7(), focusHeading());
   }
   function backGigStep() {
-    latest8 && (stepIndex = Math.max(0, stepIndex - 1), emit6(), focusHeading());
+    latest8 && (stepIndex = Math.max(0, stepIndex - 1), emit7(), focusHeading());
   }
   function exitGigCheck() {
     exitGig();
@@ -67684,7 +67733,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let panel = el("gig-panel");
     panel.dataset.gigWired !== "true" && (panel.dataset.gigWired = "true", el("gig-refresh").addEventListener("click", () => {
       loadGigCheck(!0);
-    }), mountIsland(el("gig-report"), (0, import_react51.createElement)(GigReport)));
+    }), mountIsland(el("gig-report"), (0, import_react52.createElement)(GigReport)));
   }
   async function loadGigCheck(keepStep = !1) {
     let token4 = ++state.gigToken;
@@ -67701,7 +67750,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failStatus7(serverMessage(payload, t("gig.unreadable"))), settle = "retry";
         return;
       }
-      checkedAt = /* @__PURE__ */ new Date(), latest8 = payload, el("gig-status").textContent = "", updateScope2(payload), emit6(), settle = "heading";
+      checkedAt = /* @__PURE__ */ new Date(), latest8 = payload, el("gig-status").textContent = "", updateScope2(payload), emit7(), settle = "heading";
     } catch {
       if (token4 !== state.gigToken) return;
       failStatus7(t("gig.unreachable")), settle = "retry";
@@ -67715,14 +67764,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     failStatus7(message), endBusy7(), el("gig-refresh").focus();
   }
   function repaintGig() {
-    latest8 && (updateScope2(latest8), emit6());
+    latest8 && (updateScope2(latest8), emit7());
   }
 
   // src/lib/health/bitrate.ts
-  var import_react53 = __toESM(require_react(), 1);
+  var import_react54 = __toESM(require_react(), 1);
 
   // src/pages/BitrateReport.tsx
-  var import_react52 = __toESM(require_react(), 1);
+  var import_react53 = __toESM(require_react(), 1);
 
   // src/lib/health/bitrate-view.ts
   var REASON_KEYS2 = {
@@ -67740,14 +67789,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/BitrateReport.tsx
-  var import_jsx_runtime266 = __toESM(require_jsx_runtime(), 1), BUTTON_SX6 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime267 = __toESM(require_jsx_runtime(), 1), BUTTON_SX6 = { textTransform: "none", minHeight: 44 };
   function PlanNote({
     cratePlan: cratePlan2,
     writable
   }) {
-    return cratePlan2 ? cratePlan2.written && cratePlan2.saved ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("bitrate.written", { count: cratePlan2.added, name: cratePlan2.name }) }) : cratePlan2.added ? /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(import_jsx_runtime266.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("bitrate.preview", { count: cratePlan2.added, name: cratePlan2.name }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(
+    return cratePlan2 ? cratePlan2.written && cratePlan2.saved ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t("bitrate.written", { count: cratePlan2.added, name: cratePlan2.name }) }) : cratePlan2.added ? /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(import_jsx_runtime267.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t("bitrate.preview", { count: cratePlan2.added, name: cratePlan2.name }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
         Button_default,
         {
           type: "button",
@@ -67760,17 +67809,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("bitrate.confirmCrate")
         }
       )
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("bitrate.previewEmpty") }) : null;
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t("bitrate.previewEmpty") }) : null;
   }
   function BitrateReport({
     payload,
     cratePlan: cratePlan2,
     writable
   }) {
-    let suspects = payload.suspects || [], rows = (0, import_react52.useMemo)(
+    let suspects = payload.suspects || [], rows = (0, import_react53.useMemo)(
       () => suspects.map((item) => ({ ...item, id: item.id })),
       [suspects]
-    ), columns = (0, import_react52.useMemo)(() => [
+    ), columns = (0, import_react53.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -67799,14 +67848,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         valueGetter: (_value, row) => bitrateDetail(row)
       }
     ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(import_jsx_runtime266.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: suspects.length ? t("bitrate.summary", { checked: payload.checked, count: suspects.length }) : t("bitrate.summaryClear", { checked: payload.checked }) }),
-      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("bitrate.notFound", { count: payload.not_found }) }) : null,
-      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("bitrate.unreadableFiles", { count: payload.unreadable }) }) : null,
-      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("bitrate.unchecked", { count: payload.unchecked }) }) : null,
-      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("bitrate.tooQuiet", { count: payload.too_quiet }) }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(PlanNote, { cratePlan: cratePlan2, writable }),
-      suspects.length ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("bitrate.empty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(import_jsx_runtime267.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: suspects.length ? t("bitrate.summary", { checked: payload.checked, count: suspects.length }) : t("bitrate.summaryClear", { checked: payload.checked }) }),
+      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t("bitrate.notFound", { count: payload.not_found }) }) : null,
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t("bitrate.unreadableFiles", { count: payload.unreadable }) }) : null,
+      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t("bitrate.unchecked", { count: payload.unchecked }) }) : null,
+      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t("bitrate.tooQuiet", { count: payload.too_quiet }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(PlanNote, { cratePlan: cratePlan2, writable }),
+      suspects.length ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t("bitrate.empty") })
     ] });
   }
 
@@ -67861,7 +67910,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("bitrate-report");
     reportRoot && reportHost2 !== report && (reportRoot.unmount(), reportRoot = void 0), reportHost2 = report, reportRoot = mountIsland(
       report,
-      (0, import_react53.createElement)(BitrateReport, {
+      (0, import_react54.createElement)(BitrateReport, {
         payload,
         cratePlan,
         writable: state.writable
@@ -67939,10 +67988,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/files/files-mount.tsx
-  var import_react55 = __toESM(require_react(), 1);
+  var import_react56 = __toESM(require_react(), 1);
 
   // src/pages/FilesDialog.tsx
-  var import_jsx_runtime267 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime268 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef8(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -67950,7 +67999,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function FilesDialog() {
     let files = useFiles(), action = files.dialogAction, preview = files.dialogPreview, ready = !!(preview?.ok && files.writable && preview.needs_confirm), reviewHidden = action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags", status4 = files.writable ? files.dialogStatus : document.getElementById("status")?.textContent ?? files.dialogStatus, confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm"), confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
-    return /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(
       Dialog_default,
       {
         open: files.dialogOpen,
@@ -67965,18 +68014,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         maxWidth: "sm",
         sx: { "& .MuiDialog-paper": { maxWidth: "42rem" } },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(DialogTitle_default, { id: "files-dialog-title", component: "h2", children: t("files.reviewTitle") }),
-          /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(DialogContent_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(DialogContentText_default, { id: "files-summary", component: "p", children: preview?.summary || "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(DialogContentText_default, { className: "dialog-note", component: "p", children: t("files.nothingUntilConfirm") }),
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(DialogTitle_default, { id: "files-dialog-title", component: "h2", children: t("files.reviewTitle") }),
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(DialogContent_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(DialogContentText_default, { id: "files-summary", component: "p", children: preview?.summary || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(DialogContentText_default, { className: "dialog-note", component: "p", children: t("files.nothingUntilConfirm") }),
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
               Box_default,
               {
                 id: "files-name-label",
                 className: "files-field",
                 hidden: action !== "rename",
                 sx: action !== "rename" ? { display: "none" } : void 0,
-                children: /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
                   TextField_default,
                   {
                     id: "files-name",
@@ -67990,14 +68039,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
               Box_default,
               {
                 id: "files-replace-label",
                 className: "files-field",
                 hidden: action !== "replace",
                 sx: action !== "replace" ? { display: "none" } : void 0,
-                children: /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
                   TextField_default,
                   {
                     id: "files-replacement",
@@ -68012,19 +68061,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)("ul", { id: "files-changes", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)("ul", { id: "files-changes", children: [
               (preview?.changes || []).map((change, index) => {
                 let crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "", effect4 = change.effect === "trash" ? t("files.trash") : change.to;
-                return /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("li", { children: `${change.from} → ${effect4}${crates}` }, `change-${index}`);
+                return /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("li", { children: `${change.from} → ${effect4}${crates}` }, `change-${index}`);
               }),
-              (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("li", { children: skip2 }, `skip-${index}`)),
-              preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+              (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("li", { children: skip2 }, `skip-${index}`)),
+              preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 })
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
               Button_default,
               {
                 id: "files-cancel",
@@ -68034,7 +68083,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("common.cancel")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
               Button_default,
               {
                 id: "files-review",
@@ -68048,7 +68097,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("files.review")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
               Button_default,
               {
                 id: "files-confirm",
@@ -68071,18 +68120,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/FilesPanel.tsx
-  var import_react54 = __toESM(require_react(), 1), import_react_dom7 = __toESM(require_react_dom(), 1);
+  var import_react55 = __toESM(require_react(), 1), import_react_dom7 = __toESM(require_react_dom(), 1);
 
   // node_modules/@mui/material/Breadcrumbs/Breadcrumbs.mjs
   var React316 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/internal/svg-icons/MoreHoriz.mjs
-  var import_jsx_runtime268 = __toESM(require_jsx_runtime(), 1), MoreHoriz_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime268.jsx)("path", {
+  var import_jsx_runtime269 = __toESM(require_jsx_runtime(), 1), MoreHoriz_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime269.jsx)("path", {
     d: "M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
   }), "MoreHoriz");
 
   // node_modules/@mui/material/Breadcrumbs/BreadcrumbCollapsed.mjs
-  var import_jsx_runtime269 = __toESM(require_jsx_runtime(), 1), BreadcrumbCollapsedButton = styled_default2(ButtonBase_default, {
+  var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1), BreadcrumbCollapsedButton = styled_default2(ButtonBase_default, {
     name: "MuiBreadcrumbCollapsed"
   })(memoTheme_default(({
     theme
@@ -68123,12 +68172,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       nativeButton,
       ...buttonBaseProps
     } = otherProps, ownerState = props;
-    return /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("li", {
-      children: /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(BreadcrumbCollapsedButton, {
+    return /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("li", {
+      children: /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(BreadcrumbCollapsedButton, {
         focusRipple: !0,
         ...buttonBaseProps,
         ownerState,
-        children: /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(BreadcrumbCollapsedIcon, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(BreadcrumbCollapsedIcon, {
           as: slots.CollapsedIcon,
           ownerState,
           ...slotProps.collapsedIcon
@@ -68145,7 +68194,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var breadcrumbsClasses = generateUtilityClasses("MuiBreadcrumbs", ["root", "ol", "li", "separator"]), breadcrumbsClasses_default = breadcrumbsClasses;
 
   // node_modules/@mui/material/Breadcrumbs/Breadcrumbs.mjs
-  var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1), useUtilityClasses111 = (ownerState) => {
+  var import_jsx_runtime271 = __toESM(require_jsx_runtime(), 1), useUtilityClasses111 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -68181,7 +68230,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     marginRight: 8
   });
   function insertSeparators(items, className, separator, ownerState) {
-    return items.reduce((acc, current2, index) => (acc.push(current2), index < items.length - 1 && acc.push(/* @__PURE__ */ (0, import_jsx_runtime270.jsx)(BreadcrumbsSeparator, {
+    return items.reduce((acc, current3, index) => (acc.push(current3), index < items.length - 1 && acc.push(/* @__PURE__ */ (0, import_jsx_runtime271.jsx)(BreadcrumbsSeparator, {
       "aria-hidden": !0,
       className,
       ownerState,
@@ -68223,7 +68272,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         let focusable = listRef.current.querySelector("a[href],button,[tabindex]");
         focusable && focusable.focus();
       };
-      return itemsBeforeCollapse + itemsAfterCollapse >= allItems2.length ? allItems2 : [...allItems2.slice(0, itemsBeforeCollapse), /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(BreadcrumbCollapsed_default, {
+      return itemsBeforeCollapse + itemsAfterCollapse >= allItems2.length ? allItems2 : [...allItems2.slice(0, itemsBeforeCollapse), /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(BreadcrumbCollapsed_default, {
         "aria-label": expandText,
         slots: {
           CollapsedIcon: slots.CollapsedIcon
@@ -68233,18 +68282,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         },
         onClick: handleClickExpand
       }, "ellipsis"), ...allItems2.slice(allItems2.length - itemsAfterCollapse, allItems2.length)];
-    }, allItems = React316.Children.toArray(children).filter((child) => /* @__PURE__ */ React316.isValidElement(child)).map((child, index) => /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("li", {
+    }, allItems = React316.Children.toArray(children).filter((child) => /* @__PURE__ */ React316.isValidElement(child)).map((child, index) => /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("li", {
       className: classes2.li,
       children: child
     }, `child-${index}`));
-    return /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(BreadcrumbsRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(BreadcrumbsRoot, {
       ref,
       component,
       color: "textSecondary",
       className: clsx_default(classes2.root, className),
       ownerState,
       ...other,
-      children: /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(BreadcrumbsOl, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(BreadcrumbsOl, {
         className: classes2.ol,
         ref: listRef,
         ownerState,
@@ -68254,14 +68303,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), Breadcrumbs_default = Breadcrumbs;
 
   // src/pages/FilesPanel.tsx
-  var import_jsx_runtime271 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime272 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef9(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function FileIcon({ kind: kind2 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
       "svg",
       {
         viewBox: "0 0 24 24",
@@ -68269,13 +68318,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         height: "20",
         "aria-hidden": "true",
         className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
-        children: /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
       }
     );
   }
   function FilesToolbar() {
     let files = useFiles(), crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
-    return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(
       Toolbar_default,
       {
         className: "browser-bar",
@@ -68284,7 +68333,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-label": t("files.toolbar"),
         sx: { minHeight: 0, flexWrap: "wrap", gap: 1 },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
             Button_default,
             {
               id: "files-up",
@@ -68295,7 +68344,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: t("common.up")
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
             Breadcrumbs_default,
             {
               id: "files-path",
@@ -68307,7 +68356,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 minWidth: 0,
                 "& .MuiBreadcrumbs-ol": { flexWrap: "nowrap" }
               },
-              children: crumbs.map((crumb, index) => !(index === crumbs.length - 1) && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+              children: crumbs.map((crumb, index) => !(index === crumbs.length - 1) && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
                 Button_default,
                 {
                   type: "button",
@@ -68317,7 +68366,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                   children: crumb.name
                 },
                 `${crumb.path}:${crumb.name}:${index}`
-              ) : /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+              ) : /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
                 Typography_default,
                 {
                   className: "files-crumb",
@@ -68329,7 +68378,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               ))
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
             TextField_default,
             {
               id: "files-search",
@@ -68345,8 +68394,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               onInput: (event) => files.onSearchInput(event.target.value)
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(Button_default, { id: "files-refresh", type: "button", ref: tooltipRef9(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
-          /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(Button_default, { id: "files-refresh", type: "button", ref: tooltipRef9(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+          /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
             Button_default,
             {
               id: "files-elsewhere",
@@ -68363,8 +68412,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function FilesActions() {
     let files = useFiles(), selected = files.selectedEntries, locked = files.locked;
-    return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(Box_default, { className: "files-actions", "aria-label": t("files.actionsLabel"), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(Box_default, { className: "files-actions", "aria-label": t("files.actionsLabel"), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         Button_default,
         {
           id: "files-rename",
@@ -68375,7 +68424,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         Button_default,
         {
           id: "files-rename-from-tags",
@@ -68387,7 +68436,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         Button_default,
         {
           id: "files-move",
@@ -68398,7 +68447,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveToFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         Button_default,
         {
           id: "files-move-folder",
@@ -68409,7 +68458,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         Button_default,
         {
           id: "files-replace",
@@ -68420,7 +68469,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.replaceFile")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         Button_default,
         {
           id: "files-delete",
@@ -68431,7 +68480,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         Button_default,
         {
           id: "files-move-here",
@@ -68444,7 +68493,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveHere")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         Button_default,
         {
           id: "files-pick-cancel",
@@ -68465,8 +68514,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       entry.missing ? "is-missing" : "",
       active2 ? "is-active" : ""
     ].filter(Boolean).join(" ");
-    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)("div", { className, role: "listitem", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(
+    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)("div", { className, role: "listitem", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(
         "button",
         {
           type: "button",
@@ -68481,19 +68530,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             entry.missing ? files.markActive(index) : files.openRow(entry, index);
           },
           children: [
-            entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
-            entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)("span", { className: "files-root-copy", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { className: "files-root-label", children: entry.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { className: "files-root-detail", children: entry.detail })
-            ] }) : /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(import_jsx_runtime271.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { children: entry.name }),
-              entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
+            entry.kind === "drive" || entry.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(FileIcon, { kind: entry.kind === "drive" ? "drive" : "folder" }) : null,
+            entry.detail && (entry.kind === "folder" || entry.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)("span", { className: "files-root-copy", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "files-root-label", children: entry.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "files-root-detail", children: entry.detail })
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(import_jsx_runtime272.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { children: entry.name }),
+              entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null
             ] }),
-            entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+            entry.missing ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
           ]
         }
       ),
-      entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+      entry.removable && entry.serato ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         "button",
         {
           type: "button",
@@ -68507,7 +68556,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("portable.check")
         }
       ) : null
-    ] }) : entry.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+    ] }) : entry.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
       "button",
       {
         type: "button",
@@ -68519,8 +68568,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-label": t("files.shortcut", { name: entry.name }),
         children: t("files.shortcut", { name: entry.name })
       }
-    ) }) : /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)("label", { className: "files-file", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+    ) }) : /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         "input",
         {
           ref: tooltipRef9(selectFile(entry.name, entry.path)),
@@ -68533,9 +68582,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           onChange: (event) => files.toggleFile(entry, index, event.currentTarget.checked)
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { className: "files-name", children: entry.name }),
-      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
-      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "files-name", children: entry.name }),
+      entry.detail ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "files-match-detail", children: entry.detail }) : null,
+      entry.in_library ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
     ] }) });
   }
   var FILE_OVERSCAN = 8;
@@ -68544,8 +68593,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { start: start2, end: end2 };
   }
   function FilesList() {
-    let files = useFiles(), listRef = (0, import_react54.useRef)(null), [scrollTop, setScrollTop] = (0, import_react54.useState)(0), [viewHeight, setViewHeight] = (0, import_react54.useState)(600);
-    (0, import_react54.useLayoutEffect)(() => {
+    let files = useFiles(), listRef = (0, import_react55.useRef)(null), [scrollTop, setScrollTop] = (0, import_react55.useState)(0), [viewHeight, setViewHeight] = (0, import_react55.useState)(600);
+    (0, import_react55.useLayoutEffect)(() => {
       let list = listRef.current;
       if (!list) return;
       setViewHeight(list.clientHeight || 600), setScrollTop(list.scrollTop);
@@ -68561,14 +68610,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let ariaLabel = files.searching ? t("files.searchResults") : files.atRoots ? t("files.roots") : t("files.contents"), emptyLoading = files.loading && !rows.length, emptyError = !!files.error && !rows.length, emptyRoots = files.atRoots && !files.roots.length, emptyFolder = !rows.length, body, tabIndex = 0;
     if (emptyLoading) {
       let reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      body = /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { className: "files-empty", children: reading });
+      body = /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { className: "files-empty", children: reading });
     } else if (emptyError)
-      body = /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { className: "files-empty", children: files.error });
+      body = /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { className: "files-empty", children: files.error });
     else if (emptyRoots)
-      tabIndex = -1, body = /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)("div", { className: "files-empty-state", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("h2", { children: t("files.noRoots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { children: t("files.noRootsBody") }),
-        /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+      tabIndex = -1, body = /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
           Button_default,
           {
             id: "files-run-setup",
@@ -68583,15 +68632,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ] });
     else if (emptyFolder) {
       let empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
-      body = /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { className: "files-empty", children: empty });
+      body = /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { className: "files-empty", children: empty });
     } else {
       tabIndex = -1;
       let windowRows = [];
       for (let index = start2; index < end2; index += 1) {
         let entry = rows[index];
-        entry && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime271.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
+        entry && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime272.jsx)(FileRow, { entry, index }, `${entry.path}:${index}`));
       }
-      body = /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("div", { className: "files-spacer", style: { height: `${rows.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("div", { className: "files-window", style: { transform: `translateY(${start2 * rowHeight}px)` }, children: windowRows }) });
+      body = /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("div", { className: "files-spacer", style: { height: `${rows.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("div", { className: "files-window", style: { transform: `translateY(${start2 * rowHeight}px)` }, children: windowRows }) });
     }
     function onScroll2(event) {
       let node2 = event.currentTarget;
@@ -68602,10 +68651,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onKey2(event) {
       files.onListKey(event.nativeEvent);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(import_jsx_runtime271.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(import_jsx_runtime272.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         "div",
         {
           id: "files-list",
@@ -68624,37 +68673,37 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
   function FilesPanel() {
-    return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(import_jsx_runtime271.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(FilesToolbar, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(FilesList, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(FilesActions, {})
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(import_jsx_runtime272.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(FilesActions, {})
     ] });
   }
 
   // src/components/PortableDialog.tsx
-  var import_jsx_runtime272 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime273 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
     let files = useFiles(), report = files.portableReport, verdict = "";
     report && (report.missing_drive ? verdict = t("portable.missing") : report.ready ? verdict = t("portable.ready") : verdict = t("portable.notReady"));
     let shown = report ? report.findings.slice(0, FINDING_CAP) : [], hidden = report ? report.findings.length - shown.length : 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(import_jsx_runtime272.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { id: "portable-verdict", children: verdict }),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)("ul", { id: "portable-findings", children: [
-        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)("li", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
-          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(import_jsx_runtime272.Fragment, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)(import_jsx_runtime273.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)(import_jsx_runtime273.Fragment, { children: [
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "portable-fix", children: finding.fix })
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { className: "portable-fix", children: finding.fix })
           ] }) : null
         ] }, `finding-${index}`)),
-        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
-        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
         "button",
         {
           id: "portable-close",
@@ -68678,13 +68727,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       } catch {
       }
   }
-  function rootFor(host, current2, lastHost) {
-    if (current2 && lastHost === host && host.isConnected) return current2;
-    safeUnmount2(current2);
+  function rootFor(host, current3, lastHost) {
+    if (current3 && lastHost === host && host.isConnected) return current3;
+    safeUnmount2(current3);
   }
   function mountFilesIslands() {
     let panel = el("files-panel"), dialog = el("files-dialog"), portable = el("portable-dialog");
-    panelRoot5 = mountIsland(panel, (0, import_react55.createElement)(FilesPanel), rootFor(panel, panelRoot5, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react55.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react55.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
+    panelRoot5 = mountIsland(panel, (0, import_react56.createElement)(FilesPanel), rootFor(panel, panelRoot5, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react56.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react56.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
   }
   bindFilesMount(mountFilesIslands);
   bindPortableMount(mountFilesIslands);
@@ -68738,10 +68787,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/views.ts
-  var import_react58 = __toESM(require_react(), 1);
+  var import_react59 = __toESM(require_react(), 1);
 
   // src/pages/CrateActions.tsx
-  var import_jsx_runtime273 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef10(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68749,8 +68798,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)(import_jsx_runtime273.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)(import_jsx_runtime274.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
         "button",
         {
           id: "crate-new",
@@ -68761,7 +68810,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.new")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
         "button",
         {
           id: "crate-rename",
@@ -68772,7 +68821,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
         "button",
         {
           id: "crate-color",
@@ -68783,7 +68832,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("field.color")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
         "button",
         {
           id: "crate-delete",
@@ -68794,7 +68843,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
         "button",
         {
           id: "crate-preset",
@@ -68806,7 +68855,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("presets.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
         "button",
         {
           id: "crate-folder-sync",
@@ -68818,7 +68867,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("folderSync.button")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
         "button",
         {
           id: "crate-rename-from-tags",
@@ -68830,7 +68879,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
         "button",
         {
           id: "crate-refresh",
@@ -68846,7 +68895,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateBrowserActions.tsx
-  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef11(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68854,8 +68903,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateBrowserActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)(import_jsx_runtime274.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
         "button",
         {
           id: "crate-split",
@@ -68867,7 +68916,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.split")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
         "button",
         {
           id: "crate-save-view",
@@ -68879,7 +68928,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.saveView")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
         "button",
         {
           id: "export-m3u",
@@ -68894,7 +68943,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateTree.tsx
-  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime276 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef12(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68906,9 +68955,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function Twist({ row, toggle }) {
     if (!row.childCount)
-      return /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
+      return /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
     let spec2 = row.expanded ? collapseCrate(row.name) : expandCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(
       "button",
       {
         type: "button",
@@ -68928,14 +68977,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     toggle
   }) {
     let hex = colorHex(row.color), tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)(
       "div",
       {
         className: row.holds ? "crate-row holds-selection" : "crate-row",
         style: { paddingLeft: `${row.depth * 14}px` },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(Twist, { row, toggle }),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(Twist, { row, toggle }),
+          /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)(
             "button",
             {
               type: "button",
@@ -68951,12 +69000,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               "aria-expanded": row.childCount ? row.expanded : void 0,
               onClick: (event) => select(row.id, event.nativeEvent),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("span", { className: "name", children: [
-                  hex ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)("span", { className: "name", children: [
+                  hex ? /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
                   row.name
                 ] }),
-                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
-                /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "meta", children: formatNumber(row.count) })
+                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "meta", children: formatNumber(row.count) })
               ]
             }
           )
@@ -68966,7 +69015,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateTree() {
     let crates = useCrates(), focusId = focusedCrateId(), tabbable = crates.rows.find((row) => String(row.id) === focusId) ?? crates.rows[0];
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(import_jsx_runtime275.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(import_jsx_runtime276.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(
       CrateRow,
       {
         row,
@@ -68979,16 +69028,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistoryDetail.tsx
-  var import_jsx_runtime276 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef13(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function Field({ label, value }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("div", { className: "label", children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("div", { className: "value", children: value })
+    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("div", { className: "label", children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("div", { className: "value", children: value })
     ] });
   }
   function HistoryDetail() {
@@ -69000,11 +69049,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(Field, { label, value }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(Field, { label, value }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         "button",
         {
           type: "button",
@@ -69020,7 +69069,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistorySessions.tsx
-  var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime278 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef14(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -69028,9 +69077,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HistorySessions() {
     let history = useHistory();
-    return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(import_jsx_runtime277.Fragment, { children: history.sessions.map((session) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(import_jsx_runtime278.Fragment, { children: history.sessions.map((session) => {
       let name = session.name || t("history.session");
-      return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)(
         "button",
         {
           type: "button",
@@ -69042,8 +69091,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             history.openSession(session.id);
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "name", children: name }),
-            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "meta", children: String(session.played || 0) })
+            /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "name", children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "meta", children: String(session.played || 0) })
           ]
         },
         session.id
@@ -69052,55 +69101,55 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/TrackDetail.tsx
-  var import_react57 = __toESM(require_react(), 1);
+  var import_react58 = __toESM(require_react(), 1);
 
   // src/components/BeatgridBlock.tsx
-  var import_jsx_runtime278 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime279 = __toESM(require_jsx_runtime(), 1);
   function BeatgridMarker({ mark }) {
     let bpmNumber = Number(mark.bpm), name = "";
-    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: beatSeconds(mark.position) }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: name })
+    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: beatSeconds(mark.position) }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: name })
     ] });
   }
   function BeatgridBlock({ track }) {
     if (!beatgridViewOnly(track.markers_unavailable)) return null;
     let suspect = beatgridIsSuspect(track.beatgrid_warning_code), key = beatgridWarningKey(track.beatgrid_warning_code), reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning == "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown"), empty = !suspect && !(track.beatgrid && track.beatgrid.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)(import_jsx_runtime278.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h4", { children: t("markers.gridHeading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
-      suspect ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
-      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
+    return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)(import_jsx_runtime279.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("h4", { children: t("markers.gridHeading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
+      suspect ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
+      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
     ] });
   }
 
   // src/components/CuePads.tsx
-  var import_jsx_runtime279 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime280 = __toESM(require_jsx_runtime(), 1);
   function CueSlot({ slot, cue }) {
     let color2 = slotColor(slot, cue?.color), named = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { className: "swatch", style: swatchStyle }),
-      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
-      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { className: "swatch", style: swatchStyle }),
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
     ] });
   }
   function CuePads({ cues: cues2 }) {
     let slots = cueSlots(cues2), extra = extraCues(cues2);
-    return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)(import_jsx_runtime279.Fragment, { children: [
-      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(CueSlot, { slot, cue }, slot)),
+    return /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)(import_jsx_runtime280.Fragment, { children: [
+      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(CueSlot, { slot, cue }, slot)),
       extra.map((cue, index) => {
         let cueIndex = Number(cue.index), slot = Number.isInteger(cueIndex) ? cueIndex : -1;
-        return /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
+        return /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
       })
     ] });
   }
 
   // src/components/RelatedTracks.tsx
-  var import_react56 = __toESM(require_react(), 1);
-  var import_jsx_runtime280 = __toESM(require_jsx_runtime(), 1);
+  var import_react57 = __toESM(require_react(), 1);
+  var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1);
   function relatedPath(track) {
     return track.resolved_path || track.edit?.portable_id || "";
   }
@@ -69109,8 +69158,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return item.artist ? `${title2} · ${item.artist}` : title2;
   }
   function RelatedTracks({ track, writable }) {
-    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react56.useState)(!!path), [loadError, setLoadError] = (0, import_react56.useState)(""), [payload, setPayload] = (0, import_react56.useState)(null), [query, setQuery] = (0, import_react56.useState)(""), [chosen, setChosen] = (0, import_react56.useState)(null), [note, setNote] = (0, import_react56.useState)(""), [rating, setRating] = (0, import_react56.useState)(""), [mutual, setMutual] = (0, import_react56.useState)(!0), [saving2, setSaving] = (0, import_react56.useState)(!1);
-    (0, import_react56.useEffect)(() => {
+    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react57.useState)(!!path), [loadError, setLoadError] = (0, import_react57.useState)(""), [payload, setPayload] = (0, import_react57.useState)(null), [query, setQuery] = (0, import_react57.useState)(""), [chosen, setChosen] = (0, import_react57.useState)(null), [note, setNote] = (0, import_react57.useState)(""), [rating, setRating] = (0, import_react57.useState)(""), [mutual, setMutual] = (0, import_react57.useState)(!0), [saving2, setSaving] = (0, import_react57.useState)(!1);
+    (0, import_react57.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
         return;
@@ -69132,7 +69181,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         cancelled = !0;
       };
     }, [path, list.space, track.id]);
-    let hits2 = (0, import_react56.useMemo)(() => {
+    let hits2 = (0, import_react57.useMemo)(() => {
       let parsed = parseQuery(query);
       return !parsed.terms.length && !parsed.filters.length ? null : list.tracks.filter((item) => item.id !== track.id && matchesQuery(item, parsed)).slice(0, 8);
     }, [query, list.tracks, track.id]);
@@ -69145,7 +69194,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       try {
         await postJSON("/api/related", body), list.setNotice(t("related.saved")), setChosen(null), await reload();
       } catch (error2) {
-        failureOf(error2).status === 409 ? bridge.lockDown(error2) : list.setNotice(failureOf(error2).message), setLoadError(failureOf(error2).message);
+        failureOf(error2).status === 409 ? bridge.lockDown(error2) : list.setNotice(failureOf(error2).message, "error"), setLoadError(failureOf(error2).message);
       }
     }
     async function onRemove(link) {
@@ -69158,7 +69207,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         try {
           await postJSON("/api/related", { action: "remove", id: link.id }), list.setNotice(t("related.removed")), await reload();
         } catch (error2) {
-          list.setNotice(failureOf(error2).message);
+          list.setNotice(failureOf(error2).message, "error");
         }
     }
     async function onCrate() {
@@ -69167,21 +69216,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         let result = await postJSON("/api/related", { action: "crate", asset: track.id, space: list.space });
         list.setNotice(result.warning || t("related.crateUpdated", { name: String(result.name ?? "") })), await bridge.reloadLibrary(), list.selectTrack(track.id);
       } catch (error2) {
-        failureOf(error2).status === 409 ? bridge.lockDown(error2) : (list.setNotice(failureOf(error2).message), setSaving(!1));
+        failureOf(error2).status === 409 ? bridge.lockDown(error2) : (list.setNotice(failureOf(error2).message, "error"), setSaving(!1));
       }
     }
     let saved = Array.isArray(payload?.saved) ? payload.saved : [], suggested = Array.isArray(payload?.suggested) ? payload.suggested : [], crateName = payload?.crate_name || "Related", headingId = `related-heading-${track.id}`, status4 = path ? loadError || (busy4 ? t("related.loading") : saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved")) : t("related.noPath");
     function onSearch(event) {
       setQuery(event.currentTarget.value), setChosen(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("h3", { id: headingId, children: t("related.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
-      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("ul", { className: "related-list", children: saved.map((link) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h3", { id: headingId, children: t("related.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
+      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("ul", { className: "related-list", children: saved.map((link) => {
         let other = link.track || {}, label = other.title || t("track.untitled"), bits = [];
-        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("div", { children: [
-            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { children: [
+            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
               "button",
               {
                 type: "button",
@@ -69190,11 +69239,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 onClick: () => list.selectTrack(other.asset_id),
                 children: label
               }
-            ) : /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { children: label }),
-            /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
-            link.note ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "related-note", children: link.note }) : null
+            ) : /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
+            link.note ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "related-note", children: link.note }) : null
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
             "button",
             {
               type: "button",
@@ -69209,10 +69258,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] }, String(link.id));
       }) }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("div", { className: "related-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("label", { children: [
+      payload && /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "related-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("label", { children: [
           t("related.find"),
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
             "input",
             {
               ref: tooltipRef(tips.findRelated),
@@ -69224,9 +69273,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
           let name = relatedLabel(hit);
-          return /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
             "button",
             {
               type: "button",
@@ -69239,11 +69288,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           ) }, hit.id);
         }) }),
-        chosen && /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("div", { className: "related-form", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("label", { children: [
+        chosen && /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "related-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("label", { children: [
             t("related.note"),
-            /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkNote),
@@ -69255,23 +69304,23 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("label", { children: [
             t("related.linkRating"),
-            /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)(
               "select",
               {
                 ref: tooltipRef(tips.linkRating),
                 value: rating,
                 onChange: (event) => setRating(event.currentTarget.value),
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("option", { value: "", children: t("rating.none") }),
-                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("option", { value, children: value }, value))
+                  /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("option", { value: "", children: t("rating.none") }),
+                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("option", { value, children: value }, value))
                 ]
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("label", { className: "check", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("label", { className: "check", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkMutual),
@@ -69282,7 +69331,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             ),
             t("related.twoWayLink")
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
             "button",
             {
               type: "button",
@@ -69304,14 +69353,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] })
       ] }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)(import_jsx_runtime280.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
-        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("ul", { className: "related-list", children: suggested.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { children: relatedLabel(item) }),
-            /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "related-meta", children: Array.isArray(item.reasons) ? item.reasons.join(" · ") : "" })
+      payload && /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)(import_jsx_runtime281.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
+        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("ul", { className: "related-list", children: suggested.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: relatedLabel(item) }),
+            /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "related-meta", children: Array.isArray(item.reasons) ? item.reasons.join(" · ") : "" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
             "button",
             {
               type: "button",
@@ -69333,7 +69382,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }, `${item.asset_id ?? index}`)) }),
-        /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
           "button",
           {
             type: "button",
@@ -69347,13 +69396,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("related.updateCrate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
       ] })
     ] });
   }
 
   // src/components/TrackDetail.tsx
-  var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
+  var import_jsx_runtime282 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
     ["name", "column.title", !0],
     ["artist", "column.artist", !1],
     ["album", "field.album", !1],
@@ -69391,36 +69440,36 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MarkerSection({ track }) {
     let note = t("markers.readOnly");
-    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h3", { children: t("markers.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-kicker", children: note }),
-      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(CuePads, { cues: track.cues || [] }),
-      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(LoopRow, { loop }, `loop-${index}`)),
-      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "marker", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
+    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("h3", { children: t("markers.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "detail-kicker", children: note }),
+      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(CuePads, { cues: track.cues || [] }),
+      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(LoopRow, { loop }, `loop-${index}`)),
+      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "marker", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
       ] }, `flip-${index}`)),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(BeatgridBlock, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(BeatgridBlock, { track })
     ] });
   }
   function LoopRow({ loop }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
+    return /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
     ] });
   }
   function CopySection({ fromId, copies, writable }) {
     let list = useTrackList();
-    return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h3", { children: t("copies.heading") }),
+    return /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("h3", { children: t("copies.heading") }),
       copies.map((copy2) => {
         let name = copy2.file || t("track.numbered", { id: String(copy2.id) }), file = copy2.file || `Track ${copy2.id}`;
-        return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "copy-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "copy-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
             "button",
             {
               type: "button",
@@ -69430,10 +69479,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: name
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
             "button",
             {
               type: "button",
@@ -69442,7 +69491,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               disabled: !writable,
               onClick: () => {
                 bridge.openReplaceInCratesDialog(fromId, copy2.id).catch((error2) => {
-                  list.setNotice(String(error2));
+                  list.setNotice(String(error2), "error");
                 });
               },
               children: t("copies.useInCrates")
@@ -69454,11 +69503,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MembershipSection({ track, writable }) {
     let list = useTrackList(), chosen = new Set(track.crate_ids || []), crates = [...list.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name)), smart = list.crates.filter((crate) => crate.smart && chosen.has(crate.id));
-    return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h3", { children: t("crates.heading") }),
-      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("label", { className: "member", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("h3", { children: t("crates.heading") }),
+      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("label", { className: "member", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "input",
           {
             ref: tooltipRef(membershipTip(crate.name)),
@@ -69473,29 +69522,29 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: crate.name })
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: crate.name })
       ] }, crate.id)) })
     ] });
   }
   function FieldGroups({ track }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(import_jsx_runtime281.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
+    return /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(import_jsx_runtime282.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
   }
   function FieldGroupBlock({ group }) {
-    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react57.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "label", children: [
+    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react58.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "label", children: [
         field2.label ?? "",
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { className: "column", children: field2.column ?? "" })
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "column", children: field2.column ?? "" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("span", { className: "color-value", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { className: "swatch", style: { background: field2.display } }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("span", { className: "color-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "swatch", style: { background: field2.display } }),
         field2.display
       ] }) : field2.display })
     ] }, `${field2.column ?? field2.label ?? index}`));
-    return open ? /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h3", { children: group.name ?? "" }),
+    return open ? /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("h3", { children: group.name ?? "" }),
       rows
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)(import_jsx_runtime281.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)(import_jsx_runtime282.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
         "button",
         {
           type: "button",
@@ -69505,8 +69554,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length })
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("section", { className: "group", hidden: !shown, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h3", { children: group.name ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("section", { className: "group", hidden: !shown, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("h3", { children: group.name ?? "" }),
         rows
       ] })
     ] });
@@ -69526,15 +69575,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       event.preventDefault();
       let fields = fieldsFromForm(event.currentTarget);
       if ("error" in fields) {
-        list.setNotice(fields.error);
+        list.setNotice(fields.error, "error");
         return;
       }
       list.saveTrack(track.id, fields);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("form", { className: "editor", onSubmit, children: [
-      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("label", { className: wide ? "wide" : void 0, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("form", { className: "editor", onSubmit, children: [
+      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("label", { className: wide ? "wide" : void 0, children: [
         t(label),
-        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "textarea",
           {
             ref: tooltipRef(editField(t(label))),
@@ -69542,7 +69591,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             defaultValue: String(edit[name] ?? ""),
             disabled: !writable
           }
-        ) : /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        ) : /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "input",
           {
             ref: tooltipRef(editField(t(label))),
@@ -69553,34 +69602,34 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }, name)),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("label", { children: [
         t("field.color"),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackColor),
             name: "color",
             defaultValue: String(currentColor),
             disabled: !writable,
-            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("option", { value: String(value), children: label }, value))
+            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("option", { value: String(value), children: label }, value))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("label", { children: [
         t("field.rating"),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackRating),
             name: "rating",
             defaultValue: ratingValue,
             disabled: !writable,
-            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("option", { value, children: label }, value || "none"))
+            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("option", { value, children: label }, value || "none"))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "input",
           {
             ref: tooltipRef(tips.beatgridLock),
@@ -69592,7 +69641,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         ),
         t("field.beatgridLocked")
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
         "button",
         {
           type: "submit",
@@ -69610,25 +69659,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ["column.key", track.key || "—"],
       ["column.time", track.length]
     ];
-    return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "detail-body", children: [
-      track.album ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h2", { children: track.title ?? "" }),
-      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "artist", children: track.artist }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "deck", children: [
-        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: t(key) })
+    return /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "detail-body", children: [
+      track.album ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("h2", { children: track.title ?? "" }),
+      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "artist", children: track.artist }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "deck", children: [
+        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: t(key) })
         ] }, key)),
-        track.color ? /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
-          /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("span", { children: t("field.color") })
+        track.color ? /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { children: t("field.color") })
         ] }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(TrackEditor, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(TrackEditor, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "button",
           {
             type: "button",
@@ -69640,7 +69689,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.reveal", { manager: manager2 })
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "button",
           {
             type: "button",
@@ -69652,7 +69701,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "button",
           {
             type: "button",
@@ -69664,7 +69713,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.relocate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "button",
           {
             type: "button",
@@ -69676,7 +69725,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.removeFromLibrary")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "button",
           {
             type: "button",
@@ -69684,13 +69733,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             disabled: !writable,
             onClick: () => {
               bridge.openReplaceInCratesDialog(track.id).catch((error2) => {
-                list.setNotice(String(error2));
+                list.setNotice(String(error2), "error");
               });
             },
             children: t("detail.useInCrates")
           }
         ),
-        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
           "button",
           {
             type: "button",
@@ -69698,18 +69747,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             disabled: !writable,
             onClick: () => {
               bridge.openMergeDialog().catch((error2) => {
-                list.setNotice(String(error2));
+                list.setNotice(String(error2), "error");
               });
             },
             children: t("merge.title")
           }
         ) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(RelatedTracks, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(MarkerSection, { track }),
-      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(MembershipSection, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(FieldGroups, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(RelatedTracks, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(MarkerSection, { track }),
+      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(MembershipSection, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(FieldGroups, { track })
     ] });
   }
   function HistoryBody({ entry }) {
@@ -69719,14 +69768,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("div", { className: "label", children: label }),
-        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("div", { className: "value", children: value })
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("div", { className: "field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("div", { className: "label", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("div", { className: "value", children: value })
       ] }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
         "button",
         {
           type: "button",
@@ -69740,7 +69789,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function TrackDetailPane() {
     let list = useTrackList(), { detail: detail2 } = list;
-    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(TrackBody, { track: detail2.track });
+    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(TrackBody, { track: detail2.track });
   }
 
   // src/lib/ui/nav.ts
@@ -69832,7 +69881,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot?.unmount(), historyDetailRoot = null, historyDetailHost = null;
   }
   function paintDetailIsland() {
-    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react58.createElement)(TrackDetailPane));
+    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react59.createElement)(TrackDetailPane));
   }
   function remountIsland(host, node2, slot) {
     return slot.root && slot.host !== host && (slot.root.unmount(), slot.root = null), slot.host = host, slot.root = mountIsland(host, node2, slot.root ?? void 0), slot.root;
@@ -69843,21 +69892,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountCrates() {
     let list = document.getElementById("crate-list"), listMount = mountCrateIsland(
       list instanceof HTMLElement ? list : null,
-      (0, import_react58.createElement)(CrateTree),
+      (0, import_react59.createElement)(CrateTree),
       crateListRoot,
       crateListHost
     );
     crateListRoot = listMount.root, crateListHost = listMount.host;
     let actions3 = document.getElementById("crate-actions"), actionsMount = mountCrateIsland(
       actions3 instanceof HTMLElement ? actions3 : null,
-      (0, import_react58.createElement)(CrateActions),
+      (0, import_react59.createElement)(CrateActions),
       crateActionsRoot,
       crateActionsHost
     );
     crateActionsRoot = actionsMount.root, crateActionsHost = actionsMount.host;
     let browser = document.getElementById("crate-browser-actions"), browserMount = mountCrateIsland(
       browser instanceof HTMLElement ? browser : null,
-      (0, import_react58.createElement)(CrateBrowserActions),
+      (0, import_react59.createElement)(CrateBrowserActions),
       crateBrowserRoot,
       crateBrowserHost
     );
@@ -69927,9 +69976,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function placeCrateFocus(previousId) {
     let items = [...el("crate-list").querySelectorAll(".crate")];
     if (!items.length) return null;
-    let current2 = items.find((item) => item.dataset.id === previousId) || items[0];
-    for (let item of items) item.tabIndex = item === current2 ? 0 : -1;
-    return current2;
+    let current3 = items.find((item) => item.dataset.id === previousId) || items[0];
+    for (let item of items) item.tabIndex = item === current3 ? 0 : -1;
+    return current3;
   }
   function renderCrates() {
     let list = el("crate-list"), scroll = list.scrollTop, active2 = document.activeElement, restore = list.contains(active2) ? active2.closest(".crate-row")?.querySelector(".crate")?.dataset.id ?? null : null;
@@ -70088,9 +70137,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       expanded: state.expanded.has(id),
       space: state.space
     }).then((result) => {
-      result.warning && setNotice(result.warning);
+      result.warning && setNotice2(result.warning);
     }).catch((error2) => {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
     }));
   }
   function selectCrate(id, event) {
@@ -70122,7 +70171,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function selectEntry(id) {
     if (state.selectedId = id, paintRows(), notifyHistory(), !state.entries.some((item) => item.id === id)) return;
     let host = el("detail");
-    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react58.createElement)(HistoryDetail), {
+    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react59.createElement)(HistoryDetail), {
       host: historyDetailHost,
       root: historyDetailRoot
     }), historyDetailHost = host;
@@ -70134,8 +70183,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
     detailRoot && paintDetailIsland();
   }
-  function setNotice(text2) {
-    el("notice").textContent = text2 || "", el("notice").hidden = !text2;
+  function setNotice2(text2, severity = "info") {
+    setNotice(text2, severity);
   }
   function statusLine(info) {
     return info?.code ? codedText(info.message || t("status.library"), info.code, messageParams(info.params)) : info?.message || t("status.library");
@@ -70187,33 +70236,33 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function lockDown(error2) {
     let failed = failureOf(error2);
-    applyStatus(failed.payload?.serato || { writable: !1, message: failed.message }), setNotice(failed.message);
+    applyStatus(failed.payload?.serato || { writable: !1, message: failed.message }), setNotice2(failed.message, "error");
   }
   async function saveTrack(id, fields) {
     if (fields.bpm != null && Number.isNaN(fields.bpm)) {
-      setNotice(t("detail.bpmNumber"));
+      setNotice2(t("detail.bpmNumber"), "error");
       return;
     }
     try {
       let result = await postJSON("/api/track", { id, space: state.space, fields });
-      setNotice(result.warning || t("common.saved")), await loadLibrary(), selectTrack(id);
+      setNotice2(result.warning || t("common.saved")), await loadLibrary(), selectTrack(id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
     }
   }
   async function revealTrack(id) {
     try {
       await postJSON("/api/reveal", { id });
     } catch (error2) {
-      setNotice(failureOf(error2).message);
+      setNotice2(failureOf(error2).message, "error");
     }
   }
   async function prepareTrack(id, add) {
     try {
       let result = await postJSON("/api/crate", { action: "prepare", asset: id, add, space: state.space });
-      setNotice(result.warning || (add ? t("detail.sentPrepare") : t("detail.removedPrepare"))), await loadLibrary(), selectTrack(id);
+      setNotice2(result.warning || (add ? t("detail.sentPrepare") : t("detail.removedPrepare"))), await loadLibrary(), selectTrack(id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
     }
   }
   async function relocateTrack(track) {
@@ -70230,9 +70279,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           space: state.space,
           fields: { portable_id: path }
         });
-        setNotice(result.warning || t("detail.relocated")), await loadLibrary(), selectTrack(track.id);
+        setNotice2(result.warning || t("detail.relocated")), await loadLibrary(), selectTrack(track.id);
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
       }
   }
   async function removeTrack(id) {
@@ -70243,9 +70292,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }))
       try {
         let result = await postJSON("/api/crate", { action: "remove_library", asset: id, space: state.space });
-        setNotice(result.warning || t("detail.removed")), state.selectedId = null, await loadLibrary();
+        setNotice2(result.warning || t("detail.removed")), state.selectedId = null, await loadLibrary();
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
       }
   }
   async function setMembership(assetId, crateId, add, input) {
@@ -70256,9 +70305,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         asset: assetId,
         space: state.space
       });
-      return result.warning && setNotice(result.warning), await loadLibrary(), selectTrack(assetId), !0;
+      return result.warning && setNotice2(result.warning), await loadLibrary(), selectTrack(assetId), !0;
     } catch (error2) {
-      return input && (input.checked = !add), failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message), !1;
+      return input && (input.checked = !add), failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error"), !1;
     }
   }
   async function saveRules(id, text2) {
@@ -70266,14 +70315,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     try {
       rules = JSON.parse(text2);
     } catch {
-      setNotice(t("error.smart_rules_json"));
+      setNotice2(t("error.smart_rules_json"), "error");
       return;
     }
     try {
       let result = await postJSON("/api/crate", { action: "rules", id, rules, space: state.space });
-      setNotice(result.warning || t("rules.saved")), await loadLibrary(), selectCrate(id);
+      setNotice2(result.warning || t("rules.saved")), await loadLibrary(), selectCrate(id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
     }
   }
   async function createCrate2() {
@@ -70287,9 +70336,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
     try {
       let result = await postJSON("/api/crate", { action: "create", name: name.trim(), parent, space: state.space });
-      setNotice(result.warning || t("crates.created")), await loadLibrary(), selectCrate(result.id);
+      setNotice2(result.warning || t("crates.created")), await loadLibrary(), selectCrate(result.id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
     }
   }
   async function renameCrate() {
@@ -70304,9 +70353,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (!(!name || !name.trim() || name.trim() === crate.name))
       try {
         let result = await postJSON("/api/crate", { action: "rename", id: crate.id, name: name.trim(), space: state.space });
-        setNotice(result.warning || t("crates.renamed")), await loadLibrary(), selectCrate(crate.id);
+        setNotice2(result.warning || t("crates.renamed")), await loadLibrary(), selectCrate(crate.id);
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
       }
   }
   function colorFromName(choice) {
@@ -70325,7 +70374,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (choice == null) return;
     let color2 = colorFromName(choice);
     if (color2 == null) {
-      setNotice(t("crates.colorUnknown"));
+      setNotice2(t("crates.colorUnknown"), "error");
       return;
     }
     try {
@@ -70335,9 +70384,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         color: color2 === 16777215 ? null : color2,
         space: state.space
       });
-      setNotice(result.warning || t("crates.colorSaved")), await loadLibrary();
+      setNotice2(result.warning || t("crates.colorSaved")), await loadLibrary();
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
     }
   }
   async function deleteCrate() {
@@ -70349,24 +70398,24 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }))
       try {
         let result = await postJSON("/api/crate", { action: "delete", id: crate.id, space: state.space });
-        state.activeCrate = "all", setNotice(result.warning || t("crates.deleted")), await loadLibrary();
+        state.activeCrate = "all", setNotice2(result.warning || t("crates.deleted")), await loadLibrary();
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
       }
   }
   async function importPlaylist(file) {
     let text2 = await file.text(), name = file.name.replace(/\.m3u8?$/i, "") || t("import.defaultName"), parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
     try {
       let result = await postJSON("/api/import.m3u", { space: state.space, parent, name, text: text2 }), missed = result.unmatched_count ? ` ${t("import.unmatched", { count: Number(result.unmatched_count) })}` : "";
-      setNotice(`${t("import.added", { count: Number(result.added) || 0 })}${missed}${result.warning ? ` ${result.warning}` : ""}`), await loadLibrary(), selectCrate(result.id);
+      setNotice2(`${t("import.added", { count: Number(result.added) || 0 })}${missed}${result.warning ? ` ${result.warning}` : ""}`), await loadLibrary(), selectCrate(result.id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
     }
   }
   function renderSessions() {
     notifyHistory();
     let host = el("session-list");
-    sessionRoot = remountIsland(host, (0, import_react58.createElement)(HistorySessions), {
+    sessionRoot = remountIsland(host, (0, import_react59.createElement)(HistorySessions), {
       host: sessionHost,
       root: sessionRoot
     }), sessionHost = host;
@@ -70380,7 +70429,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     state.historyId = id, state.selectedId = null, notifyHistory(), renderSessions();
     let response = await fetch(`/api/history?session=${id}`), payload = await readJSONOr(response, {});
     if (!response.ok) {
-      setNotice(serverMessage(payload, t("history.sessionFailed")));
+      setNotice2(serverMessage(payload, t("history.sessionFailed")), "error");
       return;
     }
     state.entries = payload.entries || [], notifyHistory(), el("list").scrollTop = 0, renderList();
@@ -70405,7 +70454,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     state.tracks = library.tracks, state.byId = new Map(library.tracks.map((track) => [track.id, track])), state.crates = library.crates, state.rootId = library.root_id, state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)])), state.presets = library.presets ?? {}, state.expanded = new Set(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id)), state.activeCrate = active2 === "all" || library.crates.some((crate) => crate.id === active2) ? active2 : "all", state.selectedId = selected, state.duplicateSpace !== state.space && (state.duplicateIds = null, state.duplicateGroups = []), applyStatus(library.serato), renderList();
   }
   function setMode(mode) {
-    if (rememberMode(mode), state.mode = mode, el("list").scrollTop = 0, mode === "history" ? (state.sort = "start", state.sortDir = -1, state.historySessions.length || loadHistory().catch((error2) => setNotice(failureOf(error2).message))) : (state.sort === "start" || state.sort === "deck" || state.sort === "played") && (state.sort = "name", state.sortDir = 1), mode === "duplicates" && state.duplicateSpace !== state.space && loadDuplicates().catch((error2) => setNotice(failureOf(error2).message)), mode === "files") {
+    if (rememberMode(mode), state.mode = mode, el("list").scrollTop = 0, mode === "history" ? (state.sort = "start", state.sortDir = -1, state.historySessions.length || loadHistory().catch((error2) => setNotice2(failureOf(error2).message, "error"))) : (state.sort === "start" || state.sort === "deck" || state.sort === "played") && (state.sort = "name", state.sortDir = 1), mode === "duplicates" && state.duplicateSpace !== state.space && loadDuplicates().catch((error2) => setNotice2(failureOf(error2).message, "error")), mode === "files") {
       state.filesLoading = !0;
       let path = state.filesAtRoots ? "" : state.filesPath || "";
       loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots }).catch((error2) => failFiles(error2));
@@ -70440,14 +70489,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("export-m3u").addEventListener("click", () => exportPlaylistM3u()), el("import-m3u").addEventListener("click", () => {
       if (playlistCrate() != null) {
         if (!state.writable) {
-          setNotice(el("status").textContent);
+          setNotice2(el("status").textContent);
           return;
         }
         el("import-file").click();
       }
     }), el("import-file").addEventListener("change", (event) => {
       let file = event.target.files?.[0];
-      event.target.value = "", file && importPlaylist(file).catch((error2) => setNotice(failureOf(error2).message));
+      event.target.value = "", file && importPlaylist(file).catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("space").addEventListener("change", () => {
       state.space = el("space").value, state.activeCrate = "all", state.selectedId = null, state.duplicateIds = null, state.duplicateGroups = [], loadLibrary().then(() => state.mode === "duplicates" ? loadDuplicates() : state.mode === "gig" ? loadGigCheck().catch(showGigFailure) : state.mode === "portable" ? loadPortableView().catch(showPortableFailure) : state.mode === "drift" ? loadDrift().catch(showDriftFailure) : state.mode === "health" ? loadHealth().catch(showHealthFailure) : state.mode === "stats" ? loadHistoryStats().catch(showHistoryStatsFailure) : state.mode === "scan" ? loadScan().catch(showScanFailure) : state.mode === "bitrate" ? loadBitrate().catch(showBitrateFailure) : state.mode === "tags" ? loadTags().catch(showTagsFailure) : null).catch(showFailure);
     }), el("views").addEventListener("click", (event) => {
@@ -70461,7 +70510,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), document.querySelector(".sort-crates").addEventListener("click", (event) => {
       let button = event.target.closest("button");
       button?.dataset.crateSort && (state.crateSort = button.dataset.crateSort, renderCrates(), renderShell());
-    }), el("crate-new").addEventListener("click", () => createCrate2().catch((error2) => setNotice(failureOf(error2).message))), el("crate-rename").addEventListener("click", () => renameCrate().catch((error2) => setNotice(failureOf(error2).message))), el("crate-color").addEventListener("click", () => colorCrate().catch((error2) => setNotice(failureOf(error2).message))), el("crate-delete").addEventListener("click", () => deleteCrate().catch((error2) => setNotice(failureOf(error2).message))), el("crate-list").addEventListener("keydown", (event) => {
+    }), el("crate-new").addEventListener("click", () => createCrate2().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-rename").addEventListener("click", () => renameCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-color").addEventListener("click", () => colorCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-delete").addEventListener("click", () => deleteCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-list").addEventListener("keydown", (event) => {
       let item = event.target.closest(".crate");
       if (!item || !el("crate-list").contains(item)) return;
       let items = [...el("crate-list").querySelectorAll(".crate")], index = items.indexOf(item), id = item.dataset.id === "all" ? "all" : Number(item.dataset.id);
@@ -70487,7 +70536,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     openInLibrary: (id) => {
       openInLibrary(id);
     },
-    setNotice,
+    setNotice: setNotice2,
     setSort: (key) => {
       state.sort === key ? state.sortDir *= -1 : (state.sort = key, state.sortDir = isNumericSort(key) ? -1 : 1), renderColumns(), renderList();
     }
@@ -70496,16 +70545,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     select: selectCrate,
     toggle: toggleCrate,
     create: () => {
-      createCrate2().catch((error2) => setNotice(failureOf(error2).message));
+      createCrate2().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     },
     rename: () => {
-      renameCrate().catch((error2) => setNotice(failureOf(error2).message));
+      renameCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     },
     color: () => {
-      colorCrate().catch((error2) => setNotice(failureOf(error2).message));
+      colorCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     },
     remove: () => {
-      deleteCrate().catch((error2) => setNotice(failureOf(error2).message));
+      deleteCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     },
     exportM3u: exportPlaylistM3u
   });
@@ -70515,14 +70564,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   historyActions.openInLibrary = openInLibrary;
   bridge.applyStatus = applyStatus;
   bridge.renderShell = renderShell;
-  bridge.setNotice = setNotice;
+  bridge.setNotice = setNotice2;
 
   // src/lib/ui/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360, DETAIL_MIN_WIDTH = 300, SAVE_DELAY_MS = 400, splitter = null, changedHere = !1, saveTimer;
   function save(width2) {
     changedHere = !0, clearTimeout(saveTimer), saveTimer = setTimeout(() => {
       postJSON("/api/settings", { layout: { track_list_width: width2 } }).catch(() => {
-        setNotice(t("layout.widthNotSaved"));
+        setNotice2(t("layout.widthNotSaved"), "error");
       });
     }, SAVE_DELAY_MS);
   }
@@ -70582,7 +70631,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       if (token4 === rekordboxReportToken) {
         if (!ok || typeof body.xml != "string" || !body.xml.startsWith("<?xml")) {
           let message = serverMessage(body, t("rekordbox.failed"));
-          el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice(message);
+          el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice2(message, "error");
           return;
         }
         rekordboxXml = body.xml, fillRekordboxReport(body.report || []), el("rekordbox-status").textContent = "", el("rekordbox-dialog").open || el("rekordbox-dialog").showModal();
@@ -70590,7 +70639,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }).catch((error2) => {
       if (token4 !== rekordboxReportToken) return;
       let message = failureOf(error2).message;
-      el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice(message);
+      el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice2(message, "error");
     });
   }
   function selectedMergeKeepId() {
@@ -70700,7 +70749,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         label.className = "merge-choice", label.htmlFor = `merge-keep-${id}`;
         let input = inputEl(keepCopy(track.file || `Track ${id}`));
         input.type = "radio", input.name = "merge-keep", input.id = `merge-keep-${id}`, input.value = String(id), input.checked = id === state.selectedId, input.addEventListener("change", () => {
-          input.checked && refreshMergePreview().catch((error2) => setNotice(failureOf(error2).message));
+          input.checked && refreshMergePreview().catch((error2) => setNotice2(failureOf(error2).message, "error"));
         });
         let text2 = document.createElement("span"), name = document.createElement("span");
         name.textContent = track.file || t("track.numbered", { id: String(id) });
@@ -70732,7 +70781,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let count = (result.removed || []).length, name = result.kept?.file || t("merge.keptCopy"), message = t("merge.merged", { count, name });
       result.warning && (message = `${message} ${result.warning}`);
       let copy2 = result.cue_copy;
-      copy2 && (copy2.markers || copy2.beatgrid) && copy2.status === "copied" && (message = `${message} ${mergeCopyLine(copy2, !0)}`), result.cue_warning && (message = `${message} ${result.cue_warning}`), setNotice(message), state.selectedId = keepId, await loadLibrary(), state.mode === "duplicates" && await loadDuplicates(), state.byId.has(keepId) && selectTrack(keepId);
+      copy2 && (copy2.markers || copy2.beatgrid) && copy2.status === "copied" && (message = `${message} ${mergeCopyLine(copy2, !0)}`), result.cue_warning && (message = `${message} ${result.cue_warning}`), setNotice2(message), state.selectedId = keepId, await loadLibrary(), state.mode === "duplicates" && await loadDuplicates(), state.byId.has(keepId) && selectTrack(keepId);
     } catch (error2) {
       el("merge-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("merge-dialog").close());
     } finally {
@@ -70789,7 +70838,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       label.className = "merge-choice", label.htmlFor = `crates-replace-to-${track.id}`;
       let input = inputEl(openReplaceCopy(track.file || `Track ${track.id}`));
       input.type = "radio", input.name = "crates-replace-to", input.id = `crates-replace-to-${track.id}`, input.value = String(track.id), input.checked = track.id === replaceToId, input.addEventListener("change", () => {
-        input.checked && (replaceToId = track.id, refreshReplacePreview().catch((error2) => setNotice(failureOf(error2).message)));
+        input.checked && (replaceToId = track.id, refreshReplacePreview().catch((error2) => setNotice2(failureOf(error2).message, "error")));
       });
       let text2 = document.createElement("span"), name = document.createElement("span");
       name.textContent = track.file || t("track.numbered", { id: String(track.id) });
@@ -70842,7 +70891,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         });
         el("crates-replace-dialog").close();
         let added = (result.crates_added || []).length, removed = (result.crates_removed || []).length, name = result.to?.file || result.to?.name || t("cratesReplace.title"), message = added ? t("cratesReplace.placed", { count: added, name }) : t("cratesReplace.nothingToDo");
-        result.retire && removed && (message = `${message} ${t("cratesReplace.retired", { name: result.from?.file || result.from?.name || "" })}`), !added && removed && result.retire && (message = t("cratesReplace.updated")), result.warning && (message = `${message} ${result.warning}`), setNotice(message), await loadLibrary(), state.byId.has(fromId) && selectTrack(fromId);
+        result.retire && removed && (message = `${message} ${t("cratesReplace.retired", { name: result.from?.file || result.from?.name || "" })}`), !added && removed && result.retire && (message = t("cratesReplace.updated")), result.warning && (message = `${message} ${result.warning}`), setNotice2(message), await loadLibrary(), state.byId.has(fromId) && selectTrack(fromId);
       } catch (error2) {
         el("crates-replace-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("crates-replace-dialog").close());
       } finally {
@@ -71008,7 +71057,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         let result = await postJSON("/api/files", { action: "relink", matches, confirm: !0 });
         result.serato && applyStatus(result.serato), el("relink-dialog").close();
         let message = t("relink.done", { count: matches.length });
-        result.summary && (message = result.summary), result.warning && (message = `${message} ${result.warning}`), setNotice(message), await loadLibrary();
+        result.summary && (message = result.summary), result.warning && (message = `${message} ${result.warning}`), setNotice2(message), await loadLibrary();
       } catch (error2) {
         el("relink-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("relink-dialog").close());
       } finally {
@@ -71023,7 +71072,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }), el("rekordbox-dialog").open && requestRekordboxReport();
     };
     el("rekordbox-hot-loops").addEventListener("change", saveExportBar), el("rekordbox-memory").addEventListener("change", saveExportBar), el("rekordbox-key").addEventListener("change", saveExportBar), loadPrivacy().catch((error2) => {
-      setNotice(failureOf(error2).message || t("sharing.loadFailedOff"));
+      setNotice2(failureOf(error2).message || t("sharing.loadFailedOff"), "error");
     }), el("export-rekordbox").addEventListener("click", () => {
       playlistCrate() != null && requestRekordboxReport();
     }), el("rekordbox-cancel").addEventListener("click", () => {
@@ -71038,26 +71087,26 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("health-list-chrome").addEventListener("click", (event) => {
       let button = event.target.closest("button");
       if (button?.id === "merge-duplicates") {
-        openMergeDialog().catch((error2) => setNotice(failureOf(error2).message));
+        openMergeDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
         return;
       }
-      button?.id === "open-relink" && openRelinkDialog().catch((error2) => setNotice(failureOf(error2).message));
+      button?.id === "open-relink" && openRelinkDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("relink-cancel").addEventListener("click", () => el("relink-dialog").close()), el("relink-find").addEventListener("click", () => {
       scanRelink().catch((error2) => {
         el("relink-status").textContent = failureOf(error2).message;
       });
     }), el("relink-accept-high").addEventListener("click", () => acceptRelinkHigh()), el("relink-confirm").addEventListener("click", () => {
-      confirmRelink().catch((error2) => setNotice(failureOf(error2).message));
+      confirmRelink().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("merge-cancel").addEventListener("click", () => el("merge-dialog").close()), el("merge-confirm").addEventListener("click", () => {
-      confirmMerge().catch((error2) => setNotice(failureOf(error2).message));
+      confirmMerge().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("merge-trash").addEventListener("change", () => syncTrashChoice()), el("crates-replace-cancel").addEventListener("click", () => el("crates-replace-dialog").close()), el("crates-replace-confirm").addEventListener("click", () => {
-      confirmReplaceInCrates().catch((error2) => setNotice(failureOf(error2).message));
+      confirmReplaceInCrates().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("crates-replace-search").addEventListener("input", () => {
       renderReplaceChoices();
     }), el("crates-replace-keep").addEventListener("change", () => {
-      el("crates-replace-keep").checked && refreshReplacePreview().catch((error2) => setNotice(failureOf(error2).message));
+      el("crates-replace-keep").checked && refreshReplacePreview().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("crates-replace-retire").addEventListener("change", () => {
-      el("crates-replace-retire").checked && refreshReplacePreview().catch((error2) => setNotice(failureOf(error2).message));
+      el("crates-replace-retire").checked && refreshReplacePreview().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("consent-decline").addEventListener("click", () => {
       saveConsent(!1, el("consent-status")).then((ok) => {
         ok && (consentSettled = !0, el("consent-dialog").close());
@@ -71478,7 +71527,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function openFolderSyncDialog() {
     if (mountSharedDialogs(), !state.writable || typeof state.activeCrate != "number") {
-      setNotice(el("status").textContent || "");
+      setNotice2(el("status").textContent || "");
       return;
     }
     el("folder-sync-status").textContent = "", el("folder-sync-dialog").open || el("folder-sync-dialog").showModal(), el("folder-sync-path").focus(), await previewFolderSync();
@@ -71497,7 +71546,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           subcrates: form.subcrates,
           full: form.full
         });
-        el("folder-sync-dialog").close(), setNotice(folderSyncDoneText(reply)), await loadLibrary();
+        el("folder-sync-dialog").close(), setNotice2(folderSyncDoneText(reply)), await loadLibrary();
       } catch (error2) {
         el("folder-sync-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("folder-sync-dialog").close());
       } finally {
@@ -71507,18 +71556,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wireFolderSync() {
     mountSharedDialogs(), el("crate-folder-sync").addEventListener("click", () => {
-      openFolderSyncDialog().catch((error2) => setNotice(failureOf(error2).message));
+      openFolderSyncDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("folder-sync-path").addEventListener("input", schedulePreview), el("folder-sync-subcrates").addEventListener("change", () => {
       previewFolderSync();
     }), el("folder-sync-full").addEventListener("change", () => {
       previewFolderSync();
     }), el("folder-sync-cancel").addEventListener("click", () => el("folder-sync-dialog").close()), el("folder-sync-run").addEventListener("click", () => {
-      runFolderSync().catch((error2) => setNotice(failureOf(error2).message));
+      runFolderSync().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     });
   }
   bindCrateActions({
     folderSync: () => {
-      openFolderSyncDialog().catch((error2) => setNotice(failureOf(error2).message));
+      openFolderSyncDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }
   });
 
@@ -71550,7 +71599,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function openPresetDialog() {
     if (mountSharedDialogs(), !state.writable) {
-      setNotice(el("status").textContent || "");
+      setNotice2(el("status").textContent || "");
       return;
     }
     let track = state.selectedId == null ? void 0 : state.byId.get(state.selectedId);
@@ -71570,7 +71619,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let reply = await postJSON("/api/smart-preset", { action: "create", space: state.space, preset, name });
       el("preset-dialog").close();
       let message = t("presets.created", { name: reply.name || name, count: Number(reply.added) || 0 });
-      setNotice(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
+      setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
     } catch (error2) {
       el("preset-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("preset-dialog").close());
     } finally {
@@ -71587,9 +71636,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         added: Number(reply.added) || 0,
         removed: Number(reply.removed) || 0
       });
-      setNotice(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
+      setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message), failureOf(error2).status === 404 && await loadLibrary();
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error"), failureOf(error2).status === 404 && await loadLibrary();
     }
   }
   async function refreshPresetsOnOpen() {
@@ -71598,16 +71647,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         let reply = await postJSON("/api/smart-preset", { action: "refresh_all" }), changed = reply.changed?.length ?? 0;
         if (!changed) return;
         let message = t("presets.refreshedOnOpen", { count: changed });
-        setNotice(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
+        setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
       } catch (error2) {
-        failureOf(error2).status !== 409 && setNotice(failureOf(error2).message);
+        failureOf(error2).status !== 409 && setNotice2(failureOf(error2).message, "error");
       }
   }
   function wirePresets() {
     mountSharedDialogs(), el("crate-preset").addEventListener("click", () => {
-      openPresetDialog().catch((error2) => setNotice(failureOf(error2).message));
+      openPresetDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("crate-refresh").addEventListener("click", () => {
-      refreshActivePreset().catch((error2) => setNotice(failureOf(error2).message));
+      refreshActivePreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("preset-kind").addEventListener("change", () => {
       syncPresetFields(), previewPreset();
     });
@@ -71616,23 +71665,23 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     el("preset-scope").addEventListener("change", () => {
       previewPreset();
     }), el("preset-cancel").addEventListener("click", () => el("preset-dialog").close()), el("preset-create").addEventListener("click", () => {
-      createPreset().catch((error2) => setNotice(failureOf(error2).message));
+      createPreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     });
   }
   bindCrateActions({
     preset: () => {
-      openPresetDialog().catch((error2) => setNotice(failureOf(error2).message));
+      openPresetDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     },
     refresh: () => {
-      refreshActivePreset().catch((error2) => setNotice(failureOf(error2).message));
+      refreshActivePreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }
   });
 
   // src/lib/ui/app-shell.ts
-  var import_react60 = __toESM(require_react(), 1);
+  var import_react61 = __toESM(require_react(), 1);
 
   // src/pages/AppShell.tsx
-  var import_react59 = __toESM(require_react(), 1);
+  var import_react60 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
   var React317 = __toESM(require_react(), 1);
@@ -71644,7 +71693,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var appBarClasses = generateUtilityClasses("MuiAppBar", ["root", "positionFixed", "positionAbsolute", "positionSticky", "positionStatic", "positionRelative", "colorDefault", "colorPrimary", "colorSecondary", "colorInherit", "colorTransparent", "colorError", "colorInfo", "colorSuccess", "colorWarning"]);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
-  var import_jsx_runtime282 = __toESM(require_jsx_runtime(), 1), useUtilityClasses112 = (ownerState) => {
+  var import_jsx_runtime283 = __toESM(require_jsx_runtime(), 1), useUtilityClasses112 = (ownerState) => {
     let {
       color: color2,
       position: position2,
@@ -71797,7 +71846,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       position: position2,
       enableColorOnDark
     }, classes2 = useUtilityClasses112(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(AppBarRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime283.jsx)(AppBarRoot, {
       square: !0,
       component: "header",
       ownerState,
@@ -71813,7 +71862,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/material/Slide/Slide.mjs
   var React318 = __toESM(require_react(), 1);
-  var import_jsx_runtime283 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
+  var import_jsx_runtime284 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
     visibility: "hidden"
   }, DEFAULT_TRANSLATE_OPTIONS = {};
   function isGestureTranslate(transform) {
@@ -71922,7 +71971,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       };
     }, [direction, inProp, containerProp]), React318.useEffect(() => {
       !inProp && !preserveInlineTransformRef.current && updatePosition();
-    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime283.jsx)(Transition_default, {
+    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(Transition_default, {
       nodeRef: childrenRef,
       onEnter: handleEnter,
       onEntered: handleEntered,
@@ -71964,7 +72013,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var drawerClasses = generateUtilityClasses("MuiDrawer", ["root", "docked", "paper", "anchorLeft", "anchorRight", "anchorTop", "anchorBottom", "modal"]);
 
   // node_modules/@mui/material/Drawer/Drawer.mjs
-  var import_jsx_runtime284 = __toESM(require_jsx_runtime(), 1), overridesResolver4 = (props, styles5) => {
+  var import_jsx_runtime285 = __toESM(require_jsx_runtime(), 1), overridesResolver4 = (props, styles5) => {
     let {
       ownerState
     } = props;
@@ -72200,40 +72249,301 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           container: resolveSlideContainer
         }
       }
-    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(PaperSlot, {
+    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(PaperSlot, {
       ...paperSlotProps,
       children
     });
     if (variant === "permanent")
-      return /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(DockedSlot, {
+      return /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(DockedSlot, {
         ...dockedSlotProps,
         children: drawer
       });
-    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(TransitionSlot, {
+    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(TransitionSlot, {
       ...transitionSlotProps,
       children: drawer
     });
-    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(DockedSlot, {
+    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(DockedSlot, {
       ...dockedSlotProps,
       children: slidingDrawer
-    }) : /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(RootSlot, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(RootSlot, {
       ...rootSlotProps,
       children: slidingDrawer
     });
   }), Drawer_default = Drawer;
 
   // node_modules/@mui/icons-material/ChevronLeft.mjs
-  var import_jsx_runtime285 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime285.jsx)("path", {
+  var import_jsx_runtime286 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime286.jsx)("path", {
     d: "M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
   }), "ChevronLeft");
 
   // node_modules/@mui/icons-material/Menu.mjs
-  var import_jsx_runtime286 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime286.jsx)("path", {
+  var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime287.jsx)("path", {
     d: "M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"
   }), "Menu");
 
+  // node_modules/@mui/material/Alert/Alert.mjs
+  var React320 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Alert/alertClasses.mjs
+  function getAlertUtilityClass(slot) {
+    return generateUtilityClass("MuiAlert", slot);
+  }
+  var alertClasses = generateUtilityClasses("MuiAlert", ["root", "action", "icon", "message", "filled", "colorSuccess", "colorInfo", "colorWarning", "colorError", "outlined", "standard"]), alertClasses_default = alertClasses;
+
+  // node_modules/@mui/material/internal/svg-icons/SuccessOutlined.mjs
+  var import_jsx_runtime288 = __toESM(require_jsx_runtime(), 1), SuccessOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime288.jsx)("path", {
+    d: "M20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.76,4 13.5,4.11 14.2, 4.31L15.77,2.74C14.61,2.26 13.34,2 12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0, 0 22,12M7.91,10.08L6.5,11.5L11,16L21,6L19.59,4.58L11,13.17L7.91,10.08Z"
+  }), "SuccessOutlined");
+
+  // node_modules/@mui/material/internal/svg-icons/ReportProblemOutlined.mjs
+  var import_jsx_runtime289 = __toESM(require_jsx_runtime(), 1), ReportProblemOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime289.jsx)("path", {
+    d: "M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"
+  }), "ReportProblemOutlined");
+
+  // node_modules/@mui/material/internal/svg-icons/ErrorOutline.mjs
+  var import_jsx_runtime290 = __toESM(require_jsx_runtime(), 1), ErrorOutline_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime290.jsx)("path", {
+    d: "M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+  }), "ErrorOutline");
+
+  // node_modules/@mui/material/internal/svg-icons/InfoOutlined.mjs
+  var import_jsx_runtime291 = __toESM(require_jsx_runtime(), 1), InfoOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime291.jsx)("path", {
+    d: "M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"
+  }), "InfoOutlined");
+
+  // node_modules/@mui/material/Alert/Alert.mjs
+  var import_jsx_runtime292 = __toESM(require_jsx_runtime(), 1), useUtilityClasses114 = (ownerState) => {
+    let {
+      variant,
+      color: color2,
+      severity,
+      classes: classes2
+    } = ownerState, slots = {
+      root: ["root", `color${capitalize_default(color2 || severity)}`, `${variant}`],
+      icon: ["icon"],
+      message: ["message"],
+      action: ["action"]
+    };
+    return composeClasses(slots, getAlertUtilityClass, classes2);
+  }, AlertRoot = styled_default2(Paper_default, {
+    name: "MuiAlert",
+    slot: "Root",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.root, styles5[ownerState.variant]];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => {
+    let getColor = theme.palette.mode === "light" ? theme.darken : theme.lighten, getBackgroundColor = theme.palette.mode === "light" ? theme.lighten : theme.darken;
+    return {
+      ...theme.typography.body2,
+      backgroundColor: "transparent",
+      display: "flex",
+      padding: "6px 16px",
+      variants: [...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["light"])).map(([color2]) => ({
+        props: {
+          colorSeverity: color2,
+          variant: "standard"
+        },
+        style: {
+          color: theme.vars ? theme.vars.palette.Alert[`${color2}Color`] : getColor(theme.palette[color2].light, 0.6),
+          backgroundColor: theme.vars ? theme.vars.palette.Alert[`${color2}StandardBg`] : getBackgroundColor(theme.palette[color2].light, 0.9),
+          [`& .${alertClasses_default.icon}`]: theme.vars ? {
+            color: theme.vars.palette.Alert[`${color2}IconColor`]
+          } : {
+            color: theme.palette[color2].main
+          }
+        }
+      })), ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["light"])).map(([color2]) => ({
+        props: {
+          colorSeverity: color2,
+          variant: "outlined"
+        },
+        style: {
+          color: theme.vars ? theme.vars.palette.Alert[`${color2}Color`] : getColor(theme.palette[color2].light, 0.6),
+          border: `1px solid ${(theme.vars || theme).palette[color2].light}`,
+          [`& .${alertClasses_default.icon}`]: theme.vars ? {
+            color: theme.vars.palette.Alert[`${color2}IconColor`]
+          } : {
+            color: theme.palette[color2].main
+          }
+        }
+      })), ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["dark"])).map(([color2]) => ({
+        props: {
+          colorSeverity: color2,
+          variant: "filled"
+        },
+        style: {
+          ...theme.focusVisible && applyChildrenFocusVisible(`0 0 0 4px ${(theme.vars || theme).palette.background.default}`),
+          fontWeight: theme.typography.fontWeightMedium,
+          ...theme.vars ? {
+            color: theme.vars.palette.Alert[`${color2}FilledColor`],
+            backgroundColor: theme.vars.palette.Alert[`${color2}FilledBg`]
+          } : {
+            backgroundColor: theme.palette.mode === "dark" ? theme.palette[color2].dark : theme.palette[color2].main,
+            color: theme.palette.getContrastText(theme.palette[color2].main)
+          }
+        }
+      }))]
+    };
+  })), AlertIcon = styled_default2("div", {
+    name: "MuiAlert",
+    slot: "Icon"
+  })({
+    marginRight: 12,
+    padding: "7px 0",
+    display: "flex",
+    fontSize: 22,
+    opacity: 0.9
+  }), AlertMessage = styled_default2("div", {
+    name: "MuiAlert",
+    slot: "Message"
+  })({
+    padding: "8px 0",
+    minWidth: 0,
+    overflow: "auto"
+  }), AlertAction = styled_default2("div", {
+    name: "MuiAlert",
+    slot: "Action"
+  })({
+    display: "flex",
+    alignItems: "flex-start",
+    padding: "4px 0 0 16px",
+    marginLeft: "auto",
+    marginRight: -8
+  }), defaultIconMapping = {
+    success: /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(SuccessOutlined_default, {
+      fontSize: "inherit"
+    }),
+    warning: /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(ReportProblemOutlined_default, {
+      fontSize: "inherit"
+    }),
+    error: /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(ErrorOutline_default, {
+      fontSize: "inherit"
+    }),
+    info: /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(InfoOutlined_default, {
+      fontSize: "inherit"
+    })
+  }, Alert = /* @__PURE__ */ React320.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiAlert"
+    }), {
+      action,
+      children,
+      className,
+      closeText = "Close",
+      color: color2,
+      icon,
+      iconMapping = defaultIconMapping,
+      onClose,
+      role = "alert",
+      severity = "success",
+      slotProps = {},
+      slots = {},
+      variant = "standard",
+      ...other
+    } = props, ownerState = {
+      ...props,
+      color: color2,
+      severity,
+      variant,
+      colorSeverity: color2 || severity
+    }, classes2 = useUtilityClasses114(ownerState), externalForwardedProps = {
+      slots,
+      slotProps
+    }, [RootSlot, rootSlotProps] = useSlot("root", {
+      ref,
+      shouldForwardComponentProp: !0,
+      className: clsx_default(classes2.root, className),
+      elementType: AlertRoot,
+      externalForwardedProps: {
+        ...externalForwardedProps,
+        ...other
+      },
+      ownerState,
+      additionalProps: {
+        role,
+        elevation: 0
+      }
+    }), [IconSlot, iconSlotProps] = useSlot("icon", {
+      className: classes2.icon,
+      elementType: AlertIcon,
+      externalForwardedProps,
+      ownerState
+    }), [MessageSlot, messageSlotProps] = useSlot("message", {
+      className: classes2.message,
+      elementType: AlertMessage,
+      externalForwardedProps,
+      ownerState
+    }), [ActionSlot, actionSlotProps] = useSlot("action", {
+      className: classes2.action,
+      elementType: AlertAction,
+      externalForwardedProps,
+      ownerState
+    }), [CloseButtonSlot, closeButtonProps] = useSlot("closeButton", {
+      elementType: IconButton_default,
+      externalForwardedProps,
+      ownerState
+    }), [CloseIconSlot, closeIconProps] = useSlot("closeIcon", {
+      elementType: Close_default,
+      externalForwardedProps,
+      ownerState
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime292.jsxs)(RootSlot, {
+      ...rootSlotProps,
+      children: [icon !== !1 ? /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(IconSlot, {
+        ...iconSlotProps,
+        children: icon || iconMapping[severity] || defaultIconMapping[severity]
+      }) : null, /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(MessageSlot, {
+        ...messageSlotProps,
+        children
+      }), action != null ? /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(ActionSlot, {
+        ...actionSlotProps,
+        children: action
+      }) : null, action == null && onClose ? /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(ActionSlot, {
+        ...actionSlotProps,
+        children: /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(CloseButtonSlot, {
+          size: "small",
+          "aria-label": closeText,
+          title: closeText,
+          color: "inherit",
+          onClick: onClose,
+          ...closeButtonProps,
+          children: /* @__PURE__ */ (0, import_jsx_runtime292.jsx)(CloseIconSlot, {
+            fontSize: "small",
+            ...closeIconProps
+          })
+        })
+      }) : null]
+    });
+  }), Alert_default = Alert;
+
+  // src/components/NoticeBanner.tsx
+  var import_jsx_runtime293 = __toESM(require_jsx_runtime(), 1);
+  function NoticeBanner() {
+    let { notice, dismiss: dismiss2 } = useNotice();
+    if (!notice) return null;
+    let assertive = notice.severity === "error" || notice.severity === "warning";
+    return /* @__PURE__ */ (0, import_jsx_runtime293.jsx)(Box_default, { sx: { px: 2, py: 1, flexShrink: 0 }, children: /* @__PURE__ */ (0, import_jsx_runtime293.jsx)(
+      Alert_default,
+      {
+        id: "app-notice",
+        severity: notice.severity,
+        role: assertive ? "alert" : "status",
+        onClose: dismiss2,
+        slotProps: {
+          closeButton: { "aria-label": t("common.close") }
+        },
+        children: notice.text
+      }
+    ) });
+  }
+
   // src/pages/AppShell.tsx
-  var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 200;
+  var import_jsx_runtime294 = __toESM(require_jsx_runtime(), 1), DRAWER_WIDTH = 200;
   function tooltipRef15(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -72245,12 +72555,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     node2 && node2.parentElement !== slot && slot.append(node2);
   }
   function AppShell() {
-    let [open, setOpen] = (0, import_react59.useState)(() => window.innerWidth > 980), [, setLocaleTick] = (0, import_react59.useState)(0), spaceSlot = (0, import_react59.useRef)(null), playerSlot = (0, import_react59.useRef)(null), navSlot = (0, import_react59.useRef)(null), footSlot = (0, import_react59.useRef)(null), bodySlot = (0, import_react59.useRef)(null);
-    return (0, import_react59.useEffect)(() => onLocaleChange(() => {
+    let [open, setOpen] = (0, import_react60.useState)(() => window.innerWidth > 980), [, setLocaleTick] = (0, import_react60.useState)(0), spaceSlot = (0, import_react60.useRef)(null), playerSlot = (0, import_react60.useRef)(null), navSlot = (0, import_react60.useRef)(null), footSlot = (0, import_react60.useRef)(null), bodySlot = (0, import_react60.useRef)(null);
+    return (0, import_react60.useEffect)(() => onLocaleChange(() => {
       setLocaleTick((n) => n + 1);
-    }), []), (0, import_react59.useLayoutEffect)(() => {
+    }), []), (0, import_react60.useLayoutEffect)(() => {
       adopt(spaceSlot.current, "space-field"), adopt(playerSlot.current, "player-bar"), adopt(navSlot.current, "views"), adopt(navSlot.current, "view-children"), adopt(footSlot.current, "rail-foot"), adopt(bodySlot.current, "app-body");
-    }, []), /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)(
+    }, []), /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)(
       Box_default,
       {
         sx: {
@@ -72260,8 +72570,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           minHeight: 0
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)(Toolbar_default, { sx: { gap: 2, minHeight: 56 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)(Toolbar_default, { sx: { gap: 2, minHeight: 56 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(
               IconButton_default,
               {
                 id: "drawer-toggle",
@@ -72273,14 +72583,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 "aria-label": open ? t("shell.drawerHide") : t("shell.drawerShow"),
                 onClick: () => setOpen((value) => !value),
                 ref: tooltipRef15(tips.drawerToggle),
-                children: open ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(Menu_default2, {})
+                children: open ? /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(Menu_default2, {})
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(Box_default, { ref: spaceSlot, className: "app-bar-space" })
+            /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(Box_default, { ref: spaceSlot, className: "app-bar-space" })
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(Box_default, { ref: playerSlot, className: "player-strip", sx: { flexShrink: 0 } }),
-          /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(Box_default, { ref: playerSlot, className: "player-strip", sx: { flexShrink: 0 } }),
+          /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(NoticeBanner, {}),
+          /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(
               Drawer_default,
               {
                 id: "app-drawer",
@@ -72314,7 +72625,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     flexDirection: "column"
                   }
                 },
-                children: /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)(
                   Box_default,
                   {
                     sx: {
@@ -72325,7 +72636,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     },
                     ...open ? {} : { inert: !0 },
                     children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
+                      /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(
                         Box_default,
                         {
                           ref: navSlot,
@@ -72335,13 +72646,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                           sx: { flex: 1, minHeight: 0, overflow: "auto" }
                         }
                       ),
-                      /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(Box_default, { ref: footSlot, className: "drawer-foot" })
+                      /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(Box_default, { ref: footSlot, className: "drawer-foot" })
                     ]
                   }
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(
               Box_default,
               {
                 ref: bodySlot,
@@ -72359,7 +72670,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountAppShell(host) {
     islandRoot5?.unmount(), islandRoot5 = null;
     let root = host === void 0 ? document.getElementById("app-shell") : host;
-    root && (islandRoot5 = mountIsland(root, (0, import_react60.createElement)(AppShell)));
+    root && (islandRoot5 = mountIsland(root, (0, import_react61.createElement)(AppShell)));
   }
 
   // src/lib/ui/desktop-actions.ts
@@ -72462,7 +72773,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (saving || !state.writable) return;
     let assets = saveViewIds(focusedView());
     if (!assets.length) {
-      setNotice(t("crates.saveViewEmpty"));
+      setNotice2(t("crates.saveViewEmpty"), "error");
       return;
     }
     mountSharedDialogs();
@@ -72482,16 +72793,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         assets,
         space: state.space
       });
-      setNotice(result.warning || t("crates.saveViewCreated", { count: Number(result.added) || assets.length })), await loadLibrary(), typeof result.id == "number" && selectCrate(result.id);
+      setNotice2(result.warning || t("crates.saveViewCreated", { count: Number(result.added) || assets.length })), await loadLibrary(), typeof result.id == "number" && selectCrate(result.id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice(failureOf(error2).message);
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
     } finally {
       saving = !1;
     }
   }
   function wireDualCrates() {
     el("crate-split").addEventListener("click", () => toggleSplit()), el("crate-save-view").addEventListener("click", () => {
-      saveFocusedView().catch((error2) => setNotice(failureOf(error2).message));
+      saveFocusedView().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }), el("crate-pane-a").addEventListener("focusin", () => {
       !state.splitCrates || state.focusedPane === "a" || (state.focusedPane = "a", paintDualChrome());
     }), el("crate-pane-b").addEventListener("focusin", () => {
@@ -72501,7 +72812,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   bindCrateActions({
     split: toggleSplit,
     saveView: () => {
-      saveFocusedView().catch((error2) => setNotice(failureOf(error2).message));
+      saveFocusedView().catch((error2) => setNotice2(failureOf(error2).message, "error"));
     }
   });
 

@@ -137,7 +137,7 @@ function CopySection({ fromId, copies, writable }: { fromId: number; copies: Cop
               disabled={!writable}
               onClick={() => {
                 void bridge.openReplaceInCratesDialog(fromId, copy.id as number).catch((error) => {
-                  list.setNotice(String(error));
+                  list.setNotice(String(error), "error");
                 });
               }}
             >
@@ -264,7 +264,7 @@ function TrackEditor({ track, writable }: { track: Track; writable: boolean }) {
     event.preventDefault();
     const fields = fieldsFromForm(event.currentTarget);
     if ("error" in fields) {
-      list.setNotice(fields.error);
+      list.setNotice(fields.error, "error");
       return;
     }
     void list.saveTrack(track.id, fields);
@@ -415,7 +415,7 @@ function TrackBody({ track }: { track: Track }) {
           disabled={!writable}
           onClick={() => {
             void bridge.openReplaceInCratesDialog(track.id).catch((error) => {
-              list.setNotice(String(error));
+              list.setNotice(String(error), "error");
             });
           }}
         >
@@ -428,7 +428,7 @@ function TrackBody({ track }: { track: Track }) {
             disabled={!writable}
             onClick={() => {
               void bridge.openMergeDialog().catch((error) => {
-                list.setNotice(String(error));
+                list.setNotice(String(error), "error");
               });
             }}
           >

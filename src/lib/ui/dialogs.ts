@@ -200,7 +200,7 @@ function requestRekordboxReport(): void {
       if (!ok || typeof body.xml !== "string" || !body.xml.startsWith("<?xml")) {
         const message = serverMessage(body, t("rekordbox.failed"));
         if (el("rekordbox-dialog").open) el("rekordbox-status").textContent = message;
-        else setNotice(message);
+        else setNotice(message, "error");
         return;
       }
       rekordboxXml = body.xml;
@@ -212,7 +212,7 @@ function requestRekordboxReport(): void {
       if (token !== rekordboxReportToken) return;
       const message = failureOf(error).message;
       if (el("rekordbox-dialog").open) el("rekordbox-status").textContent = message;
-      else setNotice(message);
+      else setNotice(message, "error");
     });
 }
 
@@ -454,7 +454,7 @@ function renderMergeChoices() {
     input.value = String(id);
     input.checked = id === state.selectedId;
     input.addEventListener("change", () => {
-      if (input.checked) refreshMergePreview().catch((error) => setNotice(failureOf(error).message));
+      if (input.checked) refreshMergePreview().catch((error) => setNotice(failureOf(error).message, "error"));
     });
     const text = document.createElement("span");
     const name = document.createElement("span");
@@ -653,7 +653,7 @@ function renderReplaceChoices(): void {
     input.addEventListener("change", () => {
       if (!input.checked) return;
       replaceToId = track.id;
-      refreshReplacePreview().catch((error) => setNotice(failureOf(error).message));
+      refreshReplacePreview().catch((error) => setNotice(failureOf(error).message, "error"));
     });
     const text = document.createElement("span");
     const name = document.createElement("span");
@@ -1140,7 +1140,7 @@ export function wireDialogs(): void {
   el("rekordbox-memory").addEventListener("change", saveExportBar);
   el("rekordbox-key").addEventListener("change", saveExportBar);
   loadPrivacy().catch((error: unknown) => {
-    setNotice(failureOf(error).message || t("sharing.loadFailedOff"));
+    setNotice(failureOf(error).message || t("sharing.loadFailedOff"), "error");
   });
   el("export-rekordbox").addEventListener("click", () => {
     if (playlistCrate() == null) return;
@@ -1171,11 +1171,11 @@ export function wireDialogs(): void {
   el("health-list-chrome").addEventListener("click", (event) => {
     const button = (event.target as Element).closest("button");
     if (button?.id === "merge-duplicates") {
-      openMergeDialog().catch((error) => setNotice(failureOf(error).message));
+      openMergeDialog().catch((error) => setNotice(failureOf(error).message, "error"));
       return;
     }
     if (button?.id === "open-relink") {
-      openRelinkDialog().catch((error) => setNotice(failureOf(error).message));
+      openRelinkDialog().catch((error) => setNotice(failureOf(error).message, "error"));
     }
   });
   el("relink-cancel").addEventListener("click", () => el("relink-dialog").close());
@@ -1186,28 +1186,28 @@ export function wireDialogs(): void {
   });
   el("relink-accept-high").addEventListener("click", () => acceptRelinkHigh());
   el("relink-confirm").addEventListener("click", () => {
-    confirmRelink().catch((error) => setNotice(failureOf(error).message));
+    confirmRelink().catch((error) => setNotice(failureOf(error).message, "error"));
   });
   el("merge-cancel").addEventListener("click", () => el("merge-dialog").close());
   el("merge-confirm").addEventListener("click", () => {
-    confirmMerge().catch((error) => setNotice(failureOf(error).message));
+    confirmMerge().catch((error) => setNotice(failureOf(error).message, "error"));
   });
   el("merge-trash").addEventListener("change", () => syncTrashChoice());
   el("crates-replace-cancel").addEventListener("click", () => el("crates-replace-dialog").close());
   el("crates-replace-confirm").addEventListener("click", () => {
-    confirmReplaceInCrates().catch((error) => setNotice(failureOf(error).message));
+    confirmReplaceInCrates().catch((error) => setNotice(failureOf(error).message, "error"));
   });
   el("crates-replace-search").addEventListener("input", () => {
     renderReplaceChoices();
   });
   el("crates-replace-keep").addEventListener("change", () => {
     if (el("crates-replace-keep").checked) {
-      refreshReplacePreview().catch((error) => setNotice(failureOf(error).message));
+      refreshReplacePreview().catch((error) => setNotice(failureOf(error).message, "error"));
     }
   });
   el("crates-replace-retire").addEventListener("change", () => {
     if (el("crates-replace-retire").checked) {
-      refreshReplacePreview().catch((error) => setNotice(failureOf(error).message));
+      refreshReplacePreview().catch((error) => setNotice(failureOf(error).message, "error"));
     }
   });
   el("consent-decline").addEventListener("click", () => {
