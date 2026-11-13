@@ -13,12 +13,13 @@ The HTTP banner in `server.py` is `SeratoLibrary/1.0`. A release tag does not ch
 | Dependency review | Pull requests only | Reviews dependency changes. It does not comment on the pull request |
 | PR labels | Every pull request, including label changes | Fails when the pull request has none of the labels `.github/release.yml` uses for generated notes |
 | Prepare release | Push to `main`, or a manual run on `main` | Drafts the next `vMAJOR.MINOR.PATCH` and notes since the latest final tag, uploads them as an artifact, and updates the open **Next release** issue. It does not create a tag or a GitHub Release |
+| Milestone empty | A milestoned issue or same-repo pull request closes, or a manual run | When that GitHub milestone has no remaining open items, comments on the open **Next release** issue that it is ready to tag. It does not create a tag, close the milestone, or publish a GitHub Release |
 | Release | Tag `v*.*.*`, or a manual run | Builds the macOS disk images, the Windows installer, and the portable zip. A tag also publishes a GitHub Release |
 | Pages | Push to `main` when `docs/` or `.github/workflows/pages.yml` changes, a pull request that changes those paths, or a manual run | Builds the user guide with MkDocs. A push to `main` also publishes it. A pull request builds the site and does not publish it |
 
-A push to `main` runs CI, CodeQL, and Prepare release once. When that push also changes `docs/` or the Pages workflow, Pages runs too. A pull request runs CI, CodeQL, dependency review, and PR labels. A pull request that changes the guide also builds the site. The two events do not both fire for the same commit on a feature branch, because CI, CodeQL, Pages, and Prepare release listen to `push` only on `main`. Prepare release does not run on pull requests.
+A push to `main` runs CI, CodeQL, and Prepare release once. When that push also changes `docs/` or the Pages workflow, Pages runs too. A pull request runs CI, CodeQL, dependency review, and PR labels. A pull request that changes the guide also builds the site. The two events do not both fire for the same commit on a feature branch, because CI, CodeQL, Pages, and Prepare release listen to `push` only on `main`. Prepare release does not run on pull requests. Milestone empty runs when a milestoned issue or same-repo pull request closes, not on every push.
 
-Each workflow sets `permissions: contents: read` and a `timeout-minutes` value. The CI tests job allows 20 minutes, because the Windows run takes about 9 minutes and grows with the suite. A job that needs more access sets its own permissions, which replace the workflow floor. CI, CodeQL, dependency review, PR labels, and Prepare release cancel an older run on the same group. The release workflow does not. The Pages workflow does not cancel an in-progress run, because a publish should finish. The Pages deploy job sets `contents: read`, `pages: write`, and `id-token: write`. The Prepare release job sets `contents: read` and `issues: write`. It cannot push a tag. The PR labels job needs only `contents: read`. It does not check out the repository.
+Each workflow sets `permissions: contents: read` and a `timeout-minutes` value. The CI tests job allows 20 minutes, because the Windows run takes about 9 minutes and grows with the suite. A job that needs more access sets its own permissions, which replace the workflow floor. CI, CodeQL, dependency review, PR labels, and Prepare release cancel an older run on the same group. The release workflow does not. Milestone empty does not cancel an in-progress run, because it may write a comment. The Pages workflow does not cancel an in-progress run, because a publish should finish. The Pages deploy job sets `contents: read`, `pages: write`, and `id-token: write`. The Prepare release job and the Milestone empty job set `contents: read` and `issues: write`. They cannot push a tag. The PR labels job needs only `contents: read`. It does not check out the repository.
 
 Actions are pinned to a commit SHA. The trailing comment is the version Dependabot matches. Dependabot opens a weekly Monday pull request for Python dependencies, another for the Node toolchain (`typescript`, `esbuild`, and ESLint), and another for GitHub Actions. Each group is one pull request, with a `deps` commit prefix, and at most five Python pull requests stay open. The Node group is one pull request as well. TypeScript major versions stay out of that group while `typescript-eslint` 8.x asks for TypeScript below 6.1.
 
@@ -98,6 +99,22 @@ python3 scripts/prepare_release.py --write /tmp/next-release.md
 
 `--write` is skipped when there is nothing to prepare, and the path is left unwritten.
 
+### Milestone empty
+
+Closing the last open issue or pull request on a GitHub milestone does not tag a version. GitHub also leaves that milestone open. This job comments on the open **Next release** issue that the milestone is empty and ready to tag. Charles (@mookiejones) still chooses the tag (patch, minor, or major) and pushes it locally.
+
+The job reads the live `open_issues` count from the milestones API, including pull requests. An unmilestoned close is a no-op. A fork pull request is skipped, because that event's token cannot comment. The workflow checks out the default branch, so it does not run the closed pull request's head. A matching `<!-- milestone-empty:N -->` comment already on the issue skips a second post. The job does not close the milestone, create a `v*.*.*` tag, or run `gh release`.
+
+The token is `contents: read` plus `issues: write`. The job runs on `ubuntu-latest` only. It does not install the app requirements. A change to `scripts/milestone_empty.py` does not start the macOS or Windows Release builds. `workflow_dispatch` takes a milestone number and runs the same check.
+
+Run the same decision locally:
+
+```bash
+python3 scripts/milestone_empty.py --milestone-number 8 --milestone-title "v1.4 Look and layout" --open-count 0 --write /tmp/comment.md
+```
+
+`--write` is skipped when the milestone still has open items, when the number is missing, or when the comments file already has that marker.
+
 ### Release
 
 GitHub Releases is the only download. The workflow does not publish a Homebrew formula, a winget package, or a website.
@@ -152,7 +169,7 @@ Preparation and publish are separate. Several merges can accumulate on `main` wh
 
 ### Prepare
 
-After a merge to `main`, Prepare release updates the **Next release** issue and the `next-release` artifact with the next patch tag and draft notes. You can also run `python3 scripts/prepare_release.py` locally. Edit the issue if the bump should be a minor or a major instead of a patch. Do not merge a bot tag. There is no bot tag.
+After a merge to `main`, Prepare release updates the **Next release** issue and the `next-release` artifact with the next patch tag and draft notes. You can also run `python3 scripts/prepare_release.py` locally. Edit the issue if the bump should be a minor or a major instead of a patch. Do not merge a bot tag. There is no bot tag. When a GitHub milestone has no remaining open items, Milestone empty adds a comment on that issue. That comment is a reminder. It is not a tag.
 
 ### Publish
 
