@@ -2,11 +2,11 @@
  * MUI AppBar, collapsible Drawer, and Main slot.
  *
  * Existing page nodes keep their ids. This shell portals `#space-field`
- * into the AppBar, `#player-bar` under the AppBar as a full strip,
- * `#views` and `#view-children` into the Drawer, `#rail-foot` into the
- * drawer footer, and `#app-body` into Main. Crate names stay in the Main
- * rail so collapse does not hide them. The space control stays a native
- * select. Collapse is not saved.
+ * into the AppBar, `#player-bar` under the AppBar as a full strip, then
+ * a MUI Alert for the last action notice, `#views` and `#view-children`
+ * into the Drawer, `#rail-foot` into the drawer footer, and `#app-body`
+ * into Main. Crate names stay in the Main rail so collapse does not hide
+ * them. The space control stays a native select. Collapse is not saved.
  */
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -17,6 +17,7 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
+import { NoticeBanner } from "../components/NoticeBanner";
 import { onLocaleChange, t } from "../lib/i18n";
 import { setTooltip } from "../lib/ui/tooltip";
 import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
@@ -90,6 +91,7 @@ export function AppShell() {
         </Toolbar>
       </AppBar>
       <Box ref={playerSlot} className="player-strip" sx={{ flexShrink: 0 }} />
+      <NoticeBanner />
       <Box sx={{ display: "flex", flex: 1, minHeight: 0, minWidth: 0 }}>
         <Drawer
           id="app-drawer"

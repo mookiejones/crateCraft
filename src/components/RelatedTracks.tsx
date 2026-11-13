@@ -104,7 +104,7 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
       await reload();
     } catch (error) {
       if (failureOf(error).status === 409) bridge.lockDown(error);
-      else list.setNotice(failureOf(error).message);
+      else list.setNotice(failureOf(error).message, "error");
       setLoadError(failureOf(error).message);
     }
   }
@@ -121,7 +121,7 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
       list.setNotice(t("related.removed"));
       await reload();
     } catch (error) {
-      list.setNotice(failureOf(error).message);
+      list.setNotice(failureOf(error).message, "error");
     }
   }
 
@@ -136,7 +136,7 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
       if (failureOf(error).status === 409) {
         bridge.lockDown(error);
       } else {
-        list.setNotice(failureOf(error).message);
+        list.setNotice(failureOf(error).message, "error");
         setSaving(false);
       }
     }
