@@ -28,7 +28,7 @@ Related tracks are songs you want to remember together. The links live in `relat
 
 The bar says **Link saved.** A two-way link reads **Two-way**. A one-way link reads **One-way**. **Remove** opens a dialog with **Remove the link to …**. Cancel or Esc leaves the link. Confirm removes it. The audio file and the Serato library do not change.
 
-Suggestions use the same key, a neighbor on the Camelot wheel, a tempo within 6 percent, or a shared normal crate. The line says **Suggested from key, tempo within 6%, and shared crates. Save stores a two-way link.** That save has no note and no rating.
+Suggestions use the same key, a neighbor on the Camelot wheel, a tempo within 6 percent, nearby Energy from the star rating, or a shared normal crate. On Crates, with a crate open, **This crate only** keeps those suggestions in that crate. It starts off. The line says **Suggested from key, tempo within 6%, energy, and shared crates. Save stores a two-way link.** That save has no note and no rating.
 
 **Update Serato crate** writes a normal crate named `Related - ` plus the track title. Quit Serato first. While Serato is open the button stays off and the note says **Quit Serato before writing the crate.**
 

@@ -39,6 +39,7 @@ def _track(
     bpm: float | None = None,
     key: str = "",
     crates: frozenset[int] = frozenset(),
+    rating: float | None = None,
 ) -> related.CatalogTrack:
     """Build one in-memory catalog track.
 
@@ -51,6 +52,7 @@ def _track(
         bpm: Tempo, or None.
         key: Key text.
         crates: Crate ids counted toward a shared-crate score.
+        rating: Serato 0–1 star rating, or None.
 
     Returns:
         A frozen catalog track. Nothing is written.
@@ -66,6 +68,7 @@ def _track(
         key=key,
         file_name=Path(path).name,
         crate_ids=crates,
+        rating=rating,
     )
 
 
@@ -155,6 +158,58 @@ class RankingTests(unittest.TestCase):
         self.assertIsNotNone(crate_score)
         assert crate_score is not None
         self.assertEqual(crate_score[0], related.SCORE_CRATE_CAP)
+
+    def test_energy_match_uses_star_rating(self) -> None:
+        """Score nearby Energy from Serato's 0–1 rating.
+
+        0.8 maps to 4. The same Energy scores. One step away scores
+        lower. Two steps away is not an Energy match. An unrated track
+        with no key, tempo, or crate is omitted. Nothing is stored.
+
+        Returns:
+            None. The test fails if Energy is ignored or the mapping drifts.
+        """
+        self.assertEqual(related.energy_value(0.8), 4)
+        self.assertEqual(related.energy_value(1), 5)
+        self.assertEqual(related.energy_value(0.2), 1)
+        self.assertIsNone(related.energy_value(0))
+        self.assertIsNone(related.energy_value(None))
+        anchor = _track(1, path="/music/anchor.mp3", title="Anchor", rating=0.8)
+        same = _track(2, path="/music/same.mp3", title="Same", rating=0.8)
+        nearby = _track(3, path="/music/near.mp3", title="Near", rating=1.0)
+        far = _track(4, path="/music/far.mp3", title="Far", rating=0.2)
+        unrated = _track(5, path="/music/none.mp3", title="None")
+        ranked = related.rank_suggestions(anchor, [anchor, same, nearby, far, unrated], set())
+        self.assertEqual([item["title"] for item in ranked], ["Same", "Near"])
+        self.assertIn("same energy", ranked[0]["reasons"])
+        self.assertIn("nearby energy", ranked[1]["reasons"])
+        same_score = related.score_pair(anchor, same)
+        near_score = related.score_pair(anchor, nearby)
+        self.assertIsNotNone(same_score)
+        self.assertIsNotNone(near_score)
+        assert same_score is not None and near_score is not None
+        self.assertGreater(same_score[0], near_score[0])
+        self.assertIsNone(related.score_pair(anchor, far))
+        self.assertIsNone(related.score_pair(anchor, unrated))
+
+    def test_rank_limits_to_optional_crate(self) -> None:
+        """Keep only candidates in the chosen crate.
+
+        Two same-key tracks exist. crate_id 7 keeps the member. No crate
+        filter keeps both. Nothing is stored.
+
+        Returns:
+            None. The test fails if the crate filter is ignored.
+        """
+        anchor = _track(1, path="/music/anchor.mp3", title="Anchor", key="8A")
+        inside = _track(2, path="/music/in.mp3", title="In", key="8A", crates=frozenset({7}))
+        outside = _track(3, path="/music/out.mp3", title="Out", key="8A", crates=frozenset({8}))
+        scoped = related.rank_suggestions(
+            anchor, [anchor, inside, outside], set(), crate_id=7
+        )
+        self.assertEqual([item["title"] for item in scoped], ["In"])
+        whole = related.rank_suggestions(anchor, [anchor, inside, outside], set())
+        self.assertEqual([item["title"] for item in whole], ["In", "Out"])
 
     def test_suggestion_list_stops_at_twelve(self) -> None:
         """Return at most twelve suggestions.
@@ -660,6 +715,44 @@ class ApiTests(unittest.TestCase):
         self.assertNotIn(2, [item["asset_id"] for item in again["suggested"]])
         self.assertFalse((self.library.root / "Backups").exists())
         status, missing = self.request("/api/related")
+        self.assertEqual(status, 400)
+
+    def test_get_suggestions_can_limit_to_crate(self) -> None:
+        """Optional crate= keeps suggestions that are members of that crate.
+
+        The fixture pair shares a key. A third same-key track sits only
+        in crate 5. crate=5 returns that third track. crate=nope is 400.
+        Saved links still load when the crate is empty of suggestions.
+
+        Returns:
+            None. The test fails if crate= is ignored or a bad id is 200.
+        """
+        with open_database(library.MASTER) as conn:
+            conn.execute(
+                """
+                INSERT INTO asset (id, name, artist, bpm, key, length_ms, portable_id, file_name, location_id)
+                VALUES (5, 'Scoped', 'Artist', 120, '1A', 190000, 'Music/scoped.mp3', 'scoped.mp3', 1)
+                """
+            )
+            conn.execute("INSERT INTO space_asset (id, asset_id, space_id) VALUES (5, 5, 1)")
+        created = library.crate_action({"action": "create", "name": "Warmup"})
+        library.crate_action({"action": "add", "id": created["id"], "asset": 5})
+        server.invalidate()
+        query = urllib.parse.urlencode({"path": "Music/same-a.mp3", "crate": created["id"]})
+        status, payload = self.request(f"/api/related?{query}")
+        self.assertEqual(status, 200)
+        self.assertEqual([item["title"] for item in payload["suggested"]], ["Scoped"])
+        whole = urllib.parse.urlencode({"path": "Music/same-a.mp3"})
+        status, open_space = self.request(f"/api/related?{whole}")
+        self.assertEqual(status, 200)
+        titles = [item["title"] for item in open_space["suggested"]]
+        self.assertIn("Same", titles)
+        self.assertIn("Scoped", titles)
+        missing = urllib.parse.urlencode({"path": "Music/same-a.mp3", "crate": "99999"})
+        status, empty = self.request(f"/api/related?{missing}")
+        self.assertEqual(status, 200)
+        self.assertEqual(empty["suggested"], [])
+        status, bad = self.request("/api/related?path=Music/same-a.mp3&crate=nope")
         self.assertEqual(status, 400)
 
     def test_add_telemetry_omits_names_and_paths(self) -> None:

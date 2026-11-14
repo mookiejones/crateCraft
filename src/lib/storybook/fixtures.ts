@@ -626,6 +626,7 @@ export function trackListValue(partial: Partial<TrackListContextValue> = {}): Tr
   return {
     selectedId: 4,
     mode: "crates",
+    activeCrate: "all",
     writable: true,
     splitCrates: false,
     focusedPane: "a",

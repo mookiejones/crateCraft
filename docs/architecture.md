@@ -58,7 +58,7 @@ Container(tags, "tags.py", "Python", "Reads cue, loop, flip, and beatgrid frames
 Container(rekordbox, "rekordbox.py", "Python", "Writes DJ_PLAYLISTS XML")
 Container(gig, "gig_check.py", "Python", "Read-only ready score")
 Container(snaps, "snapshots.py", "Python", "Hash-checked snapshot store")
-Container(related, "related.py", "Python", "Saved links and key, BPM, and crate suggestions")
+Container(related, "related.py", "Python", "Saved links and key, BPM, energy, and crate suggestions")
 ContainerDb(master, "master.sqlite", "SQLite", "Library Serato displays")
 ContainerDb(root, "root.sqlite", "SQLite", "On-disk location database")
 ContainerDb(sidecar, "related.sqlite", "SQLite", "Links beside settings.json")
@@ -172,7 +172,7 @@ Cue points are read with `tags.read_serato_tags` and stored frames with `snapsho
 
 A track key is a normalized absolute path. `~` is expanded and `.` and `..` are collapsed. Symlinks are not followed, and the request path is not used to test whether a file exists. A track in the open library uses the path the library already resolved. Title, artist, and length in whole seconds are a fallback when exactly one stored row matches and that path is not still a different track in the library. `update_path` is what a file move calls. `add_link` stores a one-way or two-way link with an optional note and a rating from 1 to 5. `remove_link` deletes the link and keeps the identity rows. `overview` returns saved links and suggestions. `refresh_crate` creates or replaces a normal Serato crate named `Related - ` plus the track title. That call writes `master.sqlite` through `crate_action`, so Serato must be quit and the backup rules apply.
 
-Suggestions rank other tracks in the space by Camelot key (same, relative, or one step on the wheel), BPM within 6 percent including half time and double time, and shared normal crates. Crates whose names start with `Related - ` are not counted. At most 12 suggestions are returned. They are not stored.
+Suggestions rank other tracks in the space by Camelot key (same, relative, or one step on the wheel), BPM within 6 percent including half time and double time, nearby Energy from the 0–1 star rating mapped to 1–5, and shared normal crates. Crates whose names start with `Related - ` are not counted. Optional `crate=` keeps suggestions in that crate. At most 12 suggestions are returned. They are not stored. The detail pane **This crate only** checkbox posts that crate id when a crate is open on Crates.
 
 ### `smart_presets.py`
 

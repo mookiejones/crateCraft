@@ -16,6 +16,7 @@ Suggestions are computed when the page asks. They are not stored.
 from __future__ import annotations
 
 import logging
+import math
 import os
 import sqlite3
 import threading
@@ -38,6 +39,8 @@ SCORE_SAME_KEY = 40
 SCORE_RELATIVE_KEY = 30
 SCORE_ADJACENT_KEY = 24
 SCORE_BPM = 30
+SCORE_ENERGY = 20
+SCORE_ENERGY_NEAR = 10
 SCORE_CRATE = 8
 SCORE_CRATE_CAP = SCORE_CRATE * 3
 SUGGEST_LIMIT = 12
@@ -105,6 +108,14 @@ _KEY_REASONS = {
     "relative": "relative key",
     "adjacent": "adjacent key",
 }
+_ENERGY_POINTS = {
+    "same": SCORE_ENERGY,
+    "nearby": SCORE_ENERGY_NEAR,
+}
+_ENERGY_REASONS = {
+    "same": "same energy",
+    "nearby": "nearby energy",
+}
 
 
 @dataclass(frozen=True)
@@ -122,6 +133,8 @@ class CatalogTrack:
         key: Key text as stored. Empty when Serato has none.
         file_name: File name. Empty when Serato has none.
         crate_ids: Normal crate ids, excluding generated related crates.
+        rating: Serato 0–1 star rating, or None. Energy is this value
+            mapped to 1–5. The database has no energy column.
     """
 
     asset_id: int
@@ -134,6 +147,7 @@ class CatalogTrack:
     key: str
     file_name: str
     crate_ids: frozenset[int]
+    rating: float | None = None
 
 
 @dataclass(frozen=True)
@@ -362,6 +376,62 @@ def bpm_relation(anchor: float, other: float) -> tuple[str, float] | None:
     return best
 
 
+def energy_value(rating: object) -> int | None:
+    """Map Serato's 0–1 rating to Energy 1–5.
+
+    Unrated and a rounded zero stay empty. This is the star-rating
+    workaround; the database has no energy column. The rounding matches
+    the page ``Math.round`` for a positive rating.
+
+    Args:
+        rating: Stored rating from 0 to 1, or None.
+
+    Returns:
+        1 through 5, or None.
+    """
+    if rating is None or isinstance(rating, bool):
+        return None
+    if isinstance(rating, str):
+        text = rating.strip()
+        if not text:
+            return None
+        try:
+            number = float(text)
+        except ValueError:
+            return None
+    elif isinstance(rating, (int, float)):
+        number = float(rating)
+    else:
+        return None
+    if not math.isfinite(number) or number <= 0:
+        return None
+    filled = int(number * 5 + 0.5)
+    if filled < 1:
+        return None
+    return min(5, filled)
+
+
+def energy_relation(left: int | None, right: int | None) -> str | None:
+    """Compare Energy values 1–5.
+
+    Args:
+        left: Anchor Energy, or None.
+        right: Candidate Energy, or None.
+
+    Returns:
+        ``same`` when both match, ``nearby`` when they differ by one,
+        or None.
+    """
+    if left is None or right is None:
+        return None
+    delta = abs(left - right)
+    if delta == 0:
+        return "same"
+    if delta == 1:
+        return "nearby"
+    return None
+
+
 def score_pair(anchor: CatalogTrack, other: CatalogTrack) -> tuple[int, list[str]] | None:
     """Score one candidate against the open track.
 
@@ -371,10 +441,11 @@ def score_pair(anchor: CatalogTrack, other: CatalogTrack) -> tuple[int, list[str
 
     Returns:
         The score and the reason phrases, or None when the tracks share
-        no compatible key, no tempo, and no crate. A same key scores
-        higher than a relative key, which scores higher than an adjacent
-        key. A closer tempo scores higher than one at the edge of the
-        window. Shared crates add until the third crate.
+        no compatible key, no tempo, no nearby Energy, and no crate. A
+        same key scores higher than a relative key, which scores higher
+        than an adjacent key. A closer tempo scores higher than one at
+        the edge of the window. Same Energy scores higher than one step
+        away. Shared crates add until the third crate.
     """
     reasons: list[str] = []
     score = 0
@@ -391,6 +462,10 @@ def score_pair(anchor: CatalogTrack, other: CatalogTrack) -> tuple[int, list[str
                 points = 1
             score += points
             reasons.append(_bpm_reason(kind, delta))
+    energy = energy_relation(energy_value(anchor.rating), energy_value(other.rating))
+    if energy is not None:
+        score += _ENERGY_POINTS[energy]
+        reasons.append(_ENERGY_REASONS[energy])
     shared = len(anchor.crate_ids & other.crate_ids)
     if shared:
         score += min(shared * SCORE_CRATE, SCORE_CRATE_CAP)
@@ -404,6 +479,7 @@ def rank_suggestions(
     anchor: CatalogTrack,
     catalog: Sequence[CatalogTrack],
     linked_paths: set[str],
+    crate_id: int | None = None,
 ) -> list[dict[str, object]]:
     """Rank library tracks that fit the open track.
 
@@ -412,6 +488,7 @@ def rank_suggestions(
         catalog: Tracks in the same space.
         linked_paths: Canonical paths that are already saved. Those
             tracks are left out of the list.
+        crate_id: When set, only members of that crate are ranked.
 
     Returns:
         Up to 12 suggestion dicts, highest score first. Each dict has
@@ -425,6 +502,8 @@ def rank_suggestions(
     ranked: list[tuple[int, str, int, CatalogTrack, list[str]]] = []
     for track in catalog:
         if track.asset_id == anchor.asset_id or not track.path:
+            continue
+        if crate_id is not None and crate_id not in track.crate_ids:
             continue
         folded = track.path.casefold()
         if folded == anchor_path or folded in linked:
@@ -473,7 +552,7 @@ def load_catalog(space: str) -> list[CatalogTrack]:
         assets = conn.execute(
             """
             SELECT a.id, a.name, a.artist, a.bpm, a.key, a.length_ms,
-                   a.portable_id, a.file_name
+                   a.rating, a.portable_id, a.file_name
             FROM asset a
             JOIN space_asset sa ON sa.asset_id = a.id
             JOIN space s ON s.id = sa.space_id
@@ -526,6 +605,7 @@ def load_catalog(space: str) -> list[CatalogTrack]:
                 key=_label(row["key"]),
                 file_name=_label(row["file_name"]),
                 crate_ids=frozenset(membership.get(_as_int(row["id"]), ())),
+                rating=_optional_rating(row["rating"]),
             )
         )
     return tracks
@@ -747,6 +827,7 @@ def overview(
     title: str | None = None,
     artist: str | None = None,
     length_ms: int | None = None,
+    crate: int | None = None,
 ) -> dict[str, object]:
     """Return saved links and suggestions for one track.
 
@@ -756,6 +837,7 @@ def overview(
         title: Fallback title when the path is not in the library.
         artist: Fallback artist when the path is not in the library.
         length_ms: Fallback length when the path is not in the library.
+        crate: When set, only members of that crate are suggested.
 
     Returns:
         ``schema_version``, the canonical ``path``, the anchor ``track``,
@@ -816,7 +898,11 @@ def overview(
             conn.close()
     track = _anchor_payload(anchor, canonical, query_title, query_artist, query_length)
     linked_paths = {str(item["track"]["path"]) for item in saved if isinstance(item.get("track"), dict)}
-    suggested = rank_suggestions(anchor, catalog, linked_paths) if anchor is not None else []
+    suggested = (
+        rank_suggestions(anchor, catalog, linked_paths, crate_id=crate)
+        if anchor is not None
+        else []
+    )
     return {
         "schema_version": SCHEMA_VERSION,
         "path": canonical,
@@ -976,6 +1062,25 @@ def _optional_bpm(value: object) -> float | None:
         return None
     number = float(value)
     if number <= 0 or number > 999:
+        return None
+    return number
+
+
+def _optional_rating(value: object) -> float | None:
+    """Return a 0–1 star rating, or None.
+
+    Args:
+        value: A SQLite number.
+
+    Returns:
+        The rating when it is between 0 and 1 inclusive. Other values
+        become None. Zero is kept so Energy mapping can treat it as
+        unrated.
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    number = float(value)
+    if number < 0 or number > 1:
         return None
     return number
 

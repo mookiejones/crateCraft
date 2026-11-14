@@ -2572,13 +2572,15 @@ class Handler(BaseHTTPRequestHandler):
 
         Args:
             query: Parsed query string. ``path`` is required. ``space``,
-                ``title``, ``artist``, and ``length_ms`` are optional.
+                ``title``, ``artist``, ``length_ms``, and ``crate`` are
+                optional. ``crate`` of ``all`` or empty is the whole space.
 
         The sidecar file is read. A unique title, artist, and length
         match can update a stored path. ``master.sqlite`` is not written.
         """
         raw_length = query_text(query, "length_ms")
         length_ms = None if raw_length in (None, "") else related.clean_length(raw_length)
+        crate = crate_query(query_text(query, "crate", "all") or "all")
         self.send_json(
             related.overview(
                 query_text(query, "path", "") or "",
@@ -2586,6 +2588,7 @@ class Handler(BaseHTTPRequestHandler):
                 title=query_text(query, "title"),
                 artist=query_text(query, "artist"),
                 length_ms=length_ms,
+                crate=crate,
             )
         )
 
