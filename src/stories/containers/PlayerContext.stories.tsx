@@ -1,30 +1,39 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PlayerProvider } from "../../containers/PlayerContext";
-import { playerValue } from "../../lib/storybook/fixtures";
 import { PlayerBar } from "../../components/PlayerBar";
+import { PlayerProvider } from "../../containers/PlayerContext";
+import {
+  playerArgTypes,
+  playerStoryArgs,
+  playerValueFromArgs,
+  type PlayerStoryArgs,
+} from "../../lib/storybook/args";
+
+function Host(args: PlayerStoryArgs) {
+  return (
+    <PlayerProvider value={playerValueFromArgs(args)}>
+      <PlayerBar />
+    </PlayerProvider>
+  );
+}
 
 const meta = {
   title: "Containers/Player",
-  component: PlayerBar,
   parameters: { layout: "fullscreen" },
   tags: ["autodocs"],
-} satisfies Meta<typeof PlayerBar>;
+  args: playerStoryArgs,
+  argTypes: playerArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<PlayerStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Paused: Story = {
-  render: () => (
-    <PlayerProvider value={playerValue()}>
-      <PlayerBar />
-    </PlayerProvider>
-  ),
-};
+export const Paused: Story = {};
 
 export const Playing: Story = {
-  render: () => (
-    <PlayerProvider value={playerValue({ playing: true })}>
-      <PlayerBar />
-    </PlayerProvider>
-  ),
+  args: { playing: true },
+};
+
+export const Empty: Story = {
+  args: { empty: true },
 };
