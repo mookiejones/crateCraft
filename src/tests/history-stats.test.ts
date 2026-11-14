@@ -2,11 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { HistoryStatsReport } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
+import { el } from "../lib/dom";
 import { loadHistoryStats, repaintHistoryStats, wireHistoryStats } from "../lib/history/history-stats";
 import { setLocale } from "../lib/i18n";
+import { cancelConfirm } from "../lib/ui/shared-dialog";
+import { mountSharedDialogs, unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { drainReactScheduler, installPage } from "./test-page";
 
 const report: HistoryStatsReport = {
   from: null,
@@ -44,6 +47,45 @@ function reportText(): string {
   return document.getElementById("stats-report")!.textContent || "";
 }
 
+function pressEscape(): void {
+  document.dispatchEvent(new KeyboardEvent("keydown", {
+    key: "Escape",
+    bubbles: true,
+    cancelable: true,
+  }));
+}
+
+function stubIdleCrateFetch(opts: { previewCount?: number; written?: boolean } = {}) {
+  const previewCount = opts.previewCount ?? 2;
+  const written = opts.written ?? true;
+  return vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input);
+    if (url.startsWith("/api/history-stats?") || url === "/api/history-stats") {
+      if (init?.method === "POST") {
+        const body = JSON.parse(String(init.body)) as { action?: string };
+        if (body.action === "preview") {
+          return reply({
+            preview: true,
+            written: false,
+            name: "Idle",
+            count: previewCount,
+            idle_days: 365,
+          });
+        }
+        return reply({ preview: false, written, name: "Idle", count: previewCount, id: 9 });
+      }
+      return reply(report);
+    }
+    return reply({ crates: [] });
+  });
+}
+
+function postBodies(fetchMock: ReturnType<typeof vi.fn>): Array<{ action?: string }> {
+  return fetchMock.mock.calls
+    .filter((call) => (call[1] as RequestInit | undefined)?.method === "POST")
+    .map((call) => JSON.parse(String((call[1] as RequestInit).body)) as { action?: string });
+}
+
 describe("history stats", () => {
   beforeEach(() => {
     installPage();
@@ -55,11 +97,22 @@ describe("history stats", () => {
     state.crates = [];
     bridge.reloadLibrary = vi.fn(() => Promise.resolve());
     bridge.lockDown = vi.fn();
+    vi.stubGlobal("confirm", () => {
+      throw new Error("window.confirm should not run");
+    });
+    vi.stubGlobal("prompt", () => {
+      throw new Error("window.prompt should not run");
+    });
     wireHistoryStats();
+    mountSharedDialogs();
     document.getElementById("stats-panel")!.hidden = false;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    const confirm = document.getElementById("confirm-dialog") as HTMLDialogElement | null;
+    if (confirm?.open) cancelConfirm();
+    unmountSharedDialogs();
+    await drainReactScheduler();
     vi.unstubAllGlobals();
     setLocale("en");
   });
@@ -97,52 +150,62 @@ describe("history stats", () => {
     expect(reportText()).toContain("No idle tracks");
   });
 
-  it("previews then confirms an idle crate", async () => {
-    const confirmMock = vi.fn(() => true);
-    vi.stubGlobal("confirm", confirmMock);
-    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = String(input);
-      if (url.startsWith("/api/history-stats?") || url === "/api/history-stats") {
-        if (init?.method === "POST") {
-          const body = JSON.parse(String(init.body)) as { action?: string };
-          if (body.action === "preview") {
-            return reply({ preview: true, written: false, name: "Idle", count: 2, idle_days: 365 });
-          }
-          return reply({ preview: false, written: true, name: "Idle", count: 2, id: 9 });
-        }
-        return reply(report);
-      }
-      return reply({ crates: [] });
-    });
+  it("opens a labeled confirm for an idle crate and posts on confirm", async () => {
+    const fetchMock = stubIdleCrateFetch();
     vi.stubGlobal("fetch", fetchMock);
     await loadHistoryStats();
     document.querySelector<HTMLButtonElement>("[data-stats-action='crate']")!.click();
+    await vi.waitFor(() => expect(el("confirm-dialog").open).toBe(true));
+    const dialog = el("confirm-dialog").querySelector("[role='dialog']");
+    expect(dialog?.getAttribute("aria-labelledby")).toBe("confirm-title");
+    expect(dialog?.getAttribute("aria-describedby")).toBe("confirm-message");
+    expect(el("confirm-title").textContent).toBe("Make crate");
+    expect(el("confirm-message").textContent).toContain("Idle");
+    expect(el("confirm-message").textContent).toContain("2 tracks");
+    expect(el("confirm-confirm").textContent).toBe("Make crate");
+    el("confirm-confirm").click();
     await vi.waitFor(() => {
       expect(document.getElementById("stats-status")!.textContent).toContain("Idle");
     });
-    expect(confirmMock).toHaveBeenCalled();
-    const posts = fetchMock.mock.calls.filter((call) => (call[1] as RequestInit | undefined)?.method === "POST");
-    expect(posts.length).toBeGreaterThanOrEqual(2);
+    expect(postBodies(fetchMock).map((body) => body.action)).toEqual(["preview", "create"]);
+    expect(el("confirm-dialog").open).toBe(false);
   });
 
-  it("does not write when the crate confirm is cancelled", async () => {
-    vi.stubGlobal("confirm", vi.fn(() => false));
-    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-      if ((init as RequestInit | undefined)?.method === "POST") {
-        return reply({ preview: true, written: false, name: "Idle", count: 2, idle_days: 365 });
-      }
-      return reply(report);
-    });
+  it("does not write when the idle-crate confirm is cancelled", async () => {
+    const fetchMock = stubIdleCrateFetch();
     vi.stubGlobal("fetch", fetchMock);
     await loadHistoryStats();
     document.querySelector<HTMLButtonElement>("[data-stats-action='crate']")!.click();
-    await vi.waitFor(() => {
-      expect(fetchMock.mock.calls.some((call) => (call[1] as RequestInit | undefined)?.method === "POST")).toBe(true);
-    });
-    const bodies = fetchMock.mock.calls
-      .filter((call) => (call[1] as RequestInit | undefined)?.method === "POST")
-      .map((call) => JSON.parse(String((call[1] as RequestInit).body)) as { action?: string });
-    expect(bodies.map((body) => body.action)).toEqual(["preview"]);
+    await vi.waitFor(() => expect(el("confirm-dialog").open).toBe(true));
+    el("confirm-cancel").click();
+    await vi.waitFor(() => expect(el("confirm-dialog").open).toBe(false));
+    expect(postBodies(fetchMock).map((body) => body.action)).toEqual(["preview"]);
+  });
+
+  it("does not write when the idle-crate confirm is dismissed with Esc", async () => {
+    const fetchMock = stubIdleCrateFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    await loadHistoryStats();
+    document.querySelector<HTMLButtonElement>("[data-stats-action='crate']")!.click();
+    await vi.waitFor(() => expect(el("confirm-dialog").open).toBe(true));
+    pressEscape();
+    await vi.waitFor(() => expect(el("confirm-dialog").open).toBe(false));
+    expect(postBodies(fetchMock).map((body) => body.action)).toEqual(["preview"]);
+  });
+
+  it("shows the idle-crate confirm in Spanish", async () => {
+    setLocale("es");
+    const fetchMock = stubIdleCrateFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    await loadHistoryStats();
+    document.querySelector<HTMLButtonElement>("[data-stats-action='crate']")!.click();
+    await vi.waitFor(() => expect(el("confirm-dialog").open).toBe(true));
+    expect(el("confirm-title").textContent).toBe("Crear caja");
+    expect(el("confirm-message").textContent).toContain("Idle");
+    expect(el("confirm-confirm").textContent).toBe("Crear caja");
+    el("confirm-cancel").click();
+    await vi.waitFor(() => expect(el("confirm-dialog").open).toBe(false));
+    expect(postBodies(fetchMock).map((body) => body.action)).toEqual(["preview"]);
   });
 
   it("ignores a late reply after a newer check started", async () => {
