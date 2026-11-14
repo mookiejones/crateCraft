@@ -40,6 +40,8 @@ export interface ElementIds {
   "files-panel": HTMLElement;
   "snapshots-panel": HTMLElement;
   "crate-new": HTMLButtonElement;
+  "crate-actions-more": HTMLButtonElement;
+  "crate-browser-more": HTMLButtonElement;
   "crate-rename": HTMLButtonElement;
   "crate-color": HTMLButtonElement;
   "crate-delete": HTMLButtonElement;
