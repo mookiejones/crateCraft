@@ -45,10 +45,15 @@ export interface Splitter {
  * @param minFirst Narrowest first pane.
  * @param minSecond Narrowest second pane.
  * @returns A whole-pixel width. When the container is too narrow for both
- *   minimums, the first pane keeps its minimum.
+ *   minimums, the panes share the room so neither is zeroed.
  */
 export function clampWidth(width: number, available: number, minFirst: number, minSecond: number): number {
-  const max = Math.max(minFirst, available - minSecond);
+  if (available <= 0) return 0;
+  const minTotal = minFirst + minSecond;
+  if (available < minTotal) {
+    return Math.max(1, Math.round((available * minFirst) / minTotal));
+  }
+  const max = available - minSecond;
   return Math.round(Math.min(Math.max(width, minFirst), max));
 }
 

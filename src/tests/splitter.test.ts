@@ -1,5 +1,24 @@
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  CRATE_TREE_MIN_WIDTH,
+  DESKTOP_WIDTH,
+  DETAIL_MIN_WIDTH,
+  DRAWER_MINI_CUTOFF,
+  DRAWER_MINI_WIDTH,
+  DRAWER_WIDTH,
+  shareCratesPanes,
+  SPLITTER_WIDTH,
+  TRACK_LIST_MIN_WIDTH,
+} from "../lib/ui/layout";
 import { clampWidth, mountSplitter, type Splitter } from "../lib/ui/splitter";
+
+const appCss = readFileSync(
+  join(dirname(fileURLToPath(import.meta.url)), "../../static/app.css"),
+  "utf8",
+);
 
 function sized(node: HTMLElement, prop: "clientWidth" | "offsetWidth", value: () => number): void {
   Object.defineProperty(node, prop, { configurable: true, get: value });
@@ -18,8 +37,55 @@ describe("clampWidth", () => {
     expect(clampWidth(500.4, 980, 360, 300)).toBe(500);
   });
 
-  it("gives the first pane its minimum when there is no room for both", () => {
-    expect(clampWidth(500, 500, 360, 300)).toBe(360);
+  it("shares the room so neither pane is zeroed when both minimums cannot fit", () => {
+    expect(clampWidth(500, 500, 360, 300)).toBe(273);
+    expect(clampWidth(500, 500, 360, 300) + (500 - clampWidth(500, 500, 360, 300))).toBe(500);
+    expect(500 - clampWidth(500, 500, 360, 300)).toBeGreaterThan(0);
+    expect(clampWidth(0, 0, 360, 300)).toBe(0);
+  });
+});
+
+describe("Crates share-space", () => {
+  function usable(panes: { tree: number; list: number; detail: number }): void {
+    expect(panes.tree).toBeGreaterThanOrEqual(CRATE_TREE_MIN_WIDTH);
+    expect(panes.list).toBeGreaterThanOrEqual(TRACK_LIST_MIN_WIDTH);
+    expect(panes.detail).toBeGreaterThanOrEqual(DETAIL_MIN_WIDTH);
+  }
+
+  it("fits tree, list, and detail at 1120px with the Drawer open", () => {
+    const main = DESKTOP_WIDTH - DRAWER_WIDTH;
+    const panes = shareCratesPanes(main, null);
+    usable(panes);
+    expect(panes.tree + panes.list + SPLITTER_WIDTH + panes.detail).toBe(main);
+    expect(DESKTOP_WIDTH).toBe(1120);
+  });
+
+  it("fits tree, list, and detail at 980px with the Drawer mini", () => {
+    expect(DRAWER_MINI_CUTOFF).toBe(980);
+    const main = DRAWER_MINI_CUTOFF - DRAWER_MINI_WIDTH;
+    const panes = shareCratesPanes(main, null);
+    usable(panes);
+    expect(panes.tree + panes.list + SPLITTER_WIDTH + panes.detail).toBe(main);
+  });
+
+  it("restores a huge saved list width without zeroing the tree or the detail", () => {
+    const main = DESKTOP_WIDTH - DRAWER_WIDTH;
+    const panes = shareCratesPanes(main, 8000);
+    usable(panes);
+    expect(panes.list).toBe(main - SPLITTER_WIDTH - panes.tree - DETAIL_MIN_WIDTH);
+    const crowded = shareCratesPanes(400, 8000);
+    expect(crowded.tree).toBeGreaterThan(0);
+    expect(crowded.list).toBeGreaterThan(0);
+    expect(crowded.detail).toBeGreaterThan(0);
+  });
+
+  it("keeps three columns at 980px in CSS and only stacks below 640px", () => {
+    expect(appCss).toMatch(/\.rail\s*\{[^}]*min-width:\s*var\(--crate-tree-min,\s*160px\)/);
+    expect(appCss).toMatch(/minmax\(var\(--track-list-min,\s*360px\)/);
+    expect(appCss).toMatch(/minmax\(var\(--detail-min,\s*300px\)/);
+    expect(appCss).toMatch(/@media \(max-width: 639px\)/);
+    const desktopStack = appCss.match(/@media \(max-width: 980px\) \{[^}]*flex-direction:\s*column/);
+    expect(desktopStack).toBeNull();
   });
 });
 
@@ -157,5 +223,17 @@ describe("track list layout", () => {
 
     applyLayout({ layout: { track_list_width: 400 } });
     expect(sheet.style.getPropertyValue("--track-list-width")).toBe("532px");
+  });
+
+  it("clamps a saved list width so the detail pane keeps its minimum", async () => {
+    const { installPage } = await import("./test-page");
+    installPage();
+    const sheet = document.querySelector<HTMLElement>(".sheet")!;
+    sized(sheet, "clientWidth", () => 989);
+    sized(document.getElementById("track-splitter")!, "offsetWidth", () => 9);
+    const { applyLayout, wireLayout } = await import("../lib/ui/layout");
+    wireLayout();
+    applyLayout({ layout: { track_list_width: 8000 } });
+    expect(sheet.style.getPropertyValue("--track-list-width")).toBe("680px");
   });
 });
