@@ -442,7 +442,14 @@ class SafeWriteTests(unittest.TestCase):
                 self.assertIn("local log", caught.exception.message)
                 self.assertIn("Backups", caught.exception.message)
                 self.assertNotIn(str(live_dir), caught.exception.message)
-                self.assertTrue(any(str(victim) in line for line in logged.output))
+                # dest in the log is source.resolve() from the preimage. On
+                # Windows that expands 8.3 names (RUNNER~1 → runneradmin), so
+                # str(victim) is not a substring of the line.
+                needle = os.path.normcase(str(victim.resolve()))
+                self.assertTrue(
+                    any(needle in os.path.normcase(line) for line in logged.output),
+                    logged.output,
+                )
                 self.assertEqual(victim.read_bytes(), b"changed")
                 self.assertTrue(_journal(temp.db).is_file())
 
