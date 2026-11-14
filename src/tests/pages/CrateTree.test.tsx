@@ -2,6 +2,9 @@
  * Crate tree and crate actions render from CrateContext.
  */
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createElement } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
@@ -15,6 +18,11 @@ import { installPage } from "../test-page";
 import { CrateActions } from "../../pages/CrateActions";
 import { CrateBrowserActions } from "../../pages/CrateBrowserActions";
 import { CrateTree } from "../../pages/CrateTree";
+
+const appCss = readFileSync(
+  join(dirname(fileURLToPath(import.meta.url)), "../../../static/app.css"),
+  "utf8",
+);
 
 describe("CrateTree context", () => {
   beforeEach(() => {
@@ -47,47 +55,72 @@ describe("CrateTree context", () => {
     const select = vi.fn();
     const create = vi.fn();
     const split = vi.fn();
-    bindCrateActions({ select, create, split });
-    const host = document.createElement("div");
-    document.body.append(host);
-    const root = createRoot(host);
+    const color = vi.fn();
+    bindCrateActions({ select, create, split, color });
+    const treeRoot = createRoot(el("crate-list"));
+    const actionsRoot = createRoot(el("crate-actions"));
+    const browserRoot = createRoot(el("crate-browser-actions"));
     flushSync(() => {
-      root.render(
-        createElement(AppProviders, {
-          children: [
-            createElement(CrateTree, { key: "tree" }),
-            createElement(CrateActions, { key: "actions" }),
-            createElement(CrateBrowserActions, { key: "browser" }),
-          ],
-        }),
+      treeRoot.render(createElement(AppProviders, { children: createElement(CrateTree) }));
+      actionsRoot.render(createElement(AppProviders, { children: createElement(CrateActions) }));
+      browserRoot.render(
+        createElement(AppProviders, { children: createElement(CrateBrowserActions) }),
       );
     });
-    const names = [...host.querySelectorAll<HTMLElement>(".name")].map((node) => node.textContent ?? "");
+    const names = [...el("crate-list").querySelectorAll<HTMLElement>(".name")].map(
+      (node) => node.textContent ?? "",
+    );
     expect(names).toEqual(["All tracks", "House", "Deep"]);
-    expect(host.querySelector(".swatch")).not.toBeNull();
-    expect(host.querySelector(".smart")?.textContent).toBe("smart");
-    expect(host.querySelector<HTMLButtonElement>("#crate-new")?.textContent).toBe("New");
-    expect(host.querySelector<HTMLButtonElement>("#crate-new")?.disabled).toBe(false);
-    expect(host.querySelector("#crate-new")?.className).toContain("MuiButton");
-    expect(host.querySelector("#crate-rename")?.className).toContain("MuiButton");
-    expect(host.querySelector("#crate-split")?.className).toContain("MuiButton");
-    expect(host.querySelector("#crate-save-view")?.className).toContain("MuiButton");
-    expect(host.querySelector("#export-m3u")?.className).toContain("MuiButton");
-    expect(host.querySelector<HTMLButtonElement>("#crate-rename")?.disabled).toBe(true);
-    expect(host.querySelector<HTMLButtonElement>("#crate-split")?.getAttribute("aria-pressed")).toBe("false");
+    expect(el("crate-list").querySelector(".swatch")).not.toBeNull();
+    expect(el("crate-list").querySelector(".smart")?.textContent).toBe("smart");
+    expect(el("crate-new").textContent).toBe("New");
+    expect(el("crate-new").disabled).toBe(false);
+    expect(el("crate-new").className).toContain("MuiButton");
+    expect(el("crate-rename").className).toContain("MuiButton");
+    expect(el("crate-delete").className).toContain("MuiButton");
+    expect(el("crate-actions-more").textContent).toBe("More");
+    expect(el("crate-browser-more").textContent).toBe("More");
+    const colorItem = document.querySelector("#crate-actions-menu #crate-color");
+    const splitItem = document.querySelector("#crate-browser-menu #crate-split");
+    expect(colorItem?.className).toContain("MuiMenuItem");
+    expect(document.querySelector("#crate-actions-menu #crate-preset")?.className).toContain(
+      "MuiMenuItem",
+    );
+    expect(document.querySelector("#crate-actions-menu #crate-folder-sync")?.className).toContain(
+      "MuiMenuItem",
+    );
+    expect(splitItem?.className).toContain("MuiMenuItem");
+    expect(document.querySelector("#crate-browser-menu #crate-save-view")?.className).toContain(
+      "MuiMenuItem",
+    );
+    expect(document.querySelector("#crate-browser-menu #export-m3u")?.className).toContain(
+      "MuiMenuItem",
+    );
+    expect(el("crate-rename").disabled).toBe(true);
+    expect(splitItem?.getAttribute("aria-pressed")).toBe("false");
 
-    host.querySelector<HTMLButtonElement>('.crate[data-id="2"]')?.click();
+    el("crate-list").querySelector<HTMLButtonElement>('.crate[data-id="2"]')?.click();
     expect(select).toHaveBeenCalledWith(2, expect.any(MouseEvent));
-    host.querySelector<HTMLButtonElement>("#crate-new")?.click();
+    el("crate-new").click();
     expect(create).toHaveBeenCalledTimes(1);
-    host.querySelector<HTMLButtonElement>("#crate-split")?.click();
-    expect(split).toHaveBeenCalledTimes(1);
 
     state.activeCrate = 2;
     emitCrates();
-    expect(host.querySelector<HTMLButtonElement>("#crate-rename")?.disabled).toBe(false);
-    expect(host.querySelector<HTMLButtonElement>('.crate[data-id="2"]')?.getAttribute("aria-selected")).toBe("true");
-    root.unmount();
+    expect(el("crate-rename").disabled).toBe(false);
+    expect(colorItem).toBeInstanceOf(HTMLButtonElement);
+    expect((colorItem as HTMLButtonElement).disabled).toBe(false);
+    (colorItem as HTMLButtonElement).click();
+    expect(color).toHaveBeenCalledTimes(1);
+    (splitItem as HTMLButtonElement).click();
+    expect(split).toHaveBeenCalledTimes(1);
+    expect(
+      el("crate-list").querySelector<HTMLButtonElement>('.crate[data-id="2"]')?.getAttribute(
+        "aria-selected",
+      ),
+    ).toBe("true");
+    treeRoot.unmount();
+    actionsRoot.unmount();
+    browserRoot.unmount();
   });
 
   it("keeps crate-list ids the page already uses", () => {
@@ -110,5 +143,11 @@ describe("CrateTree context", () => {
     for (const [path, src] of Object.entries(sources)) {
       expect(src, path).not.toMatch(/minHeight:\s*44/);
     }
+  });
+
+  it("keeps the crate tree scrollable and primary actions on one row", () => {
+    expect(appCss).toMatch(/#crate-actions\s*\{[^}]*flex-wrap:\s*nowrap/);
+    expect(appCss).toMatch(/#crate-actions\s+\.MuiButton-root\s*\{[^}]*min-width:\s*0/);
+    expect(appCss).toMatch(/\.crates\s*\{[^}]*overflow:\s*auto/);
   });
 });
