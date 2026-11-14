@@ -29,6 +29,105 @@ describe("CrateOverflowMenu", () => {
     host.remove();
   });
 
+  it("names More for a screen reader in English and Spanish", () => {
+    flushSync(() => {
+      root.render(
+        createElement(AppProviders, {
+          children: createElement(CrateOverflowMenu, {
+            buttonId: "crate-actions-more",
+            menuId: "crate-actions-menu",
+            moreLabel: t("crates.moreActions"),
+            items: [
+              {
+                id: "crate-color",
+                label: t("field.color"),
+                tip: tips.crateColor,
+                onClick: () => undefined,
+              },
+            ],
+          }),
+        }),
+      );
+    });
+    const more = host.querySelector<HTMLButtonElement>("#crate-actions-more");
+    expect(more?.textContent).toBe("More");
+    expect(more?.getAttribute("aria-label")).toBe("More crate actions");
+    setLocale("es");
+    flushSync(() => {
+      root.render(
+        createElement(AppProviders, {
+          children: createElement(CrateOverflowMenu, {
+            buttonId: "crate-actions-more",
+            menuId: "crate-actions-menu",
+            moreLabel: t("crates.moreActions"),
+            items: [
+              {
+                id: "crate-color",
+                label: t("field.color"),
+                tip: tips.crateColor,
+                onClick: () => undefined,
+              },
+            ],
+          }),
+        }),
+      );
+    });
+    expect(host.querySelector("#crate-actions-more")?.getAttribute("aria-label")).toBe(
+      "Más acciones de caja",
+    );
+  });
+
+  it("keeps closed items inert and restores focus to More", () => {
+    flushSync(() => {
+      root.render(
+        createElement(AppProviders, {
+          children: createElement(CrateOverflowMenu, {
+            buttonId: "crate-actions-more",
+            menuId: "crate-actions-menu",
+            moreLabel: t("crates.moreActions"),
+            items: [
+              {
+                id: "crate-color",
+                label: t("field.color"),
+                tip: tips.crateColor,
+                onClick: () => undefined,
+              },
+              {
+                id: "crate-preset",
+                label: t("presets.button"),
+                tip: tips.cratePreset,
+                ariaHasPopup: "dialog",
+                onClick: () => undefined,
+              },
+            ],
+          }),
+        }),
+      );
+    });
+    const more = host.querySelector<HTMLButtonElement>("#crate-actions-more");
+    const menu = document.getElementById("crate-actions-menu");
+    expect(more).not.toBeNull();
+    expect(menu?.closest("[inert]")).not.toBeNull();
+    more?.focus();
+    flushSync(() => {
+      more?.click();
+    });
+    expect(more?.getAttribute("aria-expanded")).toBe("true");
+    expect(menu?.closest("[inert]")).toBeNull();
+    flushSync(() => {
+      document.querySelector<HTMLButtonElement>("#crate-actions-menu #crate-color")?.click();
+    });
+    expect(more?.getAttribute("aria-expanded")).not.toBe("true");
+    expect(document.activeElement).toBe(more);
+    flushSync(() => {
+      more?.click();
+    });
+    flushSync(() => {
+      document.querySelector<HTMLButtonElement>("#crate-actions-menu #crate-preset")?.click();
+    });
+    expect(document.activeElement).toBe(more);
+  });
+
   it("keeps overflow ids mounted and runs the action from More", () => {
     const color = vi.fn();
     flushSync(() => {

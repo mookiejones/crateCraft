@@ -140,6 +140,20 @@ describe("AppShell", () => {
     expect(document.getElementById("track-splitter")?.getAttribute("role")).toBe("separator");
   });
 
+  it("puts Skip to content first and points it at Main", () => {
+    applyStatic(document);
+    const skip = document.getElementById("skip-to-content");
+    const first = document.body.querySelector("a, button, input, select, textarea");
+    expect(skip).toBe(first);
+    expect(skip?.getAttribute("href")).toBe("#app-body");
+    expect(skip?.textContent).toBe("Skip to content");
+    expect(document.getElementById("app-body")?.getAttribute("tabindex")).toBe("-1");
+    expect(skip?.dataset.tooltip?.trim().length).toBeGreaterThan(10);
+    setLocale("es");
+    applyStatic(document);
+    expect(document.getElementById("skip-to-content")?.textContent).toBe("Saltar al contenido");
+  });
+
   it("collapse keeps Help in the AppBar and crate names in the rail", () => {
     const toggle = document.getElementById("drawer-toggle");
     const help = document.getElementById("open-help");

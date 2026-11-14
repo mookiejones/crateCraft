@@ -209,6 +209,7 @@ export function AppShell() {
               }),
             "@media (prefers-reduced-motion: reduce)": {
               transition: "none",
+              transitionDuration: "0.01ms",
             },
             "& .MuiDrawer-paper": {
               position: "relative",

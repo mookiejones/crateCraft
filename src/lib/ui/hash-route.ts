@@ -119,7 +119,8 @@ export function sameRoute(a: HashRoute, b: HashRoute): boolean {
  *
  * replace true uses replaceState (first load, canonicalize). False uses
  * pushState so Back walks the click. A hash already on the location is
- * left alone.
+ * left alone. Does not assign `location.hash`, so the browser does not
+ * smooth-scroll to a fragment.
  *
  * @param hash Hash including #.
  * @param replace Use replaceState when true.

@@ -16,6 +16,7 @@ The list is in **Settings**, under **Keyboard shortcuts**. **?** opens Settings 
 | Ctrl+4 or Command+4 | History |
 | Ctrl+5 or Command+5 | Backups |
 | Esc | Close a dialog, or clear the search |
+| Tab | Reach the drawer, crate list, More, Find, and dialogs |
 | ? | Show this list |
 | Space | Play or pause |
 | Left | Back 5 seconds |
@@ -32,7 +33,9 @@ Ctrl+K or Command+K opens **Find a view, crate, track, or file**.
 1. Type a name. A few letters are enough. Each word has to appear in the name, or in the folder name.
 2. Views, crates, and tracks from the open library show at once. Files on disk follow. A view row says **View**. A crate row says **Crate**. A file row says **File**. A track row says **Track**.
 3. Use Up and Down to move. Enter opens that row. A view opens the same screen as the rail. A crate opens in **Crates**. A track opens in the library. A file opens in **Organize files**, in its folder. The address bar updates, so Back restores the previous screen.
-4. Esc closes the box and leaves the search behind it as it was.
+4. Esc closes the box, puts the focus back, and leaves the search behind it as it was.
+
+The first Tab stop is **Skip to content**, which jumps past the bar and drawer. Esc from **More** puts the focus back on that button.
 
 If the disk search cannot be read, the box says so and keeps the track matches. **Try again** asks for the files again.
 

@@ -610,6 +610,7 @@ def _minimum(size: float, weight: int) -> float:
 _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     ("html", ("--color-card", "--color-selection", "hover", "--color-button"), 15, 400),
     ("body", ("--color-card", "--color-selection", "hover", "--color-button"), 15, 400),
+    (".skip-link", ("--color-card",), 15, 400),
     (".rail", ("--color-bg",), 15, 400),
     (".brand p", ("--color-bg",), 14, 400),
     (".generation", ("--color-bg",), 15, 400),
@@ -936,6 +937,7 @@ class ContrastTests(unittest.TestCase):
             "input:focus-visible",
             "select:focus-visible",
             "textarea:focus-visible",
+            "a:focus-visible",
             ".list:focus-visible",
             ".files-list:focus-visible",
             ".crate:focus-visible",

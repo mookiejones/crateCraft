@@ -23,6 +23,8 @@ export function CrateBrowserActions() {
       buttonId="crate-browser-more"
       menuId="crate-browser-menu"
       moreTip={tips.crateBrowserMore}
+      moreLabel={t("crates.moreList")}
+      ink="sheet"
       items={[
         {
           id: "crate-split",

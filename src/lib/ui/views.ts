@@ -99,7 +99,7 @@ import {
 import { paintRows } from "./virtual-scroll";
 import { codedText, formatNumber, messageParams, serverMessage, t, type MessageKey } from "../i18n";
 import { formatHash, parseHash, writeHash } from "./hash-route";
-import { modeForGroup, paintNav, rememberMode } from "./nav";
+import { groupForMode, modeForGroup, paintNav, rememberMode } from "./nav";
 import { paintSheetChrome } from "./sheet-chrome";
 
 /** True while applyIncomingHash is driving setMode and selectCrate. */
@@ -2468,6 +2468,7 @@ export function setMode(mode: string) {
  * @returns {Promise<void>} Resolves after the screen matches the hash.
  */
 export async function applyIncomingHash(): Promise<void> {
+  const previous = document.activeElement;
   const parsed = parseHash(location.hash);
   const space = parsed.space ?? state.space;
   const crateInList = (id: number | "all") =>
@@ -2476,6 +2477,7 @@ export async function applyIncomingHash(): Promise<void> {
   const canonical = formatHash(space, parsed.mode, crate);
   if (space === state.space && parsed.mode === state.mode && crate === state.activeCrate) {
     writeHash(canonical, true);
+    queueMicrotask(() => rescueHashFocus(previous));
     return;
   }
   applyingHash = true;
@@ -2491,7 +2493,41 @@ export async function applyIncomingHash(): Promise<void> {
     writeHash(formatHash(state.space, state.mode, state.activeCrate), true);
   } finally {
     applyingHash = false;
+    queueMicrotask(() => rescueHashFocus(previous));
   }
+}
+
+function isHiddenFocus(node: HTMLElement): boolean {
+  if (!node.isConnected) return true;
+  if (node === document.body || node === document.documentElement) return false;
+  if (node.closest("[hidden]")) return true;
+  if (node.closest("[aria-hidden='true']")) return true;
+  if (node.closest("[inert]")) return true;
+  return false;
+}
+
+/**
+ * Move focus out of a control the hash just hid.
+ *
+ * Back, Forward, and an edited hash can leave focus on a hidden view
+ * tab. Skip when the active node is still visible.
+ *
+ * @returns {void}
+ */
+function rescueHashFocus(previous: Element | null): void {
+  const active = document.activeElement;
+  const node = active instanceof HTMLElement ? active : null;
+  const previousLost =
+    previous instanceof HTMLElement && (!previous.isConnected || isHiddenFocus(previous));
+  const trapped = node !== null && isHiddenFocus(node);
+  if (!previousLost && !trapped) return;
+  const child = document.querySelector<HTMLElement>(`#view-children [data-view="${state.mode}"]`);
+  if (child && !isHiddenFocus(child)) {
+    child.focus();
+    return;
+  }
+  const primary = document.querySelector<HTMLElement>(`#views [data-nav="${groupForMode(state.mode)}"]`);
+  if (primary && !isHiddenFocus(primary)) primary.focus();
 }
 
 /**

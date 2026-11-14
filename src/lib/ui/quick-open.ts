@@ -16,6 +16,7 @@ import { scoreQuery } from "../fuzzy";
 import { ROW, state } from "../state";
 import { groupForMode, modeForGroup, NAV_GROUPS, type ViewMode } from "./nav";
 import { VIEW_LABEL_KEYS } from "./sheet-chrome";
+import { HASH_SCROLL } from "./motion";
 import { buttonEl } from "./tooltip";
 import { quickOpenHit } from "./tooltip-strings";
 import { focusCrateItem, focusFileByPath, loadFolder, selectCrate, selectTrack, setMode } from "./views";
@@ -235,6 +236,13 @@ export function closeQuickOpen(): void {
   if (dialog.open) dialog.close();
 }
 
+function closeQuickOpenOnHash(): void {
+  const dialog = document.getElementById("quick-open");
+  if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
+  returnFocus = null;
+  dialog.close();
+}
+
 /**
  * Attach quick-open listeners.
  *
@@ -250,8 +258,10 @@ export function wireQuickOpen(): void {
     window.clearTimeout(timer);
     const node = returnFocus;
     returnFocus = null;
-    if (node && node.isConnected) node.focus();
+    if (node && node.isConnected && !node.closest("[hidden]")) node.focus();
   });
+  window.addEventListener("hashchange", closeQuickOpenOnHash);
+  window.addEventListener("popstate", closeQuickOpenOnHash);
   el("quick-open-query").addEventListener("input", () => schedule());
   el("quick-open-close").addEventListener("click", () => closeQuickOpen());
   el("quick-open-retry").addEventListener("click", () => {
@@ -492,5 +502,7 @@ function paint(): void {
   if (current) field.setAttribute("aria-activedescendant", `quick-open-option-${active}`);
   else field.removeAttribute("aria-activedescendant");
   const chosen = list.querySelector<HTMLElement>(".is-active");
-  if (chosen && typeof chosen.scrollIntoView === "function") chosen.scrollIntoView({ block: "nearest" });
+  if (chosen && typeof chosen.scrollIntoView === "function") {
+    chosen.scrollIntoView({ block: "nearest", behavior: HASH_SCROLL });
+  }
 }

@@ -13,12 +13,13 @@ Point at a control, or tab to it, and a short note says what it does. When that 
 | Up or Down, Enter | Move through the list and open the row |
 | Ctrl+1 or Command+1 through 5 | All tracks, Crates, Files, History, Backups |
 | Esc | Close a dialog, or clear the search |
+| Tab | Reach the drawer, crate list, More, Find, and dialogs |
 | Space | Play or pause |
 | Left | Back 5 seconds |
 | Right | Forward 5 seconds |
 
 On Windows the key is Ctrl. On a Mac it is Command.
 
-Find a view, crate, track, or file scores rail views, crates, and the open library at once, then files on disk. Enter opens the highlighted row. A view opens the same screen as the rail. A crate opens in **Crates**. A track opens in the library. A file opens in **Organize files**. Back restores the previous screen.
+Find a view, crate, track, or file scores rail views, crates, and the open library at once, then files on disk. Enter opens the highlighted row. A view opens the same screen as the rail. A crate opens in **Crates**. A track opens in the library. A file opens in **Organize files**. Back restores the previous screen. Esc from Find or **More** puts the focus back. The first Tab stop is **Skip to content**, which jumps past the bar and drawer.
 
 Space plays or pauses. Left moves 5 seconds back. Right moves 5 seconds forward.
