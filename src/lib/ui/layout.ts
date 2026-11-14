@@ -10,23 +10,81 @@
 import { postJSON } from "../api";
 import type { SettingsPayload } from "../api-types";
 import { el } from "../dom";
-import { mountSplitter, type Splitter } from "./splitter";
+import { clampWidth, mountSplitter, type Splitter } from "./splitter";
 import { setNotice } from "./views";
 import { t } from "../i18n";
 
 /** Narrowest track list that still shows title, artist, BPM, key, and time. */
 export const TRACK_LIST_MIN_WIDTH = 360;
+/** Preferred crate-tree rail width in pixels. */
+export const CRATE_TREE_WIDTH = 240;
+/** Narrowest crate-tree rail that still shows crate names. */
+export const CRATE_TREE_MIN_WIDTH = 160;
 /** Open navigation drawer width in pixels. */
 export const DRAWER_WIDTH = 200;
 /** MUI mini-variant width (`theme.spacing(7)`). */
 export const DRAWER_MINI_WIDTH = 56;
 /**
- * Below this innerWidth the drawer stays mini.
- * Resize does not write `drawer_open`.
+ * At this innerWidth and below the drawer stays mini so the Crates
+ * room can keep tree, list, and detail. Resize does not write
+ * `drawer_open`.
  */
-export const DRAWER_MINI_CUTOFF = TRACK_LIST_MIN_WIDTH + DRAWER_WIDTH;
-/** Matches the detail column's minmax(300px, …) in app.css. */
+export const DRAWER_MINI_CUTOFF = 980;
+/** Matches the detail column's min-width in app.css. */
 export const DETAIL_MIN_WIDTH = 300;
+/** The 9px list/detail separator column. */
+export const SPLITTER_WIDTH = 9;
+/** Desktop window default from `desktop.py` DEFAULT_WIDTH. */
+export const DESKTOP_WIDTH = 1120;
+
+export interface CratesPanes {
+  tree: number;
+  list: number;
+  detail: number;
+}
+
+/**
+ * Share Main width among crate tree, track list, and detail.
+ *
+ * A saved list width is clamped so the tree and the detail keep their
+ * minimums when the room is there. When Main is too narrow for every
+ * minimum, the three panes scale together and none is zeroed.
+ *
+ * @param mainWidth `#app-body` width in CSS pixels (window minus drawer).
+ * @param savedListWidth Width from settings.json, or null for the default split.
+ * @returns Whole-pixel pane widths. `tree + list + SPLITTER_WIDTH + detail`
+ *   equals `mainWidth` when `mainWidth` is positive.
+ */
+export function shareCratesPanes(
+  mainWidth: number,
+  savedListWidth: number | null,
+): CratesPanes {
+  const inner = Math.max(0, Math.round(mainWidth) - SPLITTER_WIDTH);
+  if (inner <= 0) {
+    return { tree: 0, list: 0, detail: 0 };
+  }
+  const minTree = CRATE_TREE_MIN_WIDTH;
+  const minList = TRACK_LIST_MIN_WIDTH;
+  const minDetail = DETAIL_MIN_WIDTH;
+  const mins = minTree + minList + minDetail;
+  if (inner < mins) {
+    const tree = Math.max(1, Math.round((inner * minTree) / mins));
+    const list = Math.max(1, Math.round((inner * minList) / mins));
+    const detail = Math.max(1, inner - tree - list);
+    return { tree, list, detail };
+  }
+  let leftover = inner - mins;
+  const treeExtra = Math.min(leftover, CRATE_TREE_WIDTH - minTree);
+  const tree = minTree + treeExtra;
+  leftover -= treeExtra;
+  const defaultList = minList + Math.round((leftover * 1.8) / (1.8 + 0.85));
+  const wanted = savedListWidth == null ? defaultList : savedListWidth;
+  const sheet = inner - tree;
+  const list = clampWidth(wanted, sheet, minList, minDetail);
+  const detail = sheet - list;
+  return { tree, list, detail };
+}
+
 /** Arrow keys repeat quickly. One POST follows the last key in a burst. */
 const SAVE_DELAY_MS = 400;
 

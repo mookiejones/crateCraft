@@ -8,6 +8,63 @@ test.beforeEach(async ({ page }) => {
   await page.addStyleTag({ path: "static/app.css" });
 });
 
+test("Crates shares tree, list, and detail at 1120px without page scroll", async ({ page }) => {
+  await page.setViewportSize({ width: 1120, height: 720 });
+  await page.addScriptTag({ path: "e2e/dist/crates.js" });
+  await expect(page.locator("#drawer-toggle")).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator("#crate-list")).toBeVisible();
+  const widths = await page.evaluate(() => {
+    const rail = document.querySelector(".rail");
+    const browser = document.getElementById("browser");
+    const detail = document.getElementById("detail");
+    const crates = document.getElementById("crate-list");
+    const drawer = document.getElementById("app-drawer");
+    const root = document.documentElement;
+    return {
+      tree: rail instanceof HTMLElement ? rail.clientWidth : 0,
+      list: browser instanceof HTMLElement ? browser.clientWidth : 0,
+      detail: detail instanceof HTMLElement ? detail.clientWidth : 0,
+      pageScroll: root.scrollWidth - root.clientWidth,
+      cratesInDrawer: Boolean(crates && drawer?.contains(crates)),
+    };
+  });
+  expect(widths.tree).toBeGreaterThanOrEqual(160);
+  expect(widths.list).toBeGreaterThanOrEqual(360);
+  expect(widths.detail).toBeGreaterThanOrEqual(300);
+  expect(widths.pageScroll).toBeLessThanOrEqual(1);
+  expect(widths.cratesInDrawer).toBe(false);
+  const grid = page.locator("#list .MuiDataGrid-virtualScroller");
+  expect(await grid.evaluate((node) => node.scrollWidth >= node.clientWidth)).toBe(true);
+  mkdirSync("e2e/output", { recursive: true });
+  await page.screenshot({ path: "e2e/output/crates_desktop_1120.png", animations: "disabled" });
+});
+
+test("Crates keeps crate names in Main at the 980px mini drawer", async ({ page }) => {
+  await page.setViewportSize({ width: 980, height: 720 });
+  await page.addScriptTag({ path: "e2e/dist/crates.js" });
+  await expect(page.locator("#drawer-toggle")).toHaveAttribute("aria-expanded", "false");
+  const layout = await page.evaluate(() => {
+    const rail = document.querySelector(".rail");
+    const crates = document.getElementById("crate-list");
+    const drawer = document.getElementById("app-drawer");
+    const body = document.querySelector(".app-body");
+    return {
+      tree: rail instanceof HTMLElement ? rail.clientWidth : 0,
+      list: document.getElementById("browser")?.clientWidth ?? 0,
+      detail: document.getElementById("detail")?.clientWidth ?? 0,
+      stacked: body instanceof HTMLElement && getComputedStyle(body).flexDirection === "column",
+      cratesInMain: Boolean(crates && rail?.contains(crates)),
+      cratesInDrawer: Boolean(crates && drawer?.contains(crates)),
+    };
+  });
+  expect(layout.cratesInMain).toBe(true);
+  expect(layout.cratesInDrawer).toBe(false);
+  expect(layout.stacked).toBe(false);
+  expect(layout.tree).toBeGreaterThan(0);
+  expect(layout.list).toBeGreaterThan(0);
+  expect(layout.detail).toBeGreaterThan(0);
+});
+
 test("Crates keeps horizontal scrolling in the grid across colorways", async ({ page }) => {
   await page.addScriptTag({ path: "e2e/dist/crates.js" });
   await expect(page.locator("#list .MuiDataGrid-row").first()).toContainText("Night drive");

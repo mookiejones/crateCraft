@@ -18,7 +18,7 @@ import {
   type PlayableMedia,
 } from "../../lib/player/player";
 import { state } from "../../lib/state";
-import { applyLayout } from "../../lib/ui/layout";
+import { applyLayout, DRAWER_MINI_CUTOFF } from "../../lib/ui/layout";
 import { mountAppShell, unmountAppShell } from "../../lib/ui/app-shell";
 import { paintNav, resetNav } from "../../lib/ui/nav";
 import { resetNotice, setNotice } from "../../lib/ui/notice-store";
@@ -63,8 +63,6 @@ function playerSlotHidden(bar: HTMLElement | null): boolean {
     || getComputedStyle(slot).display === "none"
   );
 }
-
-const DRAWER_MINI_CUTOFF = 560;
 
 function remountShell(): void {
   unmountAppShell();
@@ -307,10 +305,22 @@ describe("AppShell", () => {
   });
 
   it("opens the 200px drawer on a wide first launch", () => {
-    setInnerWidth(1200);
+    setInnerWidth(1120);
     remountShell();
     expect(document.getElementById("drawer-toggle")?.getAttribute("aria-expanded")).toBe("true");
     expect(drawerPaper().style.width || getComputedStyle(drawerPaper()).width).toBe("200px");
+    expect(document.querySelector(".rail")?.contains(document.getElementById("crate-list"))).toBe(true);
+    expect(document.getElementById("app-drawer")?.contains(document.getElementById("crate-list"))).toBe(false);
+  });
+
+  it("uses a mini drawer at 980px and keeps crate names in Main", () => {
+    setInnerWidth(DRAWER_MINI_CUTOFF);
+    remountShell();
+    expect(DRAWER_MINI_CUTOFF).toBe(980);
+    expect(document.getElementById("drawer-toggle")?.getAttribute("aria-expanded")).toBe("false");
+    expect(drawerPaper().style.width || getComputedStyle(drawerPaper()).width).toBe("56px");
+    expect(document.querySelector(".rail")?.contains(document.getElementById("crate-list"))).toBe(true);
+    expect(document.getElementById("app-drawer")?.contains(document.getElementById("crate-list"))).toBe(false);
   });
 
   it("uses a 56px mini drawer on a narrow first launch without inert", () => {
