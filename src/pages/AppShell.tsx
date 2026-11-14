@@ -38,7 +38,7 @@ import { setTooltip } from "../lib/ui/tooltip";
 import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
 
 function drawerExpanded(saved: boolean | null, innerWidth: number): boolean {
-  return innerWidth >= DRAWER_MINI_CUTOFF && (saved ?? true);
+  return innerWidth > DRAWER_MINI_CUTOFF && (saved ?? true);
 }
 
 function tooltipRef(spec: TipSpec) {

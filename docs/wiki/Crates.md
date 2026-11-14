@@ -1,6 +1,6 @@
 # Crates
 
-The navigation highlights the open section. On a narrow window the rail starts mini; use the menu button to open labels. The crate list header holds the space menu. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
+The navigation highlights the open section. On a window 980 pixels wide or narrower the rail starts mini; use the menu button to open labels. The crate list, track grid, and details share the window so Title, Artist, and BPM stay readable. A saved list width cannot hide the crate list or the details. The crate list header holds the space menu. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
 
 <figure>
   <img alt="Crates with Deep House selected and the open track's crate checkboxes." src="images/features/crates.png">
