@@ -39,7 +39,7 @@ npm run build
 npm run storybook
 ```
 
-`npm run storybook` serves isolated React components at `http://127.0.0.1:6006`. Vite is the Storybook builder. The page still bundles with esbuild. Stories live in `src/stories/`, mirrored as `*.stories.tsx` under `components/`, `pages/`, or `containers/`. A push to `main` that changes those stories, `.storybook/`, or the page CSS publishes them at `https://mookiejones.github.io/crateCraft/storybook/`. `@storybook/addon-mcp` exposes MCP at `http://127.0.0.1:6006/mcp` while that process is running. `.grok/config.toml` registers it as `storybook`. When editing a component that has a story, use those MCP tools for docs and props.
+`npm run storybook` serves isolated React components at `http://127.0.0.1:6006`. Vite is the Storybook builder. The page still bundles with esbuild. Stories live in `src/stories/`, mirrored as `*.stories.tsx` under `components/`, `pages/`, or `containers/`. Context islands map Controls args through `src/lib/storybook/args.ts` into fixture providers. They do not mount the live `app/providers.tsx` stores. A push to `main` that changes those stories, `.storybook/`, or the page CSS publishes them at `https://mookiejones.github.io/crateCraft/storybook/`. `@storybook/addon-mcp` exposes MCP at `http://127.0.0.1:6006/mcp` while that process is running. `.grok/config.toml` registers it as `storybook`. When editing a component that has a story, use those MCP tools for docs and props.
 
 The commands to paste into a pull request are the full list under [After a change](#after-a-change).
 

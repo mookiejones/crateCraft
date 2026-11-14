@@ -22,7 +22,6 @@ import type { CrateContextValue } from "../crates/crate-store";
 import type { CrateRailRow } from "../crates/crate-tree";
 import type { DriveReport } from "../gig/portable";
 import { formatPlayerTime } from "../player/player";
-import type { WaveformEngine } from "../player/waveform-view";
 import type { FilesContextValue } from "../../containers/FilesContext";
 import type { GigContextValue } from "../../containers/GigContext";
 import type { HealthContextValue } from "../../containers/HealthContext";
@@ -670,25 +669,6 @@ export function storyClock(partial: Partial<WaveformClock> = {}): WaveformClock 
     seekStepLarge: 30,
     ...partial,
   };
-}
-
-export function dummyWaveformEngine(): WaveformEngine {
-  return {
-    setClock: noop,
-    setPublish: noop,
-    attach: noop,
-    detach: noop,
-    setTrack: noop,
-    zoom: noop,
-    setMarkers: noop,
-    sync: noop,
-    destroy: noop,
-    showComputed: noop,
-    showUnavailable: noop,
-    relabel: noop,
-    pixelsPerSecond: () => 80,
-    bindRoot: noop,
-  } as unknown as WaveformEngine;
 }
 
 export function wizardModel(step: WizardStep): WizardModel {
