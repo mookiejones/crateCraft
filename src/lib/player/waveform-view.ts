@@ -686,7 +686,16 @@ function sizeCanvas(canvas: HTMLCanvasElement, cssHeight: number): { width: numb
   return { width, height, dpr };
 }
 
-function fixtureWaveform(durationSeconds: number): ParsedWaveform {
+/**
+ * Build a synthetic SWF1 waveform for screenshots and Storybook.
+ *
+ * Detail is 150 points per second. Overview is 200 columns. The engine
+ * can paint this without fetching `/api/waveform`.
+ *
+ * @param durationSeconds Track length.
+ * @returns Parsed sections `showComputed` accepts.
+ */
+export function fixtureWaveform(durationSeconds: number): ParsedWaveform {
   const rate = 150;
   const count = rate * durationSeconds;
   const detail = new Uint8Array(count * 6);
@@ -740,7 +749,12 @@ function fixtureWaveform(durationSeconds: number): ParsedWaveform {
   };
 }
 
-function fixtureMarkers(): WaveMarkers {
+/**
+ * Cue, loop, and beatgrid marks for the 20 second screenshot fixture.
+ *
+ * @returns A red cue at 9.25s, a blue loop at 6.15–7.4s, and 120 BPM.
+ */
+export function fixtureMarkers(): WaveMarkers {
   return {
     cues: [{ seconds: 9.25, color: "#CC0000" }],
     loops: [{ startSeconds: 6.15, endSeconds: 7.4, color: "#27AAE1" }],

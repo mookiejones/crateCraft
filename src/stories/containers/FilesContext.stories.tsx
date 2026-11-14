@@ -1,30 +1,35 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FilesProvider } from "../../containers/FilesContext";
-import { filesValue } from "../../lib/storybook/fixtures";
+import {
+  filesArgTypes,
+  filesStoryArgs,
+  filesValueFromArgs,
+  type FilesStoryArgs,
+} from "../../lib/storybook/args";
 import { FilesPanel } from "../../pages/FilesPanel";
+
+function Host(args: FilesStoryArgs) {
+  return (
+    <FilesProvider value={filesValueFromArgs(args)}>
+      <FilesPanel />
+    </FilesProvider>
+  );
+}
 
 const meta = {
   title: "Containers/Files",
-  component: FilesPanel,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof FilesPanel>;
+  args: filesStoryArgs,
+  argTypes: filesArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<FilesStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Roots: Story = {
-  render: () => (
-    <FilesProvider value={filesValue()}>
-      <FilesPanel />
-    </FilesProvider>
-  ),
-};
+export const Roots: Story = {};
 
 export const Loading: Story = {
-  render: () => (
-    <FilesProvider value={filesValue({ loading: true, rows: [] })}>
-      <FilesPanel />
-    </FilesProvider>
-  ),
+  args: { loading: true },
 };

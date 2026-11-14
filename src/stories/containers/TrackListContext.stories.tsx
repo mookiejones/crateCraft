@@ -1,28 +1,42 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { TrackListWindow } from "../../components/TrackListWindow";
 import { PlayerProvider } from "../../containers/PlayerContext";
 import { TrackListProvider } from "../../containers/TrackListContext";
-import { playerValue, trackListValue } from "../../lib/storybook/fixtures";
-import { TrackListWindow } from "../../components/TrackListWindow";
+import {
+  playerStoryArgs,
+  playerValueFromArgs,
+  trackListArgTypes,
+  trackListStoryArgs,
+  trackListValueFromArgs,
+  type TrackListStoryArgs,
+} from "../../lib/storybook/args";
 
-const meta = {
-  title: "Containers/TrackList",
-  component: TrackListWindow,
-  parameters: { layout: "padded" },
-  tags: ["autodocs"],
-  args: { pane: "a", onFocusList: () => {} },
-} satisfies Meta<typeof TrackListWindow>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Rows: Story = {
-  render: () => (
-    <PlayerProvider value={playerValue()}>
-      <TrackListProvider value={trackListValue()}>
+function Host(args: TrackListStoryArgs) {
+  return (
+    <PlayerProvider value={playerValueFromArgs(playerStoryArgs)}>
+      <TrackListProvider value={trackListValueFromArgs(args)}>
         <div className="list">
           <TrackListWindow pane="a" onFocusList={() => {}} />
         </div>
       </TrackListProvider>
     </PlayerProvider>
-  ),
+  );
+}
+
+const meta = {
+  title: "Containers/TrackList",
+  parameters: { layout: "padded" },
+  tags: ["autodocs"],
+  args: trackListStoryArgs,
+  argTypes: trackListArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<TrackListStoryArgs>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Rows: Story = {};
+
+export const Empty: Story = {
+  args: { empty: true },
 };

@@ -1,43 +1,41 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CrateProvider } from "../../containers/CrateContext";
-import { crateValue } from "../../lib/storybook/fixtures";
+import {
+  crateArgTypes,
+  crateStoryArgs,
+  crateValueFromArgs,
+  type CrateStoryArgs,
+} from "../../lib/storybook/args";
 import { CrateActions } from "../../pages/CrateActions";
+
+function Host(args: CrateStoryArgs) {
+  return (
+    <CrateProvider value={crateValueFromArgs(args)}>
+      <div className="crate-actions">
+        <CrateActions />
+      </div>
+    </CrateProvider>
+  );
+}
 
 const meta = {
   title: "Pages/CrateActions",
-  component: CrateActions,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof CrateActions>;
+  args: crateStoryArgs,
+  argTypes: crateArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<CrateStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AllTracks: Story = {
-  render: () => (
-    <CrateProvider value={crateValue()}>
-      <div className="crate-actions">
-        <CrateActions />
-      </div>
-    </CrateProvider>
-  ),
-};
+export const AllTracks: Story = {};
 
 export const CrateChosen: Story = {
-  render: () => (
-    <CrateProvider
-      value={crateValue({
-        crateChosen: true,
-        canRename: true,
-        canColor: true,
-        canDelete: true,
-        canFolderSync: true,
-        canRenameFromTags: true,
-      })}
-    >
-      <div className="crate-actions">
-        <CrateActions />
-      </div>
-    </CrateProvider>
-  ),
+  args: { crateChosen: true },
+};
+
+export const ReadOnly: Story = {
+  args: { writable: false, crateChosen: true },
 };

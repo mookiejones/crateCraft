@@ -1,39 +1,37 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SnapshotsProvider } from "../../containers/SnapshotsContext";
-import { restorePlan, snapshotsValue } from "../../lib/storybook/fixtures";
+import {
+  snapshotsArgTypes,
+  snapshotsStoryArgs,
+  snapshotsValueFromArgs,
+  type SnapshotsStoryArgs,
+} from "../../lib/storybook/args";
 import { RestoreDialog } from "../../pages/RestoreDialog";
+
+function Host(args: SnapshotsStoryArgs) {
+  return (
+    <SnapshotsProvider value={snapshotsValueFromArgs(args)}>
+      <dialog id="snapshot-dialog" open>
+        <RestoreDialog />
+      </dialog>
+    </SnapshotsProvider>
+  );
+}
 
 const meta = {
   title: "Pages/RestoreDialog",
-  component: RestoreDialog,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof RestoreDialog>;
+  args: { ...snapshotsStoryArgs, planOpen: true },
+  argTypes: snapshotsArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<SnapshotsStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DryRun: Story = {
-  render: () => (
-    <SnapshotsProvider value={snapshotsValue({ plan: restorePlan, planOpen: true })}>
-      <dialog id="snapshot-dialog" open>
-        <RestoreDialog />
-      </dialog>
-    </SnapshotsProvider>
-  ),
-};
+export const DryRun: Story = {};
 
 export const Blocked: Story = {
-  render: () => (
-    <SnapshotsProvider
-      value={snapshotsValue({
-        plan: { ...restorePlan, restore_blocked: "Quit Serato before restoring." },
-        planOpen: true,
-      })}
-    >
-      <dialog id="snapshot-dialog" open>
-        <RestoreDialog />
-      </dialog>
-    </SnapshotsProvider>
-  ),
+  args: { blocked: true },
 };

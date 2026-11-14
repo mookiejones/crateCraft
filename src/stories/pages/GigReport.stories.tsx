@@ -1,38 +1,39 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { GigStateProvider } from "../../containers/GigContext";
-import { gigReport, gigValue } from "../../lib/storybook/fixtures";
+import {
+  gigArgTypes,
+  gigStoryArgs,
+  gigValueFromArgs,
+  type GigStoryArgs,
+} from "../../lib/storybook/args";
 import { GigReport } from "../../pages/GigReport";
+
+function Host(args: GigStoryArgs) {
+  return (
+    <GigStateProvider value={gigValueFromArgs(args)}>
+      <GigReport />
+    </GigStateProvider>
+  );
+}
 
 const meta = {
   title: "Pages/GigReport",
-  component: GigReport,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof GigReport>;
+  args: gigStoryArgs,
+  argTypes: gigArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<GigStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const NotReady: Story = {
-  render: () => (
-    <GigStateProvider value={gigValue()}>
-      <GigReport />
-    </GigStateProvider>
-  ),
-};
+export const NotReady: Story = {};
 
 export const Ready: Story = {
-  render: () => (
-    <GigStateProvider
-      value={gigValue({
-        gig: {
-          report: { ...gigReport, ready: true, score: 100, hard_red: false, holding_it_back: [] },
-          stepIndex: 0,
-          checkedAt: new Date("2026-01-01T12:00:00Z"),
-        },
-      })}
-    >
-      <GigReport />
-    </GigStateProvider>
-  ),
+  args: { ready: true },
+};
+
+export const Empty: Story = {
+  args: { empty: true },
 };
