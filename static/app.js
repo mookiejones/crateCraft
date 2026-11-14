@@ -16549,7 +16549,11 @@ Error generating stack: ` + x.message + `
 
   // src/lib/ui/splitter.ts
   function clampWidth(width2, available, minFirst, minSecond) {
-    let max2 = Math.max(minFirst, available - minSecond);
+    if (available <= 0) return 0;
+    let minTotal = minFirst + minSecond;
+    if (available < minTotal)
+      return Math.max(1, Math.round(available * minFirst / minTotal));
+    let max2 = available - minSecond;
     return Math.round(Math.min(Math.max(width2, minFirst), max2));
   }
   function mountSplitter(options) {
@@ -69461,7 +69465,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   bridge.setNotice = setNotice2;
 
   // src/lib/ui/layout.ts
-  var TRACK_LIST_MIN_WIDTH = 360, DRAWER_WIDTH = 200, DRAWER_MINI_WIDTH = 56, DRAWER_MINI_CUTOFF = TRACK_LIST_MIN_WIDTH + DRAWER_WIDTH, DETAIL_MIN_WIDTH = 300, SAVE_DELAY_MS = 400, drawerOpenListeners = /* @__PURE__ */ new Set(), splitter = null, changedHere = !1, saveTimer;
+  var TRACK_LIST_MIN_WIDTH = 360;
+  var DRAWER_WIDTH = 200, DRAWER_MINI_WIDTH = 56, DRAWER_MINI_CUTOFF = 980, DETAIL_MIN_WIDTH = 300;
+  var SAVE_DELAY_MS = 400, drawerOpenListeners = /* @__PURE__ */ new Set(), splitter = null, changedHere = !1, saveTimer;
   function save(width2) {
     changedHere = !0, clearTimeout(saveTimer), saveTimer = setTimeout(() => {
       postJSON("/api/settings", { layout: { track_list_width: width2 } }).catch(() => {
@@ -71450,7 +71456,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/pages/AppShell.tsx
   var import_jsx_runtime291 = __toESM(require_jsx_runtime(), 1);
   function drawerExpanded(saved, innerWidth) {
-    return innerWidth >= DRAWER_MINI_CUTOFF && (saved ?? !0);
+    return innerWidth > DRAWER_MINI_CUTOFF && (saved ?? !0);
   }
   function tooltipRef12(spec2) {
     return (element) => {
