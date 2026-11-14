@@ -130,6 +130,21 @@ describe("hash navigation", () => {
     expect(location.hash).toBe("#library/stems");
   });
 
+  it("moves focus off a hidden view tab after the hash changes", async () => {
+    setMode("history");
+    const historyTab = document.querySelector<HTMLElement>("#view-children [data-view='history']");
+    expect(historyTab?.hidden).toBe(false);
+    historyTab?.focus();
+    expect(document.activeElement).toBe(historyTab);
+    history.replaceState(null, "", "#library/stems");
+    await applyIncomingHash();
+    await Promise.resolve();
+    const stems = document.querySelector<HTMLElement>("#view-children [data-view='stems']");
+    expect(stems).not.toBeNull();
+    expect(document.activeElement).toBe(stems);
+    expect(historyTab?.hidden || Boolean(historyTab?.closest("[hidden]"))).toBe(true);
+  });
+
   it("pushes each crate click so Back can restore the previous hash", async () => {
     const push = vi.spyOn(history, "pushState");
     selectCrate(2);

@@ -33,6 +33,7 @@ export interface ElementIds {
   "app-shell": HTMLDivElement;
   "app-body": HTMLDivElement;
   "drawer-toggle": HTMLButtonElement;
+  "skip-to-content": HTMLAnchorElement;
   "app-drawer": HTMLElement;
   "rail-foot": HTMLElement;
   "crate-tools": HTMLDivElement;

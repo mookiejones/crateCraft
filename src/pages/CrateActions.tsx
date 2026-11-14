@@ -62,6 +62,7 @@ export function CrateActions() {
       <CrateOverflowMenu
         buttonId="crate-actions-more"
         menuId="crate-actions-menu"
+        moreLabel={t("crates.moreActions")}
         items={[
           {
             id: "crate-color",

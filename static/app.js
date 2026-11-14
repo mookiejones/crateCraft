@@ -12435,10 +12435,10 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState69 = React318.useState, useEffect88 = React318.useEffect, useLayoutEffect19 = React318.useLayoutEffect, useDebugValue3 = React318.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState69 = React318.useState, useEffect88 = React318.useEffect, useLayoutEffect20 = React318.useLayoutEffect, useDebugValue3 = React318.useDebugValue;
       function useSyncExternalStore$2(subscribe3, getSnapshot) {
         var value = getSnapshot(), _useState = useState69({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
-        return useLayoutEffect19(
+        return useLayoutEffect20(
           function() {
             inst.value = value, inst.getSnapshot = getSnapshot, checkIfSnapshotChanged(inst) && forceUpdate({ inst });
           },
@@ -12486,9 +12486,9 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore3 = shim.useSyncExternalStore, useRef117 = React318.useRef, useEffect88 = React318.useEffect, useMemo66 = React318.useMemo, useDebugValue3 = React318.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore3 = shim.useSyncExternalStore, useRef118 = React318.useRef, useEffect88 = React318.useEffect, useMemo66 = React318.useMemo, useDebugValue3 = React318.useDebugValue;
       exports.useSyncExternalStoreWithSelector = function(subscribe3, getSnapshot, getServerSnapshot, selector, isEqual) {
-        var instRef = useRef117(null);
+        var instRef = useRef118(null);
         if (instRef.current === null) {
           var inst = { hasValue: !1, value: null };
           instRef.current = inst;
@@ -12654,6 +12654,8 @@ Error generating stack: ` + x.message + `
     "crates.find": "Find a crate",
     "crates.heading": "Crates",
     "crates.more": "More",
+    "crates.moreActions": "More crate actions",
+    "crates.moreList": "More list actions",
     "crates.new": "New",
     "crates.newPrompt": "New crate name",
     "crates.paneA": "Left crate",
@@ -13557,6 +13559,7 @@ Error generating stack: ` + x.message + `
     "sheet.title": "{view} · {space}",
     "shell.drawerHide": "Hide navigation",
     "shell.drawerShow": "Show navigation",
+    "shell.skipToContent": "Skip to content",
     "sharing.canSend": "Anonymous counts and crash reports can be sent.",
     "sharing.loadFailed": "Couldn't load sharing settings.",
     "sharing.loadFailedOff": "Couldn't load sharing settings. Nothing is sent.",
@@ -14017,6 +14020,7 @@ Error generating stack: ` + x.message + `
     "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
     "tooltip.viewDrift": "Flag tracks whose tempo wanders, or that look like live recordings. Needs a crate. Read-only.",
     "tooltip.drawerToggle": "Hide or show the navigation drawer.",
+    "tooltip.skipToContent": "Jump to the track list and skip the bar and drawer.",
     "tooltip.driftRefresh": "Run the tempo check again on the selected crate.",
     "tooltip.viewDuplicates": "Show tracks that look like copies of each other.",
     "tooltip.viewFiles": "Show files on disk. Ctrl/Cmd+3.",
@@ -14266,6 +14270,8 @@ Error generating stack: ` + x.message + `
     "crates.find": "Buscar una caja",
     "crates.heading": "Cajas",
     "crates.more": "Más",
+    "crates.moreActions": "Más acciones de caja",
+    "crates.moreList": "Más acciones de lista",
     "crates.new": "Nueva",
     "crates.newPrompt": "Nombre de la nueva caja",
     "crates.paneA": "Caja izquierda",
@@ -15169,6 +15175,7 @@ Error generating stack: ` + x.message + `
     "sheet.title": "{view} · {space}",
     "shell.drawerHide": "Ocultar navegación",
     "shell.drawerShow": "Mostrar navegación",
+    "shell.skipToContent": "Saltar al contenido",
     "sharing.canSend": "Se pueden enviar recuentos anónimos e informes de errores.",
     "sharing.loadFailed": "No se pudieron cargar los ajustes de privacidad.",
     "sharing.loadFailedOff": "No se pudieron cargar los ajustes de privacidad. No se envía nada.",
@@ -15629,6 +15636,7 @@ Error generating stack: ` + x.message + `
     "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
     "tooltip.viewDrift": "Marca pistas cuyo tempo se mueve, o que parecen grabaciones en vivo. Necesita una caja. Solo lectura.",
     "tooltip.drawerToggle": "Ocultar o mostrar el panel de navegación.",
+    "tooltip.skipToContent": "Salta al listado y omite la barra y el cajón.",
     "tooltip.driftRefresh": "Vuelve a comprobar el tempo de la caja seleccionada.",
     "tooltip.viewDuplicates": "Muestra pistas que parecen copias unas de otras.",
     "tooltip.viewFiles": "Muestra los archivos del disco. Ctrl/Cmd+3.",
@@ -30305,6 +30313,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     presetCreate: spec("tooltip.presetCreate"),
     shortcuts: spec("tooltip.shortcuts"),
     drawerToggle: spec("tooltip.drawerToggle"),
+    skipToContent: spec("tooltip.skipToContent"),
     playColumn: spec("tooltip.playColumn"),
     columnMenu: spec("tooltip.columnMenu"),
     columnResize: spec("tooltip.columnResize"),
@@ -30599,6 +30608,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       "preset-cancel": tips.presetCancel,
       "preset-create": tips.presetCreate,
       "drawer-toggle": tips.drawerToggle,
+      "skip-to-content": tips.skipToContent,
       "open-help": tips.help,
       "shortcuts-title": tips.shortcuts,
       "open-settings": tips.settings,
@@ -59826,6 +59836,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     scope.hidden = !scoped, scoped && (text2.textContent = sheetScopeText(sheetScopeCrate(opts.activeCrate, opts.crates)), clear instanceof HTMLButtonElement && (clear.hidden = opts.activeCrate === "all"));
   }
 
+  // src/lib/ui/motion.ts
+  var HASH_SCROLL = "auto";
+
   // src/lib/ui/quick-open.ts
   var QUICK_OPEN_MS = 200, LIMIT = 8, KIND_RANK = { view: 0, crate: 1, track: 2, file: 3 }, returnFocus = null, timer2 = 0, requestToken = 0, hits = [], active = 0, phase = "idle", truncated = !1, pendingQuery = "";
   function parentDirectory(path) {
@@ -59902,13 +59915,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let dialog = el("quick-open");
     dialog.open && dialog.close();
   }
+  function closeQuickOpenOnHash() {
+    let dialog = document.getElementById("quick-open");
+    !(dialog instanceof HTMLDialogElement) || !dialog.open || (returnFocus = null, dialog.close());
+  }
   function wireQuickOpen() {
     let dialog = el("quick-open");
     dialog.addEventListener("keydown", onDialogKey), dialog.addEventListener("close", () => {
       window.clearTimeout(timer2);
       let node2 = returnFocus;
-      returnFocus = null, node2 && node2.isConnected && node2.focus();
-    }), el("quick-open-query").addEventListener("input", () => schedule2()), el("quick-open-close").addEventListener("click", () => closeQuickOpen()), el("quick-open-retry").addEventListener("click", () => {
+      returnFocus = null, node2 && node2.isConnected && !node2.closest("[hidden]") && node2.focus();
+    }), window.addEventListener("hashchange", closeQuickOpenOnHash), window.addEventListener("popstate", closeQuickOpenOnHash), el("quick-open-query").addEventListener("input", () => schedule2()), el("quick-open-close").addEventListener("click", () => closeQuickOpen()), el("quick-open-retry").addEventListener("click", () => {
       let query = el("quick-open-query").value.trim();
       query && loadFiles(query, localHits(query));
     });
@@ -60064,7 +60081,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let field2 = el("quick-open-query");
     hits[active] ? field2.setAttribute("aria-activedescendant", `quick-open-option-${active}`) : field2.removeAttribute("aria-activedescendant");
     let chosen = list.querySelector(".is-active");
-    chosen && typeof chosen.scrollIntoView == "function" && chosen.scrollIntoView({ block: "nearest" });
+    chosen && typeof chosen.scrollIntoView == "function" && chosen.scrollIntoView({ block: "nearest", behavior: HASH_SCROLL });
   }
 
   // src/lib/ui/shared-dialog.ts
@@ -67650,6 +67667,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/CrateOverflowMenu.tsx
   var import_react56 = __toESM(require_react(), 1);
   var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none", minWidth: 0 };
+  function moreInk(ink) {
+    return ink === "sheet" ? "var(--color-text)" : "var(--color-text-muted-on-dark)";
+  }
+  function paintMoreInk(node2, ink) {
+    let token4 = ink === "sheet" ? "--color-text" : "--color-text-muted-on-dark", value = getComputedStyle(node2).getPropertyValue(token4).trim() || moreInk(ink);
+    node2.style.setProperty("color", value, "important"), node2.style.setProperty("-webkit-text-fill-color", value, "important"), node2.style.setProperty("border-color", "currentColor", "important");
+  }
   function itemButton(event) {
     let node2 = event.currentTarget;
     if (!(node2 instanceof HTMLButtonElement))
@@ -67660,11 +67684,23 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     buttonId,
     menuId,
     moreTip = tips.crateMore,
+    moreLabel,
+    ink = "rail",
     items
   }) {
-    let [anchor, setAnchor] = (0, import_react56.useState)(null), open = !!anchor;
+    let [anchor, setAnchor] = (0, import_react56.useState)(null), [colorway, setColorway] = (0, import_react56.useState)(() => getSettingsState().colorway), moreRef = (0, import_react56.useRef)(null), skipRestore = (0, import_react56.useRef)(!1), open = !!anchor, label = moreLabel ?? t("crates.moreActions"), bindTooltip = tooltipRef5(moreTip);
+    (0, import_react56.useLayoutEffect)(() => subscribeSettings(() => {
+      setColorway(getSettingsState().colorway);
+    }), []), (0, import_react56.useLayoutEffect)(() => {
+      let node2 = moreRef.current;
+      node2 && paintMoreInk(node2, ink);
+    }, [colorway, ink]);
     function close() {
       setAnchor(null);
+    }
+    function restoreMore() {
+      let node2 = moreRef.current;
+      node2 && node2.isConnected && node2.focus();
     }
     return /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)("span", { className: "crate-overflow", children: [
       /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
@@ -67675,7 +67711,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX7,
-          ref: tooltipRef5(moreTip),
+          ref: (node2) => {
+            moreRef.current = node2, bindTooltip(node2), node2 && paintMoreInk(node2, ink);
+          },
+          "aria-label": label,
           "aria-haspopup": "menu",
           "aria-expanded": open,
           "aria-controls": open ? menuId : void 0,
@@ -67689,9 +67728,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           id: menuId,
           anchorEl: anchor,
           open,
-          onClose: close,
+          disableRestoreFocus: !0,
+          onClose: () => {
+            let skip2 = skipRestore.current;
+            skipRestore.current = !1, close(), skip2 || restoreMore();
+          },
           keepMounted: !0,
-          slotProps: { list: { component: "div", "aria-labelledby": buttonId, dense: !0 } },
+          slotProps: {
+            root: { inert: !open },
+            list: {
+              component: "div",
+              "aria-labelledby": buttonId,
+              "aria-label": label,
+              dense: !0
+            }
+          },
           children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
             MenuItem_default,
             {
@@ -67705,7 +67756,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               ref: tooltipRef5(item.tip),
               sx: item.hidden ? { display: "none" } : void 0,
               onClick: (event) => {
-                item.onClick(itemButton(event)), close();
+                let opensDialog = item.ariaHasPopup === "dialog";
+                skipRestore.current = opensDialog, opensDialog && restoreMore(), item.onClick(itemButton(event)), close(), opensDialog || restoreMore();
               },
               children: item.label
             },
@@ -67768,6 +67820,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         {
           buttonId: "crate-actions-more",
           menuId: "crate-actions-menu",
+          moreLabel: t("crates.moreActions"),
           items: [
             {
               id: "crate-color",
@@ -67824,6 +67877,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         buttonId: "crate-browser-more",
         menuId: "crate-browser-menu",
         moreTip: tips.crateBrowserMore,
+        moreLabel: t("crates.moreList"),
+        ink: "sheet",
         items: [
           {
             id: "crate-split",
@@ -69341,17 +69396,31 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     mode === "snapshots" && loadSnapshots().catch((error2) => failSnapshots(error2)), mode === "gig" && loadGigCheck().catch(showGigFailure), mode === "portable" && loadPortableView().catch(showPortableFailure), mode === "drift" && loadDrift().catch(showDriftFailure), mode === "health" && loadHealth().catch(showHealthFailure), mode === "stats" && loadHistoryStats().catch(showHistoryStatsFailure), mode === "scan" && loadScan("quick").catch(showScanFailure), mode === "bitrate" && loadBitrate().catch(showBitrateFailure), mode === "tags" && loadTags().catch(showTagsFailure), renderList(), syncHash();
   }
   async function applyIncomingHash() {
-    let parsed = parseHash(location.hash), space = parsed.space ?? state.space, crateInList = (id) => id === "all" || state.crates.some((crate2) => crate2.id === id), crate = crateInList(parsed.crate) ? parsed.crate : "all", canonical = formatHash(space, parsed.mode, crate);
+    let previous2 = document.activeElement, parsed = parseHash(location.hash), space = parsed.space ?? state.space, crateInList = (id) => id === "all" || state.crates.some((crate2) => crate2.id === id), crate = crateInList(parsed.crate) ? parsed.crate : "all", canonical = formatHash(space, parsed.mode, crate);
     if (space === state.space && parsed.mode === state.mode && crate === state.activeCrate) {
-      writeHash(canonical, !0);
+      writeHash(canonical, !0), queueMicrotask(() => rescueHashFocus(previous2));
       return;
     }
     applyingHash = !0;
     try {
       space !== state.space && (state.space = space, el("space").value = space, await loadLibrary(), crate = crateInList(parsed.crate) ? parsed.crate : "all"), state.mode !== parsed.mode && setMode(parsed.mode), state.activeCrate !== crate && selectCrate(crate), writeHash(formatHash(state.space, state.mode, state.activeCrate), !0);
     } finally {
-      applyingHash = !1;
+      applyingHash = !1, queueMicrotask(() => rescueHashFocus(previous2));
     }
+  }
+  function isHiddenFocus(node2) {
+    return node2.isConnected ? node2 === document.body || node2 === document.documentElement ? !1 : !!(node2.closest("[hidden]") || node2.closest("[aria-hidden='true']") || node2.closest("[inert]")) : !0;
+  }
+  function rescueHashFocus(previous2) {
+    let active2 = document.activeElement, node2 = active2 instanceof HTMLElement ? active2 : null, previousLost = previous2 instanceof HTMLElement && (!previous2.isConnected || isHiddenFocus(previous2)), trapped = node2 !== null && isHiddenFocus(node2);
+    if (!previousLost && !trapped) return;
+    let child = document.querySelector(`#view-children [data-view="${state.mode}"]`);
+    if (child && !isHiddenFocus(child)) {
+      child.focus();
+      return;
+    }
+    let primary = document.querySelector(`#views [data-nav="${groupForMode(state.mode)}"]`);
+    primary && !isHiddenFocus(primary) && primary.focus();
   }
   function wireHashRoutes() {
     let onHash = () => {
@@ -71585,7 +71654,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     duration: open ? theme.transitions.duration.enteringScreen : theme.transitions.duration.leavingScreen
                   }),
                   "@media (prefers-reduced-motion: reduce)": {
-                    transition: "none"
+                    transition: "none",
+                    transitionDuration: "0.01ms"
                   },
                   "& .MuiDrawer-paper": {
                     position: "relative",

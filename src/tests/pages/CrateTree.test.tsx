@@ -79,7 +79,9 @@ describe("CrateTree context", () => {
     expect(el("crate-rename").className).toContain("MuiButton");
     expect(el("crate-delete").className).toContain("MuiButton");
     expect(el("crate-actions-more").textContent).toBe("More");
+    expect(el("crate-actions-more").getAttribute("aria-label")).toBe("More crate actions");
     expect(el("crate-browser-more").textContent).toBe("More");
+    expect(el("crate-browser-more").getAttribute("aria-label")).toBe("More list actions");
     const colorItem = document.querySelector("#crate-actions-menu #crate-color");
     const splitItem = document.querySelector("#crate-browser-menu #crate-split");
     expect(colorItem?.className).toContain("MuiMenuItem");

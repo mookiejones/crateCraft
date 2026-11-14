@@ -225,6 +225,20 @@ describe("quick-open", () => {
     expect(text).toContain("Crate");
   });
 
+  it("closes on hash change so Back does not trap focus in Find", () => {
+    const trigger = document.createElement("button");
+    trigger.id = "find-trigger";
+    document.body.append(trigger);
+    trigger.focus();
+    document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true, cancelable: true }));
+    expect(el("quick-open").open).toBe(true);
+    trigger.hidden = true;
+    window.dispatchEvent(new Event("hashchange"));
+    expect(el("quick-open").open).toBe(false);
+    expect(document.activeElement).not.toBe(trigger);
+    trigger.remove();
+  });
+
   it("closes on Esc without changing the view", () => {
     document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true, cancelable: true }));
     const field = el("quick-open-query");
