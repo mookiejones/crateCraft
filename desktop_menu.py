@@ -1,7 +1,8 @@
 """Native menu for the desktop window.
 
 Titles come from ``locales/en.json`` and ``locales/es.json``, so the menu
-uses the same words as the page. A frozen app reads those files from
+uses the same words as the page. Music and Tools list the same destinations
+as the drawer. A frozen app reads those files from
 ``sys._MEIPASS``, the same extract directory as ``static/``. pywebview 6.2.1 ``MenuAction`` has no
 shortcut field, so a title never includes a key chord. The Mac Edit and
 View menus stay the ones pywebview draws when ``SHOW_DEFAULT_MENUS`` is
@@ -94,8 +95,14 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
             raise ValueError(f"Menu title {title!r} must not name a shortcut.")
         return MenuAction(title, lambda action=action: dispatch(action))
 
-    space = Menu(
-        say("space.label"),
+    def submenu(key: str, items: list[object]) -> Menu:
+        title = say(key)
+        if "Ctrl" in title or "Cmd" in title:
+            raise ValueError(f"Menu title {key!r} must not name a shortcut.")
+        return Menu(title, items)
+
+    space = submenu(
+        "space.label",
         [
             custom(say("space.library"), "space:Serato Library"),
             custom(say("space.video"), "space:Serato Video"),
@@ -135,10 +142,8 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
             say("menu.library"),
             [
                 item("view.crates", "view-crates"),
-                item("crates.allTracks", "view-all"),
                 item("view.history", "view-history"),
                 item("view.stats", "view-stats"),
-                item("view.files", "view-files"),
                 MenuSeparator(),
                 space,
             ],
@@ -146,23 +151,32 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
         Menu(
             say("menu.tools"),
             [
-                item("view.health", "view-health"),
-                item("view.missing", "view-missing"),
-                item("view.duplicates", "view-duplicates"),
-                item("merge.title", "merge"),
-                item("view.stems", "view-stems"),
-                item("view.scan", "view-scan"),
-                item("view.bitrate", "view-bitrate"),
-                item("view.tags", "view-tags"),
-                MenuSeparator(),
-                item("view.gig", "view-gig"),
-                item("view.portable", "view-portable"),
-                item("view.drift", "view-drift"),
-                MenuSeparator(),
-                item("snapshots.take", "take-snapshot"),
+                item("view.files", "view-files"),
+                submenu(
+                    "view.group.health",
+                    [
+                        item("view.health", "view-health"),
+                        item("view.missing", "view-missing"),
+                        item("view.duplicates", "view-duplicates"),
+                        item("view.stems", "view-stems"),
+                        item("view.scan", "view-scan"),
+                        item("view.bitrate", "view-bitrate"),
+                        item("view.tags", "view-tags"),
+                    ],
+                ),
                 item("view.snapshots", "view-snapshots"),
-                item("snapshots.reviewUndo", "review-undo"),
+                submenu(
+                    "view.group.gig",
+                    [
+                        item("view.gig", "view-gig"),
+                        item("view.portable", "view-portable"),
+                        item("view.drift", "view-drift"),
+                    ],
+                ),
                 MenuSeparator(),
+                item("merge.title", "merge"),
+                item("snapshots.take", "take-snapshot"),
+                item("snapshots.reviewUndo", "review-undo"),
                 item("related.heading", "related"),
             ],
         ),

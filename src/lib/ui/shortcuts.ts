@@ -163,7 +163,7 @@ export const SHORTCUTS: readonly Shortcut[] = SHORTCUT_DEFS;
 
 export type ShortcutId = (typeof SHORTCUT_DEFS)[number]["id"];
 
-/** Cheat-sheet action for each shortcut. English in the catalog matches `label`. */
+/** Cheat-sheet action for each shortcut. View rows reuse the rail keys. */
 const LABEL_KEY = {
   "focus-search": "shortcuts.focusSearch",
   "quick-open": "shortcuts.quickOpen",
@@ -175,11 +175,11 @@ const LABEL_KEY = {
   "play-pause": "shortcuts.playPause",
   "seek-back": "shortcuts.seekBack",
   "seek-forward": "shortcuts.seekForward",
-  "view-library": "shortcuts.viewLibrary",
-  "view-crates": "shortcuts.viewCrates",
-  "view-files": "shortcuts.viewFiles",
-  "view-history": "shortcuts.viewHistory",
-  "view-snapshots": "shortcuts.viewSnapshots",
+  "view-library": "crates.allTracks",
+  "view-crates": "view.crates",
+  "view-files": "view.files",
+  "view-history": "view.history",
+  "view-snapshots": "view.snapshots",
 } as const satisfies Record<ShortcutId, MessageKey>;
 
 const GROUP_KEY = {
