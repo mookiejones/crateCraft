@@ -1,66 +1,53 @@
 /**
- * Split, Save view, and Export painted by React.
+ * Split, Save view, and Export under More in the track-sheet bar.
  *
- * The host is `#crate-browser-actions` in the track-sheet bar. Import,
- * Rekordbox, and Reload stay in the markup. Outlined MUI Buttons, size
- * small. `.browser-actions .MuiButton-root` unsets min-height so the
- * native 36px rule does not pin them. Split stays a Button with
+ * The host is `#crate-browser-actions`. Import, Rekordbox, and Reload
+ * stay in the markup. Overflow items keep the desktop-menu ids.
+ * `.browser-actions .MuiButton-root` unsets min-height so the native
+ * 36px rule does not pin them. Split stays a MenuItem with
  * `aria-pressed`.
  */
 
-import Button from "@mui/material/Button";
+import { CrateOverflowMenu } from "../components/CrateOverflowMenu";
 import { useCrates } from "../containers/CrateContext";
 import { t } from "../lib/i18n";
 import { tips } from "../lib/ui/tooltip-strings";
-import { tooltipRef } from "../components/tooltip-ref";
-
-const BUTTON_SX = { textTransform: "none" as const };
 
 /**
- * Split, Save view, and M3U Export.
+ * Split, Save view, and M3U Export under More.
  */
 export function CrateBrowserActions() {
   const crates = useCrates();
   return (
-    <>
-      <Button
-        id="crate-split"
-        type="button"
-        size="small"
-        variant="outlined"
-        sx={BUTTON_SX}
-        ref={tooltipRef(tips.crateSplit)}
-        hidden={crates.splitHidden}
-        aria-pressed={crates.splitPressed}
-        onClick={() => crates.split()}
-      >
-        {t("crates.split")}
-      </Button>
-      <Button
-        id="crate-save-view"
-        type="button"
-        size="small"
-        variant="outlined"
-        sx={BUTTON_SX}
-        ref={tooltipRef(tips.crateSaveView)}
-        hidden={crates.saveViewHidden}
-        disabled={!crates.canSaveView}
-        onClick={() => crates.saveView()}
-      >
-        {t("crates.saveView")}
-      </Button>
-      <Button
-        id="export-m3u"
-        type="button"
-        size="small"
-        variant="outlined"
-        sx={BUTTON_SX}
-        ref={tooltipRef(tips.exportM3u)}
-        hidden={crates.exportHidden}
-        onClick={() => crates.exportM3u()}
-      >
-        {t("export.m3u")}
-      </Button>
-    </>
+    <CrateOverflowMenu
+      buttonId="crate-browser-more"
+      menuId="crate-browser-menu"
+      moreTip={tips.crateBrowserMore}
+      items={[
+        {
+          id: "crate-split",
+          label: t("crates.split"),
+          tip: tips.crateSplit,
+          hidden: crates.splitHidden,
+          ariaPressed: crates.splitPressed,
+          onClick: () => crates.split(),
+        },
+        {
+          id: "crate-save-view",
+          label: t("crates.saveView"),
+          tip: tips.crateSaveView,
+          hidden: crates.saveViewHidden,
+          disabled: !crates.canSaveView,
+          onClick: () => crates.saveView(),
+        },
+        {
+          id: "export-m3u",
+          label: t("export.m3u"),
+          tip: tips.exportM3u,
+          hidden: crates.exportHidden,
+          onClick: () => crates.exportM3u(),
+        },
+      ]}
+    />
   );
 }

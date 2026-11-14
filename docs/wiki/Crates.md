@@ -14,7 +14,7 @@ flowchart TD
   crates --> one["One crate"]
   one --> tracks["Play, Title, Artist, BPM, Key, Energy, Genre, Added, Last, Plays, Time"]
   tracks --> tick["Tick a crate on the track"]
-  tools["New, Rename, Color, Delete"] --> quit["Quit Serato DJ Pro first"]
+  tools["New, Rename, Delete, More"] --> quit["Quit Serato DJ Pro first"]
 ```
 
 The track list puts **Play** in its own first column. **Title** is the name. Headers stay over the cells when you scroll. Drag a header edge to resize. The column menu can hide a column. A library larger than 100 tracks pages 100 at a time.
@@ -23,7 +23,9 @@ The track list puts **Play** in its own first column. **Title** is the name. Hea
 
 The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**. Each space has its own crates. Switching space returns you to **All tracks**. The address bar keeps the open view and crate (`#library/crates` for All tracks). Refresh and Back restore that screen.
 
-**Find a crate** keeps a parent visible when a nested name matches. **Order** is Serato's own order. **Name** is alphabetical. **Added** is the date the crate was created.
+**Find a crate** keeps a parent visible when a nested name matches. **Order** is Serato's own order. **Name** is alphabetical. **Added** is the date the crate was created. A long crate list scrolls inside that pane. Collapsing the navigation drawer leaves crate names in the main column.
+
+**New**, **Rename**, and **Delete** stay on the crate action row. **Color**, **Preset**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list.
 
 Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. When Serato is open, a notice under the top bar says edits stay off.
 

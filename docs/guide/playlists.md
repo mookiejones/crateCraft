@@ -8,7 +8,7 @@ Quit Serato before you import. Export and Rekordbox only read the library. Rekor
 
 1. Select **Crates**.
 2. Select the crate to export. Select **All tracks** to export the whole space.
-3. Click **Export**.
+3. Open **More** above the track list and click **Export**.
 
 The browser downloads `crate.m3u`. **Export**, **Import**, and **Rekordbox** show only on **Crates**.
 

@@ -12435,9 +12435,9 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState68 = React318.useState, useEffect88 = React318.useEffect, useLayoutEffect19 = React318.useLayoutEffect, useDebugValue3 = React318.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState69 = React318.useState, useEffect88 = React318.useEffect, useLayoutEffect19 = React318.useLayoutEffect, useDebugValue3 = React318.useDebugValue;
       function useSyncExternalStore$2(subscribe3, getSnapshot) {
-        var value = getSnapshot(), _useState = useState68({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
+        var value = getSnapshot(), _useState = useState69({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
         return useLayoutEffect19(
           function() {
             inst.value = value, inst.getSnapshot = getSnapshot, checkIfSnapshotChanged(inst) && forceUpdate({ inst });
@@ -12653,6 +12653,7 @@ Error generating stack: ` + x.message + `
     "crates.expand": "Expand {name}",
     "crates.find": "Find a crate",
     "crates.heading": "Crates",
+    "crates.more": "More",
     "crates.new": "New",
     "crates.newPrompt": "New crate name",
     "crates.paneA": "Left crate",
@@ -13784,6 +13785,8 @@ Error generating stack: ` + x.message + `
     "tooltip.copyVersion": "Copy the app version.",
     "tooltip.crateColor": "Set the color of the selected crate.",
     "tooltip.crateDelete": "Delete the selected crate. The tracks stay in the library.",
+    "tooltip.crateMore": "Color, Preset, Sync folder, and other crate actions.",
+    "tooltip.crateBrowserMore": "Split, Save view, and Export.",
     "tooltip.crateNew": "Create a new crate.",
     "tooltip.crateFolderSync": "Add library tracks whose files sit in a folder to this crate. Files that are not in the library stay skipped.",
     "tooltip.crateRenameFromTags": "Rename this crate's files to Artist - Title and keep crate paths.",
@@ -14267,6 +14270,7 @@ Error generating stack: ` + x.message + `
     "crates.expand": "Expandir {name}",
     "crates.find": "Buscar una caja",
     "crates.heading": "Cajas",
+    "crates.more": "Más",
     "crates.new": "Nueva",
     "crates.newPrompt": "Nombre de la nueva caja",
     "crates.paneA": "Caja izquierda",
@@ -15398,6 +15402,8 @@ Error generating stack: ` + x.message + `
     "tooltip.copyVersion": "Copia la versión de la aplicación.",
     "tooltip.crateColor": "Elige el color de la caja seleccionada.",
     "tooltip.crateDelete": "Elimina la caja seleccionada. Las pistas siguen en la biblioteca.",
+    "tooltip.crateMore": "Color, preajuste, sincronizar carpeta y otras acciones de caja.",
+    "tooltip.crateBrowserMore": "Dividir, guardar vista y exportar.",
     "tooltip.crateNew": "Crea una caja nueva.",
     "tooltip.crateFolderSync": "Añade a esta caja las pistas de la biblioteca cuyos archivos están en una carpeta. Los archivos que no están en la biblioteca se omiten.",
     "tooltip.crateRenameFromTags": "Renombra los archivos de esta caja a Artista - Título y conserva las rutas de las cajas.",
@@ -30270,6 +30276,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     relinkInclude: spec("tooltip.relinkInclude"),
     relinkPick: spec("tooltip.relinkPick"),
     crateNew: spec("tooltip.crateNew"),
+    crateMore: spec("tooltip.crateMore"),
+    crateBrowserMore: spec("tooltip.crateBrowserMore"),
     crateRename: spec("tooltip.crateRename"),
     crateSplit: spec("tooltip.crateSplit"),
     crateSaveView: spec("tooltip.crateSaveView"),
@@ -30571,6 +30579,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       "relink-confirm": tips.relinkConfirm,
       "relink-cancel": tips.relinkCancel,
       "crate-new": tips.crateNew,
+      "crate-actions-more": tips.crateMore,
+      "crate-browser-more": tips.crateBrowserMore,
       "crate-split": tips.crateSplit,
       "crate-save-view": tips.crateSaveView,
       "crate-rename": tips.crateRename,
@@ -67637,186 +67647,216 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/views.ts
-  var import_react58 = __toESM(require_react(), 1);
+  var import_react59 = __toESM(require_react(), 1);
+
+  // src/components/CrateOverflowMenu.tsx
+  var import_react56 = __toESM(require_react(), 1);
+  var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none", minWidth: 0 };
+  function itemButton(event) {
+    let node2 = event.currentTarget;
+    if (!(node2 instanceof HTMLButtonElement))
+      throw new Error("crate overflow item is not a button");
+    return node2;
+  }
+  function CrateOverflowMenu({
+    buttonId,
+    menuId,
+    moreTip = tips.crateMore,
+    items
+  }) {
+    let [anchor, setAnchor] = (0, import_react56.useState)(null), open = !!anchor;
+    function close() {
+      setAnchor(null);
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)("span", { className: "crate-overflow", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+        Button_default,
+        {
+          id: buttonId,
+          type: "button",
+          size: "small",
+          variant: "outlined",
+          sx: BUTTON_SX7,
+          ref: tooltipRef5(moreTip),
+          "aria-haspopup": "menu",
+          "aria-expanded": open,
+          "aria-controls": open ? menuId : void 0,
+          onClick: (event) => setAnchor(event.currentTarget),
+          children: t("crates.more")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+        Menu_default,
+        {
+          id: menuId,
+          anchorEl: anchor,
+          open,
+          onClose: close,
+          keepMounted: !0,
+          slotProps: { list: { component: "div", "aria-labelledby": buttonId, dense: !0 } },
+          children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+            MenuItem_default,
+            {
+              id: item.id,
+              component: "button",
+              type: "button",
+              disabled: item.disabled,
+              hidden: item.hidden,
+              "aria-haspopup": item.ariaHasPopup,
+              "aria-pressed": item.ariaPressed,
+              ref: tooltipRef5(item.tip),
+              sx: item.hidden ? { display: "none" } : void 0,
+              onClick: (event) => {
+                item.onClick(itemButton(event)), close();
+              },
+              children: item.label
+            },
+            item.id
+          ))
+        }
+      )
+    ] });
+  }
 
   // src/pages/CrateActions.tsx
-  var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none" };
+  var import_jsx_runtime271 = __toESM(require_jsx_runtime(), 1), BUTTON_SX8 = { textTransform: "none", minWidth: 0 };
   function CrateActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)(import_jsx_runtime270.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(import_jsx_runtime271.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
         Button_default,
         {
           id: "crate-new",
           type: "button",
           size: "small",
           variant: "outlined",
-          sx: BUTTON_SX7,
+          sx: BUTTON_SX8,
           ref: tooltipRef5(tips.crateNew),
           disabled: !crates.canCreate,
           onClick: () => crates.create(),
           children: t("crates.new")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
         Button_default,
         {
           id: "crate-rename",
           type: "button",
           size: "small",
           variant: "outlined",
-          sx: BUTTON_SX7,
+          sx: BUTTON_SX8,
           ref: tooltipRef5(tips.crateRename),
           disabled: !crates.canRename,
           onClick: () => crates.rename(),
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
-        Button_default,
-        {
-          id: "crate-color",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX7,
-          ref: tooltipRef5(tips.crateColor),
-          disabled: !crates.canColor,
-          onClick: () => crates.color(),
-          children: t("field.color")
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
         Button_default,
         {
           id: "crate-delete",
           type: "button",
           size: "small",
           variant: "outlined",
-          sx: BUTTON_SX7,
+          sx: BUTTON_SX8,
           ref: tooltipRef5(tips.crateDelete),
           disabled: !crates.canDelete,
           onClick: () => crates.remove(),
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
-        Button_default,
+      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+        CrateOverflowMenu,
         {
-          id: "crate-preset",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX7,
-          ref: tooltipRef5(tips.cratePreset),
-          "aria-haspopup": "dialog",
-          disabled: !crates.canPreset,
-          onClick: () => crates.preset(),
-          children: t("presets.button")
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
-        Button_default,
-        {
-          id: "crate-folder-sync",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX7,
-          ref: tooltipRef5(tips.crateFolderSync),
-          "aria-haspopup": "dialog",
-          disabled: !crates.canFolderSync,
-          onClick: () => crates.folderSync(),
-          children: t("folderSync.button")
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
-        Button_default,
-        {
-          id: "crate-rename-from-tags",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX7,
-          ref: tooltipRef5(tips.crateRenameFromTags),
-          "aria-haspopup": "dialog",
-          disabled: !crates.canRenameFromTags,
-          onClick: (event) => crates.renameFromTags(event.currentTarget),
-          children: t("files.renameFromTags")
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
-        Button_default,
-        {
-          id: "crate-refresh",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX7,
-          ref: tooltipRef5(tips.crateRefresh),
-          hidden: crates.refreshHidden,
-          disabled: !crates.canRefresh,
-          onClick: () => crates.refresh(),
-          children: t("presets.refresh")
+          buttonId: "crate-actions-more",
+          menuId: "crate-actions-menu",
+          items: [
+            {
+              id: "crate-color",
+              label: t("field.color"),
+              tip: tips.crateColor,
+              disabled: !crates.canColor,
+              onClick: () => crates.color()
+            },
+            {
+              id: "crate-preset",
+              label: t("presets.button"),
+              tip: tips.cratePreset,
+              ariaHasPopup: "dialog",
+              disabled: !crates.canPreset,
+              onClick: () => crates.preset()
+            },
+            {
+              id: "crate-folder-sync",
+              label: t("folderSync.button"),
+              tip: tips.crateFolderSync,
+              ariaHasPopup: "dialog",
+              disabled: !crates.canFolderSync,
+              onClick: () => crates.folderSync()
+            },
+            {
+              id: "crate-rename-from-tags",
+              label: t("files.renameFromTags"),
+              tip: tips.crateRenameFromTags,
+              ariaHasPopup: "dialog",
+              disabled: !crates.canRenameFromTags,
+              onClick: (button) => crates.renameFromTags(button)
+            },
+            {
+              id: "crate-refresh",
+              label: t("presets.refresh"),
+              tip: tips.crateRefresh,
+              hidden: crates.refreshHidden,
+              disabled: !crates.canRefresh,
+              onClick: () => crates.refresh()
+            }
+          ]
         }
       )
     ] });
   }
 
   // src/pages/CrateBrowserActions.tsx
-  var import_jsx_runtime271 = __toESM(require_jsx_runtime(), 1), BUTTON_SX8 = { textTransform: "none" };
+  var import_jsx_runtime272 = __toESM(require_jsx_runtime(), 1);
   function CrateBrowserActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(import_jsx_runtime271.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
-        Button_default,
-        {
-          id: "crate-split",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX8,
-          ref: tooltipRef5(tips.crateSplit),
-          hidden: crates.splitHidden,
-          "aria-pressed": crates.splitPressed,
-          onClick: () => crates.split(),
-          children: t("crates.split")
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
-        Button_default,
-        {
-          id: "crate-save-view",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX8,
-          ref: tooltipRef5(tips.crateSaveView),
-          hidden: crates.saveViewHidden,
-          disabled: !crates.canSaveView,
-          onClick: () => crates.saveView(),
-          children: t("crates.saveView")
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
-        Button_default,
-        {
-          id: "export-m3u",
-          type: "button",
-          size: "small",
-          variant: "outlined",
-          sx: BUTTON_SX8,
-          ref: tooltipRef5(tips.exportM3u),
-          hidden: crates.exportHidden,
-          onClick: () => crates.exportM3u(),
-          children: t("export.m3u")
-        }
-      )
-    ] });
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
+      CrateOverflowMenu,
+      {
+        buttonId: "crate-browser-more",
+        menuId: "crate-browser-menu",
+        moreTip: tips.crateBrowserMore,
+        items: [
+          {
+            id: "crate-split",
+            label: t("crates.split"),
+            tip: tips.crateSplit,
+            hidden: crates.splitHidden,
+            ariaPressed: crates.splitPressed,
+            onClick: () => crates.split()
+          },
+          {
+            id: "crate-save-view",
+            label: t("crates.saveView"),
+            tip: tips.crateSaveView,
+            hidden: crates.saveViewHidden,
+            disabled: !crates.canSaveView,
+            onClick: () => crates.saveView()
+          },
+          {
+            id: "export-m3u",
+            label: t("export.m3u"),
+            tip: tips.exportM3u,
+            hidden: crates.exportHidden,
+            onClick: () => crates.exportM3u()
+          }
+        ]
+      }
+    );
   }
 
   // src/pages/CrateTree.tsx
-  var import_jsx_runtime272 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime273 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef9(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -67828,9 +67868,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function Twist({ row, toggle }) {
     if (!row.childCount)
-      return /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
+      return /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
     let spec2 = row.expanded ? collapseCrate(row.name) : expandCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
       "button",
       {
         type: "button",
@@ -67850,14 +67890,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     toggle
   }) {
     let hex = colorHex(row.color), tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)(
       "div",
       {
         className: row.holds ? "crate-row holds-selection" : "crate-row",
         style: { paddingLeft: `${row.depth * 14}px` },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(Twist, { row, toggle }),
-          /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(Twist, { row, toggle }),
+          /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)(
             "button",
             {
               type: "button",
@@ -67873,12 +67913,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               "aria-expanded": row.childCount ? row.expanded : void 0,
               onClick: (event) => select(row.id, event.nativeEvent),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)("span", { className: "name", children: [
-                  hex ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)("span", { className: "name", children: [
+                  hex ? /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
                   row.name
                 ] }),
-                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
-                /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("span", { className: "meta", children: formatNumber(row.count) })
+                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("span", { className: "meta", children: formatNumber(row.count) })
               ]
             }
           )
@@ -67888,7 +67928,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateTree() {
     let crates = useCrates(), focusId = focusedCrateId(), tabbable = crates.rows.find((row) => String(row.id) === focusId) ?? crates.rows[0];
-    return /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(import_jsx_runtime272.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(import_jsx_runtime273.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
       CrateRow,
       {
         row,
@@ -67901,16 +67941,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistoryDetail.tsx
-  var import_jsx_runtime273 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef10(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function Field({ label, value }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("div", { className: "label", children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("div", { className: "value", children: value })
+    return /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("div", { className: "label", children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("div", { className: "value", children: value })
     ] });
   }
   function HistoryDetail() {
@@ -67922,11 +67962,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(Field, { label, value }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(Field, { label, value }, label)),
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(
         "button",
         {
           type: "button",
@@ -67942,7 +67982,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistorySessions.tsx
-  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef11(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -67950,9 +67990,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HistorySessions() {
     let history2 = useHistory();
-    return /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(import_jsx_runtime274.Fragment, { children: history2.sessions.map((session) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(import_jsx_runtime275.Fragment, { children: history2.sessions.map((session) => {
       let name = session.name || t("history.session");
-      return /* @__PURE__ */ (0, import_jsx_runtime274.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(
         "button",
         {
           type: "button",
@@ -67964,8 +68004,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             history2.openSession(session.id);
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("span", { className: "name", children: name }),
-            /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("span", { className: "meta", children: String(session.played || 0) })
+            /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "name", children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "meta", children: String(session.played || 0) })
           ]
         },
         session.id
@@ -67974,55 +68014,55 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/TrackDetail.tsx
-  var import_react57 = __toESM(require_react(), 1);
+  var import_react58 = __toESM(require_react(), 1);
 
   // src/components/BeatgridBlock.tsx
-  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime276 = __toESM(require_jsx_runtime(), 1);
   function BeatgridMarker({ mark }) {
     let bpmNumber = Number(mark.bpm), name = "";
-    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: beatSeconds(mark.position) }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: name })
+    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { children: beatSeconds(mark.position) }),
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { children: name })
     ] });
   }
   function BeatgridBlock({ track }) {
     if (!beatgridViewOnly(track.markers_unavailable)) return null;
     let suspect = beatgridIsSuspect(track.beatgrid_warning_code), key = beatgridWarningKey(track.beatgrid_warning_code), reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning == "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown"), empty = !suspect && !(track.beatgrid && track.beatgrid.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h4", { children: t("markers.gridHeading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
-      suspect ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
-      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
+    return /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)(import_jsx_runtime276.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("h4", { children: t("markers.gridHeading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
+      suspect ? /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
+      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
     ] });
   }
 
   // src/components/CuePads.tsx
-  var import_jsx_runtime276 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1);
   function CueSlot({ slot, cue }) {
     let color2 = slotColor(slot, cue?.color), named = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "swatch", style: swatchStyle }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { className: cue ? "marker" : "marker marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "swatch", style: swatchStyle }),
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
     ] });
   }
   function CuePads({ cues: cues2 }) {
     let slots = cueSlots(cues2), extra = extraCues(cues2);
-    return /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)(import_jsx_runtime276.Fragment, { children: [
-      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(CueSlot, { slot, cue }, slot)),
+    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(import_jsx_runtime277.Fragment, { children: [
+      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(CueSlot, { slot, cue }, slot)),
       extra.map((cue, index) => {
         let cueIndex = Number(cue.index), slot = Number.isInteger(cueIndex) ? cueIndex : -1;
-        return /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
+        return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
       })
     ] });
   }
 
   // src/components/RelatedTracks.tsx
-  var import_react56 = __toESM(require_react(), 1);
-  var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1);
+  var import_react57 = __toESM(require_react(), 1);
+  var import_jsx_runtime278 = __toESM(require_jsx_runtime(), 1);
   function relatedPath(track) {
     return track.resolved_path || track.edit?.portable_id || "";
   }
@@ -68031,8 +68071,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return item.artist ? `${title2} · ${item.artist}` : title2;
   }
   function RelatedTracks({ track, writable }) {
-    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react56.useState)(!!path), [loadError, setLoadError] = (0, import_react56.useState)(""), [payload, setPayload] = (0, import_react56.useState)(null), [query, setQuery] = (0, import_react56.useState)(""), [chosen, setChosen] = (0, import_react56.useState)(null), [note, setNote] = (0, import_react56.useState)(""), [rating, setRating] = (0, import_react56.useState)(""), [mutual, setMutual] = (0, import_react56.useState)(!0), [saving2, setSaving] = (0, import_react56.useState)(!1);
-    (0, import_react56.useEffect)(() => {
+    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react57.useState)(!!path), [loadError, setLoadError] = (0, import_react57.useState)(""), [payload, setPayload] = (0, import_react57.useState)(null), [query, setQuery] = (0, import_react57.useState)(""), [chosen, setChosen] = (0, import_react57.useState)(null), [note, setNote] = (0, import_react57.useState)(""), [rating, setRating] = (0, import_react57.useState)(""), [mutual, setMutual] = (0, import_react57.useState)(!0), [saving2, setSaving] = (0, import_react57.useState)(!1);
+    (0, import_react57.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
         return;
@@ -68054,7 +68094,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         cancelled = !0;
       };
     }, [path, list.space, track.id]);
-    let hits2 = (0, import_react56.useMemo)(() => {
+    let hits2 = (0, import_react57.useMemo)(() => {
       let parsed = parseQuery(query);
       return !parsed.terms.length && !parsed.filters.length ? null : list.tracks.filter((item) => item.id !== track.id && matchesQuery(item, parsed)).slice(0, 8);
     }, [query, list.tracks, track.id]);
@@ -68096,14 +68136,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onSearch(event) {
       setQuery(event.currentTarget.value), setChosen(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("h3", { id: headingId, children: t("related.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
-      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("ul", { className: "related-list", children: saved.map((link) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy4, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { id: headingId, children: t("related.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
+      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("ul", { className: "related-list", children: saved.map((link) => {
         let other = link.track || {}, label = other.title || t("track.untitled"), bits = [];
-        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { children: [
-            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { children: [
+            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
               "button",
               {
                 type: "button",
@@ -68112,11 +68152,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 onClick: () => list.selectTrack(other.asset_id),
                 children: label
               }
-            ) : /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { children: label }),
-            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
-            link.note ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "related-note", children: link.note }) : null
+            ) : /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
+            link.note ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "related-note", children: link.note }) : null
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
             "button",
             {
               type: "button",
@@ -68131,10 +68171,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] }, String(link.id));
       }) }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { className: "related-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("label", { children: [
+      payload && /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "related-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { children: [
           t("related.find"),
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
             "input",
             {
               ref: tooltipRef(tips.findRelated),
@@ -68146,9 +68186,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
           let name = relatedLabel(hit);
-          return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
             "button",
             {
               type: "button",
@@ -68161,11 +68201,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           ) }, hit.id);
         }) }),
-        chosen && /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { className: "related-form", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("label", { children: [
+        chosen && /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "related-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { children: [
             t("related.note"),
-            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkNote),
@@ -68177,23 +68217,23 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { children: [
             t("related.linkRating"),
-            /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)(
               "select",
               {
                 ref: tooltipRef(tips.linkRating),
                 value: rating,
                 onChange: (event) => setRating(event.currentTarget.value),
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("option", { value: "", children: t("rating.none") }),
-                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("option", { value, children: value }, value))
+                  /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("option", { value: "", children: t("rating.none") }),
+                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("option", { value, children: value }, value))
                 ]
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("label", { className: "check", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { className: "check", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkMutual),
@@ -68204,7 +68244,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             ),
             t("related.twoWayLink")
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
             "button",
             {
               type: "button",
@@ -68226,14 +68266,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] })
       ] }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(import_jsx_runtime277.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
-        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("ul", { className: "related-list", children: suggested.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { children: relatedLabel(item) }),
-            /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "related-meta", children: Array.isArray(item.reasons) ? item.reasons.join(" · ") : "" })
+      payload && /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)(import_jsx_runtime278.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
+        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("ul", { className: "related-list", children: suggested.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: relatedLabel(item) }),
+            /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "related-meta", children: Array.isArray(item.reasons) ? item.reasons.join(" · ") : "" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
             "button",
             {
               type: "button",
@@ -68255,7 +68295,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }, `${item.asset_id ?? index}`)) }),
-        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
           "button",
           {
             type: "button",
@@ -68269,13 +68309,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("related.updateCrate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
+        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
       ] })
     ] });
   }
 
   // src/components/TrackDetail.tsx
-  var import_jsx_runtime278 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
+  var import_jsx_runtime279 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
     ["name", "column.title", !0],
     ["artist", "column.artist", !1],
     ["album", "field.album", !1],
@@ -68313,36 +68353,36 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MarkerSection({ track }) {
     let note = t("markers.readOnly");
-    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: t("markers.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: note }),
-      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(CuePads, { cues: track.cues || [] }),
-      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(LoopRow, { loop }, `loop-${index}`)),
-      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "marker", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
+    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("h3", { children: t("markers.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-kicker", children: note }),
+      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(CuePads, { cues: track.cues || [] }),
+      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(LoopRow, { loop }, `loop-${index}`)),
+      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "marker", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
       ] }, `flip-${index}`)),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(BeatgridBlock, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(BeatgridBlock, { track })
     ] });
   }
   function LoopRow({ loop }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
+    return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
     ] });
   }
   function CopySection({ fromId, copies, writable }) {
     let list = useTrackList();
-    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: t("copies.heading") }),
+    return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("h3", { children: t("copies.heading") }),
       copies.map((copy2) => {
         let name = copy2.file || t("track.numbered", { id: String(copy2.id) }), file = copy2.file || `Track ${copy2.id}`;
-        return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "copy-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "copy-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
             "button",
             {
               type: "button",
@@ -68352,10 +68392,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: name
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
-          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
-          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
-          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
             "button",
             {
               type: "button",
@@ -68376,11 +68416,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MembershipSection({ track, writable }) {
     let list = useTrackList(), chosen = new Set(track.crate_ids || []), crates = [...list.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name)), smart = list.crates.filter((crate) => crate.smart && chosen.has(crate.id));
-    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: t("crates.heading") }),
-      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { className: "member", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("h3", { children: t("crates.heading") }),
+      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("label", { className: "member", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "input",
           {
             ref: tooltipRef(membershipTip(crate.name)),
@@ -68395,29 +68435,29 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: crate.name })
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: crate.name })
       ] }, crate.id)) })
     ] });
   }
   function FieldGroups({ track }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(import_jsx_runtime278.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
+    return /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(import_jsx_runtime279.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
   }
   function FieldGroupBlock({ group }) {
-    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react57.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "label", children: [
+    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react58.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "label", children: [
         field2.label ?? "",
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "column", children: field2.column ?? "" })
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { className: "column", children: field2.column ?? "" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("span", { className: "color-value", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "swatch", style: { background: field2.display } }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("span", { className: "color-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { className: "swatch", style: { background: field2.display } }),
         field2.display
       ] }) : field2.display })
     ] }, `${field2.column ?? field2.label ?? index}`));
-    return open ? /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: group.name ?? "" }),
+    return open ? /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("h3", { children: group.name ?? "" }),
       rows
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)(import_jsx_runtime278.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)(import_jsx_runtime279.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
         "button",
         {
           type: "button",
@@ -68427,8 +68467,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length })
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("section", { className: "group", hidden: !shown, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h3", { children: group.name ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("section", { className: "group", hidden: !shown, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("h3", { children: group.name ?? "" }),
         rows
       ] })
     ] });
@@ -68453,10 +68493,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       list.saveTrack(track.id, fields);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("form", { className: "editor", onSubmit, children: [
-      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { className: wide ? "wide" : void 0, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("form", { className: "editor", onSubmit, children: [
+      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("label", { className: wide ? "wide" : void 0, children: [
         t(label),
-        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "textarea",
           {
             ref: tooltipRef(editField(t(label))),
@@ -68464,7 +68504,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             defaultValue: String(edit[name] ?? ""),
             disabled: !writable
           }
-        ) : /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        ) : /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "input",
           {
             ref: tooltipRef(editField(t(label))),
@@ -68475,34 +68515,34 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }, name)),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("label", { children: [
         t("field.color"),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackColor),
             name: "color",
             defaultValue: String(currentColor),
             disabled: !writable,
-            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("option", { value: String(value), children: label }, value))
+            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("option", { value: String(value), children: label }, value))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("label", { children: [
         t("field.rating"),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackRating),
             name: "rating",
             defaultValue: ratingValue,
             disabled: !writable,
-            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("option", { value, children: label }, value || "none"))
+            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("option", { value, children: label }, value || "none"))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "input",
           {
             ref: tooltipRef(tips.beatgridLock),
@@ -68514,7 +68554,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         ),
         t("field.beatgridLocked")
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
         "button",
         {
           type: "submit",
@@ -68532,25 +68572,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ["column.key", track.key || "—"],
       ["column.time", track.length]
     ];
-    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "detail-body", children: [
-      track.album ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h2", { children: track.title ?? "" }),
-      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "artist", children: track.artist }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "deck", children: [
-        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
-          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: t(key) })
+    return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "detail-body", children: [
+      track.album ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("h2", { children: track.title ?? "" }),
+      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "artist", children: track.artist }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "deck", children: [
+        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: t(key) })
         ] }, key)),
-        track.color ? /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
-          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { children: t("field.color") })
+        track.color ? /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("span", { children: t("field.color") })
         ] }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(TrackEditor, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(TrackEditor, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "button",
           {
             type: "button",
@@ -68562,7 +68602,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.reveal", { manager: manager2 })
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "button",
           {
             type: "button",
@@ -68574,7 +68614,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "button",
           {
             type: "button",
@@ -68586,7 +68626,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.relocate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "button",
           {
             type: "button",
@@ -68598,7 +68638,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.removeFromLibrary")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "button",
           {
             type: "button",
@@ -68612,7 +68652,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.useInCrates")
           }
         ),
-        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
           "button",
           {
             type: "button",
@@ -68627,11 +68667,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         ) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(RelatedTracks, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(MarkerSection, { track }),
-      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(MembershipSection, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(FieldGroups, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(RelatedTracks, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(MarkerSection, { track }),
+      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(MembershipSection, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(FieldGroups, { track })
     ] });
   }
   function HistoryBody({ entry }) {
@@ -68641,14 +68681,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry.start_time) || "—"],
       [t("history.file"), entry.file || "—"]
     ];
-    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h2", { children: entry.name || t("track.untitled") }),
-      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "artist", children: entry.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("div", { className: "field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("div", { className: "label", children: label }),
-        /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("div", { className: "value", children: value })
+    return entry.notes && lines.push([t("history.notes"), entry.notes]), /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("h2", { children: entry.name || t("track.untitled") }),
+      entry.artist ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "artist", children: entry.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { className: "field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("div", { className: "label", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("div", { className: "value", children: value })
       ] }, label)),
-      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+      entry.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
         "button",
         {
           type: "button",
@@ -68662,7 +68702,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function TrackDetailPane() {
     let list = useTrackList(), { detail: detail2 } = list;
-    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(TrackBody, { track: detail2.track });
+    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(TrackBody, { track: detail2.track });
   }
 
   // src/lib/ui/hash-route.ts
@@ -68720,7 +68760,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot?.unmount(), historyDetailRoot = null, historyDetailHost = null;
   }
   function paintDetailIsland() {
-    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react58.createElement)(TrackDetailPane));
+    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react59.createElement)(TrackDetailPane));
   }
   function remountIsland(host, node2, slot) {
     return slot.root && slot.host !== host && (slot.root.unmount(), slot.root = null), slot.host = host, slot.root = mountIsland(host, node2, slot.root ?? void 0), slot.root;
@@ -68731,21 +68771,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountCrates() {
     let list = document.getElementById("crate-list"), listMount = mountCrateIsland(
       list instanceof HTMLElement ? list : null,
-      (0, import_react58.createElement)(CrateTree),
+      (0, import_react59.createElement)(CrateTree),
       crateListRoot,
       crateListHost
     );
     crateListRoot = listMount.root, crateListHost = listMount.host;
     let actions3 = document.getElementById("crate-actions"), actionsMount = mountCrateIsland(
       actions3 instanceof HTMLElement ? actions3 : null,
-      (0, import_react58.createElement)(CrateActions),
+      (0, import_react59.createElement)(CrateActions),
       crateActionsRoot,
       crateActionsHost
     );
     crateActionsRoot = actionsMount.root, crateActionsHost = actionsMount.host;
     let browser = document.getElementById("crate-browser-actions"), browserMount = mountCrateIsland(
       browser instanceof HTMLElement ? browser : null,
-      (0, import_react58.createElement)(CrateBrowserActions),
+      (0, import_react59.createElement)(CrateBrowserActions),
       crateBrowserRoot,
       crateBrowserHost
     );
@@ -69010,7 +69050,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function selectEntry(id) {
     if (state.selectedId = id, paintRows(), notifyHistory(), !state.entries.some((item) => item.id === id)) return;
     let host = el("detail");
-    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react58.createElement)(HistoryDetail), {
+    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react59.createElement)(HistoryDetail), {
       host: historyDetailHost,
       root: historyDetailRoot
     }), historyDetailHost = host;
@@ -69256,7 +69296,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function renderSessions() {
     notifyHistory();
     let host = el("session-list");
-    sessionRoot = remountIsland(host, (0, import_react58.createElement)(HistorySessions), {
+    sessionRoot = remountIsland(host, (0, import_react59.createElement)(HistorySessions), {
       host: sessionHost,
       root: sessionRoot
     }), sessionHost = host;
@@ -70549,10 +70589,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   });
 
   // src/lib/ui/app-shell.ts
-  var import_react60 = __toESM(require_react(), 1);
+  var import_react61 = __toESM(require_react(), 1);
 
   // src/pages/AppShell.tsx
-  var import_react59 = __toESM(require_react(), 1);
+  var import_react60 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
   var React314 = __toESM(require_react(), 1);
@@ -70564,7 +70604,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var appBarClasses = generateUtilityClasses("MuiAppBar", ["root", "positionFixed", "positionAbsolute", "positionSticky", "positionStatic", "positionRelative", "colorDefault", "colorPrimary", "colorSecondary", "colorInherit", "colorTransparent", "colorError", "colorInfo", "colorSuccess", "colorWarning"]);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
-  var import_jsx_runtime279 = __toESM(require_jsx_runtime(), 1), useUtilityClasses111 = (ownerState) => {
+  var import_jsx_runtime280 = __toESM(require_jsx_runtime(), 1), useUtilityClasses111 = (ownerState) => {
     let {
       color: color2,
       position: position2,
@@ -70717,7 +70757,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       position: position2,
       enableColorOnDark
     }, classes2 = useUtilityClasses111(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(AppBarRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(AppBarRoot, {
       square: !0,
       component: "header",
       ownerState,
@@ -70733,7 +70773,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/material/Slide/Slide.mjs
   var React315 = __toESM(require_react(), 1);
-  var import_jsx_runtime280 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
+  var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
     visibility: "hidden"
   }, DEFAULT_TRANSLATE_OPTIONS = {};
   function isGestureTranslate(transform) {
@@ -70842,7 +70882,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       };
     }, [direction, inProp, containerProp]), React315.useEffect(() => {
       !inProp && !preserveInlineTransformRef.current && updatePosition();
-    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(Transition_default, {
+    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(Transition_default, {
       nodeRef: childrenRef,
       onEnter: handleEnter,
       onEntered: handleEntered,
@@ -70884,7 +70924,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var drawerClasses = generateUtilityClasses("MuiDrawer", ["root", "docked", "paper", "anchorLeft", "anchorRight", "anchorTop", "anchorBottom", "modal"]);
 
   // node_modules/@mui/material/Drawer/Drawer.mjs
-  var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1), overridesResolver4 = (props, styles5) => {
+  var import_jsx_runtime282 = __toESM(require_jsx_runtime(), 1), overridesResolver4 = (props, styles5) => {
     let {
       ownerState
     } = props;
@@ -71120,35 +71160,35 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           container: resolveSlideContainer
         }
       }
-    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(PaperSlot, {
+    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(PaperSlot, {
       ...paperSlotProps,
       children
     });
     if (variant === "permanent")
-      return /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(DockedSlot, {
+      return /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(DockedSlot, {
         ...dockedSlotProps,
         children: drawer
       });
-    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(TransitionSlot, {
+    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(TransitionSlot, {
       ...transitionSlotProps,
       children: drawer
     });
-    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(DockedSlot, {
+    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(DockedSlot, {
       ...dockedSlotProps,
       children: slidingDrawer
-    }) : /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(RootSlot, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(RootSlot, {
       ...rootSlotProps,
       children: slidingDrawer
     });
   }), Drawer_default = Drawer;
 
   // node_modules/@mui/icons-material/ChevronLeft.mjs
-  var import_jsx_runtime282 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime282.jsx)("path", {
+  var import_jsx_runtime283 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime283.jsx)("path", {
     d: "M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
   }), "ChevronLeft");
 
   // node_modules/@mui/icons-material/Menu.mjs
-  var import_jsx_runtime283 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime283.jsx)("path", {
+  var import_jsx_runtime284 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime284.jsx)("path", {
     d: "M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"
   }), "Menu");
 
@@ -71162,27 +71202,27 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var alertClasses = generateUtilityClasses("MuiAlert", ["root", "action", "icon", "message", "filled", "colorSuccess", "colorInfo", "colorWarning", "colorError", "outlined", "standard"]), alertClasses_default = alertClasses;
 
   // node_modules/@mui/material/internal/svg-icons/SuccessOutlined.mjs
-  var import_jsx_runtime284 = __toESM(require_jsx_runtime(), 1), SuccessOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime284.jsx)("path", {
+  var import_jsx_runtime285 = __toESM(require_jsx_runtime(), 1), SuccessOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime285.jsx)("path", {
     d: "M20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.76,4 13.5,4.11 14.2, 4.31L15.77,2.74C14.61,2.26 13.34,2 12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0, 0 22,12M7.91,10.08L6.5,11.5L11,16L21,6L19.59,4.58L11,13.17L7.91,10.08Z"
   }), "SuccessOutlined");
 
   // node_modules/@mui/material/internal/svg-icons/ReportProblemOutlined.mjs
-  var import_jsx_runtime285 = __toESM(require_jsx_runtime(), 1), ReportProblemOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime285.jsx)("path", {
+  var import_jsx_runtime286 = __toESM(require_jsx_runtime(), 1), ReportProblemOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime286.jsx)("path", {
     d: "M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"
   }), "ReportProblemOutlined");
 
   // node_modules/@mui/material/internal/svg-icons/ErrorOutline.mjs
-  var import_jsx_runtime286 = __toESM(require_jsx_runtime(), 1), ErrorOutline_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime286.jsx)("path", {
+  var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1), ErrorOutline_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime287.jsx)("path", {
     d: "M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
   }), "ErrorOutline");
 
   // node_modules/@mui/material/internal/svg-icons/InfoOutlined.mjs
-  var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1), InfoOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime287.jsx)("path", {
+  var import_jsx_runtime288 = __toESM(require_jsx_runtime(), 1), InfoOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime288.jsx)("path", {
     d: "M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"
   }), "InfoOutlined");
 
   // node_modules/@mui/material/Alert/Alert.mjs
-  var import_jsx_runtime288 = __toESM(require_jsx_runtime(), 1), useUtilityClasses113 = (ownerState) => {
+  var import_jsx_runtime289 = __toESM(require_jsx_runtime(), 1), useUtilityClasses113 = (ownerState) => {
     let {
       variant,
       color: color2,
@@ -71285,16 +71325,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     marginLeft: "auto",
     marginRight: -8
   }), defaultIconMapping = {
-    success: /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(SuccessOutlined_default, {
+    success: /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(SuccessOutlined_default, {
       fontSize: "inherit"
     }),
-    warning: /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(ReportProblemOutlined_default, {
+    warning: /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(ReportProblemOutlined_default, {
       fontSize: "inherit"
     }),
-    error: /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(ErrorOutline_default, {
+    error: /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(ErrorOutline_default, {
       fontSize: "inherit"
     }),
-    info: /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(InfoOutlined_default, {
+    info: /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(InfoOutlined_default, {
       fontSize: "inherit"
     })
   }, Alert = /* @__PURE__ */ React317.forwardRef(function(inProps, ref) {
@@ -71363,27 +71403,27 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       externalForwardedProps,
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime289.jsxs)(RootSlot, {
       ...rootSlotProps,
-      children: [icon !== !1 ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(IconSlot, {
+      children: [icon !== !1 ? /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(IconSlot, {
         ...iconSlotProps,
         children: icon || iconMapping[severity] || defaultIconMapping[severity]
-      }) : null, /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(MessageSlot, {
+      }) : null, /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(MessageSlot, {
         ...messageSlotProps,
         children
-      }), action != null ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(ActionSlot, {
+      }), action != null ? /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(ActionSlot, {
         ...actionSlotProps,
         children: action
-      }) : null, action == null && onClose ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(ActionSlot, {
+      }) : null, action == null && onClose ? /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(ActionSlot, {
         ...actionSlotProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(CloseButtonSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(CloseButtonSlot, {
           size: "small",
           "aria-label": closeText,
           title: closeText,
           color: "inherit",
           onClick: onClose,
           ...closeButtonProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(CloseIconSlot, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(CloseIconSlot, {
             fontSize: "small",
             ...closeIconProps
           })
@@ -71393,12 +71433,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), Alert_default = Alert;
 
   // src/components/NoticeBanner.tsx
-  var import_jsx_runtime289 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime290 = __toESM(require_jsx_runtime(), 1);
   function NoticeBanner() {
     let { notice, dismiss: dismiss2 } = useNotice();
     if (!notice) return null;
     let assertive = notice.severity === "error" || notice.severity === "warning";
-    return /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(Box_default, { sx: { px: 2, py: 1, flexShrink: 0 }, children: /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(Box_default, { sx: { px: 2, py: 1, flexShrink: 0 }, children: /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(
       Alert_default,
       {
         id: "app-notice",
@@ -71414,7 +71454,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/AppShell.tsx
-  var import_jsx_runtime290 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime291 = __toESM(require_jsx_runtime(), 1);
   function drawerExpanded(saved, innerWidth) {
     return innerWidth >= DRAWER_MINI_CUTOFF && (saved ?? !0);
   }
@@ -71432,14 +71472,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     !slot || !node2 || node2.parentElement !== slot && slot.append(node2);
   }
   function AppShell() {
-    let [savedOpen, setSavedOpen] = (0, import_react59.useState)(null), [innerWidth, setInnerWidth] = (0, import_react59.useState)(() => window.innerWidth), [hasTrack, setHasTrack] = (0, import_react59.useState)(() => getPlayerState().trackId !== null), open = drawerExpanded(savedOpen, innerWidth), postedOpen = (0, import_react59.useRef)(!1), [, setLocaleTick] = (0, import_react59.useState)(0), headingSlot = (0, import_react59.useRef)(null), generationSlot = (0, import_react59.useRef)(null), actionsSlot = (0, import_react59.useRef)(null), playerSlot = (0, import_react59.useRef)(null), lockSlot = (0, import_react59.useRef)(null), navSlot = (0, import_react59.useRef)(null), bodySlot = (0, import_react59.useRef)(null);
-    (0, import_react59.useEffect)(() => onLocaleChange(() => {
+    let [savedOpen, setSavedOpen] = (0, import_react60.useState)(null), [innerWidth, setInnerWidth] = (0, import_react60.useState)(() => window.innerWidth), [hasTrack, setHasTrack] = (0, import_react60.useState)(() => getPlayerState().trackId !== null), open = drawerExpanded(savedOpen, innerWidth), postedOpen = (0, import_react60.useRef)(!1), [, setLocaleTick] = (0, import_react60.useState)(0), headingSlot = (0, import_react60.useRef)(null), generationSlot = (0, import_react60.useRef)(null), actionsSlot = (0, import_react60.useRef)(null), playerSlot = (0, import_react60.useRef)(null), lockSlot = (0, import_react60.useRef)(null), navSlot = (0, import_react60.useRef)(null), bodySlot = (0, import_react60.useRef)(null);
+    (0, import_react60.useEffect)(() => onLocaleChange(() => {
       setLocaleTick((n) => n + 1);
-    }), []), (0, import_react59.useEffect)(() => subscribeDrawerOpen((saved) => {
+    }), []), (0, import_react60.useEffect)(() => subscribeDrawerOpen((saved) => {
       postedOpen.current || setSavedOpen(saved);
-    }), []), (0, import_react59.useEffect)(() => subscribe((snapshot2) => {
+    }), []), (0, import_react60.useEffect)(() => subscribe((snapshot2) => {
       setHasTrack(snapshot2.trackId !== null);
-    }), []), (0, import_react59.useEffect)(() => {
+    }), []), (0, import_react60.useEffect)(() => {
       let onResize = () => {
         setInnerWidth(window.innerWidth);
       };
@@ -71449,9 +71489,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let next3 = !open;
       postedOpen.current = !0, setSavedOpen(next3), saveDrawerOpen(next3);
     }
-    return (0, import_react59.useLayoutEffect)(() => {
+    return (0, import_react60.useLayoutEffect)(() => {
       adoptNode(headingSlot.current, document.querySelector(".brand h1")), adopt(generationSlot.current, "library-generation"), adopt(generationSlot.current, "library-generation-note"), adopt(actionsSlot.current, "open-help"), adopt(actionsSlot.current, "open-settings"), adopt(playerSlot.current, "player-bar"), adopt(lockSlot.current, "status"), adopt(navSlot.current, "views"), adopt(bodySlot.current, "app-body"), paintNav(state.mode);
-    }, [open]), /* @__PURE__ */ (0, import_jsx_runtime290.jsxs)(
+    }, [open]), /* @__PURE__ */ (0, import_jsx_runtime291.jsxs)(
       Box_default,
       {
         sx: {
@@ -71461,8 +71501,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           minHeight: 0
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime290.jsxs)(Toolbar_default, { sx: { gap: 2, minHeight: 64, py: 1 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime291.jsxs)(Toolbar_default, { sx: { gap: 2, minHeight: 64, py: 1 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(
               IconButton_default,
               {
                 id: "drawer-toggle",
@@ -71474,10 +71514,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 "aria-label": open ? t("shell.drawerHide") : t("shell.drawerShow"),
                 onClick: toggleDrawer,
                 ref: tooltipRef12(tips.drawerToggle),
-                children: open ? /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(Menu_default2, {})
+                children: open ? /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(Menu_default2, {})
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(
               Box_default,
               {
                 ref: headingSlot,
@@ -71494,8 +71534,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 }
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(Box_default, { ref: generationSlot, className: "app-bar-generation" }),
-            /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(Box_default, { ref: generationSlot, className: "app-bar-generation" }),
+            /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(
               Box_default,
               {
                 ref: playerSlot,
@@ -71509,7 +71549,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 }
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(
               Box_default,
               {
                 ref: actionsSlot,
@@ -71518,10 +71558,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             )
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(Box_default, { ref: lockSlot, className: "app-bar-lock", sx: { flexShrink: 0 } }),
-          /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(NoticeBanner, {}),
-          /* @__PURE__ */ (0, import_jsx_runtime290.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(Box_default, { ref: lockSlot, className: "app-bar-lock", sx: { flexShrink: 0 } }),
+          /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(NoticeBanner, {}),
+          /* @__PURE__ */ (0, import_jsx_runtime291.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(
               Drawer_default,
               {
                 id: "app-drawer",
@@ -71559,7 +71599,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     flexDirection: "column"
                   }
                 },
-                children: /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(
                   Box_default,
                   {
                     sx: {
@@ -71568,7 +71608,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                       height: "100%",
                       minHeight: 0
                     },
-                    children: /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(
+                    children: /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(
                       Box_default,
                       {
                         ref: navSlot,
@@ -71582,7 +71622,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(
               Box_default,
               {
                 ref: bodySlot,
@@ -71600,7 +71640,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountAppShell(host) {
     islandRoot5?.unmount(), islandRoot5 = null;
     let root = host === void 0 ? document.getElementById("app-shell") : host;
-    root && (islandRoot5 = mountIsland(root, (0, import_react60.createElement)(AppShell)));
+    root && (islandRoot5 = mountIsland(root, (0, import_react61.createElement)(AppShell)));
   }
 
   // src/lib/ui/desktop-actions.ts

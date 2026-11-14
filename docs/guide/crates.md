@@ -2,7 +2,7 @@
 
 Crates are the lists on the left when **Crates** is selected. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
 
-The navigation highlights the open section. On a narrow window the rail starts mini; use the menu button to open labels. Search and the field menu sit above the crate actions. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
+The navigation highlights the open section. On a narrow window the rail starts mini; use the menu button to open labels. Search and the field menu sit above the crate actions. **New**, **Rename**, and **Delete** stay on that row. **Color**, **Preset**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list. A long crate list scrolls inside the crate pane. Collapsing the navigation drawer leaves crate names in the main column. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
 
 ![The Crates view with Saturday night selected in an example library of 24 tracks. Search and actions sit above the grid, with track details on the right.](../media/crates-refined.png)
 
