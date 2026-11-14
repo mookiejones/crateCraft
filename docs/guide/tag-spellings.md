@@ -4,7 +4,7 @@
 
 The note under the heading says **Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.** On **Titles** it names those cleanup rules instead.
 
-This view covers the whole space. The crate list is hidden.
+This view covers the whole space. The crate list is hidden. To rewrite one field on selected tracks, check two or more rows on [Crates](crates.md). That write also stays in the library. Audio files stay as they are.
 
 ## Review a group
 

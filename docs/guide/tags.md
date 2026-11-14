@@ -28,6 +28,8 @@ If the file is missing, that section says **The file is not on disk, so cues can
 1. Change the fields you want.
 2. Click **Save track**.
 
+To rewrite one of those text fields on many tracks at once, check two or more rows on [Crates](crates.md). **Review**, then **Apply**. Audio files stay as they are.
+
 The bar says **Saved.** If BPM is not a number, the page says **BPM needs a number.** A value outside 0 to 999 says **BPM needs to be between 0 and 999.**
 
 Other groups under the form, such as **Song**, **File**, and **Status**, are for reading. **Search copies** is closed until you open it. Those lines are copies Serato keeps for search. They are not a second set of fields to type into.

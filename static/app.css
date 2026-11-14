@@ -958,6 +958,44 @@ button:disabled { cursor: default; }
   width: 100%;
 }
 
+.field-edit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 4px;
+  flex-shrink: 0;
+}
+
+.field-edit-count {
+  margin: 0;
+  color: var(--quiet);
+}
+
+.field-edit-field,
+.field-edit-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-edit select,
+.field-edit input[type="text"] {
+  min-height: 44px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--manila);
+  border: 1px solid var(--color-control-edge);
+  border-radius: var(--radius-card);
+  padding: 0 8px;
+}
+
+.field-edit-status {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--quiet);
+}
+
 .list .MuiDataGrid-root {
   --DataGrid-rowBorderColor: var(--rule);
   background: transparent;
