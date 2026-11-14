@@ -192,6 +192,7 @@ export const tips = {
   prepareAdd: spec("tooltip.prepareAdd"),
   prepareRemove: spec("tooltip.prepareRemove"),
   updateRelated: spec("tooltip.updateRelated"),
+  relatedCrateOnly: spec("tooltip.relatedCrateOnly"),
   findRelated: spec("tooltip.findRelated"),
   linkNote: spec("tooltip.linkNote"),
   linkRating: spec("tooltip.linkRating"),

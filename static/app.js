@@ -13422,6 +13422,7 @@ Error generating stack: ` + x.message + `
     "rekordbox.reportLabel": "What is not copied",
     "related.confirmRemove": "Remove the link to “{name}”?",
     "related.crateNote": "Creates or refreshes the crate “{name}”. Serato must be quit.",
+    "related.crateOnly": "This crate only",
     "related.crateUpdated": "Crate “{name}” updated.",
     "related.find": "Find a track to link",
     "related.findPlaceholder": "Title or artist",
@@ -13430,7 +13431,7 @@ Error generating stack: ` + x.message + `
     "related.loadFailed": "Mixes well with could not be loaded.",
     "related.loading": "Loading mixes well with",
     "related.noPath": "This track has no file path, so it cannot be linked.",
-    "related.noSuggestions": "No suggestions from key, tempo, or shared crates.",
+    "related.noSuggestions": "No suggestions from key, tempo, energy, or shared crates.",
     "related.noneSaved": "No saved links yet. Search for a track, or save a suggestion.",
     "related.notInLibrary": "Not in this library",
     "related.note": "Note",
@@ -13444,7 +13445,7 @@ Error generating stack: ` + x.message + `
     "related.saveLinkTo": "Save link to {name}",
     "related.saved": "Link saved.",
     "related.savedCount": "{count} saved",
-    "related.suggested": "Suggested from key, tempo within 6%, and shared crates. Save stores a two-way link.",
+    "related.suggested": "Suggested from key, tempo within 6%, energy, and shared crates. Save stores a two-way link.",
     "related.thisTrack": "this track",
     "related.twoWay": "Two-way",
     "related.twoWayLink": "Two-way link",
@@ -13947,6 +13948,7 @@ Error generating stack: ` + x.message + `
     "tooltip.rekordboxCancel": "Cancel. The file is not downloaded. Esc.",
     "tooltip.rekordboxDownload": "Download the Rekordbox file.",
     "tooltip.rekordboxKey": "Choose how keys are written in the Rekordbox file.",
+    "tooltip.relatedCrateOnly": "Limit mix suggestions to the open crate.",
     "tooltip.reload": "Reload the library from Serato.",
     "tooltip.relocate": "Point this track at a different audio file.",
     "tooltip.removeRelated": "Remove the saved link to {name}. The audio file stays on disk.",
@@ -15052,6 +15054,7 @@ Error generating stack: ` + x.message + `
     "rekordbox.reportLabel": "Lo que no se copia",
     "related.confirmRemove": "¿Quitar el enlace con «{name}»?",
     "related.crateNote": "Crea o actualiza la caja «{name}». Serato debe estar cerrado.",
+    "related.crateOnly": "Solo esta caja",
     "related.crateUpdated": "Caja «{name}» actualizada.",
     "related.find": "Buscar una pista para enlazar",
     "related.findPlaceholder": "Título o artista",
@@ -15060,7 +15063,7 @@ Error generating stack: ` + x.message + `
     "related.loadFailed": "No se pudo cargar Mezcla bien con.",
     "related.loading": "Cargando Mezcla bien con",
     "related.noPath": "Esta pista no tiene ruta de archivo, así que no se puede enlazar.",
-    "related.noSuggestions": "No hay sugerencias por tono, tempo o cajas en común.",
+    "related.noSuggestions": "No hay sugerencias por tono, tempo, energía o cajas en común.",
     "related.noneSaved": "Todavía no hay enlaces guardados. Busca una pista o guarda una sugerencia.",
     "related.notInLibrary": "No está en esta biblioteca",
     "related.note": "Nota",
@@ -15074,7 +15077,7 @@ Error generating stack: ` + x.message + `
     "related.saveLinkTo": "Guardar enlace con {name}",
     "related.saved": "Enlace guardado.",
     "related.savedCount": "{count} guardados",
-    "related.suggested": "Sugeridas por tono, tempo con un margen del 6 % y cajas en común. Guardar crea un enlace en ambos sentidos.",
+    "related.suggested": "Sugeridas por tono, tempo con un margen del 6 %, energía y cajas en común. Guardar crea un enlace en ambos sentidos.",
     "related.thisTrack": "esta pista",
     "related.twoWay": "En ambos sentidos",
     "related.twoWayLink": "Enlace en ambos sentidos",
@@ -15577,6 +15580,7 @@ Error generating stack: ` + x.message + `
     "tooltip.rekordboxCancel": "Cancela. El archivo no se descarga. Esc.",
     "tooltip.rekordboxDownload": "Descarga el archivo de Rekordbox.",
     "tooltip.rekordboxKey": "Elige cómo se escriben las tonalidades en el archivo de Rekordbox.",
+    "tooltip.relatedCrateOnly": "Limita las sugerencias de mezcla a la caja abierta.",
     "tooltip.reload": "Vuelve a cargar la biblioteca desde Serato.",
     "tooltip.relocate": "Apunta esta pista a otro archivo de audio.",
     "tooltip.removeRelated": "Quita el enlace guardado a {name}. El archivo de audio sigue en el disco.",
@@ -30461,6 +30465,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     prepareAdd: spec("tooltip.prepareAdd"),
     prepareRemove: spec("tooltip.prepareRemove"),
     updateRelated: spec("tooltip.updateRelated"),
+    relatedCrateOnly: spec("tooltip.relatedCrateOnly"),
     findRelated: spec("tooltip.findRelated"),
     linkNote: spec("tooltip.linkNote"),
     linkRating: spec("tooltip.linkRating"),
@@ -59901,6 +59906,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return {
       selectedId: state.selectedId,
       mode: state.mode,
+      activeCrate: state.activeCrate,
       writable: state.writable,
       splitCrates: state.splitCrates,
       focusedPane: state.focusedPane,
@@ -68390,12 +68396,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function relatedPath(track) {
     return track.resolved_path || track.edit?.portable_id || "";
   }
+  function relatedQuery(path, space, crateOnly, activeCrate) {
+    let params = new URLSearchParams({ path, space });
+    return crateOnly && typeof activeCrate == "number" && params.set("crate", String(activeCrate)), params.toString();
+  }
   function relatedLabel(item) {
     let title2 = item.title || item.name || t("track.untitled");
     return item.artist ? `${title2} · ${item.artist}` : title2;
   }
   function RelatedTracks({ track, writable }) {
-    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react58.useState)(!!path), [loadError, setLoadError] = (0, import_react58.useState)(""), [payload, setPayload] = (0, import_react58.useState)(null), [query, setQuery] = (0, import_react58.useState)(""), [chosen, setChosen] = (0, import_react58.useState)(null), [note, setNote] = (0, import_react58.useState)(""), [rating, setRating] = (0, import_react58.useState)(""), [mutual, setMutual] = (0, import_react58.useState)(!0), [saving2, setSaving] = (0, import_react58.useState)(!1);
+    let list = useTrackList(), path = relatedPath(track), [busy4, setBusy] = (0, import_react58.useState)(!!path), [loadError, setLoadError] = (0, import_react58.useState)(""), [payload, setPayload] = (0, import_react58.useState)(null), [query, setQuery] = (0, import_react58.useState)(""), [chosen, setChosen] = (0, import_react58.useState)(null), [note, setNote] = (0, import_react58.useState)(""), [rating, setRating] = (0, import_react58.useState)(""), [mutual, setMutual] = (0, import_react58.useState)(!0), [saving2, setSaving] = (0, import_react58.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react58.useState)(!1);
     (0, import_react58.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
@@ -68403,7 +68413,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       let cancelled = !1;
       setBusy(!0), setLoadError("");
-      let params = new URLSearchParams({ path, space: list.space });
+      let params = relatedQuery(path, list.space, crateOnly, list.activeCrate);
       return (async () => {
         try {
           let response = await fetch(`/api/related?${params}`), body2 = await readJSONOr(response, {});
@@ -68417,13 +68427,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       })(), () => {
         cancelled = !0;
       };
-    }, [path, list.space, track.id]);
+    }, [path, list.space, list.activeCrate, crateOnly, track.id]);
     let hits2 = (0, import_react58.useMemo)(() => {
       let parsed = parseQuery(query);
       return !parsed.terms.length && !parsed.filters.length ? null : list.tracks.filter((item) => item.id !== track.id && matchesQuery(item, parsed)).slice(0, 8);
     }, [query, list.tracks, track.id]);
     async function reload() {
-      let params = new URLSearchParams({ path, space: list.space }), response = await fetch(`/api/related?${params}`), body2 = await readJSONOr(response, {});
+      let params = relatedQuery(path, list.space, crateOnly, list.activeCrate), response = await fetch(`/api/related?${params}`), body2 = await readJSONOr(response, {});
       if (!response.ok) throw new Error(t("related.loadFailed"));
       setPayload(body2), setLoadError("");
     }
@@ -68591,6 +68601,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         ] })
       ] }),
       payload && /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)(import_jsx_runtime279.Fragment, { children: [
+        list.mode === "crates" && typeof list.activeCrate == "number" ? /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("label", { className: "check", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
+            "input",
+            {
+              "data-related-crate-only": "",
+              ref: tooltipRef(tips.relatedCrateOnly),
+              type: "checkbox",
+              checked: crateOnly,
+              onChange: (event) => setCrateOnly(event.currentTarget.checked)
+            }
+          ),
+          t("related.crateOnly")
+        ] }) : null,
         /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
         suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("ul", { className: "related-list", children: suggested.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("li", { className: "related-row", children: [
           /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("div", { children: [

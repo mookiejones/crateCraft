@@ -124,7 +124,7 @@ ORDER BY l.id;
 
 ## HTTP
 
-`GET /api/related?path=` returns JSON. Optional query fields are `space`, `title`, `artist`, and `length_ms`. `space` defaults to `Serato Library`.
+`GET /api/related?path=` returns JSON. Optional query fields are `space`, `title`, `artist`, `length_ms`, and `crate`. `space` defaults to `Serato Library`. `crate` of `all` or empty is the whole space. A crate id keeps suggestions in that crate. Saved links are unchanged. An unknown crate id returns an empty suggestion list. A non-numeric `crate` is 400.
 
 The body has:
 
@@ -163,9 +163,10 @@ A candidate needs at least one of these:
 
 - The same Camelot code, the relative major or minor (same number, other letter), or one step around the wheel on the same letter. The wheel wraps from 12 to 1. Traditional key names are mapped through the same table Serato uses.
 - Tempo within 6 percent of the anchor, or within 6 percent after taking the candidate at half time or double time. Half time means the candidate is about half the anchor. Double time means it is about twice the anchor.
+- Nearby Energy from Serato's 0–1 star rating, mapped to 1–5 the same way the page Energy column maps it. The same step scores. One step away scores lower. Two steps away is not an Energy match. The database has no energy column.
 - One or more shared normal crates. The third shared crate is the last one that adds to the score.
 
-The same key ranks above a relative key, which ranks above an adjacent key. A closer tempo ranks above a tempo at the edge of the 6 percent window. The JSON field `reasons` uses the phrases `same key`, `relative key`, `adjacent key`, `BPM match`, `BPM within N%`, `half-time BPM`, `double-time BPM`, `1 shared crate`, and `N shared crates`. `score` orders the list. At most 12 suggestions are returned.
+The same key ranks above a relative key, which ranks above an adjacent key. A closer tempo ranks above a tempo at the edge of the 6 percent window. Same Energy ranks above one step away. The JSON field `reasons` uses the phrases `same key`, `relative key`, `adjacent key`, `BPM match`, `BPM within N%`, `half-time BPM`, `double-time BPM`, `same energy`, `nearby energy`, `1 shared crate`, and `N shared crates`. `score` orders the list. At most 12 suggestions are returned. Optional `crate=` keeps only members of that crate.
 
 ## What is not sent
 

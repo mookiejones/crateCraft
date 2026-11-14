@@ -26,6 +26,7 @@ export type TrackDetailState =
 export type TrackListSnapshot = {
   selectedId: number | null;
   mode: string;
+  activeCrate: number | "all";
   writable: boolean;
   splitCrates: boolean;
   focusedPane: "a" | "b";
@@ -121,6 +122,7 @@ export function readTrackList(): TrackListSnapshot {
   return {
     selectedId: state.selectedId,
     mode: state.mode,
+    activeCrate: state.activeCrate,
     writable: state.writable,
     splitCrates: state.splitCrates,
     focusedPane: state.focusedPane,

@@ -37,15 +37,18 @@ Under the search box, the page suggests other tracks in this space. A suggestion
 
 - The same key, the relative major or minor, or one step around the Camelot wheel.
 - A tempo within 6 percent, including half time and double time.
+- Nearby Energy from the star rating (the same step, or one step away).
 - A shared normal crate. Crates whose names start with `Related - ` are not counted. Smart crates are not counted.
 
-The line above the list says **Suggested from key, tempo within 6%, and shared crates. Save stores a two-way link.** Each row names the reason, such as **same key** or **BPM within 6%**.
+On Crates, with a crate open, **This crate only** keeps those suggestions in that crate. It starts off.
+
+The line above the list says **Suggested from key, tempo within 6%, energy, and shared crates. Save stores a two-way link.** Each row names the reason, such as **same key**, **same energy**, or **BPM within 6%**.
 
 1. Click **Save** on a suggestion.
 
 A suggestion save is two-way, with no note and no rating. Add a note later by removing the link and saving it from the search box.
 
-When nothing is close, the page says **No suggestions from key, tempo, or shared crates.**
+When nothing is close, the page says **No suggestions from key, tempo, energy, or shared crates.**
 
 ## Remove a link
 

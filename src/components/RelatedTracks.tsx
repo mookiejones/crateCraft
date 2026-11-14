@@ -26,6 +26,17 @@ function relatedPath(track: Track): string {
   return track.resolved_path || track.edit?.portable_id || "";
 }
 
+function relatedQuery(
+  path: string,
+  space: string,
+  crateOnly: boolean,
+  activeCrate: number | "all",
+): string {
+  const params = new URLSearchParams({ path, space });
+  if (crateOnly && typeof activeCrate === "number") params.set("crate", String(activeCrate));
+  return params.toString();
+}
+
 function relatedLabel(item: { title?: string; name?: string; artist?: string }): string {
   const title = item.title || item.name || t("track.untitled");
   return item.artist ? `${title} · ${item.artist}` : title;
@@ -48,6 +59,7 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
   const [rating, setRating] = useState("");
   const [mutual, setMutual] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [crateOnly, setCrateOnly] = useState(false);
 
   useEffect(() => {
     if (!path) {
@@ -59,7 +71,7 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
     let cancelled = false;
     setBusy(true);
     setLoadError("");
-    const params = new URLSearchParams({ path, space: list.space });
+    const params = relatedQuery(path, list.space, crateOnly, list.activeCrate);
     void (async () => {
       try {
         const response = await fetch(`/api/related?${params}`);
@@ -77,7 +89,7 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
     return () => {
       cancelled = true;
     };
-  }, [path, list.space, track.id]);
+  }, [path, list.space, list.activeCrate, crateOnly, track.id]);
 
   const hits = useMemo(() => {
     const parsed = parseQuery(query);
@@ -88,7 +100,7 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
   }, [query, list.tracks, track.id]);
 
   async function reload(): Promise<void> {
-    const params = new URLSearchParams({ path, space: list.space });
+    const params = relatedQuery(path, list.space, crateOnly, list.activeCrate);
     const response = await fetch(`/api/related?${params}`);
     const body = await readJSONOr<RelatedPayload>(response, {});
     if (!response.ok) throw new Error(t("related.loadFailed"));
@@ -308,6 +320,18 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
       )}
       {payload && (
         <>
+          {list.mode === "crates" && typeof list.activeCrate === "number" ? (
+            <label className="check">
+              <input
+                data-related-crate-only=""
+                ref={tooltipRef(tips.relatedCrateOnly)}
+                type="checkbox"
+                checked={crateOnly}
+                onChange={(event) => setCrateOnly(event.currentTarget.checked)}
+              />
+              {t("related.crateOnly")}
+            </label>
+          ) : null}
           <p className="detail-kicker">
             {suggested.length ? t("related.suggested") : t("related.noSuggestions")}
           </p>
