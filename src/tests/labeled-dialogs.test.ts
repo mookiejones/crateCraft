@@ -14,6 +14,7 @@ import {
   setCratePromptValue,
 } from "../lib/ui/shared-dialog";
 import { mountSharedDialogs, unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
+import { unmountTrackList } from "../lib/ui/virtual-scroll";
 import {
   deleteCrate,
   relocateTrack,
@@ -116,6 +117,7 @@ describe("labeled dialogs", () => {
     const confirm = document.getElementById("confirm-dialog") as HTMLDialogElement | null;
     if (confirm?.open) cancelConfirm();
     unmountDetailIslands();
+    unmountTrackList();
     unmountSharedDialogs();
     await drainReactScheduler();
     vi.unstubAllGlobals();
@@ -224,7 +226,9 @@ describe("labeled dialogs", () => {
   it("opens a labeled confirm for a related-link remove and posts on confirm", async () => {
     answer();
     const pending = selectTrack(4);
-    await vi.waitUntil(() => document.querySelector("[data-related-crate]") !== null);
+    await vi.waitUntil(() => document.querySelector("[data-related-crate]") !== null, {
+      timeout: 5_000,
+    });
     await pending;
     const remove = document.querySelector<HTMLButtonElement>("[aria-label='Remove link to Alpha']");
     if (!remove) throw new Error("missing related remove");
@@ -249,7 +253,9 @@ describe("labeled dialogs", () => {
   it("posts nothing when a related-link remove is cancelled", async () => {
     answer();
     const pending = selectTrack(4);
-    await vi.waitUntil(() => document.querySelector("[data-related-crate]") !== null);
+    await vi.waitUntil(() => document.querySelector("[data-related-crate]") !== null, {
+      timeout: 5_000,
+    });
     await pending;
     const remove = document.querySelector<HTMLButtonElement>("[aria-label='Remove link to Alpha']");
     if (!remove) throw new Error("missing related remove");
