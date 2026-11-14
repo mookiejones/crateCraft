@@ -1,34 +1,37 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { WizardProvider } from "../../containers/WizardContext";
-import { wizardModel, wizardValue } from "../../lib/storybook/fixtures";
+import {
+  wizardArgTypes,
+  wizardStoryArgs,
+  wizardValueFromArgs,
+  type WizardStoryArgs,
+} from "../../lib/storybook/args";
 import { WizardScreen } from "../../pages/WizardScreen";
+
+function Host(args: WizardStoryArgs) {
+  return (
+    <WizardProvider value={wizardValueFromArgs(args)}>
+      <div id="wizard">
+        <WizardScreen />
+      </div>
+    </WizardProvider>
+  );
+}
 
 const meta = {
   title: "Containers/Wizard",
-  component: WizardScreen,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof WizardScreen>;
+  args: wizardStoryArgs,
+  argTypes: wizardArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<WizardStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Welcome: Story = {
-  render: () => (
-    <WizardProvider value={wizardValue()}>
-      <div id="wizard">
-        <WizardScreen />
-      </div>
-    </WizardProvider>
-  ),
-};
+export const Welcome: Story = {};
 
 export const LibraryFound: Story = {
-  render: () => (
-    <WizardProvider value={wizardValue({ model: wizardModel("library") })}>
-      <div id="wizard">
-        <WizardScreen />
-      </div>
-    </WizardProvider>
-  ),
+  args: { step: "library" },
 };

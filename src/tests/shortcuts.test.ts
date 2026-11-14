@@ -8,8 +8,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "../lib/api-types";
 import { el } from "../lib/dom";
-import { setLocale } from "../lib/i18n";
+import { setLocale, t } from "../lib/i18n";
+import { NAV_GROUPS } from "../lib/ui/nav";
+import { VIEW_LABEL_KEYS } from "../lib/ui/sheet-chrome";
 import {
+  cheatSheetModel,
   chordLabel,
   chordMatches,
   registerPlayerControls,
@@ -448,6 +451,21 @@ describe("keyboard shortcuts", () => {
     press({ key: "Escape" });
     expect(el("settings-dialog").open).toBe(false);
     expect(document.activeElement).toBe(el("reload"));
+  });
+
+  it("labels view shortcuts with the rail names", () => {
+    const views = cheatSheetModel().find((group) => group.group === "Views");
+    expect(views?.rows.map((row) => t(row.actionKey))).toEqual([
+      t("crates.allTracks"),
+      t(VIEW_LABEL_KEYS.crates),
+      t(VIEW_LABEL_KEYS.files),
+      t(VIEW_LABEL_KEYS.history),
+      t(VIEW_LABEL_KEYS.snapshots),
+    ]);
+    expect(t(VIEW_LABEL_KEYS.files)).toBe(t(NAV_GROUPS.find((group) => group.id === "files")!.labelKey));
+    expect(t(VIEW_LABEL_KEYS.snapshots)).toBe(t(NAV_GROUPS.find((group) => group.id === "backups")!.labelKey));
+    expect(SHORTCUTS.find((row) => row.id === "view-files")?.label).toBe("Organize files");
+    expect(SHORTCUTS.find((row) => row.id === "view-snapshots")?.label).toBe("Backups");
   });
 
   it("translates the open cheat sheet", () => {

@@ -11,7 +11,7 @@ Point at a control, or tab to it, and a short note says what it does. When that 
 | Ctrl+F or Command+F, or / | Focus search |
 | Ctrl+K or Command+K | Find a view, crate, track, or file |
 | Up or Down, Enter | Move through the list and open the row |
-| Ctrl+1 or Command+1 through 5 | All tracks, Crates, Files, History, Backups |
+| Ctrl+1 or Command+1 through 5 | All tracks, Crates, Organize files, History, Backups |
 | Esc | Close a dialog, or clear the search |
 | Tab | Reach the drawer, crate list, More, Find, and dialogs |
 | Space | Play or pause |

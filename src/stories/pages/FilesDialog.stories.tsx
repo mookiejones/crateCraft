@@ -1,43 +1,35 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FilesProvider } from "../../containers/FilesContext";
-import { filesValue } from "../../lib/storybook/fixtures";
+import {
+  filesArgTypes,
+  filesStoryArgs,
+  filesValueFromArgs,
+  type FilesStoryArgs,
+} from "../../lib/storybook/args";
 import { FilesDialog } from "../../pages/FilesDialog";
+
+function Host(args: FilesStoryArgs) {
+  return (
+    <FilesProvider value={filesValueFromArgs(args)}>
+      <FilesDialog />
+    </FilesProvider>
+  );
+}
 
 const meta = {
   title: "Pages/FilesDialog",
-  component: FilesDialog,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof FilesDialog>;
+  args: { ...filesStoryArgs, dialogAction: "rename" },
+  argTypes: filesArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<FilesStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Rename: Story = {
-  render: () => (
-    <FilesProvider
-      value={filesValue({
-        dialogAction: "rename",
-        dialogOpen: true,
-        dialogName: "Night.mp3",
-        dialogPreview: { ok: true, needs_confirm: true, summary: "Rename Night.mp3" },
-      })}
-    >
-      <FilesDialog />
-    </FilesProvider>
-  ),
-};
+export const Rename: Story = {};
 
 export const Delete: Story = {
-  render: () => (
-    <FilesProvider
-      value={filesValue({
-        dialogAction: "delete",
-        dialogOpen: true,
-        dialogPreview: { ok: true, needs_confirm: true, summary: "Move 1 file to trash." },
-      })}
-    >
-      <FilesDialog />
-    </FilesProvider>
-  ),
+  args: { dialogAction: "delete" },
 };

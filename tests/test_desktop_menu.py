@@ -5,6 +5,7 @@ These cases build the menu in process. They do not open a window.
 
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -16,6 +17,45 @@ from webview.menu import Menu, MenuAction, MenuSeparator
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+# Rail primaries and children, same keys as src/lib/ui/nav.ts and index.html.
+RAIL_KEYS = (
+    "view.group.library",
+    "view.crates",
+    "view.history",
+    "view.stats",
+    "view.files",
+    "view.group.health",
+    "view.health",
+    "view.missing",
+    "view.duplicates",
+    "view.stems",
+    "view.scan",
+    "view.bitrate",
+    "view.tags",
+    "view.snapshots",
+    "view.group.gig",
+    "view.gig",
+    "view.portable",
+    "view.drift",
+)
+
+
+def _catalog(code: str) -> dict[str, str]:
+    payload = json.loads((ROOT / "locales" / f"{code}.json").read_text(encoding="utf-8"))
+    return {key: value for key, value in payload.items() if isinstance(value, str)}
+
+
+def _menu_named(menu: list[object], title: str) -> Menu:
+    return next(item for item in menu if isinstance(item, Menu) and item.title == title)
+
+
+def _action_titles(menu: Menu) -> list[str]:
+    return [item.title for item in menu.items if isinstance(item, MenuAction)]
+
+
+def _child_menu(menu: Menu, title: str) -> Menu:
+    return next(item for item in menu.items if isinstance(item, Menu) and item.title == title)
 
 
 def _titles(menu: list[object]) -> list[str]:
@@ -87,8 +127,11 @@ class DesktopMenuTests(unittest.TestCase):
             "Music",
             "Library",
             "Crates",
-            "All tracks",
+            "History",
+            "Play stats",
             "Tools",
+            "Organize files",
+            "Health",
             "Overview",
             "Missing files",
             "Duplicates",
@@ -97,6 +140,7 @@ class DesktopMenuTests(unittest.TestCase):
             "Damaged files",
             "Suspect quality",
             "Tag spellings",
+            "Gig",
             "Ready",
             "Check drive",
             "Tempo drift",
@@ -115,6 +159,7 @@ class DesktopMenuTests(unittest.TestCase):
             "Keyboard shortcuts",
         ):
             self.assertIn(name, titles)
+        self.assertNotIn("All tracks", titles)
         self.assertEqual(titles.count("Settings"), 2)
         self.assertEqual(titles.count("Help"), 2)
         file_menu = next(item for item in menu if isinstance(item, Menu) and item.title == "File")
@@ -130,7 +175,11 @@ class DesktopMenuTests(unittest.TestCase):
         menu = desktop_menu.build_menu(lambda _action: None, "es")
         titles = _titles(menu)
         self.assertIn("Archivo", titles)
+        self.assertIn("Música", titles)
         self.assertIn("Herramientas", titles)
+        self.assertIn("Organizar archivos", titles)
+        self.assertIn("Salud", titles)
+        self.assertIn("Bolo", titles)
         self.assertIn("Ayuda", titles)
         self.assertIn("Informar de un error", titles)
         self.assertIn("Pedir una función", titles)
@@ -207,3 +256,52 @@ class DesktopMenuTests(unittest.TestCase):
         app_titles = [item.title for item in app_menu.items if isinstance(item, MenuAction)]
         self.assertEqual(app_titles, ["Settings", "Run setup again"])
         self.assertNotIn("About", app_titles)
+
+    def test_menu_lists_every_rail_primary_and_child(self) -> None:
+        """Music and Tools use the same visible names as the drawer.
+
+        Returns:
+            None. The test fails if a rail label is missing or Music
+            still lists Organize files or All tracks.
+        """
+        for language in ("en", "es"):
+            catalog = _catalog(language)
+            menu = desktop_menu.build_menu(lambda _action: None, language)
+            titles = _titles(menu)
+            for key in RAIL_KEYS:
+                self.assertIn(catalog[key], titles, key)
+            music = _menu_named(menu, catalog["menu.library"])
+            self.assertEqual(
+                _action_titles(music),
+                [catalog["view.crates"], catalog["view.history"], catalog["view.stats"]],
+            )
+            tools = _menu_named(menu, catalog["menu.tools"])
+            self.assertEqual(_action_titles(tools)[0], catalog["view.files"])
+            health = _child_menu(tools, catalog["view.group.health"])
+            self.assertEqual(
+                _action_titles(health),
+                [
+                    catalog["view.health"],
+                    catalog["view.missing"],
+                    catalog["view.duplicates"],
+                    catalog["view.stems"],
+                    catalog["view.scan"],
+                    catalog["view.bitrate"],
+                    catalog["view.tags"],
+                ],
+            )
+            gig = _child_menu(tools, catalog["view.group.gig"])
+            self.assertEqual(
+                _action_titles(gig),
+                [catalog["view.gig"], catalog["view.portable"], catalog["view.drift"]],
+            )
+            space = _child_menu(music, catalog["space.label"])
+            self.assertEqual(
+                _action_titles(space),
+                [
+                    catalog["space.library"],
+                    catalog["space.video"],
+                    catalog["space.appleMusic"],
+                    catalog["space.prepare"],
+                ],
+            )

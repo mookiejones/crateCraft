@@ -1,34 +1,35 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { NoticeProvider } from "../../containers/NoticeContext";
 import { NoticeBanner } from "../../components/NoticeBanner";
+import { NoticeProvider } from "../../containers/NoticeContext";
+import {
+  noticeArgTypes,
+  noticeStoryArgs,
+  noticeValueFromArgs,
+  type NoticeStoryArgs,
+} from "../../lib/storybook/args";
+
+function Host(args: NoticeStoryArgs) {
+  return (
+    <NoticeProvider value={noticeValueFromArgs(args)}>
+      <NoticeBanner />
+    </NoticeProvider>
+  );
+}
 
 const meta = {
   title: "Containers/Notice",
-  component: NoticeBanner,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof NoticeBanner>;
+  args: noticeStoryArgs,
+  argTypes: noticeArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<NoticeStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ErrorNotice: Story = {
-  render: () => (
-    <NoticeProvider
-      value={{
-        notice: { text: "That file is not on disk.", severity: "error" },
-        dismiss: () => undefined,
-      }}
-    >
-      <NoticeBanner />
-    </NoticeProvider>
-  ),
-};
+export const ErrorNotice: Story = {};
 
 export const Idle: Story = {
-  render: () => (
-    <NoticeProvider value={{ notice: null, dismiss: () => undefined }}>
-      <NoticeBanner />
-    </NoticeProvider>
-  ),
+  args: { severity: "hidden" },
 };

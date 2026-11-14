@@ -1,30 +1,35 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { HealthProvider } from "../../containers/HealthContext";
-import { healthReport, healthValue } from "../../lib/storybook/fixtures";
+import {
+  healthArgTypes,
+  healthStoryArgs,
+  healthValueFromArgs,
+  type HealthStoryArgs,
+} from "../../lib/storybook/args";
 import { HealthPanel } from "../../pages/HealthPanel";
+
+function Host(args: HealthStoryArgs) {
+  return (
+    <HealthProvider value={healthValueFromArgs(args)}>
+      <HealthPanel />
+    </HealthProvider>
+  );
+}
 
 const meta = {
   title: "Pages/HealthPanel",
-  component: HealthPanel,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof HealthPanel>;
+  args: { ...healthStoryArgs, hasReport: true },
+  argTypes: healthArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<HealthStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Report: Story = {
-  render: () => (
-    <HealthProvider value={healthValue({ healthReport })}>
-      <HealthPanel />
-    </HealthProvider>
-  ),
-};
+export const Report: Story = {};
 
 export const Busy: Story = {
-  render: () => (
-    <HealthProvider value={healthValue({ healthBusy: true, healthStatus: "Checking…" })}>
-      <HealthPanel />
-    </HealthProvider>
-  ),
+  args: { hasReport: false, busy: true },
 };

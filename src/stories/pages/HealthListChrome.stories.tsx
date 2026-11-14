@@ -1,38 +1,39 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { HealthProvider } from "../../containers/HealthContext";
-import { healthValue } from "../../lib/storybook/fixtures";
+import {
+  healthArgTypes,
+  healthStoryArgs,
+  healthValueFromArgs,
+  type HealthStoryArgs,
+} from "../../lib/storybook/args";
 import { HealthListChrome } from "../../pages/HealthListChrome";
+
+function Host(args: HealthStoryArgs) {
+  return (
+    <HealthProvider value={healthValueFromArgs(args)}>
+      <HealthListChrome />
+    </HealthProvider>
+  );
+}
 
 const meta = {
   title: "Pages/HealthListChrome",
-  component: HealthListChrome,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof HealthListChrome>;
+  args: healthStoryArgs,
+  argTypes: healthArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<HealthStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Hidden: Story = {
-  render: () => (
-    <HealthProvider value={healthValue()}>
-      <HealthListChrome />
-    </HealthProvider>
-  ),
-};
+export const Hidden: Story = {};
 
 export const Duplicates: Story = {
-  render: () => (
-    <HealthProvider value={healthValue({ mode: "duplicates", mergeVisible: true, mergeDisabled: false })}>
-      <HealthListChrome />
-    </HealthProvider>
-  ),
+  args: { mode: "duplicates" },
 };
 
 export const Relink: Story = {
-  render: () => (
-    <HealthProvider value={healthValue({ mode: "missing", relinkVisible: true, relinkDisabled: false })}>
-      <HealthListChrome />
-    </HealthProvider>
-  ),
+  args: { mode: "missing" },
 };

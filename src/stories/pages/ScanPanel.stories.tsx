@@ -1,30 +1,35 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { HealthProvider } from "../../containers/HealthContext";
-import { healthValue, scanReport } from "../../lib/storybook/fixtures";
+import {
+  healthArgTypes,
+  healthStoryArgs,
+  healthValueFromArgs,
+  type HealthStoryArgs,
+} from "../../lib/storybook/args";
 import { ScanPanel } from "../../pages/ScanPanel";
+
+function Host(args: HealthStoryArgs) {
+  return (
+    <HealthProvider value={healthValueFromArgs(args)}>
+      <ScanPanel />
+    </HealthProvider>
+  );
+}
 
 const meta = {
   title: "Pages/ScanPanel",
-  component: ScanPanel,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof ScanPanel>;
+  args: { ...healthStoryArgs, hasScan: true },
+  argTypes: healthArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<HealthStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Problems: Story = {
-  render: () => (
-    <HealthProvider value={healthValue({ scanReport, scanExpanded: new Set(["empty"]) })}>
-      <ScanPanel />
-    </HealthProvider>
-  ),
-};
+export const Problems: Story = {};
 
 export const Idle: Story = {
-  render: () => (
-    <HealthProvider value={healthValue()}>
-      <ScanPanel />
-    </HealthProvider>
-  ),
+  args: { hasScan: false },
 };

@@ -1,30 +1,35 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SnapshotsProvider } from "../../containers/SnapshotsContext";
-import { snapshotsValue } from "../../lib/storybook/fixtures";
+import {
+  snapshotsArgTypes,
+  snapshotsStoryArgs,
+  snapshotsValueFromArgs,
+  type SnapshotsStoryArgs,
+} from "../../lib/storybook/args";
 import { SnapshotsPanel } from "../../pages/SnapshotsPanel";
+
+function Host(args: SnapshotsStoryArgs) {
+  return (
+    <SnapshotsProvider value={snapshotsValueFromArgs(args)}>
+      <SnapshotsPanel />
+    </SnapshotsProvider>
+  );
+}
 
 const meta = {
   title: "Containers/Snapshots",
-  component: SnapshotsPanel,
   parameters: { layout: "padded" },
   tags: ["autodocs"],
-} satisfies Meta<typeof SnapshotsPanel>;
+  args: snapshotsStoryArgs,
+  argTypes: snapshotsArgTypes,
+  render: (args) => <Host {...args} />,
+} satisfies Meta<SnapshotsStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const List: Story = {
-  render: () => (
-    <SnapshotsProvider value={snapshotsValue()}>
-      <SnapshotsPanel />
-    </SnapshotsProvider>
-  ),
-};
+export const List: Story = {};
 
 export const Empty: Story = {
-  render: () => (
-    <SnapshotsProvider value={snapshotsValue({ snapshots: [] })}>
-      <SnapshotsPanel />
-    </SnapshotsProvider>
-  ),
+  args: { empty: true },
 };
