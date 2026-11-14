@@ -337,6 +337,173 @@ class ApplyTests(unittest.TestCase):
             self.assertEqual(_genres(temp.db)[1][1], "Hip-Hop")
 
 
+def _column(db: Path, field: str) -> list[tuple[int, str | None]]:
+    """Return ``(id, field)`` for space 1, ordered by id."""
+    with closing(sqlite3.connect(db)) as conn:
+        return [
+            (int(row[0]), row[1])
+            for row in conn.execute(
+                f"SELECT a.id, a.{field} FROM asset a "
+                "JOIN space_asset sa ON sa.asset_id = a.id "
+                "WHERE sa.space_id = 1 ORDER BY a.id"
+            )
+        ]
+
+
+class FieldEditTests(unittest.TestCase):
+    """Preview lists selected-track diffs. Apply rewrites those TEXT_FIELDS through safe_write."""
+
+    def test_preview_lists_diffs_and_does_not_write(self) -> None:
+        """Preview lists rows that differ. A row that already matches is omitted. Bytes stay."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A"), ("Techno", "A"), ("House", "A")])
+            before = temp.db.read_bytes()
+            plan = tag_cleanup.preview_edit(
+                temp.db, library.LIBRARY_SPACE, [1, 2, 3], "genre", "House"
+            )
+            self.assertEqual(temp.db.read_bytes(), before)
+        self.assertEqual(plan["written"], False)
+        self.assertEqual(plan["key"], "edit")
+        self.assertEqual(plan["field"], "genre")
+        self.assertEqual(plan["value"], "House")
+        self.assertEqual(plan["changes"], [{"id": 2, "from": "Techno", "to": "House"}])
+
+    def test_apply_rewrites_selected_ids_only(self) -> None:
+        """Selected rows get the value. An unselected row and the other space stay."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A"), ("Techno", "A"), ("Disco", "A")])
+            _tracks(temp.db, [("Acid", "B")], space_id=2, start=50)
+            result = tag_cleanup.apply_edit(library.LIBRARY_SPACE, [1, 2], "genre", "House")
+            genres = _column(temp.db, "genre")
+            with open_database(temp.db) as conn:
+                other = conn.execute("SELECT genre FROM asset WHERE id = 50").fetchone()
+        self.assertEqual(result["written"], True)
+        self.assertEqual(result["key"], "edit")
+        self.assertEqual([genre for _id, genre in genres], ["House", "House", "Disco"])
+        self.assertEqual(other[0], "Acid")
+        self.assertEqual(
+            result["changes"],
+            [{"id": 2, "from": "Techno", "to": "House"}],
+        )
+
+    def test_empty_plan_does_not_write(self) -> None:
+        """Every selected row already holding the value returns written false."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A"), ("House", "A")])
+            before = temp.db.read_bytes()
+            plan = tag_cleanup.apply_edit(library.LIBRARY_SPACE, [1, 2], "genre", "House")
+            self.assertEqual(temp.db.read_bytes(), before)
+        self.assertEqual(plan["written"], False)
+        self.assertEqual(plan["changes"], [])
+
+    def test_empty_string_clears_the_field(self) -> None:
+        """An empty value clears selected rows. A missing value is the same empty string."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A"), ("Techno", "A")])
+            result = tag_cleanup.apply_edit(library.LIBRARY_SPACE, [1], "genre", "")
+            genres = _column(temp.db, "genre")
+        self.assertEqual(result["written"], True)
+        self.assertEqual(genres[0][1], "")
+        self.assertEqual(genres[1][1], "Techno")
+
+    def test_value_keeps_surrounding_spaces(self) -> None:
+        """``_clean_text`` does not strip. Trailing spaces stay on the stored value."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A")])
+            result = tag_cleanup.apply_edit(library.LIBRARY_SPACE, [1], "genre", "House ")
+            stored = _column(temp.db, "genre")[0][1]
+        self.assertEqual(result["written"], True)
+        self.assertEqual(stored, "House ")
+
+    def test_duplicate_ids_unique_preserve_order(self) -> None:
+        """Repeated ids collapse in first-seen order. The change list is one row."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A"), ("Techno", "A"), ("Disco", "A")])
+            plan = tag_cleanup.preview_edit(
+                temp.db, library.LIBRARY_SPACE, [3, 2, 3, 2], "genre", "House"
+            )
+        self.assertEqual(
+            [change["id"] for change in plan["changes"]],
+            [3, 2],
+        )
+
+    def test_audio_file_is_untouched(self) -> None:
+        """Apply rewrites the library row. Bytes on the audio file stay the same."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A")])
+            audio = temp.db.parent / "track.mp3"
+            audio.write_bytes(b"ID3fake-audio")
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET file_name = ? WHERE id = 1", (str(audio),))
+            before = audio.read_bytes()
+            tag_cleanup.apply_edit(library.LIBRARY_SPACE, [1], "genre", "Techno")
+            self.assertEqual(audio.read_bytes(), before)
+            self.assertEqual(_column(temp.db, "genre")[0][1], "Techno")
+
+    def test_apply_does_not_remember_a_mapping(self) -> None:
+        """Field editor does not write tag-spellings.json."""
+        _clear_store()
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A")])
+            tag_cleanup.apply_edit(library.LIBRARY_SPACE, [1], "genre", "Techno")
+        self.assertFalse(_store().exists())
+        _clear_store()
+
+    def test_serato_open_blocks_the_write(self) -> None:
+        """A running Serato process refuses apply_edit. Preview still reads."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A"), ("Techno", "A")])
+            preview = tag_cleanup.preview_edit(
+                temp.db, library.LIBRARY_SPACE, [1, 2], "genre", "House"
+            )
+            self.assertEqual(len(preview["changes"]), 1)
+            with open_database(temp.db) as conn:
+                conn.execute(
+                    "INSERT INTO lock (owner_process_id, owner_process_name) VALUES (99, 'Serato DJ Pro')"
+                )
+            with mock.patch("library._process_is_serato", return_value=True), self.assertRaises(SeratoOpen):
+                tag_cleanup.apply_edit(library.LIBRARY_SPACE, [1, 2], "genre", "House")
+            self.assertEqual(_column(temp.db, "genre")[1][1], "Techno")
+
+    def test_refusals_leave_the_library(self) -> None:
+        """Empty ids, too many, unknown id, a readonly field, and a bad value do not write."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("House", "A")])
+            before = temp.db.read_bytes()
+            with self.assertRaises(library.LibraryError) as empty:
+                tag_cleanup.preview_edit(temp.db, library.LIBRARY_SPACE, [], "genre", "House")
+            with self.assertRaises(library.LibraryError) as missing:
+                tag_cleanup.preview_edit(temp.db, library.LIBRARY_SPACE, None, "genre", "House")
+            with self.assertRaises(library.LibraryError) as too_many:
+                tag_cleanup.preview_edit(
+                    temp.db, library.LIBRARY_SPACE, list(range(1, 502)), "genre", "House"
+                )
+            with self.assertRaises(library.LibraryError) as unknown:
+                tag_cleanup.preview_edit(temp.db, library.LIBRARY_SPACE, [99], "genre", "House")
+            with self.assertRaises(library.LibraryError) as other:
+                tag_cleanup.preview_edit(temp.db, "Serato Video", [1], "genre", "House")
+            with self.assertRaises(library.LibraryError) as bpm:
+                tag_cleanup.preview_edit(temp.db, library.LIBRARY_SPACE, [1], "bpm", "120")
+            with self.assertRaises(library.LibraryError) as emoji:
+                tag_cleanup.preview_edit(temp.db, library.LIBRARY_SPACE, [1], "emoji", "x")
+            with self.assertRaises(library.LibraryError) as number:
+                tag_cleanup.preview_edit(temp.db, library.LIBRARY_SPACE, [1], "genre", 1)
+            with self.assertRaises(library.LibraryError) as long:
+                tag_cleanup.preview_edit(temp.db, library.LIBRARY_SPACE, [1], "genre", "x" * 4001)
+            self.assertEqual(temp.db.read_bytes(), before)
+        self.assertEqual(empty.exception.message, tag_cleanup.CHOOSE_TRACKS)
+        self.assertEqual(missing.exception.message, tag_cleanup.CHOOSE_TRACKS)
+        self.assertEqual(too_many.exception.message, "Choose fewer files at once.")
+        self.assertEqual(unknown.exception.status, 404)
+        self.assertEqual(unknown.exception.message, "That track is not in this space.")
+        self.assertEqual(other.exception.status, 404)
+        self.assertEqual(other.exception.message, "That track is not in this space.")
+        self.assertEqual(bpm.exception.message, "That field cannot be edited.")
+        self.assertEqual(emoji.exception.message, "That field cannot be edited.")
+        self.assertEqual(number.exception.message, "genre needs text.")
+        self.assertEqual(long.exception.message, "genre is too long.")
+
+
 class TitleCleanupTests(unittest.TestCase):
     """Preview lists dirty titles. Apply rewrites only those rows in that space."""
 
@@ -659,6 +826,58 @@ class ApplyApiTests(unittest.TestCase):
         self.assertEqual(cast_written(made), True)
         self.assertEqual(_titles(self.library.db)[0][1], "Song Title")
         self.assertEqual(_titles(self.library.db)[1][1], "Midnight City")
+
+
+class FieldEditApiTests(unittest.TestCase):
+    """``POST /api/tag-clusters`` edit-preview and edit-apply."""
+
+    setUp = test_server.ApiTests.setUp
+    tearDown = test_server.ApiTests.tearDown
+    request = test_server.ApiTests.request
+
+    def test_edit_preview_apply_and_errors(self) -> None:
+        """edit-preview does not write. edit-apply rewrites. Bad values get a code."""
+        _tracks(self.library.db, [("House", "A"), ("Techno", "A"), ("Disco", "A")])
+        status, preview = self.request(
+            "/api/tag-clusters",
+            {
+                "action": "edit-preview",
+                "ids": [1, 2],
+                "field": "genre",
+                "value": "House",
+            },
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(preview), False)
+        self.assertEqual(_column(self.library.db, "genre")[1][1], "Techno")
+        status, made = self.request(
+            "/api/tag-clusters",
+            {
+                "action": "edit-apply",
+                "ids": [1, 2],
+                "field": "genre",
+                "value": "House",
+            },
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(made), True)
+        self.assertEqual(_column(self.library.db, "genre")[1][1], "House")
+        self.assertEqual(_column(self.library.db, "genre")[2][1], "Disco")
+        status, empty = self.request(
+            "/api/tag-clusters",
+            {"action": "edit-preview", "ids": [], "field": "genre", "value": "House"},
+        )
+        self.assertEqual((status, cast_code(empty)), (400, "choose_tracks"))
+        status, bpm = self.request(
+            "/api/tag-clusters",
+            {"action": "edit-preview", "ids": [1], "field": "bpm", "value": "120"},
+        )
+        self.assertEqual((status, cast_code(bpm)), (400, "field_readonly"))
+        status, unknown = self.request(
+            "/api/tag-clusters",
+            {"action": "edit-preview", "ids": [99], "field": "genre", "value": "House"},
+        )
+        self.assertEqual((status, cast_code(unknown)), (404, "track_not_in_space_alt"))
 
 
 def cast_written(payload: object) -> object:

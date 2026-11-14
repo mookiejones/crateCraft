@@ -21,7 +21,10 @@ function titles(): string[] {
 
 function columnLabels(): string[] {
   return [...document.querySelectorAll<HTMLElement>("#list .MuiDataGrid-columnHeader")]
-    .filter((node) => node.getAttribute("data-field") !== "play")
+    .filter((node) => {
+      const field = node.getAttribute("data-field");
+      return field !== "play" && field !== "__check__";
+    })
     .map((node) => (node.querySelector(".MuiDataGrid-columnHeaderTitle")?.textContent ?? "").trim());
 }
 

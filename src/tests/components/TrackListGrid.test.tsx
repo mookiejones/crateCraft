@@ -3,7 +3,7 @@
  * live in the grid, and a 10k library stays virtualized.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Track } from "../../lib/api-types";
 import { setLocale } from "../../lib/i18n";
 import { state } from "../../lib/state";
@@ -44,15 +44,29 @@ describe("Track list Data Grid", () => {
     await drainReactScheduler();
   });
 
-  it("puts Play in its own first column and Title holds only the name", () => {
+  it("puts a checkbox column first on Crates, then Play, and Title holds only the name", () => {
     renderList();
-    expect(headerFields()[0]).toBe("play");
-    expect(headerFields()[1]).toBe("name");
+    expect(headerFields()[0]).toBe("__check__");
+    expect(headerFields()[1]).toBe("play");
+    expect(headerFields()[2]).toBe("name");
     const title = document.querySelector("#list .title");
     expect(title?.textContent).toBe("Night");
     expect(title?.closest(".MuiDataGrid-cell")?.querySelector(".row-play")).toBeNull();
     expect(document.querySelector("#list .row-play")).not.toBeNull();
     expect(document.querySelector("#list .MuiDataGrid-menuIconButton")).not.toBeNull();
+    expect(document.querySelector("#field-edit")).toBeNull();
+  });
+
+  it("shows the field editor after a second crates row is checked", async () => {
+    renderList();
+    const boxes = document.querySelectorAll<HTMLInputElement>(
+      "#list .MuiDataGrid-cellCheckbox input",
+    );
+    expect(boxes.length).toBeGreaterThanOrEqual(2);
+    boxes[1]?.click();
+    await vi.waitFor(() => {
+      expect(document.querySelector("#field-edit")).not.toBeNull();
+    });
   });
 
   it("keeps History on the same grid with deck, played, and time", () => {
@@ -60,6 +74,8 @@ describe("Track list Data Grid", () => {
     state.view = [{ id: 9, name: "Alpha", artist: "Ada", entry: true, deck: "1", played: "Yes" }];
     paintRows();
     expect(headerFields()).toEqual(["play", "name", "artist", "deck", "played", "start"]);
+    expect(document.querySelector("#list .MuiDataGrid-cellCheckbox")).toBeNull();
+    expect(document.querySelector("#field-edit")).toBeNull();
     expect(document.querySelector("#list .row-play")).toBeNull();
     expect(document.querySelector("#list .row")?.textContent).toContain("Yes");
   });

@@ -29,6 +29,12 @@ key. ``apply_mappings`` writes those rows through ``safe_write`` with Serato
 closed, so a later import that uses Hip-Hop becomes Hip Hop without picking
 the group again. A damaged store reads as empty. Audio files are not
 rewritten.
+
+``preview_edit`` and ``apply_edit`` rewrite one TEXT_FIELD on selected
+track ids through ``safe_write`` with Serato closed. SQL column names
+come from ``EDIT_FIELDS``, never from the request. A plan with nothing
+to change does not write. Audio files are not rewritten. Writing tags
+into audio files is a later change.
 """
 
 from __future__ import annotations
@@ -55,6 +61,22 @@ FIELDS = ("genre", "artist")
 CHOOSE_FIELD = "Choose genre or artist."
 CHOOSE_SPELLING = "Choose a spelling."
 NOT_IN_GROUP = "That spelling is not in a group."
+CHOOSE_TRACKS = "Choose tracks."
+EDIT_CAP = 500
+EDIT_KEY = "edit"
+EDIT_FIELDS = (
+    "name",
+    "artist",
+    "album",
+    "genre",
+    "year",
+    "composer",
+    "remixer",
+    "label",
+    "grouping",
+    "comments",
+    "key",
+)
 STORE_NAME = "tag-spellings.json"
 MAPPING_FIELD = "mappings"
 MAPPING_VALUE = "saved"
@@ -120,6 +142,15 @@ _TITLES = (
     "JOIN space_asset sa ON sa.asset_id = a.id JOIN space s ON s.id = sa.space_id "
     "WHERE s.name = ?"
 )
+# Column names come from EDIT_FIELDS, never from the request.
+_EDIT_SELECT = {
+    field: (
+        f"SELECT a.id AS id, a.{field} AS value FROM asset a "
+        "JOIN space_asset sa ON sa.asset_id = a.id JOIN space s ON s.id = sa.space_id "
+        "WHERE s.name = ? AND a.id IN "
+    )
+    for field in EDIT_FIELDS
+}
 TITLE_FIELD = "name"
 TITLE_VALUE = "titles"
 
@@ -1062,14 +1093,252 @@ def apply_titles(space: str) -> Plan:
     return result
 
 
+def _require_edit_field(field: object) -> str:
+    """Return one bulk-edit TEXT_FIELD.
+
+    Args:
+        field: Requested column name.
+
+    Returns:
+        That field.
+
+    Raises:
+        library.LibraryError: The field is not in ``EDIT_FIELDS`` (400).
+    """
+    if not isinstance(field, str) or field not in _EDIT_SELECT:
+        raise library.LibraryError("That field cannot be edited.", 400)
+    return field
+
+
+def _edit_ids(raw: object) -> list[int]:
+    """Return unique asset ids in first-seen order.
+
+    Args:
+        raw: Request ``ids`` list.
+
+    Returns:
+        Deduplicated ids, order preserved.
+
+    Raises:
+        library.LibraryError: The list is missing, empty, too long, or not
+            whole numbers.
+    """
+    if not isinstance(raw, list) or not raw:
+        raise library.LibraryError(CHOOSE_TRACKS, 400)
+    unique: list[int] = []
+    seen: set[int] = set()
+    for item in raw:
+        if isinstance(item, bool) or not isinstance(item, int):
+            raise library.LibraryError(CHOOSE_TRACKS, 400)
+        if item in seen:
+            continue
+        seen.add(item)
+        unique.append(item)
+    if len(unique) > EDIT_CAP:
+        raise library.LibraryError("Choose fewer files at once.", 400)
+    return unique
+
+
+def _edit_changes(
+    conn: sqlite3.Connection, space: str, field: str, value: str, ids: Sequence[int]
+) -> list[Change]:
+    """List selected rows whose field is not already ``value``.
+
+    Args:
+        conn: Open library connection.
+        space: Space name.
+        field: One ``EDIT_FIELDS`` column.
+        value: Text to write.
+        ids: Unique asset ids in request order.
+
+    Returns:
+        ``{ id, from, to }`` rows in ``ids`` order.
+
+    Raises:
+        library.LibraryError: An id is not in that space (404).
+    """
+    placeholders = ",".join("?" * len(ids))
+    sql = _EDIT_SELECT[field] + "(" + placeholders + ")"
+    rows = conn.execute(sql, (space, *ids)).fetchall()
+    by_id = {int(row["id"]): row["value"] for row in rows}
+    changes: list[Change] = []
+    for asset_id in ids:
+        if asset_id not in by_id:
+            raise library.LibraryError("That track is not in this space.", 404)
+        stored = by_id[asset_id]
+        text = "" if stored is None else str(stored)
+        if text == value:
+            continue
+        changes.append({"id": asset_id, "from": text, "to": value})
+    return changes
+
+
+def _edit_plan(
+    database: Path, space: str, ids: object, field: object, value: object
+) -> Plan:
+    """Build the field-edit plan without writing.
+
+    Args:
+        database: ``master.sqlite``.
+        space: Space name.
+        ids: Asset ids to edit.
+        field: One ``EDIT_FIELDS`` column.
+        value: Text to write. None becomes an empty string.
+
+    Returns:
+        ``field``, ``value``, ``key`` ``edit``, ``changes``, and ``written``
+        false.
+
+    Raises:
+        library.LibraryError: The space, field, ids, or value is not allowed,
+            or the database cannot be opened read-only.
+    """
+    if space not in library.ALLOWED_SPACES:
+        raise library.LibraryError("That space is not available here.")
+    column = _require_edit_field(field)
+    unique = _edit_ids(ids)
+    cleaned = library._clean_text(column, value)  # pyright: ignore[reportPrivateUsage]
+    conn = gig_check.open_read_only(database)
+    try:
+        changes = _edit_changes(conn, space, column, cleaned, unique)
+    finally:
+        conn.close()
+    return {
+        "field": column,
+        "value": cleaned,
+        "key": EDIT_KEY,
+        "changes": changes,
+        "written": False,
+    }
+
+
+def preview_edit(
+    database: Path, space: str, ids: object, field: object, value: object
+) -> Plan:
+    """List the rows an edit-apply would rewrite, without writing.
+
+    Args:
+        database: ``master.sqlite``.
+        space: Space name.
+        ids: Asset ids to edit.
+        field: One ``EDIT_FIELDS`` column.
+        value: Text to write.
+
+    Returns:
+        Plan JSON with ``written`` false.
+
+    Raises:
+        library.LibraryError: The space, field, ids, or value is not allowed.
+    """
+    return _edit_plan(database, space, ids, field, value)
+
+
+def apply_edit(space: str, ids: object, field: object, value: object) -> Plan:
+    """Rewrite one field on selected tracks through ``safe_write``.
+
+    Args:
+        space: Space name.
+        ids: Asset ids to edit.
+        field: One ``EDIT_FIELDS`` column.
+        value: Text to write.
+
+    Returns:
+        Plan JSON. ``written`` is false when every selected row already
+        holds that value.
+
+    Raises:
+        library.LibraryError: The space, field, ids, or value is not allowed.
+        library.SeratoOpen: If Serato still has the library open.
+    """
+    import safe_write
+
+    database = Path(library.MASTER)
+    plan = _edit_plan(database, space, ids, field, value)
+    if not plan["changes"]:
+        return plan
+    field_name = plan["field"]
+    cleaned = plan["value"]
+    unique = [change["id"] for change in plan["changes"]]
+    target = cleaned or field_name
+
+    def run(conn: sqlite3.Connection, write: safe_write.Session) -> Plan:
+        """Rewrite the live rows and register the field check.
+
+        Args:
+            conn: Open write connection.
+            write: Session that records the expected rows.
+
+        Returns:
+            The result dict with ``written`` true.
+        """
+        live = _edit_changes(conn, space, field_name, cleaned, unique)
+        write.set_target(target)
+        now = int(time.time())
+        live_ids = tuple(change["id"] for change in live)
+        for change in live:
+            library._assign(  # pyright: ignore[reportPrivateUsage]
+                conn,
+                "asset",
+                {field_name: cleaned, "time_modified": now},
+                "id = ?",
+                change["id"],
+            )
+
+        def check(
+            copied: sqlite3.Connection,
+            live_ids: tuple[int, ...] = live_ids,
+            field_name: str = field_name,
+            cleaned: str = cleaned,
+        ) -> None:
+            """Fail when a rewritten row does not hold the value.
+
+            Args:
+                copied: Read-only connection to the temporary database copy.
+                live_ids: Asset ids this write assigned.
+                field_name: Column that was written.
+                cleaned: Value those rows should have.
+
+            Raises:
+                VerifyMismatch: If a row is missing or different.
+            """
+            if not live_ids:
+                return
+            placeholders = ",".join("?" * len(live_ids))
+            sql = f"SELECT id, {field_name} FROM asset WHERE id IN ({placeholders})"
+            rows = copied.execute(sql, live_ids).fetchall()
+            got = {int(row[0]): row[1] for row in rows}
+            for asset_id in live_ids:
+                if got.get(asset_id) != cleaned:
+                    raise safe_write.VerifyMismatch("The track fields do not match.")
+
+        write.check(check)
+        return {
+            "field": field_name,
+            "value": cleaned,
+            "key": EDIT_KEY,
+            "changes": live,
+            "written": True,
+        }
+
+    result = safe_write.run("tag_cleanup", target, run)
+    with closing(library.read_conn()) as master:
+        for change in result["changes"]:
+            library._mirror_asset(  # pyright: ignore[reportPrivateUsage]
+                master, change["id"], {field_name: cleaned}
+            )
+    return result
+
+
 def action(payload: Mapping[str, object]) -> Plan:
     """Run one ``POST /api/tag-clusters`` request.
 
     Args:
         payload: ``action`` is ``preview``, ``apply``, ``clean-preview``,
-            ``clean-apply``, ``refresh-preview``, or ``refresh-apply``.
-            Spelling actions take ``space``, ``field``, and ``value``. Title
-            cleanup and mapping refresh take ``space``.
+            ``clean-apply``, ``refresh-preview``, ``refresh-apply``,
+            ``edit-preview``, or ``edit-apply``. Spelling actions take
+            ``space``, ``field``, and ``value``. Title cleanup and mapping
+            refresh take ``space``. Field edits take ``space``, ``ids``,
+            ``field``, and ``value``.
 
     Returns:
         That action's result.
@@ -1089,6 +1358,16 @@ def action(payload: Mapping[str, object]) -> Plan:
         return preview_mappings(Path(library.MASTER), space)
     if kind == "refresh-apply":
         return apply_mappings(space)
+    if kind == "edit-preview":
+        return preview_edit(
+            Path(library.MASTER),
+            space,
+            payload.get("ids"),
+            payload.get("field"),
+            payload.get("value"),
+        )
+    if kind == "edit-apply":
+        return apply_edit(space, payload.get("ids"), payload.get("field"), payload.get("value"))
     field = payload.get("field", "genre")
     if field is None:
         field = "genre"

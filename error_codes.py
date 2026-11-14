@@ -98,6 +98,7 @@ ERROR_CODES: dict[str, str] = {
     "Choose a folder.": "choose_folder",
     tag_cleanup.CHOOSE_FIELD: "choose_genre_or_artist",
     tag_cleanup.CHOOSE_SPELLING: "choose_spelling",
+    tag_cleanup.CHOOSE_TRACKS: "choose_tracks",
     tag_cleanup.NOT_IN_GROUP: "spelling_not_in_group",
     "Choose fewer files at once.": "too_many_files",
     "Choose tracks to relink.": "relink_needs_tracks",

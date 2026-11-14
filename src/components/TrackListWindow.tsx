@@ -2,9 +2,9 @@
  * Track list pane: one MUI X Data Grid Community.
  *
  * The grid owns headers, rows, horizontal scroll, and virtualization.
- * Play is the first column and reads PlayerContext. Selection and sort
- * stay on TrackListContext / `state`. History uses the same grid with
- * different columns.
+ * On Crates a checkbox column is first, then Play. Play reads
+ * PlayerContext. Selection and sort stay on TrackListContext / `state`.
+ * History uses the same grid with different columns.
  */
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -17,6 +17,7 @@ import {
 } from "@mui/x-data-grid";
 import { enUS, esES } from "@mui/x-data-grid/locales";
 import type { Track } from "../lib/api-types";
+import { fieldEditShows } from "../lib/crates/field-edit-view";
 import { t } from "../lib/i18n";
 import { ROW } from "../lib/state";
 import { ensureGridDom } from "../lib/ui/grid-dom-stubs";
@@ -24,6 +25,7 @@ import { trackListColumns } from "../lib/ui/track-list-columns";
 import { INTERACTIVE_SELECTOR, setTooltip } from "../lib/ui/tooltip";
 import { sortTip, tips } from "../lib/ui/tooltip-strings";
 import { useTrackList } from "../containers/TrackListContext";
+import { FieldEditorBar } from "./FieldEditorBar";
 
 /** Community Data Grid throws when pageSize is above this. */
 export const GRID_PAGE_SIZE = 100;
@@ -69,6 +71,10 @@ export function attachGridTooltips(root: HTMLElement): void {
     const header = element.closest(".MuiDataGrid-columnHeader");
     if (header instanceof HTMLElement) {
       const field = header.getAttribute("data-field") ?? "";
+      if (field === "__check__" || element.closest(".MuiDataGrid-columnHeaderCheckbox")) {
+        setTooltip(element, tips.fieldEditCheckbox);
+        continue;
+      }
       if (field === "play") {
         setTooltip(element, tips.playColumn);
         continue;
@@ -91,12 +97,31 @@ export function attachGridTooltips(root: HTMLElement): void {
       setTooltip(element, tips.columnResize);
       continue;
     }
+    if (element.closest(".MuiDataGrid-cellCheckbox")) {
+      setTooltip(element, tips.fieldEditCheckbox);
+      continue;
+    }
     if (element.closest(".MuiDataGrid-cell")) {
       setTooltip(element, tips.gridCell);
       continue;
     }
     setTooltip(element, tips.columnMenu);
   }
+}
+
+function idsFromModel(next: GridRowSelectionModel, view: readonly Track[]): number[] {
+  if (next.type === "exclude") {
+    return view.map((row) => row.id).filter((id) => !next.ids.has(id));
+  }
+  const ids: number[] = [];
+  for (const id of next.ids) {
+    if (typeof id === "number") ids.push(id);
+  }
+  return ids;
+}
+
+function sameIds(left: readonly number[], right: readonly number[]): boolean {
+  return left.length === right.length && left.every((id, index) => id === right[index]);
 }
 
 /**
@@ -111,6 +136,10 @@ export function TrackListWindow({ pane, onFocusList }: TrackListWindowProps) {
   const [height, setHeight] = useState(() => 600);
   const view = pane === "b" ? list.viewB : list.view;
   const history = list.mode === "history";
+  const cratesMode = list.mode === "crates";
+  const [selectedIds, setSelectedIds] = useState<number[]>(() =>
+    list.selectedId == null ? [] : [list.selectedId],
+  );
   const columns = useMemo(
     () => trackListColumns(history, {
       selectTrack: list.selectTrack,
@@ -122,10 +151,15 @@ export function TrackListWindow({ pane, onFocusList }: TrackListWindowProps) {
     if (!list.sort) return [];
     return [{ field: list.sort, sort: list.sortDir < 0 ? "desc" : "asc" }];
   }, [list.sort, list.sortDir]);
-  const rowSelectionModel = useMemo<GridRowSelectionModel>(() => ({
-    type: "include",
-    ids: list.selectedId == null ? new Set() : new Set([list.selectedId]),
-  }), [list.selectedId]);
+  const rowSelectionModel = useMemo<GridRowSelectionModel>(() => {
+    if (!cratesMode) {
+      return {
+        type: "include",
+        ids: list.selectedId == null ? new Set() : new Set([list.selectedId]),
+      };
+    }
+    return { type: "include", ids: new Set(selectedIds) };
+  }, [cratesMode, list.selectedId, selectedIds]);
   const localeText = useMemo(() => gridLocaleText(list.locale), [list.locale]);
   const [page, setPage] = useState(0);
   const maxPage = Math.max(0, Math.ceil(view.length / GRID_PAGE_SIZE) - 1);
@@ -134,6 +168,15 @@ export function TrackListWindow({ pane, onFocusList }: TrackListWindowProps) {
     [page, maxPage],
   );
   const hideFooter = view.length <= GRID_PAGE_SIZE;
+
+  useEffect(() => {
+    if (!cratesMode) return;
+    if (list.selectedId == null) {
+      setSelectedIds([]);
+      return;
+    }
+    setSelectedIds((prev) => (prev.includes(list.selectedId as number) ? prev : [list.selectedId as number]));
+  }, [cratesMode, list.selectedId]);
 
   useLayoutEffect(() => {
     setPage(0);
@@ -173,6 +216,24 @@ export function TrackListWindow({ pane, onFocusList }: TrackListWindowProps) {
   }
 
   function onRowSelectionModelChange(next: GridRowSelectionModel): void {
+    if (cratesMode) {
+      const ids = idsFromModel(next, view);
+      if (!ids.length) {
+        const fallback = list.selectedId == null ? [] : [list.selectedId];
+        if (!sameIds(selectedIds, fallback)) setSelectedIds(fallback);
+        return;
+      }
+      if (sameIds(selectedIds, ids)) return;
+      setSelectedIds(ids);
+      const last = ids[ids.length - 1];
+      if (last !== list.selectedId) {
+        const track = view.find((row) => row.id === last);
+        if (track?.entry) list.selectEntry(track.id);
+        else if (track) void list.selectTrack(track.id);
+      }
+      onFocusList();
+      return;
+    }
     const id = [...next.ids][0];
     if (typeof id !== "number" || id === list.selectedId) return;
     const track = view.find((row) => row.id === id);
@@ -190,8 +251,12 @@ export function TrackListWindow({ pane, onFocusList }: TrackListWindowProps) {
     setPage(model.page);
   }
 
+  const showBar = cratesMode && fieldEditShows(selectedIds.length);
+  const gridHeight = showBar ? Math.max(120, height - 56) : height;
+
   return (
     <div ref={hostRef} className="track-grid" style={{ height, width: "100%" }}>
+      {cratesMode ? <FieldEditorBar selectedIds={selectedIds} /> : null}
       <DataGrid
         key={`${history ? "history" : "tracks"}-${view.length === 0 ? "empty" : "data"}`}
         rows={[...view]}
@@ -208,7 +273,8 @@ export function TrackListWindow({ pane, onFocusList }: TrackListWindowProps) {
         disableColumnFilter
         disableDensitySelector
         disableEval
-        disableMultipleRowSelection
+        checkboxSelection={cratesMode}
+        disableMultipleRowSelection={!cratesMode}
         sortingMode="server"
         sortModel={sortModel}
         onSortModelChange={onSortModelChange}
@@ -219,7 +285,8 @@ export function TrackListWindow({ pane, onFocusList }: TrackListWindowProps) {
         localeText={localeText}
         slots={{ noRowsOverlay: EmptyList }}
         sx={{
-          height: "100%",
+          height: gridHeight,
+          width: "100%",
           border: 0,
           bgcolor: "transparent",
           color: "inherit",

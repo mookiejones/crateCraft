@@ -2163,7 +2163,7 @@ class Handler(BaseHTTPRequestHandler):
                         or (
                             clustering
                             and payload.get("action")
-                            in ("preview", "clean-preview", "refresh-preview")
+                            in ("preview", "clean-preview", "refresh-preview", "edit-preview")
                         )
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
