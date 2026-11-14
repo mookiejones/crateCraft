@@ -1,6 +1,6 @@
 /**
  * Confirm dialog that replaced window.confirm for crate delete, remove
- * from library, and removing a related link.
+ * from library, removing a related link, and Play stats idle-crate create.
  *
  * Confirm still required before the caller POSTs. Esc and Cancel return
  * false. The title is the action. The body is the existing confirm copy.

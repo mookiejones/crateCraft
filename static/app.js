@@ -61541,9 +61541,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       failureOf(error2).status === 409 && bridge.lockDown(error2), dialogStatus = failureOf(error2).message, emitFiles();
     }
   }
-  function filesBody(confirm2) {
+  function filesBody(confirm) {
     let body = { action: filesAction };
-    if (confirm2 && (body.confirm = !0), filesAction === "rename") {
+    if (confirm && (body.confirm = !0), filesAction === "rename") {
       let selected = selectedFiles();
       body.path = selected[0]?.path || state.filesPickPaths[0], body.name = dialogName;
     } else if (filesAction === "move")
@@ -64318,7 +64318,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         return;
       }
       let label = String(preview.name || name);
-      if (!confirm(t("stats.confirmCrate", { name: label, count, days: idleDays }))) return;
+      if (!await openConfirm({
+        title: t("stats.idleCrate"),
+        message: t("stats.confirmCrate", { name: label, count, days: idleDays }),
+        confirmLabel: t("stats.idleCrate")
+      })) return;
       let created = await postJSON("/api/history-stats", {
         action: "create",
         space: state.space,
@@ -69889,8 +69893,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     typeof relinkPlan?.scanned == "number" && parts.push(t("relink.scanned", { count: relinkPlan.scanned })), banner.textContent = parts.join(" "), banner.hidden = parts.length === 0;
   }
   function syncRelinkConfirm(refreshStatus = !0) {
-    let confirm2 = el("relink-confirm"), accept = el("relink-accept-high"), find = el("relink-find"), selected = selectedRelinkMatches();
-    confirm2.disabled = relinkLoading || !state.writable || selected.length === 0, accept.disabled = relinkLoading || !relinkPlan, find.disabled = relinkLoading || !state.writable, refreshStatus && !relinkLoading && selected.length && (el("relink-status").textContent = t("relink.selected", { count: selected.length }));
+    let confirm = el("relink-confirm"), accept = el("relink-accept-high"), find = el("relink-find"), selected = selectedRelinkMatches();
+    confirm.disabled = relinkLoading || !state.writable || selected.length === 0, accept.disabled = relinkLoading || !relinkPlan, find.disabled = relinkLoading || !state.writable, refreshStatus && !relinkLoading && selected.length && (el("relink-status").textContent = t("relink.selected", { count: selected.length }));
   }
   function renderRelinkRows() {
     let body = el("relink-rows");

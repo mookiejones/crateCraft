@@ -19,6 +19,7 @@ import { el } from "../dom";
 import { serverMessage, t } from "../i18n";
 import { StatsPanel } from "../../pages/StatsPanel";
 import { state } from "../state";
+import { openConfirm } from "../ui/shared-dialog";
 import {
   csvHref,
   idleDaysFromInput,
@@ -220,7 +221,7 @@ function failStatus(message: string): void {
 /**
  * Preview then create a crate of idle tracks.
  *
- * Confirm stays a browser confirm. Serato must be quit.
+ * Confirm uses the shared MUI dialog. Serato must be quit.
  *
  * @returns {Promise<void>}
  */
@@ -243,7 +244,11 @@ export async function makeIdleCrate(): Promise<void> {
       return;
     }
     const label = String(preview.name || name);
-    if (!confirm(t("stats.confirmCrate", { name: label, count, days: idleDays }))) return;
+    if (!(await openConfirm({
+      title: t("stats.idleCrate"),
+      message: t("stats.confirmCrate", { name: label, count, days: idleDays }),
+      confirmLabel: t("stats.idleCrate"),
+    }))) return;
     const created = await postJSON<HistoryIdleCrate>("/api/history-stats", {
       action: "create",
       space: state.space,
