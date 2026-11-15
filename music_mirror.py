@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import sqlite3
 import sys
@@ -137,7 +138,14 @@ def _open_dest(value: object, space: str, *, must_exist: bool) -> Path:
     """
     if not isinstance(value, str) or not value.strip():
         raise LibraryError(folder_sync.CHOOSE_FOLDER)
-    path = Path(value.strip()).expanduser()
+    if "\x00" in value or len(value.strip()) > 4096:
+        raise LibraryError(folder_sync.FOLDER_UNREADABLE)
+    expanded = os.path.expanduser(value.strip())
+    normalized = os.path.normpath(os.path.abspath(expanded))
+    root = os.path.abspath(os.path.splitdrive(normalized)[0] + os.sep)
+    if not normalized.startswith(root):
+        raise LibraryError(folder_sync.FOLDER_UNREADABLE)
+    path = Path(normalized)
     try:
         if path.is_symlink():
             raise LibraryError(folder_sync.SHORTCUT)

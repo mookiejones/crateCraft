@@ -11,6 +11,7 @@ from pathlib import Path
 from unittest import mock
 
 import error_codes
+import files
 import folder_sync
 import library
 import music_mirror
@@ -286,7 +287,9 @@ class MusicMirrorTests(unittest.TestCase):
                 self.assertTrue(written["written"])
                 with open_database(temp.db) as conn:
                     stored = conn.execute("SELECT portable_id FROM asset WHERE id = 1").fetchone()[0]
-                self.assertEqual(Path(stored).resolve(), (dest / "a.mp3").resolve())
+                mapped = dest / "a.mp3"
+                self.assertEqual(stored, files.to_portable(mapped))
+                self.assertEqual(files.resolve_stored(str(stored)), mapped.resolve())
 
     def test_unknown_action_is_refused(self) -> None:
         with self.assertRaisesRegex(LibraryError, "That action is not available."):
