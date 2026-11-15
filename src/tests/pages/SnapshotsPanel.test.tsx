@@ -93,6 +93,8 @@ describe("SnapshotsPanel context", () => {
       host.querySelector<HTMLButtonElement>('#snapshots-list .MuiDataGrid-cell[data-field="restore"] button')?.textContent,
     ).toBe(t("snapshots.reviewRestore"));
     expect(host.querySelector("#snapshots-take")?.getAttribute("data-tooltip")).toBe(t("tooltip.snapshotsTake"));
+    expect(host.querySelector("#music-mirror-heading")?.textContent).toBe(t("musicMirror.heading"));
+    expect(host.querySelector("#music-mirror-dest")).not.toBeNull();
     expect(host.querySelector("#snapshots-drives")?.getAttribute("data-tooltip")).not.toBe(
       host.querySelector("#snapshots-drives")?.getAttribute("aria-label"),
     );

@@ -39,7 +39,7 @@ The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**.
 
 Cue points live in the audio file. A normal save does not rewrite them.
 
-**Backups** keeps hash-checked copies of the library, the crates on each drive, and the Cue point frames stored in the audio files. The music itself is not copied.
+**Backups** keeps hash-checked copies of the library, the crates on each drive, and the Cue point frames stored in the audio files. The music itself is not copied. **Music files** on that page copies the audio to a second drive.
 
 Open **Backups**, choose **Review restore**, then **Restore**. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 

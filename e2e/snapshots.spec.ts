@@ -36,5 +36,12 @@ test("the snapshots list renders from context", async ({ page }) => {
   await expect(page.locator("#snapshots-list .MuiDataGrid-columnHeader[data-field='status']")).toHaveCount(1);
   await expect(page.locator('#snapshots-list .MuiDataGrid-cell[data-field="restore"] button')).toHaveText("Review restore");
   await expect(page.locator("#snapshots-take")).toHaveAttribute("data-tooltip", /.+/);
+  await expect(page.locator("#music-mirror-heading")).toHaveText("Music files");
+  await expect(page.locator("#music-mirror-dest")).toBeVisible();
+  await expect(page.locator("#music-mirror-preview")).toBeDisabled();
+  await page.locator("#music-mirror-dest").fill("/Volumes/Backup");
+  await expect(page.locator("#music-mirror-preview")).toBeEnabled();
+  await expect(page.locator("#music-mirror-copy")).toBeEnabled();
+  await page.locator("#music-mirror").scrollIntoViewIfNeeded();
   await saveShot(page, "snapshots_list");
 });

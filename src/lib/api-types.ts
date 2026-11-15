@@ -785,6 +785,41 @@ export interface BitrateCratePlan extends BitrateCheckReport {
   warning?: string | null;
 }
 
+export interface MusicMirrorRow {
+  id?: number;
+  source?: string;
+  dest?: string;
+  name?: string;
+  artist?: string;
+}
+
+export interface MusicMirrorReport {
+  dest?: string;
+  space?: string;
+  preview?: boolean;
+  written?: boolean;
+  copied?: number;
+  name?: string;
+  saved?: { id: number; name: string } | null;
+  warning?: string | null;
+  copy?: MusicMirrorRow[];
+  copy_count?: number;
+  skip_count?: number;
+  only_laptop?: MusicMirrorRow[];
+  only_laptop_count?: number;
+  restore?: MusicMirrorRow[];
+  restore_count?: number;
+  skip_newer?: MusicMirrorRow[];
+  skip_newer_count?: number;
+  mismatch?: MusicMirrorRow[];
+  mismatch_count?: number;
+  relink?: MusicMirrorRow[];
+  relink_count?: number;
+  relink_result?: { ok?: boolean; preview?: boolean; changes?: unknown[] };
+  error?: string;
+  code?: string;
+}
+
 export interface FileScanProblem {
   id: number;
   name: string;
