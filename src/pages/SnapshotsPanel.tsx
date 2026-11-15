@@ -22,6 +22,7 @@ import { driveCopyText, operationCardText } from "../lib/snapshots/restore-view"
 import { snapshotColumns } from "../lib/snapshots/snapshot-columns";
 import { ensureGridDom } from "../lib/ui/grid-dom-stubs";
 import { tips } from "../lib/ui/tooltip-strings";
+import { MusicMirrorPanel } from "../components/MusicMirrorPanel";
 
 function gridLocaleText(locale: string) {
   const pack = locale.startsWith("es") ? esES : enUS;
@@ -199,6 +200,7 @@ export function SnapshotsPanel() {
           />
         )}
       </div>
+      <MusicMirrorPanel />
       <section id="operations" className="operations" aria-labelledby="operations-heading">
         <div className="browser-bar">
           <h2 id="operations-heading" className="operations-heading">{t("operations.heading")}</h2>

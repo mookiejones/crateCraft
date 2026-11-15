@@ -25,6 +25,7 @@ from collections.abc import Mapping
 import crate_trees
 import folder_sync
 import legacy_library
+import music_mirror
 import smart_presets
 import tag_cleanup
 
@@ -131,6 +132,9 @@ ERROR_CODES: dict[str, str] = {
     crate_trees.EMPTY_TREE: "tree_empty",
     folder_sync.SMART: "smart_crate_tracks",
     folder_sync.ROOT_CRATE: "crate_not_root",
+    music_mirror.DEST_SERATO: "mirror_dest_serato",
+    music_mirror.DEST_LIBRARY: "mirror_dest_library",
+    music_mirror.DEST_MUSIC: "mirror_dest_music",
     smart_presets.UNKNOWN_PRESET: "preset_unknown",
     smart_presets.BAD_KEY: "preset_bad_key",
     smart_presets.BAD_BPM: "preset_bad_bpm",

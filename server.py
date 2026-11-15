@@ -41,6 +41,7 @@ import legacy_library
 import lost_tags
 import library
 import library_health
+import music_mirror
 import music_roots
 import rekordbox
 import related
@@ -1883,6 +1884,13 @@ class Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/snapshots":
                 self._get_snapshots(query)
                 return
+            if parsed.path == "/api/music-mirror":
+                space = require_space(query_text(query, "space"))
+                dest = query_text(query, "dest", "") or ""
+                if not dest.strip():
+                    raise library.LibraryError(folder_sync.CHOOSE_FOLDER)
+                self.send_json(music_mirror.preview(dest, space))
+                return
             if parsed.path == "/api/export.m3u":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
@@ -2153,6 +2161,7 @@ class Handler(BaseHTTPRequestHandler):
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     history = parsed.path == "/api/history-stats"
+                    mirroring = parsed.path == "/api/music-mirror"
                     preview = (
                         (merging and payload.get("preview") is True)
                         or (replacing and payload.get("preview") is True)
@@ -2168,6 +2177,13 @@ class Handler(BaseHTTPRequestHandler):
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
                         or (bitrate_crate and payload.get("action") == "preview")
+                        or (
+                            mirroring
+                            and (
+                                payload.get("action") in ("preview", "copy")
+                                or payload.get("confirm") is not True
+                            )
+                        )
                     )
                     if not preview:
                         invalidate()
@@ -2233,6 +2249,16 @@ class Handler(BaseHTTPRequestHandler):
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = bitrate_check.action(request)
                         if request.get("action") == "create" and result.get("written"):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif mirroring:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = music_mirror.action(request)
+                        if (
+                            request.get("action") == "crate"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                        ):
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif merging:
                         result = as_dict(_library_call("merge_duplicates", payload))
