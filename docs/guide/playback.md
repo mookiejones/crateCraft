@@ -16,7 +16,7 @@ If this computer cannot build a waveform for the file, the bar says **Waveform u
 
 **Play** and **Pause** are one button. Its name changes with the state.
 
-**Space** plays or pauses. When nothing is playing, it starts the selected track. It does nothing while you are typing in a field. **Left** moves 5 seconds back. **Right** moves 5 seconds forward. Those are the only playback keys in the shortcut table.
+**W** or **Space** plays or pauses. When nothing is playing, it starts the selected track. It does nothing while you are typing in a field. **Alt+E** or **Left** moves 5 seconds back. **Alt+R** or **Right** moves 5 seconds forward. **1** through **8** jump to that cue pad. They do not set or delete a cue. The other playback keys are in [Keyboard shortcuts](shortcuts.md).
 
 If the track is not in the library, or the file is missing, the bar says **Not in the library or file missing**. If this window cannot decode the file, the bar says **This file cannot be played in this window.**
 

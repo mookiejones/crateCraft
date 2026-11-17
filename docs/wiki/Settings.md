@@ -12,7 +12,7 @@ flowchart TD
   box --> on["Ticked: counts and crash reports, only with a key"]
   rail --> theme["Theme: Serato-like, Dark Club, Light, or Classic"]
   theme --> icon["App icon follows the theme, on unless you clear it"]
-  rail --> keys["Keyboard shortcuts. ? opens this list"]
+  rail --> keys["Keyboard shortcuts. Change a key. ? opens this list"]
   rail --> language["Language: Same as the system, English, or Español"]
   rail --> again["Run setup again"]
   rail --> logs["Open logs folder, or Copy logs"]
@@ -34,6 +34,8 @@ What can leave, and only after you choose share and only when a key is present, 
 
 **Theme** is Serato-like (the default), Dark Club, Light, or Classic. The whole page uses that token set. The sidebar stripe and the icon preview follow it. **App icon follows the theme** is on unless you clear it. On a Mac the Dock icon of the running app changes. On Windows the window and taskbar icon change. The Finder icon and the Windows program icon stay the baked default from launch. On another system the line says the choice is saved for Mac and Windows.
 
+**Keyboard shortcuts** lists Serato DJ Pro defaults. **Change** remaps a live key. **Reset all** restores the defaults. **?** opens this list. The full page is [Keyboard shortcuts](Keyboard-Shortcuts).
+
 **Language** switches the whole page at once. **Same as the system** follows your computer's language. English and Spanish are included.
 
 **Run setup again** opens [first-run setup](First-Run-Wizard). **Cancel** there does not forget that setup already finished.
@@ -42,7 +44,7 @@ What can leave, and only after you choose share and only when a key is present, 
 
 **About** shows the version of this copy, such as **v1.4.2**. **Copy version** puts that line on the clipboard and the next line says **Copied**. When the version cannot be read, About says **Version unavailable**. The sidebar does not repeat the version.
 
-The same settings file remembers the window, the track-list width, the language, the theme, whether the app icon follows that theme, that setup finished, and the Rekordbox dialog: Memory cues, Hot loops, and the key notation. If setup was pointed at a library that is not in the usual folder, `library.json` in that same folder remembers the file. The path stays on this computer.
+The same settings file remembers the window, the track-list width, the language, the theme, whether the app icon follows that theme, remapped keyboard shortcuts, that setup finished, and the Rekordbox dialog: Memory cues, Hot loops, and the key notation. If setup was pointed at a library that is not in the usual folder, `library.json` in that same folder remembers the file. The path stays on this computer.
 
 | System | Settings | Logs |
 | --- | --- | --- |

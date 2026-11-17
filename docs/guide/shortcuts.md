@@ -1,30 +1,72 @@
 # Keyboard shortcuts
 
-The keys below work anywhere on the library screen, except while you are typing in a field. **Esc** still closes a dialog or clears a search.
+The keys below work anywhere on the library screen, except while you are typing in a field.
 
-The list is in **Settings**, under **Keyboard shortcuts**. **?** opens Settings on that heading.
+Defaults match Serato DJ Pro on a US keyboard. crateCraft has one player, so it uses the left-deck keys. crateCraft extras sit beside those: Space, Left, Right, `/`, Ctrl+K, `?`, and Ctrl+1 through 5.
+
+The full catalog is in **Settings**, under **Keyboard shortcuts**. **?** opens Settings on that heading. Live rows have **Change** and **Reset**. Press the new key after **Change**. A chord another live action already uses is refused. **Reset all** restores Serato defaults plus crateCraft extras. Rows crateCraft cannot run stay listed as **Not in crateCraft**.
+
+**Esc** closes a dialog or clears the search. It never quits crateCraft.
+
+Cue pads **1** through **8** jump to that pad. They do not set or delete a cue.
+
+On Windows the key with the command is Ctrl. On a Mac it is Command. Both are listed in the app as Ctrl/Cmd.
+
+## Playback
+
+| Key | Action |
+| --- | --- |
+| W, or Space | Play or pause |
+| Alt+Q | Previous track |
+| Alt+W | Next track |
+| Alt+E, or Left | Back 5 seconds |
+| Alt+R, or Right | Forward 5 seconds |
+| 1 through 8 | Jump to cue pad 1–8 |
+| Shift+Left | Load the selected track |
+
+Space plays or pauses. Left moves 5 seconds back. Right moves 5 seconds forward. They do not change the library.
+
+## Library
 
 | Key | Action |
 | --- | --- |
 | Ctrl+F or Command+F, or / | Focus search in the current view |
-| Ctrl+K or Command+K | Find a view, crate, track, or file |
 | Up or Down | Move through the list |
 | Enter | Open the row |
+| Ctrl+Shift+Up | Previous crate |
+| Ctrl+Shift+Down | Next crate |
+| Tab | Reach the drawer, crate list, More, Find, and dialogs |
+| Ctrl+R or Command+R | Reveal the track |
+| Ctrl+L or Command+L | Locate the playing track |
+| Ctrl+A or Command+A | Select all |
+| Ctrl+Delete or Command+Delete | Remove from the crate |
+| Alt+Delete | Remove from the library |
+| Ctrl+Shift+Delete | Move the file to Trash |
+| Ctrl+P or Command+P | Prepare |
+| + | Waveform zoom in |
+| - | Waveform zoom out |
+
+## crateCraft extras
+
+| Key | Action |
+| --- | --- |
+| Ctrl+K or Command+K | Find a view, crate, track, or file |
 | Ctrl+1 or Command+1 | All tracks |
 | Ctrl+2 or Command+2 | Crates |
 | Ctrl+3 or Command+3 | Organize files |
 | Ctrl+4 or Command+4 | History |
 | Ctrl+5 or Command+5 | Backups |
 | Esc | Close a dialog, or clear the search |
-| Tab | Reach the drawer, crate list, More, Find, and dialogs |
 | ? | Show this list |
-| Space | Play or pause |
-| Left | Back 5 seconds |
-| Right | Forward 5 seconds |
 
-On Windows the key with the command is Ctrl. On a Mac it is Command. Both are listed in the app as Ctrl/Cmd.
+## Change a key
 
-Space plays or pauses. Left moves 5 seconds back. Right moves 5 seconds forward. They do not change the library.
+1. Open **Settings**.
+2. Under **Keyboard shortcuts**, type in the filter if you want a shorter list.
+3. On a live row, click **Change**, then press the new key.
+4. **Reset** on that row, or **Reset all**, restores the defaults.
+
+A row crateCraft cannot run stays muted.
 
 ## Find a view, crate, track, or file
 
