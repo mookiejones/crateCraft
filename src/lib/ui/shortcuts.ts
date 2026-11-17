@@ -10,7 +10,7 @@
 import { el } from "../dom";
 import { t, type MessageKey } from "../i18n";
 import { getPlayerState } from "../player/player";
-import { notifySettings, settingsIslandMounted } from "./settings";
+import { getSettingsState, notifySettings, settingsIslandMounted } from "./settings";
 import { state } from "../state";
 import { setTooltip } from "./tooltip";
 import { tips } from "./tooltip-strings";
@@ -28,9 +28,10 @@ import {
   selectTrack,
   setMode,
 } from "./views";
-import { effectiveShortcuts, type ShortcutChord } from "./shortcut-catalog";
+import { chordLabel, effectiveShortcuts, type ShortcutChord } from "./shortcut-catalog";
 
 export type { ShortcutChord } from "./shortcut-catalog";
+export { chordLabel } from "./shortcut-catalog";
 
 /** Seconds the seek keys pass to PlayerControls.seekBy. */
 export const SEEK_SECONDS = 5;
@@ -286,7 +287,7 @@ export function chordMatches(chord: ShortcutChord, event: KeyboardEvent): boolea
  * @returns The shortcut, or null when nothing matches.
  */
 export function matchShortcut(event: KeyboardEvent): Shortcut | null {
-  for (const row of effectiveShortcuts({})) {
+  for (const row of effectiveShortcuts(getSettingsState().shortcuts)) {
     if (!row.keys.some((chord) => chordMatches(chord, event))) continue;
     const sheet = SHORTCUTS.find((shortcut) => shortcut.id === row.id);
     if (sheet) return sheet;
@@ -299,30 +300,6 @@ export function matchShortcut(event: KeyboardEvent): Shortcut | null {
     };
   }
   return null;
-}
-
-/**
- * Return the cheat-sheet text for one chord.
- *
- * The sheet prints this instead of a second copy of the binding.
- *
- * @param chord Chord from the shortcut table.
- * @returns The label, such as Ctrl/Cmd+K or Esc.
- */
-export function chordLabel(chord: ShortcutChord): string {
-  const names: Record<string, string> = {
-    Escape: "Esc",
-    " ": "Space",
-    ArrowLeft: "Left arrow",
-    ArrowRight: "Right arrow",
-    ArrowUp: "Up arrow",
-    ArrowDown: "Down arrow",
-    Enter: "Enter",
-  };
-  const named = names[chord.key];
-  if (named) return named;
-  const key = chord.key.length === 1 ? chord.key.toUpperCase() : chord.key;
-  return chord.mod ? `Ctrl/Cmd+${key}` : key;
 }
 
 /**

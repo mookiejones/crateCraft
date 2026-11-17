@@ -563,6 +563,8 @@ export function settingsValue(partial: Partial<SettingsContextValue> = {}): Sett
     saveSharing: noopAsync,
     saveUpdateEnabled: noopAsync,
     saveUpdatePrereleases: noopAsync,
+    saveShortcuts: noopAsync,
+    shortcuts: {},
     openLogs: noopAsync,
     copyLogs: noopAsync,
     copyVersion: noopAsync,

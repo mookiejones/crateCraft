@@ -50,6 +50,7 @@ export interface WaveformController {
   /** Refresh titles and notes after the language changes. */
   relabel(): void;
   pixelsPerSecond(): number;
+  zoom(direction: 1 | -1): void;
 }
 
 export type WaveformAttach = {

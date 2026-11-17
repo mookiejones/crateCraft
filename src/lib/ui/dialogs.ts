@@ -50,6 +50,7 @@ import {
   applyGigLock,
   applyLanguage,
   applyPrivacy,
+  applyShortcuts,
   bindRerunSetup,
   closeSettings,
   openSettings,
@@ -920,6 +921,7 @@ export async function loadPrivacy() {
   applyLayout(payload);
   applyAppearance(payload);
   applyGigLock(payload);
+  applyShortcuts(payload);
   if (token === rekordboxToken) applyRekordboxExport(payload);
   if (!state.wizardComplete && openWizard(false, el("search"))) return;
   if (payload.needs_consent_prompt) showConsent();

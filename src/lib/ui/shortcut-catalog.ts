@@ -178,6 +178,102 @@ export const CATALOG: readonly CatalogEntry[] = [
 export function effectiveShortcuts(overrides: Record<string, ShortcutChord[]>): EffectiveShortcut[] {
   return CATALOG.filter((row) => row.live).map((row) => ({
     id: row.id,
-    keys: overrides[row.id] ?? [...row.seratoKeys, ...(row.extras ?? [])],
+    keys: overrides[row.id] ?? defaultChords(row),
   }));
+}
+
+/** Serato group order for the Keyboard shortcuts page. */
+export const GROUP_ORDER: readonly CatalogGroup[] = [
+  "playback",
+  "loop",
+  "sample",
+  "library",
+  "cratecraft",
+];
+
+/**
+ * Return whether two chords are the same binding.
+ *
+ * Missing flags count as false.
+ *
+ * @param left One chord.
+ * @param right The other chord.
+ * @returns True when key and modifiers match.
+ */
+export function chordsEqual(left: ShortcutChord, right: ShortcutChord): boolean {
+  return (
+    left.key === right.key
+    && Boolean(left.mod) === Boolean(right.mod)
+    && Boolean(left.shift) === Boolean(right.shift)
+    && Boolean(left.alt) === Boolean(right.alt)
+  );
+}
+
+/**
+ * Return the default live chords for one catalog row.
+ *
+ * @param row Catalog row.
+ * @returns Serato keys plus crateCraft extras.
+ */
+export function defaultChords(row: CatalogEntry): ShortcutChord[] {
+  return [...row.seratoKeys, ...(row.extras ?? [])];
+}
+
+/**
+ * Return the live shortcut that already owns a chord.
+ *
+ * @param chord Candidate binding.
+ * @param overrides Saved remaps.
+ * @returns Catalog id, or null when the chord is free.
+ */
+export function liveOwner(chord: ShortcutChord, overrides: Record<string, ShortcutChord[]>): string | null {
+  for (const row of effectiveShortcuts(overrides)) {
+    if (row.keys.some((item) => chordsEqual(item, chord))) return row.id;
+  }
+  return null;
+}
+
+const SHIFT_KEYS = new Set(["?", "+", "-"]);
+
+/**
+ * Build a chord from a keydown, omitting false flags.
+ *
+ * @param event Key event.
+ * @returns Chord the settings POST accepts.
+ */
+export function eventChord(event: KeyboardEvent): ShortcutChord {
+  const chord: ShortcutChord = { key: event.key.length === 1 ? event.key.toLowerCase() : event.key };
+  if (event.ctrlKey || event.metaKey) chord.mod = true;
+  if (event.altKey) chord.alt = true;
+  if (event.shiftKey && !SHIFT_KEYS.has(chord.key)) chord.shift = true;
+  return chord;
+}
+
+const KEY_NAMES: Record<string, string> = {
+  Escape: "Esc",
+  " ": "Space",
+  ArrowLeft: "Left arrow",
+  ArrowRight: "Right arrow",
+  ArrowUp: "Up arrow",
+  ArrowDown: "Down arrow",
+  Enter: "Enter",
+  Delete: "Delete",
+  Tab: "Tab",
+};
+
+/**
+ * Return the cheat-sheet text for one chord.
+ *
+ * @param chord Chord from the catalog.
+ * @returns The label, such as Ctrl/Cmd+K or Alt+E.
+ */
+export function chordLabel(chord: ShortcutChord): string {
+  const named = KEY_NAMES[chord.key];
+  const key = named ?? (chord.key.length === 1 ? chord.key.toUpperCase() : chord.key);
+  const parts: string[] = [];
+  if (chord.mod) parts.push("Ctrl/Cmd");
+  if (chord.alt) parts.push("Alt");
+  if (chord.shift) parts.push("Shift");
+  parts.push(key);
+  return parts.join("+");
 }

@@ -8,6 +8,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import type { Colorway, SettingsSnapshot } from "../lib/ui/settings";
+import type { ShortcutChord } from "../lib/ui/shortcut-catalog";
 
 export type SettingsContextValue = SettingsSnapshot & {
   saveLanguage: (value: string) => Promise<void>;
@@ -17,6 +18,7 @@ export type SettingsContextValue = SettingsSnapshot & {
   saveSharing: (on: boolean) => Promise<void>;
   saveUpdateEnabled: (on: boolean) => Promise<void>;
   saveUpdatePrereleases: (on: boolean) => Promise<void>;
+  saveShortcuts: (next: Record<string, ShortcutChord[]>) => Promise<void>;
   openLogs: () => Promise<void>;
   copyLogs: () => Promise<void>;
   copyVersion: () => Promise<void>;

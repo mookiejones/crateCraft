@@ -10,6 +10,7 @@
 import { createElement } from "react";
 import { postJSON, readJSONOr } from "../api";
 import type { LogsPayload, SettingsPayload } from "../api-types";
+import type { ShortcutChord } from "./shortcut-catalog";
 import { mountIsland, type IslandRoot } from "../../app/mount";
 import { SettingsPanel } from "../../pages/SettingsPanel";
 import { PSEUDO, getLocale, isLanguage, resolveLocale, serverMessage, setLocale, t } from "../i18n";
@@ -45,6 +46,7 @@ export type SettingsSnapshot = {
   updatePrereleasesDisabled: boolean;
   updateBusy: boolean;
   updateStatus: string;
+  shortcuts: Record<string, ShortcutChord[]>;
 };
 
 const DEFAULT_SNAPSHOT: SettingsSnapshot = {
@@ -68,6 +70,7 @@ const DEFAULT_SNAPSHOT: SettingsSnapshot = {
   updatePrereleasesDisabled: true,
   updateBusy: false,
   updateStatus: "",
+  shortcuts: {},
 };
 
 let snapshot: SettingsSnapshot = { ...DEFAULT_SNAPSHOT };
@@ -198,7 +201,7 @@ export function unmountSettings(): void {
  * @returns {void}
  */
 export function resetSettingsForTests(): void {
-  snapshot = { ...DEFAULT_SNAPSHOT };
+  snapshot = { ...DEFAULT_SNAPSHOT, shortcuts: {} };
   appearanceSync = false;
   unmountSettings();
 }
@@ -694,4 +697,46 @@ export async function saveUpdateEnabled(on: boolean): Promise<void> {
 export async function saveUpdatePrereleases(on: boolean): Promise<void> {
   patchSettings({ updatePrereleases: on, updateBusy: true, updateStatus: "" });
   await saveUpdatePrereleasesHandler?.(on);
+}
+
+/**
+ * Apply saved shortcut overrides from the server.
+ *
+ * A payload without `shortcuts` leaves the map alone. No request is made.
+ *
+ * @param payload Settings object from the server.
+ * @returns {void}
+ */
+export function applyShortcuts(payload: SettingsPayload): void {
+  if (!("shortcuts" in payload)) return;
+  const raw = payload.shortcuts;
+  const shortcuts: Record<string, ShortcutChord[]> = {};
+  if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+    for (const [id, chords] of Object.entries(raw)) {
+      if (!Array.isArray(chords)) continue;
+      shortcuts[id] = chords.map((chord) => ({ ...chord }));
+    }
+  }
+  patchSettings({ shortcuts });
+}
+
+/**
+ * Save remapped shortcut chords and bind them now.
+ *
+ * Empty `{}` restores Serato defaults plus crateCraft extras. A failed
+ * save says so and keeps the new map for this session.
+ *
+ * @param next Override map, keyed by catalog id.
+ * @returns {Promise<void>}
+ */
+export async function saveShortcuts(next: Record<string, ShortcutChord[]>): Promise<void> {
+  patchSettings({ shortcuts: next, settingsStatus: "" });
+  try {
+    const payload = await postJSON<SettingsPayload>("/api/settings", { shortcuts: next });
+    applyShortcuts(payload);
+  } catch {
+    const status = t("error.shortcuts_not_saved");
+    patchSettings({ settingsStatus: status });
+    setText("settings-status", status);
+  }
 }

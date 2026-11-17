@@ -7,6 +7,7 @@
 
 import { describe, expect, it } from "vitest";
 import { CATALOG, effectiveShortcuts, type CatalogEntry, type ShortcutChord } from "../lib/ui/shortcut-catalog";
+import { unlabeledCatalogIds } from "../lib/ui/shortcut-labels";
 import { chordMatches } from "../lib/ui/shortcuts";
 
 function chord(key: string, flags: { mod?: boolean; shift?: boolean; alt?: boolean } = {}): ShortcutChord {
@@ -227,6 +228,10 @@ describe("Serato catalog", () => {
     expect(entry("exit-app").live).toBe(false);
     expect(entry("undo-load").live).toBe(false);
     expect(entry("beatgrid-edit").live).toBe(false);
+  });
+
+  it("labels every catalog id", () => {
+    expect(unlabeledCatalogIds(CATALOG.map((row) => row.id))).toEqual([]);
   });
 });
 

@@ -27,6 +27,7 @@ import { state } from "../lib/state";
 import { drainReactScheduler, installPage } from "./test-page";
 import { mountTrackList, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderCrates, renderFiles, renderList, wireLibrary } from "../lib/ui/views";
+import { patchSettings } from "../lib/ui/settings";
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -573,6 +574,16 @@ describe("keyboard shortcuts", () => {
     const event = press({ key: "w" });
     expect(toggles).toBe(1);
     expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("plays from a remapped play-pause key", () => {
+    patchSettings({ shortcuts: { "play-pause": [{ key: "q" }] } });
+    usePlayer();
+    document.body.focus();
+    press({ key: "q" });
+    expect(toggles).toBe(1);
+    press({ key: "w" });
+    expect(toggles).toBe(1);
   });
 
   it("loads the selected track from Shift+Left", () => {
