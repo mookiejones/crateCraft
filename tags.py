@@ -9,7 +9,10 @@ when that file has a plain ID3v2.3 tag, or when it is an MP3 with no tag
 yet. Other frames and the audio bytes stay as they are. Any other layout
 is left untouched. ``embed_front_cover`` adds an ID3 ``APIC`` frame or a
 FLAC picture block without rewriting Serato GEOB frames or Vorbis
-comments. MP4 and other layouts are refused.
+comments. MP4 and other layouts are refused. ``write_text_fields``
+writes ID3v2.3/2.4 and MP4 text atoms through mutagen. GEOB frames
+and Serato freeform atoms stay. FLAC, WAV, AIFF, and a shortcut
+are refused.
 """
 
 from __future__ import annotations
@@ -22,6 +25,7 @@ import os
 import shutil
 import struct
 import tempfile
+from collections.abc import Mapping
 from pathlib import Path
 from typing import BinaryIO, NotRequired, TypedDict
 
@@ -1784,10 +1788,26 @@ ARTWORK_FORMAT = "This file format cannot take artwork yet."
 ARTWORK_NOT_IMAGE = "That image is not a JPEG or PNG cover."
 ARTWORK_WRITE_FAILED = "The artwork could not be written."
 _ARTWORK_PAD = 256
+TAG_FORMAT = "This file format cannot take those tags yet."
+TAG_WRITE_FAILED = "The tags could not be written."
+TAG_MARKERS = "The Serato markers were not preserved."
 
 
 class ArtworkWriteError(Exception):
     """A cover that cannot be written. The file is left unchanged."""
+
+    def __init__(self, message: str) -> None:
+        """Store the sentence returned to the page.
+
+        Args:
+            message: Refusal text. It does not include a path.
+        """
+        super().__init__(message)
+        self.message = message
+
+
+class TagWriteError(Exception):
+    """Text tags that cannot be written. The file is left unchanged."""
 
     def __init__(self, message: str) -> None:
         """Store the sentence returned to the page.
@@ -2304,4 +2324,195 @@ def _mp4_text(handle: BinaryIO, size: int) -> dict[str, str]:
                                         break
         pos += atom_size
     return found
+
+
+_TEXT_ID3 = {
+    "name": ("TIT2",),
+    "artist": ("TPE1",),
+    "album": ("TALB",),
+    "genre": ("TCON",),
+    "year": ("TYER", "TDRC"),
+    "composer": ("TCOM",),
+    "remixer": ("TPE4",),
+    "label": ("TPUB",),
+    "grouping": ("TIT1", "GRP1"),
+    "comments": ("COMM",),
+    "key": ("TKEY",),
+}
+_TEXT_MP4 = {
+    "name": "\xa9nam",
+    "artist": "\xa9ART",
+    "album": "\xa9alb",
+    "genre": "\xa9gen",
+    "year": "\xa9day",
+    "composer": "\xa9wrt",
+    "label": "----:com.apple.iTunes:LABEL",
+    "grouping": "\xa9grp",
+    "comments": "\xa9cmt",
+    "key": "----:com.apple.iTunes:initialkey",
+}
+_SERATO_KEEP = _SERATO_FRAME_NAMES | _OVERVIEW_NAMES | frozenset({"Serato Autotags"})
+
+
+def write_text_fields(path: str | Path, fields: Mapping[str, str]) -> None:
+    """Write library text fields onto an MP3 or MP4, keeping Serato markers.
+
+    The destination is replaced only after a sibling temp file is written
+    and GEOB / Serato freeform atoms still match. A shortcut, FLAC, WAV,
+    AIFF, and a missing file are refused.
+
+    Args:
+        path: Audio file.
+        fields: Library column to value. ``name`` is the title.
+
+    Raises:
+        TagWriteError: The file was left unchanged.
+    """
+    dest = Path(path)
+    wanted = {key: value for key, value in fields.items() if key in _TEXT_ID3 and value is not None}
+    if not wanted:
+        raise TagWriteError(TAG_FORMAT)
+    try:
+        if dest.is_symlink() or not dest.is_file():
+            raise TagWriteError(TAG_FORMAT)
+        with dest.open("rb") as handle:
+            head = handle.read(12)
+    except OSError as exc:
+        raise TagWriteError(TAG_WRITE_FAILED) from exc
+    suffix = dest.suffix.lower()
+    is_mp3 = suffix == ".mp3" or head.startswith(b"ID3")
+    is_mp4 = _is_mp4_family(dest, head)
+    if is_mp4 and set(wanted) <= {"remixer"}:
+        raise TagWriteError(TAG_FORMAT)
+    if not is_mp3 and not is_mp4:
+        raise TagWriteError(TAG_FORMAT)
+    if is_mp3 and is_mp4:
+        is_mp4 = False
+    before = _serato_fingerprint(dest)
+    temp: Path | None = None
+    try:
+        handle = tempfile.NamedTemporaryFile(delete=False, dir=dest.parent, suffix=dest.suffix)
+        temp = Path(handle.name)
+        handle.close()
+        shutil.copy2(dest, temp)
+        if is_mp4:
+            _write_mp4_text(temp, wanted)
+        else:
+            _write_id3_text(temp, wanted)
+        if _serato_fingerprint(temp) != before:
+            raise TagWriteError(TAG_MARKERS)
+        os.replace(temp, dest)
+        temp = None
+    except TagWriteError:
+        raise
+    except OSError as exc:
+        raise TagWriteError(TAG_WRITE_FAILED) from exc
+    except Exception as exc:
+        raise TagWriteError(TAG_WRITE_FAILED) from exc
+    finally:
+        if temp is not None:
+            temp.unlink(missing_ok=True)
+
+
+def _serato_fingerprint(path: Path) -> tuple[tuple[str, bytes], ...]:
+    """Return Serato GEOB and MP4 freeform payloads for a round-trip check.
+
+    Args:
+        path: Audio file.
+
+    Returns:
+        Name and payload pairs, order preserved.
+    """
+    blob = path.read_bytes()
+    frames = list(_geob_frames(blob))
+    frames.extend(_mp4_serato_frames(blob, names=_SERATO_KEEP))
+    return tuple(frames)
+
+
+def _write_id3_text(path: Path, fields: Mapping[str, str]) -> None:
+    """Set ID3v2.3 text frames on ``path`` through mutagen.
+
+    Args:
+        path: MP3 copy to rewrite in place.
+        fields: Library column to value.
+
+    Raises:
+        Exception: mutagen save failed. The caller maps it.
+    """
+    from mutagen.id3 import (
+        COMM,
+        GRP1,
+        ID3,
+        ID3NoHeaderError,
+        TALB,
+        TCOM,
+        TCON,
+        TDRC,
+        TIT1,
+        TIT2,
+        TKEY,
+        TPE1,
+        TPE4,
+        TPUB,
+        TYER,
+        Encoding,
+    )
+
+    classes = {
+        "TIT2": TIT2,
+        "TPE1": TPE1,
+        "TALB": TALB,
+        "TCON": TCON,
+        "TDRC": TDRC,
+        "TYER": TYER,
+        "TCOM": TCOM,
+        "TPE4": TPE4,
+        "TPUB": TPUB,
+        "TIT1": TIT1,
+        "GRP1": GRP1,
+        "TKEY": TKEY,
+    }
+    try:
+        tag = ID3(str(path))
+    except ID3NoHeaderError:
+        tag = ID3()
+    for field, value in fields.items():
+        for frame_id in _TEXT_ID3[field]:
+            tag.delall(frame_id)
+            if frame_id == "COMM":
+                tag.add(COMM(encoding=Encoding.UTF16, lang="eng", desc="", text=value))
+                continue
+            frame_cls = classes[frame_id]
+            tag.add(frame_cls(encoding=Encoding.UTF16, text=value))
+    tag.save(str(path), v2_version=3)
+
+
+def _write_mp4_text(path: Path, fields: Mapping[str, str]) -> None:
+    """Set MP4 text atoms on ``path`` through mutagen.
+
+    Args:
+        path: M4A copy to rewrite in place.
+        fields: Library column to value.
+
+    Raises:
+        TagWriteError: Remixer-only, or mutagen save failed.
+        Exception: mutagen save failed. The caller maps it.
+    """
+    from mutagen.mp4 import MP4, AtomDataType, MP4FreeForm
+
+    audio = MP4(str(path))
+    wrote = False
+    for field, value in fields.items():
+        key = _TEXT_MP4.get(field)
+        if key is None:
+            continue
+        if key.startswith("----"):
+            audio[key] = [MP4FreeForm(value.encode("utf-8"), dataformat=AtomDataType.UTF8)]
+        else:
+            audio[key] = [value]
+        wrote = True
+    if not wrote:
+        raise TagWriteError(TAG_FORMAT)
+    audio.save()
+
 

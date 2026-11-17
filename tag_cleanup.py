@@ -20,21 +20,24 @@ moves a trailing feat./ft./featuring credit into remixer when that field is
 empty, and title-cases a title that is all upper or all lower. Mixed case
 stays. ``preview_titles`` lists the rows that would change.
 ``apply_titles`` writes those titles through ``safe_write`` with Serato
-closed. Audio files are not rewritten.
+closed. Audio files stay unless ``files`` is JSON true.
 
 ``apply`` also stores the chosen spelling in ``tag-spellings.json`` beside
 ``settings.json``, keyed by the library file and the ``normalize`` key.
 ``preview_mappings`` lists rows that still use another spelling of a saved
 key. ``apply_mappings`` writes those rows through ``safe_write`` with Serato
 closed, so a later import that uses Hip-Hop becomes Hip Hop without picking
-the group again. A damaged store reads as empty. Audio files are not
-rewritten.
+the group again. A damaged store reads as empty. Audio files stay unless
+``files`` is JSON true.
 
 ``preview_edit`` and ``apply_edit`` rewrite one TEXT_FIELD on selected
 track ids through ``safe_write`` with Serato closed. SQL column names
 come from ``EDIT_FIELDS``, never from the request. A plan with nothing
-to change does not write. Audio files are not rewritten. Writing tags
-into audio files is a later change.
+to change does not write. ``files: true`` on apply, clean-apply,
+refresh-apply, and edit-apply also writes ID3v2.3/2.4 and MP4 text
+atoms through ``tags.write_text_fields``, snapshots those files with
+``extra_files``, and never touches GEOB or Serato freeform atoms.
+Unsupported or missing files are skipped and listed. FLAC is skipped.
 """
 
 from __future__ import annotations
@@ -56,6 +59,7 @@ from typing import NotRequired, TypedDict
 import app_config
 import gig_check
 import library
+import tags
 
 FIELDS = ("genre", "artist")
 CHOOSE_FIELD = "Choose genre or artist."
@@ -153,6 +157,11 @@ _EDIT_SELECT = {
 }
 TITLE_FIELD = "name"
 TITLE_VALUE = "titles"
+SKIP_MISSING = "missing"
+SKIP_UNSUPPORTED = "unsupported"
+SKIP_UNREADABLE = "unreadable"
+_FILE_MP3 = frozenset({".mp3"})
+_FILE_MP4 = frozenset({".m4a", ".mp4", ".aac", ".alac"})
 
 class SpellingCount(TypedDict):
     """One stored spelling and how many tracks use it."""
@@ -190,6 +199,13 @@ Change = TypedDict(
 )
 
 
+class FileSkip(TypedDict):
+    """One audio file that ``files: true`` did not rewrite."""
+
+    id: int
+    reason: str
+
+
 class CleanedTitle(TypedDict):
     """One title after the cleanup rules, and an optional remixer write."""
 
@@ -205,6 +221,8 @@ class Plan(TypedDict):
     key: str
     changes: list[Change]
     written: bool
+    files_written: NotRequired[list[int]]
+    files_skipped: NotRequired[list[FileSkip]]
 
 
 def normalize(value: str) -> str:
@@ -628,7 +646,213 @@ def _plan(database: Path, space: str, field: str, value: object) -> Plan:
     }
 
 
-def preview(database: Path, space: str, field: str, value: object) -> Plan:
+def _want_files(raw: object) -> bool:
+    """Return whether the request asked to write audio tags.
+
+    Args:
+        raw: ``files`` from the JSON body.
+
+    Returns:
+        True only for JSON true. The string ``"true"`` is false.
+    """
+    return raw is True
+
+
+def _fields_for_change(change: Change, default_field: str) -> dict[str, str]:
+    """Map one plan row to library columns written onto the file.
+
+    Args:
+        change: One ``{ id, from, to }`` row.
+        default_field: Plan field when the row has no ``field``.
+
+    Returns:
+        Column to value. ``name`` is the title.
+    """
+    column = change.get("field") or default_field
+    values: dict[str, str] = {}
+    if column == TITLE_FIELD or column == "name":
+        values["name"] = change["to"]
+        remixer = change.get("remixer")
+        if remixer is not None:
+            values["remixer"] = remixer
+        return values
+    if column in EDIT_FIELDS or column in FIELDS:
+        values[column] = change["to"]
+    return values
+
+
+def _file_skip_reason(path: Path | None, fields: Mapping[str, str]) -> str | None:
+    """Return why this file cannot take ID3/MP4 text, or None when it can.
+
+    Args:
+        path: Resolved audio path, or None.
+        fields: Columns that would be written.
+
+    Returns:
+        ``missing``, ``unsupported``, or ``unreadable``.
+    """
+    if path is None:
+        return SKIP_MISSING
+    try:
+        if path.is_symlink():
+            return SKIP_UNSUPPORTED
+        if not path.exists():
+            return SKIP_MISSING
+        if not path.is_file():
+            return SKIP_UNSUPPORTED
+        suffix = path.suffix.lower()
+        if suffix in _FILE_MP3:
+            return None
+        if suffix in _FILE_MP4:
+            if set(fields) <= {"remixer"}:
+                return SKIP_UNSUPPORTED
+            return None
+        return SKIP_UNSUPPORTED
+    except OSError:
+        return SKIP_UNREADABLE
+
+
+def _file_targets(
+    conn: sqlite3.Connection,
+    changes: Sequence[Change],
+    default_field: str,
+) -> tuple[list[tuple[int, Path, dict[str, str]]], list[FileSkip]]:
+    """Resolve writable MP3/MP4 paths for a plan.
+
+    Args:
+        conn: Open library connection.
+        changes: Rows that would be rewritten.
+        default_field: Plan field when a row has no ``field``.
+
+    Returns:
+        Writable ``(id, path, fields)`` rows and skipped ids.
+    """
+    if not changes:
+        return [], []
+    ids = [change["id"] for change in changes]
+    placeholders = ",".join("?" * len(ids))
+    rows = conn.execute(
+        f"SELECT id, portable_id FROM asset WHERE id IN ({placeholders})",
+        ids,
+    ).fetchall()
+    stored = {int(row["id"]): row["portable_id"] for row in rows}
+    writable: list[tuple[int, Path, dict[str, str]]] = []
+    skipped: list[FileSkip] = []
+    by_id = {change["id"]: change for change in changes}
+    for asset_id in ids:
+        change = by_id[asset_id]
+        fields = _fields_for_change(change, default_field)
+        portable = stored.get(asset_id)
+        text = portable if isinstance(portable, str) and portable else None
+        resolved = library.resolved_path(text) if text else None
+        dest = Path(resolved) if resolved else None
+        reason = _file_skip_reason(dest, fields)
+        if reason is not None or dest is None:
+            skipped.append({"id": asset_id, "reason": reason or SKIP_MISSING})
+            continue
+        writable.append((asset_id, dest, fields))
+    return writable, skipped
+
+
+def _attach_files(plan: Plan, database: Path, files: bool) -> Plan:
+    """Add ``files_written`` / ``files_skipped`` when ``files`` is true.
+
+    Args:
+        plan: Preview or apply JSON.
+        database: ``master.sqlite``.
+        files: JSON true from the request.
+
+    Returns:
+        The same plan dict.
+    """
+    if not files:
+        return plan
+    conn = gig_check.open_read_only(database)
+    try:
+        writable, skipped = _file_targets(conn, plan["changes"], plan["field"])
+    finally:
+        conn.close()
+    plan["files_written"] = [asset_id for asset_id, _path, _fields in writable]
+    plan["files_skipped"] = skipped
+    return plan
+
+
+def _write_audio(writable: Sequence[tuple[int, Path, dict[str, str]]]) -> None:
+    """Write ID3/MP4 text on snapshotted files.
+
+    Args:
+        writable: ``(id, path, fields)`` rows already listed in extra_files.
+
+    Raises:
+        library.LibraryError: mutagen refused the file. extra_files rollback
+            puts the bytes back.
+    """
+    for _asset_id, path, fields in writable:
+        try:
+            tags.write_text_fields(path, fields)
+        except tags.TagWriteError as exc:
+            raise library.LibraryError(exc.message, 400) from exc
+
+
+def _snapshot_files(
+    database: Path, changes: Sequence[Change], default_field: str, files: bool
+) -> list[Path]:
+    """Return extra_files paths for a files:true apply.
+
+    Args:
+        database: ``master.sqlite``.
+        changes: Outer plan rows.
+        default_field: Plan field when a row has no ``field``.
+        files: JSON true from the request.
+
+    Returns:
+        Resolved MP3/MP4 paths. Empty when files is false or nothing is
+        writable.
+    """
+    if not files or not changes:
+        return []
+    conn = gig_check.open_read_only(database)
+    try:
+        writable, _skipped = _file_targets(conn, changes, default_field)
+    finally:
+        conn.close()
+    return [path for _asset_id, path, _fields in writable]
+
+
+def _finish_files(
+    result: Plan,
+    conn: sqlite3.Connection,
+    live: Sequence[Change],
+    default_field: str,
+    files: bool,
+) -> Plan:
+    """Write ID3/MP4 text for live rows when files is true.
+
+    Args:
+        result: Apply JSON already marked written.
+        conn: Open write connection.
+        live: Rows this write assigned.
+        default_field: Plan field when a row has no ``field``.
+        files: JSON true from the request.
+
+    Returns:
+        The same result dict.
+
+    Raises:
+        library.LibraryError: mutagen refused a file.
+    """
+    if not files:
+        return result
+    writable, skipped = _file_targets(conn, live, default_field)
+    _write_audio(writable)
+    result["files_written"] = [asset_id for asset_id, _path, _fields in writable]
+    result["files_skipped"] = skipped
+    return result
+
+
+def preview(
+    database: Path, space: str, field: str, value: object, files: bool = False
+) -> Plan:
     """List the rows an apply would rewrite, without writing.
 
     Args:
@@ -636,6 +860,7 @@ def preview(database: Path, space: str, field: str, value: object) -> Plan:
         space: Space name.
         field: ``genre`` or ``artist``.
         value: One stored spelling from that field's group.
+        files: True lists which audio files would be written.
 
     Returns:
         Plan JSON with ``written`` false.
@@ -643,16 +868,17 @@ def preview(database: Path, space: str, field: str, value: object) -> Plan:
     Raises:
         library.LibraryError: The field, space, or spelling is not allowed.
     """
-    return _plan(database, space, field, value)
+    return _attach_files(_plan(database, space, field, value), database, files)
 
 
-def apply(space: str, field: str, value: object) -> Plan:
+def apply(space: str, field: str, value: object, files: bool = False) -> Plan:
     """Rewrite one group's spellings through ``safe_write``.
 
     Args:
         space: Space name.
         field: ``genre`` or ``artist``.
         value: One stored spelling from that field's group.
+        files: True also writes ID3/MP4 text on those tracks.
 
     Returns:
         Plan JSON. ``written`` is false when every matching row already holds
@@ -668,10 +894,11 @@ def apply(space: str, field: str, value: object) -> Plan:
     plan = _plan(database, space, field, value)
     if not plan["changes"]:
         _remember(plan["field"], plan["key"], plan["value"])
-        return plan
+        return _attach_files(plan, database, files)
     field_name = plan["field"]
     spelling = plan["value"]
     key = plan["key"]
+    extra = _snapshot_files(database, plan["changes"], field_name, files)
 
     def run(conn: sqlite3.Connection, write: safe_write.Session) -> Plan:
         """Rewrite the live rows and register the field check.
@@ -724,15 +951,16 @@ def apply(space: str, field: str, value: object) -> Plan:
                     raise safe_write.VerifyMismatch("The track fields do not match.")
 
         write.check(check)
-        return {
+        result: Plan = {
             "field": field_name,
             "value": spelling,
             "key": key,
             "changes": live,
             "written": True,
         }
+        return _finish_files(result, conn, live, field_name, files)
 
-    result = safe_write.run("tag_cleanup", spelling, run)
+    result = safe_write.run("tag_cleanup", spelling, run, extra_files=extra)
     with closing(library.read_conn()) as master:
         for change in result["changes"]:
             library._mirror_asset(  # pyright: ignore[reportPrivateUsage]
@@ -798,12 +1026,13 @@ def _mapping_plan(database: Path, space: str) -> Plan:
     }
 
 
-def preview_mappings(database: Path, space: str) -> Plan:
+def preview_mappings(database: Path, space: str, files: bool = False) -> Plan:
     """List the rows saved mappings would rewrite, without writing.
 
     Args:
         database: ``master.sqlite``.
         space: Space name.
+        files: True lists which audio files would be written.
 
     Returns:
         Plan JSON with ``written`` false.
@@ -812,14 +1041,15 @@ def preview_mappings(database: Path, space: str) -> Plan:
         library.LibraryError: The space is unknown or the database cannot
             be opened read-only.
     """
-    return _mapping_plan(database, space)
+    return _attach_files(_mapping_plan(database, space), database, files)
 
 
-def apply_mappings(space: str) -> Plan:
+def apply_mappings(space: str, files: bool = False) -> Plan:
     """Rewrite saved mapping rows through ``safe_write``.
 
     Args:
         space: Space name.
+        files: True also writes ID3/MP4 text on those tracks.
 
     Returns:
         Plan JSON. ``written`` is false when every matching row already
@@ -834,7 +1064,8 @@ def apply_mappings(space: str) -> Plan:
     database = Path(library.MASTER)
     plan = _mapping_plan(database, space)
     if not plan["changes"]:
-        return plan
+        return _attach_files(plan, database, files)
+    extra = _snapshot_files(database, plan["changes"], MAPPING_FIELD, files)
 
     def run(conn: sqlite3.Connection, write: safe_write.Session) -> Plan:
         """Rewrite the live rows and register the field check.
@@ -892,15 +1123,16 @@ def apply_mappings(space: str) -> Plan:
                         raise safe_write.VerifyMismatch("The track fields do not match.")
 
         write.check(check)
-        return {
+        result: Plan = {
             "field": MAPPING_FIELD,
             "value": MAPPING_VALUE,
             "key": MAPPING_KEY,
             "changes": live,
             "written": True,
         }
+        return _finish_files(result, conn, live, MAPPING_FIELD, files)
 
-    result = safe_write.run("tag_cleanup", "mappings", run)
+    result = safe_write.run("tag_cleanup", "mappings", run, extra_files=extra)
     with closing(library.read_conn()) as master:
         for change in result["changes"]:
             field_name = change.get("field")
@@ -975,12 +1207,13 @@ def _title_plan(database: Path, space: str) -> Plan:
     }
 
 
-def preview_titles(database: Path, space: str) -> Plan:
+def preview_titles(database: Path, space: str, files: bool = False) -> Plan:
     """List the titles an apply would rewrite, without writing.
 
     Args:
         database: ``master.sqlite``.
         space: Space name.
+        files: True lists which audio files would be written.
 
     Returns:
         Plan JSON with ``written`` false.
@@ -989,14 +1222,15 @@ def preview_titles(database: Path, space: str) -> Plan:
         library.LibraryError: The space is unknown or the database cannot
             be opened read-only.
     """
-    return _title_plan(database, space)
+    return _attach_files(_title_plan(database, space), database, files)
 
 
-def apply_titles(space: str) -> Plan:
+def apply_titles(space: str, files: bool = False) -> Plan:
     """Rewrite cleaned titles through ``safe_write``.
 
     Args:
         space: Space name.
+        files: True also writes ID3/MP4 text on those tracks.
 
     Returns:
         Plan JSON. ``written`` is false when every title already matches
@@ -1011,7 +1245,8 @@ def apply_titles(space: str) -> Plan:
     database = Path(library.MASTER)
     plan = _title_plan(database, space)
     if not plan["changes"]:
-        return plan
+        return _attach_files(plan, database, files)
+    extra = _snapshot_files(database, plan["changes"], TITLE_FIELD, files)
 
     def run(conn: sqlite3.Connection, write: safe_write.Session) -> Plan:
         """Rewrite the live titles and register the field check.
@@ -1073,15 +1308,16 @@ def apply_titles(space: str) -> Plan:
                     raise safe_write.VerifyMismatch("The track fields do not match.")
 
         write.check(check)
-        return {
+        result: Plan = {
             "field": TITLE_FIELD,
             "value": TITLE_VALUE,
             "key": "clean",
             "changes": live,
             "written": True,
         }
+        return _finish_files(result, conn, live, TITLE_FIELD, files)
 
-    result = safe_write.run("tag_cleanup", "titles", run)
+    result = safe_write.run("tag_cleanup", "titles", run, extra_files=extra)
     with closing(library.read_conn()) as master:
         for change in result["changes"]:
             values: dict[str, object] = {"name": change["to"]}
@@ -1213,7 +1449,12 @@ def _edit_plan(
 
 
 def preview_edit(
-    database: Path, space: str, ids: object, field: object, value: object
+    database: Path,
+    space: str,
+    ids: object,
+    field: object,
+    value: object,
+    files: bool = False,
 ) -> Plan:
     """List the rows an edit-apply would rewrite, without writing.
 
@@ -1223,6 +1464,7 @@ def preview_edit(
         ids: Asset ids to edit.
         field: One ``EDIT_FIELDS`` column.
         value: Text to write.
+        files: True lists which audio files would be written.
 
     Returns:
         Plan JSON with ``written`` false.
@@ -1230,10 +1472,12 @@ def preview_edit(
     Raises:
         library.LibraryError: The space, field, ids, or value is not allowed.
     """
-    return _edit_plan(database, space, ids, field, value)
+    return _attach_files(_edit_plan(database, space, ids, field, value), database, files)
 
 
-def apply_edit(space: str, ids: object, field: object, value: object) -> Plan:
+def apply_edit(
+    space: str, ids: object, field: object, value: object, files: bool = False
+) -> Plan:
     """Rewrite one field on selected tracks through ``safe_write``.
 
     Args:
@@ -1241,6 +1485,7 @@ def apply_edit(space: str, ids: object, field: object, value: object) -> Plan:
         ids: Asset ids to edit.
         field: One ``EDIT_FIELDS`` column.
         value: Text to write.
+        files: True also writes ID3/MP4 text on those tracks.
 
     Returns:
         Plan JSON. ``written`` is false when every selected row already
@@ -1255,11 +1500,12 @@ def apply_edit(space: str, ids: object, field: object, value: object) -> Plan:
     database = Path(library.MASTER)
     plan = _edit_plan(database, space, ids, field, value)
     if not plan["changes"]:
-        return plan
+        return _attach_files(plan, database, files)
     field_name = plan["field"]
     cleaned = plan["value"]
     unique = [change["id"] for change in plan["changes"]]
     target = cleaned or field_name
+    extra = _snapshot_files(database, plan["changes"], field_name, files)
 
     def run(conn: sqlite3.Connection, write: safe_write.Session) -> Plan:
         """Rewrite the live rows and register the field check.
@@ -1312,15 +1558,16 @@ def apply_edit(space: str, ids: object, field: object, value: object) -> Plan:
                     raise safe_write.VerifyMismatch("The track fields do not match.")
 
         write.check(check)
-        return {
+        result: Plan = {
             "field": field_name,
             "value": cleaned,
             "key": EDIT_KEY,
             "changes": live,
             "written": True,
         }
+        return _finish_files(result, conn, live, field_name, files)
 
-    result = safe_write.run("tag_cleanup", target, run)
+    result = safe_write.run("tag_cleanup", target, run, extra_files=extra)
     with closing(library.read_conn()) as master:
         for change in result["changes"]:
             library._mirror_asset(  # pyright: ignore[reportPrivateUsage]
@@ -1338,7 +1585,7 @@ def action(payload: Mapping[str, object]) -> Plan:
             ``edit-preview``, or ``edit-apply``. Spelling actions take
             ``space``, ``field``, and ``value``. Title cleanup and mapping
             refresh take ``space``. Field edits take ``space``, ``ids``,
-            ``field``, and ``value``.
+            ``field``, and ``value``. ``files`` true also writes ID3/MP4.
 
     Returns:
         That action's result.
@@ -1348,16 +1595,17 @@ def action(payload: Mapping[str, object]) -> Plan:
     """
     kind = payload.get("action")
     space = payload.get("space") or library.LIBRARY_SPACE
+    files = _want_files(payload.get("files"))
     if not isinstance(space, str):
         raise library.LibraryError("That space is not available here.")
     if kind == "clean-preview":
-        return preview_titles(Path(library.MASTER), space)
+        return preview_titles(Path(library.MASTER), space, files)
     if kind == "clean-apply":
-        return apply_titles(space)
+        return apply_titles(space, files)
     if kind == "refresh-preview":
-        return preview_mappings(Path(library.MASTER), space)
+        return preview_mappings(Path(library.MASTER), space, files)
     if kind == "refresh-apply":
-        return apply_mappings(space)
+        return apply_mappings(space, files)
     if kind == "edit-preview":
         return preview_edit(
             Path(library.MASTER),
@@ -1365,9 +1613,12 @@ def action(payload: Mapping[str, object]) -> Plan:
             payload.get("ids"),
             payload.get("field"),
             payload.get("value"),
+            files,
         )
     if kind == "edit-apply":
-        return apply_edit(space, payload.get("ids"), payload.get("field"), payload.get("value"))
+        return apply_edit(
+            space, payload.get("ids"), payload.get("field"), payload.get("value"), files
+        )
     field = payload.get("field", "genre")
     if field is None:
         field = "genre"
@@ -1375,9 +1626,9 @@ def action(payload: Mapping[str, object]) -> Plan:
         raise library.LibraryError(CHOOSE_FIELD, 400)
     value = payload.get("value")
     if kind == "preview":
-        return preview(Path(library.MASTER), space, field, value)
+        return preview(Path(library.MASTER), space, field, value, files)
     if kind == "apply":
-        return apply(space, field, value)
+        return apply(space, field, value, files)
     raise library.LibraryError("That action is not available.")
 
 

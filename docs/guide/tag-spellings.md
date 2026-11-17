@@ -1,10 +1,10 @@
 # Tag spellings
 
-**Tag spellings** groups genre and artist spellings that mean the same thing, such as Hip Hop, Hip-Hop, and hiphop. Pick one spelling per group. Review the rows that would change, then Apply. **Titles** strips track numbers, URLs, and (Original Mix), moves feat. into remixer when remixer is empty, and title-cases ALL CAPS or all lowercase. The write goes through the same library path as a crate edit. Quit Serato first. Audio files stay as they are.
+**Tag spellings** groups genre and artist spellings that mean the same thing, such as Hip Hop, Hip-Hop, and hiphop. Pick one spelling per group. Review the rows that would change, then Apply. **Titles** strips track numbers, URLs, and (Original Mix), moves feat. into remixer when remixer is empty, and title-cases ALL CAPS or all lowercase. The write goes through the same library path as a crate edit. Quit Serato first. Check **Write to files too** to also write ID3 and MP4 tags on MP3 and M4A. FLAC is skipped. Cue points stay.
 
-The note under the heading says **Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.** On **Titles** it names those cleanup rules instead.
+The note under the heading says **Pick one spelling per group. Writes the library. Check Write to files too for MP3 and M4A. Quit Serato first.** On **Titles** it names those cleanup rules instead.
 
-This view covers the whole space. The crate list is hidden. To rewrite one field on selected tracks, check two or more rows on [Crates](crates.md). That write also stays in the library. Audio files stay as they are.
+This view covers the whole space. The crate list is hidden. To rewrite one field on selected tracks, check two or more rows on [Crates](crates.md). That write also stays in the library unless **Write to files too** is checked.
 
 ## Review a group
 
@@ -41,7 +41,7 @@ When every title already matches, the report says **Every title in this space al
 
 ## What Apply writes
 
-Apply rewrites the genre or artist on those library rows, or the title and remixer for **Titles**. Cue points stay in the audio files. The files themselves are not rewritten.
+Apply rewrites the genre or artist on those library rows, or the title and remixer for **Titles**. Check **Write to files too** to also write those fields on MP3 and M4A files. Serato markers stay. FLAC is skipped.
 
 Apply also remembers that spelling next to the app settings, not in the Serato folder. **Apply saved mappings** rewrites later tracks that still use another form of a saved spelling, including a new import that is no longer in a spelling group.
 

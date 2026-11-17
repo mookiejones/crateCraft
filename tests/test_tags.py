@@ -15,10 +15,13 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from tags import (
+    TAG_FORMAT,
+    TagWriteError,
     _TAG_LIMIT,
     _parse_beatgrid,
     _parse_cue,
     _parse_markers2,
+    _serato_fingerprint,
     beatgrid_issue,
     beatgrid_issue_code,
     copy_serato_geob,
@@ -26,6 +29,7 @@ from tags import (
     read_file_health,
     read_serato_tags,
     serato_tags_from_regions,
+    write_text_fields,
 )
 
 
@@ -1195,6 +1199,66 @@ class FileHealthTests(unittest.TestCase):
             ftyp = _atom(b"ftyp", b"M4A " + bytes(4))
             path.write_bytes(ftyp + moov)
             self.assertEqual(read_file_health(str(path)), {"artwork": True, "beatgrid": False})
+
+
+AUDIO = b"\xff\xfb" + bytes(64)
+
+
+def _mp3_with_geob(path: Path) -> Path:
+    """Write a tiny MP3 with one Markers2 GEOB frame."""
+    path.write_bytes(_id3_pack([_geob_frame("Serato Markers2", _markers_payload())]) + AUDIO)
+    return path
+
+
+class WriteTextFieldsTests(unittest.TestCase):
+    """mutagen writes ID3/MP4 text and leaves Serato markers."""
+
+    def test_mp3_keeps_geob_bytes(self) -> None:
+        """TCON is set. The Markers2 GEOB payload stays identical."""
+        from mutagen.id3 import ID3
+
+        with tempfile.TemporaryDirectory() as folder:
+            path = _mp3_with_geob(Path(folder) / "a.mp3")
+            before = _serato_fingerprint(path)
+            write_text_fields(path, {"genre": "Hip Hop"})
+            self.assertEqual(_serato_fingerprint(path), before)
+            self.assertEqual(ID3(str(path))["TCON"].text[0], "Hip Hop")
+            cues = read_serato_tags(str(path))
+            self.assertTrue(cues["found"])
+            self.assertEqual(cues["cues"][0]["name"], "Drop")
+
+    def test_mp4_keeps_serato_freeform(self) -> None:
+        """Genre is set. The markersv2 atom stays."""
+        from mutagen.mp4 import MP4
+
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "a.m4a"
+            _write_m4a(path, _freeform("markersv2", b"keep-me", null_terminate=True))
+            before = _serato_fingerprint(path)
+            write_text_fields(path, {"genre": "Hip Hop"})
+            self.assertEqual(_serato_fingerprint(path), before)
+            self.assertEqual(MP4(str(path))["\xa9gen"][0], "Hip Hop")
+
+    def test_flac_and_symlink_are_refused(self) -> None:
+        """A FLAC and a shortcut stay as they were."""
+        with tempfile.TemporaryDirectory() as folder:
+            flac = Path(folder) / "a.flac"
+            write_flac_fixture(flac, [])
+            flac_before = flac.read_bytes()
+            with self.assertRaises(TagWriteError) as refused:
+                write_text_fields(flac, {"genre": "Hip Hop"})
+            self.assertEqual(refused.exception.message, TAG_FORMAT)
+            self.assertEqual(flac.read_bytes(), flac_before)
+            target = _mp3_with_geob(Path(folder) / "real.mp3")
+            link = Path(folder) / "link.mp3"
+            try:
+                link.symlink_to(target)
+            except OSError:
+                self.skipTest("This user cannot create shortcuts.")
+            before = target.read_bytes()
+            with self.assertRaises(TagWriteError):
+                write_text_fields(link, {"genre": "Hip Hop"})
+            self.assertEqual(target.read_bytes(), before)
 
 
 if __name__ == "__main__":

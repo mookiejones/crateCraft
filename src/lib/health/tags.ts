@@ -5,9 +5,9 @@
  * lists the rows a chosen spelling would rewrite. POST apply writes
  * through safe_write and remembers the spelling. Genre and Artist also
  * POST refresh-preview; Apply saved mappings POSTs refresh-apply.
- * Titles uses POST clean-preview and clean-apply. Audio files are not
- * rewritten. A newer load ignores a late response. TagsPanel paints
- * from HealthContext.
+ * Titles uses POST clean-preview and clean-apply. Check Write to files
+ * too to also write ID3 and MP4. A newer load ignores a late response.
+ * TagsPanel paints from HealthContext.
  *
  * Page text is in the locale catalogs under tags.*.
  */
@@ -35,6 +35,13 @@ import {
 
 const TITLE_KEY = "clean";
 const MAPPING_KEY = "saved";
+
+function filesPayload<T extends Record<string, unknown>>(payload: T): T & { files?: true } {
+  if (document.querySelector<HTMLInputElement>("#tags-write-files")?.checked === true) {
+    return { ...payload, files: true };
+  }
+  return payload;
+}
 
 let latest: TagClusters | null = null;
 let titlePlan: TagClusterPlan | null = null;
@@ -167,10 +174,10 @@ export async function loadTags(): Promise<void> {
   let settle: "report" | "retry" | "none" = "none";
   try {
     if (field === "titles") {
-      const payload = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+      const payload = await postJSON<TagClusterPlan>("/api/tag-clusters", filesPayload({
         action: "clean-preview",
         space: state.space,
-      });
+      }));
       if (token !== state.tagsToken) return;
       titlePlan = payload;
       latest = null;
@@ -262,12 +269,12 @@ export async function previewGroup(key: string): Promise<void> {
   actionKey = key;
   emitHealth();
   try {
-    const plan = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+    const plan = await postJSON<TagClusterPlan>("/api/tag-clusters", filesPayload({
       action: "preview",
       space: state.space,
       field: field === "titles" ? "genre" : field,
       value,
-    });
+    }));
     plans.set(key, plan);
     status = previewSummary(plan);
     emitHealth();
@@ -295,12 +302,12 @@ export async function applyGroup(key: string): Promise<void> {
   beginBusy();
   emitHealth();
   try {
-    const written = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+    const written = await postJSON<TagClusterPlan>("/api/tag-clusters", filesPayload({
       action: "apply",
       space: state.space,
       field: field === "titles" ? "genre" : field,
       value,
-    });
+    }));
     if (isQueuedWrite(written)) {
       status = t("gigLock.queued");
       setNotice(t("gigLock.queued"));
@@ -336,10 +343,10 @@ export async function applyMappings(): Promise<void> {
   beginBusy();
   emitHealth();
   try {
-    const written = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+    const written = await postJSON<TagClusterPlan>("/api/tag-clusters", filesPayload({
       action: "refresh-apply",
       space: state.space,
-    });
+    }));
     if (isQueuedWrite(written)) {
       status = t("gigLock.queued");
       setNotice(t("gigLock.queued"));
@@ -375,10 +382,10 @@ export async function applyTitles(): Promise<void> {
   beginBusy();
   emitHealth();
   try {
-    const written = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+    const written = await postJSON<TagClusterPlan>("/api/tag-clusters", filesPayload({
       action: "clean-apply",
       space: state.space,
-    });
+    }));
     if (isQueuedWrite(written)) {
       status = t("gigLock.queued");
       setNotice(t("gigLock.queued"));
@@ -423,10 +430,10 @@ function asMappingPlan(payload: unknown): TagClusterPlan | null {
 
 async function readMappingPreview(token: number): Promise<TagClusterPlan | null> {
   try {
-    const payload = await postJSON<TagClusterPlan>("/api/tag-clusters", {
+    const payload = await postJSON<TagClusterPlan>("/api/tag-clusters", filesPayload({
       action: "refresh-preview",
       space: state.space,
-    });
+    }));
     if (token !== state.tagsToken) return null;
     return asMappingPlan(payload);
   } catch {

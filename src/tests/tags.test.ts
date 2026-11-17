@@ -395,6 +395,37 @@ describe("tags", () => {
     expect(document.getElementById("tags-status")!.textContent).toContain("Wrote Hip Hop on 2 tracks");
   });
 
+  it("posts files true when Write to files too is checked", async () => {
+    const fetchMock = vi.fn(async () => reply(groups));
+    vi.stubGlobal("fetch", fetchMock);
+    stubPosts({
+      preview,
+      apply: { ...preview, written: true },
+    });
+    await loadTags();
+    const box = document.querySelector<HTMLInputElement>("#tags-write-files");
+    expect(box?.checked).toBe(false);
+    box!.checked = true;
+    previewFor("hiphop").click();
+    await vi.waitFor(() => expect(applyFor("hiphop").disabled).toBe(false));
+    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+      action: "preview",
+      space: "Serato Library",
+      field: "genre",
+      value: "Hip Hop",
+      files: true,
+    });
+    applyFor("hiphop").click();
+    await vi.waitFor(() => expect(bridge.reloadLibrary).toHaveBeenCalled());
+    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+      action: "apply",
+      space: "Serato Library",
+      field: "genre",
+      value: "Hip Hop",
+      files: true,
+    });
+  });
+
   it("locks the page on a 409 and disables Apply", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply(groups)));
     const locked = Object.assign(new Error("Quit Serato DJ before writing."), {

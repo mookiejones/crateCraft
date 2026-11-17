@@ -7,3 +7,4 @@ miniaudio==1.73
 cffi==2.1.1
 pycparser==3.12
 numpy==2.5.4
+mutagen==1.48.1

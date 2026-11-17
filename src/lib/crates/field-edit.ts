@@ -2,7 +2,8 @@
  * Bulk field edit on selected crate tracks (#27).
  *
  * POST /api/tag-clusters edit-preview lists rows that would change.
- * edit-apply writes that value through safe_write. Audio files stay.
+ * edit-apply writes that value through safe_write. files: true also
+ * writes ID3 and MP4 text. Omit files when the box is unchecked.
  */
 
 import { failureOf, postJSON } from "../api";
@@ -14,14 +15,29 @@ import { setNotice } from "../ui/notice-store";
 import { fieldEditWrittenText } from "./field-edit-view";
 import { isQueuedWrite } from "./queue-notice";
 
-function body(action: "edit-preview" | "edit-apply", ids: readonly number[], field: string, value: string) {
-  return {
+function body(
+  action: "edit-preview" | "edit-apply",
+  ids: readonly number[],
+  field: string,
+  value: string,
+  files: boolean,
+) {
+  const payload: {
+    action: "edit-preview" | "edit-apply";
+    space: string;
+    ids: number[];
+    field: string;
+    value: string;
+    files?: true;
+  } = {
     action,
     space: state.space,
     ids: [...ids],
     field,
     value,
   };
+  if (files) payload.files = true;
+  return payload;
 }
 
 /**
@@ -36,8 +52,9 @@ export async function previewFieldEdit(
   ids: readonly number[],
   field: string,
   value: string,
+  files = false,
 ): Promise<TagClusterPlan> {
-  return postJSON<TagClusterPlan>("/api/tag-clusters", body("edit-preview", ids, field, value));
+  return postJSON<TagClusterPlan>("/api/tag-clusters", body("edit-preview", ids, field, value, files));
 }
 
 /**
@@ -54,11 +71,12 @@ export async function applyFieldEdit(
   ids: readonly number[],
   field: string,
   value: string,
+  files = false,
 ): Promise<TagClusterPlan> {
   try {
     const plan = await postJSON<TagClusterPlan>(
       "/api/tag-clusters",
-      body("edit-apply", ids, field, value),
+      body("edit-apply", ids, field, value, files),
     );
     if (isQueuedWrite(plan)) {
       setNotice(t("gigLock.queued"));
