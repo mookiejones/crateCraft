@@ -2544,6 +2544,17 @@ dialog .settings-field select {
 
 #preset-dialog { max-width: 32rem; }
 
+#crate-tree-dialog {
+  max-width: 32rem;
+  overflow: auto;
+}
+
+#crate-tree-dialog .tree-bands {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--space-3);
+}
+
 .preset-field small { display: block; margin-top: var(--space-1); }
 
 #files-changes {

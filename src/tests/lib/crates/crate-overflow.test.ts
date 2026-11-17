@@ -19,10 +19,11 @@ describe("crate overflow membership", () => {
     expect(isCratePrimaryAction("crate-color")).toBe(false);
   });
 
-  it("puts Color, Preset, Sync folder, and the rest under More", () => {
+  it("puts Color, Preset, Tree, Sync folder, and the rest under More", () => {
     expect([...CRATE_RAIL_OVERFLOW_IDS]).toEqual([
       "crate-color",
       "crate-preset",
+      "crate-tree",
       "crate-folder-sync",
       "crate-rename-from-tags",
       "crate-refresh",

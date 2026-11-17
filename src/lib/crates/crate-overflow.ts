@@ -10,6 +10,7 @@ export const CRATE_PRIMARY_ACTION_IDS = ["crate-new", "crate-rename", "crate-del
 export const CRATE_RAIL_OVERFLOW_IDS = [
   "crate-color",
   "crate-preset",
+  "crate-tree",
   "crate-folder-sync",
   "crate-rename-from-tags",
   "crate-refresh",

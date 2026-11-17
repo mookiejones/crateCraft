@@ -1,7 +1,7 @@
 /**
  * Crate action buttons painted by React.
  *
- * New, Rename, and Delete stay on the row. Color, Preset, Sync folder,
+ * New, Rename, and Delete stay on the row. Color, Preset, Tree, Sync folder,
  * Rename from tags, and Refresh sit under More. Ids stay the ones the
  * desktop menu and tests click. Tooltips use `tooltip.*` through
  * `setTooltip`. Outlined MUI Buttons, size small.
@@ -78,6 +78,14 @@ export function CrateActions() {
             ariaHasPopup: "dialog",
             disabled: !crates.canPreset,
             onClick: () => crates.preset(),
+          },
+          {
+            id: "crate-tree",
+            label: t("crateTree.button"),
+            tip: tips.crateTree,
+            ariaHasPopup: "dialog",
+            disabled: !crates.canTree,
+            onClick: () => crates.tree(),
           },
           {
             id: "crate-folder-sync",

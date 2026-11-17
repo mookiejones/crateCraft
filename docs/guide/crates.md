@@ -2,7 +2,7 @@
 
 Crates are the lists on the left when **Crates** is selected. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
 
-The navigation highlights the open section. On a window 980 pixels wide or narrower the rail starts mini; use the menu button to open labels. The crate list, track grid, and details share the window so Title, Artist, and BPM stay readable. A saved list width cannot hide the crate list or the details. Search and the field menu sit above the crate actions. **New**, **Rename**, and **Delete** stay on that row. **Color**, **Preset**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list. A long crate list scrolls inside the crate pane. Collapsing the navigation drawer leaves crate names in the main column. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
+The navigation highlights the open section. On a window 980 pixels wide or narrower the rail starts mini; use the menu button to open labels. The crate list, track grid, and details share the window so Title, Artist, and BPM stay readable. A saved list width cannot hide the crate list or the details. Search and the field menu sit above the crate actions. **New**, **Rename**, and **Delete** stay on that row. **Color**, **Preset**, **Tree**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list. A long crate list scrolls inside the crate pane. Collapsing the navigation drawer leaves crate names in the main column. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
 
 ![The Crates view with Saturday night selected in an example library of 24 tracks. Search and actions sit above the grid, with track details on the right.](../media/crates-refined.png)
 
@@ -104,6 +104,19 @@ You cannot tick a smart crate in the track's crate list. The page names those cr
 3. Tick a normal crate to add the track. Clear the tick to remove it.
 
 The audio file stays where it is.
+
+## Build a crate tree
+
+**Tree** makes a parent crate with a ⟳ subcrate per BPM band, key, or genre. Empty subcrates are not made. Quit Serato first. Audio files stay as they are.
+
+1. Click **More**, then **Tree**.
+2. Choose **BPM bands**, **Keys**, or **Genres**.
+3. For BPM, set low, high, band width, and step. For genres, set fewest tracks per genre and most genres. Keys has no extra fields.
+4. Optional: tick **Only tracks in** the selected crate and its subcrates when a normal crate is selected.
+5. Read the preview. Create tree stays off when no subcrate would be made.
+6. Click **Create tree**.
+
+The default name is **BPM bands**, **Keys**, or **Genres**. The subcrates refresh like any preset crate. [Crate trees](crate-trees.md) covers the dialog.
 
 ## Sync with a folder
 

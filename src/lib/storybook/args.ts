@@ -98,6 +98,7 @@ export function crateValueFromArgs(args: CrateStoryArgs): CrateContextValue {
     canColor: chosen,
     canDelete: chosen,
     canPreset: args.writable,
+    canTree: args.writable,
     canFolderSync: chosen,
     canRenameFromTags: chosen,
     splitPressed: args.splitPressed,
