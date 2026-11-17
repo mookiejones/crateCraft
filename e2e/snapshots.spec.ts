@@ -43,5 +43,10 @@ test("the snapshots list renders from context", async ({ page }) => {
   await expect(page.locator("#music-mirror-preview")).toBeEnabled();
   await expect(page.locator("#music-mirror-copy")).toBeEnabled();
   await page.locator("#music-mirror").scrollIntoViewIfNeeded();
+  await expect(page.locator("#gig-lock-heading")).toHaveText("Gig Lock");
+  await expect(page.locator("#gig-lock-preview")).toBeVisible();
+  await expect(page.locator("#gig-lock-apply")).toBeVisible();
+  await expect(page.locator("#gig-lock-drop")).toBeVisible();
+  await page.locator("#gig-lock-queue").scrollIntoViewIfNeeded();
   await saveShot(page, "snapshots_list");
 });
