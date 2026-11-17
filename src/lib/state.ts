@@ -128,6 +128,7 @@ export interface PageState {
   scanToken: number;
   bitrateToken: number;
   tagsToken: number;
+  lostToken: number;
   view: Track[];
   viewB: Track[];
 }
@@ -205,6 +206,7 @@ export const state: PageState = {
   scanToken: 0,
   bitrateToken: 0,
   tagsToken: 0,
+  lostToken: 0,
   view: [],
   viewB: [],
 };

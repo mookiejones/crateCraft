@@ -24,6 +24,7 @@ export type ViewMode =
   | "scan"
   | "bitrate"
   | "tags"
+  | "lost"
   | "snapshots"
   | "gig"
   | "portable"
@@ -38,7 +39,7 @@ export interface NavGroup {
 export const NAV_GROUPS: readonly NavGroup[] = [
   { id: "library", labelKey: "view.group.library", modes: ["crates", "history", "stats"] },
   { id: "files", labelKey: "view.files", modes: ["files"] },
-  { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags"] },
+  { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags", "lost"] },
   { id: "backups", labelKey: "view.snapshots", modes: ["snapshots"] },
   { id: "gig", labelKey: "view.group.gig", modes: ["gig", "portable", "drift"] },
 ];

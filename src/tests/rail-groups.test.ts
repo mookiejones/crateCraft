@@ -48,6 +48,7 @@ describe("rail groups", () => {
       "scan",
       "bitrate",
       "tags",
+      "lost",
       "snapshots",
       "gig",
       "portable",
@@ -59,6 +60,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Damaged files");
     expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Suspect quality");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Tag spellings");
+    expect(document.querySelector("[data-view='lost']")?.textContent).toBe("Lost tags");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Ready");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Check drive");
@@ -91,6 +93,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Archivos dañados");
     expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Calidad dudosa");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Grafías de etiquetas");
+    expect(document.querySelector("[data-view='lost']")?.textContent).toBe("Etiquetas perdidas");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Copias de seguridad");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Listo");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Comprobar unidad");

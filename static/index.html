@@ -62,6 +62,7 @@
           <button type="button" id="scan-tab" data-view="scan" role="tab" hidden aria-controls="scan-panel" data-i18n="view.scan">Damaged files</button>
           <button type="button" id="bitrate-tab" data-view="bitrate" role="tab" hidden aria-controls="bitrate-panel" data-i18n="view.bitrate">Suspect quality</button>
           <button type="button" id="tags-tab" data-view="tags" role="tab" hidden aria-controls="tags-panel" data-i18n="view.tags">Tag spellings</button>
+          <button type="button" id="lost-tab" data-view="lost" role="tab" hidden aria-controls="lost-panel" data-i18n="view.lost">Lost tags</button>
           <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
           <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
           <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
@@ -349,6 +350,18 @@
         <p id="tags-hint" class="gig-note" data-i18n="tags.intro">Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.</p>
         <p id="tags-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="tags-report" class="gig-report" tabindex="-1"></div>
+      </section>
+
+      <section id="lost-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="lost-heading" aria-busy="false">
+        <h2 id="lost-heading" class="visually-hidden" data-i18n="lost.heading">Lost tags</h2>
+        <div class="browser-bar">
+          <p id="lost-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="lost-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+          <button id="lost-apply" type="button" data-i18n="lost.apply">Apply</button>
+        </div>
+        <p id="lost-hint" class="gig-note" data-i18n="lost.intro">Fill a blank title or artist from the file. Writes the library, not the audio. Quit Serato first.</p>
+        <p id="lost-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="lost-report" class="gig-report" tabindex="-1"></div>
       </section>
       <div id="player-bar" class="player-bar"></div>
     </main>

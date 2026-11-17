@@ -156,6 +156,14 @@ export interface ElementIds {
   "tags-refresh": HTMLButtonElement;
   "tags-status": HTMLParagraphElement;
   "tags-report": HTMLDivElement;
+  "lost-panel": HTMLElement;
+  "lost-scope": HTMLParagraphElement;
+  "lost-hint": HTMLParagraphElement;
+  "lost-refresh": HTMLButtonElement;
+  "lost-apply": HTMLButtonElement;
+  "lost-status": HTMLParagraphElement;
+  "lost-report": HTMLDivElement;
+  "lost-heading": HTMLHeadingElement;
   "crate-search": HTMLInputElement;
   reload: HTMLButtonElement;
   "export-m3u": HTMLButtonElement;

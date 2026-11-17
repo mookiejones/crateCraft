@@ -21617,6 +21617,32 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "logs.empty": "No log entries yet.",
     "logs.openFailed": "Couldn't open the logs folder.",
     "logs.opened": "Opened the logs folder.",
+    "lost.apply": "Apply",
+    "lost.applying": "Applying…",
+    "lost.checking": "Checking…",
+    "lost.column.artist": "Artist",
+    "lost.column.current": "In the library",
+    "lost.column.path": "File",
+    "lost.column.proposed": "In the file",
+    "lost.column.title": "Title",
+    "lost.empty": "No blank title or artist the file can fill.",
+    "lost.heading": "Lost tags",
+    "lost.intro": "Fill a blank title or artist from the file. Writes the library, not the audio. Quit Serato first.",
+    "lost.summary": {
+      one: "{checked} tracks with a blank field. {count} can be filled from the file.",
+      other: "{checked} tracks with a blank field. {count} can be filled from the file."
+    },
+    "lost.summaryClear": "{checked} tracks with a blank field. None can be filled from the file.",
+    "lost.unreadable": "The lost-tags report could not be read.",
+    "lost.unreadableFiles": {
+      one: "{count} file could not be read.",
+      other: "{count} files could not be read."
+    },
+    "lost.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+    "lost.written": {
+      one: "Filled {count} track.",
+      other: "Filled {count} tracks."
+    },
     "markers.beats": {
       one: "{count} beat",
       other: "{count} beats"
@@ -21699,6 +21725,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "mode.files": "Files on disk. Cue points stay in the audio file. Crates follow the path.",
     "mode.gig": "Read-only. This check does not change the library.",
     "mode.health": "Read-only. This report does not change the library.",
+    "mode.lost": "Writes the library, not the audio files. Quit Serato first.",
     "mode.missing": "Tracks whose files are missing on a connected drive.",
     "mode.missingOffline": {
       one: "Tracks whose files are missing on a connected drive. {count} track on an unplugged drive is marked offline in crates.",
@@ -22457,6 +22484,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.linkNote": "Add a note for this link.",
     "tooltip.linkRating": "Rate this link from 1 to 5.",
     "tooltip.logFallback": "Log text, when it could not be copied.",
+    "tooltip.lostApply": "Fill blank titles and artists from the file. Quit Serato first. Audio files do not change.",
+    "tooltip.lostRefresh": "Check again for blank titles and artists.",
     "tooltip.membership": "Add this track to {name}, or take it out.",
     "tooltip.memoryCues": "Include memory cues in the Rekordbox file.",
     "tooltip.mergeCancel": "Cancel. Nothing is merged. Esc.",
@@ -22621,6 +22650,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.viewGig": "Check the library before a gig. Read-only.",
     "tooltip.viewHealth": "One-page counts of missing files, missing BPM or key, empty genre, tracks in no crate, and duplicates. Read-only.",
     "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
+    "tooltip.viewLost": "Fill a blank title or artist from the file. Writes the library, not the audio.",
     "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as offline.",
     "tooltip.viewPortable": "Check a portable Serato drive before a gig. Pick a connected drive. Read-only.",
     "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
@@ -22680,6 +22710,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "view.health": "Overview",
     "view.history": "History",
     "view.label": "Views",
+    "view.lost": "Lost tags",
     "view.missing": "Missing files",
     "view.portable": "Check drive",
     "view.scan": "Damaged files",
@@ -23379,6 +23410,32 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "logs.empty": "Todavía no hay entradas en el registro.",
     "logs.openFailed": "No se pudo abrir la carpeta de registros.",
     "logs.opened": "Se abrió la carpeta de registros.",
+    "lost.apply": "Aplicar",
+    "lost.applying": "Aplicando…",
+    "lost.checking": "Comprobando…",
+    "lost.column.artist": "Artista",
+    "lost.column.current": "En la biblioteca",
+    "lost.column.path": "Archivo",
+    "lost.column.proposed": "En el archivo",
+    "lost.column.title": "Título",
+    "lost.empty": "Ningún título o artista en blanco que el archivo pueda rellenar.",
+    "lost.heading": "Etiquetas perdidas",
+    "lost.intro": "Rellena un título o artista en blanco desde el archivo. Escribe en la biblioteca, no en el audio. Cierra Serato primero.",
+    "lost.summary": {
+      one: "{checked} pistas con un campo en blanco. {count} se pueden rellenar desde el archivo.",
+      other: "{checked} pistas con un campo en blanco. {count} se pueden rellenar desde el archivo."
+    },
+    "lost.summaryClear": "{checked} pistas con un campo en blanco. Ninguna se puede rellenar desde el archivo.",
+    "lost.unreadable": "No se pudo leer el informe de etiquetas perdidas.",
+    "lost.unreadableFiles": {
+      one: "{count} archivo no se pudo leer.",
+      other: "{count} archivos no se pudieron leer."
+    },
+    "lost.unreachable": "No se pudo contactar con el servidor de la biblioteca. Comprueba que está en marcha y pulsa Comprobar de nuevo.",
+    "lost.written": {
+      one: "Se rellenó {count} pista.",
+      other: "Se rellenaron {count} pistas."
+    },
     "markers.beats": {
       one: "{count} tiempo",
       other: "{count} tiempos"
@@ -23461,6 +23518,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "mode.files": "Archivos en el disco. Los cues se quedan en el archivo de audio. Las cajas siguen la ruta.",
     "mode.gig": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.health": "Solo lectura. Este informe no cambia la biblioteca.",
+    "mode.lost": "Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
     "mode.missing": "Pistas cuyo archivo falta en una unidad conectada.",
     "mode.missingOffline": {
       one: "Pistas cuyo archivo falta en una unidad conectada. {count} pista en una unidad desconectada se marca como desconectada en las cajas.",
@@ -24219,6 +24277,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.linkNote": "Añade una nota a este enlace.",
     "tooltip.linkRating": "Valora este enlace de 1 a 5.",
     "tooltip.logFallback": "Texto del registro, cuando no se pudo copiar.",
+    "tooltip.lostApply": "Rellena los títulos y artistas en blanco desde el archivo. Cierra Serato primero. Los archivos de audio no cambian.",
+    "tooltip.lostRefresh": "Vuelve a buscar títulos y artistas en blanco.",
     "tooltip.membership": "Añade esta pista a {name}, o quítala.",
     "tooltip.memoryCues": "Incluye los cues de memoria en el archivo de Rekordbox.",
     "tooltip.mergeCancel": "Cancela. No se fusiona nada. Esc.",
@@ -24383,6 +24443,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
     "tooltip.viewHealth": "Cifras en una página de archivos no encontrados, BPM o tonalidad faltantes, género vacío, pistas en ninguna caja y duplicados. Solo lectura.",
     "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
+    "tooltip.viewLost": "Rellena título o artista en blanco desde el archivo. Escribe en la biblioteca, no en el audio.",
     "tooltip.viewMissing": "Muestra las pistas cuyo archivo falta en una unidad conectada. Las pistas en una unidad desconectada se quedan en las cajas como desconectadas.",
     "tooltip.viewPortable": "Comprueba una unidad Serato portátil antes del bolo. Elige una unidad conectada. Solo lectura.",
     "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
@@ -24442,6 +24503,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "view.health": "Resumen",
     "view.history": "Historial",
     "view.label": "Vistas",
+    "view.lost": "Etiquetas perdidas",
     "view.missing": "Archivos no encontrados",
     "view.portable": "Comprobar unidad",
     "view.scan": "Archivos dañados",
@@ -25077,6 +25139,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     viewScan: spec("tooltip.viewScan"),
     viewBitrate: spec("tooltip.viewBitrate"),
     viewTags: spec("tooltip.viewTags"),
+    viewLost: spec("tooltip.viewLost"),
+    lostApply: spec("tooltip.lostApply"),
+    lostRefresh: spec("tooltip.lostRefresh"),
     healthRefresh: spec("tooltip.healthRefresh"),
     healthSection: spec("tooltip.healthSection"),
     healthOpenMissing: spec("tooltip.healthOpenMissing"),

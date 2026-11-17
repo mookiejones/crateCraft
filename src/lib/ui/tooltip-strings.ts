@@ -252,6 +252,9 @@ export const tips = {
   viewScan: spec("tooltip.viewScan"),
   viewBitrate: spec("tooltip.viewBitrate"),
   viewTags: spec("tooltip.viewTags"),
+  viewLost: spec("tooltip.viewLost"),
+  lostApply: spec("tooltip.lostApply"),
+  lostRefresh: spec("tooltip.lostRefresh"),
   healthRefresh: spec("tooltip.healthRefresh"),
   healthSection: spec("tooltip.healthSection"),
   healthOpenMissing: spec("tooltip.healthOpenMissing"),
@@ -378,6 +381,7 @@ export function viewTip(view: string): TipSpec | undefined {
     scan: tips.viewScan,
     bitrate: tips.viewBitrate,
     tags: tips.viewTags,
+    lost: tips.viewLost,
   };
   return known[view];
 }
@@ -480,6 +484,8 @@ export function staticTip(id: string): TipSpec | undefined {
     "tags-artist": tips.tagsArtist,
     "tags-titles": tips.tagsTitles,
     "tags-refresh": tips.tagsRefresh,
+    "lost-refresh": tips.lostRefresh,
+    "lost-apply": tips.lostApply,
     "snapshots-take": tips.snapshotsTake,
     "music-mirror-dest": tips.musicMirrorDest,
     "music-mirror-preview": tips.musicMirrorPreview,

@@ -1,8 +1,9 @@
-"""Titles and artists Serato's database lost (#73), read-only.
+"""Titles and artists Serato's database lost (#73).
 
 ``tags.read_text_tags`` is checked against tiny synthetic MP3, FLAC, M4A,
 and WAV files. ``lost_tags.plan`` is checked against a temporary library
-whose tracks point at those files. The library file must be unchanged.
+whose tracks point at those files. Apply writes through ``safe_write``.
+The audio files must be unchanged.
 """
 
 from __future__ import annotations
@@ -24,6 +25,7 @@ import lost_tags
 import server
 import tags
 from tests.fixture import TempLibrary
+from tests import test_server
 from tests.test_tags import _atom, _flac_block, _vorbis_comment, _write_m4a
 
 
@@ -221,6 +223,157 @@ class RouteTests(unittest.TestCase):
                 httpd.server_close()
         self.assertEqual(caught.exception.code, 400)
         self.assertEqual(body["fixes"][0]["proposed"], {"name": "File Title", "artist": "File Artist"})
+
+
+def _names(db: Path) -> dict[int, tuple[str, str]]:
+    """Return asset id to (name, artist) from the library file."""
+    with closing(sqlite3.connect(db)) as conn:
+        rows = conn.execute("SELECT id, name, artist FROM asset ORDER BY id").fetchall()
+    return {int(row[0]): (row[1] or "", row[2] or "") for row in rows}
+
+
+class ApplyTests(unittest.TestCase):
+    """Apply fills still-blank fields and leaves files and set fields alone."""
+
+    def test_fills_blanks_and_leaves_set_fields(self) -> None:
+        """Blank title and artist come from the file. A set artist stays."""
+        with TempLibrary() as temp, tempfile.TemporaryDirectory() as raw:
+            folder = Path(raw)
+            both = _mp3(folder / "both.mp3", b"File Title", b"File Artist")
+            title_only = _mp3(folder / "title.mp3", b"File Title", b"File Artist")
+            complete = _mp3(folder / "complete.mp3", b"Other", b"Other")
+            _tracks(
+                temp.db,
+                [
+                    (1, "", "", str(both)),
+                    (2, "", "Kept Artist", str(title_only)),
+                    (3, "Kept", "Kept", str(complete)),
+                ],
+            )
+            before_both = both.read_bytes()
+            before_title = title_only.read_bytes()
+            result = lost_tags.apply(library.LIBRARY_SPACE)
+            self.assertTrue(result["written"])
+            self.assertEqual(sorted(item["asset_id"] for item in result["fixes"]), [1, 2])  # type: ignore[union-attr,index]
+            names = _names(temp.db)
+            self.assertEqual(names[1], ("File Title", "File Artist"))
+            self.assertEqual(names[2], ("File Title", "Kept Artist"))
+            self.assertEqual(names[3], ("Kept", "Kept"))
+            self.assertEqual(both.read_bytes(), before_both)
+            self.assertEqual(title_only.read_bytes(), before_title)
+
+    def test_empty_plan_and_empty_ids_do_not_write(self) -> None:
+        """No blanks, and an empty ids list, leave the library bytes alone."""
+        with TempLibrary() as temp, tempfile.TemporaryDirectory() as raw:
+            song = _mp3(Path(raw) / "a.mp3", b"File Title", b"File Artist")
+            _tracks(temp.db, [(1, "Kept", "Kept", str(song))])
+            before = temp.db.read_bytes()
+            empty = lost_tags.apply(library.LIBRARY_SPACE)
+            self.assertFalse(empty["written"])
+            self.assertEqual(empty["fixes"], [])
+            self.assertEqual(temp.db.read_bytes(), before)
+            _tracks(temp.db, [(1, "", "", str(song))])
+            before = temp.db.read_bytes()
+            skipped = lost_tags.apply(library.LIBRARY_SPACE, [])
+            self.assertFalse(skipped["written"])
+            self.assertEqual(skipped["fixes"], [])
+            self.assertEqual(_names(temp.db)[1], ("", ""))
+            self.assertEqual(temp.db.read_bytes(), before)
+
+    def test_unknown_ids_and_replan_skip_filled_fields(self) -> None:
+        """Unknown ids write nothing. A field filled since the plan stays."""
+        with TempLibrary() as temp, tempfile.TemporaryDirectory() as raw:
+            song = _mp3(Path(raw) / "a.mp3", b"File Title", b"File Artist")
+            _tracks(temp.db, [(1, "", "", str(song))])
+            missed = lost_tags.apply(library.LIBRARY_SPACE, [99])
+            self.assertFalse(missed["written"])
+            self.assertEqual(missed["fixes"], [])
+            self.assertEqual(_names(temp.db)[1], ("", ""))
+            with closing(sqlite3.connect(temp.db)) as conn:
+                conn.execute("UPDATE asset SET name = ? WHERE id = 1", ("Kept Title",))
+                conn.commit()
+            result = lost_tags.apply(library.LIBRARY_SPACE)
+            self.assertTrue(result["written"])
+            self.assertEqual(result["fixes"][0]["proposed"], {"artist": "File Artist"})  # type: ignore[index]
+            self.assertEqual(_names(temp.db)[1], ("Kept Title", "File Artist"))
+
+    def test_ids_list_applies_only_those_rows(self) -> None:
+        """A list of ids writes those rows and leaves the others blank."""
+        with TempLibrary() as temp, tempfile.TemporaryDirectory() as raw:
+            folder = Path(raw)
+            first = _mp3(folder / "a.mp3", b"One", b"Alpha")
+            second = _mp3(folder / "b.mp3", b"Two", b"Beta")
+            _tracks(temp.db, [(1, "", "", str(first)), (2, "", "", str(second))])
+            result = lost_tags.apply(library.LIBRARY_SPACE, [2])
+            self.assertTrue(result["written"])
+            self.assertEqual([item["asset_id"] for item in result["fixes"]], [2])  # type: ignore[union-attr,index]
+            self.assertEqual(_names(temp.db)[1], ("", ""))
+            self.assertEqual(_names(temp.db)[2], ("Two", "Beta"))
+
+    def test_preview_does_not_write(self) -> None:
+        """Preview lists the same fixes and leaves the database alone."""
+        with TempLibrary() as temp, tempfile.TemporaryDirectory() as raw:
+            song = _mp3(Path(raw) / "a.mp3", b"File Title", b"File Artist")
+            _tracks(temp.db, [(1, "", "", str(song))])
+            before = temp.db.read_bytes()
+            result = lost_tags.preview(temp.db, library.LIBRARY_SPACE)
+            self.assertTrue(result["preview"])
+            self.assertFalse(result["written"])
+            self.assertEqual(result["fixes"][0]["proposed"], {"name": "File Title", "artist": "File Artist"})  # type: ignore[index]
+            self.assertEqual(temp.db.read_bytes(), before)
+            self.assertEqual(_names(temp.db)[1], ("", ""))
+
+    def test_action_rejects_a_bad_verb_and_ids(self) -> None:
+        """Unknown action and a non-int ids list are 400."""
+        with self.assertRaises(library.LibraryError) as verb:
+            lost_tags.action({"action": "wipe", "space": library.LIBRARY_SPACE})
+        self.assertEqual(verb.exception.status, 400)
+        self.assertEqual(str(verb.exception), "That action is not available.")
+        with self.assertRaises(library.LibraryError) as ids:
+            lost_tags.action({"action": "preview", "space": library.LIBRARY_SPACE, "ids": True})
+        self.assertEqual(ids.exception.status, 400)
+        with self.assertRaises(library.LibraryError) as flag:
+            lost_tags.action({"action": "apply", "space": library.LIBRARY_SPACE, "ids": [True]})
+        self.assertEqual(flag.exception.status, 400)
+
+
+class ApplyApiTests(unittest.TestCase):
+    """``POST /api/lost-tags`` preview does not write. Apply does."""
+
+    setUp = test_server.ApiTests.setUp
+    tearDown = test_server.ApiTests.tearDown
+    request = test_server.ApiTests.request
+
+    def test_preview_apply_and_errors(self) -> None:
+        """Preview leaves blanks. Apply fills them. A bad action is 400."""
+        with tempfile.TemporaryDirectory() as raw:
+            song = _mp3(Path(raw) / "a.mp3", b"File Title", b"File Artist")
+            _tracks(self.library.db, [(1, "", "", str(song))])
+            before = song.read_bytes()
+            status, preview = self.request(
+                "/api/lost-tags",
+                {"action": "preview", "space": "Serato Library"},
+            )
+            self.assertEqual(status, 200)
+            self.assertEqual((preview["written"], preview["preview"]), (False, True))  # type: ignore[index]
+            self.assertEqual(_names(self.library.db)[1], ("", ""))
+            status, made = self.request(
+                "/api/lost-tags",
+                {"action": "apply", "space": "Serato Library"},
+            )
+            self.assertEqual(status, 200)
+            self.assertTrue(made["written"])  # type: ignore[index]
+            self.assertEqual(_names(self.library.db)[1], ("File Title", "File Artist"))
+            self.assertEqual(song.read_bytes(), before)
+            status, empty = self.request(
+                "/api/lost-tags",
+                {"action": "apply", "space": "Serato Library", "ids": []},
+            )
+            self.assertEqual(status, 200)
+            self.assertFalse(empty["written"])  # type: ignore[index]
+            status, verb = self.request("/api/lost-tags", {"action": "wipe"})
+            self.assertEqual((status, verb["code"]), (400, "action_unavailable"))  # type: ignore[index]
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -492,6 +492,7 @@ class LiveApiShapeTests(unittest.TestCase):
         self.assert_shape("/api/library-health", "LibraryHealthReport")
         self.assert_shape("/api/album-art", "AlbumArtMissing")
         self.assert_shape("/api/tag-clusters?field=genre", "TagClusters")
+        self.assert_shape("/api/lost-tags?space=Serato%20Library", "LostTagsPlan")
         self.assert_shape("/api/write-queue", "WriteQueueListing")
 
     def test_version_without_opening_the_library(self) -> None:
