@@ -400,6 +400,7 @@ function skipsListKey(id: string, event: KeyboardEvent): boolean {
     return true;
   }
   if (id === "list-open" && target.closest("button, a, summary, textarea, select")) return true;
+  if (id === "focus-next-pane" && event.key === "Tab") return true;
   return false;
 }
 

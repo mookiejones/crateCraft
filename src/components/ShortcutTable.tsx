@@ -123,6 +123,7 @@ export function ShortcutTable() {
         margin="dense"
         label={t("shortcuts.filter")}
         value={filter}
+        inputRef={tooltipRef(tips.shortcutsFilter)}
         onChange={(event) => setFilter(event.target.value)}
       />
       <Button
@@ -131,6 +132,7 @@ export function ShortcutTable() {
         variant="outlined"
         size="small"
         sx={{ mt: 1 }}
+        ref={tooltipRef(tips.shortcutsResetAll)}
         onClick={() => {
           setCapturingId(null);
           setStatus("");
@@ -185,6 +187,7 @@ export function ShortcutTable() {
                               data-shortcut-change=""
                               type="button"
                               size="small"
+                              ref={tooltipRef(tips.shortcutsChange)}
                               onClick={() => {
                                 setStatus("");
                                 setCapturingId(row.id);
@@ -197,6 +200,7 @@ export function ShortcutTable() {
                                 data-shortcut-reset=""
                                 type="button"
                                 size="small"
+                                ref={tooltipRef(tips.shortcutsReset)}
                                 onClick={() => {
                                   const next = { ...overrides };
                                   delete next[row.id];

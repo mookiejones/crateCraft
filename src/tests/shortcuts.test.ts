@@ -568,6 +568,31 @@ describe("keyboard shortcuts", () => {
     expect(el("snapshots-status").textContent).toContain("Ctrl+K");
   });
 
+  it("leaves Tab for native focus order from skip-to-content", () => {
+    el("skip-to-content").focus();
+    const event = press({ key: "Tab" });
+    expect(event.defaultPrevented).toBe(false);
+    expect(document.activeElement).toBe(el("skip-to-content"));
+  });
+
+  it("leaves Shift+Tab for native reverse focus order", () => {
+    el("skip-to-content").focus();
+    const event = press({ key: "Tab", shiftKey: true });
+    expect(event.defaultPrevented).toBe(false);
+    expect(document.activeElement).toBe(el("skip-to-content"));
+  });
+
+  it("cycles panes when Focus next pane is remapped off Tab", () => {
+    patchSettings({ shortcuts: { "focus-next-pane": [{ key: "F6" }] } });
+    try {
+      el("skip-to-content").focus();
+      const event = press({ key: "F6" });
+      expect(event.defaultPrevented).toBe(true);
+    } finally {
+      patchSettings({ shortcuts: {} });
+    }
+  });
+
   it("plays or pauses from W", () => {
     usePlayer();
     document.body.focus();

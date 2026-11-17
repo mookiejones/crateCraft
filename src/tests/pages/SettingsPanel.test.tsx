@@ -199,6 +199,14 @@ describe("SettingsPanel context", () => {
     expect(dead.textContent).toContain("Not in crateCraft");
   });
 
+  it("gives the shortcut catalog controls tooltips", () => {
+    mountSettings();
+    expect(el("shortcuts-filter").getAttribute("data-tooltip-key")).toBe("tooltip.shortcutsFilter");
+    expect(el("shortcuts-reset-all").getAttribute("data-tooltip-key")).toBe("tooltip.shortcutsResetAll");
+    const change = shortcutRow("play-pause").querySelector("[data-shortcut-change]");
+    expect(change?.getAttribute("data-tooltip-key")).toBe("tooltip.shortcutsChange");
+  });
+
   it("remaps play-pause from Change then q", async () => {
     const fetchMock = vi.fn(async () => new Response(
       JSON.stringify({ shortcuts: { "play-pause": [{ key: "q" }] } }),
