@@ -16,6 +16,7 @@ export type ViewMode =
   | "crates"
   | "history"
   | "stats"
+  | "compare"
   | "files"
   | "health"
   | "missing"
@@ -37,7 +38,7 @@ export interface NavGroup {
 }
 
 export const NAV_GROUPS: readonly NavGroup[] = [
-  { id: "library", labelKey: "view.group.library", modes: ["crates", "history", "stats"] },
+  { id: "library", labelKey: "view.group.library", modes: ["crates", "history", "stats", "compare"] },
   { id: "files", labelKey: "view.files", modes: ["files"] },
   { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags", "lost"] },
   { id: "backups", labelKey: "view.snapshots", modes: ["snapshots"] },

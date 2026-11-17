@@ -24,6 +24,7 @@ RAIL_KEYS = (
     "view.crates",
     "view.history",
     "view.stats",
+    "view.compare",
     "view.files",
     "view.group.health",
     "view.health",
@@ -130,6 +131,7 @@ class DesktopMenuTests(unittest.TestCase):
             "Crates",
             "History",
             "Play stats",
+            "Compare crates",
             "Tools",
             "Organize files",
             "Health",
@@ -274,7 +276,12 @@ class DesktopMenuTests(unittest.TestCase):
             music = _menu_named(menu, catalog["menu.library"])
             self.assertEqual(
                 _action_titles(music),
-                [catalog["view.crates"], catalog["view.history"], catalog["view.stats"]],
+                [
+                    catalog["view.crates"],
+                    catalog["view.history"],
+                    catalog["view.stats"],
+                    catalog["view.compare"],
+                ],
             )
             tools = _menu_named(menu, catalog["menu.tools"])
             self.assertEqual(_action_titles(tools)[0], catalog["view.files"])

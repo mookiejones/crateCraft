@@ -16,6 +16,7 @@ import { repaintScan } from "../health/scan";
 import { repaintBitrate } from "../health/bitrate";
 import { repaintTags } from "../health/tags";
 import { repaintLostTags } from "../health/lost-tags";
+import { repaintCrateCompare } from "../crates/crate-compare";
 import { repaintPortable } from "../gig/portable";
 import { applyStatic, initialLocale, onLocaleChange, setLocale } from "../i18n";
 import { repaintPlayer } from "../player/player";
@@ -49,6 +50,7 @@ export function repaintAll(): void {
   if (state.mode === "bitrate") repaintBitrate();
   if (state.mode === "tags") repaintTags();
   if (state.mode === "lost") repaintLostTags();
+  if (state.mode === "compare") repaintCrateCompare();
   repaintPortable();
   repaintSnapshotPlan();
   repaintDialogs();

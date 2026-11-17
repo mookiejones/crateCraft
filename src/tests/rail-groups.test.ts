@@ -40,6 +40,7 @@ describe("rail groups", () => {
       "crates",
       "history",
       "stats",
+      "compare",
       "files",
       "health",
       "missing",
@@ -55,6 +56,7 @@ describe("rail groups", () => {
       "drift",
     ]);
     expect(document.querySelector("[data-view='stats']")?.textContent).toBe("Play stats");
+    expect(document.querySelector("[data-view='compare']")?.textContent).toBe("Compare crates");
     expect(document.querySelector("[data-view='health']")?.textContent).toBe("Overview");
     expect(document.querySelector("[data-view='missing']")?.textContent).toBe("Missing files");
     expect(document.querySelector("[data-view='scan']")?.textContent).toBe("Damaged files");

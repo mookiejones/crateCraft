@@ -406,7 +406,7 @@ describe("AppShell", () => {
       .filter((button) => !button.hidden)
       .map((button) => button.dataset.view);
     expect(document.getElementById("view-children")?.hidden).toBe(false);
-    expect(visible).toEqual(["crates", "history", "stats"]);
+    expect(visible).toEqual(["crates", "history", "stats", "compare"]);
     paintNav("files");
     expect(document.getElementById("view-children")?.hidden).toBe(true);
   });
@@ -422,7 +422,7 @@ describe("AppShell", () => {
     const visible = [...document.querySelectorAll<HTMLButtonElement>("#view-children [data-view]")]
       .filter((button) => !button.hidden)
       .map((button) => button.dataset.view);
-    expect(visible).toEqual(["crates", "history", "stats"]);
+    expect(visible).toEqual(["crates", "history", "stats", "compare"]);
   });
 
   it("hides the child strip on Organize files", () => {

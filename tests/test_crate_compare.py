@@ -1,7 +1,9 @@
-"""Crate compare (#113), read-only.
+"""Crate compare (#113).
 
 Each test builds crates in a temporary library and checks
-``crate_compare.compare``. The library file must be unchanged.
+``crate_compare.compare``. Preview lists one set without writing.
+Create re-compares, then ``library.crate_action`` saves that set.
+An empty set does not write. Audio files are not rewritten.
 """
 
 from __future__ import annotations
@@ -22,7 +24,10 @@ from unittest import mock
 import crate_compare
 import library
 import server
-from tests.fixture import TempLibrary
+import tests.test_server as test_server
+from library import SeratoOpen
+from tests.fixture import TempLibrary, open_database
+from tests.test_smart_presets import _members
 
 
 def _digest(path: Path) -> str:
@@ -41,7 +46,10 @@ class _Crates:
         self.link = 100
 
     def track(self, asset_id: int, name: str, space: int = 1) -> None:
-        self.conn.execute("INSERT INTO asset (id, name, artist) VALUES (?, ?, 'DJ')", (asset_id, name))
+        self.conn.execute(
+            "INSERT INTO asset (id, name, artist, location_id) VALUES (?, ?, 'DJ', 1)",
+            (asset_id, name),
+        )
         self.conn.execute("INSERT INTO space_asset (asset_id, space_id) VALUES (?, ?)", (asset_id, space))
 
     def crate(self, crate_id: int, name: str, *, parent: int = 1, space: int = 1, kind: int = 1) -> None:
@@ -203,6 +211,219 @@ class CompareTests(unittest.TestCase):
         self.assertEqual(_ids(json.loads(printed), "only_a"), [12])
         with mock.patch("sys.stderr"):
             self.assertEqual(crate_compare.main(["5", "5", "--database", str(self.fixture.db)]), 1)
+
+
+def _payload(
+    action: str,
+    *,
+    a: object = 5,
+    b: object = 6,
+    set_key: object = "both",
+    subcrates: object = None,
+    name: object = None,
+) -> dict[str, object]:
+    body: dict[str, object] = {
+        "action": action,
+        "space": library.LIBRARY_SPACE,
+        "a": a,
+        "b": b,
+        "set": set_key,
+    }
+    if subcrates is not None:
+        body["subcrates"] = subcrates
+    if name is not None:
+        body["name"] = name
+    return body
+
+
+class ApplyTests(unittest.TestCase):
+    """Preview lists a set. Create writes it. Empty does not write."""
+
+    def setUp(self) -> None:
+        self.fixture = TempLibrary().__enter__()
+        self._running = mock.patch("snapshots.serato_dj_running", return_value=False)
+        self._running.start()
+        with closing(sqlite3.connect(self.fixture.db)) as conn:
+            c = _Crates(conn)
+            for asset_id, name in ((9, "Nine"), (10, "Ten"), (11, "Eleven"), (12, "Twelve"), (13, "Thirteen"), (14, "Fourteen")):
+                c.track(asset_id, name)
+            c.crate(5, "Warmup")
+            c.crate(6, "Peak" + library.NAME_SPLIT + "stored")
+            c.crate(7, "Peak encore", parent=6)
+            c.crate(8, "Rules", kind=2)
+            c.crate(9, "Video", space=2, parent=2)
+            c.crate(15, "Empty")
+            c.add(5, 10, 1)
+            c.add(5, 12, 0)
+            c.add(5, 11, 2, live=False)
+            c.add(6, 11, 0)
+            c.add(6, 13, 1)
+            c.add(6, 10, 2)
+            c.add(6, 13, 3)
+            c.add(6, 9, 4)
+            c.add(7, 14, 0)
+            c.add(8, 13, 0)
+            conn.commit()
+
+    def tearDown(self) -> None:
+        self._running.stop()
+        self.fixture.__exit__(None, None, None)
+
+    def test_preview_does_not_write(self) -> None:
+        before = _digest(self.fixture.db)
+        plan = crate_compare.preview(
+            self.fixture.db, library.LIBRARY_SPACE, 5, 6, set_key="both"
+        )
+        self.assertEqual(_digest(self.fixture.db), before)
+        self.assertEqual((plan["preview"], plan["written"], plan["count"]), (True, False, 2))
+        self.assertEqual(plan["set"], "both")
+        self.assertEqual(library.display_name(str(plan["name"])), "Both · Warmup · Peak")
+        self.assertEqual(_ids(plan, "both"), [10, 11])
+
+    def test_create_both_writes_overlap(self) -> None:
+        plan = crate_compare.save(
+            self.fixture.db, library.LIBRARY_SPACE, 5, 6, set_key="both"
+        )
+        self.assertTrue(plan["written"])
+        self.assertEqual(plan["count"], 2)
+        self.assertEqual(set(_members(int(str(plan["id"])))), {10, 11})
+        self.assertEqual(library.display_name(str(plan["name"])), "Both · Warmup · Peak")
+
+    def test_create_only_a_and_only_b(self) -> None:
+        only_a = crate_compare.save(
+            self.fixture.db, library.LIBRARY_SPACE, 5, 6, set_key="only_a"
+        )
+        self.assertEqual(set(_members(int(str(only_a["id"])))), {12})
+        self.assertEqual(library.display_name(str(only_a["name"])), "Only in Warmup")
+        only_b = crate_compare.save(
+            self.fixture.db, library.LIBRARY_SPACE, 5, 6, set_key="only_b"
+        )
+        self.assertEqual(set(_members(int(str(only_b["id"])))), {13, 9})
+        self.assertEqual(library.display_name(str(only_b["name"])), "Only in Peak")
+
+    def test_empty_set_does_not_write(self) -> None:
+        before = _digest(self.fixture.db)
+        with mock.patch("library.crate_action") as create:
+            plan = crate_compare.save(
+                self.fixture.db, library.LIBRARY_SPACE, 5, 15, set_key="only_b"
+            )
+        create.assert_not_called()
+        self.assertEqual(_digest(self.fixture.db), before)
+        self.assertEqual((plan["written"], plan["count"]), (False, 0))
+
+    def test_custom_name_and_blank_falls_back(self) -> None:
+        named = crate_compare.save(
+            self.fixture.db,
+            library.LIBRARY_SPACE,
+            5,
+            6,
+            set_key="both",
+            name="Overlap",
+        )
+        self.assertEqual(library.display_name(str(named["name"])), "Overlap")
+        blank = crate_compare.preview(
+            self.fixture.db, library.LIBRARY_SPACE, 5, 6, set_key="only_a", name="  "
+        )
+        self.assertEqual(library.display_name(str(blank["name"])), "Only in Warmup")
+
+    def test_recompare_uses_live_membership(self) -> None:
+        with closing(sqlite3.connect(self.fixture.db)) as conn:
+            conn.execute(
+                "DELETE FROM container_asset WHERE asset_id = 10 AND location_container_id = 50"
+            )
+            conn.commit()
+        plan = crate_compare.save(
+            self.fixture.db, library.LIBRARY_SPACE, 5, 6, set_key="both"
+        )
+        self.assertEqual(set(_members(int(str(plan["id"])))), {11})
+        self.assertEqual(plan["count"], 1)
+
+    def test_subcrates_create_includes_nested(self) -> None:
+        plan = crate_compare.save(
+            self.fixture.db, library.LIBRARY_SPACE, 5, 6, set_key="only_b", subcrates=True
+        )
+        self.assertEqual(set(_members(int(str(plan["id"])))), {13, 9, 14})
+
+    def test_serato_running_blocks_create(self) -> None:
+        with open_database(self.fixture.db) as conn:
+            conn.execute(
+                "INSERT INTO lock (owner_process_id, owner_process_name) VALUES (99, 'Serato DJ Pro')"
+            )
+        before = _digest(self.fixture.db)
+        with mock.patch("library._process_is_serato", return_value=True), self.assertRaises(SeratoOpen):
+            crate_compare.save(self.fixture.db, library.LIBRARY_SPACE, 5, 6, set_key="both")
+        self.assertEqual(_digest(self.fixture.db), before)
+
+    def test_action_rejects_bad_fields(self) -> None:
+        with self.assertRaises(library.LibraryError) as verb:
+            crate_compare.action(_payload("wipe"))
+        self.assertEqual((verb.exception.status, str(verb.exception)), (400, "That action is not available."))
+        with self.assertRaises(library.LibraryError) as flag:
+            crate_compare.action(_payload("preview", a=True))
+        self.assertEqual((flag.exception.status, flag.exception.message), (400, crate_compare.INVALID))
+        with self.assertRaises(library.LibraryError) as unknown:
+            crate_compare.action(_payload("preview", set_key="overlap"))
+        self.assertEqual(unknown.exception.status, 400)
+        with self.assertRaises(library.LibraryError) as same:
+            crate_compare.action(_payload("preview", a=5, b=5))
+        self.assertEqual(same.exception.status, 400)
+        with self.assertRaises(library.LibraryError) as missing:
+            crate_compare.action(_payload("preview", a=5, b=9))
+        self.assertEqual(missing.exception.status, 404)
+        with self.assertRaises(library.LibraryError) as label:
+            crate_compare.action(_payload("preview", name=12))
+        self.assertEqual(label.exception.status, 400)
+
+
+class ApplyApiTests(unittest.TestCase):
+    """``POST /api/crate-compare`` preview does not write. Create does."""
+
+    request = test_server.ApiTests.request
+
+    def setUp(self) -> None:
+        test_server.ApiTests.setUp(self)
+        self._running = mock.patch("snapshots.serato_dj_running", return_value=False)
+        self._running.start()
+
+    def tearDown(self) -> None:
+        self._running.stop()
+        test_server.ApiTests.tearDown(self)
+
+    def _seed(self) -> None:
+        with closing(sqlite3.connect(self.library.db)) as conn:
+            c = _Crates(conn)
+            for asset_id, name in ((9, "Nine"), (10, "Ten"), (11, "Eleven"), (12, "Twelve"), (13, "Thirteen")):
+                c.track(asset_id, name)
+            c.crate(5, "Warmup")
+            c.crate(6, "Peak")
+            c.crate(15, "Empty")
+            c.add(5, 10, 1)
+            c.add(5, 12, 0)
+            c.add(5, 11, 2)
+            c.add(6, 11, 0)
+            c.add(6, 13, 1)
+            c.add(6, 10, 2)
+            c.add(6, 9, 4)
+            conn.commit()
+
+    def test_preview_create_empty_and_errors(self) -> None:
+        self._seed()
+        before = _digest(self.library.db)
+        status, preview = self.request("/api/crate-compare", _payload("preview"))
+        self.assertEqual(status, 200)
+        self.assertEqual((preview["written"], preview["preview"], preview["count"]), (False, True, 2))  # type: ignore[index]
+        self.assertEqual(_digest(self.library.db), before)
+        status, made = self.request("/api/crate-compare", _payload("create"))
+        self.assertEqual(status, 200)
+        self.assertTrue(made["written"])  # type: ignore[index]
+        self.assertEqual(set(_members(int(str(made["id"])))), {10, 11})  # type: ignore[index]
+        status, empty = self.request(
+            "/api/crate-compare", _payload("create", b=15, set_key="only_b")
+        )
+        self.assertEqual(status, 200)
+        self.assertFalse(empty["written"])  # type: ignore[index]
+        status, verb = self.request("/api/crate-compare", _payload("wipe"))
+        self.assertEqual((status, verb["code"]), (400, "action_unavailable"))  # type: ignore[index]
 
 
 if __name__ == "__main__":

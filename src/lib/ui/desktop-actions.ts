@@ -38,6 +38,7 @@ const VIEWS: Record<string, string> = {
   "view-crates": "crates",
   "view-history": "history",
   "view-stats": "stats",
+  "view-compare": "compare",
   "view-files": "files",
   "view-missing": "missing",
   "view-duplicates": "duplicates",

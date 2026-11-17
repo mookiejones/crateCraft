@@ -130,6 +130,15 @@ export interface ElementIds {
   "stats-report": HTMLDivElement;
   "stats-refresh": HTMLButtonElement;
   "stats-csv": HTMLButtonElement;
+  "compare-panel": HTMLElement;
+  "compare-scope": HTMLParagraphElement;
+  "compare-a": HTMLSelectElement;
+  "compare-b": HTMLSelectElement;
+  "compare-subcrates": HTMLInputElement;
+  "compare-refresh": HTMLButtonElement;
+  "compare-status": HTMLParagraphElement;
+  "compare-report": HTMLDivElement;
+  "compare-heading": HTMLHeadingElement;
   "health-panel": HTMLElement;
   "health-scope": HTMLParagraphElement;
   "health-status": HTMLParagraphElement;

@@ -76,6 +76,7 @@ describe("parseHash", () => {
       "crates",
       "history",
       "stats",
+      "compare",
       "files",
       "health",
       "missing",

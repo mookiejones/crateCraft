@@ -13,6 +13,7 @@ export const VIEW_LABEL_KEYS: Record<ViewMode, MessageKey> = {
   crates: "view.crates",
   history: "view.history",
   stats: "view.stats",
+  compare: "view.compare",
   files: "view.files",
   health: "view.health",
   missing: "view.missing",

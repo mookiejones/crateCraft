@@ -73,6 +73,7 @@ QUEUEABLE = frozenset(
         "/api/history-stats",
         "/api/tag-clusters",
         "/api/lost-tags",
+        "/api/crate-compare",
         "/api/album-art",
         "/api/bitrate-check",
         "/api/duplicates/merge",
@@ -502,6 +503,8 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return tag_cleanup.action(request)
     if path == "/api/lost-tags":
         return lost_tags.action(request)
+    if path == "/api/crate-compare":
+        return crate_compare.action(request)
     if path == "/api/album-art":
         return album_art.action(request)
     if path == "/api/bitrate-check":

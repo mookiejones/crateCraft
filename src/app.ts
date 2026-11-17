@@ -13,6 +13,7 @@
  * Play stats fetch is src/lib/history/history-stats.ts. StatsPanel paints the report.
  * Tag spellings are src/lib/health/tags.ts.
  * Lost tags are src/lib/health/lost-tags.ts.
+ * Compare crates is src/lib/crates/crate-compare.ts.
  * Crate presets are src/lib/crates/presets.ts.
  * Folder sync is src/lib/crates/folder-sync.ts.
  * Help is src/lib/ui/help.ts. It does not post to GitHub.
@@ -32,6 +33,7 @@ import { wireScan } from "./lib/health/scan";
 import { wireBitrate } from "./lib/health/bitrate";
 import { wireTags } from "./lib/health/tags";
 import { wireLostTags } from "./lib/health/lost-tags";
+import { wireCrateCompare } from "./lib/crates/crate-compare";
 import { wireHelp } from "./lib/ui/help";
 import { wirePortable } from "./lib/gig/portable";
 import { wireLayout } from "./lib/ui/layout";
@@ -90,6 +92,7 @@ wireScan();
 wireBitrate();
 wireTags();
 wireLostTags();
+wireCrateCompare();
 wirePortable();
 wireLayout();
 wireVersion();

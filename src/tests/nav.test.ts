@@ -57,7 +57,7 @@ describe("nav collapse", () => {
     expect(document.querySelector<HTMLButtonElement>("[data-nav='library']")?.getAttribute("aria-selected")).toBe("true");
     expect(document.querySelector<HTMLButtonElement>("[data-nav='health']")?.getAttribute("aria-selected")).toBe("false");
     expect(document.getElementById("view-children")?.hidden).toBe(false);
-    expect(visibleChildren()).toEqual(["crates", "history", "stats"]);
+    expect(visibleChildren()).toEqual(["crates", "history", "stats", "compare"]);
     expect(document.querySelector("[data-view='crates']")?.getAttribute("aria-selected")).toBe("true");
 
     paintNav("missing");
