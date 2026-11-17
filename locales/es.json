@@ -627,6 +627,32 @@
   "logs.empty": "Todavía no hay entradas en el registro.",
   "logs.openFailed": "No se pudo abrir la carpeta de registros.",
   "logs.opened": "Se abrió la carpeta de registros.",
+  "lost.apply": "Aplicar",
+  "lost.applying": "Aplicando…",
+  "lost.checking": "Comprobando…",
+  "lost.column.artist": "Artista",
+  "lost.column.current": "En la biblioteca",
+  "lost.column.path": "Archivo",
+  "lost.column.proposed": "En el archivo",
+  "lost.column.title": "Título",
+  "lost.empty": "Ningún título o artista en blanco que el archivo pueda rellenar.",
+  "lost.heading": "Etiquetas perdidas",
+  "lost.intro": "Rellena un título o artista en blanco desde el archivo. Escribe en la biblioteca, no en el audio. Cierra Serato primero.",
+  "lost.summary": {
+    "one": "{checked} pistas con un campo en blanco. {count} se pueden rellenar desde el archivo.",
+    "other": "{checked} pistas con un campo en blanco. {count} se pueden rellenar desde el archivo."
+  },
+  "lost.summaryClear": "{checked} pistas con un campo en blanco. Ninguna se puede rellenar desde el archivo.",
+  "lost.unreadable": "No se pudo leer el informe de etiquetas perdidas.",
+  "lost.unreadableFiles": {
+    "one": "{count} archivo no se pudo leer.",
+    "other": "{count} archivos no se pudieron leer."
+  },
+  "lost.unreachable": "No se pudo contactar con el servidor de la biblioteca. Comprueba que está en marcha y pulsa Comprobar de nuevo.",
+  "lost.written": {
+    "one": "Se rellenó {count} pista.",
+    "other": "Se rellenaron {count} pistas."
+  },
   "markers.beats": {
     "one": "{count} tiempo",
     "other": "{count} tiempos"
@@ -709,6 +735,7 @@
   "mode.files": "Archivos en el disco. Los cues se quedan en el archivo de audio. Las cajas siguen la ruta.",
   "mode.gig": "Solo lectura. Esta comprobación no cambia la biblioteca.",
   "mode.health": "Solo lectura. Este informe no cambia la biblioteca.",
+  "mode.lost": "Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
   "mode.missing": "Pistas cuyo archivo falta en una unidad conectada.",
   "mode.missingOffline": {
     "one": "Pistas cuyo archivo falta en una unidad conectada. {count} pista en una unidad desconectada se marca como desconectada en las cajas.",
@@ -1467,6 +1494,8 @@
   "tooltip.linkNote": "Añade una nota a este enlace.",
   "tooltip.linkRating": "Valora este enlace de 1 a 5.",
   "tooltip.logFallback": "Texto del registro, cuando no se pudo copiar.",
+  "tooltip.lostApply": "Rellena los títulos y artistas en blanco desde el archivo. Cierra Serato primero. Los archivos de audio no cambian.",
+  "tooltip.lostRefresh": "Vuelve a buscar títulos y artistas en blanco.",
   "tooltip.membership": "Añade esta pista a {name}, o quítala.",
   "tooltip.memoryCues": "Incluye los cues de memoria en el archivo de Rekordbox.",
   "tooltip.mergeCancel": "Cancela. No se fusiona nada. Esc.",
@@ -1631,6 +1660,7 @@
   "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
   "tooltip.viewHealth": "Cifras en una página de archivos no encontrados, BPM o tonalidad faltantes, género vacío, pistas en ninguna caja y duplicados. Solo lectura.",
   "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
+  "tooltip.viewLost": "Rellena título o artista en blanco desde el archivo. Escribe en la biblioteca, no en el audio.",
   "tooltip.viewMissing": "Muestra las pistas cuyo archivo falta en una unidad conectada. Las pistas en una unidad desconectada se quedan en las cajas como desconectadas.",
   "tooltip.viewPortable": "Comprueba una unidad Serato portátil antes del bolo. Elige una unidad conectada. Solo lectura.",
   "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
@@ -1690,6 +1720,7 @@
   "view.health": "Resumen",
   "view.history": "Historial",
   "view.label": "Vistas",
+  "view.lost": "Etiquetas perdidas",
   "view.missing": "Archivos no encontrados",
   "view.portable": "Comprobar unidad",
   "view.scan": "Archivos dañados",

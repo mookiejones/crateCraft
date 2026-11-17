@@ -2167,6 +2167,7 @@ class Handler(BaseHTTPRequestHandler):
                     tree = parsed.path == "/api/crate-tree"
                     foldering = parsed.path == "/api/folder-sync"
                     clustering = parsed.path == "/api/tag-clusters"
+                    losting = parsed.path == "/api/lost-tags"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     history = parsed.path == "/api/history-stats"
@@ -2183,6 +2184,7 @@ class Handler(BaseHTTPRequestHandler):
                             and payload.get("action")
                             in ("preview", "clean-preview", "refresh-preview", "edit-preview")
                         )
+                        or (losting and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
                         or (bitrate_crate and payload.get("action") == "preview")
@@ -2252,6 +2254,10 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = tag_cleanup.action(request)
+                    elif losting:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = lost_tags.action(request)
                     elif covering:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

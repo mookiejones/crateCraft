@@ -84,6 +84,7 @@ describe("parseHash", () => {
       "scan",
       "bitrate",
       "tags",
+      "lost",
       "snapshots",
       "gig",
       "portable",

@@ -135,6 +135,15 @@ describe("switching the language", () => {
     expect(el("crate-foot").textContent).toBe("Todo el espacio");
   });
 
+  it("translates the Lost tags crate footer", () => {
+    wireLocale();
+    state.mode = "lost";
+    renderShell();
+    expect(el("crate-foot").textContent).toBe("Whole space");
+    setLocale("es");
+    expect(el("crate-foot").textContent).toBe("Todo el espacio");
+  });
+
   it("translates the Library health crate footer", () => {
     wireLocale();
     state.mode = "health";

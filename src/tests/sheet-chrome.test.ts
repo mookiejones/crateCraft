@@ -42,6 +42,7 @@ describe("sheet chrome", () => {
     expect(isCrateScopedMode("crates")).toBe(false);
     expect(isCrateScopedMode("missing")).toBe(false);
     expect(isCrateScopedMode("tags")).toBe(false);
+    expect(isCrateScopedMode("lost")).toBe(false);
     expect(isCrateScopedMode("files")).toBe(false);
   });
 

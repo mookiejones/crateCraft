@@ -627,6 +627,32 @@
   "logs.empty": "No log entries yet.",
   "logs.openFailed": "Couldn't open the logs folder.",
   "logs.opened": "Opened the logs folder.",
+  "lost.apply": "Apply",
+  "lost.applying": "Applying…",
+  "lost.checking": "Checking…",
+  "lost.column.artist": "Artist",
+  "lost.column.current": "In the library",
+  "lost.column.path": "File",
+  "lost.column.proposed": "In the file",
+  "lost.column.title": "Title",
+  "lost.empty": "No blank title or artist the file can fill.",
+  "lost.heading": "Lost tags",
+  "lost.intro": "Fill a blank title or artist from the file. Writes the library, not the audio. Quit Serato first.",
+  "lost.summary": {
+    "one": "{checked} tracks with a blank field. {count} can be filled from the file.",
+    "other": "{checked} tracks with a blank field. {count} can be filled from the file."
+  },
+  "lost.summaryClear": "{checked} tracks with a blank field. None can be filled from the file.",
+  "lost.unreadable": "The lost-tags report could not be read.",
+  "lost.unreadableFiles": {
+    "one": "{count} file could not be read.",
+    "other": "{count} files could not be read."
+  },
+  "lost.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+  "lost.written": {
+    "one": "Filled {count} track.",
+    "other": "Filled {count} tracks."
+  },
   "markers.beats": {
     "one": "{count} beat",
     "other": "{count} beats"
@@ -709,6 +735,7 @@
   "mode.files": "Files on disk. Cue points stay in the audio file. Crates follow the path.",
   "mode.gig": "Read-only. This check does not change the library.",
   "mode.health": "Read-only. This report does not change the library.",
+  "mode.lost": "Writes the library, not the audio files. Quit Serato first.",
   "mode.missing": "Tracks whose files are missing on a connected drive.",
   "mode.missingOffline": {
     "one": "Tracks whose files are missing on a connected drive. {count} track on an unplugged drive is marked offline in crates.",
@@ -1467,6 +1494,8 @@
   "tooltip.linkNote": "Add a note for this link.",
   "tooltip.linkRating": "Rate this link from 1 to 5.",
   "tooltip.logFallback": "Log text, when it could not be copied.",
+  "tooltip.lostApply": "Fill blank titles and artists from the file. Quit Serato first. Audio files do not change.",
+  "tooltip.lostRefresh": "Check again for blank titles and artists.",
   "tooltip.membership": "Add this track to {name}, or take it out.",
   "tooltip.memoryCues": "Include memory cues in the Rekordbox file.",
   "tooltip.mergeCancel": "Cancel. Nothing is merged. Esc.",
@@ -1631,6 +1660,7 @@
   "tooltip.viewGig": "Check the library before a gig. Read-only.",
   "tooltip.viewHealth": "One-page counts of missing files, missing BPM or key, empty genre, tracks in no crate, and duplicates. Read-only.",
   "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
+  "tooltip.viewLost": "Fill a blank title or artist from the file. Writes the library, not the audio.",
   "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as offline.",
   "tooltip.viewPortable": "Check a portable Serato drive before a gig. Pick a connected drive. Read-only.",
   "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
@@ -1690,6 +1720,7 @@
   "view.health": "Overview",
   "view.history": "History",
   "view.label": "Views",
+  "view.lost": "Lost tags",
   "view.missing": "Missing files",
   "view.portable": "Check drive",
   "view.scan": "Damaged files",

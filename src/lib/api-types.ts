@@ -992,6 +992,23 @@ export interface TagClusterPlan {
   code?: string;
 }
 
+export interface LostTagFix {
+  asset_id: number;
+  path: string;
+  current: { name: string; artist: string };
+  proposed: { name?: string; artist?: string };
+}
+
+export interface LostTagsPlan {
+  checked: number;
+  unreadable: number;
+  fixes: LostTagFix[];
+  written?: boolean;
+  preview?: boolean;
+  error?: string;
+  code?: string;
+}
+
 export interface ErrorBody {
   error?: string;
   /** Stable code for a known error sentence. The page translates it. */

@@ -33,6 +33,7 @@ RAIL_KEYS = (
     "view.scan",
     "view.bitrate",
     "view.tags",
+    "view.lost",
     "view.snapshots",
     "view.group.gig",
     "view.gig",
@@ -288,6 +289,7 @@ class DesktopMenuTests(unittest.TestCase):
                     catalog["view.scan"],
                     catalog["view.bitrate"],
                     catalog["view.tags"],
+                    catalog["view.lost"],
                 ],
             )
             gig = _child_menu(tools, catalog["view.group.gig"])

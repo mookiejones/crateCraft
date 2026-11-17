@@ -75,6 +75,8 @@ describe("desktop menu actions", () => {
     expect(state.mode).toBe("portable");
     runDesktopAction("view-tags");
     expect(state.mode).toBe("tags");
+    runDesktopAction("view-lost");
+    expect(state.mode).toBe("lost");
     runDesktopAction("view-all");
     expect(state.mode).toBe("crates");
     runDesktopAction("space:Prepare");

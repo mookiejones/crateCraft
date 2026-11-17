@@ -31,6 +31,7 @@ import files
 import folder_sync
 import history_stats
 import library
+import lost_tags
 import music_mirror
 import smart_presets
 import snapshots
@@ -71,6 +72,7 @@ QUEUEABLE = frozenset(
         "/api/folder-sync",
         "/api/history-stats",
         "/api/tag-clusters",
+        "/api/lost-tags",
         "/api/album-art",
         "/api/bitrate-check",
         "/api/duplicates/merge",
@@ -498,6 +500,8 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return history_stats.action(request)
     if path == "/api/tag-clusters":
         return tag_cleanup.action(request)
+    if path == "/api/lost-tags":
+        return lost_tags.action(request)
     if path == "/api/album-art":
         return album_art.action(request)
     if path == "/api/bitrate-check":
