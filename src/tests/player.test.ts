@@ -63,6 +63,7 @@ function track(id: number, name: string, artist = "DJ"): Track {
 
 beforeEach(() => {
   installPage();
+  Object.defineProperty(window, "innerWidth", { configurable: true, value: 980 });
   fake = new FakeAudio();
   attachMedia(fake);
   mountPlayer();

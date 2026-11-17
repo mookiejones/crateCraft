@@ -1771,6 +1771,55 @@ dialog .settings-field select {
   width: 100%;
 }
 
+.player-controls.player-deck {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-1);
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.player-controls.player-deck .player-wave-slot {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+
+.player-controls.player-deck-compact .player-play {
+  order: 1;
+}
+
+.player-controls.player-deck-compact .player-title {
+  order: 2;
+}
+
+.player-controls.player-deck-compact .player-wave-slot {
+  order: 3;
+}
+
+.player-controls.player-deck-compact .player-time {
+  order: 4;
+}
+
+.player-controls.player-deck-compact .player-status {
+  order: 5;
+}
+
+.player-deck-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  width: 100%;
+}
+
+.player-deck-row .player-title {
+  flex: 1;
+  min-width: 0;
+}
+
 .player-wave-slot {
   flex: 1;
   min-width: 0;
@@ -1955,6 +2004,10 @@ dialog .settings-field select {
   font-size: var(--font-caption);
   line-height: 22px;
   text-align: center;
+}
+
+.player-cue-pad-empty {
+  opacity: 0.45;
 }
 
 .player-wave-main {

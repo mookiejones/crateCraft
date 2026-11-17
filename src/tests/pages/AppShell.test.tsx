@@ -15,6 +15,7 @@ import {
   mountPlayer,
   pause,
   play,
+  seek,
   type PlayableMedia,
 } from "../../lib/player/player";
 import { state } from "../../lib/state";
@@ -74,6 +75,11 @@ function setInnerWidth(width: number): void {
   Object.defineProperty(window, "innerWidth", { configurable: true, value: width });
 }
 
+function isFollowing(earlier: Node | null | undefined, later: Node | null | undefined): boolean {
+  if (!earlier || !later) return false;
+  return (earlier.compareDocumentPosition(later) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+}
+
 function drawerPaper(): HTMLElement {
   const paper = document.querySelector(".MuiDrawer-paper");
   if (!(paper instanceof HTMLElement)) {
@@ -103,6 +109,7 @@ describe("AppShell", () => {
 
   afterEach(() => {
     unmountAppShell();
+    mountPlayer(null);
     resetNav();
     resetNotice();
     setLocale("en");
@@ -198,42 +205,133 @@ describe("AppShell", () => {
   });
 
   it("docks the compact player in the AppBar after a track loads", () => {
-    attachMedia(new FakeAudio());
-    mountPlayer();
-    const bar = document.getElementById("player-bar");
-    const appBar = document.querySelector(".MuiAppBar-root");
-    expect(bar).not.toBeNull();
-    expect(appBar?.contains(bar)).toBe(true);
-    expect(appBar?.nextElementSibling?.contains(bar)).toBe(false);
-    expect(document.getElementById("app-body")?.contains(bar)).toBe(false);
-    expect(getPlayerState().trackId).toBeNull();
-    expect(playerSlotHidden(bar)).toBe(true);
-
-    const night = sampleTrack(4, "Night");
-    state.byId.set(4, night);
-    flushSync(() => {
-      play(4);
-    });
-    expect(playerSlotHidden(bar)).toBe(false);
-    expect(bar?.querySelector(".player-play")).not.toBeNull();
-    expect(bar?.querySelector(".player-title")?.textContent).toBe("Night");
-    expect(bar?.querySelector("canvas")).not.toBeNull();
-    expect(bar?.querySelector(".player-time")).not.toBeNull();
-    expect(bar?.querySelector("[aria-label='Zoom in']")).toBeNull();
-    expect(bar?.querySelector("[aria-label='Zoom out']")).toBeNull();
-
-    flushSync(() => {
-      pause();
-    });
-    expect(getPlayerState().playing).toBe(false);
-    expect(getPlayerState().trackId).toBe(4);
-    expect(playerSlotHidden(bar)).toBe(false);
-
-    flushSync(() => {
+    const originalWidth = window.innerWidth;
+    setInnerWidth(980);
+    remountShell();
+    try {
+      attachMedia(new FakeAudio());
       mountPlayer();
-    });
-    expect(getPlayerState().trackId).toBeNull();
-    expect(playerSlotHidden(document.getElementById("player-bar"))).toBe(true);
+      const bar = document.getElementById("player-bar");
+      const appBar = document.querySelector(".MuiAppBar-root");
+      expect(bar).not.toBeNull();
+      expect(appBar?.contains(bar)).toBe(true);
+      expect(appBar?.nextElementSibling?.contains(bar)).toBe(false);
+      expect(document.getElementById("app-body")?.contains(bar)).toBe(false);
+      expect(getPlayerState().trackId).toBeNull();
+      expect(playerSlotHidden(bar)).toBe(true);
+
+      const night = sampleTrack(4, "Night");
+      state.byId.set(4, night);
+      flushSync(() => {
+        play(4);
+      });
+      expect(playerSlotHidden(bar)).toBe(false);
+      expect(bar?.querySelector(".player-play")).not.toBeNull();
+      expect(bar?.querySelector(".player-title")?.textContent).toBe("Night");
+      expect(bar?.querySelector("canvas")).not.toBeNull();
+      expect(bar?.querySelector(".player-time")).not.toBeNull();
+      expect(bar?.querySelector(".player-deck-compact")).not.toBeNull();
+      expect(bar?.querySelector(".player-cue-pads")).toBeNull();
+      expect(bar?.querySelector(".player-wave-compact")).not.toBeNull();
+      expect(bar?.querySelector(".waveform-overview canvas")).not.toBeNull();
+      expect(bar?.querySelector("[aria-label='Zoom in']")).toBeNull();
+      expect(bar?.querySelector("[aria-label='Zoom out']")).toBeNull();
+      expect(document.querySelector(".app-bar-actions")?.contains(document.getElementById("open-help"))).toBe(true);
+
+      flushSync(() => {
+        pause();
+      });
+      expect(getPlayerState().playing).toBe(false);
+      expect(getPlayerState().trackId).toBe(4);
+      expect(playerSlotHidden(bar)).toBe(false);
+
+      flushSync(() => {
+        mountPlayer();
+      });
+      expect(getPlayerState().trackId).toBeNull();
+      expect(playerSlotHidden(document.getElementById("player-bar"))).toBe(true);
+    } finally {
+      flushSync(() => {
+        mountPlayer();
+      });
+      setInnerWidth(originalWidth);
+    }
+  });
+
+  it("docks the full player deck in the AppBar on a wide window", async () => {
+    const originalWidth = window.innerWidth;
+    setInnerWidth(1200);
+    remountShell();
+    try {
+      const fake = new FakeAudio();
+      fake.duration = 20;
+      attachMedia(fake);
+      mountPlayer();
+      const bar = document.getElementById("player-bar");
+      const appBar = document.querySelector(".MuiAppBar-root");
+      const night = sampleTrack(4, "Night");
+      state.byId.set(4, night);
+      flushSync(() => {
+        play(4);
+      });
+      expect(playerSlotHidden(bar)).toBe(false);
+      expect(appBar?.contains(bar)).toBe(true);
+      expect(bar?.querySelector(".player-deck")).not.toBeNull();
+      expect(bar?.querySelector(".player-play")).not.toBeNull();
+      expect(bar?.querySelectorAll(".player-play")).toHaveLength(1);
+      expect(bar?.querySelector(".player-title")?.textContent).toBe("Night");
+      expect(bar?.querySelector(".player-time")).not.toBeNull();
+      await vi.waitFor(() => {
+        expect(bar?.querySelector("[aria-label='Zoom in']")).not.toBeNull();
+      });
+      expect(bar?.querySelector("[aria-label='Zoom out']")).not.toBeNull();
+      const pads = bar?.querySelector(".player-cue-pads");
+      const waveSlot = bar?.querySelector(".player-wave-slot");
+      const chip = document.getElementById("library-generation");
+      expect(pads).not.toBeNull();
+      expect(waveSlot).not.toBeNull();
+      expect(isFollowing(waveSlot, pads)).toBe(true);
+      expect(isFollowing(pads, waveSlot)).toBe(false);
+      expect(isFollowing(chip, waveSlot)).toBe(true);
+      const toolbar = document.querySelector(".MuiToolbar-root");
+      expect(toolbar).toBeInstanceOf(HTMLElement);
+      expect(getComputedStyle(toolbar as HTMLElement).alignItems).toBe("stretch");
+      expect(getComputedStyle(toolbar as HTMLElement).minHeight).toBe("auto");
+      expect(document.querySelector(".app-bar-actions")?.contains(document.getElementById("open-help"))).toBe(true);
+
+      flushSync(() => {
+        seek(2);
+      });
+      expect(getPlayerState().currentTime).toBe(2);
+      expect(fake.currentTime).toBe(2);
+
+      setInnerWidth(980);
+      flushSync(() => {
+        window.dispatchEvent(new Event("resize"));
+      });
+      await vi.waitFor(() => {
+        expect(bar?.querySelector(".player-wave-compact")).not.toBeNull();
+      });
+      expect(getPlayerState().currentTime).toBe(2);
+      expect(fake.currentTime).toBe(2);
+      expect(bar?.querySelector(".player-cue-pads")).toBeNull();
+      expect(bar?.querySelector(".player-deck-compact")).not.toBeNull();
+      expect(bar?.querySelector(".waveform-overview canvas")).not.toBeNull();
+      expect(bar?.querySelector("[aria-label='Zoom in']")).toBeNull();
+      expect(document.querySelector(".app-bar-actions")?.contains(document.getElementById("open-help"))).toBe(true);
+
+      flushSync(() => {
+        pause();
+      });
+      expect(getPlayerState().playing).toBe(false);
+      expect(getPlayerState().trackId).toBe(4);
+      expect(playerSlotHidden(bar)).toBe(false);
+    } finally {
+      flushSync(() => {
+        mountPlayer();
+      });
+      setInnerWidth(originalWidth);
+    }
   });
 
   it("keeps Help on the AppBar right while the player is hidden", () => {
