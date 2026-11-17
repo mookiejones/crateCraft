@@ -12941,6 +12941,7 @@ Error generating stack: ` + x.message + `
     "field.album": "Album",
     "field.artist": "Artist",
     "field.beatgridLocked": "Beatgrid locked",
+    "field.bpm": "BPM",
     "field.color": "Color",
     "field.comments": "Comments",
     "field.composer": "Composer",
@@ -12948,6 +12949,7 @@ Error generating stack: ` + x.message + `
     "field.file": "File",
     "field.genre": "Genre",
     "field.grouping": "Grouping",
+    "field.key": "Key",
     "field.label": "Label",
     "field.rating": "Rating",
     "field.remixer": "Remixer",
@@ -13080,6 +13082,7 @@ Error generating stack: ` + x.message + `
     "gig.missingAction": "Locate missing files",
     "gig.missingEmpty": "No files are missing.",
     "gig.noSnapshot": "No snapshot to compare.",
+    "gig.revert": "Revert",
     "gig.score": "{score}/100",
     "gig.scoreLabel": "Ready score {score} out of 100, {verdict}",
     "gig.showAll": "Show all {count}",
@@ -13090,6 +13093,9 @@ Error generating stack: ` + x.message + `
     "gig.streaming": "Streaming",
     "gig.streamingAction": "Review streaming tracks",
     "gig.streamingEmpty": "No streaming tracks.",
+    "gig.tagDiff": "{name}: {fields}",
+    "gig.tagEmpty": "(empty)",
+    "gig.tagField": "{field} {before} → {after}",
     "gig.tagsEdited": "Tags edited",
     "gig.tracksAdded": "Tracks added",
     "gig.tracksRemoved": "Tracks removed",
@@ -14069,6 +14075,7 @@ Error generating stack: ` + x.message + `
     "tooltip.gigLockUndo": "Undo this applied edit. Skips if Serato changed it since.",
     "tooltip.gigNext": "Go to the next step.",
     "tooltip.gigRefresh": "Run the gig check again.",
+    "tooltip.gigRevert": "Open the restore plan for the snapshot this check compared. Confirm stays off while Serato is running. Nothing is written until you confirm.",
     "tooltip.gigShowAll": "Show every item in this list.",
     "tooltip.gridCell": "Select this row.",
     "tooltip.gridPagination": "Show the next or previous hundred tracks.",
@@ -14807,6 +14814,7 @@ Error generating stack: ` + x.message + `
     "field.album": "Álbum",
     "field.artist": "Artista",
     "field.beatgridLocked": "Beatgrid bloqueado",
+    "field.bpm": "BPM",
     "field.color": "Color",
     "field.comments": "Comentarios",
     "field.composer": "Compositor",
@@ -14814,6 +14822,7 @@ Error generating stack: ` + x.message + `
     "field.file": "Archivo",
     "field.genre": "Género",
     "field.grouping": "Agrupación",
+    "field.key": "Tono",
     "field.label": "Sello",
     "field.rating": "Valoración",
     "field.remixer": "Remezclador",
@@ -14946,6 +14955,7 @@ Error generating stack: ` + x.message + `
     "gig.missingAction": "Buscar archivos que faltan",
     "gig.missingEmpty": "No falta ningún archivo.",
     "gig.noSnapshot": "No hay instantánea con la que comparar.",
+    "gig.revert": "Revertir",
     "gig.score": "{score}/100",
     "gig.scoreLabel": "Puntuación {score} de 100, {verdict}",
     "gig.showAll": "Mostrar las {count}",
@@ -14956,6 +14966,9 @@ Error generating stack: ` + x.message + `
     "gig.streaming": "Streaming",
     "gig.streamingAction": "Revisar pistas en streaming",
     "gig.streamingEmpty": "No hay pistas en streaming.",
+    "gig.tagDiff": "{name}: {fields}",
+    "gig.tagEmpty": "(vacío)",
+    "gig.tagField": "{field} {before} → {after}",
     "gig.tagsEdited": "Etiquetas editadas",
     "gig.tracksAdded": "Pistas añadidas",
     "gig.tracksRemoved": "Pistas eliminadas",
@@ -15935,6 +15948,7 @@ Error generating stack: ` + x.message + `
     "tooltip.gigLockUndo": "Deshace este cambio aplicado. Se omite si Serato lo cambió desde entonces.",
     "tooltip.gigNext": "Pasa al siguiente paso.",
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
+    "tooltip.gigRevert": "Abre el plan de restauración de la instantánea que comparó esta comprobación. Confirmar queda desactivado mientras Serato está abierto. No se escribe nada hasta que confirmes.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
     "tooltip.gridCell": "Selecciona esta fila.",
     "tooltip.gridPagination": "Muestra las cien pistas siguientes o anteriores.",
@@ -31601,6 +31615,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     gigBack: spec("tooltip.gigBack"),
     gigNext: spec("tooltip.gigNext"),
     gigExit: spec("tooltip.gigExit"),
+    gigRevert: spec("tooltip.gigRevert"),
     gigGroup: spec("tooltip.gigGroup"),
     gigShowAll: spec("tooltip.gigShowAll"),
     sortTitle: spec("tooltip.sortTitle"),
@@ -67228,7 +67243,28 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ["gig.cuesEdited", "cues_edited"],
     ["gig.gridsEdited", "grids_edited"],
     ["gig.tagsEdited", "tags_edited"]
-  ];
+  ], TAG_FIELD_KEYS = {
+    title: "field.title",
+    artist: "field.artist",
+    bpm: "field.bpm",
+    key: "field.key"
+  };
+  function tagDiffText(diff) {
+    let fields = (diff.fields || []).map((item) => t("gig.tagField", {
+      field: TAG_FIELD_KEYS[item.field] ? t(TAG_FIELD_KEYS[item.field]) : item.field,
+      before: item.before || t("gig.tagEmpty"),
+      after: item.after || t("gig.tagEmpty")
+    })).join("; ");
+    return t("gig.tagDiff", { name: fileName(diff.path), fields });
+  }
+  function tagEditLines(changes) {
+    if (!changes) return [];
+    let diffs = new Map((changes.tag_diffs || []).map((item) => [item.path, item]));
+    return changes.tags_edited.length ? changes.tags_edited.map((path) => {
+      let diff = diffs.get(path);
+      return diff ? tagDiffText(diff) : path;
+    }) : (changes.tag_diffs || []).map(tagDiffText);
+  }
   function gigLinesFor(payload, index) {
     return index === 0 ? (payload.unavailable_drives || []).map(
       (drive) => t("gig.driveUnavailable", { name: drive.name, count: drive.track_count })
@@ -67332,12 +67368,28 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
   function GigSince({ payload }) {
-    let note = payload.snapshot_note?.trim() ?? "", changes = payload.changes, groups = GIG_CHANGE_GROUPS.map(([label, key]) => [label, changes?.[key] || []]).filter(([, lines]) => lines.length > 0);
+    let note = payload.snapshot_note?.trim() ?? "", changes = payload.changes, groups = GIG_CHANGE_GROUPS.map(([label, key]) => [
+      label,
+      key === "tags_edited" ? tagEditLines(changes) : changes?.[key] || []
+    ]).filter(([, lines]) => lines.length > 0), snapshotId = payload.snapshot_id?.trim() ?? "", canRevert = !!snapshotId && groups.length > 0, revertBlocked = state.seratoRunning || !!state.writeBlock;
     return /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(import_jsx_runtime266.Fragment, { children: [
       note ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: note }) : null,
       !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
       groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
-      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null
+      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null,
+      canRevert ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(
+        "button",
+        {
+          type: "button",
+          ref: tooltipRef7(tips.gigRevert),
+          "data-gig-action": "revert",
+          disabled: revertBlocked,
+          onClick: () => {
+            openSnapshotPlan(snapshotId);
+          },
+          children: t("gig.revert")
+        }
+      ) : null
     ] });
   }
   function GigReport() {

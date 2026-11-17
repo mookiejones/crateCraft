@@ -41,7 +41,8 @@ window.fetch = (input: RequestInfo | URL) => {
       unavailable_drives: [{ name: "GIGDRIVE", track_count: 2, crates: ["Friday"] }],
       streaming_tracks: [],
       empty_crates: [],
-      snapshot_note: "",
+      snapshot_note: "Latest snapshot: Before Friday on 2026-10-27.",
+      snapshot_id: "snap-9",
       changes: {
         crates_added: [],
         crates_removed: [],
@@ -50,7 +51,14 @@ window.fetch = (input: RequestInfo | URL) => {
         tracks_removed: [],
         cues_edited: [],
         grids_edited: [],
-        tags_edited: [],
+        tags_edited: ["/Music/a.mp3"],
+        tag_diffs: [{
+          path: "/Music/a.mp3",
+          fields: [
+            { field: "title", before: "Mix", after: "Song" },
+            { field: "bpm", before: "120", after: "240" },
+          ],
+        }],
       },
       scope: { space: "Serato Library", crate_id: 5, crate_name: "Friday" },
     };

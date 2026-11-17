@@ -14,7 +14,10 @@ import {
   GIG_STEP_COUNT,
   GIG_STEPS,
   gigLinesFor,
+  tagEditLines,
 } from "../lib/gig/gig-view";
+import { openSnapshotPlan } from "../lib/snapshots/restore";
+import { state } from "../lib/state";
 import { setTooltip } from "../lib/ui/tooltip";
 import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
 import { GigDetailsGroup } from "./GigDetailsGroup";
@@ -67,8 +70,14 @@ function GigSince({ payload }: { payload: GigPayload }) {
   const note = payload.snapshot_note?.trim() ?? "";
   const changes = payload.changes;
   const groups = GIG_CHANGE_GROUPS
-    .map(([label, key]) => [label, changes?.[key] || []] as const)
+    .map(([label, key]) => [
+      label,
+      key === "tags_edited" ? tagEditLines(changes) : (changes?.[key] || []),
+    ] as const)
     .filter(([, lines]) => lines.length > 0);
+  const snapshotId = payload.snapshot_id?.trim() ?? "";
+  const canRevert = Boolean(snapshotId) && groups.length > 0;
+  const revertBlocked = state.seratoRunning || Boolean(state.writeBlock);
   return (
     <>
       {note ? <p className="gig-note">{note}</p> : null}
@@ -78,6 +87,19 @@ function GigSince({ payload }: { payload: GigPayload }) {
       ))}
       {changes && groups.length === 0
         ? <p className="gig-note">{t(GIG_STEPS[GIG_STEP_COUNT - 1]!.empty)}</p>
+        : null}
+      {canRevert
+        ? (
+          <button
+            type="button"
+            ref={tooltipRef(tips.gigRevert)}
+            data-gig-action="revert"
+            disabled={revertBlocked}
+            onClick={() => { void openSnapshotPlan(snapshotId); }}
+          >
+            {t("gig.revert")}
+          </button>
+        )
         : null}
     </>
   );

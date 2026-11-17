@@ -723,6 +723,17 @@ export interface GigDeduction {
   summary: string;
 }
 
+export interface GigTagFieldDiff {
+  field: string;
+  before: string;
+  after: string;
+}
+
+export interface GigTagDiff {
+  path: string;
+  fields: GigTagFieldDiff[];
+}
+
 export interface GigChanges {
   crates_added: string[];
   crates_removed: string[];
@@ -732,6 +743,7 @@ export interface GigChanges {
   cues_edited: string[];
   grids_edited: string[];
   tags_edited: string[];
+  tag_diffs?: GigTagDiff[];
 }
 
 export interface GigReport {
@@ -744,6 +756,7 @@ export interface GigReport {
   streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string }>;
   empty_crates?: Array<{ name: string; warning: string }>;
   snapshot_note?: string;
+  snapshot_id?: string;
   changes?: GigChanges | null;
   scope?: { space: string; crate_id: number | null; crate_name: string | null };
   checked_at?: string;

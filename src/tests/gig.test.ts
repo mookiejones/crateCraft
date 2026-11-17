@@ -2,7 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { GigReport } from "../lib/api-types";
 import { loadGigCheck, repaintGig, wireGigCheck } from "../lib/gig/gig";
+import { tagDiffText, tagEditLines } from "../lib/gig/gig-view";
 import { setLocale } from "../lib/i18n";
+import * as restore from "../lib/snapshots/restore";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import { state } from "../lib/state";
 import { installPage } from "./test-page";
@@ -17,6 +19,7 @@ const report: GigReport = {
   streaming_tracks: [{ service: "Apple Music", path: "stream", title: "Cloud", artist: "A", crate: "Friday" }],
   empty_crates: [{ name: "Late", warning: "Serato may delete this crate when it closes." }],
   snapshot_note: "Latest snapshot: Before Friday on 2026-10-27.",
+  snapshot_id: "snap-9",
   changes: {
     crates_added: ["Saturday"],
     crates_removed: [],
@@ -25,7 +28,14 @@ const report: GigReport = {
     tracks_removed: [],
     cues_edited: ["/Music/opener.mp3"],
     grids_edited: [],
-    tags_edited: [],
+    tags_edited: ["/Music/a.mp3"],
+    tag_diffs: [{
+      path: "/Music/a.mp3",
+      fields: [
+        { field: "title", before: "Mix", after: "Song" },
+        { field: "bpm", before: "120", after: "240" },
+      ],
+    }],
   },
   scope: { space: "Serato Library", crate_id: 5, crate_name: "Friday" },
 };
@@ -102,7 +112,9 @@ describe("gig", () => {
     expect(reportText()).toContain("Crates added");
     expect(reportText()).toContain("Saturday");
     expect(reportText()).toContain("Cues edited");
-    expect(reportText()).not.toContain("Tags edited");
+    expect(reportText()).toContain("Tags edited");
+    expect(reportText()).toContain("a.mp3: Title Mix → Song; BPM 120 → 240");
+    expect(reportText()).toContain("Revert");
     expect(document.getElementById("gig-scope")!.textContent).toContain("Friday");
     expect(document.getElementById("gig-scope")!.textContent).not.toContain("Nothing is written");
     expect(document.getElementById("gig-refresh")!.getAttribute("aria-busy")).toBe("false");
@@ -290,6 +302,11 @@ describe("gig in the active language", () => {
     expect(keys("back")).toBe("tooltip.gigBack");
     expect(keys("next")).toBe("tooltip.gigNext");
     expect(keys("exit")).toBe("tooltip.gigExit");
+    clickAction("next");
+    clickAction("next");
+    clickAction("next");
+    clickAction("next");
+    expect(keys("revert")).toBe("tooltip.gigRevert");
     const untipped = [...document.querySelectorAll<HTMLButtonElement>("#gig-panel button")].filter(
       (button) => !button.dataset.tooltipKey,
     );
@@ -302,5 +319,66 @@ describe("gig in the active language", () => {
     await loadGigCheck();
     expect(reportText()).toContain("USB: 1 track unavailable");
     expect(reportText()).not.toContain("1 tracks");
+  });
+
+  it("formats title and BPM diffs and opens the restore plan", async () => {
+    expect(tagDiffText({
+      path: "C:\\Music\\a.mp3",
+      fields: [
+        { field: "title", before: "Mix", after: "Song" },
+        { field: "bpm", before: "120", after: "240" },
+      ],
+    })).toBe("a.mp3: Title Mix → Song; BPM 120 → 240");
+    expect(tagEditLines({
+      crates_added: [],
+      crates_removed: [],
+      crates_edited: [],
+      tracks_added: [],
+      tracks_removed: [],
+      cues_edited: [],
+      grids_edited: [],
+      tags_edited: ["C:\\Music\\b.mp3"],
+    })).toEqual(["C:\\Music\\b.mp3"]);
+    setLocale("es");
+    try {
+      expect(tagDiffText({
+        path: "/Music/a.mp3",
+        fields: [{ field: "title", before: "Mix", after: "Song" }],
+      })).toBe("a.mp3: Título Mix → Song");
+    } finally {
+      setLocale("en");
+    }
+
+    const openPlan = vi.spyOn(restore, "openSnapshotPlan").mockResolvedValue(undefined);
+    vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
+    await loadGigCheck();
+    clickAction("next");
+    clickAction("next");
+    clickAction("next");
+    clickAction("next");
+    clickAction("revert");
+    expect(openPlan).toHaveBeenCalledWith("snap-9");
+  });
+
+  it("hides Revert when there is no snapshot id and disables it while Serato is running", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => reply({ ...report, snapshot_id: "" })));
+    await loadGigCheck();
+    clickAction("next");
+    clickAction("next");
+    clickAction("next");
+    clickAction("next");
+    expect(document.querySelector('[data-gig-action="revert"]')).toBeNull();
+
+    vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
+    state.seratoRunning = true;
+    await loadGigCheck();
+    clickAction("next");
+    clickAction("next");
+    clickAction("next");
+    clickAction("next");
+    const revert = document.querySelector<HTMLButtonElement>('[data-gig-action="revert"]');
+    expect(revert).not.toBeNull();
+    expect(revert!.disabled).toBe(true);
+    state.seratoRunning = false;
   });
 });

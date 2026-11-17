@@ -38,3 +38,21 @@ test("gig check and Tempo drift render from context", async ({ page }) => {
   await expect(page.locator("#drift-report")).toContainText("Old Tape");
   await saveShot(page, "gig_drift_react");
 });
+
+test("Since last gig lists tag diffs and Revert", async ({ page }) => {
+  const titles = ["Missing files", "Streaming", "Empty crates", "Since last gig"];
+  for (const title of titles) {
+    await page.locator('#gig-report [data-gig-action="next"]').evaluate((node) => {
+      (node as HTMLButtonElement).click();
+    });
+    await expect(page.locator("#gig-step-heading")).toHaveText(title);
+  }
+  await expect(page.locator("#gig-report")).toContainText("Tags edited");
+  await expect(page.locator("#gig-report")).toContainText("a.mp3: Title Mix → Song; BPM 120 → 240");
+  await expect(page.locator('#gig-report [data-gig-action="revert"]')).toBeVisible();
+  await expect(page.locator('#gig-report [data-gig-action="revert"]')).toBeEnabled();
+  await page.locator("#drift-panel").evaluate((node) => {
+    (node as HTMLElement).hidden = true;
+  });
+  await saveShot(page, "gig_since_revert");
+});
