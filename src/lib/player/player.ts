@@ -89,7 +89,7 @@ export interface CueMarker {
   seconds: number;
   color: string;
   label: string;
-  /** Zero-based Serato pad index, or -1 when the cue has no pad. */
+  /** Stored 0–7 pad, or -1 when the index is missing or out of range. */
   index: number;
 }
 
@@ -174,7 +174,7 @@ export function markersFromCues(rows: readonly Marker[] | undefined): CueMarker[
       seconds: start / 1000,
       color,
       label: named || `${playerStrings.cue} ${fallback}`,
-      index: Number.isInteger(index) ? index : -1,
+      index: Number.isInteger(index) && index >= 0 && index < 8 ? index : -1,
     });
   }
   return found;

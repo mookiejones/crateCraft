@@ -353,6 +353,20 @@ describe("cue markers", () => {
     ]);
   });
 
+  it("keeps pad index 0 and 3 and stores -1 when the pad is missing or out of range", () => {
+    expect(markersFromCues([
+      { start_ms: 1500, color: "#CC0000", name: "Drop", index: 0 },
+      { start_ms: 8000, color: "red", index: 3 },
+      { start_ms: 2000, color: "#CC0000", name: "Loose" },
+      { start_ms: 3000, color: "#CC0000", name: "Pad 9", index: 8 },
+    ])).toEqual([
+      { seconds: 1.5, color: "#CC0000", label: "Drop", index: 0 },
+      { seconds: 8, color: "var(--cue-slot-4)", label: "Cue 4", index: 3 },
+      { seconds: 2, color: "#CC0000", label: "Loose", index: -1 },
+      { seconds: 3, color: "#CC0000", label: "Pad 9", index: -1 },
+    ]);
+  });
+
   it("jumps to cue pad 1 and leaves the playhead on an empty pad", async () => {
     vi.stubGlobal("fetch", () => Promise.resolve(new Response(JSON.stringify({
       cues: [

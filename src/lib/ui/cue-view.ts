@@ -14,6 +14,9 @@ import { t } from "../i18n";
 /** Pad count Serato DJ Pro shows. Index 0 is pad 1. */
 export const CUE_SLOT_COUNT = 8;
 
+/** Seconds the playhead can be from a cue and still light that pad. */
+export const ACTIVE_PAD_EPSILON_SECONDS = 0.25;
+
 /**
  * CSS `var(--cue-slot-N)` for pads 1–8.
  *
@@ -80,6 +83,50 @@ export function cueSlots(cues: readonly Marker[] | undefined): Array<Marker | nu
     if (slots[index] == null) slots[index] = cue;
   }
   return slots;
+}
+
+/**
+ * Pad to light for the current playhead.
+ *
+ * A last-clicked pad wins while it is still within `epsilon`. Otherwise
+ * the nearest filled pad within `epsilon` wins, lower index on a tie.
+ * Empty pads and a time far from every cue return `null`.
+ *
+ * @param {number} currentTime Playhead in seconds.
+ * @param {object[]} slots Eight pad slots, empty pads `null`.
+ * @param {number|null} lastClicked Zero-based pad last clicked, or `null`.
+ * @param {number} [epsilon] Max seconds from a cue. Defaults to `ACTIVE_PAD_EPSILON_SECONDS`.
+ * @returns {number|null} Zero-based pad index, or `null`.
+ */
+export function activePadIndex(
+  currentTime: number,
+  slots: ReadonlyArray<{ seconds: number } | null>,
+  lastClicked: number | null,
+  epsilon: number = ACTIVE_PAD_EPSILON_SECONDS,
+): number | null {
+  if (
+    lastClicked !== null &&
+    Number.isInteger(lastClicked) &&
+    lastClicked >= 0 &&
+    lastClicked < CUE_SLOT_COUNT
+  ) {
+    const clicked = slots[lastClicked];
+    if (clicked && Math.abs(currentTime - clicked.seconds) <= epsilon) {
+      return lastClicked;
+    }
+  }
+  let nearest: number | null = null;
+  let nearestDelta = Infinity;
+  for (let slot = 0; slot < slots.length; slot += 1) {
+    const filled = slots[slot];
+    if (!filled) continue;
+    const delta = Math.abs(currentTime - filled.seconds);
+    if (delta > epsilon) continue;
+    if (nearest !== null && delta >= nearestDelta) continue;
+    nearest = slot;
+    nearestDelta = delta;
+  }
+  return nearest;
 }
 
 /**
