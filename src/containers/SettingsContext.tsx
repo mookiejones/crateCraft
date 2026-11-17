@@ -13,6 +13,7 @@ export type SettingsContextValue = SettingsSnapshot & {
   saveLanguage: (value: string) => Promise<void>;
   saveColorway: (value: Colorway | string) => Promise<void>;
   saveIconFollow: (follow: boolean) => Promise<void>;
+  saveGigLock: (on: boolean) => Promise<void>;
   saveSharing: (on: boolean) => Promise<void>;
   saveUpdateEnabled: (on: boolean) => Promise<void>;
   saveUpdatePrereleases: (on: boolean) => Promise<void>;

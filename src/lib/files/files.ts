@@ -16,6 +16,7 @@ import type {
 } from "../api-types";
 import { bridge } from "../bridge";
 import { serverMessage, t } from "../i18n";
+import { isQueuedWrite } from "../crates/queue-notice";
 import { emitFiles } from "./files-store";
 import { FILE_ROW, ROOT_ROW, state } from "../state";
 
@@ -650,6 +651,11 @@ export async function confirmFiles(): Promise<void> {
   const crateScope = filesAction === "rename_from_tags" && filesTagScope === "crate";
   try {
     const payload = await postJSON("/api/files", filesBody(true));
+    if (isQueuedWrite(payload)) {
+      closeFilesDialog();
+      bridge.setNotice(t("gigLock.queued"));
+      return;
+    }
     if (payload.serato) bridge.applyStatus(payload.serato);
     closeFilesDialog();
     state.filesPick = null;

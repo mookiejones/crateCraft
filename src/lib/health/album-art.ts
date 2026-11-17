@@ -9,6 +9,7 @@
  */
 
 import { failureOf, postJSON } from "../api";
+import { isQueuedWrite } from "../crates/queue-notice";
 import type { AlbumArtCandidate, AlbumArtPlan } from "../api-types";
 import { bridge } from "../bridge";
 import { el } from "../dom";
@@ -106,6 +107,11 @@ async function embedCover(): Promise<void> {
       release_id: chosen,
       confirm: true,
     });
+    if (isQueuedWrite(written)) {
+      el("album-art-dialog").close();
+      failStatus(t("gigLock.queued"));
+      return;
+    }
     latest = written;
     busy = false;
     el("album-art-dialog").close();

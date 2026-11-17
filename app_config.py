@@ -54,6 +54,7 @@ SETTINGS_KEYS = (
     "language",
     "colorway",
     "icon_follows_theme",
+    "gig_lock",
 )
 # Page languages a person can pick in Settings. None follows the OS.
 # Keep in sync with LANGUAGES in src/lib/i18n.ts.
@@ -195,6 +196,8 @@ class Settings:
         icon_follows_theme: True changes the running Dock or taskbar icon
             to match ``colorway``. False keeps the usual icon. Missing
             means True. False is a stored choice.
+        gig_lock: True queues library writes until Gig Lock is off and
+            Serato is quit. Missing means False.
     """
 
     install_id: str | None
@@ -207,6 +210,7 @@ class Settings:
     language: str | None = None
     colorway: str = DEFAULT_COLORWAY
     icon_follows_theme: bool = True
+    gig_lock: bool = False
 
     def __post_init__(self) -> None:
         """Reject an unknown theme or a non-boolean icon flag.
@@ -221,6 +225,8 @@ class Settings:
             raise ValueError("colorway is not a known theme.")
         if not isinstance(self.icon_follows_theme, bool):
             raise ValueError("icon_follows_theme must be a boolean.")
+        if not isinstance(self.gig_lock, bool):
+            raise ValueError("gig_lock must be a boolean.")
         if self.drawer_open is not None and not isinstance(self.drawer_open, bool):
             raise ValueError("layout.drawer_open must be a boolean.")
 
@@ -272,6 +278,7 @@ class Settings:
             body["language"] = self.language
         body["colorway"] = self.colorway
         body["icon_follows_theme"] = self.icon_follows_theme
+        body["gig_lock"] = self.gig_lock
         return body
 
 
@@ -651,6 +658,9 @@ def _parse(payload: object) -> Settings:
             "icon_follows_theme",
             True,
         )
+    gig_lock = False
+    if "gig_lock" in payload:
+        gig_lock = _parse_bool(payload.get("gig_lock"), "gig_lock", False)
     if "rekordbox" not in payload:
         rekordbox = default_rekordbox()
     else:
@@ -666,6 +676,7 @@ def _parse(payload: object) -> Settings:
         language=language,
         colorway=colorway,
         icon_follows_theme=icon_follows_theme,
+        gig_lock=gig_lock,
     )
 
 def _parse_bool(value: object, dotted: str, default: bool) -> bool:
@@ -1148,6 +1159,41 @@ def set_appearance(
             icon_follows_theme=(
                 current.icon_follows_theme if icon_follows_theme is None else icon_follows_theme
             ),
+        )
+        save_settings(updated)
+        return updated
+
+
+def set_gig_lock(value: bool) -> Settings:
+    """Store whether library writes queue until Serato is quit.
+
+    Args:
+        value: True queues crate, track, and file writes. False applies
+            them through the existing writers after Preview then Apply.
+
+    Returns:
+        The settings that were written. Every other field is kept. A
+        partial sharing pair is dropped, as in :func:`set_appearance`.
+
+    Raises:
+        ValueError: If ``value`` is not a boolean.
+        OSError: If the settings file cannot be written.
+    """
+    if not isinstance(value, bool):
+        raise ValueError("gig_lock must be a boolean.")
+    with _settings_lock:
+        current = load_settings()
+        install_id = current.install_id
+        consent = current.telemetry_consent
+        if not isinstance(consent, bool) or install_id is None:
+            install_id = None
+            consent = None
+        updated = replace(
+            current,
+            install_id=install_id,
+            telemetry_consent=consent,
+            wizard_complete=current.wizard_complete is True,
+            gig_lock=value,
         )
         save_settings(updated)
         return updated

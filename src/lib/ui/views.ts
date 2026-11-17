@@ -24,6 +24,7 @@ import type {
 import { bridge } from "../bridge";
 import { el } from "../dom";
 import { setNotice as writeNotice, type NoticeSeverity } from "./notice-store";
+import { isQueuedWrite } from "../crates/queue-notice";
 import { clickPane, paintDualChrome } from "../crates/dual-crate-view";
 import { colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "../format";
 import { loadGigCheck, showGigFailure } from "../gig/gig";
@@ -1915,6 +1916,10 @@ async function saveTrack(id: number, fields: TrackSaveFields) {
   }
   try {
     const result = await postJSON("/api/track", { id, space: state.space, fields });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(result.warning || t("common.saved"));
     await loadLibrary();
     selectTrack(id);
@@ -1979,6 +1984,10 @@ async function revealTrack(id: number) {
 async function prepareTrack(id: number, add: boolean) {
   try {
     const result = await postJSON("/api/crate", { action: "prepare", asset: id, add, space: state.space });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(result.warning || (add ? t("detail.sentPrepare") : t("detail.removedPrepare")));
     await loadLibrary();
     selectTrack(id);
@@ -2012,6 +2021,10 @@ export async function relocateTrack(track: Track) {
       space: state.space,
       fields: { portable_id: path },
     });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(result.warning || t("detail.relocated"));
     await loadLibrary();
     selectTrack(track.id);
@@ -2038,6 +2051,10 @@ export async function removeTrack(id: number) {
   }))) return;
   try {
     const result = await postJSON("/api/crate", { action: "remove_library", asset: id, space: state.space });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(result.warning || t("detail.removed"));
     state.selectedId = null;
     await loadLibrary();
@@ -2068,6 +2085,10 @@ async function setMembership(assetId: number, crateId: number, add: boolean, inp
       asset: assetId,
       space: state.space,
     });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return true;
+    }
     if (result.warning) setNotice(result.warning);
     await loadLibrary();
     selectTrack(assetId);
@@ -2101,6 +2122,10 @@ async function saveRules(id: number, text: string) {
   }
   try {
     const result = await postJSON("/api/crate", { action: "rules", id, rules, space: state.space });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(result.warning || t("rules.saved"));
     await loadLibrary();
     selectCrate(id);
@@ -2130,6 +2155,10 @@ export async function createCrate() {
   const parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
   try {
     const result = await postJSON("/api/crate", { action: "create", name: name.trim(), parent, space: state.space });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(result.warning || t("crates.created"));
     await loadLibrary();
     selectCrate(result.id as number);
@@ -2159,6 +2188,10 @@ export async function renameCrate() {
   if (!name || !name.trim() || name.trim() === crate.name) return;
   try {
     const result = await postJSON("/api/crate", { action: "rename", id: crate.id, name: name.trim(), space: state.space });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(result.warning || t("crates.renamed"));
     await loadLibrary();
     selectCrate(crate.id);
@@ -2214,6 +2247,10 @@ export async function colorCrate() {
       color: color === 0xffffff ? null : color,
       space: state.space,
     });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(result.warning || t("crates.colorSaved"));
     await loadLibrary();
   } catch (error) {
@@ -2241,6 +2278,10 @@ export async function deleteCrate() {
   }))) return;
   try {
     const result = await postJSON("/api/crate", { action: "delete", id: crate.id, space: state.space });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     state.activeCrate = "all";
     setNotice(result.warning || t("crates.deleted"));
     await loadLibrary();
@@ -2266,6 +2307,10 @@ export async function importPlaylist(file: File) {
   const parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
   try {
     const result = await postJSON("/api/import.m3u", { space: state.space, parent, name, text });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     const missed = result.unmatched_count ? ` ${t("import.unmatched", { count: Number(result.unmatched_count) })}` : "";
     setNotice(`${t("import.added", { count: Number(result.added) || 0 })}${missed}${result.warning ? ` ${result.warning}` : ""}`);
     await loadLibrary();

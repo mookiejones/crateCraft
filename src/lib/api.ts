@@ -22,6 +22,7 @@ import type {
   SeratoStatus,
   SettingsPayload,
   VersionPayload,
+  WriteQueueListing,
 } from "./api-types";
 import { serverMessage, t } from "./i18n";
 
@@ -35,7 +36,8 @@ export type ServerReply =
   & RestorePlan
   & ErrorBody
   & LogsPayload
-  & RekordboxReport;
+  & RekordboxReport
+  & WriteQueueListing;
 
 export interface ApiFailure extends Error {
   status?: number;

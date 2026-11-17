@@ -11,6 +11,7 @@ import { failureOf, postJSON } from "../api";
 import type { PresetSpec } from "../api-types";
 import { el } from "../dom";
 import { t } from "../i18n";
+import { isQueuedWrite } from "./queue-notice";
 import { presetName, readPresetForm, scopeCrate, syncPresetFields } from "./preset-view";
 import { state } from "../state";
 import { bindCrateActions } from "./crate-store";
@@ -28,6 +29,7 @@ interface CreateReply {
   name?: string;
   added?: number;
   warning?: string | null;
+  queued?: boolean;
 }
 
 interface RefreshReply {
@@ -139,6 +141,10 @@ export async function createPreset(): Promise<void> {
   try {
     const reply = await postJSON<CreateReply>("/api/smart-preset", { action: "create", space: state.space, preset, name });
     el("preset-dialog").close();
+    if (isQueuedWrite(reply)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     const message = t("presets.created", { name: reply.name || name, count: Number(reply.added) || 0 });
     setNotice(reply.warning ? `${message} ${reply.warning}` : message);
     await loadLibrary();
@@ -166,6 +172,10 @@ export async function refreshActivePreset(): Promise<void> {
   const crate = state.crates.find((item) => item.id === id);
   try {
     const reply = await postJSON<RefreshReply>("/api/smart-preset", { action: "refresh", id });
+    if (isQueuedWrite(reply)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     const message = t("presets.refreshed", {
       name: crate?.name ?? "",
       added: Number(reply.added) || 0,
@@ -193,6 +203,10 @@ export async function refreshPresetsOnOpen(): Promise<void> {
   if (!state.writable || Object.keys(state.presets).length === 0) return;
   try {
     const reply = await postJSON<RefreshAllReply>("/api/smart-preset", { action: "refresh_all" });
+    if (isQueuedWrite(reply)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     const changed = reply.changed?.length ?? 0;
     if (!changed) return;
     const message = t("presets.refreshedOnOpen", { count: changed });

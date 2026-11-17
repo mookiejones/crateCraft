@@ -11,6 +11,7 @@
 
 import { createElement } from "react";
 import { failureOf, postJSON, readJSON } from "../api";
+import { isQueuedWrite } from "../crates/queue-notice";
 import type { HistoryIdleCrate, HistoryStatsReport } from "../api-types";
 import { mountIsland, type IslandRoot } from "../../app/mount";
 import { bridge } from "../bridge";
@@ -255,6 +256,10 @@ export async function makeIdleCrate(): Promise<void> {
       idle_days: idleDays,
       name: label,
     });
+    if (isQueuedWrite(created)) {
+      el("stats-status").textContent = t("gigLock.queued");
+      return;
+    }
     if (!created.written) {
       el("stats-status").textContent = t("stats.emptyIdle");
       return;

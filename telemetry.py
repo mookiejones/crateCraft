@@ -838,7 +838,8 @@ def public_settings() -> dict[str, object]:
         Consent, whether the first-launch prompt should show, the saved
         pane layout, whether this build has a key, the app version, the
         Rekordbox export bar, the saved page language (None follows the
-        OS), ``colorway``, ``icon_follows_theme``, and ``icon_href``.
+        OS), ``colorway``, ``icon_follows_theme``, ``gig_lock``, and
+        ``icon_href``.
         ``app_version`` is the ``version`` string from
         ``GET /api/version``. The install id and the telemetry keys are not
         included.
@@ -863,6 +864,7 @@ def public_settings() -> dict[str, object]:
         "colorway": settings.colorway,
         "icon_follows_theme": follow,
         "icon_href": app_icons.icon_href(settings.colorway, follow),
+        "gig_lock": settings.gig_lock is True,
     }
 
 
