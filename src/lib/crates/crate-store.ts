@@ -1,8 +1,8 @@
 /**
  * Crate-rail snapshot and the actions the React tree calls.
  *
- * Library writes stay in views.ts, presets, folder-sync, dual-crate, and
- * dialogs. Those modules bind the functions. This file does not import
+ * Library writes stay in views.ts, presets, crate-trees, folder-sync,
+ * dual-crate, and dialogs. Those modules bind the functions. This file does not import
  * them, so AppProviders can read the snapshot without a cycle.
  */
 
@@ -22,6 +22,7 @@ export type CrateActions = {
   color: () => void;
   remove: () => void;
   preset: () => void;
+  tree: () => void;
   folderSync: () => void;
   renameFromTags: (button: HTMLButtonElement) => void;
   refresh: () => void;
@@ -41,6 +42,7 @@ const actions: CrateActions = {
   color: noop,
   remove: noop,
   preset: noop,
+  tree: noop,
   folderSync: noop,
   renameFromTags: noop,
   refresh: noop,
@@ -98,6 +100,7 @@ export type CrateSnapshot = {
   canColor: boolean;
   canDelete: boolean;
   canPreset: boolean;
+  canTree: boolean;
   canFolderSync: boolean;
   canRenameFromTags: boolean;
   canRefresh: boolean;
@@ -128,6 +131,7 @@ export function readCrateSnapshot(): CrateSnapshot {
     canColor: state.writable && crateChosen,
     canDelete: state.writable && crateChosen,
     canPreset: state.writable,
+    canTree: state.writable,
     canFolderSync: !blocked,
     canRenameFromTags: !blocked,
     canRefresh: state.writable && preset,

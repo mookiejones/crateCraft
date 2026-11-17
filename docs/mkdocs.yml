@@ -66,6 +66,7 @@ nav:
       - Panic: panic.md
   - Your library:
       - Crates: guide/crates.md
+      - Crate trees: guide/crate-trees.md
       - Playback: guide/playback.md
       - Track details: guide/tags.md
       - History: guide/history.md

@@ -88,6 +88,9 @@ describe("CrateTree context", () => {
     expect(document.querySelector("#crate-actions-menu #crate-preset")?.className).toContain(
       "MuiMenuItem",
     );
+    expect(document.querySelector("#crate-actions-menu #crate-tree")?.className).toContain(
+      "MuiMenuItem",
+    );
     expect(document.querySelector("#crate-actions-menu #crate-folder-sync")?.className).toContain(
       "MuiMenuItem",
     );

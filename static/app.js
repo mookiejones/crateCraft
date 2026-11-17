@@ -12699,6 +12699,35 @@ Error generating stack: ` + x.message + `
     "crates.sort.name": "Name",
     "crates.sort.order": "Order",
     "crates.split": "Split",
+    "crateTree.button": "Tree",
+    "crateTree.child": "{name} ({count})",
+    "crateTree.counting": "Counting crates…",
+    "crateTree.create": "Create tree",
+    "crateTree.created": {
+      one: "{name} saved with {count} crate.",
+      other: "{name} saved with {count} crates."
+    },
+    "crateTree.empty": "No tracks fit that crate tree.",
+    "crateTree.high": "High BPM",
+    "crateTree.intro": "The app makes a parent crate with a ⟳ subcrate per BPM band, key, or genre. Empty subcrates are not made. Serato plays them like any crate. Subcrates refresh when this app opens while Serato is closed, or when you press Refresh. Quit Serato DJ Pro first.",
+    "crateTree.kind": "Tree",
+    "crateTree.kind.bpm": "BPM bands",
+    "crateTree.kind.genre": "Genres",
+    "crateTree.kind.key": "Keys",
+    "crateTree.limit": "Most genres",
+    "crateTree.low": "Low BPM",
+    "crateTree.minTracks": "Fewest tracks per genre",
+    "crateTree.name": "Crate name",
+    "crateTree.name.bpm": "BPM bands",
+    "crateTree.name.genre": "Genres",
+    "crateTree.name.key": "Keys",
+    "crateTree.preview": {
+      one: "{count} crate:",
+      other: "{count} crates:"
+    },
+    "crateTree.step": "Step",
+    "crateTree.title": "New crate tree",
+    "crateTree.width": "Band width",
     "cratesReplace.addToCrates": "Add the replacement to {crates}.",
     "cratesReplace.alreadyInCrates": "The replacement is already in those crates. It stays where it is.",
     "cratesReplace.confirm": "Update crates",
@@ -13962,12 +13991,24 @@ Error generating stack: ` + x.message + `
     "tooltip.copyVersion": "Copy the app version.",
     "tooltip.crateColor": "Set the color of the selected crate.",
     "tooltip.crateDelete": "Delete the selected crate. The tracks stay in the library.",
-    "tooltip.crateMore": "Color, Preset, Sync folder, and other crate actions.",
+    "tooltip.crateMore": "Color, Preset, Tree, Sync folder, and other crate actions.",
     "tooltip.crateBrowserMore": "Split, Save view, and Export.",
     "tooltip.crateNew": "Create a new crate.",
     "tooltip.crateFolderSync": "Add library tracks whose files sit in a folder to this crate. Files that are not in the library stay skipped.",
     "tooltip.crateRenameFromTags": "Rename this crate's files to Artist - Title and keep crate paths.",
     "tooltip.cratePreset": "Make a crate from a preset: tracks that mix with a key, a BPM range, or tracks not played lately.",
+    "tooltip.crateTree": "Make a parent crate with a subcrate per BPM band, key, or genre. Empty subcrates are not made.",
+    "tooltip.crateTreeCancel": "Close without making crates.",
+    "tooltip.crateTreeCreate": "Save the parent crate and its subcrates. Serato DJ Pro must be quit.",
+    "tooltip.crateTreeHigh": "Highest BPM in the last band.",
+    "tooltip.crateTreeKind": "Choose BPM bands, keys, or genres.",
+    "tooltip.crateTreeLimit": "How many genre crates to make, largest first.",
+    "tooltip.crateTreeLow": "Lowest BPM in the first band.",
+    "tooltip.crateTreeMinTracks": "Skip a genre with fewer tracks than this.",
+    "tooltip.crateTreeName": "The parent crate name.",
+    "tooltip.crateTreeScope": "Look only at tracks in the selected crate and the crates inside it.",
+    "tooltip.crateTreeStep": "How far the next band starts. Smaller than the width overlaps bands.",
+    "tooltip.crateTreeWidth": "How wide each BPM band is.",
     "tooltip.folderSyncCancel": "Close without changing the crate.",
     "tooltip.folderSyncFull": "Also remove tracks whose files are not in this folder.",
     "tooltip.folderSyncPath": "Folder on this computer whose files should match this crate.",
@@ -14521,6 +14562,35 @@ Error generating stack: ` + x.message + `
     "crates.sort.name": "Nombre",
     "crates.sort.order": "Orden",
     "crates.split": "Dividir",
+    "crateTree.button": "Árbol",
+    "crateTree.child": "{name} ({count})",
+    "crateTree.counting": "Contando cajas…",
+    "crateTree.create": "Crear árbol",
+    "crateTree.created": {
+      one: "{name} guardada con {count} caja.",
+      other: "{name} guardada con {count} cajas."
+    },
+    "crateTree.empty": "Ninguna pista encaja en ese árbol de cajas.",
+    "crateTree.high": "BPM alto",
+    "crateTree.intro": "La app crea una caja padre con una subcaja ⟳ por banda de BPM, tonalidad o género. Las subcajas vacías no se crean. Serato las reproduce como cualquier caja. Las subcajas se actualizan cuando esta app se abre con Serato cerrado, o cuando pulsas Actualizar. Sal de Serato DJ Pro primero.",
+    "crateTree.kind": "Árbol",
+    "crateTree.kind.bpm": "Bandas de BPM",
+    "crateTree.kind.genre": "Géneros",
+    "crateTree.kind.key": "Tonalidades",
+    "crateTree.limit": "Máximo de géneros",
+    "crateTree.low": "BPM bajo",
+    "crateTree.minTracks": "Mínimo de pistas por género",
+    "crateTree.name": "Nombre de la caja",
+    "crateTree.name.bpm": "Bandas de BPM",
+    "crateTree.name.genre": "Géneros",
+    "crateTree.name.key": "Tonalidades",
+    "crateTree.preview": {
+      one: "{count} caja:",
+      other: "{count} cajas:"
+    },
+    "crateTree.step": "Paso",
+    "crateTree.title": "Nuevo árbol de cajas",
+    "crateTree.width": "Ancho de banda",
     "cratesReplace.addToCrates": "Añadir la pista de reemplazo a {crates}.",
     "cratesReplace.alreadyInCrates": "La pista de reemplazo ya está en esas cajas. Se queda donde está.",
     "cratesReplace.confirm": "Actualizar cajas",
@@ -15784,12 +15854,24 @@ Error generating stack: ` + x.message + `
     "tooltip.copyVersion": "Copia la versión de la aplicación.",
     "tooltip.crateColor": "Elige el color de la caja seleccionada.",
     "tooltip.crateDelete": "Elimina la caja seleccionada. Las pistas siguen en la biblioteca.",
-    "tooltip.crateMore": "Color, preajuste, sincronizar carpeta y otras acciones de caja.",
+    "tooltip.crateMore": "Color, preajuste, árbol, sincronizar carpeta y otras acciones de caja.",
     "tooltip.crateBrowserMore": "Dividir, guardar vista y exportar.",
     "tooltip.crateNew": "Crea una caja nueva.",
     "tooltip.crateFolderSync": "Añade a esta caja las pistas de la biblioteca cuyos archivos están en una carpeta. Los archivos que no están en la biblioteca se omiten.",
     "tooltip.crateRenameFromTags": "Renombra los archivos de esta caja a Artista - Título y conserva las rutas de las cajas.",
     "tooltip.cratePreset": "Crea una caja a partir de un preajuste: pistas que mezclan con una tonalidad, un rango de BPM o pistas sin tocar últimamente.",
+    "tooltip.crateTree": "Crea una caja padre con una subcaja por banda de BPM, tonalidad o género. Las subcajas vacías no se crean.",
+    "tooltip.crateTreeCancel": "Cierra sin crear cajas.",
+    "tooltip.crateTreeCreate": "Guarda la caja padre y sus subcajas. Hay que salir de Serato DJ Pro.",
+    "tooltip.crateTreeHigh": "BPM más alto de la última banda.",
+    "tooltip.crateTreeKind": "Elige bandas de BPM, tonalidades o géneros.",
+    "tooltip.crateTreeLimit": "Cuántas cajas de género crear, de mayor a menor.",
+    "tooltip.crateTreeLow": "BPM más bajo de la primera banda.",
+    "tooltip.crateTreeMinTracks": "Omite un género con menos pistas que este número.",
+    "tooltip.crateTreeName": "Nombre de la caja padre.",
+    "tooltip.crateTreeScope": "Mira solo las pistas de la caja seleccionada y las cajas que hay dentro.",
+    "tooltip.crateTreeStep": "Dónde empieza la siguiente banda. Más pequeño que el ancho solapa las bandas.",
+    "tooltip.crateTreeWidth": "Ancho de cada banda de BPM.",
     "tooltip.folderSyncCancel": "Cierra sin cambiar la caja.",
     "tooltip.folderSyncFull": "También quita las pistas cuyos archivos no están en esta carpeta.",
     "tooltip.folderSyncPath": "Carpeta de este ordenador cuyos archivos deben coincidir con esta caja.",
@@ -16891,6 +16973,7 @@ Error generating stack: ` + x.message + `
     color: noop,
     remove: noop,
     preset: noop,
+    tree: noop,
     folderSync: noop,
     renameFromTags: noop,
     refresh: noop,
@@ -16925,6 +17008,7 @@ Error generating stack: ` + x.message + `
       canColor: state.writable && crateChosen,
       canDelete: state.writable && crateChosen,
       canPreset: state.writable,
+      canTree: state.writable,
       canFolderSync: !blocked,
       canRenameFromTags: !blocked,
       canRefresh: state.writable && preset,
@@ -31261,6 +31345,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),
+    crateTree: spec("tooltip.crateTree"),
+    crateTreeKind: spec("tooltip.crateTreeKind"),
+    crateTreeLow: spec("tooltip.crateTreeLow"),
+    crateTreeHigh: spec("tooltip.crateTreeHigh"),
+    crateTreeWidth: spec("tooltip.crateTreeWidth"),
+    crateTreeStep: spec("tooltip.crateTreeStep"),
+    crateTreeMinTracks: spec("tooltip.crateTreeMinTracks"),
+    crateTreeLimit: spec("tooltip.crateTreeLimit"),
+    crateTreeScope: spec("tooltip.crateTreeScope"),
+    crateTreeName: spec("tooltip.crateTreeName"),
+    crateTreeCancel: spec("tooltip.crateTreeCancel"),
+    crateTreeCreate: spec("tooltip.crateTreeCreate"),
     crateFolderSync: spec("tooltip.crateFolderSync"),
     crateRenameFromTags: spec("tooltip.crateRenameFromTags"),
     crateRefresh: spec("tooltip.crateRefresh"),
@@ -31589,6 +31685,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       "crate-color": tips.crateColor,
       "crate-delete": tips.crateDelete,
       "crate-preset": tips.cratePreset,
+      "crate-tree": tips.crateTree,
+      "crate-tree-kind": tips.crateTreeKind,
+      "crate-tree-low": tips.crateTreeLow,
+      "crate-tree-high": tips.crateTreeHigh,
+      "crate-tree-width": tips.crateTreeWidth,
+      "crate-tree-step": tips.crateTreeStep,
+      "crate-tree-min-tracks": tips.crateTreeMinTracks,
+      "crate-tree-limit": tips.crateTreeLimit,
+      "crate-tree-scope": tips.crateTreeScope,
+      "crate-tree-name": tips.crateTreeName,
+      "crate-tree-cancel": tips.crateTreeCancel,
+      "crate-tree-create": tips.crateTreeCreate,
       "crate-folder-sync": tips.crateFolderSync,
       "crate-rename-from-tags": tips.crateRenameFromTags,
       "crate-refresh": tips.crateRefresh,
@@ -62764,6 +62872,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     "crates-replace-dialog",
     "relink-dialog",
     "preset-dialog",
+    "crate-tree-dialog",
     "folder-sync-dialog",
     "rekordbox-dialog",
     "crate-prompt-dialog",
@@ -63175,6 +63284,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     { id: "crates-replace-dialog", labelledBy: "crates-replace-title", describedBy: "crates-replace-intro" },
     { id: "relink-dialog", labelledBy: "relink-title", describedBy: "relink-intro" },
     { id: "preset-dialog", labelledBy: "preset-title", describedBy: "preset-intro" },
+    { id: "crate-tree-dialog", labelledBy: "crate-tree-title", describedBy: "crate-tree-intro" },
     { id: "folder-sync-dialog", labelledBy: "folder-sync-title", describedBy: "folder-sync-intro" },
     { id: "rekordbox-dialog", labelledBy: "rekordbox-title", describedBy: "rekordbox-intro" }
   ], buckets = /* @__PURE__ */ new Map();
@@ -68909,6 +69019,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               onClick: () => crates.preset()
             },
             {
+              id: "crate-tree",
+              label: t("crateTree.button"),
+              tip: tips.crateTree,
+              ariaHasPopup: "dialog",
+              disabled: !crates.canTree,
+              onClick: () => crates.tree()
+            },
+            {
               id: "crate-folder-sync",
               label: t("folderSync.button"),
               tip: tips.crateFolderSync,
@@ -72738,6 +72856,147 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   });
 
+  // src/lib/crates/crate-trees-view.ts
+  var MAX_BPM = 400, MAX_WIDTH = 50, MAX_BANDS = 60, MAX_GENRES = 100;
+  function defaultTreeName(kind2) {
+    return kind2 === "bpm" ? t("crateTree.name.bpm") : kind2 === "key" ? t("crateTree.name.key") : t("crateTree.name.genre");
+  }
+  function numberOrDefault(input, fallback) {
+    let text2 = input.value.trim();
+    if (!text2) return fallback;
+    let value = Number(text2);
+    return Number.isFinite(value) ? value : null;
+  }
+  function integerOrDefault(input, fallback) {
+    let value = numberOrDefault(input, fallback);
+    return value != null && Number.isInteger(value) ? value : null;
+  }
+  function bandCount(low, high, width2, step) {
+    let n = 0, start2 = low;
+    for (; start2 < high - 1e-9 && n <= MAX_BANDS; )
+      n += 1, start2 += step;
+    return n;
+  }
+  function readTreeForm() {
+    let kind2 = el("crate-tree-kind").value, scope = scopeCrate(), crate = scope && el("crate-tree-scope").checked ? { crate: scope.id } : {};
+    if (kind2 === "key") return { kind: kind2, ...crate };
+    if (kind2 === "bpm") {
+      let low = numberOrDefault(el("crate-tree-low"), 80), high = numberOrDefault(el("crate-tree-high"), 140), width2 = numberOrDefault(el("crate-tree-width"), 10), step = numberOrDefault(el("crate-tree-step"), width2 ?? 10);
+      return low == null || high == null || width2 == null || step == null || low < 1 || high > MAX_BPM || high <= low || width2 < 1 || width2 > MAX_WIDTH || step < 1 || step > width2 || bandCount(low, high, width2, step) > MAX_BANDS ? null : { kind: kind2, low, high, width: width2, step, ...crate };
+    }
+    if (kind2 === "genre") {
+      let minTracks = integerOrDefault(el("crate-tree-min-tracks"), 2), limit = integerOrDefault(el("crate-tree-limit"), 40);
+      return minTracks == null || limit == null || minTracks < 1 || limit < 1 || limit > MAX_GENRES ? null : { kind: kind2, min_tracks: minTracks, limit, ...crate };
+    }
+    return null;
+  }
+  function syncTreeFields() {
+    let kind2 = el("crate-tree-kind").value;
+    for (let field2 of document.querySelectorAll("#crate-tree-dialog [data-tree-kind]"))
+      field2.hidden = field2.dataset.treeKind !== kind2;
+  }
+  function crateTreePreviewText(children) {
+    if (children.length === 0) return t("crateTree.empty");
+    let listed = children.map((child) => t("crateTree.child", { name: child.name, count: child.count })).join(", ");
+    return `${t("crateTree.preview", { count: children.length })} ${listed}`;
+  }
+  function crateTreeHasChildren(children) {
+    return children.length > 0;
+  }
+
+  // src/lib/crates/crate-trees.ts
+  var PREVIEW_DELAY_MS3 = 250, previewTimer3 = 0, previewToken3 = 0, creating2 = !1;
+  function syncNamePlaceholder2(tree) {
+    el("crate-tree-name").placeholder = tree ? defaultTreeName(tree.kind) : "";
+  }
+  async function previewCrateTree() {
+    let token4 = ++previewToken3, tree = readTreeForm();
+    if (syncNamePlaceholder2(tree), el("crate-tree-create").disabled = !0, !tree) {
+      el("crate-tree-preview").textContent = "";
+      return;
+    }
+    el("crate-tree-preview").textContent = t("crateTree.counting");
+    try {
+      let reply = await postJSON("/api/crate-tree", {
+        action: "preview",
+        space: state.space,
+        tree
+      });
+      if (token4 !== previewToken3) return;
+      let children = Array.isArray(reply.children) ? reply.children : [];
+      el("crate-tree-preview").textContent = crateTreePreviewText(children), el("crate-tree-create").disabled = creating2 || !crateTreeHasChildren(children);
+    } catch (error2) {
+      if (token4 !== previewToken3) return;
+      el("crate-tree-preview").textContent = failureOf(error2).message, el("crate-tree-create").disabled = !0;
+    }
+  }
+  function schedulePreview3() {
+    window.clearTimeout(previewTimer3), previewTimer3 = window.setTimeout(() => {
+      previewCrateTree();
+    }, PREVIEW_DELAY_MS3);
+  }
+  async function openCrateTreeDialog() {
+    if (mountSharedDialogs(), !state.writable) {
+      setNotice2(el("status").textContent || "");
+      return;
+    }
+    let scope = scopeCrate();
+    el("crate-tree-scope-label").hidden = !scope, el("crate-tree-scope").checked = !!scope, el("crate-tree-scope-text").textContent = scope ? t("presets.scope", { name: scope.name }) : "", el("crate-tree-name").value = "", el("crate-tree-status").textContent = "", syncTreeFields(), el("crate-tree-dialog").open || el("crate-tree-dialog").showModal(), el("crate-tree-kind").focus(), await previewCrateTree();
+  }
+  async function createCrateTree() {
+    mountSharedDialogs();
+    let tree = readTreeForm();
+    if (!tree || creating2) return;
+    creating2 = !0, el("crate-tree-create").disabled = !0, el("crate-tree-status").textContent = "";
+    let name = el("crate-tree-name").value.trim() || defaultTreeName(tree.kind);
+    try {
+      let reply = await postJSON("/api/crate-tree", {
+        action: "create",
+        space: state.space,
+        tree,
+        name
+      });
+      if (el("crate-tree-dialog").close(), isQueuedWrite(reply)) {
+        setNotice2(t("gigLock.queued"));
+        return;
+      }
+      let count = Array.isArray(reply.children) ? reply.children.length : 0, message = t("crateTree.created", { name: reply.name || name, count });
+      setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
+    } catch (error2) {
+      el("crate-tree-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("crate-tree-dialog").close());
+    } finally {
+      creating2 = !1;
+      let form = readTreeForm();
+      el("crate-tree-create").disabled = !form;
+    }
+  }
+  function wireCrateTrees() {
+    mountSharedDialogs(), el("crate-tree").addEventListener("click", () => {
+      openCrateTreeDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+    }), el("crate-tree-kind").addEventListener("change", () => {
+      syncTreeFields(), previewCrateTree();
+    });
+    for (let id of [
+      "crate-tree-low",
+      "crate-tree-high",
+      "crate-tree-width",
+      "crate-tree-step",
+      "crate-tree-min-tracks",
+      "crate-tree-limit"
+    ])
+      el(id).addEventListener("input", schedulePreview3);
+    el("crate-tree-scope").addEventListener("change", () => {
+      previewCrateTree();
+    }), el("crate-tree-cancel").addEventListener("click", () => el("crate-tree-dialog").close()), el("crate-tree-create").addEventListener("click", () => {
+      createCrateTree().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+    });
+  }
+  bindCrateActions({
+    tree: () => {
+      openCrateTreeDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+    }
+  });
+
   // src/lib/ui/app-shell.ts
   var import_react69 = __toESM(require_react(), 1);
 
@@ -74336,6 +74595,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   installDesktopActions();
   wireDialogs();
   wirePresets();
+  wireCrateTrees();
   wireFolderSync();
   wireHelp();
   wireGigCheck(() => {

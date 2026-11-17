@@ -56,7 +56,7 @@ describe("playlist export chrome", () => {
     vi.unstubAllGlobals();
   });
 
-  it("paints Rekordbox, merge, relink, sharing, Find art, preset, and folder-sync as labelled MUI dialogs", () => {
+  it("paints Rekordbox, merge, relink, sharing, Find art, preset, tree, and folder-sync as labelled MUI dialogs", () => {
     mountSharedDialogs();
     const labelled = [
       ["rekordbox-dialog", "rekordbox-title"],
@@ -65,6 +65,7 @@ describe("playlist export chrome", () => {
       ["consent-dialog", "consent-title"],
       ["album-art-dialog", "album-art-title"],
       ["preset-dialog", "preset-title"],
+      ["crate-tree-dialog", "crate-tree-title"],
       ["folder-sync-dialog", "folder-sync-title"],
       ["crates-replace-dialog", "crates-replace-title"],
     ] as const;

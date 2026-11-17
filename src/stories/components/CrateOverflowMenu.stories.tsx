@@ -13,6 +13,7 @@ const meta = {
     items: [
       { id: "crate-color", label: "Color", tip: tips.crateColor, onClick: () => undefined },
       { id: "crate-preset", label: "Preset", tip: tips.cratePreset, onClick: () => undefined },
+      { id: "crate-tree", label: "Tree", tip: tips.crateTree, onClick: () => undefined },
       {
         id: "crate-folder-sync",
         label: "Sync folder",

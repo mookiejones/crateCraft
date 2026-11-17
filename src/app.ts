@@ -45,6 +45,7 @@ import { loadUpdate, wireUpdate } from "./lib/ui/update";
 import { loadVersion, wireVersion } from "./lib/ui/version";
 import { wireFolderSync } from "./lib/crates/folder-sync";
 import { refreshPresetsOnOpen, wirePresets } from "./lib/crates/presets";
+import { wireCrateTrees } from "./lib/crates/crate-trees";
 import { applyIncomingHash, loadLibrary, setMode, showFailure, wireHashRoutes, wireLibrary } from "./lib/ui/views";
 import { mountPlayer, playerControls } from "./lib/player/player";
 import { mountAppShell } from "./lib/ui/app-shell";
@@ -73,6 +74,7 @@ wireShortcuts();
 installDesktopActions();
 wireDialogs();
 wirePresets();
+wireCrateTrees();
 wireFolderSync();
 wireHelp();
 wireGigCheck(() => {

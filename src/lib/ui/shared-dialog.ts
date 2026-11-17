@@ -13,6 +13,7 @@ export const SHARED_DIALOG_IDS = [
   "crates-replace-dialog",
   "relink-dialog",
   "preset-dialog",
+  "crate-tree-dialog",
   "folder-sync-dialog",
   "rekordbox-dialog",
   "crate-prompt-dialog",

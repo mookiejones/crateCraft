@@ -27,7 +27,7 @@ The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**. E
 
 **Find a crate** keeps a parent visible when a nested name matches. **Order** is Serato's own order. **Name** is alphabetical. **Added** is the date the crate was created. A long crate list scrolls inside that pane. Collapsing the navigation drawer leaves crate names in the main column.
 
-**New**, **Rename**, and **Delete** stay on the crate action row. **Color**, **Preset**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list.
+**New**, **Rename**, and **Delete** stay on the crate action row. **Color**, **Preset**, **Tree**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list.
 
 Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. When Serato is open, a notice under the top bar says edits stay off.
 
@@ -37,6 +37,7 @@ Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. When Se
 | **Rename** | Type **Rename crate**. The tracks stay. |
 | **Color** | Type one of `none`, `red`, `orange`, `yellow`, `green`, `blue`, `purple`, `pink`. |
 | **Delete** | Confirm in the dialog. Nested crates go too. The tracks stay in the library. |
+| **Tree** | Choose BPM bands, Keys, or Genres. Preview, then Create tree. Empty subcrates are not made. Optional **Only tracks in** limits to the selected crate. |
 | **Sync folder** | Type a folder path. Preview, then confirm. Library tracks whose files sit in that folder are added. Files that are not in the library stay skipped. Optional subcrates map each subfolder to a child crate. Optional full remove takes out members whose files left that crate's folder. |
 
 There is no drag and drop. This app does not move an existing crate to a new parent. **New** does not make a smart crate. Make that in Serato, then edit the rules here.

@@ -1,6 +1,6 @@
 /**
  * Centered MUI dialogs for Rekordbox, merge, relink, sharing, Find art,
- * preset, folder-sync, crate replace, the crate name prompt, and confirm.
+ * preset, tree, folder-sync, crate replace, the crate name prompt, and confirm.
  *
  * Existing markup in index.html is adopted on first paint so field ids
  * and POST contracts stay. Restore, Files, Settings, and Wizard stay
@@ -30,6 +30,7 @@ const ADOPTED: ReadonlyArray<{
   { id: "crates-replace-dialog", labelledBy: "crates-replace-title", describedBy: "crates-replace-intro" },
   { id: "relink-dialog", labelledBy: "relink-title", describedBy: "relink-intro" },
   { id: "preset-dialog", labelledBy: "preset-title", describedBy: "preset-intro" },
+  { id: "crate-tree-dialog", labelledBy: "crate-tree-title", describedBy: "crate-tree-intro" },
   { id: "folder-sync-dialog", labelledBy: "folder-sync-title", describedBy: "folder-sync-intro" },
   { id: "rekordbox-dialog", labelledBy: "rekordbox-title", describedBy: "rekordbox-intro" },
 ];

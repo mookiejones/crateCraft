@@ -213,6 +213,15 @@ export type PresetSpec =
   | { kind: "bpm"; bpm: number; range: number; crate?: number }
   | { kind: "unplayed"; months: number; crate?: number };
 
+/** Kind of crate tree POST /api/crate-tree builds. */
+export type CrateTreeKind = "bpm" | "key" | "genre";
+
+/** A crate tree as POST /api/crate-tree stores it. */
+export type CrateTreeSpec =
+  | { kind: "bpm"; low: number; high: number; width: number; step: number; crate?: number }
+  | { kind: "key"; crate?: number }
+  | { kind: "genre"; min_tracks: number; limit: number; crate?: number };
+
 /** One remembered preset crate in GET /api/library. */
 export interface PresetRecord {
   preset: PresetSpec;
