@@ -53,6 +53,8 @@ describe("theme icon", () => {
     expect(el("colorway-select").value).toBe("serato-like");
     expect(el("colorway-preview").getAttribute("src")).toBe("/img/icons/placeholder-serato-like.svg");
     expect(el("icon-follows-theme").dataset.tooltip).toBe(t("tooltip.iconFollowsTheme"));
+    expect(el("gig-lock").checked).toBe(false);
+    expect(el("gig-lock").dataset.tooltip).toBe(t("tooltip.gigLock"));
     expect(el("colorway-select").dataset.tooltip).toBe(t("tooltip.colorway"));
     expect(el("icon-follows-theme").dataset.tooltip).not.toBe(el("icon-follows-theme").getAttribute("aria-label"));
   });
@@ -238,6 +240,7 @@ describe("theme icon", () => {
     refreshTooltips();
     expect(el("colorway-select").dataset.tooltip).toBe(t("tooltip.colorway"));
     expect(el("icon-follows-theme").dataset.tooltip).toBe(t("tooltip.iconFollowsTheme"));
+    expect(el("gig-lock").dataset.tooltip).toBe(t("tooltip.gigLock"));
     expect(el("icon-follows-theme").dataset.tooltip).not.toContain("Dock icon on Mac");
     expect(el("colorway-select").querySelector('[value="serato-like"]')?.textContent).toBeTruthy();
   });

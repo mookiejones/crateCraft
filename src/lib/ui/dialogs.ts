@@ -7,6 +7,7 @@
  */
 
 import { failureOf, getRelink, postJSON, readJSONOr } from "../api";
+import { isQueuedWrite } from "../crates/queue-notice";
 import type { LibraryStatusNotice, OpenOptions } from "../../wizard-view";
 import type {
   CratesReplacePreview,
@@ -46,12 +47,14 @@ import {
 import { serverMessage, t } from "../i18n";
 import {
   applyAppearance,
+  applyGigLock,
   applyLanguage,
   applyPrivacy,
   bindRerunSetup,
   closeSettings,
   openSettings,
   saveColorway,
+  saveGigLock,
   saveIconFollow,
   saveLanguage,
   saveSharing,
@@ -61,9 +64,11 @@ import {
 
 export {
   applyAppearance,
+  applyGigLock,
   applyLanguage,
   applyPrivacy,
   saveColorway,
+  saveGigLock,
   saveIconFollow,
   saveLanguage,
 };
@@ -517,6 +522,11 @@ async function confirmMerge() {
       delete_files: trash,
       confirm_delete_files: trash,
     });
+    if (isQueuedWrite(result)) {
+      el("merge-dialog").close();
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     el("merge-dialog").close();
     const count = (result.removed || []).length;
     const name = result.kept?.file || t("merge.keptCopy");
@@ -774,6 +784,11 @@ async function confirmReplaceInCrates(): Promise<void> {
       confirm: true,
       retire: el("crates-replace-retire").checked,
     });
+    if (isQueuedWrite(result)) {
+      el("crates-replace-dialog").close();
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     el("crates-replace-dialog").close();
     const added = (result.crates_added || []).length;
     const removed = (result.crates_removed || []).length;
@@ -904,6 +919,7 @@ export async function loadPrivacy() {
   applyLanguage(payload);
   applyLayout(payload);
   applyAppearance(payload);
+  applyGigLock(payload);
   if (token === rekordboxToken) applyRekordboxExport(payload);
   if (!state.wizardComplete && openWizard(false, el("search"))) return;
   if (payload.needs_consent_prompt) showConsent();
@@ -1101,6 +1117,11 @@ async function confirmRelink(): Promise<void> {
     }
     el("relink-status").textContent = preview.summary || t("relink.relinking");
     const result = await postJSON<FilesPayload>("/api/files", { action: "relink", matches, confirm: true });
+    if (isQueuedWrite(result)) {
+      el("relink-dialog").close();
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     if (result.serato) applyStatus(result.serato);
     el("relink-dialog").close();
     let message = t("relink.done", { count: matches.length });
@@ -1257,6 +1278,10 @@ export function wireDialogs(): void {
 
     el("icon-follows-theme").addEventListener("change", () => {
       void saveIconFollow();
+    });
+
+    el("gig-lock").addEventListener("change", () => {
+      void saveGigLock();
     });
 
     el("settings-close").addEventListener("click", () => {

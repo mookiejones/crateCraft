@@ -176,6 +176,7 @@ import {
   rerunSetup,
   saveColorway,
   saveIconFollow,
+  saveGigLock,
   saveLanguage,
   saveSharing,
   saveUpdateEnabled,
@@ -219,6 +220,7 @@ function readSettingsValue(): SettingsContextValue {
     saveLanguage,
     saveColorway,
     saveIconFollow,
+    saveGigLock,
     saveSharing: async (on) => {
       await saveSharing(on);
     },

@@ -233,6 +233,7 @@ export interface ElementIds {
   "colorway-select": HTMLSelectElement;
   "colorway-preview": HTMLImageElement;
   "icon-follows-theme": HTMLInputElement;
+  "gig-lock": HTMLInputElement;
   "icon-status": HTMLParagraphElement;
   "language-status": HTMLParagraphElement;
   "telemetry-note": HTMLParagraphElement;

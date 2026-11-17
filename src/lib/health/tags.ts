@@ -14,6 +14,7 @@
 
 import { createElement } from "react";
 import { failureOf, postJSON, readJSON } from "../api";
+import { isQueuedWrite } from "../crates/queue-notice";
 import type { TagClusterGroup, TagClusterPlan, TagClusters } from "../api-types";
 import { mountIsland, type IslandRoot } from "../../app/mount";
 import { TagsPanel } from "../../pages/TagsPanel";
@@ -300,6 +301,11 @@ export async function applyGroup(key: string): Promise<void> {
       field: field === "titles" ? "genre" : field,
       value,
     });
+    if (isQueuedWrite(written)) {
+      status = t("gigLock.queued");
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     await bridge.reloadLibrary();
     actionKey = "";
     panelBusy = false;
@@ -334,6 +340,11 @@ export async function applyMappings(): Promise<void> {
       action: "refresh-apply",
       space: state.space,
     });
+    if (isQueuedWrite(written)) {
+      status = t("gigLock.queued");
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     await bridge.reloadLibrary();
     actionKey = "";
     panelBusy = false;
@@ -368,6 +379,11 @@ export async function applyTitles(): Promise<void> {
       action: "clean-apply",
       space: state.space,
     });
+    if (isQueuedWrite(written)) {
+      status = t("gigLock.queued");
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     await bridge.reloadLibrary();
     actionKey = "";
     panelBusy = false;

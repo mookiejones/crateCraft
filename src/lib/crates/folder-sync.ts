@@ -17,6 +17,7 @@ import {
   type FolderSyncReply,
 } from "./folder-sync-view";
 import { state } from "../state";
+import { isQueuedWrite } from "./queue-notice";
 import { bindCrateActions } from "./crate-store";
 import { mountSharedDialogs } from "../ui/shared-dialog-mount";
 import { loadLibrary, lockDown, setNotice } from "../ui/views";
@@ -114,6 +115,10 @@ export async function runFolderSync(): Promise<void> {
       full: form.full,
     });
     el("folder-sync-dialog").close();
+    if (isQueuedWrite(reply)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(folderSyncDoneText(reply));
     await loadLibrary();
   } catch (error) {

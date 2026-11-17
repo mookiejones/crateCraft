@@ -11,6 +11,7 @@
 
 import { createElement } from "react";
 import { failureOf, postJSON, readJSON } from "../api";
+import { isQueuedWrite } from "../crates/queue-notice";
 import type { BitrateCheckReport, BitrateCratePlan } from "../api-types";
 import { mountIsland, type IslandRoot } from "../../app/mount";
 import { BitrateReport } from "../../pages/BitrateReport";
@@ -218,6 +219,10 @@ async function createCrate(): Promise<void> {
       crate: state.activeCrate,
     });
     if (token !== state.bitrateToken) return;
+    if (isQueuedWrite(payload)) {
+      el("bitrate-status").textContent = t("gigLock.queued");
+      return;
+    }
     await bridge.reloadLibrary();
     if (token !== state.bitrateToken) return;
     cratePlan = payload;

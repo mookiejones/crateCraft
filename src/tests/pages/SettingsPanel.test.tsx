@@ -48,6 +48,8 @@ describe("SettingsPanel context", () => {
     expect(host.querySelector("#language-select")).not.toBeNull();
     expect(host.querySelector("#colorway-select")).not.toBeNull();
     expect(host.querySelector("#telemetry-toggle")).not.toBeNull();
+    expect(host.querySelector("#gig-lock")).not.toBeNull();
+    expect((host.querySelector("#gig-lock") as HTMLInputElement).checked).toBe(false);
     expect(host.querySelector("#about-title")?.textContent).toBe(t("settings.about"));
     const sheet = host.querySelector("#shortcuts-body")?.textContent ?? "";
     for (const shortcut of SHORTCUTS) {
