@@ -505,6 +505,35 @@ class SnapshotTests(unittest.TestCase):
             self.assertEqual(temp.db.read_bytes(), before["database"])
             self.assertEqual([item["id"] for item in store.list_snapshots()], before["snapshots"])
 
+    def test_restore_plan_lists_crate_membership(self) -> None:
+        """Show tracks a restore would add or remove inside a crate.
+
+        Returns:
+            None. The test fails if membership is omitted or a file changes.
+        """
+        with TempLibrary() as temp:
+            music, serato, store = _drive(temp.root, temp.db)
+            track = music / "track.mp3"
+            _audio_file(track)
+            crate = serato / "Subcrates" / "House.crate"
+            crate.parent.mkdir(parents=True)
+            crate.write_bytes(_crate(["track.mp3"]))
+            saved = store.take("manual", "House has track.mp3.")
+            crate.write_bytes(_crate(["other.mp3"]))
+            before = crate.read_bytes()
+            snapshots_before = [item["id"] for item in store.list_snapshots()]
+            plan = store.plan(saved["id"])
+            changed = [
+                item
+                for item in plan["crates"]["changed"]
+                if item.get("path") == "Subcrates/House.crate" or item.get("name") == "House"
+            ]
+            self.assertEqual(len(changed), 1)
+            self.assertIn("track.mp3", changed[0]["tracks_added"])
+            self.assertIn("other.mp3", changed[0]["tracks_removed"])
+            self.assertEqual(crate.read_bytes(), before)
+            self.assertEqual([item["id"] for item in store.list_snapshots()], snapshots_before)
+
     def test_restore_refuses_while_serato_dj_is_running(self) -> None:
         """Refuse a restore when the process list reports Serato DJ.
 
@@ -1006,7 +1035,7 @@ class SnapshotTests(unittest.TestCase):
         page = Path("static/app.js").read_text(encoding="utf-8")
         markup = Path("static/index.html").read_text(encoding="utf-8")
         self.assertIn('data-view="snapshots"', markup)
-        for field in ("plan.crates", "plan.tracks", "plan.cues", "plan.grids", "plan.dry_run", "plan.restore_blocked", "plan.deleted", "crates_registered", "crates_skipped", "registration_warning"):
+        for field in ("plan.crates", "plan.tracks", "plan.cues", "plan.grids", "plan.dry_run", "plan.restore_blocked", "plan.deleted", "crates_registered", "crates_skipped", "registration_warning", "tracks_added", "tracks_removed"):
             self.assertIn(field, page)
 
     def test_reader_protocol_returns_crates_cues_grids_and_tags(self) -> None:

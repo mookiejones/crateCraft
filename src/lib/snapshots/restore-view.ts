@@ -4,7 +4,7 @@
  * React paints from these strings. Nothing here fetches or writes.
  */
 
-import type { DriveBackup, DriveCopy, OperationEntry, PlanName, SnapshotInfo } from "../api-types";
+import type { ChangedCrate, DriveBackup, DriveCopy, OperationEntry, PlanName, SnapshotInfo } from "../api-types";
 import { formatDate, formatList, formatNumber, t, type MessageKey } from "../i18n";
 
 export const OPERATION_ACTIONS: Record<string, MessageKey> = {
@@ -149,6 +149,14 @@ export function fileName(path: string): string {
  * @param rows Diff rows.
  * @returns One sentence.
  */
+function listedNames(values: ReadonlyArray<string> | undefined): string {
+  const items = (values || []).filter(Boolean);
+  if (!items.length) return "";
+  const names = items.slice(0, 8).map((item) => fileName(item));
+  const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
+  return `${names.join(", ")}${extra}`;
+}
+
 export function planLineText(
   label: string,
   rows: ReadonlyArray<PlanName | { name?: string; path?: string; drive_label?: string }> | undefined,
@@ -159,6 +167,23 @@ export function planLineText(
   const extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
   const listed = `${names.join(", ")}${extra}`;
   return t("plan.listed", { label, count: items.length, names: listed });
+}
+
+/**
+ * Tracks a restore would add or remove inside one crate.
+ *
+ * @param row Changed crate from POST /api/snapshots action plan.
+ * @returns One sentence, already translated.
+ */
+export function crateContentsText(row: ChangedCrate): string {
+  const name = row.name || fileName(row.path || "") || t("plan.item");
+  const parts: string[] = [];
+  const added = listedNames(row.tracks_added);
+  const removed = listedNames(row.tracks_removed);
+  if (added) parts.push(t("plan.crateTracksAdded", { names: added }));
+  if (removed) parts.push(t("plan.crateTracksRemoved", { names: removed }));
+  if (!parts.length) return name;
+  return t("plan.crateContents", { name, detail: parts.join(". ") });
 }
 
 /**
