@@ -199,6 +199,19 @@ export function SettingsPanel() {
         }
         label={t("settings.iconFollowsTheme")}
       />
+      <FormControlLabel
+        control={
+          <Switch
+            id="gig-lock"
+            slotProps={{ input: { ref: tooltipRef(tips.gigLock) } }}
+            checked={settings.gigLock}
+            onChange={(event) => {
+              void settings.saveGigLock(event.currentTarget.checked);
+            }}
+          />
+        }
+        label={t("settings.gigLock")}
+      />
       <Typography id="icon-status" className="dialog-status" component="p" role="status" aria-live="polite">
         {settings.iconStatus}
       </Typography>

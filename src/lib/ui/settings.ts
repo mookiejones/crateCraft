@@ -29,6 +29,7 @@ export type SettingsSnapshot = {
   languageStatus: string;
   colorway: Colorway;
   iconFollowsTheme: boolean;
+  gigLock: boolean;
   iconStatus: string;
   telemetryOn: boolean;
   telemetryConfigured: boolean;
@@ -51,6 +52,7 @@ const DEFAULT_SNAPSHOT: SettingsSnapshot = {
   languageStatus: "",
   colorway: "serato-like",
   iconFollowsTheme: true,
+  gigLock: false,
   iconStatus: "",
   telemetryOn: false,
   telemetryConfigured: false,
@@ -397,6 +399,46 @@ export async function saveIconFollow(next?: boolean): Promise<void> {
     setText("icon-status", status);
   } catch {
     const status = t("settings.iconNotSaved");
+    patchSettings({ iconStatus: status });
+    setText("icon-status", status);
+  }
+}
+
+/**
+ * Apply the saved Gig Lock switch.
+ *
+ * A payload without gig_lock leaves the control alone. No request is made.
+ *
+ * @param payload Settings object from the server.
+ * @returns {void}
+ */
+export function applyGigLock(payload: SettingsPayload): void {
+  if (!("gig_lock" in payload)) return;
+  const on = payload.gig_lock === true;
+  patchSettings({ gigLock: on });
+  if (!settingsIslandMounted()) {
+    const box = document.getElementById("gig-lock");
+    if (box instanceof HTMLInputElement) box.checked = on;
+  }
+}
+
+/**
+ * Save whether crate and track edits sit in the queue.
+ *
+ * False is sent as false. A failed save says so and keeps the checkbox
+ * where the person left it for this session.
+ *
+ * @param next Checkbox value, or the control's current value.
+ * @returns {Promise<void>}
+ */
+export async function saveGigLock(next?: boolean): Promise<void> {
+  const on = next ?? checkboxChecked("gig-lock");
+  patchSettings({ gigLock: on, iconStatus: "" });
+  try {
+    const payload = await postJSON<SettingsPayload>("/api/settings", { gig_lock: on });
+    applyGigLock(payload);
+  } catch {
+    const status = t("error.gig_lock_not_saved");
     patchSettings({ iconStatus: status });
     setText("icon-status", status);
   }

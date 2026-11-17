@@ -8,6 +8,7 @@
 
 import { failureOf, postJSON } from "../api";
 import { el } from "../dom";
+import { isQueuedWrite } from "./queue-notice";
 import { focusedView, paintDualChrome, saveViewIds } from "./dual-crate-view";
 import { t } from "../i18n";
 import { state } from "../state";
@@ -21,6 +22,7 @@ interface CreateReply {
   name?: string;
   added?: number;
   warning?: string | null;
+  queued?: boolean;
 }
 
 let saving = false;
@@ -75,6 +77,10 @@ export async function saveFocusedView(): Promise<void> {
       assets,
       space: state.space,
     });
+    if (isQueuedWrite(result)) {
+      setNotice(t("gigLock.queued"));
+      return;
+    }
     setNotice(result.warning || t("crates.saveViewCreated", { count: Number(result.added) || assets.length }));
     await loadLibrary();
     if (typeof result.id === "number") selectCrate(result.id);

@@ -56,6 +56,7 @@ import update_check
 import version_info
 import volumes
 import waveform
+import write_queue
 
 
 class _WaveformFlight:
@@ -1809,6 +1810,9 @@ class Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/settings":
                 self.send_json(telemetry.public_settings())
                 return
+            if parsed.path == "/api/write-queue":
+                self.send_json(write_queue.listing())
+                return
             if parsed.path == "/api/setup":
                 self._get_setup(query)
                 return
@@ -2150,6 +2154,11 @@ class Handler(BaseHTTPRequestHandler):
                     with snapshots.own_writes():
                         self._post_snapshots(payload)
                 return
+            if parsed.path == "/api/write-queue":
+                with _lock:
+                    with snapshots.own_writes():
+                        self.send_json(write_queue.action(payload))
+                return
             with _lock:
                 with snapshots.own_writes():
                     merging = parsed.path == "/api/duplicates/merge"
@@ -2185,6 +2194,9 @@ class Handler(BaseHTTPRequestHandler):
                             )
                         )
                     )
+                    if write_queue.should_queue(parsed.path, payload, is_preview=preview):
+                        self.send_json(write_queue.enqueue(parsed.path, payload))
+                        return
                     if not preview:
                         invalidate()
                     if parsed.path == "/api/track":
@@ -2438,6 +2450,18 @@ class Handler(BaseHTTPRequestHandler):
                 return
             except OSError:
                 self.send_json({"error": "The language could not be saved."}, status=500)
+                return
+            self.send_json(telemetry.public_settings())
+            return
+        if keys == {"gig_lock"}:
+            value = payload.get("gig_lock")
+            if not isinstance(value, bool):
+                self.send_json({"error": "That request is not valid."}, status=400)
+                return
+            try:
+                app_config.set_gig_lock(value)
+            except OSError:
+                self.send_json({"error": write_queue.GIG_LOCK_NOT_SAVED}, status=500)
                 return
             self.send_json(telemetry.public_settings())
             return
