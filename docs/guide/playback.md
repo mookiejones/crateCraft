@@ -4,13 +4,13 @@ Play a file that is already in the library. The app streams it from this compute
 
 1. Click a track.
 2. Double-click the row, press **Enter**, or click the play button on the row. **Enter** on the list plays the selected track. **Enter** on a focused row plays that row. In the detail pane, click **Play**. The list Play button and the detail Play button share one player. Click **Play** on the playing track to pause. Click **Play** on another row to start that track. Both buttons show Play or Pause.
-3. After a track loads, **Play**, the title, the waveform, and the time sit in the top bar, between the Serato chip and Help. Pause keeps that bar. It hides again when there is no current track.
+3. After a track loads, the top bar is the deck. In a wide window it shows a zoomed waveform, a whole-track overview, pads 1–8, and **Play**, the title, and the time in the blank next to the pads, between the Serato chip and Help. Click a pad that has a cue to jump there. Empty pads do nothing. Zoom sits on the wave. A window narrower than 980px keeps **Play**, the title, a 32px wave, and the time. Pause keeps that bar. It hides again when there is no current track.
 
 When a track ends, the next row in the list starts. The last row stops.
 
-Cue points read from the file sit on the pads in the detail pane. The name shows when you point at a pad, and in the pad's label for a screen reader. Click a pad to jump there. A track with no cues has empty pads.
+Cue points from the file sit on pads 1–8 in the top bar. Click a pad that has a cue to jump there. Empty pads do nothing. The detail pane still lists cue times and names. The name shows in that list, and in the pad's label for a screen reader. A track with no cues has empty pads.
 
-The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. The brighter core is the sustained level. The fainter edge is the peak. Click it, or drag, to move through the track. Zoom stays off that bar.
+The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. The brighter core is the sustained level. The fainter edge is the peak. Click it, or drag, to move through the track. Zoom sits on the wave in a wide window.
 
 If this computer cannot build a waveform for the file, the bar says **Waveform unavailable for this format**. The track still plays.
 

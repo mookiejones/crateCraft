@@ -255,7 +255,7 @@ describe("rendered controls", () => {
     mountPlayer();
     expectCovered();
     expect(document.querySelector(".player-play")?.getAttribute("data-tooltip")?.trim().length).toBeGreaterThan(10);
-    expect(document.querySelector("[aria-label='Zoom in']")).toBeNull();
+    expect(document.querySelector("[aria-label='Zoom in']")?.getAttribute("data-tooltip-key")).toBe("tooltip.zoomIn");
 
     state.mode = "duplicates";
     state.writable = true;

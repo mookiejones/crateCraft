@@ -4,11 +4,11 @@ Play a track that is already in the library. The sound stays on this computer. T
 
 Double-click a row, press **Enter**, or click **Play**. **Enter** on the list plays the selected track. **Enter** on a focused row plays that row. The list Play button and the detail Play button share one player. Click **Play** on the playing track to pause. Click **Play** on another row to start that track. Both buttons show Play or Pause.
 
-After a track loads, **Play**, the title, the waveform, and the time sit in the top bar, between the Serato chip and Help. Pause keeps that bar. It hides again when there is no current track. When a track ends, the next row in the list starts.
+After a track loads, the top bar is the deck. In a wide window it shows a zoomed waveform, a whole-track overview, pads 1–8, and **Play**, the title, and the time in the blank next to the pads, between the Serato chip and Help. Click a pad that has a cue to jump there. Empty pads do nothing. Zoom sits on the wave. A window narrower than 980px keeps **Play**, the title, a 32px wave, and the time. Pause keeps that bar. It hides again when there is no current track. When a track ends, the next row in the list starts.
 
-Cue points from the file sit on the pads in the detail pane. Click a pad to jump there. A track with no cues has empty pads.
+The detail pane still lists cue times and names. A track with no cues has empty pads.
 
-The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. Click or drag it to move through the track. Zoom stays off that bar.
+The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. Click or drag it to move through the track.
 
 If the file has no waveform, the bar says **Waveform unavailable for this format**. The track still plays.
 

@@ -132,7 +132,7 @@ const meta = {
     unavailable: false,
   },
   argTypes: {
-    compact: { control: "boolean", description: "AppBar strip: overview only, no zoom." },
+    compact: { control: "boolean", description: "Compact AppBar strip at 980px and below: overview only, no zoom. Full deck is 160px detail plus zoom." },
     playing: { control: "boolean", description: "Starts the paint loop at the playhead." },
     playhead: { control: { type: "range", min: 0, max: 20, step: 0.25 }, description: "Seconds on the 20s fixture." },
     unavailable: { control: "boolean", description: "Format note instead of canvases." },
