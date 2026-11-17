@@ -179,6 +179,7 @@ class GigReport:
         streaming_tracks: Tracks matched by a documented streaming marker.
         empty_crates: Empty normal crates and their warning.
         snapshot_note: ``No snapshots yet`` or a sentence about the latest one.
+        snapshot_id: Id of the snapshot the diff compared, or empty.
         changes: Diff against the latest snapshot. None when there is nothing
             to compare.
         scope_space: Space that was checked.
@@ -201,6 +202,7 @@ class GigReport:
     scope_crate_id: int | None
     scope_crate: str | None
     checked_at: datetime
+    snapshot_id: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -912,7 +914,7 @@ def _changes(
     library_rows: _Library,
     classified: _Classified,
     now: datetime,
-) -> tuple[str, ChangeReport | None, bool]:
+) -> tuple[str, ChangeReport | None, bool, str]:
     """Compare the library with the latest snapshot.
 
     Args:
@@ -922,16 +924,17 @@ def _changes(
         now: Freshness clock.
 
     Returns:
-        The snapshot note, the diff, and whether a snapshot is fresh.
-        No snapshots yields ``No snapshots yet``, no diff, and not fresh.
-        A store that cannot be listed says so and is also not fresh.
+        The snapshot note, the diff, whether a snapshot is fresh, and the
+        compared snapshot id. No snapshots yields ``No snapshots yet``, no
+        diff, not fresh, and an empty id. A store that cannot be listed
+        says so and is also not fresh.
     """
     try:
         listed = list(reader.list_snapshots())
     except OSError:
-        return SNAPSHOTS_UNREADABLE, None, False
+        return SNAPSHOTS_UNREADABLE, None, False, ""
     if not listed:
-        return NO_SNAPSHOTS, None, False
+        return NO_SNAPSHOTS, None, False, ""
     latest = max(listed, key=lambda info: (_as_utc(info.taken_at), info.snapshot_id))
     fresh = _as_utc(latest.taken_at) >= now - timedelta(days=FRESH_DAYS)
     when = _as_utc(latest.taken_at).strftime("%Y-%m-%d")
@@ -940,9 +943,9 @@ def _changes(
     try:
         loaded = reader.load(latest.snapshot_id)
     except (KeyError, OSError):
-        return f"{note} The latest snapshot could not be read.", None, fresh
+        return f"{note} The latest snapshot could not be read.", None, fresh, ""
     current = _current_snapshot(library_rows, classified, now)
-    return note, gig_snapshots.diff_snapshots(loaded, current), fresh
+    return note, gig_snapshots.diff_snapshots(loaded, current), fresh, latest.snapshot_id
 
 
 class StoreSnapshots:
@@ -1371,7 +1374,7 @@ def run_gig_check(
     with closing(open_read_only(path)) as conn:
         loaded = _read_library(conn, space, crate_id)
     classified = _classify(loaded)
-    note, changes, fresh = _changes(reader, loaded, classified, moment)
+    note, changes, fresh, snapshot_id = _changes(reader, loaded, classified, moment)
     score, ready, hard, lines = _score(classified, fresh, changes, loaded.scope_crate)
     return GigReport(
         ready,
@@ -1388,6 +1391,7 @@ def run_gig_check(
         crate_id,
         loaded.scope_crate,
         moment,
+        snapshot_id,
     )
 
 
@@ -1414,6 +1418,16 @@ def report_to_dict(report: GigReport) -> dict[str, object]:
             "cues_edited": list(diff.cues_edited),
             "grids_edited": list(diff.grids_edited),
             "tags_edited": list(diff.tags_edited),
+            "tag_diffs": [
+                {
+                    "path": item.path,
+                    "fields": [
+                        {"field": field.field, "before": field.before, "after": field.after}
+                        for field in item.fields
+                    ],
+                }
+                for item in diff.tag_diffs
+            ],
         }
     return {
         "ready": report.ready,
@@ -1448,6 +1462,7 @@ def report_to_dict(report: GigReport) -> dict[str, object]:
         ],
         "empty_crates": [{"name": item.name, "warning": item.warning} for item in report.empty_crates],
         "snapshot_note": report.snapshot_note,
+        "snapshot_id": report.snapshot_id,
         "changes": changes,
         "scope": {
             "space": report.scope_space,
@@ -1473,6 +1488,50 @@ def _section(title: str, lines: Sequence[str]) -> list[str]:
     block = [title]
     block.extend(f"- {line}" for line in lines)
     return block
+
+
+def _file_name(path: str) -> str:
+    """Last path segment for a CLI tag line.
+
+    Args:
+        path: Stored path, with either slash.
+
+    Returns:
+        The file name, or the whole path when it has no slash.
+    """
+    return path.replace("\\", "/").rsplit("/", 1)[-1] or path
+
+
+def _tag_diff_line(item: gig_snapshots.TagDiff) -> str:
+    """One CLI line for title, artist, BPM, or key.
+
+    Args:
+        item: Field diffs for one path.
+
+    Returns:
+        ``name: title Mix → Song; bpm 120 → 240``.
+    """
+    name = _file_name(item.path)
+    fields = "; ".join(
+        f"{field.field} {field.before} → {field.after}" for field in item.fields
+    )
+    return f"{name}: {fields}"
+
+
+def _tag_lines(diff: ChangeReport) -> tuple[str, ...]:
+    """CLI tag lines: field diffs when present, else the path.
+
+    Args:
+        diff: Snapshot comparison.
+
+    Returns:
+        One line per ``tags_edited`` path.
+    """
+    by_path = {item.path: item for item in diff.tag_diffs}
+    return tuple(
+        _tag_diff_line(by_path[path]) if path in by_path else path
+        for path in diff.tags_edited
+    )
 
 
 def format_report(report: GigReport) -> str:
@@ -1537,7 +1596,7 @@ def format_report(report: GigReport) -> str:
                 ("Tracks removed", diff.tracks_removed),
                 ("Cues edited", diff.cues_edited),
                 ("Beatgrids edited", diff.grids_edited),
-                ("Tags edited", diff.tags_edited),
+                ("Tags edited", _tag_lines(diff)),
             ):
                 blocks.extend(_section(heading, values))
     text = "\n".join(blocks).rstrip() + "\n"

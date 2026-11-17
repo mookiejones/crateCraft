@@ -5,8 +5,9 @@
  * the locale catalogs. Server sentences stay as returned.
  */
 
-import type { GigReport } from "../api-types";
+import type { GigChanges, GigReport, GigTagDiff } from "../api-types";
 import { t, type MessageKey } from "../i18n";
+import { fileName } from "../snapshots/restore-view";
 
 export const GIG_STEP_COUNT = 5;
 
@@ -24,7 +25,9 @@ export const GIG_STEPS: readonly GigStep[] = [
   { title: "gig.since", action: "gig.sinceAction", empty: "gig.sinceEmpty" },
 ];
 
-export const GIG_CHANGE_GROUPS: ReadonlyArray<readonly [MessageKey, keyof NonNullable<GigReport["changes"]>]> = [
+type GigPathGroup = Exclude<keyof GigChanges, "tag_diffs">;
+
+export const GIG_CHANGE_GROUPS: ReadonlyArray<readonly [MessageKey, GigPathGroup]> = [
   ["gig.cratesAdded", "crates_added"],
   ["gig.cratesRemoved", "crates_removed"],
   ["gig.cratesEdited", "crates_edited"],
@@ -34,6 +37,48 @@ export const GIG_CHANGE_GROUPS: ReadonlyArray<readonly [MessageKey, keyof NonNul
   ["gig.gridsEdited", "grids_edited"],
   ["gig.tagsEdited", "tags_edited"],
 ];
+
+const TAG_FIELD_KEYS: Record<string, MessageKey> = {
+  title: "field.title",
+  artist: "field.artist",
+  bpm: "field.bpm",
+  key: "field.key",
+};
+
+/**
+ * One Since-last-gig line for title, artist, BPM, or key.
+ *
+ * @param diff Field diffs for one path.
+ * @returns `a.mp3: Title Mix → Song; BPM 120 → 240`.
+ */
+export function tagDiffText(diff: GigTagDiff): string {
+  const fields = (diff.fields || [])
+    .map((item) => t("gig.tagField", {
+      field: TAG_FIELD_KEYS[item.field] ? t(TAG_FIELD_KEYS[item.field]!) : item.field,
+      before: item.before || t("gig.tagEmpty"),
+      after: item.after || t("gig.tagEmpty"),
+    }))
+    .join("; ");
+  return t("gig.tagDiff", { name: fileName(diff.path), fields });
+}
+
+/**
+ * Tag group lines: field diffs when present, else the path.
+ *
+ * @param changes Diff from GET /api/gig-check.
+ * @returns Display rows for Tags edited.
+ */
+export function tagEditLines(changes: GigChanges | null | undefined): string[] {
+  if (!changes) return [];
+  const diffs = new Map((changes.tag_diffs || []).map((item) => [item.path, item]));
+  if (changes.tags_edited.length) {
+    return changes.tags_edited.map((path) => {
+      const diff = diffs.get(path);
+      return diff ? tagDiffText(diff) : path;
+    });
+  }
+  return (changes.tag_diffs || []).map(tagDiffText);
+}
 
 /**
  * Lines for one numbered gig step, not the since-last-gig screen.

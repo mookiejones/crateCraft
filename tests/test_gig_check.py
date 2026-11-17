@@ -40,6 +40,7 @@ from gig_snapshots import (
     SnapshotCrate,
     SnapshotInfo,
     SnapshotTrack,
+    TagFieldDiff,
     TrackTags,
     track_key,
 )
@@ -237,17 +238,31 @@ def _absent_drive() -> tuple[str, str, str]:
     )
 
 
-def _tags(title: str = "Song", artist: str = "Artist") -> TrackTags:
-    """Build empty library tags.
+def _tags(
+    title: str = "Song",
+    artist: str = "Artist",
+    *,
+    album: str = "",
+    genre: str = "",
+    key: str = "",
+    bpm: str = "",
+    comments: str = "",
+) -> TrackTags:
+    """Build library tags.
 
     Args:
         title: Track title.
         artist: Artist.
+        album: Album.
+        genre: Genre.
+        key: Key text.
+        bpm: BPM as text.
+        comments: Comments.
 
     Returns:
-        Tags with blank album, genre, key, BPM, and comments.
+        Tags with the given fields. Unset fields stay blank.
     """
-    return TrackTags(title, artist, "", "", "", "", "")
+    return TrackTags(title, artist, album, genre, key, bpm, comments)
 
 
 class FakeSnapshots:
@@ -525,7 +540,118 @@ class GigCheckTests(unittest.TestCase):
         self.assertEqual(diff.cues_edited, ("/music/a.mp3",))
         self.assertEqual(diff.grids_edited, ("/music/b.mp3",))
         self.assertEqual(diff.tags_edited, ("/music/a.mp3",))
+        self.assertEqual(len(diff.tag_diffs), 1)
+        self.assertEqual(diff.tag_diffs[0].path, "/music/a.mp3")
+        self.assertEqual(diff.tag_diffs[0].fields, (TagFieldDiff("title", "Keep", "Renamed"),))
         self.assertIsInstance(diff, ChangeReport)
+
+    def test_tag_diffs_name_title_artist_bpm_and_key(self) -> None:
+        """Title, artist, BPM, and key are field diffs; album stays a path.
+
+        Returns:
+            None. The test fails if a named field is missing or album is listed.
+        """
+        before = LoadedSnapshot(
+            SnapshotInfo("then", NOW - timedelta(days=1), "Last gig"),
+            (SnapshotCrate("Friday", ("t1", "t2")),),
+            (
+                SnapshotTrack(
+                    "t1",
+                    "/music/a.mp3",
+                    ("Friday",),
+                    (),
+                    (),
+                    _tags("Mix", "A", bpm="120", key="8A"),
+                ),
+                SnapshotTrack(
+                    "t2",
+                    r"C:\Music\b.mp3",
+                    ("Friday",),
+                    (),
+                    (),
+                    _tags("Song", album="LP"),
+                ),
+            ),
+        )
+        after = LoadedSnapshot(
+            SnapshotInfo("now", NOW, "Now"),
+            (SnapshotCrate("Friday", ("t1", "t2")),),
+            (
+                SnapshotTrack(
+                    "t1",
+                    "/music/a.mp3",
+                    ("Friday",),
+                    (),
+                    (),
+                    _tags("Song", "B", bpm="240", key="8B"),
+                ),
+                SnapshotTrack(
+                    "t2",
+                    r"C:\Music\b.mp3",
+                    ("Friday",),
+                    (),
+                    (),
+                    _tags("Song", album="EP"),
+                ),
+            ),
+        )
+        diff = gig_snapshots.diff_snapshots(before, after)
+        self.assertEqual(diff.tags_edited, ("/music/a.mp3", r"C:\Music\b.mp3"))
+        self.assertEqual(len(diff.tag_diffs), 1)
+        self.assertEqual(diff.tag_diffs[0].path, "/music/a.mp3")
+        self.assertEqual(
+            diff.tag_diffs[0].fields,
+            (
+                TagFieldDiff("title", "Mix", "Song"),
+                TagFieldDiff("artist", "A", "B"),
+                TagFieldDiff("bpm", "120", "240"),
+                TagFieldDiff("key", "8A", "8B"),
+            ),
+        )
+        payload = gig_check.report_to_dict(
+            gig_check.GigReport(
+                True,
+                100,
+                False,
+                (),
+                (),
+                (),
+                (),
+                (),
+                "Latest snapshot: Last gig on 2026-10-27.",
+                diff,
+                library.LIBRARY_SPACE,
+                None,
+                None,
+                NOW,
+                "then",
+            )
+        )
+        self.assertEqual(payload["snapshot_id"], "then")
+        changes = payload["changes"]
+        assert isinstance(changes, dict)
+        self.assertEqual(changes["tag_diffs"][0]["fields"][2], {"field": "bpm", "before": "120", "after": "240"})
+        text = gig_check.format_report(
+            gig_check.GigReport(
+                True,
+                100,
+                False,
+                (),
+                (),
+                (),
+                (),
+                (),
+                "Latest snapshot: Last gig on 2026-10-27.",
+                diff,
+                library.LIBRARY_SPACE,
+                None,
+                None,
+                NOW,
+                "then",
+            )
+        )
+        self.assertIn("a.mp3: title Mix → Song; artist A → B; bpm 120 → 240; key 8A → 8B", text)
+        self.assertIn(r"C:\Music\b.mp3", text)
 
     def test_live_library_diff_uses_the_fake_snapshot(self) -> None:
         """A cue in the snapshot and none in the file is an edited cue.
@@ -575,6 +701,8 @@ class GigCheckTests(unittest.TestCase):
             self.assertIn(portable, report.changes.grids_edited)
             self.assertEqual(report.changes.tracks_added, ())
             self.assertEqual(report.changes.tags_edited, ())
+            self.assertEqual(report.changes.tag_diffs, ())
+            self.assertEqual(report.snapshot_id, "last")
 
     def test_no_snapshot_in_seven_days_lowers_the_score(self) -> None:
         """A snapshot older than seven days lowers the score and says so.
@@ -612,6 +740,7 @@ class GigCheckTests(unittest.TestCase):
             stale = at(NOW - timedelta(days=7, seconds=1))
             none = gig_check.run_gig_check(database, now=NOW)
             self.assertEqual(none.snapshot_note, gig_check.NO_SNAPSHOTS)
+            self.assertEqual(none.snapshot_id, "")
             self.assertIsNone(none.changes)
             self.assertTrue(any(line.summary == gig_check.STALE_SNAPSHOT for line in none.holding_it_back))
             self.assertLess(stale.score, fresh.score)
@@ -855,6 +984,11 @@ class GigCheckTests(unittest.TestCase):
             self.assertEqual(Path(changes.cues_edited[0]).name, "opener.mp3")
             self.assertEqual(changes.grids_edited, ())
             self.assertEqual(len(changes.tags_edited), 1)
+            self.assertEqual(report.snapshot_id, saved["id"])
+            self.assertEqual(len(changes.tag_diffs), 1)
+            self.assertEqual(Path(changes.tag_diffs[0].path).name, "opener.mp3")
+            self.assertEqual(changes.tag_diffs[0].fields[0].field, "title")
+            self.assertEqual(changes.tag_diffs[0].fields[0].after, "Opener (edit)")
             self.assertNotIn("snapshot_stale", {line.code for line in report.holding_it_back})
             self.assertTrue(saved["id"])
 
@@ -1180,7 +1314,9 @@ class GigCheckTests(unittest.TestCase):
             "streaming_tracks",
             "empty_crates",
             "snapshot_note",
+            "snapshot_id",
             "changes",
+            "tag_diffs",
         ):
             self.assertIn(field, script)
         self.assertNotIn("innerHTML", src_page_text())
@@ -1231,6 +1367,7 @@ class GigCheckApiTests(unittest.TestCase):
             self.assertIn("ready", payload)
             self.assertIn("holding_it_back", payload)
             self.assertEqual(payload["snapshot_note"], gig_check.NO_SNAPSHOTS)
+            self.assertEqual(payload["snapshot_id"], "")
             self.assertEqual(payload["empty_crates"][0]["warning"], gig_check.EMPTY_CRATE_WARNING)
             self.assertEqual(_digest(library_fixture.db), before)
             self.assertEqual(_names(library_fixture.root), names)

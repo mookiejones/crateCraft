@@ -210,6 +210,37 @@ class NoSnapshots:
         raise KeyError(snapshot_id)
 
 
+TAG_DIFF_FIELDS: tuple[str, ...] = ("title", "artist", "bpm", "key")
+
+
+@dataclass(frozen=True, slots=True)
+class TagFieldDiff:
+    """One library field that differs between snapshots.
+
+    Attributes:
+        field: ``title``, ``artist``, ``bpm``, or ``key``.
+        before: Value in the older snapshot.
+        after: Value in the newer snapshot.
+    """
+
+    field: str
+    before: str
+    after: str
+
+
+@dataclass(frozen=True, slots=True)
+class TagDiff:
+    """Named field changes for one path.
+
+    Attributes:
+        path: Track path shown in the change report.
+        fields: Title, artist, BPM, and key that differ, in that order.
+    """
+
+    path: str
+    fields: tuple[TagFieldDiff, ...]
+
+
 @dataclass(frozen=True, slots=True)
 class ChangeReport:
     """What differs between an older snapshot and a newer one.
@@ -223,6 +254,8 @@ class ChangeReport:
         cues_edited: Paths whose cues or loops changed.
         grids_edited: Paths whose beatgrid changed.
         tags_edited: Paths whose library text changed.
+        tag_diffs: Title, artist, BPM, and key for those paths. Album,
+            genre, and comments stay path-only in ``tags_edited``.
     """
 
     crates_added: tuple[str, ...]
@@ -233,6 +266,7 @@ class ChangeReport:
     cues_edited: tuple[str, ...]
     grids_edited: tuple[str, ...]
     tags_edited: tuple[str, ...]
+    tag_diffs: tuple[TagDiff, ...] = ()
 
     def empty(self) -> bool:
         """Return whether nothing changed.
@@ -250,6 +284,7 @@ class ChangeReport:
                 self.cues_edited,
                 self.grids_edited,
                 self.tags_edited,
+                self.tag_diffs,
             )
         )
 
@@ -297,6 +332,7 @@ def diff_snapshots(before: LoadedSnapshot, after: LoadedSnapshot) -> ChangeRepor
     cues: list[str] = []
     grids: list[str] = []
     tags: list[str] = []
+    tag_diffs: list[TagDiff] = []
     for key, track in newer.items():
         previous = older.get(key)
         if previous is None:
@@ -307,6 +343,9 @@ def diff_snapshots(before: LoadedSnapshot, after: LoadedSnapshot) -> ChangeRepor
             grids.append(track.path)
         if track.tags != previous.tags:
             tags.append(track.path)
+            fields = _tag_field_diffs(previous.tags, track.tags)
+            if fields:
+                tag_diffs.append(TagDiff(track.path, fields))
     added_tracks = [newer[key].path for key in newer.keys() - older.keys()]
     removed_tracks = [older[key].path for key in older.keys() - newer.keys()]
     edited_crates = [
@@ -323,4 +362,25 @@ def diff_snapshots(before: LoadedSnapshot, after: LoadedSnapshot) -> ChangeRepor
         cues_edited=tuple(sorted(cues)),
         grids_edited=tuple(sorted(grids)),
         tags_edited=tuple(sorted(tags)),
+        tag_diffs=tuple(sorted(tag_diffs, key=lambda item: item.path)),
     )
+
+
+def _tag_field_diffs(previous: TrackTags, current: TrackTags) -> tuple[TagFieldDiff, ...]:
+    """Named title, artist, BPM, and key that differ.
+
+    Args:
+        previous: Tags in the older snapshot.
+        current: Tags in the newer snapshot.
+
+    Returns:
+        Field diffs in ``TAG_DIFF_FIELDS`` order. Album, genre, and
+        comments are omitted.
+    """
+    fields: list[TagFieldDiff] = []
+    for name in TAG_DIFF_FIELDS:
+        before = getattr(previous, name)
+        after = getattr(current, name)
+        if before != after:
+            fields.append(TagFieldDiff(name, before, after))
+    return tuple(fields)
