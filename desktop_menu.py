@@ -144,6 +144,7 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
                 item("view.crates", "view-crates"),
                 item("view.history", "view-history"),
                 item("view.stats", "view-stats"),
+                item("view.compare", "view-compare"),
                 MenuSeparator(),
                 space,
             ],

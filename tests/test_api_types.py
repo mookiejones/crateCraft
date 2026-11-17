@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import re
+import sqlite3
 import threading
 import unittest
 import urllib.error
@@ -470,9 +471,9 @@ class LiveApiShapeTests(unittest.TestCase):
             None. The test fails if a required field is missing or mistyped.
         """
         self.assert_shape("/api/version", "VersionPayload")
-        library = self.assert_shape("/api/library", "LibraryPayload")
-        self.assertIsInstance(library, dict)
-        tracks = library["tracks"]
+        library_payload = self.assert_shape("/api/library", "LibraryPayload")
+        self.assertIsInstance(library_payload, dict)
+        tracks = library_payload["tracks"]
         self.assertGreaterEqual(len(tracks), 1)
         track_id = tracks[0]["id"]
         self.assert_shape(f"/api/track?id={track_id}", "Track")
@@ -493,6 +494,18 @@ class LiveApiShapeTests(unittest.TestCase):
         self.assert_shape("/api/album-art", "AlbumArtMissing")
         self.assert_shape("/api/tag-clusters?field=genre", "TagClusters")
         self.assert_shape("/api/lost-tags?space=Serato%20Library", "LostTagsPlan")
+        conn = sqlite3.connect(library.MASTER)
+        try:
+            conn.execute(
+                "INSERT INTO container (id, parent_id, name, type, space_id) VALUES (10, 1, 'Warmup', 1, 1)"
+            )
+            conn.execute(
+                "INSERT INTO container (id, parent_id, name, type, space_id) VALUES (11, 1, 'Peak', 1, 1)"
+            )
+            conn.commit()
+        finally:
+            conn.close()
+        self.assert_shape("/api/crate-compare?space=Serato%20Library&a=10&b=11", "CrateCompareReport")
         self.assert_shape("/api/write-queue", "WriteQueueListing")
 
     def test_version_without_opening_the_library(self) -> None:

@@ -2171,6 +2171,7 @@ class Handler(BaseHTTPRequestHandler):
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     history = parsed.path == "/api/history-stats"
+                    comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
                     preview = (
                         (merging and payload.get("preview") is True)
@@ -2185,6 +2186,7 @@ class Handler(BaseHTTPRequestHandler):
                             in ("preview", "clean-preview", "refresh-preview", "edit-preview")
                         )
                         or (losting and payload.get("action") == "preview")
+                        or (comparing and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
                         or (bitrate_crate and payload.get("action") == "preview")
@@ -2258,6 +2260,12 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = lost_tags.action(request)
+                    elif comparing:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = crate_compare.action(request)
+                        if request.get("action") == "create" and result.get("written"):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif covering:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

@@ -144,6 +144,15 @@ describe("switching the language", () => {
     expect(el("crate-foot").textContent).toBe("Todo el espacio");
   });
 
+  it("translates the Compare crates crate footer", () => {
+    wireLocale();
+    state.mode = "compare";
+    renderShell();
+    expect(el("crate-foot").textContent).toBe("Whole space");
+    setLocale("es");
+    expect(el("crate-foot").textContent).toBe("Todo el espacio");
+  });
+
   it("translates the Library health crate footer", () => {
     wireLocale();
     state.mode = "health";

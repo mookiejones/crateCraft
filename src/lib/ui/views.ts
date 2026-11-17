@@ -1,5 +1,5 @@
 /**
- * Crates, history, play stats, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, tempo drift, and the portable drive check.
+ * Crates, history, play stats, compare crates, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, tempo drift, and the portable drive check.
  *
  * Files is React on FilesContext. This module re-exports that store so
  * existing callers keep one import. Play stats fetch is history-stats.ts;
@@ -36,6 +36,7 @@ import { loadScan, showScanFailure } from "../health/scan";
 import { loadBitrate, showBitrateFailure } from "../health/bitrate";
 import { loadTags, showTagsFailure } from "../health/tags";
 import { loadLostTags, showLostTagsFailure } from "../health/lost-tags";
+import { loadCrateCompare, showCrateCompareFailure } from "../crates/crate-compare";
 import { loadPortableView, showPortableFailure } from "../gig/portable";
 import { mountFilesIslands } from "../files/files-mount";
 import {
@@ -513,6 +514,7 @@ export function renderShell() {
   const driftMode = state.mode === "drift";
   const healthMode = state.mode === "health";
   const statsMode = state.mode === "stats";
+  const compareMode = state.mode === "compare";
   const scanMode = state.mode === "scan";
   const bitrateMode = state.mode === "bitrate";
   const tagsMode = state.mode === "tags";
@@ -529,7 +531,7 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || statsMode || scanMode || bitrateMode || tagsMode || lostMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
@@ -540,6 +542,7 @@ export function renderShell() {
   el("drift-panel").hidden = !driftMode;
   el("health-panel").hidden = !healthMode;
   el("stats-panel").hidden = !statsMode;
+  el("compare-panel").hidden = !compareMode;
   el("scan-panel").hidden = !scanMode;
   el("bitrate-panel").hidden = !bitrateMode;
   el("tags-panel").hidden = !tagsMode;
@@ -565,6 +568,10 @@ export function renderShell() {
   }
   if (statsMode) {
     el("mode-note").textContent = t("mode.stats");
+    document.querySelector(".rules")?.remove();
+  }
+  if (compareMode) {
+    el("mode-note").textContent = t("mode.compare");
     document.querySelector(".rules")?.remove();
   }
   if (scanMode) {
@@ -626,7 +633,7 @@ export function renderShell() {
     el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : (crate?.name ?? t("crates.selectedCrate"));
     return;
   }
-  if (tagsMode || lostMode || statsMode) {
+  if (tagsMode || lostMode || statsMode || compareMode) {
     el("crate-foot").textContent = t("gig.wholeSpace");
     return;
   }
@@ -2511,6 +2518,7 @@ export function setMode(mode: string) {
   if (mode === "bitrate") loadBitrate().catch(showBitrateFailure);
   if (mode === "tags") loadTags().catch(showTagsFailure);
   if (mode === "lost") loadLostTags().catch(showLostTagsFailure);
+  if (mode === "compare") loadCrateCompare().catch(showCrateCompareFailure);
   renderList();
   syncHash();
 }
@@ -2707,6 +2715,7 @@ export function wireLibrary(): void {
     if (state.mode === "bitrate") jobs.push(loadBitrate().catch(showBitrateFailure));
     if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
     if (state.mode === "lost") jobs.push(loadLostTags().catch(showLostTagsFailure));
+    if (state.mode === "compare") jobs.push(loadCrateCompare().catch(showCrateCompareFailure));
     Promise.all(jobs).catch(showFailure);
   });
 
@@ -2744,6 +2753,7 @@ export function wireLibrary(): void {
       if (state.mode === "bitrate") return loadBitrate().catch(showBitrateFailure);
       if (state.mode === "tags") return loadTags().catch(showTagsFailure);
       if (state.mode === "lost") return loadLostTags().catch(showLostTagsFailure);
+      if (state.mode === "compare") return loadCrateCompare().catch(showCrateCompareFailure);
       return null;
     }).catch(showFailure);
   });

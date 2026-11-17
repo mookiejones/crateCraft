@@ -69,6 +69,7 @@ nav:
       - Playback: guide/playback.md
       - Track details: guide/tags.md
       - History: guide/history.md
+      - Compare crates: guide/crate-compare.md
       - Missing files: guide/missing.md
       - Library health: guide/library-health.md
       - Ready: guide/gig-check.md

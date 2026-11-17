@@ -1009,6 +1009,41 @@ export interface LostTagsPlan {
   code?: string;
 }
 
+export interface CrateCompareTrack {
+  id: number;
+  name: string;
+  artist: string;
+}
+
+export interface CrateCompareSide {
+  id: number;
+  name: string;
+  smart: boolean;
+  tracks: number;
+}
+
+export interface CrateCompareReport {
+  a: CrateCompareSide;
+  b: CrateCompareSide;
+  subcrates: boolean;
+  both: CrateCompareTrack[];
+  only_a: CrateCompareTrack[];
+  only_b: CrateCompareTrack[];
+  error?: string;
+  code?: string;
+}
+
+export interface CrateComparePlan extends CrateCompareReport {
+  set: "both" | "only_a" | "only_b";
+  name: string;
+  count: number;
+  preview: boolean;
+  written: boolean;
+  id?: number;
+  added?: number;
+  warning?: string;
+}
+
 export interface ErrorBody {
   error?: string;
   /** Stable code for a known error sentence. The page translates it. */
