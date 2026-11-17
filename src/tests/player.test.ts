@@ -15,6 +15,7 @@ import {
   getPlayerCues,
   getPlayerState,
   isPlaying,
+  jumpCue,
   markersFromCues,
   mountPlayer,
   next,
@@ -347,9 +348,29 @@ describe("cue markers", () => {
       { start_ms: "nope", name: "Skip" },
       { start_ms: 8000, color: "red", index: 3 },
     ])).toEqual([
-      { seconds: 1.5, color: "#CC0000", label: "Drop" },
-      { seconds: 8, color: "var(--cue-slot-4)", label: "Cue 4" },
+      { seconds: 1.5, color: "#CC0000", label: "Drop", index: 0 },
+      { seconds: 8, color: "var(--cue-slot-4)", label: "Cue 4", index: 3 },
     ]);
+  });
+
+  it("jumps to cue pad 1 and leaves the playhead on an empty pad", async () => {
+    vi.stubGlobal("fetch", () => Promise.resolve(new Response(JSON.stringify({
+      cues: [
+        { index: 0, start_ms: 1500, color: "#CC0000", name: "Drop" },
+        { index: 3, start_ms: 8000, color: "#001122", name: "" },
+      ],
+    }), { status: 200, headers: { "Content-Type": "application/json" } })));
+    state.byId.set(4, track(4, "Night"));
+    fake.duration = 10;
+    play(4);
+    fake.dispatchEvent(new Event("durationchange"));
+    await vi.waitUntil(() => getPlayerCues().length === 2);
+    jumpCue(0);
+    expect(fake.currentTime).toBe(1.5);
+    jumpCue(1);
+    expect(fake.currentTime).toBe(1.5);
+    jumpCue(3);
+    expect(fake.currentTime).toBe(8);
   });
 
   it("draws markers from the track and seeks when one is clicked", async () => {

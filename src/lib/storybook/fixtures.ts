@@ -512,7 +512,7 @@ export function playerValue(partial: Partial<PlayerContextValue> = {}): PlayerCo
     duration: 180,
     volume: 0.8,
     error: "",
-    cues: [{ seconds: 1.5, color: "#CC0000", label: "Drop" }],
+    cues: [{ seconds: 1.5, color: "#CC0000", label: "Drop", index: 0 }],
     canTogglePlay: true,
     canSkipPrevious: true,
     canSkipNext: true,
