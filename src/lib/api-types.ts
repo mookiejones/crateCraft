@@ -536,6 +536,8 @@ export interface SettingsPayload {
   icon_href?: string;
   /** Result of changing the running icon. Present after a theme save. */
   icon?: IconApplyResult;
+  /** True queues crate and track edits until Gig Lock is off. */
+  gig_lock?: boolean;
   error?: string;
   code?: string;
 }
@@ -566,6 +568,7 @@ export interface CrateWriteResult {
   name?: string;
   added?: number;
   unmatched_count?: number;
+  queued?: boolean;
 }
 
 export interface PlanName {
@@ -816,6 +819,38 @@ export interface MusicMirrorReport {
   relink?: MusicMirrorRow[];
   relink_count?: number;
   relink_result?: { ok?: boolean; preview?: boolean; changes?: unknown[] };
+  error?: string;
+  code?: string;
+}
+
+export interface WriteQueueItem {
+  id?: string;
+  path?: string;
+  action?: string;
+  label?: string;
+  queued_at?: number;
+  conflict?: boolean;
+  layer?: string;
+  skipped?: string;
+}
+
+export interface WriteQueueUndoItem {
+  id?: string;
+  label?: string;
+  applied_at?: number;
+  layer?: string;
+}
+
+export interface WriteQueueListing {
+  gig_lock: boolean;
+  locked: boolean;
+  pending: WriteQueueItem[];
+  undo: WriteQueueUndoItem[];
+  preview?: boolean;
+  applied?: WriteQueueItem[];
+  skipped?: WriteQueueItem[];
+  layers?: string[];
+  undone?: string;
   error?: string;
   code?: string;
 }

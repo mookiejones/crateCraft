@@ -28,6 +28,7 @@ import legacy_library
 import music_mirror
 import smart_presets
 import tag_cleanup
+import write_queue
 
 REGISTRATION_NO_SPACE = (
     "Crates were not registered. This library has no Serato Library space, "
@@ -136,6 +137,10 @@ ERROR_CODES: dict[str, str] = {
     music_mirror.DEST_LIBRARY: "mirror_dest_library",
     music_mirror.DEST_MUSIC: "mirror_dest_music",
     smart_presets.UNKNOWN_PRESET: "preset_unknown",
+    write_queue.CONFIRM_NEEDED: "queue_confirm",
+    write_queue.QUEUE_LOCKED: "queue_locked",
+    write_queue.UNKNOWN_ITEM: "queue_unknown",
+    write_queue.GIG_LOCK_NOT_SAVED: "gig_lock_not_saved",
     smart_presets.BAD_KEY: "preset_bad_key",
     smart_presets.BAD_BPM: "preset_bad_bpm",
     smart_presets.BAD_MONTHS: "preset_bad_months",

@@ -8,9 +8,11 @@
 import { failureOf, postJSON } from "../api";
 import type { TagClusterPlan } from "../api-types";
 import { bridge } from "../bridge";
+import { t } from "../i18n";
 import { state } from "../state";
 import { setNotice } from "../ui/notice-store";
 import { fieldEditWrittenText } from "./field-edit-view";
+import { isQueuedWrite } from "./queue-notice";
 
 function body(action: "edit-preview" | "edit-apply", ids: readonly number[], field: string, value: string) {
   return {
@@ -58,6 +60,10 @@ export async function applyFieldEdit(
       "/api/tag-clusters",
       body("edit-apply", ids, field, value),
     );
+    if (isQueuedWrite(plan)) {
+      setNotice(t("gigLock.queued"));
+      return plan;
+    }
     if (plan.written) {
       await bridge.reloadLibrary();
       setNotice(fieldEditWrittenText(plan));

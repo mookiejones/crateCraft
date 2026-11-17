@@ -110,6 +110,7 @@ export type SettingsStoryArgs = {
   language: "en" | "es";
   telemetryOn: boolean;
   iconFollowsTheme: boolean;
+  gigLock: boolean;
 };
 
 export const settingsStoryArgs: SettingsStoryArgs = {
@@ -117,6 +118,7 @@ export const settingsStoryArgs: SettingsStoryArgs = {
   language: "en",
   telemetryOn: false,
   iconFollowsTheme: true,
+  gigLock: false,
 };
 
 export const settingsArgTypes = {
@@ -132,6 +134,7 @@ export const settingsArgTypes = {
   },
   telemetryOn: { control: "boolean" as const, description: "Sharing checkbox is on." },
   iconFollowsTheme: { control: "boolean" as const, description: "App icon follows the colorway." },
+  gigLock: { control: "boolean" as const, description: "Queue crate and track edits." },
 };
 
 /**
@@ -147,6 +150,7 @@ export function settingsValueFromArgs(args: SettingsStoryArgs): SettingsContextV
     telemetryOn: args.telemetryOn,
     telemetryConfigured: args.telemetryOn,
     iconFollowsTheme: args.iconFollowsTheme,
+    gigLock: args.gigLock,
   });
 }
 

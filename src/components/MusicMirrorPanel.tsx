@@ -9,7 +9,9 @@ import TextField from "@mui/material/TextField";
 import type { MusicMirrorReport } from "../lib/api-types";
 import { failureOf } from "../lib/api";
 import { t } from "../lib/i18n";
+import { isQueuedWrite } from "../lib/crates/queue-notice";
 import { fetchMirrorPreview, postMirror } from "../lib/snapshots/music-mirror";
+import { setNotice } from "../lib/ui/notice-store";
 import { hasMirrorDest, mirrorStatusText, type MusicMirrorAction } from "../lib/snapshots/music-mirror-view";
 import { tooltipRef } from "./tooltip-ref";
 import { tips } from "../lib/ui/tooltip-strings";
@@ -36,6 +38,10 @@ export function MusicMirrorPanel() {
         ? await fetchMirrorPreview(dest)
         : await postMirror(action, dest, confirm);
       if (token !== tokenRef.current) return;
+      if (isQueuedWrite(payload)) {
+        setNotice(t("gigLock.queued"));
+        return;
+      }
       setReport(payload);
     } catch (caught) {
       if (token !== tokenRef.current) return;

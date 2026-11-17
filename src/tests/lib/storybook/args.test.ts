@@ -87,6 +87,7 @@ describe("settingsValueFromArgs", () => {
       language: "es",
       telemetryOn: true,
       iconFollowsTheme: false,
+      gigLock: false,
     });
     expect(value.colorway).toBe("dark-club");
     expect(value.language).toBe("es");
