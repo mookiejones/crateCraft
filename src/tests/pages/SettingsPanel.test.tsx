@@ -18,9 +18,25 @@ import {
   resetSettingsForTests,
   saveLanguage,
 } from "../../lib/ui/settings";
-import { SHORTCUTS } from "../../lib/ui/shortcuts";
+import { SHORTCUTS, wireShortcuts } from "../../lib/ui/shortcuts";
 import { installPage } from "../test-page";
 import { SettingsPanel } from "../../pages/SettingsPanel";
+
+function shortcutRow(id: string): HTMLElement {
+  const row = document.querySelector(`[data-shortcut-id="${id}"]`);
+  expect(row, id).not.toBeNull();
+  return row as HTMLElement;
+}
+
+function settingsBody(call: unknown): Record<string, unknown> | null {
+  const init = (call as [unknown, RequestInit | undefined])[1];
+  if (typeof init?.body !== "string") return null;
+  try {
+    return JSON.parse(init.body) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
 
 describe("SettingsPanel context", () => {
   beforeEach(() => {
@@ -171,5 +187,86 @@ describe("SettingsPanel context", () => {
         return typeof init?.body === "string" && init.body.includes("colorway");
       })).toBe(true);
     });
+  });
+
+  it("lists a live Serato row and an unavailable row", () => {
+    mountSettings();
+    const live = shortcutRow("play-pause");
+    expect(live.querySelector("[data-shortcut-change]")).not.toBeNull();
+    expect(live.textContent).toMatch(/W/);
+    const dead = shortcutRow("play-pause-right");
+    expect(dead.querySelector("[data-shortcut-change]")).toBeNull();
+    expect(dead.textContent).toContain("Not in crateCraft");
+  });
+
+  it("gives the shortcut catalog controls tooltips", () => {
+    mountSettings();
+    expect(el("shortcuts-filter").getAttribute("data-tooltip-key")).toBe("tooltip.shortcutsFilter");
+    expect(el("shortcuts-reset-all").getAttribute("data-tooltip-key")).toBe("tooltip.shortcutsResetAll");
+    const change = shortcutRow("play-pause").querySelector("[data-shortcut-change]");
+    expect(change?.getAttribute("data-tooltip-key")).toBe("tooltip.shortcutsChange");
+  });
+
+  it("remaps play-pause from Change then q", async () => {
+    const fetchMock = vi.fn(async () => new Response(
+      JSON.stringify({ shortcuts: { "play-pause": [{ key: "q" }] } }),
+      { status: 200 },
+    ));
+    vi.stubGlobal("fetch", fetchMock);
+    mountSettings();
+    const change = shortcutRow("play-pause").querySelector("[data-shortcut-change]");
+    expect(change).not.toBeNull();
+    (change as HTMLElement).click();
+    await vi.waitFor(() => {
+      expect(shortcutRow("play-pause").textContent).toContain("Press a key");
+    });
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "q", bubbles: true, cancelable: true }));
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalled();
+    });
+    expect(fetchMock).toHaveBeenCalledWith("/api/settings", expect.objectContaining({
+      body: JSON.stringify({ shortcuts: { "play-pause": [{ key: "q" }] } }),
+    }));
+    expect(shortcutRow("play-pause").textContent).toMatch(/Q/);
+  });
+
+  it("refuses a chord another live action already owns", async () => {
+    const fetchMock = vi.fn(async () => new Response("{}", { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    mountSettings();
+    const change = shortcutRow("play-pause").querySelector("[data-shortcut-change]");
+    expect(change).not.toBeNull();
+    (change as HTMLElement).click();
+    await vi.waitFor(() => {
+      expect(shortcutRow("play-pause").textContent).toContain("Press a key");
+    });
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true, cancelable: true }));
+    await vi.waitFor(() => {
+      expect(el("shortcuts-status").textContent).not.toBe("");
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(shortcutRow("play-pause").textContent).toMatch(/W/);
+  });
+
+  it("resets all shortcuts to Serato defaults", async () => {
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ shortcuts: {} }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    mountSettings();
+    el("shortcuts-reset-all").click();
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalled();
+    });
+    const bodies = fetchMock.mock.calls.map(settingsBody);
+    expect(bodies.some((body) => body && JSON.stringify(body.shortcuts) === "{}")).toBe(true);
+  });
+
+  it("still focuses the shortcuts heading from ?", () => {
+    mountSettings();
+    wireShortcuts();
+    if (el("settings-dialog").open) el("settings-dialog").close();
+    document.body.focus();
+    document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "?", bubbles: true, cancelable: true }));
+    expect(el("settings-dialog").open).toBe(true);
+    expect(document.activeElement).toBe(el("shortcuts-title"));
   });
 });

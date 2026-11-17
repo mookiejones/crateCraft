@@ -315,7 +315,10 @@ export interface ElementIds {
   "shortcuts-section": HTMLElement;
   "shortcuts-title": HTMLHeadingElement;
   "shortcuts-intro": HTMLParagraphElement;
+  "shortcuts-filter": HTMLInputElement;
+  "shortcuts-reset-all": HTMLButtonElement;
   "shortcuts-body": HTMLDivElement;
+  "shortcuts-status": HTMLParagraphElement;
   "quick-open": HTMLDialogElement;
   "quick-open-title": HTMLHeadingElement;
   "quick-open-label": HTMLLabelElement;

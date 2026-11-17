@@ -19,6 +19,9 @@
  * - `previous(): void`
  * - `seek(seconds: number): void`
  * - `seekBy(deltaSeconds: number): void`
+ * - `jumpCue(slot: number): void`
+ * - `playSelected(): void`
+ * - `zoomWaveform(direction: 1 | -1): void`
  * - `isPlaying(): boolean`
  * - `getPlayerState(): PlayerSnapshot`
  * - `getPlayerCues(): readonly CueMarker[]`
@@ -63,6 +66,11 @@ export type PlayerListener = (state: PlayerSnapshot) => void;
 export interface PlayerControls {
   togglePlayPause(): void;
   seekBy(deltaSeconds: number): void;
+  jumpCue(slot: number): void;
+  playSelected(): void;
+  next(): void;
+  previous(): void;
+  zoom(direction: 1 | -1): void;
 }
 
 /** Seconds for one press of Left or Right on the seek bar. */
@@ -81,6 +89,8 @@ export interface CueMarker {
   seconds: number;
   color: string;
   label: string;
+  /** Zero-based Serato pad index, or -1 when the cue has no pad. */
+  index: number;
 }
 
 /**
@@ -164,6 +174,7 @@ export function markersFromCues(rows: readonly Marker[] | undefined): CueMarker[
       seconds: start / 1000,
       color,
       label: named || `${playerStrings.cue} ${fallback}`,
+      index: Number.isInteger(index) ? index : -1,
     });
   }
   return found;
@@ -323,6 +334,42 @@ export function seekBy(deltaSeconds: number): void {
 }
 
 /**
+ * Seek to a cue pad on the loaded track.
+ *
+ * Slot 0 is pad 1. An empty pad, a slot outside 0–7, or no loaded track
+ * leaves the playhead. Nothing is written.
+ *
+ * @param slot Zero-based pad index.
+ */
+export function jumpCue(slot: number): void {
+  if (!Number.isInteger(slot) || slot < 0 || slot > 7) return;
+  const mark = cues.find((cue) => cue.index === slot);
+  if (!mark) return;
+  seek(mark.seconds);
+}
+
+/**
+ * Play the selected library row even when another track is already loaded.
+ *
+ * A history row and an empty selection do nothing.
+ */
+export function playSelected(): void {
+  const selected = selectedPlayableId();
+  if (selected !== null) play(selected);
+}
+
+/**
+ * Step the waveform zoom in or out around the playhead.
+ *
+ * Does nothing when the waveform is not mounted.
+ *
+ * @param direction Positive zooms in.
+ */
+export function zoomWaveform(direction: 1 | -1): void {
+  waveform?.zoom(direction);
+}
+
+/**
  * The player hooks the shortcut table registers once.
  *
  * Pass this object to `registerPlayerControls`. Do not also listen for Space.
@@ -330,6 +377,11 @@ export function seekBy(deltaSeconds: number): void {
 export const playerControls: PlayerControls = {
   togglePlayPause,
   seekBy,
+  jumpCue,
+  playSelected,
+  next,
+  previous,
+  zoom: zoomWaveform,
 };
 
 /**

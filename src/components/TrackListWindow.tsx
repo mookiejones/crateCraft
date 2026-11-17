@@ -24,6 +24,7 @@ import { ensureGridDom } from "../lib/ui/grid-dom-stubs";
 import { trackListColumns } from "../lib/ui/track-list-columns";
 import { INTERACTIVE_SELECTOR, setTooltip } from "../lib/ui/tooltip";
 import { sortTip, tips } from "../lib/ui/tooltip-strings";
+import { SELECT_ALL_EVENT } from "../lib/ui/track-list-store";
 import { useTrackList } from "../containers/TrackListContext";
 import { FieldEditorBar } from "./FieldEditorBar";
 
@@ -177,6 +178,15 @@ export function TrackListWindow({ pane, onFocusList }: TrackListWindowProps) {
     }
     setSelectedIds((prev) => (prev.includes(list.selectedId as number) ? prev : [list.selectedId as number]));
   }, [cratesMode, list.selectedId]);
+
+  useEffect(() => {
+    function onSelectAll(): void {
+      if (!cratesMode) return;
+      setSelectedIds(view.filter((row) => !row.entry).map((row) => row.id));
+    }
+    document.addEventListener(SELECT_ALL_EVENT, onSelectAll);
+    return () => document.removeEventListener(SELECT_ALL_EVENT, onSelectAll);
+  }, [cratesMode, view]);
 
   useLayoutEffect(() => {
     setPage(0);

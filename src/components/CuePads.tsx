@@ -4,8 +4,9 @@
  * Helpers stay in `cue-view.ts`. Restore diffs still paint there.
  */
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { Marker } from "../lib/api-types";
+import { jumpCue } from "../lib/player/player";
 import { cueSlots, extraCues, formatCueTime, slotColor } from "../lib/ui/cue-view";
 import { t } from "../lib/i18n";
 
@@ -23,8 +24,24 @@ export function CueSlot({ slot, cue }: CueSlotProps) {
   const color = slotColor(slot, cue?.color);
   const named = cue && typeof cue.name === "string" ? cue.name.trim() : "";
   const swatchStyle = color ? { background: color } satisfies CSSProperties : undefined;
+  const jumpable = Boolean(cue) && slot >= 0 && slot < 8;
+  function onJump(): void {
+    if (jumpable) jumpCue(slot);
+  }
+  function onKeyDown(event: ReactKeyboardEvent<HTMLDivElement>): void {
+    if (!jumpable) return;
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    jumpCue(slot);
+  }
   return (
-    <div className={cue ? "marker" : "marker marker-empty"}>
+    <div
+      className={cue ? "marker" : "marker marker-empty"}
+      role={jumpable ? "button" : undefined}
+      tabIndex={jumpable ? 0 : undefined}
+      onClick={jumpable ? onJump : undefined}
+      onKeyDown={jumpable ? onKeyDown : undefined}
+    >
       <span className="marker-slot">{slot >= 0 ? String(slot + 1) : ""}</span>
       <span className="swatch" style={swatchStyle} />
       <span>{cue ? formatCueTime(cue.start_ms) : "—"}</span>

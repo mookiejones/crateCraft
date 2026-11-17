@@ -27,6 +27,7 @@ import { state } from "../lib/state";
 import { drainReactScheduler, installPage } from "./test-page";
 import { mountTrackList, unmountTrackList } from "../lib/ui/virtual-scroll";
 import { renderCrates, renderFiles, renderList, wireLibrary } from "../lib/ui/views";
+import { patchSettings } from "../lib/ui/settings";
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -84,16 +85,33 @@ function libraryRows(): void {
 
 let toggles = 0;
 let sought: number[] = [];
+let jumps: number[] = [];
+let loads = 0;
+let zooms: number[] = [];
 
 function usePlayer(): void {
   toggles = 0;
   sought = [];
+  jumps = [];
+  loads = 0;
+  zooms = [];
   registerPlayerControls({
     togglePlayPause: () => {
       toggles += 1;
     },
     seekBy: (deltaSeconds: number) => {
       sought.push(deltaSeconds);
+    },
+    jumpCue: (slot: number) => {
+      jumps.push(slot);
+    },
+    playSelected: () => {
+      loads += 1;
+    },
+    next: () => undefined,
+    previous: () => undefined,
+    zoom: (direction: 1 | -1) => {
+      zooms.push(direction);
     },
   });
 }
@@ -548,5 +566,107 @@ describe("keyboard shortcuts", () => {
     document.body.focus();
     press({ key: "/" });
     expect(el("snapshots-status").textContent).toContain("Ctrl+K");
+  });
+
+  it("leaves Tab for native focus order from skip-to-content", () => {
+    el("skip-to-content").focus();
+    const event = press({ key: "Tab" });
+    expect(event.defaultPrevented).toBe(false);
+    expect(document.activeElement).toBe(el("skip-to-content"));
+  });
+
+  it("leaves Shift+Tab for native reverse focus order", () => {
+    el("skip-to-content").focus();
+    const event = press({ key: "Tab", shiftKey: true });
+    expect(event.defaultPrevented).toBe(false);
+    expect(document.activeElement).toBe(el("skip-to-content"));
+  });
+
+  it("cycles panes when Focus next pane is remapped off Tab", () => {
+    patchSettings({ shortcuts: { "focus-next-pane": [{ key: "F6" }] } });
+    try {
+      el("skip-to-content").focus();
+      const event = press({ key: "F6" });
+      expect(event.defaultPrevented).toBe(true);
+    } finally {
+      patchSettings({ shortcuts: {} });
+    }
+  });
+
+  it("plays or pauses from W", () => {
+    usePlayer();
+    document.body.focus();
+    const event = press({ key: "w" });
+    expect(toggles).toBe(1);
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("plays from a remapped play-pause key", () => {
+    patchSettings({ shortcuts: { "play-pause": [{ key: "q" }] } });
+    usePlayer();
+    document.body.focus();
+    press({ key: "q" });
+    expect(toggles).toBe(1);
+    press({ key: "w" });
+    expect(toggles).toBe(1);
+  });
+
+  it("loads the selected track from Shift+Left", () => {
+    usePlayer();
+    document.body.focus();
+    const event = press({ key: "ArrowLeft", shiftKey: true });
+    expect(loads).toBe(1);
+    expect(sought).toEqual([]);
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("jumps cue pad 1 from the 1 key", () => {
+    usePlayer();
+    document.body.focus();
+    const event = press({ key: "1" });
+    expect(jumps).toEqual([0]);
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("seeks back from Alt+E", () => {
+    usePlayer();
+    document.body.focus();
+    const event = press({ key: "e", altKey: true });
+    expect(sought).toEqual([-SEEK_SECONDS]);
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("moves to the next crate from Ctrl+Shift+Down", () => {
+    state.rootId = 1;
+    state.crates = [
+      { id: 2, name: "House", parent: 1, order: 0 },
+      { id: 3, name: "Deep", parent: 1, order: 1 },
+    ];
+    state.activeCrate = "all";
+    renderCrates();
+    document.body.focus();
+    const event = press({ key: "ArrowDown", ctrlKey: true, shiftKey: true });
+    expect(state.activeCrate).toBe(2);
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("still dismisses from Esc", () => {
+    el("search").value = "house";
+    state.query = "house";
+    document.body.focus();
+    press({ key: "Escape" });
+    expect(el("search").value).toBe("");
+    expect(state.query).toBe("");
+  });
+
+  it("zooms the waveform from + and -", () => {
+    usePlayer();
+    document.body.focus();
+    const plus = press({ key: "+", shiftKey: true });
+    expect(zooms).toEqual([1]);
+    expect(plus.defaultPrevented).toBe(true);
+    const minus = press({ key: "-" });
+    expect(zooms).toEqual([1, -1]);
+    expect(minus.defaultPrevented).toBe(true);
   });
 });

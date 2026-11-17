@@ -9,14 +9,29 @@
 
 import { el } from "../dom";
 import { t, type MessageKey } from "../i18n";
-import { notifySettings, settingsIslandMounted } from "./settings";
+import { getPlayerState } from "../player/player";
+import { getSettingsState, notifySettings, settingsIslandMounted } from "./settings";
 import { state } from "../state";
 import { setTooltip } from "./tooltip";
 import { tips } from "./tooltip-strings";
 import { moveTrackList, openTrackList } from "./virtual-scroll";
 import { closeQuickOpen, openQuickOpen, quickOpenIsOpen, wireQuickOpen } from "./quick-open";
 import { isSharedDialogId, setSharedDialogOpen } from "./shared-dialog";
-import { focusCrateItem, moveFileList, openFileList, selectCrate, setMode } from "./views";
+import { getTrackListActions, selectAllVisibleTracks } from "./track-list-store";
+import {
+  deleteCrate,
+  focusCrateItem,
+  moveFileList,
+  openFileList,
+  removeTrack,
+  selectCrate,
+  selectTrack,
+  setMode,
+} from "./views";
+import { chordLabel, effectiveShortcuts, type ShortcutChord } from "./shortcut-catalog";
+
+export type { ShortcutChord } from "./shortcut-catalog";
+export { chordLabel } from "./shortcut-catalog";
 
 /** Seconds the seek keys pass to PlayerControls.seekBy. */
 export const SEEK_SECONDS = 5;
@@ -30,14 +45,11 @@ export const SEEK_SECONDS = 5;
 export interface PlayerControls {
   togglePlayPause(): void;
   seekBy(deltaSeconds: number): void;
-}
-
-export interface ShortcutChord {
-  /** KeyboardEvent.key value. */
-  key: string;
-  /** Ctrl on Windows and Linux, Command on macOS. */
-  mod?: boolean;
-  shift?: boolean;
+  jumpCue?(slot: number): void;
+  playSelected?(): void;
+  next?(): void;
+  previous?(): void;
+  zoom?(direction: 1 | -1): void;
 }
 
 export interface Shortcut {
@@ -249,18 +261,20 @@ export function registeredPlayer(): PlayerControls | null {
 /**
  * Return whether a key event matches one chord.
  *
- * Ctrl and Command both count as mod. Alt does not. "?" matches the
- * question-mark key whether or not Shift is reported with it.
+ * Ctrl and Command both count as mod. Alt matches chord.alt. "?" matches
+ * the question-mark key whether or not Shift is reported with it.
  *
  * @param chord Chord from the shortcut table.
  * @param event Key event.
  * @returns True when the event is that chord.
  */
 export function chordMatches(chord: ShortcutChord, event: KeyboardEvent): boolean {
-  if (event.altKey) return false;
   const mod = event.ctrlKey || event.metaKey;
   if (mod !== Boolean(chord.mod)) return false;
+  if (event.altKey !== Boolean(chord.alt)) return false;
   if (chord.key === "?") return event.key === "?" && !mod;
+  if (chord.key === "+") return event.key === "+" && !mod;
+  if (chord.key === "-") return event.key === "-" && !mod;
   if (event.shiftKey !== Boolean(chord.shift)) return false;
   if (chord.key === " ") return event.key === " ";
   return event.key === chord.key || event.key.toLowerCase() === chord.key.toLowerCase();
@@ -273,34 +287,19 @@ export function chordMatches(chord: ShortcutChord, event: KeyboardEvent): boolea
  * @returns The shortcut, or null when nothing matches.
  */
 export function matchShortcut(event: KeyboardEvent): Shortcut | null {
-  for (const shortcut of SHORTCUTS) {
-    if (shortcut.keys.some((chord) => chordMatches(chord, event))) return shortcut;
+  for (const row of effectiveShortcuts(getSettingsState().shortcuts)) {
+    if (!row.keys.some((chord) => chordMatches(chord, event))) continue;
+    const sheet = SHORTCUTS.find((shortcut) => shortcut.id === row.id);
+    if (sheet) return sheet;
+    return {
+      id: row.id,
+      label: row.id,
+      group: "",
+      keys: row.keys,
+      whileTyping: false,
+    };
   }
   return null;
-}
-
-/**
- * Return the cheat-sheet text for one chord.
- *
- * The sheet prints this instead of a second copy of the binding.
- *
- * @param chord Chord from the shortcut table.
- * @returns The label, such as Ctrl/Cmd+K or Esc.
- */
-export function chordLabel(chord: ShortcutChord): string {
-  const names: Record<string, string> = {
-    Escape: "Esc",
-    " ": "Space",
-    ArrowLeft: "Left arrow",
-    ArrowRight: "Right arrow",
-    ArrowUp: "Up arrow",
-    ArrowDown: "Down arrow",
-    Enter: "Enter",
-  };
-  const named = names[chord.key];
-  if (named) return named;
-  const key = chord.key.length === 1 ? chord.key.toUpperCase() : chord.key;
-  return chord.mod ? `Ctrl/Cmd+${key}` : key;
 }
 
 /**
@@ -376,19 +375,32 @@ function onKey(event: KeyboardEvent): void {
   if (!shortcut) return;
   if (isTypingTarget(event.target) && !shortcut.whileTyping) return;
   if (shortcut.id !== "dismiss" && topDialog()) return;
-  if (skipsListKey(shortcut.id, event.target)) return;
+  if (skipsListKey(shortcut.id, event)) return;
   if (event.repeat && !repeats(shortcut.id)) return;
   runShortcut(shortcut.id, event);
 }
 
 function repeats(id: string): boolean {
-  return id === "list-previous" || id === "list-next" || id === "seek-back" || id === "seek-forward";
+  return (
+    id === "list-previous" ||
+    id === "list-next" ||
+    id === "seek-back" ||
+    id === "seek-forward" ||
+    id === "crate-previous" ||
+    id === "crate-next" ||
+    id === "waveform-zoom-in" ||
+    id === "waveform-zoom-out"
+  );
 }
 
-function skipsListKey(id: string, target: EventTarget | null): boolean {
+function skipsListKey(id: string, event: KeyboardEvent): boolean {
+  const target = event.target;
   if (!(target instanceof HTMLElement)) return false;
-  if (id === "play-pause" && target.closest("button, a, summary, input, select, textarea, [role='button']")) return true;
+  if (id === "play-pause" && event.key === " " && target.closest("button, a, summary, input, select, textarea, [role='button']")) {
+    return true;
+  }
   if (id === "list-open" && target.closest("button, a, summary, textarea, select")) return true;
+  if (id === "focus-next-pane" && event.key === "Tab") return true;
   return false;
 }
 
@@ -404,7 +416,7 @@ function topDialog(): HTMLElement | null {
   return mui ?? null;
 }
 
-const HANDLERS: { [K in ShortcutId]: (event: KeyboardEvent) => void } = {
+const HANDLERS: Record<string, (event: KeyboardEvent) => void> = {
   "focus-search": (event) => {
     event.preventDefault();
     focusCurrentSearch();
@@ -471,11 +483,128 @@ const HANDLERS: { [K in ShortcutId]: (event: KeyboardEvent) => void } = {
     snapshotCursor = 0;
     el("snapshots-list").focus();
   },
+  "load-selected": (event) => {
+    if (!player?.playSelected) return;
+    event.preventDefault();
+    player.playSelected();
+  },
+  "play-next": (event) => {
+    if (!player?.next) return;
+    event.preventDefault();
+    player.next();
+  },
+  "play-previous": (event) => {
+    if (!player?.previous) return;
+    event.preventDefault();
+    player.previous();
+  },
+  "crate-previous": (event) => {
+    event.preventDefault();
+    moveCrate(-1);
+  },
+  "crate-next": (event) => {
+    event.preventDefault();
+    moveCrate(1);
+  },
+  "focus-next-pane": (event) => {
+    event.preventDefault();
+    focusNextPane();
+  },
+  "reveal-track": (event) => {
+    if (state.selectedId == null) return;
+    event.preventDefault();
+    void getTrackListActions().revealTrack(state.selectedId);
+  },
+  "locate-playing": (event) => {
+    const id = getPlayerState().trackId;
+    if (id === null) return;
+    event.preventDefault();
+    void selectTrack(id);
+  },
+  "select-all": (event) => {
+    event.preventDefault();
+    selectAllVisibleTracks();
+  },
+  "delete-row": (event) => {
+    event.preventDefault();
+    void deleteCrate();
+  },
+  "remove-from-library": (event) => {
+    if (state.selectedId == null) return;
+    event.preventDefault();
+    void removeTrack(state.selectedId);
+  },
+  "trash-track": (event) => {
+    event.preventDefault();
+  },
+  "view-prepare": (event) => {
+    event.preventDefault();
+    const select = el("space");
+    select.value = "Prepare";
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+  },
+  "waveform-zoom-in": (event) => {
+    if (!player?.zoom) return;
+    event.preventDefault();
+    player.zoom(1);
+  },
+  "waveform-zoom-out": (event) => {
+    if (!player?.zoom) return;
+    event.preventDefault();
+    player.zoom(-1);
+  },
 };
 
+for (let slot = 0; slot < 8; slot += 1) {
+  HANDLERS[`cue-jump-${slot + 1}`] = (event) => {
+    if (!player?.jumpCue) return;
+    event.preventDefault();
+    player.jumpCue(slot);
+  };
+}
+
 function runShortcut(id: string, event: KeyboardEvent): void {
-  const handler = HANDLERS[id as ShortcutId];
-  handler(event);
+  HANDLERS[id]?.(event);
+}
+
+function moveCrate(delta: number): void {
+  const items = [...el("crate-list").querySelectorAll<HTMLButtonElement>(".crate")];
+  if (!items.length) return;
+  const selected = items.findIndex((item) => item.getAttribute("aria-selected") === "true");
+  const start = selected >= 0 ? selected : 0;
+  const next = Math.max(0, Math.min(items.length - 1, start + delta));
+  const item = items[next];
+  if (!item) return;
+  focusCrateItem(item);
+  const raw = item.dataset.id;
+  const id = raw === "all" ? "all" : Number(raw);
+  if (raw === "all" || Number.isInteger(id)) selectCrate(id as number | "all");
+}
+
+function focusNextPane(): void {
+  const tree = el("crate-list");
+  const list = el("list");
+  const detail = el("detail");
+  const active = document.activeElement;
+  if (!(active instanceof Node) || tree.contains(active) || active === tree) {
+    list.focus();
+    return;
+  }
+  if (list.contains(active) || active === list) {
+    const focusable = detail.querySelector<HTMLElement>(
+      "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+    );
+    if (focusable) {
+      focusable.focus();
+      return;
+    }
+    detail.tabIndex = -1;
+    detail.focus();
+    return;
+  }
+  const selected = tree.querySelector<HTMLButtonElement>(".crate[aria-selected='true']");
+  if (selected) focusCrateItem(selected);
+  else tree.focus();
 }
 
 function focusCurrentSearch(): void {

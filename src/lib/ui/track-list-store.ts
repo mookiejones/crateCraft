@@ -189,6 +189,21 @@ export function emitTrackList(): void {
   for (const listener of listeners) listener();
 }
 
+/** Dispatched when Ctrl/Cmd+A should select every visible crate row. */
+export const SELECT_ALL_EVENT = "cratecraft-select-all";
+
+/**
+ * Ask the track list to select every visible row.
+ *
+ * The Data Grid owns the checkbox selection. This event is how the
+ * shortcut table reaches it. History and other modes ignore it.
+ *
+ * @returns {void}
+ */
+export function selectAllVisibleTracks(): void {
+  document.dispatchEvent(new Event(SELECT_ALL_EVENT));
+}
+
 /**
  * Subscribe to list and detail changes.
  *

@@ -14,17 +14,12 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { MuiThemeProof } from "../components/MuiThemeProof";
+import { ShortcutTable } from "../components/ShortcutTable";
 import { useSettings } from "../containers/SettingsContext";
 import { LANGUAGES, LANGUAGE_NAMES, t } from "../lib/i18n";
 import { COLORWAYS, type Colorway } from "../lib/ui/settings";
-import { cheatSheetModel, chordLabel } from "../lib/ui/shortcuts";
 import { state } from "../lib/state";
 import { setTooltip } from "../lib/ui/tooltip";
 import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
@@ -51,52 +46,6 @@ function telemetryNote(): string {
 function selectValue(event: { target: EventTarget }): string {
   const target = event.target;
   return target instanceof HTMLSelectElement ? target.value : "";
-}
-
-/**
- * Cheat-sheet tables from the shortcut list.
- */
-function CheatSheet() {
-  const groups = cheatSheetModel();
-  return (
-    <Box id="shortcuts-section" className="shortcuts-section" component="section" aria-labelledby="shortcuts-title">
-      <Typography id="shortcuts-title" variant="h6" component="h3" tabIndex={-1} ref={tooltipRef(tips.shortcuts)}>
-        {t("shortcuts.title")}
-      </Typography>
-      <Typography id="shortcuts-intro" component="p">{t("shortcuts.intro")}</Typography>
-      <Box id="shortcuts-body">
-        {groups.map((group) => (
-          <Box key={group.group} sx={{ mt: 2 }}>
-            <Typography variant="subtitle1" component="h3">{t(group.headingKey)}</Typography>
-            {group.playNote ? <Typography className="dialog-note" component="p">{t("shortcuts.playNote")}</Typography> : null}
-            <Table className="shortcut-table" size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell component="th" scope="col">{t("shortcuts.action")}</TableCell>
-                  <TableCell component="th" scope="col">{t("shortcuts.key")}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {group.rows.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell component="th" scope="row">{t(row.actionKey)}</TableCell>
-                    <TableCell>
-                      {row.chords.map((chord, index) => (
-                        <span key={`${row.id}-${index}`}>
-                          {index > 0 ? " or " : null}
-                          <kbd>{chordLabel(chord)}</kbd>
-                        </span>
-                      ))}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
-        ))}
-      </Box>
-    </Box>
-  );
 }
 
 /**
@@ -238,7 +187,7 @@ export function SettingsPanel() {
       <Typography id="language-status" className="dialog-status" component="p" role="status" aria-live="polite">
         {settings.languageStatus}
       </Typography>
-      <CheatSheet />
+      <ShortcutTable />
       <Box className="about" component="section" aria-labelledby="about-title">
         <Typography id="about-title" variant="h6" component="h3">{t("settings.about")}</Typography>
         <Typography id="about-version" className="about-version" component="p">{settings.aboutVersion}</Typography>
