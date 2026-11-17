@@ -51,6 +51,8 @@ export interface WaveformController {
   relabel(): void;
   pixelsPerSecond(): number;
   zoom(direction: 1 | -1): void;
+  /** Constructor compact flag. Compact has no wheel zoom. */
+  isCompact(): boolean;
 }
 
 export type WaveformAttach = {
@@ -91,7 +93,7 @@ export function mountWaveform(
 ): WaveformController {
   const engine = new WaveformEngine(compact);
   host.classList.add("player-wave");
-  if (compact) host.classList.add("player-wave-compact");
+  host.classList.toggle("player-wave-compact", compact);
   host.hidden = true;
   if (hooks) engine.setClock(hooks);
   const panel = createElement(WaveformPanel, { engine, host, compact });
@@ -365,6 +367,15 @@ export class WaveformEngine implements WaveformController {
   }
 
   /**
+   * Whether this engine is the compact AppBar strip.
+   *
+   * @returns The constructor flag.
+   */
+  isCompact(): boolean {
+    return this.compact;
+  }
+
+  /**
    * Step zoom in or out around the playhead.
    *
    * @param direction Positive zooms in.
@@ -570,7 +581,7 @@ export class WaveformEngine implements WaveformController {
 
   private paintDetail(time: number): void {
     if (!this.tiles || !this.parsed || !this.detail) return;
-    const size = sizeCanvas(this.detail, 96);
+    const size = sizeCanvas(this.detail, 160);
     if (!size) return;
     const context = this.detail.getContext("2d");
     if (!context) return;

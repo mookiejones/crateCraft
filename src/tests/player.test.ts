@@ -26,6 +26,7 @@ import {
   previous,
   seek,
   seekBy,
+  setPlayerWaveformCompact,
   setVolume,
   subscribe,
   togglePlayPause,
@@ -94,6 +95,31 @@ describe("player chrome", () => {
     expect(document.querySelector(".player-seek .MuiSlider-root")).toBeNull();
     expect(document.querySelector("[aria-label='Zoom in']")).toBeNull();
     expect(document.querySelector("[aria-label='Zoom out']")).toBeNull();
+  });
+
+  it("remounts the AppBar wave when compact changes and keeps currentTime", () => {
+    state.byId.set(4, track(4, "Night"));
+    fake.duration = 20;
+    play(4);
+    seek(7);
+    expect(getPlayerState().currentTime).toBe(7);
+    expect(fake.currentTime).toBe(7);
+    const wave = document.querySelector(".player-wave");
+    expect(wave?.classList.contains("player-wave-compact")).toBe(true);
+    expect(document.querySelector("[aria-label='Zoom in']")).toBeNull();
+    setPlayerWaveformCompact(false);
+    expect(document.querySelector(".player-wave")?.classList.contains("player-wave-compact")).toBe(
+      false,
+    );
+    expect(document.querySelector("[aria-label='Zoom in']")).not.toBeNull();
+    expect(document.querySelector("[aria-label='Zoom out']")).not.toBeNull();
+    expect(getPlayerState().currentTime).toBe(7);
+    expect(fake.currentTime).toBe(7);
+    expect(getPlayerState().trackId).toBe(4);
+    expect(fake.src).toContain("id=4");
+    setPlayerWaveformCompact(false);
+    expect(getPlayerState().currentTime).toBe(7);
+    expect(fake.currentTime).toBe(7);
   });
 });
 

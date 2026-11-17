@@ -9,6 +9,7 @@ import {
   DRAWER_MINI_CUTOFF,
   DRAWER_MINI_WIDTH,
   DRAWER_WIDTH,
+  playerDeckIsCompact,
   shareCratesPanes,
   SPLITTER_WIDTH,
   TRACK_LIST_MIN_WIDTH,
@@ -86,6 +87,32 @@ describe("Crates share-space", () => {
     expect(appCss).toMatch(/@media \(max-width: 639px\)/);
     const desktopStack = appCss.match(/@media \(max-width: 980px\) \{[^}]*flex-direction:\s*column/);
     expect(desktopStack).toBeNull();
+  });
+});
+
+describe("playerDeckIsCompact", () => {
+  it("is compact at the mini cutoff and full above it", () => {
+    expect(DRAWER_MINI_CUTOFF).toBe(980);
+    expect(playerDeckIsCompact(980)).toBe(true);
+    expect(playerDeckIsCompact(981)).toBe(false);
+    expect(playerDeckIsCompact(0)).toBe(true);
+  });
+});
+
+describe("player deck CSS", () => {
+  it("sets the full-deck detail to 160px and overlays zoom on the wave", () => {
+    expect(appCss).toMatch(/\.waveform-detail-wrap\s*\{[^}]*height:\s*160px/);
+    expect(appCss).toMatch(/\.waveform-detail\s*\{[^}]*height:\s*160px/);
+    expect(appCss).not.toMatch(/\.player-wave\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s+44px/);
+    expect(appCss).toMatch(
+      /\.player-wave:not\(\.player-wave-compact\)\s+\.waveform-zoom\s*\{[^}]*position:\s*absolute[^}]*right:/,
+    );
+  });
+
+  it("keeps cue pads on a 4 by 22px grid that does not stretch", () => {
+    expect(appCss).toMatch(/\.player-cue-pads\s*\{[^}]*grid-template-columns:\s*repeat\(4,\s*22px\)/);
+    expect(appCss).toMatch(/\.player-cue-pad\s*\{[^}]*width:\s*22px/);
+    expect(appCss).toMatch(/\.player-cue-pad\s*\{[^}]*height:\s*22px/);
   });
 });
 

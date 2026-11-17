@@ -1910,10 +1910,9 @@ dialog .settings-field select {
 }
 
 .player-wave {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 44px;
-  gap: var(--space-2);
-  align-items: start;
+  display: block;
+  position: relative;
+  min-width: 0;
   padding: var(--space-2) var(--space-4) 0;
 }
 
@@ -1928,6 +1927,36 @@ dialog .settings-field select {
   height: 32px;
 }
 
+.player-wave:not(.player-wave-compact) .waveform-zoom {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-4);
+  z-index: 1;
+  width: auto;
+}
+
+.player-cue-pads {
+  display: grid;
+  grid-template-columns: repeat(4, 22px);
+  grid-auto-rows: 22px;
+  gap: var(--space-1);
+  width: max-content;
+}
+
+.player-cue-pad {
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  font-size: var(--font-caption);
+  line-height: 22px;
+  text-align: center;
+}
+
 .player-wave-main {
   min-width: 0;
   display: flex;
@@ -1937,7 +1966,7 @@ dialog .settings-field select {
 
 .waveform-detail-wrap {
   position: relative;
-  height: 96px;
+  height: 160px;
   border-radius: 4px;
   background: var(--color-bg);
   overflow: hidden;
@@ -1951,7 +1980,7 @@ dialog .settings-field select {
 }
 
 .waveform-detail {
-  height: 96px;
+  height: 160px;
 }
 
 .waveform-reading,
