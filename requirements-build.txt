@@ -1,9 +1,9 @@
 pywebview==6.2.1
 pythonnet==3.2.1; sys_platform == "win32"
 clr-loader==0.3.1; sys_platform == "win32"
-sentry-sdk==2.74.0
-posthog==7.84.1
-miniaudio==1.71
+sentry-sdk==2.75.0
+posthog==7.89.0
+miniaudio==1.73
 cffi==2.1.1
 pycparser==3.12
 numpy==2.5.4
