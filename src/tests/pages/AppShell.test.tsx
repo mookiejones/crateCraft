@@ -236,6 +236,8 @@ describe("AppShell", () => {
       expect(bar?.querySelector(".waveform-overview canvas")).not.toBeNull();
       expect(bar?.querySelector("[aria-label='Zoom in']")).toBeNull();
       expect(bar?.querySelector("[aria-label='Zoom out']")).toBeNull();
+      expect(isFollowing(bar?.querySelector(".player-play"), bar?.querySelector(".player-wave-slot"))).toBe(true);
+      expect(isFollowing(bar?.querySelector(".player-play"), bar?.querySelector(".waveform-overview"))).toBe(true);
       expect(document.querySelector(".app-bar-actions")?.contains(document.getElementById("open-help"))).toBe(true);
 
       flushSync(() => {
@@ -258,7 +260,7 @@ describe("AppShell", () => {
     }
   });
 
-  it("docks the full player deck in the AppBar on a wide window", async () => {
+  it("docks the full player deck in the AppBar on a wide window", () => {
     const originalWidth = window.innerWidth;
     setInnerWidth(1200);
     remountShell();
@@ -281,10 +283,9 @@ describe("AppShell", () => {
       expect(bar?.querySelectorAll(".player-play")).toHaveLength(1);
       expect(bar?.querySelector(".player-title")?.textContent).toBe("Night");
       expect(bar?.querySelector(".player-time")).not.toBeNull();
-      await vi.waitFor(() => {
-        expect(bar?.querySelector("[aria-label='Zoom in']")).not.toBeNull();
-      });
+      expect(bar?.querySelector("[aria-label='Zoom in']")).not.toBeNull();
       expect(bar?.querySelector("[aria-label='Zoom out']")).not.toBeNull();
+      expect(bar?.querySelector(".player-wave-compact")).toBeNull();
       const pads = bar?.querySelector(".player-cue-pads");
       const waveSlot = bar?.querySelector(".player-wave-slot");
       const chip = document.getElementById("library-generation");
@@ -294,10 +295,16 @@ describe("AppShell", () => {
       expect(isFollowing(pads, waveSlot)).toBe(false);
       expect(isFollowing(chip, waveSlot)).toBe(true);
       const toolbar = document.querySelector(".MuiToolbar-root");
+      const playerSlot = document.querySelector(".app-bar-player");
+      const actions = document.querySelector(".app-bar-actions");
+      const toggle = document.getElementById("drawer-toggle");
       expect(toolbar).toBeInstanceOf(HTMLElement);
-      expect(getComputedStyle(toolbar as HTMLElement).alignItems).toBe("stretch");
+      expect(getComputedStyle(toolbar as HTMLElement).alignItems).toBe("flex-start");
       expect(getComputedStyle(toolbar as HTMLElement).minHeight).toBe("auto");
-      expect(document.querySelector(".app-bar-actions")?.contains(document.getElementById("open-help"))).toBe(true);
+      expect(getComputedStyle(playerSlot as HTMLElement).alignSelf).toBe("stretch");
+      expect(getComputedStyle(actions as HTMLElement).alignSelf).toBe("flex-start");
+      expect(getComputedStyle(toggle as HTMLElement).alignSelf).toBe("flex-start");
+      expect(actions?.contains(document.getElementById("open-help"))).toBe(true);
 
       flushSync(() => {
         seek(2);
@@ -309,16 +316,26 @@ describe("AppShell", () => {
       flushSync(() => {
         window.dispatchEvent(new Event("resize"));
       });
-      await vi.waitFor(() => {
-        expect(bar?.querySelector(".player-wave-compact")).not.toBeNull();
-      });
       expect(getPlayerState().currentTime).toBe(2);
       expect(fake.currentTime).toBe(2);
       expect(bar?.querySelector(".player-cue-pads")).toBeNull();
       expect(bar?.querySelector(".player-deck-compact")).not.toBeNull();
+      expect(bar?.querySelector(".player-wave-compact")).not.toBeNull();
       expect(bar?.querySelector(".waveform-overview canvas")).not.toBeNull();
       expect(bar?.querySelector("[aria-label='Zoom in']")).toBeNull();
+      expect(isFollowing(bar?.querySelector(".player-play"), bar?.querySelector(".player-wave-slot"))).toBe(true);
       expect(document.querySelector(".app-bar-actions")?.contains(document.getElementById("open-help"))).toBe(true);
+
+      setInnerWidth(1200);
+      flushSync(() => {
+        window.dispatchEvent(new Event("resize"));
+      });
+      expect(getPlayerState().currentTime).toBe(2);
+      expect(fake.currentTime).toBe(2);
+      expect(bar?.querySelector("[aria-label='Zoom in']")).not.toBeNull();
+      expect(bar?.querySelector(".player-cue-pads")).not.toBeNull();
+      expect(bar?.querySelector(".player-wave-compact")).toBeNull();
+      expect(bar?.querySelector(".player-deck")).not.toBeNull();
 
       flushSync(() => {
         pause();

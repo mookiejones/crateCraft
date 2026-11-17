@@ -538,11 +538,12 @@ export function mountPlayer(host?: HTMLElement | null): void {
   const element = ensureMedia();
   root.replaceChildren();
   if (element instanceof Node) root.append(element);
-  waveHost = document.createElement("div");
-  waveform = mountWaveform(waveHost, undefined, true);
   const controls = document.createElement("div");
   root.append(controls);
   barRoot = mountIsland(controls, createElement(PlayerBar));
+  const compact = controls.querySelector(".player-deck-compact") !== null;
+  waveHost = document.createElement("div");
+  waveform = mountWaveform(waveHost, undefined, compact);
   const slot = controls.querySelector(".player-wave-slot");
   if (slot instanceof HTMLElement) slot.append(waveHost);
   else controls.append(waveHost);

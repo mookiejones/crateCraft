@@ -1787,26 +1787,6 @@ dialog .settings-field select {
   width: 100%;
 }
 
-.player-controls.player-deck-compact .player-play {
-  order: 1;
-}
-
-.player-controls.player-deck-compact .player-title {
-  order: 2;
-}
-
-.player-controls.player-deck-compact .player-wave-slot {
-  order: 3;
-}
-
-.player-controls.player-deck-compact .player-time {
-  order: 4;
-}
-
-.player-controls.player-deck-compact .player-status {
-  order: 5;
-}
-
 .player-deck-row {
   display: flex;
   align-items: center;

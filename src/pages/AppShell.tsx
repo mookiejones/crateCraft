@@ -6,7 +6,8 @@
  * toggle, `#player-bar` into the Toolbar flex slot between the chip and
  * Help, `#open-help` and `#open-settings` to the AppBar end (`ml: auto`
  * so they stay right while the player is hidden). A loaded track on a
- * wide window stretches the Toolbar for the player deck. `#status`
+ * wide window stretches the player slot; ☰, heading, chip, and Help
+ * stay top-aligned. `#status`
  * into a persistent lock bar under the AppBar, then a MUI Alert for the
  * last action notice, `#views` into the Drawer, and `#app-body` into
  * Main. The player slot stays hidden while `trackId` is null. `paintNav`
@@ -141,7 +142,7 @@ export function AppShell() {
             gap: 2,
             minHeight: deckOpen ? "auto" : 64,
             py: 1,
-            alignItems: deckOpen ? "stretch" : "center",
+            alignItems: deckOpen ? "flex-start" : "center",
             [theme.breakpoints.up("sm")]: {
               minHeight: deckOpen ? "auto" : 64,
             },
@@ -157,6 +158,7 @@ export function AppShell() {
             aria-label={open ? t("shell.drawerHide") : t("shell.drawerShow")}
             onClick={toggleDrawer}
             ref={tooltipRef(tips.drawerToggle)}
+            sx={deckOpen ? { alignSelf: "flex-start" } : undefined}
           >
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
@@ -164,6 +166,7 @@ export function AppShell() {
             ref={headingSlot}
             className="app-bar-heading"
             sx={{
+              alignSelf: deckOpen ? "flex-start" : undefined,
               "& h1": {
                 margin: 0,
                 fontFamily: "var(--display)",
@@ -174,7 +177,11 @@ export function AppShell() {
               },
             }}
           />
-          <Box ref={generationSlot} className="app-bar-generation" />
+          <Box
+            ref={generationSlot}
+            className="app-bar-generation"
+            sx={deckOpen ? { alignSelf: "flex-start" } : undefined}
+          />
           <Box
             ref={playerSlot}
             className="app-bar-player"
@@ -184,12 +191,19 @@ export function AppShell() {
               minWidth: 0,
               display: hasTrack ? "flex" : "none",
               alignItems: deckOpen ? "stretch" : "center",
+              alignSelf: deckOpen ? "stretch" : undefined,
             }}
           />
           <Box
             ref={actionsSlot}
             className="app-bar-actions"
-            sx={{ display: "flex", gap: 1, flexShrink: 0, ml: "auto" }}
+            sx={{
+              display: "flex",
+              gap: 1,
+              flexShrink: 0,
+              ml: "auto",
+              alignSelf: deckOpen ? "flex-start" : undefined,
+            }}
           />
         </Toolbar>
       </AppBar>
