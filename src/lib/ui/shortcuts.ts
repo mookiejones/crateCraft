@@ -17,6 +17,9 @@ import { moveTrackList, openTrackList } from "./virtual-scroll";
 import { closeQuickOpen, openQuickOpen, quickOpenIsOpen, wireQuickOpen } from "./quick-open";
 import { isSharedDialogId, setSharedDialogOpen } from "./shared-dialog";
 import { focusCrateItem, moveFileList, openFileList, selectCrate, setMode } from "./views";
+import type { ShortcutChord } from "./shortcut-catalog";
+
+export type { ShortcutChord } from "./shortcut-catalog";
 
 /** Seconds the seek keys pass to PlayerControls.seekBy. */
 export const SEEK_SECONDS = 5;
@@ -30,14 +33,6 @@ export const SEEK_SECONDS = 5;
 export interface PlayerControls {
   togglePlayPause(): void;
   seekBy(deltaSeconds: number): void;
-}
-
-export interface ShortcutChord {
-  /** KeyboardEvent.key value. */
-  key: string;
-  /** Ctrl on Windows and Linux, Command on macOS. */
-  mod?: boolean;
-  shift?: boolean;
 }
 
 export interface Shortcut {
@@ -249,17 +244,17 @@ export function registeredPlayer(): PlayerControls | null {
 /**
  * Return whether a key event matches one chord.
  *
- * Ctrl and Command both count as mod. Alt does not. "?" matches the
- * question-mark key whether or not Shift is reported with it.
+ * Ctrl and Command both count as mod. Alt matches chord.alt. "?" matches
+ * the question-mark key whether or not Shift is reported with it.
  *
  * @param chord Chord from the shortcut table.
  * @param event Key event.
  * @returns True when the event is that chord.
  */
 export function chordMatches(chord: ShortcutChord, event: KeyboardEvent): boolean {
-  if (event.altKey) return false;
   const mod = event.ctrlKey || event.metaKey;
   if (mod !== Boolean(chord.mod)) return false;
+  if (event.altKey !== Boolean(chord.alt)) return false;
   if (chord.key === "?") return event.key === "?" && !mod;
   if (event.shiftKey !== Boolean(chord.shift)) return false;
   if (chord.key === " ") return event.key === " ";
