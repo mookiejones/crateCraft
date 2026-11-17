@@ -191,6 +191,8 @@ describe("TrackListContext", () => {
     });
     expect(host.querySelector(".row-play")).toBeNull();
     expect(host.querySelectorAll(".marker")).toHaveLength(8);
+    expect(host.querySelectorAll("button.player-cue-pad")).toHaveLength(0);
+    expect(host.querySelector(".marker")?.tagName).toBe("DIV");
     expect(host.querySelector(".marker-slot")?.textContent).toBe("1");
     expect((host.querySelector(".swatch") as HTMLElement).style.background).toBe("var(--cue-slot-1)");
     expect(host.textContent).not.toContain("Beatgrid");
