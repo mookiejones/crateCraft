@@ -73,6 +73,29 @@ describe("field-edit engine", () => {
     expect(getNotice()?.text).toBe("Wrote House on 1 track.");
   });
 
+  it("posts files true on preview and apply when asked", async () => {
+    postJSON.mockResolvedValueOnce(preview);
+    await previewFieldEdit([1, 2], "genre", "House", true);
+    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+      action: "edit-preview",
+      space: "Serato Library",
+      ids: [1, 2],
+      field: "genre",
+      value: "House",
+      files: true,
+    });
+    postJSON.mockResolvedValueOnce(written);
+    await applyFieldEdit([1, 2], "genre", "House", true);
+    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+      action: "edit-apply",
+      space: "Serato Library",
+      ids: [1, 2],
+      field: "genre",
+      value: "House",
+      files: true,
+    });
+  });
+
   it("does not reload when the plan did not write", async () => {
     postJSON.mockResolvedValueOnce(preview);
     await applyFieldEdit([1, 2], "genre", "House");

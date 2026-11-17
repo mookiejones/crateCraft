@@ -28,6 +28,7 @@ export type FieldEditRequest = {
   ids: readonly number[];
   field: string;
   value: string;
+  files?: boolean;
 };
 
 const FIELD_LABELS: Record<EditField, MessageKey> = {
@@ -71,7 +72,7 @@ export function fieldEditLabel(field: EditField): string {
  * @returns Fingerprint compared on Apply.
  */
 export function fieldEditFingerprint(request: FieldEditRequest): string {
-  return `${request.ids.join(",")}|${request.field}|${request.value}`;
+  return `${request.ids.join(",")}|${request.field}|${request.value}|${request.files ? "1" : "0"}`;
 }
 
 /**

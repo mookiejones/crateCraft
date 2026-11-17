@@ -302,6 +302,16 @@ export function TagsPanel() {
         >
           {t("gig.checkAgain")}
         </Button>
+        <label className="tags-write-files">
+          <input
+            id="tags-write-files"
+            type="checkbox"
+            defaultChecked={false}
+            disabled={health.tagsBusy}
+            ref={tooltipRef(tips.tagsWriteFiles)}
+          />
+          {t("tags.writeFiles")}
+        </label>
       </div>
       <p id="tags-hint" className="gig-note">
         {field === "titles" ? t("tags.introTitles") : t("tags.intro")}

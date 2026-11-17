@@ -8,6 +8,7 @@ import { setLocale } from "../../../lib/i18n";
 import {
   EDIT_FIELDS,
   fieldEditApplyReady,
+  fieldEditFingerprint,
   fieldEditLabel,
   fieldEditPreviewText,
   fieldEditSelectedText,
@@ -65,6 +66,14 @@ describe("field-edit-view", () => {
     expect(fieldEditLabel("name")).toBe("Título");
     expect(fieldEditLabel("genre")).toBe("Género");
     setLocale("en");
+  });
+
+  it("puts the files flag in the Apply fingerprint", () => {
+    expect(fieldEditFingerprint(current)).toBe("1,2|genre|House|0");
+    expect(fieldEditFingerprint({ ...current, files: true })).toBe("1,2|genre|House|1");
+    expect(
+      fieldEditApplyReady(plan, current, { ...current, files: true }, true, false),
+    ).toBe(false);
   });
 
   it("keeps Apply off until the preview matches the current field, value, and ids", () => {

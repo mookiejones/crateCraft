@@ -53,7 +53,7 @@ The columns are a checkbox, then **Play**, **Title**, **Artist**, **BPM**, **Key
 1. Type in **Search tracks**. A track matches when the words appear in the title, artist, album, genre, key, or file name. Choose **Comments**, **Grouping**, or **Composer** in the field menu to search that field. Filter words: `bpm:120-128`, `bpm:124~3`, `bpm:none`, `key:8A`, `key:none`, `mix:8A`, `missing:yes`, `nokeybpm:yes`, `cues:none`, `comments:`, `grouping:`, and `composer:`. `missing:yes` is a missing file on a connected drive. `nokeybpm:yes` is a blank key or no BPM. `cues:none` matches a track the page already knows has no cue points. The list load does not open every audio file.
 2. Click a column heading to sort. Click it again to reverse the sort. Numbers start high to low. Words start at A.
 3. Click a row to open it on the right. [Track details](tags.md) explains that pane.
-4. Check two or more rows to rewrite one text field on those tracks. Choose the field, type the value, click **Review**, then **Apply**. Apply stays off until Review matches, the library is writable, and at least one row would change. Quit Serato first. Audio files stay as they are. History has no checkboxes.
+4. Check two or more rows to rewrite one text field on those tracks. Choose the field, type the value, click **Review**, then **Apply**. Apply stays off until Review matches, the library is writable, and at least one row would change. Check **Write to files too** to also write ID3 and MP4. Quit Serato first. History has no checkboxes.
 
 A row can show **missing** or **stems**. Untitled tracks read **Untitled**.
 

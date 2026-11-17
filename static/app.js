@@ -12962,6 +12962,7 @@ Error generating stack: ` + x.message + `
       other: "{count} tracks selected."
     },
     "fieldEdit.value": "Value",
+    "fieldEdit.writeFiles": "Write to files too",
     "files.andMore": "And {count} more.",
     "files.browseElsewhere": "Browse elsewhere…",
     "files.changeCrates": "Crates: {crates}.",
@@ -13908,10 +13909,10 @@ Error generating stack: ` + x.message + `
     "tags.column.tracks": "Tracks",
     "tags.field": "Field",
     "tags.genre": "Genre",
-    "tags.introTitles": "Strips track numbers, URLs, and (Original Mix). Moves feat. into remixer when remixer is empty. Title-cases ALL CAPS or all lowercase. Writes the library, not the audio files. Quit Serato first.",
+    "tags.introTitles": "Strips track numbers, URLs, and (Original Mix). Moves feat. into remixer when remixer is empty. Title-cases ALL CAPS or all lowercase. Writes the library. Check Write to files too for MP3 and M4A. Quit Serato first.",
     "tags.group": "{name} — {spellings}, {tracks}",
     "tags.heading": "Tag spellings",
-    "tags.intro": "Pick one spelling per group. Writes the library, not the audio files. Quit Serato first.",
+    "tags.intro": "Pick one spelling per group. Writes the library. Check Write to files too for MP3 and M4A. Quit Serato first.",
     "tags.noChanges": "Every track in this group already uses that spelling.",
     "tags.preview": "Review",
     "tags.mappingSummary": {
@@ -13960,6 +13961,7 @@ Error generating stack: ` + x.message + `
     },
     "tags.summaryTitlesClear": "Every title in this space already matches the cleanup rules.",
     "tags.titles": "Titles",
+    "tags.writeFiles": "Write to files too",
     "tags.titlesPreviewSummary": {
       one: "{count} title would change.",
       other: "{count} titles would change."
@@ -14038,11 +14040,12 @@ Error generating stack: ` + x.message + `
     "tooltip.expandCrate": "Show the crates nested under {name}.",
     "tooltip.exportM3u": "Download this list as a playlist file.",
     "tooltip.exportRekordbox": "Download a playlist file Rekordbox can open. You confirm before it downloads.",
-    "tooltip.fieldEditApply": "Write this value on the selected tracks. Quit Serato first. Audio files stay as they are.",
+    "tooltip.fieldEditApply": "Write this value on the selected tracks. Quit Serato first. Check Write to files too for MP3 and M4A.",
     "tooltip.fieldEditCheckbox": "Select this track for a bulk field edit.",
     "tooltip.fieldEditField": "Choose which field to rewrite on the selected tracks.",
     "tooltip.fieldEditPreview": "Show which selected tracks would change before writing the library.",
     "tooltip.fieldEditValue": "Type the value to write on the selected tracks.",
+    "tooltip.fieldEditWriteFiles": "Also write ID3 and MP4 tags on those tracks. Serato markers stay. FLAC is skipped.",
     "tooltip.fileShortcut": "{name} is a shortcut. It cannot be opened from here.",
     "tooltip.filesCancel": "Cancel. Nothing is changed. Esc.",
     "tooltip.filesConfirm": "Save this file change.",
@@ -14246,9 +14249,9 @@ Error generating stack: ` + x.message + `
     "tooltip.statsPeriod": "Limit most-played counts to this period. Idle tracks use Idle days, not this period.",
     "tooltip.statsRefresh": "Load play stats for this period.",
     "tooltip.statsTo": "Last day of a custom period.",
-    "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Audio files stay as they are.",
-    "tooltip.tagsApplyMappings": "Write saved genre and artist spellings on tracks that still use another form. Quit Serato first. Audio files stay as they are.",
-    "tooltip.tagsApplyTitles": "Write the cleaned titles. Quit Serato first. Audio files stay as they are.",
+    "tooltip.tagsApply": "Write this spelling on every track in the group. Quit Serato first. Check Write to files too for MP3 and M4A.",
+    "tooltip.tagsApplyMappings": "Write saved genre and artist spellings on tracks that still use another form. Quit Serato first. Check Write to files too for MP3 and M4A.",
+    "tooltip.tagsApplyTitles": "Write the cleaned titles. Quit Serato first. Check Write to files too for MP3 and M4A.",
     "tooltip.tagsArtist": "Show artist names that are the same words written different ways.",
     "tooltip.tagsGenre": "Show genres that are the same words written different ways.",
     "tooltip.tagsTitles": "Show titles that would change after stripping numbers, URLs, Original Mix, and feat., and title-casing ALL CAPS or all lowercase.",
@@ -14256,6 +14259,7 @@ Error generating stack: ` + x.message + `
     "tooltip.tagsPreview": "Show which tracks would change before writing the library.",
     "tooltip.tagsRefresh": "Load the spelling groups again.",
     "tooltip.tagsSpelling": "Choose this spelling for every track in the group.",
+    "tooltip.tagsWriteFiles": "Also write ID3 and MP4 tags on those tracks. Serato markers stay. FLAC is skipped.",
     "tooltip.telemetry": "Turn anonymous stats and crash reports on or off.",
     "tooltip.trackColor": "Choose a color for this track.",
     "tooltip.trackList": "Track list. Up arrow and Down arrow move between rows. Enter opens the row. Space plays or pauses.",
@@ -14835,6 +14839,7 @@ Error generating stack: ` + x.message + `
       other: "{count} pistas seleccionadas."
     },
     "fieldEdit.value": "Valor",
+    "fieldEdit.writeFiles": "Escribir también en los archivos",
     "files.andMore": "Y {count} más.",
     "files.browseElsewhere": "Explorar otra ubicación…",
     "files.changeCrates": "Cajas: {crates}.",
@@ -15781,10 +15786,10 @@ Error generating stack: ` + x.message + `
     "tags.column.tracks": "Pistas",
     "tags.field": "Campo",
     "tags.genre": "Género",
-    "tags.introTitles": "Quita números de pista, URL y (Original Mix). Pasa feat. a remixer cuando remixer está vacío. Pasa a mayúsculas iniciales los títulos en MAYÚSCULAS o minúsculas. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
+    "tags.introTitles": "Quita números de pista, URL y (Original Mix). Pasa feat. a remixer cuando remixer está vacío. Pasa a mayúsculas iniciales los títulos en MAYÚSCULAS o minúsculas. Escribe en la biblioteca. Marca Escribir también en los archivos para MP3 y M4A. Cierra Serato primero.",
     "tags.group": "{name} — {spellings}, {tracks}",
     "tags.heading": "Grafías de etiquetas",
-    "tags.intro": "Elige una grafía por grupo. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
+    "tags.intro": "Elige una grafía por grupo. Escribe en la biblioteca. Marca Escribir también en los archivos para MP3 y M4A. Cierra Serato primero.",
     "tags.noChanges": "Todas las pistas de este grupo ya usan esa grafía.",
     "tags.preview": "Revisar",
     "tags.mappingSummary": {
@@ -15833,6 +15838,7 @@ Error generating stack: ` + x.message + `
     },
     "tags.summaryTitlesClear": "Cada título de este espacio ya cumple las reglas de limpieza.",
     "tags.titles": "Títulos",
+    "tags.writeFiles": "Escribir también en los archivos",
     "tags.titlesPreviewSummary": {
       one: "{count} título cambiaría.",
       other: "{count} títulos cambiarían."
@@ -15911,11 +15917,12 @@ Error generating stack: ` + x.message + `
     "tooltip.expandCrate": "Muestra las cajas que están dentro de {name}.",
     "tooltip.exportM3u": "Descarga esta lista como un archivo de lista de reproducción.",
     "tooltip.exportRekordbox": "Descarga un archivo de lista que Rekordbox puede abrir. Confirmas antes de la descarga.",
-    "tooltip.fieldEditApply": "Escribe este valor en las pistas seleccionadas. Cierra Serato primero. Los archivos de audio no cambian.",
+    "tooltip.fieldEditApply": "Escribe este valor en las pistas seleccionadas. Cierra Serato primero. Marca Escribir también en los archivos para MP3 y M4A.",
     "tooltip.fieldEditCheckbox": "Selecciona esta pista para una edición de campo en lote.",
     "tooltip.fieldEditField": "Elige qué campo reescribir en las pistas seleccionadas.",
     "tooltip.fieldEditPreview": "Muestra qué pistas seleccionadas cambiarían antes de escribir la biblioteca.",
     "tooltip.fieldEditValue": "Escribe el valor para las pistas seleccionadas.",
+    "tooltip.fieldEditWriteFiles": "También escribe etiquetas ID3 y MP4 en esas pistas. Los marcadores de Serato se quedan. FLAC se omite.",
     "tooltip.fileShortcut": "{name} es un acceso directo. No se puede abrir desde aquí.",
     "tooltip.filesCancel": "Cancela. No se cambia nada. Esc.",
     "tooltip.filesConfirm": "Guarda este cambio de archivo.",
@@ -16119,9 +16126,9 @@ Error generating stack: ` + x.message + `
     "tooltip.statsPeriod": "Limita los más reproducidos a este periodo. Las pistas inactivas usan Días inactivos, no este periodo.",
     "tooltip.statsRefresh": "Carga las estadísticas de este periodo.",
     "tooltip.statsTo": "Último día de un periodo personalizado.",
-    "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Los archivos de audio no cambian.",
-    "tooltip.tagsApplyMappings": "Escribe las grafías de género y artista guardadas en las pistas que aún usan otra forma. Cierra Serato primero. Los archivos de audio no cambian.",
-    "tooltip.tagsApplyTitles": "Escribe los títulos limpios. Cierra Serato primero. Los archivos de audio no cambian.",
+    "tooltip.tagsApply": "Escribe esta grafía en cada pista del grupo. Cierra Serato primero. Marca Escribir también en los archivos para MP3 y M4A.",
+    "tooltip.tagsApplyMappings": "Escribe las grafías de género y artista guardadas en las pistas que aún usan otra forma. Cierra Serato primero. Marca Escribir también en los archivos para MP3 y M4A.",
+    "tooltip.tagsApplyTitles": "Escribe los títulos limpios. Cierra Serato primero. Marca Escribir también en los archivos para MP3 y M4A.",
     "tooltip.tagsArtist": "Muestra nombres de artista que son las mismas palabras escritas de otra forma.",
     "tooltip.tagsGenre": "Muestra géneros que son las mismas palabras escritas de otra forma.",
     "tooltip.tagsTitles": "Muestra títulos que cambiarían al quitar números, URL, Original Mix y feat., y al pasar a mayúsculas iniciales los que están en MAYÚSCULAS o minúsculas.",
@@ -16129,6 +16136,7 @@ Error generating stack: ` + x.message + `
     "tooltip.tagsPreview": "Muestra qué pistas cambiarían antes de escribir en la biblioteca.",
     "tooltip.tagsRefresh": "Vuelve a cargar los grupos de grafías.",
     "tooltip.tagsSpelling": "Elige esta grafía para todas las pistas del grupo.",
+    "tooltip.tagsWriteFiles": "También escribe etiquetas ID3 y MP4 en esas pistas. Los marcadores de Serato se quedan. FLAC se omite.",
     "tooltip.telemetry": "Activa o desactiva las estadísticas anónimas y los informes de fallos.",
     "tooltip.trackColor": "Elige un color para esta pista.",
     "tooltip.trackList": "Lista de pistas. Arriba y Abajo cambian de fila. Intro abre la fila. Espacio reproduce o pausa.",
@@ -31428,6 +31436,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     fieldEditField: spec("tooltip.fieldEditField"),
     fieldEditPreview: spec("tooltip.fieldEditPreview"),
     fieldEditValue: spec("tooltip.fieldEditValue"),
+    fieldEditWriteFiles: spec("tooltip.fieldEditWriteFiles"),
     memoryCues: spec("tooltip.memoryCues"),
     hotLoops: spec("tooltip.hotLoops"),
     rekordboxKey: spec("tooltip.rekordboxKey"),
@@ -31606,6 +31615,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     tagsApplyMappings: spec("tooltip.tagsApplyMappings"),
     tagsGroup: spec("tooltip.tagsGroup"),
     tagsSpelling: spec("tooltip.tagsSpelling"),
+    tagsWriteFiles: spec("tooltip.tagsWriteFiles"),
     gigRefresh: spec("tooltip.gigRefresh"),
     scanQuick: spec("tooltip.scanQuick"),
     scanFull: spec("tooltip.scanFull"),
@@ -60393,7 +60403,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return t(FIELD_LABELS[field2]);
   }
   function fieldEditFingerprint(request) {
-    return `${request.ids.join(",")}|${request.field}|${request.value}`;
+    return `${request.ids.join(",")}|${request.field}|${request.value}|${request.files ? "1" : "0"}`;
   }
   function fieldEditApplyReady(plan, previewed, current3, writable, busy5) {
     return !plan || !previewed || !writable || busy5 || plan.changes.length === 0 ? !1 : fieldEditFingerprint(previewed) === fieldEditFingerprint(current3);
@@ -61617,23 +61627,24 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var import_react29 = __toESM(require_react(), 1);
 
   // src/lib/crates/field-edit.ts
-  function body(action, ids, field2, value) {
-    return {
+  function body(action, ids, field2, value, files) {
+    let payload = {
       action,
       space: state.space,
       ids: [...ids],
       field: field2,
       value
     };
+    return files && (payload.files = !0), payload;
   }
-  async function previewFieldEdit(ids, field2, value) {
-    return postJSON("/api/tag-clusters", body("edit-preview", ids, field2, value));
+  async function previewFieldEdit(ids, field2, value, files = !1) {
+    return postJSON("/api/tag-clusters", body("edit-preview", ids, field2, value, files));
   }
-  async function applyFieldEdit(ids, field2, value) {
+  async function applyFieldEdit(ids, field2, value, files = !1) {
     try {
       let plan = await postJSON(
         "/api/tag-clusters",
-        body("edit-apply", ids, field2, value)
+        body("edit-apply", ids, field2, value, files)
       );
       return isQueuedWrite(plan) ? (setNotice(t("gigLock.queued")), plan) : (plan.written && (await bridge.reloadLibrary(), setNotice(fieldEditWrittenText(plan))), plan);
     } catch (error2) {
@@ -61655,23 +61666,33 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return EDIT_FIELDS.includes(value) ? value : "genre";
   }
   function FieldEditorBar({ selectedIds }) {
-    let list = useTrackList(), [field2, setField] = (0, import_react29.useState)("genre"), [value, setValue] = (0, import_react29.useState)(""), [plan, setPlan] = (0, import_react29.useState)(null), [previewed, setPreviewed] = (0, import_react29.useState)(null), [busy5, setBusy] = (0, import_react29.useState)(!1), [status4, setStatus] = (0, import_react29.useState)(""), idsKey = selectedIds.join(",");
+    let list = useTrackList(), [field2, setField] = (0, import_react29.useState)("genre"), [value, setValue] = (0, import_react29.useState)(""), [plan, setPlan] = (0, import_react29.useState)(null), [previewed, setPreviewed] = (0, import_react29.useState)(null), [busy5, setBusy] = (0, import_react29.useState)(!1), [status4, setStatus] = (0, import_react29.useState)(""), [writeFiles, setWriteFiles] = (0, import_react29.useState)(!1), idsKey = selectedIds.join(",");
     (0, import_react29.useEffect)(() => {
       let count = idsKey === "" ? 0 : idsKey.split(",").filter(Boolean).length;
       setPlan(null), setPreviewed(null), setBusy(!1), setStatus(fieldEditShows(count) ? fieldEditSelectedText(count) : "");
     }, [idsKey]);
     let current3 = (0, import_react29.useMemo)(
-      () => ({ ids: [...selectedIds], field: field2, value }),
-      [selectedIds, field2, value]
+      () => ({ ids: [...selectedIds], field: field2, value, files: writeFiles }),
+      [selectedIds, field2, value, writeFiles]
     ), applyReady = fieldEditApplyReady(plan, previewed, current3, list.writable, busy5);
     if (!fieldEditShows(selectedIds.length)) return null;
     async function onPreview() {
       let fieldNode = document.querySelector("#field-edit-field"), valueNode = document.querySelector("#field-edit-value"), nextField = asEditField(fieldNode?.value ?? field2), nextValue = valueNode?.value ?? value;
       setField(nextField), setValue(nextValue);
-      let request = { ids: [...selectedIds], field: nextField, value: nextValue };
+      let request = {
+        ids: [...selectedIds],
+        field: nextField,
+        value: nextValue,
+        files: writeFiles
+      };
       setBusy(!0), setStatus(t("fieldEdit.checking"));
       try {
-        let nextPlan = await previewFieldEdit(request.ids, request.field, request.value);
+        let nextPlan = await previewFieldEdit(
+          request.ids,
+          request.field,
+          request.value,
+          writeFiles
+        );
         setPlan(nextPlan), setPreviewed(request), setStatus(fieldEditPreviewText(nextPlan));
       } catch (error2) {
         setPlan(null), setPreviewed(null), setStatus(failureOf(error2).message);
@@ -61683,7 +61704,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       if (fieldEditApplyReady(plan, previewed, current3, list.writable, busy5)) {
         setBusy(!0);
         try {
-          await applyFieldEdit(current3.ids, current3.field, current3.value);
+          await applyFieldEdit(current3.ids, current3.field, current3.value, writeFiles);
         } catch {
         } finally {
           setBusy(!1);
@@ -61720,6 +61741,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             onInput: (event) => setValue(event.currentTarget.value)
           }
         )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime229.jsxs)("label", { className: "field-edit-write-files", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(
+          "input",
+          {
+            id: "field-edit-write-files",
+            type: "checkbox",
+            checked: writeFiles,
+            disabled: busy5,
+            ref: tooltipRef6(tips.fieldEditWriteFiles),
+            onChange: (event) => setWriteFiles(event.currentTarget.checked)
+          }
+        ),
+        t("fieldEdit.writeFiles")
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(
         Button_default,
@@ -65377,7 +65412,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             },
             children: t("gig.checkAgain")
           }
-        )
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)("label", { className: "tags-write-files", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(
+            "input",
+            {
+              id: "tags-write-files",
+              type: "checkbox",
+              defaultChecked: !1,
+              disabled: health.tagsBusy,
+              ref: tooltipRef6(tips.tagsWriteFiles)
+            }
+          ),
+          t("tags.writeFiles")
+        ] })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
       /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
@@ -65429,7 +65477,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/tags.ts
-  var TITLE_KEY2 = "clean", MAPPING_KEY2 = "saved", latest7 = null, titlePlan = null, mappingPlan = null, plans = /* @__PURE__ */ new Map(), selectedByKey = /* @__PURE__ */ new Map(), openKeys = /* @__PURE__ */ new Set(), field = "genre", status3 = "", panelBusy = !1, actionKey = "", panelRoot4, panelHost3 = null;
+  var TITLE_KEY2 = "clean", MAPPING_KEY2 = "saved";
+  function filesPayload(payload) {
+    return document.querySelector("#tags-write-files")?.checked === !0 ? { ...payload, files: !0 } : payload;
+  }
+  var latest7 = null, titlePlan = null, mappingPlan = null, plans = /* @__PURE__ */ new Map(), selectedByKey = /* @__PURE__ */ new Map(), openKeys = /* @__PURE__ */ new Set(), field = "genre", status3 = "", panelBusy = !1, actionKey = "", panelRoot4, panelHost3 = null;
   function getTagsSnapshot() {
     return {
       tagsField: field,
@@ -65462,10 +65514,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let settle = "none";
     try {
       if (field === "titles") {
-        let payload = await postJSON("/api/tag-clusters", {
+        let payload = await postJSON("/api/tag-clusters", filesPayload({
           action: "clean-preview",
           space: state.space
-        });
+        }));
         if (token4 !== state.tagsToken) return;
         titlePlan = payload, latest7 = null, mappingPlan = null, status3 = titlesPreviewSummary(payload), settle = "report";
       } else {
@@ -65502,12 +65554,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (!(!group || !value)) {
       actionKey = key, emitHealth();
       try {
-        let plan = await postJSON("/api/tag-clusters", {
+        let plan = await postJSON("/api/tag-clusters", filesPayload({
           action: "preview",
           space: state.space,
           field: field === "titles" ? "genre" : field,
           value
-        });
+        }));
         plans.set(key, plan), status3 = previewSummary(plan), emitHealth(), applyButton(key)?.focus();
       } catch (error2) {
         failStatus6(failureOf(error2).message);
@@ -65521,12 +65573,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (!(!plan || !value || plan.value !== value || !plan.changes.length || !state.writable)) {
       actionKey = key, panelBusy = !0, beginBusy6(), emitHealth();
       try {
-        let written = await postJSON("/api/tag-clusters", {
+        let written = await postJSON("/api/tag-clusters", filesPayload({
           action: "apply",
           space: state.space,
           field: field === "titles" ? "genre" : field,
           value
-        });
+        }));
         if (isQueuedWrite(written)) {
           status3 = t("gigLock.queued"), setNotice(t("gigLock.queued"));
           return;
@@ -65544,10 +65596,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (!(!plan || !plan.changes.length || !state.writable)) {
       actionKey = MAPPING_KEY2, panelBusy = !0, beginBusy6(), emitHealth();
       try {
-        let written = await postJSON("/api/tag-clusters", {
+        let written = await postJSON("/api/tag-clusters", filesPayload({
           action: "refresh-apply",
           space: state.space
-        });
+        }));
         if (isQueuedWrite(written)) {
           status3 = t("gigLock.queued"), setNotice(t("gigLock.queued"));
           return;
@@ -65565,10 +65617,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (!(!plan || !plan.changes.length || !state.writable)) {
       actionKey = TITLE_KEY2, panelBusy = !0, beginBusy6(), emitHealth();
       try {
-        let written = await postJSON("/api/tag-clusters", {
+        let written = await postJSON("/api/tag-clusters", filesPayload({
           action: "clean-apply",
           space: state.space
-        });
+        }));
         if (isQueuedWrite(written)) {
           status3 = t("gigLock.queued"), setNotice(t("gigLock.queued"));
           return;
@@ -65594,10 +65646,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function readMappingPreview(token4) {
     try {
-      let payload = await postJSON("/api/tag-clusters", {
+      let payload = await postJSON("/api/tag-clusters", filesPayload({
         action: "refresh-preview",
         space: state.space
-      });
+      }));
       return token4 !== state.tagsToken ? null : asMappingPlan(payload);
     } catch {
       return token4 !== state.tagsToken, null;

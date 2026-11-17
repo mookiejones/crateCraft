@@ -1010,12 +1010,19 @@ export interface TagClusterChange {
   field?: string;
 }
 
+export interface TagClusterFileSkip {
+  id: number;
+  reason: string;
+}
+
 export interface TagClusterPlan {
   field: string;
   value: string;
   key: string;
   changes: TagClusterChange[];
   written: boolean;
+  files_written?: number[];
+  files_skipped?: TagClusterFileSkip[];
   error?: string;
   code?: string;
 }

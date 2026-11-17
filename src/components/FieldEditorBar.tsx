@@ -2,7 +2,7 @@
  * Bulk field editor for checked Crates rows (#27).
  *
  * Review posts edit-preview. Apply stays off until that preview matches
- * the current field, value, and ids. Audio files stay as they are.
+ * the current field, value, ids, and Write to files too box.
  */
 
 import { useEffect, useMemo, useState } from "react";
@@ -48,6 +48,7 @@ export function FieldEditorBar({ selectedIds }: FieldEditorBarProps) {
   const [previewed, setPreviewed] = useState<FieldEditRequest | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
+  const [writeFiles, setWriteFiles] = useState(false);
   const idsKey = selectedIds.join(",");
 
   useEffect(() => {
@@ -59,8 +60,8 @@ export function FieldEditorBar({ selectedIds }: FieldEditorBarProps) {
   }, [idsKey]);
 
   const current = useMemo<FieldEditRequest>(
-    () => ({ ids: [...selectedIds], field, value }),
-    [selectedIds, field, value],
+    () => ({ ids: [...selectedIds], field, value, files: writeFiles }),
+    [selectedIds, field, value, writeFiles],
   );
   const applyReady = fieldEditApplyReady(plan, previewed, current, list.writable, busy);
 
@@ -73,11 +74,21 @@ export function FieldEditorBar({ selectedIds }: FieldEditorBarProps) {
     const nextValue = valueNode?.value ?? value;
     setField(nextField);
     setValue(nextValue);
-    const request: FieldEditRequest = { ids: [...selectedIds], field: nextField, value: nextValue };
+    const request: FieldEditRequest = {
+      ids: [...selectedIds],
+      field: nextField,
+      value: nextValue,
+      files: writeFiles,
+    };
     setBusy(true);
     setStatus(t("fieldEdit.checking"));
     try {
-      const nextPlan = await previewFieldEdit(request.ids, request.field, request.value);
+      const nextPlan = await previewFieldEdit(
+        request.ids,
+        request.field,
+        request.value,
+        writeFiles,
+      );
       setPlan(nextPlan);
       setPreviewed(request);
       setStatus(fieldEditPreviewText(nextPlan));
@@ -94,7 +105,7 @@ export function FieldEditorBar({ selectedIds }: FieldEditorBarProps) {
     if (!fieldEditApplyReady(plan, previewed, current, list.writable, busy)) return;
     setBusy(true);
     try {
-      await applyFieldEdit(current.ids, current.field, current.value);
+      await applyFieldEdit(current.ids, current.field, current.value, writeFiles);
     } catch {
       // applyFieldEdit already noticed and locked on 409.
     } finally {
@@ -132,6 +143,17 @@ export function FieldEditorBar({ selectedIds }: FieldEditorBarProps) {
           onChange={(event) => setValue(event.currentTarget.value)}
           onInput={(event) => setValue(event.currentTarget.value)}
         />
+      </label>
+      <label className="field-edit-write-files">
+        <input
+          id="field-edit-write-files"
+          type="checkbox"
+          checked={writeFiles}
+          disabled={busy}
+          ref={tooltipRef(tips.fieldEditWriteFiles)}
+          onChange={(event) => setWriteFiles(event.currentTarget.checked)}
+        />
+        {t("fieldEdit.writeFiles")}
       </label>
       <Button
         id="field-edit-preview"

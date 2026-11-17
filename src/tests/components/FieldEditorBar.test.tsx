@@ -123,6 +123,49 @@ describe("FieldEditorBar", () => {
     });
   });
 
+  it("posts files true when Write to files too is checked", async () => {
+    postJSON.mockResolvedValue(preview);
+    paint([1, 2]);
+    const input = host.querySelector<HTMLInputElement>("#field-edit-value");
+    const box = host.querySelector<HTMLInputElement>("#field-edit-write-files");
+    expect(box?.checked).toBe(false);
+    if (input) input.value = "House";
+    input?.dispatchEvent(new Event("input", { bubbles: true }));
+    flushSync(() => {
+      box?.click();
+    });
+    expect(host.querySelector<HTMLInputElement>("#field-edit-write-files")?.checked).toBe(true);
+    flushSync(() => {
+      host.querySelector<HTMLButtonElement>("#field-edit-preview")?.click();
+    });
+    await vi.waitFor(() => {
+      expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+        action: "edit-preview",
+        space: "Serato Library",
+        ids: [1, 2],
+        field: "genre",
+        value: "House",
+        files: true,
+      });
+    });
+    await vi.waitFor(() => {
+      expect(host.querySelector("#field-edit-apply")?.hasAttribute("disabled")).toBe(false);
+    });
+    flushSync(() => {
+      host.querySelector<HTMLButtonElement>("#field-edit-apply")?.click();
+    });
+    await vi.waitFor(() => {
+      expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
+        action: "edit-apply",
+        space: "Serato Library",
+        ids: [1, 2],
+        field: "genre",
+        value: "House",
+        files: true,
+      });
+    });
+  });
+
   it("disables Apply while the library is locked", () => {
     paint([1, 2], { writable: false });
     expect(host.querySelector<HTMLButtonElement>("#field-edit-apply")?.disabled).toBe(true);

@@ -26,6 +26,14 @@ from tag_cleanup import clean_title, normalize
 from tests import test_server
 import app_config
 from tests.fixture import TempLibrary, open_database
+from tests.test_tags import (
+    _geob_frame,
+    _id3_pack,
+    _markers_payload,
+    write_flac_fixture,
+)
+
+AUDIO = b"\xff\xfb" + bytes(64)
 
 
 def _tracks(db: Path, rows: list[tuple[str | None, str | None]], *, space_id: int = 1, start: int = 1) -> None:
@@ -878,6 +886,138 @@ class FieldEditApiTests(unittest.TestCase):
             {"action": "edit-preview", "ids": [99], "field": "genre", "value": "House"},
         )
         self.assertEqual((status, cast_code(unknown)), (404, "track_not_in_space_alt"))
+
+
+def _link_audio(db: Path, asset_id: int, path: Path) -> None:
+    """Point one asset at an audio file."""
+    with closing(sqlite3.connect(db)) as conn:
+        conn.execute("UPDATE asset SET portable_id = ? WHERE id = ?", (str(path), asset_id))
+        conn.commit()
+
+
+def _mp3(path: Path) -> Path:
+    """Write a tiny MP3 with one Markers2 GEOB frame."""
+    path.write_bytes(_id3_pack([_geob_frame("Serato Markers2", _markers_payload())]) + AUDIO)
+    return path
+
+
+class FileWriteApiTests(unittest.TestCase):
+    """``files`` true writes ID3/MP4. Omit or a string leaves the bytes."""
+
+    setUp = test_server.ApiTests.setUp
+    tearDown = test_server.ApiTests.tearDown
+    request = test_server.ApiTests.request
+
+    def test_omit_and_string_true_leave_bytes(self) -> None:
+        """Default and the string ``true`` rewrite the library, not the file."""
+        audio = _mp3(self.library.root / "a.mp3")
+        before = audio.read_bytes()
+        _tracks(self.library.db, [("Hip Hop", "A"), ("Hip-Hop", "A")])
+        _link_audio(self.library.db, 2, audio)
+        status, made = self.request(
+            "/api/tag-clusters",
+            {"action": "apply", "field": "genre", "value": "Hip Hop"},
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(made), True)
+        self.assertEqual(_genres(self.library.db)[1][1], "Hip Hop")
+        self.assertEqual(audio.read_bytes(), before)
+        _tracks(self.library.db, [("Hip Hop", "A"), ("Hip-Hop", "A")])
+        _link_audio(self.library.db, 2, audio)
+        status, again = self.request(
+            "/api/tag-clusters",
+            {"action": "apply", "field": "genre", "value": "Hip Hop", "files": "true"},
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(again), True)
+        self.assertEqual(audio.read_bytes(), before)
+
+    def test_files_true_writes_id3_and_lists_flac(self) -> None:
+        """JSON true writes TCON. FLAC is skipped. The library still writes."""
+        from mutagen.id3 import ID3
+
+        mp3 = _mp3(self.library.root / "a.mp3")
+        flac = self.library.root / "b.flac"
+        write_flac_fixture(flac, [])
+        flac_before = flac.read_bytes()
+        _tracks(self.library.db, [("Hip Hop", "A"), ("Hip-Hop", "A"), ("hiphop", "A")])
+        _link_audio(self.library.db, 2, mp3)
+        _link_audio(self.library.db, 3, flac)
+        status, made = self.request(
+            "/api/tag-clusters",
+            {"action": "apply", "field": "genre", "value": "Hip Hop", "files": True},
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(made), True)
+        assert isinstance(made, dict)
+        self.assertEqual(made["files_written"], [2])
+        self.assertEqual(made["files_skipped"], [{"id": 3, "reason": "unsupported"}])
+        self.assertEqual(_genres(self.library.db)[1][1], "Hip Hop")
+        self.assertEqual(_genres(self.library.db)[2][1], "Hip Hop")
+        self.assertEqual(ID3(str(mp3))["TCON"].text[0], "Hip Hop")
+        self.assertEqual(flac.read_bytes(), flac_before)
+
+    def test_preview_files_true_lists_without_writing(self) -> None:
+        """Preview with files true names writable ids. Bytes stay."""
+        mp3 = _mp3(self.library.root / "a.mp3")
+        before = mp3.read_bytes()
+        _tracks(self.library.db, [("Hip Hop", "A"), ("Hip-Hop", "A")])
+        _link_audio(self.library.db, 2, mp3)
+        status, preview = self.request(
+            "/api/tag-clusters",
+            {"action": "preview", "field": "genre", "value": "Hip Hop", "files": True},
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(preview), False)
+        assert isinstance(preview, dict)
+        self.assertEqual(preview["files_written"], [2])
+        self.assertEqual(preview["files_skipped"], [])
+        self.assertEqual(mp3.read_bytes(), before)
+        self.assertEqual(_genres(self.library.db)[1][1], "Hip-Hop")
+
+    def test_empty_plan_does_not_write_files(self) -> None:
+        """edit-apply with nothing to change leaves the file."""
+        mp3 = _mp3(self.library.root / "a.mp3")
+        before = mp3.read_bytes()
+        _tracks(self.library.db, [("House", "A"), ("House", "A")])
+        _link_audio(self.library.db, 1, mp3)
+        status, made = self.request(
+            "/api/tag-clusters",
+            {
+                "action": "edit-apply",
+                "ids": [1, 2],
+                "field": "genre",
+                "value": "House",
+                "files": True,
+            },
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(made), False)
+        self.assertEqual(mp3.read_bytes(), before)
+
+    def test_edit_apply_files_true_writes_title(self) -> None:
+        """edit-apply with files true writes TIT2."""
+        from mutagen.id3 import ID3
+
+        mp3 = _mp3(self.library.root / "a.mp3")
+        _named(self.library.db, [("Old Title", None), ("Keep", None)])
+        _link_audio(self.library.db, 1, mp3)
+        status, made = self.request(
+            "/api/tag-clusters",
+            {
+                "action": "edit-apply",
+                "ids": [1],
+                "field": "name",
+                "value": "New Title",
+                "files": True,
+            },
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(cast_written(made), True)
+        assert isinstance(made, dict)
+        self.assertEqual(made["files_written"], [1])
+        self.assertEqual(_titles(self.library.db)[0][1], "New Title")
+        self.assertEqual(ID3(str(mp3))["TIT2"].text[0], "New Title")
 
 
 def cast_written(payload: object) -> object:

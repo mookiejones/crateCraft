@@ -19,7 +19,7 @@ flowchart TD
 
 The track list puts a checkbox first, then **Play**. **Title** is the name. Headers stay over the cells when you scroll. Drag a header edge to resize. The column menu can hide a column. A library larger than 100 tracks pages 100 at a time.
 
-Check two or more rows to rewrite one text field on those tracks. Choose the field, type the value, click **Review**, then **Apply**. Apply stays off until Review matches, the library is writable, and at least one row would change. Quit Serato DJ Pro first. Audio files stay as they are. History has no checkboxes.
+Check two or more rows to rewrite one text field on those tracks. Choose the field, type the value, click **Review**, then **Apply**. Apply stays off until Review matches, the library is writable, and at least one row would change. Check **Write to files too** to also write ID3 and MP4. Quit Serato DJ Pro first. History has no checkboxes.
 
 **Crates** is the list on the left. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
 

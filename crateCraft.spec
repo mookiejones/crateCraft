@@ -140,7 +140,7 @@ elif sys.platform == "win32":
 else:
     hidden += ["webview.platforms.gtk", "gi"]
 hidden.extend(telemetry_hiddenimports())
-hidden.extend(["version_info", "_version", "miniaudio", "numpy", "numpy.fft", "cffi", "pycparser"])
+hidden.extend(["version_info", "_version", "miniaudio", "numpy", "numpy.fft", "cffi", "pycparser", "mutagen", "mutagen.id3", "mutagen.mp4"])
 if importlib.util.find_spec("miniaudio") is not None:
     binaries += collect_dynamic_libs("miniaudio")
 if importlib.util.find_spec("numpy") is not None:
