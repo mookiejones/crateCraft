@@ -132,6 +132,7 @@ class LanguageSettingTests(unittest.TestCase):
             lambda: app_config.set_wizard_complete(True),
             lambda: app_config.update_rekordbox(hot_loops=True),
             lambda: app_config.set_track_list_width(480),
+            lambda: app_config.set_shortcuts({"play-pause": [{"key": "q"}]}),
             lambda: app_config.set_wizard_complete(False),
             lambda: app_config.set_telemetry_consent(False),
         )
@@ -313,6 +314,118 @@ class LanguageApiTests(unittest.TestCase):
             self.assertEqual(plan["restore_blocked_params"], {"build": "unknown"})
             self.assertEqual(plan["restore_blocked"], body["message"])
             self.assertTrue(plan["dry_run"])
+
+
+class ShortcutApiTests(unittest.TestCase):
+    """POST and GET /api/settings carry remapped keyboard shortcuts."""
+
+    def setUp(self) -> None:
+        """Start a fixture library and isolate settings.
+
+        Returns:
+            None.
+        """
+        self.library = TempLibrary()
+        self.library.__enter__()
+        self._tmp = tempfile.TemporaryDirectory()
+        self.config = Path(self._tmp.name) / "config"
+        logs = Path(self._tmp.name) / "logs"
+        self.config.mkdir()
+        logs.mkdir()
+        self._env = mock.patch.dict(
+            os.environ,
+            {app_config.CONFIG_ENV: str(self.config), app_config.LOG_ENV: str(logs)},
+        )
+        self._env.start()
+        self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+        self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
+        self.thread.start()
+        host, port = self.httpd.server_address
+        self.base = f"http://{host}:{port}"
+
+    def tearDown(self) -> None:
+        """Stop the server and remove the temporary files.
+
+        Returns:
+            None.
+        """
+        self.httpd.shutdown()
+        self.httpd.server_close()
+        self.thread.join(timeout=3)
+        self._env.stop()
+        self._tmp.cleanup()
+        self.library.__exit__(None, None, None)
+
+    def test_post_and_get_shortcuts(self) -> None:
+        """A saved remap comes back from GET, and an empty map resets it.
+
+        Returns:
+            None.
+        """
+        chord = {"key": "q", "mod": False, "shift": False, "alt": False}
+        status, body = _request(self.base, "/api/settings", {"shortcuts": {"play-pause": [chord]}})
+        self.assertEqual(status, 200)
+        assert isinstance(body, dict)
+        self.assertEqual(body["shortcuts"], {"play-pause": [chord]})
+        status, fetched = _request(self.base, "/api/settings")
+        self.assertEqual(status, 200)
+        assert isinstance(fetched, dict)
+        self.assertEqual(fetched["shortcuts"], {"play-pause": [chord]})
+        status, cleared = _request(self.base, "/api/settings", {"shortcuts": {}})
+        self.assertEqual(status, 200)
+        assert isinstance(cleared, dict)
+        self.assertEqual(cleared["shortcuts"], {})
+        self.assertEqual(app_config.load_settings().shortcuts, {})
+
+    def test_missing_shortcuts_are_an_empty_map(self) -> None:
+        """GET includes shortcuts even when the file has none.
+
+        Returns:
+            None.
+        """
+        status, body = _request(self.base, "/api/settings")
+        self.assertEqual(status, 200)
+        assert isinstance(body, dict)
+        self.assertEqual(body["shortcuts"], {})
+
+    def test_bad_shortcuts_are_refused(self) -> None:
+        """Unknown ids, wrong types, and extra keys are 400.
+
+        Returns:
+            None.
+        """
+        chord = {"key": "q"}
+        app_config.set_shortcuts({"play-pause": [chord]})
+        for payload in (
+            {"shortcuts": {"nope": [chord]}},
+            {"shortcuts": {"play-pause": "W"}},
+            {"shortcuts": {"play-pause": []}},
+            {"shortcuts": [chord]},
+            {"shortcuts": {"play-pause": [chord]}, "language": "es"},
+        ):
+            with self.subTest(payload=payload):
+                status, body = _request(self.base, "/api/settings", payload)
+                self.assertEqual(status, 400)
+                self.assertEqual(body, {"error": "That request is not valid.", "code": "invalid_request"})
+        self.assertEqual(app_config.load_settings().shortcuts, {"play-pause": [chord]})
+
+    def test_failed_write_says_so(self) -> None:
+        """A disk error is a 500 with its own code.
+
+        Returns:
+            None.
+        """
+        with mock.patch.object(app_config, "save_settings", side_effect=OSError("disk full")):
+            status, body = _request(
+                self.base,
+                "/api/settings",
+                {"shortcuts": {"play-pause": [{"key": "q"}]}},
+            )
+        self.assertEqual(status, 500)
+        self.assertEqual(
+            body,
+            {"error": "The shortcuts could not be saved.", "code": "shortcuts_not_saved"},
+        )
 
 
 class ErrorCodeTests(unittest.TestCase):

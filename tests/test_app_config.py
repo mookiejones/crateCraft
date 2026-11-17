@@ -733,6 +733,7 @@ class WindowSettingsTests(unittest.TestCase):
         app_config.save_window_geometry(app_config.WindowGeometry(1, 2, 640, 480))
         app_config.set_track_list_width(520)
         app_config.set_language("es")
+        app_config.set_shortcuts({"play-pause": [{"key": "q"}]})
         payload = json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
         self.assertEqual(set(payload), set(app_config.SETTINGS_KEYS))
 
@@ -988,6 +989,7 @@ class SettingsIntegrityTests(unittest.TestCase):
         app_config.save_window_geometry(old_frame)
         app_config.set_track_list_width(480)
         app_config.set_language("es")
+        app_config.set_shortcuts({"play-pause": [{"key": "q"}]})
         app_config.update_rekordbox(memory_cues=False, key_notation="camelot")
         new_frame = app_config.WindowGeometry(30, 40, 1100, 700)
         original_save = app_config.save_settings
@@ -1066,6 +1068,7 @@ class SettingsIntegrityTests(unittest.TestCase):
         self.assertEqual(loaded.rekordbox.key_notation, "camelot")
         self.assertEqual(loaded.track_list_width, 480)
         self.assertEqual(loaded.language, "es")
+        self.assertEqual(loaded.shortcuts, {"play-pause": [{"key": "q"}]})
         payload = json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
         self.assertEqual(set(payload), set(app_config.SETTINGS_KEYS))
 
@@ -1155,6 +1158,166 @@ class SettingsIntegrityTests(unittest.TestCase):
         loaded = app_config.load_settings()
         self.assertEqual(loaded.rekordbox.key_notation, "camelot")
         self.assertIs(loaded.telemetry_consent, False)
+
+
+class ShortcutSettingsTests(unittest.TestCase):
+    """Check remapped keyboard shortcuts stored beside the other settings.
+
+    Each test uses a fresh config directory. Nothing is sent over the network.
+    """
+
+    def setUp(self) -> None:
+        """Create an empty config directory for one test.
+
+        Returns:
+            None.
+        """
+        self._tmp = tempfile.TemporaryDirectory()
+        self.config = Path(self._tmp.name) / "config"
+        self.config.mkdir()
+        self._env = mock.patch.dict(os.environ, {app_config.CONFIG_ENV: str(self.config)})
+        self._env.start()
+
+    def tearDown(self) -> None:
+        """Remove the temporary config directory.
+
+        Returns:
+            None.
+        """
+        self._env.stop()
+        self._tmp.cleanup()
+
+    def test_missing_shortcuts_load_as_empty(self) -> None:
+        """Treat a missing shortcuts key as no overrides.
+
+        Returns:
+            None. The test fails if a missing file invents a mapping.
+        """
+        loaded = app_config.load_settings()
+        self.assertEqual(loaded.shortcuts, {})
+        self.assertFalse((self.config / "settings.json").exists())
+
+    def test_valid_override_round_trips(self) -> None:
+        """Save one remapped chord and read it back unchanged.
+
+        Returns:
+            None. The test fails if the file omits the override or a later
+            save of another field drops it.
+        """
+        chord = {"key": "q", "mod": False, "shift": False, "alt": False}
+        saved = app_config.set_shortcuts({"play-pause": [chord]})
+        self.assertEqual(saved.shortcuts, {"play-pause": [chord]})
+        loaded = app_config.load_settings()
+        self.assertEqual(loaded.shortcuts, {"play-pause": [chord]})
+        stored = json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
+        self.assertEqual(stored["shortcuts"], {"play-pause": [chord]})
+        app_config.set_language("es")
+        kept = app_config.load_settings()
+        self.assertEqual(kept.shortcuts, {"play-pause": [chord]})
+        self.assertEqual(kept.language, "es")
+
+    def test_unknown_shortcut_id_is_dropped(self) -> None:
+        """Warn ``shortcuts.nope`` and keep the rest of the map.
+
+        Returns:
+            None. The test fails if an unknown id is stored.
+        """
+        path = self.config / "settings.json"
+        path.write_text(
+            json.dumps(
+                {
+                    "shortcuts": {
+                        "nope": [{"key": "q"}],
+                        "play-pause": [{"key": "q"}],
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+        with self.assertLogs("serato.library.config", level="WARNING") as caught:
+            loaded = app_config.load_settings()
+        self.assertEqual(loaded.shortcuts, {"play-pause": [{"key": "q"}]})
+        self.assertTrue(any("shortcuts.nope" in line for line in caught.output))
+
+    def test_string_override_is_dropped(self) -> None:
+        """Warn when a shortcut id maps to a string instead of a chord list.
+
+        Returns:
+            None. The test fails if ``"W"`` is kept as a chord.
+        """
+        path = self.config / "settings.json"
+        path.write_text(
+            json.dumps({"shortcuts": {"play-pause": "W"}}),
+            encoding="utf-8",
+        )
+        with self.assertLogs("serato.library.config", level="WARNING") as caught:
+            loaded = app_config.load_settings()
+        self.assertEqual(loaded.shortcuts, {})
+        self.assertTrue(any("shortcuts.play-pause" in line for line in caught.output))
+
+    def test_empty_chord_list_is_dropped(self) -> None:
+        """Warn and ignore an id whose chord list is empty.
+
+        Returns:
+            None. The test fails if an empty list is stored.
+        """
+        path = self.config / "settings.json"
+        path.write_text(
+            json.dumps({"shortcuts": {"play-pause": []}}),
+            encoding="utf-8",
+        )
+        with self.assertLogs("serato.library.config", level="WARNING") as caught:
+            loaded = app_config.load_settings()
+        self.assertEqual(loaded.shortcuts, {})
+        self.assertTrue(any("shortcuts.play-pause" in line for line in caught.output))
+
+    def test_empty_overrides_are_omitted_from_the_file(self) -> None:
+        """Reset to defaults by writing an empty map, then drop the key.
+
+        Returns:
+            None. The test fails if ``shortcuts`` stays as ``{}``.
+        """
+        app_config.set_shortcuts({"play-pause": [{"key": "q"}]})
+        app_config.set_shortcuts({})
+        stored = json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
+        self.assertNotIn("shortcuts", stored)
+        self.assertEqual(app_config.load_settings().shortcuts, {})
+
+    def test_set_shortcuts_rejects_an_unknown_id(self) -> None:
+        """Refuse a remap whose id is not in the catalog.
+
+        Returns:
+            None. The test fails if ``nope`` is stored.
+        """
+        with self.assertRaises(ValueError):
+            app_config.set_shortcuts({"nope": [{"key": "q"}]})
+        self.assertFalse((self.config / "settings.json").exists())
+
+    def test_set_shortcuts_rejects_a_string_chord_list(self) -> None:
+        """Refuse a remap that is a string instead of a chord list.
+
+        Returns:
+            None. The test fails if ``"W"`` is stored as a chord.
+        """
+        with self.assertRaises(ValueError):
+            app_config.set_shortcuts({"play-pause": "W"})
+        self.assertFalse((self.config / "settings.json").exists())
+
+    def test_public_settings_includes_shortcuts(self) -> None:
+        """Return overrides to the page, or an empty map when none are saved.
+
+        Returns:
+            None. The test fails if GET-shaped settings omit the key.
+        """
+        import telemetry
+
+        self.assertEqual(telemetry.public_settings()["shortcuts"], {})
+        chord = {"key": "q", "mod": False, "shift": False, "alt": False}
+        app_config.set_shortcuts({"play-pause": [chord]})
+        self.assertEqual(
+            telemetry.public_settings()["shortcuts"],
+            {"play-pause": [chord]},
+        )
 
 
 class VersionTests(unittest.TestCase):

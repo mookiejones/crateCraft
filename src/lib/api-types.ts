@@ -538,6 +538,8 @@ export interface SettingsPayload {
   icon?: IconApplyResult;
   /** True queues crate and track edits until Gig Lock is off. */
   gig_lock?: boolean;
+  /** Remapped shortcut chords. Empty means Serato defaults plus extras. */
+  shortcuts?: Record<string, Array<{ key: string; mod?: boolean; shift?: boolean; alt?: boolean }>>;
   error?: string;
   code?: string;
 }

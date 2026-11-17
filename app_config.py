@@ -14,6 +14,7 @@ report. Writing it does not open or change the database.
 
 from __future__ import annotations
 
+import copy
 import json
 import logging
 import os
@@ -55,7 +56,124 @@ SETTINGS_KEYS = (
     "colorway",
     "icon_follows_theme",
     "gig_lock",
+    "shortcuts",
 )
+# KeyboardEvent.key chords, matching src/lib/ui/shortcut-catalog.ts.
+_CUE_DIGITS = tuple("1234567890")
+_SAMPLE_SLOTS = range(1, 9)
+CHORD_FIELDS = ("key", "mod", "shift", "alt")
+
+
+def _catalog_shortcut_ids() -> frozenset[str]:
+    """Return the shortcut ids the catalog may remap.
+
+    Returns:
+        Every id in ``src/lib/ui/shortcut-catalog.ts``. Digit rows and
+        sample slots are built with the same loops as that file.
+    """
+    ids = {
+        "load-selected",
+        "load-selected-right",
+        "double-loaded-left",
+        "double-loaded-right",
+        "eject-left",
+        "eject-right",
+        "play-pause",
+        "play-pause-right",
+        "reverse-left",
+        "reverse-right",
+        "set-next-cue-left",
+        "set-next-cue-right",
+        "temp-cue-left",
+        "temp-cue-right",
+        "play-next",
+        "load-next-right",
+        "play-previous",
+        "load-prev-right",
+        "seek-back",
+        "rewind-right",
+        "seek-forward",
+        "ff-right",
+        "pitch-bend-down-left",
+        "pitch-bend-down-right",
+        "pitch-bend-up-left",
+        "pitch-bend-up-right",
+        "pitch-down-left",
+        "pitch-down-right",
+        "pitch-up-left",
+        "pitch-up-right",
+        "censor-left",
+        "censor-right",
+        "keylock-left",
+        "keylock-right",
+        "flip",
+        "loop-on-left",
+        "loop-on-right",
+        "slot-reloop-left",
+        "slot-reloop-right",
+        "loop-in-left",
+        "loop-in-right",
+        "loop-out-left",
+        "loop-out-right",
+        "loop-slot-up-left",
+        "loop-slot-up-right",
+        "loop-slot-down-left",
+        "loop-slot-down-right",
+        "list-previous",
+        "list-next",
+        "crate-previous",
+        "crate-next",
+        "focus-next-pane",
+        "focus-search",
+        "reveal-track",
+        "locate-playing",
+        "select-all",
+        "undo-load",
+        "delete-row",
+        "remove-from-library",
+        "trash-track",
+        "view-prepare",
+        "waveform-zoom-in",
+        "waveform-zoom-out",
+        "zoom-library-in",
+        "zoom-library-out",
+        "start-recording",
+        "open-external",
+        "bpm-double",
+        "bpm-halve",
+        "beatgrid-edit",
+        "exit-app",
+        "quick-open",
+        "cheat-sheet",
+        "list-open",
+        "dismiss",
+        "view-library",
+        "view-crates",
+        "view-files",
+        "view-history",
+        "view-snapshots",
+    }
+    for digit in _CUE_DIGITS:
+        ids.update(
+            (
+                f"cue-jump-{digit}",
+                f"delete-cue-{digit}",
+                f"autoloop-{digit}",
+                f"loop-roll-{digit}",
+            )
+        )
+    for slot in _SAMPLE_SLOTS:
+        ids.update(
+            (
+                f"sample-load-{slot}",
+                f"sample-play-{slot}",
+                f"sample-stop-{slot}",
+            )
+        )
+    return frozenset(ids)
+
+
+SHORTCUT_IDS = _catalog_shortcut_ids()
 # Page languages a person can pick in Settings. None follows the OS.
 # Keep in sync with LANGUAGES in src/lib/i18n.ts.
 LANGUAGES = ("en", "es")
@@ -198,6 +316,8 @@ class Settings:
             means True. False is a stored choice.
         gig_lock: True queues library writes until Gig Lock is off and
             Serato is quit. Missing means False.
+        shortcuts: Remapped keyboard chords, keyed by catalog id. Empty
+            means Serato DJ Pro defaults plus crateCraft extras.
     """
 
     install_id: str | None
@@ -211,6 +331,7 @@ class Settings:
     colorway: str = DEFAULT_COLORWAY
     icon_follows_theme: bool = True
     gig_lock: bool = False
+    shortcuts: dict[str, list[dict[str, object]]] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         """Reject an unknown theme or a non-boolean icon flag.
@@ -279,6 +400,8 @@ class Settings:
         body["colorway"] = self.colorway
         body["icon_follows_theme"] = self.icon_follows_theme
         body["gig_lock"] = self.gig_lock
+        if self.shortcuts:
+            body["shortcuts"] = copy.deepcopy(self.shortcuts)
         return body
 
 
@@ -592,6 +715,126 @@ def _parse_layout(value: object) -> tuple[int | None, bool | None]:
     return width, drawer_open
 
 
+def _parse_shortcuts(value: object, *, strict: bool = False) -> dict[str, list[dict[str, object]]]:
+    """Validate a remapped shortcut map.
+
+    Args:
+        value: The ``shortcuts`` member of the settings file, or a POST
+            body.
+        strict: True raises ``ValueError`` on a bad id or chord. False
+            warns and drops that id.
+
+    Returns:
+        Known ids mapped to chord objects that keep only the fields that
+        were present. An empty map means no overrides.
+
+    Raises:
+        ValueError: If ``strict`` is True and ``value`` is not a mapping,
+            an id is unknown, a chord list is empty or not a list, or a
+            chord field has the wrong type.
+    """
+    if not isinstance(value, dict):
+        if strict:
+            raise ValueError("shortcuts must be a mapping.")
+        logger.warning("Config key 'shortcuts' must be a mapping — ignored")
+        return {}
+    parsed: dict[str, list[dict[str, object]]] = {}
+    for raw_id, raw_chords in value.items():
+        dotted = f"shortcuts.{raw_id}"
+        if not isinstance(raw_id, str) or raw_id not in SHORTCUT_IDS:
+            if strict:
+                raise ValueError(f"{dotted} is not a known shortcut.")
+            logger.warning("Unknown config key %r — ignored", dotted)
+            continue
+        chords = _parse_chord_list(raw_chords, dotted, strict=strict)
+        if chords is None:
+            continue
+        parsed[raw_id] = chords
+    return copy.deepcopy(parsed)
+
+
+def _parse_chord_list(
+    value: object,
+    dotted: str,
+    *,
+    strict: bool,
+) -> list[dict[str, object]] | None:
+    """Validate one id's chord list.
+
+    Args:
+        value: Candidate list of chord objects.
+        dotted: Full key, such as ``shortcuts.play-pause``.
+        strict: True raises instead of warning.
+
+    Returns:
+        The chords, or None when the list is dropped.
+
+    Raises:
+        ValueError: If ``strict`` is True and the value is not a non-empty
+            list of chords.
+    """
+    if not isinstance(value, list) or not value:
+        if strict:
+            raise ValueError(f"{dotted} must be a non-empty list of chords.")
+        logger.warning("Config key %r has wrong type — ignored", dotted)
+        return None
+    chords: list[dict[str, object]] = []
+    for index, raw in enumerate(value):
+        chord = _parse_chord(raw, f"{dotted}.{index}", strict=strict)
+        if chord is None:
+            return None
+        chords.append(chord)
+    return chords
+
+
+def _parse_chord(value: object, dotted: str, *, strict: bool) -> dict[str, object] | None:
+    """Validate one chord object.
+
+    Args:
+        value: Candidate ``{key, mod?, shift?, alt?}``.
+        dotted: Full key, such as ``shortcuts.play-pause.0``.
+        strict: True raises instead of warning.
+
+    Returns:
+        The present fields, or None when the chord is dropped.
+
+    Raises:
+        ValueError: If ``strict`` is True and a field is missing or the
+            wrong type.
+    """
+    if not isinstance(value, dict):
+        if strict:
+            raise ValueError(f"{dotted} must be a mapping.")
+        logger.warning("Config key %r has wrong type — ignored", dotted)
+        return None
+    for key in value:
+        if key not in CHORD_FIELDS:
+            path = f"{dotted}.{key}"
+            if strict:
+                raise ValueError(f"{path} is not a chord field.")
+            logger.warning("Unknown config key '%s' — ignored", path)
+    raw_key = value.get("key")
+    if not isinstance(raw_key, str) or raw_key == "":
+        path = f"{dotted}.key"
+        if strict:
+            raise ValueError(f"{path} must be a non-empty string.")
+        logger.warning("Config key %r has wrong type — ignored", path)
+        return None
+    chord: dict[str, object] = {"key": raw_key}
+    for flag in ("mod", "shift", "alt"):
+        if flag not in value:
+            continue
+        raw_flag = value[flag]
+        if not isinstance(raw_flag, bool):
+            path = f"{dotted}.{flag}"
+            if strict:
+                raise ValueError(f"{path} must be a boolean.")
+            logger.warning("Config key %r has wrong type — ignored", path)
+            return None
+        chord[flag] = raw_flag
+    return chord
+
+
 def _parse(payload: object) -> Settings:
     """Validate a decoded settings object.
 
@@ -665,6 +908,10 @@ def _parse(payload: object) -> Settings:
         rekordbox = default_rekordbox()
     else:
         rekordbox = _parse_rekordbox(payload.get("rekordbox"))
+    if "shortcuts" in payload:
+        shortcuts = _parse_shortcuts(payload.get("shortcuts"))
+    else:
+        shortcuts = {}
     return Settings(
         install_id=install_id,
         telemetry_consent=consent,
@@ -677,6 +924,7 @@ def _parse(payload: object) -> Settings:
         colorway=colorway,
         icon_follows_theme=icon_follows_theme,
         gig_lock=gig_lock,
+        shortcuts=shortcuts,
     )
 
 def _parse_bool(value: object, dotted: str, default: bool) -> bool:
@@ -1194,6 +1442,42 @@ def set_gig_lock(value: bool) -> Settings:
             telemetry_consent=consent,
             wizard_complete=current.wizard_complete is True,
             gig_lock=value,
+        )
+        save_settings(updated)
+        return updated
+
+
+def set_shortcuts(value: object) -> Settings:
+    """Store remapped keyboard chords, or clear them to restore defaults.
+
+    Args:
+        value: Map of catalog id to a non-empty chord list. An empty map
+            removes every override.
+
+    Returns:
+        The settings that were written. Every other field is kept. A
+        partial sharing pair is dropped, as in :func:`set_language`.
+
+    Raises:
+        ValueError: If ``value`` is not a mapping, an id is unknown, a
+            chord list is empty or not a list, or a chord field has the
+            wrong type.
+        OSError: If the settings file cannot be written.
+    """
+    parsed = _parse_shortcuts(value, strict=True)
+    with _settings_lock:
+        current = load_settings()
+        install_id = current.install_id
+        consent = current.telemetry_consent
+        if not isinstance(consent, bool) or install_id is None:
+            install_id = None
+            consent = None
+        updated = replace(
+            current,
+            install_id=install_id,
+            telemetry_consent=consent,
+            wizard_complete=current.wizard_complete is True,
+            shortcuts=parsed,
         )
         save_settings(updated)
         return updated

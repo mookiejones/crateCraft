@@ -403,6 +403,7 @@ class SetupApiTests(unittest.TestCase):
         app_config.save_window_geometry(frame)
         app_config.set_track_list_width(520)
         app_config.set_language("es")
+        app_config.set_shortcuts({"play-pause": [{"key": "q"}]})
         status, choice = _request(self.base, "/api/settings", {"telemetry_consent": False})
         self.assertEqual(status, 200)
         assert isinstance(choice, dict)

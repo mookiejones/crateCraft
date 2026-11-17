@@ -2380,6 +2380,9 @@ class Handler(BaseHTTPRequestHandler):
                 Booleans reject integers. ``key_notation`` must be
                 ``asis``, ``camelot``, or ``classical``. Any other shape is
                 a 400, and the file is left unchanged.
+                ``{"shortcuts": {id: [{key, mod?, shift?, alt?}]}}`` is
+                accepted alone. An empty map resets to Serato defaults.
+                Unknown ids, empty chord lists, and wrong types are a 400.
                 ``{"colorway": str}`` and ``{"icon_follows_theme": bool}``
                 may be sent together or alone. ``colorway`` must be a known
                 theme. The icon flag must be a boolean. The running icon
@@ -2435,6 +2438,21 @@ class Handler(BaseHTTPRequestHandler):
                 return
             except OSError:
                 self.send_json({"error": "The layout could not be saved."}, status=500)
+                return
+            self.send_json(telemetry.public_settings())
+            return
+        if keys == {"shortcuts"}:
+            raw = payload.get("shortcuts")
+            if not isinstance(raw, dict):
+                self.send_json({"error": "That request is not valid."}, status=400)
+                return
+            try:
+                app_config.set_shortcuts(raw)
+            except ValueError:
+                self.send_json({"error": "That request is not valid."}, status=400)
+                return
+            except OSError:
+                self.send_json({"error": "The shortcuts could not be saved."}, status=500)
                 return
             self.send_json(telemetry.public_settings())
             return

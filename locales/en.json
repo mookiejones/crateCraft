@@ -319,6 +319,7 @@
   "error.setup_needs_consent": "Choose whether to share stats before finishing setup.",
   "error.setup_not_saved": "Setup could not be saved.",
   "error.shortcut_skipped": "Shortcuts are left alone.",
+  "error.shortcuts_not_saved": "The shortcuts could not be saved.",
   "error.smart_crate_tracks": "Smart crates choose their tracks from rules.",
   "error.smart_rules_json": "Smart crate rules need to be JSON.",
   "error.smart_rules_list": "Smart crate rules need a rules list.",

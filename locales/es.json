@@ -319,6 +319,7 @@
   "error.setup_needs_consent": "Elige si quieres compartir estadísticas antes de terminar la configuración.",
   "error.setup_not_saved": "No se pudo guardar la configuración.",
   "error.shortcut_skipped": "Los accesos directos no se tocan.",
+  "error.shortcuts_not_saved": "No se pudieron guardar los atajos.",
   "error.smart_crate_tracks": "Las cajas inteligentes eligen sus pistas a partir de reglas.",
   "error.smart_rules_json": "Las reglas de la caja inteligente deben estar en JSON.",
   "error.smart_rules_list": "Las reglas de la caja inteligente necesitan una lista de reglas.",
