@@ -13388,6 +13388,9 @@ Error generating stack: ` + x.message + `
     "operations.snapshots": "Before {before}. After {after}.",
     "operations.unreadable": "The operation log could not be read.",
     "plan.andMore": ", and {count} more",
+    "plan.crateContents": "{name}: {detail}",
+    "plan.crateTracksAdded": "tracks added {names}",
+    "plan.crateTracksRemoved": "tracks removed {names}",
     "plan.cratesAdded": "Crates added",
     "plan.cratesChanged": "Crates changed",
     "plan.cratesRegistered": "Crates registered so Serato keeps them",
@@ -15251,6 +15254,9 @@ Error generating stack: ` + x.message + `
     "operations.snapshots": "Antes {before}. Después {after}.",
     "operations.unreadable": "No se pudo leer el registro de operaciones.",
     "plan.andMore": " y {count} más",
+    "plan.crateContents": "{name}: {detail}",
+    "plan.crateTracksAdded": "pistas añadidas {names}",
+    "plan.crateTracksRemoved": "pistas quitadas {names}",
     "plan.cratesAdded": "Cajas añadidas",
     "plan.cratesChanged": "Cajas modificadas",
     "plan.cratesRegistered": "Cajas registradas para que Serato las conserve",
@@ -65747,11 +65753,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let parts = String(path).split(/[/\\]/);
     return parts[parts.length - 1] || path;
   }
+  function listedNames(values3) {
+    let items = (values3 || []).filter(Boolean);
+    if (!items.length) return "";
+    let names = items.slice(0, 8).map((item) => fileName(item)), extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "";
+    return `${names.join(", ")}${extra}`;
+  }
   function planLineText(label, rows) {
     let items = rows || [];
     if (!items.length) return t("plan.none", { label });
     let names = items.slice(0, 8).map((item) => item.name || item.path || item.drive_label || t("plan.item")), extra = items.length > names.length ? t("plan.andMore", { count: items.length - names.length }) : "", listed = `${names.join(", ")}${extra}`;
     return t("plan.listed", { label, count: items.length, names: listed });
+  }
+  function crateContentsText(row) {
+    let name = row.name || fileName(row.path || "") || t("plan.item"), parts = [], added = listedNames(row.tracks_added), removed = listedNames(row.tracks_removed);
+    return added && parts.push(t("plan.crateTracksAdded", { names: added })), removed && parts.push(t("plan.crateTracksRemoved", { names: removed })), parts.length ? t("plan.crateContents", { name, detail: parts.join(". ") }) : name;
   }
   function operationTime(value) {
     let date = new Date(value);
@@ -65801,6 +65817,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function PlanLine({ label, rows }) {
     return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { children: planLineText(label, rows) });
   }
+  function ChangedCrates({ rows }) {
+    let items = rows || [], label = t("plan.cratesChanged");
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(import_jsx_runtime256.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { children: planLineText(label, items) }),
+      items.map((row, index) => /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { children: crateContentsText(row) }, `${row.path ?? row.name ?? ""}:${index}`))
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { children: t("plan.none", { label }) });
+  }
   function CueDiffs({ label, rows }) {
     let items = rows || [];
     return items.length ? /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(import_jsx_runtime256.Fragment, { children: [
@@ -65844,7 +65867,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(import_jsx_runtime256.Fragment, { children: [
               /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
               /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
-              /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(PlanLine, { label: t("plan.cratesChanged"), rows: plan.crates?.changed }),
+              /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(ChangedCrates, { rows: plan.crates?.changed }),
               /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
               /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
               /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),

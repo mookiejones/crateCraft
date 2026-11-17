@@ -50,3 +50,36 @@ test("the snapshots list renders from context", async ({ page }) => {
   await page.locator("#gig-lock-queue").scrollIntoViewIfNeeded();
   await saveShot(page, "snapshots_list");
 });
+
+test("review restore lists crate membership and deleted crates", async ({ page }) => {
+  await page.evaluate(() => {
+    window.fetch = async (input, init) => {
+      const url = String(input);
+      const method = (init && init.method) || "GET";
+      if (url.includes("/api/snapshots") && method === "POST") {
+        return new Response(JSON.stringify({
+          dry_run: true,
+          crates: {
+            added: [],
+            removed: [],
+            changed: [{
+              name: "House",
+              tracks_added: ["track.mp3"],
+              tracks_removed: ["other.mp3"],
+            }],
+            unavailable: [],
+          },
+          deleted: { crates: [{ name: "Old" }], tracks: [], cues: [], grids: [] },
+        }), { status: 200, headers: { "Content-Type": "application/json" } });
+      }
+      return new Response("{}", { status: 404 });
+    };
+  });
+  await page.locator("#snapshots-panel").evaluate((node) => {
+    if (node instanceof HTMLElement) node.hidden = false;
+  });
+  await page.locator('#snapshots-list .MuiDataGrid-cell[data-field="restore"] button').click();
+  await expect(page.locator("#snapshot-plan")).toContainText("House: tracks added track.mp3. tracks removed other.mp3");
+  await expect(page.locator("#snapshot-plan")).toContainText("Deleted crates: 1. Old");
+  await saveShot(page, "snapshot_restore_plan");
+});

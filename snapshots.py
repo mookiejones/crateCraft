@@ -956,7 +956,8 @@ class SnapshotStore:
             snapshot_id: Snapshot to compare with the library as it is now.
 
         Returns:
-            Crate, track, cue, and grid differences. ``dry_run`` is true.
+            Crate, track, crate membership, cue, and grid differences.
+            ``dry_run`` is true.
             ``restore_blocked`` is the refusal text when a real restore
             would be refused, and None when it would be allowed.
 

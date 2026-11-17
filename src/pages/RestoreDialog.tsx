@@ -13,11 +13,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { failureOf } from "../lib/api";
-import type { FrameDiff, Marker, PlanName } from "../lib/api-types";
+import type { ChangedCrate, FrameDiff, Marker, PlanName } from "../lib/api-types";
 import { cueDiffRows, cueSummary, slotColor, type CueDiff } from "../lib/ui/cue-view";
 import { codedText, messageParams, t } from "../lib/i18n";
 import { useSnapshots } from "../containers/SnapshotsContext";
-import { fileName, planLineText } from "../lib/snapshots/restore-view";
+import { crateContentsText, fileName, planLineText } from "../lib/snapshots/restore-view";
 import { tooltipRef } from "../components/tooltip-ref";
 import { tips } from "../lib/ui/tooltip-strings";
 
@@ -50,6 +50,20 @@ function CueDiffRow({ diff }: { diff: CueDiff }) {
 
 function PlanLine({ label, rows }: { label: string; rows: PlanName[] | undefined }) {
   return <p>{planLineText(label, rows)}</p>;
+}
+
+function ChangedCrates({ rows }: { rows: ChangedCrate[] | undefined }) {
+  const items = rows || [];
+  const label = t("plan.cratesChanged");
+  if (!items.length) return <p>{t("plan.none", { label })}</p>;
+  return (
+    <>
+      <p>{planLineText(label, items)}</p>
+      {items.map((row, index) => (
+        <p key={`${row.path ?? row.name ?? ""}:${index}`}>{crateContentsText(row)}</p>
+      ))}
+    </>
+  );
 }
 
 function CueDiffs({ label, rows }: { label: string; rows: FrameDiff[] | undefined }) {
@@ -128,7 +142,7 @@ export function RestoreDialog() {
             <>
               <PlanLine label={t("plan.cratesAdded")} rows={plan.crates?.added} />
               <PlanLine label={t("plan.cratesRemoved")} rows={plan.crates?.removed} />
-              <PlanLine label={t("plan.cratesChanged")} rows={plan.crates?.changed} />
+              <ChangedCrates rows={plan.crates?.changed} />
               <PlanLine label={t("plan.cratesUnavailable")} rows={plan.crates?.unavailable} />
               <PlanLine label={t("plan.cratesRegistered")} rows={plan.crates_registered} />
               <PlanLine label={t("plan.cratesSkipped")} rows={plan.crates_skipped} />

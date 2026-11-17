@@ -588,10 +588,16 @@ export interface PlanName {
   drive_label?: string;
 }
 
+/** Crate whose track list differs from the snapshot. */
+export interface ChangedCrate extends PlanName {
+  tracks_added?: string[];
+  tracks_removed?: string[];
+}
+
 export interface PlanGroup {
   added?: PlanName[];
   removed?: PlanName[];
-  changed?: PlanName[];
+  changed?: ChangedCrate[];
   unavailable?: PlanName[];
 }
 

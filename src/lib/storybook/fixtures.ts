@@ -588,6 +588,22 @@ export const snapshotInfo: SnapshotInfo = {
 export const restorePlan: RestorePlan = {
   dry_run: true,
   restore_blocked: null,
+  crates: {
+    added: [],
+    removed: [],
+    changed: [{
+      name: "House",
+      tracks_added: ["track.mp3"],
+      tracks_removed: ["other.mp3"],
+    }],
+    unavailable: [],
+  },
+  deleted: {
+    crates: [{ name: "Old" }],
+    tracks: [],
+    cues: [],
+    grids: [],
+  },
 };
 
 export function snapshotsValue(partial: Partial<SnapshotsContextValue> = {}): SnapshotsContextValue {

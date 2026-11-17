@@ -9,6 +9,7 @@ vi.mock("../lib/api", async () => {
 
 import { applyStatic, setLocale, t } from "../lib/i18n";
 import { el } from "../lib/dom";
+import { crateContentsText } from "../lib/snapshots/restore-view";
 import { backupDriveCrates, closePlan, confirmSnapshotRestore, openSnapshotPlan, renderOperations, renderSnapshots, repaintSnapshotPlan, unmountSnapshots } from "../lib/snapshots/restore";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import type { RestorePlan } from "../lib/api-types";
@@ -19,7 +20,11 @@ const plan: RestorePlan = {
   crates: {
     added: [{ name: "House" }],
     removed: [],
-    changed: [],
+    changed: [{
+      name: "House",
+      tracks_added: ["track.mp3"],
+      tracks_removed: ["other.mp3"],
+    }],
     unavailable: [],
   },
   tracks: {
@@ -116,6 +121,8 @@ describe("restore", () => {
     await openSnapshotPlan("snap-9");
     const text = document.getElementById("snapshot-plan")?.textContent ?? "";
     expect(text).toContain("Crates added: 1. House");
+    expect(text).toContain("Crates changed: 1. House");
+    expect(text).toContain("House: tracks added track.mp3. tracks removed other.mp3");
     expect(text).toContain("Crates registered so Serato keeps them: none");
     expect(text).toContain("Crates skipped: none");
     expect(text).toContain("Tracks added: 1. Music/a.mp3");
@@ -213,6 +220,34 @@ describe("restore", () => {
       state.snapshots = [];
       renderSnapshots();
       expect(document.getElementById("snapshots-status")?.textContent).toBe("Copia guardada.");
+    } finally {
+      setLocale("en");
+    }
+  });
+
+  it("lists tracks added and removed inside a changed crate", async () => {
+    expect(crateContentsText({
+      name: "House",
+      tracks_added: ["track.mp3"],
+      tracks_removed: ["other.mp3"],
+    })).toBe("House: tracks added track.mp3. tracks removed other.mp3");
+    expect(crateContentsText({
+      name: "House",
+      tracks_added: Array.from({ length: 10 }, (_, index) => `t${index}.mp3`),
+    })).toBe("House: tracks added t0.mp3, t1.mp3, t2.mp3, t3.mp3, t4.mp3, t5.mp3, t6.mp3, t7.mp3, and 2 more");
+    expect(crateContentsText({ name: "House" })).toBe("House");
+
+    postJSON.mockResolvedValue(plan);
+    await openSnapshotPlan("snap-9");
+    expect(document.getElementById("snapshot-plan")?.textContent).toContain(
+      "House: tracks added track.mp3. tracks removed other.mp3",
+    );
+    setLocale("es");
+    try {
+      repaintSnapshotPlan();
+      expect(document.getElementById("snapshot-plan")?.textContent).toContain(
+        "House: pistas añadidas track.mp3. pistas quitadas other.mp3",
+      );
     } finally {
       setLocale("en");
     }
