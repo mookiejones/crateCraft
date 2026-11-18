@@ -82,5 +82,6 @@ test("review restore lists crate membership and deleted crates", async ({ page }
   await page.getByRole("button", { name: "Review restore" }).click();
   await expect(page.locator("#snapshot-plan")).toContainText("House: tracks added track.mp3. tracks removed other.mp3");
   await expect(page.locator("#snapshot-plan")).toContainText("Deleted crates: 1. Old");
+  await expect(page.locator("#snapshot-touched")).toHaveText("What changed: master.sqlite");
   await saveShot(page, "snapshot_restore_plan");
 });

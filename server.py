@@ -1294,6 +1294,7 @@ def load_library(space: str | None = None) -> dict[str, object]:
     import verified_copies
 
     payload["copies"] = verified_copies.library_copies(snapshots.current_store())
+    snapshots.remember_load()
     return payload
 
 
@@ -2154,16 +2155,16 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if parsed.path == "/api/snapshots":
                 with _lock:
-                    with snapshots.own_writes():
+                    with snapshots.own_writes(), snapshots.allow_force(payload.get("force") is True):
                         self._post_snapshots(payload)
                 return
             if parsed.path == "/api/write-queue":
                 with _lock:
-                    with snapshots.own_writes():
+                    with snapshots.own_writes(), snapshots.allow_force(payload.get("force") is True):
                         self.send_json(write_queue.action(payload))
                 return
             with _lock:
-                with snapshots.own_writes():
+                with snapshots.own_writes(), snapshots.allow_force(payload.get("force") is True):
                     merging = parsed.path == "/api/duplicates/merge"
                     replacing = parsed.path == "/api/replace-in-crates"
                     preset = parsed.path == "/api/smart-preset"

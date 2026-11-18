@@ -112,6 +112,13 @@ SERATO_RUNNING_MESSAGE = (
 
 _stores: dict[str, SnapshotStore] = {}
 _watch: FolderWatch | None = None
+_LOAD_FINGERPRINTS: dict[str, str] = {}
+_ALLOW_FORCE = False
+
+LIBRARY_CHANGED = (
+    "The library files changed on disk since they were loaded. "
+    "Confirm to write anyway."
+)
 
 
 class SnapshotError(Exception):
@@ -171,6 +178,7 @@ class SnapshotInfo(TypedDict):
     serato_build: str
     unavailable_drives: list[str]
     integrity: str
+    touched: list[str]
 
 
 class CrateView(TypedDict):
@@ -783,6 +791,74 @@ def current_store() -> SnapshotStore:
     return store
 
 
+def remember_load() -> None:
+    """Remember the current Serato file fingerprint as the loaded library.
+
+    GET ``/api/library`` calls this so a later write can refuse when those
+    files change on disk. A process that never loaded skips the compare.
+    """
+    store = current_store()
+    _LOAD_FINGERPRINTS[str(store.master.resolve())] = store.fingerprint()
+
+
+def rebase_load() -> None:
+    """Treat the current files as the loaded library after our own write."""
+    key = str(current_store().master.resolve())
+    if key in _LOAD_FINGERPRINTS:
+        _LOAD_FINGERPRINTS[key] = current_store().fingerprint()
+
+
+@contextmanager
+def allow_force(force: bool) -> Iterator[None]:
+    """Allow one write past the load-fingerprint check.
+
+    Args:
+        force: True when the person confirmed writing over an outside change.
+
+    Yields:
+        None. The previous force flag is restored afterwards.
+    """
+    global _ALLOW_FORCE
+    previous = _ALLOW_FORCE
+    _ALLOW_FORCE = bool(force)
+    try:
+        yield
+    finally:
+        _ALLOW_FORCE = previous
+
+
+def require_unchanged() -> None:
+    """Refuse a write when the loaded fingerprint no longer matches.
+
+    Raises:
+        LibraryError: 409 ``library_changed`` when files hashed at load
+            differ and the caller did not confirm. Skipped when nothing
+            was loaded in this process for this library file.
+    """
+    import library
+
+    if _ALLOW_FORCE:
+        return
+    store = current_store()
+    saved = _LOAD_FINGERPRINTS.get(str(store.master.resolve()))
+    if saved is None:
+        return
+    if store.fingerprint() != saved:
+        raise library.LibraryError(LIBRARY_CHANGED, 409)
+
+
+def record_touched(snapshot_id: str | None, files: Sequence[str]) -> None:
+    """Store touched files on the before-write snapshot, if one is open.
+
+    Args:
+        snapshot_id: SnapshotStore id from ``take``, or None.
+        files: Labels of files whose hash changed.
+    """
+    if not snapshot_id:
+        return
+    current_store().record_touched(snapshot_id, files)
+
+
 def snapshot_before_write() -> None:
     """Save a snapshot before a library write.
 
@@ -793,9 +869,14 @@ def snapshot_before_write() -> None:
     import library
 
     try:
-        current_store().take("before-write", "Before a library write.")
+        info = current_store().take("before-write", "Before a library write.")
     except SnapshotError as exc:
         raise library.LibraryError(exc.message, exc.status) from exc
+    import safe_write
+
+    session = safe_write.current_session()
+    if session is not None:
+        session._content_id = info["id"]
 
 
 @contextmanager
@@ -868,6 +949,39 @@ class SnapshotStore:
                 rows.append(_info(manifest))
         rows.sort(key=lambda item: item["created"], reverse=True)
         return rows
+
+    def record_touched(self, snapshot_id: str, files: Sequence[str]) -> None:
+        """Store the files a write changed on an existing snapshot manifest.
+
+        Rewrites ``sha256`` so ``list_snapshots`` still accepts the row.
+
+        Args:
+            snapshot_id: Manifest directory name.
+            files: Labels of files whose hash changed, such as
+                ``master.sqlite``.
+        """
+        folder = self._snapshot_dir(snapshot_id)
+        path = folder / "manifest.json"
+        if path.is_symlink() or not path.is_file():
+            return
+        try:
+            manifest = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError, UnicodeError):
+            return
+        if not isinstance(manifest, dict):
+            return
+        manifest["touched"] = list(files)
+        manifest.pop("sha256", None)
+        manifest["sha256"] = _body_digest(manifest, self._manifest_key())
+        payload = json.dumps(manifest, indent=2, sort_keys=True) + "\n"
+        temporary = folder / ".manifest.json.tmp"
+        try:
+            temporary.write_text(payload, encoding="utf-8")
+            os.replace(temporary, path)
+            write_complete_marker(folder)
+        except OSError:
+            if temporary.exists():
+                temporary.unlink(missing_ok=True)
 
     def load(self, snapshot_id: str) -> SnapshotContents:
         """Return crates, cues, grids, and autotags for one snapshot.
@@ -2771,6 +2885,7 @@ def _info(manifest: Mapping[str, object]) -> SnapshotInfo:
         if isinstance(master, dict) and master.get("integrity") not in (None, "ok"):
             integrity = "failed"
     source = manifest.get("source")
+    touched_raw = manifest.get("touched")
     return {
         "id": str(manifest.get("id") or ""),
         "created": str(manifest.get("created") or ""),
@@ -2781,6 +2896,11 @@ def _info(manifest: Mapping[str, object]) -> SnapshotInfo:
         "serato_build": str(manifest.get("serato_build") or "unknown"),
         "unavailable_drives": unavailable,
         "integrity": integrity,
+        "touched": (
+            [str(item) for item in touched_raw]
+            if isinstance(touched_raw, list)
+            else []
+        ),
     }
 
 
@@ -4402,6 +4522,39 @@ def _contained(path: Path, root: Path) -> bool:
     return os.name == "nt"
 
 
+def parse_chunks(data: bytes) -> tuple[list[tuple[str, bytes]], str | None]:
+    """Split a Serato chunk file and name a cut-off header or body.
+
+    Complete records before the cut are kept. This is the production
+    companion of ``tests.serato_spec.parse_chunks``.
+
+    Args:
+        data: Concatenated records. Each record is a 4-byte ASCII tag, a
+            big-endian length, and that many bytes.
+
+    Returns:
+        Tag and payload pairs, and ``truncated-header`` or
+        ``truncated-body`` when a record is cut off.
+    """
+    chunks: list[tuple[str, bytes]] = []
+    pos = 0
+    error: str | None = None
+    while pos < len(data):
+        if pos + 8 > len(data):
+            error = "truncated-header"
+            break
+        tag = data[pos:pos + 4]
+        if not tag.isascii() or not tag.isalnum():
+            break
+        length = int.from_bytes(data[pos + 4:pos + 8], "big")
+        if pos + 8 + length > len(data):
+            error = "truncated-body"
+            break
+        chunks.append((tag.decode("ascii"), data[pos + 8:pos + 8 + length]))
+        pos += 8 + length
+    return chunks, error
+
+
 def _chunks(data: bytes) -> list[tuple[str, bytes]]:
     """Split a Serato chunk file.
 
@@ -4411,18 +4564,52 @@ def _chunks(data: bytes) -> list[tuple[str, bytes]]:
     Returns:
         Tag and payload pairs. Parsing stops at a truncated chunk.
     """
-    chunks: list[tuple[str, bytes]] = []
-    pos = 0
-    while pos + 8 <= len(data):
-        tag = data[pos:pos + 4]
-        if not tag.isascii() or not tag.isalnum():
-            break
-        length = int.from_bytes(data[pos + 4:pos + 8], "big")
-        if pos + 8 + length > len(data):
-            break
-        chunks.append((tag.decode("ascii"), data[pos + 8:pos + 8 + length]))
-        pos += 8 + length
-    return chunks
+    records, _error = parse_chunks(data)
+    return records
+
+
+def half_written_crates(master: Path, serato_root: Path) -> list[dict[str, str]]:
+    """Report crate files that are cut off or unknown to the database.
+
+    Scans ``Subcrates`` and ``SmartCrates``. A database crate with no
+    export file is not reported: Serato 4/5 writes that file later.
+
+    Args:
+        master: ``master.sqlite``.
+        serato_root: A drive's ``_Serato_`` folder.
+
+    Returns:
+        Rows with ``name`` (basename) and ``issue`` (``truncated-header``,
+        ``truncated-body``, or ``unknown``).
+    """
+    import library
+
+    known = library.crate_export_names(master)
+    reports: list[dict[str, str]] = []
+    for folder_name in ("Subcrates", "SmartCrates"):
+        folder = serato_root / folder_name
+        if not folder.is_dir() or folder.is_symlink():
+            continue
+        try:
+            names = list(folder.iterdir())
+        except OSError:
+            continue
+        for path in names:
+            if path.suffix.lower() not in {".crate", ".scrate"}:
+                continue
+            if path.is_symlink() or not path.is_file():
+                continue
+            try:
+                data = path.read_bytes()
+            except OSError:
+                continue
+            _records, error = parse_chunks(data)
+            issue = error
+            if issue is None and path.name.casefold() not in known:
+                issue = "unknown"
+            if issue:
+                reports.append({"name": path.name, "issue": issue})
+    return reports
 
 
 def _utf16be(data: bytes) -> str:

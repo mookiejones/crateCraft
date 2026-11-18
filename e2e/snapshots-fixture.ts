@@ -26,6 +26,7 @@ state.snapshots = [
     serato_version: "4.0.10",
     serato_build: "4010213",
     reason: "Safety copy",
+    touched: ["master.sqlite"],
   },
 ];
 

@@ -115,6 +115,11 @@ export function RestoreDialog() {
   const blockText = reading
     ? t("snapshots.readingPlan")
     : blocked || (plan != null && plan.dry_run ? t("plan.nothingChanged") : "");
+  const item = snapshots.snapshots.find((row) => row.id === snapshots.snapshotPlanId);
+  const touched = (item?.touched ?? []).filter((name) => name.length > 0);
+  const touchedLine = touched.length
+    ? t("snapshots.whatChanged", { files: touched.join(", ") })
+    : "";
 
   return (
     <Dialog
@@ -137,6 +142,7 @@ export function RestoreDialog() {
         <DialogContentText id="snapshot-intro">
           {t("snapshots.restoreIntro")}
         </DialogContentText>
+        {touchedLine ? <p id="snapshot-touched">{touchedLine}</p> : null}
         <div id="snapshot-plan" aria-live="polite">
           {plan ? (
             <>

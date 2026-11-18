@@ -50,6 +50,7 @@ export const tips = {
   relocateConfirm: spec("tooltip.relocateConfirm"),
   confirmCancel: spec("tooltip.confirmCancel"),
   confirmAction: spec("tooltip.confirmAction"),
+  forceWrite: spec("tooltip.forceWrite"),
   crateColor: spec("tooltip.crateColor"),
   crateDelete: spec("tooltip.crateDelete"),
   cratePreset: spec("tooltip.cratePreset"),

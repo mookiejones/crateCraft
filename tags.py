@@ -1389,6 +1389,37 @@ _BEATGRID_ISSUES: dict[str, str] = {
 }
 
 
+def markers2_issue_code(payload: bytes) -> str | None:
+    """Return a stable code when a Markers2 payload is cut off.
+
+    Args:
+        payload: Markers2 bytes, including the leading 01 01 pair.
+
+    Returns:
+        ``markers2_truncated`` when an entry header or body is shorter
+        than its length field. None when every entry is complete, or
+        when the payload is not a Markers2 body.
+    """
+    if len(payload) < 2 or payload[:2] != b"\x01\x01":
+        return None
+    decoded = _decode_serato_base64(payload[2:])
+    if not decoded:
+        return None
+    if decoded.startswith(b"\x01\x01"):
+        decoded = decoded[2:]
+    pos = 0
+    while pos < len(decoded):
+        end = decoded.find(b"\x00", pos)
+        if end < 0 or end + 5 > len(decoded):
+            return "markers2_truncated"
+        length = int.from_bytes(decoded[end + 1:end + 5], "big")
+        start = end + 5
+        if start + length > len(decoded):
+            return "markers2_truncated"
+        pos = start + length
+    return None
+
+
 def beatgrid_issue_code(payload: bytes) -> str | None:
     """Return a stable code when a BeatGrid payload cannot be read.
 

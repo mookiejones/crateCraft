@@ -600,6 +600,8 @@ export interface CrateWriteResult {
   added?: number;
   unmatched_count?: number;
   queued?: boolean;
+  /** Files whose bytes changed in this write, such as master.sqlite. */
+  touched?: string[];
 }
 
 export interface PlanName {
@@ -682,6 +684,8 @@ export interface SnapshotInfo {
   integrity?: string;
   /** Optional byte size when the API sends one. */
   size?: number;
+  /** Files this snapshot's write changed, such as master.sqlite. */
+  touched?: string[];
 }
 
 export interface PendingUndo {
