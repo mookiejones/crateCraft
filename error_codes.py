@@ -160,6 +160,8 @@ ERROR_CODES: dict[str, str] = {
     "The write did not match, and putting the library back failed.": "write_rollback_failed",
     "The write failed, and putting the library back failed.": "write_undo_failed",
     "The pre-write snapshot does not match its hash.": "write_preimage_mismatch",
+    "The library files changed on disk since they were loaded. "
+    "Confirm to write anyway.": "library_changed",
 }
 
 # Code -> English template. ``{name}`` is filled from the params the page

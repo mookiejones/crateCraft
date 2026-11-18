@@ -175,6 +175,10 @@ export async function getRelink(space: string, root = ""): Promise<RelinkPlan> {
   return payload;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 export async function postJSON<T = ServerReply>(url: string, body: unknown): Promise<T> {
   const response = await fetch(url, {
     method: "POST",
@@ -183,6 +187,21 @@ export async function postJSON<T = ServerReply>(url: string, body: unknown): Pro
   });
   const payload = await readJSONOr<T & ErrorBody>(response, {} as T & ErrorBody);
   if (!response.ok) {
+    if (
+      response.status === 409
+      && payload.code === "library_changed"
+      && !(isRecord(body) && body.force === true)
+    ) {
+      const { openConfirm } = await import("./ui/shared-dialog");
+      const ok = await openConfirm({
+        title: t("write.forceTitle"),
+        message: t("write.forceConfirm"),
+        confirmLabel: t("write.forceWrite"),
+      });
+      if (ok && isRecord(body)) {
+        return postJSON(url, { ...body, force: true });
+      }
+    }
     const error = new Error(serverMessage(payload, t("error.requestStatus", { status: String(response.status) }))) as ApiFailure;
     error.status = response.status;
     error.payload = payload;

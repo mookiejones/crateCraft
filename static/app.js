@@ -5,6 +5,14 @@
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __esm = (fn2, res, err) => function() {
+    if (err) throw err[0];
+    try {
+      return fn2 && (res = (0, fn2[__getOwnPropNames(fn2)[0]])(fn2 = 0)), res;
+    } catch (e) {
+      throw err = [e], e;
+    }
+  };
   var __commonJS = (cb, mod) => function() {
     try {
       return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
@@ -29,6 +37,164 @@
     isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: !0 }) : target,
     mod
   ));
+
+  // src/lib/ui/shared-dialog.ts
+  var shared_dialog_exports = {};
+  __export(shared_dialog_exports, {
+    SHARED_DIALOG_IDS: () => SHARED_DIALOG_IDS,
+    bindDialogApi: () => bindDialogApi,
+    bindSharedDialogMount: () => bindSharedDialogMount,
+    cancelConfirm: () => cancelConfirm,
+    cancelCratePrompt: () => cancelCratePrompt,
+    confirmConfirm: () => confirmConfirm,
+    confirmCratePrompt: () => confirmCratePrompt,
+    ensureSharedDialogs: () => ensureSharedDialogs,
+    getConfirm: () => getConfirm,
+    getCratePrompt: () => getCratePrompt,
+    isSharedDialogId: () => isSharedDialogId,
+    isSharedDialogOpen: () => isSharedDialogOpen,
+    openConfirm: () => openConfirm,
+    openCratePrompt: () => openCratePrompt,
+    setCratePromptValue: () => setCratePromptValue,
+    setSharedDialogOpen: () => setSharedDialogOpen,
+    sharedDialogMaxWidth: () => sharedDialogMaxWidth,
+    subscribeSharedDialogs: () => subscribeSharedDialogs
+  });
+  function bindSharedDialogMount(fn2) {
+    ensureMount = fn2;
+  }
+  function ensureSharedDialogs() {
+    ensureMount();
+  }
+  function subscribeSharedDialogs(listener) {
+    return listeners.add(listener), () => {
+      listeners.delete(listener);
+    };
+  }
+  function bindEscape() {
+    escapeBound || (escapeBound = !0, document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      let id = [...openIds].at(-1);
+      id && (event.preventDefault(), setSharedDialogOpen(id, !1));
+    }));
+  }
+  function emit() {
+    bindEscape();
+    for (let listener of listeners) listener();
+  }
+  function isSharedDialogOpen(id) {
+    return openIds.has(id);
+  }
+  function setSharedDialogOpen(id, open) {
+    let was = openIds.has(id);
+    if (open !== was && (open ? openIds.add(id) : openIds.delete(id), emit(), !open)) {
+      if (document.getElementById(id)?.dispatchEvent(new Event("close")), id === "crate-prompt-dialog") {
+        let resolve = cratePromptResolve;
+        cratePromptResolve = null, resolve?.(null);
+      }
+      if (id === "confirm-dialog") {
+        let resolve = confirmResolve;
+        confirmResolve = null, resolve?.(!1);
+      }
+    }
+  }
+  function sharedDialogMaxWidth(id) {
+    return WIDE[id] ?? "sm";
+  }
+  function bindDialogApi(root, id) {
+    Object.defineProperty(root, "open", {
+      configurable: !0,
+      enumerable: !0,
+      get() {
+        return isSharedDialogOpen(id);
+      },
+      set(value) {
+        setSharedDialogOpen(id, !!value);
+      }
+    }), Object.assign(root, {
+      showModal() {
+        ensureSharedDialogs(), setSharedDialogOpen(id, !0);
+      },
+      close() {
+        setSharedDialogOpen(id, !1);
+      }
+    });
+  }
+  function getCratePrompt() {
+    return cratePrompt;
+  }
+  function setCratePromptValue(value) {
+    cratePrompt = { ...cratePrompt, value }, emit();
+  }
+  function settleCratePrompt(value) {
+    let resolve = cratePromptResolve;
+    cratePromptResolve = null, setSharedDialogOpen("crate-prompt-dialog", !1), resolve?.(value);
+  }
+  function cancelCratePrompt() {
+    settleCratePrompt(null);
+  }
+  function confirmCratePrompt() {
+    settleCratePrompt(cratePrompt.value);
+  }
+  function openCratePrompt(next3) {
+    if (ensureSharedDialogs(), cratePromptResolve) {
+      let previous2 = cratePromptResolve;
+      cratePromptResolve = null, previous2(null);
+    }
+    return cratePrompt = next3, emit(), setSharedDialogOpen("crate-prompt-dialog", !0), new Promise((resolve) => {
+      cratePromptResolve = resolve;
+    });
+  }
+  function getConfirm() {
+    return confirmState;
+  }
+  function settleConfirm(value) {
+    let resolve = confirmResolve;
+    confirmResolve = null, setSharedDialogOpen("confirm-dialog", !1), resolve?.(value);
+  }
+  function cancelConfirm() {
+    settleConfirm(!1);
+  }
+  function confirmConfirm() {
+    settleConfirm(!0);
+  }
+  function openConfirm(next3) {
+    if (ensureSharedDialogs(), confirmResolve) {
+      let previous2 = confirmResolve;
+      confirmResolve = null, previous2(!1);
+    }
+    return confirmState = next3, emit(), setSharedDialogOpen("confirm-dialog", !0), new Promise((resolve) => {
+      confirmResolve = resolve;
+    });
+  }
+  function isSharedDialogId(id) {
+    return SHARED_DIALOG_IDS.includes(id);
+  }
+  var SHARED_DIALOG_IDS, WIDE, openIds, listeners, cratePrompt, cratePromptResolve, confirmState, confirmResolve, ensureMount, escapeBound, init_shared_dialog = __esm({
+    "src/lib/ui/shared-dialog.ts"() {
+      "use strict";
+      SHARED_DIALOG_IDS = [
+        "consent-dialog",
+        "merge-dialog",
+        "album-art-dialog",
+        "crates-replace-dialog",
+        "relink-dialog",
+        "preset-dialog",
+        "crate-tree-dialog",
+        "folder-sync-dialog",
+        "rekordbox-dialog",
+        "crate-prompt-dialog",
+        "confirm-dialog"
+      ], WIDE = {
+        "merge-dialog": "md",
+        "crates-replace-dialog": "md",
+        "rekordbox-dialog": "md",
+        "relink-dialog": "lg"
+      }, openIds = /* @__PURE__ */ new Set(), listeners = /* @__PURE__ */ new Set(), cratePrompt = { title: "", value: "", confirmLabel: "" }, cratePromptResolve = null, confirmState = { title: "", message: "", confirmLabel: "" }, confirmResolve = null, ensureMount = () => {
+      };
+      escapeBound = !1;
+    }
+  });
 
   // node_modules/react/cjs/react.production.js
   var require_react_production = __commonJS({
@@ -12870,6 +13036,7 @@ Error generating stack: ` + x.message + `
     "error.layout_not_saved": "The layout could not be saved.",
     "error.legacy_read_only": "This library was made by an older Serato DJ. This app can show it but cannot change it yet.",
     "error.length_invalid": "Length needs a whole number of milliseconds.",
+    "error.library_changed": "The library files changed on disk since they were loaded. Confirm to write anyway.",
     "error.library_log_unconfirmed": "The session log does not confirm this library file ({database}). Writes and restores are off. Snapshots can still be taken and read.",
     "error.library_not_saved": "The library could not be saved.",
     "error.logs_not_opened": "The logs folder could not be opened.",
@@ -13844,6 +14011,7 @@ Error generating stack: ` + x.message + `
     "snapshots.readingPlan": "Reading what would change",
     "snapshots.restore": "Restore",
     "snapshots.restoreIntro": "Nothing is changed until you confirm. A new snapshot is saved first, so this restore can be undone.",
+    "snapshots.whatChanged": "What changed: {files}",
     "snapshots.restoreTitle": "Restore this backup",
     "snapshots.restored": "Restore finished. The previous library was saved first, so this can be undone from the list.",
     "snapshots.restoring": "Restoring…",
@@ -14434,7 +14602,11 @@ Error generating stack: ` + x.message + `
     "tooltip.relocateCancel": "Close without changing the file location.",
     "tooltip.relocateConfirm": "Save this file location. Serato DJ Pro must be quit.",
     "tooltip.confirmCancel": "Close without making this change.",
-    "tooltip.confirmAction": "Confirm this change."
+    "tooltip.confirmAction": "Confirm this change.",
+    "tooltip.forceWrite": "Write even though the library files changed after they were loaded.",
+    "write.forceTitle": "Library changed",
+    "write.forceConfirm": "The library files changed on disk since they were loaded. Write anyway?",
+    "write.forceWrite": "Write anyway"
   };
 
   // locales/es.json
@@ -14768,6 +14940,7 @@ Error generating stack: ` + x.message + `
     "error.layout_not_saved": "No se pudo guardar la disposición.",
     "error.legacy_read_only": "Esta biblioteca la creó una versión anterior de Serato DJ. Esta app puede mostrarla, pero todavía no puede modificarla.",
     "error.length_invalid": "La duración debe ser un número entero de milisegundos.",
+    "error.library_changed": "Los archivos de la biblioteca cambiaron en disco desde que se cargaron. Confirma para escribir de todos modos.",
     "error.library_log_unconfirmed": "El registro de la sesión no confirma este archivo de biblioteca ({database}). Las escrituras y las restauraciones están desactivadas. Las instantáneas se pueden tomar y leer.",
     "error.library_not_saved": "No se pudo guardar la biblioteca.",
     "error.logs_not_opened": "No se pudo abrir la carpeta de registros.",
@@ -15742,6 +15915,7 @@ Error generating stack: ` + x.message + `
     "snapshots.readingPlan": "Leyendo qué cambiaría",
     "snapshots.restore": "Restaurar",
     "snapshots.restoreIntro": "No se cambia nada hasta que confirmes. Primero se guarda una instantánea nueva, así que esta restauración se puede deshacer.",
+    "snapshots.whatChanged": "Qué cambió: {files}",
     "snapshots.restoreTitle": "Restaurar esta copia",
     "snapshots.restored": "Restauración terminada. La biblioteca anterior se guardó primero, así que puedes deshacerla desde la lista.",
     "snapshots.restoring": "Restaurando…",
@@ -16332,7 +16506,11 @@ Error generating stack: ` + x.message + `
     "tooltip.relocateCancel": "Cerrar sin cambiar la ubicación del archivo.",
     "tooltip.relocateConfirm": "Guardar esta ubicación. Hay que salir de Serato DJ Pro.",
     "tooltip.confirmCancel": "Cerrar sin hacer este cambio.",
-    "tooltip.confirmAction": "Confirmar este cambio."
+    "tooltip.confirmAction": "Confirmar este cambio.",
+    "tooltip.forceWrite": "Escribir aunque los archivos de la biblioteca cambiaron después de cargarse.",
+    "write.forceTitle": "Biblioteca cambiada",
+    "write.forceConfirm": "Los archivos de la biblioteca cambiaron en disco desde que se cargaron. ¿Escribir de todos modos?",
+    "write.forceWrite": "Escribir de todos modos"
   };
 
   // src/lib/i18n.ts
@@ -16529,6 +16707,9 @@ Error generating stack: ` + x.message + `
     }
     return payload;
   }
+  function isRecord(value) {
+    return typeof value == "object" && value !== null && !Array.isArray(value);
+  }
   async function postJSON(url, body2) {
     let response = await fetch(url, {
       method: "POST",
@@ -16536,6 +16717,15 @@ Error generating stack: ` + x.message + `
       body: JSON.stringify(body2)
     }), payload = await readJSONOr(response, {});
     if (!response.ok) {
+      if (response.status === 409 && payload.code === "library_changed" && !(isRecord(body2) && body2.force === !0)) {
+        let { openConfirm: openConfirm2 } = await Promise.resolve().then(() => (init_shared_dialog(), shared_dialog_exports));
+        if (await openConfirm2({
+          title: t("write.forceTitle"),
+          message: t("write.forceConfirm"),
+          confirmLabel: t("write.forceWrite")
+        }) && isRecord(body2))
+          return postJSON(url, { ...body2, force: !0 });
+      }
       let error2 = new Error(serverMessage(payload, t("error.requestStatus", { status: String(response.status) })));
       throw error2.status = response.status, error2.payload = payload, error2;
     }
@@ -17052,17 +17242,17 @@ Error generating stack: ` + x.message + `
     saveView: noop,
     exportM3u: noop,
     exportRekordbox: noop
-  }, listeners = /* @__PURE__ */ new Set();
+  }, listeners2 = /* @__PURE__ */ new Set();
   function bindCrateActions(next3) {
     Object.assign(actions, next3);
   }
   function subscribeCrates(listener) {
-    return listeners.add(listener), () => {
-      listeners.delete(listener);
+    return listeners2.add(listener), () => {
+      listeners2.delete(listener);
     };
   }
   function emitCrates() {
-    for (let listener of listeners) listener();
+    for (let listener of listeners2) listener();
   }
   function folderSyncBlocked() {
     let id = state.activeCrate, crate = typeof id == "number" ? state.crates.find((row) => row.id === id) : void 0;
@@ -17182,23 +17372,23 @@ Error generating stack: ` + x.message + `
   }
 
   // src/lib/ui/notice-store.ts
-  var current = null, listeners2 = /* @__PURE__ */ new Set();
-  function emit() {
-    for (let listener of listeners2) listener();
+  var current = null, listeners3 = /* @__PURE__ */ new Set();
+  function emit2() {
+    for (let listener of listeners3) listener();
   }
   function getNotice() {
     return current;
   }
   function setNotice(text2, severity = "info") {
     let trimmed = text2.trim();
-    current = trimmed ? { text: trimmed, severity } : null, emit();
+    current = trimmed ? { text: trimmed, severity } : null, emit2();
   }
   function dismissNotice() {
-    current !== null && (current = null, emit());
+    current !== null && (current = null, emit2());
   }
   function subscribeNotice(listener) {
-    return listeners2.add(listener), () => {
-      listeners2.delete(listener);
+    return listeners3.add(listener), () => {
+      listeners3.delete(listener);
     };
   }
 
@@ -31414,6 +31604,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     relocateConfirm: spec("tooltip.relocateConfirm"),
     confirmCancel: spec("tooltip.confirmCancel"),
     confirmAction: spec("tooltip.confirmAction"),
+    forceWrite: spec("tooltip.forceWrite"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),
@@ -32647,7 +32838,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     updateBusy: !1,
     updateStatus: "",
     shortcuts: {}
-  }, snapshot = { ...DEFAULT_SNAPSHOT }, listeners3 = /* @__PURE__ */ new Set(), islandRoot = null, appearanceSync = !1, rerunSetupHandler = null, copyVersionHandler = null, saveUpdateEnabledHandler = null, saveUpdatePrereleasesHandler = null;
+  }, snapshot = { ...DEFAULT_SNAPSHOT }, listeners4 = /* @__PURE__ */ new Set(), islandRoot = null, appearanceSync = !1, rerunSetupHandler = null, copyVersionHandler = null, saveUpdateEnabledHandler = null, saveUpdatePrereleasesHandler = null;
   function isColorway(value) {
     return typeof value == "string" && COLORWAYS.includes(value);
   }
@@ -32663,12 +32854,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return snapshot;
   }
   function subscribeSettings(listener) {
-    return listeners3.add(listener), () => {
-      listeners3.delete(listener);
+    return listeners4.add(listener), () => {
+      listeners4.delete(listener);
     };
   }
   function notifySettings() {
-    for (let listener of listeners3) listener();
+    for (let listener of listeners4) listener();
   }
   function patchSettings(patch) {
     snapshot = { ...snapshot, ...patch }, notifySettings();
@@ -33064,14 +33255,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     },
     openInLibrary: async (_assetId) => {
     }
-  }, listeners4 = /* @__PURE__ */ new Set();
+  }, listeners5 = /* @__PURE__ */ new Set();
   function subscribeHistory(listener) {
-    return listeners4.add(listener), () => {
-      listeners4.delete(listener);
+    return listeners5.add(listener), () => {
+      listeners5.delete(listener);
     };
   }
   function notifyHistory() {
-    for (let listener of listeners4) listener();
+    for (let listener of listeners5) listener();
   }
   var HistoryContext = (0, import_react16.createContext)(null);
   function HistoryProvider({
@@ -33505,14 +33696,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/lib/files/files-store.ts
-  var listeners5 = /* @__PURE__ */ new Set();
+  var listeners6 = /* @__PURE__ */ new Set();
   function subscribeFiles(listener) {
-    return listeners5.add(listener), () => {
-      listeners5.delete(listener);
+    return listeners6.add(listener), () => {
+      listeners6.delete(listener);
     };
   }
   function emitFiles() {
-    for (let listener of listeners5) listener();
+    for (let listener of listeners6) listener();
   }
 
   // src/lib/files/files.ts
@@ -61518,7 +61709,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/player/player.ts
-  var SEEK_STEP_SECONDS = 5, SEEK_STEP_LARGE_SECONDS = 30, listeners6 = /* @__PURE__ */ new Set(), wired = /* @__PURE__ */ new WeakSet(), media = null, trackId = null, title = "", artist = "", playing = !1, currentTime = 0, duration2 = 0, volume = 1, error = "", ignoreMediaPause = !1, cueToken = 0, cues = [], barRoot = null, waveform = null, waveHost = null, waveMarks = { cues: [], loops: [], beatgrid: [] };
+  var SEEK_STEP_SECONDS = 5, SEEK_STEP_LARGE_SECONDS = 30, listeners7 = /* @__PURE__ */ new Set(), wired = /* @__PURE__ */ new WeakSet(), media = null, trackId = null, title = "", artist = "", playing = !1, currentTime = 0, duration2 = 0, volume = 1, error = "", ignoreMediaPause = !1, cueToken = 0, cues = [], barRoot = null, waveform = null, waveHost = null, waveMarks = { cues: [], loops: [], beatgrid: [] };
   function formatPlayerTime(seconds) {
     if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
     let total = Math.floor(seconds), secs = total % 60, minutes = Math.floor(total / 60);
@@ -61556,7 +61747,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         let row = state.byId.get(nextId);
         title = row?.name || row?.title || playerStrings.untitled, artist = row?.artist ?? "", trackId = nextId, currentTime = 0, duration2 = 0, element.src = trackUrl(nextId), element.currentTime = 0, waveform?.setTrack(nextId), loadCues(nextId);
       }
-      error = "", playing = !0, emit2();
+      error = "", playing = !0, emit3();
       let pending = element.play();
       pending && typeof pending.then == "function" && pending.catch(() => {
         trackId === nextId && noteFailure(nextId);
@@ -61569,7 +61760,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     trackId === nextId && playing ? pause() : play(nextId);
   }
   function pause() {
-    trackId !== null && (playing = !1, ensureMedia().pause(), emit2());
+    trackId !== null && (playing = !1, ensureMedia().pause(), emit3());
   }
   function togglePlayPause() {
     if (trackId === null) {
@@ -61588,7 +61779,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function seek(seconds) {
     if (!Number.isFinite(seconds) || trackId === null) return;
     let element = ensureMedia(), next3 = seconds < 0 ? 0 : seconds, limit = element.duration;
-    Number.isFinite(limit) && limit > 0 && next3 > limit && (next3 = limit), element.currentTime = next3, currentTime = next3, emit2();
+    Number.isFinite(limit) && limit > 0 && next3 > limit && (next3 = limit), element.currentTime = next3, currentTime = next3, emit3();
   }
   function seekBy(deltaSeconds) {
     Number.isFinite(deltaSeconds) && seek(currentTime + deltaSeconds);
@@ -61633,15 +61824,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return canMove(delta);
   }
   function setVolume(next3) {
-    Number.isFinite(next3) && (volume = Math.min(1, Math.max(0, next3)), media && (media.volume = volume), emit2());
+    Number.isFinite(next3) && (volume = Math.min(1, Math.max(0, next3)), media && (media.volume = volume), emit3());
   }
   function subscribe(listener) {
-    return listeners6.add(listener), () => {
-      listeners6.delete(listener);
+    return listeners7.add(listener), () => {
+      listeners7.delete(listener);
     };
   }
   function mountPlayer(host) {
-    barRoot?.unmount(), barRoot = null, waveform?.destroy(), waveform = null, waveHost = null, resetPlayback(), emit2();
+    barRoot?.unmount(), barRoot = null, waveform?.destroy(), waveform = null, waveHost = null, resetPlayback(), emit3();
     let root = host === void 0 ? document.getElementById("player-bar") : host;
     if (!root) return;
     root.classList.add("player-bar"), root.setAttribute("role", "region"), root.setAttribute("aria-label", playerStrings.region);
@@ -61661,7 +61852,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function repaintPlayer() {
     let root = document.getElementById("player-bar");
-    root && root.setAttribute("aria-label", playerStrings.region), waveform?.relabel(), emit2();
+    root && root.setAttribute("aria-label", playerStrings.region), waveform?.relabel(), emit3();
   }
   function resetPlayback() {
     cueToken += 1, trackId = null, title = "", artist = "", playing = !1, currentTime = 0, duration2 = 0, error = "", cues = [], waveMarks = { cues: [], loops: [], beatgrid: [] };
@@ -61673,15 +61864,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wire(element) {
     wired.has(element) || (wired.add(element), element.addEventListener("play", () => {
-      playing = !0, emit2();
+      playing = !0, emit3();
     }), element.addEventListener("pause", () => {
-      ignoreMediaPause || (playing = !1, emit2());
+      ignoreMediaPause || (playing = !1, emit3());
     }), element.addEventListener("ended", () => {
-      currentTime = Number.isFinite(element.currentTime) ? element.currentTime : currentTime, moveBy(1) || (playing = !1, emit2());
+      currentTime = Number.isFinite(element.currentTime) ? element.currentTime : currentTime, moveBy(1) || (playing = !1, emit3());
     }), element.addEventListener("timeupdate", () => {
-      currentTime = element.currentTime, Number.isFinite(element.duration) && (duration2 = element.duration), emit2();
+      currentTime = element.currentTime, Number.isFinite(element.duration) && (duration2 = element.duration), emit3();
     }), element.addEventListener("durationchange", () => {
-      duration2 = Number.isFinite(element.duration) ? element.duration : 0, emit2();
+      duration2 = Number.isFinite(element.duration) ? element.duration : 0, emit3();
     }), element.addEventListener("error", () => {
       trackId !== null && noteFailure(trackId);
     }));
@@ -61717,10 +61908,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let token4 = ++cueToken;
     cues = [], waveMarks = { cues: [], loops: [], beatgrid: [] }, waveform?.setMarkers(id, waveMarks), readCues(id).then(
       (found) => {
-        token4 !== cueToken || trackId !== id || (cues = found.cues, waveMarks = found, waveform?.setMarkers(id, found), emit2());
+        token4 !== cueToken || trackId !== id || (cues = found.cues, waveMarks = found, waveform?.setMarkers(id, found), emit3());
       },
       () => {
-        token4 !== cueToken || trackId !== id || (cues = [], waveMarks = { cues: [], loops: [], beatgrid: [] }, waveform?.setMarkers(id, waveMarks), emit2());
+        token4 !== cueToken || trackId !== id || (cues = [], waveMarks = { cues: [], loops: [], beatgrid: [] }, waveform?.setMarkers(id, waveMarks), emit3());
       }
     );
   }
@@ -61740,7 +61931,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function noteFailure(forId) {
     playing = !1, classifyStatus(forId).then((message) => {
-      trackId === forId && (playing = !1, error = message, emit2());
+      trackId === forId && (playing = !1, error = message, emit3());
     });
   }
   async function classifyStatus(forId) {
@@ -61752,9 +61943,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       return playerStrings.cannotPlay;
     }
   }
-  function emit2() {
+  function emit3() {
     let snapshot2 = getPlayerState();
-    for (let listener of [...listeners6]) listener(snapshot2);
+    for (let listener of [...listeners7]) listener(snapshot2);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -61765,7 +61956,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/track-list-store.ts
-  var listeners7 = /* @__PURE__ */ new Set(), detail = { kind: "none" }, actions2 = {
+  var listeners8 = /* @__PURE__ */ new Set(), detail = { kind: "none" }, actions2 = {
     selectTrack(id) {
       bridge.selectTrack(id);
     },
@@ -61829,15 +62020,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     detail = next3, emitTrackList();
   }
   function emitTrackList() {
-    for (let listener of listeners7) listener();
+    for (let listener of listeners8) listener();
   }
   var SELECT_ALL_EVENT = "cratecraft-select-all";
   function selectAllVisibleTracks() {
     document.dispatchEvent(new Event(SELECT_ALL_EVENT));
   }
   function subscribeTrackList(listener) {
-    return listeners7.add(listener), () => {
-      listeners7.delete(listener);
+    return listeners8.add(listener), () => {
+      listeners8.delete(listener);
     };
   }
 
@@ -62355,10 +62546,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/drift.ts
-  var listeners8 = /* @__PURE__ */ new Set(), latest = null, islandRoot2 = null;
-  function emit3() {
+  var listeners9 = /* @__PURE__ */ new Set(), latest = null, islandRoot2 = null;
+  function emit4() {
     let snapshot2 = getDriftSnapshot();
-    for (let listener of listeners8) listener(snapshot2);
+    for (let listener of listeners9) listener(snapshot2);
   }
   function beginBusy() {
     let button = el("drift-refresh");
@@ -62378,8 +62569,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { report: latest, scope: driftScopeLabel() };
   }
   function subscribeDrift(listener) {
-    return listeners8.add(listener), () => {
-      listeners8.delete(listener);
+    return listeners9.add(listener), () => {
+      listeners9.delete(listener);
     };
   }
   function wireDrift() {
@@ -62393,7 +62584,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     beginBusy();
     let settle = "none";
     if (state.activeCrate === "all") {
-      failStatus(t("error.tempo_needs_crate")), endBusy(), updateScope(), emit3(), el("drift-refresh").focus();
+      failStatus(t("error.tempo_needs_crate")), endBusy(), updateScope(), emit4(), el("drift-refresh").focus();
       return;
     }
     let crate = String(state.activeCrate);
@@ -62408,7 +62599,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failStatus(serverMessage(payload, t("drift.unreadable"))), settle = "retry";
         return;
       }
-      latest = payload, el("drift-status").textContent = "", updateScope(), emit3(), settle = "report";
+      latest = payload, el("drift-status").textContent = "", updateScope(), emit4(), settle = "report";
     } catch {
       if (token4 !== state.driftToken) return;
       failStatus(t("drift.unreachable")), settle = "retry";
@@ -62422,7 +62613,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     failStatus(message), endBusy(), el("drift-refresh").focus();
   }
   function repaintDrift() {
-    updateScope(), emit3();
+    updateScope(), emit4();
   }
 
   // src/lib/gig/portable.ts
@@ -62510,15 +62701,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/portable.ts
-  var FINDING_CAP = 100, islandRoot3 = null, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners9 = /* @__PURE__ */ new Set();
+  var FINDING_CAP = 100, islandRoot3 = null, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners10 = /* @__PURE__ */ new Set();
   function emitPortable() {
     let snapshot2 = portableSnapshot();
-    for (let listener of listeners9) listener(snapshot2);
+    for (let listener of listeners10) listener(snapshot2);
     emitFiles();
   }
   function subscribePortable(listener) {
-    return listeners9.add(listener), () => {
-      listeners9.delete(listener);
+    return listeners10.add(listener), () => {
+      listeners10.delete(listener);
     };
   }
   function portableSnapshot() {
@@ -62552,10 +62743,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { connected, missing };
   }
   function parseDriveReport(value) {
-    if (!isRecord(value) || typeof value.ready != "boolean" || typeof value.missing_drive != "boolean" || typeof value.summary != "string" || !Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
+    if (!isRecord2(value) || typeof value.ready != "boolean" || typeof value.missing_drive != "boolean" || typeof value.summary != "string" || !Array.isArray(value.findings) || !Array.isArray(value.errors)) return null;
     let findings = [];
     for (let item of value.findings) {
-      if (!isRecord(item) || typeof item.kind != "string" || typeof item.fix != "string") return null;
+      if (!isRecord2(item) || typeof item.kind != "string" || typeof item.fix != "string") return null;
       findings.push({
         kind: item.kind,
         crate: text(item.crate),
@@ -62567,7 +62758,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
     let errors = [];
     for (let item of value.errors) {
-      if (!isRecord(item) || typeof item.message != "string") return null;
+      if (!isRecord2(item) || typeof item.message != "string") return null;
       errors.push({ crate: text(item.crate), message: item.message });
     }
     return {
@@ -62696,27 +62887,27 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let button = el("portable-check");
     button.disabled = !hasConnected, button.setAttribute("aria-busy", "false"), el("portable-panel").setAttribute("aria-busy", "false");
   }
-  function isRecord(value) {
+  function isRecord2(value) {
     return typeof value == "object" && value !== null && !Array.isArray(value);
   }
   function text(value) {
     return typeof value == "string" ? value : "";
   }
   function errorBody(value) {
-    if (!isRecord(value)) return null;
+    if (!isRecord2(value)) return null;
     let body2 = {};
     return typeof value.error == "string" && (body2.error = value.error), typeof value.code == "string" && (body2.code = value.code), body2.error === void 0 && body2.code === void 0 ? null : body2;
   }
 
   // src/lib/health/health-events.ts
-  var listeners10 = /* @__PURE__ */ new Set();
+  var listeners11 = /* @__PURE__ */ new Set();
   function subscribeHealth(listener) {
-    return listeners10.add(listener), () => {
-      listeners10.delete(listener);
+    return listeners11.add(listener), () => {
+      listeners11.delete(listener);
     };
   }
   function emitHealth() {
-    for (let listener of [...listeners10]) listener();
+    for (let listener of [...listeners11]) listener();
   }
 
   // src/lib/health/health-list.ts
@@ -63153,139 +63344,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     });
   }), DialogContent_default = DialogContent;
 
-  // src/lib/ui/shared-dialog.ts
-  var SHARED_DIALOG_IDS = [
-    "consent-dialog",
-    "merge-dialog",
-    "album-art-dialog",
-    "crates-replace-dialog",
-    "relink-dialog",
-    "preset-dialog",
-    "crate-tree-dialog",
-    "folder-sync-dialog",
-    "rekordbox-dialog",
-    "crate-prompt-dialog",
-    "confirm-dialog"
-  ], WIDE = {
-    "merge-dialog": "md",
-    "crates-replace-dialog": "md",
-    "rekordbox-dialog": "md",
-    "relink-dialog": "lg"
-  }, openIds = /* @__PURE__ */ new Set(), listeners11 = /* @__PURE__ */ new Set(), cratePrompt = { title: "", value: "", confirmLabel: "" }, cratePromptResolve = null, confirmState = { title: "", message: "", confirmLabel: "" }, confirmResolve = null, ensureMount = () => {
-  };
-  function bindSharedDialogMount(fn2) {
-    ensureMount = fn2;
-  }
-  function ensureSharedDialogs() {
-    ensureMount();
-  }
-  function subscribeSharedDialogs(listener) {
-    return listeners11.add(listener), () => {
-      listeners11.delete(listener);
-    };
-  }
-  var escapeBound = !1;
-  function bindEscape() {
-    escapeBound || (escapeBound = !0, document.addEventListener("keydown", (event) => {
-      if (event.key !== "Escape" || event.defaultPrevented) return;
-      let id = [...openIds].at(-1);
-      id && (event.preventDefault(), setSharedDialogOpen(id, !1));
-    }));
-  }
-  function emit4() {
-    bindEscape();
-    for (let listener of listeners11) listener();
-  }
-  function isSharedDialogOpen(id) {
-    return openIds.has(id);
-  }
-  function setSharedDialogOpen(id, open) {
-    let was = openIds.has(id);
-    if (open !== was && (open ? openIds.add(id) : openIds.delete(id), emit4(), !open)) {
-      if (document.getElementById(id)?.dispatchEvent(new Event("close")), id === "crate-prompt-dialog") {
-        let resolve = cratePromptResolve;
-        cratePromptResolve = null, resolve?.(null);
-      }
-      if (id === "confirm-dialog") {
-        let resolve = confirmResolve;
-        confirmResolve = null, resolve?.(!1);
-      }
-    }
-  }
-  function sharedDialogMaxWidth(id) {
-    return WIDE[id] ?? "sm";
-  }
-  function bindDialogApi(root, id) {
-    Object.defineProperty(root, "open", {
-      configurable: !0,
-      enumerable: !0,
-      get() {
-        return isSharedDialogOpen(id);
-      },
-      set(value) {
-        setSharedDialogOpen(id, !!value);
-      }
-    }), Object.assign(root, {
-      showModal() {
-        ensureSharedDialogs(), setSharedDialogOpen(id, !0);
-      },
-      close() {
-        setSharedDialogOpen(id, !1);
-      }
-    });
-  }
-  function getCratePrompt() {
-    return cratePrompt;
-  }
-  function setCratePromptValue(value) {
-    cratePrompt = { ...cratePrompt, value }, emit4();
-  }
-  function settleCratePrompt(value) {
-    let resolve = cratePromptResolve;
-    cratePromptResolve = null, setSharedDialogOpen("crate-prompt-dialog", !1), resolve?.(value);
-  }
-  function cancelCratePrompt() {
-    settleCratePrompt(null);
-  }
-  function confirmCratePrompt() {
-    settleCratePrompt(cratePrompt.value);
-  }
-  function openCratePrompt(next3) {
-    if (ensureSharedDialogs(), cratePromptResolve) {
-      let previous2 = cratePromptResolve;
-      cratePromptResolve = null, previous2(null);
-    }
-    return cratePrompt = next3, emit4(), setSharedDialogOpen("crate-prompt-dialog", !0), new Promise((resolve) => {
-      cratePromptResolve = resolve;
-    });
-  }
-  function getConfirm() {
-    return confirmState;
-  }
-  function settleConfirm(value) {
-    let resolve = confirmResolve;
-    confirmResolve = null, setSharedDialogOpen("confirm-dialog", !1), resolve?.(value);
-  }
-  function cancelConfirm() {
-    settleConfirm(!1);
-  }
-  function confirmConfirm() {
-    settleConfirm(!0);
-  }
-  function openConfirm(next3) {
-    if (ensureSharedDialogs(), confirmResolve) {
-      let previous2 = confirmResolve;
-      confirmResolve = null, previous2(!1);
-    }
-    return confirmState = next3, emit4(), setSharedDialogOpen("confirm-dialog", !0), new Promise((resolve) => {
-      confirmResolve = resolve;
-    });
-  }
-  function isSharedDialogId(id) {
-    return SHARED_DIALOG_IDS.includes(id);
-  }
-
   // src/components/CenteredDialog.tsx
+  init_shared_dialog();
   var import_jsx_runtime237 = __toESM(require_jsx_runtime(), 1);
   function bindSharedRoot(node2, id) {
     node2 && (node2.id || (node2.id = id), node2.setAttribute("data-shared-dialog", id), node2.setAttribute("data-open", isSharedDialogOpen(id) ? "true" : "false"), bindDialogApi(node2, id));
@@ -63470,6 +63530,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), DialogTitle_default = DialogTitle;
 
   // src/components/ConfirmDialog.tsx
+  init_shared_dialog();
   var import_jsx_runtime241 = __toESM(require_jsx_runtime(), 1);
   function ConfirmDialog() {
     let prompt = getConfirm(), open = isSharedDialogOpen("confirm-dialog");
@@ -63499,7 +63560,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               Button_default,
               {
                 id: "confirm-confirm",
-                ref: tooltipRef6(tips.confirmAction),
+                ref: tooltipRef6(
+                  prompt.confirmLabel === t("write.forceWrite") ? tips.forceWrite : tips.confirmAction
+                ),
                 type: "button",
                 variant: "contained",
                 sx: { minHeight: 44 },
@@ -63514,6 +63577,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/CratePromptDialog.tsx
+  init_shared_dialog();
   var import_jsx_runtime242 = __toESM(require_jsx_runtime(), 1);
   function CratePromptDialog() {
     let prompt = getCratePrompt(), open = isSharedDialogOpen("crate-prompt-dialog"), ready = !!prompt.value.trim(), pathMode = !!prompt.fieldLabel;
@@ -63566,6 +63630,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/SharedDialogs.tsx
+  init_shared_dialog();
   var import_jsx_runtime243 = __toESM(require_jsx_runtime(), 1), ADOPTED = [
     { id: "consent-dialog", labelledBy: "consent-title", describedBy: "consent-body" },
     { id: "merge-dialog", labelledBy: "merge-title", describedBy: "merge-intro" },
@@ -63654,6 +63719,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/shared-dialog-mount.tsx
+  init_shared_dialog();
   var islandRoot4 = null, islandHost = null;
   function safeUnmount(root) {
     if (root)
@@ -64929,6 +64995,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
 
+  // src/lib/history/history-stats.ts
+  init_shared_dialog();
+
   // src/lib/history/history-stats-view.ts
   var PERIODS = /* @__PURE__ */ new Set(["all", "7", "30", "90", "365", "custom"]);
   function isStatsPeriod(value) {
@@ -66146,7 +66215,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       plan.restore_blocked,
       plan.restore_blocked_code,
       messageParams(plan.restore_blocked_params)
-    ) : "", reading = snapshots.planOpen && !plan, confirmDisabled = snapshots.confirming || reading || !!plan?.restore_blocked, blockText = reading ? t("snapshots.readingPlan") : blocked || (plan != null && plan.dry_run ? t("plan.nothingChanged") : "");
+    ) : "", reading = snapshots.planOpen && !plan, confirmDisabled = snapshots.confirming || reading || !!plan?.restore_blocked, blockText = reading ? t("snapshots.readingPlan") : blocked || (plan != null && plan.dry_run ? t("plan.nothingChanged") : ""), touched = (snapshots.snapshots.find((row) => row.id === snapshots.snapshotPlanId)?.touched ?? []).filter((name) => name.length > 0), touchedLine = touched.length ? t("snapshots.whatChanged", { files: touched.join(", ") }) : "";
     return /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(
       Dialog_default,
       {
@@ -66164,6 +66233,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(DialogTitle_default, { id: "snapshot-title", component: "h2", children: t("snapshots.restoreTitle") }),
           /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(DialogContent_default, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(DialogContentText_default, { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
+            touchedLine ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { id: "snapshot-touched", children: touchedLine }) : null,
             /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
               /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
               /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
@@ -67055,6 +67125,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/snapshots/restore.ts
+  init_shared_dialog();
   var reloadLibrary = async () => {
   };
   function bindLibraryReload(reload) {
@@ -69734,6 +69805,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/components/RelatedTracks.tsx
   var import_react66 = __toESM(require_react(), 1);
+  init_shared_dialog();
   var import_jsx_runtime285 = __toESM(require_jsx_runtime(), 1);
   function relatedPath(track) {
     return track.resolved_path || track.edit?.portable_id || "";
@@ -70393,6 +70465,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let list = useTrackList(), { detail: detail2 } = list;
     return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(TrackBody, { track: detail2.track });
   }
+
+  // src/lib/ui/views.ts
+  init_shared_dialog();
 
   // src/lib/ui/virtual-scroll.ts
   var import_react68 = __toESM(require_react(), 1);
@@ -72432,6 +72507,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/shortcuts.ts
+  init_shared_dialog();
   var SEEK_SECONDS = 5, SHORTCUT_DEFS = [
     {
       id: "focus-search",
@@ -74968,6 +75044,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/crates/dual-crate.ts
+  init_shared_dialog();
   var saving = !1;
   function toggleSplit() {
     state.splitCrates = !state.splitCrates, state.splitCrates && (state.secondCrate = "all", state.focusedPane = "a"), renderList();
