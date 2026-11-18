@@ -169,13 +169,31 @@ class DuplicateDeleteGateTests(_ConfigCase):
             None. The test fails if the laptop file is trashed.
         """
         unplugged = "/Volumes/crateCraftUnplugged359/same-a.mp3"
+
+        def volume_of(path: str) -> volumes.Volume | None:
+            if "crateCraftUnplugged359" in path.replace("\\", "/"):
+                return volumes.Volume(
+                    "crateCraftUnplugged359",
+                    "/Volumes/crateCraftUnplugged359",
+                    "posix",
+                )
+            return volumes.volume_of(path)
+
         with TempLibrary() as temp:
             laptop = self._duplicate_on_volume(temp, unplugged)
             trash = temp.root / "trash-bin"
             os.environ[files._TRASH_ENV] = str(trash)
             self.addCleanup(lambda: os.environ.pop(files._TRASH_ENV, None))
-            with self.assertRaises(LibraryError) as ctx:
-                files.execute({"action": "delete", "paths": [str(laptop)], "confirm": True})
+            with (
+                mock.patch("verified_copies.volume_of", volume_of),
+                mock.patch.object(
+                    volumes.Mounts,
+                    "mounted",
+                    lambda self, volume: volume.name != "crateCraftUnplugged359",
+                ),
+            ):
+                with self.assertRaises(LibraryError) as ctx:
+                    files.execute({"action": "delete", "paths": [str(laptop)], "confirm": True})
             self.assertEqual(ctx.exception.code, "copies_unplugged")
             self.assertEqual(ctx.exception.params, {"drive": "crateCraftUnplugged359"})
             self.assertTrue(laptop.is_file())
@@ -216,6 +234,65 @@ class DuplicateDeleteGateTests(_ConfigCase):
             self.assertEqual(ctx.exception.code, "copies_untrusted")
             self.assertEqual(ctx.exception.params, {"drive": "CheapUSB"})
             self.assertTrue(laptop.is_file())
+
+    def test_delete_counts_a_present_file_when_mounts_say_unplugged(self) -> None:
+        """A file that exists is verified even when mount metadata is empty.
+
+        Windows merge-trash tests patch ``sys.platform`` to linux for the
+        XDG trash layout. That empties ``os.listdrives``, so a ``C:`` keep
+        file would look unplugged if existence did not win.
+
+        Returns:
+            None. The test fails if the laptop file is kept.
+        """
+        with TempLibrary() as temp:
+            music = temp.root / "music"
+            music.mkdir()
+            laptop = music / "same-a.mp3"
+            extra_b = music / "copy-b.mp3"
+            extra_c = music / "copy-c.mp3"
+            laptop.write_bytes(b"audio-a")
+            extra_b.write_bytes(b"audio-a")
+            extra_c.write_bytes(b"audio-a")
+            with open_database(temp.db) as conn:
+                conn.execute(
+                    "UPDATE asset SET portable_id = ?, file_name = 'same-a.mp3' WHERE id = 1",
+                    (str(laptop.resolve()),),
+                )
+                conn.execute(
+                    "UPDATE asset SET portable_id = ?, file_name = 'copy-b.mp3' WHERE id = 2",
+                    (str(extra_b.resolve()),),
+                )
+                conn.execute(
+                    """
+                    INSERT INTO asset
+                        (id, name, artist, album, bpm, key, length_ms, color, is_missing,
+                         file_name, portable_id, location_id, time_added, dj_play_count)
+                    VALUES
+                        (3, 'Same', 'Artist', 'Album', 120, '1A', 180000, 16711680, 0,
+                         'copy-c.mp3', ?, 1, 12, 0)
+                    """,
+                    (str(extra_c.resolve()),),
+                )
+                conn.execute("INSERT INTO space_asset (id, asset_id, space_id) VALUES (3, 3, 1)")
+            trash = temp.root / "trash-bin"
+            os.environ[files._TRASH_ENV] = str(trash)
+            self.addCleanup(lambda: os.environ.pop(files._TRASH_ENV, None))
+
+            def volume_of(_path: str) -> volumes.Volume:
+                return volumes.Volume("C", "C:\\", "letter")
+
+            with (
+                mock.patch("verified_copies.volume_of", volume_of),
+                mock.patch.object(volumes.Mounts, "mounted", return_value=False),
+            ):
+                result = files.execute(
+                    {"action": "delete", "paths": [str(laptop)], "confirm": True}
+                )
+            self.assertTrue(result["ok"])
+            self.assertFalse(laptop.exists())
+            self.assertTrue(extra_b.is_file())
+            self.assertTrue(extra_c.is_file())
 
     def test_delete_allows_when_two_other_verified_copies_remain(self) -> None:
         """Trash a duplicate when two other plugged trusted copies stay.

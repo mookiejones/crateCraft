@@ -70,12 +70,12 @@ def _classify(path: str, mounts: Mounts, untrusted: frozenset[str]) -> str:
         ``verified``, ``unplugged``, ``untrusted``, or ``missing``.
     """
     volume = volume_of(path)
-    if volume is not None and not mounts.mounted(volume):
-        return "unplugged"
     if volume is not None and volume.name in untrusted:
         return "untrusted"
     if _present(path):
         return "verified"
+    if volume is not None and not mounts.mounted(volume):
+        return "unplugged"
     return "missing"
 
 
