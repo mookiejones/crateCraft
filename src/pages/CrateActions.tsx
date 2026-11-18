@@ -8,9 +8,11 @@
  */
 
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import { CrateOverflowMenu } from "../components/CrateOverflowMenu";
 import { useCrates } from "../containers/CrateContext";
 import { t } from "../lib/i18n";
+import { copiesChipText } from "../lib/snapshots/copies-view";
 import { tips } from "../lib/ui/tooltip-strings";
 import { tooltipRef } from "../components/tooltip-ref";
 
@@ -21,8 +23,19 @@ const BUTTON_SX = { textTransform: "none" as const, minWidth: 0 };
  */
 export function CrateActions() {
   const crates = useCrates();
+  const copiesLabel = copiesChipText(crates.copies);
   return (
     <>
+      {copiesLabel ? (
+        <Chip
+          id="library-copies"
+          size="small"
+          label={copiesLabel}
+          ref={tooltipRef(tips.libraryCopies)}
+        />
+      ) : (
+        <span id="library-copies" hidden />
+      )}
       <Button
         id="crate-new"
         type="button"

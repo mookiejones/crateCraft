@@ -43,9 +43,10 @@ The strip has **Download**, which opens that version's page on GitHub in your br
    ![Classic](../media/theme-classic.png)
 6. Read [**Keyboard shortcuts**](shortcuts.md). Defaults match Serato DJ Pro. **Change** remaps a live key. **?** opens Settings on that heading.
 7. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
-8. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
-9. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable**. The sidebar does not repeat the version. The page does not show an error code.
-10. Click **Close**.
+8. Pick **Verified copies before delete** (2 unless you change it, 1 to 9). That is how many complete copies must remain before **Prune** or a duplicate-group delete. Unplugged or untrusted drives, and a snapshot whose hash check failed, do not count. **Untrusted volume names** is a comma-separated list of drive names that never count. A unique file delete on Organize files is not gated that way.
+9. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
+10. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable**. The sidebar does not repeat the version. The page does not show an error code.
+11. Click **Close**.
 
 | Line under the tick | Meaning |
 | --- | --- |

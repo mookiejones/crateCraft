@@ -5893,6 +5893,26 @@ def _refuse_unsafe_trash(plan: Mapping[str, object]) -> None:
             raise LibraryError(f"{reason} Leave the Trash option off to merge the library rows.")
 
 
+def _refuse_unverified_merge_trash(plan: Mapping[str, object]) -> None:
+    """Refuse trashing merge copies when too few stay verified.
+
+    Args:
+        plan: Merge plan with private ``path`` fields.
+
+    Raises:
+        LibraryError: If remaining verified copies would drop below
+            ``min_copies``. Nothing is written.
+    """
+    import verified_copies
+
+    paths = [
+        str(item["path"])
+        for item in cast(list[dict[str, object]], plan["files"])
+        if item.get("on_disk") and not item.get("blocks_trash") and item.get("path") is not None
+    ]
+    verified_copies.require_audio_delete(paths)
+
+
 def _public_merge(plan: Mapping[str, object], **extra: object) -> dict[str, object]:
     """Copy the plan fields the page is allowed to see.
 
@@ -6279,6 +6299,7 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
         early = _build_merge_plan(conn, space, keep_id)
     if delete_files:
         _refuse_unsafe_trash(early)
+        _refuse_unverified_merge_trash(early)
     import safe_write
 
     def apply(conn: sqlite3.Connection, write: safe_write.Session) -> tuple[dict[str, object], list[str | None]]:
@@ -6297,6 +6318,7 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
         plan = _build_merge_plan(conn, space, keep_id)
         if delete_files:
             _refuse_unsafe_trash(plan)
+            _refuse_unverified_merge_trash(plan)
         _apply_cue_copy(plan)
         _apply_merge(conn, plan)
         warnings = _mirror_merge(conn, plan)

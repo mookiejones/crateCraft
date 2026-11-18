@@ -14,6 +14,7 @@ flowchart TD
   theme --> icon["App icon follows the theme, on unless you clear it"]
   rail --> keys["Keyboard shortcuts. Change a key. ? opens this list"]
   rail --> language["Language: Same as the system, English, or Español"]
+  rail --> copies["Verified copies before delete, and untrusted volume names"]
   rail --> again["Run setup again"]
   rail --> logs["Open logs folder, or Copy logs"]
   rail --> about["About: the app version, and Copy version"]
@@ -38,13 +39,15 @@ What can leave, and only after you choose share and only when a key is present, 
 
 **Language** switches the whole page at once. **Same as the system** follows your computer's language. English and Spanish are included.
 
+**Verified copies before delete** is how many complete copies must remain before **Prune** or a duplicate-group delete (2 unless you change it, 1 to 9). Unplugged or untrusted drives, and a snapshot whose hash check failed, do not count. **Untrusted volume names** is a comma-separated list of drive names that never count. A unique file delete on Organize files is not gated that way.
+
 **Run setup again** opens [first-run setup](First-Run-Wizard). **Cancel** there does not forget that setup already finished.
 
 **Open logs folder** says **Opened the logs folder.** or **Couldn't open the logs folder.** **Copy logs** says **Copied the logs.** A long log says **Copied the latest log entries. Older entries were left out.** An empty log says **No log entries yet.** A snackbar that names a file and points at this log is a write that could not put that file back. The full path stays in the log.
 
 **About** shows the version of this copy, such as **v1.4.2**. **Copy version** puts that line on the clipboard and the next line says **Copied**. When the version cannot be read, About says **Version unavailable**. The sidebar does not repeat the version.
 
-The same settings file remembers the window, the track-list width, the language, the theme, whether the app icon follows that theme, remapped keyboard shortcuts, that setup finished, and the Rekordbox dialog: Memory cues, Hot loops, and the key notation. If setup was pointed at a library that is not in the usual folder, `library.json` in that same folder remembers the file. The path stays on this computer.
+The same settings file remembers the window, the track-list width, the language, the theme, whether the app icon follows that theme, remapped keyboard shortcuts, verified copies before delete, untrusted volume names, that setup finished, and the Rekordbox dialog: Memory cues, Hot loops, and the key notation. If setup was pointed at a library that is not in the usual folder, `library.json` in that same folder remembers the file. The path stays on this computer.
 
 | System | Settings | Logs |
 | --- | --- | --- |

@@ -81,6 +81,8 @@ class FileLibraryCase(unittest.TestCase):
         self.trash = self.library.root / "trash-bin"
         self._old_trash = os.environ.get(files._TRASH_ENV)
         os.environ[files._TRASH_ENV] = str(self.trash)
+        self._min_copies = mock.patch("verified_copies.min_copies", return_value=1)
+        self._min_copies.start()
         self._seed()
 
     def tearDown(self) -> None:
@@ -89,6 +91,7 @@ class FileLibraryCase(unittest.TestCase):
         Returns:
             None.
         """
+        self._min_copies.stop()
         if self._old_trash is None:
             os.environ.pop(files._TRASH_ENV, None)
         else:

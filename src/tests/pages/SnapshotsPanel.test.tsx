@@ -74,6 +74,7 @@ describe("SnapshotsPanel context", () => {
     }
     panelRoot = null;
     await drainReactScheduler();
+    await drainReactScheduler();
   });
 
   it("renders a Data Grid of when, size, and status with Restore as a row action", () => {
@@ -92,6 +93,9 @@ describe("SnapshotsPanel context", () => {
     expect(
       host.querySelector<HTMLButtonElement>('#snapshots-list .MuiDataGrid-cell[data-field="restore"] button')?.textContent,
     ).toBe(t("snapshots.reviewRestore"));
+    const prune = host.querySelector<HTMLButtonElement>('#snapshots-list [data-action="prune"]');
+    expect(prune?.textContent).toBe(t("snapshots.prune"));
+    expect(prune?.getAttribute("data-tooltip")).toBe(t("tooltip.pruneSnapshot"));
     expect(host.querySelector("#snapshots-take")?.getAttribute("data-tooltip")).toBe(t("tooltip.snapshotsTake"));
     expect(host.querySelector("#music-mirror-heading")?.textContent).toBe(t("musicMirror.heading"));
     expect(host.querySelector("#music-mirror-dest")).not.toBeNull();

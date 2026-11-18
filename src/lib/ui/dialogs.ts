@@ -47,6 +47,7 @@ import {
 import { serverMessage, t } from "../i18n";
 import {
   applyAppearance,
+  applyCopies,
   applyGigLock,
   applyLanguage,
   applyPrivacy,
@@ -65,6 +66,7 @@ import {
 
 export {
   applyAppearance,
+  applyCopies,
   applyGigLock,
   applyLanguage,
   applyPrivacy,
@@ -921,6 +923,7 @@ export async function loadPrivacy() {
   applyLayout(payload);
   applyAppearance(payload);
   applyGigLock(payload);
+  applyCopies(payload);
   applyShortcuts(payload);
   if (token === rekordboxToken) applyRekordboxExport(payload);
   if (!state.wizardComplete && openWizard(false, el("search"))) return;

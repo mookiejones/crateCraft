@@ -730,6 +730,23 @@ class MergeTests(unittest.TestCase):
     library is not opened.
     """
 
+    def setUp(self) -> None:
+        """Allow merge-trash tests that leave one verified copy.
+
+        Returns:
+            None.
+        """
+        self._min_copies = mock.patch("verified_copies.min_copies", return_value=1)
+        self._min_copies.start()
+
+    def tearDown(self) -> None:
+        """Restore the default copy minimum.
+
+        Returns:
+            None.
+        """
+        self._min_copies.stop()
+
     def test_merge_folds_crates_metadata_and_history(self) -> None:
         """Keep one copy and fold crates, metadata, and history into it.
 
@@ -1225,10 +1242,16 @@ class MergeTests(unittest.TestCase):
             None. The test fails if the file is gone or the row remains.
         """
         with TempLibrary() as temp:
+            keep = temp.db.parent.parent / f"{temp.db.parent.name}-keep-file.mp3"
             audio = temp.db.parent.parent / f"{temp.db.parent.name}-backup-file.mp3"
+            keep.write_bytes(b"keep")
             audio.write_bytes(b"still")
             try:
                 with open_database(temp.db) as conn:
+                    conn.execute(
+                        "UPDATE asset SET portable_id = ? WHERE id = 1",
+                        (str(keep),),
+                    )
                     conn.execute(
                         "UPDATE asset SET portable_id = ?, file_name = 'song.mp3' WHERE id = 2",
                         (str(audio),),
@@ -1252,8 +1275,9 @@ class MergeTests(unittest.TestCase):
                 self.assertEqual(audio.read_bytes(), b"still")
                 self.assertEqual(_asset_count(temp.db, 2), 0)
             finally:
-                if audio.exists():
-                    audio.unlink()
+                for path in (audio, keep):
+                    if path.exists():
+                        path.unlink()
 
     def test_cue_warning_does_not_rewrite_the_audio_file(self) -> None:
         """Warn when the kept file has no cues and a duplicate file does.

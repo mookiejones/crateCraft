@@ -165,7 +165,7 @@ A plain MP3 can take the markers. Many other kinds of file cannot. When the dial
 
 ## Delete
 
-Delete removes the track from the library and its crates, and moves the audio file to the Trash.
+Delete removes the track from the library and its crates, and moves the audio file to the Trash. A duplicate-group delete (same title, artist, and length) is refused when fewer than **Verified copies before delete** remain. A unique file delete is not gated that way.
 
 1. Tick one or more files. Do not tick a folder. Folders stay.
 2. Click **Delete**.

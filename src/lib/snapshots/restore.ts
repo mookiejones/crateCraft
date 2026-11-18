@@ -15,6 +15,7 @@ import { SnapshotsPanel } from "../../pages/SnapshotsPanel";
 import type { SnapshotsSnapshot } from "../../containers/SnapshotsContext";
 import { messageParams, serverMessage, t } from "../i18n";
 import { state } from "../state";
+import { openConfirm } from "../ui/shared-dialog";
 
 let reloadLibrary: () => Promise<void> = async () => {};
 
@@ -352,6 +353,34 @@ export async function takeSnapshot() {
     taking = false;
     paint();
   }
+}
+
+/**
+ * Preview a snapshot prune, then delete it after confirm.
+ *
+ * A short copy count stays on the status line and does not open confirm.
+ *
+ * @param snapshotId Manifest id to prune.
+ * @returns {Promise<void>}
+ */
+export async function pruneSnapshot(snapshotId: string) {
+  statusOverride = "";
+  paint();
+  const preview = await postJSON("/api/snapshots", { action: "prune", id: snapshotId });
+  if (preview.ok === false) {
+    statusOverride = serverMessage(preview, preview.error || t("error.copies_need_more", { n: 2 }));
+    paint();
+    return;
+  }
+  const ok = await openConfirm({
+    title: t("snapshots.pruneTitle"),
+    message: t("snapshots.pruneMessage"),
+    confirmLabel: t("snapshots.prune"),
+  });
+  if (!ok) return;
+  await postJSON("/api/snapshots", { action: "prune", id: snapshotId, confirm: true });
+  state.snapshotMessage = "snapshots.pruned";
+  await loadSnapshots();
 }
 
 /**

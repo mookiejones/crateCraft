@@ -66,6 +66,13 @@ describe("SettingsPanel context", () => {
     expect(host.querySelector("#telemetry-toggle")).not.toBeNull();
     expect(host.querySelector("#gig-lock")).not.toBeNull();
     expect((host.querySelector("#gig-lock") as HTMLInputElement).checked).toBe(false);
+    expect(host.querySelector("#min-copies")).not.toBeNull();
+    expect((host.querySelector("#min-copies") as HTMLSelectElement).value).toBe("2");
+    expect(host.querySelector("#min-copies")?.getAttribute("data-tooltip-key")).toBe("tooltip.minCopies");
+    expect(host.querySelector("#untrusted-volumes")).not.toBeNull();
+    expect(host.querySelector("#untrusted-volumes")?.getAttribute("data-tooltip-key")).toBe(
+      "tooltip.untrustedVolumes",
+    );
     expect(host.querySelector("#about-title")?.textContent).toBe(t("settings.about"));
     const sheet = host.querySelector("#shortcuts-body")?.textContent ?? "";
     for (const shortcut of SHORTCUTS) {

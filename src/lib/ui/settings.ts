@@ -31,6 +31,8 @@ export type SettingsSnapshot = {
   colorway: Colorway;
   iconFollowsTheme: boolean;
   gigLock: boolean;
+  minCopies: number;
+  untrustedVolumes: string;
   iconStatus: string;
   telemetryOn: boolean;
   telemetryConfigured: boolean;
@@ -55,6 +57,8 @@ const DEFAULT_SNAPSHOT: SettingsSnapshot = {
   colorway: "serato-like",
   iconFollowsTheme: true,
   gigLock: false,
+  minCopies: 2,
+  untrustedVolumes: "",
   iconStatus: "",
   telemetryOn: false,
   telemetryConfigured: false,
@@ -442,6 +446,88 @@ export async function saveGigLock(next?: boolean): Promise<void> {
     applyGigLock(payload);
   } catch {
     const status = t("error.gig_lock_not_saved");
+    patchSettings({ iconStatus: status });
+    setText("icon-status", status);
+  }
+}
+
+function parseUntrustedNames(text: string): string[] {
+  return text.split(",").map((part) => part.trim()).filter((part) => part.length > 0);
+}
+
+/**
+ * Apply the saved copies gate from settings.
+ *
+ * min_copies must be an integer from 1 to 9. untrusted_volumes is a
+ * list of non-empty names joined for the field.
+ *
+ * @param payload Settings object from the server.
+ * @returns {void}
+ */
+export function applyCopies(payload: SettingsPayload): void {
+  const patch: Partial<SettingsSnapshot> = {};
+  if ("min_copies" in payload) {
+    const copies = payload.min_copies;
+    if (typeof copies === "number" && copies >= 1 && copies <= 9) {
+      patch.minCopies = copies;
+    }
+  }
+  if ("untrusted_volumes" in payload) {
+    const volumes = payload.untrusted_volumes;
+    if (Array.isArray(volumes) && volumes.every((name) => typeof name === "string" && name.length > 0)) {
+      patch.untrustedVolumes = volumes.join(", ");
+    } else if (Array.isArray(volumes) && volumes.length === 0) {
+      patch.untrustedVolumes = "";
+    }
+  }
+  if (Object.keys(patch).length) patchSettings(patch);
+}
+
+/**
+ * Save the verified-copy count required before prune or duplicate delete.
+ *
+ * @param next Integer 1–9, or the control's current value.
+ * @returns {Promise<void>}
+ */
+export async function saveMinCopies(next?: number): Promise<void> {
+  const copies = next ?? Number(selectValue("min-copies"));
+  if (!Number.isInteger(copies) || copies < 1 || copies > 9) return;
+  patchSettings({ minCopies: copies, iconStatus: "" });
+  try {
+    const payload = await postJSON<SettingsPayload>("/api/settings", { min_copies: copies });
+    applyCopies(payload);
+  } catch {
+    const status = t("error.copies_not_saved");
+    patchSettings({ iconStatus: status });
+    setText("icon-status", status);
+  }
+}
+
+/**
+ * Keep the untrusted-volumes field as typed, without posting.
+ *
+ * @param text Field contents.
+ * @returns {void}
+ */
+export function setUntrustedDraft(text: string): void {
+  patchSettings({ untrustedVolumes: text });
+}
+
+/**
+ * Save untrusted volume names. Empty is an empty list.
+ *
+ * @param next Field contents, or the stored draft.
+ * @returns {Promise<void>}
+ */
+export async function saveUntrustedVolumes(next?: string): Promise<void> {
+  const text = next ?? snapshot.untrustedVolumes;
+  const names = parseUntrustedNames(text);
+  patchSettings({ untrustedVolumes: names.join(", "), iconStatus: "" });
+  try {
+    const payload = await postJSON<SettingsPayload>("/api/settings", { untrusted_volumes: names });
+    applyCopies(payload);
+  } catch {
+    const status = t("error.copies_not_saved");
     patchSettings({ iconStatus: status });
     setText("icon-status", status);
   }

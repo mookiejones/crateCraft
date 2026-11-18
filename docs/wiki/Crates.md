@@ -27,7 +27,7 @@ The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**. E
 
 **Find a crate** keeps a parent visible when a nested name matches. **Order** is Serato's own order. **Name** is alphabetical. **Added** is the date the crate was created. A long crate list scrolls inside that pane. Collapsing the navigation drawer leaves crate names in the main column.
 
-**New**, **Rename**, and **Delete** stay on the crate action row. **Color**, **Preset**, **Tree**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list.
+**New**, **Rename**, and **Delete** stay on the crate action row. A chip on that row names the live library and each complete snapshot. **Color**, **Preset**, **Tree**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list.
 
 Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. When Serato is open, a notice under the top bar says edits stay off.
 

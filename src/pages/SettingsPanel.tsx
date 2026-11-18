@@ -14,6 +14,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { MuiThemeProof } from "../components/MuiThemeProof";
 import { ShortcutTable } from "../components/ShortcutTable";
@@ -160,6 +161,35 @@ export function SettingsPanel() {
           />
         }
         label={t("settings.gigLock")}
+      />
+      <FormControl className="settings-field" size="small" fullWidth>
+        <InputLabel htmlFor="min-copies" shrink>{t("settings.minCopies")}</InputLabel>
+        <Select
+          native
+          id="min-copies"
+          label={t("settings.minCopies")}
+          inputRef={tooltipRef(tips.minCopies)}
+          value={String(settings.minCopies)}
+          onChange={(event) => {
+            void settings.saveMinCopies(Number(selectValue(event)));
+          }}
+        >
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((count) => (
+            <option key={count} value={String(count)}>{count}</option>
+          ))}
+        </Select>
+      </FormControl>
+      <TextField
+        id="untrusted-volumes"
+        size="small"
+        fullWidth
+        label={t("settings.untrustedVolumes")}
+        value={settings.untrustedVolumes}
+        inputRef={tooltipRef(tips.untrustedVolumes)}
+        onChange={(event) => settings.setUntrustedDraft(event.target.value)}
+        onBlur={() => {
+          void settings.saveUntrustedVolumes();
+        }}
       />
       <Typography id="icon-status" className="dialog-status" component="p" role="status" aria-live="polite">
         {settings.iconStatus}

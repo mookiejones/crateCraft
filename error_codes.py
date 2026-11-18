@@ -77,6 +77,8 @@ ERROR_CODES: dict[str, str] = {
     "The layout could not be saved.": "layout_not_saved",
     "The sharing choice could not be saved.": "consent_not_saved",
     "The language could not be saved.": "language_not_saved",
+    "The copies setting could not be saved.": "copies_not_saved",
+    "Can't verify, not deleting. A snapshot's hash check failed.": "copies_hash_failed",
     "The shortcuts could not be saved.": "shortcuts_not_saved",
     "The theme could not be saved.": "theme_not_saved",
     "The logs folder could not be opened.": "logs_not_opened",
@@ -176,6 +178,15 @@ PARAM_CODES: dict[str, str] = {
     "restore_outside": (
         "Could not put {name} back. Open the local log from Settings, or "
         "read the operation log on Backups."
+    ),
+    "copies_unplugged": (
+        "Can't verify, not deleting. The copy on {drive} is unplugged."
+    ),
+    "copies_untrusted": (
+        "Can't verify, not deleting. The copy on {drive} is marked untrusted."
+    ),
+    "copies_need_more": (
+        "Need {n} verified copies before deleting."
     ),
 }
 

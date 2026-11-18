@@ -34,7 +34,8 @@ test("the snapshots list renders from context", async ({ page }) => {
   await expect(page.locator("#snapshots-list .MuiDataGrid-columnHeader[data-field='created']")).toHaveCount(1);
   await expect(page.locator("#snapshots-list .MuiDataGrid-columnHeader[data-field='size']")).toHaveCount(1);
   await expect(page.locator("#snapshots-list .MuiDataGrid-columnHeader[data-field='status']")).toHaveCount(1);
-  await expect(page.locator('#snapshots-list .MuiDataGrid-cell[data-field="restore"] button')).toHaveText("Review restore");
+  await expect(page.getByRole("button", { name: "Review restore" })).toHaveCount(1);
+  await expect(page.locator('#snapshots-list [data-action="prune"]')).toHaveText("Prune");
   await expect(page.locator("#snapshots-take")).toHaveAttribute("data-tooltip", /.+/);
   await expect(page.locator("#music-mirror-heading")).toHaveText("Music files");
   await expect(page.locator("#music-mirror-dest")).toBeVisible();
@@ -78,7 +79,7 @@ test("review restore lists crate membership and deleted crates", async ({ page }
   await page.locator("#snapshots-panel").evaluate((node) => {
     if (node instanceof HTMLElement) node.hidden = false;
   });
-  await page.locator('#snapshots-list .MuiDataGrid-cell[data-field="restore"] button').click();
+  await page.getByRole("button", { name: "Review restore" }).click();
   await expect(page.locator("#snapshot-plan")).toContainText("House: tracks added track.mp3. tracks removed other.mp3");
   await expect(page.locator("#snapshot-plan")).toContainText("Deleted crates: 1. Old");
   await saveShot(page, "snapshot_restore_plan");

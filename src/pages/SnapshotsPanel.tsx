@@ -61,14 +61,19 @@ export function SnapshotsPanel() {
   const latest = snapshots.operations[snapshots.operations.length - 1];
   const failed = latest?.result === "rollback_failed";
   const openSnapshotPlan = snapshots.openSnapshotPlan;
+  const pruneSnapshot = snapshots.pruneSnapshot;
+  const failSnapshots = snapshots.failSnapshots;
   const setSnapshotDialogStatus = snapshots.setSnapshotDialogStatus;
   const columns = useMemo(
     () => snapshotColumns({
       onRestore: (snapshotId) => {
         openSnapshotPlan(snapshotId).catch((error) => setSnapshotDialogStatus(failureOf(error).message));
       },
+      onPrune: (snapshotId) => {
+        pruneSnapshot(snapshotId).catch((error) => failSnapshots(error));
+      },
     }),
-    [locale, openSnapshotPlan, setSnapshotDialogStatus],
+    [locale, openSnapshotPlan, pruneSnapshot, failSnapshots, setSnapshotDialogStatus],
   );
   const localeText = useMemo(() => gridLocaleText(locale), [locale]);
   const operations = useMemo(

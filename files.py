@@ -166,6 +166,8 @@ class Plan:
     browse: str | None = None
     trash: list[str] = field(default_factory=list)
     skipped: list[str] = field(default_factory=list)
+    code: str | None = None
+    params: dict[str, str] | None = None
 
 
 def list_directory(
@@ -542,6 +544,7 @@ def plan(payload: Mapping[str, object]) -> dict[str, object]:
         LibraryError: If the body is not a file action.
     """
     built = _build(payload)
+    _preview_unverified_delete(built)
     body = _public(built)
     info = library.status()
     body["serato"] = info
@@ -593,6 +596,7 @@ def execute(payload: Mapping[str, object]) -> dict[str, object]:
     built = _build(payload)
     if not built.ok:
         raise library.LibraryError(built.error or "That change was not saved.")
+    _refuse_unverified_delete(built)
     import safe_write
 
     extra = [change.source for change in built.changes]
@@ -2076,7 +2080,7 @@ def _public(plan: Plan) -> dict[str, object]:
         )
     shown = changes[:_CHANGE_CAP]
     warnings = list(plan.warnings)
-    return {
+    body: dict[str, object] = {
         "ok": plan.ok,
         "action": plan.action,
         "needs_confirm": True,
@@ -2091,6 +2095,54 @@ def _public(plan: Plan) -> dict[str, object]:
         "browse": plan.browse,
         "skipped": list(plan.skipped[:_CHANGE_CAP]),
     }
+    if plan.code:
+        body["code"] = plan.code
+        if plan.params:
+            body["params"] = dict(plan.params)
+    return body
+
+
+def _delete_paths(plan: Plan) -> list[str]:
+    """Return stored paths a delete plan would trash.
+
+    Args:
+        plan: Checked delete plan.
+
+    Returns:
+        Path strings for remaining-copy checks.
+    """
+    return [str(item.path) for item in plan.removals if item.path is not None]
+
+
+def _refuse_unverified_delete(plan: Plan) -> None:
+    """Refuse trashing a duplicate when too few copies stay verified.
+
+    Args:
+        plan: Checked plan. Unique files are left to the existing path.
+
+    Raises:
+        LibraryError: If a duplicate group would fall below ``min_copies``.
+    """
+    if plan.action != "delete" or not plan.ok:
+        return
+    import verified_copies
+
+    verified_copies.require_audio_delete(_delete_paths(plan))
+
+
+def _preview_unverified_delete(plan: Plan) -> None:
+    """Mark a delete preview refused when the copy gate would raise.
+
+    Args:
+        plan: Plan that ``_public`` will send. Nothing is written.
+    """
+    try:
+        _refuse_unverified_delete(plan)
+    except library.LibraryError as exc:
+        plan.ok = False
+        plan.error = str(exc)
+        plan.code = exc.code
+        plan.params = dict(exc.params) if exc.params else None
 
 
 def _summary(action: str, changes: list[FileChange], warnings: list[str]) -> str:

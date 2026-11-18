@@ -228,6 +228,20 @@ export interface PresetRecord {
   updated?: number | null;
 }
 
+/** One verified destination in GET /api/library `copies`. */
+export interface LibraryCopyDestination {
+  kind: string;
+  name: string;
+  id?: string;
+}
+
+/** Library-level copy count. Distinct from per-track `copies` on a track. */
+export interface LibraryCopies {
+  verified: number;
+  min_copies: number;
+  destinations: LibraryCopyDestination[];
+}
+
 export interface LibraryPayload {
   tracks: Track[];
   crates: Crate[];
@@ -235,6 +249,8 @@ export interface LibraryPayload {
   serato?: SeratoStatus | null;
   /** Preset crates of this space, keyed by crate id. */
   presets?: Record<string, PresetRecord>;
+  /** Verified live library plus complete snapshots. */
+  copies?: LibraryCopies;
   error?: string;
 }
 
@@ -547,6 +563,10 @@ export interface SettingsPayload {
   icon?: IconApplyResult;
   /** True queues crate and track edits until Gig Lock is off. */
   gig_lock?: boolean;
+  /** Verified copies required before prune or duplicate-group delete. 1–9. */
+  min_copies?: number;
+  /** Volume names that do not count as verified copies. */
+  untrusted_volumes?: string[];
   /** Remapped shortcut chords. Empty means Serato defaults plus extras. */
   shortcuts?: Record<string, Array<{ key: string; mod?: boolean; shift?: boolean; alt?: boolean }>>;
   error?: string;

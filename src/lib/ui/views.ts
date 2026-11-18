@@ -2464,6 +2464,7 @@ export async function loadLibrary() {
   state.rootId = library.root_id;
   state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)]));
   state.presets = library.presets ?? {};
+  state.copies = library.copies ?? null;
   state.expanded = new Set<number | "all">(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id));
   state.activeCrate = active === "all" || library.crates.some((crate) => crate.id === active) ? active : "all";
   state.selectedId = selected;

@@ -12,7 +12,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AppProviders } from "../../app/providers";
 import { bindCrateActions, emitCrates } from "../../lib/crates/crate-store";
 import { el } from "../../lib/dom";
-import { setLocale } from "../../lib/i18n";
+import { setLocale, t } from "../../lib/i18n";
 import { state } from "../../lib/state";
 import { installPage } from "../test-page";
 import { CrateActions } from "../../pages/CrateActions";
@@ -49,6 +49,14 @@ describe("CrateTree context", () => {
     state.crateTracks = new Map([[2, new Set([1])], [3, new Set([1, 2])]]);
     state.expanded = new Set([2]);
     state.presets = {};
+    state.copies = {
+      verified: 2,
+      min_copies: 2,
+      destinations: [
+        { kind: "live", name: "laptop" },
+        { kind: "snapshot", name: "snapshot" },
+      ],
+    };
   });
 
   it("paints the rail and actions from one crate context", () => {
@@ -73,6 +81,10 @@ describe("CrateTree context", () => {
     expect(names).toEqual(["All tracks", "House", "Deep"]);
     expect(el("crate-list").querySelector(".swatch")).not.toBeNull();
     expect(el("crate-list").querySelector(".smart")?.textContent).toBe("smart");
+    expect(el("library-copies").textContent).toBe(
+      t("copies.count", { count: 2, names: `${t("copies.laptop")}, ${t("copies.snapshot")}` }),
+    );
+    expect(el("library-copies").getAttribute("data-tooltip")).toBe(t("tooltip.libraryCopies"));
     expect(el("crate-new").textContent).toBe("New");
     expect(el("crate-new").disabled).toBe(false);
     expect(el("crate-new").className).toContain("MuiButton");
