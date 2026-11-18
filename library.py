@@ -4042,6 +4042,7 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
     action = payload.get("action")
     space = cast(str, payload.get("space") or LIBRARY_SPACE)
     target = _crate_target(payload)
+    import snapshots
     import safe_write
 
     def apply(conn: sqlite3.Connection, write: safe_write.Session) -> dict[str, object]:
@@ -4107,7 +4108,9 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
         _expect_crate(write, action, payload, result)
         return result
 
-    return safe_write.run(f"crate_{action}", target, apply)
+    force = payload.get("force") is True
+    with snapshots.allow_force(force):
+        return safe_write.run(f"crate_{action}", target, apply)
 
 
 def _library_crate(conn: sqlite3.Connection, crate_id: int) -> bool:

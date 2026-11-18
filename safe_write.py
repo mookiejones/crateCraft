@@ -500,6 +500,8 @@ def run(
             value = apply(conn, active)
             conn.commit()
             active.mark_committed()
+            if isinstance(value, dict):
+                value["touched"] = active.touched_files()
             return value
         except Exception:
             try:
@@ -604,6 +606,36 @@ class Session:
         """Record that the body committed the transaction."""
         self.committed = True
 
+    def touched_files(self) -> list[str]:
+        """Return labels of files whose hash changed during this write.
+
+        Returns:
+            Unique labels in preimage order. ``-shm`` is omitted.
+        """
+        preimage = self._preimage
+        if preimage is None:
+            return []
+        current = _committed_state(preimage)
+        names: list[str] = []
+        seen: set[str] = set()
+        for entry in preimage.files:
+            if not _compared(entry.dest):
+                continue
+            now = current.get(str(entry.dest))
+            if now != entry.sha256 and entry.label not in seen:
+                seen.add(entry.label)
+                names.append(entry.label)
+        for path in preimage.absent:
+            if not _compared(path):
+                continue
+            now = current.get(str(path))
+            if now is not None:
+                label = path.name
+                if label not in seen:
+                    seen.add(label)
+                    names.append(label)
+        return names
+
     def close_connection(self) -> None:
         """Close the write connection if it is still open."""
         conn = self._conn
@@ -620,12 +652,18 @@ class Session:
         """
         global _SKIP_DEPTH
         import library
+        import snapshots
 
         self._gate()
         try:
             recover_interrupted_write()
         except library.LibraryError:
             self._record("rollback_failed", "failed")
+            raise
+        try:
+            snapshots.snapshot_before_write()
+        except library.LibraryError:
+            self._record("refused", "not_attempted")
             raise
         try:
             self._preimage = _capture(self.extra_files, self.fault)
@@ -654,6 +692,7 @@ class Session:
             InjectedCrash: When the crash fault is set. The journal stays.
         """
         import library
+        import snapshots
 
         if not self.committed:
             self._restore_and_record("refused", "verified")
@@ -677,6 +716,8 @@ class Session:
             self._rollback_committed(exc)
         self._clear_owned_journal()
         self._record("verified", "not_needed")
+        snapshots.record_touched(self._content_id, self.touched_files())
+        snapshots.rebase_load()
 
     def finish_exception(self) -> None:
         """Put the preimage back after the body raised.
@@ -734,6 +775,11 @@ class Session:
         if blocked:
             self._record("refused", "not_attempted")
             raise library.LibraryError(blocked, 409)
+        try:
+            snapshots.require_unchanged()
+        except library.LibraryError:
+            self._record("refused", "not_attempted")
+            raise
 
     def _rollback_committed(self, exc: Exception) -> None:
         """Run the file hook, restore the preimage, and raise.

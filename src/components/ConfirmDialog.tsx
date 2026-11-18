@@ -51,7 +51,9 @@ export function ConfirmDialog() {
         </Button>
         <Button
           id="confirm-confirm"
-          ref={tooltipRef(tips.confirmAction)}
+          ref={tooltipRef(
+            prompt.confirmLabel === t("write.forceWrite") ? tips.forceWrite : tips.confirmAction,
+          )}
           type="button"
           variant="contained"
           sx={{ minHeight: 44 }}

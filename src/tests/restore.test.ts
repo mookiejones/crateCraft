@@ -160,6 +160,20 @@ describe("restore", () => {
     });
   });
 
+  it("shows the files this snapshot's write changed", async () => {
+    state.snapshots = [{
+      id: "snap-9",
+      created: "2026-01-01",
+      trigger: "before-write",
+      touched: ["master.sqlite"],
+    }];
+    postJSON.mockResolvedValue(plan);
+    await openSnapshotPlan("snap-9");
+    expect(document.getElementById("snapshot-touched")?.textContent).toBe(
+      t("snapshots.whatChanged", { files: "master.sqlite" }),
+    );
+  });
+
   it("paints the dry-run plan fields and blocks confirm when restore is refused", async () => {
     postJSON.mockResolvedValue(plan);
     await openSnapshotPlan("snap-9");

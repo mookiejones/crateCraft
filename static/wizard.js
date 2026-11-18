@@ -21318,6 +21318,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "error.layout_not_saved": "The layout could not be saved.",
     "error.legacy_read_only": "This library was made by an older Serato DJ. This app can show it but cannot change it yet.",
     "error.length_invalid": "Length needs a whole number of milliseconds.",
+    "error.library_changed": "The library files changed on disk since they were loaded. Confirm to write anyway.",
     "error.library_log_unconfirmed": "The session log does not confirm this library file ({database}). Writes and restores are off. Snapshots can still be taken and read.",
     "error.library_not_saved": "The library could not be saved.",
     "error.logs_not_opened": "The logs folder could not be opened.",
@@ -22292,6 +22293,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "snapshots.readingPlan": "Reading what would change",
     "snapshots.restore": "Restore",
     "snapshots.restoreIntro": "Nothing is changed until you confirm. A new snapshot is saved first, so this restore can be undone.",
+    "snapshots.whatChanged": "What changed: {files}",
     "snapshots.restoreTitle": "Restore this backup",
     "snapshots.restored": "Restore finished. The previous library was saved first, so this can be undone from the list.",
     "snapshots.restoring": "Restoring…",
@@ -22882,7 +22884,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.relocateCancel": "Close without changing the file location.",
     "tooltip.relocateConfirm": "Save this file location. Serato DJ Pro must be quit.",
     "tooltip.confirmCancel": "Close without making this change.",
-    "tooltip.confirmAction": "Confirm this change."
+    "tooltip.confirmAction": "Confirm this change.",
+    "tooltip.forceWrite": "Write even though the library files changed after they were loaded.",
+    "write.forceTitle": "Library changed",
+    "write.forceConfirm": "The library files changed on disk since they were loaded. Write anyway?",
+    "write.forceWrite": "Write anyway"
   };
 
   // locales/es.json
@@ -23216,6 +23222,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "error.layout_not_saved": "No se pudo guardar la disposición.",
     "error.legacy_read_only": "Esta biblioteca la creó una versión anterior de Serato DJ. Esta app puede mostrarla, pero todavía no puede modificarla.",
     "error.length_invalid": "La duración debe ser un número entero de milisegundos.",
+    "error.library_changed": "Los archivos de la biblioteca cambiaron en disco desde que se cargaron. Confirma para escribir de todos modos.",
     "error.library_log_unconfirmed": "El registro de la sesión no confirma este archivo de biblioteca ({database}). Las escrituras y las restauraciones están desactivadas. Las instantáneas se pueden tomar y leer.",
     "error.library_not_saved": "No se pudo guardar la biblioteca.",
     "error.logs_not_opened": "No se pudo abrir la carpeta de registros.",
@@ -24190,6 +24197,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "snapshots.readingPlan": "Leyendo qué cambiaría",
     "snapshots.restore": "Restaurar",
     "snapshots.restoreIntro": "No se cambia nada hasta que confirmes. Primero se guarda una instantánea nueva, así que esta restauración se puede deshacer.",
+    "snapshots.whatChanged": "Qué cambió: {files}",
     "snapshots.restoreTitle": "Restaurar esta copia",
     "snapshots.restored": "Restauración terminada. La biblioteca anterior se guardó primero, así que puedes deshacerla desde la lista.",
     "snapshots.restoring": "Restaurando…",
@@ -24780,7 +24788,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.relocateCancel": "Cerrar sin cambiar la ubicación del archivo.",
     "tooltip.relocateConfirm": "Guardar esta ubicación. Hay que salir de Serato DJ Pro.",
     "tooltip.confirmCancel": "Cerrar sin hacer este cambio.",
-    "tooltip.confirmAction": "Confirmar este cambio."
+    "tooltip.confirmAction": "Confirmar este cambio.",
+    "tooltip.forceWrite": "Escribir aunque los archivos de la biblioteca cambiaron después de cargarse.",
+    "write.forceTitle": "Biblioteca cambiada",
+    "write.forceConfirm": "Los archivos de la biblioteca cambiaron en disco desde que se cargaron. ¿Escribir de todos modos?",
+    "write.forceWrite": "Escribir de todos modos"
   };
 
   // src/lib/i18n.ts
@@ -25147,6 +25159,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     relocateConfirm: spec("tooltip.relocateConfirm"),
     confirmCancel: spec("tooltip.confirmCancel"),
     confirmAction: spec("tooltip.confirmAction"),
+    forceWrite: spec("tooltip.forceWrite"),
     crateColor: spec("tooltip.crateColor"),
     crateDelete: spec("tooltip.crateDelete"),
     cratePreset: spec("tooltip.cratePreset"),
