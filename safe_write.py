@@ -652,18 +652,12 @@ class Session:
         """
         global _SKIP_DEPTH
         import library
-        import snapshots
 
         self._gate()
         try:
             recover_interrupted_write()
         except library.LibraryError:
             self._record("rollback_failed", "failed")
-            raise
-        try:
-            snapshots.snapshot_before_write()
-        except library.LibraryError:
-            self._record("refused", "not_attempted")
             raise
         try:
             self._preimage = _capture(self.extra_files, self.fault)

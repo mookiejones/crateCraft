@@ -118,23 +118,35 @@ class LoadFingerprintTests(unittest.TestCase):
 class WriteManifestTests(unittest.TestCase):
     """Every write returns the files it changed and stores them on the snapshot."""
 
-    def test_write_returns_touched_files_and_stores_them_on_the_snapshot(self) -> None:
-        """A crate create lists master.sqlite and records it on the before-write snapshot.
+    def test_write_returns_touched_files_without_a_serato_backup(self) -> None:
+        """A crate create lists master.sqlite and does not add Backups beside it.
 
         Returns:
-            None. The test fails if touched is missing from the result or snapshot.
+            None. The test fails if touched is missing or Backups appears.
         """
-        with TempLibrary():
+        with TempLibrary() as temp:
             with mock.patch("snapshots.serato_dj_running", return_value=False):
                 created = library.crate_action({"action": "create", "name": "Warmup"})
             self.assertIn("master.sqlite", created["touched"])
-            before = [
+            self.assertFalse((temp.db.resolve().parent / "Backups").exists())
+
+    def test_record_touched_stores_files_on_an_existing_snapshot(self) -> None:
+        """An existing snapshot keeps the files that write listed.
+
+        Returns:
+            None. The test fails if list_snapshots drops the row or the list.
+        """
+        with TempLibrary():
+            with mock.patch("snapshots.serato_dj_running", return_value=False):
+                info = snapshots.current_store().take("manual", "A test snapshot.")
+                snapshots.record_touched(info["id"], ["master.sqlite"])
+            rows = [
                 row
                 for row in snapshots.current_store().list_snapshots()
-                if row["trigger"] == "before-write"
+                if row["id"] == info["id"]
             ]
-            self.assertTrue(before)
-            self.assertIn("master.sqlite", before[0]["touched"])
+            self.assertEqual(len(rows), 1)
+            self.assertIn("master.sqlite", rows[0]["touched"])
 
 
 class TruncationTests(unittest.TestCase):
