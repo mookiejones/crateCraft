@@ -12652,7 +12652,13 @@ Error generating stack: ` + x.message + `
     "consent.accept": "Share",
     "consent.body": "Counts and actions only, plus the app name, the app version, and the operating system. Track titles, crate names, file paths, and library contents stay on this computer. Sharing stays off unless you turn it on.",
     "consent.decline": "Don't share",
+    "copies.count": {
+      one: "{count} copy: {names}",
+      other: "{count} copies: {names}"
+    },
     "copies.heading": "Other copies",
+    "copies.laptop": "laptop",
+    "copies.snapshot": "snapshot",
     "copies.useInCrates": "Use in crates",
     "count.plays": {
       one: "{count} play",
@@ -12840,6 +12846,11 @@ Error generating stack: ` + x.message + `
     "error.color_not_number": "Color needs a number.",
     "error.color_out_of_range": "Color is out of range.",
     "error.consent_not_saved": "The sharing choice could not be saved.",
+    "error.copies_hash_failed": "Can't verify, not deleting. A snapshot's hash check failed.",
+    "error.copies_need_more": "Need {n} verified copies before deleting.",
+    "error.copies_not_saved": "The copies setting could not be saved.",
+    "error.copies_unplugged": "Can't verify, not deleting. The copy on {drive} is unplugged.",
+    "error.copies_untrusted": "Can't verify, not deleting. The copy on {drive} is marked untrusted.",
     "error.crate_name_separator": "Use a crate name without the Serato name separator.",
     "error.crate_name_too_long": "That crate name is too long.",
     "error.crate_not_in_space": "That crate is not in this space.",
@@ -13666,6 +13677,8 @@ Error generating stack: ` + x.message + `
     "settings.copyLogs": "Copy logs",
     "settings.copyVersion": "Copy version",
     "settings.gigLock": "Queue writes while gigging",
+    "settings.minCopies": "Verified copies before delete",
+    "settings.untrustedVolumes": "Untrusted volume names",
     "settings.iconAppliedDock": "The Dock icon matches this theme.",
     "settings.iconAppliedWindow": "The window and taskbar icon match this theme.",
     "settings.iconDefault": "The app icon stays the usual one.",
@@ -13819,8 +13832,12 @@ Error generating stack: ` + x.message + `
     "snapshots.drivesNone": "No drive folders were due for a copy.",
     "snapshots.drivesSaved": "Drive crates were copied into the backup on this computer.",
     "snapshots.drivesSkipped": "Skipped: {drives}.",
-    "snapshots.empty": "No backups yet. Take a backup to keep a point you can restore. Backups are kept, and this page does not expire them.",
+    "snapshots.empty": "No backups yet. Take a backup to keep a point you can restore. Prune a backup from the list when enough copies remain.",
     "snapshots.noSearch": "Backups has no search. Press Ctrl+K to find a view, crate, track, or file.",
+    "snapshots.prune": "Prune",
+    "snapshots.pruneMessage": "This backup is deleted from this computer. Remaining copies stay.",
+    "snapshots.pruneTitle": "Prune this backup",
+    "snapshots.pruned": "Backup pruned.",
     "snapshots.outsideChange": "Something outside this app changed the Serato folder. A snapshot was saved after that change. Undo puts back the previous snapshot.",
     "snapshots.outsideChangeLexicon": "Lexicon changed the Serato folder. A snapshot was saved after that change. Undo puts back the previous snapshot.",
     "snapshots.reading": "Reading backups",
@@ -14112,6 +14129,7 @@ Error generating stack: ` + x.message + `
     "tooltip.importM3u": "Add tracks from a playlist file into a new crate.",
     "tooltip.keepCopy": "Keep this copy: {name}. The others leave the library.",
     "tooltip.language": "Choose the language for this window. Same as the system follows this computer.",
+    "tooltip.libraryCopies": "Verified copies of this library: this computer and complete snapshots.",
     "tooltip.libraryGeneration": "Opens the note that says whether the session log or the installed Serato decided this is Serato 4, Serato 5, or an unknown version.",
     "tooltip.linkMutual": "Also link that track back to this one.",
     "tooltip.linkNote": "Add a note for this link.",
@@ -14134,6 +14152,7 @@ Error generating stack: ` + x.message + `
     "tooltip.relinkPick": "Choose which file this missing track should use.",
     "tooltip.relinkRoot": "Extra folder to search after a drive swap. Leave blank to use the music folders.",
     "tooltip.mergeTrash": "Move the other audio files to the Trash. You can restore them from there.",
+    "tooltip.minCopies": "How many verified copies must remain before a duplicate or snapshot can be deleted. Default is 2.",
     "tooltip.merging": "Merging the copies.",
     "tooltip.missingDrive": "Connect the drive that holds {name} before opening it.",
     "tooltip.musicMirrorCopy": "Copy library audio to the backup folder. Cues stay in the file.",
@@ -14191,6 +14210,7 @@ Error generating stack: ` + x.message + `
     "tooltip.removeTrack": "Remove this track from the library. The audio file stays on disk.",
     "tooltip.rerunWizard": "Run setup again.",
     "tooltip.reveal": "Show this file in {name}. The library is not changed.",
+    "tooltip.pruneSnapshot": "Delete this backup when enough verified copies remain. Unplugged and untrusted copies do not count.",
     "tooltip.reviewRestore": "Review what restoring this snapshot would change.",
     "tooltip.runSetup": "Run setup to find music folders.",
     "tooltip.saveLink": "Save this link.",
@@ -14271,6 +14291,7 @@ Error generating stack: ` + x.message + `
     "tooltip.updatePrereleases": "Also tell you about beta versions and release candidates.",
     "tooltip.updateRelated": "Create or refresh the Related crate in Serato. Serato has to be quit.",
     "tooltip.updateSkip": "Don't tell you about this version again.",
+    "tooltip.untrustedVolumes": "Volume names that do not count as copies, comma-separated. An unplugged drive is never counted.",
     "tooltip.updateToggle": "Ask GitHub once a day whether a newer version is out.",
     "tooltip.useInCrates": "Put another track in every crate this one is in, at the same position.",
     "tooltip.viewBitrate": "Flag files whose stated bitrate is much higher than the spectrum, or lossless files made from a lossy encode. Needs a crate. Saving a crate writes the library.",
@@ -14529,7 +14550,13 @@ Error generating stack: ` + x.message + `
     "consent.accept": "Compartir",
     "consent.body": "Solo recuentos y acciones, más el nombre de la app, su versión y el sistema operativo. Los títulos de las pistas, los nombres de las cajas, las rutas de los archivos y el contenido de la biblioteca se quedan en este equipo. No se comparte nada a menos que lo actives.",
     "consent.decline": "No compartir",
+    "copies.count": {
+      one: "{count} copia: {names}",
+      other: "{count} copias: {names}"
+    },
     "copies.heading": "Otras copias",
+    "copies.laptop": "portátil",
+    "copies.snapshot": "instantánea",
     "copies.useInCrates": "Usar en las cajas",
     "count.plays": {
       one: "{count} reproducción",
@@ -14717,6 +14744,11 @@ Error generating stack: ` + x.message + `
     "error.color_not_number": "El color debe ser un número.",
     "error.color_out_of_range": "El color está fuera de rango.",
     "error.consent_not_saved": "No se pudo guardar la elección sobre compartir datos.",
+    "error.copies_hash_failed": "No se puede verificar, no se borra. Falló la comprobación de hash de una instantánea.",
+    "error.copies_need_more": "Se necesitan {n} copias verificadas antes de borrar.",
+    "error.copies_not_saved": "No se pudo guardar la opción de copias.",
+    "error.copies_unplugged": "No se puede verificar, no se borra. La copia en {drive} está desconectada.",
+    "error.copies_untrusted": "No se puede verificar, no se borra. La copia en {drive} está marcada como no confiable.",
     "error.crate_name_separator": "Usa un nombre de caja sin el separador de nombres de Serato.",
     "error.crate_name_too_long": "Ese nombre de caja es demasiado largo.",
     "error.crate_not_in_space": "Esa caja no está en este espacio.",
@@ -15543,6 +15575,8 @@ Error generating stack: ` + x.message + `
     "settings.copyLogs": "Copiar registros",
     "settings.copyVersion": "Copiar versión",
     "settings.gigLock": "Poner en cola las escrituras durante el concierto",
+    "settings.minCopies": "Copias verificadas antes de borrar",
+    "settings.untrustedVolumes": "Nombres de volúmenes no confiables",
     "settings.iconAppliedDock": "El icono del Dock coincide con este tema.",
     "settings.iconAppliedWindow": "El icono de la ventana y de la barra de tareas coincide con este tema.",
     "settings.iconDefault": "El icono de la app se queda en el habitual.",
@@ -15696,8 +15730,12 @@ Error generating stack: ` + x.message + `
     "snapshots.drivesNone": "No había carpetas de unidades pendientes de copiar.",
     "snapshots.drivesSaved": "Las cajas de las unidades se copiaron en la copia de este equipo.",
     "snapshots.drivesSkipped": "Omitidas: {drives}.",
-    "snapshots.empty": "Todavía no hay copias. Haz una copia para guardar un punto al que puedas volver. Las copias se conservan y esta página no las caduca.",
+    "snapshots.empty": "Todavía no hay copias. Haz una copia para guardar un punto al que puedas volver. Poda una copia de la lista cuando queden copias suficientes.",
     "snapshots.noSearch": "Copias de seguridad no tiene búsqueda. Pulsa Ctrl+K para buscar una vista, una caja, una pista o un archivo.",
+    "snapshots.prune": "Podar",
+    "snapshots.pruneMessage": "Esta copia se borra de este equipo. Las copias restantes se quedan.",
+    "snapshots.pruneTitle": "Podar esta copia",
+    "snapshots.pruned": "Copia podada.",
     "snapshots.outsideChange": "Algo ajeno a esta app cambió la carpeta de Serato. Se guardó una instantánea después de ese cambio. Deshacer restaura la instantánea anterior.",
     "snapshots.outsideChangeLexicon": "Lexicon cambió la carpeta de Serato. Se guardó una instantánea después de ese cambio. Deshacer restaura la instantánea anterior.",
     "snapshots.reading": "Leyendo copias",
@@ -15989,6 +16027,7 @@ Error generating stack: ` + x.message + `
     "tooltip.importM3u": "Añade pistas de un archivo de lista a una caja nueva.",
     "tooltip.keepCopy": "Conserva esta copia: {name}. Las demás salen de la biblioteca.",
     "tooltip.language": "Elige el idioma de esta ventana. Igual que el sistema sigue el idioma de este ordenador.",
+    "tooltip.libraryCopies": "Copias verificadas de esta biblioteca: este equipo e instantáneas completas.",
     "tooltip.libraryGeneration": "Abre la nota que dice si el registro de sesión o el Serato instalado decidió que esta biblioteca es Serato 4, Serato 5 o una versión desconocida.",
     "tooltip.linkMutual": "Enlaza también esa pista de vuelta a esta.",
     "tooltip.linkNote": "Añade una nota a este enlace.",
@@ -16010,7 +16049,8 @@ Error generating stack: ` + x.message + `
     "tooltip.relinkInclude": "Incluye esta pista en el reenlace.",
     "tooltip.relinkPick": "Elige qué archivo debe usar esta pista faltante.",
     "tooltip.relinkRoot": "Carpeta extra para buscar después de cambiar de disco. Déjala en blanco para usar las carpetas de música.",
-    "tooltip.mergeTrash": "Mueve los otros archivos de audio a la papelera. Puedes restaurarlos desde allí.",
+    "tooltip.mergeTrash": "Mueve los demás archivos de audio a la Papelera. Puedes restaurarlos desde ahí.",
+    "tooltip.minCopies": "Cuántas copias verificadas deben quedar antes de borrar un duplicado o una instantánea. El valor predeterminado es 2.",
     "tooltip.merging": "Fusionando las copias.",
     "tooltip.missingDrive": "Conecta el disco que contiene {name} antes de abrirlo.",
     "tooltip.musicMirrorCopy": "Copia el audio de la biblioteca a la carpeta de copia. Los cues se quedan en el archivo.",
@@ -16068,6 +16108,7 @@ Error generating stack: ` + x.message + `
     "tooltip.removeTrack": "Quita esta pista de la biblioteca. El archivo de audio sigue en el disco.",
     "tooltip.rerunWizard": "Ejecuta la configuración otra vez.",
     "tooltip.reveal": "Muestra este archivo en {name}. La biblioteca no cambia.",
+    "tooltip.pruneSnapshot": "Borra esta copia cuando queden copias verificadas suficientes. Las copias desconectadas o no confiables no cuentan.",
     "tooltip.reviewRestore": "Revisa qué cambiaría al restaurar esta instantánea.",
     "tooltip.runSetup": "Ejecuta la configuración para encontrar las carpetas de música.",
     "tooltip.saveLink": "Guarda este enlace.",
@@ -16148,6 +16189,7 @@ Error generating stack: ` + x.message + `
     "tooltip.updatePrereleases": "Avisar también de versiones beta y candidatas.",
     "tooltip.updateRelated": "Crea o actualiza la caja Relacionadas en Serato. Serato tiene que estar cerrado.",
     "tooltip.updateSkip": "No volver a avisar de esta versión.",
+    "tooltip.untrustedVolumes": "Nombres de volumen que no cuentan como copias, separados por comas. Una unidad desconectada nunca cuenta.",
     "tooltip.updateToggle": "Preguntar a GitHub una vez al día si hay una versión más nueva.",
     "tooltip.useInCrates": "Pon otra pista en cada caja donde está esta, en la misma posición.",
     "tooltip.viewBitrate": "Marca archivos cuya tasa de bits declarada es mucho más alta que la del espectro, o archivos sin pérdida hechos a partir de un códec con pérdida. Necesita una caja. Guardar una caja escribe en la biblioteca.",
@@ -16564,6 +16606,7 @@ Error generating stack: ` + x.message + `
     crates: [],
     crateTracks: /* @__PURE__ */ new Map(),
     presets: {},
+    copies: null,
     rootId: null,
     activeCrate: "all",
     secondCrate: "all",
@@ -17045,7 +17088,8 @@ Error generating stack: ` + x.message + `
       splitPressed: state.splitCrates && cratesMode,
       canSaveView: state.writable,
       saveViewHidden: !cratesMode,
-      exportHidden: !cratesMode
+      exportHidden: !cratesMode,
+      copies: state.copies
     };
   }
   function readCrateValue() {
@@ -30314,13 +30358,285 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), Switch_default = Switch;
 
+  // node_modules/@mui/material/TextField/TextField.mjs
+  var React82 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/FormHelperText/FormHelperText.mjs
+  var React81 = __toESM(require_react(), 1);
+  var import_jsx_runtime54 = __toESM(require_jsx_runtime(), 1), _span3, useUtilityClasses25 = (ownerState) => {
+    let {
+      classes: classes2,
+      contained,
+      size,
+      disabled,
+      error: error2,
+      filled,
+      focused,
+      required
+    } = ownerState, slots = {
+      root: ["root", disabled && "disabled", error2 && "error", size && `size${capitalize_default(size)}`, contained && "contained", focused && "focused", filled && "filled", required && "required"]
+    };
+    return composeClasses(slots, getFormHelperTextUtilityClasses, classes2);
+  }, FormHelperTextRoot = styled_default2("p", {
+    name: "MuiFormHelperText",
+    slot: "Root",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.root, ownerState.size && styles5[`size${capitalize_default(ownerState.size)}`], ownerState.contained && styles5.contained, ownerState.filled && styles5.filled];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    color: (theme.vars || theme).palette.text.secondary,
+    ...theme.typography.caption,
+    textAlign: "left",
+    marginTop: 3,
+    marginRight: 0,
+    marginBottom: 0,
+    marginLeft: 0,
+    [`&.${formHelperTextClasses_default.disabled}`]: {
+      color: (theme.vars || theme).palette.text.disabled
+    },
+    [`&.${formHelperTextClasses_default.error}`]: {
+      color: (theme.vars || theme).palette.error.main
+    },
+    variants: [{
+      props: {
+        size: "small"
+      },
+      style: {
+        marginTop: 4
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.contained,
+      style: {
+        marginLeft: 14,
+        marginRight: 14
+      }
+    }]
+  }))), FormHelperText = /* @__PURE__ */ React81.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiFormHelperText"
+    }), {
+      children,
+      className,
+      component = "p",
+      disabled,
+      error: error2,
+      filled,
+      focused,
+      margin: margin2,
+      required,
+      variant,
+      ...other
+    } = props, [fcs] = useFormControlState({
+      props,
+      states: ["variant", "size", "disabled", "error", "filled", "focused", "required"]
+    }), ownerState = {
+      ...props,
+      component,
+      contained: fcs.variant === "filled" || fcs.variant === "outlined",
+      variant: fcs.variant,
+      size: fcs.size,
+      disabled: fcs.disabled,
+      error: fcs.error,
+      filled: fcs.filled,
+      focused: fcs.focused,
+      required: fcs.required
+    };
+    delete ownerState.ownerState;
+    let classes2 = useUtilityClasses25(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(FormHelperTextRoot, {
+      as: component,
+      className: clsx_default(classes2.root, className),
+      ref,
+      ...other,
+      ownerState,
+      children: children === " " ? (
+        // notranslate needed while Google Translate will not fix zero-width space issue
+        _span3 || (_span3 = /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("span", {
+          className: "notranslate",
+          "aria-hidden": !0,
+          children: "​"
+        }))
+      ) : children
+    });
+  }), FormHelperText_default = FormHelperText;
+
+  // node_modules/@mui/material/TextField/textFieldClasses.mjs
+  function getTextFieldUtilityClass(slot) {
+    return generateUtilityClass("MuiTextField", slot);
+  }
+  var textFieldClasses = generateUtilityClasses("MuiTextField", ["root"]);
+
+  // node_modules/@mui/material/TextField/TextField.mjs
+  var import_jsx_runtime55 = __toESM(require_jsx_runtime(), 1), variantComponent = {
+    standard: Input_default,
+    filled: FilledInput_default,
+    outlined: OutlinedInput_default
+  }, useUtilityClasses26 = (ownerState) => {
+    let {
+      classes: classes2
+    } = ownerState;
+    return composeClasses({
+      root: ["root"]
+    }, getTextFieldUtilityClass, classes2);
+  }, TextFieldRoot = styled_default2(FormControl_default, {
+    name: "MuiTextField",
+    slot: "Root"
+  })({}), TextField = /* @__PURE__ */ React82.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiTextField"
+    }), {
+      autoComplete,
+      autoFocus = !1,
+      children,
+      className,
+      color: color2 = "primary",
+      defaultValue,
+      disabled = !1,
+      error: error2 = !1,
+      fullWidth = !1,
+      helperText,
+      id: idOverride,
+      inputRef,
+      label,
+      maxRows,
+      minRows,
+      multiline = !1,
+      name,
+      onBlur,
+      onChange,
+      onFocus,
+      placeholder,
+      required = !1,
+      rows,
+      select = !1,
+      slots = {},
+      slotProps = {},
+      type,
+      value,
+      variant = "outlined",
+      ...other
+    } = props, ownerState = {
+      ...props,
+      autoFocus,
+      color: color2,
+      disabled,
+      error: error2,
+      fullWidth,
+      multiline,
+      required,
+      select,
+      variant
+    }, classes2 = useUtilityClasses26(ownerState), id = useId(idOverride), helperTextId = helperText && id ? `${id}-helper-text` : void 0, inputLabelId = label && id ? `${id}-label` : void 0, InputComponent = variantComponent[variant], externalForwardedProps = {
+      slots,
+      slotProps
+    }, [SelectSlot, selectProps] = useSlot("select", {
+      elementType: Select_default,
+      externalForwardedProps,
+      ownerState
+    }), nativeSelect = select && selectProps.native, [InputLabelSlot, inputLabelProps] = useSlot("inputLabel", {
+      elementType: InputLabel_default,
+      externalForwardedProps,
+      ownerState
+    }), inputAdditionalProps = {};
+    variant === "outlined" && (typeof inputLabelProps.shrink < "u" && (inputAdditionalProps.notched = inputLabelProps.shrink), inputAdditionalProps.label = label), select && (nativeSelect || (inputAdditionalProps.id = void 0), inputAdditionalProps["aria-describedby"] = void 0);
+    let [RootSlot, rootProps] = useSlot("root", {
+      elementType: TextFieldRoot,
+      shouldForwardComponentProp: !0,
+      externalForwardedProps: {
+        ...externalForwardedProps,
+        ...other
+      },
+      ownerState,
+      className: clsx_default(classes2.root, className),
+      ref,
+      additionalProps: {
+        disabled,
+        error: error2,
+        fullWidth,
+        required,
+        color: color2,
+        variant
+      }
+    }), [InputSlot, inputProps] = useSlot("input", {
+      elementType: InputComponent,
+      externalForwardedProps,
+      additionalProps: inputAdditionalProps,
+      ownerState
+    }), [HtmlInputSlot, htmlInputProps] = useSlot("htmlInput", {
+      elementType: "input",
+      externalForwardedProps,
+      ownerState
+    }), [FormHelperTextSlot, formHelperTextProps] = useSlot("formHelperText", {
+      elementType: FormHelperText_default,
+      externalForwardedProps,
+      ownerState
+    }), InputElement = /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(InputSlot, {
+      "aria-describedby": helperTextId,
+      autoComplete,
+      autoFocus,
+      defaultValue,
+      fullWidth,
+      multiline,
+      name,
+      rows,
+      maxRows,
+      minRows,
+      type,
+      value,
+      id,
+      inputRef,
+      onBlur,
+      onChange,
+      onFocus,
+      placeholder,
+      inputProps: htmlInputProps,
+      slots: {
+        input: slots.htmlInput ? HtmlInputSlot : void 0
+      },
+      ...inputProps
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)(RootSlot, {
+      ...rootProps,
+      children: [label != null && label !== "" && /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(InputLabelSlot, {
+        htmlFor: select && !nativeSelect ? void 0 : id,
+        id: inputLabelId,
+        ...select && !nativeSelect && {
+          component: "div"
+        },
+        ...inputLabelProps,
+        children: label
+      }), select ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(SelectSlot, {
+        "aria-describedby": helperTextId,
+        id,
+        labelId: inputLabelId,
+        value,
+        input: InputElement,
+        ...selectProps,
+        children
+      }) : InputElement, helperText && /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(FormHelperTextSlot, {
+        id: helperTextId,
+        ...formHelperTextProps,
+        children: helperText
+      })]
+    });
+  }), TextField_default = TextField;
+
   // src/containers/SettingsContext.tsx
-  var import_react7 = __toESM(require_react(), 1), import_jsx_runtime54 = __toESM(require_jsx_runtime(), 1), SettingsContext = (0, import_react7.createContext)(null);
+  var import_react7 = __toESM(require_react(), 1), import_jsx_runtime56 = __toESM(require_jsx_runtime(), 1), SettingsContext = (0, import_react7.createContext)(null);
   function SettingsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(SettingsContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime56.jsx)(SettingsContext, { value, children });
   }
   function useSettings() {
     let value = (0, import_react7.useContext)(SettingsContext);
@@ -30330,10 +30646,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/components/MuiThemeProof.tsx
-  var import_jsx_runtime55 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime57 = __toESM(require_jsx_runtime(), 1);
   function MuiThemeProof() {
     let theme = useTheme4(), { colorway } = useSettings();
-    return /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
       "span",
       {
         id: "mui-theme-proof",
@@ -30349,10 +30665,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var import_react8 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Table/Table.mjs
-  var React82 = __toESM(require_react(), 1);
+  var React84 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Table/TableContext.mjs
-  var React81 = __toESM(require_react(), 1), TableContext = /* @__PURE__ */ React81.createContext(), TableContext_default = TableContext;
+  var React83 = __toESM(require_react(), 1), TableContext = /* @__PURE__ */ React83.createContext(), TableContext_default = TableContext;
 
   // node_modules/@mui/material/Table/tableClasses.mjs
   function getTableUtilityClass(slot) {
@@ -30361,7 +30677,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableClasses = generateUtilityClasses("MuiTable", ["root", "stickyHeader"]);
 
   // node_modules/@mui/material/Table/Table.mjs
-  var import_jsx_runtime56 = __toESM(require_jsx_runtime(), 1), useUtilityClasses25 = (ownerState) => {
+  var import_jsx_runtime58 = __toESM(require_jsx_runtime(), 1), useUtilityClasses27 = (ownerState) => {
     let {
       classes: classes2,
       stickyHeader
@@ -30400,7 +30716,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         borderCollapse: "separate"
       }
     }]
-  }))), defaultComponent = "table", Table = /* @__PURE__ */ React82.forwardRef(function(inProps, ref) {
+  }))), defaultComponent = "table", Table = /* @__PURE__ */ React84.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTable"
@@ -30417,14 +30733,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       padding: padding2,
       size,
       stickyHeader
-    }, classes2 = useUtilityClasses25(ownerState), table = React82.useMemo(() => ({
+    }, classes2 = useUtilityClasses27(ownerState), table = React84.useMemo(() => ({
       padding: padding2,
       size,
       stickyHeader
     }), [padding2, size, stickyHeader]);
-    return /* @__PURE__ */ (0, import_jsx_runtime56.jsx)(TableContext_default.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(TableContext_default.Provider, {
       value: table,
-      children: /* @__PURE__ */ (0, import_jsx_runtime56.jsx)(TableRoot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(TableRoot, {
         as: component,
         role: component === defaultComponent ? null : "table",
         ref,
@@ -30436,10 +30752,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), Table_default = Table;
 
   // node_modules/@mui/material/TableBody/TableBody.mjs
-  var React84 = __toESM(require_react(), 1);
+  var React86 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Table/Tablelvl2Context.mjs
-  var React83 = __toESM(require_react(), 1), Tablelvl2Context = /* @__PURE__ */ React83.createContext(), Tablelvl2Context_default = Tablelvl2Context;
+  var React85 = __toESM(require_react(), 1), Tablelvl2Context = /* @__PURE__ */ React85.createContext(), Tablelvl2Context_default = Tablelvl2Context;
 
   // node_modules/@mui/material/TableBody/tableBodyClasses.mjs
   function getTableBodyUtilityClass(slot) {
@@ -30448,7 +30764,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableBodyClasses = generateUtilityClasses("MuiTableBody", ["root"]);
 
   // node_modules/@mui/material/TableBody/TableBody.mjs
-  var import_jsx_runtime57 = __toESM(require_jsx_runtime(), 1), useUtilityClasses26 = (ownerState) => {
+  var import_jsx_runtime59 = __toESM(require_jsx_runtime(), 1), useUtilityClasses28 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -30462,7 +30778,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     display: "table-row-group"
   }), tablelvl2 = {
     variant: "body"
-  }, defaultComponent2 = "tbody", TableBody = /* @__PURE__ */ React84.forwardRef(function(inProps, ref) {
+  }, defaultComponent2 = "tbody", TableBody = /* @__PURE__ */ React86.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTableBody"
@@ -30473,10 +30789,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     } = props, ownerState = {
       ...props,
       component
-    }, classes2 = useUtilityClasses26(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(Tablelvl2Context_default.Provider, {
+    }, classes2 = useUtilityClasses28(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime59.jsx)(Tablelvl2Context_default.Provider, {
       value: tablelvl2,
-      children: /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(TableBodyRoot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime59.jsx)(TableBodyRoot, {
         className: clsx_default(classes2.root, className),
         as: component,
         ref,
@@ -30488,7 +30804,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), TableBody_default = TableBody;
 
   // node_modules/@mui/material/TableCell/TableCell.mjs
-  var React85 = __toESM(require_react(), 1);
+  var React87 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/TableCell/tableCellClasses.mjs
   function getTableCellUtilityClass(slot) {
@@ -30497,7 +30813,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableCellClasses = generateUtilityClasses("MuiTableCell", ["root", "head", "body", "footer", "sizeSmall", "sizeMedium", "paddingCheckbox", "paddingNone", "alignLeft", "alignCenter", "alignRight", "alignJustify", "stickyHeader"]), tableCellClasses_default = tableCellClasses;
 
   // node_modules/@mui/material/TableCell/TableCell.mjs
-  var import_jsx_runtime58 = __toESM(require_jsx_runtime(), 1), useUtilityClasses27 = (ownerState) => {
+  var import_jsx_runtime60 = __toESM(require_jsx_runtime(), 1), useUtilityClasses29 = (ownerState) => {
     let {
       classes: classes2,
       variant,
@@ -30626,7 +30942,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         backgroundColor: (theme.vars || theme).palette.background.default
       }
     }]
-  }))), TableCell = /* @__PURE__ */ React85.forwardRef(function(inProps, ref) {
+  }))), TableCell = /* @__PURE__ */ React87.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTableCell"
@@ -30640,7 +30956,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       sortDirection,
       variant: variantProp,
       ...other
-    } = props, table = React85.useContext(TableContext_default), tablelvl23 = React85.useContext(Tablelvl2Context_default), isHeadCell = tablelvl23 && tablelvl23.variant === "head", component;
+    } = props, table = React87.useContext(TableContext_default), tablelvl23 = React87.useContext(Tablelvl2Context_default), isHeadCell = tablelvl23 && tablelvl23.variant === "head", component;
     componentProp ? component = componentProp : component = isHeadCell ? "th" : "td";
     let scope = scopeProp;
     component === "td" ? scope = void 0 : !scope && isHeadCell && (scope = "col");
@@ -30653,8 +30969,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       sortDirection,
       stickyHeader: variant === "head" && table && table.stickyHeader,
       variant
-    }, classes2 = useUtilityClasses27(ownerState), ariaSort = null;
-    return sortDirection && (ariaSort = sortDirection === "asc" ? "ascending" : "descending"), /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(TableCellRoot, {
+    }, classes2 = useUtilityClasses29(ownerState), ariaSort = null;
+    return sortDirection && (ariaSort = sortDirection === "asc" ? "ascending" : "descending"), /* @__PURE__ */ (0, import_jsx_runtime60.jsx)(TableCellRoot, {
       as: component,
       ref,
       className: clsx_default(classes2.root, className),
@@ -30666,7 +30982,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), TableCell_default = TableCell;
 
   // node_modules/@mui/material/TableHead/TableHead.mjs
-  var React86 = __toESM(require_react(), 1);
+  var React88 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/TableHead/tableHeadClasses.mjs
   function getTableHeadUtilityClass(slot) {
@@ -30675,7 +30991,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableHeadClasses = generateUtilityClasses("MuiTableHead", ["root"]);
 
   // node_modules/@mui/material/TableHead/TableHead.mjs
-  var import_jsx_runtime59 = __toESM(require_jsx_runtime(), 1), useUtilityClasses28 = (ownerState) => {
+  var import_jsx_runtime61 = __toESM(require_jsx_runtime(), 1), useUtilityClasses30 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -30689,7 +31005,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     display: "table-header-group"
   }), tablelvl22 = {
     variant: "head"
-  }, defaultComponent3 = "thead", TableHead = /* @__PURE__ */ React86.forwardRef(function(inProps, ref) {
+  }, defaultComponent3 = "thead", TableHead = /* @__PURE__ */ React88.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTableHead"
@@ -30700,10 +31016,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     } = props, ownerState = {
       ...props,
       component
-    }, classes2 = useUtilityClasses28(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime59.jsx)(Tablelvl2Context_default.Provider, {
+    }, classes2 = useUtilityClasses30(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime61.jsx)(Tablelvl2Context_default.Provider, {
       value: tablelvl22,
-      children: /* @__PURE__ */ (0, import_jsx_runtime59.jsx)(TableHeadRoot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime61.jsx)(TableHeadRoot, {
         as: component,
         className: clsx_default(classes2.root, className),
         ref,
@@ -30715,7 +31031,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), TableHead_default = TableHead;
 
   // node_modules/@mui/material/TableRow/TableRow.mjs
-  var React87 = __toESM(require_react(), 1);
+  var React89 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/TableRow/tableRowClasses.mjs
   function getTableRowUtilityClass(slot) {
@@ -30724,7 +31040,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableRowClasses = generateUtilityClasses("MuiTableRow", ["root", "selected", "hover", "head", "footer"]), tableRowClasses_default = tableRowClasses;
 
   // node_modules/@mui/material/TableRow/TableRow.mjs
-  var import_jsx_runtime60 = __toESM(require_jsx_runtime(), 1), useUtilityClasses29 = (ownerState) => {
+  var import_jsx_runtime62 = __toESM(require_jsx_runtime(), 1), useUtilityClasses31 = (ownerState) => {
     let {
       classes: classes2,
       selected,
@@ -30761,7 +31077,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         backgroundColor: theme.alpha((theme.vars || theme).palette.primary.main, `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.hoverOpacity}`)
       }
     }
-  }))), defaultComponent4 = "tr", TableRow = /* @__PURE__ */ React87.forwardRef(function(inProps, ref) {
+  }))), defaultComponent4 = "tr", TableRow = /* @__PURE__ */ React89.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTableRow"
@@ -30771,15 +31087,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       hover = !1,
       selected = !1,
       ...other
-    } = props, tablelvl23 = React87.useContext(Tablelvl2Context_default), ownerState = {
+    } = props, tablelvl23 = React89.useContext(Tablelvl2Context_default), ownerState = {
       ...props,
       component,
       hover,
       selected,
       head: tablelvl23 && tablelvl23.variant === "head",
       footer: tablelvl23 && tablelvl23.variant === "footer"
-    }, classes2 = useUtilityClasses29(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime60.jsx)(TableRowRoot, {
+    }, classes2 = useUtilityClasses31(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime62.jsx)(TableRowRoot, {
       as: component,
       ref,
       className: clsx_default(classes2.root, className),
@@ -30788,278 +31104,6 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ...other
     });
   }), TableRow_default = TableRow;
-
-  // node_modules/@mui/material/TextField/TextField.mjs
-  var React89 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/material/FormHelperText/FormHelperText.mjs
-  var React88 = __toESM(require_react(), 1);
-  var import_jsx_runtime61 = __toESM(require_jsx_runtime(), 1), _span3, useUtilityClasses30 = (ownerState) => {
-    let {
-      classes: classes2,
-      contained,
-      size,
-      disabled,
-      error: error2,
-      filled,
-      focused,
-      required
-    } = ownerState, slots = {
-      root: ["root", disabled && "disabled", error2 && "error", size && `size${capitalize_default(size)}`, contained && "contained", focused && "focused", filled && "filled", required && "required"]
-    };
-    return composeClasses(slots, getFormHelperTextUtilityClasses, classes2);
-  }, FormHelperTextRoot = styled_default2("p", {
-    name: "MuiFormHelperText",
-    slot: "Root",
-    overridesResolver: (props, styles5) => {
-      let {
-        ownerState
-      } = props;
-      return [styles5.root, ownerState.size && styles5[`size${capitalize_default(ownerState.size)}`], ownerState.contained && styles5.contained, ownerState.filled && styles5.filled];
-    }
-  })(memoTheme_default(({
-    theme
-  }) => ({
-    color: (theme.vars || theme).palette.text.secondary,
-    ...theme.typography.caption,
-    textAlign: "left",
-    marginTop: 3,
-    marginRight: 0,
-    marginBottom: 0,
-    marginLeft: 0,
-    [`&.${formHelperTextClasses_default.disabled}`]: {
-      color: (theme.vars || theme).palette.text.disabled
-    },
-    [`&.${formHelperTextClasses_default.error}`]: {
-      color: (theme.vars || theme).palette.error.main
-    },
-    variants: [{
-      props: {
-        size: "small"
-      },
-      style: {
-        marginTop: 4
-      }
-    }, {
-      props: ({
-        ownerState
-      }) => ownerState.contained,
-      style: {
-        marginLeft: 14,
-        marginRight: 14
-      }
-    }]
-  }))), FormHelperText = /* @__PURE__ */ React88.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiFormHelperText"
-    }), {
-      children,
-      className,
-      component = "p",
-      disabled,
-      error: error2,
-      filled,
-      focused,
-      margin: margin2,
-      required,
-      variant,
-      ...other
-    } = props, [fcs] = useFormControlState({
-      props,
-      states: ["variant", "size", "disabled", "error", "filled", "focused", "required"]
-    }), ownerState = {
-      ...props,
-      component,
-      contained: fcs.variant === "filled" || fcs.variant === "outlined",
-      variant: fcs.variant,
-      size: fcs.size,
-      disabled: fcs.disabled,
-      error: fcs.error,
-      filled: fcs.filled,
-      focused: fcs.focused,
-      required: fcs.required
-    };
-    delete ownerState.ownerState;
-    let classes2 = useUtilityClasses30(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime61.jsx)(FormHelperTextRoot, {
-      as: component,
-      className: clsx_default(classes2.root, className),
-      ref,
-      ...other,
-      ownerState,
-      children: children === " " ? (
-        // notranslate needed while Google Translate will not fix zero-width space issue
-        _span3 || (_span3 = /* @__PURE__ */ (0, import_jsx_runtime61.jsx)("span", {
-          className: "notranslate",
-          "aria-hidden": !0,
-          children: "​"
-        }))
-      ) : children
-    });
-  }), FormHelperText_default = FormHelperText;
-
-  // node_modules/@mui/material/TextField/textFieldClasses.mjs
-  function getTextFieldUtilityClass(slot) {
-    return generateUtilityClass("MuiTextField", slot);
-  }
-  var textFieldClasses = generateUtilityClasses("MuiTextField", ["root"]);
-
-  // node_modules/@mui/material/TextField/TextField.mjs
-  var import_jsx_runtime62 = __toESM(require_jsx_runtime(), 1), variantComponent = {
-    standard: Input_default,
-    filled: FilledInput_default,
-    outlined: OutlinedInput_default
-  }, useUtilityClasses31 = (ownerState) => {
-    let {
-      classes: classes2
-    } = ownerState;
-    return composeClasses({
-      root: ["root"]
-    }, getTextFieldUtilityClass, classes2);
-  }, TextFieldRoot = styled_default2(FormControl_default, {
-    name: "MuiTextField",
-    slot: "Root"
-  })({}), TextField = /* @__PURE__ */ React89.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiTextField"
-    }), {
-      autoComplete,
-      autoFocus = !1,
-      children,
-      className,
-      color: color2 = "primary",
-      defaultValue,
-      disabled = !1,
-      error: error2 = !1,
-      fullWidth = !1,
-      helperText,
-      id: idOverride,
-      inputRef,
-      label,
-      maxRows,
-      minRows,
-      multiline = !1,
-      name,
-      onBlur,
-      onChange,
-      onFocus,
-      placeholder,
-      required = !1,
-      rows,
-      select = !1,
-      slots = {},
-      slotProps = {},
-      type,
-      value,
-      variant = "outlined",
-      ...other
-    } = props, ownerState = {
-      ...props,
-      autoFocus,
-      color: color2,
-      disabled,
-      error: error2,
-      fullWidth,
-      multiline,
-      required,
-      select,
-      variant
-    }, classes2 = useUtilityClasses31(ownerState), id = useId(idOverride), helperTextId = helperText && id ? `${id}-helper-text` : void 0, inputLabelId = label && id ? `${id}-label` : void 0, InputComponent = variantComponent[variant], externalForwardedProps = {
-      slots,
-      slotProps
-    }, [SelectSlot, selectProps] = useSlot("select", {
-      elementType: Select_default,
-      externalForwardedProps,
-      ownerState
-    }), nativeSelect = select && selectProps.native, [InputLabelSlot, inputLabelProps] = useSlot("inputLabel", {
-      elementType: InputLabel_default,
-      externalForwardedProps,
-      ownerState
-    }), inputAdditionalProps = {};
-    variant === "outlined" && (typeof inputLabelProps.shrink < "u" && (inputAdditionalProps.notched = inputLabelProps.shrink), inputAdditionalProps.label = label), select && (nativeSelect || (inputAdditionalProps.id = void 0), inputAdditionalProps["aria-describedby"] = void 0);
-    let [RootSlot, rootProps] = useSlot("root", {
-      elementType: TextFieldRoot,
-      shouldForwardComponentProp: !0,
-      externalForwardedProps: {
-        ...externalForwardedProps,
-        ...other
-      },
-      ownerState,
-      className: clsx_default(classes2.root, className),
-      ref,
-      additionalProps: {
-        disabled,
-        error: error2,
-        fullWidth,
-        required,
-        color: color2,
-        variant
-      }
-    }), [InputSlot, inputProps] = useSlot("input", {
-      elementType: InputComponent,
-      externalForwardedProps,
-      additionalProps: inputAdditionalProps,
-      ownerState
-    }), [HtmlInputSlot, htmlInputProps] = useSlot("htmlInput", {
-      elementType: "input",
-      externalForwardedProps,
-      ownerState
-    }), [FormHelperTextSlot, formHelperTextProps] = useSlot("formHelperText", {
-      elementType: FormHelperText_default,
-      externalForwardedProps,
-      ownerState
-    }), InputElement = /* @__PURE__ */ (0, import_jsx_runtime62.jsx)(InputSlot, {
-      "aria-describedby": helperTextId,
-      autoComplete,
-      autoFocus,
-      defaultValue,
-      fullWidth,
-      multiline,
-      name,
-      rows,
-      maxRows,
-      minRows,
-      type,
-      value,
-      id,
-      inputRef,
-      onBlur,
-      onChange,
-      onFocus,
-      placeholder,
-      inputProps: htmlInputProps,
-      slots: {
-        input: slots.htmlInput ? HtmlInputSlot : void 0
-      },
-      ...inputProps
-    });
-    return /* @__PURE__ */ (0, import_jsx_runtime62.jsxs)(RootSlot, {
-      ...rootProps,
-      children: [label != null && label !== "" && /* @__PURE__ */ (0, import_jsx_runtime62.jsx)(InputLabelSlot, {
-        htmlFor: select && !nativeSelect ? void 0 : id,
-        id: inputLabelId,
-        ...select && !nativeSelect && {
-          component: "div"
-        },
-        ...inputLabelProps,
-        children: label
-      }), select ? /* @__PURE__ */ (0, import_jsx_runtime62.jsx)(SelectSlot, {
-        "aria-describedby": helperTextId,
-        id,
-        labelId: inputLabelId,
-        value,
-        input: InputElement,
-        ...selectProps,
-        children
-      }) : InputElement, helperText && /* @__PURE__ */ (0, import_jsx_runtime62.jsx)(FormHelperTextSlot, {
-        id: helperTextId,
-        ...formHelperTextProps,
-        children: helperText
-      })]
-    });
-  }), TextField_default = TextField;
 
   // src/lib/ui/shortcut-catalog.ts
   function chord(key, flags = {}) {
@@ -31543,6 +31587,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     colorway: spec("tooltip.colorway"),
     iconFollowsTheme: spec("tooltip.iconFollowsTheme"),
     gigLock: spec("tooltip.gigLock"),
+    minCopies: spec("tooltip.minCopies"),
+    untrustedVolumes: spec("tooltip.untrustedVolumes"),
+    libraryCopies: spec("tooltip.libraryCopies"),
+    pruneSnapshot: spec("tooltip.pruneSnapshot"),
     gigLockApply: spec("tooltip.gigLockApply"),
     gigLockDrop: spec("tooltip.gigLockDrop"),
     gigLockPreview: spec("tooltip.gigLockPreview"),
@@ -31838,6 +31886,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       "colorway-select": tips.colorway,
       "icon-follows-theme": tips.iconFollowsTheme,
       "gig-lock": tips.gigLock,
+      "min-copies": tips.minCopies,
+      "untrusted-volumes": tips.untrustedVolumes,
       "library-generation": tips.libraryGeneration,
       "merge-trash": tips.mergeTrash,
       "merge-cancel": tips.mergeCancel,
@@ -32417,6 +32467,38 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.gigLock")
         }
       ),
+      /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(FormControl_default, { className: "settings-field", size: "small", fullWidth: !0, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(InputLabel_default, { htmlFor: "min-copies", shrink: !0, children: t("settings.minCopies") }),
+        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+          Select_default,
+          {
+            native: !0,
+            id: "min-copies",
+            label: t("settings.minCopies"),
+            inputRef: tooltipRef3(tips.minCopies),
+            value: String(settings.minCopies),
+            onChange: (event) => {
+              settings.saveMinCopies(Number(selectValue(event)));
+            },
+            children: [1, 2, 3, 4, 5, 6, 7, 8, 9].map((count) => /* @__PURE__ */ (0, import_jsx_runtime64.jsx)("option", { value: String(count), children: count }, count))
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        TextField_default,
+        {
+          id: "untrusted-volumes",
+          size: "small",
+          fullWidth: !0,
+          label: t("settings.untrustedVolumes"),
+          value: settings.untrustedVolumes,
+          inputRef: tooltipRef3(tips.untrustedVolumes),
+          onChange: (event) => settings.setUntrustedDraft(event.target.value),
+          onBlur: () => {
+            settings.saveUntrustedVolumes();
+          }
+        }
+      ),
       /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "icon-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.iconStatus }),
       /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(FormControl_default, { className: "settings-field", size: "small", fullWidth: !0, children: [
         /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(InputLabel_default, { htmlFor: "language-select", shrink: !0, children: t("settings.language") }),
@@ -32547,6 +32629,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     colorway: "serato-like",
     iconFollowsTheme: !0,
     gigLock: !1,
+    minCopies: 2,
+    untrustedVolumes: "",
     iconStatus: "",
     telemetryOn: !1,
     telemetryConfigured: !1,
@@ -32702,6 +32786,48 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       applyGigLock(payload);
     } catch {
       let status4 = t("error.gig_lock_not_saved");
+      patchSettings({ iconStatus: status4 }), setText("icon-status", status4);
+    }
+  }
+  function parseUntrustedNames(text2) {
+    return text2.split(",").map((part) => part.trim()).filter((part) => part.length > 0);
+  }
+  function applyCopies(payload) {
+    let patch = {};
+    if ("min_copies" in payload) {
+      let copies = payload.min_copies;
+      typeof copies == "number" && copies >= 1 && copies <= 9 && (patch.minCopies = copies);
+    }
+    if ("untrusted_volumes" in payload) {
+      let volumes = payload.untrusted_volumes;
+      Array.isArray(volumes) && volumes.every((name) => typeof name == "string" && name.length > 0) ? patch.untrustedVolumes = volumes.join(", ") : Array.isArray(volumes) && volumes.length === 0 && (patch.untrustedVolumes = "");
+    }
+    Object.keys(patch).length && patchSettings(patch);
+  }
+  async function saveMinCopies(next3) {
+    let copies = next3 ?? Number(selectValue2("min-copies"));
+    if (!(!Number.isInteger(copies) || copies < 1 || copies > 9)) {
+      patchSettings({ minCopies: copies, iconStatus: "" });
+      try {
+        let payload = await postJSON("/api/settings", { min_copies: copies });
+        applyCopies(payload);
+      } catch {
+        let status4 = t("error.copies_not_saved");
+        patchSettings({ iconStatus: status4 }), setText("icon-status", status4);
+      }
+    }
+  }
+  function setUntrustedDraft(text2) {
+    patchSettings({ untrustedVolumes: text2 });
+  }
+  async function saveUntrustedVolumes(next3) {
+    let text2 = next3 ?? snapshot.untrustedVolumes, names = parseUntrustedNames(text2);
+    patchSettings({ untrustedVolumes: names.join(", "), iconStatus: "" });
+    try {
+      let payload = await postJSON("/api/settings", { untrusted_volumes: names });
+      applyCopies(payload);
+    } catch {
+      let status4 = t("error.copies_not_saved");
       patchSettings({ iconStatus: status4 }), setText("icon-status", status4);
     }
   }
@@ -66234,18 +66360,33 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/lib/snapshots/snapshot-columns.tsx
   var import_jsx_runtime259 = __toESM(require_jsx_runtime(), 1);
   function restoreCell(params, handlers) {
-    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(
-      Button_default,
-      {
-        type: "button",
-        size: "small",
-        ref: tooltipRef6(tips.reviewRestore),
-        onClick: (event) => {
-          event.stopPropagation(), handlers.onRestore(params.row.id);
-        },
-        children: t("snapshots.reviewRestore")
-      }
-    );
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(import_jsx_runtime259.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(
+        Button_default,
+        {
+          type: "button",
+          size: "small",
+          ref: tooltipRef6(tips.reviewRestore),
+          onClick: (event) => {
+            event.stopPropagation(), handlers.onRestore(params.row.id);
+          },
+          children: t("snapshots.reviewRestore")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(
+        Button_default,
+        {
+          type: "button",
+          size: "small",
+          "data-action": "prune",
+          ref: tooltipRef6(tips.pruneSnapshot),
+          onClick: (event) => {
+            event.stopPropagation(), handlers.onPrune(params.row.id);
+          },
+          children: t("snapshots.prune")
+        }
+      )
+    ] });
   }
   function snapshotColumns(handlers) {
     return [
@@ -66274,7 +66415,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       {
         field: "restore",
         headerName: t("snapshots.columnRestore"),
-        width: 168,
+        width: 256,
         sortable: !1,
         filterable: !1,
         disableColumnMenu: !0,
@@ -66612,13 +66753,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function SnapshotsPanel() {
     ensureGridDom();
-    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react50.useMemo)(
+    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, pruneSnapshot2 = snapshots.pruneSnapshot, failSnapshots2 = snapshots.failSnapshots, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react50.useMemo)(
       () => snapshotColumns({
         onRestore: (snapshotId) => {
           openSnapshotPlan2(snapshotId).catch((error2) => setSnapshotDialogStatus2(failureOf(error2).message));
+        },
+        onPrune: (snapshotId) => {
+          pruneSnapshot2(snapshotId).catch((error2) => failSnapshots2(error2));
         }
       }),
-      [locale, openSnapshotPlan2, setSnapshotDialogStatus2]
+      [locale, openSnapshotPlan2, pruneSnapshot2, failSnapshots2, setSnapshotDialogStatus2]
     ), localeText = (0, import_react50.useMemo)(() => gridLocaleText4(locale), [locale]), operations = (0, import_react50.useMemo)(
       () => [...snapshots.operations].reverse(),
       [snapshots.operations]
@@ -66938,6 +67082,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       taking = !1, paint();
     }
   }
+  async function pruneSnapshot(snapshotId) {
+    statusOverride = "", paint();
+    let preview = await postJSON("/api/snapshots", { action: "prune", id: snapshotId });
+    if (preview.ok === !1) {
+      statusOverride = serverMessage(preview, preview.error || t("error.copies_need_more", { n: 2 })), paint();
+      return;
+    }
+    await openConfirm({
+      title: t("snapshots.pruneTitle"),
+      message: t("snapshots.pruneMessage"),
+      confirmLabel: t("snapshots.prune")
+    }) && (await postJSON("/api/snapshots", { action: "prune", id: snapshotId, confirm: !0 }), state.snapshotMessage = "snapshots.pruned", await loadSnapshots());
+  }
   async function confirmSnapshotRestore() {
     confirming = !0, planStatus = "", paint();
     try {
@@ -66985,6 +67142,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       saveColorway,
       saveIconFollow,
       saveGigLock,
+      saveMinCopies,
+      setUntrustedDraft,
+      saveUntrustedVolumes,
       saveSharing: async (on) => {
         await saveSharing(on);
       },
@@ -67202,6 +67362,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       loadSnapshots,
       loadOperations,
       takeSnapshot,
+      pruneSnapshot,
       backupDriveCrates,
       openSnapshotPlan,
       confirmSnapshotRestore,
@@ -69076,11 +69237,30 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
 
+  // src/lib/snapshots/copies-view.ts
+  function destinationLabel(destination) {
+    return destination.kind === "live" || destination.name === "laptop" ? t("copies.laptop") : destination.kind === "snapshot" || destination.name === "snapshot" ? t("copies.snapshot") : destination.name;
+  }
+  function copiesChipText(copies) {
+    if (!copies || copies.verified < 1) return "";
+    let names = copies.destinations.map(destinationLabel).join(", ");
+    return t("copies.count", { count: copies.verified, names });
+  }
+
   // src/pages/CrateActions.tsx
   var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1), BUTTON_SX12 = { textTransform: "none", minWidth: 0 };
   function CrateActions() {
-    let crates = useCrates();
+    let crates = useCrates(), copiesLabel = copiesChipText(crates.copies);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(import_jsx_runtime277.Fragment, { children: [
+      copiesLabel ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+        Chip_default,
+        {
+          id: "library-copies",
+          size: "small",
+          label: copiesLabel,
+          ref: tooltipRef6(tips.libraryCopies)
+        }
+      ) : /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { id: "library-copies", hidden: !0 }),
       /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         Button_default,
         {
@@ -70959,7 +71139,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let response = await fetch(`/api/library?space=${encodeURIComponent(state.space)}`), library = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(library, t("library.readFailed", { status: String(response.status) })));
     let selected = state.selectedId, active2 = state.activeCrate;
-    state.tracks = library.tracks, state.byId = new Map(library.tracks.map((track) => [track.id, track])), state.crates = library.crates, state.rootId = library.root_id, state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)])), state.presets = library.presets ?? {}, state.expanded = new Set(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id)), state.activeCrate = active2 === "all" || library.crates.some((crate) => crate.id === active2) ? active2 : "all", state.selectedId = selected, state.duplicateSpace !== state.space && (state.duplicateIds = null, state.duplicateGroups = []), applyStatus(library.serato), renderList();
+    state.tracks = library.tracks, state.byId = new Map(library.tracks.map((track) => [track.id, track])), state.crates = library.crates, state.rootId = library.root_id, state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)])), state.presets = library.presets ?? {}, state.copies = library.copies ?? null, state.expanded = new Set(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id)), state.activeCrate = active2 === "all" || library.crates.some((crate) => crate.id === active2) ? active2 : "all", state.selectedId = selected, state.duplicateSpace !== state.space && (state.duplicateIds = null, state.duplicateGroups = []), applyStatus(library.serato), renderList();
   }
   function setMode(mode) {
     if (rememberMode(mode), state.mode = mode, el("list").scrollTop = 0, mode === "history" ? (state.sort = "start", state.sortDir = -1, state.historySessions.length || loadHistory().catch((error2) => setNotice2(failureOf(error2).message, "error"))) : (state.sort === "start" || state.sort === "deck" || state.sort === "played") && (state.sort = "name", state.sortDir = 1), mode === "duplicates" && state.duplicateSpace !== state.space && loadDuplicates().catch((error2) => setNotice2(failureOf(error2).message, "error")), mode === "files") {
@@ -71505,7 +71685,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function loadPrivacy() {
     let token4 = rekordboxToken, response = await fetch("/api/settings"), payload = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(payload, t("sharing.loadFailed")));
-    applyPrivacy(payload), applyLanguage(payload), applyLayout(payload), applyAppearance(payload), applyGigLock(payload), applyShortcuts(payload), token4 === rekordboxToken && applyRekordboxExport(payload), !(!state.wizardComplete && openWizard(!1, el("search"))) && payload.needs_consent_prompt && showConsent();
+    applyPrivacy(payload), applyLanguage(payload), applyLayout(payload), applyAppearance(payload), applyGigLock(payload), applyCopies(payload), applyShortcuts(payload), token4 === rekordboxToken && applyRekordboxExport(payload), !(!state.wizardComplete && openWizard(!1, el("search"))) && payload.needs_consent_prompt && showConsent();
   }
   function relinkReason(reason) {
     return reason === "same name and size" ? t("relink.reason.nameAndSize") : reason === "same name" ? t("relink.reason.name") : reason === "same size" ? t("relink.reason.size") : reason === "folder moved" ? t("relink.reason.folder") : t("relink.reason.unknown", { reason });

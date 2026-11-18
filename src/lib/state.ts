@@ -16,6 +16,7 @@ import type {
   HistorySession,
   OperationEntry,
   PendingUndo,
+  LibraryCopies,
   PresetRecord,
   SeratoStatus,
   DriveBackup,
@@ -60,6 +61,8 @@ export interface PageState {
   crateTracks: Map<number, Set<number>>;
   /** Preset crates of this space, keyed by crate id. */
   presets: Record<string, PresetRecord>;
+  /** Verified live library plus complete snapshots. */
+  copies: LibraryCopies | null;
   rootId: number | null | undefined;
   activeCrate: number | "all";
   secondCrate: number | "all";
@@ -140,6 +143,7 @@ export const state: PageState = {
   crates: [],
   crateTracks: new Map(),
   presets: {},
+  copies: null,
   rootId: null,
   activeCrate: "all",
   secondCrate: "all",

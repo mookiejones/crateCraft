@@ -1,16 +1,24 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const postJSON = vi.hoisted(() => vi.fn());
+const openConfirm = vi.hoisted(() => vi.fn());
 
 vi.mock("../lib/api", async () => {
   const actual = await vi.importActual<typeof import("../lib/api")>("../lib/api");
   return { ...actual, postJSON };
 });
 
+vi.mock("../lib/ui/shared-dialog", async () => {
+  const actual = await vi.importActual<typeof import("../lib/ui/shared-dialog")>(
+    "../lib/ui/shared-dialog",
+  );
+  return { ...actual, openConfirm };
+});
+
 import { applyStatic, setLocale, t } from "../lib/i18n";
 import { el } from "../lib/dom";
 import { crateContentsText } from "../lib/snapshots/restore-view";
-import { backupDriveCrates, closePlan, confirmSnapshotRestore, openSnapshotPlan, renderOperations, renderSnapshots, repaintSnapshotPlan, unmountSnapshots } from "../lib/snapshots/restore";
+import { backupDriveCrates, closePlan, confirmSnapshotRestore, openSnapshotPlan, pruneSnapshot, renderOperations, renderSnapshots, repaintSnapshotPlan, unmountSnapshots } from "../lib/snapshots/restore";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import type { RestorePlan } from "../lib/api-types";
 import { state } from "../lib/state";
@@ -69,12 +77,48 @@ describe("restore", () => {
     state.operationsError = "";
     postJSON.mockReset();
     postJSON.mockResolvedValue({});
+    openConfirm.mockReset();
+    openConfirm.mockResolvedValue(true);
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
   });
 
   afterEach(async () => {
     unmountSnapshots();
     await drainReactScheduler();
+  });
+
+  it("previews prune then deletes after confirm", async () => {
+    renderSnapshots();
+    postJSON.mockResolvedValueOnce({ ok: true, preview: true }).mockResolvedValueOnce({ ok: true });
+    await pruneSnapshot("snap-9");
+    expect(postJSON).toHaveBeenNthCalledWith(1, "/api/snapshots", { action: "prune", id: "snap-9" });
+    expect(openConfirm).toHaveBeenCalledWith({
+      title: t("snapshots.pruneTitle"),
+      message: t("snapshots.pruneMessage"),
+      confirmLabel: t("snapshots.prune"),
+    });
+    expect(postJSON).toHaveBeenNthCalledWith(2, "/api/snapshots", {
+      action: "prune",
+      id: "snap-9",
+      confirm: true,
+    });
+  });
+
+  it("refuses prune without confirm when copies are short", async () => {
+    renderSnapshots();
+    postJSON.mockResolvedValue({
+      ok: false,
+      preview: true,
+      error: "Need 2 verified copies before deleting.",
+      code: "copies_need_more",
+      params: { n: 2 },
+    });
+    await pruneSnapshot("snap-9");
+    expect(openConfirm).not.toHaveBeenCalled();
+    expect(postJSON).toHaveBeenCalledTimes(1);
+    expect(document.getElementById("snapshots-status")?.textContent).toBe(
+      t("error.copies_need_more", { n: 2 }),
+    );
   });
 
   it("unmounts snapshot islands so the Data Grid scheduler does not outlive the document", () => {

@@ -1291,6 +1291,9 @@ def load_library(space: str | None = None) -> dict[str, object]:
     payload["writable"] = info["writable"]
     crates = payload.get("crates")
     payload["presets"] = smart_presets.for_crates(chosen, crates if isinstance(crates, list) else [])
+    import verified_copies
+
+    payload["copies"] = verified_copies.library_copies(snapshots.current_store())
     return payload
 
 
@@ -2497,6 +2500,24 @@ class Handler(BaseHTTPRequestHandler):
                 return
             self.send_json(telemetry.public_settings())
             return
+        if keys and keys <= {"min_copies", "untrusted_volumes"}:
+            copies = payload.get("min_copies")
+            volumes = payload.get("untrusted_volumes")
+            try:
+                if "min_copies" in payload:
+                    if isinstance(copies, bool) or not isinstance(copies, int):
+                        raise ValueError("min_copies must be an integer from 1 to 9.")
+                    app_config.set_min_copies(copies)
+                if "untrusted_volumes" in payload:
+                    app_config.set_untrusted_volumes(volumes)
+            except ValueError:
+                self.send_json({"error": "That request is not valid."}, status=400)
+                return
+            except OSError:
+                self.send_json({"error": "The copies setting could not be saved."}, status=500)
+                return
+            self.send_json(telemetry.public_settings())
+            return
         if keys and keys <= {"colorway", "icon_follows_theme"}:
             self._post_appearance(payload)
             return
@@ -2844,12 +2865,14 @@ class Handler(BaseHTTPRequestHandler):
         self.send_json(body)
 
     def _post_snapshots(self, payload: dict[str, object]) -> None:
-        """Create a snapshot, plan a restore, restore, or undo an outside change.
+        """Create a snapshot, plan a restore, restore, prune, or undo.
 
         Args:
             payload: JSON body with ``action`` of ``create``, ``plan``,
-                ``restore``, ``undo``, or ``backup-drives``. ``restore`` also
-                needs ``id`` and ``confirm`` true. ``plan`` changes nothing.
+                ``restore``, ``prune``, ``undo``, or ``backup-drives``.
+                ``restore`` also needs ``id`` and ``confirm`` true.
+                ``prune`` needs ``id``; ``confirm`` true deletes after
+                the copy check. ``plan`` changes nothing.
                 ``backup-drives`` copies each present drive's ``_Serato_``
                 folder into ``Library/Backups`` and does not change the library.
         """
@@ -2883,6 +2906,10 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(store.plan(snapshot_id))
                 return
             self.send_json(store.restore(snapshot_id))
+            return
+        if action == "prune":
+            snapshot_id = str(payload.get("id") or "")
+            self.send_json(store.prune(snapshot_id, confirm=payload.get("confirm") is True))
             return
         self.send_json({"error": "That action is not available."}, status=404)
 

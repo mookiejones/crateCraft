@@ -45,6 +45,7 @@ export type SnapshotsContextValue = SnapshotsSnapshot & {
   loadSnapshots: () => Promise<void>;
   loadOperations: () => Promise<void>;
   takeSnapshot: () => Promise<void>;
+  pruneSnapshot: (snapshotId: string) => Promise<void>;
   backupDriveCrates: () => Promise<void>;
   openSnapshotPlan: (snapshotId: string) => Promise<void>;
   confirmSnapshotRestore: () => Promise<void>;

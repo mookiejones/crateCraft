@@ -56,6 +56,8 @@ SETTINGS_KEYS = (
     "colorway",
     "icon_follows_theme",
     "gig_lock",
+    "min_copies",
+    "untrusted_volumes",
     "shortcuts",
 )
 # KeyboardEvent.key chords, matching src/lib/ui/shortcut-catalog.ts.
@@ -316,6 +318,10 @@ class Settings:
             means True. False is a stored choice.
         gig_lock: True queues library writes until Gig Lock is off and
             Serato is quit. Missing means False.
+        min_copies: Verified copies required before prune or duplicate
+            delete. Missing means 2. 1 is the lowest stored value.
+        untrusted_volumes: Volume names that never count toward
+            ``min_copies``. Missing means empty.
         shortcuts: Remapped keyboard chords, keyed by catalog id. Empty
             means Serato DJ Pro defaults plus crateCraft extras.
     """
@@ -331,6 +337,8 @@ class Settings:
     colorway: str = DEFAULT_COLORWAY
     icon_follows_theme: bool = True
     gig_lock: bool = False
+    min_copies: int = 2
+    untrusted_volumes: list[str] = field(default_factory=list)
     shortcuts: dict[str, list[dict[str, object]]] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
@@ -348,6 +356,14 @@ class Settings:
             raise ValueError("icon_follows_theme must be a boolean.")
         if not isinstance(self.gig_lock, bool):
             raise ValueError("gig_lock must be a boolean.")
+        if isinstance(self.min_copies, bool) or not isinstance(self.min_copies, int):
+            raise ValueError("min_copies must be an integer from 1 to 9.")
+        if self.min_copies < 1 or self.min_copies > 9:
+            raise ValueError("min_copies must be an integer from 1 to 9.")
+        if not isinstance(self.untrusted_volumes, list) or any(
+            not isinstance(name, str) or not name for name in self.untrusted_volumes
+        ):
+            raise ValueError("untrusted_volumes must be a list of volume names.")
         if self.drawer_open is not None and not isinstance(self.drawer_open, bool):
             raise ValueError("layout.drawer_open must be a boolean.")
 
@@ -400,6 +416,8 @@ class Settings:
         body["colorway"] = self.colorway
         body["icon_follows_theme"] = self.icon_follows_theme
         body["gig_lock"] = self.gig_lock
+        body["min_copies"] = self.min_copies
+        body["untrusted_volumes"] = list(self.untrusted_volumes)
         if self.shortcuts:
             body["shortcuts"] = copy.deepcopy(self.shortcuts)
         return body
@@ -904,6 +922,12 @@ def _parse(payload: object) -> Settings:
     gig_lock = False
     if "gig_lock" in payload:
         gig_lock = _parse_bool(payload.get("gig_lock"), "gig_lock", False)
+    min_copies = 2
+    if "min_copies" in payload:
+        min_copies = _parse_min_copies(payload.get("min_copies"))
+    untrusted_volumes: list[str] = []
+    if "untrusted_volumes" in payload:
+        untrusted_volumes = _parse_untrusted_volumes(payload.get("untrusted_volumes"))
     if "rekordbox" not in payload:
         rekordbox = default_rekordbox()
     else:
@@ -924,6 +948,8 @@ def _parse(payload: object) -> Settings:
         colorway=colorway,
         icon_follows_theme=icon_follows_theme,
         gig_lock=gig_lock,
+        min_copies=min_copies,
+        untrusted_volumes=untrusted_volumes,
         shortcuts=shortcuts,
     )
 
@@ -943,6 +969,45 @@ def _parse_bool(value: object, dotted: str, default: bool) -> bool:
         return value
     logger.warning("Config key %r has wrong type — ignored", dotted)
     return default
+
+
+def _parse_min_copies(value: object) -> int:
+    """Return a stored copy minimum, or 2 when the value is unusable.
+
+    Args:
+        value: Candidate from the settings file.
+
+    Returns:
+        An integer from 1 to 9. ``True`` is not 1.
+    """
+    if isinstance(value, bool) or not isinstance(value, int):
+        logger.warning("Config key 'min_copies' has wrong type — ignored")
+        return 2
+    if value < 1 or value > 9:
+        logger.warning("Config key 'min_copies' has wrong type — ignored")
+        return 2
+    return value
+
+
+def _parse_untrusted_volumes(value: object) -> list[str]:
+    """Return stored volume names, or empty when the value is unusable.
+
+    Args:
+        value: Candidate from the settings file.
+
+    Returns:
+        Non-empty strings. A missing or wrong type is empty.
+    """
+    if not isinstance(value, list):
+        logger.warning("Config key 'untrusted_volumes' has wrong type — ignored")
+        return []
+    names: list[str] = []
+    for item in value:
+        if isinstance(item, str) and item:
+            names.append(item)
+        else:
+            logger.warning("Config key 'untrusted_volumes' has wrong type — ignored")
+    return names
 
 
 def _parse_rekordbox(value: object) -> RekordboxSettings:
@@ -1442,6 +1507,82 @@ def set_gig_lock(value: bool) -> Settings:
             telemetry_consent=consent,
             wizard_complete=current.wizard_complete is True,
             gig_lock=value,
+        )
+        save_settings(updated)
+        return updated
+
+
+def set_min_copies(value: int) -> Settings:
+    """Store how many verified copies must remain after prune or duplicate delete.
+
+    Args:
+        value: Integer from 1 to 9. Missing settings use 2.
+
+    Returns:
+        The settings that were written. Every other field is kept. A
+        partial sharing pair is dropped, as in :func:`set_gig_lock`.
+
+    Raises:
+        ValueError: If ``value`` is not an integer from 1 to 9. ``True``
+            is not 1.
+        OSError: If the settings file cannot be written.
+    """
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError("min_copies must be an integer from 1 to 9.")
+    if value < 1 or value > 9:
+        raise ValueError("min_copies must be an integer from 1 to 9.")
+    with _settings_lock:
+        current = load_settings()
+        install_id = current.install_id
+        consent = current.telemetry_consent
+        if not isinstance(consent, bool) or install_id is None:
+            install_id = None
+            consent = None
+        updated = replace(
+            current,
+            install_id=install_id,
+            telemetry_consent=consent,
+            wizard_complete=current.wizard_complete is True,
+            min_copies=value,
+        )
+        save_settings(updated)
+        return updated
+
+
+def set_untrusted_volumes(value: object) -> Settings:
+    """Store volume names that never count toward ``min_copies``.
+
+    Args:
+        value: List of non-empty volume names. Empty clears the list.
+
+    Returns:
+        The settings that were written. Every other field is kept. A
+        partial sharing pair is dropped, as in :func:`set_gig_lock`.
+
+    Raises:
+        ValueError: If ``value`` is not a list of non-empty strings.
+        OSError: If the settings file cannot be written.
+    """
+    if not isinstance(value, list):
+        raise ValueError("untrusted_volumes must be a list of volume names.")
+    names: list[str] = []
+    for item in value:
+        if not isinstance(item, str) or not item:
+            raise ValueError("untrusted_volumes must be a list of volume names.")
+        names.append(item)
+    with _settings_lock:
+        current = load_settings()
+        install_id = current.install_id
+        consent = current.telemetry_consent
+        if not isinstance(consent, bool) or install_id is None:
+            install_id = None
+            consent = None
+        updated = replace(
+            current,
+            install_id=install_id,
+            telemetry_consent=consent,
+            wizard_complete=current.wizard_complete is True,
+            untrusted_volumes=names,
         )
         save_settings(updated)
         return updated

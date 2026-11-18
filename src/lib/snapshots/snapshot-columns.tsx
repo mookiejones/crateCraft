@@ -15,6 +15,7 @@ import { snapshotSizeText, snapshotStatusText, snapshotWhenText } from "./restor
 
 export type SnapshotColumnHandlers = {
   onRestore: (snapshotId: string) => void;
+  onPrune: (snapshotId: string) => void;
 };
 
 function restoreCell(
@@ -22,24 +23,38 @@ function restoreCell(
   handlers: SnapshotColumnHandlers,
 ) {
   return (
-    <Button
-      type="button"
-      size="small"
-      ref={tooltipRef(tips.reviewRestore)}
-      onClick={(event) => {
-        event.stopPropagation();
-        handlers.onRestore(params.row.id);
-      }}
-    >
-      {t("snapshots.reviewRestore")}
-    </Button>
+    <>
+      <Button
+        type="button"
+        size="small"
+        ref={tooltipRef(tips.reviewRestore)}
+        onClick={(event) => {
+          event.stopPropagation();
+          handlers.onRestore(params.row.id);
+        }}
+      >
+        {t("snapshots.reviewRestore")}
+      </Button>
+      <Button
+        type="button"
+        size="small"
+        data-action="prune"
+        ref={tooltipRef(tips.pruneSnapshot)}
+        onClick={(event) => {
+          event.stopPropagation();
+          handlers.onPrune(params.row.id);
+        }}
+      >
+        {t("snapshots.prune")}
+      </Button>
+    </>
   );
 }
 
 /**
  * Column defs for the snapshot Data Grid.
  *
- * @param handlers Restore click. The engine still dry-runs before confirm.
+ * @param handlers Restore and prune clicks. Restore still dry-runs before confirm.
  * @returns Community Data Grid columns.
  */
 export function snapshotColumns(handlers: SnapshotColumnHandlers): GridColDef<SnapshotInfo>[] {
@@ -69,7 +84,7 @@ export function snapshotColumns(handlers: SnapshotColumnHandlers): GridColDef<Sn
     {
       field: "restore",
       headerName: t("snapshots.columnRestore"),
-      width: 168,
+      width: 256,
       sortable: false,
       filterable: false,
       disableColumnMenu: true,

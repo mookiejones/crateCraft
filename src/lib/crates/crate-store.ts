@@ -8,6 +8,7 @@
 
 import { crateRailRows, type CrateRailRow } from "./crate-tree";
 import { isPresetCrate } from "./preset-view";
+import type { LibraryCopies } from "../api-types";
 import { state } from "../state";
 
 export type { CrateRailRow };
@@ -110,6 +111,7 @@ export type CrateSnapshot = {
   canSaveView: boolean;
   saveViewHidden: boolean;
   exportHidden: boolean;
+  copies: LibraryCopies | null;
 };
 
 /**
@@ -141,6 +143,7 @@ export function readCrateSnapshot(): CrateSnapshot {
     canSaveView: state.writable,
     saveViewHidden: !cratesMode,
     exportHidden: !cratesMode,
+    copies: state.copies,
   };
 }
 

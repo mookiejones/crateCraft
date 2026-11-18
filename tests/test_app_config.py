@@ -94,6 +94,8 @@ class SettingsTests(unittest.TestCase):
                 "colorway",
                 "icon_follows_theme",
                 "gig_lock",
+                "min_copies",
+                "untrusted_volumes",
             },
         )
         self.assertEqual(
@@ -602,6 +604,8 @@ class WindowSettingsTests(unittest.TestCase):
                 "colorway",
                 "icon_follows_theme",
                 "gig_lock",
+                "min_copies",
+                "untrusted_volumes",
             },
         )
         self.assertIs(payload["wizard_complete"], False)
@@ -796,7 +800,18 @@ class LayoutSettingsTests(unittest.TestCase):
         app_config.set_track_list_width(400)
         path = self.config / "settings.json"
         stored = json.loads(path.read_text(encoding="utf-8"))
-        self.assertEqual(set(stored), {"rekordbox", "layout", "colorway", "icon_follows_theme", "gig_lock"})
+        self.assertEqual(
+            set(stored),
+            {
+                "rekordbox",
+                "layout",
+                "colorway",
+                "icon_follows_theme",
+                "gig_lock",
+                "min_copies",
+                "untrusted_volumes",
+            },
+        )
         self.assertEqual(stored["colorway"], "serato-like")
         self.assertIs(stored["icon_follows_theme"], True)
         self.assertEqual(stored["layout"], {"track_list_width": 400})

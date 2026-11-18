@@ -268,6 +268,9 @@ export interface ElementIds {
   "colorway-preview": HTMLImageElement;
   "icon-follows-theme": HTMLInputElement;
   "gig-lock": HTMLInputElement;
+  "min-copies": HTMLSelectElement;
+  "untrusted-volumes": HTMLInputElement;
+  "library-copies": HTMLElement;
   "icon-status": HTMLParagraphElement;
   "language-status": HTMLParagraphElement;
   "telemetry-note": HTMLParagraphElement;

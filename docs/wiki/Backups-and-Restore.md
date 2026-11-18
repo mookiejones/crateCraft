@@ -19,11 +19,13 @@ flowchart TD
   confirm --> pre["A new Backup is saved first"]
   pre --> put["Library, drive crates, and Cue point frames"]
   put --> audio["Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was."]
+  list --> prune["Prune"]
+  prune --> copies["Enough verified copies remain"]
   unplug["Drive unplugged"] --> mark["Marked unavailable"]
   mark --> keep["Crates and tracks are never deleted"]
 ```
 
-Open **Backups**. **Take a backup** sits above a table of snapshots with **When**, **Size**, and **Status**. **Take a backup** saves a hash-checked Backup of the library database, the crates on each drive (the `_Serato_` folder and `database V2`), and the Cue point, beatgrid, and autotag frames inside the audio files. The music itself is not copied. Snapshots are kept. This page does not delete old ones.
+Open **Backups**. **Take a backup** sits above a table of snapshots with **When**, **Size**, and **Status**. **Take a backup** saves a hash-checked Backup of the library database, the crates on each drive (the `_Serato_` folder and `database V2`), and the Cue point, beatgrid, and autotag frames inside the audio files. The music itself is not copied. **Prune** on a row removes that snapshot after a confirm, only when enough verified copies remain (the live library plus other complete snapshots). Unplugged or untrusted drives, and a snapshot whose hash check failed, do not count. Settings **Verified copies before delete** is how many must remain (2 unless you change it). A chip on Crates names the live library and each complete snapshot.
 
 **Music files** on the same page copies library audio to a second drive or NAS. Type the backup folder, then **Preview**. **Copy** writes the files that are missing or different. Cue points stay in the audio because the copy is byte-for-byte. **Restore to this computer** copies dest files back and skips a laptop file that is newer. **Make crate** saves tracks that exist only on this laptop. **Relink missing** points missing rows at dest files. Dest cannot be the Serato folder, the Serato library, or a music folder.
 

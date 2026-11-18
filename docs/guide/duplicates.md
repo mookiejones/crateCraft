@@ -71,7 +71,7 @@ When the frames cannot be copied, the plan warns you. That happens when the file
 
 ## Trash
 
-**Move the other audio files to the Trash** is off by default. The note says **Off by default. Files go to the Trash, where you can restore them. They are not permanently deleted.**
+**Move the other audio files to the Trash** is off by default. The note says **Off by default. Files go to the Trash, where you can restore them. They are not permanently deleted.** The merge is refused when the remaining verified copies would drop below **Verified copies before delete** in Settings. Unplugged or untrusted drives, and a snapshot whose hash check failed, do not count.
 
 The box stays off, and stays disabled, when a duplicate file is missing, is the same file as the one you are keeping, or cannot be moved safely. The line **Audio files stay on disk.** means the merge will not touch the files.
 

@@ -730,6 +730,23 @@ class MergeTests(unittest.TestCase):
     library is not opened.
     """
 
+    def setUp(self) -> None:
+        """Allow merge-trash tests that leave one verified copy.
+
+        Returns:
+            None.
+        """
+        self._min_copies = mock.patch("verified_copies.min_copies", return_value=1)
+        self._min_copies.start()
+
+    def tearDown(self) -> None:
+        """Restore the default copy minimum.
+
+        Returns:
+            None.
+        """
+        self._min_copies.stop()
+
     def test_merge_folds_crates_metadata_and_history(self) -> None:
         """Keep one copy and fold crates, metadata, and history into it.
 

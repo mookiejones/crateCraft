@@ -166,6 +166,7 @@ import {
   setSnapshotDialogStatus,
   subscribe as subscribeSnapshots,
   takeSnapshot,
+  pruneSnapshot,
 } from "../lib/snapshots/restore";
 import {
   closeSettings,
@@ -177,6 +178,9 @@ import {
   saveColorway,
   saveIconFollow,
   saveGigLock,
+  saveMinCopies,
+  saveUntrustedVolumes,
+  setUntrustedDraft,
   saveLanguage,
   saveSharing,
   saveShortcuts,
@@ -222,6 +226,9 @@ function readSettingsValue(): SettingsContextValue {
     saveColorway,
     saveIconFollow,
     saveGigLock,
+    saveMinCopies,
+    setUntrustedDraft,
+    saveUntrustedVolumes,
     saveSharing: async (on) => {
       await saveSharing(on);
     },
@@ -545,6 +552,7 @@ function readSnapshotsValue(): SnapshotsContextValue {
     loadSnapshots,
     loadOperations,
     takeSnapshot,
+    pruneSnapshot,
     backupDriveCrates,
     openSnapshotPlan,
     confirmSnapshotRestore,

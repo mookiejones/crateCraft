@@ -949,6 +949,53 @@ class SnapshotStore:
         self._remember_version(install)
         return _info(manifest)
 
+    def prune(self, snapshot_id: str, confirm: bool = False) -> dict[str, object]:
+        """Remove one snapshot directory when enough verified copies remain.
+
+        Live ``master.sqlite`` plus other complete snapshots must meet
+        ``min_copies``. A hash-failed remaining snapshot does not count.
+        Confirm false returns a preview and does not delete.
+
+        Args:
+            snapshot_id: Manifest directory name to drop.
+            confirm: True deletes after the copy check. False previews.
+
+        Returns:
+            ``ok`` true when the directory is gone, or a preview dict
+            when confirm is false. A refused preview has ``ok`` false
+            and ``code``.
+
+        Raises:
+            SnapshotError: If the id is not a snapshot directory.
+            library.LibraryError: If confirm is true and remaining
+                copies would drop below ``min_copies``.
+        """
+        import library
+        import verified_copies
+
+        folder = self._snapshot_dir(snapshot_id)
+        if not folder.is_dir():
+            raise SnapshotError("That snapshot could not be read.")
+        try:
+            verified_copies.require_snapshot_prune(self, snapshot_id)
+        except library.LibraryError as exc:
+            if confirm:
+                raise
+            body: dict[str, object] = {
+                "ok": False,
+                "preview": True,
+                "error": str(exc),
+            }
+            if exc.code:
+                body["code"] = exc.code
+                if exc.params:
+                    body["params"] = dict(exc.params)
+            return body
+        if not confirm:
+            return {"ok": True, "preview": True}
+        shutil.rmtree(folder)
+        return {"ok": True}
+
     def plan(self, snapshot_id: str) -> dict[str, object]:
         """Describe a restore and change nothing.
 
