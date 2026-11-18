@@ -32146,6 +32146,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function playRow(name) {
     return spec("tooltip.playRow", { name });
   }
+  function cueTip(label) {
+    return spec("tooltip.cue", { label });
+  }
   function editField(label) {
     return spec("tooltip.editField", { label });
   }
@@ -61089,6 +61092,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/components/PlayerCuePads.tsx
   var import_react25 = __toESM(require_react(), 1);
+
+  // src/components/tooltip-ref.ts
+  function tooltipRef5(spec2) {
+    return (element) => {
+      element && setTooltip(element, spec2);
+    };
+  }
+
+  // src/components/PlayerCuePads.tsx
   var import_jsx_runtime224 = __toESM(require_jsx_runtime(), 1);
   function slotsFromPlayerCues(cues2) {
     let slots = Array.from({ length: CUE_SLOT_COUNT }, () => null);
@@ -61097,6 +61109,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       !Number.isInteger(index) || index < 0 || index >= CUE_SLOT_COUNT || slots[index] == null && (slots[index] = cue);
     }
     return slots;
+  }
+  function cueJumpName(cue, number) {
+    return cue.label.trim() || t("markers.cue", { number });
   }
   function PlayerCuePads() {
     let { cues: cues2, currentTime: currentTime2, seek: seek2 } = usePlayer(), [lastClicked, setLastClicked] = (0, import_react25.useState)(null), slots = slotsFromPlayerCues(cues2), lit = activePadIndex(currentTime2, slots, lastClicked);
@@ -61113,6 +61128,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           className,
           "data-slot": String(number),
           "aria-label": t("markers.cue", { number }),
+          ref: tooltipRef5(cueTip(cueJumpName(cue, number))),
           style: style4,
           onClick: () => {
             setLastClicked(slot), seek2(cue.seconds);
@@ -61197,7 +61213,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/components/WaveformPanel.tsx
   var import_jsx_runtime228 = __toESM(require_jsx_runtime(), 1);
-  function tooltipRef5(spec2) {
+  function tooltipRef6(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
@@ -61307,7 +61323,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         IconButton_default,
         {
           type: "button",
-          ref: tooltipRef5(tips.zoomIn),
+          ref: tooltipRef6(tips.zoomIn),
           className: "waveform-zoom-button",
           size: "large",
           color: "inherit",
@@ -61321,7 +61337,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         IconButton_default,
         {
           type: "button",
-          ref: tooltipRef5(tips.zoomOut),
+          ref: tooltipRef6(tips.zoomOut),
           className: "waveform-zoom-button",
           size: "large",
           color: "inherit",
@@ -62077,13 +62093,6 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
 
-  // src/components/tooltip-ref.ts
-  function tooltipRef6(spec2) {
-    return (element) => {
-      element && setTooltip(element, spec2);
-    };
-  }
-
   // src/components/FieldEditorBar.tsx
   var import_jsx_runtime230 = __toESM(require_jsx_runtime(), 1), BUTTON_SX = { textTransform: "none", minHeight: 44 };
   function asEditField(value) {
@@ -62145,7 +62154,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "field-edit-field",
             value: field2,
             disabled: busy5,
-            ref: tooltipRef6(tips.fieldEditField),
+            ref: tooltipRef5(tips.fieldEditField),
             onChange: (event) => setField(asEditField(event.currentTarget.value)),
             children: EDIT_FIELDS.map((name) => /* @__PURE__ */ (0, import_jsx_runtime230.jsx)("option", { value: name, children: fieldEditLabel(name) }, name))
           }
@@ -62160,7 +62169,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             type: "text",
             value,
             disabled: busy5,
-            ref: tooltipRef6(tips.fieldEditValue),
+            ref: tooltipRef5(tips.fieldEditValue),
             onChange: (event) => setValue(event.currentTarget.value),
             onInput: (event) => setValue(event.currentTarget.value)
           }
@@ -62174,7 +62183,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             type: "checkbox",
             checked: writeFiles,
             disabled: busy5,
-            ref: tooltipRef6(tips.fieldEditWriteFiles),
+            ref: tooltipRef5(tips.fieldEditWriteFiles),
             onChange: (event) => setWriteFiles(event.currentTarget.checked)
           }
         ),
@@ -62188,7 +62197,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX,
-          ref: tooltipRef6(tips.fieldEditPreview),
+          ref: tooltipRef5(tips.fieldEditPreview),
           disabled: busy5,
           onClick: () => {
             onPreview();
@@ -62204,7 +62213,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX,
-          ref: tooltipRef6(tips.fieldEditApply),
+          ref: tooltipRef5(tips.fieldEditApply),
           disabled: !applyReady,
           onClick: () => {
             onApply();
@@ -63548,7 +63557,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               Button_default,
               {
                 id: "confirm-cancel",
-                ref: tooltipRef6(tips.confirmCancel),
+                ref: tooltipRef5(tips.confirmCancel),
                 type: "button",
                 autoFocus: open,
                 sx: { minHeight: 44 },
@@ -63560,7 +63569,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               Button_default,
               {
                 id: "confirm-confirm",
-                ref: tooltipRef6(
+                ref: tooltipRef5(
                   prompt.confirmLabel === t("write.forceWrite") ? tips.forceWrite : tips.confirmAction
                 ),
                 type: "button",
@@ -63587,7 +63596,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         TextField_default,
         {
           id: "crate-prompt-input",
-          inputRef: tooltipRef6(pathMode ? tips.relocatePath : tips.cratePromptName),
+          inputRef: tooltipRef5(pathMode ? tips.relocatePath : tips.cratePromptName),
           label: prompt.fieldLabel || t("crates.promptName"),
           value: prompt.value,
           autoComplete: "off",
@@ -63605,7 +63614,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           Button_default,
           {
             id: "crate-prompt-cancel",
-            ref: tooltipRef6(pathMode ? tips.relocateCancel : tips.cratePromptCancel),
+            ref: tooltipRef5(pathMode ? tips.relocateCancel : tips.cratePromptCancel),
             type: "button",
             sx: { minHeight: 44 },
             onClick: () => cancelCratePrompt(),
@@ -63616,7 +63625,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           Button_default,
           {
             id: "crate-prompt-confirm",
-            ref: tooltipRef6(pathMode ? tips.relocateConfirm : tips.cratePromptConfirm),
+            ref: tooltipRef5(pathMode ? tips.relocateConfirm : tips.cratePromptConfirm),
             type: "button",
             variant: "contained",
             disabled: !ready,
@@ -64540,7 +64549,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label, count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label, count }) }),
           /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
             action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
               Button_default,
@@ -64549,7 +64558,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 size: "small",
                 variant: "outlined",
                 sx: BUTTON_SX2,
-                ref: tooltipRef6(tips.healthOpenMissing),
+                ref: tooltipRef5(tips.healthOpenMissing),
                 "data-health-action": "missing",
                 onClick: () => onNavigate("missing"),
                 children: t("health.openMissing")
@@ -64563,7 +64572,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                   size: "small",
                   variant: "text",
                   sx: BUTTON_SX2,
-                  ref: tooltipRef6(tips.healthTrack),
+                  ref: tooltipRef5(tips.healthTrack),
                   "data-health-action": "track",
                   "data-health-id": String(track.id),
                   onClick: () => onNavigate("track", track.id),
@@ -64577,7 +64586,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                   size: "small",
                   variant: "outlined",
                   sx: BUTTON_SX2,
-                  ref: tooltipRef6(tips.healthFindArt),
+                  ref: tooltipRef5(tips.healthFindArt),
                   "data-health-action": "artwork",
                   "data-health-id": String(track.id),
                   onClick: () => {
@@ -64603,7 +64612,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("health.bitrate") }),
+          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("health.bitrate") }),
           /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
               Button_default,
@@ -64612,7 +64621,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 size: "small",
                 variant: "outlined",
                 sx: BUTTON_SX2,
-                ref: tooltipRef6(tips.healthOpenBitrate),
+                ref: tooltipRef5(tips.healthOpenBitrate),
                 "data-health-action": "bitrate",
                 onClick: () => onNavigate("bitrate"),
                 children: t("health.openBitrate")
@@ -64637,7 +64646,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.unused"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label: t("health.unused"), count }) }),
           /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
               Button_default,
@@ -64646,7 +64655,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 size: "small",
                 variant: "outlined",
                 sx: BUTTON_SX2,
-                ref: tooltipRef6(tips.healthOpenFiles),
+                ref: tooltipRef5(tips.healthOpenFiles),
                 "data-health-action": "files",
                 onClick: () => onNavigate("files"),
                 children: t("health.openFiles")
@@ -64672,7 +64681,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.healthSection), children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
           /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
               Button_default,
@@ -64681,7 +64690,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 size: "small",
                 variant: "outlined",
                 sx: BUTTON_SX2,
-                ref: tooltipRef6(tips.healthOpenDuplicates),
+                ref: tooltipRef5(tips.healthOpenDuplicates),
                 "data-health-action": "duplicates",
                 onClick: () => onNavigate("duplicates"),
                 children: t("health.openDuplicates")
@@ -64711,7 +64720,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX2,
-            ref: tooltipRef6(tips.healthRefresh),
+            ref: tooltipRef5(tips.healthRefresh),
             disabled: health.healthBusy,
             "aria-busy": health.healthBusy ? "true" : "false",
             onClick: () => {
@@ -64757,7 +64766,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX3,
-          ref: tooltipRef6(tips.mergeDuplicates),
+          ref: tooltipRef5(tips.mergeDuplicates),
           disabled: health.mergeDisabled,
           children: t("merge.title")
         }
@@ -64770,7 +64779,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX3,
-          ref: tooltipRef6(tips.relink),
+          ref: tooltipRef5(tips.relink),
           disabled: health.relinkDisabled,
           children: t("relink.title")
         }
@@ -64885,7 +64894,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX2,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.tracks"), count: rows.length }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.tracks"), count: rows.length }) }),
           /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
               StatsTable,
@@ -64915,7 +64924,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX2,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.artists"), count: rows.length }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.artists"), count: rows.length }) }),
           /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
               StatsTable,
@@ -64949,7 +64958,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX2,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.idle"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.idle"), count }) }),
           /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(AccordionDetails_default, { children: [
             noteLine(t("stats.idleHint", { days: idleDays })),
             /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
@@ -64959,7 +64968,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 size: "small",
                 variant: "outlined",
                 sx: BUTTON_SX4,
-                ref: tooltipRef6(tips.statsIdleCrate),
+                ref: tooltipRef5(tips.statsIdleCrate),
                 "data-stats-action": "crate",
                 disabled: stats.crateBusy || !stats.writable || count === 0,
                 onClick: () => {
@@ -65324,7 +65333,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX5,
-            ref: tooltipRef6(tips.scanQuick),
+            ref: tooltipRef5(tips.scanQuick),
             disabled: health.scanBusy,
             "aria-busy": health.scanBusy ? "true" : "false",
             onClick: () => {
@@ -65341,7 +65350,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX5,
-            ref: tooltipRef6(tips.scanFull),
+            ref: tooltipRef5(tips.scanFull),
             disabled: health.scanBusy || health.scanFullDisabled,
             "aria-busy": health.scanBusy ? "true" : "false",
             onClick: () => {
@@ -65516,7 +65525,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX6,
-          ref: tooltipRef6(tips.tagsApplyMappings),
+          ref: tooltipRef5(tips.tagsApplyMappings),
           "data-tags-action": "refresh-apply",
           disabled: !canApply,
           onClick: onApply,
@@ -65540,7 +65549,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX6,
-          ref: tooltipRef6(tips.tagsApplyTitles),
+          ref: tooltipRef5(tips.tagsApplyTitles),
           "data-tags-action": "clean-apply",
           disabled: !canApply,
           onClick: onApply,
@@ -65565,7 +65574,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
           "input",
           {
-            ref: tooltipRef6(tips.tagsSpelling),
+            ref: tooltipRef5(tips.tagsSpelling),
             type: "radio",
             name: `tags-${group.key}`,
             value: spelling.value,
@@ -65585,7 +65594,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX6,
-            ref: tooltipRef6(tips.tagsPreview),
+            ref: tooltipRef5(tips.tagsPreview),
             "data-tags-action": "preview",
             "data-key": group.key,
             disabled: busy5 || !chosen,
@@ -65600,7 +65609,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX6,
-            ref: tooltipRef6(tips.tagsApply),
+            ref: tooltipRef5(tips.tagsApply),
             "data-tags-action": "apply",
             "data-key": group.key,
             disabled: !canApply || !!(plan && plan.value === chosen && !plan.changes.length),
@@ -65657,7 +65666,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               size: "small",
               variant: "outlined",
               sx: BUTTON_SX6,
-              ref: tooltipRef6(tips.tagsGenre),
+              ref: tooltipRef5(tips.tagsGenre),
               "aria-pressed": field2 === "genre",
               disabled: health.tagsBusy,
               "aria-busy": health.tagsBusy ? "true" : "false",
@@ -65673,7 +65682,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               size: "small",
               variant: "outlined",
               sx: BUTTON_SX6,
-              ref: tooltipRef6(tips.tagsArtist),
+              ref: tooltipRef5(tips.tagsArtist),
               "aria-pressed": field2 === "artist",
               disabled: health.tagsBusy,
               "aria-busy": health.tagsBusy ? "true" : "false",
@@ -65689,7 +65698,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               size: "small",
               variant: "outlined",
               sx: BUTTON_SX6,
-              ref: tooltipRef6(tips.tagsTitles),
+              ref: tooltipRef5(tips.tagsTitles),
               "aria-pressed": field2 === "titles",
               disabled: health.tagsBusy,
               "aria-busy": health.tagsBusy ? "true" : "false",
@@ -65706,7 +65715,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX6,
-            ref: tooltipRef6(tips.tagsRefresh),
+            ref: tooltipRef5(tips.tagsRefresh),
             disabled: health.tagsBusy,
             "aria-busy": health.tagsBusy ? "true" : "false",
             onClick: () => {
@@ -65723,7 +65732,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               type: "checkbox",
               defaultChecked: !1,
               disabled: health.tagsBusy,
-              ref: tooltipRef6(tips.tagsWriteFiles)
+              ref: tooltipRef5(tips.tagsWriteFiles)
             }
           ),
           t("tags.writeFiles")
@@ -66261,7 +66270,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               {
                 id: "snapshot-cancel",
                 type: "button",
-                ref: tooltipRef6(tips.snapshotCancel),
+                ref: tooltipRef5(tips.snapshotCancel),
                 onClick: () => snapshots.closePlan(),
                 children: t("common.cancel")
               }
@@ -66272,7 +66281,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 id: "snapshot-confirm",
                 type: "button",
                 variant: "contained",
-                ref: tooltipRef6(tips.snapshotConfirm),
+                ref: tooltipRef5(tips.snapshotConfirm),
                 disabled: confirmDisabled,
                 onClick: () => {
                   snapshots.confirmSnapshotRestore().catch((error2) => snapshots.setSnapshotDialogStatus(failureOf(error2).message));
@@ -66543,7 +66552,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         {
           type: "button",
           size: "small",
-          ref: tooltipRef6(tips.reviewRestore),
+          ref: tooltipRef5(tips.reviewRestore),
           onClick: (event) => {
             event.stopPropagation(), handlers.onRestore(params.row.id);
           },
@@ -66556,7 +66565,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           type: "button",
           size: "small",
           "data-action": "prune",
-          ref: tooltipRef6(tips.pruneSnapshot),
+          ref: tooltipRef5(tips.pruneSnapshot),
           onClick: (event) => {
             event.stopPropagation(), handlers.onPrune(params.row.id);
           },
@@ -66673,7 +66682,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           value: dest,
           autoComplete: "off",
           slotProps: { htmlInput: { spellCheck: !1 } },
-          inputRef: tooltipRef6(tips.musicMirrorDest),
+          inputRef: tooltipRef5(tips.musicMirrorDest),
           onChange: (event) => setDest(event.target.value)
         }
       ),
@@ -66687,7 +66696,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             variant: "outlined",
             sx: BUTTON_SX7,
             disabled: !ready,
-            ref: tooltipRef6(tips.musicMirrorPreview),
+            ref: tooltipRef5(tips.musicMirrorPreview),
             onClick: () => {
               run("preview", !1);
             },
@@ -66703,7 +66712,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             variant: "outlined",
             sx: BUTTON_SX7,
             disabled: !ready,
-            ref: tooltipRef6(tips.musicMirrorCopy),
+            ref: tooltipRef5(tips.musicMirrorCopy),
             onClick: () => {
               run("copy", !0);
             },
@@ -66719,7 +66728,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             variant: "outlined",
             sx: BUTTON_SX7,
             disabled: !ready,
-            ref: tooltipRef6(tips.musicMirrorRestore),
+            ref: tooltipRef5(tips.musicMirrorRestore),
             onClick: () => {
               run("restore", !0);
             },
@@ -66735,7 +66744,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             variant: "outlined",
             sx: BUTTON_SX7,
             disabled: !ready,
-            ref: tooltipRef6(tips.musicMirrorCrate),
+            ref: tooltipRef5(tips.musicMirrorCrate),
             onClick: () => {
               run("crate", !0);
             },
@@ -66751,7 +66760,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             variant: "outlined",
             sx: BUTTON_SX7,
             disabled: !ready,
-            ref: tooltipRef6(tips.musicMirrorRelink),
+            ref: tooltipRef5(tips.musicMirrorRelink),
             onClick: () => {
               run("relink", !0);
             },
@@ -66848,7 +66857,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             variant: "outlined",
             sx: BUTTON_SX8,
             disabled: busy5 || !hasPending,
-            ref: tooltipRef6(tips.gigLockPreview),
+            ref: tooltipRef5(tips.gigLockPreview),
             onClick: () => {
               run("preview");
             },
@@ -66864,7 +66873,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             variant: "outlined",
             sx: BUTTON_SX8,
             disabled: busy5 || locked || !hasPending,
-            ref: tooltipRef6(tips.gigLockApply),
+            ref: tooltipRef5(tips.gigLockApply),
             onClick: () => {
               run("apply", !0);
             },
@@ -66880,7 +66889,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             variant: "outlined",
             sx: BUTTON_SX8,
             disabled: busy5 || !hasPending,
-            ref: tooltipRef6(tips.gigLockDrop),
+            ref: tooltipRef5(tips.gigLockDrop),
             onClick: () => {
               run("drop");
             },
@@ -66902,7 +66911,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             variant: "outlined",
             sx: { ...BUTTON_SX8, ml: 1 },
             disabled: busy5 || locked || !item.id,
-            ref: tooltipRef6(tips.gigLockUndo),
+            ref: tooltipRef5(tips.gigLockUndo),
             onClick: () => {
               item.id && run("undo", !0, item.id);
             },
@@ -66958,7 +66967,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "snapshots-refresh",
             type: "button",
-            ref: tooltipRef6(tips.snapshotsRefresh),
+            ref: tooltipRef5(tips.snapshotsRefresh),
             onClick: () => {
               snapshots.loadSnapshots().catch((error2) => snapshots.failSnapshots(error2));
             },
@@ -66971,7 +66980,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "snapshots-take",
             type: "button",
             variant: "contained",
-            ref: tooltipRef6(tips.snapshotsTake),
+            ref: tooltipRef5(tips.snapshotsTake),
             disabled: snapshots.taking,
             onClick: () => {
               snapshots.takeSnapshot().catch((error2) => snapshots.failSnapshots(error2));
@@ -66984,7 +66993,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "snapshots-drives",
             type: "button",
-            ref: tooltipRef6(tips.backupDrives),
+            ref: tooltipRef5(tips.backupDrives),
             disabled: snapshots.backingDrives,
             "aria-label": t("snapshots.backupDrives"),
             onClick: () => {
@@ -67003,7 +67012,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "snapshots-undo-button",
             type: "button",
-            ref: tooltipRef6(tips.snapshotsUndo),
+            ref: tooltipRef5(tips.snapshotsUndo),
             onClick: () => {
               undoId && snapshots.openSnapshotPlan(undoId).catch((error2) => snapshots.failSnapshots(error2));
             },
@@ -67021,14 +67030,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           "aria-busy": snapshots.snapshotLoading,
           tabIndex: 0,
           ref: (element) => {
-            listRef.current = element, tooltipRef6(tips.snapshotsList)(element);
+            listRef.current = element, tooltipRef5(tips.snapshotsList)(element);
           },
           style: { height: 320, width: "100%", minWidth: 640 },
           children: snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
             Button_default,
             {
               type: "button",
-              ref: tooltipRef6(tips.snapshotsRetry),
+              ref: tooltipRef5(tips.snapshotsRetry),
               onClick: () => {
                 snapshots.loadSnapshots().catch((error2) => snapshots.failSnapshots(error2));
               },
@@ -67075,7 +67084,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             {
               id: "operations-refresh",
               type: "button",
-              ref: tooltipRef6(tips.operationsRefresh),
+              ref: tooltipRef5(tips.operationsRefresh),
               onClick: () => {
                 snapshots.loadOperations().catch(() => {
                 });
@@ -67094,13 +67103,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             "aria-label": t("operations.heading"),
             "aria-busy": snapshots.operationsLoading,
             tabIndex: 0,
-            ref: tooltipRef6(tips.operationsList),
+            ref: tooltipRef5(tips.operationsList),
             dense: !0,
             children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
               Button_default,
               {
                 type: "button",
-                ref: tooltipRef6(tips.operationsRetry),
+                ref: tooltipRef5(tips.operationsRetry),
                 onClick: () => {
                   snapshots.loadOperations().catch(() => {
                   });
@@ -67690,7 +67699,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             AccordionSummary_default,
             {
               expandIcon: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(ExpandMore_default, { fontSize: "small" }),
-              ref: tooltipRef6(tips.gigGroup),
+              ref: tooltipRef5(tips.gigGroup),
               children: t("gig.groupCount", { label, count: lines.length })
             }
           ),
@@ -67700,7 +67709,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               "button",
               {
                 type: "button",
-                ref: tooltipRef6(tips.gigShowAll),
+                ref: tooltipRef5(tips.gigShowAll),
                 className: "gig-show-all",
                 onClick: () => {
                   (0, import_react_dom6.flushSync)(() => setExpanded(!0));
@@ -67937,7 +67946,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           sx: BUTTON_SX9,
           "data-bitrate-action": "confirm",
           disabled: !writable,
-          ref: tooltipRef6(tips.bitrateConfirm),
+          ref: tooltipRef5(tips.bitrateConfirm),
           children: t("bitrate.confirmCrate")
         }
       )
@@ -68322,7 +68331,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX3,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(ExpandMore_default, {}), ref: tooltipRef6(tips.gigGroup), children: t("gig.groupCount", { label, count: tracks.length }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label, count: tracks.length }) }),
           /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)(AccordionDetails_default, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
               Button_default,
@@ -68331,7 +68340,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 size: "small",
                 variant: "outlined",
                 sx: BUTTON_SX10,
-                ref: tooltipRef6(tips.compareSave),
+                ref: tooltipRef5(tips.compareSave),
                 "data-compare-set": setKey,
                 disabled: busy5 || !writable || tracks.length === 0,
                 children: t("compare.save")
@@ -69335,7 +69344,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ink = "rail",
     items
   }) {
-    let [anchor, setAnchor] = (0, import_react65.useState)(null), [colorway, setColorway] = (0, import_react65.useState)(() => getSettingsState().colorway), moreRef = (0, import_react65.useRef)(null), skipRestore = (0, import_react65.useRef)(!1), open = !!anchor, label = moreLabel ?? t("crates.moreActions"), bindTooltip = tooltipRef6(moreTip);
+    let [anchor, setAnchor] = (0, import_react65.useState)(null), [colorway, setColorway] = (0, import_react65.useState)(() => getSettingsState().colorway), moreRef = (0, import_react65.useRef)(null), skipRestore = (0, import_react65.useRef)(!1), open = !!anchor, label = moreLabel ?? t("crates.moreActions"), bindTooltip = tooltipRef5(moreTip);
     (0, import_react65.useLayoutEffect)(() => subscribeSettings(() => {
       setColorway(getSettingsState().colorway);
     }), []), (0, import_react65.useLayoutEffect)(() => {
@@ -69400,7 +69409,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               hidden: item.hidden,
               "aria-haspopup": item.ariaHasPopup,
               "aria-pressed": item.ariaPressed,
-              ref: tooltipRef6(item.tip),
+              ref: tooltipRef5(item.tip),
               sx: item.hidden ? { display: "none" } : void 0,
               onClick: (event) => {
                 let opensDialog = item.ariaHasPopup === "dialog";
@@ -69436,7 +69445,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           id: "library-copies",
           size: "small",
           label: copiesLabel,
-          ref: tooltipRef6(tips.libraryCopies)
+          ref: tooltipRef5(tips.libraryCopies)
         }
       ) : /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { id: "library-copies", hidden: !0 }),
       /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
@@ -69447,7 +69456,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX12,
-          ref: tooltipRef6(tips.crateNew),
+          ref: tooltipRef5(tips.crateNew),
           disabled: !crates.canCreate,
           onClick: () => crates.create(),
           children: t("crates.new")
@@ -69461,7 +69470,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX12,
-          ref: tooltipRef6(tips.crateRename),
+          ref: tooltipRef5(tips.crateRename),
           disabled: !crates.canRename,
           onClick: () => crates.rename(),
           children: t("crates.rename")
@@ -69475,7 +69484,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           size: "small",
           variant: "outlined",
           sx: BUTTON_SX12,
-          ref: tooltipRef6(tips.crateDelete),
+          ref: tooltipRef5(tips.crateDelete),
           disabled: !crates.canDelete,
           onClick: () => crates.remove(),
           children: t("common.delete")

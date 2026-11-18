@@ -12,7 +12,7 @@ The waveform in the top bar is the same SWF1 view. Lows are red, mids are green,
 
 If the file has no waveform, the bar says **Waveform unavailable for this format**. The track still plays.
 
-**Play** and **Pause** are one button. Its name changes with the state. Hover a player control, or tab to it, and a note names the action. **W**, **Space**, **Left**, and **Right** are written there when they apply.
+**Play** and **Pause** are one button. Its name changes with the state. Hover a player control, or tab to it, and a note names the action. A filled cue pad's note names the jump and the cue. The pad nearest the playhead is marked. **W**, **Space**, **Left**, and **Right** are written there when they apply.
 
 **W** or **Space** plays or pauses. When nothing is playing, it starts the selected track. It does nothing while you are typing in a field. **Alt+E** or **Left** moves 5 seconds back. **Alt+R** or **Right** moves 5 seconds forward. **1** through **8** jump to that cue pad. They do not set or delete a cue. The other playback keys are in [Keyboard shortcuts](Keyboard-Shortcuts).
 

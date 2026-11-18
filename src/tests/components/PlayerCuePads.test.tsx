@@ -9,9 +9,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CuePads } from "../../components/CuePads";
 import { PlayerCuePads } from "../../components/PlayerCuePads";
 import { PlayerProvider } from "../../containers/PlayerContext";
-import { setLocale } from "../../lib/i18n";
+import { setLocale, t } from "../../lib/i18n";
 import type { CueMarker } from "../../lib/player/player";
 import { playerValue } from "../../lib/storybook/fixtures";
+import {
+  installTooltips,
+  refreshTooltips,
+  resetTooltipState,
+  TOOLTIP_ID,
+} from "../../lib/ui/tooltip";
+import { cueTip, tipText } from "../../lib/ui/tooltip-strings";
 import { drainReactScheduler } from "../test-page";
 
 const NIGHT_CUES: CueMarker[] = [
@@ -56,8 +63,24 @@ describe("PlayerCuePads", () => {
   afterEach(async () => {
     flushSync(() => root.unmount());
     host.remove();
+    resetTooltipState();
+    setLocale("en");
+    vi.unstubAllGlobals();
     await drainReactScheduler();
   });
+
+  function stubReducedMotion(): void {
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: query.includes("prefers-reduced-motion"),
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }));
+  }
 
   it("renders eight pads, seeks a filled pad, and ignores an empty pad", () => {
     const seek = vi.fn();
@@ -89,6 +112,72 @@ describe("PlayerCuePads", () => {
       (host.querySelector('[data-slot="2"]') as HTMLElement).click();
     });
     expect(seek).not.toHaveBeenCalled();
+  });
+
+  it("gives a filled pad a cue-jump tooltip that is not a copy of the aria-label", () => {
+    stubReducedMotion();
+    resetTooltipState();
+    installTooltips();
+    flushSync(() => {
+      root.render(createElement(PadsHarness, { cues: NIGHT_CUES, onSeek: vi.fn() }));
+    });
+    const pad = host.querySelector('[data-slot="1"]');
+    if (!(pad instanceof HTMLButtonElement)) throw new Error("missing filled pad");
+    const aria = pad.getAttribute("aria-label") ?? "";
+    const sentence = tipText(cueTip("Drop"));
+    expect(sentence).toBe(t("tooltip.cue", { label: "Drop" }));
+    expect(sentence).toContain("Drop");
+    expect(pad.getAttribute("data-tooltip")).toBe(sentence);
+    expect(pad.getAttribute("data-tooltip")).not.toBe(aria);
+    expect(pad.getAttribute("data-tooltip-key")).toBe("tooltip.cue");
+    expect(aria).toBe(t("markers.cue", { number: 1 }));
+
+    pad.focus();
+    const tip = document.getElementById(TOOLTIP_ID);
+    if (!(tip instanceof HTMLElement)) throw new Error("missing tooltip");
+    expect(tip.hidden).toBe(false);
+    expect(tip.textContent).toBe(sentence);
+    expect(pad.getAttribute("aria-describedby")).toContain(TOOLTIP_ID);
+
+    pad.blur();
+    expect(tip.hidden).toBe(true);
+    pad.dispatchEvent(new PointerEvent("pointerover", { bubbles: true, pointerType: "mouse" }));
+    expect(tip.hidden).toBe(false);
+    expect(tip.textContent).toBe(sentence);
+    pad.dispatchEvent(new PointerEvent("pointerout", { bubbles: true, pointerType: "mouse" }));
+    expect(tip.hidden).toBe(true);
+
+    const empty = host.querySelector('[data-slot="2"]');
+    expect(empty?.tagName).toBe("SPAN");
+    expect(empty?.getAttribute("data-tooltip")).toBeNull();
+    expect(empty?.getAttribute("tabindex")).toBeNull();
+
+    pad.focus();
+    setLocale("es");
+    refreshTooltips();
+    const spanish = t("tooltip.cue", { label: "Drop" });
+    expect(spanish).toContain("Drop");
+    expect(spanish).not.toBe(sentence);
+    expect(pad.getAttribute("data-tooltip")).toBe(spanish);
+    expect(pad.getAttribute("data-tooltip")).not.toBe(pad.getAttribute("aria-label"));
+    expect(tip.textContent).toBe(spanish);
+  });
+
+  it("uses the pad name in the tooltip when the cue label is blank", () => {
+    flushSync(() => {
+      root.render(
+        createElement(PadsHarness, {
+          cues: [{ index: 0, seconds: 2, color: "#CC0000", label: "   " }],
+          onSeek: vi.fn(),
+        }),
+      );
+    });
+    const pad = host.querySelector('[data-slot="1"]');
+    if (!(pad instanceof HTMLButtonElement)) throw new Error("missing filled pad");
+    const fallback = t("markers.cue", { number: 1 });
+    expect(pad.getAttribute("data-tooltip")).toBe(tipText(cueTip(fallback)));
+    expect(pad.getAttribute("data-tooltip")).not.toBe(pad.getAttribute("aria-label"));
+    expect(pad.getAttribute("data-tooltip")).toContain(fallback);
   });
 
   it("lights the pad whose cue is nearest the playhead", () => {

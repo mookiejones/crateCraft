@@ -8,7 +8,7 @@ Play a file that is already in the library. The app streams it from this compute
 
 When a track ends, the next row in the list starts. The last row stops.
 
-Cue points from the file sit on pads 1–8 in the top bar. Click a pad that has a cue to jump there. Empty pads do nothing. The detail pane still lists cue times and names. The name shows in that list, and in the pad's label for a screen reader. A track with no cues has empty pads.
+Cue points from the file sit on pads 1–8 in the top bar. Click a pad that has a cue to jump there. Empty pads do nothing. The detail pane still lists cue times and names. The name shows in that list. Hover a filled pad, or tab to it, and the note names the jump and the cue. The pad nearest the playhead is marked. A screen reader still hears Cue point and the number. A track with no cues has empty pads.
 
 The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. The brighter core is the sustained level. The fainter edge is the peak. Click it, or drag, to move through the track. Zoom sits on the wave in a wide window.
 

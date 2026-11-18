@@ -9,6 +9,8 @@ import { usePlayer } from "../containers/PlayerContext";
 import { t } from "../lib/i18n";
 import type { CueMarker } from "../lib/player/player";
 import { CUE_SLOT_COUNT, activePadIndex, slotColor } from "../lib/ui/cue-view";
+import { cueTip } from "../lib/ui/tooltip-strings";
+import { tooltipRef } from "./tooltip-ref";
 
 /**
  * Map player cues onto pads 1–8.
@@ -30,10 +32,26 @@ function slotsFromPlayerCues(cues: readonly CueMarker[]): Array<CueMarker | null
 }
 
 /**
+ * Name used in the jump tooltip.
+ *
+ * A stored cue name wins. A blank name uses the pad's screen-reader
+ * label so the sentence still names a place.
+ *
+ * @param cue Filled pad marker.
+ * @param number Pad number, 1–8.
+ * @returns The cue label, or `Cue point N` when the name is blank.
+ */
+function cueJumpName(cue: CueMarker, number: number): string {
+  const named = cue.label.trim();
+  return named || t("markers.cue", { number });
+}
+
+/**
  * Eight jump pads bound to the shared player.
  *
  * Filled pads are buttons. Empty pads are spans. Clicking a filled pad
- * seeks to that cue. Nothing is written.
+ * seeks to that cue. A filled pad's tooltip is `tooltip.cue`: hover and
+ * keyboard focus name the jump and the cue label. Nothing is written.
  */
 export function PlayerCuePads(): JSX.Element {
   const { cues, currentTime, seek } = usePlayer();
@@ -74,6 +92,7 @@ export function PlayerCuePads(): JSX.Element {
             className={className}
             data-slot={String(number)}
             aria-label={t("markers.cue", { number })}
+            ref={tooltipRef(cueTip(cueJumpName(cue, number)))}
             style={style}
             onClick={() => {
               setLastClicked(slot);

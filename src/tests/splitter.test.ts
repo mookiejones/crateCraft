@@ -114,6 +114,11 @@ describe("player deck CSS", () => {
     expect(appCss).toMatch(/\.player-cue-pad\s*\{[^}]*width:\s*22px/);
     expect(appCss).toMatch(/\.player-cue-pad\s*\{[^}]*height:\s*22px/);
   });
+
+  it("draws the lit cue pad with a text-colored ring", () => {
+    expect(appCss).toMatch(/\.player-cue-pad-lit\s*\{[^}]*box-shadow:[^}]*var\(--color-text\)/);
+    expect(appCss).toMatch(/\.player-cue-pad-lit\s*\{[^}]*var\(--color-bg\)/);
+  });
 });
 
 describe("mountSplitter", () => {

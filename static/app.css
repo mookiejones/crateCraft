@@ -1990,6 +1990,16 @@ dialog .settings-field select {
   opacity: 0.45;
 }
 
+/* Playhead pad. The text-colored ring is separated from the fill by the
+   page background, so it stays visible on every pad color and colorway. */
+.player-cue-pad-lit {
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 0 0 1px var(--color-bg),
+    0 0 0 3px var(--color-text);
+}
+
 .player-wave-main {
   min-width: 0;
   display: flex;
