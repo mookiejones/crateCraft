@@ -62,6 +62,62 @@ class AgentGuideTests(unittest.TestCase):
         claude = (ROOT / "CLAUDE.md").read_bytes()
         self.assertEqual(agents, claude)
 
+    def test_triage_labels_exist_in_agent_guides(self) -> None:
+        """Require the five tracker roles to exist, not wait on create.
+
+        Returns:
+            None. The test fails when the guides still say the labels
+            are missing.
+        """
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("`ready-for-agent`", agents)
+        self.assertIn("`/serato-triage`", agents)
+        self.assertNotIn("must be created before `/triage` applies them", agents)
+
+
+class TriageLabelTests(unittest.TestCase):
+    """Keep the five tracker roles mapped and present."""
+
+    def test_triage_labels_map_the_five_roles(self) -> None:
+        """Require tracker strings for the five roles, and that they exist.
+
+        Returns:
+            None. The test fails when a role is unmapped or still marked
+            missing.
+        """
+        text = (ROOT / "docs" / "agents" / "triage-labels.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("do not exist yet", text)
+        rows = {
+            "needs-triage": "needs-triage",
+            "needs-info": "question",
+            "ready-for-agent": "ready-for-agent",
+            "ready-for-human": "ready-for-human",
+            "wontfix": "wontfix",
+        }
+        for skill_label, tracker_label in rows.items():
+            with self.subTest(skill_label=skill_label):
+                self.assertRegex(
+                    text,
+                    rf"\|\s*`{skill_label}`\s*\|\s*`{tracker_label}`\s*\|",
+                )
+        self.assertIn("`/serato-triage`", text)
+        self.assertIn("`/serato-progress`", text)
+
+    def test_issue_tracker_splits_role_from_milestone_triage(self) -> None:
+        """Require ``/serato-triage`` for roles and ``/serato-progress`` for homes.
+
+        Returns:
+            None. The test fails when the tracker guide drops that split.
+        """
+        text = (ROOT / "docs" / "agents" / "issue-tracker.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("`/serato-triage`", text)
+        self.assertIn("`/serato-progress`", text)
+        self.assertIn("milestone homes", text)
+
 
 class QuickStartTests(unittest.TestCase):
     """Check the wiki page and the guide page describe the same five steps."""
