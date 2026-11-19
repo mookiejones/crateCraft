@@ -207,11 +207,20 @@ export interface RelatedHit {
   in_library?: boolean;
 }
 
+/** One STRING, UINT32, or TIME predicate in a custom-rule preset. */
+export type RuleLeaf =
+  | { attribute: string; operation: string; value: string | number }
+  | { attribute: string; operation: string; partial_date: number };
+
+/** One extra nesting level of custom rules. Groups hold only leaves. */
+export type RuleGroup = { conjunction: "AND" | "OR"; rules: RuleLeaf[] };
+
 /** A crate preset as POST /api/smart-preset stores it. */
 export type PresetSpec =
   | { kind: "harmonic"; key: string; crate?: number }
   | { kind: "bpm"; bpm: number; range: number; crate?: number }
-  | { kind: "unplayed"; months: number; crate?: number };
+  | { kind: "unplayed"; months: number; crate?: number }
+  | { kind: "rules"; conjunction: "AND" | "OR"; rules: Array<RuleLeaf | RuleGroup>; crate?: number };
 
 /** Kind of crate tree POST /api/crate-tree builds. */
 export type CrateTreeKind = "bpm" | "key" | "genre";

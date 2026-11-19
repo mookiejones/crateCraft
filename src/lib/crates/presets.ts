@@ -2,9 +2,10 @@
  * Crate presets: the dialog, Refresh, and the refresh when the page opens (part 2 of #26).
  *
  * POST /api/smart-preset previews, creates, refreshes one crate, or
- * refreshes them all. The server saves a normal crate whose name ends in
- * ⟳ and refuses every write while Serato is running. A preview only reads.
- * A newer preview request makes a late answer be ignored.
+ * refreshes them all. When the rules fit Serato, create writes a live
+ * smart crate. Mixed AND/OR, play history, and a crate limit stay a
+ * normal crate whose name ends in ⟳. A preview only reads. A newer
+ * preview request makes a late answer be ignored.
  */
 
 import { failureOf, postJSON } from "../api";
@@ -12,7 +13,16 @@ import type { PresetSpec } from "../api-types";
 import { el } from "../dom";
 import { t } from "../i18n";
 import { isQueuedWrite } from "./queue-notice";
-import { presetName, readPresetForm, scopeCrate, syncPresetFields } from "./preset-view";
+import {
+  addGroup,
+  addRule,
+  presetName,
+  readPresetForm,
+  resetRuleForm,
+  scopeCrate,
+  syncPresetFields,
+  syncPresetIntro,
+} from "./preset-view";
 import { state } from "../state";
 import { bindCrateActions } from "./crate-store";
 import { mountSharedDialogs } from "../ui/shared-dialog-mount";
@@ -22,6 +32,7 @@ const PREVIEW_DELAY_MS = 250;
 
 interface PreviewReply {
   count?: number;
+  native?: boolean;
 }
 
 interface CreateReply {
@@ -69,6 +80,7 @@ export async function previewPreset(): Promise<void> {
   el("preset-create").disabled = !preset || creating;
   if (!preset) {
     el("preset-preview").textContent = "";
+    syncPresetIntro(false);
     return;
   }
   el("preset-preview").textContent = t("presets.counting");
@@ -76,10 +88,12 @@ export async function previewPreset(): Promise<void> {
     const reply = await postJSON<PreviewReply>("/api/smart-preset", { action: "preview", space: state.space, preset });
     if (token !== previewToken) return;
     el("preset-preview").textContent = t("presets.matches", { count: Number(reply.count) || 0 });
+    syncPresetIntro(Boolean(reply.native));
   } catch (error) {
     if (token !== previewToken) return;
     el("preset-preview").textContent = failureOf(error).message;
     el("preset-create").disabled = true;
+    syncPresetIntro(false);
   }
 }
 
@@ -119,6 +133,7 @@ export async function openPresetDialog(): Promise<void> {
   el("preset-scope-text").textContent = scope ? t("presets.scope", { name: scope.name }) : "";
   el("preset-name").value = "";
   el("preset-status").textContent = "";
+  resetRuleForm();
   syncPresetFields();
   if (!el("preset-dialog").open) el("preset-dialog").showModal();
   el("preset-kind").focus();
@@ -239,6 +254,21 @@ export function wirePresets(): void {
   for (const id of ["preset-key", "preset-bpm", "preset-range", "preset-months"] as const) {
     el(id).addEventListener("input", schedulePreview);
   }
+  el("preset-conjunction").addEventListener("change", () => {
+    void previewPreset();
+  });
+  el("preset-rule-list").addEventListener("input", schedulePreview);
+  el("preset-rule-list").addEventListener("change", () => {
+    void previewPreset();
+  });
+  el("preset-add-rule").addEventListener("click", () => {
+    addRule();
+    void previewPreset();
+  });
+  el("preset-add-group").addEventListener("click", () => {
+    addGroup();
+    void previewPreset();
+  });
   el("preset-scope").addEventListener("change", () => {
     void previewPreset();
   });

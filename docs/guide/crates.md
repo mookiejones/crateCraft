@@ -70,7 +70,18 @@ Quit Serato first. [Safety and backups](safety.md) explains the status line. The
 
 The page says **Crate created.** There is no drag and drop. A new crate is created inside the crate you had selected. This app does not move an existing crate to a new parent.
 
-**New** creates a normal crate. It does not create a smart crate. Make a smart crate in Serato DJ Pro. You can edit its rules here afterward.
+**New** creates a normal crate. It does not create a smart crate.
+
+## Preset
+
+**Preset** under **More** builds a crate from rules. Quit Serato DJ Pro first.
+
+1. Choose Mixes with a key, BPM range, Not played lately, or Custom rules.
+2. Fill the fields. Custom rules can nest one AND/OR group.
+3. Preview the match count.
+4. Confirm **Create crate**.
+
+When the rules fit what Serato stores, the app writes a live smart crate. Serato updates it on its own. Mixed AND/OR, play history, and a crate limit stay a normal crate whose name ends in ⟳. Refresh shows on those copy crates.
 
 ## Rename, color, and delete
 
@@ -86,7 +97,7 @@ The color names in the track editor are **None**, **Red**, **Orange**, **Yellow*
 
 ## Smart crates
 
-A smart crate shows the word **smart** on its row. Its tracks come from rules, not from checkboxes.
+A smart crate shows the word **smart** on its row. Its tracks come from rules, not from checkboxes. **Preset** writes a live smart crate when the rules fit. You can still make one in Serato DJ Pro and edit the rules here.
 
 1. Select the smart crate.
 2. Read the **Matches** line. It states the rules in a sentence, joined with **and** or **or**.

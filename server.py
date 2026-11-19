@@ -48,6 +48,7 @@ import related
 import relink
 import setup_flow
 import smart_presets
+import smart_rules
 import snapshots
 import tag_cleanup
 import tempo_drift
@@ -1449,6 +1450,9 @@ def _load_library(space: str) -> dict[str, object]:
         for crate in crates:
             if crate["id"] in rules:
                 crate["rules"] = rules[crate["id"]]
+                parsed = smart_rules.parse_rules(crate["rules"])
+                if crate["smart"] and not crate["tracks"] and parsed is not None:
+                    crate["tracks"].extend(smart_rules.asset_ids(conn, space, parsed))
 
     payload: dict[str, object] = {
         "source": str(db_path()),

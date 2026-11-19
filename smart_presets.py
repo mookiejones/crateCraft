@@ -1,12 +1,10 @@
-"""DJ presets that the app evaluates and saves as a normal crate (part 1 of #26).
+"""DJ presets: live Serato smart crates when the flat model fits, else ``⟳`` (#26).
 
-Serato smart crates take one flat list of rules over the whole library. They
-cannot say "Camelot neighbours of 8A" or "BPM 124 plus or minus 3, only inside
-crate Bar set". A preset here is evaluated by the app and saved as a normal
-crate whose name ends in ``⟳``. Serato plays it like any crate. It goes stale
-until it is refreshed, so the preset is remembered in ``preset-crates.json``
-beside ``settings.json`` (never in the Serato folder), keyed by the library
-file and the crate id.
+Unscoped ``harmonic`` and ``bpm``, and a flattenable custom ``rules`` tree,
+write a type-2 smart crate with a ``.scrate`` filename. Serato live-updates
+those. Crate scope, ``unplayed``, mixed nested AND/OR, and crate-tree kinds
+stay a normal crate whose name ends in ``⟳``, remembered in
+``preset-crates.json`` beside ``settings.json`` (never in the Serato folder).
 
 Presets:
 
@@ -16,12 +14,14 @@ Presets:
 - ``bpm``: tracks whose BPM is within ``range`` of ``bpm``.
 - ``unplayed``: tracks with no played history entry in the last ``months``
   months, including tracks never played.
+- ``rules``: a nested AND/OR tree of native STRING, UINT32, and TIME leaves.
 
 Each preset can be scoped to one crate and the crates nested under it.
 
 ``preview`` reads the library read-only. ``create`` and ``refresh`` go through
 ``safe_write.run`` like every other crate edit, so they are refused while
-Serato is running, backed up first, and checked after the commit.
+Serato is running, backed up first, and checked after the commit. Refresh
+never rewrites a type-2 crate as a normal ``.crate``.
 """
 
 from __future__ import annotations
@@ -38,13 +38,14 @@ from pathlib import Path
 import app_config
 import library
 import related
+import smart_rules
 from library import LIBRARY_SPACE, LibraryError
 
 STORE_NAME = "preset-crates.json"
 SUFFIX = " ⟳"
 MONTH_SECONDS = 30.44 * 24 * 3600
 
-KINDS = ("harmonic", "bpm", "unplayed", "bpm_band", "key", "genre")
+KINDS = ("harmonic", "bpm", "unplayed", "bpm_band", "key", "genre", "rules")
 MAX_BPM = 400.0
 GENRE_LIMIT = 200
 DEFAULT_BPM_RANGE = 3.0
@@ -61,6 +62,7 @@ BAD_BAND = "Choose a BPM band whose low end is below its high end, up to 400."
 BAD_GENRE = "Choose a genre."
 NOT_A_PRESET_CRATE = "That crate was not made from a preset."
 PRESET_CRATE_GONE = "That preset crate is no longer in the library."
+BAD_RULES = smart_rules.BAD_RULES
 
 
 def check_key(key: object) -> str:
@@ -147,6 +149,10 @@ def normalize(preset: object) -> dict[str, object]:
         if not isinstance(genre, str) or not genre_key(genre) or len(genre) > GENRE_LIMIT:
             raise LibraryError(BAD_GENRE)
         clean["genre"] = " ".join(genre.split())
+    elif kind == "rules":
+        tree = smart_rules.normalize_tree(preset)
+        clean["conjunction"] = tree["conjunction"]
+        clean["rules"] = tree["rules"]
     else:
         months = preset.get("months", 12)
         if isinstance(months, bool) or not isinstance(months, int) or not 1 <= months <= MAX_MONTHS:
@@ -177,18 +183,22 @@ def genre_key(text: str) -> str:
     return " ".join(text.split()).casefold()
 
 
-def default_name(preset: Mapping[str, object]) -> str:
+def default_name(preset: Mapping[str, object], native: bool = False) -> str:
     """Name a preset crate when the page does not send a name.
 
     Args:
         preset: A preset from :func:`normalize`.
+        native: True omits ``⟳`` so a live smart crate is not named as a
+            refreshable copy. Crate trees keep the default False.
 
     Returns:
-        A short English name ending in ``⟳``.
+        A short English name. ``⟳`` is added unless ``native`` is true.
 
     Example:
         >>> default_name({"kind": "bpm", "bpm": 124.0, "range": 3.0})
         'BPM 124 ±3 ⟳'
+        >>> default_name({"kind": "bpm", "bpm": 124.0, "range": 3.0}, native=True)
+        'BPM 124 ±3'
     """
     kind = preset["kind"]
     if kind == "harmonic":
@@ -199,9 +209,11 @@ def default_name(preset: Mapping[str, object]) -> str:
         label = f"{_trim(preset['low'])}–{_trim(preset['high'])} BPM"
     elif kind in ("key", "genre"):
         label = str(preset[kind])
+    elif kind == "rules":
+        label = "Custom rules"
     else:
         label = f"Not played in {preset['months']} months"
-    return label + SUFFIX
+    return label if native else label + SUFFIX
 
 
 def _trim(value: object) -> str:
@@ -240,7 +252,9 @@ def matching_ids(
     """
     params: list[object] = [space]
     sql = """
-        SELECT a.id, a.key, a.bpm, a.genre FROM asset a
+        SELECT a.id, a.key, a.bpm, a.genre, a.name, a.artist, a.album,
+               a.comments, a.type, a.time_added, a.stems_analyze_state
+        FROM asset a
         JOIN space_asset sa ON sa.asset_id = a.id
         JOIN space s ON s.id = sa.space_id
         WHERE s.name = ?
@@ -292,6 +306,28 @@ def matching_ids(
     if kind == "genre":
         target = genre_key(str(preset["genre"]))
         return [int(row[0]) for row in rows if isinstance(row[3], str) and genre_key(row[3]) == target]
+    if kind == "rules":
+        tree_rules = preset.get("rules")
+        if not isinstance(tree_rules, list):
+            return []
+        found_rules: list[int] = []
+        for row in rows:
+            fields = {
+                "id": row[0],
+                "key": row[1],
+                "bpm": row[2],
+                "genre": row[3],
+                "name": row[4],
+                "artist": row[5],
+                "album": row[6],
+                "comments": row[7],
+                "type": row[8],
+                "time_added": row[9],
+                "stems_analyze_state": row[10],
+            }
+            if smart_rules.tree_matches(fields, str(preset.get("conjunction") or "AND"), tree_rules):
+                found_rules.append(int(row[0]))
+        return found_rules
     cutoff = (time.time() if now is None else now) - int(preset["months"]) * MONTH_SECONDS  # type: ignore[arg-type]
     recent = {
         int(row[0])
@@ -418,14 +454,17 @@ def preview(space: str, preset: object) -> dict[str, object]:
         LibraryError: If the preset is invalid or the library is missing.
     """
     clean = normalize(preset)
+    blob = smart_rules.to_native(clean, space)
+    native = blob is not None
     with closing(library.read_conn()) as conn:
-        ids = matching_ids(conn, space, clean)
+        ids = smart_rules.asset_ids(conn, space, blob) if blob is not None else matching_ids(conn, space, clean)
     return {
         "ok": True,
         "preset": clean,
-        "name": default_name(clean),
+        "name": default_name(clean, native=native),
         "count": len(ids),
         "ids": ids[:PREVIEW_LIMIT],
+        "native": native,
     }
 
 
@@ -478,18 +517,67 @@ def _expect_members(write: object, crate_id: int, wanted: tuple[int, ...]) -> No
     write.check(check)  # type: ignore[attr-defined]
 
 
+def _expect_smart(write: object, crate_id: int, blob: Mapping[str, object]) -> None:
+    """Register a check that the crate is type 2 with ``.scrate`` rules and no members.
+
+    Args:
+        write: The ``safe_write.Session``.
+        crate_id: Container id.
+        blob: Native rules JSON that must be stored.
+    """
+    import safe_write
+
+    wanted = json.loads(library._rules_blob(blob))
+
+    def check(copied: sqlite3.Connection) -> None:
+        """Fail when the smart crate is stored as a normal crate or has members.
+
+        Args:
+            copied: Read-only connection to the temporary database copy.
+
+        Raises:
+            VerifyMismatch: If type, filename, rules, or memberships differ.
+        """
+        row = copied.execute("SELECT type FROM container WHERE id = ?", (crate_id,)).fetchone()
+        if row is None or int(row[0]) != 2:
+            raise safe_write.VerifyMismatch("The smart crate type does not match.")
+        filename = copied.execute(
+            "SELECT filename FROM dj_container_metadata WHERE container_id = ?",
+            (crate_id,),
+        ).fetchone()
+        if filename is None or not str(filename[0]).endswith(".scrate"):
+            raise safe_write.VerifyMismatch("A smart crate must use a .scrate file.")
+        stored = copied.execute(
+            "SELECT rules FROM smart_crate_rules WHERE container_id = ?",
+            (crate_id,),
+        ).fetchone()
+        if stored is None:
+            raise safe_write.VerifyMismatch("The smart crate rules are missing.")
+        try:
+            parsed = json.loads(str(stored[0]))
+        except ValueError as exc:
+            raise safe_write.VerifyMismatch("The smart crate rules are not JSON.") from exc
+        if parsed != wanted:
+            raise safe_write.VerifyMismatch("The smart crate rules do not match.")
+        if _members(copied, crate_id):
+            raise safe_write.VerifyMismatch("A smart crate must not store members.")
+
+    write.check(check)  # type: ignore[attr-defined]
+
+
 def create(space: str, preset: object, parent: int | None = None, name: str = "") -> dict[str, object]:
-    """Save a preset's tracks as a new normal crate and remember the preset.
+    """Save a preset as a live smart crate when it fits, else a ``⟳`` crate.
 
     Args:
         space: Space name.
         preset: Preset JSON.
         parent: Parent crate id, or None for the top level.
         name: Crate name. Empty uses :func:`default_name`. ``⟳`` is added
-            when the name does not already end in it.
+            on a refreshable copy when the name does not already end in it.
 
     Returns:
-        ``id``, ``name``, ``added``, ``preset``, ``updated``, and ``warning``.
+        ``id``, ``name``, ``added``, ``preset``, ``native``, ``updated``,
+        and ``warning``. Native crates are not remembered for Refresh.
 
     Raises:
         LibraryError: If the preset is invalid or the crate cannot be made.
@@ -498,12 +586,14 @@ def create(space: str, preset: object, parent: int | None = None, name: str = ""
     import safe_write
 
     clean = normalize(preset)
-    label = (name or "").strip() or default_name(clean)
-    if not label.endswith(SUFFIX.strip()):
+    blob = smart_rules.to_native(clean, space)
+    native = blob is not None
+    label = (name or "").strip() or default_name(clean, native=native)
+    if not native and not label.endswith(SUFFIX.strip()):
         label += SUFFIX
 
     def apply(conn: sqlite3.Connection, write: safe_write.Session) -> dict[str, object]:
-        """Create the crate, add the matches, and register the check.
+        """Create the crate, add matches or rules, and register the check.
 
         Args:
             conn: Open write connection.
@@ -512,28 +602,36 @@ def create(space: str, preset: object, parent: int | None = None, name: str = ""
         Returns:
             The result dict.
         """
-        ids = matching_ids(conn, space, clean)
-        created = library._create_crate(conn, space, parent, label, False, None)
+        ids = smart_rules.asset_ids(conn, space, blob) if native else matching_ids(conn, space, clean)
+        created = library._create_crate(conn, space, parent, label, native, blob)
         crate_id = created["id"]
         if not isinstance(crate_id, int):
             raise LibraryError("The crate could not be created.")
-        for asset_id in ids:
-            library._membership(conn, crate_id, asset_id, space, True)
+        if not native:
+            for asset_id in ids:
+                library._membership(conn, crate_id, asset_id, space, True)
+            _expect_members(write, crate_id, tuple(ids))
+        else:
+            assert blob is not None
+            _expect_smart(write, crate_id, blob)
         if isinstance(created.get("name"), str):
             write.set_target(str(created["name"]))
-        _expect_members(write, crate_id, tuple(ids))
         return {
             "ok": True,
             "id": crate_id,
             "name": created["name"],
             "added": len(ids),
             "preset": clean,
+            "native": native,
             "warning": created.get("warning"),
         }
 
     result = safe_write.run("preset_create", label, apply)
     crate_id = int(result["id"])  # type: ignore[arg-type]
     updated = int(time.time())
+    result["updated"] = updated
+    if native:
+        return result
     found = _identity(crate_id) or {}
     record: dict[str, object] = {
         "space": space,
@@ -542,7 +640,6 @@ def create(space: str, preset: object, parent: int | None = None, name: str = ""
         "time_added": found.get("time_added"),
     }
     _remember(crate_id, record)
-    result["updated"] = updated
     return result
 
 
