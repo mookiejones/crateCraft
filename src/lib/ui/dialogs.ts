@@ -49,6 +49,7 @@ import {
   applyAppearance,
   applyCopies,
   applyGigLock,
+  applyProtected,
   applyLanguage,
   applyPrivacy,
   applyShortcuts,
@@ -923,6 +924,7 @@ export async function loadPrivacy() {
   applyLayout(payload);
   applyAppearance(payload);
   applyGigLock(payload);
+  applyProtected(payload);
   applyCopies(payload);
   applyShortcuts(payload);
   if (token === rekordboxToken) applyRekordboxExport(payload);

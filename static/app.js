@@ -13030,6 +13030,7 @@ Error generating stack: ` + x.message + `
     "error.folder_outside_roots": "That folder is outside the music folders.",
     "error.folder_unreadable": "That folder could not be read.",
     "error.gig_lock_not_saved": "The Gig Lock choice could not be saved.",
+    "error.protected_not_saved": "The protected-field choice could not be saved.",
     "error.internal": "Something went wrong. The details are in the local log.",
     "error.invalid_request": "That request is not valid.",
     "error.job_cannot_undo": "That write cannot be undone.",
@@ -13891,6 +13892,10 @@ Error generating stack: ` + x.message + `
     "settings.copyLogs": "Copy logs",
     "settings.copyVersion": "Copy version",
     "settings.gigLock": "Queue writes while gigging",
+    "settings.protectBpm": "Protect BPM",
+    "settings.protectKey": "Protect key",
+    "settings.protectCues": "Protect cues",
+    "detail.restored": "Kept {fields}. Those fields are protected.",
     "settings.minCopies": "Verified copies before delete",
     "settings.untrustedVolumes": "Untrusted volume names",
     "settings.iconAppliedDock": "The Dock icon matches this theme.",
@@ -14304,6 +14309,9 @@ Error generating stack: ` + x.message + `
     "tooltip.gigExit": "Leave the gig check and show crates.",
     "tooltip.gigGroup": "Show or hide this list.",
     "tooltip.gigLock": "Queue crate and track edits instead of writing them.",
+    "tooltip.protectBpm": "Keep the stored BPM when a save or a duplicate merge would change it.",
+    "tooltip.protectKey": "Keep the stored key when a save would change it.",
+    "tooltip.protectCues": "Keep cue points on the file you keep when duplicates are merged.",
     "tooltip.gigLockApply": "Write the queued edits through a backup. Quit Serato and turn Gig Lock off first.",
     "tooltip.gigLockDrop": "Remove this queued edit without writing it.",
     "tooltip.gigLockPreview": "Show what would be written. Nothing is saved.",
@@ -14992,6 +15000,7 @@ Error generating stack: ` + x.message + `
     "error.folder_not_library": "Esa carpeta no es la biblioteca de Serato de este equipo.",
     "error.folder_outside_roots": "Esa carpeta está fuera de las carpetas de música.",
     "error.folder_unreadable": "No se pudo leer esa carpeta.",
+    "error.protected_not_saved": "No se pudo guardar la protección del campo.",
     "error.gig_lock_not_saved": "No se pudo guardar la opción de Bloqueo de concierto.",
     "error.internal": "Algo salió mal. Los detalles están en el registro local.",
     "error.invalid_request": "Esa solicitud no es válida.",
@@ -15854,6 +15863,10 @@ Error generating stack: ` + x.message + `
     "settings.copyLogs": "Copiar registros",
     "settings.copyVersion": "Copiar versión",
     "settings.gigLock": "Poner en cola las escrituras durante el concierto",
+    "settings.protectBpm": "Proteger BPM",
+    "settings.protectKey": "Proteger tonalidad",
+    "settings.protectCues": "Proteger cues",
+    "detail.restored": "Se conservó {fields}. Esos campos están protegidos.",
     "settings.minCopies": "Copias verificadas antes de borrar",
     "settings.untrustedVolumes": "Nombres de volúmenes no confiables",
     "settings.iconAppliedDock": "El icono del Dock coincide con este tema.",
@@ -16267,6 +16280,9 @@ Error generating stack: ` + x.message + `
     "tooltip.gigExit": "Sale de la comprobación y muestra las cajas.",
     "tooltip.gigGroup": "Muestra u oculta esta lista.",
     "tooltip.gigLock": "Pone en cola los cambios de cajas y pistas en vez de escribirlos.",
+    "tooltip.protectBpm": "Conserva el BPM guardado cuando un guardado o una fusión de duplicados lo cambiaría.",
+    "tooltip.protectKey": "Conserva la tonalidad guardada cuando un guardado la cambiaría.",
+    "tooltip.protectCues": "Conserva los cues del archivo que te quedas al fusionar duplicados.",
     "tooltip.gigLockApply": "Escribe los cambios en cola a través de una copia de seguridad. Cierra Serato y desactiva el Bloqueo de concierto primero.",
     "tooltip.gigLockDrop": "Quita este cambio en cola sin escribirlo.",
     "tooltip.gigLockPreview": "Muestra lo que se escribiría. No se guarda nada.",
@@ -17509,6 +17525,9 @@ Error generating stack: ` + x.message + `
     colorway: spec("tooltip.colorway"),
     iconFollowsTheme: spec("tooltip.iconFollowsTheme"),
     gigLock: spec("tooltip.gigLock"),
+    protectBpm: spec("tooltip.protectBpm"),
+    protectKey: spec("tooltip.protectKey"),
+    protectCues: spec("tooltip.protectCues"),
     minCopies: spec("tooltip.minCopies"),
     untrustedVolumes: spec("tooltip.untrustedVolumes"),
     libraryCopies: spec("tooltip.libraryCopies"),
@@ -33031,6 +33050,57 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "language-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.languageStatus }),
       /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(ShortcutTable, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        FormControlLabel_default,
+        {
+          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+            Switch_default,
+            {
+              id: "protect-bpm",
+              slotProps: { input: { ref: tooltipRef3(tips.protectBpm) } },
+              checked: settings.protectBpm,
+              onChange: (event) => {
+                settings.saveProtected("bpm", event.currentTarget.checked);
+              }
+            }
+          ),
+          label: t("settings.protectBpm")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        FormControlLabel_default,
+        {
+          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+            Switch_default,
+            {
+              id: "protect-key",
+              slotProps: { input: { ref: tooltipRef3(tips.protectKey) } },
+              checked: settings.protectKey,
+              onChange: (event) => {
+                settings.saveProtected("key", event.currentTarget.checked);
+              }
+            }
+          ),
+          label: t("settings.protectKey")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        FormControlLabel_default,
+        {
+          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+            Switch_default,
+            {
+              id: "protect-cues",
+              slotProps: { input: { ref: tooltipRef3(tips.protectCues) } },
+              checked: settings.protectCues,
+              onChange: (event) => {
+                settings.saveProtected("cues", event.currentTarget.checked);
+              }
+            }
+          ),
+          label: t("settings.protectCues")
+        }
+      ),
       /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(Box_default, { className: "about", component: "section", "aria-labelledby": "about-title", children: [
         /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "about-title", variant: "h6", component: "h3", children: t("settings.about") }),
         /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "about-version", className: "about-version", component: "p", children: settings.aboutVersion }),
@@ -33138,6 +33208,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     colorway: "serato-like",
     iconFollowsTheme: !0,
     gigLock: !1,
+    protectBpm: !1,
+    protectKey: !1,
+    protectCues: !1,
     minCopies: 2,
     untrustedVolumes: "",
     iconStatus: "",
@@ -33285,6 +33358,32 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (patchSettings({ gigLock: on }), !settingsIslandMounted()) {
       let box2 = document.getElementById("gig-lock");
       box2 instanceof HTMLInputElement && (box2.checked = on);
+    }
+  }
+  function applyProtected(payload) {
+    let flags = payload.protected_fields;
+    if (flags == null || typeof flags != "object") return;
+    let next3 = {
+      protectBpm: flags.bpm === !0,
+      protectKey: flags.key === !0,
+      protectCues: flags.cues === !0
+    };
+    snapshot.protectBpm === next3.protectBpm && snapshot.protectKey === next3.protectKey && snapshot.protectCues === next3.protectCues || patchSettings(next3);
+  }
+  async function saveProtected(field2, on) {
+    let patch = {
+      protectBpm: field2 === "bpm" ? on : snapshot.protectBpm,
+      protectKey: field2 === "key" ? on : snapshot.protectKey,
+      protectCues: field2 === "cues" ? on : snapshot.protectCues
+    };
+    patchSettings(patch);
+    try {
+      let payload = await postJSON("/api/settings", {
+        protected_fields: { [field2]: on }
+      });
+      applyProtected(payload);
+    } catch {
+      patchSettings({ iconStatus: t("error.protected_not_saved") });
     }
   }
   async function saveGigLock(next3) {
@@ -67846,6 +67945,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       saveColorway,
       saveIconFollow,
       saveGigLock,
+      saveProtected,
       saveMinCopies,
       setUntrustedDraft,
       saveUntrustedVolumes,
@@ -71628,7 +71728,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         setNotice2(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || t("common.saved")), await loadLibrary(), selectTrack(id);
+      let restored = Array.isArray(result.restored) ? result.restored : [];
+      restored.length > 0 ? setNotice2(t("detail.restored", { fields: restored.join(", ") })) : setNotice2(result.warning || t("common.saved")), await loadLibrary(), selectTrack(id);
     } catch (error2) {
       failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
     }
@@ -72421,7 +72522,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function loadPrivacy() {
     let token4 = rekordboxToken, response = await fetch("/api/settings"), payload = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(payload, t("sharing.loadFailed")));
-    applyPrivacy(payload), applyLanguage(payload), applyLayout(payload), applyAppearance(payload), applyGigLock(payload), applyCopies(payload), applyShortcuts(payload), token4 === rekordboxToken && applyRekordboxExport(payload), !(!state.wizardComplete && openWizard(!1, el("search"))) && payload.needs_consent_prompt && showConsent();
+    applyPrivacy(payload), applyLanguage(payload), applyLayout(payload), applyAppearance(payload), applyGigLock(payload), applyProtected(payload), applyCopies(payload), applyShortcuts(payload), token4 === rekordboxToken && applyRekordboxExport(payload), !(!state.wizardComplete && openWizard(!1, el("search"))) && payload.needs_consent_prompt && showConsent();
   }
   function relinkReason(reason) {
     return reason === "same name and size" ? t("relink.reason.nameAndSize") : reason === "same name" ? t("relink.reason.name") : reason === "same size" ? t("relink.reason.size") : reason === "folder moved" ? t("relink.reason.folder") : t("relink.reason.unknown", { reason });

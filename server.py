@@ -2230,6 +2230,7 @@ class Handler(BaseHTTPRequestHandler):
                                 required_int(payload["id"]),
                                 payload.get("fields") or {},
                                 require_space(optional_text(payload.get("space"))),
+                                payload.get("overwrite"),
                             )
                         )
                     elif parsed.path == "/api/crate":
@@ -2423,6 +2424,20 @@ class Handler(BaseHTTPRequestHandler):
                 is updated after the file is saved. A platform that cannot
                 change it still saves the choice.
         """
+        if "protected_fields" in payload:
+            import protected_fields
+
+            try:
+                protected_fields.save(payload["protected_fields"])
+            except ValueError:
+                self.send_json({"error": "That request is not valid."}, status=400)
+                return
+            payload = {
+                key: value for key, value in payload.items() if key != "protected_fields"
+            }
+            if not payload:
+                self.send_json(telemetry.public_settings())
+                return
         keys = set(payload)
         if keys == {"wizard_complete"} and isinstance(payload.get("wizard_complete"), bool):
             done = payload["wizard_complete"]

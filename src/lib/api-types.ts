@@ -578,6 +578,10 @@ export interface SettingsPayload {
   untrusted_volumes?: string[];
   /** Remapped shortcut chords. Empty means Serato defaults plus extras. */
   shortcuts?: Record<string, Array<{ key: string; mod?: boolean; shift?: boolean; alt?: boolean }>>;
+  /** BPM, key, and cues stay put when true. */
+  protected_fields?: { bpm?: boolean; key?: boolean; cues?: boolean };
+  /** Protected fields a save left unchanged. */
+  restored?: string[];
   error?: string;
   code?: string;
 }

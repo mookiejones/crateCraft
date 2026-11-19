@@ -2796,21 +2796,31 @@ def _expect_asset(session: object, asset_id: int, values: Mapping[str, object]) 
     session.check(check)
 
 
-def save_track(asset_id: int, fields: object, space: str = LIBRARY_SPACE) -> dict[str, object]:
+def save_track(
+    asset_id: int,
+    fields: object,
+    space: str = LIBRARY_SPACE,
+    overwrite: object = None,
+) -> dict[str, object]:
     """Save editable fields for one track.
 
     Args:
         asset_id: Asset id.
         fields: Columns accepted by TRACK_FIELDS.
         space: Space that must contain the track.
+        overwrite: Field names this save may change even when they are
+            protected. ``bpm`` and ``key`` are the names that apply here.
 
     Returns:
-        A dict with ok, id, and warning.
+        A dict with ok, id, warning, and restored. ``restored`` names
+        protected fields this save left as they were.
 
     Raises:
         LibraryError: If the fields are invalid, the track is not in the space, or the new file's size cannot be read.
         SeratoOpen: If Serato still has the library open.
     """
+    import protected_fields
+
     cleaned = _clean_fields(fields)
     portable = cleaned.get("portable_id")
     target = str(cleaned.get("name") or f"track {asset_id}")
@@ -2843,7 +2853,17 @@ def save_track(asset_id: int, fields: object, space: str = LIBRARY_SPACE) -> dic
         ).fetchone()
         if row is None:
             raise LibraryError("That track is not in this space.", 404)
+        current = conn.execute(
+            "SELECT bpm, key FROM asset WHERE id = ?",
+            (asset_id,),
+        ).fetchone()
+        before = {"bpm": None, "key": None}
+        if current is not None:
+            before = {"bpm": current["bpm"], "key": current["key"]}
+        restored = protected_fields.changed(before, cleaned, overwrite)
         values = dict(cleaned)
+        for name in restored:
+            values.pop(name, None)
         if isinstance(portable, str):
             values["file_name"] = Path(portable).name
             values["is_missing"] = 0
@@ -2858,16 +2878,22 @@ def save_track(asset_id: int, fields: object, space: str = LIBRARY_SPACE) -> dic
             if session is not None:
                 session.set_target(str(values["name"]))
         _expect_asset(session, asset_id, values)
-        return values
+        return {"values": values, "restored": restored}
 
     import safe_write
 
-    values = safe_write.run("save_track", target, apply)
+    written = safe_write.run("save_track", target, apply)
+    values = written["values"]
     mirror_values = {key: value for key, value in values.items() if key != "time_modified"}
     mirror_values["time_modified"] = values["time_modified"]
     with closing(read_conn()) as master:
         warning = _mirror_asset(master, asset_id, mirror_values)
-    return {"ok": True, "id": asset_id, "warning": warning}
+    return {
+        "ok": True,
+        "id": asset_id,
+        "warning": warning,
+        "restored": written["restored"],
+    }
 
 
 def _mark_smart(conn: sqlite3.Connection, crate_id: int) -> None:
@@ -5326,6 +5352,16 @@ def _apply_cue_copy(plan: dict[str, object]) -> None:
     copy = plan.get("_cue_copy")
     if not isinstance(copy, dict) or not copy.get("write"):
         return
+    import protected_fields
+
+    if protected_fields.blocked(["cues"], plan.get("overwrite")):
+        public = copy.get("public")
+        if isinstance(public, dict):
+            public["status"] = "restored"
+            plan["cue_copy"] = public
+        plan["restored"] = ["cues"]
+        plan["cue_warning"] = None
+        return
     dest = copy.get("dest")
     wanted = copy.get("wanted")
     public = copy.get("public")
@@ -6397,6 +6433,8 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
             LibraryError: If a requested file move is unsafe.
         """
         plan = _build_merge_plan(conn, space, keep_id)
+        if "overwrite" in payload:
+            plan["overwrite"] = payload.get("overwrite")
         if delete_files:
             _refuse_unsafe_trash(plan)
             _refuse_unverified_merge_trash(plan)

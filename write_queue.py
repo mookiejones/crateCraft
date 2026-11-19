@@ -456,7 +456,12 @@ def _apply_track(
             "after_id": result.get("id"),
             "conflict": True,
         }
-    result = library.save_track(asset_id, payload.get("fields") or {}, space)
+    result = library.save_track(
+        asset_id,
+        payload.get("fields") or {},
+        space,
+        payload.get("overwrite"),
+    )
     return {"result": result, "after_id": asset_id}
 
 
@@ -479,7 +484,12 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
     if path == "/api/crate":
         return library.crate_action(body)
     if path == "/api/track":
-        return library.save_track(int(body["id"]), body.get("fields") or {}, space)
+        return library.save_track(
+            int(body["id"]),
+            body.get("fields") or {},
+            space,
+            body.get("overwrite"),
+        )
     if path == "/api/files":
         return files.execute(body)
     if path == "/api/import.m3u":
