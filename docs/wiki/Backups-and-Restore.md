@@ -35,6 +35,8 @@ Open **Backups**. **Take a backup** sits above a table of snapshots with **When*
 
 Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 
+Health, Gig, and other read-only checks copy the library first, so they do not change the Serato folder and do not trip the outside-change notice.
+
 An unplugged drive is marked unavailable, never deleted. Its crates and tracks stay in the Backup, and a restore does not remove them. The plan lines are **Crates on an unavailable drive** and **Tracks on an unavailable drive**.
 
 Quit Serato DJ Pro before you restore. If Serato is still running, restore stops. On Serato 5.0, writes and restores run when Protect Library is off. Serato 5.1.0 is listed and stays read-only until its library schema is probed. If Protect Library is on or cannot be read, the note names the version and that preference. Lucid beatgrid storage is not parsed. Snapshots can still be taken and read. The newest session log in `_Serato_/Logs` can name Serato 4 or Serato 5. A log that does not name a dotted version is unknown. If the installed version cannot be read, that log does not turn writes back on. An unreadable version does the same: writes and restores stay off until a version can be read.

@@ -12,7 +12,7 @@ The gig check is in the app. Open **Gig**, then **Ready**, or run `python3 gig_c
 - **Every restore can be undone.** A restore takes its own snapshot first. After it writes, it checks the hashes. A mismatch puts that snapshot back. **Backups** lists each checked edit and restore. A change that could not be put back is shown there and is not reported as saved.
 - **A missing drive is never a deletion.** Its tracks and crates are marked unavailable, never removed.
 - **Empty crates.** The gig check flags an empty crate with **Serato may delete this crate when it closes.** Put a track in the crate if you want to keep it. See [Ready](guide/gig-check.md).
-- **Outside changes get caught.** If another app changes your Serato folder, we take a snapshot, show what changed and offer an undo. We can't catch the moment *before* an outside app writes, so undo returns you to our last snapshot. In the app that button is **Review undo**.
+- **Outside changes get caught.** If another app changes your Serato folder, we take a snapshot, show what changed and offer an undo. We can't catch the moment *before* an outside app writes, so undo returns you to our last snapshot. In the app that button is **Review undo**. Health, Gig, and other read-only checks copy the database first, so they do not change the Serato folder and do not trip this notice.
 - **Restore is free.**
 
 ## What a restore covers

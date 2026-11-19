@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Read-only check a DJ can run before a gig.
 
-Opens the library with a SQLite URI in mode=ro and opens audio with rb.
+Opens the library through library.read_conn (copy then mode=ro) and audio with rb.
 It never writes the database, a journal, or an audio file. The result is
 a frozen GigReport: a ready score and the Holding it back lines that
 explain each deduction. A missing drive, or missing files in the selected
@@ -264,7 +264,8 @@ def open_read_only(path: Path) -> sqlite3.Connection:
         path: Database file. It must already exist.
 
     Returns:
-        A connection with ``mode=ro`` and ``query_only``. The caller closes it.
+        A connection with ``mode=ro`` and ``query_only`` on a copy. The
+        caller closes it.
 
     Raises:
         library.LibraryError: If the file is missing or SQLite cannot open it
@@ -275,17 +276,13 @@ def open_read_only(path: Path) -> sqlite3.Connection:
         database = database.resolve()
     if not database.is_file():
         raise library.LibraryError(f"Serato library not found at {database}", 404)
-    # mode=ro is the SQLite URI guard. query_only is the second guard.
-    uri = database.as_uri() + "?mode=ro"
     try:
-        conn = sqlite3.connect(uri, uri=True)
+        conn = library.read_conn(database)
     except sqlite3.OperationalError as exc:
         raise library.LibraryError(
             "The library could not be read. Quit Serato and try the check again.",
             409,
         ) from exc
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA query_only=ON")
     conn.execute("PRAGMA busy_timeout=1000")
     return conn
 

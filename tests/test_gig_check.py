@@ -312,9 +312,10 @@ class GigCheckTests(unittest.TestCase):
             None. The test fails if a write entry point is named.
         """
         source = (ROOT / "gig_check.py").read_text(encoding="utf-8")
-        self.assertIn('"?mode=ro"', source)
+        self.assertIn("library.read_conn", source)
         self.assertIn('READ_MODE = "rb"', source)
         self.assertNotIn("begin_write", source)
+        self.assertNotIn('"?mode=ro"', source)
 
     def test_read_only_connection_rejects_writes(self) -> None:
         """A mode=ro connection cannot update, and the file bytes stay put.
