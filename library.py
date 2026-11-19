@@ -439,7 +439,9 @@ class _CopiedReadConnection(sqlite3.Connection):
             if tmp is not None:
                 try:
                     tmp.cleanup()
-                except OSError:
+                except Exception:
+                    # A refused listing is OSError. Windows tempfile turns
+                    # that same miss into TypeError when the path is empty.
                     pass
 
 
@@ -497,7 +499,7 @@ def _open_copied_readonly(
                 pass
         try:
             tmp.cleanup()
-        except OSError:
+        except Exception:
             pass
         raise
 
