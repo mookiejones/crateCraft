@@ -606,6 +606,21 @@ class MappingTests(unittest.TestCase):
         """Leave no mapping file for the next case."""
         _clear_store()
 
+    def test_on_progress_raise_leaves_library_unchanged(self) -> None:
+        """A raise from on_progress rolls the apply back."""
+        with TempLibrary() as temp:
+            _tracks(temp.db, [("Hip Hop", "A"), ("Hip-Hop", "A")])
+            before = temp.db.read_bytes()
+
+            def boom(_done: int, _total: int, _current: str) -> None:
+                raise RuntimeError("stop")
+
+            with self.assertRaises(RuntimeError):
+                tag_cleanup.apply(
+                    library.LIBRARY_SPACE, "genre", "Hip Hop", on_progress=boom
+                )
+            self.assertEqual(temp.db.read_bytes(), before)
+
     def test_apply_remembers_beside_settings_not_in_the_serato_folder(self) -> None:
         """Hip Hop is stored next to settings. The library folder stays free of it."""
         with TempLibrary() as temp:

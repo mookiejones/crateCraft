@@ -922,6 +922,35 @@ export interface WriteQueueListing {
   code?: string;
 }
 
+export type JobKind = "tag_spelling" | "snapshot_restore";
+
+export type JobState =
+  | "queued"
+  | "running"
+  | "success"
+  | "partial"
+  | "failed"
+  | "cancelled";
+
+export interface Job {
+  id: string;
+  kind: JobKind;
+  label: string;
+  state: JobState;
+  done: number;
+  total: number;
+  current: string;
+  errors: string[];
+  snapshot_id: string | null;
+  cancelable: boolean;
+  created_at: number;
+  finished_at: number | null;
+}
+
+export interface JobList {
+  jobs: Job[];
+}
+
 export interface FileScanProblem {
   id: number;
   name: string;

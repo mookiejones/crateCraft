@@ -1,7 +1,7 @@
 /**
  * React providers for the page.
  *
- * The action-flash notice is one domain. Player is the next. The crate
+ * The action-flash notice is one domain. Write jobs are the next. Player is the next. The crate
  * rail is the next. Waveform zoom and overview are another. Before a
  * gig is a fourth. Files is a fifth. History is a sixth. Play stats is
  * a seventh. Settings is an eighth. Track list selection and detail
@@ -33,6 +33,10 @@ import {
   type HealthContextValue,
 } from "../containers/HealthContext";
 import {
+  JobProvider as JobContextProvider,
+  type JobContextValue,
+} from "../containers/JobContext";
+import {
   NoticeProvider as NoticeContextProvider,
   type NoticeContextValue,
 } from "../containers/NoticeContext";
@@ -52,6 +56,19 @@ import {
 } from "../containers/PlayerContext";
 import { WaveformProvider } from "../containers/WaveformContext";
 import { readCrateValue, subscribeCrates } from "../lib/crates/crate-store";
+import {
+  cancelJob,
+  closeDetails,
+  dismissToast,
+  getDetails,
+  getJobs,
+  getRunning,
+  getToast,
+  openDetails,
+  startJob,
+  subscribeJobs,
+  undoJob,
+} from "../lib/jobs/job-store";
 import {
   dismissNotice,
   getNotice,
@@ -660,11 +677,45 @@ export function NoticeProvider({ children }: { children: ReactNode }) {
   return <NoticeContextProvider value={current}>{children}</NoticeContextProvider>;
 }
 
+function readJobValue(): JobContextValue {
+  return {
+    jobs: getJobs(),
+    running: getRunning(),
+    toast: getToast(),
+    details: getDetails(),
+    startJob,
+    cancelJob,
+    undoJob,
+    dismissToast,
+    openDetails,
+    closeDetails,
+  };
+}
+
+/**
+ * Mount the write-job list at the root of one React island.
+ *
+ * @param children Island that calls `useJobs`.
+ */
+export function JobProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readJobValue);
+  useLayoutEffect(() => {
+    return subscribeJobs(() => {
+      flushSync(() => {
+        setValue(readJobValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <JobContextProvider value={current}>{children}</JobContextProvider>;
+}
+
 /**
  * Nest every domain provider.
  *
  * MUI ThemeProvider is the outer wrap, mapped to the saved colorway.
- * The action-flash notice wraps inside it. Player is the next domain.
+ * The action-flash notice wraps inside it. Write jobs wrap inside the
+ * notice. Player is the next domain.
  * Crates wrap inside it. Waveform wraps inside crates. Before a gig
  * wraps inside waveform. Files wraps inside Before a gig. History
  * wraps inside Files. Play stats wraps inside History. Settings wraps
@@ -678,29 +729,31 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <MuiThemeRoot>
       <NoticeProvider>
-        <PlayerProvider>
-          <CrateProvider>
-            <WaveformProvider>
-              <GigProvider>
-                <FilesProvider>
-                  <HistoryProvider>
-                    <StatsRoot>
-                      <SettingsProvider>
-                        <TrackListRoot>
-                          <SnapshotsProvider>
-                            <WizardProvider>
-                              <HealthProvider>{children}</HealthProvider>
-                            </WizardProvider>
-                          </SnapshotsProvider>
-                        </TrackListRoot>
-                      </SettingsProvider>
-                    </StatsRoot>
-                  </HistoryProvider>
-                </FilesProvider>
-              </GigProvider>
-            </WaveformProvider>
-          </CrateProvider>
-        </PlayerProvider>
+        <JobProvider>
+          <PlayerProvider>
+            <CrateProvider>
+              <WaveformProvider>
+                <GigProvider>
+                  <FilesProvider>
+                    <HistoryProvider>
+                      <StatsRoot>
+                        <SettingsProvider>
+                          <TrackListRoot>
+                            <SnapshotsProvider>
+                              <WizardProvider>
+                                <HealthProvider>{children}</HealthProvider>
+                              </WizardProvider>
+                            </SnapshotsProvider>
+                          </TrackListRoot>
+                        </SettingsProvider>
+                      </StatsRoot>
+                    </HistoryProvider>
+                  </FilesProvider>
+                </GigProvider>
+              </WaveformProvider>
+            </CrateProvider>
+          </PlayerProvider>
+        </JobProvider>
       </NoticeProvider>
     </MuiThemeRoot>
   );

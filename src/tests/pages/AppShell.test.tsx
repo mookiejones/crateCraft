@@ -139,8 +139,13 @@ describe("AppShell", () => {
     expect(appBar?.contains(space)).toBe(false);
     expect(document.querySelector(".brand")?.contains(space)).toBe(true);
     expect(document.querySelector(".brand")?.contains(heading)).toBe(false);
+    const tray = document.getElementById("jobs-tray");
     expect(appBar?.contains(help)).toBe(true);
     expect(appBar?.contains(settings)).toBe(true);
+    expect(appBar?.contains(tray)).toBe(true);
+    expect(tray?.getAttribute("aria-label")).toBe(t("jobs.tray"));
+    expect(tray?.getAttribute("aria-label")).not.toBe(t("tooltip.jobsTray"));
+    expect(isFollowing(tray, help)).toBe(true);
     expect(appBar?.contains(heading)).toBe(true);
     expect(heading?.textContent).toBe("crateCraft");
     expect(appBar?.contains(generation)).toBe(true);

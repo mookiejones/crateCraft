@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { TagClusterPlan, TagClusters } from "../lib/api-types";
+import type { Job, TagClusterPlan, TagClusters } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
@@ -97,8 +97,32 @@ function postAction(body: unknown): string {
   return "";
 }
 
+const applyJob: Job = {
+  id: "job-tag",
+  kind: "tag_spelling",
+  label: "Fixing spellings",
+  state: "success",
+  done: 2,
+  total: 2,
+  current: "",
+  errors: [],
+  snapshot_id: "snap-1",
+  cancelable: false,
+  created_at: 0,
+  finished_at: 1,
+};
+
 function stubPosts(handlers: Record<string, unknown> = {}): void {
-  postJSON.mockImplementation(async (_url: string, body: unknown) => {
+  postJSON.mockImplementation(async (url: string, body: unknown) => {
+    if (url === "/api/jobs" && typeof body === "object" && body !== null && "kind" in body
+        && (body as { kind: unknown }).kind === "tag_spelling") {
+      if (Object.prototype.hasOwnProperty.call(handlers, "apply")) {
+        const value = handlers.apply;
+        if (value instanceof Error) throw value;
+        return value;
+      }
+      throw new Error("unexpected postJSON action apply");
+    }
     const action = postAction(body);
     if (Object.prototype.hasOwnProperty.call(handlers, action)) {
       const value = handlers[action];
@@ -377,22 +401,22 @@ describe("tags", () => {
     vi.stubGlobal("fetch", fetchMock);
     stubPosts({
       preview,
-      apply: { ...preview, written: true },
+      apply: applyJob,
     });
     await loadTags();
     previewFor("hiphop").click();
     await vi.waitFor(() => expect(applyFor("hiphop").disabled).toBe(false));
     applyFor("hiphop").click();
     await vi.waitFor(() => expect(bridge.reloadLibrary).toHaveBeenCalled());
-    expect(postJSON.mock.calls.filter((call) => postAction(call[1]) === "apply")).toHaveLength(1);
-    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
-      action: "apply",
+    expect(postJSON.mock.calls.filter((call) => call[0] === "/api/jobs")).toHaveLength(1);
+    expect(postJSON).toHaveBeenCalledWith("/api/jobs", {
+      kind: "tag_spelling",
       space: "Serato Library",
       field: "genre",
       value: "Hip Hop",
     });
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(document.getElementById("tags-status")!.textContent).toContain("Wrote Hip Hop on 2 tracks");
+    expect(document.getElementById("tags-status")!.textContent).toContain("Fixing spellings finished.");
   });
 
   it("posts files true when Write to files too is checked", async () => {
@@ -400,7 +424,7 @@ describe("tags", () => {
     vi.stubGlobal("fetch", fetchMock);
     stubPosts({
       preview,
-      apply: { ...preview, written: true },
+      apply: applyJob,
     });
     await loadTags();
     const box = document.querySelector<HTMLInputElement>("#tags-write-files");
@@ -417,8 +441,8 @@ describe("tags", () => {
     });
     applyFor("hiphop").click();
     await vi.waitFor(() => expect(bridge.reloadLibrary).toHaveBeenCalled());
-    expect(postJSON).toHaveBeenCalledWith("/api/tag-clusters", {
-      action: "apply",
+    expect(postJSON).toHaveBeenCalledWith("/api/jobs", {
+      kind: "tag_spelling",
       space: "Serato Library",
       field: "genre",
       value: "Hip Hop",

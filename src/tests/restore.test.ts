@@ -20,7 +20,7 @@ import { el } from "../lib/dom";
 import { crateContentsText } from "../lib/snapshots/restore-view";
 import { backupDriveCrates, closePlan, confirmSnapshotRestore, openSnapshotPlan, pruneSnapshot, renderOperations, renderSnapshots, repaintSnapshotPlan, unmountSnapshots } from "../lib/snapshots/restore";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
-import type { RestorePlan } from "../lib/api-types";
+import type { Job, RestorePlan } from "../lib/api-types";
 import { state } from "../lib/state";
 import { drainReactScheduler, installPage } from "./test-page";
 
@@ -56,6 +56,21 @@ const plan: RestorePlan = {
   restore_blocked: null,
 };
 
+const restoreJob: Job = {
+  id: "job-restore",
+  kind: "snapshot_restore",
+  label: "Restoring snapshot",
+  state: "success",
+  done: 1,
+  total: 1,
+  current: "",
+  errors: [],
+  snapshot_id: "snap-undo",
+  cancelable: false,
+  created_at: 0,
+  finished_at: 1,
+};
+
 function snapshotResponse(): Response {
   return new Response(JSON.stringify({
     snapshots: [],
@@ -76,7 +91,7 @@ describe("restore", () => {
     state.operationsLoading = false;
     state.operationsError = "";
     postJSON.mockReset();
-    postJSON.mockResolvedValue({});
+    postJSON.mockResolvedValue(restoreJob);
     openConfirm.mockReset();
     openConfirm.mockResolvedValue(true);
     vi.stubGlobal("fetch", vi.fn(async () => snapshotResponse()));
@@ -130,7 +145,9 @@ describe("restore", () => {
 
   it("reports skipped crates after restore in the active language", async () => {
     postJSON.mockResolvedValue({
-      crates_skipped: [{ name: "House", path: "Subcrates/House.crate" }],
+      ...restoreJob,
+      state: "partial",
+      errors: ["House"],
     });
     await confirmSnapshotRestore();
     expect(document.getElementById("snapshots-status")?.textContent).toBe(
@@ -145,8 +162,8 @@ describe("restore", () => {
 
   it("posts undo or restore with confirm true", async () => {
     await confirmSnapshotRestore();
-    expect(postJSON).toHaveBeenCalledWith("/api/snapshots", {
-      action: "restore",
+    expect(postJSON).toHaveBeenCalledWith("/api/jobs", {
+      kind: "snapshot_restore",
       id: "snap-9",
       confirm: true,
     });
