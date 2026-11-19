@@ -3346,8 +3346,10 @@ class Handler(BaseHTTPRequestHandler):
 def _check_app_upgrade() -> None:
     """Record this crateCraft version, and snapshot a library before an update.
 
-    A missing ``master.sqlite`` only records the version. A failed snapshot
-    is logged. Writes in this process stay off. The server still starts.
+    A missing ``master.sqlite`` only records the version. A failed snapshot,
+    including one skipped because Serato DJ is still open, is logged.
+    Writes in this process stay off. The server still starts. Quit Serato
+    and open crateCraft again to retry.
 
     Returns:
         None.
@@ -3371,7 +3373,8 @@ def serve(port: int | None = None, *, require_library: bool = True) -> Threading
             telemetry and the snapshot watch start after the bind if the
             master database exists. Before that watch, and before an
             interrupted file change is finished, a new crateCraft version
-            snapshots the library. A missing database records the version
+            snapshots the library only while Serato DJ is not running. A
+            missing database records the version
             and still serves the page, so the first-run wizard can explain
             what to do. The release smoke check passes false so a runner
             without Serato does not start telemetry, record a version, or

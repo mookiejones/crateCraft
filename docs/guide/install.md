@@ -68,7 +68,7 @@ If that file is missing, the app stays open. Setup says **No Serato library was 
 
 ## Go back one version
 
-Install the previous disk image or the previous Windows installer from the [releases page](https://github.com/mookiejones/crateCraft/releases). Quit Serato DJ Pro. Open **Backups** and restore the snapshot named `before update to vX`. The newer copy stays where it is until that older app is open. Opening crateCraft does not delete the other copy.
+Install the previous disk image or the previous Windows installer from the [releases page](https://github.com/mookiejones/crateCraft/releases). Quit Serato DJ Pro. Open **Backups** and restore the snapshot named `before update to vX`. That snapshot is saved only while Serato DJ Pro is closed. The newer copy stays where it is until that older app is open. Opening crateCraft does not delete the other copy.
 
 ## If the window does not open
 

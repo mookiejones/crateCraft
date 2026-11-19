@@ -1692,10 +1692,10 @@ class SnapshotStore:
         ``cratecraft_version`` is separate from ``observed_version`` and
         ``observed_build``, which :meth:`check_version` uses for Serato.
         The first version seen is recorded and no snapshot is taken. A
-        later different version snapshots first. The new version is
-        recorded only when that snapshot succeeds. A missing
-        ``master.sqlite`` records the version and does not create the
-        database.
+        later different version snapshots first, and only when Serato DJ
+        is not running. The new version is recorded only when that
+        snapshot succeeds. A missing ``master.sqlite`` records the version
+        and does not create the database.
 
         Args:
             version: crateCraft version now running, such as
@@ -1706,9 +1706,10 @@ class SnapshotStore:
             recorded or the library file is absent.
 
         Raises:
-            SnapshotError: If the snapshot cannot be saved. The previous
-                version stays recorded, and library writes in this process
-                are refused.
+            SnapshotError: If Serato DJ is running, or the snapshot cannot
+                be saved. The previous version stays recorded, and library
+                writes in this process are refused. Quit Serato and open
+                crateCraft again to retry.
         """
         state = self._load_state()
         seen = state.get("cratecraft_version")
@@ -1723,6 +1724,11 @@ class SnapshotStore:
             self._save_state(state)
             return None
         try:
+            if self.serato_running():
+                raise SnapshotError(
+                    "Quit Serato DJ Pro before this crateCraft update snapshot. "
+                    "Serato DJ is still running, so the snapshot was not saved."
+                )
             info = self.take("app-upgrade", f"before update to {version}")
         except Exception:
             block_library_writes(APP_UPGRADE_WRITE_BLOCK)

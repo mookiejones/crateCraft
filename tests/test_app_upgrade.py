@@ -197,6 +197,41 @@ class AppUpgradeSnapshotTests(unittest.TestCase):
             self.assertEqual(caught.exception.message, _BLOCK)
             self.assertEqual(temp.db.read_bytes(), before)
 
+    def test_open_serato_does_not_snapshot_and_begin_write_refuses(self) -> None:
+        """Refuse the update snapshot and a library write while Serato is open.
+
+        Returns:
+            None. The test fails if ``take`` runs, if the new version is
+            recorded, or if ``begin_write`` does not raise 409.
+        """
+        with TempLibrary() as temp:
+            store = _store(temp)
+            store._save_state({"cratecraft_version": "1.0.0"})
+            store.serato_running = lambda: True
+            before = temp.db.read_bytes()
+            taken: list[str] = []
+            original = store.take
+
+            def wrapped(trigger: str, reason: str, source: str | None = None) -> snapshots.SnapshotInfo:
+                taken.append(trigger)
+                return original(trigger, reason, source)
+
+            store.take = wrapped  # type: ignore[method-assign]
+            with self.assertRaises(snapshots.SnapshotError) as raised:
+                store.check_app_upgrade("1.1.0")
+            self.assertIn("still running", str(raised.exception))
+            self.assertEqual(taken, [])
+            self.assertEqual(store._load_state().get("cratecraft_version"), "1.0.0")
+            self.assertEqual(store.list_snapshots(), [])
+            self.assertEqual(snapshots.library_write_block(), _BLOCK)
+            self.assertEqual(temp.db.read_bytes(), before)
+            with mock.patch.object(library, "status", return_value={"open": False}):
+                with self.assertRaises(LibraryError) as caught:
+                    library.begin_write()
+            self.assertEqual(caught.exception.status, 409)
+            self.assertEqual(caught.exception.message, _BLOCK)
+            self.assertEqual(temp.db.read_bytes(), before)
+
     def test_missing_library_records_version_and_creates_no_database(self) -> None:
         """Record a version change when ``master.sqlite`` is absent.
 

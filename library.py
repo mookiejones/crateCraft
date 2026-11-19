@@ -2007,8 +2007,9 @@ def begin_write(*, snapshot: bool = True) -> sqlite3.Connection:
     Restore passes ``snapshot=False`` because it already saved a snapshot and
     is holding the restore journal. A nested snapshot would open the store
     again and roll that journal back. A failed snapshot before a crateCraft
-    update refuses the write after the Serato-open check and before the
-    Serato version gate. That refusal is not Protect Library.
+    update, including one skipped because Serato is still open, refuses
+    the write after the Serato-open check and before the Serato version
+    gate. That refusal is not Protect Library.
 
     Args:
         snapshot: When true, save a snapshot before the transaction opens.
