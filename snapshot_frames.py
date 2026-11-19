@@ -192,7 +192,9 @@ def restore_stored_frames(path: str | Path, frames: Mapping[str, bytes]) -> None
 
     Raises:
         FrameRewriteError: If the file is not a regular file, the container
-            cannot be rewritten, or the audio region would change.
+            cannot be rewritten, the audio region would change, or a stored
+            frame did not land. A frame that did not land puts the previous
+            file back.
         OSError: If the file cannot be read or replaced.
     """
     file = Path(path)
@@ -229,6 +231,11 @@ def restore_stored_frames(path: str | Path, frames: Mapping[str, bytes]) -> None
             raise FrameRewriteError(
                 "The audio bytes would have changed, so the file was left as it was."
             )
+        if wanted and not _frames_landed(file, wanted):
+            os.replace(backup, file)
+            raise FrameRewriteError(
+                "The tag write did not land, so the file was left as it was."
+            )
     except Exception:
         try:
             if backup.is_file() and audio_digest(file) != before:
@@ -240,6 +247,25 @@ def restore_stored_frames(path: str | Path, frames: Mapping[str, bytes]) -> None
         if temp is not None:
             temp.unlink(missing_ok=True)
         backup.unlink(missing_ok=True)
+
+
+def _frames_landed(path: Path, wanted: Mapping[str, bytes]) -> bool:
+    """Return whether every requested frame byte is in the file.
+
+    Args:
+        path: Audio file just replaced.
+        wanted: Frame kinds mapped to the bytes the rewrite asked to store.
+            An empty map is a removal and counts as landed.
+
+    Returns:
+        True when each wanted kind is stored as those exact bytes. Extra
+        frames are allowed. A missing or unreadable file is not landed
+        when ``wanted`` is not empty.
+    """
+    if not wanted:
+        return True
+    found = read_stored_frames(path)
+    return all(found.get(kind) == blob for kind, blob in wanted.items())
 
 
 def _sniff_container(path: Path) -> str:

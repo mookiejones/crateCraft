@@ -13032,6 +13032,7 @@ Error generating stack: ` + x.message + `
     "error.file_already_used": "Another library track already uses that file.",
     "error.file_not_on_disk": "That file is not on disk.",
     "error.focus_failed": "The window could not be focused.",
+    "error.folder_access_not_opened": "The Windows Security page could not be opened.",
     "error.folder_not_library": "That folder is not the Serato library on this computer.",
     "error.folder_outside_roots": "That folder is outside the music folders.",
     "error.folder_unreadable": "That folder could not be read.",
@@ -13222,6 +13223,10 @@ Error generating stack: ` + x.message + `
     "folderSync.sync": "Sync crate",
     "folderSync.title": "Sync crate with a folder",
     "folderSync.unchanged": "{name} already matches that folder.",
+    "folderAccess.allow": "Allow",
+    "folderAccess.audit": "Windows is watching Music folder writes. A blocked write will not be reported as saved.",
+    "folderAccess.on": "Windows Controlled folder access can block writes into Music. Allow crateCraft, then try the write again.",
+    "folderAccess.unknown": "crateCraft could not tell whether Windows Controlled folder access is on. A tag write is checked after it lands.",
     "format.bytes": {
       one: "{count} byte",
       other: "{count} bytes"
@@ -14263,6 +14268,7 @@ Error generating stack: ` + x.message + `
     "tooltip.crateTreeScope": "Look only at tracks in the selected crate and the crates inside it.",
     "tooltip.crateTreeStep": "How far the next band starts. Smaller than the width overlaps bands.",
     "tooltip.crateTreeWidth": "How wide each BPM band is.",
+    "tooltip.folderAccessAllow": "Opens Windows Security so you can allow crateCraft. Does not change the setting.",
     "tooltip.folderSyncCancel": "Close without changing the crate.",
     "tooltip.folderSyncFull": "Also remove tracks whose files are not in this folder.",
     "tooltip.folderSyncPath": "Folder on this computer whose files should match this crate.",
@@ -15007,6 +15013,7 @@ Error generating stack: ` + x.message + `
     "error.file_already_used": "Otra pista de la biblioteca ya usa ese archivo.",
     "error.file_not_on_disk": "Ese archivo no está en el disco.",
     "error.focus_failed": "No se pudo traer la ventana al frente.",
+    "error.folder_access_not_opened": "No se pudo abrir la página de Seguridad de Windows.",
     "error.folder_not_library": "Esa carpeta no es la biblioteca de Serato de este equipo.",
     "error.folder_outside_roots": "Esa carpeta está fuera de las carpetas de música.",
     "error.folder_unreadable": "No se pudo leer esa carpeta.",
@@ -15197,6 +15204,10 @@ Error generating stack: ` + x.message + `
     "folderSync.sync": "Sincronizar caja",
     "folderSync.title": "Sincronizar la caja con una carpeta",
     "folderSync.unchanged": "{name} ya coincide con esa carpeta.",
+    "folderAccess.allow": "Permitir",
+    "folderAccess.audit": "Windows vigila las escrituras en la carpeta Música. Una escritura bloqueada no se informará como guardada.",
+    "folderAccess.on": "El acceso controlado a carpetas de Windows puede bloquear escrituras en Música. Permite crateCraft y vuelve a intentar la escritura.",
+    "folderAccess.unknown": "crateCraft no pudo saber si el acceso controlado a carpetas de Windows está activado. Una escritura de etiquetas se comprueba después de guardarse.",
     "format.bytes": {
       one: "{count} byte",
       other: "{count} bytes"
@@ -16238,6 +16249,7 @@ Error generating stack: ` + x.message + `
     "tooltip.crateTreeScope": "Mira solo las pistas de la caja seleccionada y las cajas que hay dentro.",
     "tooltip.crateTreeStep": "Dónde empieza la siguiente banda. Más pequeño que el ancho solapa las bandas.",
     "tooltip.crateTreeWidth": "Ancho de cada banda de BPM.",
+    "tooltip.folderAccessAllow": "Abre Seguridad de Windows para permitir crateCraft. No cambia el ajuste.",
     "tooltip.folderSyncCancel": "Cierra sin cambiar la caja.",
     "tooltip.folderSyncFull": "También quita las pistas cuyos archivos no están en esta carpeta.",
     "tooltip.folderSyncPath": "Carpeta de este ordenador cuyos archivos deben coincidir con esta caja.",
@@ -17555,6 +17567,7 @@ Error generating stack: ` + x.message + `
     gigLockPreview: spec("tooltip.gigLockPreview"),
     gigLockUndo: spec("tooltip.gigLockUndo"),
     libraryGeneration: spec("tooltip.libraryGeneration"),
+    folderAccessAllow: spec("tooltip.folderAccessAllow"),
     linkMutual: spec("tooltip.linkMutual"),
     saveLink: spec("tooltip.saveLink"),
     showSearchCopies: spec("tooltip.showSearchCopies"),
@@ -17851,6 +17864,7 @@ Error generating stack: ` + x.message + `
       "min-copies": tips.minCopies,
       "untrusted-volumes": tips.untrustedVolumes,
       "library-generation": tips.libraryGeneration,
+      "folder-access-allow": tips.folderAccessAllow,
       "merge-trash": tips.mergeTrash,
       "merge-cancel": tips.mergeCancel,
       "merge-confirm": tips.mergeConfirm,
@@ -71689,7 +71703,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), historyDetailHost = host;
   }
   function repaintViews() {
-    if (state.serato && (el("status").textContent = statusLine(state.serato)), paintGeneration(state.serato), renderList(), state.mode === "history") {
+    if (state.serato && (el("status").textContent = statusLine(state.serato)), paintGeneration(state.serato), paintFolderAccess(state.serato), renderList(), state.mode === "history") {
       renderSessions(), state.selectedId != null && selectEntry(state.selectedId);
       return;
     }
@@ -71743,10 +71757,27 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       panel && (panel.hidden = !next3);
     }));
   }
+  var FOLDER_ACCESS_WARN = /* @__PURE__ */ new Set(["on", "audit", "unknown"]), FOLDER_ACCESS_COPY = {
+    on: "folderAccess.on",
+    audit: "folderAccess.audit",
+    unknown: "folderAccess.unknown"
+  };
+  function paintFolderAccess(info) {
+    let note = document.getElementById("folder-access"), button = document.getElementById("folder-access-allow");
+    if (!(note instanceof HTMLElement) || !(button instanceof HTMLButtonElement)) return;
+    let stateName = info?.controlled_folder_access ?? "", show2 = FOLDER_ACCESS_WARN.has(stateName);
+    if (note.hidden = !show2, button.hidden = !show2, !show2) return;
+    let key = FOLDER_ACCESS_COPY[stateName];
+    key && (note.textContent = t(key), button.textContent = t("folderAccess.allow"), setTooltip(button, tips.folderAccessAllow), button.dataset.bound !== "1" && (button.dataset.bound = "1", button.addEventListener("click", () => {
+      postJSON("/api/folder-access", { action: "open" }).catch((error2) => {
+        setNotice2(failureOf(error2).message, "error");
+      });
+    })));
+  }
   function applyStatus(info) {
     state.serato = info, state.writable = !!info?.writable;
     let status4 = el("status");
-    status4.textContent = statusLine(info), status4.hidden = info?.writable !== !1, paintGeneration(info), renderShell();
+    status4.textContent = statusLine(info), status4.hidden = info?.writable !== !1, paintGeneration(info), paintFolderAccess(info), renderShell();
   }
   function lockDown(error2) {
     let failed = failureOf(error2);
@@ -75622,7 +75653,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       postedOpen.current = !0, setSavedOpen(next3), saveDrawerOpen(next3);
     }
     return (0, import_react72.useLayoutEffect)(() => {
-      adoptNode(headingSlot.current, document.querySelector(".brand h1")), adopt(generationSlot.current, "library-generation"), adopt(generationSlot.current, "library-generation-note"), adopt(actionsSlot.current, "open-help"), adopt(actionsSlot.current, "open-settings"), adopt(playerSlot.current, "player-bar"), adopt(lockSlot.current, "status"), adopt(navSlot.current, "views"), adopt(bodySlot.current, "app-body"), paintNav(state.mode);
+      adoptNode(headingSlot.current, document.querySelector(".brand h1")), adopt(generationSlot.current, "library-generation"), adopt(generationSlot.current, "library-generation-note"), adopt(actionsSlot.current, "open-help"), adopt(actionsSlot.current, "open-settings"), adopt(playerSlot.current, "player-bar"), adopt(lockSlot.current, "status"), adopt(lockSlot.current, "folder-access"), adopt(lockSlot.current, "folder-access-allow"), adopt(navSlot.current, "views"), adopt(bodySlot.current, "app-body"), paintNav(state.mode);
     }, [open]), /* @__PURE__ */ (0, import_jsx_runtime305.jsxs)(
       Box_default,
       {

@@ -320,6 +320,7 @@
   "error.file_already_used": "Otra pista de la biblioteca ya usa ese archivo.",
   "error.file_not_on_disk": "Ese archivo no está en el disco.",
   "error.focus_failed": "No se pudo traer la ventana al frente.",
+  "error.folder_access_not_opened": "No se pudo abrir la página de Seguridad de Windows.",
   "error.folder_not_library": "Esa carpeta no es la biblioteca de Serato de este equipo.",
   "error.folder_outside_roots": "Esa carpeta está fuera de las carpetas de música.",
   "error.folder_unreadable": "No se pudo leer esa carpeta.",
@@ -510,6 +511,10 @@
   "folderSync.sync": "Sincronizar caja",
   "folderSync.title": "Sincronizar la caja con una carpeta",
   "folderSync.unchanged": "{name} ya coincide con esa carpeta.",
+  "folderAccess.allow": "Permitir",
+  "folderAccess.audit": "Windows vigila las escrituras en la carpeta Música. Una escritura bloqueada no se informará como guardada.",
+  "folderAccess.on": "El acceso controlado a carpetas de Windows puede bloquear escrituras en Música. Permite crateCraft y vuelve a intentar la escritura.",
+  "folderAccess.unknown": "crateCraft no pudo saber si el acceso controlado a carpetas de Windows está activado. Una escritura de etiquetas se comprueba después de guardarse.",
   "format.bytes": {
     "one": "{count} byte",
     "other": "{count} bytes"
@@ -1551,6 +1556,7 @@
   "tooltip.crateTreeScope": "Mira solo las pistas de la caja seleccionada y las cajas que hay dentro.",
   "tooltip.crateTreeStep": "Dónde empieza la siguiente banda. Más pequeño que el ancho solapa las bandas.",
   "tooltip.crateTreeWidth": "Ancho de cada banda de BPM.",
+  "tooltip.folderAccessAllow": "Abre Seguridad de Windows para permitir crateCraft. No cambia el ajuste.",
   "tooltip.folderSyncCancel": "Cierra sin cambiar la caja.",
   "tooltip.folderSyncFull": "También quita las pistas cuyos archivos no están en esta carpeta.",
   "tooltip.folderSyncPath": "Carpeta de este ordenador cuyos archivos deben coincidir con esta caja.",

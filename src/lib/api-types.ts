@@ -32,6 +32,8 @@ export interface SeratoStatus {
   params?: Record<string, string>;
   /** Serato 4, Serato 5, or unknown, and why that was chosen. */
   generation?: LibraryGeneration;
+  /** Windows Controlled folder access. Missing before the server answers. */
+  controlled_folder_access?: "off" | "on" | "audit" | "unknown" | "unsupported";
 }
 
 export interface EditFields {

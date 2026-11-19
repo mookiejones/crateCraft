@@ -44,4 +44,10 @@ The pre-release **v1.1.0-rc2** attaches both files under their pre-rename `Serat
 
 The window uses the installed WebView2 runtime. The title is **crateCraft**. Close the window to quit. A second open focuses that window.
 
-The page is served on `127.0.0.1`. Next: [Quick Start](Quick-Start).
+The page is served on `127.0.0.1`.
+
+## Windows can block a save into Music
+
+Windows Controlled folder access can stop a save into the Music folder. The bar under the title says so and shows **Allow**. Allow opens Windows Security so you can allow crateCraft. crateCraft does not turn that setting off. A tag write that Windows blocks is not reported as saved.
+
+Next: [Quick Start](Quick-Start).
