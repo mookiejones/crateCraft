@@ -979,8 +979,9 @@ def _refuse_rollback() -> None:
     """Refuse to replace library files when the version gate or Serato says no.
 
     Raises:
-        LibraryError: If Serato 5, an unknown version, or a running Serato DJ
-            process blocks the write. Nothing has been replaced yet.
+        LibraryError: If an unknown or unprobed version, probed Serato 5.0.0
+            with Protect Library on or unread, or a running Serato DJ process
+            blocks the write. Nothing has been replaced yet.
     """
     import library
     import snapshots

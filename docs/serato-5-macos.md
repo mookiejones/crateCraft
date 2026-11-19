@@ -2,7 +2,7 @@
 
 This is a read-only note. It does not change a library. `python3 serato_probe.py` prints which of these paths exist. It does not open `master.sqlite`, `root.sqlite`, or `database V2`.
 
-Serato 5 was not re-probed from this checkout. The paths below are the ones this app already uses, the 2026-10-28 read-only probe on a Mac running Serato DJ Pro 5.0.0 build `5.0.0.1251` (issue #40), and Serato's own support notes. Lucid beatgrid storage is still unconfirmed.
+Serato 5.0.0 was probed read-only on 2026-10-28 on a Mac running Serato DJ Pro 5.0.0 build `5.0.0.1251` (issue #40). Serato 5.1.0 (2026-11-10) is on the known-versions list and stays read-only until `serato5-probe.sh` runs against a real 5.1.0 library (issue #357). The paths below are the ones this app already uses, that 5.0.0 probe, and Serato's own support notes. Lucid beatgrid storage is still unconfirmed.
 
 ## What changed
 
